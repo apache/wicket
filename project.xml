@@ -26,7 +26,7 @@
     <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
     <repository>
         <connection>scm:cvs:pserver:anoncvs@cvs.sourceforge.net:/cvsroot/wicket:Wicket</connection>
-        <developerConnection>scm:cvs:ext:{maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
+        <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
         <url>http://cvs.sourceforge.net/viewcvs.py/wicket/Wicket</url>
     </repository>
     <versions>
