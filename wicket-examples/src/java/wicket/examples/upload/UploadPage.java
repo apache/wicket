@@ -65,9 +65,12 @@ public class UploadPage extends WicketExamplePage
 	 */
 	public UploadPage(final PageParameters parameters)
 	{
-		// set upload folder to tempdir + 'wicket-uploads'.
+		// Set upload folder to tempdir + 'wicket-uploads'.
 		this.uploadFolder = uploadFolder = new Folder(System.getProperty("java.io.tmpdir"),
 				"wicket-uploads");
+		
+		// Ensure folder exists
+		uploadFolder.mkdirs();
 
 		// Create feedback panels
 		final FeedbackPanel simpleUploadFeedback = new FeedbackPanel("simpleUploadFeedback");
