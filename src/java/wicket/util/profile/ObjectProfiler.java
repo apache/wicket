@@ -63,7 +63,7 @@ import java.util.WeakHashMap;
  *         </a>, 2003
  */
 public abstract class ObjectProfiler
-{ // TODO finalize javadoc
+{
     // public: ................................................................
     // the following constants are physical sizes (in bytes) and are
     // JVM-dependent:

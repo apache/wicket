@@ -29,7 +29,7 @@ import java.util.Arrays;
  *         </a>, 2003
  */
 final class ObjectProfileNode extends AbstractProfileNode
-{ // TODO finalize javadoc
+{
     final ILink m_link;
 
     final Object m_obj;
