@@ -65,6 +65,10 @@ public final class BookmarkablePageLink extends Link
 			final PageParameters parameters)
 	{
 		super(name);
+		if (pageClass == null)
+		{
+			throw new IllegalArgumentException("Page class for bookmarkable link cannot be null");
+		}
 		this.pageClass = pageClass;
 		this.parameters = parameters;
 	}
