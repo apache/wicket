@@ -356,7 +356,7 @@ public class StringValue
 	 */
 	public final boolean toBoolean() throws StringValueConversionException
 	{
-		return Strings.toBoolean(text);
+		return Strings.isTrue(text);
 	}
 
 	/**
@@ -382,7 +382,7 @@ public class StringValue
 	 */
 	public final Boolean toBooleanObject() throws StringValueConversionException
 	{
-		return new Boolean(toBoolean());
+		return Strings.toBoolean(text);
 	}
 
 	/**

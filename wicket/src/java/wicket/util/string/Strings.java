@@ -402,6 +402,7 @@ public final class Strings
 
 		return s;
 	}
+	
 
 	/**
 	 * @param s
@@ -409,7 +410,18 @@ public final class Strings
 	 * @return Boolean value
 	 * @throws StringValueConversionException
 	 */
-	public static boolean toBoolean(final String s) throws StringValueConversionException
+	public static Boolean toBoolean(final String s) throws StringValueConversionException
+	{
+		return Boolean.valueOf(isTrue(s));
+	}
+
+	/**
+	 * @param s
+	 *            String
+	 * @return Boolean value
+	 * @throws StringValueConversionException
+	 */
+	public static boolean isTrue(final String s) throws StringValueConversionException
 	{
 		if (s != null)
 		{
@@ -423,7 +435,19 @@ public final class Strings
 				return false;
 			}
 
-			throw new StringValueConversionException("Boolean value was not 'true' or 'false'");
+			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y")
+					|| s.equalsIgnoreCase("1"))
+			{
+				return true;
+			}
+
+			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n")
+					|| s.equalsIgnoreCase("0"))
+			{
+				return false;
+			}
+
+			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
 		}
 
 		throw new StringValueConversionException("Boolean value was null");

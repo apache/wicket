@@ -223,14 +223,12 @@
         <servlet-name>SpringApplication</servlet-name>
         <!-- DO NOT USE YOUR WICKET APPLICATION. USE SPRING'S DISPATCHER SERVLET -->
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>SpringApplication2</servlet-name>
         <!-- DO NOT USE YOUR WICKET APPLICATION. USE SPRING'S DISPATCHER SERVLET -->
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
@@ -240,7 +238,6 @@
           <param-name>applicationClassName</param-name>
           <param-value>wicket.examples.groovy.GroovyApplication</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
@@ -260,13 +257,11 @@
           <param-name>applicationClassName</param-name>
           <param-value>wicket.examples.tabpanel.TabPanelApplication</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <!-- servlet>
         <servlet-name>Wicket-Appfuse</servlet-name>
         <servlet-class>wicket.examples.appfuse.AppfuseApplication</servlet-class>
-        <load-on-startup>1</load-on-startup>
     </servlet -->
 
     <servlet>
@@ -276,7 +271,6 @@
             <param-name>applicationClassName</param-name>
             <param-value>wicket.examples.cdapp.CDApplication</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>

@@ -17,6 +17,9 @@
  */
 package wicket.util.convert.converters;
 
+import wicket.util.string.StringValueConversionException;
+import wicket.util.string.Strings;
+
 /**
  * Converts from Object to Boolean.
  * 
@@ -30,21 +33,11 @@ public final class BooleanConverter extends AbstractConverter
 	 */
 	public Object convert(final Object value)
 	{
-		final String stringValue = value.toString();
-
-		if (stringValue.equalsIgnoreCase("yes") || stringValue.equalsIgnoreCase("y")
-				|| stringValue.equalsIgnoreCase("true") || stringValue.equalsIgnoreCase("on")
-				|| stringValue.equalsIgnoreCase("1"))
+		try
 		{
-			return Boolean.TRUE;
+			return Strings.toBoolean(value.toString());
 		}
-		else if (stringValue.equalsIgnoreCase("no") || stringValue.equalsIgnoreCase("n")
-				|| stringValue.equalsIgnoreCase("false") || stringValue.equalsIgnoreCase("off")
-				|| stringValue.equalsIgnoreCase("0"))
-		{
-			return Boolean.FALSE;
-		}
-		else
+		catch (StringValueConversionException e)
 		{
 			throw newConversionException("Cannot convert '" + value + "' to Boolean", value);
 		}

@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
 /**
@@ -40,7 +41,7 @@ public class CheckBox extends FormComponent
 	{
 		super(name);
 	}
-	
+
 	/**
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
@@ -76,38 +77,29 @@ public class CheckBox extends FormComponent
 	{
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
-		super.onComponentTag(tag);
 
-		Object value = getModelObject();
-
+		final String value = getValue();
 		if (value != null)
 		{
-			final boolean tagValue;
-
-			// Probably was formatted or straight from request
-			if (value instanceof String)
+			try
 			{
-				tagValue = Boolean.valueOf((String)value).booleanValue();
+				if (Strings.isTrue(value))
+				{
+					tag.put("checked", "checked");
+				}
+				else
+				{
+					// In case the attribute was added at design time
+					tag.remove("checked");
+				}
 			}
-			else if (value instanceof Boolean)
+			catch (StringValueConversionException e)
 			{
-				tagValue = ((Boolean)value).booleanValue();
-			}
-			else
-			{
-				throw new WicketRuntimeException("CheckBox model object must be of type Boolean");
-			}
-			
-			if (tagValue)
-			{
-				tag.put("checked", "checked");
-			}
-			else
-			{
-				// In case the was a design time attrib
-				tag.remove("checked");
+				throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"");
 			}
 		}
+
+		super.onComponentTag(tag);
 	}
 
 	/**

@@ -20,11 +20,14 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.Stack;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
+import wicket.util.string.StringValueConversionException;
+import wicket.util.string.Strings;
 
 /**
  * This is a markup inline filter. It identifies xml tags which include a href
@@ -132,14 +135,13 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 
 					// html allows to represent true in different ways
 					final String autolink = tag.getAttributes().getString("autolink");
-					if ((autolink == null) || "".equals(autolink)
-							|| "true".equalsIgnoreCase(autolink) || "1".equals(autolink))
+					try
 					{
-						autolinking = true;
+						autolinking = Strings.isEmpty(autolink) || Strings.isTrue(autolink);
 					}
-					else
+					catch (StringValueConversionException e)
 					{
-						autolinking = false;
+						throw new WicketRuntimeException("Invalid autolink attribute value \"" + autolink + "\"");
 					}
 				}
 				else if (tag.isClose())
