@@ -49,7 +49,7 @@ public class Signin2Test extends WebTestCase
     /**
      * Test page.
      */
-    public void testHelloWorld() {
+    public void testSignIn2() {
         beginAt("/signin2");
         //this.dumpResponse(System.err);
         assertTitleEquals("Wicket Examples - signin2");
@@ -109,7 +109,7 @@ public class Signin2Test extends WebTestCase
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite();
-		suite.addTest(new Signin2Test("testHelloWorld"));
+		suite.addTest(new Signin2Test("testSignIn2"));
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
