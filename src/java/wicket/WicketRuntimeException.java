@@ -19,16 +19,17 @@
 package wicket;
 
 /**
- * Runtime exception thrown during request processing.
+ * Generic runtime exception subclass thrown by wicket.
+ * 
  * @author Jonathan Locke
  */
 public class WicketRuntimeException extends RuntimeException
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 3796104527069637919L;
 
 	/**
-     * Constructor
+     * @see RuntimeException#RuntimeException()
      */
     public WicketRuntimeException()
     {
@@ -36,8 +37,7 @@ public class WicketRuntimeException extends RuntimeException
     }
 
     /**
-     * Constructor
-     * @param message
+     * @see RuntimeException#RuntimeException(java.lang.String)
      */
     public WicketRuntimeException(final String message)
     {
@@ -45,9 +45,7 @@ public class WicketRuntimeException extends RuntimeException
     }
 
     /**
-     * Constructor
-     * @param message
-     * @param cause
+     * @see RuntimeException#RuntimeException(java.lang.String, java.lang.Throwable)
      */
     public WicketRuntimeException(final String message, final Throwable cause)
     {
@@ -55,8 +53,7 @@ public class WicketRuntimeException extends RuntimeException
     }
 
     /**
-     * Constructor
-     * @param cause
+     * @see RuntimeException#RuntimeException(java.lang.Throwable)
      */
     public WicketRuntimeException(final Throwable cause)
     {
