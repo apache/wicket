@@ -29,6 +29,7 @@ import com.voicetribe.wicket.markup.html.link.ImageMap;
 import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.link.PageLink;
 import com.voicetribe.wicket.markup.html.link.PopupSpecification;
+import com.voicetribe.wicket.markup.html.link.SimpleHref;
 
 /**
  * Demonstrates different flavors of hyperlinks.
@@ -111,6 +112,8 @@ public class Home extends HtmlPage
 
         add(new ExternalPageLink("popupLink", Page1.class)
             .setPopupSpecification(popupSpec));
+        
+        add(new SimpleHref("google", "http://www.google.de", "Google"));
     }
 
     /**
