@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.list;
 
-import java.io.Serializable;
 import java.util.List;
 
 import wicket.model.IModel;
@@ -68,26 +67,6 @@ public abstract class PageableListView extends ListView
 	public PageableListView(final String name, final List list, final int rowsPerPage)
 	{
 		super(name, list);
-		this.rowsPerPage = rowsPerPage;
-	}
-
-	/**
-	 * Creates a pagable list view having the given number of rows per page that
-	 * uses the provided object as a simple model.
-	 * 
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param rowsPerPage
-	 *            Number of rows to show on a page
-	 * @see wicket.Component#Component(String, Serializable)
-	 */
-	public PageableListView(String name, Serializable object, String expression, int rowsPerPage)
-	{
-		super(name, object, expression);
 		this.rowsPerPage = rowsPerPage;
 	}
 

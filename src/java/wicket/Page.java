@@ -17,8 +17,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,7 +28,7 @@ import wicket.model.IModel;
  * Abstract base class for pages. As a MarkupContainer subclass, a Page can
  * contain a component hierarchy and markup in some markup language such as
  * HTML. Users of the framework should not attempt to subclass Page directly.
- * Instead they should subclass a subclass of Page that is appropriate to the
+ * Instead they should subclass a subcilass of Page that is appropriate to the
  * markup type they are using, such as WebPage.
  * <p>
  * When a page is constructed, it is automatically added to the user's session
@@ -103,30 +101,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	protected Page(final IModel model)
 	{
 		super(null, model);
-		addToSession();
-	}
-
-	/**
-	 * @param object
-	 *            See Component
-	 * @see Component#Component(String, Serializable)
-	 */
-	protected Page(final Serializable object)
-	{
-		super(null, object);
-		addToSession();
-	}
-
-	/**
-	 * @param object
-	 *            See Component
-	 * @param expression
-	 *            See Component
-	 * @see Component#Component(String, Serializable, String)
-	 */
-	protected Page(final Serializable object, final String expression)
-	{
-		super(null, object, expression);
 		addToSession();
 	}
 

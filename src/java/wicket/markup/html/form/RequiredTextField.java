@@ -17,9 +17,8 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.model.IModel;
 
 /**
  * A text field which automatically adds a RequiredValidator. This is mainly for
@@ -51,52 +50,26 @@ public class RequiredTextField extends TextField
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public RequiredTextField(final String name, final Serializable object)
+	public RequiredTextField(final String name, final IModel model)
 	{
-		super(name, object);
-		add(RequiredValidator.getInstance());
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public RequiredTextField(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 		add(RequiredValidator.getInstance());
 	}
 
 	/**
 	 * @param name
 	 *            See Component constructor
-	 * @param object
+	 * @param model
 	 *            See Component constructor
 	 * @param type
 	 *            The type to use when updating the model for this text field
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public RequiredTextField(String name, Serializable object, Class type)
+	public RequiredTextField(String name, IModel model, Class type)
 	{
-		super(name, object, type);
-		add(RequiredValidator.getInstance());
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param type
-	 *            The type to use when updating the model for this text field
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public RequiredTextField(String name, Serializable object, String expression, Class type)
-	{
-		super(name, object, expression, type);
+		super(name, model, type);
 		add(RequiredValidator.getInstance());
 	}
 }

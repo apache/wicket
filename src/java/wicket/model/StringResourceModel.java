@@ -185,7 +185,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * @author Chris Turner
  */
-public class StringResourceModel extends AbstractReadOnlyDetachableModel implements INestedModel
+public class StringResourceModel extends AbstractReadOnlyDetachableModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 6659487382203513733L;
@@ -279,7 +279,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel impleme
 	 * 
 	 * @return The model
 	 */
-	public final IModel getNestedModel()
+	public final Object getNestedModel()
 	{
 		return model;
 	}
@@ -309,7 +309,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel impleme
 
 		// Get the string resource, doing any OGNL substitutions as part
 		// of the get operation
-		String s = localizer.getString(getResourceKey(), component, getNestedModel());
+		String s = localizer.getString(getResourceKey(), component, model);
 
 		// Substitute any parameters if necessary
 		Object[] parameters = getParameters();

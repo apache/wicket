@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import wicket.markup.ComponentTag;
@@ -25,6 +24,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.form.model.ChoiceList;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
+import wicket.model.IModel;
 
 /**
  * Abstract base class for all choice (html select) options.
@@ -69,64 +69,29 @@ abstract class AbstractChoice extends FormComponent
 	/**
 	 * @param name
 	 *            See Component constructor
-	 * @param object
+	 * @param model
 	 *            See Component constructor
 	 * @param choices
 	 *            The collection of choices in the dropdown
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(String name, Serializable object, final Collection choices)
+	public AbstractChoice(String name, IModel model, final Collection choices)
 	{
-		this(name, object, new ChoiceList(choices));
+		this(name, model, new ChoiceList(choices));
 	}
 
 	/**
 	 * @param name
 	 *            See Component constructor
-	 * @param object
+	 * @param model
 	 *            See Component constructor
 	 * @param choices
 	 *            The drop down choices
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(String name, Serializable object, final IChoiceList choices)
+	public AbstractChoice(String name, IModel model, final IChoiceList choices)
 	{
-		super(name, object);
-		this.choices = choices;
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param choices
-	 *            The collection of choices in the dropdown
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public AbstractChoice(String name, Serializable object, String expression,
-			final Collection choices)
-	{
-		this(name, object, new ChoiceList(choices));
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param choices
-	 *            The collection of choices in the dropdown
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public AbstractChoice(String name, Serializable object, String expression,
-			final IChoiceList choices)
-	{
-		super(name, object, expression);
+		super(name, model);
 		this.choices = choices;
 	}
 

@@ -20,7 +20,8 @@ package wicket.model;
 import wicket.Component;
 
 /**
- * A compound property model is a model which
+ * A simple compound model which uses the component's name as the OGNL
+ * expression to retrieve properties on the nested model object.
  * 
  * @see wicket.model.IModel
  * @see wicket.model.Model
@@ -33,29 +34,6 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
 
-	/** Any nested model object */
-	private final IModel model;
-
-	/** The model object */
-	private final Object modelObject;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param model
-	 *            Nested model
-	 */
-	public CompoundPropertyModel(final IModel model)
-	{
-		if (model == null)
-		{
-			throw new IllegalArgumentException("Model parameter must not be null");
-		}
-
-		this.model = model;
-		this.modelObject = null;
-	}
-
 	/**
 	 * Constructor
 	 * 
@@ -64,37 +42,7 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	 */
 	public CompoundPropertyModel(final Object modelObject)
 	{
-		if (modelObject == null)
-		{
-			throw new IllegalArgumentException("Model parameter must not be null");
-		}
-		
-		this.modelObject = modelObject;
-		this.model = null;
-	}
-
-	/**
-	 * @return The nested model object
-	 */
-	public final IModel getNestedModel()
-	{
-		return model;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return "[CompoundPropertyModel model = " + model + ", modelObject = " + modelObject + "]";
-	}
-
-	/**
-	 * @see wicket.model.AbstractPropertyModel#modelObject(Component)
-	 */
-	protected Object modelObject(final Component component)
-	{
-		return model != null ? model.getObject(component) : modelObject;
+		super(modelObject);
 	}
 
 	/**
@@ -103,22 +51,6 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	protected String ognlExpression(final Component component)
 	{
 		return component.getName();
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onAttach()
-	 */
-	protected void onAttach()
-	{
-	}
-
-	/**
-	 * @see AbstractDetachableModel#onDetach()
-	 */
-	protected void onDetach()
-	{
-		super.onDetach();
-		model.detach();
 	}
 
 	/**

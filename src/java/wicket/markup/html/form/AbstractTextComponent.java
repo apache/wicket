@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
+import wicket.model.IModel;
 
 /**
  * Abstract base class for TextArea and TextField.
@@ -38,19 +38,11 @@ abstract class AbstractTextComponent extends FormComponent
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+     * @see wicket.Component#Component(String, IModel)
 	 */
-	AbstractTextComponent(final String name, final Serializable object)
+	AbstractTextComponent(final String name, final IModel model)
 	{
-		super(name, object);
-	}
-
-	/**
-     * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	AbstractTextComponent(final String name, final Serializable object, final String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
     /**

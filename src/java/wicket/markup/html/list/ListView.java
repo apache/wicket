@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * A ListView holds ListItems of information. The listItem can be re-ordered and
@@ -91,19 +92,11 @@ public abstract class ListView extends WebMarkupContainer
 	 *            See Component constructor
 	 * @param list
 	 *            List to cast to Serializable
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public ListView(String name, List list)
 	{
-		super(name, (Serializable)list);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public ListView(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
+		super(name, new Model((Serializable)list));
 	}
 
 	/**

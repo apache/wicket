@@ -34,9 +34,6 @@ import wicket.markup.parser.XmlTag;
 import wicket.model.IConverterSource;
 import wicket.model.IConvertible;
 import wicket.model.IModel;
-import wicket.model.INestedModel;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
 import wicket.response.NullResponse;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
@@ -186,104 +183,6 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Constructor that uses the provided object as a model. If the object given
-	 * is an instance of IModel, the object will be used directly. Otherwise,
-	 * the object will be wrapped in an instance of {@link Model}. All
-	 * components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as a simple model
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
-	 */
-	public Component(String name, Serializable object)
-	{
-		setName(name);
-
-		// If the object is already an IModel
-		if (object instanceof IModel)
-		{
-			// just cast and store it
-			setModel((IModel)object);
-		}
-		else
-		{
-			// otherwise, create a Model wrapper for the object
-			setModel(new Model(object));
-		}
-	}
-
-	/**
-	 * Constructor that uses the provided object as a model. If the object given
-	 * is an instance of PropertyModel, the object will be used directly. If the
-	 * object is an instance of IModel, it will be wrapped in a PropertyModel
-	 * instance using the OGNL expression. This is the equivalent of:
-	 * 
-	 * <pre>
-	 * 
-	 *  
-	 *                               IModel model;
-	 *                               String expression;
-	 *                               ...
-	 *                               new MyComponent(name, new PropertyModel(model, expression));
-	 *   
-	 *  
-	 * </pre>
-	 * 
-	 * If the object is not an instance of PropertyModel or IModel, the object
-	 * will be wrapped in an instance of {@link Model}that will in turn be
-	 * wrapped in an instance of {@link PropertyModel}using the provided
-	 * expression. Thus, this is the equivalent of:
-	 * 
-	 * <pre>
-	 * 
-	 *  
-	 *                               Serializable model;
-	 *                               String expression;
-	 *                               ...
-	 *                               new MyComponent(name, new PropertyModel(new Model(model), expression));
-	 *   
-	 *  
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            The object that will be used as the subject for the given OGNL
-	 *            expression
-	 * @param expression
-	 *            The OGNL expression that works on the given model object
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
-	 */
-	public Component(String name, Serializable object, String expression)
-	{
-		setName(name);
-
-		// If object is already a property model, set that
-		if (object instanceof PropertyModel)
-		{
-			setModel((PropertyModel)object);
-		}
-		else
-		// If object is already an IModel
-		if (object instanceof IModel)
-		{
-			// wrap in a PropertyModel
-			setModel(new PropertyModel((IModel)object, expression));
-		}
-		else
-		{
-			// wrap object in a Model and then in a PropertyModel
-			setModel(new PropertyModel(new Model(object), expression));
-		}
-	}
-
-	/**
 	 * Adds an attribute modifier to the component.
 	 * 
 	 * @param modifier
@@ -417,6 +316,15 @@ public abstract class Component implements Serializable, IConverterSource
 	public final ApplicationSettings getApplicationSettings()
 	{
 		return getApplication().getSettings();
+	}
+
+	/**
+	 * @return A path of the form <page-class-name>. <page-relative-path>
+	 * @see Component#getPageRelativePath()
+	 */
+	public final String getClassRelativePath()
+	{
+		return getClass().getName() + "." + getPageRelativePath();
 	}
 
 	/**
@@ -582,15 +490,6 @@ public abstract class Component implements Serializable, IConverterSource
 	{
 		return Strings.afterFirstPathComponent(getPath(), '.');
 	}
-	
-	/**
-	 * @return A path of the form <page-class-name>.<page-relative-path>
-	 * @see Component#getPageRelativePath()
-	 */
-	public final String getClassRelativePath()
-	{
-		return getClass().getName() + "." + getPageRelativePath();
-	}
 
 	/**
 	 * Gets any parent container, or null if there is none.
@@ -656,6 +555,14 @@ public abstract class Component implements Serializable, IConverterSource
 	public final Response getResponse()
 	{
 		return getRequestCycle().getResponse();
+	}
+	
+	/**
+	 * @return The root model (innermost nested model) for this component
+	 */
+	public final Object getRootModel()
+	{
+		return getRootModel(getModel());
 	}
 
 	/**
@@ -901,21 +808,39 @@ public abstract class Component implements Serializable, IConverterSource
 		// If both models are non-null they could be the same
 		if (thisModel != null && thatModel != null)
 		{
-			// Find most nested models
-			while (thisModel instanceof INestedModel)
-			{
-				thisModel = ((INestedModel)thisModel).getNestedModel();
-			}
-
-			while (thatModel instanceof INestedModel)
-			{
-				thatModel = ((INestedModel)thatModel).getNestedModel();
-			}
-
-			return thisModel == thatModel;
+			return getRootModel(thisModel) == getRootModel(thatModel);
 		}
 
 		return false;
+	}
+
+	/**
+	 * Sets the given model.
+	 * 
+	 * @param model
+	 *            the model
+	 */
+	public final void setModel(final IModel model)
+	{
+		// Detach current model
+		if (this.model != null)
+		{
+			this.model.detach();
+		}
+
+		// Set self as source of converter in case the model needs to do
+		// conversions
+		if (model instanceof IConvertible)
+		{
+			((IConvertible)model).setConverterSource(this);
+		}
+
+		// Change model
+		if (this.model != model)
+		{
+			this.model = (IModel)model;
+			modelChanged();
+		}
 	}
 
 	/**
@@ -1095,10 +1020,10 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	protected IModel initModel()
 	{
-		final IModel pageModel = getPage().getModel();
-		if (pageModel != null)
+		final IModel model = getPage().getModel();
+		if (model != null)
 		{
-			return new PropertyModel(pageModel, getName());
+			return model;
 		}
 		return null;
 	}
@@ -1456,31 +1381,26 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Sets the given model.
+	 * Finds the root object for an IModel
 	 * 
 	 * @param model
-	 *            the model
+	 *            The model
+	 * @return The root object
 	 */
-	private final void setModel(final IModel model)
+	private Object getRootModel(final IModel model)
 	{
-		// Detach current model
-		if (this.model != null)
+		Object nestedModelObject = model.getNestedModel();
+		while (nestedModelObject instanceof IModel)
 		{
-			this.model.detach();
+			final Object next = ((IModel)nestedModelObject).getNestedModel();
+			if (nestedModelObject == next)
+			{
+				throw new WicketRuntimeException("Model for " + nestedModelObject
+						+ " is self-referential");
+			}
+			nestedModelObject = next;
 		}
-
-		// Set self as source of converter in case the model needs to do conversions
-		if (model instanceof IConvertible)
-		{
-			((IConvertible)model).setConverterSource(this);
-		}
-
-		// Change model
-		if (this.model != model)
-		{
-			this.model = (IModel)model;
-			modelChanged();
-		}
+		return nestedModelObject;
 	}
 
 	/**

@@ -76,6 +76,11 @@ public class AttributeModifierComponentPage extends WebPage
 			{
 				text = object.toString();
 			}
+
+			public Object getNestedModel()
+			{
+				return text;
+			}
 		}));
 		add(label3);
 	}

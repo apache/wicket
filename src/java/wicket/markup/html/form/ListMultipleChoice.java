@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,6 +25,7 @@ import java.util.StringTokenizer;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
+import wicket.model.IModel;
 import wicket.util.string.Strings;
 
 /**
@@ -56,39 +56,19 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
-	public ListMultipleChoice(String name, Serializable object, final Collection choices)
+	public ListMultipleChoice(String name, IModel object, final Collection choices)
 	{
 		super(name, object, choices);
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, IChoiceList)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
-	public ListMultipleChoice(String name, Serializable object, final IChoiceList choices)
+	public ListMultipleChoice(String name, IModel object, final IChoiceList choices)
 	{
 		super(name, object, choices);
-	}
-
-	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
-	 *      Collection)
-	 */
-	public ListMultipleChoice(String name, Serializable object, String expression,
-			final Collection choices)
-	{
-		super(name, object, expression, choices);
-	}
-
-	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
-	 *      IChoiceList)
-	 */
-	public ListMultipleChoice(String name, Serializable object, String expression,
-			final IChoiceList choices)
-	{
-		super(name, object, expression, choices);
 	}
 
 	/**

@@ -17,10 +17,9 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.TypeValidator;
+import wicket.model.IModel;
 
 /**
  * A simple text field.
@@ -56,9 +55,9 @@ public class TextField extends AbstractTextComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextField(final String name, final Serializable object)
+	public TextField(final String name, final IModel object)
 	{
 		super(name, object);
 	}
@@ -66,41 +65,15 @@ public class TextField extends AbstractTextComponent
 	/**
 	 * @param name
 	 *            See Component constructor
-	 * @param object
+	 * @param model
 	 *            See Component constructor
 	 * @param type
 	 *            The type to use when updating the model for this text field
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextField(String name, Serializable object, Class type)
+	public TextField(String name, IModel model, Class type)
 	{
-		super(name, object);
-		this.type = type;
-		add(new TypeValidator(type));
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public TextField(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param type
-	 *            The type to use when updating the model for this text field
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public TextField(String name, Serializable object, String expression, Class type)
-	{
-		super(name, object, expression);
+		super(name, model);
 		this.type = type;
 		add(new TypeValidator(type));
 	}

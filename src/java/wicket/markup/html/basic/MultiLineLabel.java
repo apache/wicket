@@ -17,11 +17,11 @@
  */
 package wicket.markup.html.basic;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
+import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.util.string.Strings;
 
 /**
@@ -40,19 +40,26 @@ public class MultiLineLabel extends WebComponent
 	private static final long serialVersionUID = 7949493094618802759L;
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * Convenience constructor. Same as Label(String, new Model(String))
+	 * 
+	 * @param name
+	 *            See Component
+	 * @param label
+	 *            The label text
+	 * 
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MultiLineLabel(String name, Serializable object)
+	public MultiLineLabel(String name, String label)
 	{
-		super(name, object);
+		this(name, new Model(label));
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MultiLineLabel(String name, Serializable object, String expression)
+	public MultiLineLabel(String name, IModel model)
 	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

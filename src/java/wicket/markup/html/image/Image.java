@@ -17,12 +17,12 @@
  */
 package wicket.markup.html.image;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.image.resource.ImageResource;
 import wicket.markup.html.image.resource.LocalizedImageResource;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * An image component represents a localizable image resource. The image name
@@ -66,19 +66,23 @@ public class Image extends AbstractImage
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Image(final String name, final Serializable object)
+	public Image(final String name, final IModel model)
 	{
-		super(name, object);
+		super(name, model);
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @param name
+	 *            See Component
+	 * @param string
+	 *            Name of image
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Image(final String name, final Serializable object, final String expression)
+	public Image(final String name, final String string)
 	{
-		super(name, object, expression);
+		super(name, new Model(string));
 	}
 
 	/**

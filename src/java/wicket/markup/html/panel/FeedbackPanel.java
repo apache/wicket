@@ -87,9 +87,14 @@ public final class FeedbackPanel extends Panel implements IFeedback
 				public void setObject(final Component component, final Object object)
 				{
 				}
+
+				public Object getNestedModel()
+				{
+					return message;
+				}
 			};
 
-			final Label label = new Label("message", message, "message");
+			final Label label = new Label("message", message.getMessage());
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);

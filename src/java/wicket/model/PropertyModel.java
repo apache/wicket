@@ -46,9 +46,9 @@ import wicket.Component;
  * given person object like this:
  * 
  * <pre>
- *              Person person = getSomePerson();
- *              ...
- *              add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *                 Person person = getSomePerson();
+ *                 ...
+ *                 add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
  * </pre>
  * 
  * Where 'myLabel' is the name of the component, and 'name' is the Ognl
@@ -60,7 +60,7 @@ import wicket.Component;
  * updates the name property of a person like this:
  * 
  * <pre>
- *              add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *                 add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
  * </pre>
  * 
  * </p>
@@ -83,7 +83,7 @@ import wicket.Component;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class PropertyModel extends AbstractPropertyModel implements INestedModel
+public class PropertyModel extends AbstractPropertyModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
@@ -91,11 +91,8 @@ public class PropertyModel extends AbstractPropertyModel implements INestedModel
 	/** Ognl expression for property access. */
 	private final String expression;
 
-	/** The model. */
-	private final IModel model;
-
 	/**
-	 * if this is set, this type is used for conversion instead of the type that
+	 * If this is set, this type is used for conversion instead of the type that
 	 * is figured out by Ognl. This can be especially usefull for when you have
 	 * a generic property (like Serializable myProp) that you want to be
 	 * converted to a narrower type (e.g. an Integer). Ognl sees an incomming
@@ -110,14 +107,14 @@ public class PropertyModel extends AbstractPropertyModel implements INestedModel
 	 * given model. Additional formatting will be used depending on the
 	 * configuration setting.
 	 * 
-	 * @param model
-	 *            the wrapper
+	 * @param modelObject
+	 *            The model object, which may or may not implement IModel
 	 * @param expression
 	 *            Ognl expression for property access
 	 */
-	public PropertyModel(final IModel model, final String expression)
+	public PropertyModel(final Object modelObject, final String expression)
 	{
-		this(model, expression, null);
+		this(modelObject, expression, null);
 	}
 
 	/**
@@ -125,8 +122,8 @@ public class PropertyModel extends AbstractPropertyModel implements INestedModel
 	 * given model. Additional formatting will be used depending on the
 	 * configuration setting.
 	 * 
-	 * @param model
-	 *            the wrapper
+	 * @param modelObject
+	 *            The model object, which may or may not implement IModel
 	 * @param expression
 	 *            Ognl expression for property access
 	 * @param propertyType
@@ -139,29 +136,11 @@ public class PropertyModel extends AbstractPropertyModel implements INestedModel
 	 *            myProp being converted to and from and integer, propertyType
 	 *            should be set to Integer.
 	 */
-	public PropertyModel(final IModel model, final String expression, Class propertyType)
+	public PropertyModel(final Object modelObject, final String expression, Class propertyType)
 	{
-		if (model == null)
-		{
-			throw new IllegalArgumentException("Model parameter must not be null");
-		}
-
-		this.model = model;
+		super(modelObject);
 		this.expression = expression;
 		this.propertyType = propertyType;
-	}
-
-	/**
-	 * Gets the model on which the Ognl expressions are applied. The expression
-	 * will actually not be applied on the instance of IModel, but (naturally)
-	 * on the wrapped model object or more accurate, the object that results
-	 * from calling getObject on the instance of IModel.
-	 * 
-	 * @return The model on which the Ognl expressions are applied.
-	 */
-	public final IModel getNestedModel()
-	{
-		return model;
 	}
 
 	/**
@@ -169,24 +148,8 @@ public class PropertyModel extends AbstractPropertyModel implements INestedModel
 	 */
 	public String toString()
 	{
-		return "[PropertyModel model = " + model + ", expression = " + expression + ", object = "
-				+ getObject(null) + "]";
-	}
-	
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onAttach()
-	 */
-	protected void onAttach()
-	{
-	}
-	
-	/**
-	 * @see AbstractDetachableModel#onDetach()
-	 */
-	protected final void onDetach()
-	{
-		super.onDetach();
-		model.detach();
+		return "[PropertyModel super = " + super.toString() + ", expression = " + expression
+				+ ", propertyType = " + propertyType + "]";
 	}
 
 	/**
@@ -195,14 +158,6 @@ public class PropertyModel extends AbstractPropertyModel implements INestedModel
 	protected String ognlExpression(Component component)
 	{
 		return expression;
-	}
-
-	/**
-	 * @see wicket.model.AbstractPropertyModel#modelObject(Component)
-	 */
-	protected Object modelObject(final Component component)
-	{
-		return model.getObject(component);
 	}
 
 	/**

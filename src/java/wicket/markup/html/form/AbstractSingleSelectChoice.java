@@ -17,11 +17,11 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
+import wicket.model.IModel;
 import wicket.util.string.Strings;
 
 /**
@@ -59,37 +59,19 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
-	public AbstractSingleSelectChoice(String name, Serializable object, final Collection choices)
+	public AbstractSingleSelectChoice(String name, IModel model, final Collection choices)
 	{
-		super(name, object, choices);
+		super(name, model, choices);
 	}
 	
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, IChoiceList)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
-	public AbstractSingleSelectChoice(String name, Serializable object, final IChoiceList choices)
+	public AbstractSingleSelectChoice(String name, IModel model, final IChoiceList choices)
 	{
-		super(name, object, choices);
-	}
-	
-	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
-	 */
-	public AbstractSingleSelectChoice(String name, Serializable object, String expression,
-			final Collection choices)
-	{
-		super(name, object, expression, choices);
-	}
-	
-	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, IChoiceList)
-	 */
-	public AbstractSingleSelectChoice(String name, Serializable object, String expression,
-			final IChoiceList choices)
-	{
-		super(name, object, expression, choices);
+		super(name, model, choices);
 	}
 
 	/**

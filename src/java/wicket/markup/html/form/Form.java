@@ -17,8 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -32,6 +30,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationDelegate;
+import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.Strings;
 
@@ -142,12 +141,12 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
 	 * @param name
 	 *            See Component constructor
 	 * @param feedback
 	 *            Interface to a component that can handle/display validation
 	 *            errors
+	 * @see wicket.Component#Component(String)
 	 */
 	public Form(final String name, final IFeedback feedback)
 	{
@@ -156,36 +155,18 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 * @param name
 	 *            See Component constructor
-	 * @param object
+	 * @param model
 	 *            See Component constructor
 	 * @param feedback
 	 *            Interface to a component that can handle/display validation
 	 *            errors
 	 */
-	public Form(String name, Serializable object, final IFeedback feedback)
+	public Form(String name, IModel model, final IFeedback feedback)
 	{
-		super(name, object);
-		this.feedback = feedback;
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable)
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param feedback
-	 *            Interface to a component that can handle/display validation
-	 *            errors
-	 */
-	public Form(String name, Serializable object, String expression, final IFeedback feedback)
-	{
-		super(name, object, expression);
+		super(name, model);
 		this.feedback = feedback;
 	}
 
