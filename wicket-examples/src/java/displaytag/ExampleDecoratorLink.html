@@ -1,0 +1,49 @@
+
+<html>
+<head>
+	<title>How to do tables like displaytag with Wicket</title>
+	<meta http-equiv="Expires" content="-1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+	
+<body>
+	<h2><a id="wcn-[autolink]" href="Displaytag.html">Example</a> &gt; Standard, creating dynamic links</h2>
+	<br/>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Status</th>
+      </tr>
+	  </thead>
+    <tbody>
+			<tr id="wcn-rows" class="even">
+				<td><a id="wcn-idLink"><span id="wcn-id">Test ID</span></a></td>
+				<td><a id="wcn-mailLink"><span id="wcn-email">Test EMail</span></a></td>
+				<td><a id="wcn-statusLink"><span id="wcn-status">Test Status</span></a></td>
+			</tr>
+    </tbody>
+  </table>
+	<br/>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+	  </thead>
+    <tbody>
+			<tr id="wcn-rows2" class="even">
+				<td><a id = "wcn-idLink"><span id="wcn-id">Test ID</span></a></td>
+				<td><span id="wcn-email">Test EMail</span></td>
+				<td><a id = "wcn-view">View</a> | <a id = "wcn-edit">Edit</a> | <a id = "wcn-delete">Delete</a></td>
+			</tr>
+    </tbody>
+  </table>
+</body>
+</html>

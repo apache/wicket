@@ -1,22 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////////
-//
-// Created May 21, 2004
-//
-// Copyright 2004, Jonathan W. Locke
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package signin;
 
 import com.voicetribe.util.value.ValueMap;
@@ -42,6 +41,7 @@ public final class SignIn extends HtmlPage
     {
         // Create feedback panel and add to page
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
+
         add(feedback);
 
         // Add sign-in form to page, passing feedback panel as validation error handler
@@ -54,12 +54,16 @@ public final class SignIn extends HtmlPage
      */
     public final class SignInForm extends Form
     {
+        // El-cheapo model for form
+        private final ValueMap properties = new ValueMap();
+
         /**
          * Constructor
          * @param componentName Name of the form component
          * @param feedback The feedback panel to update
          */
-        public SignInForm(final String componentName, final FeedbackPanel feedback)
+        public SignInForm(final String componentName,
+            final FeedbackPanel feedback)
         {
             super(componentName, feedback);
 
@@ -74,10 +78,11 @@ public final class SignIn extends HtmlPage
         public final void handleSubmit(final RequestCycle cycle)
         {
             // Sign the user in
-            if (properties.getString("username").equals("jonathan") &&
-                properties.getString("password").equals("password"))
+            if (properties.getString("username").equals("jonathan")
+                && properties.getString("password").equals("password"))
             {
-                cycle.getSession().setProperty("user", "jonathan");
+                cycle.getSession().setProperty("signin.user", "jonathan");
+
                 if (!cycle.continueToOriginalDestination())
                 {
                     cycle.setPage(new Home(PageParameters.NULL));
@@ -89,9 +94,6 @@ public final class SignIn extends HtmlPage
                 errorMessage("Couldn't sign you in");
             }
         }
-
-        // El-cheapo model for form
-        private final ValueMap properties = new ValueMap();
     }
 }
 

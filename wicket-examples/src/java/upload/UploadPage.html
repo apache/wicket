@@ -1,0 +1,27 @@
+
+<html>
+<body>
+
+    <form id="wcn-upload">
+      <fieldset>
+        <legend>File Upload</legend>
+        <label for="fileName">name</label>
+        <input id="wcn-fileName" type="text" size="20"/>
+        <label for="upload">file</label>
+        <input name="upload" type="file"/>
+        <input type="submit" value="upload"/>
+      </fieldset>
+    </form>
+
+    <div>
+      <h4>current files (directory <span id="wcn-dir">(dir)</span>):</h4>
+      <table>
+        <tr id="wcn-fileList">
+            <td width="200"><span id="wcn-file">(file)</span></td>
+            <td><a href="#" id="wcn-delete"><img src="delete.gif" border="0"/></a></td>
+        </tr>
+      </table>
+    </div>
+
+</body>
+</html>

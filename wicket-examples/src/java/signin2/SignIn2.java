@@ -21,14 +21,17 @@ package signin2;
 
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.RequestCycle;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.panel.SignInPanel;
 
+
 /**
- * Simple example of a sign in page.
+ * Simple example of a sign in page. It extends SignInPage, a
+ * base class which provide standard functionality for 
+ * typical log-in pages
+ * 
  * @author Jonathan Locke
  */
-public final class SignIn2 extends HtmlPage
+public final class SignIn2 extends SignInPage
 {
     /**
      * Constructor
@@ -36,23 +39,38 @@ public final class SignIn2 extends HtmlPage
      */
     public SignIn2(final PageParameters parameters)
     {
-        add(new SignInPanel("signInPanel")
+        super(new SignIn2Panel("signInPanel")
         {
-            protected String signIn(RequestCycle cycle, String username, String password)
+            public String signIn(RequestCycle cycle, String username, String password)
             {
                 // Sign the user in
                 if (username.equals("jonathan") && password.equals("password"))
                 {
-                    cycle.getSession().setProperty("user", "jonathan");
+                    // successfully signed in.
+                    cycle.getSession().setProperty("signin2.user", "jonathan");
+                    
+                    // Depending on user's choice, remember me or not
+                    this.setPersistent(this.getRememberMe());
                     return null;
                 }
-                else
-                {
-                    return "Couldn't sign you in";
-                }
+
+                // error
+                return "Couldn't sign you in";
             }
         });
     }
+	
+	/**
+	 * 
+	 * @param cycle
+	 */
+	public static void logout(final RequestCycle cycle)
+	{
+	    SignInPage.logout(cycle);
+		
+		// Remove persisted user data
+		new SignIn2(null).removePersistedFormData(cycle, SignInPanel.SignInForm.class, true);
+	}
 }
 
 ///////////////////////////////// End of File /////////////////////////////////

@@ -1,0 +1,48 @@
+
+<html>
+<head>
+	<title>How to do tables like displaytag with Wicket</title>
+	<meta http-equiv="Expires" content="-1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+	
+<body>
+	<h2><a id="wcn-[autolink]" href="Displaytag.html">Example</a> &gt; Show (sub-)totals</h2>
+	<br/>
+  <table class="simple nocol">
+    <thead>
+      <tr>
+        <th>City</th>
+        <th>Project</th>
+        <th>Hours</th>
+        <th>Task</th>
+      </tr>
+	  </thead>
+    <tbody>
+      <span id="wcn-border">
+				<tr id="wcn-rows" class="even">
+					<td><span id="wcn-city">Test City</span></td>
+					<td><span id="wcn-project">Test Project</span></td>
+					<td><span id="wcn-hours">Test Hours</span></td>
+					<td><span id="wcn-task">Test Task</span></td>
+				</tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td><hr noshade size="1"/></td>
+          <td>&nbsp;</td>
+	      </tr>
+ 	      <tr>
+          <td>&nbsp;</td>
+          <td align="right"><b><span id="wcn-name">Test</span> Total:</b></td>
+          <td><b><span id="wcn-value">123.45</span></b></td>
+          <td>&nbsp;</td>
+		    </tr>
+      </span>
+    </tbody>
+  </table>
+</body>
+</html>

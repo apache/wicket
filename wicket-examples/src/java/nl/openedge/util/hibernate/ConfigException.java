@@ -24,7 +24,6 @@ package nl.openedge.util.hibernate;
  */
 public final class ConfigException extends Exception
 {
-
     /**
      * Construct.
      */
@@ -60,5 +59,4 @@ public final class ConfigException extends Exception
     {
         super(message, cause);
     }
-
 }

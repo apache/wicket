@@ -23,7 +23,9 @@ import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 
 /**
- * 
+ * Base class to check access to a page. If user is not logged in,
+ * redirect to the log-in page.
+ *  
  * @author Jonathan Locke
  */
 public class AuthenticatedHtmlPage extends HtmlPage
@@ -33,7 +35,7 @@ public class AuthenticatedHtmlPage extends HtmlPage
      */
     protected boolean checkAccess(RequestCycle cycle)
     {
-        boolean signedIn = cycle.getSession().getProperty("user") != null;
+        boolean signedIn = cycle.getSession().getProperty("signin2.user") != null;
         if (!signedIn)
         {
             cycle.redirectToInterceptPage(SignIn2.class);
