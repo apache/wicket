@@ -22,12 +22,25 @@ import ognl.Ognl;
 import ognl.OgnlException;
 
 /**
- * Interpolates values produced by ognl expressions into strings
+ * Interpolates values into strings that are produced by interpreting 
+ * OGNL (Object Graph Navigational Language) expressions against a beans 
+ * model.
+ * <p>
+ * The interpolate(String string, Object model) method takes a string 
+ * such as "My name is ${name}" and a beans model such as a Person and 
+ * uses OGNL to reflect on the object using any OGNL expressions found 
+ * inside ${} markers in the string.  In this case, if the Person model 
+ * had a getName() method, the results of calling that method would be 
+ * substituted for ${name}.  If getName() returned Jonathan, interpolate() 
+ * would then return "My name is Jonathan".
+ * <p>
+ * For full documentation and OGNL examples, see the OGNL web site.
+ * 
  * @author Jonathan Locke
  */
 public final class OgnlVariableInterpolator extends VariableInterpolator
-{ // TODO finalize javadoc
-    // Map of variables
+{
+    /** The model to introspect on with OGNL */
     private final Object model;
 
     /**
@@ -49,7 +62,7 @@ public final class OgnlVariableInterpolator extends VariableInterpolator
      */
     public static String interpolate(final String string, final Object object)
     {
-        // If there's any reason to go to the expense of ognl
+        // If there's any reason to go to the expense of OGNL
         if (string.indexOf("${") != -1)
         {
             // do ognl variable interpolation
@@ -73,8 +86,8 @@ public final class OgnlVariableInterpolator extends VariableInterpolator
         }
         catch (OgnlException e)
         {
-            throw new RuntimeException("Unable to get value of variable '"
-                    + variableName + "' in " + string);
+            throw new RuntimeException
+                ("Unable to get value of variable '" + variableName + "' in " + string);
         }
     }
 }
