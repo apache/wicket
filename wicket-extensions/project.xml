@@ -122,7 +122,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>0.9.18-beta</version>
+      <version>SNAPSHOT</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
