@@ -44,7 +44,7 @@ import wicket.markup.MarkupStream;
  * </pre>
  * and in your HTML file:
  * <pre>
- *  &lt;a href="#" id="wcn-myLink"&gt;click here&lt;/a&gt;
+ *  &lt;a href="#" id="wicket-myLink"&gt;click here&lt;/a&gt;
  * </pre>
  * </p>
  *

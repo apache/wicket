@@ -641,20 +641,20 @@ public final class MarkupParser
                 // Get key
                 final String key = attributeParser.getKey();
 
-                // If the form <tag id = "wcn-value"> is used
-                boolean wcnId = key.equalsIgnoreCase("id") && value.startsWith(componentNameAttribute + "-");
+                // If the form <tag id = "wicket-value"> is used
+                boolean wicketId = key.equalsIgnoreCase("id") && value.startsWith(componentNameAttribute + "-");
 
-                if (wcnId)
+                if (wicketId)
                 {
                     // extract component name from value
                     value = value.substring(componentNameAttribute.length() + 1).trim();
                 }
                 
                 // If user-defined component name attribute is used OR the
-                // standard name ("wcn") is used
-                if (wcnId
+                // standard name ("wicket") is used
+                if (wicketId
                         || key.equalsIgnoreCase(componentNameAttribute)
-                        || key.equalsIgnoreCase(ComponentTag.wicketComponentNameAttribute))
+                        || key.equalsIgnoreCase(ComponentTag.WICKET_COMPONENT_NAME_ATTRIBUTE))
                 {
                     // Set componentName value on tag
                     tag.componentName = value;

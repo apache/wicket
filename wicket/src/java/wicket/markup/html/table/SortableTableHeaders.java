@@ -30,7 +30,7 @@ import wicket.markup.html.HtmlContainer;
 
 /**
  * This is a convinient component to create sorted table headers very easily.
- * It first scans the markup for &lt;th id="wcn-.*" ..&gt> tags and 
+ * It first scans the markup for &lt;th id="wicket-.*" ..&gt> tags and 
  * automatically creates a SortableTableHeader for each.
  * <p>
  * The component can only be used with &lt;thead&gt; tags. 
@@ -82,7 +82,7 @@ public class SortableTableHeaders extends HtmlContainer
         ComponentTag tag = markupStream.getTag();
         checkTag(tag, "thead");
         
-        // find all <th id="wcn-..." childs
+        // find all <th id="wicket-..." childs
         // Loop through the markup in this container
         markupStream.next();
         while (markupStream.hasMore())

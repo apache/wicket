@@ -29,8 +29,8 @@ import wicket.markup.html.HtmlContainer;
  * Whereas HTMLContainer is an inline container like
  * <pre>
  * ...
- * &lt;span id="wcn-xxx"&gt;
- *   &lt;span id="wcn-mylabel"&gt;My label&lt;/span&gt;
+ * &lt;span id="wicket-xxx"&gt;
+ *   &lt;span id="wicket-mylabel"&gt;My label&lt;/span&gt;
  *   ....
  * &lt;/span&gt;
  * ...
@@ -38,11 +38,11 @@ import wicket.markup.html.HtmlContainer;
  * A Panel does have its own associated markup file and the container
  * content is taken from that file, like:
  * <pre>
- * &lt;span id="wcn-mypanel"/&gt;
+ * &lt;span id="wicket-mypanel"/&gt;
  *
  * TestPanel.html
- * &lt;span id="wcn-[panel]"&gt;
- *   &lt;span id="wcn-mylabel"&gt;My label&lt;/span&gt;
+ * &lt;span id="wicket-[panel]"&gt;
+ *   &lt;span id="wicket-mylabel"&gt;My label&lt;/span&gt;
  *   ....
  * &lt;/span&gt;
  * </pre>
