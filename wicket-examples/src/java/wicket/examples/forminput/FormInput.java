@@ -30,7 +30,6 @@ import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.panel.FeedbackPanel;
 
 /**
@@ -109,7 +108,7 @@ public class FormInput extends WicketExamplePage
 
 			add(new ImageButton("saveButton"));
 
-			add(new OnClickLink("resetButtonLink")
+			add(new Link("resetButtonLink")
 			{
 				public void onClick()
 				{

@@ -41,7 +41,7 @@ import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.form.validation.LengthValidator;
 import wicket.markup.html.form.validation.RequiredValidator;
-import wicket.markup.html.link.OnClickLink;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.DetachableModel;
 import wicket.model.IModel;
@@ -119,7 +119,7 @@ public final class EditCDPage extends WicketExamplePage
 			yearField.add(RequiredValidator.getInstance());
 			yearField.add(IntegerValidator.POSITIVE_INT);
 			add(yearField);
-			add(new OnClickLink("cancelButton")
+			add(new Link("cancelButton")
 			{
 				public void onClick()
 				{

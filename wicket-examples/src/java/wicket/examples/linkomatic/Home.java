@@ -25,7 +25,6 @@ import wicket.markup.html.link.ExternalLink;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.ImageMap;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.link.PopupSettings;
 
@@ -59,7 +58,7 @@ public class Home extends WicketExamplePage
 		add(actionLink);
 
 		// Action link counts link clicks on works with onclick handler
-		final OnClickLink actionOnClickLink = new OnClickLink("actionOnClickLink")
+		final Link actionOnClickLink = new Link("actionOnClickLink")
 		{
 			public void onClick()
 			{

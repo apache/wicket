@@ -48,7 +48,7 @@ public class ExportLink extends Link
     }
     
     /**
-     * @see wicket.markup.html.link.AbstractLink#onClick()
+     * @see wicket.markup.html.link.Link#onClick()
      */
     public void onClick()
     {

@@ -38,8 +38,8 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidationFeedback;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
@@ -190,13 +190,13 @@ public class SearchCDPage extends WicketExamplePage
 			PageParameters params = new PageParameters();
 			params.put("id", id);
 			
-			item.add(new BookmarkableOnclickPageLink("title", EditCDPage.class, params)
+			item.add(new BookmarkablePageLink("title", EditCDPage.class, params)
 					.add(new Label("title", cd.getTitle())));
-			item.add(new BookmarkableOnclickPageLink("performers", EditCDPage.class, params)
+			item.add(new BookmarkablePageLink("performers", EditCDPage.class, params)
 					.add(new Label("performers", cd.getPerformers())));
-			item.add(new BookmarkableOnclickPageLink("label", EditCDPage.class, params)
+			item.add(new BookmarkablePageLink("label", EditCDPage.class, params)
 					.add(new Label("label", cd.getLabel())));
-			item.add(new BookmarkableOnclickPageLink("year", EditCDPage.class, params)
+			item.add(new BookmarkablePageLink("year", EditCDPage.class, params)
 					.add(new Label("year", (cd.getYear() != null) ? cd.getYear().toString() : "")));
 
 			// add a delete link for each found record
@@ -311,48 +311,6 @@ public class SearchCDPage extends WicketExamplePage
 			link.add(new Label("pageNumber", String.valueOf(page + 1)));
 			link.add(new Label("pageLabel", "page"));
 			item.add(link);
-		}
-	}
-
-	/**
-	 * BookmarkablePageLink that generates an onclick javascript event handler.
-	 * TODO IMO the onclick eventhandler should be supported by all link components.
-	 */
-	private final class BookmarkableOnclickPageLink extends OnClickLink
-	{
-		/** The page class that this link links to. */
-		private final Class pageClass;
-
-		/** The parameters to pass to the class constructor when instantiated. */
-		private final PageParameters parameters;
-
-		/**
-		 * Construct.
-		 * @param name
-		 * @param pageClass
-		 * @param parameters
-		 */
-		public BookmarkableOnclickPageLink(final String name,
-				final Class pageClass, final PageParameters parameters)
-		{
-			super(name);
-			this.pageClass = pageClass;
-			this.parameters = parameters;
-		}
-
-		/**
-		 * @see wicket.markup.html.link.AbstractLink#getURL()
-		 */
-		protected String getURL()
-		{
-			return getRequestCycle().urlFor(pageClass, parameters);
-		}
-
-		/**
-		 * @see wicket.markup.html.link.AbstractLink#onClick()
-		 */
-		public void onClick()
-		{
 		}
 	}
 }
