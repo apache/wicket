@@ -70,6 +70,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 
 		/** Single instance of default form validation delegate */
 		private static final DefaultFormValidationDelegate instance = new DefaultFormValidationDelegate();
+        
 		/** Log. */
 		private static final Log log = LogFactory.getLog(DefaultFormValidationDelegate.class);
 
