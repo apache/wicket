@@ -95,7 +95,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 		// an onChange scriptlet is added
 		final String url = urlFor(IOnChangeListener.class);
 		
-		// Should the form be resubmitted if the selection changes?
+		// Should a roundtrip be made (have onSelectionChanged called) when the selection changed?
 		if (wantOnSelectionChangedNotifications())
 		{
 			// NOTE: do not encode the url as that would give invalid JavaScript
