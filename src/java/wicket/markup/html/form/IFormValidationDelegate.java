@@ -18,6 +18,8 @@
  */
 package wicket.markup.html.form;
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,7 +35,7 @@ import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public interface IFormValidationDelegate
+public interface IFormValidationDelegate extends Serializable
 { // TODO finalize javadoc
 	/**
 	 * Validates the form and return the collected feeback messages.
