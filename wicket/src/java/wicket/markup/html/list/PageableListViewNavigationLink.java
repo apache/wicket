@@ -59,7 +59,17 @@ public final class PageableListViewNavigationLink extends PageLink
 
 			public Page getPage()
 			{
-				pageableListView.setCurrentPage(pageNumber);
+			    int idx = pageNumber;
+				if (idx < 0)
+				{
+					idx = 0;
+				}
+				else if (idx > (pageableListView.getList().size() - 1))
+				{
+					idx = pageableListView.getList().size() - 1;
+				}
+			    
+				pageableListView.setCurrentPage(idx);
 
 				return pageableListView.getPage();
 			}
