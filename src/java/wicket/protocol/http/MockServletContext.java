@@ -35,6 +35,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.util.value.ValueMap;
 
@@ -55,6 +58,8 @@ import wicket.util.value.ValueMap;
  */
 public class MockServletContext implements ServletContext
 {
+	private static Log log = LogFactory.getLog(MockServletContext.class);
+
 	private Application application;
 
 	private ValueMap attributes = new ValueMap();
@@ -88,7 +93,7 @@ public class MockServletContext implements ServletContext
 			webappRoot = new File(path);
 			if (!webappRoot.exists() || !webappRoot.isDirectory())
 			{
-				System.err.println("WARNING: The webapp root directory is invalid: " + path);
+				log.warn("WARNING: The webapp root directory is invalid: " + path);
 				webappRoot = null;
 			}
 		}
@@ -457,8 +462,7 @@ public class MockServletContext implements ServletContext
 	 */
 	public void log(Exception e, String msg)
 	{
-		System.err.println(msg);
-		e.printStackTrace();
+		log.error(msg, e);
 	}
 
 	/**
@@ -469,7 +473,7 @@ public class MockServletContext implements ServletContext
 	 */
 	public void log(String msg)
 	{
-		System.err.println(msg);
+		log.info(msg);
 	}
 
 	/**
@@ -482,8 +486,7 @@ public class MockServletContext implements ServletContext
 	 */
 	public void log(String msg, Throwable cause)
 	{
-		System.err.println(msg);
-		cause.printStackTrace();
+		log.error(msg, cause);
 	}
 
 	/**
