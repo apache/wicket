@@ -43,7 +43,7 @@ public final class Home extends AuthenticatedHtmlPage
                     final Book book = (Book) cell.getModelObject();
 
                     cell.add(BookDetails.link("details", book,
-                            getLocalizedString("noBookTitle")));
+                            getLocalizer().getString("noBookTitle", this)));
                     cell.add(new Label("author", book));
                     cell.add(cell.moveUpLink("moveUp"));
                     cell.add(cell.moveDownLink("moveDown"));

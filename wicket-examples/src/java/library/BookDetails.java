@@ -18,6 +18,7 @@
  */
 package library;
 
+import java.util.Iterator;
 import com.voicetribe.util.string.StringList;
 import com.voicetribe.util.string.StringValueConversionException;
 import com.voicetribe.wicket.Model;
@@ -26,8 +27,6 @@ import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
 import com.voicetribe.wicket.markup.html.style.Italic;
-
-import java.util.Iterator;
 
 /**
  * A book details page.  Shows information about a book.
@@ -58,9 +57,9 @@ public final class BookDetails extends AuthenticatedHtmlPage
         add(new Label("author", book.getAuthor()));
         add(new Label("fiction", Boolean.toString(book.getFiction())));
         add(BookDetails.link("companion", book.getCompanionBook(),
-                getLocalizedString("noBookTitle")));
+                getLocalizer().getString("noBookTitle", this)));
         add(BookDetails.link("related", book.getRelatedBook(),
-                getLocalizedString("noBookTitle")));
+                getLocalizer().getString("noBookTitle", this)));
 
         String writingStyles;
         final boolean hasStyles = (book.getWritingStyles() != null)
@@ -75,14 +74,14 @@ public final class BookDetails extends AuthenticatedHtmlPage
             {
                 Book.WritingStyle style = (Book.WritingStyle) iterator.next();
 
-                styles.add(getLocalizedString(style.toString()));
+                styles.add(getLocalizer().getString(style.toString(), this));
             }
 
             writingStyles = styles.toString();
         }
         else
         {
-            writingStyles = getLocalizedString("noWritingStyles");
+            writingStyles = getLocalizer().getString("noWritingStyles", this);
         }
 
         final Italic italic = new Italic("italicWritingStyles");

@@ -53,7 +53,7 @@ public final class SignIn extends HtmlPage
                     else
                     {
                         // Form method that will notify feedback panel
-                        return getLocalizedString("couldNotAuthenticate");
+                        return getLocalizer().getString("couldNotAuthenticate", this);
                     }
                 }
             });

@@ -18,15 +18,15 @@
  */
 package pub;
 
+import java.util.Locale;
 import com.voicetribe.util.value.ValueMap;
+import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.Session;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.image.Image;
-
-import java.util.Locale;
 
 /**
  * Demonstrates localization.
@@ -46,7 +46,7 @@ public final class Home extends HtmlPage
 
         map.put("user", "Jonathan");
         add(new Label("salutation",
-                getLocalizedStringWithModel("salutation", map)));
+                getLocalizer().getString("salutation", this, new Model(map))));
     }
 
     /**
