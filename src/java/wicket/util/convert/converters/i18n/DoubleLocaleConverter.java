@@ -27,7 +27,7 @@ import wicket.util.convert.ConversionException;
  *
  * @author Eelco Hillenius
  */
-public class DoubleLocaleConverter extends DecimalLocaleConverter
+public final class DoubleLocaleConverter extends DecimalLocaleConverter
 {
 	/**
 	 * Construct.
@@ -64,13 +64,13 @@ public class DoubleLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
 		{
 			String pattern = getPattern();
 			Number temp = getNumber(value);
 			return (temp instanceof Double) ? (Double)temp : new Double(temp.doubleValue());
 		}
-		if(String.class.isAssignableFrom(c))
+		else if(String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}

@@ -28,7 +28,7 @@ import wicket.util.convert.ConversionException;
  * 
  * @author Eelco Hillenius
  */
-public class ByteLocaleConverter extends DecimalLocaleConverter
+public final class ByteLocaleConverter extends DecimalLocaleConverter
 {
 	/**
 	 * Construct.
@@ -65,12 +65,12 @@ public class ByteLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
 		{
 			Number temp = getNumber(value);
 			return (temp instanceof Byte) ? (Byte)temp : new Byte(temp.byteValue());
 		}
-		if(String.class.isAssignableFrom(c))
+		else if(String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}

@@ -43,7 +43,7 @@ public final class IntegerConverter extends AbstractConverter
 		{
 			return null;
 		}
-		if(Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
 		{
 			if (value instanceof Integer)
 			{
@@ -63,7 +63,7 @@ public final class IntegerConverter extends AbstractConverter
 				throw new ConversionException(e);
 			}
 		}
-		if(String.class.isAssignableFrom(c))
+		else if(String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}

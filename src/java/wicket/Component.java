@@ -36,6 +36,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.response.NullResponse;
+import wicket.util.convert.IConverter;
 import wicket.util.convert.IStringConverter;
 import wicket.util.string.Strings;
 
@@ -394,13 +395,49 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Gets the converter that this component uses.
-	 * @return the converter
+	 * Gets the converter that should be used by this component.
+	 * @return the converter that should be used by this component
 	 */
-	public final IStringConverter getConverter()
+	public IStringConverter getConverter()
 	{
-		// TODO where should the casting check go?
-		return (IStringConverter)getSession().getConverter();
+		final IStringConverter stringConverter;
+		final IConverter converter = (IConverter)getSession().getConverter();
+		if(converter instanceof IStringConverter)
+		{
+			stringConverter = (IStringConverter)converter;
+		}
+		else
+		{
+			// A user provided converter that is not a IStringConverter. Wrap
+			// that converter to act as a IStringConverter
+			stringConverter = new IStringConverter()
+			{
+				/**
+				 * @see wicket.util.convert.IStringConverter#toString(java.lang.Object)
+				 */
+				public String toString(Object value)
+				{
+					return (String)converter.convert(value, String.class);
+				}
+
+				/**
+				 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
+				 */
+				public Object valueOf(String string)
+				{
+					return converter.convert(string, null); // converts to default
+				}
+
+				/**
+				 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
+				 */
+				public Object convert(Object value, Class c)
+				{
+					return converter.convert(value, c);
+				}
+			};
+		}
+		return stringConverter;
 	}
     
     /** 

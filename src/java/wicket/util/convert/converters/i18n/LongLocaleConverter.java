@@ -26,7 +26,7 @@ import wicket.util.convert.ConversionException;
  *
  * @author Eelco Hillenius
  */
-public class LongLocaleConverter extends DecimalLocaleConverter
+public final class LongLocaleConverter extends DecimalLocaleConverter
 {
 	/**
 	 * Construct.
@@ -63,12 +63,12 @@ public class LongLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
 		{
 			Number temp = getNumber(value);
 			return (temp instanceof Long) ? (Long)temp : new Long(temp.longValue());
 		}
-		if(String.class.isAssignableFrom(c))
+		else if(String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}

@@ -34,7 +34,7 @@ import wicket.util.convert.ConversionException;
  *
  * @author Eelco Hillenius
  */
-public class DateLocaleConverter extends AbstractLocaleConverter
+public final class DateLocaleConverter extends AbstractLocaleConverter
 {
 	/** whether to use lenient parsing. */
 	private boolean lenient = false;
@@ -109,11 +109,11 @@ public class DateLocaleConverter extends AbstractLocaleConverter
 		{
 			return null;
 		}
-		if(Date.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Date.class.isAssignableFrom(c))
 		{
 			return parse(value);
 		}
-		if(String.class.isAssignableFrom(c))
+		else if(String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}
