@@ -27,11 +27,11 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.table.Cell;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * Nested table
  * 
  * @author Juergen Donnerstag
  */
@@ -44,10 +44,11 @@ public class ExampleNestedTables extends HtmlPage
      */
     public ExampleNestedTables(final PageParameters parameters)
     {
+        // Test data
         List data = new TestList(6, false);
         
         // straight forward
-        add(new MyTable("rows", data)
+        add(new TableWithAlternatingRowStyle("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
@@ -58,7 +59,9 @@ public class ExampleNestedTables extends HtmlPage
                 tagClass.add(new Label("comments", value.getDescription()));
 
                 List data2 = new TestList(3, false);
-                tagClass.add(new MyTable("rows", data2)
+                
+                // Just create a new table, which will be put into the current cell
+                tagClass.add(new TableWithAlternatingRowStyle("rows", data2)
                 {
                     public boolean populateCell(final Cell cell, final Container tagClass)
                     {

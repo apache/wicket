@@ -33,11 +33,11 @@ import com.voicetribe.wicket.markup.html.table.Cell;
 import displaytag.export.Export;
 import displaytag.export.XmlView;
 import displaytag.utils.ListObject;
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * How to support exporting table data
  * 
  * @author Juergen Donnerstag
  */
@@ -50,10 +50,11 @@ public class ExampleExport extends HtmlPage
      */
     public ExampleExport(final PageParameters parameters)
     {
+        // Test data
         final List data = new TestList(6, false);
         
-        // Add table of existing comments
-        MyTable table = new MyTable("rows", data)
+        // Add the table
+        TableWithAlternatingRowStyle table = new TableWithAlternatingRowStyle("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
@@ -70,11 +71,17 @@ public class ExampleExport extends HtmlPage
         
         add(table);
         
+        // Add the export links
         add(new ExportLink("exportCsv", data));
         add(new ExportLink("exportExcel", data));
         add(new ExportLink("exportXml", data));
     }
     
+    /**
+     * Define action if Link is selected
+     * 
+     * @author Juergen Donnerstag
+     */
     private class ExportLink extends Link
     {
         final private List data;

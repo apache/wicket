@@ -34,12 +34,12 @@ import com.voicetribe.wicket.markup.html.table.SortableTableHeaders;
 
 import displaytag.export.Export;
 import displaytag.export.XmlView;
-import displaytag.utils.MyPagedTable;
+import displaytag.utils.PagedTableWithAlternatingRowStyle;
 import displaytag.utils.ReportList;
 import displaytag.utils.ReportableListObject;
 
 /**
- * Start page for different displaytag pages
+ * Pageable + sortable + exportable + grouping table
  * 
  * @author Juergen Donnerstag
  */
@@ -52,9 +52,10 @@ public class ExamplePse extends HtmlPage
      */
     public ExamplePse(final PageParameters parameters)
     {
+        // Test data
         final ReportList data = new ReportList();
         
-        // And this is with a little bit of magic
+        // Add the sortable header and define how to sort the different columns
         add(new SortableTableHeaders("header", data, "rows", true)
         {
 	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
@@ -73,14 +74,20 @@ public class ExamplePse extends HtmlPage
 	        }
         });
 
-        // Add table of existing comments
-        final MyPagedTable table = new MyPagedTable("rows", data, 10)
+        // Add the table
+        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
         {
+            // Groups: value must be equal
             private ReportableListObject previousValue = null;
+            
+            /**
+             * @see displaytag.utils.PagedTableWithAlternatingRowStyle#populateCell(com.voicetribe.wicket.markup.html.table.Cell, com.voicetribe.wicket.Container)
+             */
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
                 final ReportableListObject value = (ReportableListObject) cell.getModelObject();
 
+                // If first row of table, print anyway
                 if (previousValue == null)
                 {
 	                tagClass.add(new Label("city", value.getCity()));
@@ -95,9 +102,11 @@ public class ExamplePse extends HtmlPage
 	                tagClass.add(new Label("project", equal ? "" : value.getProject()));
                 }
 
+                // Not included in grouping
                 tagClass.add(new Label("hours", new Double(value.getAmount())));
                 tagClass.add(new Label("task", value.getTask()));
                 
+                // remember the current value for the next row
                 previousValue = value;
                 return true;
             }
@@ -105,6 +114,7 @@ public class ExamplePse extends HtmlPage
 
         add(table);
 
+        // Add a table navigator
         add(new PagedTableNavigator("pageTableNav", table));
 
         // Add export links
@@ -113,6 +123,11 @@ public class ExamplePse extends HtmlPage
         add(new ExportLink("exportXml", data));
     }
     
+    /**
+     * Simple extension to Link
+
+     * @author Juergen Donnerstag
+     */
     private class ExportLink extends Link
     {
         final private List data;

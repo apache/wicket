@@ -26,7 +26,7 @@ import com.voicetribe.wicket.markup.html.HtmlPage;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * Two independent sortable + pageable tables on the same page
  * 
  * @author Juergen Donnerstag
  */

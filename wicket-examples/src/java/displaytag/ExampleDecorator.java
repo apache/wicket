@@ -29,11 +29,11 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.table.Cell;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * Examples on how to format table data
  * 
  * @author Juergen Donnerstag
  */
@@ -46,10 +46,11 @@ public class ExampleDecorator extends HtmlPage
      */
     public ExampleDecorator(final PageParameters parameters)
     {
+        // Test data
         List data = new TestList(10, false);
         
-        // Add table of existing comments
-        add(new MyTable("rows", data)
+        // Add table 
+        add(new TableWithAlternatingRowStyle("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
@@ -67,8 +68,8 @@ public class ExampleDecorator extends HtmlPage
             }
         });
         
-        // Add table of existing comments
-        add(new MyTable("rows2", data)
+        // Add table 
+        add(new TableWithAlternatingRowStyle("rows2", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {

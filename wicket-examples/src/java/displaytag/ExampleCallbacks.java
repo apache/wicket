@@ -28,12 +28,12 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
 
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.ReportList;
 import displaytag.utils.ReportableListObject;
 
 /**
- * Start page for different displaytag pages
+ * Table with subtotals calculated and printed into the table on the fly
  * 
  * @author Juergen Donnerstag
  */
@@ -46,8 +46,10 @@ public class ExampleCallbacks extends HtmlPage
      */
     public ExampleCallbacks(final PageParameters parameters)
     {
+        // Test data
         final ReportList data = new ReportList();
 
+        // add the table
         add(new Table("border", new Model(data))
         {
             private int firstCell = 0;
@@ -72,7 +74,13 @@ public class ExampleCallbacks extends HtmlPage
         });
     }
 
-    private class SubtotalTable extends MyTable
+    /**
+     * A subtotal + grouping table prints the tables rows and adds a bar 
+     * and the subtotal at the bottom. 
+     * 
+     * @author Juergen Donnerstag
+     */
+    private class SubtotalTable extends TableWithAlternatingRowStyle
     {
         private ReportableListObject previousValue = null;
         private double subtotal = 0;

@@ -19,21 +19,24 @@
 package displaytag;
 
 import java.util.List;
+
+import linkomatic.Page3;
+
 import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.markup.ComponentTagAttributeModifier;
-import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
+
 import displaytag.utils.ListObject;
 import displaytag.utils.TestList;
-import linkomatic.Page3;
 
 /**
- * Start page for different displaytag pages
+ * Table may not only print value. This example show how to decorate
+ * table values.
  *
  * @author Juergen Donnerstag
  */
@@ -46,34 +49,34 @@ public class ExampleDecoratorLink extends HtmlPage
      */
     public ExampleDecoratorLink(final PageParameters parameters)
     {
+        // Test data
         List data = new TestList(10, false);
 
-        // Add table of existing comments
+        // Add the table
         add(new Table("rows", data)
         {
             public void populateCell(final Cell cell)
             {
                 final ListObject value = (ListObject) cell.getModelObject();
 
-                HtmlContainer table = new HtmlContainer("class");
-                table.addAttributeModifier(new ComponentTagAttributeModifier("class",
+                // alternating row styles
+                cell.addAttributeModifier(new ComponentTagAttributeModifier("class",
                                                           new Model(cell.isEvenIndex() ? "even" : "odd")));
-                cell.add(table);
                 
                 ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", new Integer(value.getId())));
-                table.add(idLink);
+                cell.add(idLink);
 
                 ExternalPageLink emailLink = new ExternalPageLink("mailLink", Page3.class);
                 emailLink.setParameter("action", "sendamail");
                 emailLink.add(new Label("email", value.getEmail()));
-                table.add(emailLink);
+                cell.add(emailLink);
 
                 ExternalPageLink statusLink = new ExternalPageLink("statusLink", Page3.class);
                 statusLink.setParameter("id", value.getId());
                 statusLink.add(new Label("status", value.getStatus()));
-                table.add(statusLink);
+                cell.add(statusLink);
             }
         });
 
@@ -84,29 +87,27 @@ public class ExampleDecoratorLink extends HtmlPage
             {
                 final ListObject value = (ListObject) cell.getModelObject();
 
-                HtmlContainer table = new HtmlContainer("class");
-                table.addAttributeModifier(new ComponentTagAttributeModifier("class",
+                cell.addAttributeModifier(new ComponentTagAttributeModifier("class",
                                                           new Model(cell.isEvenIndex() ? "even" : "odd")));
-                cell.add(table);
                 
                 ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", new Integer(value.getId())));
-                table.add(idLink);
+                cell.add(idLink);
 
-                table.add(new Label("email", value.getEmail()));
+                cell.add(new Label("email", value.getEmail()));
 
-                table.add(
+                cell.add(
                         new ExternalPageLink("view", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "view"));
 
-                table.add(
+                cell.add(
                         new ExternalPageLink("edit", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "edit"));
 
-                table.add(
+                cell.add(
                         new ExternalPageLink("delete", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "delete"));

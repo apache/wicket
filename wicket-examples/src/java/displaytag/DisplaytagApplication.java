@@ -22,7 +22,8 @@ import com.voicetribe.util.time.Duration;
 import com.voicetribe.wicket.WebApplication;
 
 /**
- * HttpApplication class for ExampleNoColumns example.
+ * HttpApplication to support the displaytag examples
+ * 
  * @author Juergen Donnerstag
  */
 public class DisplaytagApplication extends WebApplication

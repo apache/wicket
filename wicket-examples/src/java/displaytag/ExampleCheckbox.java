@@ -29,11 +29,11 @@ import com.voicetribe.wicket.markup.html.form.TextField;
 import com.voicetribe.wicket.markup.html.table.Cell;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * A table with checkboxes and input fields. I'm not sure displaytag can do!
  * 
  * @author Juergen Donnerstag
  */
@@ -46,10 +46,11 @@ public class ExampleCheckbox extends HtmlPage
      */
     public ExampleCheckbox(final PageParameters parameters)
     {
+        // test data
         List data = new TestList(6, false);
         
         // Add table of existing comments
-        add(new MyTable("rows", data)
+        add(new TableWithAlternatingRowStyle("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {

@@ -27,7 +27,7 @@ import com.voicetribe.wicket.markup.html.HtmlPage;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * Show different means of displaying subsets of a table
  * 
  * @author Juergen Donnerstag
  */

@@ -28,11 +28,11 @@ import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.PagedTableNavigator;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyPagedTable;
+import displaytag.utils.PagedTableWithAlternatingRowStyle;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * Table with paging
  * 
  * @author Juergen Donnerstag
  */
@@ -45,10 +45,11 @@ public class ExamplePaging extends HtmlPage
      */
     public ExamplePaging(final PageParameters parameters)
     {
+        // Test data
         final List data = new TestList(60, false);
         
-        // Add table of existing comments
-        final MyPagedTable table = new MyPagedTable("rows", data, 10)
+        // Add pageable table with alternating row styles
+        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {

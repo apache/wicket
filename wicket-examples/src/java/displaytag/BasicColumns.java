@@ -29,11 +29,11 @@ import com.voicetribe.wicket.markup.html.table.Table;
 import com.voicetribe.wicket.markup.html.table.WicketComponentTree;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * Simple table with a few columns
  * 
  * @author Juergen Donnerstag
  */
@@ -46,10 +46,11 @@ public class BasicColumns extends HtmlPage
      */
     public BasicColumns(final PageParameters parameters)
     {
+        // test data
         List data = new TestList(6, false);
         
         // Add table of existing comments
-        final Table table = new MyTable("rows", data)
+        final Table table = new TableWithAlternatingRowStyle("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {

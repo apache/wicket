@@ -30,21 +30,22 @@ import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeader;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeaders;
-import com.voicetribe.wicket.markup.html.table.TableNavigation;
 import com.voicetribe.wicket.markup.html.table.TableNavigationIncrementLink;
 import com.voicetribe.wicket.markup.html.table.TableNavigationLink;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyPagedTable;
+import displaytag.utils.PagedTableWithAlternatingRowStyle;
 
 /**
- * Start page for different displaytag pages
+ * Sortable + pageable table example
  * 
  * @author Juergen Donnerstag
  */
 public class SortablePageableDisplaytagTableComponent extends Panel
 {
+    // Model data
     final private List data;
+
     /**
      * Constructor.
      * 
@@ -54,52 +55,11 @@ public class SortablePageableDisplaytagTableComponent extends Panel
     {
         super(componentName);
         
+        // Get an internal copy of the model data
         this.data = new ArrayList();
         this.data.addAll(data);
-/*        
-        SortableTableHeaderGroup headerGroup = 
-            new SortableTableHeaderGroup(this, data, "rows");
-        
-        add(new SimpleHrefComponent("id", headerGroup)
-        {
-            protected int compareTo(Object o1, Object o2)
-            {
-                return ((ListObject)o1).getId() - ((ListObject)o2).getId();
-            }
-        });
-        
-        add(new SimpleHrefComponent("name", headerGroup)
-        {
-            protected Comparable getObjectToCompare(Object object)
-            {
-                return ((ListObject)object).getName();
-            }
-        });
 
-        add(new SimpleHrefComponent("email", headerGroup)
-        {
-            protected Comparable getObjectToCompare(Object object)
-            {
-                return ((ListObject)object).getEmail();
-            }
-        });
-        
-        add(new SimpleHrefComponent("status", headerGroup)
-        {
-            protected Comparable getObjectToCompare(Object object)
-            {
-                return ((ListObject)object).getStatus();
-            }
-        });
-        
-        add(new SimpleHrefComponent("comment", headerGroup)
-        {
-            protected Comparable getObjectToCompare(Object object)
-            {
-                return ((ListObject)object).getDescription();
-            }
-        });
-*/
+        // Add a sortable header to the table
         add(new SortableTableHeaders("header", data, "rows", true)
         {
 	        protected int compareTo(SortableTableHeader header, Object o1, Object o2)
@@ -136,8 +96,8 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 	        }
         });
 
-        // Add table of existing comments
-        final MyPagedTable table = new MyPagedTable("rows", data, 10)
+        // Add a table 
+        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
@@ -152,12 +112,9 @@ public class SortablePageableDisplaytagTableComponent extends Panel
                 return true;
             }
         };
-
         add(table);
 
-        final TableNavigation tableNavigation = new TableNavigation("navigation", table);
-        add(tableNavigation);
-            
+        // Add a headline
         add(new Label("headline", null)
         {
             protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
@@ -174,7 +131,8 @@ public class SortablePageableDisplaytagTableComponent extends Panel
                 replaceBody(cycle, markupStream, openTag, text);
             }
         });
-        
+
+        // Add some navigation links
         add(new TableNavigationLink("first", table, 0));
         add(new TableNavigationIncrementLink("prev", table, -1));
         add(new TableNavigationIncrementLink("next", table, 1));

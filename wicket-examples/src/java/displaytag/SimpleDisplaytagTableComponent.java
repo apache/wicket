@@ -26,18 +26,15 @@ import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 
 /**
- * Start page for different displaytag pages
+ * Display a simple table
  * 
  * @author Juergen Donnerstag
  */
 public class SimpleDisplaytagTableComponent extends Panel
 {
-    final private List data;
-    final private MyTable table;
-    
     /**
      * Constructor.
      * 
@@ -47,10 +44,8 @@ public class SimpleDisplaytagTableComponent extends Panel
     {
         super(componentName);
         
-        this.data = data;
-        
-        // Add table of existing comments
-        table = new MyTable("rows", data)
+        // Add table with alternating row styles
+        add(new TableWithAlternatingRowStyle("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
@@ -62,9 +57,7 @@ public class SimpleDisplaytagTableComponent extends Panel
                 
                 return true;
             }
-        };
-        
-        add(table);
+        });
     }
 
 }

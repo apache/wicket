@@ -28,19 +28,24 @@ import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
 
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 
 /**
- * This is a convinient component to create sorted table headers very easily.
- * It first scans the markup for &lt;th id="wcn-.*" ..&gt> tags and 
- * automatically create a SimpleHrefComponent for each.
- * <p>
- * The component can only be used with &lt;thead&gt; tags. 
+ * This is a convinient component to dynamically create tables. It takes
+ * the header and the tables data, and the rest is magic. 
  * 
  * @author Juergen Donnerstag
  */
 public class TableGeneratorComponent extends Panel
 {
+    /**
+     * Constructor
+     * 
+     * @param componentName
+     * @param data
+     * @param headers
+     * @param columns
+     */
     public TableGeneratorComponent(final String componentName, final List data, final String[] headers, final String[] columns)
     {
         super(componentName);
@@ -65,6 +70,7 @@ public class TableGeneratorComponent extends Panel
     }
     
     /**
+     * Constructor
      * 
      * @param componentName The component name; must not be null
      * @param data The tables underlying model object list
@@ -77,8 +83,16 @@ public class TableGeneratorComponent extends Panel
         init(data, headers, columns);
     }
 
+    /**
+     * Initialite the Component
+     * 
+     * @param data
+     * @param headers
+     * @param columns
+     */
     private final void init(final List data, final List headers, final List columns)
     {
+        // Add table header
         add(new Table("headers", headers)
         {
             protected void populateCell(Cell cell)
@@ -92,7 +106,8 @@ public class TableGeneratorComponent extends Panel
             }
         });
         
-        add(new MyTable("rows", data)
+        // Add table rows
+        add(new TableWithAlternatingRowStyle("rows", data)
         {
             protected boolean populateCell(final Cell rowCell, final Container tagClass)
             {
@@ -113,12 +128,26 @@ public class TableGeneratorComponent extends Panel
             }
         });
     }
-    
+
+    /**
+     * To be subclassed
+     * 
+     * @param cell
+     * @param header
+     * @return
+     */
     protected boolean populateHeader(final Cell cell, final Object header)
     {
         return false;
     }
     
+    /**
+     * To be subclassed
+     * 
+     * @param cell
+     * @param column
+     * @return
+     */
     protected boolean populateColumn(final Cell cell, final Object column)
     {
         return false;

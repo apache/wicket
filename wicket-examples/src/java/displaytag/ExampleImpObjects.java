@@ -27,11 +27,11 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.table.Cell;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * Show how cell values are generated at runtime
  * 
  * @author Juergen Donnerstag
  */
@@ -44,11 +44,13 @@ public class ExampleImpObjects extends HtmlPage
      */
     public ExampleImpObjects(final PageParameters parameters)
     {
+        // Test data
         List data = new TestList(10, false);
         
         // Add table of existing comments
-        add(new MyTable("rows", data)
+        add(new TableWithAlternatingRowStyle("rows", data)
         {
+            // Row number
             private int i=1;
             
             public boolean populateCell(final Cell cell, final Container tagClass)

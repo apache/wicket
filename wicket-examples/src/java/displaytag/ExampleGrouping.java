@@ -24,12 +24,12 @@ import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.table.Cell;
 
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.ReportList;
 import displaytag.utils.ReportableListObject;
 
 /**
- * Start page for different displaytag pages
+ * A table supporting grouping
  * 
  * @author Juergen Donnerstag
  */
@@ -42,16 +42,20 @@ public class ExampleGrouping extends HtmlPage
      */
     public ExampleGrouping(final PageParameters parameters)
     {
+        // Test data
         ReportList data = new ReportList();
 
         // Add table of existing comments
-        add(new MyTable("rows", data)
+        add(new TableWithAlternatingRowStyle("rows", data)
         {
+            // Remember the value from the previous row
             private ReportableListObject previousValue = null;
+            
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
                 final ReportableListObject value = (ReportableListObject) cell.getModelObject();
 
+                // If first row, print anyway
                 if (previousValue == null)
                 {
 	                tagClass.add(new Label("city", value.getCity()));
@@ -66,9 +70,11 @@ public class ExampleGrouping extends HtmlPage
 	                tagClass.add(new Label("project", equal ? "" : value.getProject()));
                 }
 
+                // These values are not grouped
                 tagClass.add(new Label("hours", new Double(value.getAmount())));
                 tagClass.add(new Label("task", value.getTask()));
                 
+                // Remember current value
                 previousValue = value;
                 return true;
             }

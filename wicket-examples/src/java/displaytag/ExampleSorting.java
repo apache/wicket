@@ -29,11 +29,11 @@ import com.voicetribe.wicket.markup.html.table.SortableTableHeader;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeaders;
 
 import displaytag.utils.ListObject;
-import displaytag.utils.MyTable;
+import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.TestList;
 
 /**
- * Start page for different displaytag pages
+ * A sorted table example
  * 
  * @author Juergen Donnerstag
  */
@@ -46,6 +46,7 @@ public class ExampleSorting extends HtmlPage
      */
     public ExampleSorting(final PageParameters parameters)
     {
+        // Test data
         final List data = new TestList(6, false);
         
 /* This is without magic  
@@ -95,6 +96,9 @@ public class ExampleSorting extends HtmlPage
         // And this is with a little bit of magic
         add(new SortableTableHeaders("header", data, "rows", true)
         {
+            /*
+             * If object does not support equals()
+             */
 	        protected int compareTo(SortableTableHeader header, Object o1, Object o2)
 	        {
 	            if (header.getName().equals("id"))
@@ -105,6 +109,11 @@ public class ExampleSorting extends HtmlPage
 	            return super.compareTo(header, o1, o2);
 	        }
 
+	        /**
+	         * Define how to do sorting
+	         * 
+	         * @see com.voicetribe.wicket.markup.html.table.SortableTableHeaders#getObjectToCompare(com.voicetribe.wicket.markup.html.table.SortableTableHeader, java.lang.Object)
+	         */
 	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
 	        {
 	            final String name = header.getName();
@@ -129,8 +138,8 @@ public class ExampleSorting extends HtmlPage
 	        }
         });
         
-        // Add table of existing comments
-        add(new MyTable("rows", data)
+        // Add table 
+        add(new TableWithAlternatingRowStyle("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
