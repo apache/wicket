@@ -42,7 +42,6 @@
 			</ul>
 		</section>
 		<section name="Latest News">
-			<div class = "dottedbox">
 			<subsection name="January 25, 2005 - 0.9.17-beta released">
 				<p>
 					The Wicket team is proud to present yet another release of the Wicket core
@@ -82,7 +81,6 @@
 					.
 				</p>
 			</subsection>
-			</div>
 			<p>
 				See
 				<a href="News.html">the news archive</a>
