@@ -58,7 +58,7 @@ public class HttpRequestCycle extends RequestCycle
 	 * @param application The application
 	 * @param session The session
 	 * @param request The request
-	 * @param response The wicket.response
+	 * @param response The response
 	 */
 	public HttpRequestCycle(final IApplication application, final HttpSession session,
 			final HttpRequest request, final Response response)
@@ -313,7 +313,7 @@ public class HttpRequestCycle extends RequestCycle
 					// Got component?
 					if (component != null)
 					{
-						// Set the page for the component as the wicket.response page
+						// Set the page for the component as the response page
 						// and expire any
 						// pages in the session cache that are newer than the
 						// given page since

@@ -124,7 +124,7 @@ public class HtmlContainer extends Container
     /**
      * Renders this component.
      * This implementation just calls renderComponent.
-     * @param cycle The wicket.response to write to
+     * @param cycle The response to write to
      */
     protected void handleRender(final RequestCycle cycle)
     {

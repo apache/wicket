@@ -58,7 +58,7 @@ import wicket.util.string.Strings;
  * page that contains it, you can call getPageRelativePath().
  * <p>
  * The primary responsibility of a component is to use its model, which can be set via
- * setModel() and retrieved via getModel() to render a wicket.response in an appropriate
+ * setModel() and retrieved via getModel() to render a response in an appropriate
  * markup language, such as HTML. In addition, form components know how to update their
  * models based on request information.
  * <p>
@@ -67,8 +67,8 @@ import wicket.util.string.Strings;
  * 1. An incoming request is processed by the application class for the protocol in use,
  * for example, HttpApplication. The application class creates Session, Request and
  * Response objects for use by a component in updating is model and rendering a
- * wicket.response. These objects are stored inside a container called RequestCycle, which
- * is a parameter to most of the methods involved in rendering a wicket.response.
+ * response. These objects are stored inside a container called RequestCycle, which
+ * is a parameter to most of the methods involved in rendering a response.
  * <p>
  * 2. If a form has been submitted, the form component's model is updated by a call to
  * FormComponent.updateModel(RequestCycle)
@@ -76,7 +76,7 @@ import wicket.util.string.Strings;
  * 3. If a form has been submitted, the form component's model is validated by a call to
  * FormComponent.validate()
  * <p>
- * 4. A wicket.response page is rendered via render(RequestCycle)
+ * 4. A response page is rendered via render(RequestCycle)
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -626,7 +626,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Performs a render of this component.
-	 * @param cycle The wicket.response to render to
+	 * @param cycle The response to render to
 	 */
 	public void render(final RequestCycle cycle)
 	{
@@ -785,7 +785,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Renders this component.
-	 * @param cycle The wicket.response to write to
+	 * @param cycle The response to write to
 	 */
 	protected abstract void handleRender(final RequestCycle cycle);
 
@@ -846,7 +846,7 @@ public abstract class Component implements Serializable
 	 * method handleComponentTag() is called to allow the component to mutate the start
 	 * tag. The method handleBody() is then called to permit the component to render its
 	 * body.
-	 * @param cycle The wicket.response to write to
+	 * @param cycle The response to write to
 	 * @param markupStream The markup stream
 	 */
 	protected final void renderComponent(final RequestCycle cycle, final MarkupStream markupStream)
@@ -890,10 +890,10 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Writes a simple tag out to the wicket.response stream. Any components that might be
+	 * Writes a simple tag out to the response stream. Any components that might be
 	 * referenced by the tag are ignored. Also undertakes any tag attribute modifications
 	 * if they have been added to the component.
-	 * @param cycle The wicket.response stream
+	 * @param cycle The response stream
 	 * @param tag The tag to write
 	 */
 	protected final void renderTag(final RequestCycle cycle, ComponentTag tag)
@@ -913,9 +913,9 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Writes a simple tag out to the wicket.response stream. Any components that might be
+	 * Writes a simple tag out to the response stream. Any components that might be
 	 * referenced by the tag are ignored.
-	 * @param cycle The wicket.response stream
+	 * @param cycle The response stream
 	 * @param markupStream The markup stream to advance (where the tag came from)
 	 */
 	protected final void renderTag(final RequestCycle cycle, final MarkupStream markupStream)
@@ -924,9 +924,9 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Writes a simple tag out to the wicket.response stream. Any components that might be
+	 * Writes a simple tag out to the response stream. Any components that might be
 	 * referenced by the tag are ignored.
-	 * @param cycle The wicket.response stream
+	 * @param cycle The response stream
 	 * @param markupStream The markup stream to advance (where the tag came from)
 	 * @param tag The tag to write
 	 */
@@ -943,7 +943,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Replaces the body with the given one.
-	 * @param cycle The wicket.response stream
+	 * @param cycle The response stream
 	 * @param markupStream The markup stream to replace the tag body in
 	 * @param tag The tag
 	 * @param body The new markup

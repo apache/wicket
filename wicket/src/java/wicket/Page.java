@@ -169,7 +169,7 @@ public abstract class Page extends Container implements IRedirectListener
 
     /**
      * Performs a render of this component.
-     * @param cycle The wicket.response to render to
+     * @param cycle The response to render to
      */
     public void render(final RequestCycle cycle)
     {
@@ -179,7 +179,7 @@ public abstract class Page extends Container implements IRedirectListener
             super.render(cycle);
 
             // If the application wants component uses checked and 
-            // the wicket.response is not a redirect
+            // the response is not a redirect
             if (getApplicationSettings().getComponentUseCheck()
                     && !cycle.getResponse().isRedirect())
             {
@@ -214,8 +214,8 @@ public abstract class Page extends Container implements IRedirectListener
     }
 
     /**
-     * Renders this container to the given wicket.response object.
-     * @param cycle The wicket.response to write to
+     * Renders this container to the given response object.
+     * @param cycle The response to write to
      */
     protected void handleRender(final RequestCycle cycle)
     {
@@ -234,7 +234,7 @@ public abstract class Page extends Container implements IRedirectListener
     }
 
     /**
-     * Set-up wicket.response header
+     * Set-up response header
      * 
      * @param cycle
      */

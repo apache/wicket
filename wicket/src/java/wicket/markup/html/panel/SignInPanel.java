@@ -139,8 +139,8 @@ public abstract class SignInPanel extends Panel
             	// Else to the Home page
                 if (cycle.continueToOriginalDestination())
                 {
-                	// HTTP redirect wicket.response has been committed. No more data 
-                	// shall be written to the wicket.response.
+                	// HTTP redirect response has been committed. No more data 
+                	// shall be written to the response.
                 	cycle.setPage((Page)null);
                 } 
                 else 

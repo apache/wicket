@@ -27,7 +27,7 @@ import wicket.markup.ComponentTag;
 public abstract class Response
 { // TODO finalize javadoc
     /**
-     * Closes the wicket.response output stream
+     * Closes the response output stream
      */
     public void close()
     {
@@ -55,7 +55,7 @@ public abstract class Response
     }
 
     /**
-     * Set the content type on the wicket.response.
+     * Set the content type on the response.
      * @param mimeType The mime type
      */
     public void setContentType(final String mimeType)
@@ -66,7 +66,7 @@ public abstract class Response
     }
 
     /**
-     * @return True if the redirect method has been called, making this wicket.response a
+     * @return True if the redirect method has been called, making this response a
      *         redirect
      */
     public boolean isRedirect()

@@ -38,8 +38,8 @@ import wicket.util.lang.Classes;
  * protocol. Each HttpApplication has a name that comes from the name of the concrete
  * subclass which is instantiated. It also holds application settings which are typically
  * initialized in the subclass constructor. When GET/POST requests are made via HTTP, a
- * RequestCycle object is created from the request, wicket.response and session objects. The
- * RequestCycle's render() method is called to produce a wicket.response to the HTTP request.
+ * RequestCycle object is created from the request, response and session objects. The
+ * RequestCycle's render() method is called to produce a response to the HTTP request.
  * </p>
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters from
@@ -92,7 +92,7 @@ public abstract class HttpApplication extends HttpServlet implements IApplicatio
     /**
      * Calls doGet with arguments.
      * @param servletRequest Servlet request object
-     * @param servletResponse Servlet wicket.response object
+     * @param servletResponse Servlet response object
      * @see HttpApplication#doGet(HttpServletRequest, HttpServletResponse)
      * @throws ServletException Thrown if something goes wrong during request handling
      * @throws IOException
@@ -106,7 +106,7 @@ public abstract class HttpApplication extends HttpServlet implements IApplicatio
     /**
      * Handles servlet page requests.
      * @param servletRequest Servlet request object
-     * @param servletResponse Servlet wicket.response object
+     * @param servletResponse Servlet response object
      * @throws ServletException Thrown if something goes wrong during request handling
      * @throws IOException
      */

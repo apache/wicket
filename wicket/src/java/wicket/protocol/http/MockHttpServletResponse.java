@@ -36,9 +36,9 @@ import javax.servlet.ServletOutputStream;
 import wicket.util.value.ValueMap;
 
 /**
- * Mock servlet wicket.response. Implements all of the methods from the standard
+ * Mock servlet response. Implements all of the methods from the standard
  * HttpServletResponse class plus helper methods to aid viewing the generated
- * wicket.response.
+ * response.
  * @author Chris Turner
  */
 public class MockHttpServletResponse implements HttpServletResponse
@@ -81,7 +81,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	private static final int MODE_TEXT = 2;
 
 	/**
-	 * Create the wicket.response object.
+	 * Create the response object.
 	 */
 	public MockHttpServletResponse()
 	{
@@ -89,7 +89,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Reset the wicket.response ready for reuse.
+	 * Reset the response ready for reuse.
 	 */
 	public void initialise()
 	{
@@ -127,7 +127,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Add a cookie to the wicket.response.
+	 * Add a cookie to the response.
 	 * @param cookie The cookie to add
 	 */
 	public void addCookie(final Cookie cookie)
@@ -136,7 +136,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Get all of the cookies that have been added to the wicket.response.
+	 * Get all of the cookies that have been added to the response.
 	 * @return The collection of cookies
 	 */
 	public Collection getCookies()
@@ -145,9 +145,9 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Check if the wicket.response contains the given header name.
+	 * Check if the response contains the given header name.
 	 * @param name The name to check
-	 * @return Whether header in wicket.response or not
+	 * @return Whether header in response or not
 	 */
 	public boolean containsHeader(final String name)
 	{
@@ -256,8 +256,8 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Get the wicket.response code for this request.
-	 * @return The wicket.response code
+	 * Get the response code for this request.
+	 * @return The response code
 	 */
 	public int getCode()
 	{
@@ -286,7 +286,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Check whether the wicket.response was redirected or not.
+	 * Check whether the response was redirected or not.
 	 * @return Whether the state was redirected or not
 	 */
 	public boolean isRedirect()
@@ -374,7 +374,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Set the status for this wicket.response.
+	 * Set the status for this response.
 	 * @param status The status
 	 */
 	public void setStatus(final int status)
@@ -383,7 +383,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Set the status for this wicket.response.
+	 * Set the status for this response.
 	 * @param status The status
 	 * @param msg The message
 	 * @deprecated
@@ -403,7 +403,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Get the character encoding of the wicket.response.
+	 * Get the character encoding of the response.
 	 * @return The character encoding
 	 */
 	public String getCharacterEncoding()
@@ -445,7 +445,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Get the print writer for writing text output for this wicket.response.
+	 * Get the print writer for writing text output for this response.
 	 * @return The writer
 	 * @throws IOException Not used
 	 */
@@ -460,7 +460,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Get the text document that was written as part of this wicket.response.
+	 * Get the text document that was written as part of this response.
 	 * @return The document
 	 */
 	public String getDocument()
@@ -548,7 +548,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Set the locale in the wicket.response header.
+	 * Set the locale in the response header.
 	 * @param locale The locale
 	 */
 	public void setLocale(final Locale locale)

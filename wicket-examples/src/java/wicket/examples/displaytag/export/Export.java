@@ -57,10 +57,10 @@ public class Export
     }
 
     /**
-     * Will write the export. The default behavior is to write directly to the wicket.response. If the ResponseOverrideFilter
+     * Will write the export. The default behavior is to write directly to the response. If the ResponseOverrideFilter
      * is configured for this request, will instead write the export content to a StringBuffer in the Request object.
      * @param cycle
-     * @param mimeType mime type to set in the wicket.response
+     * @param mimeType mime type to set in the response
      * @param exportString String
      * @param filename name of the file to be saved. Can be null, if set the content-disposition header will be added.
      * @return int
@@ -70,10 +70,10 @@ public class Export
         HttpResponse response = (HttpResponse)cycle.getResponse();
         HttpServletResponse servletResponse = response.getServletResponse();
 
-        // wicket.response can't be already committed at this time
+        // response can't be already committed at this time
         if (servletResponse.isCommitted())
         {
-            throw new RenderException("HTTP wicket.response already committed. Can not change that any more");
+            throw new RenderException("HTTP response already committed. Can not change that any more");
         }
 
         // if cache is disabled using http header, export will not work.
@@ -102,7 +102,7 @@ public class Export
         }
         catch (Exception e)
         {
-            throw new RenderException("Unable to reset HTTP wicket.response", e);
+            throw new RenderException("Unable to reset HTTP response", e);
         }
 
         response.setContentType(mimeType);

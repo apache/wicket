@@ -33,7 +33,7 @@ import wicket.util.value.ValueMap;
  * overriding the values specified in the markup. The two primary uses
  * of this class are to allow overriding of markup attributes based on business
  * logic and to support dynamic localization. The replacement occurs as the
- * component tag is rendered to the wicket.response.
+ * component tag is rendered to the response.
  * <p>
  * The attribute whose value is to be modified must be given on construction
  * of the instance of this class along with the model containing the value to

@@ -92,7 +92,7 @@ public class PageLink extends Link
      */
     public final void linkClicked(final RequestCycle cycle)
     {
-        // Set page source's page as wicket.response page
+        // Set page source's page as response page
         cycle.setPage(pageLink.getPage());
     }
 
