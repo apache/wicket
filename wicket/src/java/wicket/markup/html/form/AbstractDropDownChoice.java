@@ -52,12 +52,6 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     /** Index value for null choice. */
     public static final int NULL_VALUE = -1;
 
-    static
-    {
-        // allow optional use of the IOnChangeListener interface
-        RequestCycle.registerListenerInterface(IOnChangeListener.class);
-    }
-
     /** The list of values. */
     private List values;
 
@@ -187,17 +181,6 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
     {
         checkTag(tag, "select");
-
-        if (this instanceof IOnChangeListener)
-        {
-            // if a user subclasses this class and implements IOnChangeListener
-            // an onChange scriptlet is added
-            String url = cycle.urlFor(this, IOnChangeListener.class);
-
-            tag.put("onChange", "location.href='"
-                    + url + "&selected=' + this.options[this.selectedIndex].value;");
-        }
-
         super.handleComponentTag(cycle, tag);
     }
 
@@ -258,35 +241,6 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     protected boolean isSelected(Object currentValue)
     {
         return currentValue.equals(getModelObject());
-    }
-
-    /**
-     * called when a selection changed.
-     * @param cycle the request cycle
-     */
-    public final void selectionChanged(RequestCycle cycle)
-    {
-        int index = Integer.parseInt(cycle.getRequest().getParameter("selected"));
-        Object value = getValues().get(index);
-
-        updateModel(cycle);
-        selectionChanged(cycle, value);
-    }
-
-    /**
-     * Template method that can be overriden by clients that implement
-     * IOnChangeListener to be notified by onChange events of a select element.
-     * This method does nothing by default.
-     * 
-     * @param cycle
-     *           the request cycle
-     * @param newSelection
-     *           the newly selected object
-     * @see wicket.markup.html.form.IOnChangeListener#selectionChanged(wicket.RequestCycle,java.lang.Object)
-     */
-    public void selectionChanged(RequestCycle cycle, Object newSelection)
-    {
-        // no nada
     }
 
     /**
