@@ -115,6 +115,15 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 			});
 		}
 	}
+    
+    /**
+	 * Constructs a form with no validation.
+     * @param componentName Name of this form
+	 */
+	public Form(final String componentName)
+	{
+        this(componentName, null);
+	}
 
 	/**
 	 * Constructor that uses the provided {@link IModel}as its model. All
