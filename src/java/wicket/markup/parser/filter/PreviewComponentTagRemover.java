@@ -49,7 +49,7 @@ public class PreviewComponentTagRemover implements IMarkupFilter
     }
 
     /**
-     * @see wicket.markup.parser.filter.IMarkupFilter
+     * @see wicket.markup.parser.IMarkupFilter
      * @return The next MarkupFilter in the processing chain
      */
     public final IMarkupFilter getParent()
@@ -62,7 +62,7 @@ public class PreviewComponentTagRemover implements IMarkupFilter
      * Note that for obvious reasons, nested components are not 
      * allowed.
      * 
-     * @see wicket.util.xml.IMarkupFilter#nextTag()
+     * @see wicket.markup.parser.IMarkupFilter#nextTag()
      * @return The next tag to be processed. Null, if not more tags 
      * 		   are available
      */

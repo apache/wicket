@@ -88,7 +88,7 @@ public class HtmlHandler implements IMarkupFilter
      * may return the MarkupElement unchanged, modified or it remove by
      * asking the parent handler for the next tag.
      * 
-     * @see wicket.util.xml.IMarkupFilter#nextTag()
+     * @see wicket.markup.parser.IMarkupFilter#nextTag()
      * @return Return the next eligible MarkupElement
      */
     public MarkupElement nextTag() throws ParseException
@@ -185,6 +185,7 @@ public class HtmlHandler implements IMarkupFilter
 	/**
 	 * Gets whether this tag does not require a closing tag.
 	 * 
+	 * @param name The tag's name, e.g. a, br, div, etc.
 	 * @return True if this tag does not require a closing tag
 	 */
 	public static boolean requiresCloseTag(final String name)

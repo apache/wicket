@@ -19,7 +19,6 @@
 package wicket.markup.parser;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
@@ -60,7 +59,6 @@ public interface IXmlPullParser extends IMarkupFilter
      * provided does have the correct encoding already. 
      * 
      * @param string The markup to be parsed
-     * @throws ParseException in case of malformed markup
      */
     public abstract void parse(final CharSequence string);
 
@@ -69,7 +67,6 @@ public interface IXmlPullParser extends IMarkupFilter
      * the tags contained, one after another.
      * 
      * @param resource A resource like e.g. a file
-     * @throws ParseException In case of malformed markup
      * @throws IOException Error while reading the resource
      * @throws ResourceNotFoundException Resource not found
      */

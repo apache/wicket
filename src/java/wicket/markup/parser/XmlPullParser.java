@@ -162,10 +162,7 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * Reads and parses markup from a resource such as file.
 	 * 
-	 * @param resource
-	 *           The file
-	 * @return The markup
-	 * @throws ParseException
+	 * @param resource The resource to read and parse 
 	 * @throws IOException
 	 * @throws ResourceNotFoundException
 	 */
@@ -222,8 +219,9 @@ public final class XmlPullParser implements IXmlPullParser
 	 * return all characters read so far. determineEncoding will read-ahead at
 	 * max. the very first line of the markup.
 	 * 
-	 * @param in
-	 *           The markup file
+	 * @param in The markup file
+	 * @param readAheadSize The read ahead buffer available to read the xml 
+	 * 		   encoding information
 	 * @return null, if &lt;?xml ..?&gt; has been found; else all characters read
 	 *         ahead
 	 * @throws IOException
@@ -403,9 +401,9 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * Parses the text between tags. For example, "a href=foo.html".
 	 * 
-	 * @param tagText
-	 *           The text between tags
+	 * @param tagText The text between tags
 	 * @return A new Tag object or null if the tag is invalid
+	 * @throws ParseException
 	 */
 	private XmlTag parseTagText(final String tagText) throws ParseException
 	{

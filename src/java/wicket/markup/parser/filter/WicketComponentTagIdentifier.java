@@ -112,7 +112,7 @@ public class WicketComponentTagIdentifier implements IMarkupFilter
      * Both are subclasses of MarkupElement as well and both maintain a reference
      * to the XmlTag. But no XmlTag is returned.
      * 
-     * @see wicket.util.xml.IMarkupFilter#nextTag()
+     * @see wicket.markup.parser.IMarkupFilter#nextTag()
      * @return The next tag from markup to be processed. If null, no more tags 
      * 		   are available
      */

@@ -81,6 +81,7 @@ public final class MarkupParser
     
     /**
      * Constructor.
+     * @param xmlParser The streaming xml parser to read and parse the markup
      * @param componentNameAttribute The name of the componentName attribute
      * @param wicketNamespace The name of the wicket namespace
      */
@@ -93,6 +94,7 @@ public final class MarkupParser
     
     /**
      * Constructor.
+     * @param xmlParser The streaming xml parser to read and parse the markup
      */
     public MarkupParser(final IXmlPullParser xmlParser)
     {
@@ -100,7 +102,8 @@ public final class MarkupParser
     }
     
     /**
-	 * @see wicket.markup.IMarkupParser#configure(wicket.ApplicationSettings)
+	 * Configure the markup parser based on Wicket application settings
+	 * @param settings Wicket application settings
 	 */
 	public void configure(ApplicationSettings settings)
 	{
@@ -153,7 +156,6 @@ public final class MarkupParser
 
     /**
      * Scans the given markup string and extracts balancing tags.
-     * @param markup The markup
      * @return An immutable list of immutable MarkupElement elements
      * @throws ParseException Thrown if markup is malformed or tags don't balance
      */

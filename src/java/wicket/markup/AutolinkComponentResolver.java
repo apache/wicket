@@ -25,7 +25,6 @@ import wicket.Component;
 import wicket.Container;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.util.value.ValueMap;
 
@@ -51,8 +50,7 @@ public class AutolinkComponentResolver implements IComponentResolver
     /**
      * Automatically creates a BookmarkablePageLink component.
      * 
-     * @see wicket.markup.IComponentResolver#resolve(RequestCycle, MarkupStream, ComponentTag, Container)
-     * @param cycle The current RequestCycle 
+     * @see wicket.markup.IComponentResolver#resolve(Container, MarkupStream, ComponentTag)
      * @param markupStream The current markupStream
      * @param tag The current component tag while parsing the markup
      * @param container The container parsing its markup

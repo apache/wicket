@@ -89,7 +89,7 @@ public class AutolinkHandler implements IMarkupFilter
 	 * return the MarkupElement unchanged, modified or it remove by asking the
 	 * parent handler for the next tag.
 	 * 
-	 * @see wicket.util.xml.IMarkupFilter#nextTag()
+	 * @see wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return Return the next eligible MarkupElement
 	 */
 	public MarkupElement nextTag() throws ParseException
