@@ -95,7 +95,7 @@ public abstract class Component implements Serializable
 {
 	/** True when a component is being auto-added */
 	static final byte FLAG_AUTO = 0x08;
-	
+
 	/** Flag for escaping HTML in model strings */
 	private static final byte FLAG_ESCAPE_MODEL_STRINGS = 0x04;
 
@@ -1019,8 +1019,9 @@ public abstract class Component implements Serializable
 	 */
 	public String toString()
 	{
-		return "[" + getPath() + "." + Classes.name(getClass()) + " isVisible = " + isVisible()
-				+ ", isVersioned = " + isVersioned() + "]";
+		return "[" + getPage().getClass().getName() + " path = " + getPath() + "."
+				+ Classes.name(getClass()) + ", isVisible = " + isVisible() + ", isVersioned = "
+				+ isVersioned() + "]";
 	}
 
 	/**
@@ -1572,18 +1573,19 @@ public abstract class Component implements Serializable
 			{
 				return true;
 			}
-		}		
+		}
 		return false;
 	}
 
 	/**
-	 * @param auto True to put component into auto-add mode
+	 * @param auto
+	 *            True to put component into auto-add mode
 	 */
 	final void setAuto(final boolean auto)
 	{
 		setFlag(FLAG_AUTO, auto);
 	}
-	
+
 	/**
 	 * Detaches all models
 	 */
