@@ -222,6 +222,16 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>SelectTagApplication</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.selecttag.SelectTagApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
     <!-- servlet>
         <servlet-name>Wicket-Appfuse</servlet-name>
         <servlet-class>wicket.examples.appfuse.AppfuseApplication</servlet-class>
@@ -326,6 +336,11 @@
     <servlet-mapping>
         <servlet-name>GroovyApplication</servlet-name>
         <url-pattern>/groovy</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SelectTagApplication</servlet-name>
+        <url-pattern>/selecttag</url-pattern>
     </servlet-mapping>
 
     <!-- servlet-mapping>
