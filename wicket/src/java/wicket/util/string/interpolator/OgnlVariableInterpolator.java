@@ -20,7 +20,6 @@ package wicket.util.string.interpolator;
 
 import ognl.Ognl;
 import ognl.OgnlException;
-import wicket.WicketRuntimeException;
 
 /**
  * Interpolates values into strings that are produced by interpreting 
@@ -87,7 +86,7 @@ public final class OgnlVariableInterpolator extends VariableInterpolator
         }
         catch (OgnlException e)
         {
-            throw new WicketRuntimeException
+            throw new RuntimeException
                 ("Unable to get value of variable '" + variableName + "' in " + string);
         }
     }
