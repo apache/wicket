@@ -3,7 +3,7 @@
 <project>
   <id>wicket-quickstart</id>
   <name>Wicket QuickStart</name>
-  <currentVersion>0.9.15-beta</currentVersion>
+  <currentVersion>0.9.16-beta</currentVersion>
   <package>wicket</package>
   <description><![CDATA[
 	    Quickstart project for the Wicket framework. This project will get you up and running using Jetty as a]]><![CDATA[
@@ -28,12 +28,12 @@
         <wicket.description>The Wicket jar</wicket.description>
       </properties>
     </dependency>
-
     <!--		
             ===================================================================
             == Dependencies for using Wicket container                       ==
             ===================================================================
           -->
+
     <dependency>
       <groupId>dom4j</groupId>
       <artifactId>dom4j</artifactId>
@@ -121,7 +121,6 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
-
     <!--		
             ===================================================================
             == Dependencies for using Jetty servlet container                ==
@@ -215,6 +214,11 @@
       <id>0.9.15-beta</id>
       <name>0.9.15-beta</name>
       <tag>WICKET_R_0_9_15_BETA</tag>
+    </version>
+    <version>
+      <id>0.9.16-beta</id>
+      <name>0.9.16-beta</name>
+      <tag>WICKET_R_0_9_16_BETA</tag>
     </version>
   </versions>
 </project>
