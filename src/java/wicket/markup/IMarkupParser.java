@@ -54,7 +54,7 @@ public interface IMarkupParser
      *   
      * @param remove If true, markup elements will not be forwarded
      */
-    public abstract void setRemoveWicketTagsFromOutput(boolean remove);
+    public abstract void setStripWicketParamTag(boolean remove);
 
     /**
      * Return the encoding used while reading the markup file.

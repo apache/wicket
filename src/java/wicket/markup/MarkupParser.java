@@ -102,7 +102,7 @@ public final class MarkupParser implements IMarkupParser
     private static final Pattern encodingPattern = Pattern.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
 
     /** if true, &lt;wicket:param ..&gt; tags will be removed from markup */
-    private boolean removeWicketParamTags;
+    private boolean stripWicketParamTag;
     
     /**
      * Constructor.
@@ -161,10 +161,9 @@ public final class MarkupParser implements IMarkupParser
      * @param remove If true, &lt;wicket:param ...&gt; markup elements 
      *    will be removed
      */
-    // TODO shall be renamed 
-    public void setRemoveWicketTagsFromOutput(boolean remove)
+    public void setStripWicketParamTag(boolean remove)
     {
-        this.removeWicketParamTags = remove;
+        this.stripWicketParamTag = remove;
     }
     
     /**
@@ -482,7 +481,7 @@ public final class MarkupParser implements IMarkupParser
         // the <wicket:param ..> from output.
         if (hasWicketParamTag == true)
         {
-            validateWicketTag(list);
+            validateWicketTags(list);
         }
 
         // Return an umodifable list of MarkupElements
@@ -497,7 +496,9 @@ public final class MarkupParser implements IMarkupParser
      * @param markupElements
      * @throws ParseException
      */
-    private final void validateWicketTag(final List markupElements)
+    // TODO this one of methods which I'd like to see being moved out of 
+    //      the parser. It has nothing todo with markup parsing.
+    private final void validateWicketTags(final List markupElements)
     	throws ParseException
     {
         // For each ComponentWicketTag found ...
@@ -569,7 +570,7 @@ public final class MarkupParser implements IMarkupParser
 	        tag.attributes = params;
 	        
 	        // Shall the wicket tag be removed from output?
-	        if (removeWicketParamTags == true)
+	        if (stripWicketParamTag == true)
 	        {
 	            // TODO "empty" RawMarkup could also be removed: 
 	            //  like <wicket:param..> being the only tag in the whole line 
@@ -582,7 +583,7 @@ public final class MarkupParser implements IMarkupParser
     }
     
     /**
-     * Removes region enclosed by <wicket:region name=remove> tags.
+     * Removes region enclosed by <wicket:remove> tags.
      * ComponentTag are not allowed within this region for obvious reasons.
      * 
      * @param list The list to process

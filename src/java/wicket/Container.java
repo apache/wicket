@@ -473,8 +473,8 @@ public abstract class Container extends Component
 
 		// Check for required open tag name
 		if (!associatedMarkupStream.atOpenTag("[" + openTagName + "]") &&
-		    !(associatedMarkupStream.atOpenTag("region") 
-		    && openTagName.equalsIgnoreCase(((ComponentWicketTag) associatedMarkupOpenTag).getNameAttribute())))
+		    !(associatedMarkupStream.atOpenTag(openTagName) 
+		            && (associatedMarkupOpenTag instanceof ComponentWicketTag)))
 		{
 		    associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -783,7 +783,7 @@ public abstract class Container extends Component
 		parser.setWicketTagName(settings.getWicketTagName());
 		parser.setStripComments(settings.getStripComments());
 		parser.setCompressWhitespace(settings.getCompressWhitespace());
-		parser.setRemoveWicketTagsFromOutput(settings.getRemoveWicketTagsFromOutput());
+		parser.setStripWicketParamTag(settings.getStripWicketParamTag());
 
 		final Markup markup = parser.read(markupResource);
 
