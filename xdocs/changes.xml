@@ -26,6 +26,10 @@
                 Introduced new ComponentTagAttributeModifier class and associated methods
                 as a direct replacement for HtmlTagModifier and its subclasses.
             </action>
+            <action type="fix" dev="Martijn Dashorst" issue="1072362">
+            	Added reset password flag for PasswordTextField in order to support input
+            	forms without emptying the contents.
+            </action>
 		</release>
 	</body>
 </document>
