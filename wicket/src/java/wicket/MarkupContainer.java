@@ -232,7 +232,7 @@ public abstract class MarkupContainer extends Component
 		{
 			childForName = Collections.EMPTY_MAP;
 		}
-		return childForName.values().iterator();
+		return new ComponentIterator(childForName.values().iterator());
 	}
 
 	/**
@@ -307,6 +307,13 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void removeAll()
 	{
+//		MarkupContainer.java
+//		Undoable undoable = new RemoveAllUndoable(childForName);
+//		
+//		getPage().addUndoable(undoable);
+//		
+//		childForName.clear();
+
 		// Get page for efficiency
 		final Page page = findPage();
 
@@ -968,6 +975,52 @@ public abstract class MarkupContainer extends Component
 			log.debug("Rendering raw markup");
 			getResponse().write(element.toString());
 			markupStream.next();
+		}
+	}
+	
+	private class ComponentIterator implements Iterator
+	{
+		private Iterator iterator;
+		private Component component;
+		
+		/**
+		 * @param iterator 
+		 * 
+		 */
+		public ComponentIterator(Iterator iterator)
+		{
+			this.iterator = iterator;
+		}
+
+		/**
+		 * @see java.util.Iterator#hasNext()
+		 */
+		public boolean hasNext()
+		{
+			return iterator.hasNext();
+		}
+
+		/**
+		 * @see java.util.Iterator#next()
+		 */
+		public Object next()
+		{
+			component = (Component)iterator.next(); 
+			return component;
+		}
+
+		/**
+		 * @see java.util.Iterator#remove()
+		 */
+		public void remove()
+		{
+			iterator.remove();
+			// Notify Page
+			final Page page = findPage();
+			if (page != null)
+			{
+				page.componentRemoved(component);
+			}
 		}
 	}
 }
