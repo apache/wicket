@@ -116,7 +116,7 @@ public class MyTree extends IndentTree
     }
 
 	/**
-	 * @see wicket.markup.html.tree.FlatTree#getNodeLabel(wicket.markup.html.tree.TreeNodeModel)
+	 * @see wicket.markup.html.tree.IndentTree#getNodeLabel(wicket.markup.html.tree.TreeNodeModel)
 	 */
 	protected String getNodeLabel(TreeNodeModel node)
 	{

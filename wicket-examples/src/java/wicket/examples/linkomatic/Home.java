@@ -20,7 +20,6 @@ package wicket.examples.linkomatic;
 
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
@@ -57,11 +56,12 @@ public class Home extends HtmlPage
         // Action link counts link clicks
         final Link actionLink = new Link("actionLink")
         {
-            public void linkClicked(final RequestCycle cycle)
+            public void linkClicked()
             {
                 linkClickCount++;
+                
                 // Redirect back to result to avoid refresh updating the link count
-                cycle.setRedirect(true);
+                getRequestCycle().setRedirect(true);
             }
         };
         actionLink.add(new Label("linkClickCount", this, "linkClickCount"));
@@ -70,11 +70,12 @@ public class Home extends HtmlPage
         // Action link counts link clicks on works with onclick handler
         final OnClickLink actionOnClickLink = new OnClickLink("actionOnClickLink")
         {
-            public void linkClicked(final RequestCycle cycle)
+            public void linkClicked()
             {
                 onClickLinkClickCount++;
+                
                 // Redirect back to result to avoid refresh updating the link count
-                cycle.setRedirect(true);
+                getRequestCycle().setRedirect(true);
             }
         };
 
@@ -173,4 +174,4 @@ public class Home extends HtmlPage
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

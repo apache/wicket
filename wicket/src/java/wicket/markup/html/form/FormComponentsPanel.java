@@ -63,17 +63,16 @@ public abstract class FormComponentsPanel extends FormComponent
 
 	/**
 	 * Updates all registered children that are form components.
-	 * @param cycle the request cycle
-	 * @see wicket.markup.html.form.FormComponent#updateModel(wicket.RequestCycle)
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void updateModel(final RequestCycle cycle)
+	public void updateModel()
 	{
         visitChildren(FormComponent.class, new IVisitor()
         {
             public Object component(final Component component)
             {
                 final FormComponent formComponent = (FormComponent)component;
-                formComponent.updateModel(cycle);
+                formComponent.updateModel();
                 return CONTINUE_TRAVERSAL;
             }
         });

@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
@@ -32,7 +31,6 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
-
 
 /**
  * A simple "guest book" example that allows visitors to the page to add a comment
@@ -94,9 +92,8 @@ public class Home extends HtmlPage
 
         /**
          * Show the resulting valid edit
-         * @param cycle The request cycle
          */
-        public final void handleSubmit(final RequestCycle cycle)
+        public final void handleSubmit()
         {
             // Construct a copy of the edited comment
             final Comment newComment = new Comment(comment);
@@ -117,4 +114,4 @@ public class Home extends HtmlPage
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

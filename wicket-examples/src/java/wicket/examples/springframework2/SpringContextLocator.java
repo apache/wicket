@@ -43,7 +43,10 @@ public class SpringContextLocator
      */
     private javax.servlet.http.HttpSession httpSession = null;
 
-    /** Creates a new SpringContextLocator */
+    /** 
+     * Creates a new SpringContextLocator 
+     * @param session
+     */
     protected SpringContextLocator(HttpSession session)
     {
         super();
@@ -61,7 +64,10 @@ public class SpringContextLocator
                 .getApplicationContext(cycle);
     }
 
-    /** Creates a new SpringContextLocator */
+    /** 
+     * Creates a new SpringContextLocator 
+     * @param cycle
+     */
     protected SpringContextLocator(RequestCycle cycle)
     {
         super();
@@ -99,6 +105,8 @@ public class SpringContextLocator
     /**
      * This method always trie to get the WebApplicationContext set by the
      * ContextLoaderListener of Spring otherwise fails.
+     * @param session
+     * @return
      * 
      * @see org.springframework.web.context.support.WebApplicationContextUtils
      */
@@ -114,9 +122,11 @@ public class SpringContextLocator
 
     /**
      * This method first tries to get the WebApplicationContext set by the
-     * Spring {@link DispatcherServlet}from the HttpServletRequest. If this
-     * fails, the context is searched in the ServletContext probably set by
-     * Spring's ContextLoaderListener
+     * Spring {@link org.springframework.web.servlet.DispatcherServlet} from 
+     * the HttpServletRequest. If this fails, the context is searched in the 
+     * ServletContext probably set by Spring's ContextLoaderListener
+     * @param cycle
+     * @return
      * 
      * @see org.springframework.web.servlet.support.RequestContextUtils
      */

@@ -162,9 +162,8 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 
     /**
      * Implemented by subclasses to deal with form submits.
-     * @param cycle The request cycle
      */
-    public abstract void handleSubmit(RequestCycle cycle);
+    public abstract void handleSubmit();
 
     /**
      * Sets error messages for form. First all childs (form components) are asked to
@@ -207,51 +206,49 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 
     /**
      * Handles form submissions.
-     * @param cycle The request cycle
      */
-    public final void formSubmitted(final RequestCycle cycle)
+    public final void formSubmitted()
     {
         // Redirect back to result to avoid postback warnings. But we turn
         // redirecting on as the first thing because the user's handleSubmit
         // implementation may wish to redirect somewhere else. In that case,
         // they can simply call setRedirect(false) in handleSubmit.
-        cycle.setRedirect(true);
+        getRequestCycle().setRedirect(true);
 
         // Validate model
         final FeedbackMessages messages = validate();
 
         // Update model using form data
-        updateFormComponentModels(cycle);
+        updateFormComponentModels();
 
-        // persist FormComponents if requested
-        persistFormComponentData(cycle);
+        // Persist FormComponents if requested
+        persistFormComponentData();
 
         if (messages.hasErrorMessages())
         {
-            // handle any validation error
+            // Handle any validation error
             handleErrors(messages.getErrorMessages());
         }
         else
         {
-            handleSubmit(cycle);
+            handleSubmit();
         }
     }
 
     /**
      * Update the model of all form components.
-     * @param cycle The request cycle
-     * @see wicket.markup.html.form.FormComponent#updateModel(wicket.RequestCycle)
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    private void updateFormComponentModels(final RequestCycle cycle)
+    private void updateFormComponentModels()
     {
         visitChildren(FormComponent.class, new IVisitor()
         {
             public Object component(final Component component)
             {
                 // Update model of form component
-                final FormComponent formComponent = (FormComponent) component;
+                final FormComponent formComponent = (FormComponent)component;
 
-                formComponent.updateModel(cycle);
+                formComponent.updateModel();
 
                 return CONTINUE_TRAVERSAL;
             }
@@ -270,11 +267,9 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
     
     /**
      * Gets the form component persistence manager; it is lazy loaded.
-     * @param cycle the request cycle
      * @return the form component persistence manager
      */
-    private IFormComponentPersistenceManager getFormComponentPersistenceManager(
-            final RequestCycle cycle) 
+    private IFormComponentPersistenceManager getFormComponentPersistenceManager() 
     {
     	if (persister == null) 
     	{
@@ -298,18 +293,17 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      * to the FormComponent automatically when the page is visited by the 
      * user next time. 
      * 
-     * @param cycle The request cycle
-     * @see wicket.markup.html.form.FormComponent#updateModel(wicket.RequestCycle)
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    private void persistFormComponentData(final RequestCycle cycle)
+    private void persistFormComponentData()
     {
         // Cannot add cookies to request cycle unless it accepts them
         // We could conceivably be HTML over some other protocol!
-        if (cycle instanceof HttpRequestCycle)
+        if (getRequestCycle() instanceof HttpRequestCycle)
         {
             // The persistence manager responsible to persist and retrieve FormComponent data
             final IFormComponentPersistenceManager persister =
-                getFormComponentPersistenceManager(cycle);
+                getFormComponentPersistenceManager();
 
             // Search for FormComponent children. Ignore all other
             visitChildren(FormComponent.ICookieValue.class, new IVisitor()
@@ -343,10 +337,8 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      * and assign the values to the FormComponent. Thus initializing them.
      * NOTE: THIS METHOD IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY
      * FRAMEWORK CLIENTS. IT MAY BE REMOVED IN THE FUTURE.
-     * 
-     * @param cycle the request cycle
      */
-    final public void setFormComponentValuesFromPersister(final RequestCycle cycle)
+    final public void setFormComponentValuesFromPersister()
     {
 		// Visit all FormComponent contained in the page
         visitChildren(FormComponent.class, new Component.IVisitor()
@@ -366,7 +358,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
                     // The persistence manager responsible to persist and retrieve
                     // FormComponent data
                     final IFormComponentPersistenceManager persister =
-                        getFormComponentPersistenceManager(cycle);
+                        getFormComponentPersistenceManager();
 
                     // Retrieve persisted value
                     final String persistedValue =
@@ -374,7 +366,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
                     if (persistedValue != null)
                     {
                         // Assign the retrieved/persisted value to the component
-                        ((FormComponent.ICookieValue) component).setCookieValue(persistedValue);
+                        ((FormComponent.ICookieValue)component).setCookieValue(persistedValue);
                     }
                 }
                 return CONTINUE_TRAVERSAL;
@@ -386,18 +378,16 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * Removes already persisted data for all FormComponent childs and disable
 	 * persistence for the same components. 
 	 *
-	 * @see Page#removePersistedFormData(RequestCycle, Class, boolean)
+	 * @see Page#removePersistedFormData(Class, boolean)
 	 *  
-	 * @param cycle Current RequestCycle (may belong to another page though)
 	 * @param disablePersistence if true, disable persistence for all
 	 * FormComponents on that page. If false, it will remain unchanged. 
 	 */
-	public void removePersistedFormComponentData(
-	        final RequestCycle cycle, final boolean disablePersistence)
+	public void removePersistedFormComponentData(final boolean disablePersistence)
 	{
 		// The persistence manager responsible to persist and retrieve FormComponent data
     	final IFormComponentPersistenceManager persister =
-    	    getFormComponentPersistenceManager(cycle);
+    	    getFormComponentPersistenceManager();
 
 		// Search for FormComponents like TextField etc.
 		visitChildren(FormComponent.class, new IVisitor()

@@ -27,7 +27,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
@@ -138,7 +137,7 @@ public class UploadPage extends HtmlPage
             listItem.add(new Label("file", fileName));
             listItem.add(new Link("delete") {
                 
-                public void linkClicked(RequestCycle cycle)
+                public void linkClicked()
                 {
                     File toDelete = new File(tempDir, fileName);
                     log.info("delete " + toDelete);

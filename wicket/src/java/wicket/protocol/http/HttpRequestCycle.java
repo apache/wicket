@@ -149,40 +149,55 @@ public class HttpRequestCycle extends RequestCycle
 	 */
 	protected void handleRender()
 	{
-		// Dispatch to component listener or handle as bookmarkable page 
-        // or home page
+        // Serialize renderings on the session object so that only one page
+        // can be rendered at a time for a given session.
 		synchronized (session)
 		{
-			if (callComponentListener() || bookmarkablePage() || homePage())
-			{
-				// Get page set by handler
-				Page page = getPage();
-                
-				// Is there a page to render?
-				if (page != null)
-				{
-					// Should page be redirected to?
-					if (getRedirect())
-					{
-						// redirect to the page
-						redirectToPage(page);
-					}
-					else
-					{
-						// render the page
-						page.render(this);
-					}
-				}
-			}
-			else 
-            {
-                // Try to respond with static content
-                if (!renderStaticContent())
+            // Set this request cycle as the active request cycle for the 
+            // session for easy access by the page being rendered and any
+            // components on that page
+            session.setRequestCycle(this);
+            
+            try
+            {            
+                // Try different methods of parsing and dispatching the request
+    			if (callComponentListener() || bookmarkablePage() || homePage())
     			{
-                    // No static content could be found
-                    response.write("<pre>Invalid request: " + request + "</pre>");
-                }
-			}
+    				// Get page set by handler
+    				final Page page = getPage();
+                    
+    				// Is there a page to render?
+    				if (page != null)
+    				{
+    					// Should page be redirected to?
+    					if (getRedirect())
+    					{
+    						// redirect to the page
+    						redirectToPage(page);
+    					}
+    					else
+    					{
+    						// render the page
+    						page.render(this);
+    					}
+    				}
+    			}
+    			else 
+                {
+                    // Try to respond with static content
+                    if (!renderStaticContent())
+        			{
+                        // No static content could be found
+                        response.write("<pre>Invalid request: " + request + "</pre>");
+                    }
+    			}
+            }
+            finally
+            {
+                // Set the active request cycle back to null since we are 
+                // done rendering the requested page
+                session.setRequestCycle(null);
+            }
 		}
 	}
 
@@ -211,17 +226,13 @@ public class HttpRequestCycle extends RequestCycle
 	 */
 	final void setFormComponentValuesFromCookies(final Page page)
 	{
-		// May be there is some other means I don't know. But I need access
-		// to 'this' from inside the anonymous inner class.
-		final RequestCycle cycle = this;
-
 		// Visit all Forms contained in the page
 		page.visitChildren(Form.class, new Component.IVisitor()
 		{
 			// For each FormComponent found on the Page (not Form)
 			public Object component(final Component component)
 			{
-				((Form)component).setFormComponentValuesFromPersister(cycle);
+				((Form)component).setFormComponentValuesFromPersister();
 				return CONTINUE_TRAVERSAL;
 			}
 		});
@@ -328,7 +339,7 @@ public class HttpRequestCycle extends RequestCycle
 						try
 						{
 							// Invoke the interface method on the component
-							method.invoke(component, new Object[] {this});
+							method.invoke(component, new Object[] {});
 						}
 						catch (IllegalAccessException e)
 						{

@@ -24,7 +24,6 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.html.link.Link;
 
-
 /**
  * Define action if Link is selected
  * 
@@ -42,8 +41,10 @@ public class ExportLink extends Link
         this.exportView = exportView;
     }
     
-    public void linkClicked(final RequestCycle cycle)
+    public void linkClicked()
     {
+        final RequestCycle cycle = getRequestCycle();
+        
         new Export().doExport(cycle, exportView, data);
         
         // rendering completed

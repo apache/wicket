@@ -171,9 +171,9 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     }
 
     /**
-     * @see wicket.markup.html.form.FormComponent#updateModel(wicket.RequestCycle)
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    public abstract void updateModel(final RequestCycle cycle);
+    public abstract void updateModel();
 
     /**
      * @see wicket.Component#handleComponentTag(RequestCycle, wicket.markup.ComponentTag)

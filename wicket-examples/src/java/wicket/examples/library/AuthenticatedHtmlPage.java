@@ -20,7 +20,6 @@ package wicket.examples.library;
 
 import wicket.Component;
 import wicket.Container;
-import wicket.RequestCycle;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.border.Border;
 
@@ -92,12 +91,12 @@ public class AuthenticatedHtmlPage extends HtmlPage
     }
 
     /**
-     * @see wicket.Page#checkAccess(wicket.RequestCycle)
+     * @see wicket.Page#checkAccess()
      */
-    protected boolean checkAccess(RequestCycle cycle)
+    protected boolean checkAccess()
     {
         // Is user signed in?
-        if (Authenticator.forSession(cycle.getSession()).isSignedIn())
+        if (Authenticator.forSession(getSession()).isSignedIn())
         {
             // okay to proceed
             return true;
@@ -105,11 +104,11 @@ public class AuthenticatedHtmlPage extends HtmlPage
         else
         {
             // Force sign in
-            cycle.redirectToInterceptPage(SignIn.class);
+            getRequestCycle().redirectToInterceptPage(SignIn.class);
 
             return false;
         }
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

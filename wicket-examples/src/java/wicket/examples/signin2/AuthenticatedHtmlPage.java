@@ -31,10 +31,11 @@ import wicket.markup.html.HtmlPage;
 public class AuthenticatedHtmlPage extends HtmlPage
 {
     /**
-     * @see wicket.Page#checkAccess(wicket.RequestCycle)
+     * @see wicket.Page#checkAccess()
      */
-    protected boolean checkAccess(RequestCycle cycle)
+    protected boolean checkAccess()
     {
+        final RequestCycle cycle = getRequestCycle();
         boolean signedIn = cycle.getSession().getProperty("wicket.examples.signin2.user") != null;
         if (!signedIn)
         {
@@ -44,4 +45,4 @@ public class AuthenticatedHtmlPage extends HtmlPage
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

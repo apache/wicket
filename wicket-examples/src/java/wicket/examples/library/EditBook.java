@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.Page;
-import wicket.RequestCycle;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -158,14 +157,13 @@ public final class EditBook extends AuthenticatedHtmlPage
 
         /**
          * Show the resulting valid edit
-         * @param cycle The request cycle
          */
-        public final void handleSubmit(final RequestCycle cycle)
+        public final void handleSubmit()
         {
             // Go to details page for book
-            BookDetails.setPage(cycle, book);
+            BookDetails.setPage(getRequestCycle(), book);
         }
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

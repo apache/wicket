@@ -99,20 +99,18 @@ public abstract class AbstractTreeNodeLink extends AbstractLink
     /**
      * Called when a link is clicked.
      * @see ILinkListener
-     * @param cycle The cycle object
      */
-    public final void linkClicked(final RequestCycle cycle)
+    public final void linkClicked()
     {
-        linkClicked(cycle, getNode());
+        linkClicked(getNode());
     }
 
     /**
      * Called when a link is clicked.
      * @see ILinkListener
-     * @param cycle The cycle object
      * @param node the node model
      */
-    public void linkClicked(RequestCycle cycle, TreeNodeModel node)
+    public void linkClicked(TreeNodeModel node)
     {
         TreeStateCache state = tree.getTreeState();
         // note: get the - possibly wrapped - user object from the tree node; if we would

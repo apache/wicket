@@ -140,11 +140,11 @@ public final class PasswordTextField extends FormComponent implements FormCompon
     }
 
     /**
-     * @param cycle The request cycle
+     * @see FormComponent#updateModel()
      */
-    public void updateModel(final RequestCycle cycle)
+    public void updateModel()
     {
-        setModelObject(getRequestString(cycle));
+        setModelObject(getRequestString());
     }
 
     /**

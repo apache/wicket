@@ -55,7 +55,7 @@ public final class ValidationErrorMessage extends FeedbackMessage
         final Component reporter = getReporter();
         if (reporter instanceof FormComponent)
         {
-            return ((FormComponent)getReporter()).getStringValue();
+            return ((FormComponent)getReporter()).getRequestString();
         }
         return null;
     }

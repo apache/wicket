@@ -24,6 +24,9 @@ import java.security.spec.*;
 import javax.crypto.spec.*;
 import javax.crypto.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -37,6 +40,9 @@ import sun.misc.BASE64Encoder;
  */
 public class Crypt implements ICrypt
 {
+    /** Log. */
+    private static Log log = LogFactory.getLog(Crypt.class);
+
     /** Name of encryption method */
     private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
     
@@ -103,23 +109,16 @@ public class Crypt implements ICrypt
      * @param input byte array to be crypted
      * @param mode crypt mode
      * @return the input crypted. Null in case of an error
+     * @throws GeneralSecurityException
      */
-    private final byte[] crypt(final byte[] input, final int mode)
+    private final byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException 
     {
         byte[] result = null;
-        try
-        {
             SecretKey key = generateKey();
             PBEParameterSpec spec = new PBEParameterSpec(salt, count);
             Cipher ciph = Cipher.getInstance(CRYPT_METHOD);
             ciph.init(mode, key, spec);
             result = ciph.doFinal(input);
-        } 
-        catch (Exception e)
-        {
-            return null;
-        }
-        
         return result;
     }
 
@@ -128,8 +127,9 @@ public class Crypt implements ICrypt
      * 
      * @param plainText text to encrypt
      * @return the string encrypted
+     * @throws GeneralSecurityException
      */
-    private final byte[] encryptStringToByteArray(final String plainText)
+    private final byte[] encryptStringToByteArray(final String plainText) throws GeneralSecurityException
     {
         return crypt(plainText.getBytes(), Cipher.ENCRYPT_MODE);
     }
@@ -142,28 +142,41 @@ public class Crypt implements ICrypt
      */
     public final String encryptString(final String plainText)
     {
-        byte[] cipherText = encryptStringToByteArray(plainText);
-        return new BASE64Encoder().encode(cipherText);
+        try
+        {
+            byte[] cipherText = encryptStringToByteArray(plainText);
+            return new BASE64Encoder().encode(cipherText);
+        }
+        catch (GeneralSecurityException e)
+        {
+            log.error("Unable to encrypt text '" + plainText + "'", e);
+            return null;
+        }
     }
 
     /**
      * Decrypts a String into a byte array.
      * 
-     * @param plainText text to decrypt
+     * @param encrypted text to decrypt
      * @return the decrypted text
      */
-    private final byte[] decryptStringToByteArray(final String plainText)
+    private final byte[] decryptStringToByteArray(final String encrypted)
     {
         final byte[] plainBytes;
         try
         {
-            plainBytes = new BASE64Decoder().decodeBuffer(plainText);
+            plainBytes = new BASE64Decoder().decodeBuffer(encrypted);
+            return crypt(plainBytes, Cipher.DECRYPT_MODE);
         }
-        catch (IOException ex) 
+        catch (IOException e) 
         {
-            throw new RuntimeException(ex.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
-        return crypt(plainBytes, Cipher.DECRYPT_MODE);
+        catch (GeneralSecurityException e)
+        {
+            log.error("Unable to decrypt text '" + encrypted + "'", e);
+            return null;
+        }
     }
 
     /**
@@ -178,4 +191,3 @@ public class Crypt implements ICrypt
     }
 }
 
-////////////////////////////////// END OF FILE //////////////////////////

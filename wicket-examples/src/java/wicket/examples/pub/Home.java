@@ -72,19 +72,19 @@ public final class Home extends HtmlPage
 
         // add a couple of links to be able to play around with the Locales
         add(new Link("goCanadian"){
-            public void linkClicked(RequestCycle cycle)
+            public void linkClicked()
             {
                 currentLocale = Locale.CANADA;
             }
         });
         add(new Link("goUS"){
-            public void linkClicked(RequestCycle cycle)
+            public void linkClicked()
             {
                 currentLocale = Locale.US;
             }
         });
         add(new Link("goDutch"){
-            public void linkClicked(RequestCycle cycle)
+            public void linkClicked()
             {
                 currentLocale = new Locale("nl", "NL");
             }

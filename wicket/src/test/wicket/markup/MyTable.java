@@ -26,7 +26,6 @@ import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
 import wicket.model.Model;
 
-
 /**
  * @author Juergen Donnerstag
  */

@@ -29,7 +29,6 @@ import wicket.model.IModel;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringList;
 
-
 /**
  * An html form component knows how to validate itself. Validators that implement
  * IValidator can be added to the component. They will be evaluated in the order they were
@@ -158,9 +157,8 @@ public abstract class FormComponent extends HtmlContainer
 
     /**
      * Implemented by form component subclass to update the form component's model.
-     * @param cycle The request cycle
      */
-    public abstract void updateModel(final RequestCycle cycle);
+    public abstract void updateModel();
 
     /**
      * Validates this component and returns an optional message. If a message
@@ -174,15 +172,6 @@ public abstract class FormComponent extends HtmlContainer
         return validator.validate(this);
     }
     
-    /**
-     * Gets the input value from the request for this component as a String.
-     * @return Gets the input value from the request for this component as a String
-     */
-    public final String getStringValue()
-    {
-        return getRequestString(RequestCycle.get());
-    }
-
     /**
      * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
      */
@@ -211,7 +200,7 @@ public abstract class FormComponent extends HtmlContainer
             if (this.validator instanceof ValidatorList)
             {
                 // Already have a list. Just add new validator to list
-                ((ValidatorList) this.validator).add(validator);
+                ((ValidatorList)this.validator).add(validator);
             }
             else
             {
@@ -287,7 +276,7 @@ public abstract class FormComponent extends HtmlContainer
 
             while (current.right instanceof ValidatorList)
             {
-                current = (ValidatorList) current.right;
+                current = (ValidatorList)current.right;
             }
 
             current.right = new ValidatorList(current.right, validator);
@@ -327,7 +316,7 @@ public abstract class FormComponent extends HtmlContainer
 
                 if (current.right instanceof ValidatorList)
                 {
-                    current = (ValidatorList) current.right;
+                    current = (ValidatorList)current.right;
                 }
                 else
                 {

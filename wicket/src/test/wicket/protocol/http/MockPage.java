@@ -19,7 +19,6 @@
 package wicket.protocol.http;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -45,11 +44,11 @@ public class MockPage extends HtmlPage {
 			/** Serial Version ID */
 			private static final long serialVersionUID = 6609669501359176769L;
 
-			public void linkClicked(final RequestCycle cycle) {
+			public void linkClicked() {
                 linkClickCount++;
 
                 // Redirect back to result to avoid refresh updating the link count
-                cycle.setRedirect(true);
+                getRequestCycle().setRedirect(true);
             }
         };
         actionLink.add(new Label("linkClickCount", this, "linkClickCount"));

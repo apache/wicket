@@ -19,7 +19,6 @@
 package wicket.examples.signin2;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
 
 /**
@@ -35,16 +34,9 @@ public class Logout extends AuthenticatedHtmlPage
     public Logout(final PageParameters parameters)
     {
         add(new NavigationPanel("mainNavigation", "Signin example"));
-    }
-    
-	/**
-	 * @see wicket.Page#checkAccess(wicket.RequestCycle)
-	 */
-	protected boolean checkAccess(RequestCycle cycle) 
-	{
-	    SignIn2.logout(cycle);
-		return true;
-	}
+        
+        getSession().invalidate();
+    }    
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

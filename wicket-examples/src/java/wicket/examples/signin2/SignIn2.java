@@ -19,10 +19,7 @@
 package wicket.examples.signin2;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.markup.html.panel.SignInPanel;
-
-
 
 /**
  * Simple example of a sign in page. It extends SignInPage, a
@@ -41,13 +38,13 @@ public final class SignIn2 extends SignInPage
     {
         super(new SignIn2Panel("signInPanel")
         {
-            public String signIn(RequestCycle cycle, String username, String password)
+            public String signIn(String username, String password)
             {
                 // Sign the user in
                 if (username.equals("jonathan") && password.equals("password"))
                 {
-                    // successfully signed in.
-                    cycle.getSession().setProperty("wicket.examples.signin2.user", "jonathan");
+                    // Successfully signed in.
+                    getSession().setProperty("wicket.examples.signin2.user", "jonathan");
                     
                     // Depending on user's choice, remember me or not
                     this.setPersistent(this.getRememberMe());
@@ -62,15 +59,14 @@ public final class SignIn2 extends SignInPage
 	
 	/**
 	 * 
-	 * @param cycle
 	 */
-	public static void logout(final RequestCycle cycle)
+	public void logout()
 	{
-	    SignInPage.logout(cycle);
+        // Invalidate session
+        getSession().invalidate();
 		
 		// Remove persisted user data
-		new SignIn2(null).removePersistedFormData(cycle, SignInPanel.SignInForm.class, true);
+		removePersistedFormData(SignInPanel.SignInForm.class, true);
 	}
 }
 
-///////////////////////////////// End of File /////////////////////////////////

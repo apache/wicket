@@ -18,13 +18,9 @@
  */
 package wicket.examples.signin2;
 
-import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.panel.SignInPanel;
-import wicket.protocol.http.HttpSession;
-
-
 
 /**
  * Abstract base class for a typical login page
@@ -49,39 +45,22 @@ public abstract class SignInPage extends HtmlPage
     }
    
 	/**
-	 * @see wicket.Page#checkAccess(wicket.RequestCycle)
+	 * @see wicket.Page#checkAccess()
 	 */
-	protected boolean checkAccess(RequestCycle cycle) {
+	protected boolean checkAccess() 
+    {
         // Log the user in
-        if (null == signInPanel.signIn(cycle, signInPanel.getUsername(), signInPanel.getPassword()))
+        if (null == signInPanel.signIn(signInPanel.getUsername(), signInPanel.getPassword()))
         {
-        	// Login successfull
-            if (cycle.continueToOriginalDestination())
+        	// Login successful
+            if (getRequestCycle().continueToOriginalDestination())
             {
             	// Page successfully redirected. No need to render page.
                 return HtmlPage.ACCESS_DENIED;
             }
         }
-            
-       return HtmlPage.ACCESS_ALLOWED;
-	}
-
-	/**
-	 * Log user out
-	 *  
-	 * @param cycle
-	 */
-	public static void logout(final RequestCycle cycle)
-	{
-		try
-		{
-			((HttpSession)cycle.getSession()).getHttpServletSession().invalidate();
-		}
-		catch (IllegalStateException e)
-		{
-			; // ignore
-		}
-	}
+        
+        return HtmlPage.ACCESS_ALLOWED;
+    }
 }
 
-///////////////////////////////// End of File /////////////////////////////////

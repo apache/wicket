@@ -18,9 +18,7 @@
  */
 package wicket.examples.signin;
 
-import wicket.RequestCycle;
 import wicket.markup.html.HtmlPage;
-
 
 /**
  *
@@ -29,23 +27,21 @@ import wicket.markup.html.HtmlPage;
 public class AuthenticatedHtmlPage extends HtmlPage
 {
     /**
-     * @see wicket.Page#checkAccess(wicket.RequestCycle)
+     * @see wicket.Page#checkAccess()
      */
-    protected boolean checkAccess(RequestCycle cycle)
+    protected boolean checkAccess()
     {
         // Is a user signed into this cycle's session?
-        boolean signedIn = cycle.getSession().getProperty("wicket.examples.signin.user") != null;
+        boolean signedIn = getSession().getProperty("wicket.examples.signin.user") != null;
 
         // If nobody is signed in
         if (!signedIn)
         {
-            // redirect request to SignIn page
-            cycle.redirectToInterceptPage(SignIn.class);
+            // Redirect request to SignIn page
+            getRequestCycle().redirectToInterceptPage(SignIn.class);
         }
 
         // Return true if someone is signed in and access is okay
         return signedIn;
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

@@ -68,4 +68,4 @@ public final class User implements Serializable
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

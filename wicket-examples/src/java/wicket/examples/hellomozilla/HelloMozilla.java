@@ -88,9 +88,9 @@ public class HelloMozilla extends HtmlPage
     	}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
+		 * @see wicket.markup.html.form.Form#handleSubmit()
 		 */
-		public void handleSubmit(RequestCycle cycle)
+		public void handleSubmit()
 		{
 			// we just let our property model handle the updating
 		}

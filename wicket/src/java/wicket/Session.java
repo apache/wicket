@@ -85,6 +85,9 @@ public abstract class Session implements Serializable
 
     /** Application that this is a session of. */
     private transient IApplication application;
+    
+    /** Active request cycle */
+    private transient RequestCycle cycle;
 
     /** Separator for component paths. */
     private final char componentPathSeparator = '.';
@@ -138,6 +141,11 @@ public abstract class Session implements Serializable
     }
 
     /**
+     * Invalidates this session
+     */
+    public abstract void invalidate();
+
+    /**
      * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN THE
      * FUTURE. Expires any pages in the session page map that are newer than the given
      * page. It is called by implementors of RequestCycle to expire pages from the session
@@ -161,6 +169,38 @@ public abstract class Session implements Serializable
             }
         }
     }
+    
+    /**
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
+     * SUPPORTED IN THE FUTURE.
+     * @return The currently active request cycle for this session
+     */
+    public final RequestCycle getRequestCycle()
+    {
+        return cycle;
+    }
+    
+    /**
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
+     * SUPPORTED IN THE FUTURE.
+     * @return The currently active request cycle for this session
+     * with a null response set so that output is discarded
+     */
+    public final RequestCycle getNullResponseRequestCycle()
+    {
+        return cycle.nullResponse();
+    }
+    
+    /**
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
+     * SUPPORTED IN THE FUTURE.
+     * Sets the currently active request cycle for this session. 
+     * @param cycle The request cycle
+     */
+    public final void setRequestCycle(final RequestCycle cycle)
+    {
+        this.cycle = cycle;
+    }
 
     /**
      * Get the application that is currently working with this session.
@@ -181,8 +221,8 @@ public abstract class Session implements Serializable
     }
 
     /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN THE
-     * FUTURE.
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
+     * SUPPORTED IN THE FUTURE.
      * Get the freshest page in the session.
      * @return The freshest page in the session
      */

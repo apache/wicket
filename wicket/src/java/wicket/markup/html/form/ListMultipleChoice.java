@@ -93,13 +93,12 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 	}
 
 	/**
-	 * @param cycle
-	 *           The request cycle
+     * @see FormComponent#updateModel()
 	 */
-	public final void updateModel(final RequestCycle cycle)
+	public final void updateModel()
 	{
 		// Get the list of selected values
-		Collection selectedValues = (Collection) getModelObject();
+		Collection selectedValues = (Collection)getModelObject();
 
 		if (selectedValues != null)
 		{
@@ -112,7 +111,7 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 		}
 
 		// Get indices selected from request
-		final String[] indicesOrIds = getRequestStrings(cycle);
+		final String[] indicesOrIds = getRequestStrings();
 
 		if (indicesOrIds != null)
 		{

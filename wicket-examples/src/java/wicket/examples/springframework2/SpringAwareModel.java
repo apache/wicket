@@ -32,7 +32,10 @@ public abstract class SpringAwareModel implements IModel
 {
     protected SpringBeanModel springBeanModel = null;
 
-    /** Creates a new instance of SpringAwareModel */
+    /** 
+     * Creates a new instance of SpringAwareModel 
+     * @param model
+     */
     public SpringAwareModel(SpringBeanModel model)
     {
         this.springBeanModel = model;

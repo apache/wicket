@@ -38,4 +38,4 @@ public final class BookDetails extends HtmlPage
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

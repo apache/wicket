@@ -77,11 +77,11 @@ public class FormInput extends HtmlPage
         add(new LocaleSelect("localeSelect", this, "currentLocale", ALL_LOCALES));
         add(new Link("defaultLocaleLink"){
 
-			public void linkClicked(RequestCycle cycle)
+			public void linkClicked()
 			{
-				Locale requestLocale = ((HttpRequest)cycle.getRequest()).getLocale();
+				Locale requestLocale = ((HttpRequest)getRequestCycle().getRequest()).getLocale();
 				FormInput.this.currentLocale = requestLocale;
-				cycle.getSession().setLocale(requestLocale);
+				getSession().setLocale(requestLocale);
 			}
         	
         });
@@ -146,15 +146,15 @@ public class FormInput extends HtmlPage
 
 				public ValidationErrorMessage validate(FormComponent component)
 				{
-					String componentInput = component.getStringValue();
-					int value = Integer.parseInt(componentInput);
+                    final String input = component.getRequestString();
+					int value = Integer.parseInt(input.toString());
 					if((value < 0) || (value > 100))
 					{
 						Map vars = new HashMap();
-						vars.put("input", componentInput);
+						vars.put("input", input);
 						vars.put("lower", "0");
 						vars.put("upper", "100");
-						return errorMessage("error.outOfRange", vars, componentInput, component);
+						return errorMessage("error.outOfRange", vars, input, component);
 					}
 					return ValidationErrorMessage.NO_MESSAGE; // same as null
 				}
@@ -164,9 +164,9 @@ public class FormInput extends HtmlPage
 		}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
+		 * @see wicket.markup.html.form.Form#handleSubmit()
 		 */
-		public void handleSubmit(RequestCycle cycle)
+		public void handleSubmit()
 		{
 			// everything went well; just display a message
 			FeedbackMessages.info(this, "form saved");
@@ -188,16 +188,16 @@ public class FormInput extends HtmlPage
 		public LocaleSelect(String name, Serializable object,
 				String expression, Collection values)
 		{
-			// construct a property model WITHOUT formatting
+			// Construct a property model WITHOUT formatting
 			super(name, new PropertyModel(new Model(object), expression, false), values);
 		}
 
 		/**
-		 * @see wicket.markup.html.form.DropDownChoice#selectionChanged(wicket.RequestCycle, java.lang.Object)
+		 * @see wicket.markup.html.form.DropDownChoice#selectionChanged(java.lang.Object)
 		 */
-		public void selectionChanged(RequestCycle cycle, Object newSelection)
+		public void selectionChanged(Object newSelection)
 		{
-			cycle.getSession().setLocale((Locale)newSelection);
+			getSession().setLocale((Locale)newSelection);
 		}
     }
 }

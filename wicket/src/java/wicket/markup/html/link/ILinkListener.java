@@ -19,7 +19,6 @@
 package wicket.markup.html.link;
 
 import wicket.IRequestListener;
-import wicket.RequestCycle;
 
 /**
  * Listener method for link clicks.
@@ -30,9 +29,8 @@ public interface ILinkListener extends IRequestListener
 {
     /**
      * Called when a link is clicked
-     * @param cycle The request cycle
      */
-    public void linkClicked(final RequestCycle cycle);
+    public void linkClicked();
 }
 
 

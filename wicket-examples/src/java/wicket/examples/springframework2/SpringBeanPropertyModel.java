@@ -32,10 +32,10 @@ public class SpringBeanPropertyModel extends PropertyModel
      * SpringBeanModel with the given beanName parameter and adding that model
      * together with the given OGNL expression to the super constructor.
      * 
-     * @parameter beanName The name of the Spring managed bean as defined in the
-     *            Spring's ApplicationContext.
-     * @parameter expression The OGNL expression that should work on the Spring
-     *            bean
+     * @param beanName The name of the Spring managed bean as defined in the
+     *                 Spring's ApplicationContext.
+     * @param expression The OGNL expression that should work on the Spring
+     *                   bean
      */
     public SpringBeanPropertyModel(final String beanName, String expression)
     {
@@ -47,9 +47,9 @@ public class SpringBeanPropertyModel extends PropertyModel
      * SpringBeanModel with the given beanClass parameter and adding that model
      * object with the given OGNL expression to the super constructor.
      * 
-     * @parameter beanClass The class of a subclass of SpringAwareModel.
-     * @parameter expression The OGNL expression that should work on the Spring
-     *            managed bean defined in the beanClass.
+     * @param beanClass The class of a subclass of SpringAwareModel.
+     * @param expression The OGNL expression that should work on the Spring
+     *        managed bean defined in the beanClass.
      */
     public SpringBeanPropertyModel(Class beanClass, String expression)
     {

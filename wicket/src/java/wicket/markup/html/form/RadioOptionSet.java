@@ -40,16 +40,16 @@ public final class RadioOptionSet extends FormComponent
     /** Serial Version ID */
 	private static final long serialVersionUID = 2552126944567296644L;
 
-	/** line break markup. */
+	/** Line break markup. */
 	public static final Style LINE_BREAK = new Style("<br>");
 
-	/** paragraph markup. */
+	/** Paragraph markup. */
     public static final Style PARAGRAPH = new Style("<p>");
 
-    /** space markup. */
+    /** Space markup. */
     public static final Style SPACE = new Style(" ");
 
-    // The style to render in
+    /** The style to render in */
     private final Style style;
 
     /**
@@ -136,9 +136,9 @@ public final class RadioOptionSet extends FormComponent
     }
 
     /**
-     * @see wicket.markup.html.form.FormComponent#updateModel(wicket.RequestCycle)
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    public void updateModel(final RequestCycle cycle)
+    public void updateModel()
     {
     }
 

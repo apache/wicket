@@ -80,4 +80,4 @@ public class SimpleDisplaytagTableComponent extends Panel
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

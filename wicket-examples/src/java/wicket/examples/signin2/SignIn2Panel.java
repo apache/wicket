@@ -71,4 +71,4 @@ public abstract class SignIn2Panel extends SignInPanel
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

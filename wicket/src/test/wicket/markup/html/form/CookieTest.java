@@ -25,7 +25,7 @@ import java.util.Iterator;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
-import wicket.RequestCycle;
+import wicket.ApplicationSettings;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
@@ -69,12 +69,13 @@ public class CookieTest extends TestCase
         super.setUp();
         
         application = new MockHttpApplication(null);
-        application.getSettings().setHomePage(MockPage.class);
+        final ApplicationSettings settings = application.getSettings();
+        settings.setHomePage(MockPage.class);
         application.setupRequestAndResponse();
 
         this.panel = new SignInPanel("panel")
 		{
-            public String signIn(final RequestCycle cycle, final String username, final String password)
+            public String signIn(final String username, final String password)
             {
             	return null;
             }
@@ -83,7 +84,9 @@ public class CookieTest extends TestCase
 		this.panel.setPersistent(true);
 		this.form = (Form)panel.get("signInForm");
 
-        final String encryptedPassword = application.getSettings().getCryptInstance().encryptString("test");
+        final ICrypt crypt = settings.getCryptInstance();
+        final String encryptedPassword = crypt.encryptString("test");
+        assertNotNull(encryptedPassword);
         this.cookieUsername = new Cookie("panel.signInForm.username", "juergen");
         this.cookiePassword = new Cookie("panel.signInForm.password", encryptedPassword);
         this.cookies = new Cookie[] {cookieUsername, cookiePassword};
@@ -108,7 +111,7 @@ public class CookieTest extends TestCase
     public void testSetCookieOnForm() throws IOException, ServletException
     {
     	// initialize 
-		this.form.setFormComponentValuesFromPersister(cycle);
+		this.form.setFormComponentValuesFromPersister();
 		
 		// validate
         FormComponent username = (FormComponent)panel.get("signInForm.username");
@@ -143,10 +146,9 @@ public class CookieTest extends TestCase
 	 */
     public void testPersistCookieWithPersistenceDisabled() throws IOException, ServletException
     {
-        // test
-        // will call persistFromComponentData(), which is private
+        // test will call persistFromComponentData(), which is private
 		this.panel.setPersistent(false);
-		this.form.formSubmitted(cycle);
+		this.form.formSubmitted();
 		
 		// validate
         Collection cookies = application.getServletResponse().getCookies();
@@ -166,9 +168,8 @@ public class CookieTest extends TestCase
     {
         panel.setPersistent(true);
         
-        // test
-        // will call persistFromComponentData(), which is private
-		this.form.formSubmitted(cycle);
+        // test will call persistFromComponentData(), which is private
+		this.form.formSubmitted();
 		
 		// validate
         Collection cookies = application.getServletResponse().getCookies();
@@ -196,7 +197,7 @@ public class CookieTest extends TestCase
         panel.setPersistent(true);
         
         // test
-		page.removePersistedFormData(cycle, SignInPanel.SignInForm.class, true);
+		page.removePersistedFormData(SignInPanel.SignInForm.class, true);
 		
 		// validate
         Collection cookieCollection = application.getServletResponse().getCookies();
@@ -211,7 +212,7 @@ public class CookieTest extends TestCase
         application.getServletRequest().setCookies(cookies);
         
         // test
-		page.removePersistedFormData(cycle, SignInPanel.SignInForm.class, true);
+		page.removePersistedFormData(SignInPanel.SignInForm.class, true);
 		
 		// validate
         cookieCollection = application.getServletResponse().getCookies();

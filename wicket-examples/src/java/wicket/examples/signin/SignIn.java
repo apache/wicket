@@ -78,14 +78,16 @@ public final class SignIn extends HtmlPage
         }
 
         /**
-         * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
+         * @see wicket.markup.html.form.Form#handleSubmit()
          */
-        public final void handleSubmit(final RequestCycle cycle)
+        public final void handleSubmit()
         {
             // Sign the user in
             if (properties.getString("username").equals("jonathan")
                 && properties.getString("password").equals("password"))
             {
+                final RequestCycle cycle = getRequestCycle();
+                
                 cycle.getSession().setProperty("wicket.examples.signin.user", "jonathan");
 
                 if (!cycle.continueToOriginalDestination())
@@ -102,4 +104,4 @@ public final class SignIn extends HtmlPage
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

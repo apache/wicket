@@ -20,7 +20,6 @@ package wicket.markup.html.link;
 
 import wicket.Page;
 import wicket.RenderException;
-import wicket.RequestCycle;
 
 /**
  * Links to a given page via an object implementing the IPageLink delayed
@@ -100,12 +99,12 @@ public class PageLink extends Link
      * Handles a link click by asking for a concrete Page instance through the 
      * IPageLink.getPage() delayed linking interface.  This call will normally 
      * cause the destination page to be created. 
-     * @see wicket.markup.html.link.ILinkListener#linkClicked(wicket.RequestCycle)
+     * @see wicket.markup.html.link.ILinkListener#linkClicked()
      */
-    public final void linkClicked(final RequestCycle cycle)
+    public final void linkClicked()
     {
         // Set page source's page as response page
-        cycle.setPage(pageLink.getPage());
+        getRequestCycle().setPage(pageLink.getPage());
     }
 
     /**

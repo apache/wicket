@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.RequestCycle;
 import wicket.model.IModel;
 
 /**
@@ -117,11 +116,11 @@ public final class RadioChoice extends FormComponent implements FormComponent.IC
     }
 
     /**
-     * @see wicket.markup.html.form.FormComponent#updateModel(wicket.RequestCycle)
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    public void updateModel(final RequestCycle cycle)
+    public void updateModel()
     {
-        final int index = getRequestInt(cycle, NULL_VALUE);
+        final int index = getRequestInt(NULL_VALUE);
 
         if (index != NULL_VALUE)
         {

@@ -24,7 +24,6 @@ import wicket.Component;
 import wicket.markup.html.panel.Panel;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
-import wicket.resource.InvalidResourceSpecificationException;
 
 import junit.framework.Assert;
 
@@ -34,7 +33,6 @@ import junit.framework.Assert;
  */
 public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestBase
 {
-
 	/**
 	 * Create the test case.
 	 * @param message The test name
@@ -91,9 +89,9 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 			loader.get(c, "test.string", Locale.getDefault(), null);
 			Assert.fail("InvalidResourceSpecificationException should be thrown");
 		}
-		catch (InvalidResourceSpecificationException e)
+		catch (IllegalStateException e)
 		{
-			// Expected result
+			// Expected result since component is not attached to a Page
 		}
 	}
 
@@ -137,4 +135,4 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	}
 }
 
-// 
+

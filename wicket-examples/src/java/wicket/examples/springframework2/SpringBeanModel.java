@@ -35,7 +35,7 @@ import wicket.model.IModel;
  * created that wraps the Spring bean and stored as a member of this object.
  * Doing so you will depend in your pages (and other components) on the Spring
  * bean names as defined in in your Spring XML config. Second an instance can be
- * created by passing a subclass of {@see SpringAwareModel}. A SpringAwareModel
+ * created by passing a subclass of {@link SpringAwareModel}. A SpringAwareModel
  * object will be created using the given class passing this object to it's
  * constructor. It will be stored as a member of this object. By this way you
  * can encapsulate the Spring bean names in a specific SpringAwareModel model
@@ -63,8 +63,8 @@ public class SpringBeanModel extends DetachableModel
      * SpringBeanModel object will be delegated to the created IModel member
      * instance.
      * 
-     * @parameter beanName The name of the Spring managed bean as defined in the
-     *            Spring's ApplicationContext.
+     * @param beanName The name of the Spring managed bean as defined in the
+     * Spring ApplicationContext.
      */
     public SpringBeanModel(final String beanName)
     {
@@ -102,8 +102,8 @@ public class SpringBeanModel extends DetachableModel
      * SpringAwareModel is stored as an member of this object and all calls to
      * getObject and setObject will be delegated to that member.
      * 
-     * @parameter beanClass The class of the SpringAwareModel subclass to
-     *            instanciate
+     * @param beanClass The class of the SpringAwareModel subclass to
+     *                  instanciate
      */
     public SpringBeanModel(Class beanClass)
     {

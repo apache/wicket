@@ -132,4 +132,4 @@ public final class BookDetails extends AuthenticatedHtmlPage
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

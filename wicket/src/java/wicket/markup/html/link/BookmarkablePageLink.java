@@ -70,9 +70,9 @@ public final class BookmarkablePageLink extends Link
     }
 
     /**
-     * @see wicket.markup.html.link.Link#linkClicked(wicket.RequestCycle)
+     * @see wicket.markup.html.link.Link#linkClicked()
      */
-    public void linkClicked(final RequestCycle cycle)
+    public void linkClicked()
     {
         // Bookmarkable links do not have a click handler.
         // Instead they are dispatched by the request handling servlet.

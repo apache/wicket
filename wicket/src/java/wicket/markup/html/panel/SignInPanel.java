@@ -90,13 +90,11 @@ public abstract class SignInPanel extends Panel
 
     /**
      * Sign in user if possible.
-     * @param cycle The request cycle
      * @param username The username
      * @param password The password
      * @return Error message to display, or null if the user was signed in
      */
-    public abstract String signIn(final RequestCycle cycle, final String username,
-            final String password);
+    public abstract String signIn(final String username, final String password);
 
     /**
      * Sign in form.
@@ -125,15 +123,18 @@ public abstract class SignInPanel extends Panel
         }
 
         /**
-         * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
+         * @see wicket.markup.html.form.Form#handleSubmit()
          */
-        public final void handleSubmit(final RequestCycle cycle)
+        public final void handleSubmit()
         {
             // Sign the user in
-            final String error = signIn(cycle, getUsername(), getPassword());
+            final String error = signIn(getUsername(), getPassword());
 
             if (error == null)
             {
+                // Get active request cycle
+                final RequestCycle cycle = getRequestCycle();
+                
             	// If login has been called because the user was not yet
             	// logged in, than continue to the original destination.
             	// Else to the Home page

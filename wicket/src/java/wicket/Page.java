@@ -140,12 +140,12 @@ public abstract class Page extends Container implements IRedirectListener
 
     /**
      * Redirect to this page.
-     * @see wicket.IRedirectListener#redirect(wicket.RequestCycle)
+     * @see wicket.IRedirectListener#redirect()
      */
-    public final void redirect(final RequestCycle cycle)
+    public final void redirect()
     {
         // This method is used when redirecting to a page
-        cycle.setPage(this);
+        getRequestCycle().setPage(this);
     }
 
     /**
@@ -159,10 +159,9 @@ public abstract class Page extends Container implements IRedirectListener
 
     /**
      * Whether access is allowed to this page.
-     * @param cycle request cycle
      * @return true if access is allowed, false otherwise
      */
-    protected boolean checkAccess(final RequestCycle cycle)
+    protected boolean checkAccess()
     {
         return ACCESS_ALLOWED;
     }
@@ -222,7 +221,7 @@ public abstract class Page extends Container implements IRedirectListener
     	configureResponse(cycle);
     	
         // Check access to page
-        if (checkAccess(cycle))
+        if (checkAccess())
         {
             // Set page's associated markup stream
             final MarkupStream markupStream = getAssociatedMarkupStream();
@@ -240,8 +239,10 @@ public abstract class Page extends Container implements IRedirectListener
      */
     protected void configureResponse(final RequestCycle cycle)
     {
+        // Set content type based on markup type for page
     	cycle.response.setContentType("text/" + getMarkupType());
-    	
+        
+        // Set response locale from session locale
     	((HttpResponse)cycle.response).setLocale(cycle.getSession().getLocale());
     }
 
@@ -285,13 +286,12 @@ public abstract class Page extends Container implements IRedirectListener
 	 * Convinience method. Search for children of type fromClass and 
 	 * invoke their respectiv removePersistedFormData() method.
 	 * 
-	 * @see Form#removePersistedFormComponentData(RequestCycle, boolean)
+	 * @see Form#removePersistedFormComponentData(boolean)
 	 * 
-	 * @param cycle Current RequestCycle (may belong to another page though)
 	 * @param formClass Form to be selected. Pages may have more than one Form.
 	 * @param disablePersistence if true, disable persistence for all FormComponents on that page. If false, it will remain unchanged. 
 	 */
-	final public void removePersistedFormData(final RequestCycle cycle, final Class formClass, final boolean disablePersistence)
+	final public void removePersistedFormData(final Class formClass, final boolean disablePersistence)
 	{
 		// Visit all children which are an instance of formClass
 		visitChildren(formClass, new IVisitor()
@@ -302,7 +302,7 @@ public abstract class Page extends Container implements IRedirectListener
             	if (component instanceof Form)
             	{
             		// Delete persistet FormComponent data and disable persistence
-            		((Form)component).removePersistedFormComponentData(cycle, disablePersistence);
+            		((Form)component).removePersistedFormComponentData(disablePersistence);
             	}
                 return CONTINUE_TRAVERSAL;
             }

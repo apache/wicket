@@ -27,17 +27,17 @@ package wicket;
  * The Image class allows reusable components to transparently bundle localized image
  * resources. Components that use Image resources (instead of referencing static images in
  * their markup) can be distributed as a self-contained JAR file.
+ * 
  * @see wicket.markup.html.image.Image
  * @see wicket.markup.html.image.DynamicImage
  * @author Jonathan Locke
  */
 public interface IResourceListener extends IRequestListener
-{ // TODO finalize javadoc
+{
     /**
      * Called when a resource is requested.
-     * @param cycle The request cycle
      */
-    public void resourceRequested(RequestCycle cycle);
+    public void resourceRequested();
 }
 
 
