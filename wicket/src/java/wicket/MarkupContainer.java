@@ -260,7 +260,7 @@ public abstract class MarkupContainer extends Component
 			for (Component current = component; current != null;)
 			{
 				// Get parent
-				MarkupContainer parent = component.getParent();
+				final MarkupContainer parent = current.getParent();
 
 				// If this container is the parent, then the component is
 				// recursively contained by this container
