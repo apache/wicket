@@ -29,14 +29,6 @@ public interface IOnChangeListener extends IListener
 {
     /**
      * Called when a option is selected of a dropdown list that wants to be notified of
-     * this event. THIS METHOD IS FOR INTERNAL USE AND IS NOT MEANT TO BE USED BY
-     * FRAMEWORK CLIENTS
-     * @param cycle The request cycle
-     */
-    void selectionChanged(final RequestCycle cycle);
-
-    /**
-     * Called when a option is selected of a dropdown list that wants to be notified of
      * this event. This method is to be implemented by clients that want to be notified of
      * selection events.
      * @param cycle The request cycle
