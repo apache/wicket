@@ -155,6 +155,12 @@ public class AutolinkTest extends TestCase
 		anchor9.addExpectedChild(new TextContent("Home"));
 		body.addExpectedChild(anchor9);
 
+		Tag anchor11 = new Tag("a");
+		anchor11.addExpectedAttribute("href", ".*MockWebApplication.*wicket.markup.html.link.Page1");
+		anchor11.addExpectedChild(new TextContent("Home"));
+		body.addExpectedChild(anchor11);
+		body.addExpectedChild(new TextContent(".*"));
+
 		Tag anchor10 = new Tag("a");
 		anchor10.addExpectedAttribute("href", "http://www.google.com");
 		anchor10.addExpectedChild(new TextContent("Google"));
