@@ -16,7 +16,7 @@
             <ul>
                 <li>
                     <em>Find out</em>
-                    <a href="Introduction.html">Why you should use wicket</a>
+                    <a href="Introduction.html">why you should use Wicket</a>
                 </li>
                 <li>
                     <em>Read</em>
@@ -53,7 +53,7 @@
                     restructuring</a> of the package structure: the 
                     <code>com.voicetribe</code> package prefix has been 
                     dropped. All Wicket classes are now in the top level 
-                    package name <code>wicket</code>.</p>
+                    package named <code>wicket</code>.</p>
             </subsection>
             <subsection name="December 19, 2004 - Going into beta">
                 <p>Finally the Wicket development team is starting the march to 
