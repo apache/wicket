@@ -34,5 +34,5 @@ public interface IConvertible
 	 * Sets the component that acts as a provider for the converter.
 	 * @param component the converter provider component
 	 */
-	void setConverterProvider(Component component);
+	public void setConverterProvider(Component component);
 }
