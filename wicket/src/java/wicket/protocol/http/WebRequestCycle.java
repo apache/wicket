@@ -32,9 +32,10 @@ import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
+import wicket.Resource;
 import wicket.Response;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.util.io.Streams;
 import wicket.util.lang.Classes;
@@ -99,7 +100,6 @@ public class WebRequestCycle extends RequestCycle
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
 				final String key = (String)iterator.next();
-
 				buffer.append('&');
 				buffer.append(key);
 				buffer.append('=');
@@ -133,38 +133,24 @@ public class WebRequestCycle extends RequestCycle
 
 		// Buffer for composing URL
 		final StringBuffer buffer = urlPrefix();
-
-		// Compose URL differently depending on component sharing
-		switch (component.getSharing())
-		{
-			case Component.UNSHARED : {
-				buffer.append("?component=");
-				buffer.append(component.getPath());
-				buffer.append("&rendering=");
-				buffer.append(component.getPage().getRendering());
-				buffer.append("&interface=");
-				buffer.append(Classes.name(listenerInterface));
-				return response.encodeURL(buffer.toString());
-			}
-
-			case Component.SESSION_SHARED : {
-				buffer.append('/');
-				buffer.append(((WebSession)session).reference(component));
-				return response.encodeURL(buffer.toString());
-			}
-
-			case Component.APPLICATION_SHARED : {
-				buffer.append('/');
-				buffer.append(((WebApplication)application).reference(component));
-				return buffer.toString();
-			}
-
-			default : {
-				throw new WicketRuntimeException("Illegal component sharing type");
-			}
-		}
+		buffer.append("?component=");
+		buffer.append(component.getPath());
+		buffer.append("&rendering=");
+		buffer.append(component.getPage().getRendering());
+		buffer.append("&interface=");
+		buffer.append(Classes.name(listenerInterface));
+		return response.encodeURL(buffer.toString());
 	}
-
+	
+	/**
+	 * @param path The path
+	 * @return The url for the path
+	 */
+	public String urlFor(final String path)
+	{
+        return urlPrefix() + "/" + path;		
+	}
+	
 	/**
 	 * @return Prefix for URLs including the context path, servlet path and
 	 *         application name (if servlet path is empty).
@@ -360,24 +346,13 @@ public class WebRequestCycle extends RequestCycle
 			final String pathInfo = ((WebRequest)request).getHttpServletRequest().getPathInfo();
 			if (pathInfo != null)
 			{
-				// Ask application to resolve shared component
-				Component component = ((WebApplication)application).resolve(pathInfo.substring(1));
-				if (component != null)
+				// Get resource for path
+				final Resource resource = Resource.forPath(pathInfo.substring(1));
+				if (resource != null)
 				{
-					// Found shared component, so invoke interface on it
-					invokeInterface(component, "IResourceListener");
+					// Request resource
+					resource.onResourceRequested();
 					return true;
-				}
-				else
-				{
-					// Ask session to resolve the path next
-					component = ((WebSession)session).resolve(pathInfo);
-					if (component != null)
-					{
-						// Found it!
-						invokeInterface(component, "IResourceListener");
-						return true;
-					}
 				}
 			}
 		}

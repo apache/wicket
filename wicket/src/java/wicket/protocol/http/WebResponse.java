@@ -18,6 +18,7 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
@@ -91,7 +92,6 @@ public class WebResponse extends Response
         {
             return httpServletResponse.encodeURL(url);
         }
-
         return url;
     }
 
@@ -104,6 +104,21 @@ public class WebResponse extends Response
     {
         return httpServletResponse;
     }
+
+	/**
+	 * @see wicket.Response#getOutputStream()
+	 */
+	public OutputStream getOutputStream()
+	{
+		try
+		{
+			return httpServletResponse.getOutputStream();
+		}
+		catch (IOException e)
+		{
+            throw new WicketRuntimeException("Error while getting output stream.", e);			
+		}
+	}
 
     /**
      * Whether this response is going to redirect the user agent.
@@ -174,17 +189,6 @@ public class WebResponse extends Response
     {
         httpServletResponse.setLocale(locale);
     }
-
-    /**
-     * Output stream encoding. See CharSetMap for more details NOTE: Only
-     * available with servlet API >= 2.4
-     * 
-     * @param encoding
-     *            e.b. ISO-8859-1 or UTF-8
-     * 
-     * public final void setCharacterEncoding(final String encoding) {
-     * httpServletResponse.setCharacterEncoding(encoding); }
-     */
 
     /**
      * Writes string to response output.

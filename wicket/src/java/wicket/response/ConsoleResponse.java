@@ -17,6 +17,8 @@
  */
 package wicket.response;
 
+import java.io.OutputStream;
+
 import wicket.Response;
 
 /**
@@ -51,6 +53,14 @@ public class ConsoleResponse extends Response
     {
         System.out.print(string);
     }
+
+	/**
+	 * @see wicket.Response#getOutputStream()
+	 */
+	public OutputStream getOutputStream()
+	{
+		return System.out;
+	}
 }
 
 

@@ -15,51 +15,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.image;
+package wicket.markup.html.image.resource;
 
-import java.awt.image.BufferedImage;
+import wicket.protocol.http.WebResource;
+import wicket.util.resource.IResource;
 
 /**
  * An image subclass that allows easy rendering of dynamic images. An image can
- * be set with setImage(BufferedImage) and its extension can be specified with
+ * be set with setImage(BufferedImage) and its format can be specified with
  * setExtension(String). After this, the image will be cached as an input stream
  * and will render as would any other Image resource.
  * 
  * @author Jonathan Locke
  */
-public class BufferedDynamicImage extends AbstractDynamicImage
+public abstract class ImageResource extends WebResource
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 
-	/** The byte array holding the contents of the dynamic image */
-	private byte[] imageData;
-
 	/**
-	 * Constructor.
-	 * 
-	 * @param name
-	 *            Component name
+	 * @return Gets the image resource to attach to the component.
 	 */
-	public BufferedDynamicImage(final String name)
-	{
-		super(name);
-	}
-
-	/**
-	 * @param image
-	 *            The image to set
-	 */
-	public void setImage(final BufferedImage image)
-	{
-		imageData = toImageData(image);
-	}
-
-	/**
-	 * @see wicket.markup.html.image.AbstractDynamicImage#getImageData()
-	 */
-	protected byte[] getImageData()
-	{
-		return imageData;
-	}
+	protected abstract IResource getResource();
 }
+
+

@@ -29,7 +29,7 @@ package wicket;
  * their markup) can be distributed as a self-contained JAR file.
  * 
  * @see wicket.markup.html.image.Image
- * @see wicket.markup.html.image.DynamicImage
+ * @see wicket.markup.html.image.resource.RenderedDynamicImageResource
  * @author Jonathan Locke
  */
 public interface IResourceListener extends IRequestListener

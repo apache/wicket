@@ -23,10 +23,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import wicket.Component;
 import wicket.examples.WicketExampleApplication;
-import wicket.markup.html.image.BufferedDynamicImage;
-import wicket.markup.html.image.ButtonImage;
+import wicket.markup.html.image.resource.BufferedDynamicImageResource;
+import wicket.markup.html.image.resource.ButtonImageResource;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
@@ -34,8 +33,8 @@ import wicket.markup.html.image.ButtonImage;
  */
 public class ImagesApplication extends WicketExampleApplication
 {
-	private BufferedDynamicImage image5;
-	private ButtonImage cancelButtonImage;
+	private BufferedDynamicImageResource image5Resource;
+	private ButtonImageResource cancelButtonImageResource;
 	
 	/**
 	 * Constructor
@@ -44,39 +43,37 @@ public class ImagesApplication extends WicketExampleApplication
     {
         getPages().setHomePage(Home.class);
         
-	    cancelButtonImage = new ButtonImage("cancelButton", "Cancel");
-	    cancelButtonImage.setSharing(Component.APPLICATION_SHARED);
+	    cancelButtonImageResource = new ButtonImageResource("Cancel");
     }
     
     /**
      * @return Gets shared image component
      */
-    public BufferedDynamicImage getImage5()
+    public BufferedDynamicImageResource getImage5Resource()
     {
-    	if (image5 == null)
+    	if (image5Resource == null)
     	{
-		    image5 = new BufferedDynamicImage("image5");
+		    image5Resource = new BufferedDynamicImageResource();
 			final BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
 			drawCircle((Graphics2D)image.getGraphics());
-			image5.setImage(image);
-			image5.setSharing(Component.APPLICATION_SHARED);
+			image5Resource.setImage(image);
     	}
-    	return image5;
+    	return image5Resource;
     }
     
     /**
      * @return Cancel button image
      */
-    public ButtonImage getCancelButtonImage()
+    public ButtonImageResource getCancelButtonImageResource()
     {
-    	return cancelButtonImage;
+    	return cancelButtonImageResource;
     }
     
 	/**
 	 * Draws a random circle on a graphics
 	 * @param graphics The graphics to draw on
 	 */
-	static void drawCircle(Graphics2D graphics)
+	void drawCircle(Graphics2D graphics)
 	{
 		// Compute random size for circle
 		final Random random = new Random();

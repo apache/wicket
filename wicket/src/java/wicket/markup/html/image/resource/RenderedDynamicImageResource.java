@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.image;
+package wicket.markup.html.image.resource;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -28,7 +28,7 @@ import java.awt.image.BufferedImage;
  * 
  * @author Jonathan Locke
  */
-public abstract class DynamicImage extends AbstractDynamicImage
+public abstract class RenderedDynamicImageResource extends DynamicImageResource
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
@@ -39,30 +39,17 @@ public abstract class DynamicImage extends AbstractDynamicImage
 	/** Width of image */
 	private int width = 100;
 
-	/**
-	 * @see wicket.Component#Component(String)
-	 * 
-	 * @param name
-	 *            Component name
-	 */
-	public DynamicImage(String name)
-	{
-		super(name);
-	}
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * Constructor.
 	 * 
-	 * @param name
-	 *            Component name
 	 * @param width
 	 *            Width of image
 	 * @param height
 	 *            Height of image
 	 */
-	public DynamicImage(final String name, final int width, final int height)
+	public RenderedDynamicImageResource(final int width, final int height)
 	{
-		super(name);
 		this.width = width;
 		this.height = height;
 	}

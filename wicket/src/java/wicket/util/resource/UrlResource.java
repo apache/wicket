@@ -131,7 +131,7 @@ public final class UrlResource extends AbstractResource
 	/**
 	 * @return The URL to this resource (if any)
 	 */
-	public URL getUrl()
+	public URL getURL()
 	{
 		return url;
 	}

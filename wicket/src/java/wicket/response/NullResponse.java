@@ -18,6 +18,9 @@
  */
 package wicket.response;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import wicket.Response;
 
 /**
@@ -52,6 +55,17 @@ public class NullResponse extends Response
     {
         // Does nothing
     }
+
+	/**
+	 * @see wicket.Response#getOutputStream()
+	 */
+	public OutputStream getOutputStream()
+	{
+		return new OutputStream()
+		{
+			public void write(int b) throws IOException
+			{
+			}	
+		};
+	}
 }
-
-
