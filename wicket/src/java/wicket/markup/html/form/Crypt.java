@@ -129,7 +129,7 @@ public class Crypt implements ICrypt
      * @param plainText text to encrypt
      * @return the string encrypted
      */
-    private final byte[] encryptString(final String plainText)
+    private final byte[] encryptStringToByteArray(final String plainText)
     {
         return crypt(plainText.getBytes(), Cipher.ENCRYPT_MODE);
     }
@@ -140,9 +140,9 @@ public class Crypt implements ICrypt
      * @param plainText text to encrypt
      * @return encrypted string
      */
-    public final String encryptStringToString(final String plainText)
+    public final String encryptString(final String plainText)
     {
-        byte[] cipherText = encryptString(plainText);
+        byte[] cipherText = encryptStringToByteArray(plainText);
         return new BASE64Encoder().encode(cipherText);
     }
 
@@ -152,7 +152,7 @@ public class Crypt implements ICrypt
      * @param plainText text to decrypt
      * @return the decrypted text
      */
-    private final byte[] decryptString(final String plainText)
+    private final byte[] decryptStringToByteArray(final String plainText)
     {
         final byte[] plainBytes;
         try
@@ -172,9 +172,9 @@ public class Crypt implements ICrypt
      * @param text text to decript
      * @return the decrypted text
      */
-    public final String decryptStringToString(final String text)
+    public final String decryptString(final String text)
     {
-        return new String(decryptString(text));
+        return new String(decryptStringToByteArray(text));
     }
 }
 
