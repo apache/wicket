@@ -768,90 +768,59 @@ public abstract class Component implements Serializable
 	 */
 	public final void render()
 	{
-		// Any runtime exception thrown during rendering
-		RuntimeException renderException = null;
-
 		// Determine if component is visible
 		final boolean isVisible = isVisible();
 
-		try
+		// Get request cycle to render to
+		final RequestCycle cycle = getRequestCycle();
+
+		// Save original Response
+		final Response originalResponse;
+
+		// If component is not visible, set response to NullResponse
+		if (isVisible)
 		{
-			// Get request cycle to render to
-			final RequestCycle cycle = getRequestCycle();
+			// No response to restore
+			originalResponse = null;
 
-			// Save original Response
-			final Response originalResponse;
-
-			// If component is not visible, set response to NullResponse
-			if (isVisible)
+			// Rendering is beginning
+			if (log.isDebugEnabled())
 			{
-				// No response to restore
-				originalResponse = null;
-
-				// Rendering is beginning
-				if (log.isDebugEnabled())
-				{
-					log.debug("Begin render " + this);
-				}
-			}
-			else
-			{
-				originalResponse = cycle.getResponse();
-				cycle.setResponse(NullResponse.getInstance());
-			}
-
-			// Synchronize on model lock while rendering to help ensure
-			// that the model doesn't change while its being read
-			synchronized (getModelLock())
-			{
-				// Call implementation to render component
-				onRender();
-
-				// Component has been rendered
-				rendered();
-			}
-
-			// Restore original response if any
-			if (!isVisible)
-			{
-				cycle.setResponse(originalResponse);
+				log.debug("Begin render " + this);
 			}
 		}
-		catch (RuntimeException e)
+		else
 		{
-			// Remember exception in finally block
-			renderException = e;
-			e.printStackTrace();
-			throw e;
+			// Since component is invisible, pipe all output to NullResponse
+			originalResponse = cycle.getResponse();
+			cycle.setResponse(NullResponse.getInstance());
 		}
-		finally
-		{
-			if (isVisible)
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("End render " + this);
-				}
 
-				try
-				{
-					// Detach models now that rendering is fully completed
-					detachModels();
-				}
-				catch (RuntimeException e)
-				{
-					if (renderException != null)
-					{
-						throw new WicketRuntimeException(
-								"Exception thrown while cleaning up from the following exception which was thrown during rendering: "
-										+ Strings.toString(renderException), e);
-					}
-					else
-					{
-						throw e;
-					}
-				}
+		// Synchronize on model lock while rendering to help ensure
+		// that the model doesn't change while its being read
+		synchronized (getModelLock())
+		{
+			// Call implementation to render component
+			onRender();
+
+			// Component has been rendered
+			rendered();
+
+			// Detach models now that rendering is fully completed
+			detachModels();
+		}
+
+		// Restore original response if any
+		if (isVisible)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("End render " + this);
 			}
+		}
+		else
+		{
+			cycle.setResponse(originalResponse);
 		}
 	}
 
