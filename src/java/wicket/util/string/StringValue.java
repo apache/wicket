@@ -46,9 +46,9 @@ import wicket.util.time.Time;
  */
 public class StringValue
 {
-
 	/** Locale to be used for formatting and parsing. */
 	private final Locale locale;
+	
 	/** The underlying string. */
 	private final String text;
 

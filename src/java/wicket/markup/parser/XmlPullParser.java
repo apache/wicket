@@ -34,7 +34,6 @@ import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.resource.StringResource;
-import wicket.util.string.StringValue;
 
 /**
  * A fairly shallow markup pull or streaming parser. Parses a markup string of a
@@ -485,7 +484,7 @@ public final class XmlPullParser implements IXmlPullParser
 				final String key = attributeParser.getKey();
 
 				// Put the attribute in the attributes hash
-				if (null != tag.attributes.put(key, StringValue.valueOf(value)))
+				if (null != tag.attributes.put(key, value))
 				{
 				    throw new ParseException("Same attribute found twice: " 
 				            + key, this.inputPosition);
