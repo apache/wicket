@@ -60,7 +60,6 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 		super(name, object, expression);
 	}
 
-
 	/**
 	 * Gets the popup specification. If not-null, a javascript on-click event
 	 * handler will be generated that opens a new window using the popup
