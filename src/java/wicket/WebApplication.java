@@ -41,11 +41,13 @@ import wicket.protocol.http.WicketServlet;
  * <pre>
  * 
  *  
- *     public void init() throws ServletException
- *     {
- *       ServletConfig config = getServletConfig();
- *       String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *       ...
+ *   
+ *      public void init() throws ServletException
+ *      {
+ *        ServletConfig config = getServletConfig();
+ *        String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *        ...
+ *    
  *   
  *  
  * </pre>
@@ -62,11 +64,11 @@ public abstract class WebApplication extends Application
     /** Serial Version ID. */
     private static final long serialVersionUID = 1152456333052646498L;
 
-    /** Settings for application. */
-    private final ApplicationSettings settings;
-
     /** Pages for application */
     private final ApplicationPages pages;
+
+    /** Settings for application. */
+    private final ApplicationSettings settings;
 
     /** The WicketServlet that this application is attached to */
     private WicketServlet wicketServlet;
@@ -85,6 +87,14 @@ public abstract class WebApplication extends Application
     }
 
     /**
+     * @see wicket.Application#getPages()
+     */
+    public ApplicationPages getPages()
+    {
+        return pages;
+    }
+
+    /**
      * @see wicket.Application#getSettings()
      */
     public ApplicationSettings getSettings()
@@ -92,14 +102,6 @@ public abstract class WebApplication extends Application
         return settings;
     }
 
-    /**
-     * @see wicket.Application#getPages()
-     */
-    public ApplicationPages getPages()
-    {
-        return pages;
-    }
-    
     /**
      * @return The Wicket servlet for this application
      */

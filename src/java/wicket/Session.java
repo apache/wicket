@@ -209,7 +209,7 @@ public abstract class Session implements Serializable
     /**
      * @return The class resolver for this Session
      */
-    public IClassResolver getClassResolver()
+    public final IClassResolver getClassResolver()
     {
         return classResolver;
     }
@@ -275,7 +275,7 @@ public abstract class Session implements Serializable
     /**
      * @return The page factory for this session
      */
-    public IPageFactory getPageFactory()
+    public final IPageFactory getPageFactory()
     {
         return pageFactory;
     }
@@ -343,7 +343,7 @@ public abstract class Session implements Serializable
      * @param classResolver
      *            The class resolver
      */
-    public void setClassResolver(final IClassResolver classResolver)
+    public final void setClassResolver(final IClassResolver classResolver)
     {
         this.classResolver = classResolver;
     }
@@ -365,7 +365,7 @@ public abstract class Session implements Serializable
      * @param pageFactory
      *            The page factory
      */
-    public void setPageFactory(final IPageFactory pageFactory)
+    public final void setPageFactory(final IPageFactory pageFactory)
     {
         this.pageFactory = pageFactory;
     }

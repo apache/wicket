@@ -84,7 +84,7 @@ public class Model implements IModel
             }
         }
 
-        setObject((Serializable) object);
+        setObject((Serializable)object);
     }
 
     /**

@@ -30,12 +30,12 @@ package wicket.model;
 public interface IDetachableModel extends IModel
 {
     /**
-     * Detaches from a session
-     */
-    public void detach();
-
-    /**
      * Attaches to a session
      */
     public void attach();
+
+    /**
+     * Detaches from a session
+     */
+    public void detach();
 }
