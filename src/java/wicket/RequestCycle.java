@@ -431,7 +431,11 @@ public abstract class RequestCycle
 			catch (RuntimeException e)
 			{
 				// Reset page for re-rendering after exception
-				getPage().reset();
+				Page currentPage = getPage();
+				if(currentPage != null) // could be null when it expired
+				{
+					currentPage.reset();
+				}
 
 				// Handle the exception
 				handleRenderingException(e);
