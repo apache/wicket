@@ -27,7 +27,9 @@ import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.protocol.http.WebRequest;
 
 /**
- * Form for handling (file) uploads with multipart requests.
+ * Form for handling (file) uploads with multipart requests. Use this with
+ * {@link wicket.markup.html.form.upload.FileInput} components. You can attach
+ * mutliple FileInput fields for muliple file uploads.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke

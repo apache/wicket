@@ -47,7 +47,7 @@ import wicket.markup.html.form.FormComponent;
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
  * When a FileInput component is nested in a
  * {@link wicket.markup.html.form.upload.UploadForm}, its model is updated
- * with the uploaded file for this component.
+ * with the {@link org.apache.commons.fileupload.FileItem} for this component.
  *
  * @author Eelco Hillenius
  */
@@ -65,7 +65,9 @@ public class FileInput extends FormComponent
 	/**
 	 * Construct.
 	 * @param name name of the component
-	 * @param object the model
+	 * @param object the model; this model will be updated with an instance of
+	 * 		{@link org.apache.commons.fileupload.FileItem} when an upload for this
+	 * 		component happens
 	 */
 	public FileInput(String name, Serializable object)
 	{
@@ -75,7 +77,9 @@ public class FileInput extends FormComponent
 	/**
 	 * Construct.
 	 * @param name name of the component
-	 * @param object the model
+	 * @param object the model; this model will be updated with an instance of
+	 * 		{@link org.apache.commons.fileupload.FileItem} when an upload for this
+	 * 		component happens
 	 * @param expression ognl expression that works on the model
 	 */
 	public FileInput(String name, Serializable object, String expression)
