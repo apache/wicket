@@ -454,14 +454,14 @@ public abstract class Component implements Serializable
 	 */
 	public final String getModelObjectAsString()
 	{
-		IModel model = getModel();
+		final IModel model = getModel();
 		if (model != null)
 		{
 			final Object modelObject = model.getObject();
 			if (modelObject != null)
 			{
 				// Get converter
-				IConverter converter = getConverter();
+				final IConverter converter = getConverter();
 
 				//	Model string from property
 				final String modelString = (String)converter.convert(modelObject, String.class);
