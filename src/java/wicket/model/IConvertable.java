@@ -18,18 +18,21 @@
  */
 package wicket.model;
 
-import wicket.Component;
+import wicket.util.convert.IConverter;
 
 /**
  * Interface that can be implemented by instances of {@link wicket.model.IModel}
- * to indicate that they want to have the component that the model is set on
- * being set.
+ * to indicate that they want to be able to do conversions using a components'
+ * converter.
+ *
+ * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
-public interface IComponentAware
+public interface IConvertable
 {
 	/**
-	 * Sets the component that uses this model.
-	 * @param component the component that uses this model
+	 * Sets the converter.
+	 * @param converter the converter
 	 */
-	void setComponent(Component component);
+	void setConverter(IConverter converter);
 }
