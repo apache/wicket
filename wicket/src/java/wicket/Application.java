@@ -20,7 +20,6 @@ package wicket;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.markup.AutolinkComponentResolver;
 import wicket.markup.IMarkupParser;
 import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.ICrypt;
@@ -92,7 +91,6 @@ public abstract class Application
 
 		// Install default component resolvers
 		componentResolvers = new ArrayList();
-		componentResolvers.add(new AutolinkComponentResolver());
 		componentResolvers.add(new WicketTagComponentResolver());
 	}
 
