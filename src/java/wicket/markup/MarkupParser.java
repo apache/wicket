@@ -34,8 +34,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.ApplicationSettings;
 import wicket.Page;
-import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -322,8 +320,21 @@ public final class MarkupParser implements IMarkupParser
         if ((automaticLinking == true) && (tag.getComponentName() == null) 
                 && tag.getAttributes().containsKey("href"))
         {
-            // Just a dummy name. The ComponentTag will not be forwarded.
-            return resolveAutomaticLink(tag);
+            final String originalHref = tag.getAttributes().getString("href");
+
+            // Only hrefs which reference a html can be autolinks (for now)
+            final int pos = originalHref.indexOf(".html");
+            if (pos <= 0)
+            {
+                return false;
+            }
+            
+            // Assign a dummy name. A component resolver will pick it and
+            // handle the details.
+            tag.componentName = "_autolink_";
+            tag.enableAutolink(true);
+            
+            return true;
         }
         
         // For all <wicket:link ..> tags
@@ -613,24 +624,16 @@ public final class MarkupParser implements IMarkupParser
                     list.add(new RawMarkup(rawMarkup));
                 }
 
-                if (tag.isAutolinkEnabled())
+                if ((tag instanceof ComponentWicketTag) && ((ComponentWicketTag)tag).isLinkTag())
                 {
                     final String tagString = tag.toXmlString();
 	                list.add(new RawMarkup(tagString));
                 }
                 else
                 {
-                    if ((tag instanceof ComponentWicketTag) && ((ComponentWicketTag)tag).isLinkTag())
-                    {
-                        final String tagString = tag.toXmlString();
-    	                list.add(new RawMarkup(tagString));
-                    }
-                    else
-                    {
-		                // Add immutable tag
-		                tag.makeImmutable();
-		                list.add(tag);
-                    }
+	                // Add immutable tag
+	                tag.makeImmutable();
+	                list.add(tag);
                 }
                 
                 // Position is after tag
@@ -890,48 +893,6 @@ public final class MarkupParser implements IMarkupParser
                 }
             }
         }
-    }
-	
-    /**
-     * Resolves the given tag's automaticLinkPageClass and automaticLinkPageParameters
-     * variables by parsing the tag component name and then searching for a page class at
-     * the relative URL specified by the href attribute of the tag. The href URL is
-     * relative to the package containing the page where this component is contained.
-     * @param tag the component tag
-     * @return
-     * @throws ParseException
-     */
-    private boolean resolveAutomaticLink(final ComponentTag tag)
-    	throws ParseException
-    {
-        final String originalHref = tag.getAttributes().getString("href");
-
-        final int pos = originalHref.indexOf(".html");
-        if (pos <= 0)
-        {
-            return false;
-        }
-        
-        String classPath = originalHref.substring(0, pos);
-        PageParameters pageParameters = null;
-        
-        // ".html?" => 6 chars
-        if ((classPath.length() + 6) < originalHref.length())
-        {
-            String queryString = originalHref.substring(classPath.length() + 6);
-            pageParameters = new PageParameters(new ValueMap(queryString, "&"));
-        }
-        
-        classPath = classPath.replaceAll("/", ".");
-        classPath = autolinkBasePage.getClass().getPackage().getName() + "." + classPath;
-
-        Class clazz = autolinkBasePage.getApplicationSettings().getDefaultClassResolver().resolveClass(classPath);
-        
-        String url = RequestCycle.get().urlFor(clazz, pageParameters);
-        tag.put("href", url);
-        tag.enableAutolink(true);
-        
-        return true;
     }
 
     /** 

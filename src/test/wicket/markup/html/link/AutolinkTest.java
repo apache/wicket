@@ -137,7 +137,7 @@ public class AutolinkTest extends TestCase
 		link5.addExpectedChild(new TextContent(".*"));
 		
 		Tag anchor6 = new Tag("a");
-		anchor6.addExpectedAttribute("href", ".*MockWebApplication.*name=test&id=123");
+		anchor6.addExpectedAttribute("href", ".*MockWebApplication.*name=test&amp;id=123");
 		anchor6.addExpectedChild(new TextContent("Home"));
 		link5.addExpectedChild(anchor6);
 		link5.addExpectedChild(new TextContent(".*"));

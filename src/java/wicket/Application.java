@@ -20,7 +20,9 @@ package wicket;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.markup.AutolinkComponentResolver;
 import wicket.markup.IMarkupParser;
+import wicket.markup.MarkupParser;
 import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.ICrypt;
 import wicket.util.convert.ConverterRegistry;
@@ -91,6 +93,7 @@ public abstract class Application
 
 		// Install default component resolvers
 		componentResolvers = new ArrayList();
+		componentResolvers.add(new AutolinkComponentResolver());
 		componentResolvers.add(new WicketTagComponentResolver());
 	}
 
@@ -155,21 +158,9 @@ public abstract class Application
 	 */
 	public IMarkupParser getMarkupParser()
 	{
-		try
-		{
-			final IMarkupParser parser = (IMarkupParser)settings.getMarkupParserClass()
-					.newInstance();
-			parser.configure(getSettings());
-			return parser;
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new WicketRuntimeException("Failed to get markup parser", e);
-		}
-		catch (InstantiationException e)
-		{
-			throw new WicketRuntimeException("Failed to get markup parser", e);
-		}
+		final MarkupParser parser = new MarkupParser();
+		parser.configure(getSettings());
+		return parser;
 	}
 
 	/**
