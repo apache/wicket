@@ -37,5 +37,3 @@ public class Page2 extends HtmlPage
         add(new NavomaticBorder("navomaticBorder"));
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

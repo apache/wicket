@@ -40,5 +40,3 @@ public class NavomaticBorder extends Border
         add(new BoxBorder("boxBorder2"));
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////
