@@ -52,7 +52,7 @@ public abstract class TableWithAlternatingRowStyle extends ListView
      * @param index Index of item 
      * @return List item
      */
-    protected ListItem getNewListItem(final int index)
+    protected ListItem newItem(final int index)
     {
 		return new ListItem(index, getListItemModel(getModel(), index))
 	        {
