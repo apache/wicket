@@ -26,7 +26,9 @@ import wicket.IModel;
 import wicket.RequestCycle;
 
 /**
- * A container of HTML markup and components.
+ * A container of HTML markup and components. It is very similar to the
+ * base class Container, except that the markup is defined to be HTML.<p>
+ * 
  * @author Jonathan Locke
  */
 public class HtmlContainer extends Container
