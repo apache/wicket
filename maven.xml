@@ -1,29 +1,177 @@
-<project default="jar:jar"
-  xmlns:j="jelly:core"
-  xmlns:u="jelly:util"
-  xmlns:ant="jelly:ant"
-  xmlns:maven="jelly:maven">
-  
-<postGoal name="dist:prepare-bin-filesystem" >
-<!--	<attainGoal name="announcement"/> -->
-    <ant:mkdir dir="${maven.dist.bin.assembly.dir}/lib" />
-	<ant:mkdir dir="${maven.dist.bin.assembly.dir}/licenses" />
-	<ant:mkdir dir="${maven.dist.bin.assembly.dir}/sample" />
-    
-    <j:forEach var="lib" items="${pom.artifacts}">
-		<j:set var="dep" value="${lib.dependency}" />
-		<j:if test="${dep.type=='jar'}">
-			<j:choose>
-				<j:when test="${dep.getProperty('endorsed')}">
-					<ant:copy todir="${maven.dist.bin.assembly.dir}/lib/endorsed" file="${lib.path}" />
-				</j:when>
-				<j:otherwise>
-					<ant:copy todir="${maven.dist.bin.assembly.dir}/lib" file="${lib.path}" />
-				</j:otherwise>
-			</j:choose>
-		</j:if>
-	</j:forEach>
-<!--
+<project default="jar:jar" xmlns:j="jelly:core" xmlns:u="jelly:util" 
+    xmlns:ant="jelly:ant" xmlns:maven="jelly:maven">
+
+    <preGoal name="xdoc:transform">
+        <attainGoal name="createDependenciesPage"/>
+    </preGoal>
+
+    <goal name="createDependenciesPage" 
+        description="Generates the dependencies document">
+        <j:set var="destfile" 
+            value="${maven.build.dir}/generated-xdocs/dependencies.xml"/>
+        <ant:mkdir dir="${maven.build.dir}/generated-xdocs"/>
+        <u:file var="destfileFile" name="${destfile}"/>
+        <j:set var="destfile" value="${destfileFile.getCanonicalPath()}"/>
+        <j:set var="outputencoding" value="${maven.docs.outputencoding}"/>
+        <j:file name="${destfile}" encoding="${outputencoding}" 
+            outputMode="xml">
+            <document>
+                <properties>
+                    <title>Dependencies</title>
+                </properties>
+                <body>
+                    <section name="Dependencies">
+                        <p> These are the various dependencies required by 
+                            Wicket.</p>
+                        <p> If you're using maven to build your project and 
+                            just want to know what dependencies to add to your 
+                            POM, just scroll down to the <a 
+                            href="#pomDependencies">next section</a>. </p>
+                        <table>
+                            <tr>
+                                <th>Required JARs</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td>wicket-${pom.currentVersion}.jar</td>
+                                <td>The main Wicket classes</td>
+                            </tr>
+                            <j:forEach var="lib" items="${pom.artifacts}">
+                                <j:set var="dep" value="${lib.dependency}"/>
+                                <j:if 
+                                    test="${dep.getProperty('wicket.group')=='required'}">
+                                    <tr>
+                                        <tr>
+                                            <td>
+                                                <a href="${dep.url}">
+                                                    ${dep.artifact}</a>
+                                            </td>
+                                            <td>
+                                                ${dep.getProperty('wicket.description')}</td>
+                                        </tr>
+                                    </tr>
+                                </j:if>
+                            </j:forEach>
+                            <tr>
+                                <th>Optional JARs</th>
+                                <th>Description</th>
+                            </tr>
+                            <j:forEach var="lib" items="${pom.artifacts}">
+                                <j:set var="dep" value="${lib.dependency}"/>
+                                <j:if 
+                                    test="${dep.getProperty('wicket.group')=='optional'}">
+                                    <tr>
+                                        <tr>
+                                            <td>
+                                                <a href="${dep.url}">
+                                                    ${dep.artifact}</a>
+                                            </td>
+                                            <td>
+                                                ${dep.getProperty('wicket.description')}</td>
+                                        </tr>
+                                    </tr>
+                                </j:if>
+                            </j:forEach>
+                            <tr>
+                                <th>JARs for running the unit 
+                                    tests</th>
+                                <th>Description</th>
+                            </tr>
+                            <j:forEach var="lib" items="${pom.artifacts}">
+                                <j:set var="dep" value="${lib.dependency}"/>
+                                <j:if 
+                                    test="${dep.getProperty('wicket.group')=='test'}">
+                                    <tr>
+                                        <td>
+                                            <a href="${dep.url}">
+                                                ${dep.artifact}</a>
+                                        </td>
+                                        <td>
+                                            ${dep.getProperty('wicket.description')}</td>
+                                    </tr>
+                                </j:if>
+                            </j:forEach>
+                            <tr>
+                                <th>JARs for compilation</th>
+                                <th>Description</th>
+                            </tr>
+                            <j:forEach var="lib" items="${pom.artifacts}">
+                                <j:set var="dep" value="${lib.dependency}"/>
+                                <j:if 
+                                    test="${dep.getProperty('wicket.group')=='compile'}">
+                                    <tr>
+                                        <td>
+                                            <a href="${dep.url}">
+                                                ${dep.artifact}</a>
+                                        </td>
+                                        <td>
+                                            ${dep.getProperty('wicket.description')}</td>
+                                    </tr>
+                                </j:if>
+                            </j:forEach>
+                        </table>
+                    </section>
+                    <section name="Dependencies">
+                        <a name="pomDependencies"></a>
+                        <p> If you are using <a 
+                            href="http://maven.apache.org">maven</a> to build 
+                            your project then you can simply cut and paste the 
+                            following dependencies into your project.xml.</p>
+                        <p> Note that if you are reading this on the Wicket 
+                            website then the version numbers reflect what is 
+                            currently in CVS, not necessarily what versions 
+                            are in use in the distribution that you have 
+                            downloaded. In particular, the version number for 
+                            Wicket itself may not reflect a version currently 
+                            available in the maven repository. </p>
+                        <p> If you are reading this from the documentation that 
+                            came bundled with a particular distribution of 
+                            Wicket then you can use these values without 
+                            modification. </p>
+<source>&lt;dependency&gt; 
+    &lt;groupId&gt;wicket&lt;/groupId&gt; 
+    &lt;artifactId&gt;wicket&lt;/artifactId&gt; 
+    &lt;version&gt;${pom.currentVersion}&lt;/version&gt; 
+&lt;/dependency&gt;
+<j:forEach var="lib" items="${pom.artifacts}">
+    <j:set var="dep" value="${lib.dependency}"/>
+    <j:if test="${dep.getProperty('wicket.group')=='optional' or dep.getProperty('wicket.group')=='required'}">
+
+&lt;dependency&gt;
+    &lt;groupId&gt;${dep.groupId}&lt;/groupId&gt; 
+    &lt;artifactId&gt;${dep.artifactId}&lt;/artifactId&gt; 
+    &lt;version&gt;${dep.version}&lt;/version&gt; 
+&lt;/dependency&gt;
+
+</j:if>
+</j:forEach></source>
+                    </section>
+                </body>
+            </document>
+        </j:file>
+    </goal>
+    <postGoal name="dist:prepare-bin-filesystem" >
+        <!--	<attainGoal name="announcement"/> -->
+        <ant:mkdir dir="${maven.dist.bin.assembly.dir}/lib" />
+        <ant:mkdir dir="${maven.dist.bin.assembly.dir}/licenses" />
+        <ant:mkdir dir="${maven.dist.bin.assembly.dir}/sample" />
+        <j:forEach var="lib" items="${pom.artifacts}">
+            <j:set var="dep" value="${lib.dependency}" />
+            <j:if test="${dep.type=='jar'}">
+                <j:choose>
+                    <j:when test="${dep.getProperty('endorsed')}">
+                        <ant:copy 
+                            todir="${maven.dist.bin.assembly.dir}/lib/endorsed" 
+                            file="${lib.path}" />
+                    </j:when>
+                    <j:otherwise>
+                        <ant:copy todir="${maven.dist.bin.assembly.dir}/lib" 
+                            file="${lib.path}" />
+                    </j:otherwise>
+                </j:choose>
+            </j:if>
+        </j:forEach>
+        <!--
 	<ant:copy todir="${maven.dist.bin.assembly.dir}/sample">
 		<fileset dir="sample">
 			<include name="**/*"/>
@@ -36,33 +184,31 @@
 		</fileset>
 	</ant:copy>
 -->
-	<ant:copy todir="${maven.dist.bin.assembly.dir}/src/java">
-		<fileset dir="src/java">
-			<include name="**/*"/>
-		</fileset>
-	</ant:copy>
-
-	<ant:copy todir="${maven.dist.bin.assembly.dir}/src/test">
-		<fileset dir="src/test">
-			<include name="**/*"/>
-		</fileset>
-	</ant:copy>
-
-	<ant:copy todir="${maven.dist.bin.assembly.dir}/xdocs">
-		<fileset dir="xdocs">
-			<include name="**/*"/>
-		</fileset>
-	</ant:copy>
-
-	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="project.xml" />
-	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="project.properties" />
-	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="maven.xml" />
-	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="build.xml" />
-	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="LICENSE_AGREEMENT.txt" />
-<!--	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="wicket-checkstyle.xml" /> -->
-<!--
+        <ant:copy todir="${maven.dist.bin.assembly.dir}/src/java">
+            <fileset dir="src/java">
+                <include name="**/*"/>
+            </fileset>
+        </ant:copy>
+        <ant:copy todir="${maven.dist.bin.assembly.dir}/src/test">
+            <fileset dir="src/test">
+                <include name="**/*"/>
+            </fileset>
+        </ant:copy>
+        <ant:copy todir="${maven.dist.bin.assembly.dir}/xdocs">
+            <fileset dir="xdocs">
+                <include name="**/*"/>
+            </fileset>
+        </ant:copy>
+        <ant:copy todir="${maven.dist.bin.assembly.dir}" file="project.xml" />
+        <ant:copy todir="${maven.dist.bin.assembly.dir}" 
+            file="project.properties" />
+        <ant:copy todir="${maven.dist.bin.assembly.dir}" file="maven.xml" />
+        <ant:copy todir="${maven.dist.bin.assembly.dir}" file="build.xml" />
+        <ant:copy todir="${maven.dist.bin.assembly.dir}" 
+            file="LICENSE_AGREEMENT.txt" />
+        <!--	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="wicket-checkstyle.xml" /> -->
+        <!--
 		<ant:copy tofile="${maven.dist.bin.assembly.dir}/release-${pom.currentVersion}.txt" file="${maven.announcement.file}"/>
 -->
-</postGoal>
-
+    </postGoal>
 </project>
