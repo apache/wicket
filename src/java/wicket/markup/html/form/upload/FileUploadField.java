@@ -32,12 +32,12 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Eelco Hillenius
  */
-public class FileInputField extends FormComponent
+public class FileUploadField extends FormComponent
 {
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FileInputField(String name)
+	public FileUploadField(String name)
 	{
 		super(name);
 	}
@@ -45,7 +45,7 @@ public class FileInputField extends FormComponent
 	/**
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
-	public FileInputField(String name, Serializable object)
+	public FileUploadField(String name, Serializable object)
 	{
 		super(name, object);
 	}
@@ -53,7 +53,7 @@ public class FileInputField extends FormComponent
 	/**
 	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
-	public FileInputField(String name, Serializable object, String expression)
+	public FileUploadField(String name, Serializable object, String expression)
 	{
 		super(name, object, expression);
 	}
