@@ -72,7 +72,7 @@ public abstract class FormComponentsPanel extends FormComponent
         {
             public Object component(final Component component)
             {
-                final FormComponent formComponent = (FormComponent) component;
+                final FormComponent formComponent = (FormComponent)component;
                 formComponent.updateModel(cycle);
                 return CONTINUE_TRAVERSAL;
             }
@@ -94,7 +94,9 @@ public abstract class FormComponentsPanel extends FormComponent
                 {
                 	children.add(component);
                 }
-                return IVisitor.CONTINUE_TRAVERSAL; // continue until the end
+                
+                // Continue until the end
+                return IVisitor.CONTINUE_TRAVERSAL;
             }
         });
 		return children;
@@ -162,12 +164,15 @@ public abstract class FormComponentsPanel extends FormComponent
                             log.debug("validation error: " + message);
                         }
                         messages.add(message);
-                        // replace the model
+                        
+                        // Replace the model
                         ValidationErrorModelDecorator decorator =
                             new ValidationErrorModelDecorator(component, message.getInput());
                         component.setModel(decorator);
                     }
-                    return IVisitor.CONTINUE_TRAVERSAL; // continue until the end
+                    
+                    // Continue until the end
+                    return IVisitor.CONTINUE_TRAVERSAL; 
                 }
             });
 		}
