@@ -210,9 +210,9 @@ public class HttpResponse extends Response
         {
             httpServletResponse.getWriter().write(string);
         }
-        catch (IOException ex)
+        catch (IOException e)
         {
-            throw new WicketRuntimeException("Error while writing to servlet output writer.", ex);
+            throw new WicketRuntimeException("Error while writing to servlet output writer.", e);
         }
     }
 }
