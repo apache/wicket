@@ -119,6 +119,21 @@ public final class MarkupParserTest extends TestCase
         Assert.assertEquals("a", closeA.getName());
         Assert.assertTrue(tokens.get(5).equals(" of the emergency broadcasting system"));
     }
+
+    public final void testXhtmlDocument() throws ParseException {
+        final String docText = "" +
+           "<?xml version='1.0' encoding='iso-8859-1' ?>" +
+           "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" +
+           "<html>" +
+           "<head><title>Some Page</title></head>" +
+           "<body><h1>XHTML Test</h1></body>" +
+           "</html>";
+        final MarkupParser parser = new MarkupParser("componentName", 0);
+        final Markup tokens = parser.parse(docText);
+
+        System.out.println("tok(0)=" + tokens.get(0));
+        Assert.assertEquals(docText, tokens.get(0).toString());
+    }
 }
 
 ///////////////////////////////// End of File /////////////////////////////////
