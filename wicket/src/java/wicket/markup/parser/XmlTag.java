@@ -385,7 +385,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public Object put(final String key, final StringValue value)
 	{
-		return attributes.put(key.toLowerCase(), value);
+		return attributes.put(key.toLowerCase(), value.toString());
 	}
 
 	/**

@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
-import wicket.util.string.StringValue;
 import wicket.util.string.StringValueConversionException;
 
 /**
@@ -217,7 +216,7 @@ public class WicketTagComponentResolver implements IComponentResolver
         {
             final Map.Entry entry = (Map.Entry)iter.next();
             final String key = (String)entry.getKey();
-            final String value = ((StringValue)entry.getValue()).toString();
+            final String value = (String)entry.getValue();
 
             // Ignore attributes 'name' and 'class'
             if ("name".equalsIgnoreCase(key) || ("class".equalsIgnoreCase(key)))

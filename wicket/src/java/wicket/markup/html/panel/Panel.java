@@ -78,13 +78,11 @@ public class Panel extends WebMarkupContainer
         // Render the tag that included this html compoment
         final MarkupStream markupStream = findMarkupStream();
 
-        if (!markupStream.atOpenCloseTag())
-        {
-            markupStream.throwMarkupException("A panel must be referenced by an openclose tag.");
-        }
+        // True if our panel is referenced by <wicket:panel>
+        final boolean atOpenTag = markupStream.atOpenTag();
 
         // In order to be html compliant (though we are xhtml compliant already) 
-        // and even more intuitiv, we open up the tag, change it from open-close to
+        // and even more intuitive, we open up the tag, change it from open-close to
         // open, the panel now becomes the tag body and we'll close it manually
         // later.
         final ComponentTag openTag = markupStream.getTag().mutable();
@@ -97,8 +95,27 @@ public class Panel extends WebMarkupContainer
         
         // Close the manually opened panel tag.
         getResponse().write(openTag.syntheticCloseTagString());
+                
+        // Skip opening tag
 		markupStream.next();
+		
+        // If we are at an open tag, then there is nested preview markup
+        if (atOpenTag)
+        {
+			// Skip any raw markup in the body
+			markupStream.skipRawMarkup();
+			
+			// Open tag must have close tag
+			if (!markupStream.atCloseTag())
+			{
+				// There must be a component in this discarded body
+				markupStream
+						.throwMarkupException("Expected close tag.  Possible attempt to embed component(s) "
+								+ "in the body of a component which discards its body");
+			}
+	        
+	        // Skip closing tag
+			markupStream.next();
+        }
     }
 }
-
-

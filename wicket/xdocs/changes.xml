@@ -9,6 +9,9 @@
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
       <action type="update" dev="Jonathan Locke" issue="">
+      Changed Panel so you can have preview text inside the wicket:panel tag.  Fixed a bug in XmlTag regarding what the attributes map holds.  It now holds ordinary Strings.
+	  </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Added a protected method to Link and Button to get onClick script code to install from subclasses.  Fixed bug where XmlTag attributes were case sensitive!
 	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
