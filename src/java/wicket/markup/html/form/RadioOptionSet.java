@@ -118,7 +118,8 @@ public final class RadioOptionSet extends FormComponent
             //TODO support custom labels in future
             final String label = String.valueOf(value.toString());
 
-            options.append(getLocalizer().getString(getPath() + "." + label, this, label));
+            options.append(getLocalizer().getString(
+                    getName() + "." + label, this, label));
 
             // Append separator
             if (iterator.hasNext())

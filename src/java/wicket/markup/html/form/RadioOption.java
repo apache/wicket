@@ -256,7 +256,8 @@ public final class RadioOption extends FormComponent
             displayLabel = String.valueOf(value);
         }
 
-        String s = getLocalizer().getString(getPath() + "." + displayLabel, this, displayLabel);
+        String s = getLocalizer().getString(
+                getName() + "." + displayLabel, this, displayLabel);
 
         replaceBody(cycle, markupStream, openTag, s);
     }
