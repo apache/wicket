@@ -296,6 +296,7 @@ public abstract class Tree extends Panel implements ILinkListener
         treeStateCache.setModel(model);
         treeStateCache.setSelectionModel(selectionModel);
         treeStateCache.setRootVisible(rootVisible);
+        model.addTreeModelListener(treeStateCache);
         return treeStateCache;
 	}
 
