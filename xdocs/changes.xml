@@ -15,6 +15,13 @@
 			<action type="add" dev="Juergen Donnerstag">
 				Fixed autoIndex bug. AutoIndex numbers are now unique across a whole page.
 			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				Added lots of new and improved Table features. Examples contain 
+				displaytag like demos.
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				signin example now includes a rememberMe functionality
+			</action>
 		</release>
 	</body>
 </document>
