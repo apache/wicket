@@ -166,38 +166,38 @@ public final class MarkupParserTest extends TestCase
     {
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn", "wicket");
         Resource resource = Resource.locate(null, this.getClass(), "1", null, "html");
-        Markup tokens = parser.read(resource);
+        Markup tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = Resource.locate(null, this.getClass(), "2", null, "html");
-        tokens = parser.read(resource);
+        tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = Resource.locate(null, this.getClass(), "3", null, "html");
-        tokens = parser.read(resource);
+        tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = Resource.locate(null, this.getClass(), "4", null, "html");
-        tokens = parser.read(resource);
+        tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         // File from jar (URL resource)
         resource = Resource.locate(null, PageExpiredErrorPage.class, null, null, "html");
-        tokens = parser.read(resource);
+        tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = Resource.locate(null, this.getClass(), "5", null, "html");
-        tokens = parser.read(resource);
+        tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = Resource.locate(null, this.getClass(), "6", null, "html");
-        tokens = parser.read(resource);
+        tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
     }
