@@ -19,6 +19,7 @@
 package wicket.examples.pub;
 
 import wicket.protocol.http.WebApplication;
+import wicket.util.time.Duration;
 
 /**
  * WicketServlet class for the linkomatic example.
@@ -30,5 +31,6 @@ public class PubApplication extends WebApplication
     public PubApplication()
     {
         getPages().setHomePage(Home.class);
+        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }

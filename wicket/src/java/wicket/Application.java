@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.markup.AutolinkComponentResolver;
-import wicket.markup.IMarkupParser;
 import wicket.markup.MarkupParser;
 import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.ICrypt;
+import wicket.markup.parser.XmlPullParser;
 import wicket.util.convert.ConverterRegistry;
 import wicket.util.lang.Classes;
 import wicket.util.time.Duration;
@@ -156,9 +156,9 @@ public abstract class Application
 	 * 
 	 * @return A new MarkupParser
 	 */
-	public IMarkupParser getMarkupParser()
+	public MarkupParser getMarkupParser()
 	{
-		final MarkupParser parser = new MarkupParser();
+		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 		parser.configure(getSettings());
 		return parser;
 	}

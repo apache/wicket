@@ -30,6 +30,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.markup.parser.XmlTag;
 import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -984,11 +985,11 @@ public abstract class Component implements Serializable
 		handleComponentTag(tag);
 
 		// If we're an openclose tag
-		final ComponentTag.Type type = tag.getType();
+		final XmlTag.Type type = tag.getType();
 		if (tag.isOpenClose())
 		{
 			// Change type to open tag
-			tag.setType(ComponentTag.OPEN);
+			tag.setType(XmlTag.OPEN);
 		}
 		else
 		{
@@ -1026,7 +1027,7 @@ public abstract class Component implements Serializable
 	protected final void renderTag(ComponentTag tag)
 	{
 		// Apply attribute tag modifiers
-		if (attributeModifiers != null && tag.getType() != ComponentTag.CLOSE)
+		if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE))
 		{
 			tag = tag.mutable();
 			for (Iterator it = attributeModifiers.iterator(); it.hasNext();)

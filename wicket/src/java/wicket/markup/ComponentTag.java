@@ -1,32 +1,34 @@
 /*
  * $Id$
- * $Revision$ $Date$
- * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package wicket.markup;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import wicket.util.lang.EnumeratedType;
+import wicket.markup.parser.XmlTag;
+import wicket.markup.parser.XmlTag.Type;
+import wicket.markup.parser.filter.HtmlHandler;
 import wicket.util.string.StringValue;
 import wicket.util.value.ValueMap;
 
 /**
  * A subclass of MarkupElement which represents a "significant" markup tag, such
- * as a component open or close tag. Insignificant markup tags (those which are
+ * as a component open tag. Insignificant markup tags (those which are
  * merely concerned with markup formatting operations and do not denote
  * components or component nesting) are coalesced into instances of RawMarkup
  * (also a subclass of MarkupElement).
@@ -35,565 +37,400 @@ import wicket.util.value.ValueMap;
  */
 public class ComponentTag extends MarkupElement
 {
-	/** A close tag, like &lt;/TAG&gt;. */
-	public static final Type CLOSE = new Type("CLOSE");
+    /**
+     * Standard component name attribute always available for components
+     * regardless of user ApplicationSettings for componentName attribute; 
+     * value == 'wicket'.
+     */
+    public static final String DEFAULT_COMPONENT_NAME_ATTRIBUTE = "wicket";
 
-	/** Default component name is 'wicket'. */
-	public static final String DEFAULT_COMPONENT_NAME_ATTRIBUTE = "wicket";
+    /** The component's name. Wicket supports several means to identify
+     * Wicket components. E.g. wicket="name", id="wicket-name" */
+    private String componentName;
 
-	/** An open tag, like &lt;TAG componentName = "xyz"&gt;. */
-	public static final Type OPEN = new Type("OPEN");
+    /** The underlying xml tag */
+    protected final XmlTag xmlTag;
+    
+    /** Assuming this is a open (or open-close) tag, 'closes' refers to
+     * the ComponentTag which closes it.
+     */
+    protected ComponentTag closes;
+    
+    /** True if a href attribute is available and autolinking is on */
+    private boolean autolink = false;
 
-	/** An open/close tag, like &lt;TAG componentName = "xyz"/&gt; */
-	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
+    /**
+     * Construct.
+     * @param The underlying xml tag
+     */
+    public ComponentTag(final XmlTag tag)
+    {
+        super();
+        xmlTag = tag;
+    }
 
-	/** Map of simple tags. */
-	private static final Map doesNotRequireCloseTag = new HashMap();
+    /**
+     * Get the tag's component name 
+     * 
+     * @return The component name attribute of this tag
+     */
+    public String getComponentName()
+    {
+        return componentName;
+    }
 
-	/** Attribute map. */
-	ValueMap attributes = new ValueMap();
+    /**
+     * Set the component's name. The value is usually taken from
+     * the tag's id attribute, e.g. id="wicket-name" or wicket="name".
+     * @param name The component's name assigned to the tag.
+     */
+    public void setComponentName(final String name)
+    {
+        this.componentName = name;
+    }
 
-	/** Any component tag that this tag closes. */
-	ComponentTag closes;
+    /**
+     * @return Returns the underlying xml tag.
+     */
+    public XmlTag getXmlTag()
+    {
+        return xmlTag;
+    }
 
-	/** Column number. */
-	int columnNumber;
+    /**
+     * Gets whether this tag closes the provided open tag.
+     * @param open The open tag
+     * @return True if this tag closes the given open tag
+     */
+    public final boolean closes(final MarkupElement open)
+    {
+        if (open instanceof ComponentTag)
+        {
+            return (closes == open) 
+            		|| getXmlTag().closes(((ComponentTag)open).getXmlTag());
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Assuming this is a close tag, assign it's corresponding open tag.
+     * 
+     * @param tag the open-tag
+     * @throws RuntimeException if 'this' is not a close tag
+     */
+    public void setOpenTag(final ComponentTag tag)
+    {
+        this.closes = tag;
+        getXmlTag().setOpenTag(tag.getXmlTag());
+    }
 
-	/** Convenient copy of componentName attribute. */
-	String componentName;
+    /**
+     * If set, return the corresponding open tag (ComponentTag).
+     * @return The corresponding open tag
+     */
+    public ComponentTag getOpenTag()
+    {
+        return closes;
+    }
 
-	/** Length of this tag in characters. */
-	int length;
+    /**
+     * Gets this tag if it is already mutable, or a mutable copy of this tag if
+     * it is immutable.
+     * 
+     * @return This tag if it is already mutable, or a mutable copy of this tag
+     *         if it is immutable.
+     */
+    public ComponentTag mutable()
+    {
+        if (xmlTag.isMutable())
+        {
+            return this;
+        } 
+        else
+        {
+            final ComponentTag tag = new ComponentTag(xmlTag.mutable());
+            tag.componentName = componentName;
+            return tag;
+        }
+    }
 
-	/** Line number. */
-	int lineNumber;
+    /**
+     * Makes this tag object immutable by making the attribute map unmodifiable. Immutable
+     * tags cannot be made mutable again. They can only be copied into new mutable tag
+     * objects.
+     */
+    public void makeImmutable()
+    {
+        xmlTag.makeImmutable();
+    }
 
-	/** Name of tag, such as "img" or "input". */
-	String name;
+    /**
+     * Clears component name attribute from this tag if the tag is mutable.
+     * 
+     * @param componentNameAttribute
+     *            The attribute name to remove
+     */
+    public void removeComponentName(final String componentNameAttribute)
+    {
+        if (xmlTag.isMutable())
+        {
+            this.componentName = null;
+            xmlTag.remove(componentNameAttribute);
+            xmlTag.remove(DEFAULT_COMPONENT_NAME_ATTRIBUTE);
+        } else
+        {
+            throw new UnsupportedOperationException(
+                    "Attempt to clear component name attribute of immutable tag");
+        }
+    }
 
-	/** Namespace of the tag, if available, such as &lt;wicket:link ...&gt; */
-	String namespace;
+    /**
+     * Converts this object to a string representation.
+     * 
+     * @return String version of this object
+     */
+    public String toString()
+    {
+        return xmlTag.toString();
+    }
 
-	/** Position of this tag in the input that was parsed. */
-	int pos;
+    /**
+     * Converts this object to a string representation including
+     * useful information for debugging
+     * 
+     * @return String version of this object
+     */
+    public String toUserDebugString()
+    {
+        return xmlTag.toUserDebugString();
+    }
 
-	/** Full text of tag. */
-	String text;
+    /**
+     * @see wicket.util.xml.XmlTag#getAttributes()
+     * @return The tag#s attributes
+     */
+    public ValueMap getAttributes()
+    {
+        return xmlTag.getAttributes();
+    }
 
-	/** The tag type (OPEN, CLOSE or OPEN_CLOSE). */
-	Type type;
+    /**
+     * @see wicket.util.xml.XmlTag#put(String, boolean)
+     * @param key The key
+     * @param value The value
+     */
+    public void put(String key, boolean value)
+    {
+        xmlTag.put(key, value);
+    }
 
-	/** True if a href attribute is available and autolinking is on */
-	private boolean autolink = false;
+    /**
+     * @see wicket.util.xml.XmlTag#put(String, int)
+     * @param key The key
+     * @param value The value
+     */
+    public void put(String key, int value)
+    {
+        xmlTag.put(key, value);
+    }
 
-	/** If mutable, the immutable tag that this tag is a mutable copy of. */
-	private ComponentTag copyOf = this;
+    /**
+     * @see wicket.util.xml.XmlTag#put(String, String)
+     * @param key The key
+     * @param value The value
+     */
+    public void put(String key, String value)
+    {
+        xmlTag.put(key, value);
+    }
 
-	/** True if this tag is mutable, false otherwise. */
-	private boolean isMutable;
+    /**
+     * @see wicket.util.xml.XmlTag#put(String, StringValue)
+     * @param key The key
+     * @param value The value
+     */
+    public void put(String key, StringValue value)
+    {
+        xmlTag.put(key, value);
+    }
 
-	/** True if the name of this tag was changed. */
-	private boolean nameChanged = false;
+    /**
+     * @see wicket.util.xml.XmlTag#putAll(Map)
+     * @param map a key/value map
+     */
+    public void putAll(final Map map)
+    {
+        xmlTag.putAll(map);
+    }
 
-	/**
-	 * Enumerated type for different kinds of component tags.
-	 */
-	public static final class Type extends EnumeratedType
-	{
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *            name of type
-		 */
-		Type(final String name)
-		{
-			super(name);
-		}
-	}
+    /**
+     * @see wicket.util.xml.XmlTag#getString(String)
+     * @param key The key
+     * @return The string value
+     */
+    public String getString(String key)
+    {
+        return xmlTag.getString(key);
+    }
 
-	/**
-	 * Gets whether this tag closes the provided open tag.
-	 * 
-	 * @param open
-	 *            The open tag
-	 * @return True if this tag closes the given open tag
-	 */
-	public boolean closes(final ComponentTag open)
-	{
-		return this.closes == open || this.closes == open.copyOf;
-	}
+    /**
+     * @see wicket.util.xml.XmlTag#getName()
+     * @return The tag's name
+     */
+    public String getName()
+    {
+        return xmlTag.getName();
+    }
 
-	/**
-	 * Get the close tag for this tag.
-	 * 
-	 * @return Close tag for this tag
-	 */
-	public ComponentTag closeTag()
-	{
-		final ComponentTag tag = new ComponentTag();
+    /**
+     * @see wicket.util.xml.XmlTag#getNamespace()
+     * @return The tag's namespace
+     */
+    public String getNamespace()
+    {
+        return xmlTag.getNamespace();
+    }
 
-		tag.namespace = this.namespace;
-		tag.name = this.name;
-		tag.type = CLOSE;
-		tag.text = tag.toString();
-		tag.isMutable = false;
+    /**
+     * @see wicket.util.xml.XmlTag#remove(String)
+     * @param key The key to remove
+     */
+    public void remove(String key)
+    {
+        xmlTag.remove(key);
+    }
 
-		return tag;
-	}
+    /**
+     * @see wicket.util.xml.XmlTag#getType()
+     * @return the tag type (OPEN, CLOSE or OPEN_CLOSE).
+     */
+    public Type getType()
+    {
+        return xmlTag.getType();
+    }
 
-	/**
-	 * If autolink is set to true, href attributes will automatically be
-	 * converted into Wicket bookmarkable URLs.
-	 * 
-	 * @param autolink
-	 *            Enable/disable automatic href conversion
-	 */
-	public void enableAutolink(final boolean autolink)
-	{
-		this.autolink = autolink;
-	}
+    /**
+     * @see wicket.util.xml.XmlTag#isOpen()
+     * @return True if this tag is an open tag
+     */
+    public boolean isOpen()
+    {
+        return xmlTag.isOpen();
+    }
 
-	/**
-	 * Gets a hashmap of this tag's attributes.
-	 * 
-	 * @return The tag's attributes
-	 */
-	public ValueMap getAttributes()
-	{
-		return attributes;
-	}
+    /**
+     * @see wicket.util.xml.XmlTag#isOpen(String)
+     * @param componentName Required component name attribute
+     * @return True if this tag is an open tag with the given component name
+     */
+    public boolean isOpen(String componentName)
+    {
+        return xmlTag.isOpen(componentName);
+    }
 
-	/**
-	 * Get the column number.
-	 * 
-	 * @return Returns the columnNumber.
-	 */
-	public int getColumnNumber()
-	{
-		return columnNumber;
-	}
+    /**
+     * @see wicket.util.xml.XmlTag#isOpenClose()
+     * @return True if this tag is an open and a close tag
+     */
+    public boolean isOpenClose()
+    {
+        return xmlTag.isOpenClose();
+    }
 
-	/**
-	 * Get the name of the component.
-	 * 
-	 * @return The component name attribute of this tag
-	 */
-	public String getComponentName()
-	{
-		return componentName;
-	}
+    /**
+     * @see wicket.util.xml.XmlTag#isOpenClose(String)
+     * @param componentName Required component name attribute
+     * @return True if this tag is an openclose tag with the given component name
+     */
+    public boolean isOpenClose(String componentName)
+    {
+        return xmlTag.isOpenClose(componentName);
+    }
 
-	/**
-	 * Gets the length of the tag in characters.
-	 * 
-	 * @return The tag's length
-	 */
-	public int getLength()
-	{
-		return length;
-	}
-
-	/**
-	 * Get the line number.
-	 * 
-	 * @return Returns the lineNumber.
-	 */
-	public int getLineNumber()
-	{
-		return lineNumber;
-	}
-
-	/**
-	 * Gets the name of the tag, for example the tag <b>'s name would be 'b'.
-	 * 
-	 * @return The tag's name
-	 */
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * Get whether the name of this component tag was changed.
-	 * 
-	 * @return Returns true if the name of this component tag was changed
-	 */
-	public boolean getNameChanged()
-	{
-		return nameChanged;
-	}
-
-	/**
-	 * Namespace of the tag, if available, such as &lt;wicket:link ...&gt;
-	 * 
-	 * @return The tag's namespace
-	 */
-	public String getNamespace()
-	{
-		return namespace;
-	}
-
-	/**
-	 * Gets the location of the tag in the input string.
-	 * 
+    /**
+     * @see wicket.util.xml.XmlTag#setType(Type)
+     * @param type The new type
+     */
+    public void setType(Type type)
+    {
+        xmlTag.setType(type);
+    }
+    
+    /**
+     * True if autolink is enabled and the tag contains a href attribute.
+     * @return True, if the href contained should automatically be converted
+     */
+    public boolean isAutolinkEnabled()
+    {
+        return this.autolink;
+    }
+    
+    /**
+     * If autolink is set to true, href attributes will automatically be
+     * converted into Wicket bookmarkable URLs.
+     * @param autolink enable/disable automatic href conversion
+     */
+    public void enableAutolink(final boolean autolink)
+    {
+        this.autolink = autolink;
+    }
+    
+    /**
+     * @see wicket.util.xml.XmlTag#getNameChanged()
+     * @return Returns true if the name of this component tag was changed
+     */
+    public boolean getNameChanged()
+    {
+        return xmlTag.getNameChanged();
+    }
+    
+    /**
+     * @see wicket.util.xml.XmlTag#setName(String)
+     * @param name New tag name
+     */
+    public void setName(String name)
+    {
+        xmlTag.setName(name);
+    }
+    
+    /**
+     * @see wicket.util.xml.XmlTag#isClose()
+     * @return True if this tag is a close tag
+     */
+    public boolean isClose()
+    {
+        return xmlTag.isClose();
+    }
+    
+    /**
+     * @see wicket.util.xml.XmlTag#getPos()
 	 * @return Tag location (index in input string)
-	 */
-	public int getPos()
-	{
-		return pos;
-	}
-
-	/**
-	 * Get a string attribute.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The string value
-	 */
-	public String getString(final String key)
-	{
-		return attributes.getString(key);
-	}
-
-	/**
-	 * Get the tag type.
-	 * 
-	 * @return the tag type (OPEN, CLOSE or OPEN_CLOSE).
-	 */
-	public Type getType()
-	{
-		return type;
-	}
-
-	/**
-	 * True if autolink is enabled and the tag contains a href attribute.
-	 * 
-	 * @return True, if the href contained should automatically be converted
-	 */
-	public boolean isAutolinkEnabled()
-	{
-		return this.autolink;
-	}
-
-	/**
-	 * Gets whether this is a close tag.
-	 * 
-	 * @return True if this tag is a close tag
-	 */
-	public boolean isClose()
-	{
-		return type == CLOSE;
-	}
-
-	/**
-	 * Gets whether this is an open tag.
-	 * 
-	 * @return True if this tag is an open tag
-	 */
-	public boolean isOpen()
-	{
-		return type == OPEN;
-	}
-
-	/**
-	 * Gets whether this tag is an open tag with the given component name.
-	 * 
-	 * @param componentName
-	 *            Required component name attribute
-	 * @return True if this tag is an open tag with the given component name
-	 */
-	public boolean isOpen(final String componentName)
-	{
-		return isOpen() && componentName.equals(componentName);
-	}
-
-	/**
-	 * Gets whether this tag is an open/ close tag.
-	 * 
-	 * @return True if this tag is an open and a close tag
-	 */
-	public boolean isOpenClose()
-	{
-		return type == OPEN_CLOSE;
-	}
-
-	/**
-	 * Gets whether this tag is an openclose tag with the given component name.
-	 * 
-	 * @param componentName
-	 *            Required component name attribute
-	 * @return True if this tag is an openclose tag with the given component
-	 *         name
-	 */
-	public boolean isOpenClose(final String componentName)
-	{
-		return isOpenClose() && componentName.equals(componentName);
-	}
-
-	/**
-	 * Makes this tag object immutable by making the attribute map unmodifiable.
-	 * Immutable tags cannot be made mutable again. They can only be copied into
-	 * new mutable tag objects.
-	 */
-	public void makeImmutable()
-	{
-		if (isMutable)
-		{
-			isMutable = false;
-			attributes.makeImmutable();
-		}
-	}
-
-	/**
-	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
-	 * it is immutable.
-	 * 
-	 * @return This tag if it is already mutable, or a mutable copy of this tag
-	 *         if it is immutable.
-	 */
-	public ComponentTag mutable()
-	{
-		if (isMutable)
-		{
-			return this;
-		}
-		else
-		{
-			final ComponentTag tag = new ComponentTag();
-
-			tag.namespace = namespace;
-			tag.name = name;
-			tag.pos = pos;
-			tag.length = length;
-			tag.text = text;
-			tag.attributes = new ValueMap(attributes);
-			tag.type = type;
-			tag.isMutable = true;
-			tag.componentName = componentName;
-			tag.closes = closes;
-			tag.copyOf = copyOf;
-
-			return tag;
-		}
-	}
-
-	/**
-	 * Puts a boolean attribute.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param value
-	 *            The value
-	 */
-	public void put(final String key, final boolean value)
-	{
-		put(key, Boolean.toString(value));
-	}
-
-	/**
-	 * Puts an int attribute.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param value
-	 *            The value
-	 */
-	public void put(final String key, final int value)
-	{
-		put(key, Integer.toString(value));
-	}
-
-	/**
-	 * Puts a string attribute.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param value
-	 *            The value
-	 */
-	public void put(final String key, final String value)
-	{
-		attributes.put(key, value);
-	}
-
-	/**
-	 * Puts a {@link StringValue}attribute.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param value
-	 *            The value
-	 */
-	public void put(final String key, final StringValue value)
-	{
-		attributes.put(key, value);
-	}
-
-	/**
-	 * Removes an attribute.
-	 * 
-	 * @param key
-	 *            The key to remove
-	 */
-	public void remove(final String key)
-	{
-		attributes.remove(key);
-	}
-
-	/**
-	 * Clears component name attribute from this tag if the tag is mutable.
-	 * 
-	 * @param componentNameAttribute
-	 *            The attribute name to remove
-	 */
-	public void removeComponentName(final String componentNameAttribute)
-	{
-		if (isMutable)
-		{
-			this.componentName = null;
-			remove(componentNameAttribute);
-			remove(DEFAULT_COMPONENT_NAME_ATTRIBUTE);
-		}
-		else
-		{
-			throw new UnsupportedOperationException(
-					"Attempt to clear component name attribute of immutable tag");
-		}
-	}
-
+     */
+    public int getPos()
+    {
+        return xmlTag.getPos();
+    }
+    
 	/**
 	 * Gets whether this tag does not require a closing tag.
 	 * 
 	 * @return True if this tag does not require a closing tag
 	 */
-	public boolean requiresCloseTag()
-	{
-		return doesNotRequireCloseTag.get(name) == null;
-	}
-
+    public boolean requiresCloseTag()
+    {
+        return HtmlHandler.requiresCloseTag(this.getName());
+    }
+    
 	/**
-	 * Sets the tag name.
+	 * Gets the length of the tag in characters.
 	 * 
-	 * @param name
-	 *            New tag name
+	 * @return The tag's length
 	 */
-	public void setName(final String name)
-	{
-		if (isMutable)
-		{
-			this.name = name;
-			this.nameChanged = true;
-		}
-		else
-		{
-			throw new UnsupportedOperationException("Attempt to set name of immutable tag");
-		}
-	}
-
-	/**
-	 * Sets type of this tag if it is not immutable.
-	 * 
-	 * @param type
-	 *            The new type
-	 */
-	public void setType(final Type type)
-	{
-		if (isMutable)
-		{
-			this.type = type;
-		}
-		else
-		{
-			throw new UnsupportedOperationException("Attempt to set type of immutable tag");
-		}
-	}
-
-	/**
-	 * Converts this object to a string representation.
-	 * 
-	 * @return String version of this object
-	 */
-	public String toDebugString()
-	{
-		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber + ", length = "
-				+ length + ", attributes = [" + attributes + "], type = " + type + "]";
-	}
-
-	/**
-	 * Converts this object to a string representation.
-	 * 
-	 * @return String version of this object
-	 */
-	public String toString()
-	{
-		if (!isMutable)
-		{
-			return text;
-		}
-		else
-		{
-			return toXmlString();
-		}
-	}
-
-	/**
-	 * Converts this object to a string representation.
-	 * 
-	 * @return String version of this object
-	 */
-	public String toUserDebugString()
-	{
-		return "'" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
-	}
-
-	/**
-	 * Converts this object to a xml string representation.
-	 * 
-	 * @return xml string version of this object
-	 */
-	public String toXmlString()
-	{
-		final StringBuffer buffer = new StringBuffer();
-
-		buffer.append('<');
-
-		if (type == CLOSE)
-		{
-			buffer.append('/');
-		}
-
-		if (namespace != null)
-		{
-			buffer.append(namespace);
-			buffer.append(':');
-		}
-
-		buffer.append(name);
-
-		if (attributes.size() > 0)
-		{
-			buffer.append(' ');
-			buffer.append(attributes);
-		}
-
-		if (type == OPEN_CLOSE)
-		{
-			buffer.append('/');
-		}
-
-		buffer.append('>');
-
-		return buffer.toString();
-	}
-
-	static
-	{
-		doesNotRequireCloseTag.put("p", Boolean.TRUE);
-		doesNotRequireCloseTag.put("br", Boolean.TRUE);
-		doesNotRequireCloseTag.put("img", Boolean.TRUE);
-		doesNotRequireCloseTag.put("input", Boolean.TRUE);
-	}
+    public int getLength()
+    {
+        return xmlTag.getLength();
+    }
 }
 
-
+// /////////////////////////////// End of File /////////////////////////////////

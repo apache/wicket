@@ -88,6 +88,12 @@ public final class Home extends HtmlPage
                 currentLocale = new Locale("nl", "NL");
             }
         });
+        add(new Link("goGerman"){
+            public void linkClicked()
+            {
+                currentLocale = new Locale("de", "DE");
+            }
+        });
     }
 
     /**

@@ -22,6 +22,7 @@ import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentTagAttributeModifier;
+import wicket.markup.parser.XmlTag;
 import wicket.model.Model;
 import wicket.util.value.ValueMap;
 import junit.framework.TestCase;
@@ -156,7 +157,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 	{
 		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
 				new Model("model"));
-		ComponentTag tag = new ComponentTag();
+		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
 		attributes.put("test", "oldValue");
 		modifier.replaceAttibuteValue(tag);
@@ -172,7 +173,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 	{
 		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
 				"old[A-Z].*", new Model("model"));
-		ComponentTag tag = new ComponentTag();
+		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
 		attributes.put("test", "oldValue");
 		modifier.replaceAttibuteValue(tag);
@@ -189,7 +190,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 	{
 		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
 				"old[0-9].*", new Model("model"));
-		ComponentTag tag = new ComponentTag();
+		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
 		attributes.put("test", "oldValue");
 		modifier.replaceAttibuteValue(tag);
@@ -206,7 +207,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 	{
 		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
 				new Model("model"));
-		ComponentTag tag = new ComponentTag();
+		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
 		attributes.put("other", "value");
 		modifier.replaceAttibuteValue(tag);
@@ -223,7 +224,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 	{
 		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test", true,
 				new Model("model"));
-		ComponentTag tag = new ComponentTag();
+		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
 		attributes.put("other", "value");
 		modifier.replaceAttibuteValue(tag);
@@ -241,7 +242,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
 				new Model("model"));
 		modifier.setEnabled(false);
-		ComponentTag tag = new ComponentTag();
+		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
 		attributes.put("test", "oldValue");
 		modifier.replaceAttibuteValue(tag);

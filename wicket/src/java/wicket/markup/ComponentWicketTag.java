@@ -1,21 +1,25 @@
 /*
  * $Id$
- * $Revision$ $Date$
- * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package wicket.markup;
+
+import wicket.markup.parser.XmlTag;
+
 
 /**
  * ComponentWicketTag extends ComponentTag and will be createtd by a
@@ -39,35 +43,39 @@ public final class ComponentWicketTag extends ComponentTag
 	public static final String DEFAULT_WICKET_NAMESPACE = "wicket";
 
 	/**
-	 * Get wicket's component name attribute: e.g. &lt;wicket:component
-	 * name="myComponent"&gt;
+	 * Constructor
 	 * 
-	 * @return name attribute
+	 * @param tag
+	 *           The xml tag which this component tag is based upon.
 	 */
-	public final String getNameAttribute()
+	public ComponentWicketTag(final XmlTag tag)
 	{
-		return this.getAttributes().getString("name");
+		super(tag);
 	}
 
 	/**
+	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
+	 * it is immutable.
 	 * 
-	 * @return true, if tag name equals wicket:component
+	 * @return This tag if it is already mutable, or a mutable copy of this tag
+	 *         if it is immutable.
 	 */
-	public final boolean isComponentTag()
+	public ComponentTag mutable()
 	{
-		return "component".equalsIgnoreCase(getName());
+		if (xmlTag.isMutable())
+		{
+			return this;
+		}
+		else
+		{
+			final ComponentWicketTag tag = new ComponentWicketTag(xmlTag.mutable());
+			tag.setComponentName(getComponentName());
+			return tag;
+		}
 	}
 
 	/**
-	 * 
-	 * @return true, if tag name equals wicket:link
-	 */
-	public final boolean isLinkTag()
-	{
-		return "link".equalsIgnoreCase(getName());
-	}
-
-	/**
+	 * True, if tag name equals 'wicket:param'.
 	 * 
 	 * @return true, if tag name equals wicket:param
 	 */
@@ -77,13 +85,42 @@ public final class ComponentWicketTag extends ComponentTag
 	}
 
 	/**
+	 * True, if tag name equals 'wicket:component'
 	 * 
-	 * @return true, if &lt;wicket:remove&gt;
+	 * @return true, if tag name equals wicket:component
+	 */
+	public final boolean isComponentTag()
+	{
+		return "component".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * True, if tag name equals 'wicket:link'
+	 * 
+	 * @return true, if tag name equals wicket:link
+	 */
+	public final boolean isLinkTag()
+	{
+		return "link".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * True, if tag name equals 'wicket:remove'
+	 * 
+	 * @return true, if &lt;wicket:region name=remove&gt;
 	 */
 	public final boolean isRemoveTag()
 	{
 		return "remove".equalsIgnoreCase(getName());
 	}
+
+	/**
+	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
+	 * 
+	 * @return the tag's name attribute
+	 */
+	public final String getNameAttribute()
+	{
+		return this.getAttributes().getString("name");
+	}
 }
-
-
