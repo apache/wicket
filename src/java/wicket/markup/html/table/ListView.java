@@ -35,10 +35,12 @@ import wicket.model.IModel;
  * Example:
  * 
  * <pre>
- *   &lt;tbody&gt;
- *     &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
- *         &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *     ...    
+ * 
+ *    &lt;tbody&gt;
+ *      &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
+ *          &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *      ...    
+ *  
  * </pre>
  * 
  * <p>
@@ -46,6 +48,7 @@ import wicket.model.IModel;
  * HTML tables. Any kind of list can be rendered using ListView.
  * <p>
  * And the related Java code:
+ * 
  * <pre>
  * add(new ListView(&quot;rows&quot;, listData)
  * {
@@ -56,6 +59,7 @@ import wicket.model.IModel;
  * 	}
  * });
  * </pre>
+ * 
  * <p>
  * Note: Because Wicket model object must be Serializable,
  * java.util.List.subList() can not be used for model object, as the List
@@ -77,7 +81,7 @@ public abstract class ListView extends HtmlContainer
 	private int firstIndex = 0;
 
 	/**
-     * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public ListView(String name, IModel model)
 	{
@@ -85,7 +89,7 @@ public abstract class ListView extends HtmlContainer
 	}
 
 	/**
-     * @see wicket.Component#Component(String, IModel, String)
+	 * @see wicket.Component#Component(String, IModel, String)
 	 */
 	public ListView(String name, IModel model, String expression)
 	{
@@ -93,8 +97,10 @@ public abstract class ListView extends HtmlContainer
 	}
 
 	/**
-     * @param name See Component constructor
-	 * @param list List to cast to Serializable
+	 * @param name
+	 *            See Component constructor
+	 * @param list
+	 *            List to cast to Serializable
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public ListView(String name, List list)
@@ -103,7 +109,7 @@ public abstract class ListView extends HtmlContainer
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public ListView(String name, Serializable object)
 	{
@@ -111,7 +117,7 @@ public abstract class ListView extends HtmlContainer
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public ListView(String name, Serializable object, String expression)
 	{
@@ -175,8 +181,7 @@ public abstract class ListView extends HtmlContainer
 		}
 		else if (viewSize == Integer.MAX_VALUE)
 		{
-			// the model is not a list and the size is not set; probably an
-			// error
+			// The model is not a list and size is not set; probably an error
 			log.warn("model object (" + modelObject
 					+ ") is not a List and the view size is not explicitly set");
 		}
@@ -321,7 +326,6 @@ public abstract class ListView extends HtmlContainer
 	 */
 	protected ListItem newItem(final int index)
 	{
-		Object model = getListObject(index);
 		return new ListItem(index, this);
 	}
 
