@@ -164,7 +164,7 @@ public abstract class AbstractLink extends HtmlContainer implements ILinkListene
 	{
 		return getRequestCycle().urlFor(AbstractLink.this, ILinkListener.class);
 	}
-
+    
 	static
 	{
 		// Allow calls through the ILinkListener interface

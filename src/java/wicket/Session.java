@@ -345,33 +345,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-	 * THE FUTURE. Expires any pages in the session page map that are newer than
-	 * the given page. It is called by implementors of RequestCycle to expire
-	 * pages from the session page map which are no longer accessible in the
-	 * user's browser by using the back button.
-	 * 
-	 * @param page
-	 *            The page
-	 */
-	public final void removeNewerThan(final Page page)
-	{
-		// Loop through pages in page map
-		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
-		{
-			// Get next page
-			final Page current = (Page)iterator.next();
-
-			// If the page has a higher id than the given page
-			if (current.getId() > page.getId())
-			{
-				// remove it from the cache
-				iterator.remove();
-			}
-		}
-	}
-
-	/**
 	 * Removes a property on this session by key.
 	 * 
 	 * @param key
