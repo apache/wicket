@@ -21,6 +21,7 @@ package wicket.examples.forminput;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +30,6 @@ import java.util.Map;
 import wicket.FeedbackMessages;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.Session;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.DropDownChoice;
@@ -40,11 +40,13 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.validation.TypeValidator;
 import wicket.markup.html.form.validation.ValidationErrorMessage;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
+import wicket.protocol.http.HttpRequest;
 
 /**
  * Example for form input.
@@ -77,7 +79,9 @@ public class FormInput extends HtmlPage
 
 			public void linkClicked(RequestCycle cycle)
 			{
-				FormInput.this.currentLocale = RequestCycle.get().getSession().getLocale();
+				Locale requestLocale = ((HttpRequest)cycle.getRequest()).getLocale();
+				FormInput.this.currentLocale = requestLocale;
+				cycle.getSession().setLocale(requestLocale);
 			}
         	
         });
@@ -101,29 +105,6 @@ public class FormInput extends HtmlPage
 		this.currentLocale = currentLocale;
 	}
 
-    /**
-     * Temporarily set the currentLocale property at this session for rendering, and
-     * re-set the former locale after rendering.
-     * @see wicket.Container#handleRender(wicket.RequestCycle)
-     */
-    protected void handleRender(final RequestCycle cycle)
-    {
-        final Session session = cycle.getSession();
-        // keep the current locale
-        Locale userLocale = session.getLocale();
-        // replace the locale for rendering
-        session.setLocale(currentLocale);
-        try
-        {
-            super.handleRender(cycle);
-        }
-        finally
-        {
-            // set the user's locale back again
-            session.setLocale(userLocale);
-        }
-    }
-
     /** Form for input. */
     private static class InputForm extends Form
     {
@@ -144,10 +125,13 @@ public class FormInput extends HtmlPage
 			stringInput.add(requiredValidator);
 			TextField integerInput = new TextField("integerInput", input, "integerProperty");
 			integerInput.add(requiredValidator);
+			integerInput.add(new TypeValidator(Integer.class));
 			TextField doubleInput = new TextField("doubleInput", input, "doubleProperty");
 			doubleInput.add(requiredValidator);
+			doubleInput.add(new TypeValidator(Double.class));
 			TextField dateInput = new TextField("dateInput", input, "dateProperty");
 			dateInput.add(requiredValidator);
+			dateInput.add(new TypeValidator(Date.class));
 			add(stringInput);
 			add(integerInput);
 			add(doubleInput);
@@ -201,8 +185,8 @@ public class FormInput extends HtmlPage
 		 * @param expression ognl expression
 		 * @param values list of values
 		 */
-		public LocaleSelect(String name, Serializable object, String expression,
-				Collection values)
+		public LocaleSelect(String name, Serializable object,
+				String expression, Collection values)
 		{
 			// construct a property model WITHOUT formatting
 			super(name, new PropertyModel(new Model(object), expression, false), values);
@@ -213,12 +197,7 @@ public class FormInput extends HtmlPage
 		 */
 		public void selectionChanged(RequestCycle cycle, Object newSelection)
 		{
-			// In a real life app, you would probably want to set the session's
-			// current locale to the new selection. For this example, we just use
-			// the currentLocale instance variable of this page for rendering.
-			// As we used this page as the subject of the property model, and the
-			// expression 'currentLocale', this property will allways have the selected
-			// value; we do not have to do anything here.
+			cycle.getSession().setLocale((Locale)newSelection);
 		}
     }
 }
