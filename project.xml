@@ -1,6 +1,5 @@
 <project>
     <pomVersion>3</pomVersion>
-    <id>wicket</id>
     <name>Wicket</name>
     <groupId>wicket</groupId>
     <currentVersion>0.9.12-alpha</currentVersion>
@@ -11,7 +10,6 @@
     </organization>
     <inceptionYear>2004</inceptionYear>
     <package>com.voicetribe</package>
-    <logo/> <!-- /images/logo.gif</logo> -->
     <description>
 	    Wicket is a Java web application framework that takes simplicity, 
 	    separation of concerns and ease of development to a whole new level. Wicket 
@@ -23,10 +21,8 @@
     <shortDescription>a Java web application framework.</shortDescription>
     <url>http://wicket.sourceforge.net</url>
     <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
-
-	<siteAddress>shell.sourceforge.net</siteAddress>
-	<siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
-
+    <siteAddress>shell.sourceforge.net</siteAddress>
+    <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
     <mailingLists>
         <mailingList>
             <name>${pom.name} Dev List</name>
@@ -48,26 +44,30 @@
         </mailingList>
     </mailingLists>
     <developers>
-    	<developer>
-    		<name>Chris Turner</name>
-    		<id>skipoles</id>
-    		<email>skipoles at users.sourceforge.net</email>
-    	</developer>
-    	<developer>
-    		<name>Eelco Hillenius</name>
-    		<id>eelco12</id>
-    		<email>eelco12 at users.sourceforge.net</email>
-    	</developer>
-    	<developer>
-    		<name>Johan Compagner</name>
-    		<id>joco01</id>
-    		<email>joco01 at users.sourceforge.net</email>
-    	</developer>
-    	<developer>
-    		<name>Martijn Dashorst</name>
-    		<id>dashorst</id>
-    		<email>dashorst at users.sourceforge.net</email>
-    	</developer>
+        <developer>
+            <name>Chris Turner</name>
+            <id>skipoles</id>
+            <email>skipoles at users.sourceforge.net</email>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Eelco Hillenius</name>
+            <id>eelco12</id>
+            <email>eelco12 at users.sourceforge.net</email>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Johan Compagner</name>
+            <id>joco01</id>
+            <email>joco01 at users.sourceforge.net</email>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Martijn Dashorst</name>
+            <id>dashorst</id>
+            <email>dashorst at users.sourceforge.net</email>
+            <roles/>
+        </developer>
     </developers>
     <dependencies>
         <dependency>
@@ -75,14 +75,6 @@
             <artifactId>dom4j</artifactId>
             <version>1.4</version>
             <jar>dom4j-1.4.jar</jar>
-            <type>jar</type>
-            <properties/>
-        </dependency>
-        <dependency>
-            <groupId>hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>2.1.6</version>
-            <jar>hibernate-2.1.6.jar</jar>
             <type>jar</type>
             <properties/>
         </dependency>
@@ -121,9 +113,6 @@
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
-        <includes>
-        	<include>**/*.java</include>
-        </includes>
         <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
         <unitTest>
             <includes>
@@ -132,9 +121,10 @@
         </unitTest>
     </build>
     <reports>
-    	<report>maven-changes-plugin</report>
-    	<report>maven-tasklist-plugin</report>
-    	<report>maven-javadoc-plugin</report>
-    	<report>maven-junit-report-plugin</report>
+        <report>maven-changes-plugin</report>
+        <report>maven-tasklist-plugin</report>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-junit-report-plugin</report>
     </reports>
+    <properties/>
 </project>
