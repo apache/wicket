@@ -62,7 +62,7 @@ public final class HttpPageTester
     public HttpPageTester(final HttpSession session)
     {
         this(new HttpRequestCycle((HttpApplication) session.getApplication(), session,
-                NullHttpRequest.getInstance(), NullResponse.getInstance()));
+                HttpRequest.NULL, NullResponse.getInstance()));
     }
 
     /**
