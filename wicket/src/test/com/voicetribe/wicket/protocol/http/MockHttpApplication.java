@@ -86,7 +86,8 @@ public class MockHttpApplication extends HttpApplication {
      * @see com.voicetribe.wicket.protocol.http.MockServletContext
      */
     public MockHttpApplication(final String path) {
-        settings = new ApplicationSettings(this);
+        //settings = new ApplicationSettings(this);
+        settings = new ApplicationSettings();
         context = new MockServletContext(this, path);
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
