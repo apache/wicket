@@ -92,8 +92,9 @@ public class CheckBox extends FormComponent
 		if (value != null)
 		{
 			final boolean tagValue;
-			if (value instanceof String) // probably was formatted or
-											// straight from request
+
+			// Probably was formatted or straight from request
+			if (value instanceof String)
 			{
 				tagValue = Boolean.valueOf((String)value).booleanValue();
 			}
@@ -103,13 +104,18 @@ public class CheckBox extends FormComponent
 			}
 			else
 			{
-				throw new WicketRuntimeException(
-						"Model objects for checkboxes have to be of type Boolean");
+				throw new WicketRuntimeException("CheckBox model object must be of type Boolean");
 			}
+			
 			if (tagValue)
+			{
 				tag.put("checked", "checked");
+			}
 			else
-				tag.remove("checked"); // in case the was a design time attrib
+			{
+				// In case the was a design time attrib
+				tag.remove("checked");
+			}
 		}
 	}
 }
