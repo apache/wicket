@@ -59,21 +59,16 @@ public class AutolinkComponentResolver implements IComponentResolver
     private static final Group automaticCommand = new Group(MetaPattern.WORD);
 
     /** pattern group for automatic parameters . */
-    private static final Group automaticParameters = new Group(
-            MetaPattern.ANYTHING_NON_EMPTY);
+    private static final Group automaticParameters = new Group(MetaPattern.ANYTHING_NON_EMPTY);
 
     /** pattern group for automatic parameters . */
-    private static final Group automaticIndexPrefix = new Group(
-            MetaPattern.DIGITS);
+    private static final Group automaticIndexPrefix = new Group(MetaPattern.DIGITS);
 
     /** pattern for automatic components. */
-    private static final MetaPattern automaticComponentPattern = new MetaPattern(
-            new MetaPattern[] {
-                    MetaPattern.LEFT_SQUARE,
-                    automaticCommand,
-                    new OptionalMetaPattern(new MetaPattern[] {
-                            MetaPattern.COLON, automaticParameters }),
-                    MetaPattern.RIGHT_SQUARE });
+    private static final MetaPattern automaticComponentPattern = new MetaPattern(new MetaPattern[] {
+            MetaPattern.LEFT_SQUARE, automaticCommand,
+            new OptionalMetaPattern(new MetaPattern[] { MetaPattern.COLON, automaticParameters }),
+            MetaPattern.RIGHT_SQUARE });
 
     /** Used to create page-unique component name like [autolink]- <autoIndex> */
     private static int autoIndex;
@@ -100,8 +95,8 @@ public class AutolinkComponentResolver implements IComponentResolver
      * @return true, if componentName was handle by the resolver. False,
      *         otherwise
      */
-    public boolean resolve(final Container container,
-            final MarkupStream markupStream, final ComponentTag tag)
+    public boolean resolve(final Container container, final MarkupStream markupStream,
+            final ComponentTag tag)
     {
         // Get the component name to handle
         final String componentName = tag.getComponentName();
@@ -109,8 +104,7 @@ public class AutolinkComponentResolver implements IComponentResolver
         // The componentName may be [autolink] or [autolink:key=value,
         // key2=value, ...]
         if (componentName.startsWith("[autolink")
-                && ((componentName.charAt(9) == ']') || (componentName
-                        .charAt(9) == ':')))
+                && ((componentName.charAt(9) == ']') || (componentName.charAt(9) == ':')))
         {
             // Autolinks are only supported with anchor tags
             if (!tag.getName().equalsIgnoreCase("a"))
@@ -120,8 +114,7 @@ public class AutolinkComponentResolver implements IComponentResolver
             }
 
             // Try to find the Page matching the href
-            resolveAutomaticLink(container.getPage(), markupStream,
-                    componentName, tag);
+            resolveAutomaticLink(container.getPage(), markupStream, componentName, tag);
 
             // Make the compnentName (page-)unique
             final String id = "[autolink]-" + autoIndex;
@@ -133,8 +126,8 @@ public class AutolinkComponentResolver implements IComponentResolver
             tag.attributes.makeImmutable();
 
             // Create an external (bookmarkable) Link
-            final Link link = new BookmarkablePageLink(id,
-                    automaticLinkPageClass, automaticLinkPageParameters);
+            final Link link = new BookmarkablePageLink(id, automaticLinkPageClass,
+                    automaticLinkPageParameters);
 
             // Add the link to the container
             container.add(link);
@@ -170,13 +163,11 @@ public class AutolinkComponentResolver implements IComponentResolver
      * @param tag
      *            the component tag
      */
-    private void resolveAutomaticLink(final Page page,
-            final MarkupStream markupStream, final String componentName,
-            final ComponentTag tag)
+    private void resolveAutomaticLink(final Page page, final MarkupStream markupStream,
+            final String componentName, final ComponentTag tag)
     {
         // Get any automaticLink component
-        final Matcher matcher = automaticComponentPattern
-                .matcher(componentName);
+        final Matcher matcher = automaticComponentPattern.matcher(componentName);
 
         if (matcher.matches())
         {
@@ -191,8 +182,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 
                 if (href == null)
                 {
-                    markupStream
-                            .throwMarkupException("Automatic link requires href attribute");
+                    markupStream.throwMarkupException("Automatic link requires href attribute");
                 }
 
                 // Find class relative to current package
@@ -200,15 +190,12 @@ public class AutolinkComponentResolver implements IComponentResolver
 
                 try
                 {
-                    automaticLinkPageClass = Session.get().getClassResolver()
-                            .resolveClass(
-                                    page.getClass().getPackage().getName()
-                                            + "." + path);
+                    automaticLinkPageClass = Session.get().getClassResolver().resolveClass(
+                            page.getClass().getPackage().getName() + "." + path);
 
                     if (parameters != null)
                     {
-                        automaticLinkPageParameters = new PageParameters(
-                                parameters);
+                        automaticLinkPageParameters = new PageParameters(parameters);
                     }
                     else
                     {
@@ -217,8 +204,7 @@ public class AutolinkComponentResolver implements IComponentResolver
                 }
                 catch (WicketRuntimeException e)
                 {
-                    markupStream.throwMarkupException("Could not find page at "
-                            + path);
+                    markupStream.throwMarkupException("Could not find page at " + path);
                 }
             }
             else
@@ -233,8 +219,7 @@ public class AutolinkComponentResolver implements IComponentResolver
         }
         else
         {
-            markupStream
-                    .throwMarkupException("Invalid syntax for automaticLink component");
+            markupStream.throwMarkupException("Invalid syntax for automaticLink component");
         }
     }
 

@@ -39,8 +39,7 @@ import wicket.util.string.StringValueConversionException;
 public class WicketTagComponentResolver implements IComponentResolver
 { // TODO finalize javadoc
     /** Logging */
-    private static Log log = LogFactory
-            .getLog(WicketTagComponentResolver.class);
+    private static Log log = LogFactory.getLog(WicketTagComponentResolver.class);
 
     /** Used to create anonymous component names */
     public static int autoIndex = 0;
@@ -57,12 +56,12 @@ public class WicketTagComponentResolver implements IComponentResolver
      * @return true, if componentName was handle by the resolver. False,
      *         otherwise
      */
-    public boolean resolve(final Container container,
-            final MarkupStream markupStream, final ComponentTag tag)
+    public boolean resolve(final Container container, final MarkupStream markupStream,
+            final ComponentTag tag)
     {
         if (tag instanceof ComponentWicketTag)
         {
-            final ComponentWicketTag wicketTag = (ComponentWicketTag) tag;
+            final ComponentWicketTag wicketTag = (ComponentWicketTag)tag;
             if (wicketTag.isComponentTag())
             {
                 final Component component = createComponent(wicketTag);
@@ -89,49 +88,42 @@ public class WicketTagComponentResolver implements IComponentResolver
         }
 
         final String classname = tag.getAttributes().getString("class");
-        final Class componentClass = Session.get()
-                .getClassResolver().resolveClass(classname);
+        final Class componentClass = Session.get().getClassResolver().resolveClass(classname);
 
         final Component component;
         try
         {
             final Constructor constructor = componentClass
                     .getConstructor(new Class[] { String.class });
-            component = (Component) constructor
-                    .newInstance(new Object[] { componentName });
+            component = (Component)constructor.newInstance(new Object[] { componentName });
         }
-        catch (NoSuchMethodException ex)
+        catch (NoSuchMethodException e)
         {
-            throw new WicketRuntimeException(
-                    "Unable to create Component derived from wicket tag", ex);
+            throw new WicketRuntimeException("Unable to create Component from wicket tag", e);
         }
-        catch (InvocationTargetException ex)
+        catch (InvocationTargetException e)
         {
-            throw new WicketRuntimeException(
-                    "Unable to create Component derived from wicket tag", ex);
+            throw new WicketRuntimeException("Unable to create Component from wicket tag", e);
         }
-        catch (IllegalAccessException ex)
+        catch (IllegalAccessException e)
         {
-            throw new WicketRuntimeException(
-                    "Unable to create Component derived from wicket tag", ex);
+            throw new WicketRuntimeException("Unable to create Component from wicket tag", e);
         }
-        catch (InstantiationException ex)
+        catch (InstantiationException e)
         {
-            throw new WicketRuntimeException(
-                    "Unable to create Component derived from wicket tag", ex);
+            throw new WicketRuntimeException("Unable to create Component from wicket tag", e);
         }
-        catch (ClassCastException ex)
+        catch (ClassCastException e)
         {
-            throw new WicketRuntimeException(
-                    "Unable to create Component derived from wicket tag", ex);
+            throw new WicketRuntimeException("Unable to create Component from wicket tag", e);
         }
 
         final Iterator iter = tag.getAttributes().entrySet().iterator();
         while (iter.hasNext())
         {
-            final Map.Entry entry = (Map.Entry) iter.next();
-            final String key = (String) entry.getKey();
-            final String value = (String) entry.getKey();
+            final Map.Entry entry = (Map.Entry)iter.next();
+            final String key = (String)entry.getKey();
+            final String value = (String)entry.getKey();
 
             if ("name".equalsIgnoreCase(key) || ("class".equalsIgnoreCase(key)))
             {
@@ -152,16 +144,15 @@ public class WicketTagComponentResolver implements IComponentResolver
             if (method == null)
             {
                 throw new WicketRuntimeException(
-                        "Unable to initialize Component. Method with name "
-                                + methodName + " not found");
+                        "Unable to initialize Component. Method with name " + methodName
+                                + " not found");
             }
 
             final Class[] parameterClasses = method.getParameterTypes();
             if (parameterClasses.length != 1)
             {
                 throw new WicketRuntimeException(
-                        "Unable to initialize Component. Method with name "
-                                + methodName
+                        "Unable to initialize Component. Method with name " + methodName
                                 + " must have one and only one parameter");
             }
 
@@ -174,13 +165,13 @@ public class WicketTagComponentResolver implements IComponentResolver
                 }
                 else if (paramClass.equals(int.class))
                 {
-                    method.invoke(component, new Object[] { new Integer(tag
-                            .getAttributes().getInt(key)) });
+                    method.invoke(component, new Object[] { new Integer(tag.getAttributes().getInt(
+                            key)) });
                 }
                 else if (paramClass.equals(long.class))
                 {
-                    method.invoke(component, new Object[] { new Long(tag
-                            .getAttributes().getLong((key))) });
+                    method.invoke(component, new Object[] { new Long(tag.getAttributes().getLong(
+                            (key))) });
                 }
             }
             catch (IllegalAccessException ex)
