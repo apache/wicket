@@ -30,22 +30,19 @@ import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * Base class for Wicket applications. An application has a name, settings and a
- * particular set of required pages. The settings specify how the application is
- * to function. The required pages include a home page and several pages for
+ * Base class for Wicket applications. An application has a name, settings, a
+ * particular set of required pages and a variety of resources such as a
+ * localizer, a markup parser factory method, a resource watcher and more.
+ * <p>
+ * The application's settings specify how the application is to function.
+ * <p>
+ * The required pages returned by getPages() include a home page and pages for
  * handling common error conditions.
  * <p>
  * To create a Wicket application, you generally do not want to directly
  * subclass this class. Instead, you want to subclass a subclass of Application,
- * like WebApplication, which is appropriate to the protocol and markup you are
- * working with.
- * 
- * <p>
- * <i>stringResourceLoaders </i>- A chain of <code>IStringResourceLoader</code>
- * instances that are searched in order to obtain string resources used during
- * localization. By default the chain is set up to first search for resources
- * against a particular component (e.g. page etc.) and then against the
- * application.
+ * like WebApplication, which is appropriate to the protocol and markup type you
+ * are working with.
  * <p>
  * <i>localizer </i> (read-only) - An application wide object encapsulating all
  * of the functionality required to access localized resources.
@@ -55,7 +52,7 @@ import wicket.util.watch.ModificationWatcher;
  * Use the reference of converterRegistry to register/ deregister type
  * converters if needed. Also, there are convenience method in converterRegistry
  * to swith to a localized/ non-localized set of type converters.
-
+ * 
  * @see WebApplication
  * @author Jonathan Locke
  */
@@ -207,7 +204,7 @@ public abstract class Application
 
     /** The single application-wide localization class */
     private final Localizer localizer;
- // TODO finalize javadoc
+    // TODO finalize javadoc
     /** Name of application subclass. */
     private final String name;
 

@@ -95,7 +95,7 @@ public abstract class Session implements Serializable
     private transient RequestCycle cycle;
 
     /** Separator for component paths. */
-    private final char componentPathSeparator = '.';
+    private static final char componentPathSeparator = '.';
 
     /** The locale to use when loading resources for this session. */
     private Locale locale = Locale.getDefault();
