@@ -27,14 +27,72 @@
 				is now displayed in <i>italics</i>. Also the message box shows that we are viewing
 				<code>Page2</code> instead of <code>Page1</code>.
 			</p>
-
-			<subsection name="NavomaticApplication.java">
+		<subsection name="Navigation component">
+			<p>
+				To create a reusable navigation component we are going to use a 
+				<code>wicket.markup.html.border.Border</code> component. From the
+				<a href="apidocs/wicket/markup/html/border/Border.html">Border Javadoc</a>:
+			</p>
+			<blockquote>
 				<p>
-					Just as in the <a href="Helloworld.html">HelloWorld example</a>, we need to
-					define our application. In this case, we set <code>Page1</code> to be our
-					home page.
+					A border component has associated markup which is drawn and determines 
+					placement of any markup and/or components nested within the border 
+					component.
 				</p>
-				<source><![CDATA[package wicket.examples.navomatic;
+				<p>
+					The portion of the border's associated markup file which is to be used 
+					in rendering the border is denoted by a 
+					<code><![CDATA[<wicket:border>]]></code> tag. The children of the border 
+					component instance are then inserted into this markup, replacing the first 
+					<code><![CDATA[<wicket:body>]]></code> tag in the border's associated markup. 
+				</p>
+			</blockquote>
+			<p>
+				For example, if a border's associated markup looked like this:
+<table>
+<tr>
+	<th>Component markup</th>
+	<th>Component usage</th>
+	<th>Resulting markup</th>
+</tr>
+<tr>
+	<td><pre><![CDATA[<html>
+<body>
+  <wicket:border>
+      First <wicket:body/> Last
+  </wicket:border>
+</body>
+</html>]]></pre></td>
+<td><pre><![CDATA[<html>
+<body>
+  <span id = "wicket-myBorder">
+      Middle
+  </span>
+</body>
+</html>]]></pre></td>
+<td><pre><![CDATA[<html>
+<body>
+      First Middle Last
+</body>
+</html>]]></pre></td>
+</tr>
+</table>
+			</p>
+			<p>
+				In other words, the body of the myBorder component is 
+				substituted into the border's associated markup at the 
+				position indicated by the 
+				<code><![CDATA[<wicket:body>]]></code> tag.
+			</p>
+		</subsection>
+
+		<subsection name="NavomaticApplication.java">
+			<p>
+				Just as in the <a href="Helloworld.html">HelloWorld example</a>, we need to
+				define our application. In this case, we set <code>Page1</code> to be our
+				home page.
+			</p>
+			<source><![CDATA[package wicket.examples.navomatic;
 
 import wicket.protocol.http.WebApplication;
 
@@ -47,33 +105,29 @@ public class NavomaticApplication extends WebApplication
 }]]></source>
 			</subsection>
 
+			<subsection name="Page1.html">
+				<source><![CDATA[<html>
+<body> 
+    <span componentName = "navomaticBorder"> 
+    You are viewing Page1 
+    </span>   
+</body>
+</html>]]></source>
+			</subsection>
+
 			<subsection name="Page1.java">
-				<source>
-					<![CDATA[
+				<source><![CDATA[package wicket.examples.navomatic;
+
+import wicket.PageParameters;
+import wicket.markup.html.HtmlPage;
+
 public class Page1 extends HtmlPage
 {
     public Page1(PageParameters parameters)
     {
         add(new NavomaticBorder("navomaticBorder"));
     }
-}]]>
-				</source>
-			</subsection>
-			<subsection name="Page1.html">
-				<source>
-					<![CDATA[
-<html>
-<body>
- 
-    <span componentName = "navomaticBorder">
- 
-    You are viewing Page1
- 
-    </span>
-   
-</body>
-</html>]]>
-				</source>
+}]]></source>
 			</subsection>
 			<subsection name="Page2.java">
 				<source>
