@@ -21,6 +21,7 @@ package wicket.markup.html.tree;
 import java.io.Serializable;
 import java.util.Enumeration;
 
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -31,7 +32,8 @@ import javax.swing.tree.VariableHeightLayoutCache;
  *
  * @author Eelco Hillenius
  */
-public class TreeStateCache extends VariableHeightLayoutCache implements Serializable
+public class TreeStateCache extends VariableHeightLayoutCache
+	implements Serializable, TreeModelListener
 {
     /** currently selected path. */
     private TreePath selectedPath;
