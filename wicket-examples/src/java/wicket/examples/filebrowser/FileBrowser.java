@@ -202,8 +202,8 @@ public class FileBrowser extends HtmlPage
          * @param componentName The name of this container
          * @param model the underlying tree model
          * @param makeTreeModelUnique whether to make the user objects of the tree model
-         * unique. If true, the default implementation will wrapp all user objects in
-         * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
+         * unique. If true, the default implementation will wrapp all user objects so that
+         * they will have unique id's attached. If false, users must ensure that the
          * user objects are unique within the tree in order to have the tree working properly
          */
         public FileTreeCustomRow(final String componentName, final TreeModel model,
@@ -243,8 +243,8 @@ public class FileBrowser extends HtmlPage
          * @param componentName The name of this container
          * @param model the underlying tree model
          * @param makeTreeModelUnique whether to make the user objects of the tree model
-         * unique. If true, the default implementation will wrapp all user objects in
-         * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
+         * unique. If true, the default implementation will wrapp all user objects so that
+         * they will have unique id's attached. If false, users must ensure that the
          * user objects are unique within the tree in order to have the tree working properly
          */
         public FileTreeCustomRows(final String componentName, final TreeModel model,
