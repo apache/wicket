@@ -446,9 +446,13 @@ public final class Strings
 			{
 				return false;
 			}
-
-			return false;
-		}
+			
+			if (isEmpty(s))
+			{
+				return false;
+			}
+			
+			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");		}
 
 		return false;
 	}
