@@ -26,36 +26,30 @@ import java.io.Serializable;
  */
 public class FeedbackMessage implements Serializable
 {
+	/** Constant for debug level. */
+	public static final int DEBUG = 1;
+
+	/** Constant for error level. */
+	public static final int ERROR = 4;
+
+	/** Constant for fatal level. */
+	public static final int FATAL = 5;
+
+	/** Constant for info level. */
+	public static final int INFO = 2;
+    
 	/**
 	 * Constant for an undefined level; note that components might decide not to
 	 * render anything when this level is used.
 	 */
 	public static final int UNDEFINED = 0;
 
-	/** constant for debug level. */
-	public static final int DEBUG = 1;
-
-	/** constant for info level. */
-	public static final int INFO = 2;
-
 	/** constant for warn level. */
 	public static final int WARN = 3;
-
-	/** constant for error level. */
-	public static final int ERROR = 4;
-
-	/** constant for fatal level. */
-	public static final int FATAL = 5;
 
 	/** levels as strings for debugging/ toString method. */
 	private static final String[] LEVELS_AS_STRING = new String[] { "UNDEFINED", "DEBUG", "INFO",
 			"WARN", "ERROR", "FATAL" };
-
-	/** the reporting component. */
-	private Component reporter;
-
-	/** the actual message. */
-	private String message;
 
 	/**
 	 * The message level; can be used by rendering components. Note that what
@@ -64,18 +58,11 @@ public class FeedbackMessage implements Serializable
 	 */
 	private int level = UNDEFINED;
 
-	/**
-	 * Construct using fields.
-	 * @param reporter the message reporter
-	 * @param message the actual message
-	 * @param level the level of the message
-	 */
-	public FeedbackMessage(Component reporter, String message, int level)
-	{
-		this.reporter = reporter;
-		this.message = message;
-		this.level = level;
-	}
+	/** the actual message. */
+	private String message;
+
+	/** the reporting component. */
+	private Component reporter;
 
 	/**
 	 * Gets a new constructed message with level DEBUG.
@@ -86,28 +73,6 @@ public class FeedbackMessage implements Serializable
 	public final static FeedbackMessage debug(Component reporter, String message)
 	{
 		return new FeedbackMessage(reporter, message, DEBUG);
-	}
-
-	/**
-	 * Gets a new constructed message with level INFO.
-	 * @param reporter the reporter of the message
-	 * @param message the actual message
-	 * @return a new message with level INFO
-	 */
-	public final static FeedbackMessage info(Component reporter, String message)
-	{
-		return new FeedbackMessage(reporter, message, INFO);
-	}
-
-	/**
-	 * Gets a new constructed message with level WARN.
-	 * @param reporter the reporter of the message
-	 * @param message the actual message
-	 * @return a new message with level WARN
-	 */
-	public final static FeedbackMessage warn(Component reporter, String message)
-	{
-		return new FeedbackMessage(reporter, message, WARN);
 	}
 
 	/**
@@ -133,39 +98,38 @@ public class FeedbackMessage implements Serializable
 	}
 
 	/**
-	 * Gets the actual message.
-	 * @return the message.
+	 * Gets a new constructed message with level INFO.
+	 * @param reporter the reporter of the message
+	 * @param message the actual message
+	 * @return a new message with level INFO
 	 */
-	public final String getMessage()
+	public final static FeedbackMessage info(Component reporter, String message)
 	{
-		return message;
+		return new FeedbackMessage(reporter, message, INFO);
 	}
 
 	/**
-	 * Sets the actual message.
-	 * @param message the actual message.
+	 * Gets a new constructed message with level WARN.
+	 * @param reporter the reporter of the message
+	 * @param message the actual message
+	 * @return a new message with level WARN
 	 */
-	protected final void setMessage(String message)
+	public final static FeedbackMessage warn(Component reporter, String message)
 	{
-		this.message = message;
+		return new FeedbackMessage(reporter, message, WARN);
 	}
 
 	/**
-	 * Gets the reporting component.
-	 * @return the reporting component.
+	 * Construct using fields.
+	 * @param reporter the message reporter
+	 * @param message the actual message
+	 * @param level the level of the message
 	 */
-	public final Component getReporter()
-	{
-		return reporter;
-	}
-
-	/**
-	 * Sets the reporting component.
-	 * @param reporter the reporting component.
-	 */
-	public final void setReporter(Component reporter)
+	public FeedbackMessage(Component reporter, String message, int level)
 	{
 		this.reporter = reporter;
+		this.message = message;
+		this.level = level;
 	}
 
 	/**
@@ -189,23 +153,31 @@ public class FeedbackMessage implements Serializable
 	}
 
 	/**
-	 * Sets the message level; can be used by rendering components. Note that
-	 * what actually happens with the level indication is totally up to the
-	 * components that render messages like these.
-	 * @param level the message level indicator.
+	 * Gets the actual message.
+	 * @return the message.
 	 */
-	protected final void setLevel(int level)
+	public final String getMessage()
 	{
-		this.level = level;
+		return message;
 	}
 
 	/**
-	 * Gets whether the current level is UNDEFINED.
-	 * @return whether the current level is UNDEFINED.
+	 * Gets the reporting component.
+	 * @return the reporting component.
 	 */
-	public final boolean isLevelUndefined()
+	public final Component getReporter()
 	{
-		return (getLevel() == UNDEFINED);
+		return reporter;
+	}
+
+	/**
+	 * Returns whether this level is greater than or equal to the given level.
+	 * @param level the level
+	 * @return whether this level is greater than or equal to the given level
+	 */
+	public final boolean isLevel(int level)
+	{
+		return (getLevel() >= level);
 	}
 
 	/**
@@ -215,24 +187,6 @@ public class FeedbackMessage implements Serializable
 	public final boolean isLevelDebug()
 	{
 		return isLevel(DEBUG);
-	}
-
-	/**
-	 * Gets whether the current level is INFO or up.
-	 * @return whether the current level is INFO or up.
-	 */
-	public final boolean isLevelInfo()
-	{
-		return isLevel(INFO);
-	}
-
-	/**
-	 * Gets whether the current level is WARN or up.
-	 * @return whether the current level is WARN or up.
-	 */
-	public final boolean isLevelWarn()
-	{
-		return isLevel(WARN);
 	}
 
 	/**
@@ -254,13 +208,39 @@ public class FeedbackMessage implements Serializable
 	}
 
 	/**
-	 * Returns whether this level is greater than or equal to the given level.
-	 * @param level the level
-	 * @return whether this level is greater than or equal to the given level
+	 * Gets whether the current level is INFO or up.
+	 * @return whether the current level is INFO or up.
 	 */
-	public final boolean isLevel(int level)
+	public final boolean isLevelInfo()
 	{
-		return (getLevel() >= level);
+		return isLevel(INFO);
+	}
+
+	/**
+	 * Gets whether the current level is UNDEFINED.
+	 * @return whether the current level is UNDEFINED.
+	 */
+	public final boolean isLevelUndefined()
+	{
+		return (getLevel() == UNDEFINED);
+	}
+
+	/**
+	 * Gets whether the current level is WARN or up.
+	 * @return whether the current level is WARN or up.
+	 */
+	public final boolean isLevelWarn()
+	{
+		return isLevel(WARN);
+	}
+
+	/**
+	 * Sets the reporting component.
+	 * @param reporter the reporting component.
+	 */
+	public final void setReporter(Component reporter)
+	{
+		this.reporter = reporter;
 	}
 
 	/**
@@ -270,5 +250,25 @@ public class FeedbackMessage implements Serializable
 	{
 		return ("'" + getMessage() + "' (reporter: " + getReporter().getName() + ", level: "
 				+ LEVELS_AS_STRING[getLevel()] + ")");
+	}
+
+	/**
+	 * Sets the message level; can be used by rendering components. Note that
+	 * what actually happens with the level indication is totally up to the
+	 * components that render messages like these.
+	 * @param level the message level indicator.
+	 */
+	protected final void setLevel(int level)
+	{
+		this.level = level;
+	}
+
+	/**
+	 * Sets the actual message.
+	 * @param message the actual message.
+	 */
+	protected final void setMessage(String message)
+	{
+		this.message = message;
 	}
 }
