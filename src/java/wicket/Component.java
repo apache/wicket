@@ -30,7 +30,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
-import wicket.model.IConvertable;
+import wicket.model.IConvertible;
 import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -186,12 +186,12 @@ public abstract class Component implements Serializable
 		if (object instanceof IModel)
 		{
             // just cast and store it
-			this.model = (IModel)object;
+			setModel((IModel)object);
 		}
 		else
 		{
             // otherwise, create a Model wrapper for the object
-			this.model = new Model(object);
+			setModel(new Model(object));
 		}
 	}
 
@@ -239,19 +239,19 @@ public abstract class Component implements Serializable
         // If object is already a property model, set that
         if (object instanceof PropertyModel)
         {
-        	this.model = (PropertyModel)object;
+        	setModel((PropertyModel)object);
         }
         else
         // If object is already an IModel
         if (object instanceof IModel)
         {
             // wrap in a PropertyModel
-        	this.model = new PropertyModel((IModel)object, expression);
+        	setModel(new PropertyModel((IModel)object, expression));
         }
         else
         {
             // wrap object in a Model and then in a PropertyModel 
-        	this.model = new PropertyModel(new Model(object), expression);
+        	setModel(new PropertyModel(new Model(object), expression));
         }
 	}
 
@@ -843,9 +843,9 @@ public abstract class Component implements Serializable
 		}
 
 		// Set self in case the model is component aware
-		if (model instanceof IConvertable)
+		if (model instanceof IConvertible)
 		{
-			((IConvertable)model).setConverter(getConverter());
+			((IConvertible)model).setConverter(getConverter());
 		}
 		this.model = (IModel)model;
 		return this;
