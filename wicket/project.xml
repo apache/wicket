@@ -141,7 +141,7 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.0</version>
-            <url>http://jakarta.apache.org/commons/beanutils/</url>
+            <url>http://jakarta.apache.org/commons/fileupload/</url>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
