@@ -21,8 +21,11 @@ package wicket.markup.html.form.validation;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * Ensures that the form component has a numeric value. If min and max arguments are
- * given, this validator also ensures the value is in bounds.
+ * Ensures that the form component has a numeric value in a given range. 
+ * The range static factory method constructs a DecimalValidator with
+ * minimum and maximum values specified as Java longs.  Convenience fields
+ * exist for INT, POSITIVE_INT, LONG and POSITIVE_LONG which match the
+ * appropriate ranges of numbers.
  *
  * @author Jonathan Locke
  */
@@ -31,13 +34,13 @@ public final class DecimalValidator extends AbstractValidator
     /**
      * Validator that ensures int value.
      */
-    public static final DecimalValidator INTEGER =
+    public static final DecimalValidator INT =
         new DecimalValidator(Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     /**
      * Validator that ensures positive int value.
      */
-    public static final DecimalValidator POSITIVE_INTEGER =
+    public static final DecimalValidator POSITIVE_INT =
         new DecimalValidator(0, Integer.MAX_VALUE);
 
     /**
@@ -84,7 +87,7 @@ public final class DecimalValidator extends AbstractValidator
      * Validates the given form component.
      * Ensures that the form component has a numeric value. If min and max arguments are
      * given, this validator also ensures the value is in bounds.
-     * @param input the input
+     * @param input The input
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
@@ -94,9 +97,10 @@ public final class DecimalValidator extends AbstractValidator
         try
         {
             // Get long value
-            final long value = Long.parseLong((String)input);
-
-            if ((value < min) || (value > max))
+            final long value = Long.parseLong(input);
+            
+            // Check range
+            if (value < min || value > max)
             {
                 return errorMessage(input, component);
             }
@@ -109,3 +113,5 @@ public final class DecimalValidator extends AbstractValidator
         return NO_ERROR;
     }
 }
+
+///////////////////////////////// End of File /////////////////////////////////
