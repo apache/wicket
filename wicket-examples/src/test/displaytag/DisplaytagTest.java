@@ -26,13 +26,13 @@ import nl.openedge.util.jetty.JettyDecorator;
 /**
  * jWebUnit test for Hello World.
  */
-public class DisplaytagTestSuite extends WebTestCase
+public class DisplaytagTest extends WebTestCase
 {
     /**
      * Construct.
      * @param name name of test
      */
-    public DisplaytagTestSuite(String name)
+    public DisplaytagTest(String name)
     {
         super(name);
     }
@@ -113,7 +113,7 @@ public class DisplaytagTestSuite extends WebTestCase
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite();
-		suite.addTest(new DisplaytagTestSuite("testHomePage"));
+		suite.addTest(new DisplaytagTest("testHomePage"));
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
