@@ -71,13 +71,13 @@ public abstract class Application
 	private final String name;
 
 	/** Pages for application */
-	private final ApplicationPages pages;
+	private final ApplicationPages pages = new ApplicationPages();
 
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
 
 	/** Settings for application. */
-	private final ApplicationSettings settings;
+	private final ApplicationSettings settings = new ApplicationSettings(this);
 
 	/**
 	 * Constructor
@@ -86,10 +86,6 @@ public abstract class Application
 	{
 		// Create name from subclass
 		this.name = Classes.name(getClass());
-
-		// Consttruct aggregated settings and pages objects
-		this.settings = new ApplicationSettings(this);
-		this.pages = new ApplicationPages();
 
 		// Construct localizer for this application
 		this.localizer = new Localizer(this);
