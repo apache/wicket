@@ -67,8 +67,8 @@ public final class FeedbackMessages
 		/**
 		 * Construct.
 		 * 
-		 * @param ascending
-		 *            whether to sort ascending (otherwise, it sorts descending)
+		 * @param ascending whether to sort ascending (otherwise, it sorts
+		 *           descending)
 		 */
 		public LevelComparator(boolean ascending)
 		{
@@ -76,9 +76,9 @@ public final class FeedbackMessages
 		}
 
 		/**
-		 * Compares its two arguments for order. Returns a negative integer,
-		 * zero, or a positive integer as the first argument is less than, equal
-		 * to, or greater than the second.
+		 * Compares its two arguments for order. Returns a negative integer, zero,
+		 * or a positive integer as the first argument is less than, equal to, or
+		 * greater than the second.
 		 * <p>
 		 * 
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
@@ -123,8 +123,7 @@ public final class FeedbackMessages
 		/**
 		 * Construct and narrow to the given level.
 		 * 
-		 * @param level
-		 *            the level to narrow to
+		 * @param level the level to narrow to
 		 */
 		public UIMessagesModel(final int level)
 		{
@@ -213,11 +212,10 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Gets the FeedbackMessages as an instance of {@link IModel}, narrowed
-	 * down to the given level.
+	 * Gets the FeedbackMessages as an instance of {@link IModel}, narrowed down
+	 * to the given level.
 	 * 
-	 * @param level
-	 *            the level to narrow down to
+	 * @param level the level to narrow down to
 	 * @return tthe FeedbackMessages as an instance of {@link IModel}, narrowed
 	 *         down to the given level
 	 */
@@ -242,8 +240,7 @@ public final class FeedbackMessages
 	/**
 	 * Sets the messages for the current thread.
 	 * 
-	 * @param messages
-	 *            the messages to use with the current thread
+	 * @param messages the messages to use with the current thread
 	 */
 	static void set(FeedbackMessages messages)
 	{
@@ -303,8 +300,7 @@ public final class FeedbackMessages
 	/**
 	 * Adds a message.
 	 * 
-	 * @param message
-	 *            the message
+	 * @param message the message
 	 * @return This
 	 */
 	public FeedbackMessages add(FeedbackMessage message)
@@ -322,8 +318,8 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Convenience method that gets a sub list of messages with messages that
-	 * are of level ERROR or above (FATAL). This is the same as calling
+	 * Convenience method that gets a sub list of messages with messages that are
+	 * of level ERROR or above (FATAL). This is the same as calling
 	 * 'getMessages(FeedbackMessage.ERROR)'.
 	 * 
 	 * @return the sub list of message with messages that are of level ERROR or
@@ -379,8 +375,7 @@ public final class FeedbackMessages
 	 * Gets a sub list of messages with messages that are of the given level or
 	 * above.
 	 * 
-	 * @param level
-	 *            the level to get the messages for
+	 * @param level the level to get the messages for
 	 * @return the sub list of message with messages that are of the given level
 	 *         or above, or an empty list
 	 */
@@ -417,8 +412,8 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Gets the list with messages sorted on level descending (from FATAL down
-	 * to UNDEFINED/ DEBUG).
+	 * Gets the list with messages sorted on level descending (from FATAL down to
+	 * UNDEFINED/ DEBUG).
 	 * 
 	 * @return the list with messages
 	 */
@@ -431,8 +426,7 @@ public final class FeedbackMessages
 	 * Gets the set of reporters of messages that are of the given level or
 	 * above.
 	 * 
-	 * @param level
-	 *            the level to get the messages for
+	 * @param level the level to get the messages for
 	 * @return the set of reporters of messages that are of the given level or
 	 *         above
 	 */
@@ -482,10 +476,8 @@ public final class FeedbackMessages
 	/**
 	 * Gets whether this list contains any messages with the given level or up.
 	 * 
-	 * @param level
-	 *            the level
-	 * @return whether this list contains any messages with the given level or
-	 *         up
+	 * @param level the level
+	 * @return whether this list contains any messages with the given level or up
 	 */
 	public boolean hasMessages(final int level)
 	{
@@ -527,10 +519,8 @@ public final class FeedbackMessages
 	/**
 	 * Adds a new ui message with level DEBUG to the current messages.
 	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
+	 * @param reporter the reporting component
+	 * @param message the actual message
 	 */
 	void debug(Component reporter, String message)
 	{
@@ -540,10 +530,8 @@ public final class FeedbackMessages
 	/**
 	 * Adds a new ui message with level ERROR to the current messages.
 	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
+	 * @param reporter the reporting component
+	 * @param message the actual message
 	 */
 	void error(Component reporter, String message)
 	{
@@ -553,10 +541,8 @@ public final class FeedbackMessages
 	/**
 	 * Adds a new ui message with level FATAL to the current messages.
 	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
+	 * @param reporter the reporting component
+	 * @param message the actual message
 	 */
 	void fatal(Component reporter, String message)
 	{
@@ -566,10 +552,9 @@ public final class FeedbackMessages
 	/**
 	 * Looks up a message for the given component.
 	 * 
-	 * @param component
-	 *            the component to look up the message for
-	 * @return the message that is found for the given component (first match)
-	 *         or null if none was found
+	 * @param component the component to look up the message for
+	 * @return the message that is found for the given component (first match) or
+	 *         null if none was found
 	 */
 	FeedbackMessage getMessageFor(Component component)
 	{
@@ -597,8 +582,7 @@ public final class FeedbackMessages
 	 * Convenience method that looks up whether the given component registered a
 	 * message with this list with the level ERROR.
 	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
+	 * @param component the component to look up whether it registered a message
 	 * @return whether the given component registered a message with this list
 	 *         with level ERROR
 	 */
@@ -610,8 +594,7 @@ public final class FeedbackMessages
 	/**
 	 * Looks up whether the given component registered a message with this list.
 	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
+	 * @param component the component to look up whether it registered a message
 	 * @return whether the given component registered a message with this list
 	 */
 	boolean hasMessageFor(Component component)
@@ -623,10 +606,8 @@ public final class FeedbackMessages
 	 * Looks up whether the given component registered a message with this list
 	 * with the given level.
 	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @param level
-	 *            the level of the message
+	 * @param component the component to look up whether it registered a message
+	 * @param level the level of the message
 	 * @return whether the given component registered a message with this list
 	 *         with the given level
 	 */
@@ -646,10 +627,8 @@ public final class FeedbackMessages
 	/**
 	 * Adds a new ui message with level INFO to the current messages.
 	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
+	 * @param reporter the reporting component
+	 * @param message the actual message
 	 */
 	void info(Component reporter, String message)
 	{
@@ -659,12 +638,10 @@ public final class FeedbackMessages
 	/**
 	 * Adds a new ui message with level WARN to the current messages.
 	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
+	 * @param reporter the reporting component
+	 * @param message the actual message
 	 */
-    void warn(Component reporter, String message)
+	void warn(Component reporter, String message)
 	{
 		add(FeedbackMessage.warn(reporter, message));
 	}
@@ -672,8 +649,7 @@ public final class FeedbackMessages
 	/**
 	 * Gets the messages sorted.
 	 * 
-	 * @param ascending
-	 *            Whether to sort ascending (true) or descending (false)
+	 * @param ascending Whether to sort ascending (true) or descending (false)
 	 * @return sorted list
 	 */
 	private List getMessagesSorted(boolean ascending)
@@ -693,8 +669,7 @@ public final class FeedbackMessages
 	/**
 	 * Sets the list with messages.
 	 * 
-	 * @param messages
-	 *            the messages
+	 * @param messages the messages
 	 * @return This
 	 */
 	private FeedbackMessages setMessages(List messages)
