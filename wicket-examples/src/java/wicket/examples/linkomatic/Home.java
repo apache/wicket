@@ -24,14 +24,14 @@ import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.ImageMap;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.link.PopupSpecification;
-import wicket.markup.html.link.SimpleHref;
+import wicket.markup.html.link.ExternalLink;
 
 
 /**
@@ -82,11 +82,11 @@ public class Home extends HtmlPage
         add(new Label("onClickLinkClickCount", this, "onClickLinkClickCount"));
 
         // Link to Page1 is a simple external page link 
-        add(new ExternalPageLink("page1Link", Page1.class));
+        add(new BookmarkablePageLink("page1Link", Page1.class));
 
         // Link to Page2 is automaticLink, so no code
         // Link to Page3 is an external link which takes a parameter
-        add(new ExternalPageLink("page3Link", Page3.class).setParameter("id", 3));
+        add(new BookmarkablePageLink("page3Link", Page3.class).setParameter("id", 3));
 
         // Link to BookDetails page
         add(new PageLink("bookDetailsLink",
@@ -120,21 +120,21 @@ public class Home extends HtmlPage
 
         // Image map link example
         add(new ImageMap("imageMap").addRectangleLink(0, 0, 100, 100,
-                new ExternalPageLink("page1", Page1.class))
+                new BookmarkablePageLink("page1", Page1.class))
                                     .addCircleLink(160, 50, 35,
-                new ExternalPageLink("page2", Page2.class)).addPolygonLink(new int[]
+                new BookmarkablePageLink("page2", Page2.class)).addPolygonLink(new int[]
                 {
                     212, 79, 241, 4, 279, 54, 212, 79
-                }, new ExternalPageLink("page3", Page3.class)));
+                }, new BookmarkablePageLink("page3", Page3.class)));
 
         // Popup example
         PopupSpecification popupSpec = new PopupSpecification().setHeight(100)
                                                                .setWidth(100);
 
-        add(new ExternalPageLink("popupLink", Page1.class)
+        add(new BookmarkablePageLink("popupLink", Page1.class)
             .setPopupSpecification(popupSpec));
         
-        add(new SimpleHref("google", "http://www.google.com",
+        add(new ExternalLink("google", "http://www.google.com",
                 "Click this link to go to Google"));
     }
 

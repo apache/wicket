@@ -27,7 +27,7 @@ import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.table.ListItem;
 import wicket.model.Model;
 
@@ -51,12 +51,12 @@ public class ExampleStyles extends Displaytag
         List data = new TestList(10, false);
 
         // Add Links to handle the different styles
-        add(new ExternalPageLink("isis", this.getClass()).setParameter("class", "isis").setAutoEnable(false));
-        add(new ExternalPageLink("its", this.getClass()).setParameter("class", "its").setAutoEnable(false));
-        add(new ExternalPageLink("mars", this.getClass()).setParameter("class", "mars").setAutoEnable(false));
-        add(new ExternalPageLink("simple", this.getClass()).setParameter("class", "simple").setAutoEnable(false));
-        add(new ExternalPageLink("report", this.getClass()).setParameter("class", "report").setAutoEnable(false));
-        add(new ExternalPageLink("mark", this.getClass()).setParameter("class", "mark").setAutoEnable(false));
+        add(new BookmarkablePageLink("isis", this.getClass()).setParameter("class", "isis").setAutoEnable(false));
+        add(new BookmarkablePageLink("its", this.getClass()).setParameter("class", "its").setAutoEnable(false));
+        add(new BookmarkablePageLink("mars", this.getClass()).setParameter("class", "mars").setAutoEnable(false));
+        add(new BookmarkablePageLink("simple", this.getClass()).setParameter("class", "simple").setAutoEnable(false));
+        add(new BookmarkablePageLink("report", this.getClass()).setParameter("class", "report").setAutoEnable(false));
+        add(new BookmarkablePageLink("mark", this.getClass()).setParameter("class", "mark").setAutoEnable(false));
 
         // Apply style on current tag (based on URL parameter)
         HtmlContainer htmlTable = new HtmlContainer("htmlTable");

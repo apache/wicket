@@ -24,7 +24,7 @@ import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.model.Model;
 import wicket.util.string.StringList;
 import wicket.util.string.StringValueConversionException;
@@ -111,10 +111,10 @@ public final class BookDetails extends AuthenticatedHtmlPage
      * @param noBookTitle The title to show if book is null
      * @return The external page link
      */
-    public static ExternalPageLink link(final String name, final Book book,
+    public static BookmarkablePageLink link(final String name, final Book book,
         final String noBookTitle)
     {
-        final ExternalPageLink link = new ExternalPageLink(name,
+        final BookmarkablePageLink link = new BookmarkablePageLink(name,
                 BookDetails.class);
 
         if (book != null)

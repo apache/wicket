@@ -26,7 +26,7 @@ import wicket.examples.displaytag.utils.TestList;
 import wicket.examples.linkomatic.Page3;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
 import wicket.model.Model;
@@ -63,17 +63,17 @@ public class ExampleDecoratorLink extends Displaytag
                 listItem.add(new ComponentTagAttributeModifier("class",
                                                           new Model(listItem.isEvenIndex() ? "even" : "odd")));
                 
-                ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
+                BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", new Integer(value.getId())));
                 listItem.add(idLink);
 
-                ExternalPageLink emailLink = new ExternalPageLink("mailLink", Page3.class);
+                BookmarkablePageLink emailLink = new BookmarkablePageLink("mailLink", Page3.class);
                 emailLink.setParameter("action", "sendamail");
                 emailLink.add(new Label("email", value.getEmail()));
                 listItem.add(emailLink);
 
-                ExternalPageLink statusLink = new ExternalPageLink("statusLink", Page3.class);
+                BookmarkablePageLink statusLink = new BookmarkablePageLink("statusLink", Page3.class);
                 statusLink.setParameter("id", value.getId());
                 statusLink.add(new Label("status", value.getStatus()));
                 listItem.add(statusLink);
@@ -90,7 +90,7 @@ public class ExampleDecoratorLink extends Displaytag
                 listItem.add(new ComponentTagAttributeModifier("class",
                                                           new Model(listItem.isEvenIndex() ? "even" : "odd")));
                 
-                ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
+                BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", new Integer(value.getId())));
                 listItem.add(idLink);
@@ -98,17 +98,17 @@ public class ExampleDecoratorLink extends Displaytag
                 listItem.add(new Label("email", value.getEmail()));
 
                 listItem.add(
-                        new ExternalPageLink("view", Page3.class)
+                        new BookmarkablePageLink("view", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "view"));
 
                 listItem.add(
-                        new ExternalPageLink("edit", Page3.class)
+                        new BookmarkablePageLink("edit", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "edit"));
 
                 listItem.add(
-                        new ExternalPageLink("delete", Page3.class)
+                        new BookmarkablePageLink("delete", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "delete"));
             }
