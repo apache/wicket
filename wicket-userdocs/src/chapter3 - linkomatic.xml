@@ -243,16 +243,93 @@ add(actionLink);
             the Home page itself can serve as a model for the label, which is 
             what is happening in this line:</para>
         <programlisting><![CDATA[actionLink.add(new Label("linkClickCount", this));]]>
-            </programlisting>
+             </programlisting>
         <para>The value <structfield>this</structfield> can be passed to the 
             <classname>Label</classname> constructor because the Home page 
             itself is a bean component model with the property linkClickCount. 
             When the label inside the link component renders, it will get its 
             value from the linkClickCount bean property of the Home page 
             model.</para>
-            <para>One last question you might have about the action link example is what this line does:</para>
-            <programlisting><![CDATA[cycle.setRedirect(true);]]></programlisting>
-            <para>Since the action link is handled by the page object that constructed the link, the URL that invokes
-the link will be in the user’s browser:</para>
+        <para>One last question you might have about the action link example is 
+            what this line does:</para>
+        <programlisting><![CDATA[cycle.setRedirect(true);]]></programlisting>
+        <para>Since the action link is handled by the page object that 
+            constructed the link, the URL that invokes the link will be in the 
+            user’s browser:</para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/image007-actionlink3.png" 
+                    format="PNG"></imagedata>
+            </imageobject>
+        </mediaobject>
+        <para>With this URL in the browser’s URL field, hitting return will 
+            cause the same action link to be called again. Since we want to 
+            count actual action link clicks and not link listener invocations, 
+            we can redirect the user back to the Home page. This changes the 
+            URL to:</para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/image008-actionlink4.png" 
+                    format="PNG"></imagedata>
+            </imageobject>
+        </mediaobject>
+        <para>Now hitting return in the browser will just retrieve the same 
+            page.</para>
+        <para>The other place where 
+            <methodname>RequestCycle.setRedirect</methodname> is used is in 
+            forms processing to avoid triggering browser POST warnings when the 
+            user goes back to a form using the back button in their browser. We 
+            will be talking a lot more about forms later in this User’s 
+            Guide.</para>
+    </sect1>
+    <sect1>
+        <title>External Page Links</title>
+        <para>External page links are created by creating an instance of the 
+            ExternalPageLink component (and associating the link component with 
+            some HTML using its name). The simplest kind of external page link 
+            is next on the Home page:</para>
+        <programlisting><![CDATA[add(new ExternalPageLink("page1Link", Page1.class));]]>
+             </programlisting>
+        <para>This link will instantiate the page class 
+            <classname>Page1</classname>, which is trivial and simply displays 
+            "<computeroutput>Welcome to Page1</computeroutput>". Note that the 
+            page will not be <emphasis>created</emphasis> until the link is 
+            clicked.</para>
+        <para>Because it is tedious and time-consuming to create external page 
+            links by instantiating components, a special shorthand is allowed 
+            in your HTML. The link to Page2 in <filename>Home.html</filename> 
+            looks like this:</para>
+        <programlisting><![CDATA[<a id = "wcn-[autolink]" href = "Page2.html">Click this [autolink] to go to Page2</a>]]>
+             </programlisting>
+        <para>Giving a link the component name <symbol>"[autolink]"</symbol> 
+            causes the framework to look at the <property>href</property> 
+            property and do the equivalent of:</para>
+        <programlisting><![CDATA[add(new ExternalPageLink("[autolink]-0", Page2.class));]]></programlisting>
+        <para>only without you having to write any code.</para>
+        <para>Finally, external page links can have parameters. The example 
+            link which goes to Page3, takes an <parameter>id</parameter> 
+            parameter that is typical of "details" pages which display 
+            information about something.</para>
+        <programlisting><![CDATA[add(new ExternalPageLink("page3Link", Page3.class).setParameter("id", 3));]]></programlisting>
+        <para>The implementation of Page3 retrieves the id parameter from the 
+            PageParameters passed to the page and shows the id in a Label 
+            component:</para>
+        <programlisting><![CDATA[public class Page3 extends HtmlPage
+{
+    public Page3(PageParameters parameters)
+    {
+        add(new Label("id", parameters.getString("id")));
+    }
+}]]></programlisting>
+        <para>The body of Page3.html references the label component that shows 
+            the id:</para>
+        <programlisting><![CDATA[Your ExternalPageLink parameter "id" has the value "<span id = "wcn-id">-1</span>"]]></programlisting>
+        <para>The main benefit of creating an external page link is that it is 
+            bookmarkable. The downside is that changing the link’s 
+            implementation will break any links stored in users’ browsers. If 
+            you expose Page3 as an external page with an id parameter, you are, 
+            in a sense, exposing a public API to your website, and you will 
+            have to continue supporting that, or face frustrated or lost 
+            users.</para>
     </sect1>
 </chapter>
