@@ -165,6 +165,8 @@ public class WicketServlet extends HttpServlet
 		final WebResponse response = webApplication.getSettings().getBufferResponse()
 				? new BufferedWebResponse(servletResponse)
 				: new WebResponse(servletResponse);
+				
+		session.updateSession();
 
 		try
 		{
