@@ -18,6 +18,7 @@
  */
 package wicket.resource;
 
+import wicket.WicketRuntimeException;
 import wicket.util.ExceptionTestBase;
 
 /**
@@ -42,6 +43,6 @@ public class InvalidResourceSpecificationExceptionTest extends ExceptionTestBase
 	 */
 	protected String getExceptionClassName()
 	{
-		return "wicket.resource.InvalidResourceSpecificationException";
+		return WicketRuntimeException.class.getName();
 	}
 }
