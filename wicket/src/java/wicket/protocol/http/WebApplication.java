@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import wicket.Application;
 import wicket.ISessionFactory;
 import wicket.Session;
+import wicket.markup.html.link.AutolinkComponentResolver;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.html.pages.StaleDataErrorPage;
@@ -73,6 +74,9 @@ public abstract class WebApplication extends Application
         // Set default error pages for HTML markup
         getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class).setInternalErrorPage(
                 InternalErrorPage.class).setStaleDataErrorPage(StaleDataErrorPage.class);
+        
+        // Add resolver for automatically resolving HTML links
+        getComponentResolvers().add(new AutolinkComponentResolver());
 	}
    
     /**

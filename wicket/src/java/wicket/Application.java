@@ -23,7 +23,6 @@ import java.util.List;
 import wicket.markup.MarkupParser;
 import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.encryption.ICrypt;
-import wicket.markup.html.link.AutolinkComponentResolver;
 import wicket.markup.parser.XmlPullParser;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
@@ -55,7 +54,7 @@ import wicket.util.watch.ModificationWatcher;
 public abstract class Application
 {
 	/** List of (static) ComponentResolvers */
-	private List componentResolvers;
+	private List componentResolvers = new ArrayList();
 
 	/**
 	 * Factory for the converter instance; default to the non localized
@@ -90,8 +89,6 @@ public abstract class Application
 		this.localizer = new Localizer(this);
 
 		// Install default component resolvers
-		componentResolvers = new ArrayList();
-		componentResolvers.add(new AutolinkComponentResolver());
 		componentResolvers.add(new WicketTagComponentResolver());
 	}
 
