@@ -34,6 +34,7 @@ public class PageExpiredErrorPage extends HtmlPage
 	 * Constructor.
 	 * 
 	 * @param parameters
+	 *            The page parameters
 	 */
 	public PageExpiredErrorPage(final PageParameters parameters)
 	{

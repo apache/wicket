@@ -34,7 +34,7 @@ public class InternalErrorPage extends HtmlPage
 	 * Constructor.
 	 * 
 	 * @param parameters
-	 *            the page parameters
+	 *            The page parameters
 	 */
 	public InternalErrorPage(final PageParameters parameters)
 	{
