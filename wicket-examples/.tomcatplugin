@@ -9,8 +9,8 @@
     <extraInfo></extraInfo>
     <webPath>/wicket</webPath>
     <webClassPathEntries>
-        <webClassPathEntry>/Wicket/build/classes</webClassPathEntry>
         <webClassPathEntry>/wicket-examples/build/classes</webClassPathEntry>
+        <webClassPathEntry>/wicket/build/classes</webClassPathEntry>
         <webClassPathEntry>MAVEN_REPO/asm/jars/asm-1.4.3.jar</webClassPathEntry>
         <webClassPathEntry>MAVEN_REPO/asm/jars/asm-util-1.4.3.jar</webClassPathEntry>
         <webClassPathEntry>MAVEN_REPO/cglib/jars/cglib-full-2.0.1.jar</webClassPathEntry>
