@@ -101,10 +101,7 @@ public abstract class Component implements Serializable
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
-	/**
-	 * Collections to hold instances of modifiers to be applied for this
-	 * component.
-	 */
+	/** Collection of AttributeModifiers to be applied for this Component */
 	private List attributeModifiers = null;
 
 	/** The model for this component. */
