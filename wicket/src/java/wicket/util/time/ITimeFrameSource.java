@@ -19,16 +19,18 @@
 package wicket.util.time;
 
 /**
- * A timeframe source produces time frame values. The value returned by a timeframe source
- * may vary over time.
+ * A timeframe source produces time frame values. The value returned by a 
+ * timeframe source may vary over time.
+ * @see wicket.util.time.TimeFrame
+ * 
  * @author Jonathan Locke
  */
 public interface ITimeFrameSource
-{ // TODO finalize javadoc
+{
     /**
      * @return Gets current time frame value
      */
-    public TimeFrame get();
+    public TimeFrame getTimeFrame();
 }
 
 ///////////////////////////////// End of File /////////////////////////////////

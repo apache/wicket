@@ -19,17 +19,36 @@
 package wicket.util.time;
 
 /**
- * Immutable class which represents an interval of time with a beginning and an end. The
- * beginning value is inclusive and the end value is exclusive. In other words, the time
- * frame of 1pm to 2pm includes 1pm, but not 2pm. 1:59:59 is the last value in the
- * timeframe.
+ * Immutable class which represents an interval of time with a beginning 
+ * and an end. The beginning value is inclusive and the end value is 
+ * exclusive. In other words, the time frame of 1pm to 2pm includes 1pm, 
+ * but not 2pm. 1:59:59 is the last value in the timeframe.
+ * <p>
+ * TimeFrames can be constructed by calling the valueOf static factory
+ * methods valueOf(Time, Time) (yielding a TimeFrame between two absolute
+ * times) and valueOf(Time, Duration) yielding a TimeFrame starting at
+ * an absolute time and having a given length.
+ * <p>
+ * The start and end of a TimeFrame can be retrieved by calling getStart()
+ * and getEnd().  Its duration can be retrieved by calling getDuration().
+ * <p>
+ * The contains(Time) method can be called to determine if a TimeFrame 
+ * contains a given point in time.  The overlaps(TimeFrame) method can
+ * be called to determine if two TimeFrames overlap.
+ * <p>
+ * The eachDay(TimeOfDay, TimeOfDay) will return a TimeFrameSource which
+ * generates a timeframe using the two times of day.  In other words, if
+ * the start is 3pm and the end is 4pm, the TimeFrameSource returned will
+ * yield 3-4pm on the day it is called (each day).
+ * 
  * @author Jonathan Locke
  */
 public final class TimeFrame implements ITimeFrameSource
-{ // TODO finalize javadoc
-    // Start and end points of this time frame
+{
+    /** Begining of this timeframe */
     private final Time start;
 
+    /** End of this timeframe */
     private final Time end;
 
     /**
@@ -46,9 +65,10 @@ public final class TimeFrame implements ITimeFrameSource
     }
 
     /**
+     * Implementation of ITimeFrameSource that simply returns this timeframe
      * @return Gets this timeframe
      */
-    public TimeFrame get()
+    public TimeFrame getTimeFrame()
     {
         return this;
     }
@@ -78,6 +98,30 @@ public final class TimeFrame implements ITimeFrameSource
     }
 
     /**
+     * @return The start of this time frame
+     */
+    public Time getStart()
+    {
+        return start;
+    }
+
+    /**
+     * @return The end of this time frame
+     */
+    public Time getEnd()
+    {
+        return end;
+    }
+
+    /**
+     * @return The duration of this time frame
+     */
+    public Duration getDuration()
+    {
+        return end.subtract(start);
+    }
+
+    /**
      * Returns a timeframe source for a start and end time-of-day. For example, called
      * with 3pm and 5pm as parameters, the timeframe source returned would produce
      * timeframe objects representing 3pm-5pm on whatever day it is when the caller calls
@@ -93,34 +137,11 @@ public final class TimeFrame implements ITimeFrameSource
 
         return new ITimeFrameSource()
         {
-            public TimeFrame get()
+            public TimeFrame getTimeFrame()
             {
                 return new TimeFrame(Time.valueOf(startTimeOfDay), Time.valueOf(endTimeOfDay));
             }
         };
-    }
-
-    /**
-     * Checks consistency of start and end values
-     * @param start Start value
-     * @param end End value
-     */
-    private static void check(final AbstractTimeValue start, final AbstractTimeValue end)
-    {
-        // Throw illegal argument exception if start is less than end
-        if (end.lessThan(start))
-        {
-            throw new IllegalArgumentException("Start time of time frame "
-                    + start + " was after end time " + end);
-        }
-    }
-
-    /**
-     * @return The duration of this time frame
-     */
-    public Duration getDuration()
-    {
-        return end.subtract(start);
     }
 
     /**
@@ -139,23 +160,9 @@ public final class TimeFrame implements ITimeFrameSource
     public boolean overlaps(final TimeFrame timeframe)
     {
         return contains(timeframe.start)
-                || contains(timeframe.end) || timeframe.contains(start) || timeframe.contains(end);
-    }
-
-    /**
-     * @return The start of this time frame
-     */
-    public Time getStart()
-    {
-        return start;
-    }
-
-    /**
-     * @return The end of this time frame
-     */
-    public Time getEnd()
-    {
-        return end;
+            || contains(timeframe.end) 
+            || timeframe.contains(start) 
+            || timeframe.contains(end);
     }
 
     /**
@@ -164,6 +171,23 @@ public final class TimeFrame implements ITimeFrameSource
     public String toString()
     {
         return "[start=" + start + ", end=" + end + "]";
+    }
+
+    /**
+     * Checks consistency of start and end values, ensuring that the end 
+     * value is less than the start value.
+     * @param start Start value
+     * @param end End value
+     * @throws IllegalArgumentException Thrown if end is less than start
+     */
+    private static void check(final AbstractTimeValue start, final AbstractTimeValue end)
+    {
+        // Throw illegal argument exception if end is less than start
+        if (end.lessThan(start))
+        {
+            throw new IllegalArgumentException
+                ("Start time of time frame " + start + " was after end time " + end);
+        }
     }
 }
 

@@ -23,14 +23,22 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This class maps ITimeFrames to Objects. Since values are stored using ITimeFrameSource
- * implementing objects, the value returned by the source may vary over time. For example,
- * one implementation of ITimeFrameSource might return the start and end time of lunch on
- * any given day. This class is not threadsafe.
+ * This class maps ITimeFrames to Objects. Since values are stored using 
+ * ITimeFrameSource implementing objects, the value returned by the source 
+ * may vary over time. For example, one implementation of ITimeFrameSource 
+ * might return the start and end time of lunch on any given day. 
+ * <p>
+ * To associate an object with a dynamic TimeFrame (via ITimeFrameSource),
+ * call put(ITimeFrameSource, Object).  You can later retrieve the first 
+ * object for a point in time with get(Time).  The method get() is provided
+ * for convenience and is equivalent to get(Time.now()).
+ * <p>
+ * This class is not threadsafe.
+ * 
  * @author Jonathan Locke
  */
 public final class TimeMap
-{ // TODO finalize javadoc
+{
     /** Map from ITimeFrameSource implementing objects to Object values. */
     private final Map sources = new HashMap();
 
@@ -48,16 +56,16 @@ public final class TimeMap
      */
     public void put(final ITimeFrameSource source, final Object o)
     {
-        final TimeFrame timeframe = source.get();
+        final TimeFrame timeframe = source.getTimeFrame();
 
         for (final Iterator iterator = sources.keySet().iterator(); iterator.hasNext();)
         {
-            final TimeFrame current = ((ITimeFrameSource) iterator.next()).get();
+            final TimeFrame current = ((ITimeFrameSource)iterator.next()).getTimeFrame();
 
             if (timeframe.overlaps(current))
             {
-                throw new IllegalArgumentException("Timeframe "
-                        + timeframe + " overlaps timeframe " + current);
+                throw new IllegalArgumentException
+                    ("Timeframe " + timeframe + " overlaps timeframe " + current);
             }
         }
 
@@ -72,8 +80,7 @@ public final class TimeMap
     {
         for (final Iterator iterator = sources.keySet().iterator(); iterator.hasNext();)
         {
-            final TimeFrame current = ((ITimeFrameSource) iterator.next()).get();
-
+            final TimeFrame current = ((ITimeFrameSource)iterator.next()).getTimeFrame();
             if (current.contains(time))
             {
                 return sources.get(current);
