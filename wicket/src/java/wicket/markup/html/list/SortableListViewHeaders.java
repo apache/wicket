@@ -121,7 +121,7 @@ public class SortableListViewHeaders extends WebMarkupContainer
 					{
 						add(new SortableListViewHeader(componentName, group)
 						{
-							protected int compareTo(final Object o1, final Object o2)
+							protected int compare(final Object o1, final Object o2)
 							{
 								return me.compareTo(this, o1, o2);
 							}
