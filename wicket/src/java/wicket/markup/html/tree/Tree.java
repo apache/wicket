@@ -68,7 +68,7 @@ public class Tree extends Panel implements ILinkListener
      */
     void addLink(TreeNodeLink link)
     {
-        NodeModel node = link.getNode();
+        TreeNodeModel node = link.getNode();
         Serializable userObject = node.getUserObject();
 
         // links can change, but the target user object should be the same, so
@@ -163,9 +163,48 @@ public class Tree extends Panel implements ILinkListener
         {
             visiblePathsList.add(e.nextElement());
         }
-        List topList = new ArrayList(); // reference to the first level list
-        buildList(visiblePathsList, 0, 0, topList); // build the nested lists
-        add(new TreeRows("tree", topList, this)); // add the tree panel
+        List nestedList = new ArrayList(); // reference to the first level list
+        buildList(visiblePathsList, 0, 0, nestedList); // build the nested lists
+        add(getTreeRowsPanel("tree", nestedList)); // add the tree panel
+    }
+
+    /**
+     * Gets the panel which displays the tree rows.
+     * Override this if you want to provide your own panel.
+     * @param nestedList the list that represents the currently visible tree paths.
+     * @param componentName the name of the panel. Warning: this must be used to construct
+     * the panel.
+     * @return the panel that is used to display visible tree paths
+     */
+    protected Panel getTreeRowsPanel(String componentName, List nestedList)
+    {
+        return new TreeRows(componentName, nestedList, this);
+    }
+
+    /**
+     * Gets the panel that displays one row.
+     * Override this if you want to provide your own panel.
+     * @param componentName the name of the panel.
+     * Warning: if you did not override {@link TreeRows}, this must be
+     * used to construct the panel.
+     * @param nodeModel the model that holds a reference to the tree node and some
+     * other usefull objects that help you construct the panel
+     * @return the panel that displays one row
+     */
+    protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
+    {
+        return new TreeRow(componentName, this, nodeModel);
+    }
+
+    /**
+     * Gets the panel that displays one row. For internal usage only.
+     * @param componentName the name o fthe panel
+     * @param nodeModel the node model
+     * @return the panel that displays one row
+     */
+    final Panel internalGetTreeRowPanel(String componentName, TreeNodeModel nodeModel)
+    {
+        return getTreeRowPanel(componentName, nodeModel);
     }
 
     /**
@@ -196,7 +235,7 @@ public class Tree extends Panel implements ILinkListener
             }
             else // node
             {
-                NodeModel nodeModel = new NodeModel(treeNode, treeState, path);
+                TreeNodeModel nodeModel = new TreeNodeModel(treeNode, treeState, path);
                 rows.add(nodeModel);
                 index++;
             }

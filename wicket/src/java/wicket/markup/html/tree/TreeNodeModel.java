@@ -33,7 +33,7 @@ import wicket.Model;
  *
  * @author Eelco Hillenius
  */
-public final class NodeModel extends Model
+public final class TreeNodeModel extends Model
 {
     /** tree node. */
     private final DefaultMutableTreeNode treeNode;
@@ -50,7 +50,7 @@ public final class NodeModel extends Model
      * @param treeState the (shared) reference to the tree state
      * @param path the (shared) current path
      */
-    public NodeModel(final DefaultMutableTreeNode treeNode,
+    public TreeNodeModel(final DefaultMutableTreeNode treeNode,
             final TreeStateCache treeState, final TreePath path)
     {
         super(null);

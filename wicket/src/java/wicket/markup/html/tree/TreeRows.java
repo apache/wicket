@@ -71,7 +71,7 @@ public final class TreeRows extends Panel
             Object modelObject = listItem.getModelObject();
             if(modelObject instanceof List)
             {
-                TreeRow row = new TreeRow("row", tree, null);
+                Panel row = tree.internalGetTreeRowPanel("row", null);
                 row.setVisible(false);
                 listItem.add(row);
                 TreeRows nested = new TreeRows("nested", (List)modelObject, tree);
@@ -79,8 +79,8 @@ public final class TreeRows extends Panel
             }
             else
             {
-                NodeModel nodeModel = (NodeModel)modelObject;
-                TreeRow row = new TreeRow("row", tree, nodeModel);
+                TreeNodeModel nodeModel = (TreeNodeModel)modelObject;
+                Panel row = tree.internalGetTreeRowPanel("row", nodeModel);
                 listItem.add(row);
                 TreeRows nested = new TreeRows("nested", null, tree);
                 nested.setVisible(false);
