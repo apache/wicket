@@ -18,18 +18,19 @@
  */
 package wicket.examples.guestbook;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import nl.openedge.util.jetty.JettyDecorator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import net.sourceforge.jwebunit.WebTestCase;
-import nl.openedge.util.jetty.JettyDecorator;
+import wicket.examples.WicketWebTestCase;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class GuestbookTest extends WebTestCase
+public class GuestbookTest extends WicketWebTestCase
 {
 	private static Log log = LogFactory.getLog(GuestbookTest.class);
 
@@ -52,9 +53,9 @@ public class GuestbookTest extends WebTestCase
 
     /**
      * Test page.
-     * @throws InterruptedException
+     * @throws Exception
      */
-    public void testHomePage() throws InterruptedException {
+    public void testHomePage() throws Exception {
         try
         {
             beginAt("/guestbook");
@@ -65,8 +66,10 @@ public class GuestbookTest extends WebTestCase
         }
         
         this.dumpResponse(System.out);
+        this.dumpResponse(System.out);
         assertTitleEquals("Wicket Examples - guestbook");
-        this.assertElementNotPresent("comments");
+        this.assertXpathNodeNotPresent("//*[@wicket:id='comments']");
+        //this.assertElementNotPresent("comments");
         
         assertFormPresent("wicket-commentForm");
         this.assertFormElementPresent("0.commentForm.text");

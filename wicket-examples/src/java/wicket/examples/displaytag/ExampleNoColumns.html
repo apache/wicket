@@ -7,12 +7,12 @@
 	<meta http-equiv="Cache-Control" content="no-cache" />
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
     <link rel="stylesheet" type="text/css" href="style.css"/>
-	<link id="wicket-styleLink" rel="stylesheet" href="css/displaytag.css" type="text/css" media="screen, print" />
+	<link wicket:id="styleLink" rel="stylesheet" href="css/displaytag.css" type="text/css" media="screen, print" />
 </head>
 	
 <body>
 
-	<span id="wicket-mainNavigation"/>
+	<span wicket:id="mainNavigation"/>
 	
 	<h2><wicket:link><a href="DisplaytagIndex.html">Example</a></wicket:link> &gt; Simplest case, no columns</h2>
 	<br/>
@@ -23,8 +23,8 @@
       </tr>
 	  </thead>
     <tbody>
- 	    <tr id="wicket-entries" class="even">
-				<td><span id="wicket-entry">Test Eintrag</span></td>
+ 	    <tr wicket:id="entries" class="even">
+				<td><span wicket:id="entry">Test Eintrag</span></td>
 			</tr>
       <wicket:remove>
 		    <tr class="odd">

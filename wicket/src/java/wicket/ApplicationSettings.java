@@ -137,17 +137,6 @@ public final class ApplicationSettings
 	/** The application */
 	private Application application;
 
-	/**
-	 * If true and if componentIdAttribute has been changed, than not only use
-	 * the new componentIdAttribute to identify wicket components, but also the
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back to default. Both the
-	 * new componentIdAttribute and DEFAULT_COMPONENT_ID_ATTRIBUTE would
-	 * identify wicket components. If componentIdAttribute has not be changed,
-	 * the system's behaviour is the same, not matter if applyDefaultComponentId
-	 * is true or false.
-	 */
-	private boolean applyDefaultComponentId = false;
-
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
 
@@ -208,10 +197,8 @@ public final class ApplicationSettings
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
 
-	/** Should component ids be stripped during rendering? */
-	private boolean stripComponentIds = false;
-
-	/** If true, wicket tags ( <wicket ..>) shall be removed from output */
+	/** If true, wicket tags (<wicket: ..>) and wicket:id attributes 
+	 * we be removed from output */
 	private boolean stripWicketTags = false;
 
 	/** Flags used to determine how to behave if resources are not found */
@@ -292,12 +279,10 @@ public final class ApplicationSettings
 			}
 			setComponentUseCheck(true);
 			setStripWicketTags(false);
-			setStripComponentIds(false);
 		}
 		else if ("deployment".equalsIgnoreCase(configurationType))
 		{
 			setComponentUseCheck(false);
-			setStripComponentIds(true);
 			setStripWicketTags(true);
 		}
 		else
@@ -305,21 +290,6 @@ public final class ApplicationSettings
 			throw new IllegalArgumentException(
 					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
 		}
-	}
-
-	/**
-	 * If true and if componentIdAttribute has been changed, than not only use
-	 * the new componentIdAttribute to identify wicket components, but also the
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back to default. Both the
-	 * new componentIdAttribute and DEFAULT_COMPONENT_ID_ATTRIBUTE would
-	 * identify wicket components.
-	 * 
-	 * @return true, if "wicket" will be used IN ADDITION to the changed value
-	 *         for the componentIdAttribute.
-	 */
-	public boolean getApplyDefaultComponentId()
-	{
-		return applyDefaultComponentId;
 	}
 
 	/**
@@ -494,18 +464,6 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Returns true if componentId attributes should be stripped from tags when
-	 * rendering.
-	 * 
-	 * @return Returns the stripComponentIds.
-	 * @see ApplicationSettings#setStripComponentIds(boolean)
-	 */
-	public final boolean getStripComponentIds()
-	{
-		return stripComponentIds;
-	}
-
-	/**
 	 * Gets whether to remove wicket tags from the output.
 	 * 
 	 * @return whether to remove wicket tags from the output
@@ -551,22 +509,6 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * If true and if componentIdAttribute has been changed, than not only use
-	 * the new componentIdAttribute to identify wicket components, but also the
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back to default. Both the
-	 * new componentIdAttribute and DEFAULT_COMPONENT_ID_ATTRIBUTE would
-	 * identify wicket components.
-	 * 
-	 * @param applyDefault
-	 *            if true, "wicket" will be used IN ADDITION to the changed
-	 *            value for the componentIdAttribute.
-	 */
-	public void setApplyDefaultComponentId(final boolean applyDefault)
-	{
-		this.applyDefaultComponentId = applyDefault;
-	}
-
-	/**
 	 * Application default for automatic link resolution.
 	 * 
 	 * @param automaticLinking
@@ -603,7 +545,6 @@ public final class ApplicationSettings
 					"Component id attribute must be a valid variable name ([a-z][a-z0-9_]*)");
 		}
 
-		this.applyDefaultComponentId = true;
 		this.componentIdAttribute = componentIdAttribute;
 		return this;
 	}
@@ -811,23 +752,6 @@ public final class ApplicationSettings
 	public final ApplicationSettings setStripComments(boolean stripComments)
 	{
 		this.stripComments = stripComments;
-		return this;
-	}
-
-	/**
-	 * Determines if componentId attributes and "wicket-" from id attributes
-	 * should be stripped from tags when rendering. Component id attributes in
-	 * rendered pages can be a helpful debugging tool, but they are not helpful
-	 * to end-users and do not increase efficiency in delivering pages over any
-	 * protocol.
-	 * 
-	 * @param stripComponentIds
-	 *            The stripComponentIds to set.
-	 * @return This
-	 */
-	public final ApplicationSettings setStripComponentIds(final boolean stripComponentIds)
-	{
-		this.stripComponentIds = stripComponentIds;
 		return this;
 	}
 

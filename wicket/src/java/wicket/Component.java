@@ -1203,17 +1203,8 @@ public abstract class Component implements Serializable
 				}
 			}
 
-			// Strip component id attribute if desired
-			if (settings.getStripComponentIds())
-			{
-				// Get mutable copy of tag and remove component id
-				tag = tag.mutable();
-				tag.removeComponentId(settings.getComponentIdAttribute(), settings
-						.getApplyDefaultComponentId());
-			}
-
 			// Write the tag
-			getResponse().write(tag);
+			getResponse().write(tag.toString(settings.getStripWicketTags()));
 		}
 	}
 

@@ -8,6 +8,10 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="fix" dev="Juergen Donnerstag" issue="">
+      Replaced id="wicket-xxx" and wicket="xxx" with wicket:id="xxx". 
+      <action type="fix" dev="Juergen Donnerstag" issue="1124299">
+      Removed setStripComponentId(boolean). setStripWicketTags(boolean) now removes wicket:id="XX" as well.
       <action type="update" dev="Jonathan Locke" issue="">
       Added Netherlands buttons to form input example to demo button factories.  Improved DefaultButtonImageResource so that it auto-resizes buttons with text that won't fit (as it most likely won't in Dutch).
 	  </action>

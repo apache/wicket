@@ -1,52 +1,52 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/wicket">
 <head>
 	<title>Wicket Examples - hangman</title>
 	<link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 
 <body>
-	<span id="wicket-mainNavigation"/>
+	<span wicket:id="mainNavigation"/>
 
 	<p><span id="wicket-guessesRemaining">3</span> guesses remaining</p>
 
-	<p>Current Word: <span id="wicket-letters">_U__E_</span></p>
+	<p>Current Word: <span wicket:id="letters">_U__E_</span></p>
 
 	<table>
 		<tr>
-			<td><a id="wicket-letter_a" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_b" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_c" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_d" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_e" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_f" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
+			<td><a wicket:id="letter_a" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_b" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_c" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_d" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_e" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_f" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
 		</tr>
 		<tr>
-			<td><a id="wicket-letter_g" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_h" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_i" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_j" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_k" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_l" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
+			<td><a wicket:id="letter_g" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_h" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_i" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_j" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_k" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_l" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
 		</tr>
 		<tr>
-			<td><a id="wicket-letter_m" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_n" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_o" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_p" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_q" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_r" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
+			<td><a wicket:id="letter_m" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_n" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_o" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_p" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_q" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_r" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
 		</tr>
 		<tr>
-			<td><a id="wicket-letter_s" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_t" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_u" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_v" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_w" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_x" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
+			<td><a wicket:id="letter_s" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_t" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_u" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_v" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_w" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_x" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
 		</tr>
 		<tr>
-			<td><a id="wicket-letter_y" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
-			<td><a id="wicket-letter_z" href="#"><img type="image" id="wicket-enabled"><img type="image" id="wicket-disabled"></a></td>
+			<td><a wicket:id="letter_y" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
+			<td><a wicket:id="letter_z" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
 		</tr>
 	</table>
 

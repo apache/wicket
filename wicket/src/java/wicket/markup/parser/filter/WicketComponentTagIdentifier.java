@@ -47,20 +47,8 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	/** Logging */
 	private static final Log log = LogFactory.getLog(WicketComponentTagIdentifier.class);
 
-	/** Name of desired componentId tag attribute. */
-	private String componentIdAttribute = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
-
-	/** If true, "wicket-" will be removed from id="wicket-xxx" */
-	private boolean stripWicketFromComponentTag = false;
-
-	/** 
-	 * If true and if componentIdAttribute has been changed, than not only
-	 * use the new componentIdAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentIdAttribute and 
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
-	 */
-	private boolean applyDefaultComponentId = false;
+	/** Wicket namespace */
+	private String wicketNamespace = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
 
 	/**
 	 * Construct.
@@ -79,41 +67,14 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	 * @param name
 	 *            component name
 	 */
-	public void setComponentIdAttribute(final String name)
+	public void setWicketNamespace(final String name)
 	{
-		this.componentIdAttribute = name;
+		this.wicketNamespace = name;
 
-		if (!ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE.equals(componentIdAttribute))
+		if (!ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE.equals(wicketNamespace))
 		{
-			log.info("You are using a non-standard component name: " + componentIdAttribute);
+			log.info("You are using a non-standard component name: " + wicketNamespace);
 		}
-	}
-
-	/**
-	 * If true, "wicket-" will be removed from component tag's id attributes.
-	 * E.g. id="wicket-myLabel" will be id="myLabel" on the output.
-	 * 
-	 * @param enable
-	 *            if true, remove "wicket-"
-	 */
-	public void setStripWicketFromComponentTag(final boolean enable)
-	{
-		this.stripWicketFromComponentTag = enable;
-	}
-
-	/** 
-	 * If true and if componentIdAttribute has been changed, than not only
-	 * use the new componentIdAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentIdAttribute and 
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
-	 * 
-	 * @param applyDefault if true, "wicket" will be used IN ADDITION to the 
-	 *   changed value for the componentIdAttribute.
-	 */
-	public void setApplyDefaultComponentId(final boolean applyDefault)
-	{
-	    this.applyDefaultComponentId = applyDefault;
 	}
 
 	/**
@@ -142,9 +103,7 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
-		if (componentIdAttribute.equalsIgnoreCase(xmlTag.getNamespace())
-				|| (applyDefaultComponentId && ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE
-						.equalsIgnoreCase(xmlTag.getNamespace())))
+		if (wicketNamespace.equalsIgnoreCase(xmlTag.getNamespace()))
 		{
 			// It is <wicket:...>
 			tag = new ComponentWicketTag(xmlTag);
@@ -159,43 +118,11 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 		}
 
 		// If the form <tag id = "wicket-value"> is used
-		final String id = xmlTag.getAttributes().getString("id");
-
-		if ((id != null) && id.startsWith(componentIdAttribute + "-"))
+		final String value = tag.getAttributes().getString(wicketNamespace + ":id");
+		if (value != null)
 		{
-			// extract component name from value
-			tag.setId(id.substring(componentIdAttribute.length() + 1).trim());
-
-			// Depending on apps setting, "wicket-" will be removed or not
-			if (this.stripWicketFromComponentTag)
-			{
-				tag.put("id", tag.getId());
-			}
-		}
-		else if ((id != null) && applyDefaultComponentId
-				&& id.startsWith(ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE))
-		{
-			// extract component name from value
-			tag.setId(id.substring(
-					ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE.length() + 1).trim());
-
-			// Depending on apps setting, "wicket-" will be removed or not
-			if (this.stripWicketFromComponentTag)
-			{
-				tag.put("id", tag.getId());
-			}
-		}
-		else if (tag.getAttributes().containsKey(componentIdAttribute))
-		{
-			// Set componentId value on tag
-			tag.setId(tag.getAttributes().getString(componentIdAttribute));
-		}
-		else if (applyDefaultComponentId
-				&& tag.getAttributes().containsKey(ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE))
-		{
-			// Set componentId value on tag
-			tag.setId(tag.getAttributes().getString(
-					ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE));
+			// Make it a wicket component. Otherwise it would be RawMarkup
+			tag.setId(value);
 		}
 
 		return tag;

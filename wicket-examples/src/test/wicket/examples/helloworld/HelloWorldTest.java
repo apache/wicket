@@ -20,15 +20,14 @@ package wicket.examples.helloworld;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import net.sourceforge.jwebunit.WebTestCase;
 import nl.openedge.util.jetty.JettyDecorator;
+import wicket.examples.WicketWebTestCase;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class HelloWorldTest extends WebTestCase
+public class HelloWorldTest extends WicketWebTestCase
 {
-
     /**
      * Construct.
      * @param name name of test
@@ -48,11 +47,16 @@ public class HelloWorldTest extends WebTestCase
 
     /**
      * Test page.
+     * @throws Exception
      */
-    public void testHelloWorld() {
+    public void testHelloWorld() throws Exception 
+    {
         beginAt("/helloworld");
+        //this.dumpResponse(System.out);
         assertTitleEquals("Wicket Examples - helloworld");
-        assertTextInElement("wicket-message", "Hello World!");
+        assertXPath("//body/span[@wicket:id='message']", "Hello World");
+        assertWicketIdTagText("message", "Hello World");
+        //assertTextInElement("message", "Hello World!");
     }
 
 	/**

@@ -1,4 +1,4 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
     <title>Wicket Examples - library</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
@@ -12,14 +12,14 @@
 </style>
 <body>
 
-  <span id = "wicket-border">
+  <span wicket:id = "border">
   Book Details
   <p>
   <table>
 	<tr>
 	  <td align="right">Title:</td>
 	  <td>
-	    <span id = "wicket-title">
+	    <span wicket:id = "title">
         Huckleberry Finn
         </span>
       </td>
@@ -27,7 +27,7 @@
 	<tr>
 	  <td align="right">Author:</td>
 	  <td>
-	    <span id = "wicket-author">
+	    <span wicket:id = "author">
         Mark Twain
         </span>
 	  </td>
@@ -35,7 +35,7 @@
 	<tr>
 	  <td align="right">Fiction:</td>
 	  <td>
-	    <span id = "wicket-fiction">
+	    <span wicket:id = "fiction">
 	    true
         </span>
 	  </td>
@@ -43,15 +43,15 @@
 	<tr>
 	  <td align="right">Companion Book:</td>
 	  <td>
-	    <a id = "wicket-companion">
-	    <span id = "wicket-title">Cat in Hat</span>
+	    <a wicket:id = "companion">
+	    <span wicket:id = "title">Cat in Hat</span>
         </a>
 	  </td>
 	</tr>
 	<tr>
 	  <td align="right">Styles:</td>
 	  <td>
-	    <span id = "wicket-writingStyles">
+	    <span wicket:id = "writingStyles">
 	      Style1, Style2
       </span>
 	  </td>
@@ -59,14 +59,14 @@
 	<tr>
 	  <td align="right">Related Book:</td>
 	  <td>
-	    <a id = "wicket-related">
-	    <span id = "wicket-title">Cat in Hat</span>
+	    <a wicket:id = "related">
+	    <span wicket:id = "title">Cat in Hat</span>
         </a>
 	  </td>
 	</tr>	
   </table>	
   <p>
-  <a id = "wicket-edit" href="EditBook.html">Edit</a>
+  <a wicket:id = "edit" href="EditBook.html">Edit</a>
   </span>
 </body>
 </html>

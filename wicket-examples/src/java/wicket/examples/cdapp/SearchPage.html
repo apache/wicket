@@ -1,4 +1,4 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
 <title>Wicket Examples - cdapp</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
@@ -6,48 +6,48 @@
 </head>
 <body>
 
-<span id="wicket-mainNavigation" />
+<span wicket:id="mainNavigation" />
 
-<form id="wicket-searchForm">
-<fieldset><legend>Search</legend> <input id="wicket-search" type="text"
+<form wicket:id="searchForm">
+<fieldset><legend>Search</legend> <input wicket:id="search" type="text"
 	size="20" /> <input type="submit" value="search" class="mediumButton" />
 </fieldset>
 </form>
 
 <div>
 <table id="resultstable">
-	<thead id="wicket-resultsHeader">
+	<thead wicket:id="resultsHeader">
 		<tr>
 			<!--
             	note: we could do the rollovers with CSS, but IE doesn't support
             	them on other elements than anchors without providing a .htc hack
              -->
-			<th id="wicket-sortOnArtist" class="litupColumn"
+			<th wicket:id="sortOnArtist" class="litupColumn"
 				onmouseover="this.className='litupColumnOver';"
 				onmouseout="this.className='litupColumn';">Artist</th>
-			<th id="wicket-sortOnTitle" class="litupColumn"
+			<th wicket:id="sortOnTitle" class="litupColumn"
 				onmouseover="this.className='litupColumnOver';"
 				onmouseout="this.className='litupColumn';">Title</th>
-			<th id="wicket-sortOnLabel" class="litupColumn"
+			<th wicket:id="sortOnLabel" class="litupColumn"
 				onmouseover="this.className='litupColumnOver';"
 				onmouseout="this.className='litupColumn';">Label</th>
-			<th id="wicket-sortOnYear" class="number litupColumn"
+			<th wicket:id="sortOnYear" class="number litupColumn"
 				onmouseover="this.className='number litupColumnOver';"
 				onmouseout="this.className='number litupColumn';">Year</th>
 			<th class="delete"></th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr id="wicket-results" class="litupRow"
+		<tr wicket:id="results" class="litupRow"
 			onmouseover="this.className='litupRowOver';"
 			onmouseout="this.className='litupRow';">
-			<td id="wicket-performers"><span id="wicket-performers">(performers)</span>
+			<td wicket:id="performers"><span wicket:id="performers">(performers)</span>
 			</td>
-			<td id="wicket-title"><span id="wicket-title">(title)</span></td>
-			<td id="wicket-label"><span id="wicket-label">(label)</span></td>
-			<td id="wicket-year" class="number"><span id="wicket-year">(year)</span>
+			<td wicket:id="title"><span wicket:id="title">(title)</span></td>
+			<td wicket:id="label"><span wicket:id="label">(label)</span></td>
+			<td wicket:id="year" class="number"><span wicket:id="year">(year)</span>
 			</td>
-			<td><a href="#" class="delete" id="wicket-delete"> <img
+			<td><a href="#" class="delete" wicket:id="delete"> <img
 				src="cdapp/delete.gif" border="0" /> </a></td>
 		</tr>
 	</tbody>
@@ -56,16 +56,16 @@
 
 <div id="resultsNavigation">
 <ul>
-	<li id="wicket-navigation"><span id="wicket-separator" />
-		<a id="wicket-pageLink" href="#"><span id="wicket-pageLabel" /><span id="wicket-pageNumber" /></a>
+	<li wicket:id="navigation"><span wicket:id="separator" />
+		<a wicket:id="pageLink" href="#"><span wicket:id="pageLabel" /><span wicket:id="pageNumber" /></a>
 	</li>
 </ul>
 </div>
 
 <div id="">
-	<input type="button" id="wicket-newCdLink" value="new cd" class="mediumButton"/>
+	<input type="button" wicket:id="newCdLink" value="new cd" class="mediumButton"/>
 </div>
 
-<div><span id="wicket-feedback" /></div>
+<div><span wicket:id="feedback" /></div>
 </body>
 </html>

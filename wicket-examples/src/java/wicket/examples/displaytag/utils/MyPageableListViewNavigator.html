@@ -1,14 +1,14 @@
 <html xmlns:wicket>
 <body>
   <wicket:panel>
-    <span wicket="headline">a headline above the navigator</span><br/>
-	  [<a id="wicket-first">First</a>/<a id="wicket-prev">Prev</a>]
-    <span id="wicket-navigation">
-		  <a id="wicket-pageLink" href="#">
-        <span id="wicket-pageNumber">5</span>
+    <span wicket:id="headline">a headline above the navigator</span><br/>
+	  [<a wicket:id="first">First</a>/<a wicket:id="prev">Prev</a>]
+    <span wicket:id="navigation">
+		  <a wicket:id="pageLink" href="#">
+        <span wicket:id="pageNumber">5</span>
       </a>
     </span>
-		[<a id="wicket-next">Next</a>/<a id="wicket-last">Last</a>]
+		[<a wicket:id="next">Next</a>/<a wicket:id="last">Last</a>]
   </wicket:panel>
 </body>
 </html>

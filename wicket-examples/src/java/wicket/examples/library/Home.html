@@ -1,11 +1,11 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
     <title>Wicket Examples - library</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 
-  <span id = "wicket-border">
+  <span wicket:id = "border">
   <table>
 	<tr>
 	  <th>Title</th>
@@ -15,28 +15,28 @@
 	  <th></th>
 	  <th></th>
     </tr>
-    <tr id = "wicket-books">
+    <tr wicket:id = "books">
       <td>
-        <a id = "wicket-details" href="#">
-        <span id = "wicket-title">Huckleberry Finn</span>
+        <a wicket:id = "details" href="#">
+        <span wicket:id = "title">Huckleberry Finn</span>
         </a>
       </td>
       <td>
-        <span id = "wicket-author">
+        <span wicket:id = "author">
         Mark Twain
         </span>
       </td>
       <td>
-        <a id = "wicket-moveUp" href="#">Move Up</a>
+        <a wicket:id = "moveUp" href="#">Move Up</a>
       </td>
       <td>
-        <a id = "wicket-moveDown" href="#">Move Down</a>
+        <a wicket:id = "moveDown" href="#">Move Down</a>
       </td>
       <td>
-        <a id = "wicket-remove" href="#">Remove</a>
+        <a wicket:id = "remove" href="#">Remove</a>
       </td>
       <td>
-        <a id = "wicket-edit" href="EditBook.html">Edit</a>
+        <a wicket:id = "edit" href="EditBook.html">Edit</a>
       </td>
     </tr>
   </table>	

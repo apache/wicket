@@ -2,32 +2,32 @@
 <html xmlns:wicket>
 <body>
 	<wicket:panel>
-    <span id="wicket-headline">xxx items found, displaying yy to zz.</span><p/>
-	  [<a id="wicket-first">First</a>/<a id="wicket-prev">Prev</a>]
-    <span id="wicket-navigation">
-		  <a id="wicket-pageLink" href="#">
-        <span id="wicket-pageNumber"/>
+    <span wicket:id="headline">xxx items found, displaying yy to zz.</span><p/>
+	  [<a wicket:id="first">First</a>/<a wicket:id="prev">Prev</a>]
+    <span wicket:id="navigation">
+		  <a wicket:id="pageLink" href="#">
+        <span wicket:id="pageNumber"/>
       </a>
     </span>
-		[<a id="wicket-next">Next</a>/<a id="wicket-last">Last</a>]
+		[<a wicket:id="next">Next</a>/<a wicket:id="last">Last</a>]
 	<br/>
   <table>
-    <thead id="wicket-header">
+    <thead wicket:id="header">
       <tr>
-        <th id="wicket-id" class="sortable">ID</th>
-        <th id="wicket-name" class="sortable">Name</th>
-        <th id="wicket-email" class="sortable">Email</th>
-        <th id="wicket-status" class="sortable">Status</th>
-        <th id="wicket-comment" class="sortable">Comment</th>
+        <th wicket:id="id" class="sortable">ID</th>
+        <th wicket:id="name" class="sortable">Name</th>
+        <th wicket:id="email" class="sortable">Email</th>
+        <th wicket:id="status" class="sortable">Status</th>
+        <th wicket:id="comment" class="sortable">Comment</th>
       </tr>
 	  </thead>
     <tbody>
-			<tr id="wicket-rows" class="even">
-				<td><span id="wicket-id">Test ID</span></td>
-				<td><span id="wicket-name">Test Name</span></td>
-				<td><span id="wicket-email">Test EMail</span></td>
-				<td><span id="wicket-status">Test Status</span></td>
-				<td><span id="wicket-comments">Test Comments</span></td>
+			<tr wicket:id="rows" class="even">
+				<td><span wicket:id="id">Test ID</span></td>
+				<td><span wicket:id="name">Test Name</span></td>
+				<td><span wicket:id="email">Test EMail</span></td>
+				<td><span wicket:id="status">Test Status</span></td>
+				<td><span wicket:id="comments">Test Comments</span></td>
 			</tr>
       <wicket:remove>
 		    <tr class="odd">

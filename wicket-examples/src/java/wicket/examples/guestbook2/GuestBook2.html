@@ -1,23 +1,23 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
 	<title>Wicket Examples - guestbook2</title>
 	<link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-  <span id="wicket-mainNavigation"/>
+  <span wicket:id="mainNavigation"/>
 
-  <form id = "wicket-commentForm">
+  <form wicket:id = "commentForm">
     Add your comment here:
     <p>
-    <textarea id = "wicket-text">This is a comment</textarea>
+    <textarea wicket:id = "text">This is a comment</textarea>
     <p>
     <input type = "submit" value = "Submit"/>
   </form>
   <p>
-  <span id = "wicket-comments">
+  <span wicket:id = "comments">
     <p>
-	    <span id = "wicket-date">1/1/2004</span><br>
-	    <span id = "wicket-text">Comment text goes here.</span>
+	    <span wicket:id = "date">1/1/2004</span><br>
+	    <span wicket:id = "text">Comment text goes here.</span>
 	</p>
   </span>
   <wicket:remove>

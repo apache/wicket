@@ -57,7 +57,7 @@ public final class MarkupParser
 
     /** Name of desired componentId tag attribute.
      * E.g. &lt;tag id="wicket-..."&gt; or &lt;tag wicket=..&gt; */
-    private String componentIdAttribute = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
+    private String wicketNamespace = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
 
     /** True to strip out HTML comments. */
     private boolean stripComments;
@@ -68,34 +68,24 @@ public final class MarkupParser
     /** if true, <wicket:param ..> tags will be removed from markup */
     private boolean stripWicketTag;
 
-    /** if true, "wicket-" will be removed from id="wicket-xxx" */
-    private boolean stripWicketFromComponentTag = false;
-
     /** If true, MarkupParser will automatically create a ComponentWicketTag for
      * all tags surrounding a href attribute with a relative path to a
      * html file. E.g. &lt;a href="Home.html"&gt;
      */
     private boolean automaticLinking = false;
 
-	/** If true and if componentIdAttribute has been changed, than not only
-	 * use the new componentIdAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentIdAttribute and 
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
-	 */
-	private boolean applyDefaultComponentId = false;
-
+    /** The XML parser to use */
     private IXmlPullParser xmlParser = new XmlPullParser();
 
     /**
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
-     * @param componentIdAttribute The name of the componentId attribute
+     * @param wicketNamespace The wicket namespace to identifiy wicket tags; e.g. wicket:id="XXX"
      */
-    public MarkupParser(final IXmlPullParser xmlParser, final String componentIdAttribute)
+    public MarkupParser(final IXmlPullParser xmlParser, final String wicketNamespace)
     {
         this.xmlParser = xmlParser;
-        this.componentIdAttribute = componentIdAttribute;
+        this.wicketNamespace = wicketNamespace;
     }
 
     /**
@@ -113,13 +103,11 @@ public final class MarkupParser
 	 */
 	public void configure(final ApplicationSettings settings)
 	{
-        this.componentIdAttribute = settings.getComponentIdAttribute();
+        this.wicketNamespace = settings.getComponentIdAttribute();
         this.stripWicketTag = settings.getStripWicketTags();
         this.stripComments = settings.getStripComments();
         this.compressWhitespace = settings.getCompressWhitespace();
         this.automaticLinking = settings.getAutomaticLinking();
-        this.stripWicketFromComponentTag = settings.getStripComponentIds();
-        this.applyDefaultComponentId = settings.getApplyDefaultComponentId();
 	}
 
     /**
@@ -176,9 +164,7 @@ public final class MarkupParser
 
         // Chain together all the different markup filters
         final WicketComponentTagIdentifier detectWicketComponents = new WicketComponentTagIdentifier(xmlParser);
-        detectWicketComponents.setComponentIdAttribute(this.componentIdAttribute);
-        detectWicketComponents.setStripWicketFromComponentTag(this.stripWicketFromComponentTag);
-        detectWicketComponents.setApplyDefaultComponentId(this.applyDefaultComponentId);
+        detectWicketComponents.setWicketNamespace(this.wicketNamespace);
         
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
                 new HtmlHandler(detectWicketComponents));

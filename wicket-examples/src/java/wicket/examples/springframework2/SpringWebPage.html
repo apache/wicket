@@ -1,18 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
   <head>
     <title>Wicket Examples - springframework2</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
   </head>
   <body>
-    <span id="wicket-mainNavigation"/>
+    <span wicket:id="mainNavigation"/>
     
-    Spring managed String object: <b><span id = "wicket-message"/></b>
+    Spring managed String object: <b><span wicket:id = "message"/></b>
     <br />
     
-    Spring managed User object (forename): <b><span id = "wicket-user"/></b>
+    Spring managed User object (forename): <b><span wicket:id = "user"/></b>
     <br />
-    Spring managed User object (surname): <b><span id = "wicket-user2"/></b>
+    Spring managed User object (surname): <b><span wicket:id = "user2"/></b>
   </body>
 </html>

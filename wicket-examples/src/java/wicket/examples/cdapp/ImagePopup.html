@@ -1,4 +1,4 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
 <title>Image</title>
 <script type="text/javascript">
@@ -27,7 +27,7 @@ function resizeWinTo()
 </head>
 <body>
 <div style="position:absolute;left:0px;top:0px;">
- <a href="#" onclick="self.close();"><img id="wicket-image" onload="resizeWinTo();" border="0"/></a>
+ <a href="#" onclick="self.close();"><img wicket:id="image" onload="resizeWinTo();" border="0"/></a>
 </div>
 </body>
 </html>

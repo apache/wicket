@@ -1,35 +1,35 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
     <title>Wicket Examples - upload</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span id="wicket-mainNavigation"/>
+    <span wicket:id="mainNavigation"/>
 
-    <form id="wicket-simpleUpload">
+    <form wicket:id="simpleUpload">
 	 <div>
-		<span id="wicket-simpleUploadFeedback"/>
+		<span wicket:id="simpleUploadFeedback"/>
 	 </div>
 	 <fieldset>
 	  <legend>Upload form</legend>
     	<p>
 	    <label for="upload">File</label>
-	    <input id="wicket-fileInput" type="file"/>
+	    <input wicket:id="fileInput" type="file"/>
 	    </p>
 	    <input type="submit" value="Upload!"/>
 	 </fieldset>
     </form>
 
 	 <div>
-		<span id="wicket-uploadFeedback"/>
+		<span wicket:id="uploadFeedback"/>
 	 </div>
 
     <div>
-      <h4>Current files in <span id="wicket-dir">(dir)</span>:</h4>
+      <h4>Current files in <span wicket:id="dir">(dir)</span>:</h4>
       <table>
-        <tr id="wicket-fileList">
-            <td width="200"><span id="wicket-file">(file)</span></td>
-            <td><a href="#" id="wicket-delete"><img src="delete.gif" border="0"/></a></td>
+        <tr wicket:id="fileList">
+            <td width="200"><span wicket:id="file">(file)</span></td>
+            <td><a href="#" wicket:id="delete"><img src="delete.gif" border="0"/></a></td>
         </tr>
       </table>
     </div>

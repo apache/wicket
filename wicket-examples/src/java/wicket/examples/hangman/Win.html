@@ -1,15 +1,15 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
     <title>Wicket Examples - hangman</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 
 <body>
-    <span id="wicket-mainNavigation"/>
+    <span wicket:id="mainNavigation"/>
 
-    <p>Congratulations! You guessed that the word was <b><span id="wicket-currentWord">summer</span></b>
-    with <span id="wicket-guessesRemaining">3</span> remaining guesses.
-    <a id="wicket-playAgain">Play again</a>.</p>
+    <p>Congratulations! You guessed that the word was <b><span wicket:id="currentWord">summer</span></b>
+    with <span wicket:id="guessesRemaining">3</span> remaining guesses.
+    <a wicket:id="playAgain">Play again</a>.</p>
 
 </body>
 </html>

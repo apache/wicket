@@ -1,37 +1,37 @@
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
     <title>Wicket Examples - library</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 
-  <span id = "wicket-border">
-  <span id = "wicket-feedback"/>
+  <span wicket:id = "border">
+  <span wicket:id = "feedback"/>
   <p>
-  <form id = "wicket-editBookForm">        
+  <form wicket:id = "editBookForm">        
     <table cellpadding="3">  
       <tr>
 	    <td align="right">Title:</td>
-	    <td id = "wicket-titleFeedback">
-	      <input id = "wicket-title" type="text" value="Huckleberry Finn" size="30"/>
+	    <td wicket:id = "titleFeedback">
+	      <input wicket:id = "title" type="text" value="Huckleberry Finn" size="30"/>
         </td>
       </tr>
 	  <tr>
 	    <td align="right">Author:</td>
-	    <td id = "wicket-authorFeedback">
-	      <input id = "wicket-author" type="text" value="Mark Twain" hidden="1" size="30"/>
+	    <td wicket:id = "authorFeedback">
+	      <input wicket:id = "author" type="text" value="Mark Twain" hidden="1" size="30"/>
 	    </td>
 	  </tr>
 	  <tr>
 	    <td align="right">Fiction:</td>
 	    <td>
-	      <input id = "wicket-fiction" type="checkbox"/>
+	      <input wicket:id = "fiction" type="checkbox"/>
 	    </td>
 	  </tr>
 	  <tr>
 	    <td align="right">Favorite Companion Book:</td>
 	    <td>
-			<select id = "wicket-companionBook">
+			<select wicket:id = "companionBook">
 			<option>Volvo</option>
 			<option>Saab</option>
 			<option>Fiat</option>
@@ -42,7 +42,7 @@
 	  <tr>
 	    <td align="right" valign="top">Styles:</td>
 	    <td>
-			<select multiple id = "wicket-writingStyles">
+			<select multiple wicket:id = "writingStyles">
 			<option>Foo</option>
 			<option>Bar</option>
 			</select>
@@ -51,7 +51,7 @@
 	  <tr>
 	    <td align="right" valign="top">Related book:</td>
 	    <td valign="top">
-	    	<span valign="top" id = "wicket-relatedBook">
+	    	<span valign="top" wicket:id = "relatedBook">
 	    		<input type="radio">A
 				<input type="radio">B
 				<input type="radio">C

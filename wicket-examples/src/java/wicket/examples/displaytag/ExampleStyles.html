@@ -7,25 +7,25 @@
 	<meta http-equiv="Cache-Control" content="no-cache" />
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
     <link rel="stylesheet" type="text/css" href="style.css"/>
-	<link id="wicket-styleLink" rel="stylesheet" href="css/displaytag.css" type="text/css" media="screen, print" />
+	<link wicket:id="styleLink" rel="stylesheet" href="css/displaytag.css" type="text/css" media="screen, print" />
 </head>
 	
 <body>
 
-	<span id="wicket-mainNavigation"/>
+	<span wicket:id="mainNavigation"/>
 	
 	<h2><wicket:link><a href="DisplaytagIndex.html">Example</a></wicket:link> &gt; Basic, columns - different styles</h2>
 	<br/>
   <ul id="stylelist">
-	  <li><a id="wicket-isis">ISIS</a></li>
-	  <li><a id="wicket-its">ITS</a></li>
-	  <li><a id="wicket-mars">Mars</a></li>
-	  <li><a id="wicket-simple">Simple</a></li>
-	  <li><a id="wicket-report">Report</a></li>
-	  <li><a id="wicket-mark">Mark Column</a></li>
+	  <li><a wicket:id="isis">ISIS</a></li>
+	  <li><a wicket:id="its">ITS</a></li>
+	  <li><a wicket:id="mars">Mars</a></li>
+	  <li><a wicket:id="simple">Simple</a></li>
+	  <li><a wicket:id="report">Report</a></li>
+	  <li><a wicket:id="mark">Mark Column</a></li>
   </ul>
 
-  <table id="wicket-htmlTable" class="isis">
+  <table wicket:id="htmlTable" class="isis">
     <thead>
       <tr>
         <th>ID</th>
@@ -36,12 +36,12 @@
       </tr>
 	</thead>
     <tbody>
-			<tr id="wicket-rows" class="even">
-				<td class="idcol"><span id="wicket-id">Test ID</span></td>
-				<td><span id="wicket-name">Test Name</span></td>
-				<td><span id="wicket-email">Test EMail</span></td>
-				<td class="tableCellError"><span id="wicket-status">Test Status</span></td>
-				<td><span id="wicket-comments">Test Comments</span></td>
+			<tr wicket:id="rows" class="even">
+				<td class="idcol"><span wicket:id="id">Test ID</span></td>
+				<td><span wicket:id="name">Test Name</span></td>
+				<td><span wicket:id="email">Test EMail</span></td>
+				<td class="tableCellError"><span wicket:id="status">Test Status</span></td>
+				<td><span wicket:id="comments">Test Comments</span></td>
 			</tr>
       <wicket:remove>
 		    <tr class="odd">

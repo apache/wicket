@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?> 
 
-<html>
+<html xmlns:wicket="http://wicket.sourceforge.net/">
 <head>
 	<title>Wicket Examples - springframework</title>
 	<link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-  <span id="wicket-mainNavigation"/>
+  <span wicket:id="mainNavigation"/>
   
 	This is a simple example on how to integrate Wicket and Spring. It uses Spring's
   DispatcherServlet and a Spring web application context &lt;servlet-name&gt;-servlet.xml
@@ -19,7 +19,7 @@
   -->
 	</script>
 	<br/>
-	<span id="wicket-message">Here comes the hello world message ...</span>
+	<span wicket:id="message">Here comes the hello world message ...</span>
 	<p>
 		Test: äöü		
 	</p>
