@@ -140,6 +140,10 @@ h3 {
 	font-size: 1em;
 }
 
+h5 {
+	font-size: 1em;
+}
+
 a {
 	color: #6F6F6F;
 	text-decoration: underline;
@@ -164,7 +168,7 @@ blockquote {
 
 p.quoteAttribution {
 	padding-left: 16px;
-	font-style: italic
+	font-style: italic;
 	margin-bottom: 16px;
 }
 
