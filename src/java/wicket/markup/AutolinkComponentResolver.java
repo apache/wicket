@@ -132,7 +132,7 @@ public class AutolinkComponentResolver implements IComponentResolver
         Class clazz = page.getApplicationSettings().getDefaultClassResolver().resolveClass(classPath);
 
         // Make the componentName (page-)unique
-        final String id = componentName + "-" + page.getAutoIndex();
+        final String id = componentName + page.getAutoIndex();
         
         return new BookmarkablePageLink(id, clazz, pageParameters);
     }
