@@ -133,7 +133,7 @@ public class TypeValidator extends StringValidator
 		{
 			model.put("locale", locale);
 		}
-		model.put("exception", e.getMessage());
+		model.put("exception", e);
 		Format format = e.getFormat();
 		if (format instanceof SimpleDateFormat)
 		{
