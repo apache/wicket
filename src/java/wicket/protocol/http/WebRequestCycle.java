@@ -291,9 +291,6 @@ public class WebRequestCycle extends RequestCycle
 	private void invokeInterface(final Page page, final String path, final String interfaceName)
 	{
 		// Set the page for the component as the response page
-		// and expire any pages in the session cache that are
-		// newer than the given page since they will no longer
-		// be accessible.
 		setResponsePage(page);
 
 		// Invoke interface on the component at the given path on the page
