@@ -240,7 +240,7 @@ public class MenuBorder extends Border
 			{
 				public Object getObject(final Component component)
 				{
-					return (pageLink.linksTo(getPage())) ? "selectedTab" : null;
+					return (pageLink.linksTo(findPage())) ? "selectedTab" : null;
 				}
 			}));
 	    }
