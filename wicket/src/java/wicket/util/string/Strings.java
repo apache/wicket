@@ -447,7 +447,7 @@ public final class Strings
 				return false;
 			}
 
-			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
+			return false;
 		}
 
 		return false;
