@@ -237,7 +237,7 @@ public class MenuBorder extends Border
 	        // TODO this works for one level, but what about nesting?
 			add(new AttributeModifier("class", true, new Model()
 			{
-				public Object getObject()
+				public Object getObject(final Component component)
 				{
 					return (pageLink.linksTo(getPage())) ? "selectedTab" : null;
 				}

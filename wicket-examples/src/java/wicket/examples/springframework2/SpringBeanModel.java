@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.springframework.context.ApplicationContext;
 
+import wicket.Component;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.model.AbstractDetachableModel;
@@ -81,12 +82,12 @@ public class SpringBeanModel extends AbstractDetachableModel
         {
             private Object object = null;
 
-            public void setObject(Object object)
+            public void setObject(final Component component, final Object object)
             {
                 this.object = object;
             }
 
-            public Object getObject()
+            public Object getObject(final Component component)
             {
                 if (object == null)
                 {
@@ -149,19 +150,19 @@ public class SpringBeanModel extends AbstractDetachableModel
     }
 
     /**
-     * @see AbstractDetachableModel#setObject(Object)
+     * @see AbstractDetachableModel#onSetObject(Component, Object)
      */
-    public void setObject(Object object)
+    public void onSetObject(final Component component, final Object object)
     {
-        this.model.setObject(object);
+        this.model.setObject(component, object);
     }
 
     /**
-     * @see AbstractDetachableModel#onGetObject()
+     * @see AbstractDetachableModel#onGetObject(Component)
      */
-    protected Object onGetObject()
+    protected Object onGetObject(final Component component)
     {
-        return this.model.getObject();
+        return this.model.getObject(component);
     }
 
     /**

@@ -25,6 +25,7 @@ import net.sf.hibernate.Transaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
 import wicket.IFeedback;
 import wicket.WicketRuntimeException;
 import wicket.contrib.data.model.PersistentObjectModel;
@@ -164,11 +165,11 @@ public final class EditCDPage extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.model.IModel#setObject(java.lang.Object)
+		 * @see AbstractDetachableModel#onSetObject(Component, Object)
 		 */
-		public void setObject(Object object)
+		public void onSetObject(final Component component, final Object object)
 		{
-			cdModel.setObject(object);
+			cdModel.setObject(component, object);
 		}
 
 		/**
@@ -188,13 +189,13 @@ public final class EditCDPage extends WicketExamplePage
 		}
 
 		/**
-		 * @see AbstractDetachableModel#onGetObject()
+		 * @see AbstractDetachableModel#onGetObject(Component)
 		 */
-		protected Object onGetObject()
+		protected Object onGetObject(final Component component)
 		{
 			if (cdModel.getId() != null) // it is allready persistent
 			{
-				CD cd = (CD)cdModel.getObject();
+				CD cd = (CD)cdModel.getObject(component);
 				return cd.getTitle();
 			}
 			else // it is a new cd

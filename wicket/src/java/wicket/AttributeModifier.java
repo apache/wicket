@@ -238,7 +238,7 @@ public class AttributeModifier implements Serializable
 		if (enabled)
 		{
 			final ValueMap attributes = tag.getAttributes();
-			final Object replacementValue = getReplaceModel().getObject();
+			final Object replacementValue = getReplaceModel().getObject(null);
 
 			// Only do something when we have a replacement
 			if (replacementValue != null)

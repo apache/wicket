@@ -22,10 +22,12 @@ import java.util.List;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
+import wicket.Component;
 import wicket.contrib.data.model.PageableList;
 import wicket.contrib.data.model.hibernate.HibernateCountAndListAction;
 import wicket.contrib.data.util.hibernate.HibernateHelperSessionDelegate;
 import wicket.model.AbstractDetachableModel;
+import wicket.model.AbstractReadOnlyDetachableModel;
 
 /**
  * Model that keeps a (current) search argument, and uses a pageable list as
@@ -33,7 +35,7 @@ import wicket.model.AbstractDetachableModel;
  * 
  * @author Eelco Hillenius
  */
-public final class CDSearchModel extends AbstractDetachableModel
+public final class CDSearchModel extends AbstractReadOnlyDetachableModel
 {
 	/** action used by the pageable list (has our order columns). */
 	private CountAndListAction countAndListAction = new CountAndListAction();	
@@ -94,7 +96,7 @@ public final class CDSearchModel extends AbstractDetachableModel
 	 */
 	public final void addOrdering(String field)
 	{
-		PageableList list = (PageableList)getObject();
+		PageableList list = (PageableList)getObject(null);
 		if (list != null)
 		{
 			HibernateCountAndListAction action =
@@ -128,7 +130,7 @@ public final class CDSearchModel extends AbstractDetachableModel
 	 */
 	public final boolean hasResults()
 	{
-		List results = (List)getObject();
+		List results = (List)getObject(null);
 		return (!results.isEmpty());
 	}
 
@@ -159,9 +161,9 @@ public final class CDSearchModel extends AbstractDetachableModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject()
+	 * @see wicket.model.AbstractDetachableModel#onGetObject(Component)
 	 */
-	protected Object onGetObject()
+	protected Object onGetObject(final Component component)
 	{
 		return list;
 	}

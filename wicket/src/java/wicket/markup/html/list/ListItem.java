@@ -19,6 +19,7 @@ package wicket.markup.html.list;
 
 import java.util.Collections;
 
+import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
@@ -44,17 +45,17 @@ public class ListItem extends WebMarkupContainer
 	private class ListItemModel extends AbstractModel
 	{
 		/**
-		 * @see IModel#getObject()
+		 * @see IModel#getObject(Component)
 		 */
-		public Object getObject()
+		public Object getObject(final Component component)
 		{
 			return listView.getListObject(index);
 		}
 
 		/**
-		 * @see IModel#setObject(Object)
+		 * @see IModel#setObject(Component, Object)
 		 */
-		public void setObject(Object object)
+		public void setObject(final Component component, final Object object)
 		{
 			throw new WicketRuntimeException("Can't set an object through a ListItem");
 		}

@@ -20,6 +20,7 @@ package wicket.examples.springframework2;
 
 import org.springframework.context.ApplicationContext;
 
+import wicket.Component;
 import wicket.model.AbstractModel;
 import wicket.model.IModel;
 
@@ -51,12 +52,12 @@ public abstract class SpringAwareModel extends AbstractModel
     }
 
     /**
-     * @see wicket.model.IModel#setObject(java.lang.Object)
+     * @see wicket.model.IModel#setObject(Component, Object)
      */
-    public abstract void setObject(Object object);
+    public abstract void setObject(final Component component, final Object object);
 
     /**
-     * @see wicket.model.IModel#getObject()
+     * @see wicket.model.IModel#getObject(Component)
      */
-    public abstract Object getObject();
+    public abstract Object getObject(final Component component);
 }

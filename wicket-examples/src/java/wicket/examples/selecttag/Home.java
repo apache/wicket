@@ -1,5 +1,6 @@
 package wicket.examples.selecttag;
 
+import wicket.Component;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
@@ -61,17 +62,17 @@ public class Home extends WicketExamplePage
 		private Object selection;
 
 		/**
-		 * @see wicket.model.IModel#getObject()
+		 * @see wicket.model.IModel#getObject(Component)
 		 */
-		public Object getObject()
+		public Object getObject(final Component component)
 		{
 			return selection;
 		}
 
 		/**
-		 * @see wicket.model.IModel#setObject(java.lang.Object)
+		 * @see wicket.model.IModel#setObject(Component, Object)
 		 */
-		public void setObject(Object object)
+		public void setObject(final Component component, final Object object)
 		{
 			selection = object;
 		}

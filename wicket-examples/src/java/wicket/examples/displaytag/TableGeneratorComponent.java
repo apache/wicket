@@ -101,7 +101,7 @@ public class TableGeneratorComponent extends Panel
                 Object header = headers.get(listItem.getIndex());
                 if (populateHeader(listItem, header) == false)
                 {
-                    String value = (String)(header instanceof String ? header : ((IModel)header).getObject());
+                    String value = (String)(header instanceof String ? header : ((IModel)header).getObject(null));
                     listItem.add(new Label("header", value));
                 }
             }
@@ -119,7 +119,7 @@ public class TableGeneratorComponent extends Panel
                         Object column = columns.get(colItem.getIndex());
                         if (populateColumn(colItem, column) == false)
                         {
-                            String value = (String)(column instanceof String ? column : ((IModel)column).getObject());
+                            String value = (String)(column instanceof String ? column : ((IModel)column).getObject(null));
                             colItem.add(new Label("column", rowItem.getModel(), value));
                         }
                     }

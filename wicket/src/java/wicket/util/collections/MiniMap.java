@@ -146,9 +146,7 @@ public final class MiniMap implements Map, Serializable
 		{
 			// Replace existing value
 			final Object oldValue = values[index];
-
 			this.values[index] = value;
-
 			return oldValue;
 		}
 
@@ -158,7 +156,6 @@ public final class MiniMap implements Map, Serializable
 			// Store at first null index and continue searching after null index
 			// next time
 			final int nullIndex = nextNullKey(lastSearchIndex);
-
 			lastSearchIndex = nextIndex(nullIndex);
 			keys[nullIndex] = key;
 			values[nullIndex] = value;
@@ -203,7 +200,6 @@ public final class MiniMap implements Map, Serializable
 		for (final Iterator iterator = map.entrySet().iterator(); iterator.hasNext();)
 		{
 			final Map.Entry e = (Map.Entry)iterator.next();
-
 			put(e.getKey(), e.getValue());
 		}
 	}

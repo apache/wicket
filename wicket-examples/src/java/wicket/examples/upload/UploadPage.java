@@ -148,7 +148,7 @@ public class UploadPage extends WicketExamplePage
 		protected void onSubmit()
 		{
 			// get the uploaded file
-			FileItem item = (FileItem)fileModel.getObject();
+			FileItem item = (FileItem)fileModel.getObject(this);
 
 			if(item != null)
 			{
