@@ -23,12 +23,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 
-import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.html.pages.StaleDataErrorPage;
+import wicket.protocol.http.WebApplication;
 
 /**
  * WicketServlet class for hello world example.
@@ -41,9 +40,6 @@ public class SpringApplication extends WebApplication implements InitializingBea
     
 	/** Settings for the application */
     private ApplicationSettings settings;
-    
-    /** Common application pages */
-    private ApplicationPages pages;
     
     /** Spring application context */
     private ApplicationContext springContext;
@@ -80,22 +76,6 @@ public class SpringApplication extends WebApplication implements InitializingBea
     }
 
     /**
-     * @return Returns the pages.
-     */
-    public ApplicationPages getPages()
-    {
-        return pages;
-    }
-
-    /**
-     * @param pages The pages to set.
-     */
-    public void setPages(ApplicationPages pages)
-    {
-        this.pages = pages;
-    }
-
-    /**
      * 
      * @param context
      */
@@ -125,11 +105,6 @@ public class SpringApplication extends WebApplication implements InitializingBea
         if (getSettings() == null)
         {
             setSettings(new ApplicationSettings(this));
-        }
-
-        if (getPages() == null)
-        {
-            setPages(new ApplicationPages());
         }
         
         initSettings();
