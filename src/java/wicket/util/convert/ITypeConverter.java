@@ -17,6 +17,8 @@
  */
 package wicket.util.convert;
 
+import java.io.Serializable;
+
 /**
  * Converter for a specific data type. The type of the conversion is implicit in
  * the class which implements ITypeConverter. For example, a BooleanConverter
@@ -24,7 +26,7 @@ package wicket.util.convert;
  * 
  * @author Jonathan Locke
  */
-public interface ITypeConverter extends ILocalizable
+public interface ITypeConverter extends ILocalizable, Serializable
 {
 	/**
 	 * Converts the given value
