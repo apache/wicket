@@ -775,7 +775,7 @@ public abstract class Component implements Serializable, IConverterSource
 	 * without session scoping. A component which is APPLICATION_SHARED will
 	 * have a stable URL to enable browser caching and will be available to ANY
 	 * CLIENT requesting it, regardless of who they are. This has obvious
-	 * security implications if the image data is sensitive.
+	 * security implications if the component's data is sensitive.
 	 * 
 	 * @return The kind of sharing this component desires
 	 */
