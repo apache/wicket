@@ -107,13 +107,10 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		public void validate(final Form form)
 		{
 			// Visit all the form components and validate each
-			form.visitChildren(FormComponent.class, new IVisitor()
+			form.visitFormComponents(new FormComponent.IVisitor()
 			{
-				public Object component(final Component component)
+				public void formComponent(final FormComponent formComponent)
 				{
-					// Get form component
-					final FormComponent formComponent = (FormComponent)component;
-
 					// Validate form component
 					formComponent.validate();
 
@@ -128,9 +125,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 						// tell component that it is valid now
 						formComponent.valid();
 					}
-
-					// Continue until the end
-					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 			});
 		}
@@ -214,11 +208,9 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 */
 	public final void loadPersistentFormComponentValues()
 	{
-		// Visit all FormComponent contained in the page
-		visitChildren(FormComponent.class, new Component.IVisitor()
+		visitFormComponents(new FormComponent.IVisitor()
 		{
-			// For each FormComponent found on the Page (not Form)
-			public Object component(final Component component)
+			public void formComponent(final FormComponent formComponent)
 			{
 				// Component must implement persister interface and
 				// persistence for that component must be enabled.
@@ -226,16 +218,14 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 				// once the user submits the Form containing that FormComponent.
 				// Note: if that is true, values may remain persisted longer
 				// than really necessary
-				final FormComponent formComponent = (FormComponent)component;
 				if (formComponent.isPersistent())
 				{
 					// The persister
 					final IValuePersister persister = getValuePersister();
 
 					// Retrieve persisted value
-					persister.load((FormComponent)component);
+					persister.load(formComponent);
 				}
-				return CONTINUE_TRAVERSAL;
 			}
 		});
 	}
@@ -276,12 +266,11 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		final IValuePersister persister = getValuePersister();
 
 		// Search for FormComponents like TextField etc.
-		visitChildren(FormComponent.class, new IVisitor()
+		visitFormComponents(new FormComponent.IVisitor()
 		{
-			public Object component(final Component component)
+			public void formComponent(final FormComponent formComponent)
 			{
-				// remove the FormComponents persisted data
-				final FormComponent formComponent = (FormComponent)component;
+				// remove the FormComponent's persisted data
 				persister.clear(formComponent);
 
 				// Disable persistence if requested. Leave unchanged otherwise.
@@ -289,8 +278,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 				{
 					formComponent.setPersistent(false);
 				}
-
-				return CONTINUE_TRAVERSAL;
 			}
 		});
 	}
@@ -332,18 +319,15 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	protected void onModelChanged()
 	{
 		// Visit all the form components and validate each
-		visitChildren(FormComponent.class, new IVisitor()
+		visitFormComponents(new FormComponent.IVisitor()
 		{
-			public Object component(final Component component)
+			public void formComponent(final FormComponent formComponent)
 			{
 				// If form component is using form model
-				if (component.sameRootModel(Form.this))
+				if (formComponent.sameRootModel(Form.this))
 				{
-					component.modelChanged();
+					formComponent.modelChanged();
 				}
-
-				// Continue until the end
-				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
 	}
@@ -365,7 +349,15 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		}
 		else if (buttons > 1)
 		{
-			invokeButtonClicked();
+			final Button button = findSubmittingButton();
+			if (button == null)
+			{
+				throw new WicketRuntimeException("Unable to find submitting button");
+			}
+			else
+			{
+				button.onSubmit();
+			}
 		}
 	}
 
@@ -388,23 +380,44 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		// Validate model using validation delegate
 		getValidationDelegate().validate(this);
 
-		// Update model using form data
-		updateFormComponentModels();
-
-		// Persist FormComponents if requested
-		persistFormComponentData();
-
-		// If validation or update caused error message(s) to appear
+		// If a validation error occurred
 		if (hasError())
 		{
-			// handle those errors
+			// mark all children as invalid
+			invalid();
+			
+			// let subclass handle error
 			onError();
 		}
 		else
 		{
+			// Persist FormComponents if requested
+			persistFormComponentData();
+			
+			// Update model using form data
+			updateFormComponentModels();
+			
 			// Model was successfully updated with valid data
 			onSubmit();
 		}
+	}
+
+	/**
+	 * Convenient and typesafe way to visit all the form components on a form
+	 * 
+	 * @param visitor
+	 *            The visitor interface to call
+	 */
+	protected void visitFormComponents(final FormComponent.IVisitor visitor)
+	{
+		visitChildren(FormComponent.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				visitor.formComponent((FormComponent)component);
+				return CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**
@@ -495,17 +508,18 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		return value == IVisitor.STOP_TRAVERSAL ? true : false;
 	}
 
-	private void invokeButtonClicked()
+	/**
+	 * Mark each form component on this form invalid
+	 */
+	private void invalid()
 	{
-		final Button button = findSubmittingButton();
-		if (button == null)
+		visitFormComponents(new FormComponent.IVisitor()
 		{
-			throw new WicketRuntimeException("Unable to find submitting button");
-		}
-		else
-		{
-			button.onSubmit();
-		}
+			public void formComponent(final FormComponent formComponent)
+			{
+				formComponent.invalid();
+			}
+		});
 	}
 
 	/**
@@ -526,13 +540,10 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 			final IValuePersister persister = getValuePersister();
 
 			// Search for FormComponent children. Ignore all other
-			visitChildren(FormComponent.class, new IVisitor()
+			visitFormComponents(new FormComponent.IVisitor()
 			{
-				public Object component(final Component component)
+				public void formComponent(final FormComponent formComponent)
 				{
-					// Can only a FormComponent
-					final FormComponent formComponent = (FormComponent)component;
-
 					// If peristence is switched on for that FormComponent ...
 					if (formComponent.isPersistent())
 					{
@@ -544,8 +555,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 						// Remove component's data (e.g. cookie)
 						persister.clear(formComponent);
 					}
-
-					return CONTINUE_TRAVERSAL;
 				}
 			});
 		}
@@ -558,13 +567,10 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 */
 	private void updateFormComponentModels()
 	{
-		visitChildren(FormComponent.class, new IVisitor()
+		visitFormComponents(new FormComponent.IVisitor()
 		{
-			public Object component(final Component component)
+			public void formComponent(final FormComponent formComponent)
 			{
-				// Update model of form component
-				final FormComponent formComponent = (FormComponent)component;
-
 				// Only update the component when it is visible and valid
 				if (formComponent.isVisible() && formComponent.isValid())
 				{
@@ -575,7 +581,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 						formComponent.updateModel();
 					}
 				}
-				return CONTINUE_TRAVERSAL;
 			}
 		});
 	}

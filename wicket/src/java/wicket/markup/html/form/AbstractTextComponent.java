@@ -28,13 +28,6 @@ abstract class AbstractTextComponent extends FormComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1323747673401786242L;
-
-	/**
-	 * When the user input does not validate, this is a temporary store for the
-	 * input he/she provided. We have to store it somewhere as we loose the
-	 * request parameter when redirecting.
-	 */
-	private String invalidInput;
 	
 	/**
 	 * @see wicket.Component#Component(String)
@@ -77,39 +70,4 @@ abstract class AbstractTextComponent extends FormComponent
 	{
 		setModelObject(getInput());
 	}
-    
-    /**
-     * @return Returns the invalidInput.
-     */
-    protected String getInvalidInput()
-    {
-        return invalidInput;
-    }
-
-	/**
-	 * @see wicket.markup.html.form.FormComponent#onInvalid()
-	 */
-	protected void onInvalid()
-	{
-		// Store the user input for form repopulation
-		invalidInput = getInput();
-	}
-
-	/**
-	 * @see wicket.Component#onModelChanged()
-	 */
-	protected void onModelChanged()
-	{
-		// If the model for this text field changed, we should make it valid
-		// again because there can't be any invalid input for it anymore.
-		valid();
-	}
- 
-    /**
-     * @see wicket.markup.html.form.FormComponent#onValid()
-     */
-    protected void onValid()
-    {
-        invalidInput = null;     	
-    }
 }

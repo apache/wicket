@@ -68,8 +68,6 @@ public class TextArea extends AbstractTextComponent
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, (getInvalidInput() == null)
-				? getModelObjectAsString()
-				: getInvalidInput());
+		replaceComponentTagBody(markupStream, openTag, getValue());
 	}
 }

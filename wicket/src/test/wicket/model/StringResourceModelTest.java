@@ -224,7 +224,8 @@ public class StringResourceModelTest extends TestCase
 		Assert.assertNotNull(model.getNestedModel().getObject());
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
-		Assert.assertNull(model.getNestedModel().getObject());
+		// Removed this because getObject() will reattach now...
+		//Assert.assertNull(model.getNestedModel().getObject());
 		Assert.assertNull(model.getLocalizer());
 	}
 
