@@ -160,6 +160,12 @@ pre {
 th {
     background : #C3C3C3;
     color : white;
+    font-weight : bold;
+}
+
+th, td {
+    padding-left : 5px;
+    padding-right : 5px;
 }
 
 tr.b {
