@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -41,17 +41,13 @@ public class DropDownChoice extends Choice
 	private static final long serialVersionUID = 122777360064586107L;
 
 	/**
-	 * Constructor that uses the provided {@link IModel}as its model. All
-	 * components have names. A component's name cannot be null.
-	 * 
 	 * @param name
-	 *            The non-null name of this component
+	 *            See Component constructor
 	 * @param model
-	 *            the model
+	 *            See Component constructor
 	 * @param values
-	 *            the drop down values
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 *            The drop down values
+	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public DropDownChoice(String name, IModel model, final Collection values)
 	{
@@ -59,28 +55,15 @@ public class DropDownChoice extends Choice
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a
-	 * dynamic model. This model will be wrapped in an instance of
-	 * {@link wicket.model.PropertyModel}using the provided expression. Thus,
-	 * using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(myIModel, expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
 	 * @param name
-	 *            The non-null name of this component
+	 *            See Component constructor
 	 * @param model
-	 *            the instance of {@link IModel}from which the model object
-	 *            will be used as the subject for the given expression
-	 * @param values
-	 *            the drop down values
+	 *            See Component constructor
 	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 *            See Component constructor
+	 * @param values
+	 *            The drop down values
+	 * @see wicket.Component#Component(String, IModel, String)
 	 */
 	public DropDownChoice(String name, IModel model, String expression, final Collection values)
 	{
@@ -88,18 +71,13 @@ public class DropDownChoice extends Choice
 	}
 
 	/**
-	 * Constructor that uses the provided object as a simple model. This object
-	 * will be wrapped in an instance of {@link wicket.model.Model}. All
-	 * components have names. A component's name cannot be null.
-	 * 
 	 * @param name
-	 *            The non-null name of this component
+	 *            See Component constructor
 	 * @param object
-	 *            the object that will be used as a simple model
+	 *            See Component constructor
 	 * @param values
-	 *            the drop down values
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 *            The drop down values
+	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public DropDownChoice(String name, Serializable object, final Collection values)
 	{
@@ -107,28 +85,15 @@ public class DropDownChoice extends Choice
 	}
 
 	/**
-	 * Constructor that uses the provided object as a dynamic model. This object
-	 * will be wrapped in an instance of {@link wicket.model.Model}that will be
-	 * wrapped in an instance of {@link wicket.model.PropertyModel}using the
-	 * provided expression. Thus, using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(new Model(object), expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
 	 * @param name
-	 *            The non-null name of this component
+	 *            See Component constructor
 	 * @param object
-	 *            the object that will be used as the subject for the given
-	 *            expression
+	 *            See Component constructor
 	 * @param expression
-	 *            the OGNL expression that works on the given object
+	 *            See Component constructor
 	 * @param values
-	 *            the drop down values
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 *            The drop down values
+	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public DropDownChoice(String name, Serializable object, String expression,
 			final Collection values)
