@@ -30,11 +30,11 @@ import wicket.contrib.data.model.PersistentObjectModel;
 import wicket.contrib.data.model.hibernate.HibernateObjectModel;
 import wicket.contrib.data.util.hibernate.HibernateHelper;
 import wicket.contrib.data.util.hibernate.HibernateHelperSessionDelegate;
-import wicket.contrib.markup.html.form.DataTextField;
 import wicket.examples.WicketExamplePage;
 import wicket.examples.cdapp.model.CD;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.form.validation.LengthValidator;
@@ -100,18 +100,18 @@ public final class EditCDPage extends WicketExamplePage
 				PersistentObjectModel cdModel)
 		{
 			super(name, cdModel, validationErrorHandler);
-			DataTextField titleField = new DataTextField("title", cdModel, "title");
+			TextField titleField = new TextField("title", cdModel, "title");
 			titleField.add(RequiredValidator.getInstance());
 			titleField.add(LengthValidator.max(50));
 			add(titleField);
-			DataTextField performersField = new DataTextField("performers", cdModel, "performers");
+			TextField performersField = new TextField("performers", cdModel, "performers");
 			performersField.add(RequiredValidator.getInstance());
 			performersField.add(LengthValidator.max(50));
 			add(performersField);
-			DataTextField labelField = new DataTextField("label", cdModel, "label");
+			TextField labelField = new TextField("label", cdModel, "label");
 			labelField.add(LengthValidator.max(50));
 			add(labelField);
-			DataTextField yearField = new DataTextField("year", cdModel, "year");
+			TextField yearField = new TextField("year", cdModel, "year");
 			yearField.add(RequiredValidator.getInstance());
 			yearField.add(IntegerValidator.POSITIVE_INT);
 			add(yearField);
@@ -130,6 +130,7 @@ public final class EditCDPage extends WicketExamplePage
 		public void onSubmit()
 		{
 			CD cd = (CD)getModelObject();
+			boolean isNew = (cd.getId() == null);
 			// note that, as we used the Ognl property model, the fields are
 			// allready updated
 			Session session = null;
@@ -143,6 +144,11 @@ public final class EditCDPage extends WicketExamplePage
 				// set message for search page to display on next rendering
 				searchCDPage.setInfoMessageForNextRendering("cd " + cd.getTitle() + " saved");
 				searchCDPage.modelChangedStructure(); // force reload of data
+				if (isNew)
+				{
+					// if it was a new cd, set the search page to page 1
+					searchCDPage.setCurrentResultPageToFirst();
+				}
 				getRequestCycle().setPage(searchCDPage); // navigate back to search page
 			}
 			catch (HibernateException e)

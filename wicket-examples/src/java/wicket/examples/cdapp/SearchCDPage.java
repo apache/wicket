@@ -112,6 +112,8 @@ public class SearchCDPage extends WicketExamplePage
 		resultsTableHeader.setVisible(false); // non-visible as there are no
 		// results yet
 		add(resultsTableHeader);
+		add(new DetailLink("newCdLink", null)); // add with null; the model and
+			// the detail page are smart enough to know we want a new one then
 		add(new CDTableNavigation("navigation", resultsListView));
 	}
 
@@ -125,18 +127,9 @@ public class SearchCDPage extends WicketExamplePage
 	}
 
 	/**
-	 * Gets the current number of results.
-	 * @return the current number of results
-	 */
-	private int getNumberOfResults()
-	{
-		return ((List)resultsListView.getModelObject()).size();
-	}
-
-	/**
 	 * Sets the result page to the first page.
 	 */
-	private void setCurrentResultPageToFirst()
+	public void setCurrentResultPageToFirst()
 	{
 		resultsListView.setCurrentPage(0);
 	}
@@ -154,12 +147,21 @@ public class SearchCDPage extends WicketExamplePage
 
 	protected void onRender()
 	{
-		if(infoMessageForNextRendering != null)
+		if (infoMessageForNextRendering != null)
 		{
-			searchForm.info(infoMessageForNextRendering);
+			searchForm.setMessage(infoMessageForNextRendering);
 			infoMessageForNextRendering = null;
 		}
 		super.onRender();
+	}
+
+	/**
+	 * Gets the current number of results.
+	 * @return the current number of results
+	 */
+	private int getNumberOfResults()
+	{
+		return ((List)resultsListView.getModelObject()).size();
 	}
 
 	/**
@@ -213,6 +215,12 @@ public class SearchCDPage extends WicketExamplePage
 		public final void setSearch(String search)
 		{
 			this.search = search;
+		}
+
+		/** hack to get message displayed. */
+		void setMessage(String msg)
+		{
+			get("search").info(msg);
 		}
 	}
 
