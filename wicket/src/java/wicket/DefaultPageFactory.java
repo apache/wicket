@@ -38,10 +38,10 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
 public final class DefaultPageFactory implements IPageFactory
 {
     /** Logging */
-    private final Log log = LogFactory.getLog(DefaultPageFactory.class);
+    private final static Log log = LogFactory.getLog(DefaultPageFactory.class);
 
     /** Map of Constructors for Page subclasses */
-    private final Map constructorForClass = new ConcurrentHashMap();
+    private final transient Map constructorForClass = new ConcurrentHashMap();
 
     /**
      * @see IPageFactory#newPage(Class)
