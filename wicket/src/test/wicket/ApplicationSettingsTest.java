@@ -30,13 +30,14 @@ import junit.framework.Assert;
 
 /**
  * Test cases for the <code>ApplicationSettings</code> class.
+ * 
  * @author Chris Turner
  */
 public class ApplicationSettingsTest extends TestCase
 {
-
 	/**
-	 * @param message The name of the test being run
+	 * @param message
+	 *            The name of the test being run
 	 */
 	public ApplicationSettingsTest(final String message)
 	{
@@ -49,8 +50,8 @@ public class ApplicationSettingsTest extends TestCase
 	public void testExceptionOnMissingResourceDefaultValue() throws Exception
 	{
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-		Assert.assertTrue("exceptionOnMissingResource should default to true", settings
-				.getThrowExceptionOnMissingResource());
+		Assert.assertTrue("exceptionOnMissingResource should default to true", 
+		        settings.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -60,8 +61,8 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
 		Assert.assertSame(settings, settings.setThrowExceptionOnMissingResource(false));
-		Assert.assertFalse("exceptionOnMissingResource should have been set to false", settings
-				.getThrowExceptionOnMissingResource());
+		Assert.assertFalse("exceptionOnMissingResource should have been set to false", 
+		        settings.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -70,8 +71,8 @@ public class ApplicationSettingsTest extends TestCase
 	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
 	{
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-		Assert.assertTrue("useDefaultOnMissingResource should default to true", settings
-				.getUseDefaultOnMissingResource());
+		Assert.assertTrue("useDefaultOnMissingResource should default to true", 
+		        settings.getUseDefaultOnMissingResource());
 	}
 
 	/**
@@ -81,11 +82,12 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
 		Assert.assertSame(settings, settings.setUseDefaultOnMissingResource(false));
-		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", settings
-				.getUseDefaultOnMissingResource());
+		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", 
+		        settings.getUseDefaultOnMissingResource());
 	}
 
 	/**
+	 * 
 	 */
 	public void testDefaultStringResourceLoaderSetup()
 	{
@@ -99,6 +101,7 @@ public class ApplicationSettingsTest extends TestCase
 	}
 
 	/**
+	 * 
 	 */
 	public void testOverrideStringResourceLoaderSetup()
 	{
@@ -115,13 +118,12 @@ public class ApplicationSettingsTest extends TestCase
 	}
 
 	/**
+	 * 
 	 */
 	public void testLocalizer()
 	{
-        Application dummy = new DummyApplication();
+		Application dummy = new DummyApplication();
 		ApplicationSettings settings = new ApplicationSettings(dummy);
 		Assert.assertNotNull("Localizer should be available", dummy.getLocalizer());
 	}
 }
-
-// 
