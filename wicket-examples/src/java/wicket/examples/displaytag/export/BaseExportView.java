@@ -21,8 +21,6 @@ package wicket.examples.displaytag.export;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.jsp.JspException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

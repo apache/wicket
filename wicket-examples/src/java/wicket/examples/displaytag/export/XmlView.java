@@ -20,8 +20,6 @@ package wicket.examples.displaytag.export;
 
 import java.util.List;
 
-import javax.swing.table.TableModel;
-
 import org.apache.commons.lang.StringEscapeUtils;
 
 
