@@ -83,6 +83,7 @@ div .xright {
 
 #navcolumn a {
     text-decoration : none;
+    color: #A7A7A7;
 }
 
 #navcolumn a:hover {
@@ -140,6 +141,7 @@ h3 {
 
 a {
     color : #6F6F6F;
+    text-decoration: underline;
 }
 
 img {
