@@ -30,34 +30,49 @@ import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * Base class for Wicket applications. An application has a name, settings, a
- * particular set of required pages and a variety of resources such as a
+ * Base class for all Wicket applications. An application has a name, settings,
+ * a particular set of required pages and a variety of resources such as a
  * localizer, a markup parser factory method, a resource watcher and more.
+ * <p>
+ * To create a Wicket application, you generally do not want to directly
+ * subclass this class. Instead, you want to subclass a subclass of Application,
+ * like WebApplication, which is appropriate for the protocol and markup type
+ * you are working with.
  * <p>
  * The application's settings specify how the application is to function.
  * <p>
  * The required pages returned by getPages() include a home page and pages for
  * handling common error conditions.
  * <p>
- * To create a Wicket application, you generally do not want to directly
- * subclass this class. Instead, you want to subclass a subclass of Application,
- * like WebApplication, which is appropriate to the protocol and markup type you
- * are working with.
+ * The getLocalizer() method returns an object encapsulating all of the
+ * functionality required to access localized resources.
  * <p>
- * <i>localizer </i> (read-only) - An application wide object encapsulating all
- * of the functionality required to access localized resources.
- * <p>
- * <i>converterRegistry </i> (read-only) - The registry with converters that
+ * The getConverterRegistry() method returns a registry with converters that
  * should be used for type conversion e.g. by {@link wicket.model.PropertyModel}.
- * Use the reference of converterRegistry to register/ deregister type
- * converters if needed. Also, there are convenience method in converterRegistry
- * to swith to a localized/ non-localized set of type converters.
+ * Use the converter registry to register/deregister type converters if needed.
+ * Also, there are convenience method in converterRegistry to switch to a
+ * localized/ non-localized set of type converters.
  * 
  * @see WebApplication
  * @author Jonathan Locke
  */
 public abstract class Application
 {
+    /** List of (static) ComponentResolvers */
+    private List componentResolvers;
+
+    /** Registry with type converters */
+    private ConverterRegistry converterRegistry = new ConverterRegistry();
+
+    /** The single application-wide localization class */
+    private final Localizer localizer;
+    
+    /** Name of application subclass. */
+    private final String name;
+
+    /** ModificationWatcher to watch for changes in markup files */
+    private ModificationWatcher resourceWatcher;
+    
     /**
      * Constructor
      */
@@ -77,7 +92,7 @@ public abstract class Application
     /**
      * Get the (modifiable) List of ComponentResolvers.
      * 
-     * @see wicket.markup.AutolinkComponentResolver for an example
+     * @see WicketTagComponentResolver for an example
      * @return List of ComponentResolvers
      */
     public final List getComponentResolvers()
@@ -200,21 +215,6 @@ public abstract class Application
      * @return The applications settings
      */
     public abstract ApplicationSettings getSettings();
-
-    /** List of (static) ComponentResolvers */
-    private List componentResolvers;
-
-    /** Registry with type converters */
-    private ConverterRegistry converterRegistry = new ConverterRegistry();
-
-    /** The single application-wide localization class */
-    private final Localizer localizer;
-    // TODO finalize javadoc
-    /** Name of application subclass. */
-    private final String name;
-
-    /** ModificationWatcher to watch for changes in markup files */
-    private ModificationWatcher resourceWatcher;
 }
 
 
