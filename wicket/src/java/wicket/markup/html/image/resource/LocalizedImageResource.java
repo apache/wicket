@@ -43,9 +43,6 @@ import wicket.util.string.Strings;
  */
 public class LocalizedImageResource implements Serializable, IResourceListener
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 5934721258765771884L;
-
 	/** The component that is referencing this image resource */
 	private Component component;
 

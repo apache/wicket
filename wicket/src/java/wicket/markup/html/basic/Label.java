@@ -68,9 +68,6 @@ import wicket.model.Model;
  */
 public class Label extends WebComponent
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = -2180588252471379004L;
-
 	/**
 	 * Convenience constructor. Same as Label(String, new Model(String))
 	 * 

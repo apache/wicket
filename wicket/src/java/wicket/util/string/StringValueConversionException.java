@@ -24,9 +24,6 @@ package wicket.util.string;
  */
 public final class StringValueConversionException extends Exception
 {
-	/** serialVersionUID. */
-	private static final long serialVersionUID = -3628074800660713435L;
-
 	/**
 	 * Constructor.
 	 * 

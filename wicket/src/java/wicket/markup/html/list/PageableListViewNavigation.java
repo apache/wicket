@@ -115,9 +115,6 @@ import wicket.markup.html.basic.Label;
  */
 public class PageableListViewNavigation extends Loop
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 8591577491410447609L;
-
 	/** The PageableListView this navigation is navigating. */
 	protected PageableListView pageableListView;
 

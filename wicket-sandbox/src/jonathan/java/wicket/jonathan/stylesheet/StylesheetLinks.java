@@ -35,9 +35,6 @@ import wicket.markup.html.WebComponent;
  */
 public abstract class StylesheetLinks extends WebComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 209001445308790198L;
-
 	/** The set of links */
 	private Set links = new HashSet();
 

@@ -59,9 +59,6 @@ import wicket.util.time.Time;
  */
 public abstract class DynamicImageResource extends ImageResource
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 5934721258765771884L;
-
 	/** The image type */
 	private String format = "png";
 

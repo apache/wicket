@@ -57,9 +57,6 @@ import java.util.StringTokenizer;
  */
 public final class StringList extends AbstractStringList
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = 3913242296604884174L;
-
 	// The underlying list of strings
 	private final List strings;
 

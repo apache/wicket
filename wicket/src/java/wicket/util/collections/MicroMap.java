@@ -35,9 +35,6 @@ import java.util.Set;
  */
 public final class MicroMap implements Map, Serializable
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = 6392759678359952206L;
-
 	/** The maximum number of entries this map supports. */
 	public static final int MAX_ENTRIES = 1;
 

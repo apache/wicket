@@ -35,9 +35,6 @@ public class PasswordTextField extends TextField
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PasswordTextField.class);
 
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 1776665507834380353L;
-
 	/**
 	 * Flag indicating whether the contents of the field should be reset each
 	 * time it is rendered. If <code>true</code>, the contents are emptied

@@ -111,8 +111,6 @@ public final class Duration extends AbstractTimeValue
 	private static final Pattern pattern = Pattern.compile(
 			"([0-9]+([.,][0-9]+)?)\\s+(millisecond|second|minute|hour|day)s?",
 			Pattern.CASE_INSENSITIVE);
-	/** serialVersionUID */
-	private static final long serialVersionUID = 1212559549133827631L;
 
 	/**
 	 * @param code

@@ -25,9 +25,6 @@ package wicket.util.parse.metapattern;
  */
 public final class GroupAlreadyBoundException extends RuntimeException
 {
-	/** serialVersionUID. */
-	private static final long serialVersionUID = 5110506464403807991L;
-
 	/**
 	 * Constructor.
 	 */

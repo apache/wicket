@@ -36,9 +36,6 @@ import wicket.model.IModel;
  */
 public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
-	/** serial UID. */
-	private static final long serialVersionUID = 122777360064586107L;
-
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */

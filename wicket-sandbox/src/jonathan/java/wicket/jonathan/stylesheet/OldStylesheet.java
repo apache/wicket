@@ -28,9 +28,6 @@ import wicket.util.resource.StringBufferResource;
  */
 public class OldStylesheet extends WebResource
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 209001445308790198L;
-
 	/** Stylesheet information */
 	private StringBufferResource resource = new StringBufferResource();
 	

@@ -41,9 +41,6 @@ public class StaticImageResource extends ImageResource
 	/** Map from key to resource */
 	private static Map imageResourceMap = new HashMap();
 
-	/** Serial Version ID */
-	private static final long serialVersionUID = 555385780092173403L;
-
 	/** The image resource */
 	private transient IResource resource;
 

@@ -32,9 +32,6 @@ import java.util.List;
  */
 public class Game implements Serializable
 {
-	/** Serial version UID */
-	private static final long serialVersionUID = 1L;
-
 	/** Number of guesses allowed */
 	private int guessesAllowed;
 	

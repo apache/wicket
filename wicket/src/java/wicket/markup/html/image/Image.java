@@ -39,9 +39,6 @@ import wicket.model.Model;
  */
 public class Image extends WebComponent implements IResourceListener
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 555385780092173403L;
-
 	/** The image resource this image component references */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 

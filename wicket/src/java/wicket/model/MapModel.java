@@ -31,9 +31,6 @@ import java.util.Map;
  */
 public class MapModel extends Model
 {
-	/** Serial Version ID. */
-	static final long serialVersionUID = 898435312991208901L;
-
 	/**
 	 * Static factory method for creating a MapModel for a given Map.
 	 * 

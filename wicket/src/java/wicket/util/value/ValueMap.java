@@ -60,9 +60,6 @@ public class ValueMap implements Map, Serializable
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
 	
-	/** serialVersionUID. */
-	private static final long serialVersionUID = -693116621545826988L;
-
 	/** True if this value map has been made immutable. */
 	private boolean immutable = false;
 

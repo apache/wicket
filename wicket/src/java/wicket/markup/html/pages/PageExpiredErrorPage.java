@@ -26,9 +26,6 @@ import wicket.markup.html.WebPage;
  */
 public class PageExpiredErrorPage extends WebPage
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -4566588225634687534L;
-
 	/**
 	 * Constructor.
 	 */

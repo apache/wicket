@@ -33,9 +33,6 @@ import wicket.WicketRuntimeException;
  */
 public class Model extends AbstractModel
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 3031804965001519439L;
-
 	/** Backing object. */
 	private Serializable object;
 

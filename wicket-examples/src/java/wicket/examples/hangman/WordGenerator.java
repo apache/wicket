@@ -40,11 +40,6 @@ import wicket.util.resource.locator.ClassLoaderResourceLocator;
  */
 public class WordGenerator implements Serializable
 {
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/** List of words */
 	private final List words;
 

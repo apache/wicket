@@ -28,9 +28,6 @@ import wicket.PageParameters;
  */
 public final class BookmarkablePageLink extends Link
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 2396751463296314926L;
-
 	/** The page class that this link links to. */
 	private final Class pageClass;
 

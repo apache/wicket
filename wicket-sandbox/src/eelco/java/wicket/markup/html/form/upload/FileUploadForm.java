@@ -96,9 +96,6 @@ public class FileUploadForm extends UploadForm
 	/** Lock used to serialize file conflict resolutions */
 	private static final Lock conflictResolverLock = new Lock();
 
-	/** Serial Version ID */
-	private static final long serialVersionUID = 6615560494113373735L;
-
 	/**
 	 * Conflict handler that will be called when a file with the same name
 	 * already exists in the same directory when trying to save an uploaded

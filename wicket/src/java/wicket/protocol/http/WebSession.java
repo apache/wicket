@@ -39,9 +39,6 @@ import wicket.Session;
  */
 public class WebSession extends Session
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = -7738551549126761943L;
-
 	/** The underlying HttpSession object */
 	private transient javax.servlet.http.HttpSession httpSession;
 

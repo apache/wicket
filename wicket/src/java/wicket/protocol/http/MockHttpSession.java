@@ -36,9 +36,6 @@ import wicket.util.value.ValueMap;
  */
 public class MockHttpSession implements HttpSession, Serializable
 {
-    /** Serial Version ID */
-    private static final long serialVersionUID = 7638042159794505659L;
-
     private final ValueMap attributes = new ValueMap();
 
     private final ServletContext context;

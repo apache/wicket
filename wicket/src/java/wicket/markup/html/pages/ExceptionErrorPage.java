@@ -34,9 +34,6 @@ import wicket.util.string.Strings;
  */
 public class ExceptionErrorPage extends WebPage
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 5578704587965089202L;
-
 	/**
 	 * Constructor.
 	 * 

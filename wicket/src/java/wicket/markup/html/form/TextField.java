@@ -28,9 +28,6 @@ import wicket.model.IModel;
  */
 public class TextField extends AbstractTextComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -2913294206388017417L;
-
 	/** Model type for conversions */
 	private Class type;
 

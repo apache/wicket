@@ -78,9 +78,6 @@ public class QuickStartApplication extends WebApplication
     {
         return new ISessionFactory()
         {        	
-            /** serialVersionUID */
-			private static final long serialVersionUID = 3834586604240189497L;
-
 			public Session newSession()
             {
                 return new QuickStartSession(QuickStartApplication.this);

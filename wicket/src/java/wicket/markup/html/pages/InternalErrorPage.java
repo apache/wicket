@@ -26,9 +26,6 @@ import wicket.markup.html.WebPage;
  */
 public class InternalErrorPage extends WebPage
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -4676797850273383367L;
-
 	/**
 	 * Constructor.
 	 */

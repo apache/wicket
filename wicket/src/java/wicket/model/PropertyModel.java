@@ -85,9 +85,6 @@ import wicket.Component;
  */
 public class PropertyModel extends AbstractPropertyModel
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -3136339624173288385L;
-
 	/** Ognl expression for property access. */
 	private final String expression;
 

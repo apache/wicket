@@ -31,9 +31,6 @@ import wicket.markup.html.image.resource.LocalizedImageResource;
  */
 public class ImageButton extends Button implements IResourceListener
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -2913294206388017417L;
-
 	/** The image resource this image component references */
 	private LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 

@@ -62,9 +62,6 @@ import wicket.markup.html.pages.PageExpiredErrorPage;
  */
 public abstract class WebApplication extends Application
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 1152456333052646498L;
-
 	/** Session factory for this web application */
 	private ISessionFactory sessionFactory = new ISessionFactory()
 	{

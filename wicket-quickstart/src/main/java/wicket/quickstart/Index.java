@@ -9,9 +9,6 @@ import wicket.PageParameters;
  */
 public class Index extends QuickStartPage 
 {
-	/** serialVersionUID */
-    static final long serialVersionUID = -1975120319575009331L;
-    
     // TODO Add any page properties or variables here
 
 	/**

@@ -29,9 +29,6 @@ import wicket.model.IModel;
  */
 public class WebMarkupContainer extends MarkupContainer
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 4704928946724566158L;
-
 	/**
 	 * @see Component#Component(String)
 	 */

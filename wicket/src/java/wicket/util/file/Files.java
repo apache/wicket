@@ -30,9 +30,6 @@ import wicket.util.io.Streams;
  */
 public class Files
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = -1464216059997960924L;
-
 	/**
 	 * Private constructor to prevent instantiation.
 	 */

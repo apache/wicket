@@ -35,9 +35,6 @@ import java.util.Set;
  */
 public final class MiniMap implements Map, Serializable
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = 5304939100732595513L;
-
 	/** The array of keys. Keys that are null are not used. */
 	private final Object[] keys;
 

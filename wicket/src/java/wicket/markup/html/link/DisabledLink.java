@@ -27,9 +27,6 @@ import wicket.markup.html.WebMarkupContainer;
  */
 public final class DisabledLink extends WebMarkupContainer
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 5315730184113248127L;
-
 	/**
 	 * Constructor.
 	 * 

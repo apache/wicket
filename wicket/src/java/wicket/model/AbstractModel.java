@@ -25,9 +25,6 @@ package wicket.model;
  */
 public abstract class AbstractModel implements IModel
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 3031804965001519439L;
-
 	/**
 	 * @see wicket.model.IModel#detach()
 	 */

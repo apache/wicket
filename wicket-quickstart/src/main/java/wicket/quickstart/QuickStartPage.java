@@ -9,9 +9,6 @@ import wicket.markup.html.WebPage;
  */
 public abstract class QuickStartPage extends WebPage
 {
-	/** serialVersionUID */
-    static final long serialVersionUID = -7762134015544589208L;
-    
 	/**
 	 * Get downcast session object for easy access by subclasses
 	 * 

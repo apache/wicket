@@ -45,9 +45,6 @@ import wicket.util.lang.Classes;
  */
 public class WebPage extends Page
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 3986701406378811908L;
-
 	/**
 	 * Constructor.
 	 */
