@@ -82,4 +82,30 @@ public class TableTest extends TestCase
         assertEquals(2, table.getViewSize());
         assertEquals(18, table.getStartIndex());
     }
+
+    public void testEmptyTable()
+    {
+        Table table = createTable(0, 4);
+        assertEquals(4, table.getRowsPerPage());
+        assertEquals(0, table.getCurrentPage());
+        assertEquals(0, table.getPageCount());
+        assertEquals(0, table.getViewSize());
+
+        // null tables are a special case used for table navigation
+        // bar, where there is no underlying model necessary, as 
+        // listItem.getIndex() is equal to the required listItem.getModelObject()
+        table = new Table("table", new Model(null), 10)
+	    {
+	        protected void populateItem(final ListItem listItem)
+	        {
+	            ; // do nothing
+	        }
+	    };
+        assertEquals(0, table.getStartIndex());
+        assertEquals(0, table.getViewSize());
+        
+        // These 2 methods are deliberately not available for Tables
+        // table.setStartIndex(5);
+        // table.setViewSize(10);
+    }
 }
