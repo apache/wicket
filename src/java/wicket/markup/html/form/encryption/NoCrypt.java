@@ -21,7 +21,7 @@ import javax.crypto.SecretKey;
 
 /**
  * Due to legal reasons in some countries the JRE is shipped without a security
- * provider. As a convinience solution, we provide a default implementation
+ * provider. As a convenience solution, we provide a default implementation
  * which does not encrypt/decrypt the data. It does not modify the data at all.
  * Thus we strongly recommend not to use it for production sites.
  * 
