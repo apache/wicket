@@ -18,9 +18,8 @@
  */
 package wicket.markup.html.form;
 
+import java.io.Serializable;
 import java.util.List;
-
-import wicket.RequestCycle;
 
 /**
  * A List interface that is used by the DropDown or ListBox implementation to get a
@@ -29,19 +28,19 @@ import wicket.RequestCycle;
  * @author Johan Compagner
  * @author Eelco Hillenius
  */
-public interface IIdList extends List
+public interface IIdList extends List, Serializable
 {
     /**
      * Detach from a request.
      * @param cycle the request cycle
      */
-    public void detach(RequestCycle cycle);
+    public void detach();
 
     /**
      * Attach to a request.
      * @param cycle the request cycle
      */
-    public void attach(RequestCycle cycle);
+    public void attach();
 
     /**
      * Gets the display value.
