@@ -24,6 +24,7 @@ import java.util.Calendar;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.Component;
 import wicket.RequestCycle;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.MockPage;
@@ -74,7 +75,7 @@ public class StringResourceModelTest extends TestCase
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, null);
 		Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
-		Assert.assertEquals("Text should be as expected", "Simple text", model.getObject());
+		Assert.assertEquals("Text should be as expected", "Simple text", model.getObject(page));
 		Assert.assertEquals("Text should be as expected", "Simple text", model.toString());
 	}
 
@@ -169,13 +170,19 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * 
-	 *
 	 */
 	public void testSetObject()
 	{
-		StringResourceModel model = new StringResourceModel("simple.text", page, null);
-		model.setObject("Some value");
-		Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
+		try
+		{
+			StringResourceModel model = new StringResourceModel("simple.text", page, null);
+			model.setObject(page, "Some value");
+			Assert.fail("UnsupportedOperationException expected");
+		}
+		catch (UnsupportedOperationException e)
+		{
+			// Expected result
+		}
 	}
 
 	/**
@@ -198,7 +205,7 @@ public class StringResourceModelTest extends TestCase
 	 */
 	public void testDetachAttachDetachableModel() throws Exception
 	{
-		IModel wsDetachModel = new AbstractDetachableModel()
+		IModel wsDetachModel = new AbstractReadOnlyDetachableModel()
 		{
 			private transient WeatherStation station;
 			
@@ -212,7 +219,7 @@ public class StringResourceModelTest extends TestCase
 				station = null;
 			}
 
-			protected Object onGetObject()
+			protected Object onGetObject(final Component component)
 			{
 				return station;
 			}
@@ -222,7 +229,7 @@ public class StringResourceModelTest extends TestCase
 		RequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
-		Assert.assertNotNull(model.getNestedModel().getObject());
+		Assert.assertNotNull(model.getNestedModel().getObject(page));
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		// Removed this because getObject() will reattach now...

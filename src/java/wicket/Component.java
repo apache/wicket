@@ -496,7 +496,7 @@ public abstract class Component implements Serializable, IConverterSource
 		final IModel model = getModel();
 		if (model != null)
 		{
-			return model.getObject();
+			return model.getObject(this);
 		}
 		else
 		{
@@ -514,7 +514,7 @@ public abstract class Component implements Serializable, IConverterSource
 		final IModel model = getModel();
 		if (model != null)
 		{
-			final Object modelObject = model.getObject();
+			final Object modelObject = model.getObject(this);
 			if (modelObject != null)
 			{
 				// Get converter
@@ -581,6 +581,15 @@ public abstract class Component implements Serializable, IConverterSource
 	public final String getPageRelativePath()
 	{
 		return Strings.afterFirstPathComponent(getPath(), '.');
+	}
+	
+	/**
+	 * @return A path of the form <page-class-name>.<page-relative-path>
+	 * @see Component#getPageRelativePath()
+	 */
+	public final String getClassRelativePath()
+	{
+		return getClass().getName() + "." + getPageRelativePath();
 	}
 
 	/**
@@ -921,9 +930,9 @@ public abstract class Component implements Serializable, IConverterSource
 		final IModel model = getModel();
 		if (model != null)
 		{
-			if (model.getObject() != object)
+			if (model.getObject(this) != object)
 			{
-				model.setObject(object);
+				model.setObject(this, object);
 				modelChanged();
 			}
 		}

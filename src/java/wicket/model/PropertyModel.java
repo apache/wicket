@@ -17,14 +17,7 @@
  */
 package wicket.model;
 
-import java.lang.reflect.Member;
-import java.util.Map;
-import ognl.DefaultTypeConverter;
-import ognl.Ognl;
-import ognl.OgnlContext;
-import ognl.OgnlException;
-import wicket.WicketRuntimeException;
-import wicket.util.string.Strings;
+import wicket.Component;
 
 /**
  * A PropertyModel is used to dynamically access a model using an <a
@@ -90,16 +83,10 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class PropertyModel extends AbstractDetachableModel implements IConvertible, INestedModel
+public class PropertyModel extends AbstractPropertyModel implements INestedModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
-
-	/** Ognl context wrapper object. It contains the type converter. */
-	private transient OgnlContext context;
-
-	/** The converter source for converters to be used by this model. */
-	private IConverterSource converterSource;
 
 	/** Ognl expression for property access. */
 	private final String expression;
@@ -117,81 +104,6 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	 * integer, propertyType should be set to Integer.
 	 */
 	private final Class propertyType;
-
-	/**
-	 * This class is registered with the Ognl context before parsing in order to
-	 * be able to use our converters. It implements Ognl TypeConverter and uses
-	 * the ConverterRegistry to lookup converters. If no converter is found for
-	 * a given type, the default conversion of Ognl is used.
-	 */
-	protected final class OgnlConverterWrapper extends DefaultTypeConverter
-	{
-		/**
-		 * Construct.
-		 */
-		public OgnlConverterWrapper()
-		{
-		}
-
-		/**
-		 * Converts the provided value to provided type using provided context.
-		 * 
-		 * @param context
-		 *            Ognl context
-		 * @param value
-		 *            The current, unconverted value
-		 * @param toType
-		 *            The type that should be converted to
-		 * @return Object the converted value
-		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
-		 *      java.lang.Object, java.lang.Class)
-		 */
-		public Object convertValue(Map context, Object value, Class toType)
-		{
-			if (value == null)
-			{
-				return null;
-			}
-
-			if (!toType.isArray() && value instanceof String[] && ((String[])value).length == 1)
-			{
-				value = ((String[])value)[0];
-			}
-
-			if (value instanceof String && ((String)value).trim().equals(""))
-			{
-				return null;
-			}
-			return converterSource.getConverter().convert(value, toType);
-		}
-
-		/**
-		 * This method is only here to satisfy the interface. Method
-		 * convertValue(Map, Object, Class) is called, so parameters member and
-		 * propertyName are ignored.
-		 * 
-		 * @param context
-		 *            The context
-		 * @param target
-		 *            The target
-		 * @param member
-		 *            The member
-		 * @param propertyName
-		 *            The name of the property
-		 * @param value
-		 *            The value
-		 * @param toType
-		 *            The type to convert to
-		 * @return the converted value
-		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
-		 *      java.lang.Object,java.lang.Class)
-		 */
-		public Object convertValue(Map context, Object target, Member member, String propertyName,
-				Object value, Class toType)
-		{
-			return convertValue(context, value, toType);
-		}
-	}
 
 	/**
 	 * Construct with an IModel object and a Ognl expression that works on the
@@ -253,85 +165,12 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	}
 
 	/**
-	 * Gets the type to be used for conversion instead of the type that is
-	 * figured out by Ognl.
-	 * 
-	 * @return the type to be used for conversion instead of the type that is
-	 *         figured out by Ognl
-	 */
-	public final Class getPropertyType()
-	{
-		return propertyType;
-	}
-
-	/**
-	 * @see wicket.model.IConvertible#setConverterSource(IConverterSource)
-	 */
-	public void setConverterSource(final IConverterSource converterSource)
-	{
-		this.converterSource = converterSource;
-	}
-
-	/**
-	 * Applies the Ognl expression on the model object using the given object
-	 * argument (Ognl.setValue).
-	 * 
-	 * @param object
-	 *            the object that will be used when applying Ognl.setValue on
-	 *            the model object
-	 * @see wicket.model.IModel#setObject(java.lang.Object)
-	 */
-	public void setObject(Object object)
-	{
-		try
-		{
-			// Get the real object
-			Object target = getNestedModel().getObject();
-
-			// Convert the incoming object to the target type when not null and
-			// the property type is set and the incoming object is a non-empty
-			// string
-			if (object != null && propertyType != null && (object instanceof String)
-					&& (!((String)object).trim().equals("")))
-			{
-				// Convert to set type
-				object = converterSource.getConverter().convert(object, propertyType);
-			}
-
-			// Let ognl set the value
-			Ognl.setValue(expression, getContext(), target, object);
-		}
-		catch (OgnlException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
 		return "[PropertyModel model = " + model + ", expression = " + expression + ", object = "
-				+ getObject() + "]";
-	}
-
-	/**
-	 * Gets the Ognl context that is used for evaluating expressions. It
-	 * contains the type converter that is used to access the converter
-	 * framework.
-	 * 
-	 * @return the Ognl context that is used for evaluating expressions.
-	 */
-	protected final OgnlContext getContext()
-	{
-		if (context == null)
-		{
-			// Setup ognl context for this request
-			this.context = new OgnlContext();
-			context.setTypeConverter(new OgnlConverterWrapper());
-		}
-		return context;
+				+ getObject(null) + "]";
 	}
 	
 	/**
@@ -342,66 +181,35 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	}
 	
 	/**
-	 * Unsets this property model's instance variables and detaches the model.
-	 * 
 	 * @see AbstractDetachableModel#onDetach()
 	 */
 	protected final void onDetach()
 	{
+		super.onDetach();
 		model.detach();
-
-		// Reset OGNL context
-		this.context = null;
 	}
 
 	/**
-	 * Gets the value that results when the given Ognl expression is applied to
-	 * the model object (Ognl.getValue).
-	 * 
-	 * @return the value that results when the given Ognl expression is applied
-	 *         to the model object
-	 * @see wicket.model.IModel#getObject()
+	 * @see wicket.model.AbstractPropertyModel#ognlExpression(wicket.Component)
 	 */
-	protected final Object onGetObject()
+	protected String ognlExpression(Component component)
 	{
-		if (Strings.isEmpty(expression))
-		{
-			// No expression will cause OGNL to throw an exception. The OGNL
-			// expression to return the current object is "#this". Instead
-			// of throwing that exception, we'll provide a meaningfull
-			// return value
-			return model.getObject();
-		}
-
-		if (model != null)
-		{
-			final Object modelObject = model.getObject();
-			if (modelObject != null)
-			{
-				try
-				{
-					// note: if property type is null it is ignored by Ognl
-					return Ognl.getValue(expression, getContext(), modelObject, propertyType);
-				}
-				catch (OgnlException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-			}
-		}
-		return null;
+		return expression;
 	}
 
 	/**
-	 * Sets the Ognl context that is used for evaluating expressions. It
-	 * contains the type converter that is used to access the converter
-	 * framework.
-	 * 
-	 * @param context
-	 *            the Ognl context that is used for evaluating expressions
+	 * @see wicket.model.AbstractPropertyModel#modelObject(Component)
 	 */
-	protected final void setContext(OgnlContext context)
+	protected Object modelObject(final Component component)
 	{
-		this.context = context;
+		return model.getObject(component);
+	}
+
+	/**
+	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
+	 */
+	protected Class propertyType(Component component)
+	{
+		return propertyType;
 	}
 }

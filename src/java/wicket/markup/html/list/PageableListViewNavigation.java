@@ -20,8 +20,9 @@ package wicket.markup.html.list;
 import java.util.AbstractList;
 import java.util.List;
 
+import wicket.Component;
 import wicket.markup.html.basic.Label;
-import wicket.model.AbstractDetachableModel;
+import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
 
 /**
@@ -131,7 +132,7 @@ public class PageableListViewNavigation extends ListView
 	 */
 	protected IModel initModel()
 	{
-		return new AbstractDetachableModel()
+		return new AbstractReadOnlyDetachableModel()
 		{
 			private transient List list;
 			
@@ -156,7 +157,7 @@ public class PageableListViewNavigation extends ListView
 				this.list = null;
 			}
 
-			protected Object onGetObject()
+			protected Object onGetObject(final Component component)
 			{
 				return list;
 			}

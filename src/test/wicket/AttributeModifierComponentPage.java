@@ -67,12 +67,12 @@ public class AttributeModifierComponentPage extends WebPage
 				text = "insertLabel";
 			}
 
-			public Object onGetObject()
+			public Object onGetObject(final Component component)
 			{
 				return text;
 			}
 
-			public void setObject(Object object)
+			public void onSetObject(final Component component, final Object object)
 			{
 				text = object.toString();
 			}

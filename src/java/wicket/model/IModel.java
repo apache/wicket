@@ -17,6 +17,8 @@
  */
 package wicket.model;
 
+import wicket.Component;
+
 /**
  * A IModel wraps the actual model objects of components. IModel implementations
  * are used as a facade for the real model so that users have control over the
@@ -31,21 +33,28 @@ package wicket.model;
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public interface IModel extends IDetachable
 {
 	/**
 	 * Gets the model object.
 	 * 
+	 * @param component
+	 *            The component which wants to get a model Object
+	 * 
 	 * @return The model object
 	 */
-	public Object getObject();
+	public Object getObject(final Component component);
 
 	/**
 	 * Sets the model object.
 	 * 
+	 * @param component
+	 *            The component which wants to set a new model Object
+	 * 
 	 * @param object
 	 *            The model object
 	 */
-	public void setObject(Object object);
+	public void setObject(final Component component, final Object object);
 }

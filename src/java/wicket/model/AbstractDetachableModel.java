@@ -17,6 +17,8 @@
  */
 package wicket.model;
 
+import wicket.Component;
+
 /**
  * This provide a base class to work with detachable {@link wicket.model.IModel}
  * 's. It encapsulates the logic for attaching and detaching models. The
@@ -29,7 +31,7 @@ package wicket.model;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractDetachableModel implements IModel
+public abstract class AbstractDetachableModel extends AbstractModel
 {
 	/**
 	 * Transient flag to prevent multiple detach/attach scenario. We need to
@@ -66,22 +68,23 @@ public abstract class AbstractDetachableModel implements IModel
 	}
 
 	/**
-	 * @see wicket.model.IModel#getObject()
+	 * @see wicket.model.IModel#getObject(Component)
 	 */
-	public final Object getObject()
+	public final Object getObject(final Component component)
 	{
 		attach();
-		return onGetObject();
+		return onGetObject(component);
 	}
-	
+
 	/**
-	 * @see wicket.model.IModel#setObject(java.lang.Object)
+	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
-	public void setObject(Object object)
+	public final void setObject(final Component component, final Object object)
 	{
-		throw new UnsupportedOperationException("AbstractDetachableModel " + getClass() + " does not support setObject(Object)");
+		attach();
+		onSetObject(component, object);
 	}
-	
+
 	/**
 	 * Gets whether this model has been attached to the current session.
 	 * 
@@ -109,7 +112,23 @@ public abstract class AbstractDetachableModel implements IModel
 	 * object. Before this method is called, getObject() always calls attach()
 	 * to ensure that the object is attached.
 	 * 
+	 * @param component
+	 *            The component asking for the object
 	 * @return The object
 	 */
-	protected abstract Object onGetObject();
+	protected abstract Object onGetObject(final Component component);
+
+	/**
+	 * This default implementation of onSetObject throws an
+	 * UnsupportedOperationException to indicate that the subclass has not
+	 * implemented onSetObject() and therefore does not implement setObject().
+	 * If the subclass does not override this method, the model is effectively
+	 * read-only.
+	 * 
+	 * @param component
+	 *            The component wanting to set the object
+	 * @param object
+	 *            The object to set into the model
+	 */
+	protected abstract void onSetObject(final Component component, final Object object);
 }

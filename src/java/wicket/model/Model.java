@@ -19,6 +19,7 @@ package wicket.model;
 
 import java.io.Serializable;
 
+import wicket.Component;
 import wicket.WicketRuntimeException;
 
 /**
@@ -57,11 +58,9 @@ public class Model extends AbstractModel
 	}
 
 	/**
-	 * Get the model object proper.
-	 * 
-	 * @return The model object proper
+	 * @see wicket.model.IModel#getObject(wicket.Component)
 	 */
-	public Object getObject()
+	public Object getObject(final Component component)
 	{
 		return object;
 	}
@@ -72,9 +71,9 @@ public class Model extends AbstractModel
 	 * 
 	 * @param object
 	 *            the model object
-	 * @see wicket.model.IModel#setObject(java.lang.Object)
+	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
-	public void setObject(Object object)
+	public void setObject(final Component component, final Object object)
 	{
 		if (object != null)
 		{
@@ -93,7 +92,7 @@ public class Model extends AbstractModel
 	 * 
 	 * @param object
 	 *            the serializable model object
-	 * @see wicket.model.IModel#setObject(java.lang.Object)
+	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
 	public void setObject(Serializable object)
 	{

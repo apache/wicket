@@ -47,7 +47,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * &quot;product.${product.id}&quot; which prior to rendering will call
  * model.getObject().getProduct().getId() and substitute this value into the
  * resource key before is is passed to the loader.
- * <li><b>relativeComponent </b>- This parameter should be a component that the
+ * <li><b>component </b>- This parameter should be a component that the
  * string resource is relative to. In a simple application this will usually be
  * the Page on which the component resides. For reusable components/containers
  * that are packaged with their own string resource bundles it should be the
@@ -185,7 +185,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * @author Chris Turner
  */
-public class StringResourceModel extends AbstractDetachableModel implements INestedModel
+public class StringResourceModel extends AbstractReadOnlyDetachableModel implements INestedModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 6659487382203513733L;
@@ -206,7 +206,7 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 	private Object[] parameters;
 
 	/** The relative component used for lookups. */
-	private Component relativeComponent;
+	private Component component;
 
 	/** The key of message to get. */
 	private String resourceKey;
@@ -216,16 +216,16 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 	 * 
 	 * @param resourceKey
 	 *            The resource key for this string resource
-	 * @param relativeComponent
+	 * @param component
 	 *            The component that the resource is relative to
 	 * @param model
 	 *            The model to use for OGNL substitutions
 	 * @see #StringResourceModel(String, Component, IModel, Object[])
 	 */
-	public StringResourceModel(final String resourceKey, final Component relativeComponent,
+	public StringResourceModel(final String resourceKey, final Component component,
 			final IModel model)
 	{
-		this(resourceKey, relativeComponent, model, null);
+		this(resourceKey, component, model, null);
 	}
 
 	/**
@@ -244,14 +244,14 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 	 * 
 	 * @param resourceKey
 	 *            The resource key for this string resource
-	 * @param relativeComponent
+	 * @param component
 	 *            The component that the resource is relative to
 	 * @param model
 	 *            The model to use for OGNL substitutions
 	 * @param parameters
 	 *            The parameters to substitute using a Java MessageFormat object
 	 */
-	public StringResourceModel(final String resourceKey, final Component relativeComponent,
+	public StringResourceModel(final String resourceKey, final Component component,
 			final IModel model, final Object[] parameters)
 	{
 		if (resourceKey == null)
@@ -259,7 +259,7 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 			throw new IllegalArgumentException("Resource key must not be null");
 		}
 		this.resourceKey = resourceKey;
-		this.relativeComponent = relativeComponent;
+		this.component = component;
 		this.model = model;
 		this.parameters = parameters;
 	}
@@ -294,14 +294,12 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 	 */
 	public final String getString()
 	{
-		final Component c = getRelativeComponent();
-
 		// Make sure we have a localizer before commencing
 		if (getLocalizer() == null)
 		{
-			if (c != null)
+			if (component != null)
 			{
-				setLocalizer(c.getLocalizer());
+				setLocalizer(component.getLocalizer());
 			}
 			else
 			{
@@ -311,7 +309,7 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 
 		// Get the string resource, doing any OGNL substitutions as part
 		// of the get operation
-		String s = localizer.getString(getResourceKey(), c, getNestedModel());
+		String s = localizer.getString(getResourceKey(), component, getNestedModel());
 
 		// Substitute any parameters if necessary
 		Object[] parameters = getParameters();
@@ -323,12 +321,12 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 			{
 				if (parameters[i] instanceof IModel)
 				{
-					realParams[i] = ((IModel)parameters[i]).getObject();
+					realParams[i] = ((IModel)parameters[i]).getObject(component);
 				}
 				else if (model != null && parameters[i] instanceof String)
 				{
 					realParams[i] = OgnlVariableInterpolator.interpolate((String)parameters[i],
-							model.getObject());
+							model.getObject(component));
 				}
 				else
 				{
@@ -338,10 +336,10 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 
 			// Apply the parameters
 			Locale workingLocale = locale;
-			if (c != null)
+			if (component != null)
 			{
 				// Use component locale out of preference
-				workingLocale = c.getLocale();
+				workingLocale = component.getLocale();
 			}
 			final MessageFormat format = new MessageFormat(s, workingLocale);
 			s = format.format(realParams);
@@ -362,20 +360,6 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 	public void setLocalizer(final Localizer localizer)
 	{
 		this.localizer = localizer;
-	}
-
-	/**
-	 * This method does not apply for string resource models. The contents of
-	 * the model are set on construction and any variations should be achieved
-	 * through OGNL expressions in the key, the resource string and the
-	 * parameters or by the contents of the model object.
-	 * 
-	 * @param object
-	 *            Not used
-	 */
-	public final void setObject(final Object object)
-	{
-		// No implementation
 	}
 
 	/**
@@ -401,16 +385,6 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 	}
 
 	/**
-	 * Gets the component that this string resource is relative to.
-	 * 
-	 * @return The relative component
-	 */
-	protected final Component getRelativeComponent()
-	{
-		return relativeComponent;
-	}
-
-	/**
 	 * Gets the resource key for this string resource. If the resource key
 	 * contains OGNL and the model is null then the returned value is the actual
 	 * resource key with all substitutions undertaken.
@@ -421,7 +395,7 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 	{
 		if (model != null)
 		{
-			return OgnlVariableInterpolator.interpolate(resourceKey, model.getObject());
+			return OgnlVariableInterpolator.interpolate(resourceKey, model.getObject(component));
 		}
 		else
 		{
@@ -469,9 +443,9 @@ public class StringResourceModel extends AbstractDetachableModel implements INes
 	 * string is returned as an object to allow it to be used generically within
 	 * components.
 	 * 
-	 * @return The string for this model object
+	 * @see AbstractDetachableModel#onGetObject(Component)
 	 */
-	protected final Object onGetObject()
+	protected final Object onGetObject(final Component component)
 	{
 		return getString();
 	}

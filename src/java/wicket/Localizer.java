@@ -94,7 +94,7 @@ public class Localizer
 			string = loader.loadStringResource(component, key, locale, style);
 			if (string != null)
 			{
-				return substituteOgnl(string, model);
+				return substituteOgnl(component, string, model);
 			}
 		}
 
@@ -309,17 +309,19 @@ public class Localizer
 	/**
 	 * Helper method to handle OGNL variable substituion in strings.
 	 * 
+	 * @param component
+	 *            The component requesting a model value
 	 * @param string
 	 *            The string to substitute into
 	 * @param model
 	 *            The model
 	 * @return The resulting string
 	 */
-	private String substituteOgnl(String string, final IModel model)
+	private String substituteOgnl(final Component component, final String string, final IModel model)
 	{
 		if (string != null && model != null)
 		{
-			string = OgnlVariableInterpolator.interpolate(string, model.getObject());
+			return OgnlVariableInterpolator.interpolate(string, model.getObject(component));
 		}
 		return string;
 	}
