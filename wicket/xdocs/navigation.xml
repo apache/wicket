@@ -21,7 +21,12 @@
                 <item name="Running Eclipse" href="#Running_Eclipse" />
                 <item name="Further development" href="#Further_development"/>
             </item>
-            <item name="Examples" href="/Examples.html"/>
+	        <item name="Examples" href="/Examples.html" collapse="true">
+	        	<item name="Helloworld" href="/ExampleHelloworld.html"/>
+	        	<item name="Nav-o-matic" href="/ExampleNavomatic.html"/>
+	        	<item name="Images" href="/ExampleImages.html"/>
+	        	<item name="Tables" href="/ExampleTables.html"/>
+			</item>
         </menu>
 	    <menu name="Project info">
 	        <item name="News" href="/News.html"/>
@@ -33,7 +38,6 @@
         <menu name="Documentation">
 	        <item name="User's guide" href="/manual.html" />
             <item name="Wiki" href="/wiki" />
-	        <item name="Examples" href="/Examples.html"/>
 	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
 	        <item name="The Wicket Vision" href="/Vision.html" collapse="true">
 				<item name="The Overall Wicket Vision" href="#The_Overall_Wicket_Vision" />
