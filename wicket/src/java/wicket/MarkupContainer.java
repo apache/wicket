@@ -651,7 +651,7 @@ public abstract class MarkupContainer extends Component
 	 * @param component
 	 *            The component to add
 	 */
-	final void autoAdd(final Component component)
+	public final void autoAdd(final Component component)
 	{
 		component.setAuto(true);
 		add(component);

@@ -21,8 +21,8 @@ package wicket.examples.displaytag.list;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IComponentResolver;
 import wicket.markup.ComponentTag;
-import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.list.ListView;
@@ -37,13 +37,13 @@ import wicket.markup.html.list.ListView;
  * @see SortableListViewHeader
  * @author Juergen Donnerstag
  */
-public class SortableListViewHeaders extends WebMarkupContainer
+public class SortableListViewHeaders extends WebMarkupContainer implements IComponentResolver
 {
-
-	/** Each SortableTableHeader (without 's) must be attached to a group. */
-	final private SortableListViewHeaderGroup group;
 	/** Logging. */
 	final private Log log = LogFactory.getLog(SortableListViewHeaders.class);
+	
+	/** Each SortableTableHeader (without 's) must be attached to a group. */
+	final private SortableListViewHeaderGroup group;
 
 	/**
 	 * Construct.
@@ -85,62 +85,53 @@ public class SortableListViewHeaders extends WebMarkupContainer
 	}
 
 	/**
+	 * 
+	 * @param container
+	 * @param markupStream
+	 * @param tag
+	 * @return true, if component got resolved
+	 */
+	public boolean resolve(wicket.MarkupContainer container,MarkupStream markupStream,ComponentTag tag)
+	{
+		if (tag.getName().equalsIgnoreCase("th"))
+		{
+			// Get component name
+			final String componentName = tag.getId();
+			if ((componentName != null) && (get(componentName) == null))
+			{
+				autoAdd(new SortableListViewHeader(componentName, group)
+				{
+					protected int compareTo(final Object o1, final Object o2)
+					{
+						return SortableListViewHeaders.this.compareTo(this, o1, o2);
+					}
+
+					protected Comparable getObjectToCompare(final Object object)
+					{
+						return SortableListViewHeaders.this.getObjectToCompare(this, object);
+					}
+				});
+				return true;
+			}
+		}
+		
+	    return false;
+	}
+	
+	/**
 	 * Scan the related markup and attach a SortableListViewHeader to each &lt;th&gt; tag
 	 * found.
 	 * @see wicket.Component#onRender()
 	 */
 	protected void onRender()
 	{
-		// Allow anonymous class to access 'this' methods with same name
-		final SortableListViewHeaders me = this;
-
 		// Get the markup related to the component
 		MarkupStream markupStream = this.findMarkupStream();
 
-		// Save position in markup stream
-		final int markupStart = markupStream.getCurrentIndex();
-
 		// Must be <thead> tag
 		ComponentTag tag = markupStream.getTag();
+		final ComponentTag openTag = tag;
 		checkComponentTag(tag, "thead");
-
-		// find all <th wicket:id="..." childs
-		// Loop through the markup in this container
-		markupStream.next();
-		while (markupStream.hasMore())
-		{
-			final MarkupElement element = markupStream.get();
-			if (element instanceof ComponentTag)
-			{
-				// Get element as tag
-				tag = (ComponentTag)element;
-				if (tag.getName().equalsIgnoreCase("th"))
-				{
-					// Get component name
-					final String componentName = tag.getId();
-					if ((componentName != null) && (get(componentName) == null))
-					{
-						add(new SortableListViewHeader(componentName, group)
-						{
-							protected int compareTo(final Object o1, final Object o2)
-							{
-								return me.compareTo(this, o1, o2);
-							}
-
-							protected Comparable getObjectToCompare(final Object object)
-							{
-								return me.getObjectToCompare(this, object);
-							}
-						});
-					}
-				}
-			}
-
-			markupStream.next();
-		}
-
-		// Rewind to start of markup
-		markupStream.setCurrentIndex(markupStart);
 
 		// Continue with default behaviour
 		super.onRender();
