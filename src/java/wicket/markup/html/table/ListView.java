@@ -353,12 +353,14 @@ public abstract class ListView extends HtmlContainer
      */
     protected Serializable getListObject(final int index)
     {
-    	Object object = getList().get(index);
-      if (!(object instanceof Serializable))
-      {
-          throw new ClassCastException("ListView and ListItem model data must be serializable, index: " + index + ", data: " + object); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-      return (Serializable) object;
+        Object object = getList().get(index);
+        if ((object != null) && !(object instanceof Serializable))
+        {
+            throw new ClassCastException(
+                    "ListView and ListItem model data must be serializable, index: "
+                    + index + ", data: " + object); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return (Serializable) object;
     }
     
     /**
