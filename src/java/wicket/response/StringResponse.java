@@ -18,18 +18,20 @@
  */
 package wicket.response;
 
-
 import java.io.StringWriter;
 
 import wicket.Response;
 
 /**
- * Response object that writes to string.
+ * Response object that writes to a StringWriter.  If the StringResponse 
+ * is later converted to a String via toString(), the output which 
+ * was written to the StringResponse will be returned as a String.
+ * 
  * @author Jonathan Locke
  */
 public final class StringResponse extends Response
-{ // TODO finalize javadoc
-    // Writer to write to
+{
+    /** StringWriter to write to */
     private final StringWriter out;
 
     /**
