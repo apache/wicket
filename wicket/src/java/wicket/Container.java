@@ -724,15 +724,18 @@ public abstract class Container extends Component
 		}
 		catch (ParseException e)
 		{
-			throw new MarkupException(markupResource, exceptionMessage("Unable to parse markup"), e);
+			throw new MarkupException(markupResource, 
+			        exceptionMessage("Unable to parse markup from " + markupResource), e);
 		}
 		catch (ResourceNotFoundException e)
 		{
-			throw new MarkupException(markupResource, exceptionMessage("Unable to find markup"), e);
+			throw new MarkupException(markupResource, 
+			        exceptionMessage("Unable to find markup from " + markupResource), e);
 		}
 		catch (IOException e)
 		{
-			throw new MarkupException(markupResource, exceptionMessage("Unable to read markup"), e);
+			throw new MarkupException(markupResource, 
+			        exceptionMessage("Unable to read markup from " + markupResource), e);
 		}
 	}
 
