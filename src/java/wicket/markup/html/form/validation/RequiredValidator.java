@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.util.string.Strings;
+
 /**
  * Validator that ensures a component has a non-null and non-empty value. If the
  * component's value is null or empty (a value is considered empty if it just
@@ -39,12 +41,19 @@ public class RequiredValidator extends StringValidator
 	}
 	
 	/**
+	 * Private constructor to force use of static singleton accessor method.
+	 */
+	private RequiredValidator()
+	{
+	}
+	
+	/**
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(java.lang.String)
 	 */
 	public void onValidate(String value)
 	{
 		// Check value
-		if (value == null || value.trim().equals(""))
+		if (Strings.isEmpty(value))
 		{
 			error();
 		}
