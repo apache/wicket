@@ -8,6 +8,13 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1121946">
+		The getResource() method in Image now uses the new findParentWithAssociatedMarkup() 
+		method to find the nearest parent with associated markup, which it then uses as the 
+		base class for image loading.  This should always be right for Images since they are 
+		referenced from markup and findParentWithAssociatedMarkup() should always find that 
+		markup.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1121959">
       	Added ResourceComponent base class for components that provide resources by
       	implementing IResourceListener.  There doesn't appear to be an easy way to 
