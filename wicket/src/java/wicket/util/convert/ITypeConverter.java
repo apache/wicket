@@ -24,7 +24,7 @@ package wicket.util.convert;
  * 
  * @author Jonathan Locke
  */
-public interface ITypeConverter
+public interface ITypeConverter extends ILocalizable
 {
 	/**
 	 * Converts the given value

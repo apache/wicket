@@ -19,7 +19,6 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
-import wicket.util.convert.ILocalizable;
 import wicket.util.convert.ITypeConverter;
 import wicket.util.convert.converters.AbstractConverter;
 
@@ -28,7 +27,7 @@ import wicket.util.convert.converters.AbstractConverter;
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractConverter implements ITypeConverter, ILocalizable 
+public abstract class AbstractConverter implements ITypeConverter
 {
 	/** The current locale. */
 	private Locale locale = Locale.getDefault();

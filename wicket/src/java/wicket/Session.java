@@ -27,7 +27,6 @@ import java.util.Map;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.IConverterFactory;
-import wicket.util.convert.ILocalizable;
 import wicket.util.string.Strings;
 
 /**
@@ -216,10 +215,7 @@ public abstract class Session implements Serializable
 
 			// Let the factory create a new converter
 			converter = converterFactory.newConverter();
-			if (converter instanceof ILocalizable)
-			{
-				((ILocalizable)converter).setLocale(locale);
-			}
+			converter.setLocale(locale);
 		}
 		return converter;
 	}
@@ -414,11 +410,9 @@ public abstract class Session implements Serializable
 	public final void setLocale(final Locale locale)
 	{
 		this.locale = locale;
-		// set the new locale on the converter instance
-		if (converter instanceof ILocalizable)
-		{
-			((ILocalizable)getConverter()).setLocale(locale);
-		}
+
+        // Set the new locale on the converter instance
+		getConverter().setLocale(locale);
 	}
 
 	/**

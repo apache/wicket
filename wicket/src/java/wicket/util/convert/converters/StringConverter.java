@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.ILocalizable;
 import wicket.util.convert.ITypeConverter;
 
 /**
@@ -82,6 +81,15 @@ public class StringConverter extends AbstractConverter
 		{
 			return value.toString();
 		}
+
+		public void setLocale(Locale locale)
+		{
+		}
+
+		public Locale getLocale()
+		{
+			return Locale.getDefault();
+		}
 	};
 
 	/**
@@ -114,18 +122,12 @@ public class StringConverter extends AbstractConverter
 		ITypeConverter converter = get(c);
 		if (converter == null)
 		{
-			if (defaultConverter instanceof ILocalizable)
-			{
-				((ILocalizable)defaultConverter).setLocale(getLocale());
-			}
+			defaultConverter.setLocale(getLocale());
 			return defaultConverter.convert(value);
 		}
 
 		// Set locale
-		if (converter instanceof ILocalizable)
-		{
-			((ILocalizable)converter).setLocale(getLocale());
-		}
+		converter.setLocale(getLocale());
 
 		try
 		{

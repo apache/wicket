@@ -24,7 +24,7 @@ package wicket.util.convert;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface IConverter
+public interface IConverter extends ILocalizable
 {
 	/**
 	 * Converts the given value to class c.
