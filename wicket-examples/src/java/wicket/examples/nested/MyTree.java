@@ -17,7 +17,6 @@
  */
 package wicket.examples.nested;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -26,12 +25,14 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.ComponentTag;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.tree.Tree;
-import wicket.model.Model;
 
-/** indent tree implementation. */
+/**
+ * tree implementation.
+ *
+ * @author Eelco Hillenius
+ */
 public class MyTree extends Tree
 {
 	/** Log. */
@@ -106,46 +107,6 @@ public class MyTree extends Tree
 		else
 		{
 			return String.valueOf(node.getUserObject());
-		}
-	}
-
-	/**
-	 * Image that loads from this package (instead of Image's page) without
-	 * locale, style etc.
-	 */
-	private static final class LocalImage extends Image
-	{
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *            component name
-		 * @param object
-		 *            model
-		 */
-		public LocalImage(String name, Serializable object)
-		{
-			super(name, new Model(object));
-		}
-		
-		/**
-		 * @return Gets the image resource for the component.
-		 *
-		protected IResource getResource()
-		{
-			final String imageResource = getModelObjectAsString();
-			final String path = MyTree.class.getPackage().getName() + "." + imageResource;
-			return getApplication().getResourceLocator().locate(path, null, null, null);
-		}*/
-
-		/**
-		 * @see wicket.Component#onComponentTag(ComponentTag)
-		 */
-		protected void onComponentTag(final ComponentTag tag)
-		{
-			checkComponentTag(tag, "img");
-			final String url = getModelObjectAsString();
-			tag.put("src", url.replaceAll("&", "&amp;"));
 		}
 	}
 }
