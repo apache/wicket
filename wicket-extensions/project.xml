@@ -160,6 +160,24 @@
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>wicket/examples/AllTests.java</include>
+      </includes>
+      <resources>
+        <resource>
+          <directory>src/test</directory>
+          <includes>
+            <include>**</include>
+          </includes>
+          <excludes>
+            <exclude>**/*.java</exclude>
+          </excludes>
+          <filtering>false</filtering>
+        </resource>
+      </resources>
+    </unitTest>
     <resources>
       <resource>
         <directory>src/java</directory>
