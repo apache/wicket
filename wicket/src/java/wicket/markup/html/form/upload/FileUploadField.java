@@ -19,6 +19,7 @@ package wicket.markup.html.form.upload;
 
 import org.apache.commons.fileupload.FileItem;
 
+import wicket.Request;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
@@ -56,10 +57,10 @@ public class FileUploadField extends FormComponent
 	 */
 	protected void onComponentTag(ComponentTag tag)
 	{
-		// must be attached to an input tag
+		// Must be attached to an input tag
 		checkComponentTag(tag, "input");
 
-		// check for file type
+		// Check for file type
 		checkComponentTagAttribute(tag, "type", "file");
 
 		// Default handling for component tag
@@ -81,13 +82,20 @@ public class FileUploadField extends FormComponent
 	 */
 	protected void updateModel()
 	{
-		final MultipartWebRequest multipartWebRequest = ((MultipartWebRequest)getRequest());
-		final FileItem item = multipartWebRequest.getFile(getPath());
-
-		// only update the model when there is a file (larger than zero bytes)
-		if (item != null && item.getSize() > 0)
+		// Get request 
+		final Request request = getRequest();
+		
+		// If we successfully installed a multipart request
+		if (request instanceof MultipartWebRequest)
 		{
-			this.fileUpload = new FileUpload(item);
+			// Get the item for the path
+			final FileItem item = ((MultipartWebRequest)request).getFile(getPath());
+	
+			// Only update the model when there is a file (larger than zero bytes)
+			if (item != null && item.getSize() > 0)
+			{
+				this.fileUpload = new FileUpload(item);
+			}
 		}
 	}
 }

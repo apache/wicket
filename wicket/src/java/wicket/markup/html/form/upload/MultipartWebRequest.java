@@ -28,7 +28,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
 
-import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.util.value.ValueMap;
 
@@ -48,48 +47,45 @@ public class MultipartWebRequest extends WebRequest
 	/**
 	 * Constructor
 	 * 
+	 * @param uploadForm
+	 *            The form doing the uploading
 	 * @param httpServletRequest
 	 *            The servlet request
+	 * @throws FileUploadException Thrown if something goes wrong with upload
 	 */
-	MultipartWebRequest(final HttpServletRequest httpServletRequest)
+	MultipartWebRequest(final UploadForm uploadForm, final HttpServletRequest httpServletRequest) throws FileUploadException
 	{
 		super(httpServletRequest);
 
-		try
+		// Check that request is multipart
+		final boolean isMultipart = FileUpload.isMultipartContent(httpServletRequest);
+		if (!isMultipart)
 		{
-			// Check that request is multipart
-			final boolean isMultipart = FileUpload.isMultipartContent(httpServletRequest);
-			if (!isMultipart)
-			{
-				throw new IllegalStateException("Request does not contain multipart content");
-			}
-
-			// Parse multipart request into items
-			final List items = new DiskFileUpload().parseRequest(httpServletRequest);
-
-			// Loop through items
-			for (Iterator i = items.iterator(); i.hasNext();)
-			{
-				// Get next item
-				final FileItem item = (FileItem)i.next();
-
-				// If item is a form field
-				if (item.isFormField())
-				{
-					// Set parameter value
-					parameters.put(item.getFieldName(), item.getString());
-				}
-				else
-				{
-					// Add to file list
-					files.put(item.getFieldName(), item);
-				}
-			}
+			throw new IllegalStateException("Request does not contain multipart content");
 		}
-		catch (FileUploadException e)
+
+		// Parse multipart request into items
+		final DiskFileUpload diskFileUpload = new DiskFileUpload();
+		diskFileUpload.setSizeMax(uploadForm.maxSize.bytes());
+		final List items = diskFileUpload.parseRequest(httpServletRequest);
+
+		// Loop through items
+		for (Iterator i = items.iterator(); i.hasNext();)
 		{
-			// For the time being, we throw
-			throw new WicketRuntimeException(e);
+			// Get next item
+			final FileItem item = (FileItem)i.next();
+
+			// If item is a form field
+			if (item.isFormField())
+			{
+				// Set parameter value
+				parameters.put(item.getFieldName(), item.getString());
+			}
+			else
+			{
+				// Add to file list
+				files.put(item.getFieldName(), item);
+			}
 		}
 	}
 
