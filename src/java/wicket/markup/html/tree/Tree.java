@@ -53,11 +53,8 @@ import wicket.protocol.http.HttpRequest;
  * around with their back buttons.
  * <p></p>
  * Users can either extends this class directly, or use one of the provided subclasses, like
- * {@link wicket.markup.html.tree.ListTree} (uses nested lists to render and is best used
- * with UL/ LI elements) or {@link wicket.markup.html.tree.IndentTree} (uses spacers and
- * CSS for indentation). Currently {@link wicket.markup.html.tree.IndentTree} is more usuable,
- * is it has the distinction between junction links (for folding/ unfolding of tree paths)
- * and node links (for the actual selection of a link).
+ * {@link wicket.markup.html.tree.IndentTree} (uses spacers and
+ * CSS for indentation).
  * </p>
  *
  * @author Eelco Hillenius
