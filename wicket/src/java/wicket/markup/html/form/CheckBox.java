@@ -25,11 +25,12 @@ import wicket.model.IModel;
 
 /**
  * HTML checkbox input component.
+ *
  * @author Jonathan Locke
  */
 public final class CheckBox extends FormComponent implements FormComponent.ICookieValue
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = 7559827519977114184L;
 
 	/**
@@ -100,6 +101,8 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
     }
 
     /**
+	 * Processes the component tag.
+	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(ComponentTag)
      */
     protected void handleComponentTag(final ComponentTag tag)
@@ -126,6 +129,7 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
     }
 
     /**
+     * Updates this components' model from the request.
      * @see wicket.markup.html.form.FormComponent#updateModel()
      */
     public void updateModel()
@@ -134,6 +138,8 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
     }
 
     /**
+     * Gets the cookie value for this component.
+     * @return the cookie value for this component
      * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
      */
     public String getCookieValue()
@@ -142,6 +148,8 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
     }
 
     /**
+     * Sets the cookie value for this component.
+     * @param value the cookie value for this component
      * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
      */
     public void setCookieValue(String value)

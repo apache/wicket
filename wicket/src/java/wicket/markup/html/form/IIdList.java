@@ -30,7 +30,7 @@ import wicket.RequestCycle;
  * @author Eelco Hillenius
  */
 public interface IIdList extends List
-{ // TODO finalize javadoc
+{
     /**
      * Detach from a request.
      * @param cycle the request cycle

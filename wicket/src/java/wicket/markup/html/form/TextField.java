@@ -26,11 +26,12 @@ import wicket.model.IModel;
 
 /**
  * A simple text field.
+ *
  * @author Jonathan Locke
  */
 public final class TextField extends FormComponent implements FormComponent.ICookieValue
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = -2913294206388017417L;
 
 	/**
@@ -105,6 +106,8 @@ public final class TextField extends FormComponent implements FormComponent.ICoo
     }
 
     /**
+	 * Gets the cookie value for this component.
+	 * @return the cookie value for this component
      * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
      */
     public String getCookieValue()
@@ -113,6 +116,8 @@ public final class TextField extends FormComponent implements FormComponent.ICoo
     }
 
     /**
+	 * Sets the cookie value for this component
+	 * @param value the cookie value for this component
      * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
      */
     public void setCookieValue(final String value)
@@ -121,6 +126,8 @@ public final class TextField extends FormComponent implements FormComponent.ICoo
     }
 
     /**
+	 * Processes the component tag.
+	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(ComponentTag)
      */
     protected void handleComponentTag(final ComponentTag tag)
@@ -132,6 +139,7 @@ public final class TextField extends FormComponent implements FormComponent.ICoo
     }
 
     /**
+     * Updates this components' model from the request.
      * @see wicket.markup.html.form.FormComponent#updateModel()
      */
     public void updateModel()
@@ -139,5 +147,3 @@ public final class TextField extends FormComponent implements FormComponent.ICoo
         setModelObject(getRequestString());
     }
 }
-
-

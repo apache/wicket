@@ -38,7 +38,7 @@ import wicket.util.string.StringList;
  * @author Eelco Hillenius
  */
 public abstract class FormComponent extends HtmlContainer
-{ // TODO finalize javadoc
+{
     /** The validator or validator list for this component. */
     private IValidator validator = IValidator.NULL;
 
@@ -155,7 +155,8 @@ public abstract class FormComponent extends HtmlContainer
     }
 
     /**
-     * Implemented by form component subclass to update the form component's model.
+     * Implemented by form component subclass to update the form
+     * component's model.
      */
     public abstract void updateModel();
 
@@ -172,6 +173,8 @@ public abstract class FormComponent extends HtmlContainer
     }
     
     /**
+	 * Processes the component tag.
+	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(ComponentTag)
      */
     protected void handleComponentTag(final ComponentTag tag)
@@ -212,7 +215,7 @@ public abstract class FormComponent extends HtmlContainer
     }
 
     /**
-     * Gets whether this components is to be validated.
+     * Gets whether this component is to be validated.
      * @return True if this component has one or more validators
      */
     public final boolean isValidated()
@@ -221,8 +224,8 @@ public abstract class FormComponent extends HtmlContainer
     }
 
     /**
-     * Interface to components that support getting and setting cookie values to allow for
-     * persistent state in the user's browser.
+     * Interface to components that support getting and setting cookie
+     * values to allow for persistent state in the user's browser.
      */
     public interface ICookieValue
     {
@@ -240,7 +243,8 @@ public abstract class FormComponent extends HtmlContainer
     }
 
     /**
-     * A convenient and memory efficent representation for a list of validators.
+     * A convenient and memory efficent representation for a list
+     * of validators.
      */
     static private final class ValidatorList implements IValidator
     {
@@ -330,5 +334,3 @@ public abstract class FormComponent extends HtmlContainer
         }
     }
 }
-
-

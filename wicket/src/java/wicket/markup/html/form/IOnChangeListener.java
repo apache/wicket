@@ -22,6 +22,9 @@ import wicket.IRequestListener;
 
 /**
  * Listener method for OnChange events of dropdown lists.
+ * Users can optionally implement this interface with drop down components
+ * to have an onchange javascript event handler rendered that will call
+ * the implementor directly when an onchange event is issued.
  * 
  * @author Eelco Hillenius
  */
