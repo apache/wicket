@@ -403,7 +403,14 @@ public class WebRequestCycle extends RequestCycle
 		{
 			final String sharedResourceKey = pathInfo.substring(sharedResourcePrefix.length());
 			final Resource resource = getApplication().getResource(sharedResourceKey);
-			resource.onResourceRequested();
+			if (resource == null)
+			{
+				throw new WicketRuntimeException("Could not find shared resource under key " + sharedResourceKey);
+			}
+			else
+			{
+				resource.onResourceRequested();
+			}
 			return true;
 		}
 		return false;

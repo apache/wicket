@@ -7,7 +7,14 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-  	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2"> 
+  	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	
+      <action type="fix" dev="Jonathan Locke" issue="1175835">
+      Fixed shared resource localization problem manifested in forminput example.
+      Image resources are now correctly shared under a URL that includes locale
+      and style (as originally intended).  Switching between locales will be correct
+      and efficient now.  The earlier code would result in unpredictable locale
+      shifts when used by multiple users.  It would also be very inefficient.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
       	Added UploadForm.setMaxSize() method to limit the size of uploads. 
       	This change includes an update to the upload example which shows how

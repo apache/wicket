@@ -145,6 +145,8 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	public LocalizedImageResource(final Component component)
 	{
 		this.component = component;
+		this.locale = component.getLocale();
+		this.style = component.getStyle();
 	}
 	
 	/**
@@ -190,9 +192,13 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		// If locale has changed from the initial locale used to attach image
 		// resource, then we need to reload the resource in the new locale
-		if ((locale != null && locale != component.getLocale())
-				|| (style != null && style.equals(component.getStyle())))
+		if ((locale != null && !locale.equals(component.getLocale()))
+				|| (style != null && !style.equals(component.getStyle())))
 		{
+			// Get new component locale and style
+			this.locale = component.getLocale();
+			this.style = component.getStyle();
+
 			// If the image is a shared resource
 			if (resource instanceof SharedResource)
 			{
@@ -207,9 +213,9 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 				{
 					// Change the locale and style for the named resource so it
 					// will rebind when next accessed.
-					final SharedResource namedResource = (SharedResource)resource;
-					namedResource.setLocale(locale);
-					namedResource.setStyle(style);
+					final SharedResource sharedResource = (SharedResource)resource;
+					sharedResource.setLocale(locale);
+					sharedResource.setStyle(style);
 				}
 			}
 			else
@@ -247,10 +253,6 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			}
 		}
 
-		// Save component locale and style so we can detect changes
-		this.locale = component.getLocale();
-		this.style = component.getStyle();
-
 		// Get URL for resource
 		final String url;
 		if (this.resource instanceof SharedResource)
@@ -282,8 +284,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		final Package basePackage = component.findParentWithAssociatedMarkup().getClass()
 				.getPackage();
-		final ImageResource resource = StaticImageResource.get(basePackage, path, component
-				.getLocale(), component.getStyle());
+		final ImageResource resource = StaticImageResource.get(basePackage, path, locale, style);
 		if (resource == null)
 		{
 			throw new WicketRuntimeException("Could not load static image resource using path '"
@@ -326,8 +327,11 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			final String name = valueParser.getImageName();
 			if (!Strings.isEmpty(name))
 			{
-				component.getApplication().addResource(name, resource);
-				return new SharedResource(Application.class, name);
+				component.getApplication().addResource(Application.class, name, locale, style, resource);
+				final SharedResource sharedResource = new SharedResource(Application.class, name);
+				sharedResource.setLocale(locale);
+				sharedResource.setStyle(style);
+				return sharedResource;
 			}
 			return resource;
 		}
