@@ -153,7 +153,7 @@
 
     <servlet-mapping>
         <servlet-name>DisplaytagApplication</servlet-name>
-        <url-pattern>/displaytag/*</url-pattern>
+        <url-pattern>/displaytag</url-pattern>
     </servlet-mapping>
 
     <!-- servlet-mapping>
