@@ -37,14 +37,14 @@ A: Classes and methods in Wicket are generally declared as final until the
 <subsection name="Q: How can I set a session property?">
 <p>
 A: The best and safest way to set a property for a session is to create a 
-   subclass of Session (for web applications, a subclass of HttpSession)
+   subclass of Session (for web applications, a subclass of WebSession)
    which has the properties you desire.  Then override the getSessionFactory()
    method of Application and provide code which instantiates instances of
    your session subclass.  For example:
 </p>
 <p>
 <source><![CDATA[
-    public class MySession extends HttpSession
+    public class MySession extends WebSession
     {
     	private MyObject object;
 		protected MySession(Application application) { super(application); }
