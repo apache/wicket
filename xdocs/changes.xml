@@ -8,6 +8,10 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+	  <action type="update" dev="Jonathan Locke" issue="">
+		Added relative and absolute path functionality to StaticImage, and in the 
+		process, factored out Packages from Classes in wicket.util.lang.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1145200">
 		Refactored resource locator code, creating a new package wicket.util.resource.locator 
 		which contains an SPI interface, IResourceLocator, for implementing resource 

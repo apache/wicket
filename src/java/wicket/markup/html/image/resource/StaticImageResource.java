@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.RequestCycle;
-import wicket.WicketRuntimeException;
+import wicket.util.lang.Packages;
 import wicket.util.resource.IResource;
 
 /**
@@ -52,7 +52,7 @@ public class StaticImageResource extends ImageResource
 	 * 
 	 * @param basePackage
 	 *            The base package to search from
-	 * @param resourcePath
+	 * @param path
 	 *            The path to the resource
 	 * @param locale
 	 *            The locale of the image
@@ -60,18 +60,18 @@ public class StaticImageResource extends ImageResource
 	 *            The style of the image
 	 * @return The image resource
 	 */
-	public static StaticImageResource get(final Package basePackage, final String resourcePath,
+	public static StaticImageResource get(final Package basePackage, final String path,
 			final Locale locale, final String style)
 	{
 		final String localeKeyPart = (locale != null) ? locale.toString() : "";
 		final String localeStylePart = (style != null) ? style : "";
-		final String key = basePackage.getName() + resourcePath + localeKeyPart + localeStylePart;
+		final String key = basePackage.getName() + path + localeKeyPart + localeStylePart;
 		synchronized (imageResourceMap)
 		{
 			StaticImageResource imageResource = (StaticImageResource)imageResourceMap.get(key);
 			if (imageResource == null)
 			{
-				imageResource = new StaticImageResource(basePackage, resourcePath, locale, style);
+				imageResource = new StaticImageResource(basePackage, path, locale, style);
 				imageResourceMap.put(key, imageResource);
 			}
 			return imageResource;
@@ -83,25 +83,21 @@ public class StaticImageResource extends ImageResource
 	 * 
 	 * @param basePackage
 	 *            The base package to search from
-	 * @param resourcePath
+	 * @param path
 	 *            The path to the resource
 	 * @param locale
 	 *            The locale of the image
 	 * @param style
 	 *            The style of the image
 	 */
-	private StaticImageResource(final Package basePackage, final String resourcePath,
+	private StaticImageResource(final Package basePackage, final String path,
 			final Locale locale, final String style)
 	{
-		// TODO we might want to consider relaxing this in the future so people
-		// can stash images in subfolders and the like
-		if (resourcePath.indexOf("..") != -1 || resourcePath.indexOf("/") != -1)
-		{
-			throw new WicketRuntimeException("Source for image resource cannot contain a path");
-		}
+		// Convert resource path to absolute path relative to base package
+		final String absolutePath = Packages.absolutePath(basePackage, path);
 
-		final String path = basePackage.getName() + "." + resourcePath;
-		this.resource = RequestCycle.get().getApplication().getResourceLocator().locate(path,
+		// Locate resource
+		this.resource = RequestCycle.get().getApplication().getResourceLocator().locate(absolutePath,
 				style, locale, null);
 	}
 
