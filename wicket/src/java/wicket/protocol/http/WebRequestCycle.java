@@ -32,7 +32,9 @@ import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.Resource;
 import wicket.Response;
+import wicket.SharedResource;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.util.io.Streams;
@@ -53,6 +55,9 @@ public class WebRequestCycle extends RequestCycle
 {
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
+
+	/** Path prefix for shared resources */
+	private static final String sharedResourcePrefix = "/shared/";
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
@@ -111,7 +116,7 @@ public class WebRequestCycle extends RequestCycle
 	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
-		if (callComponentListener() || bookmarkablePage() || homePage())
+		if (callComponentListener() || bookmarkablePage() || homePage() || sharedResource())
 		{
 			return true;
 		}
@@ -244,6 +249,14 @@ public class WebRequestCycle extends RequestCycle
 		return false;
 	}
 
+	/**
+	 * Invokes a given interface on a component.
+	 * 
+	 * @param component
+	 *            The component
+	 * @param interfaceName
+	 *            The name of the interface to call
+	 */
 	private void invokeInterface(final Component component, final String interfaceName)
 	{
 		// Look up interface to call
@@ -373,5 +386,22 @@ public class WebRequestCycle extends RequestCycle
 		{
 			throw new WicketRuntimeException("Cannot load static content for request " + request, e);
 		}
+	}
+
+	/**
+	 * @return Returns shared resource to user if URL matches shared resource
+	 *         pattern
+	 */
+	private boolean sharedResource()
+	{
+		final String pathInfo = getWebRequest().getPathInfo();
+		if (pathInfo.startsWith(sharedResourcePrefix))
+		{
+			final String sharedResourceKey = pathInfo.substring(sharedResourcePrefix.length());
+			final Resource resource = getApplication().getResource(sharedResourceKey);
+			resource.onResourceRequested();
+			return true;
+		}
+		return false;
 	}
 }

@@ -148,6 +148,23 @@ public class LocalizedImageResource implements Serializable, IResourceListener
 	}
 
 	/**
+	 * @see wicket.IResourceListener#onResourceRequested()
+	 */
+	public void onResourceRequested()
+	{
+		resource.onResourceRequested();
+	}
+
+	/**
+	 * @param resource
+	 *            The resource to set.
+	 */
+	public void setResource(final Resource resource)
+	{
+		this.resource = resource;
+	}
+
+	/**
 	 * @param tag
 	 *            The tag to inspect for an optional src attribute that might
 	 *            reference an image.
@@ -155,7 +172,7 @@ public class LocalizedImageResource implements Serializable, IResourceListener
 	 *             Thrown if an image is required by the caller, but none can be
 	 *             found.
 	 */
-	public void loadImageResource(final ComponentTag tag)
+	public void setSrcAttribute(final ComponentTag tag)
 	{
 		// If locale has changed from the initial locale used to attach image
 		// resource, then we need to reload the resource in the new locale
@@ -219,23 +236,22 @@ public class LocalizedImageResource implements Serializable, IResourceListener
 		// Save component locale and style so we can detect changes
 		this.locale = component.getLocale();
 		this.style = component.getStyle();
-	}
 
-	/**
-	 * @see wicket.IResourceListener#onResourceRequested()
-	 */
-	public void onResourceRequested()
-	{
-		resource.onResourceRequested();
-	}
-
-	/**
-	 * @param resource
-	 *            The resource to set.
-	 */
-	public void setResource(final Resource resource)
-	{
-		this.resource = resource;
+		// Get URL for resource
+		final String url;
+		if (this.resource instanceof SharedResource)
+		{
+			// Create URL to shared resource
+			url = component.getPage().urlFor("shared/" + ((SharedResource)resource).getPath());
+		}
+		else
+		{
+			// Create URL to component
+			url = component.urlFor(IResourceListener.class);
+		}
+		
+		// Set the SRC attribute to point to the component or shared resource
+		tag.put("src", component.getResponse().encodeURL(url).replaceAll("&", "&amp;"));
 	}
 
 	/**

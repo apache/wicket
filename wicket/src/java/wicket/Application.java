@@ -94,55 +94,6 @@ public abstract class Application
 	private final ApplicationSettings settings = new ApplicationSettings(this);
 
 	/**
-	 * Key for looking up a resource.
-	 * 
-	 * @author Jonathan Locke
-	 */
-	private static final class ResourceKey
-	{
-		/** Name of resource */
-		private final String name;
-
-		/** Scope of resource */
-		private final Class scope;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param scope
-		 *            The resource's scoping
-		 * @param name
-		 *            The name of the resource
-		 */
-		private ResourceKey(final Class scope, final String name)
-		{
-			this.scope = scope;
-			this.name = name;
-		}
-
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		public boolean equals(Object obj)
-		{
-			if (obj instanceof ResourceKey)
-			{
-				final ResourceKey that = (ResourceKey)obj;
-				return this.scope == that.scope && this.name.equals(that.name);
-			}
-			return false;
-		}
-
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
-		public int hashCode()
-		{
-			return scope.hashCode() ^ name.hashCode();
-		}
-	}
-
-	/**
 	 * Constructor
 	 */
 	public Application()
@@ -176,9 +127,10 @@ public abstract class Application
 	public void addResource(final Class scope, final String name, final Locale locale,
 			final String style, final Resource resource)
 	{
-		final String key = name + (locale == null ? "" : "_" + locale.toString())
+		final String key = scope.getName() + "_" + name
+				+ (locale == null ? "" : "_" + locale.toString())
 				+ (style == null ? "" : "_" + style);
-		resourceMap.put(new ResourceKey(scope, key), resource);
+		resourceMap.put(key, resource);
 	}
 
 	/**
@@ -330,6 +282,16 @@ public abstract class Application
 	}
 
 	/**
+	 * @param key
+	 *            Shared resource key
+	 * @return The resource
+	 */
+	public final Resource getResource(final String key)
+	{
+		return (Resource)resourceMap.get(key);
+	}
+
+	/**
 	 * @param scope
 	 *            The resource's scope
 	 * @param name
@@ -369,36 +331,44 @@ public abstract class Application
 	public Resource getResource(final Class scope, final String name, final Locale locale,
 			final String style)
 	{
-		// Resource
-		Resource resource = null;
+		// Base name for resource
+		final String baseName = scope.getName() + "_" + name;
 
 		// 1. Look for fully qualified entry with locale and style
-		String key = name + (locale == null ? "" : "_" + locale.toString())
-				+ (style == null ? "" : "_" + style);
-		resource = (Resource)resourceMap.get(new ResourceKey(scope, key));
-		if (resource != null)
+		if (locale != null && style != null)
 		{
-			return resource;
+			final String key = baseName + "_" + locale + "_" + style;
+			final Resource resource = getResource(key);
+			if (resource != null)
+			{
+				return resource;
+			}
 		}
 
 		// 2. Look for entry without style
-		key = name + (locale == null ? "" : "_" + locale.toString());
-		resource = (Resource)resourceMap.get(new ResourceKey(scope, key));
-		if (resource != null)
+		if (locale != null)
 		{
-			return resource;
+			final String key = baseName + "_" + locale;
+			final Resource resource = getResource(key);
+			if (resource != null)
+			{
+				return resource;
+			}
 		}
 
 		// 3. Look for entry without locale
-		key = name + (style == null ? "" : "_" + style);
-		resource = (Resource)resourceMap.get(new ResourceKey(scope, key));
-		if (resource != null)
+		if (style != null)
 		{
-			return resource;
+			final String key = baseName + "_" + style;
+			final Resource resource = getResource(key);
+			if (resource != null)
+			{
+				return resource;
+			}
 		}
 
 		// 4. Look for base name
-		return (Resource)resourceMap.get(new ResourceKey(scope, name));
+		return getResource(baseName);
 	}
 
 	/**
