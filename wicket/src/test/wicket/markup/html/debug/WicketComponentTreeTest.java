@@ -20,7 +20,9 @@ package wicket.markup.html.debug;
 import java.io.IOException;
 
 import junit.framework.TestCase;
+import wicket.MarkupContainer;
 import wicket.markup.html.list.DiffUtil;
+import wicket.markup.html.list.ListView;
 import wicket.protocol.http.MockWebApplication;
 
 /**
@@ -63,6 +65,9 @@ public class WicketComponentTreeTest extends TestCase
 	    application.setupRequestAndResponse();
 		application.processRequestCycle();
 
+		final ListView components = (ListView)((MarkupContainer)application.getLastRenderedPage().get("componentList")).get("components");
+		assertEquals(2, components.getList().size());
+		
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
 		System.out.println(document);
