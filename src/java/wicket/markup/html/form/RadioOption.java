@@ -31,7 +31,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  */
 public final class RadioOption extends FormComponent
-{ // TODO finalize javadoc
+{
 	/** Serial Version ID */
 	private static final long serialVersionUID = -2933133745573428936L;
 
@@ -39,18 +39,7 @@ public final class RadioOption extends FormComponent
 	private String label = null;
 
 	/**
-	 * Constructor that uses the provided {@link IModel}as its model and that
-	 * uses either the model object's string value as the resource key for the
-	 * label or, if the resource key cannot be found, the object's string value
-	 * as the label itself. All components have names. A component's name cannot
-	 * be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the model
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public RadioOption(String name, IModel model)
 	{
@@ -58,28 +47,7 @@ public final class RadioOption extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a
-	 * dynamic model and that uses either the model object's string value as the
-	 * resource key for the label or, if the resource key cannot be found, the
-	 * object's string value as the label itself. This model will be wrapped in
-	 * an instance of {@link wicket.model.PropertyModel}using the provided
-	 * expression. Thus, using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(myIModel, expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the instance of {@link IModel}from which the model object
-	 *            will be used as the subject for the given expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, IModel, String)
 	 */
 	public RadioOption(String name, IModel model, String expression)
 	{
@@ -87,19 +55,7 @@ public final class RadioOption extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided object as a simple model and that uses
-	 * either the model object's string value as the resource key for the label
-	 * or, if the resource key cannot be found, the object's string value as the
-	 * label itself. This object will be wrapped in an instance of
-	 * {@link wicket.model.Model}. All components have names. A component's
-	 * name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as a simple model
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable)
 	 */
 	public RadioOption(String name, Serializable object)
 	{
@@ -107,29 +63,7 @@ public final class RadioOption extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided object as a dynamic model and that
-	 * uses either the model object's string value as the resource key for the
-	 * label or, if the resource key cannot be found, the object's string value
-	 * as the label itself. This object will be wrapped in an instance of
-	 * {@link wicket.model.Model}that will be wrapped in an instance of
-	 * {@link wicket.model.PropertyModel}using the provided expression. Thus,
-	 * using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(new Model(object), expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as the subject for the given
-	 *            expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public RadioOption(String name, Serializable object, String expression)
 	{
@@ -137,20 +71,10 @@ public final class RadioOption extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided {@link IModel}as its model and the
-	 * provided label either as a resource key or as the static label itself.
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param label
-	 *            the label for this option as either a resource key to lookup
-	 *            the label text, or, if that key cannot be found, as the static
-	 *            text itself
-	 * @param model
-	 *            the model
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @param name See Component constructor
+	 * @param label Label for option
+	 * @param model See Component constructor
+	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public RadioOption(String name, String label, IModel model)
 	{
@@ -159,31 +83,11 @@ public final class RadioOption extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a
-	 * dynamic model and the provided label either as a resource key or as the
-	 * static label itself. This model will be wrapped in an instance of
-	 * {@link wicket.model.PropertyModel}using the provided expression. Thus,
-	 * using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(myIModel, expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param label
-	 *            the label for this option as either a resource key to lookup
-	 *            the label text, or, if that key cannot be found, as the static
-	 *            text itself
-	 * @param model
-	 *            the instance of {@link IModel}from which the model object
-	 *            will be used as the subject for the given expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @param name See Component constructor
+     * @param label Label for option
+     * @param model See Component constructor
+     * @param expression See Component constructor
+     * @see wicket.Component#Component(String, IModel, String)
 	 */
 	public RadioOption(String name, String label, IModel model, String expression)
 	{
@@ -192,21 +96,10 @@ public final class RadioOption extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided object as a simple model and the
-	 * provided label either as a resource key or as the static label itself.
-	 * This object will be wrapped in an instance of {@link wicket.model.Model}.
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param label
-	 *            the label for this option as either a resource key to lookup
-	 *            the label text, or, if that key cannot be found, as the static
-	 *            text itself
-	 * @param object
-	 *            the object that will be used as a simple model
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @param name See Component constructor
+     * @param label Label for option
+     * @param object See Component constructor
+     * @see wicket.Component#Component(String, Serializable)
 	 */
 	public RadioOption(String name, String label, Serializable object)
 	{
@@ -215,32 +108,11 @@ public final class RadioOption extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided object as a dynamic model and the
-	 * provided label either as a resource key or as the static label itself.
-	 * This object will be wrapped in an instance of {@link wicket.model.Model}
-	 * that will be wrapped in an instance of {@link wicket.model.PropertyModel}
-	 * using the provided expression. Thus, using this constructor is a
-	 * short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(new Model(object), expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param label
-	 *            the label for this option as either a resource key to lookup
-	 *            the label text, or, if that key cannot be found, as the static
-	 *            text itself
-	 * @param object
-	 *            the object that will be used as the subject for the given
-	 *            expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @param name See Component constructor
+     * @param label Label for option
+     * @param object See Component constructor
+     * @param expression See Component constructor
+     * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public RadioOption(String name, String label, Serializable object, String expression)
 	{
@@ -261,7 +133,6 @@ public final class RadioOption extends FormComponent
 	 */
 	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		Object value = getModelObject();
 		final String displayLabel;
 
 		if (label != null)
@@ -270,10 +141,10 @@ public final class RadioOption extends FormComponent
 		}
 		else
 		{
-			displayLabel = String.valueOf(value);
+			displayLabel = String.valueOf(getModelObject());
 		}
 
-		String s = getLocalizer().getString(getName() + "." + displayLabel, this, displayLabel);
+		final String s = getLocalizer().getString(getName() + "." + displayLabel, this, displayLabel);
 
 		replaceBody(markupStream, openTag, s);
 	}
