@@ -294,7 +294,8 @@ public abstract class Link extends AbstractLink
 		final PopupSettings popupSettings = getPopupSettings();
 		if (popupSettings != null)
 		{
-			tag.put("onClick", popupSettings.getPopupJavaScript().replaceAll("&", "&amp;"));
+			// NOTE: don't encode to HTML as that is not valid JavaScript
+			tag.put("onClick", popupSettings.getPopupJavaScript());
 		}
 	}
 
