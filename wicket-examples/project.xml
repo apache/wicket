@@ -1,5 +1,4 @@
 <project>
-    <pomVersion>3</pomVersion>
     <name>Wicket Examples</name>
     <groupId>wicket-examples</groupId>
 	<id>wicket-examples</id>
@@ -75,130 +74,131 @@
             <groupId>wicket</groupId>
             <artifactId>wicket</artifactId>
             <version>SNAPSHOT</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.4</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>hibernate</groupId>
             <artifactId>hibernate</artifactId>
             <version>2.1.6</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
-            <groupId>geronimo-spec</groupId><!-- it's the only jta jar available at Ibiblio! -->
+            <groupId>geronimo-spec</groupId>
             <artifactId>geronimo-spec-jta</artifactId>
             <version>1.0-M1</version>
- 			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.4</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>2.1</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.0</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>odmg</groupId>
             <artifactId>odmg</artifactId>
             <version>3.0</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>1.7.2.2</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
-			<properties>
-				<war.bundle>false</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>false</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.8</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
             <version>2.6.5</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>servletapi</groupId>
             <artifactId>servletapi</artifactId>
             <version>2.3</version>
-			<properties>
-				<war.bundle>false</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>false</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.0.4</version>
-			<properties> <!-- might want to turn this of for Tomcat? -->
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-full</artifactId>
             <version>2.0.1</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
-		<dependency>
-			<id>commons-fileupload</id>
-			<version>1.0</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
-			<url>http://jakarta.apache.org/commons/beanutils/</url>
-		</dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.0</version>
+            <url>http://jakarta.apache.org/commons/beanutils/</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
         <dependency>
             <groupId>concurrent</groupId>
             <artifactId>concurrent</artifactId>
@@ -206,6 +206,77 @@
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
+        </dependency>
+        <dependency>
+            <groupId>httpunit</groupId>
+            <artifactId>httpunit</artifactId>
+            <version>1.5.5</version>
+            <jar>httpunit-1.5.5.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>jwebunit</groupId>
+            <artifactId>jwebunit</artifactId>
+            <version>1.2</version>
+            <jar>jwebunit-1.2.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>jetty</groupId>
+            <artifactId>jetty</artifactId>
+            <version>4.2.21</version>
+            <jar>jetty-4.2.21.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>0.9.2</version>
+            <jar>nekohtml-0.9.2.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>rhino</groupId>
+            <artifactId>js-1.5R4-RC3</artifactId>
+            <jar>js-1.5R4-RC3.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>tomcat</groupId>
+            <artifactId>jasper-compiler</artifactId>
+            <version>4.1.30</version>
+            <jar>jasper-compiler-4.1.30.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>tomcat</groupId>
+            <artifactId>jasper-runtime</artifactId>
+            <version>4.1.30</version>
+            <jar>jasper-runtime-4.1.30.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.6.2</version>
+            <jar>xercesImpl-2.6.2.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>2.5.0</version>
+            <jar>xml-apis-2.5.0.jar</jar>
+            <type>jar</type>
+            <properties/>
         </dependency>
     </dependencies>
     <build>
@@ -237,6 +308,7 @@
                 <excludes>
                     <exclude>**/*.java</exclude>
                 </excludes>
+                <filtering>false</filtering>
             </resource>
             <resource>
                 <directory>src/test</directory>
