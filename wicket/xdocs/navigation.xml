@@ -36,9 +36,16 @@
 	        <item name="Vision" href="/Vision.html"/>
 	        <item name="FAQ" href="/faqs.html"/>
 	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
-	        <item name="User's Guide" href="/manual.html" />
+	        <item name="User's Guide" href="/manual.html" collapse="true">
+	        	<item name="Working with Wicket Models" href="/wiki/doku.php?id=models" />
+	        	<item name="The Lifecycle of a Wicket Application" href="/wiki/doku.php?id=lifecycle" />
+	        </item>
             <item name="Wiki" href="/wiki" />
 	        <item name="Dependencies" href="/dependencies.html"/>
+        </menu>
+        <menu name="Related projects">
+        	<item name="Wicket Stuff" href="http://wicket-stuff.sourceforge.net" />
+        	<item name="Wicket Library" href="http://www.wicket-library.com" />
         </menu>
 	    <menu name="Development">
             <item name="Releasing Wicket" href="/BuildingARelease.html" 
