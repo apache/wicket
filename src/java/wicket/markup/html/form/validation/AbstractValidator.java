@@ -131,7 +131,7 @@ public abstract class AbstractValidator implements IValidator
 	/**
 	 * @return The string value being validated
 	 */
-	public String getStringValue()
+	public String getInput()
 	{
 		return component.getRequestString();
 	}
@@ -165,7 +165,7 @@ public abstract class AbstractValidator implements IValidator
 	protected Map messageModel()
 	{
 		final Map resourceModel = new HashMap(4);
-		resourceModel.put("input", getStringValue());
+		resourceModel.put("input", getInput());
 		resourceModel.put("name", component.getName());
 		return resourceModel;
 	}
