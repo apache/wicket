@@ -1,31 +1,30 @@
-///////////////////////////////////////////////////////////////////////////////////
-//
-// Created Jun 2, 2004
-//
-// Copyright 2004, Jonathan W. Locke
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.voicetribe.util.time.test;
-
-import java.text.NumberFormat;
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import com.voicetribe.util.string.StringValueConversionException;
 import com.voicetribe.util.time.Duration;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+import java.text.NumberFormat;
 
 /**
  * Test cases for this object
@@ -57,7 +56,9 @@ public final class DurationTest extends TestCase
         Assert.assertEquals(0, Duration.milliseconds(3000).compareTo(Duration.seconds(3)));
         Assert.assertEquals(Duration.minutes(10), Duration.minutes(4).add(Duration.minutes(6)));
         Assert.assertEquals(Duration.ONE_HOUR, Duration.minutes(90).subtract(Duration.minutes(30)));
+
         String value = NumberFormat.getNumberInstance().format(1.5);
+
         Assert.assertEquals(value + " minutes", Duration.seconds(90).toString());
         Assert.assertEquals("12 hours", Duration.days(0.5).toString());
     }
@@ -81,4 +82,5 @@ public final class DurationTest extends TestCase
         })));
     }
 }
+
 ///////////////////////////////// End of File /////////////////////////////////
