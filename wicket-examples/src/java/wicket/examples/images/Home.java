@@ -50,8 +50,8 @@ public final class Home extends WicketExamplePage
 			}
 		}));
 
+		// Simple model
 		add(new Image("image4", "Image2.gif"));
-		
 
 		// Dynamically created buffered image
 		add(new Image("image5", application.getImage5Resource()));
