@@ -21,19 +21,9 @@ package wicket.markup;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 
-import wicket.Page;
-import wicket.PageParameters;
-import wicket.RenderException;
-import wicket.RequestCycle;
-import wicket.markup.html.link.ExternalPageLink;
 import wicket.util.lang.EnumeratedType;
-import wicket.util.parse.metapattern.Group;
-import wicket.util.parse.metapattern.MetaPattern;
-import wicket.util.parse.metapattern.OptionalMetaPattern;
 import wicket.util.string.StringValue;
-import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
 /**
@@ -67,29 +57,7 @@ public final class ComponentTag extends MarkupElement
      */
     public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
-    /** Parse "[AutomaticComponentName:parameters]-<number>". */
-    private static final Group automaticCommand = new Group(MetaPattern.WORD);
-
-    /** pattern group for automatic parameters .*/
-    private static final Group automaticParameters =
-        new Group(MetaPattern.ANYTHING_NON_EMPTY);
-
-    /** pattern group for automatic parameters .*/
-    private static final Group automaticIndexPrefix =
-        new Group(MetaPattern.DIGITS);
-
-    /** pattern for automatic components. */
-    private static final MetaPattern automaticComponentPattern =
-        new MetaPattern(new MetaPattern[] {
-            MetaPattern.LEFT_SQUARE, automaticCommand,
-            new OptionalMetaPattern(new MetaPattern[] {
-                    MetaPattern.COLON, automaticParameters}),
-            MetaPattern.RIGHT_SQUARE,
-            new OptionalMetaPattern(new MetaPattern[] {
-                    MetaPattern.DASH, automaticIndexPrefix}),
-            MetaPattern.DASH, MetaPattern.POSITIVE_INTEGER});
-
-    /** Map of simple tags. */
+	/** Map of simple tags. */
     private static final Map doesNotRequireCloseTag = new HashMap();
 
     static
@@ -104,13 +72,13 @@ public final class ComponentTag extends MarkupElement
     ValueMap attributes = new ValueMap();
 
     /** True if this tag automatically creates a corresponding component. */
-    boolean automaticLink = false;
+    //boolean automaticLink = false;
 
     /** Automatic link destination information. */
-    Class automaticLinkPageClass;
+    //Class automaticLinkPageClass;
 
     /** page parameters for automatic links. */
-    PageParameters automaticLinkPageParameters;
+    //PageParameters automaticLinkPageParameters;
 
     /** Any component tag that this tag closes. */
     ComponentTag closes;
@@ -277,11 +245,12 @@ public final class ComponentTag extends MarkupElement
      * Gets whether this tag represents an automatic link.
      * @return Returns the automaticLink.
      */
+/*    
     public boolean isAutomaticLink()
     {
         return automaticLink;
     }
-
+*/
     /**
      * Gets whether this is a close tag.
      * @return True if this tag is a close tag
@@ -530,108 +499,6 @@ public final class ComponentTag extends MarkupElement
             buffer.append('>');
 
             return buffer.toString();
-        }
-    }
-
-    /**
-     * Automatically creates a ExternalPageLink component using the tag syntax:
-     * "[autolink:parameters]", where parameters can be a list of comma separated key
-     * value pairs, such as "x=9,y=foo".
-     * @param page The page where the link is
-     * @param markupStream The markup stream to use when throwing any exceptions
-     * @return The component created by the automaticLink component command
-     */
-    public ExternalPageLink createAutomaticLink(
-            final Page page, final MarkupStream markupStream)
-    {
-        // If this tag does not yet know what it's destination class and page
-        // parameters are
-        if (automaticLinkPageClass == null)
-        {
-            // look them up
-            resolveAutomaticLink(page, markupStream);
-        }
-
-        // Create automaticLink bookmark link
-        return new ExternalPageLink(getComponentName(), automaticLinkPageClass,
-                automaticLinkPageParameters);
-    }
-
-    /**
-     * Resolves the given tag's automaticLinkPageClass and automaticLinkPageParameters
-     * variables by parsing the tag component name and then searching for a page class at
-     * the relative URL specified by the href attribute of the tag. The href URL is
-     * relative to the package containing the page where this component is contained.
-     * @param page The page where the link is
-     * @param markupStream Markup stream to use when throwing any exceptions
-     */
-    private void resolveAutomaticLink(final Page page, final MarkupStream markupStream)
-    {
-        // Get component name attribute
-        final String componentName = getComponentName();
-
-        // Get any automaticLink component
-        final Matcher matcher = automaticComponentPattern.matcher(componentName);
-
-        if (matcher.matches())
-        {
-            final String command = automaticCommand.get(matcher);
-            final String parameters = automaticParameters.get(matcher);
-
-            if (command.equals("autolink"))
-            {
-                // Must be anchor tag
-                if (!getName().equalsIgnoreCase("a"))
-                {
-                    markupStream.throwMarkupException(
-                            "Automatic link can only be attached to an anchor tag");
-                }
-
-                // Must have href value
-                final String href = getAttributes().getString("href");
-
-                if (href == null)
-                {
-                    markupStream.throwMarkupException(
-                            "Automatic link requires href attribute");
-                }
-
-                // Find class relative to current package
-                final String path = Strings.stripEnding(href, ".html");
-
-                try
-                {
-                    automaticLinkPageClass = RequestCycle.get().getApplication()
-                    	.getSettings().getPageFactory().getClassInstance(
-                    	        page.getClass().getPackage().getName() + "." + path);
-
-                    if (parameters != null)
-                    {
-                        automaticLinkPageParameters = new PageParameters(parameters);
-                    }
-                    else
-                    {
-                        automaticLinkPageParameters = PageParameters.NULL;
-                    }
-                }
-                catch (RenderException e)
-                {
-                    markupStream.throwMarkupException("Could not find page at " + path);
-                }
-            }
-            else
-            {
-                if (!command.equals("children") && !command.equals("border"))
-                {
-                    markupStream.throwMarkupException(
-                            "Special component names include [border], [body] and [autolink], "
-                            + "but not '" + command + "'");
-                }
-            }
-        }
-        else
-        {
-            markupStream.throwMarkupException("Invalid syntax for automaticLink component");
         }
     }
 

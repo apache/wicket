@@ -47,7 +47,7 @@ public final class MarkupParserTest extends TestCase
      */
     public final void testTagParsing() throws StringValueConversionException, ParseException
     {
-        final MarkupParser parser = new MarkupParser("componentName", 0);
+        final MarkupParser parser = new MarkupParser("componentName");
         final Markup markup = parser
                 .parse("This is a test <a componentName=\"a\" href=\"foo.html\"> <b componentName=\"b\">Bold!</b> "
                         + "<img componentName=\"img\" width=9 height=10 src=\"foo\"> <marker componentName=\"marker\"/> </a>");
@@ -111,7 +111,7 @@ public final class MarkupParserTest extends TestCase
      */
     public final void test() throws StringValueConversionException, ParseException
     {
-        final MarkupParser parser = new MarkupParser("componentName", 0);
+        final MarkupParser parser = new MarkupParser("componentName");
         final Markup tokens = parser
                 .parse("This is a test <a componentName=9> <b>bold</b> <b componentName=10/></a> of the emergency broadcasting system");
 
@@ -151,7 +151,7 @@ public final class MarkupParserTest extends TestCase
            "<head><title>Some Page</title></head>" +
            "<body><h1>XHTML Test</h1></body>" +
            "</html>";
-        final MarkupParser parser = new MarkupParser("componentName", 0);
+        final MarkupParser parser = new MarkupParser("componentName");
         final Markup tokens = parser.parse(docText);
 
         System.out.println("tok(0)=" + tokens.get(0));
@@ -165,7 +165,7 @@ public final class MarkupParserTest extends TestCase
      * @throws IOException
      */
     public final void testFileDocument() throws ParseException, ResourceNotFoundException, IOException {
-        final MarkupParser parser = new MarkupParser("componentName", 0);
+        final MarkupParser parser = new MarkupParser("componentName");
         Resource resource = Resource.locate(null, this.getClass(), "1", null, "html");
         Markup tokens = parser.read(resource);
         System.out.println("tok(0)=" + tokens.get(0));
