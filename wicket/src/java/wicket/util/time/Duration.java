@@ -28,39 +28,93 @@ import wicket.util.string.StringValue;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.thread.ICode;
 
-
 /**
- * A duration is an immutable length of time stored as a number of milliseconds. Various
- * factory and conversion methods are available for convenience.
+ * A duration is an immutable length of time stored as a number of milliseconds. 
+ * Various factory and conversion methods are available for convenience.
+ * <P>
+ * These static factory methods allow easy construction of value objects using 
+ * either long values like seconds(2034) or hours(3):
+ * <p>
+ * <ul>
+ *   <li>Duration.milliseconds(long)
+ *   <li>Duration.seconds(int)
+ *   <li>Duration.minutes(int)
+ *   <li>Duration.hours(int)
+ *   <li>Duration.days(int)
+ * </ul>
+ * <p>
+ *  or double precision floating point values like days(3.2):
+ * <p>
+ * <ul>
+ *   <li>Duration.milliseconds(double)
+ *   <li>Duration.seconds(double)
+ *   <li>Duration.minutes(double)
+ *   <li>Duration.hours(double)
+ *   <li>Duration.days(double)
+ * </ul>
+ * <p>
+ * In the case of milliseconds(double), the value will be rounded off to the
+ * nearest integral millisecond using Math.round().
+ * <p>
+ * The precise number of milliseconds represented by a Duration object can be
+ * retrieved by calling the milliseconds() method.  The value of a Duration 
+ * object in a given unit like days or hours can be retrieved by calling one
+ * of the following unit methods, each of which returns a double precision 
+ * floating point number:
+ * <p>
+ * <ul>
+ *   <li>seconds()
+ *   <li>minutes()
+ *   <li>hours()
+ *   <li>days()
+ * </ul>
+ * <p>
+ * Values can be added and subtracted using the add() and subtract() methods,
+ * each of which returns a new immutable Duration object.
+ * <p>
+ * String values can be converted to Duration objects using the static valueOf
+ * factory methods.  The string format is the opposite of the one created by
+ * toString(), which converts a Duration object to a readable form, such as
+ * "3.2 hours" or "32.5 minutes".  Valid units are: milliseconds, seconds, minutes
+ * hours and days.  Correct English plural forms are used in creating string
+ * values and are parsed as well.  The Locale is respected and "," will be used
+ * instead of "." in the Eurozone.
+ * <p>
+ * The benchmark method will "benchmark" a Runnable or an ICode implementing
+ * object, returning a Duration object that represents the amount of time 
+ * elapsed in running the code. 
+ * <p>
+ * Finally, the sleep() method will sleep for the value of a Duration.
+ * 
  * @author Jonathan Locke
  */
 public final class Duration extends AbstractTimeValue
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1212559549133827631L;
 
-	/** constant for no duration. */
+	/** Constant for no duration. */
     public static final Duration NONE = milliseconds(0);
 
-    /** constant for one week. */
+    /** Constant for one week. */
     public static final Duration ONE_WEEK = days(7);
 
-    /** constant for one day. */
+    /** Constant for one day. */
     public static final Duration ONE_DAY = days(1);
 
-    /** constant for one hour. */
+    /** Constant for one hour. */
     public static final Duration ONE_HOUR = hours(1);
 
-    /** constant for on minute. */
+    /** Constant for on minute. */
     public static final Duration ONE_MINUTE = minutes(1);
 
-    /** constant for one second. */
+    /** Constant for one second. */
     public static final Duration ONE_SECOND = seconds(1);
 
     /** Pattern to match strings. */
-    private static final Pattern pattern = Pattern.compile(
-            "([0-9]+([.,][0-9]+)?)\\s+(millisecond|second|minute|hour|day)s?",
-            Pattern.CASE_INSENSITIVE);
+    private static final Pattern pattern = Pattern.compile
+            ("([0-9]+([.,][0-9]+)?)\\s+(millisecond|second|minute|hour|day)s?",
+             Pattern.CASE_INSENSITIVE);
 
     /**
      * Private constructor forces use of static factory methods.
@@ -72,7 +126,7 @@ public final class Duration extends AbstractTimeValue
     }
 
     /**
-     * gets the given long as a duration.
+     * Gets the given long as a duration.
      * @param time The duration value in milliseconds
      * @return Duration value
      */
@@ -95,7 +149,7 @@ public final class Duration extends AbstractTimeValue
     }
     
     /**
-     * Converts the given string to a new duration object. The string can take the form of
+     * Converts the given string to a new Duration object. The string can take the form of
      * a floating point number followed by a number of milliseconds, seconds, minutes,
      * hours or days. For example "6 hours" or "3.4 days". Parsing is case insensitive.
      * @param string The string to parse
@@ -247,7 +301,7 @@ public final class Duration extends AbstractTimeValue
      * Gets number of seconds of the current duration.
      * @return number of seconds of the current duration
      */
-    public final double getSeconds()
+    public final double seconds()
     {
         return getMilliseconds() / 1000.0;
     }
@@ -256,27 +310,27 @@ public final class Duration extends AbstractTimeValue
      * Gets number of minutes of the current duration.
      * @return number of minutes of the current duration
      */
-    public final double getMinutes()
+    public final double minutes()
     {
-        return getSeconds() / 60.0;
+        return seconds() / 60.0;
     }
 
     /**
      * Gets number of hours of the current duration.
      * @return number of hours of the current duration
      */
-    public final double getHours()
+    public final double hours()
     {
-        return getMinutes() / 60.0;
+        return minutes() / 60.0;
     }
 
     /**
      * Gets number of days of the current duration.
      * @return number of days of the current duration
      */
-    public final double getDays()
+    public final double days()
     {
-        return getHours() / 24.0;
+        return hours() / 24.0;
     }
 
     /**
@@ -286,10 +340,13 @@ public final class Duration extends AbstractTimeValue
      */
     public static Duration benchmark(final ICode code, final Log log)
     {
+        // Get time before running code
         final Time start = Time.now();
         
+        // Run the code
         code.run(log);
 
+        // Return the difference
         return Time.now().subtract(start);
     }
 
@@ -300,10 +357,13 @@ public final class Duration extends AbstractTimeValue
      */
     public static Duration benchmark(final Runnable code)
     {
+        // Get time before running code
         final Time start = Time.now();
-
+        
+        // Run code
         code.run();
-
+        
+        // Return the difference
         return Time.now().subtract(start);
     }
 
@@ -346,8 +406,8 @@ public final class Duration extends AbstractTimeValue
     }
 
     /**
-     * Gets the string representation of this duration in days, hours, minutes, seconds or
-     *         milliseconds, as appropriate. Uses the default locale
+     * Gets the string representation of this duration in days, hours, minutes, 
+     * seconds or milliseconds, as appropriate. Uses the default locale.
      * @return String representation
      */
     public String toString()
@@ -356,8 +416,8 @@ public final class Duration extends AbstractTimeValue
     }
 
     /**
-     * Gets the string representation of this duration in days, hours, minutes, seconds or
-     *         milliseconds, as appropriate.
+     * Gets the string representation of this duration in days, hours, minutes, 
+     * seconds or milliseconds, as appropriate.
      * @param locale the locale
      * @return String representation
      */
@@ -365,24 +425,24 @@ public final class Duration extends AbstractTimeValue
     {
         if (getMilliseconds() >= 0)
         {
-            if (getDays() >= 1.0)
+            if (days() >= 1.0)
             {
-                return unitString(getDays(), "day", locale);
+                return unitString(days(), "day", locale);
             }
 
-            if (getHours() >= 1.0)
+            if (hours() >= 1.0)
             {
-                return unitString(getHours(), "hour", locale);
+                return unitString(hours(), "hour", locale);
             }
 
-            if (getMinutes() >= 1.0)
+            if (minutes() >= 1.0)
             {
-                return unitString(getMinutes(), "minute", locale);
+                return unitString(minutes(), "minute", locale);
             }
 
-            if (getSeconds() >= 1.0)
+            if (seconds() >= 1.0)
             {
-                return unitString(getSeconds(), "second", locale);
+                return unitString(seconds(), "second", locale);
             }
 
             return getMilliseconds() + " milliseconds";
@@ -394,8 +454,8 @@ public final class Duration extends AbstractTimeValue
     }
 
     /**
-     * Converts a value to a unit suffixed value, taking care of English singular/plural
-     * suffix.
+     * Converts a value to a unit suffixed value, taking care of English 
+     * singular/plural suffix.
      * @param value The value to format
      * @param units The units to apply singular or plural suffix to
      * @param locale The locale

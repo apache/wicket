@@ -21,12 +21,13 @@ package wicket.util.time;
 import wicket.util.value.LongValue;
 
 /**
- * Package local class for representing immutable time values in milliseconds and typical
- * operations on such values.
+ * Package local class for representing immutable time values in milliseconds 
+ * and typical operations on such values.
+ * 
  * @author Jonathan Locke
  */
 abstract class AbstractTimeValue extends LongValue
-{ // TODO finalize javadoc
+{
     /**
      * Package local constructor for package subclasses only
      * @param milliseconds The number of milliseconds in this time value
@@ -37,7 +38,7 @@ abstract class AbstractTimeValue extends LongValue
     }
 
     /**
-     * @return Number of milliseconds in this time value
+     * @return Number of milliseconds in this abstract time value
      */
     public final long getMilliseconds()
     {

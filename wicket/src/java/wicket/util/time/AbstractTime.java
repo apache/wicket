@@ -24,16 +24,17 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Abstract base class for subclasses that represent a point in time (as opposed to a
- * duration of time).
+ * Abstract base class for subclasses that represent a point in time 
+ * (as opposed to a duration of time).
+ * 
  * @author Jonathan Locke
  */
 abstract class AbstractTime extends AbstractTimeValue
-{ // TODO finalize javadoc
-    // Calendar for the local timezone
+{
+    /** Calendar for the local timezone */
     static final Calendar localtime = Calendar.getInstance();
 
-    // Time format
+    /** Time format */
     static final SimpleDateFormat timeFormat = new SimpleDateFormat("h.mma");
 
     /**
@@ -84,7 +85,6 @@ abstract class AbstractTime extends AbstractTimeValue
             synchronized (calendar)
             {
                 timeFormat.setCalendar(calendar);
-
                 return timeFormat.format(new Date(getMilliseconds())).toLowerCase();
             }
         }
