@@ -24,30 +24,22 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * A placeholder HttpRequest where everything is null.
+ * A placeholder HttpRequest where all methods do nothing.  This
+ * class is not accessible outside this package because it is intended
+ * to be used as a singleton.  To gain access to a NullHttpRequest
+ * instance, just access the static final field HttpRequest.NULL.
  * 
+ * @see HttpRequest#NULL
  * @author Jonathan Locke
  */
-public class NullHttpRequest extends HttpRequest
+class NullHttpRequest extends HttpRequest
 {
-    /** Singleton instance. */
-    private static NullHttpRequest NULL = new NullHttpRequest();
-
     /**
      * Private constructor to force use of static factory method.
      */
-    private NullHttpRequest()
+    NullHttpRequest()
     {
         super(null);
-    }
-
-    /**
-     * Gets the singleton instance.
-     * @return the singleton instance
-     */
-    public static NullHttpRequest getInstance()
-    {
-        return NULL;
     }
 
     /**
@@ -122,5 +114,3 @@ public class NullHttpRequest extends HttpRequest
         return "[NullHttpRequest]";
     }
 }
-
-

@@ -18,7 +18,6 @@
  */
 package wicket.protocol.http;
 
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,6 +38,9 @@ public class HttpRequest extends Request
 { // TODO finalize javadoc
     /** Servlet request information. */
     private final HttpServletRequest servletRequest;
+    
+    /** Null HttpRequest object that does nothing */
+    public static final HttpRequest NULL = new NullHttpRequest();
 
     /**
      * Package private constructor.
@@ -97,7 +99,7 @@ public class HttpRequest extends Request
         }
         catch (NullPointerException ex)
         {
-            // ignore
+            // Ignore any app server problem here
         }
         
         return new Cookie[0];
@@ -131,7 +133,7 @@ public class HttpRequest extends Request
     {
         final Map map = new HashMap();
 
-        for (Enumeration enumeration = servletRequest.getParameterNames();
+        for (final Enumeration enumeration = servletRequest.getParameterNames();
         	enumeration.hasMoreElements();)
         {
             final String name = (String) enumeration.nextElement();
@@ -148,7 +150,7 @@ public class HttpRequest extends Request
     public String getURL()
     {
         String url = servletRequest.getContextPath() + servletRequest.getServletPath();
-        String pathInfo = servletRequest.getPathInfo();
+        final String pathInfo = servletRequest.getPathInfo();
 
         if (pathInfo != null)
         {
@@ -183,7 +185,7 @@ public class HttpRequest extends Request
      * doesn't provide an Accept-Language header, this method returns an
      * <code>Enumeration</code> containing one <code>Locale</code>, the default
      * locale for the server.
-     * @return an <code>Enumeration</code> of preferred <code>Locale</code> objects
+     * @return An <code>Enumeration</code> of preferred <code>Locale</code> objects
      *         for the client
      */
     public Enumeration getLocales()
