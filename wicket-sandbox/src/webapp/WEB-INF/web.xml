@@ -5,7 +5,7 @@
 
 <web-app>
 
-    <display-name>Wicket Examples</display-name>  
+    <display-name>Wicket Sandbox</display-name>  
 
     <servlet>
         <servlet-name>MenuApplication</servlet-name>
@@ -19,7 +19,7 @@
 
     <servlet-mapping>
         <servlet-name>MenuApplication</servlet-name>
-        <url-pattern>/menu</url-pattern>
+        <url-pattern>/menu/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
