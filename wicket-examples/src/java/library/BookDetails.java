@@ -24,9 +24,9 @@ import com.voicetribe.util.string.StringValueConversionException;
 import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.RequestCycle;
+import com.voicetribe.wicket.markup.ComponentTagAttributeModifier;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
-import com.voicetribe.wicket.markup.html.style.Italic;
 
 /**
  * A book details page.  Shows information about a book.
@@ -84,10 +84,12 @@ public final class BookDetails extends AuthenticatedHtmlPage
             writingStyles = getLocalizer().getString("noWritingStyles", this);
         }
 
-        final Italic italic = new Italic("italicWritingStyles");
+        Label writingStylesLabel = new Label("writingStyles", writingStyles);
 
-        italic.setEnable(!hasStyles);
-        add(italic.add(new Label("writingStyles", writingStyles)));
+        final ComponentTagAttributeModifier italic = new ComponentTagAttributeModifier("class", new Model("italic"));
+        italic.setEnabled(!hasStyles);
+
+        add(writingStylesLabel.addAttributeModifier(italic));
         add(EditBook.link("edit", book.getId()));
     }
 

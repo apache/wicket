@@ -19,30 +19,29 @@
 package displaytag;
 
 import java.util.List;
-
 import com.voicetribe.wicket.Container;
+import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
+import com.voicetribe.wicket.markup.ComponentTagAttributeModifier;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
-import com.voicetribe.wicket.markup.html.style.CascadingStyleSheetStyle;
 import com.voicetribe.wicket.markup.html.table.Cell;
-
 import displaytag.utils.ListObject;
 import displaytag.utils.MyTable;
 import displaytag.utils.TestList;
 
 /**
  * Start page for different displaytag pages
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class ExampleStyles extends HtmlPage
 {
     /**
      * Constructor.
-     * 
+     *
      * @param parameters Page parameters
      */
     public ExampleStyles(final PageParameters parameters)
@@ -51,7 +50,7 @@ public class ExampleStyles extends HtmlPage
 
         HtmlContainer styleList = new HtmlContainer("stylelist");
         add(styleList);
-        
+
         styleList.add(new ExternalPageLink("isis", this.getClass()).setParameter("class", "isis").setAutoEnable(false));
         styleList.add(new ExternalPageLink("its", this.getClass()).setParameter("class", "its").setAutoEnable(false));
         styleList.add(new ExternalPageLink("mars", this.getClass()).setParameter("class", "mars").setAutoEnable(false));
@@ -60,12 +59,10 @@ public class ExampleStyles extends HtmlPage
         styleList.add(new ExternalPageLink("mark", this.getClass()).setParameter("class", "mark").setAutoEnable(false));
 
         // Apply style on current tag
-        CascadingStyleSheetStyle htmlTable = new CascadingStyleSheetStyle("htmlTable", parameters.getString("class"));
-        htmlTable.setEnable(true);
-        add(htmlTable);
-        
+        addAttributeModifier(new ComponentTagAttributeModifier("class", new Model(parameters.getString("class"))));
+
         // Add table of existing comments
-        htmlTable.add(new MyTable("rows", data)
+        add(new MyTable("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
@@ -76,7 +73,7 @@ public class ExampleStyles extends HtmlPage
                 tagClass.add(new Label("email", value.getEmail()));
                 tagClass.add(new Label("status", value.getStatus()));
                 tagClass.add(new Label("comments", value.getDescription()));
-                
+
                 return true;
             }
         });

@@ -7,9 +7,10 @@
 package displaytag.utils;
 
 import java.util.List;
-
 import com.voicetribe.wicket.Container;
-import com.voicetribe.wicket.markup.html.style.CascadingStyleSheetStyle;
+import com.voicetribe.wicket.Model;
+import com.voicetribe.wicket.markup.ComponentTagAttributeModifier;
+import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
 
@@ -25,15 +26,17 @@ public abstract class MyTable extends Table
     {
         super(componentName, data);
     }
-    
+
     public void populateCell(final Cell cell)
     {
-        final CascadingStyleSheetStyle tagClass = new CascadingStyleSheetStyle("class", cell.isEvenIndex() ? "even" : "odd");
-        tagClass.setEnable(true);
-        cell.add(tagClass);
-        
-        populateCell(cell, tagClass);
+        HtmlContainer hc = new HtmlContainer("class");
+        hc.addAttributeModifier(
+                new ComponentTagAttributeModifier("class",
+                                                  new Model(cell.isEvenIndex() ? "even" : "odd")));
+        cell.add(hc);
+
+        populateCell(cell, hc);
     }
-    
+
     protected abstract boolean populateCell(final Cell cell, final Container tagClass);
 }
