@@ -36,7 +36,6 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidationFeedback;
-import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
@@ -186,59 +185,92 @@ public class SearchCDPage extends WicketExamplePage
 			final Long id = cd.getId();
 
 			// add links to the details
-			PageParameters params = new PageParameters();
-			params.put("id", id);
-			
-			item.add(new BookmarkablePageLink("title", EditCDPage.class, params)
+			item.add(new DetailLink("title", id)
 					.add(new Label("title", cd.getTitle())));
-			item.add(new BookmarkablePageLink("performers", EditCDPage.class, params)
+			item.add(new DetailLink("performers", id)
 					.add(new Label("performers", cd.getPerformers())));
-			item.add(new BookmarkablePageLink("label", EditCDPage.class, params)
+			item.add(new DetailLink("label", id)
 					.add(new Label("label", cd.getLabel())));
-			item.add(new BookmarkablePageLink("year", EditCDPage.class, params)
+			item.add(new DetailLink("year", id)
 					.add(new Label("year", (cd.getYear() != null) ? cd.getYear().toString() : "")));
 
 			// add a delete link for each found record
-			item.add(new Link("delete")
-			{
-				/**
-				 * Delete the record that corresponds to the id.
-				 * 
-				 * @see wicket.markup.html.link.Link#onClick()
-				 */
-				public void onClick()
-				{
-					RequestCycle cycle = RequestCycle.get();
-					Session session = null;
-					Transaction tx = null;
-					try
-					{
-						session = HibernateHelper.getSession();
-						tx = session.beginTransaction();
-						CD toDelete = (CD)session.load(CD.class, id);
-						session.delete(toDelete);
-						tx.commit();
-						info(" cd " + toDelete.getTitle() + " deleted");
-						SearchCDPage.this.modelChangedStructure();
-					}
-					catch (HibernateException e)
-					{
-						try
-						{
-							tx.rollback();
-						}
-						catch (HibernateException ex)
-						{
-						}
-						throw new WicketRuntimeException(e);
-					}
-				}
-			});
+			item.add(new DeleteLink("delete", id));
 		}
 	}
 
+	/** link to detail edit page. */
+	private final class DetailLink extends Link
+	{
+		/**
+		 * Construct.
+		 * @param name name of the component
+		 * @param id the id of the cd
+		 */
+		public DetailLink(String name, Long id)
+		{
+			super(name, id);
+		}
+
+		/**
+		 * @see wicket.markup.html.link.Link#onClick()
+		 */
+		public void onClick()
+		{
+			final RequestCycle requestCycle = getRequestCycle();
+			final Long id = (Long)getModelObject();
+			requestCycle.setPage(new EditCDPage(SearchCDPage.this, id));
+		}	
+	}
+
+	/** Link for deleting a row. */
+	private final class DeleteLink extends Link
+	{
+		/**
+		 * Construct.
+		 * @param name name of the component
+		 * @param id the id of the cd
+		 */
+		public DeleteLink(String name, Long id)
+		{
+			super(name, id);
+		}
+
+		/**
+		 * @see wicket.markup.html.link.Link#onClick()
+		 */
+		public void onClick()
+		{
+			final Long id = (Long)getModelObject();
+			Session session = null;
+			Transaction tx = null;
+			try
+			{
+				session = HibernateHelper.getSession();
+				tx = session.beginTransaction();
+				CD toDelete = (CD)session.load(CD.class, id);
+				session.delete(toDelete);
+				tx.commit();
+				info(" cd " + toDelete.getTitle() + " deleted");
+				SearchCDPage.this.modelChangedStructure();
+			}
+			catch (HibernateException e)
+			{
+				try
+				{
+					tx.rollback();
+				}
+				catch (HibernateException ex)
+				{
+				}
+				throw new WicketRuntimeException(e);
+			}
+		}
+		
+	}
+
 	/** Link for sorting on a column. */
-	private class SortLink extends Link
+	private final class SortLink extends Link
 	{
 		/** order by field. */
 		private final String field;

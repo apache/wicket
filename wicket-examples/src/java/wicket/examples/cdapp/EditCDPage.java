@@ -25,8 +25,6 @@ import net.sf.hibernate.Transaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Page;
-import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.contrib.data.model.PersistentObjectModel;
 import wicket.contrib.data.model.hibernate.HibernateObjectModel;
@@ -58,21 +56,19 @@ public final class EditCDPage extends WicketExamplePage
 	private static Log log = LogFactory.getLog(SearchCDPage.class);
 
 	/** model for one cd. */
-	private PersistentObjectModel cdModel;
+	private final PersistentObjectModel cdModel;
+
+	/** search page to navigate back to. */
+	private final SearchCDPage searchCDPage;
 
 	/**
-	 * Constructor for new CD.
-	 * 
-	 * @param parameters Page parameters
+	 * Constructor.
+	 * @param searchCDPage the search page to navigate back to
+	 * @param id the id of the cd to edit
 	 */
-	public EditCDPage(final PageParameters parameters)
+	public EditCDPage(final SearchCDPage searchCDPage, Long id)
 	{
-		Long id = null;
-		String idFromRequest = parameters.getString("id");
-		if (idFromRequest != null)
-		{
-			id = Long.valueOf(idFromRequest);
-		}
+		this.searchCDPage = searchCDPage;
 		cdModel = new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
 		add(new Label("cdTitle", new TitleModel(cdModel)));
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
@@ -123,8 +119,7 @@ public final class EditCDPage extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					Page searchPage = getPageFactory().newPage(SearchCDPage.class);
-					getRequestCycle().setPage(searchPage);
+					getRequestCycle().setPage(searchCDPage);
 				}
 			});
 		}
@@ -146,8 +141,7 @@ public final class EditCDPage extends WicketExamplePage
 				session.saveOrUpdate(cd);
 				tx.commit();
 				info("cd saved");
-				Page searchPage = getPageFactory().newPage(SearchCDPage.class);
-				getRequestCycle().setPage(searchPage);
+				getRequestCycle().setPage(searchCDPage);
 			}
 			catch (HibernateException e)
 			{
