@@ -107,3 +107,15 @@ a.none {
 #wicket-inputForm label.non {
 	display: inline !important;
 }
+
+#wicket-tabbar a.selected {
+	background: #C3C3C3;
+	font-weight: bold;
+	padding: 5px;
+}
+
+#wicket-tabbar a.not-selected {
+	background: #F5F5F5;
+	font-weight: bold;
+	padding: 5px;
+}
