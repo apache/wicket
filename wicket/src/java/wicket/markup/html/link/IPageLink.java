@@ -18,20 +18,27 @@
  */
 package wicket.markup.html.link;
 
-
 import java.io.Serializable;
 
 import wicket.Page;
 
 /**
- * Interface that gets a page. This is used to defer the creation of pages which are
- * linked to.
+ * Interface that gets a page.  This is used to defer the creation of 
+ * pages which are linked to.  The getPage() method returns an instance
+ * of Page when a link is clicked.  The getPageClass() method returns 
+ * the subclass of Page that getPage() will return if and when it is 
+ * called.  This way of arranging things is useful in determining whether 
+ * a link links to a given page, which is in turn useful for deciding 
+ * how to display the link (because links in a navigation which link to 
+ * the page itself generally should indicate where in the navigation 
+ * the user is rather than being active links). 
+ * 
  * @author Jonathan Locke
  */
 public interface IPageLink extends Serializable
-{ // TODO finalize javadoc
+{
     /**
-     * @return The page linked to
+     * @return The page to go to
      */
     public Page getPage();
 
