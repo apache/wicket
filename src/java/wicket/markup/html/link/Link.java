@@ -309,10 +309,10 @@ public abstract class Link extends AbstractLink
         }
 
         // Add any popup script
-        PopupSpecification popupSpecification = getPopupSpecification();
-        if (popupSpecification != null)
+        final PopupSettings popupSettings = getPopupSettings();
+        if (popupSettings != null)
         {
-            tag.put("onClick", popupSpecification.getPopupJavaScript().replaceAll("&", "&amp;"));
+            tag.put("onClick", popupSettings.getPopupJavaScript().replaceAll("&", "&amp;"));
         }
     }
 }

@@ -32,17 +32,12 @@ import wicket.model.IModel;
  */
 public abstract class AbstractLink extends HtmlContainer implements ILinkListener
 {
-    static
-    {
-        // Allow calls through the ILinkListener interface
-        RequestCycle.registerRequestListenerInterface(ILinkListener.class);
-    }
 
     /**
      * The popup specification. If not-null, a javascript on-click event handler will be
      * generated that opens a new window using the popup properties.
      */
-    private PopupSpecification popupSpecification = null;
+    private PopupSettings popupSettings = null;
 
     /**
      * Construct.
@@ -106,11 +101,34 @@ public abstract class AbstractLink extends HtmlContainer implements ILinkListene
         super(name, object, expression);
     }
 
+
+    /**
+     * Gets the popup specification. If not-null, a javascript on-click event handler
+     * will be generated that opens a new window using the popup properties.
+     * @return the popup specification.
+     */
+    public final PopupSettings getPopupSettings()
+    {
+        return popupSettings;
+    }
+
     /**
      * Called when a link is clicked.
      * @see ILinkListener
      */
     public abstract void linkClicked();
+
+    /**
+     * Sets the popup specification. If not-null, a javascript on-click event handler
+     * will be generated that opens a new window using the popup properties.
+     * @param popupSettings the popup specification.
+     * @return This
+     */
+    public final AbstractLink setPopupSettings(PopupSettings popupSettings)
+    {
+        this.popupSettings = popupSettings;
+        return this;
+    }
 
     /**
      * Gets the url to use for this link.
@@ -120,27 +138,9 @@ public abstract class AbstractLink extends HtmlContainer implements ILinkListene
     {
         return getRequestCycle().urlFor(AbstractLink.this, ILinkListener.class);
     }
-
-
-    /**
-     * Gets the popup specification. If not-null, a javascript on-click event handler
-     * will be generated that opens a new window using the popup properties.
-     * @return the popup specification.
-     */
-    public final PopupSpecification getPopupSpecification()
+    static
     {
-        return popupSpecification;
-    }
-
-    /**
-     * Sets the popup specification. If not-null, a javascript on-click event handler
-     * will be generated that opens a new window using the popup properties.
-     * @param popupSpecification the popup specification.
-     * @return This
-     */
-    public final AbstractLink setPopupSpecification(PopupSpecification popupSpecification)
-    {
-        this.popupSpecification = popupSpecification;
-        return this;
+        // Allow calls through the ILinkListener interface
+        RequestCycle.registerRequestListenerInterface(ILinkListener.class);
     }
 }
