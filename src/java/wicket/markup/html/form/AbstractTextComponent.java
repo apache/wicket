@@ -39,7 +39,7 @@ abstract class AbstractTextComponent extends FormComponent
 	/**
      * @see wicket.Component#Component(String, Serializable)
 	 */
-	public AbstractTextComponent(final String name, final Serializable object)
+	AbstractTextComponent(final String name, final Serializable object)
 	{
 		super(name, object);
 	}
@@ -47,7 +47,7 @@ abstract class AbstractTextComponent extends FormComponent
 	/**
      * @see wicket.Component#Component(String, Serializable, String)
 	 */
-	public AbstractTextComponent(final String name, final Serializable object, final String expression)
+	AbstractTextComponent(final String name, final Serializable object, final String expression)
 	{
 		super(name, object, expression);
 	}
