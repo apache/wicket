@@ -35,17 +35,6 @@ public class MapModel extends Model
     private static final long serialVersionUID = -1;
 
     /**
-     * Private constructor forces use of static factory method.
-     * 
-     * @param object
-     *            The model object
-     */
-    private MapModel(Serializable object)
-    {
-        super(object);
-    }
-
-    /**
      * Static factory method for creating a MapModel for a given Map.
      * 
      * @param map
@@ -56,12 +45,23 @@ public class MapModel extends Model
     {
         if (map instanceof Serializable)
         {
-            return new MapModel((Serializable) map);
+            return new MapModel((Serializable)map);
         }
         else
         {
             return new MapModel(new HashMap(map));
         }
+    }
+
+    /**
+     * Private constructor forces use of static factory method.
+     * 
+     * @param object
+     *            The model object
+     */
+    private MapModel(Serializable object)
+    {
+        super(object);
     }
 }
 

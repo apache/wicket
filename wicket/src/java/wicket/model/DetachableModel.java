@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -35,18 +35,18 @@ package wicket.model;
  */
 public abstract class DetachableModel implements IDetachableModel
 {
-    /**
-     * The wrapped model object. Note that this object is transient to ensure we
-     * never serialize it even if the user forgets to set the object to null in
-     * their detach() method.
-     */
-    private transient Object object;
 
     /**
      * Transient flag to prevent multiple detach/attach scenario. We need to
      * maintain this flag as we allow 'null' model values.
      */
     private transient boolean attached = false;
+    /**
+     * The wrapped model object. Note that this object is transient to ensure we
+     * never serialize it even if the user forgets to set the object to null in
+     * their detach() method.
+     */
+    private transient Object object;
 
     /**
      * Construct.
@@ -64,39 +64,6 @@ public abstract class DetachableModel implements IDetachableModel
     public DetachableModel(final Object object)
     {
         this.object = object;
-    }
-
-    /**
-     * Gets the model object.
-     * 
-     * @return the model object
-     * @see wicket.model.IModel#getObject()
-     */
-    public Object getObject()
-    {
-        return object;
-    }
-
-    /**
-     * Sets the model object.
-     * 
-     * @param object
-     *            the model object
-     * @see wicket.model.IModel#setObject(java.lang.Object)
-     */
-    public void setObject(final Object object)
-    {
-        this.object = object;
-    }
-
-    /**
-     * Gets whether this model has been attached to the current session.
-     * 
-     * @return whether this model has been attached to the current session
-     */
-    public boolean isAttached()
-    {
-        return attached;
     }
 
     /**
@@ -125,6 +92,39 @@ public abstract class DetachableModel implements IDetachableModel
             doDetach();
             attached = false;
         }
+    }
+
+    /**
+     * Gets the model object.
+     * 
+     * @return the model object
+     * @see wicket.model.IModel#getObject()
+     */
+    public Object getObject()
+    {
+        return object;
+    }
+
+    /**
+     * Gets whether this model has been attached to the current session.
+     * 
+     * @return whether this model has been attached to the current session
+     */
+    public boolean isAttached()
+    {
+        return attached;
+    }
+
+    /**
+     * Sets the model object.
+     * 
+     * @param object
+     *            the model object
+     * @see wicket.model.IModel#setObject(java.lang.Object)
+     */
+    public void setObject(final Object object)
+    {
+        this.object = object;
     }
 
     /**
