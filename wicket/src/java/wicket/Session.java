@@ -100,9 +100,6 @@ public abstract class Session implements Serializable
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
-	/** Session state that can be replicated when dirty */
-	transient State state;
-
 	/** Application that this is a session of. */
 	private transient Application application;
 
@@ -120,6 +117,9 @@ public abstract class Session implements Serializable
 
 	/** The still-live pages for this user session. */
 	private transient MostRecentlyUsedMap pages;
+
+	/** Session state that can be replicated when dirty */
+	private State state;
 
 	/**
 	 * Interface called when visiting session pages.
@@ -584,7 +584,7 @@ public abstract class Session implements Serializable
 	 *            The attribute value
 	 */
 	protected abstract void setAttribute(final String name, final Object object);
-
+	
 	/**
 	 * Get the interceptContinuationURL.
 	 * 
@@ -605,6 +605,14 @@ public abstract class Session implements Serializable
 	final Page getPage(final String id)
 	{
 		return (Page)getPageMap().get(id);
+	}
+
+	/**
+	 * @return The next access number
+	 */
+	int nextAccessNumber()
+	{
+		return state.accessNumber++;
 	}
 
 	/**
