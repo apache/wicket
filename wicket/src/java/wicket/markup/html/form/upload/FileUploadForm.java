@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +19,8 @@
 package wicket.markup.html.form.upload;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -35,7 +38,7 @@ import wicket.util.thread.Lock;
  * 
  * @author Eelco Hillenius
  */
-public class FileUploadForm extends AbstractUploadForm
+public class FileUploadForm extends UploadForm
 {
 	/**
 	 * This conflict handler renames the file using an ascending number until it
@@ -165,11 +168,25 @@ public class FileUploadForm extends AbstractUploadForm
 	}
 
 	/**
-	 * @see wicket.markup.html.form.upload.AbstractUploadForm#onUpload(org.apache.commons.fileupload.FileItem)
+	 * This implementation of onSubmit loops through all uploaded files and
+	 * saves the file to the set upload folder using the current conflict resolver.
+	 * @see wicket.markup.html.form.upload.UploadForm#onSubmit()
 	 */
-	protected void onUpload(FileItem fileItem)
+	protected void onSubmit()
 	{
-		saveFile(fileItem, new File(uploadFolder, fileItem.getName()));
+		// The submit was valid and some form subclass implementation of
+		// onSubmit() called super.onSubmit()
+		final Map files = ((MultipartWebRequest)getRequest()).getFiles();
+		for (final Iterator iterator = files.values().iterator(); iterator.hasNext();)
+		{
+			final FileItem fileItem = (FileItem)iterator.next();
+			long sizeInBytes = fileItem.getSize();
+			if (sizeInBytes > 0) // only process when there's anything uploaded at all
+			{
+				// save the upload to FS
+				saveFile(fileItem, new File(uploadFolder, fileItem.getName()));
+			}
+		}
 	}
 
 	/**
