@@ -7,6 +7,14 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="">
+    	Fix for unreported synchronization bug in ModificationWatcher where a 
+    	ConcurrentModificationException can be thrown if the entries to be watched
+    	are modified while polling is going on (which takes a while).  The solution
+    	was to make a defensive copy rather than holding a lock since that might
+    	introduce liveness issues since iterating the list of files and checking
+    	all their timestamps might take a while.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
 		Reworked signin panel and signin examples, including the library example so 
 		that they work with the new session factory model.  Also added remember me
