@@ -18,7 +18,6 @@
 package wicket;
 
 import java.io.Serializable;
-import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -126,32 +125,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		super(null, object, expression);
 		addToSession();
-	}
-
-	/**
-	 * Detach models from this page, including any models used by component
-	 * attribute modifiers.
-	 */
-	public final void detachModels()
-	{
-		visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				component.detachModel();
-
-				// Also detach models from any contained attribute modifiers
-				if (component.attributeModifiers != null)
-				{
-					for (Iterator iterator = component.attributeModifiers.iterator(); iterator
-							.hasNext();)
-					{
-						((AttributeModifier)iterator.next()).detachModel();
-					}
-				}
-				return CONTINUE_TRAVERSAL;
-			}
-		});
 	}
 
 	/**
@@ -286,23 +259,19 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public void render()
 	{
-		try
-		{
-			super.render();
+		// Render markup in page
+		super.render();
 
-			// If the application wants component uses checked and
-			// the response is not a redirect
-			if (getApplicationSettings().getComponentUseCheck() && !getResponse().isRedirect())
-			{
-				// Visit components on page
-				checkRendering(this);
-			}
-		}
-		finally
+		// If the application wants component uses checked and
+		// the response is not a redirect
+		if (getApplicationSettings().getComponentUseCheck() && !getResponse().isRedirect())
 		{
-			// Be sure to detach models
-			detachModels();
+			// Visit components on page
+			checkRendering(this);
 		}
+		
+		// Reset page for future use
+		reset();
 	}
 
 	/**
@@ -339,7 +308,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Set response locale from session locale
 		response.setLocale(getSession().getLocale());
 	}
-	
+
 	/**
 	 * @see wicket.Component#initModel()
 	 */
@@ -347,7 +316,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return null;
 	}
-	
+
 	/**
 	 * Renders this container to the given response object.
 	 */
@@ -369,21 +338,23 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * Reset at end of request by resetting each component on the page
+	 */
+	protected void onReset()
+	{
+		// Reset the page container
+		super.onReset();
+
+		// Clear all feedback messages
+		getFeedbackMessages().clear();
+	}
+
+	/**
 	 * Reset this page. Called if rendering is interrupted by an exception to
 	 * put the page back into a state where it can function again.
 	 */
-	final void reset()
+	final void resetMarkupStreams()
 	{
-		try
-		{
-			// Models should be detached
-			detachModels();
-		}
-		catch (RuntimeException e1)
-		{
-			log.debug("Error detaching models when exception is thrown", e1);
-		}
-
 		// When an exception is thrown while rendering a page, there may
 		// be invalid markup streams set on various containers. We need
 		// to reset these to null to ensure they get recreated correctly.
@@ -396,7 +367,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-
 	}
 
 	/**

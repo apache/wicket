@@ -256,7 +256,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		onValidate();
 
 		// Update validation feedback no matter how the form was validated
-		updateValidationFeedback();
+		addValidationFeedback();
 	}
 
 	/**
@@ -408,6 +408,32 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
+	 * Updates feedback on each feedback component on or attached to the form.
+	 */
+	private void addValidationFeedback()
+	{
+		// Traverse children of this form, calling validationError() on any
+		// components implementing IValidationFeedback.
+		visitChildren(IValidationFeedback.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Call validation error handler
+				((IValidationFeedback)component).addValidationFeedback(Form.this);
+
+				// Traverse all children
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+
+		// Call the validation handler that is registered with this form, if any
+		if (validationFeedback != null)
+		{
+			validationFeedback.addValidationFeedback(this);
+		}
+	}
+
+	/**
 	 * @return Number of buttons on this form
 	 */
 	private int countButtons()
@@ -552,32 +578,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
-
-	/**
-	 * Updates feedback on each feedback component on or attached to the form.
-	 */
-	private void updateValidationFeedback()
-	{
-		// Traverse children of this form, calling validationError() on any
-		// components implementing IValidationFeedback.
-		visitChildren(IValidationFeedback.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Call validation error handler
-				((IValidationFeedback)component).updateValidationFeedback(Form.this);
-
-				// Traverse all children
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-
-		// Call the validation handler that is registered with this form, if any
-		if (validationFeedback != null)
-		{
-			validationFeedback.updateValidationFeedback(this);
-		}
 	}
 
 	static

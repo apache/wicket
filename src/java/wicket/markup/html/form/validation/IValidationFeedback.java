@@ -38,10 +38,10 @@ import wicket.markup.html.form.Form;
 public interface IValidationFeedback
 {
 	/**
-	 * Called to update validation feedback
+	 * Called to add validation feedback from a form
 	 * 
 	 * @param form
 	 *            The form attached to this validation feedback component
 	 */
-	public void updateValidationFeedback(Form form);
+	public void addValidationFeedback(Form form);
 }

@@ -116,7 +116,7 @@ public abstract class MarkupContainer extends Component
 		super(name);
 		optimize();
 	}
-	
+
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
@@ -526,6 +526,22 @@ public abstract class MarkupContainer extends Component
 	protected void onRender()
 	{
 		renderAll(findMarkupStream());
+	}
+
+	/**
+	 * @see wicket.Component#onReset()
+	 */
+	protected void onReset()
+	{
+		// Reset this container component
+		super.onReset();
+		
+		// Iterate through children on this container
+		for (Iterator iterator = iterator(); iterator.hasNext();)
+		{
+			// Reset child
+			((Component)iterator.next()).reset();
+		}
 	}
 
 	/**

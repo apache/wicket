@@ -420,47 +420,22 @@ public abstract class RequestCycle
 		// can be rendered at a time for a given session.
 		synchronized (session)
 		{
-			// Restore the transient application association with the session
-			session.setApplication(application);
-
-			// Set this request cycle as the active request cycle for the
-			// session for easy access by the page being rendered and any
-			// components on that page
-			session.setRequestCycle(this);
+			// Attach thread local resources for request
+			threadAttach();
 
 			try
 			{
 				// Render response for request cycle
 				onRender();
 			}
-			catch (StackOverflowError e)
-			{
-				throw new ServletException("Wicket could not render page", e);
-			}
 			catch (RuntimeException e)
 			{
-				// Reset page for re-rendering after exception
-				Page currentPage = getPage();
-                                
-                // Could be null when it expired
-				if (currentPage != null) 
-				{
-					currentPage.reset();
-				}
-
-				// Handle the exception
-				onException(e);
+				// Handle any runtime exception
+				onRuntimeException(e);
 			}
 			finally
 			{
-				// Close the response
-				response.close();
-
-				// Set the active request cycle back to null since we are
-				// done rendering the requested page
-				session.setRequestCycle(null);
-
-				// Thread is done and should release thread local resources
+				// Release thread local resources
 				threadDetach();
 			}
 		}
@@ -568,13 +543,12 @@ public abstract class RequestCycle
 	/**
 	 * Sets up to handle a runtime exception thrown during rendering
 	 *
-	 * @param throwable
+	 * @param e
 	 *            The exception
 	 * @throws ServletException The exception rethrown for the servlet container
 	 */
-	private final void onException(final Throwable throwable) throws ServletException
+	private final void onRuntimeException(final RuntimeException e) throws ServletException
 	{
-		// Render a page for the user
 		try
 		{
 			// If application doesn't want debug info showing up for users
@@ -589,7 +563,7 @@ public abstract class RequestCycle
 				else
 				{
 					// otherwise show full details
-					setPage(new ExceptionErrorPage(throwable, getPage()));
+					setPage(new ExceptionErrorPage(e, getPage()));
 				}
 				
 				// We generally want to redirect the response because we were
@@ -608,9 +582,32 @@ public abstract class RequestCycle
 			// will not want to be distracted by any internal problems rendering
 			// a runtime exception error display page.
 		}
+		
+		// Reset page for re-rendering after exception
+		final Page currentPage = getPage();
+                        
+        // Could be null when it expired
+		if (currentPage != null) 
+		{
+			currentPage.resetMarkupStreams();
+		}
 
 		// Rethrow error for console / container
-		throw new ServletException("Wicket could not render page", throwable);
+		throw new ServletException("Wicket could not render page", e);
+	}
+
+	/**
+	 * Attach thread
+	 */
+	private void threadAttach()
+	{
+		// Restore the transient application association with the session
+		session.setApplication(application);
+		
+		// Set this request cycle as the active request cycle for the
+		// session for easy access by the page being rendered and any
+		// components on that page
+		session.setRequestCycle(this);
 	}
 
 	/**
@@ -621,6 +618,9 @@ public abstract class RequestCycle
 	 */
 	private void threadDetach()
 	{
+		// Close the response
+		response.close();
+		
 		if (getRedirect())
 		{
 			// Since we are explicitly redirecting to a page already, we do not
@@ -630,7 +630,9 @@ public abstract class RequestCycle
 
 		// Clear ThreadLocal reference
 		current.set(null);
+
+		// Set the active request cycle back to null since we are
+		// done rendering the requested page
+		session.setRequestCycle(null);
 	}
 }
-
-

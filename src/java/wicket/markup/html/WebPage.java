@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.8 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,39 +50,43 @@ public class WebPage extends Page
 	}
 
 	/**
-     * @see Page#Page(IModel)
+	 * @see Page#Page(IModel)
 	 */
 	protected WebPage(final IModel model)
 	{
 		super(model);
-	}	
+	}
 
 	/**
-     * @see Page#Page(Serializable)
+	 * @see Page#Page(Serializable)
 	 */
 	protected WebPage(final Serializable object)
 	{
 		super(object);
-	}	
-	
+	}
+
 	/**
-     * @see Page#Page(Serializable, String)
+	 * @see Page#Page(Serializable, String)
 	 */
 	protected WebPage(final Serializable object, final String expression)
 	{
 		super(object, expression);
-	}	
+	}
 
 	/**
-	 * Gets the markup type for this component. Pages which return
-	 * XML, RSS or whatever may replace the markup type returned.
+	 * Gets the markup type for a WebPage, which is always "html" (and thus the
+	 * method is final here). Support for pages in another markup language, such
+	 * as VXML, would require the creation of a different Page subclass in an
+	 * appropriate package under wicket.markup. To support VXML (voice markup),
+	 * one might create the package wicket.markup.vxml and a subclass of Page
+	 * called VoicePage.
 	 * <p>
-	 * Note: The markup type must be equal to the extension of the
-	 *   markup file.
+	 * Note: The markup type must be equal to the extension of the markup file.
+	 * In the case of WebPages, it must always be "html".
 	 * 
 	 * @return Markup type for HTML
 	 */
-	protected String getMarkupType()
+	protected final String getMarkupType()
 	{
 		return "html";
 	}
