@@ -375,6 +375,11 @@ public class HtmlDocumentValidator
                         }
 
                         String value = (String)actualAttributes.get(name);
+                        if (value == null)
+                        {
+                        	System.err.println("Attribute " + name + " was expected but not found");
+                        	valid = false;
+                        }
                         if (!value.matches(pattern))
                         {
                             System.err.println("The value '" + value + "' of attribute '" + name
