@@ -176,19 +176,18 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     public abstract void updateModel();
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "select");
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
     }
 
     /**
-     * @see wicket.Component#handleBody(wicket.RequestCycle, wicket.markup.MarkupStream,
-     *      wicket.markup.ComponentTag)
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    protected final void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
+    protected final void handleBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
         final StringBuffer options = new StringBuffer();
@@ -242,12 +241,12 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
         }
 
         options.append("\n");
-        replaceBody(cycle, markupStream, openTag, options.toString());
+        replaceBody(markupStream, openTag, options.toString());
 
         // Deattach the list after this. Check if this is the right place!
         if (list instanceof IIdList)
         {
-            ((IIdList) list).detach(cycle);
+            ((IIdList)list).detach(getRequestCycle());
         }
     }
 

@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.link;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
@@ -51,9 +50,9 @@ public class ExternalLink extends HtmlContainer
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(wicket.RequestCycle, wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
-    protected void handleComponentTag(RequestCycle cycle, ComponentTag tag)
+    protected void handleComponentTag(ComponentTag tag)
     {
         if (href != null)
         {
@@ -62,13 +61,13 @@ public class ExternalLink extends HtmlContainer
     }
 
     /**
-     * @see wicket.Component#handleBody(wicket.RequestCycle, wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+     * @see wicket.Component#handleBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected void handleBody(RequestCycle cycle, MarkupStream markupStream,
+    protected void handleBody(MarkupStream markupStream,
             ComponentTag openTag)
     {
         this.checkTag(openTag, "a");
-        replaceBody(cycle, markupStream, openTag, label);
+        replaceBody(markupStream, openTag, label);
     }
 }
 

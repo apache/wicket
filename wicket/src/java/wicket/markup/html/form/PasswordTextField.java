@@ -24,12 +24,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.RenderException;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
-
 
 /**
  * A password text field component. As you type, characters show up as asterisks or some
@@ -122,13 +120,13 @@ public final class PasswordTextField extends FormComponent implements FormCompon
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "input");
         checkAttribute(tag, "type", "password");
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
 		if (isResetPassword())
 		{
 			tag.put("value", "");

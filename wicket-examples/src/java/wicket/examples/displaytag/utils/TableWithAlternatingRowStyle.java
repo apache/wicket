@@ -21,7 +21,6 @@ package wicket.examples.displaytag.utils;
 import java.io.Serializable;
 import java.util.List;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
@@ -65,13 +64,13 @@ public abstract class TableWithAlternatingRowStyle extends ListView
         // every other Cell.
         return new ListItem(index, this)
         {
-            protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+            protected void handleComponentTag(final ComponentTag tag)
             {
                 // add/modify the attribute controlling the CSS style
                 tag.put("class", this.isEvenIndex() ? "even" : "odd");
                 
                 // continue with default behaviour
-                super.handleComponentTag(cycle, tag);
+                super.handleComponentTag(tag);
             }
         };
     }

@@ -21,12 +21,10 @@ package wicket.markup.html.table;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
-
 
 /**
  * This is a convenient component to create sorted table headers very easily.
@@ -64,10 +62,9 @@ public class SortableTableHeaders extends HtmlContainer
     /**
      * Scan the related markup and attach a SortableTableHeader to each 
      * &lt;th&gt; tag found.
-     *   
-     * @see wicket.Component#handleRender(wicket.RequestCycle)
+     * @see wicket.Component#handleRender()
      */
-    protected void handleRender(RequestCycle cycle)
+    protected void handleRender()
     {
         // Allow anonmous class to access 'this' methods with same name
         final SortableTableHeaders me = this;
@@ -121,7 +118,7 @@ public class SortableTableHeaders extends HtmlContainer
         markupStream.setCurrentIndex(markupStart);
 
         // Continue with default behaviour
-        super.handleRender(cycle);
+        super.handleRender();
     }
 
     /**

@@ -19,12 +19,10 @@
 package wicket.markup.html.border;
 
 import wicket.Container;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
-
 
 /**
  * A border component has associated markup which is drawn and determines placement of any
@@ -114,18 +112,15 @@ public abstract class Border extends HtmlContainer
     }
 
     /**
-     * @see wicket.Component#handleBody(wicket.RequestCycle,
-     *      wicket.markup.MarkupStream,
-     *      wicket.markup.ComponentTag)
+     * @see wicket.Component#handleBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected final void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-            final ComponentTag openTag)
+    protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
         // Save open tag for callback later to render body
         this.openTag = openTag;
 
         // Render the associated markup
-        renderAssociatedMarkup(cycle, "border",
+        renderAssociatedMarkup("border",
                 "Markup for a border component must begin a tag like '<wicket:border>'");
     }
 
@@ -144,13 +139,12 @@ public abstract class Border extends HtmlContainer
 	 * where to insert the border's body. As [body] is a special component
 	 * name and Container is not able to handle it, we will do.
 	 *  
-	 * @param cycle The current request cycle
 	 * @param markupStream The current markup stream
 	 * @param tag The current component tag
 	 * @return true, if Container was able to resolve the component name 
 	 * 		and to render the component
 	 */
-	protected boolean resolveComponent(final RequestCycle cycle, final MarkupStream markupStream, final ComponentTag tag)
+	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// If it's a [body] tag
 		if (!tag.getComponentName().equals("[body]") &&
@@ -165,7 +159,7 @@ public abstract class Border extends HtmlContainer
 		}
 		
 		// Render the children tag
-		renderTag(cycle, tag);
+		renderTag(tag);
 		markupStream.next();
 
 		// Find nearest Border at or above this container
@@ -198,7 +192,7 @@ public abstract class Border extends HtmlContainer
 		// Draw the children of the border component using its
 		// original in-line
 		// markup stream (not the border's associated markup stream)
-		border.renderBody(cycle, border.findMarkupStream(), border.getOpenTag());
+		border.renderBody(border.findMarkupStream(), border.getOpenTag());
 
 		// Restore border markup so it can continue rendering
 		border.setMarkupStream(borderMarkup);

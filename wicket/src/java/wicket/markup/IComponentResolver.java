@@ -19,7 +19,6 @@
 package wicket.markup;
 
 import wicket.Container;
-import wicket.RequestCycle;
 
 /**
  * ApplicationSettings maintains a list of IComponentNameResolvers.
@@ -32,18 +31,16 @@ public interface IComponentResolver
 {
     /**
      * Try to resolve the component name, then create a component, add it 
-     * to the container and render the compoent.
-     * @param cycle The current RequestCycle 
+     * to the container and render the component.
+     * @param container The container parsing its markup
      * @param markupStream The current markupStream
      * @param tag The current component tag while parsing the markup
-     * @param container The container parsing its markup
      * @return True if componentName was handled by the resolver, false otherwise.
      */
 	public boolean resolve(
-	        final RequestCycle cycle, 
+            final Container container,
 	        final MarkupStream markupStream, 
-	        final ComponentTag tag, 
-	        final Container container);
+	        final ComponentTag tag);
 }
 
 

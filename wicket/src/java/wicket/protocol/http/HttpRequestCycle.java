@@ -38,7 +38,6 @@ import wicket.RenderException;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.markup.html.form.Form;
-import wicket.response.NullResponse;
 import wicket.util.io.Streams;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
@@ -178,7 +177,7 @@ public class HttpRequestCycle extends RequestCycle
     					else
     					{
     						// render the page
-    						page.render(this);
+    						page.render();
     					}
     				}
     			}
@@ -199,15 +198,6 @@ public class HttpRequestCycle extends RequestCycle
                 session.setRequestCycle(null);
             }
 		}
-	}
-
-	/**
-	 * @return A copy of this request cycle object with a NULL response
-	 */
-	protected RequestCycle nullResponse()
-	{
-		return new HttpRequestCycle(application, (HttpSession)session, (HttpRequest)request,
-				NullResponse.getInstance());
 	}
 
 	/**

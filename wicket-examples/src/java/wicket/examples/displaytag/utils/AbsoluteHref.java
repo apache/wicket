@@ -18,13 +18,11 @@
  */
 package wicket.examples.displaytag.utils;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
 import wicket.protocol.http.HttpRequest;
 import wicket.protocol.http.HttpRequestCycle;
-
 
 /**
  * @author Juergen Donnerstag
@@ -44,17 +42,16 @@ public class AbsoluteHref extends HtmlComponent
     }
     
     /**
-     * 
-     * @see wicket.Component#handleComponentTag(wicket.RequestCycle, wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
-    protected void handleComponentTag(RequestCycle cycle, ComponentTag tag)
+    protected void handleComponentTag(ComponentTag tag)
     {
         String href = tag.getString("href");
         if (href.charAt(0) != '/')
         {
-            HttpRequestCycle hcycle = (HttpRequestCycle)cycle;
+            HttpRequestCycle hcycle = (HttpRequestCycle)getRequestCycle();
             String requestUrl = ((HttpRequest)hcycle.getRequest()).getServletRequest().getRequestURL().toString();
-            String urlPrefix = ((HttpRequestCycle)cycle).urlPrefix().toString();
+            String urlPrefix = hcycle.urlPrefix().toString();
             int idx = requestUrl.indexOf(urlPrefix);
             if (idx > 0)
             {
@@ -64,16 +61,14 @@ public class AbsoluteHref extends HtmlComponent
             tag.put("href", href);
         }
         
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
     }
 
     /**
      * 
-     * @see wicket.Component#handleBody(wicket.RequestCycle, wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+     * @see wicket.Component#handleBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected void handleBody(RequestCycle cycle,
-            MarkupStream markupStream, ComponentTag openTag)
+    protected void handleBody(MarkupStream markupStream, ComponentTag openTag)
     {
-        ; // nothting to do
     }
 }

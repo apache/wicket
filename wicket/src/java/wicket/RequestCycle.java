@@ -564,12 +564,6 @@ public abstract class RequestCycle
     }
 
     /**
-     * Gets a null response.
-     * @return A copy of this request cycle object with a NULL response
-     */
-    protected abstract RequestCycle nullResponse();
-
-    /**
      * Redirects browser to the given page.
      * @param page The page to redirect to
      */

@@ -21,7 +21,6 @@ package wicket.examples.pub;
 import java.util.Locale;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.Session;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
@@ -92,18 +91,20 @@ public final class Home extends HtmlPage
     }
 
     /**
-     * @see wicket.Container#handleRender(wicket.RequestCycle)
+     * @see wicket.Container#handleRender()
      */
-    protected void handleRender(final RequestCycle cycle)
+    protected void handleRender()
     {
-        final Session session = cycle.getSession();
-        // keep the current locale
+        final Session session = getSession();
+
+        // Keep the current locale
         Locale userLocale = session.getLocale();
-        // replace the locale for rendering
+        
+        // Replace the locale for rendering
         session.setLocale(currentLocale);
         try
         {
-            super.handleRender(cycle);
+            super.handleRender();
         }
         finally
         {

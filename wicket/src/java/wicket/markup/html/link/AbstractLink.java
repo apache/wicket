@@ -114,12 +114,11 @@ public abstract class AbstractLink extends HtmlContainer implements ILinkListene
 
     /**
      * Gets the url to use for this link.
-     * @param cycle Request cycle
      * @return The URL that this link links to
      */
-    protected String getURL(final RequestCycle cycle)
+    protected String getURL()
     {
-        return cycle.urlFor(AbstractLink.this, ILinkListener.class);
+        return getRequestCycle().urlFor(AbstractLink.this, ILinkListener.class);
     }
 
 

@@ -21,7 +21,6 @@ package wicket.examples.library;
 import java.util.Iterator;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -93,15 +92,6 @@ public final class BookDetails extends AuthenticatedHtmlPage
 
         add(writingStylesLabel.add(italic));
         add(EditBook.link("edit", book.getId()));
-    }
-
-    public static void setPage(final RequestCycle cycle, final Book book)
-    {
-        PageParameters parameters = new PageParameters();
-
-        parameters.put("id", new Long(book.getId()));
-        cycle.setPage(cycle.getPageFactory().newPage(BookDetails.class, parameters));
-        cycle.setRedirect(true);
     }
 
     /**

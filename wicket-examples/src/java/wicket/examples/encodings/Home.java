@@ -24,11 +24,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
-import wicket.protocol.http.HttpResponse;
-
 
 /**
  * Everybody's favorite example.
@@ -52,20 +49,19 @@ public class Home extends HtmlPage
      * deployment descriptors, this is a workaround for 
      * servlet 2.3 
      */
-    protected void configureResponse(final RequestCycle cycle)
+    protected void configureResponse()
     {
-        final Locale orgLocale = cycle.getSession().getLocale();
-        cycle.getSession().setLocale(Locale.GERMANY);
-    	super.configureResponse(cycle);
+        final Locale originalLocale = getSession().getLocale();
+        getSession().setLocale(Locale.GERMANY);
+    	super.configureResponse();
     	
     	final String encoding = "text/" 
     		+ getMarkupType() 
 			+ "; charset=" 
-			+ CharSetUtil.configureResponse(cycle);;
+			+ CharSetUtil.configureResponse(getRequestCycle());
     	
-    	((HttpResponse)cycle.getResponse()).setContentType(encoding);
-
-    	cycle.getSession().setLocale(orgLocale);
+    	getResponse().setContentType(encoding);
+    	getSession().setLocale(originalLocale);
     }
 }
 

@@ -23,13 +23,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import wicket.RenderException;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
-
 
 /**
  * If you have email addresses or web URLs in the data that you are displaying, 
@@ -135,15 +133,13 @@ public final class SmartLinkLabel extends Label
     }
 
     /**
-     * @see wicket.Component#handleBody(wicket.RequestCycle,
-     *      wicket.markup.MarkupStream,
-     *      wicket.markup.ComponentTag)
+     * @see wicket.Component#handleBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
+    protected void handleBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
         String body = smartLink(getModelObjectAsString());
-        replaceBody(cycle, markupStream, openTag, body);
+        replaceBody(markupStream, openTag, body);
     }
     
     /**

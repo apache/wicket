@@ -20,7 +20,6 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
@@ -122,15 +121,14 @@ public abstract class OnClickLink extends AbstractLink
 
     /**
 	 * Processes the component tag.
-	 * @param cycle Request cycle
 	 * @param tag Tag to modify
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
         // Add simple javascript on click handler that links to this
         // link's linkClicked method
-        final String url = getURL(cycle).replaceAll("&", "&amp;");
+        final String url = getURL().replaceAll("&", "&amp;");
         PopupSpecification popupSpecification = getPopupSpecification();
         if (popupSpecification != null)
         {

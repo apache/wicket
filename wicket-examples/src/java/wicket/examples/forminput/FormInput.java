@@ -29,7 +29,6 @@ import java.util.Map;
 
 import wicket.FeedbackMessages;
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.DropDownChoice;
@@ -46,7 +45,6 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
-import wicket.protocol.http.HttpRequest;
 
 /**
  * Example for form input.
@@ -73,17 +71,21 @@ public class FormInput extends HtmlPage
 	    FeedbackPanel feedback = new FeedbackPanel("feedback");
 	    add(feedback);
         add(new InputForm("inputForm", feedback));
-        currentLocale = RequestCycle.get().getSession().getLocale();
+        currentLocale = getSession().getLocale();
         add(new LocaleSelect("localeSelect", this, "currentLocale", ALL_LOCALES));
-        add(new Link("defaultLocaleLink"){
-
+        add(new Link("defaultLocaleLink")
+        {
 			public void linkClicked()
 			{
-				Locale requestLocale = ((HttpRequest)getRequestCycle().getRequest()).getLocale();
+                // Get locale of request
+				final Locale requestLocale = getRequest().getLocale();
+                
+                // Set current locale
 				FormInput.this.currentLocale = requestLocale;
+                
+                // Change session locale
 				getSession().setLocale(requestLocale);
 			}
-        	
         });
     }
 

@@ -22,7 +22,6 @@ import java.io.Serializable;
 
 import javax.swing.tree.TreePath;
 
-import wicket.RequestCycle;
 import wicket.markup.html.link.AbstractLink;
 import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.link.Link;
@@ -121,12 +120,11 @@ public abstract class AbstractTreeNodeLink extends AbstractLink
     }
 
     /**
-     * @param cycle Request cycle
      * @return The URL that this link links to
      */
-    protected String getURL(final RequestCycle cycle)
+    protected String getURL()
     {
-        return cycle.urlFor(tree, ILinkListener.class)
+        return getRequestCycle().urlFor(tree, ILinkListener.class)
         	+ "&" + REQUEST_PARAMETER_LINK_ID + "=" + id;
     }
 

@@ -19,7 +19,6 @@
 package wicket.examples.hellomozilla;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -47,12 +46,11 @@ public class HelloMozilla extends HtmlPage
 
     /**
      * Set-up response header for using XUL.
-     * @param cycle the request cycle
      */
-    protected void configureResponse(final RequestCycle cycle)
+    protected void configureResponse()
     {
-    	((HttpResponse)cycle.getResponse()).setLocale(cycle.getSession().getLocale());
-    	cycle.getResponse().setContentType("application/vnd.mozilla.xul+xml");    	
+    	((HttpResponse)getResponse()).setLocale(getSession().getLocale());
+    	getResponse().setContentType("application/vnd.mozilla.xul+xml");    	
     }
 
 	/**

@@ -89,15 +89,14 @@ public class AutolinkComponentResolver implements IComponentResolver
      * "[autolink:parameters]", where parameters can be a list of comma separated key
      * value pairs, such as "x=9,y=foo".
      * 
-     * @see wicket.markup.IComponentResolver#resolve(RequestCycle, MarkupStream, ComponentTag, Container)
-     * @param cycle The current RequestCycle 
+     * @see wicket.markup.IComponentResolver#resolve(Container, MarkupStream, ComponentTag)
      * @param markupStream The current markupStream
      * @param tag The current component tag while parsing the markup
      * @param container The container parsing its markup
      * @return true, if componentName was handle by the resolver. False, otherwise  
      */
-	public boolean resolve(final RequestCycle cycle, final MarkupStream markupStream,
-			final ComponentTag tag, final Container container)
+	public boolean resolve(final Container container, final MarkupStream markupStream,
+			final ComponentTag tag)
 	{
 	    // Get the component name to handle
 	    final String componentName = tag.getComponentName();
@@ -114,7 +113,7 @@ public class AutolinkComponentResolver implements IComponentResolver
             }
             
             // Try to find the Page matching the href
-            resolveAutomaticLink(cycle.getPage(), markupStream, componentName, tag);
+            resolveAutomaticLink(container.getPage(), markupStream, componentName, tag);
 
 	        // Make the compnentName (page-)unique
             final String id = "[autolink]-" + autoIndex;
@@ -137,7 +136,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 			}
 
 			// Render the Link
-			link.render(cycle);
+			link.render();
 
 			// Tell the container, we handled the componentName
 			return true;

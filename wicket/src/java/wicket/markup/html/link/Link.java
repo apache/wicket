@@ -22,11 +22,9 @@ import java.io.Serializable;
 
 import wicket.Container;
 import wicket.Page;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
-
 
 /**
  * Implementation of a hyperlink component. A link must be used with an anchor (&lt;a href...)
@@ -233,13 +231,11 @@ public abstract class Link extends AbstractLink
 
     /**
      * Renders this link's body.
-     * @param cycle the request cycle
      * @param markupStream the markup stream
      * @param openTag the open part of this tag
-     * @see wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    protected final void handleBody(final RequestCycle cycle,
-    		final MarkupStream markupStream, final ComponentTag openTag)
+    protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
         // Get disabled component of the same name with "Disabled" appended
         final Container disabledContainer = (Container)get("disabled");
@@ -264,32 +260,31 @@ public abstract class Link extends AbstractLink
         // Draw anything before the body?
         if (!enabled && (beforeDisabledLink != null))
         {
-            cycle.getResponse().write(beforeDisabledLink);
+            getResponse().write(beforeDisabledLink);
         }
 
         // Render the body of the link
-        renderBody(cycle, markupStream, openTag);
+        renderBody(markupStream, openTag);
 
         // Draw anything after the body?
         if (!enabled && (afterDisabledLink != null))
         {
-            cycle.getResponse().write(afterDisabledLink);
+            getResponse().write(afterDisabledLink);
         }
     }
 
     /**
      * Handles this link's tag.
-     * @param cycle the request cycle
      * @param tag the component tag
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
         // Can only attach links to anchor tags
         checkTag(tag, "a");
 
         // Default handling for tag
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
 
         // If we're auto-enabling
         if (autoEnable)
@@ -310,7 +305,7 @@ public abstract class Link extends AbstractLink
         else
         {
             // Set href to link to this link's linkClicked method
-            String url = getURL(cycle);
+            String url = getURL();
             url = url.replaceAll("&", "&amp;");
 			tag.put("href", url);
         }

@@ -26,14 +26,11 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.Page;
-import wicket.RequestCycle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
 import wicket.util.string.Strings;
-
-
 
 /**
  * This is a simple Wicket component displaying all components of a 
@@ -66,7 +63,7 @@ public class WicketComponentTree extends Panel
             // Assuming all other components are already populated
             // (and rendered), determine the components and fill
             // the 'our' model object.
-            protected void handleRender(final RequestCycle cycle)
+            protected void handleRender()
             {
                 // Get the components data and fill and sort the list
                 data.clear();
@@ -80,7 +77,7 @@ public class WicketComponentTree extends Panel
                 });
                 
                 // Keep on rendering the table
-                super.handleRender(cycle);
+                super.handleRender();
             }
             
             // Populate the table with Wicket elements

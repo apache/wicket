@@ -46,27 +46,25 @@ public class WicketTagComponentResolver implements IComponentResolver
     public static int autoIndex = 0;
 
     /**
-     * 
-     * @see wicket.markup.IComponentResolver#resolve(RequestCycle, MarkupStream, ComponentTag, Container)
-     * @param cycle The current RequestCycle 
+     * @see wicket.markup.IComponentResolver#resolve(Container, MarkupStream, ComponentTag)
+     * @param container The container parsing its markup
      * @param markupStream The current markupStream
      * @param tag The current component tag while parsing the markup
-     * @param container The container parsing its markup
      * @return true, if componentName was handle by the resolver. False, otherwise  
      */
-	public boolean resolve(final RequestCycle cycle, final MarkupStream markupStream,
-			final ComponentTag tag, final Container container)
+	public boolean resolve(final Container container, final MarkupStream markupStream,
+			final ComponentTag tag)
 	{
 	    if (tag instanceof ComponentWicketTag)
 	    {
-	        final ComponentWicketTag wicketTag = (ComponentWicketTag) tag;
+	        final ComponentWicketTag wicketTag = (ComponentWicketTag)tag;
 	        if (wicketTag.isComponentTag())
 	        {
 	            final Component component = createComponent(wicketTag);
 	            if (component != null)
 	            {
 	                container.add(component);
-	                component.render(cycle);
+	                component.render();
 	                return true;
 	            }
 	        }

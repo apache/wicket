@@ -31,7 +31,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
@@ -59,11 +58,11 @@ public abstract class AbstractUploadForm extends Form
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
         tag.put("enctype", "multipart/form-data");
     }
 
@@ -75,7 +74,7 @@ public abstract class AbstractUploadForm extends Form
     {
 		try
         {
-			HttpServletRequest request = ((HttpRequest)getRequestCycle().getRequest()).getServletRequest();
+			HttpServletRequest request = ((HttpRequest)getRequest()).getServletRequest();
 			boolean isMultipart = FileUpload.isMultipartContent(request);
 			if(!isMultipart)
 			{

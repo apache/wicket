@@ -409,14 +409,14 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	}
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "form");
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
         tag.put("method", "POST");
-        String url = cycle.urlFor(Form.this, IFormSubmitListener.class);
+        String url = getRequestCycle().urlFor(Form.this, IFormSubmitListener.class);
         url = url.replaceAll("&", "&amp;");
 		tag.put("action", url);
     }

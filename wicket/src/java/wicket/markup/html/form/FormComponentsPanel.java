@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.FeedbackMessages;
-import wicket.RequestCycle;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.validation.ValidationErrorMessage;
@@ -103,9 +102,8 @@ public abstract class FormComponentsPanel extends FormComponent
 
     /**
      * Renders this component like a {@link wicket.markup.html.panel.Panel}.
-     * @param cycle Response to write to
      */
-    protected final void handleRender(final RequestCycle cycle)
+    protected final void handleRender()
     {
         // Render the tag that included this html compoment
         final MarkupStream markupStream = findMarkupStream();
@@ -116,10 +114,10 @@ public abstract class FormComponentsPanel extends FormComponent
                     "A panel must be referenced by an openclose tag.");
         }
 
-        renderTag(cycle, markupStream);
+        renderTag(markupStream);
 
         // Render the associated markup
-        renderAssociatedMarkup(cycle, "panel",
+        renderAssociatedMarkup("panel",
                 "Markup for a panel component must begin with a component" +
                 "'<wicket:panel>'");
     }

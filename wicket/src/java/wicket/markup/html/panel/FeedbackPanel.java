@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.panel;
 
-import wicket.RequestCycle;
 import wicket.FeedbackMessage;
 import wicket.FeedbackMessages;
 import wicket.markup.ComponentTagAttributeModifier;
@@ -27,7 +26,6 @@ import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
 import wicket.model.IModel;
-
 
 /**
  * A simple panel that displays {@link wicket.FeedbackMessage}s.
@@ -130,11 +128,11 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
         /**
          * Removes all subcomponents on each render pass, to ensure that the
          * dynamic model is allways read again.
-         * @see wicket.Component#handleRender(wicket.RequestCycle)
+         * @see wicket.Component#handleRender()
          */
-        protected void handleRender(final RequestCycle cycle)
+        protected void handleRender()
         {
-            super.handleRender(cycle);
+            super.handleRender();
             removeAll();
         }
     }

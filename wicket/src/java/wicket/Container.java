@@ -405,29 +405,20 @@ public abstract class Container extends Component
 
 	/**
 	 * Handle the container's body.
-	 * 
-	 * @param cycle
-	 *           The request cycle
-	 * @param markupStream
-	 *           The markup stream
-	 * @param openTag
-	 *           The open tag for the body
+	 * @param markupStream The markup stream
+	 * @param openTag The open tag for the body
 	 */
-	protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		renderBody(cycle, markupStream, openTag);
+		renderBody(markupStream, openTag);
 	}
 
 	/**
 	 * Renders this component.
-	 * 
-	 * @param cycle
-	 *           The response to write to
 	 */
-	protected void handleRender(final RequestCycle cycle)
+	protected void handleRender()
 	{
-		renderAll(cycle, findMarkupStream());
+		renderAll(findMarkupStream());
 	}
 
 	/**
@@ -451,14 +442,12 @@ public abstract class Container extends Component
 	/**
 	 * Renders associated markup for a Border or Panel component.
 	 * 
-	 * @param cycle
-	 *           The request cycle
 	 * @param openTagName
 	 *           the tag to render the associated markup for
 	 * @param exceptionMessage
 	 *           message that will be used for exceptions
 	 */
-	protected final void renderAssociatedMarkup(final RequestCycle cycle, final String openTagName,
+	protected final void renderAssociatedMarkup(final String openTagName,
 			final String exceptionMessage)
 	{
 		// Get markup associated with Border or Panel component
@@ -479,24 +468,21 @@ public abstract class Container extends Component
 		    associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
 
-		renderTag(cycle, associatedMarkupStream, associatedMarkupOpenTag);
-		renderBody(cycle, associatedMarkupStream, associatedMarkupOpenTag);
-		renderCloseTag(cycle, associatedMarkupStream, associatedMarkupOpenTag);
+		renderTag(associatedMarkupStream, associatedMarkupOpenTag);
+		renderBody(associatedMarkupStream, associatedMarkupOpenTag);
+		renderCloseTag(associatedMarkupStream, associatedMarkupOpenTag);
 		setMarkupStream(originalMarkupStream);
 	}
 
 	/**
 	 * Renders markup until the closing tag for openTag is reached.
 	 * 
-	 * @param cycle
-	 *           The response to write to
 	 * @param markupStream
 	 *           The markup stream
 	 * @param openTag
 	 *           The open tag
 	 */
-	protected final void renderBody(final RequestCycle cycle, final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected final void renderBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// If the open tag requires a close tag
 		if (openTag.requiresCloseTag())
@@ -508,7 +494,7 @@ public abstract class Container extends Component
 				// stream
 				final int index = markupStream.getCurrentIndex();
 
-				renderNext(cycle, markupStream);
+				renderNext(markupStream);
 
 				if (index == markupStream.getCurrentIndex())
 				{
@@ -654,12 +640,10 @@ public abstract class Container extends Component
 	 * Renders this component and all sub-components using the given markup
 	 * stream.
 	 * 
-	 * @param cycle
-	 *           The response to write to
 	 * @param markupStream
 	 *           The markup stream
 	 */
-	final void renderAll(final RequestCycle cycle, final MarkupStream markupStream)
+	final void renderAll(final MarkupStream markupStream)
 	{
 		// Loop through the markup in this container
 		while (markupStream.hasMore())
@@ -667,7 +651,7 @@ public abstract class Container extends Component
 			// Element rendering is responsible for advancing markup stream!
 			final int index = markupStream.getCurrentIndex();
 
-			renderNext(cycle, markupStream);
+			renderNext(markupStream);
 
 			if (index == markupStream.getCurrentIndex())
 			{
@@ -795,12 +779,10 @@ public abstract class Container extends Component
 	/**
 	 * Renders the next element of markup in the given markup stream.
 	 * 
-	 * @param cycle
-	 *           The response to write to
 	 * @param markupStream
 	 *           The markup stream
 	 */
-	private void renderNext(final RequestCycle cycle, final MarkupStream markupStream)
+	private void renderNext(final MarkupStream markupStream)
 	{
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();
@@ -809,7 +791,7 @@ public abstract class Container extends Component
 		if ((element instanceof ComponentTag) && !markupStream.atCloseTag())
 		{
 			// Get element as tag
-			final ComponentTag tag = (ComponentTag) element;
+			final ComponentTag tag = (ComponentTag)element;
 			
 			// Get component name
 			final String componentName = tag.getComponentName();
@@ -825,7 +807,7 @@ public abstract class Container extends Component
 					log.debug("Begin render of sub-component " + component);
 				}
 
-				component.render(cycle);
+				component.render();
 
 				if (log.isDebugEnabled())
 				{
@@ -839,8 +821,8 @@ public abstract class Container extends Component
 			    final Iterator iter = componentResolvers.iterator();
 			    while (iter.hasNext())
 			    {
-			        final IComponentResolver resolver = (IComponentResolver) iter.next();
-			        if (resolver.resolve(cycle, markupStream, tag, this) == true)
+			        final IComponentResolver resolver = (IComponentResolver)iter.next();
+			        if (resolver.resolve(this, markupStream, tag) == true)
 			        {
 			            return;
 			        }
@@ -850,7 +832,7 @@ public abstract class Container extends Component
 			    Container container = this;
 			    while (container != null)
 			    {
-					if (container.resolveComponent(cycle, markupStream, tag) == true)
+					if (container.resolveComponent(markupStream, tag) == true)
 					{
 					    return;
 					}
@@ -867,7 +849,7 @@ public abstract class Container extends Component
 		{
 			// Render as raw markup
 			log.debug("Rendering raw markup");
-			cycle.getResponse().write(element.toString());
+			getResponse().write(element.toString());
 			markupStream.next();
 		}
 	}
@@ -878,13 +860,12 @@ public abstract class Container extends Component
 	 * @see wicket.markup.html.border.Border for an example.<p>
 	 * Note: resolveComponent must also render the components created
 	 *  
-	 * @param cycle The current request cycle
 	 * @param markupStream The current markup stream
 	 * @param tag The current component tag
 	 * @return true, if Container was able to resolve the component name 
 	 * 		and to render the component
 	 */
-	protected boolean resolveComponent(final RequestCycle cycle, final MarkupStream markupStream, final ComponentTag tag)
+	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
 	{
 	    return false;
 	}

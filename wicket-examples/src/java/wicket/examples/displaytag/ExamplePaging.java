@@ -77,7 +77,7 @@ public class ExamplePaging extends Displaytag
             
         add(new Label("headline", null)
         {
-            protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
+            protected void handleBody(final MarkupStream markupStream,
                     final ComponentTag openTag)
             {
                 String text = 
@@ -88,7 +88,7 @@ public class ExamplePaging extends Displaytag
                     + String.valueOf(table.getFirstCell() + table.getWindowSize())
                     + ".";
                 
-                replaceBody(cycle, markupStream, openTag, text);
+                replaceBody(markupStream, openTag, text);
             }
         });
         

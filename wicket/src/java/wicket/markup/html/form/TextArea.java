@@ -21,7 +21,6 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -107,13 +106,11 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
     }
 
     /**
-     * @see wicket.Component#handleBody(RequestCycle, MarkupStream,
-     *      ComponentTag)
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-            final ComponentTag openTag)
+    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
-        replaceBody(cycle, markupStream, openTag, getModelObjectAsString());
+        replaceBody(markupStream, openTag, getModelObjectAsString());
     }
 
     /**

@@ -18,12 +18,9 @@
  */
 package wicket.markup.html.form;
 
-
 import java.io.Serializable;
-
 import java.util.Collection;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
@@ -206,11 +203,11 @@ public final class ListChoice extends DropDownChoice implements FormComponent.IC
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
         tag.put("size", Math.min(maxRows, getValues().size()));
     }
     

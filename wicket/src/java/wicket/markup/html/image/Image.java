@@ -170,12 +170,12 @@ public class Image extends HtmlComponent implements IResourceListener
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(RequestCycle cycle, ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "img");
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
 
         final String resourceToLoad;
         final String imageResource = (String)getModelObject();
@@ -196,15 +196,14 @@ public class Image extends HtmlComponent implements IResourceListener
             throw new RenderException("Could not find image resource " + resourceToLoad);
         }
 
-        final String url = cycle.urlFor(this, IResourceListener.class);
+        final String url = getRequestCycle().urlFor(this, IResourceListener.class);
 		tag.put("src", url.replaceAll("&", "&amp;"));
     }
 
     /**
-     * @see wicket.Component#handleBody(RequestCycle, MarkupStream,
-     *      ComponentTag)
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    protected void handleBody(RequestCycle cycle, MarkupStream markupStream, ComponentTag openTag)
+    protected void handleBody(MarkupStream markupStream, ComponentTag openTag)
     {
     }
 

@@ -21,10 +21,8 @@ package wicket.markup.html.table;
 import java.util.List;
 
 import wicket.Container;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.util.collections.MicroMap;
-
 
 /**
  * Maintains a group of sortable table headers. By means of this group 
@@ -112,11 +110,10 @@ public class SortableTableHeaderGroup
 
     /**
      * Called by SortableTableHeader and may be subclassed for company standards.
-     * @param cycle
      * @param tag
      * @param style
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag, final String style)
+    protected void handleComponentTag(final ComponentTag tag, final String style)
     {
         if (style != null)
         {

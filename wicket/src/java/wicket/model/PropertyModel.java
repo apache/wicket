@@ -274,7 +274,7 @@ public class PropertyModel extends DetachableModel
     {
         if (model instanceof IDetachableModel)
         {
-            ((IDetachableModel) model).attach(cycle);
+            ((IDetachableModel)model).attach(cycle);
         }
 
         // save the reference to the current locale
@@ -295,7 +295,7 @@ public class PropertyModel extends DetachableModel
     {
         if (model instanceof IDetachableModel)
         {
-            ((IDetachableModel) model).detach(cycle);
+            ((IDetachableModel)model).detach(cycle);
         }
 
         // reset ognl context

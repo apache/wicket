@@ -26,11 +26,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.RenderException;
-import wicket.RequestCycle;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 import wicket.model.IModel;
-
 
 /**
  * A ListView holds ListItems of information. The listItem can be re-ordered 
@@ -286,10 +284,8 @@ public abstract class ListView extends HtmlContainer
     
     /**
      * Renders this ListView (container).
-     * 
-     * @param cycle The request cycle
      */
-    protected void handleRender(final RequestCycle cycle)
+    protected void handleRender()
     {
         // Ask parents for markup stream to use
         final MarkupStream markupStream = findMarkupStream();
@@ -325,7 +321,7 @@ public abstract class ListView extends HtmlContainer
 	            markupStream.setCurrentIndex(markupStart);
 	
 	            // Render cell
-	            renderItem(listItem, cycle, i >= (size - 1));
+	            renderItem(listItem, i >= (size - 1));
 	        }
         }
         else
@@ -336,19 +332,16 @@ public abstract class ListView extends HtmlContainer
 
     /**
      * Render a single listItem.
-     * 
      * @param listItem the listItem to be rendered
-     * @param cycle The request cycle
      * @param lastItem True, if item is last listItem in listView
      */
-    protected void renderItem(final ListItem listItem, final RequestCycle cycle, final boolean lastItem)
+    protected void renderItem(final ListItem listItem, final boolean lastItem)
     {
-        listItem.render(cycle);
+        listItem.render();
     }
     
     /**
      * Creates a new listItem  for the given listItem index of this listView.
-     * 
      * @param index ListItem index
      * @return The new ListItem
      */
@@ -361,7 +354,6 @@ public abstract class ListView extends HtmlContainer
     /**
      * Provide list object at index. May be subclassed for virtual list,
      * which don't implement List.
-     * 
      * @param index The list object's index
      * @return the model list's object
      */

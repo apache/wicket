@@ -20,7 +20,6 @@ package wicket.examples.hellomozilla;
 
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
@@ -106,25 +105,21 @@ public class XulDescription extends HtmlComponent
 
     /**
      * Allows modification of component tag.
-     * @param cycle The request cycle
      * @param tag The tag to modify
-     * @see wicket.Component#handleComponentTag(RequestCycle,
-     *      wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
-    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "description");
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
     }
 
     /**
-     * @see wicket.Component#handleBody(wicket.RequestCycle,
-     *      wicket.markup.MarkupStream,
+     * @see wicket.Component#handleBody(wicket.markup.MarkupStream,
      *      wicket.markup.ComponentTag)
      */
-    protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-            final ComponentTag openTag)
+    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
-        replaceBody(cycle, markupStream, openTag, getModelObjectAsString());
+        replaceBody(markupStream, openTag, getModelObjectAsString());
     }
 }

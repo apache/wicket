@@ -18,11 +18,9 @@
  */
 package wicket.markup.html;
 
-
 import java.io.Serializable;
 
 import wicket.Component;
-import wicket.RequestCycle;
 import wicket.model.IModel;
 
 /**
@@ -111,11 +109,10 @@ public abstract class HtmlComponent extends Component
 
     /**
      * Renders this component.
-     * @param cycle The request cycle
      */
-    protected void handleRender(final RequestCycle cycle)
+    protected void handleRender()
     {
-        renderComponent(cycle, findMarkupStream());
+        renderComponent(findMarkupStream());
     }
 }
 

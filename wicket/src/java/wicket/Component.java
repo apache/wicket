@@ -35,6 +35,7 @@ import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
+import wicket.response.NullResponse;
 import wicket.util.string.Strings;
 
 /**
@@ -448,6 +449,31 @@ public abstract class Component implements Serializable
 	{
 		return rendering;
 	}
+    
+    /**
+     * Gets the active request cycle for this component
+     * @return The request cycle
+     */
+    public final RequestCycle getRequestCycle()
+    {
+        return getSession().getRequestCycle();
+    }
+    
+    /**
+     * @return The request for this component's active request cycle
+     */
+    public final Request getRequest()
+    {
+        return getRequestCycle().getRequest();
+    }
+    
+    /**
+     * @return The response for this component's active request cycle
+     */
+    public final Response getResponse()
+    {
+        return getRequestCycle().getResponse();
+    }
 
 	/**
 	 * Gets the request parameter for this component as a string.
@@ -455,7 +481,7 @@ public abstract class Component implements Serializable
 	 */
 	public final String getRequestString()
 	{
-		return getRequestCycle().getRequest().getParameter(getPath());
+		return getRequest().getParameter(getPath());
 	}
 
 	/**
@@ -538,7 +564,7 @@ public abstract class Component implements Serializable
 	 */
 	public final String[] getRequestStrings()
 	{
-		return getRequestCycle().getRequest().getParameters(getPath());
+		return getRequest().getParameters(getPath());
 	}
 
 	/**
@@ -561,21 +587,12 @@ public abstract class Component implements Serializable
         
 		return session;
 	}
-    
-    /**
-     * Gets the active request cycle for this component
-     * @return The request cycle
-     */
-    public final RequestCycle getRequestCycle()
-    {
-        return getSession().getRequestCycle();
-    }
 
 	/**
 	 * Gets whether model strings should be escaped.
 	 * @return Returns whether model strings should be escaped
 	 */
-	public final boolean isShouldEscapeModelStrings()
+	public final boolean getShouldEscapeModelStrings()
 	{
 		return shouldEscapeModelStrings;
 	}
@@ -638,12 +655,26 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Performs a render of this component.
-	 * @param cycle The response to render to
 	 */
-	public void render(final RequestCycle cycle)
+	public void render()
 	{
+        // Get request cycle to render to
+        final RequestCycle cycle = getRequestCycle();
+        
+        // Save original Response
+        final Response originalResponse = cycle.getResponse();
+        
+        // If component is not visible, set response to NullResponse
+        if (!visible)
+        {
+            cycle.setResponse(NullResponse.getInstance());
+        }
+        
 		// Call implementation to render component
-		handleRender(visible ? cycle : cycle.nullResponse());
+		handleRender();
+        
+        // Restore original response
+        cycle.setResponse(originalResponse);
 
 		// Increase render count for component
 		rendering++;
@@ -774,32 +805,28 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Processes the body.
-	 * @param cycle The request cycle
 	 * @param markupStream The markup stream
 	 * @param openTag The open tag for the body
 	 */
-	protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		markupStream.throwMarkupException("No handleBody implementation found");
 	}
 
 	/**
 	 * Processes the component tag.
-	 * @param cycle Request cycle
 	 * @param tag Tag to modify
 	 */
-	protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+	protected void handleComponentTag(final ComponentTag tag)
 	{
 		// Optionally strip componentName tag
-		stripComponentName(cycle, tag);
+		stripComponentName(tag);
 	}
 
 	/**
 	 * Renders this component.
-	 * @param cycle The response to write to
 	 */
-	protected abstract void handleRender(final RequestCycle cycle);
+	protected abstract void handleRender();
 
 	/**
 	 * Invalidates the model attached to this component. Traverses all pages in the
@@ -858,16 +885,15 @@ public abstract class Component implements Serializable
 	 * method handleComponentTag() is called to allow the component to mutate the start
 	 * tag. The method handleBody() is then called to permit the component to render its
 	 * body.
-	 * @param cycle The response to write to
 	 * @param markupStream The markup stream
 	 */
-	protected final void renderComponent(final RequestCycle cycle, final MarkupStream markupStream)
+	protected final void renderComponent(final MarkupStream markupStream)
 	{
 		// Get mutable copy of next tag
 		final ComponentTag tag = markupStream.getTag().mutable();
 
 		// Call any tag handler
-		handleComponentTag(cycle, tag);
+		handleComponentTag(tag);
 
 		// If we're an openclose tag
 		final ComponentTag.Type type = tag.getType();
@@ -889,26 +915,25 @@ public abstract class Component implements Serializable
 		}
 
 		// Render open tag
-		renderTag(cycle, tag);
+		renderTag(tag);
 		markupStream.next();
 
 		// Render body using original tag type so implementors
 		// of handleBody will know if the tag has a body or not
 		tag.setType(type);
-		handleBody(cycle, markupStream, tag);
+		handleBody(markupStream, tag);
 
 		// Render close tag
-		renderCloseTag(cycle, markupStream, tag);
+		renderCloseTag(markupStream, tag);
 	}
 
 	/**
 	 * Writes a simple tag out to the response stream. Any components that might be
 	 * referenced by the tag are ignored. Also undertakes any tag attribute modifications
 	 * if they have been added to the component.
-	 * @param cycle The response stream
 	 * @param tag The tag to write
 	 */
-	protected final void renderTag(final RequestCycle cycle, ComponentTag tag)
+	protected final void renderTag(ComponentTag tag)
 	{
 		// Apply attribute tag modifiers
 		if (attributeModifiers != null && tag.getType() != ComponentTag.CLOSE)
@@ -921,46 +946,42 @@ public abstract class Component implements Serializable
 		}
 
 		// Write the tag
-		cycle.getResponse().write(tag);
+		getResponse().write(tag);
 	}
 
 	/**
 	 * Writes a simple tag out to the response stream. Any components that might be
 	 * referenced by the tag are ignored.
-	 * @param cycle The response stream
 	 * @param markupStream The markup stream to advance (where the tag came from)
 	 */
-	protected final void renderTag(final RequestCycle cycle, final MarkupStream markupStream)
+	protected final void renderTag(final MarkupStream markupStream)
 	{
-		renderTag(cycle, markupStream, markupStream.getTag());
+		renderTag(markupStream, markupStream.getTag());
 	}
 
 	/**
 	 * Writes a simple tag out to the response stream. Any components that might be
 	 * referenced by the tag are ignored.
-	 * @param cycle The response stream
 	 * @param markupStream The markup stream to advance (where the tag came from)
 	 * @param tag The tag to write
 	 */
-	protected final void renderTag(final RequestCycle cycle, final MarkupStream markupStream,
-			final ComponentTag tag)
+	protected final void renderTag(final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// Optionally strip componentName tag
-		stripComponentName(cycle, tag);
+		stripComponentName(tag);
 
 		// Write to output
-		renderTag(cycle, tag);
+		renderTag(tag);
 		markupStream.next();
 	}
 
 	/**
 	 * Replaces the body with the given one.
-	 * @param cycle The response stream
 	 * @param markupStream The markup stream to replace the tag body in
 	 * @param tag The tag
 	 * @param body The new markup
 	 */
-	protected final void replaceBody(final RequestCycle cycle, final MarkupStream markupStream,
+	protected final void replaceBody(final MarkupStream markupStream,
 			final ComponentTag tag, final String body)
 	{
 		// If tag has body
@@ -971,7 +992,7 @@ public abstract class Component implements Serializable
 		}
 
 		// Write the new body
-		cycle.getResponse().write(body);
+		getResponse().write(body);
 
 		// If we had an open tag (and not an openclose tag) and we found a
 		// close tag, we're good
@@ -1037,11 +1058,10 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Renders the close tag at the current position in the markup stream.
-	 * @param cycle request cycle
 	 * @param markupStream the markup stream
 	 * @param openTag the tag to render
 	 */
-	final void renderCloseTag(final RequestCycle cycle, final MarkupStream markupStream,
+	final void renderCloseTag(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
 		// Tag should be open tag and not openclose tag
@@ -1062,7 +1082,7 @@ public abstract class Component implements Serializable
 				}
 
 				// Render the close tag
-				renderTag(cycle, markupStream, closeTag);
+				renderTag(markupStream, closeTag);
 			}
 			else
 			{
@@ -1090,13 +1110,12 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Strips the component name of stuff we do not need.
-	 * @param cycle The request cycle
 	 * @param tag The tag to strip
 	 */
-	private void stripComponentName(final RequestCycle cycle, final ComponentTag tag)
+	private void stripComponentName(final ComponentTag tag)
 	{
 		// Strip component name attribute if desired
-		final ApplicationSettings settings = cycle.getApplication().getSettings();
+		final ApplicationSettings settings = getApplication().getSettings();
 		if (settings.getStripComponentNames())
 		{
 			// Get mutable copy of tag and remove component name

@@ -20,7 +20,6 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.validation.IValidator;
@@ -173,11 +172,11 @@ public abstract class FormComponent extends HtmlContainer
     }
     
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
         tag.put("name", getPath());
     }
 

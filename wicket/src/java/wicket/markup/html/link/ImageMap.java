@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
@@ -50,9 +49,9 @@ public final class ImageMap extends HtmlComponent
     }
 
     /**
-     * @see wicket.Component#handleRender(RequestCycle)
+     * @see wicket.Component#handleRender()
      */
-    protected void handleRender(final RequestCycle cycle)
+    protected void handleRender()
     {
         // Get markup stream
         final MarkupStream markupStream = findMarkupStream();
@@ -67,7 +66,7 @@ public final class ImageMap extends HtmlComponent
         tag.put("usemap", "#" + getPath());
 
         // Write out the tag
-        renderTag(cycle, markupStream, tag);
+        renderTag(markupStream, tag);
 
         // Write out the image map
         final StringBuffer imageMap = new StringBuffer();
@@ -79,11 +78,11 @@ public final class ImageMap extends HtmlComponent
             final ShapeLink shapeLink = (ShapeLink) iterator.next();
 
             imageMap.append('\n');
-            imageMap.append(shapeLink.toString(cycle));
+            imageMap.append(shapeLink.toString());
         }
 
         imageMap.append("\n</map>");
-        cycle.getResponse().write(imageMap.toString());
+        getResponse().write(imageMap.toString());
     }
 
     /**
@@ -163,10 +162,9 @@ public final class ImageMap extends HtmlComponent
         /**
          * The shape as a string using the given request cycle; will be used
          * for rendering.
-         * @param cycle the current request cycle
          * @return The shape as a string
          */
-        final String toString(final RequestCycle cycle)
+        public String toString()
         {
             //Add any popup script
             final String popupJavaScript;
@@ -182,7 +180,7 @@ public final class ImageMap extends HtmlComponent
 
             return "<area shape=\""
                     + getType() + "\"" + " coords=\"" + getCoordinates() + "\"" + " href=\""
-                    + link.getURL(cycle) + "\""
+                    + link.getURL() + "\""
                     + ((popupJavaScript == null) ? "" : (" onClick = \"" + popupJavaScript + "\""))
                     + ">";
         }

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.Page;
+import wicket.PageParameters;
+import wicket.RequestCycle;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -160,8 +162,11 @@ public final class EditBook extends AuthenticatedHtmlPage
          */
         public final void handleSubmit()
         {
-            // Go to details page for book
-            BookDetails.setPage(getRequestCycle(), book);
+            final RequestCycle cycle = getRequestCycle();
+            PageParameters parameters = new PageParameters();
+            parameters.put("id", new Long(book.getId()));
+            cycle.setPage(cycle.getPageFactory().newPage(BookDetails.class, parameters));
+            cycle.setRedirect(true);
         }
     }
 }
