@@ -62,8 +62,8 @@ public abstract class AbstractDetachableModel extends AbstractModel
 	{
 		if (attached)
 		{
-			onDetach();
 			attached = false;
+			onDetach();
 		}
 	}
 
