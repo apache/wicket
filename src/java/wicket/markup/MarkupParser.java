@@ -190,7 +190,7 @@ public final class MarkupParser
             if (add == true)
             {
                 final CharSequence text = 
-                    	xmlParser.getInputFromPositionMarker(tag.getXmlTag().getPos());
+                    	xmlParser.getInputFromPositionMarker(tag.getPos());
                 
                 // Add text from last position to tag position
                 if (text.length() > 0)
@@ -211,10 +211,13 @@ public final class MarkupParser
                     list.add(new RawMarkup(rawMarkup));
                 }
 
-                // Add immutable tag
-                tag.makeImmutable();
-                list.add(tag);
-
+                if (!"_ignore_".equals(tag.getComponentName()))
+                {
+	                // Add immutable tag
+	                tag.makeImmutable();
+	                list.add(tag);
+                }
+                
                 // Position is after tag
                 xmlParser.setPositionMarker();
             }
