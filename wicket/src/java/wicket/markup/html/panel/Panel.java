@@ -82,7 +82,7 @@ public class Panel extends HtmlContainer
 
         // Render the associated markup
         renderAssociatedMarkup(cycle, "panel",
-                "Markup for a panel component must begin with a component '<wicket:panel>'");
+                "Markup for a panel component must begin with '<wicket:panel>'");
     }
 }
 
