@@ -116,6 +116,15 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
+	 * @param sharedResource
+	 *            The shared ImageResource to set.
+	 */
+	public void setImageResource(final SharedResource sharedResource)
+	{
+		this.localizedImageResource.setResource(sharedResource);
+	}
+
+	/**
 	 * @return Resource returned from subclass
 	 */
 	protected Resource getImageResource()
