@@ -17,11 +17,14 @@
  */
 package wicket.markup.html.border;
 
+import java.io.Serializable;
+
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.model.IModel;
 
 /**
  * A border component has associated markup which is drawn and determines
@@ -75,10 +78,34 @@ public abstract class Border extends WebMarkupContainer
 	/**
      * @see wicket.Component#Component(String)
 	 */
-	public Border(final String componentName)
+	public Border(final String name)
 	{
-		super(componentName);
+		super(name);
 	}
+
+	/**
+     * @see wicket.Component#Component(String, IModel)
+	 */
+	public Border(final String name, final IModel model)
+	{
+		super(name, model);
+	}	
+
+	/**
+     * @see wicket.Component#Component(String, Serializable)
+	 */
+	public Border(final String name, final Serializable object)
+	{
+		super(name, object);
+	}	
+	
+	/**
+     * @see wicket.Component#Component(String, Serializable, String)
+	 */
+	public Border(final String name, final Serializable object, final String expression)
+	{
+		super(name, object, expression);
+	}	
 
 	/**
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,

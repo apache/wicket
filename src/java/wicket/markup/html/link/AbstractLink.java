@@ -39,9 +39,9 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractLink(String componentName)
+	public AbstractLink(String name)
 	{
-		super(componentName);
+		super(name);
 	}
 
 	/**

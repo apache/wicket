@@ -98,9 +98,9 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FeedbackPanel(final String componentName)
+	public FeedbackPanel(final String name)
 	{
-		super(componentName);
+		super(name);
 		this.messageListView = new MessageListView("messages");
 		add(messageListView);
 	}

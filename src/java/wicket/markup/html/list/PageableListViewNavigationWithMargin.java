@@ -44,15 +44,15 @@ public class PageableListViewNavigationWithMargin extends PageableListViewNaviga
 	/**
 	 * Construct.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The name of the component
 	 * @param pageableListView
 	 *            The PageableListView to navigate
 	 */
-	public PageableListViewNavigationWithMargin(final String componentName,
+	public PageableListViewNavigationWithMargin(final String name,
 			final PageableListView pageableListView)
 	{
-		super(componentName, pageableListView);
+		super(name, pageableListView);
 	}
 
 	/**

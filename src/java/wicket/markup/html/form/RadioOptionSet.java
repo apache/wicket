@@ -70,29 +70,29 @@ public class RadioOptionSet extends FormComponent
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The component name
 	 * @param values
 	 *            The option values
 	 */
-	public RadioOptionSet(final String componentName, final Collection values)
+	public RadioOptionSet(final String name, final Collection values)
 	{
-		this(componentName, values, LINE_BREAK);
+		this(name, values, LINE_BREAK);
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The component name
 	 * @param values
 	 *            The option values
 	 * @param style
 	 *            The style of layout
 	 */
-	public RadioOptionSet(final String componentName, final Collection values, final Style style)
+	public RadioOptionSet(final String name, final Collection values, final Style style)
 	{
-		super(componentName, new ArrayList(values));
+		super(name, new ArrayList(values));
 		this.style = style;
 	}
 

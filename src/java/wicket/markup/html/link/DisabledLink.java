@@ -33,11 +33,11 @@ public final class DisabledLink extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The name of this component
 	 */
-	public DisabledLink(final String componentName)
+	public DisabledLink(final String name)
 	{
-		super(componentName);
+		super(name);
 	}
 }

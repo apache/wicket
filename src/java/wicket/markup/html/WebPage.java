@@ -17,8 +17,11 @@
  */
 package wicket.markup.html;
 
+import java.io.Serializable;
+
 import wicket.Page;
 import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.model.IModel;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when
@@ -47,11 +50,35 @@ public class WebPage extends Page
 	}
 
 	/**
+     * @see Page#Page(IModel)
+	 */
+	protected WebPage(final IModel model)
+	{
+		super(model);
+	}	
+
+	/**
+     * @see Page#Page(Serializable)
+	 */
+	protected WebPage(final Serializable object)
+	{
+		super(object);
+	}	
+	
+	/**
+     * @see Page#Page(Serializable, String)
+	 */
+	protected WebPage(final Serializable object, final String expression)
+	{
+		super(object, expression);
+	}	
+
+	/**
 	 * Gets the markup type for this component.
 	 * 
 	 * @return Markup type for HTML
 	 */
-	public final String getMarkupType()
+	protected final String getMarkupType()
 	{
 		return "html";
 	}

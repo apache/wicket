@@ -78,9 +78,9 @@ public abstract class Link extends AbstractLink
 	/**
      * @see wicket.Component#Component(String)
 	 */
-	public Link(String componentName)
+	public Link(String name)
 	{
-		super(componentName);
+		super(name);
 	}
 
 	/**

@@ -40,20 +40,20 @@ public final class BookmarkablePageLink extends Link
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The name of this component
 	 * @param pageClass
 	 *            The class of page to link to
 	 */
-	public BookmarkablePageLink(final String componentName, final Class pageClass)
+	public BookmarkablePageLink(final String name, final Class pageClass)
 	{
-		this(componentName, pageClass, new PageParameters());
+		this(name, pageClass, new PageParameters());
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The name of this component
 	 * @param pageClass
 	 *            The class of page to link to
@@ -61,10 +61,10 @@ public final class BookmarkablePageLink extends Link
 	 *            The parameters to pass to the new page when the link is
 	 *            clicked
 	 */
-	public BookmarkablePageLink(final String componentName, final Class pageClass,
+	public BookmarkablePageLink(final String name, final Class pageClass,
 			final PageParameters parameters)
 	{
-		super(componentName);
+		super(name);
 		this.pageClass = pageClass;
 		this.parameters = parameters;
 	}

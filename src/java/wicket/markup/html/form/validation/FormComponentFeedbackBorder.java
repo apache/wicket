@@ -45,14 +45,14 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            This component's name
 	 * @param child
 	 *            The child to border
 	 */
-	public FormComponentFeedbackBorder(final String componentName, FormComponent child)
+	public FormComponentFeedbackBorder(final String name, FormComponent child)
 	{
-		super(componentName);
+		super(name);
 
 		this.child = child;
 		add(child);

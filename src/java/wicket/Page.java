@@ -17,6 +17,7 @@
  */
 package wicket;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
@@ -24,13 +25,14 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
+import wicket.model.IModel;
 
 /**
- * Abstract base class for pages. As a MarkupContainer subclass, a Page can contain a
- * component hierarchy and markup in some markup language such as HTML. Users of
- * the framework should not attempt to subclass Page directly. Instead they
- * should subclass a subclass of Page that is appropriate to the markup type
- * they are using, such as WebPage.
+ * Abstract base class for pages. As a MarkupContainer subclass, a Page can
+ * contain a component hierarchy and markup in some markup language such as
+ * HTML. Users of the framework should not attempt to subclass Page directly.
+ * Instead they should subclass a subclass of Page that is appropriate to the
+ * markup type they are using, such as WebPage.
  * <p>
  * When a page is constructed, it is automatically added to the user's session
  * and assigned the next page id available from the session. The session that a
@@ -58,7 +60,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** static for access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
-	
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
 
@@ -72,7 +74,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	private int id = -1;
 
 	/** The session that this page is in. */
-	private final Session session;
+	private final Session session = Session.get();
 
 	/** True if this page is stale. */
 	private boolean stale = false;
@@ -88,12 +90,42 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// A page's componentName is its id, which is not determined until
 		// setId is called when the page is added to the session
 		super(null);
+		addToSession();
+	}
 
-		// Get thread-local session and add this page. This ensures that
-		// all the nice attributes of a page, such as its session and
-		// application are accessible in the page constructor.
-		this.session = Session.get();
-		this.session.addPage(this);
+	/**
+	 * @param model
+	 *            See Component
+	 * @see Component#Component(String, IModel)
+	 */
+	protected Page(final IModel model)
+	{
+		super(null, model);
+		addToSession();
+	}
+
+	/**
+	 * @param object
+	 *            See Component
+	 * @see Component#Component(String, Serializable)
+	 */
+	protected Page(final Serializable object)
+	{
+		super(null, object);
+		addToSession();
+	}
+
+	/**
+	 * @param object
+	 *            See Component
+	 * @param expression
+	 *            See Component
+	 * @see Component#Component(String, Serializable, String)
+	 */
+	protected Page(final Serializable object, final String expression)
+	{
+		super(null, object, expression);
+		addToSession();
 	}
 
 	/**
@@ -225,12 +257,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final void removePersistedFormData(final Class formClass,
 			final boolean disablePersistence)
 	{
-        // Check that formClass is an instanceof Form
-        if (!Form.class.isAssignableFrom(formClass))
-        {
-            throw new WicketRuntimeException("Form class " + formClass.getName() + " is not a subclass of Form");
-        }
-        
+		// Check that formClass is an instanceof Form
+		if (!Form.class.isAssignableFrom(formClass))
+		{
+			throw new WicketRuntimeException("Form class " + formClass.getName()
+					+ " is not a subclass of Form");
+		}
+
 		// Visit all children which are an instance of formClass
 		visitChildren(formClass, new IVisitor()
 		{
@@ -342,19 +375,19 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		{
 			log.debug("Error detaching models when exception is thrown", e1);
 		}
-        
+
 		// When an exception is thrown while rendering a page, there may
 		// be invalid markup streams set on various containers. We need
 		// to reset these to null to ensure they get recreated correctly.
-        visitChildren(MarkupContainer.class, new IVisitor()
-        {
-            public Object component(final Component component)
-            {
-                final MarkupContainer container = (MarkupContainer)component;
-                container.setMarkupStream(null);
-                return CONTINUE_TRAVERSAL;
-            }
-        });
+		visitChildren(MarkupContainer.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				final MarkupContainer container = (MarkupContainer)component;
+				container.setMarkupStream(null);
+				return CONTINUE_TRAVERSAL;
+			}
+		});
 
 	}
 
@@ -391,11 +424,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		this.staleRendering = staleRendering;
 	}
 
+	/**
+	 * Adds this page to the current session
+	 */
+	private void addToSession()
+	{
+		// Add page to session. This ensures that all the nice attributes
+		// of a page, such as its session and application are accessible in
+		// the page constructor.
+		this.session.addPage(this);
+	}
+
 	static
 	{
 		// Allow calls through the IRedirectListener interface
 		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
 	}
 }
-
-

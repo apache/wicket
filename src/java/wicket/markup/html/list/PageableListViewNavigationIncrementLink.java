@@ -48,17 +48,17 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The name of this component
 	 * @param pageableListView
 	 *            The list view the page links are referring to
 	 * @param increment
 	 *            increment by
 	 */
-	public PageableListViewNavigationIncrementLink(final String componentName,
+	public PageableListViewNavigationIncrementLink(final String name,
 			final PageableListView pageableListView, final int increment)
 	{
-		super(componentName, new IPageLink()
+		super(name, new IPageLink()
 		{
 			/**
 			 * @see wicket.markup.html.link.IPageLink#getPage()
