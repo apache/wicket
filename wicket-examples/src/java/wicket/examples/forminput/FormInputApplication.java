@@ -20,7 +20,8 @@ package wicket.examples.forminput;
 
 import wicket.ApplicationSettings;
 import wicket.protocol.http.WebApplication;
-import wicket.util.convert.ConverterRegistry;
+import wicket.util.convert.IConverterFactory;
+import wicket.util.convert.converters.i18n.LocalizedConverterFactory;
 import wicket.util.time.Duration;
 
 /**
@@ -30,6 +31,9 @@ import wicket.util.time.Duration;
  */
 public class FormInputApplication extends WebApplication
 {
+	/** converter factory. */
+	private final IConverterFactory converterFactory = new LocalizedConverterFactory();
+
     /**
      * Constructor.
      */
@@ -42,10 +46,17 @@ public class FormInputApplication extends WebApplication
         // show ?? markers when a message resource is not found
         settings.setThrowExceptionOnMissingResource(false);
 
-        // use the localized converters
-        ConverterRegistry converterRegistry = getConverterRegistry();
-        converterRegistry.setLocalizedDefaults();
         // let PropertyModel format when the apply formatting parameter is not provided
         settings.setPropertyModelDefaultApplyFormatting(true);
     }
+
+
+ 	/**
+ 	 * Provide a localized converter instead of the default non-localized.
+ 	 * @see wicket.Application#getConverterFactory()
+ 	 */
+ 	public IConverterFactory getConverterFactory()
+ 	{
+ 		return converterFactory;
+ 	}
 }

@@ -25,6 +25,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.util.collections.MostRecentlyUsedMap;
+import wicket.util.convert.IConverter;
+import wicket.util.convert.IConverterFactory;
+import wicket.util.convert.ILocalizable;
 import wicket.util.string.Strings;
 
 /**
@@ -109,6 +112,9 @@ public abstract class Session implements Serializable
 
 	/** The locale to use when loading resources for this session. */
 	private Locale locale = Locale.getDefault();
+
+	/** the converter instance. */
+	private transient IConverter converter;
 
 	/** Factory for constructing Pages for this Session */
 	private IPageFactory pageFactory;
@@ -196,6 +202,28 @@ public abstract class Session implements Serializable
 		return classResolver;
 	}
 
+	/**
+	 * Gets the converter instance.
+	 * @return the converter
+	 */
+	public final IConverter getConverter()
+	{
+		if(converter == null)
+		{
+			// get the converter factory, possibly overriden by the client
+			IConverterFactory converterFactory =
+				getApplication().getConverterFactory();
+
+			// let the factory create a new converter
+			converter = converterFactory.newConverter();
+			if(converter instanceof ILocalizable)
+			{
+				((ILocalizable)converter).setLocale(locale);
+			}
+		}
+		return converter;
+	}
+	
 	/**
 	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
 	 * THE FUTURE. Get the freshest page in the session.
@@ -386,6 +414,11 @@ public abstract class Session implements Serializable
 	public final void setLocale(final Locale locale)
 	{
 		this.locale = locale;
+		// set the new locale on the converter instance
+		if(converter instanceof ILocalizable)
+		{
+			((ILocalizable)getConverter()).setLocale(locale);
+		}
 	}
 
 	/**

@@ -19,51 +19,55 @@
 package wicket.util.convert.converters;
 
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.IConverter;
 
 /**
- * {@link wicket.util.convert.IConverter} implementation that converts an incoming String
- * into a <code>java.lang.Float</code> object, throwing a
- * {@link wicket.util.convert.ConversionException} if a conversion error occurs.
+ * Converts to and from Float objects.
+ * 
+ * @author Eelco Hillenius
  */
-public final class FloatConverter implements IConverter
+public final class FloatConverter extends AbstractConverter
 {
-    /**
-     * Construct.
-     */
-    public FloatConverter()
-    {
-    }
+	/**
+	 * Construct.
+	 */
+	public FloatConverter()
+	{
+	}
 
-    /**
-     * Converts the specified input object into an output object of the specified type.
-     * @param value The input value to be converted
-     * @return converted object
-     * @exception ConversionException if conversion cannot be performed successfully
-     */
-    public Object convert(Object value)
-    {
-        if (value == null)
-        {
-            return null;
-        }
+	/**
+	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
+	 */
+	public Object convert(Object value, Class c)
+	{
+		if (value == null)
+		{
+			return null;
+		}
+		if(Number.class.isAssignableFrom(c))
+		{
+			if (value instanceof Float)
+			{
+				return (value);
+			}
+			else if (value instanceof Number)
+			{
+				return new Float(((Number)value).floatValue());
+			}
 
-        if (value instanceof Float)
-        {
-            return (value);
-        }
-        else if (value instanceof Number)
-        {
-            return new Float(((Number) value).floatValue());
-        }
-
-        try
-        {
-            return (new Float(value.toString()));
-        }
-        catch (Exception e)
-        {
-            throw new ConversionException(e);
-        }
-    }
+			try
+			{
+				return (new Float(value.toString()));
+			}
+			catch (Exception e)
+			{
+				throw new ConversionException(e);
+			}
+		}
+		if(String.class.isAssignableFrom(c))
+		{
+			return toString(value);
+		}
+		throw new ConversionException(this +
+				" cannot handle conversions of type " + c);
+	}
 }

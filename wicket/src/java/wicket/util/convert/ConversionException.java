@@ -22,6 +22,8 @@ import java.util.Locale;
 
 /**
  * Thrown for conversion exceptions.
+ *
+ * @author Eelco Hillenius
  */
 public final class ConversionException extends RuntimeException
 {

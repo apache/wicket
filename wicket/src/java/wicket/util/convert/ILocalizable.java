@@ -16,27 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.convert.converters;
-
+package wicket.util.convert;
 
 import java.util.Locale;
 
-import wicket.util.convert.IFormatter;
-
 /**
- * IFormatter that uses a locale.
+ * Implementing converters want to have the current locale set.
+ *
+ * @author Eelco Hillenius
  */
-public interface LocaleFormatter extends IFormatter
+public interface ILocalizable
 {
-    /**
-     * Sets the locale for this instance.
-     * @param locale the locale for this instance
-     */
-    public void setLocale(Locale locale);
-
-    /**
-     * Gets the locale for this instance
-     * @return Locale the locale for this instance
-     */
-    public Locale getLocale();
+	/**
+	 * Sets the locale.
+	 * @param locale the locale
+	 */
+	void setLocale(Locale locale);
 }

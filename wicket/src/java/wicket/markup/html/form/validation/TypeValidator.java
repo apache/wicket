@@ -26,13 +26,13 @@ import org.apache.commons.logging.LogFactory;
 import wicket.RequestCycle;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.ConversionUtils;
-import wicket.util.convert.ConverterRegistry;
+import wicket.util.convert.IConverter;
 
 /**
  * Validates input by trying it to convert to the given type using the
- * {@link wicket.util.convert.ConverterRegistry}instance of that can be found in the
- * application settings.
+ * {@link wicket.util.convert.IStringConverter} instance of component that
+ * does the validation.
+ *
  * @author Eelco Hillenius
  */
 public class TypeValidator extends AbstractValidator
@@ -88,8 +88,8 @@ public class TypeValidator extends AbstractValidator
 
 	/**
 	 * Validates input by trying it to convert to the given type using the
-	 * {@link wicket.util.convert.ConverterRegistry}instance of that can be found in the
-	 * application settings.
+	 * {@link wicket.util.convert.IStringConverter}instance of component that
+	 * does the validation.
 	 * @param component the component that wants to validate its input
 	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
@@ -100,37 +100,17 @@ public class TypeValidator extends AbstractValidator
 		if (!isNullOrEmpty(value))
         {
     		// Check value by attempting to convert it
-    		final ConversionUtils conversionUtils = getConversionUtils();
+    		final IConverter converter = component.getConverter();
     		final Locale localeForValidation = getLocaleForValidation();
     		try
     		{
-    			conversionUtils.convert(component.getRequestString(), type, localeForValidation);
+    			converter.convert(value, type);
     		}
     		catch (ConversionException e)
     		{
     			conversionError(value, component, e);
     		}
         }
-	}
-
-	/**
-	 * Gets the conversion utilities.
-	 * @return the conversion utilities
-	 */
-	protected final ConversionUtils getConversionUtils()
-	{
-		RequestCycle requestCycle = RequestCycle.get();
-		if (requestCycle != null)
-		{
-			ConverterRegistry converterRegistry = requestCycle.getApplication().getConverterRegistry();
-			return converterRegistry.getConversionUtils();
-		}
-		else
-		// we must be in a test case; just give a dummy
-		{
-			log.error("no current request cycle found; using a dummy converter registry");
-			return new ConversionUtils(new ConverterRegistry());
-		}
 	}
 
 	/**

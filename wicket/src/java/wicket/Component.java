@@ -30,11 +30,13 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
+import wicket.model.IComponentAware;
 import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.response.NullResponse;
+import wicket.util.convert.IStringConverter;
 import wicket.util.string.Strings;
 
 /**
@@ -389,6 +391,16 @@ public abstract class Component implements Serializable
 	public final Localizer getLocalizer()
 	{
 		return getApplication().getLocalizer();
+	}
+
+	/**
+	 * Gets the converter that this component uses.
+	 * @return the converter
+	 */
+	public final IStringConverter getConverter()
+	{
+		// TODO where should the casting check go?
+		return (IStringConverter)getSession().getConverter();
 	}
     
     /** 
@@ -802,10 +814,16 @@ public abstract class Component implements Serializable
 	 */
 	public final Component setModel(final IModel model)
 	{
-		final IModel currentModel = getModel();
+		final IModel currentModel = getModel(); // see if there is a current model
 		if (currentModel != null && currentModel instanceof IDetachableModel)
 		{
+			// detach in case it is a IDetachableModel
 			((IDetachableModel)currentModel).detach();
+		}
+		if(model instanceof IComponentAware)
+		{
+			// set self in case the model is component aware
+			((IComponentAware)model).setComponent(this);
 		}
 		this.model = (IModel)model;
 		return this;
@@ -1371,5 +1389,3 @@ public abstract class Component implements Serializable
 		}
 	}
 }
-
-

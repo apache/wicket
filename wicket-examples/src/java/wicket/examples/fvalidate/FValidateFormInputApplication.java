@@ -20,7 +20,6 @@ package wicket.examples.fvalidate;
 
 import wicket.ApplicationSettings;
 import wicket.protocol.http.WebApplication;
-import wicket.util.convert.ConverterRegistry;
 import wicket.util.time.Duration;
 
 /**
@@ -41,10 +40,6 @@ public class FValidateFormInputApplication extends WebApplication
 
         // show ?? markers when a message resource is not found
         settings.setThrowExceptionOnMissingResource(false);
-
-        // use the localized converters
-        ConverterRegistry converterRegistry = getConverterRegistry();
-        converterRegistry.setLocalizedDefaults();
         settings.setPropertyModelDefaultApplyFormatting(true);
     }
 }

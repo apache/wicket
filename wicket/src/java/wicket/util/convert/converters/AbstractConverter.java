@@ -19,20 +19,40 @@
 package wicket.util.convert.converters;
 
 import wicket.util.convert.IConverter;
+import wicket.util.convert.IStringConverter;
 
 /**
- * General purpose data type converter.
+ * Converts to and from Boolean objects.
+ *
+ * @author Eelco Hillenius
  */
-public interface LocaleConverter extends IConverter
+public abstract class AbstractConverter implements IConverter, IStringConverter
 {
-    /**
-     * Converts the specified locale-sensitive input object into an output object of the
-     * specified type.
-     * @param value The input value to be converted
-     * @param pattern The user-defined pattern is used for the input object formatting.
-     * @return converted object
-     * @exception wicket.util.convert.ConversionException if conversion
-     * cannot be performed successfully
-     */
-    public Object convert(Object value, String pattern);
+	/**
+	 * Construct.
+	 */
+	public AbstractConverter()
+	{
+	}
+
+	/**
+	 * @see wicket.util.convert.IStringConverter#toString(java.lang.Object)
+	 */
+	public String toString(Object value)
+	{
+		if(value == null)
+		{
+			return null;
+		}
+		return value.toString();
+	}
+
+
+	/**
+	 * @see wicket.util.convert.IStringConverter#valueOf(java.lang.String)
+	 */
+	public Object valueOf(String string)
+	{
+		return convert(string, String.class);
+	}
 }

@@ -19,15 +19,15 @@
 package wicket.util.convert;
 
 /**
- * Interface for formatting values.
+ * Factory that creates instances of {@link wicket.util.convert.IConverter}.
+ *
+ * @author Eelco Hillenius
  */
-public interface IFormatter
+public interface IConverterFactory
 {
-    /**
-     * Convert the specified input object into a locale-sensitive output string.
-     * @param value The input object to be formatted
-     * @param pattern The pattern is used for the conversion
-     * @return object as a formatted string
-     */
-    public String format(Object value, String pattern);
+	/**
+	 * Creates and returns a new instance of {@link IConverter}.
+	 * @return a new IConverter instance
+	 */
+	IConverter newConverter();
 }

@@ -25,7 +25,8 @@ import wicket.markup.MarkupParser;
 import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.encryption.ICrypt;
 import wicket.markup.parser.XmlPullParser;
-import wicket.util.convert.ConverterRegistry;
+import wicket.util.convert.IConverterFactory;
+import wicket.util.convert.converters.ConverterFactory;
 import wicket.util.lang.Classes;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
@@ -47,12 +48,6 @@ import wicket.util.watch.ModificationWatcher;
  * <p>
  * The getLocalizer() method returns an object encapsulating all of the
  * functionality required to access localized resources.
- * <p>
- * The getConverterRegistry() method returns a registry with converters that
- * should be used for type conversion e.g. by {@link wicket.model.PropertyModel}.
- * Use the converter registry to register/deregister type converters if needed.
- * Also, there are convenience method in converterRegistry to switch to a
- * localized/ non-localized set of type converters.
  * 
  * @see wicket.protocol.http.WebApplication
  * @author Jonathan Locke
@@ -61,9 +56,6 @@ public abstract class Application
 {
 	/** List of (static) ComponentResolvers */
 	private List componentResolvers;
-
-	/** Registry with type converters */
-	private ConverterRegistry converterRegistry = new ConverterRegistry();
 
 	/** The single application-wide localization class */
 	private final Localizer localizer;
@@ -79,6 +71,12 @@ public abstract class Application
 
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
+
+	/**
+	 * Factory for the converter instance; default to the non localized
+	 * factory {@link ConverterFactory}.
+	 */
+	private IConverterFactory converterFactory = new ConverterFactory();
 
 	/**
 	 * Constructor
@@ -106,16 +104,6 @@ public abstract class Application
 	public final List getComponentResolvers()
 	{
 		return componentResolvers;
-	}
-
-	/**
-	 * Get converterRegistry.
-	 * 
-	 * @return converterRegistry.
-	 */
-	public final ConverterRegistry getConverterRegistry()
-	{
-		return converterRegistry;
 	}
 
 	/**
@@ -205,6 +193,13 @@ public abstract class Application
 	{
 		return settings;
 	}
+
+	/**
+	 * Gets the converter factory.
+	 * @return the converter factory
+	 */
+	public IConverterFactory getConverterFactory()
+	{
+		return converterFactory;
+	}
 }
-
-
