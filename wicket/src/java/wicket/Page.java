@@ -26,7 +26,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 
 /**
- * Abstract base class for pages. As a Container subclass, a Page can contain a
+ * Abstract base class for pages. As a MarkupContainer subclass, a Page can contain a
  * component hierarchy and markup in some markup language such as HTML. Users of
  * the framework should not attempt to subclass Page directly. Instead they
  * should subclass a subclass of Page that is appropriate to the markup type
@@ -47,11 +47,11 @@ import wicket.markup.html.form.Form;
  * argument.
  * 
  * @see wicket.markup.html.WebPage
- * @see Container
+ * @see MarkupContainer
  * @author Jonathan Locke
  * @author Chris Turner
  */
-public abstract class Page extends Container implements IRedirectListener
+public abstract class Page extends MarkupContainer implements IRedirectListener
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
@@ -257,11 +257,11 @@ public abstract class Page extends Container implements IRedirectListener
 		// When an exception is thrown while rendering a page, there may
 		// be invalid markup streams set on various containers. We need
 		// to reset these to null to ensure they get recreated correctly.
-        visitChildren(Container.class, new IVisitor()
+        visitChildren(MarkupContainer.class, new IVisitor()
         {
             public Object component(final Component component)
             {
-                final Container container = (Container)component;
+                final MarkupContainer container = (MarkupContainer)component;
                 container.setMarkupStream(null);
                 return CONTINUE_TRAVERSAL;
             }

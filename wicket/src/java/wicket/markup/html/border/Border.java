@@ -17,11 +17,11 @@
  */
 package wicket.markup.html.border;
 
-import wicket.Container;
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * A border component has associated markup which is drawn and determines
@@ -67,7 +67,7 @@ import wicket.markup.html.WebContainer;
  *
  * @author Jonathan Locke
  */
-public abstract class Border extends WebContainer
+public abstract class Border extends WebMarkupContainer
 {
 	/** The open tag for this border component. */
 	private transient ComponentTag openTag;
@@ -97,13 +97,13 @@ public abstract class Border extends WebContainer
 	/**
 	 * Border makes use of a &lt;wicket:body&gt; tag to indentify the position
 	 * to insert within the border's body. As &lt;wicket:body&gt; is a special
-     * tag and Container is not able to handle it, we do that here.
+     * tag and MarkupContainer is not able to handle it, we do that here.
 	 *
 	 * @param markupStream
 	 *            The current markup stream
 	 * @param tag
 	 *            The current component tag
-	 * @return True, if Container was able to resolve the component name and to
+	 * @return True, if MarkupContainer was able to resolve the component name and to
 	 *         render the component
 	 */
 	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
@@ -137,7 +137,7 @@ public abstract class Border extends WebContainer
 			if (border.getMarkupStream() == null)
 			{
 				// Find Border at or above parent of this border
-				final Container borderParent = border.getParent();
+				final MarkupContainer borderParent = border.getParent();
 				border = (Border)((borderParent instanceof Border) ? borderParent : borderParent
 						.findParent(Border.class));
 			}

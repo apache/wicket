@@ -20,15 +20,15 @@ package wicket.markup.html;
 import java.io.Serializable;
 
 import wicket.Component;
-import wicket.Container;
+import wicket.MarkupContainer;
 
 /**
  * A container of HTML markup and components. It is very similar to the base
- * class Container, except that the markup type is defined to be HTML.
+ * class MarkupContainer, except that the markup type is defined to be HTML.
  * 
  * @author Jonathan Locke
  */
-public class WebContainer extends Container
+public class WebMarkupContainer extends MarkupContainer
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 4704928946724566158L;
@@ -36,7 +36,7 @@ public class WebContainer extends Container
 	/**
 	 * @see Component#Component(String)
 	 */
-	public WebContainer(final String name)
+	public WebMarkupContainer(final String name)
 	{
 		super(name);
 	}
@@ -45,7 +45,7 @@ public class WebContainer extends Container
 	/**
 	 * @see Component#Component(String, Serializable)
 	 */
-	public WebContainer(final String name, final Serializable object)
+	public WebMarkupContainer(final String name, final Serializable object)
 	{
 		super(name, object);
 	}
@@ -53,7 +53,7 @@ public class WebContainer extends Container
 	/**
 	 * @see Component#Component(String, Serializable, String)
 	 */
-	public WebContainer(final String name, final Serializable object, final String expression)
+	public WebMarkupContainer(final String name, final Serializable object, final String expression)
 	{
 		super(name, object, expression);
 	}

@@ -19,7 +19,7 @@
 package wicket.examples.library;
 
 import wicket.Component;
-import wicket.Container;
+import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.border.Border;
 
@@ -42,9 +42,9 @@ public class AuthenticatedWebPage extends WicketExamplePage
     /**
      * Adding children to instances of this class causes those children to
      * be added to the border child instead.
-     * @see wicket.Container#add(wicket.Component)
+     * @see wicket.MarkupContainer#add(wicket.Component)
      */
-    public Container add(final Component child)
+    public MarkupContainer add(final Component child)
     {
         // Add children of the page to the page's border component
         if (border == null)
@@ -60,7 +60,7 @@ public class AuthenticatedWebPage extends WicketExamplePage
     /**
      * Removing children from instances of this class causes those children to
      * be removed from the border child instead.
-     * @see wicket.Container#removeAll()
+     * @see wicket.MarkupContainer#removeAll()
      */
     public void removeAll()
     {
@@ -70,9 +70,9 @@ public class AuthenticatedWebPage extends WicketExamplePage
     /**
      * Replacing children on instances of this class causes those children
      * to be replaced on the border child instead.
-     * @see wicket.Container#replace(wicket.Component)
+     * @see wicket.MarkupContainer#replace(wicket.Component)
      */
-    public Container replace(Component child)
+    public MarkupContainer replace(Component child)
     {
         return border.replace(child);
     }

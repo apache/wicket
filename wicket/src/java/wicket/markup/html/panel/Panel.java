@@ -18,12 +18,12 @@
 package wicket.markup.html.panel;
 
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * A panel is a reusable component that holds markup and other components.
  * <p>
- * Whereas WebContainer is an inline container like
+ * Whereas WebMarkupContainer is an inline container like
  * <pre>
  *  ...
  *  &lt;span id=&quot;wicket-xxx&quot;&gt;
@@ -46,7 +46,7 @@ import wicket.markup.html.WebContainer;
  * 
  * @author Jonathan Locke
  */
-public class Panel extends WebContainer
+public class Panel extends WebMarkupContainer
 {
     /** Serial Version ID */
     private static final long serialVersionUID = -5449444447932560536L;

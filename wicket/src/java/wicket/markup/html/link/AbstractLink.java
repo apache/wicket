@@ -20,7 +20,7 @@ package wicket.markup.html.link;
 import java.io.Serializable;
 
 import wicket.RequestCycle;
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * Base class for links.
@@ -28,7 +28,7 @@ import wicket.markup.html.WebContainer;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class AbstractLink extends WebContainer implements ILinkListener
+public abstract class AbstractLink extends WebMarkupContainer implements ILinkListener
 {
 	/**
 	 * The popup specification. If not-null, a javascript on-click event handler

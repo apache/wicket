@@ -20,7 +20,7 @@ package wicket.markup.html.panel;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
@@ -174,8 +174,8 @@ public abstract class SignInPanel extends Panel
 			add(username = new TextField("username", properties, "username"));
 			add(password = new PasswordTextField("password", properties, "password"));
             
-            // Container row for remember me checkbox
-            WebContainer rememberMeRow = new WebContainer("rememberMeRow");
+            // MarkupContainer row for remember me checkbox
+            WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
             add(rememberMeRow);
 
             // Add rememberMe checkbox

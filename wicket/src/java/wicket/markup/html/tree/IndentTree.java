@@ -31,7 +31,7 @@ import javax.swing.tree.TreePath;
 
 import wicket.AttributeModifier;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -148,7 +148,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 				junctionLinkClicked(node);
 			}
 		};
-		WebContainer junctionImg = new WebContainer("junctionImg");
+		WebMarkupContainer junctionImg = new WebMarkupContainer("junctionImg");
 		junctionImg.add(new AttributeModifier(
 				"src", true, new Model()
 		{
@@ -193,7 +193,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 				nodeLinkClicked(node);
 			}
 		};
-		WebContainer nodeImg = new WebContainer("nodeImg");
+		WebMarkupContainer nodeImg = new WebMarkupContainer("nodeImg");
 		nodeImg.add(new AttributeModifier(
 				"src", true, new Model()
 		{
@@ -352,7 +352,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 			listItem.add(new SpacerList("spacers", level));
 
 			// add node
-			WebContainer nodeContainer = new WebContainer("node");
+			WebMarkupContainer nodeContainer = new WebMarkupContainer("node");
 			Link expandCollapsLink = IndentTree.this.createJunctionLink(node);
 			nodeContainer.add(expandCollapsLink);
 

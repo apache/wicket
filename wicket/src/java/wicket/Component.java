@@ -41,7 +41,7 @@ import wicket.util.string.Strings;
 
 /**
  * Component serves as the highest level abstract base class for all components.
- * A component has a parent. If a component is an instance of Container, it may
+ * A component has a parent. If a component is an instance of MarkupContainer, it may
  * have children. In this way it has a place in the hierarchy of components
  * contained on a given page.
  * <p>
@@ -133,7 +133,7 @@ public abstract class Component implements Serializable
 	private String name;
 
 	/** Any parent container. */
-	private Container parent;
+	private MarkupContainer parent;
 
 	/** Component rendering number useful in debugging. */
 	private int rendering = 0;
@@ -391,14 +391,14 @@ public abstract class Component implements Serializable
 	 * Finds the first container parent of this component of the given class.
 	 * 
 	 * @param c
-	 *            Container class to search for
+	 *            MarkupContainer class to search for
 	 * @return First container parent that is an instance of the given class, or
 	 *         null if none can be found
 	 */
-	public final Container findParent(final Class c)
+	public final MarkupContainer findParent(final Class c)
 	{
 		// Start with immediate parent
-		Container current = parent;
+		MarkupContainer current = parent;
 
 		// Walk up containment hierarchy
 		while (current != null)
@@ -643,7 +643,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return Any parent container, or null if there is none
 	 */
-	public final Container getParent()
+	public final MarkupContainer getParent()
 	{
 		return parent;
 	}
@@ -1447,7 +1447,7 @@ public abstract class Component implements Serializable
 	 * @param parent
 	 *            The parent container
 	 */
-	final void setParent(final Container parent)
+	final void setParent(final MarkupContainer parent)
 	{
 		if (this.parent != null && log.isDebugEnabled())
 		{

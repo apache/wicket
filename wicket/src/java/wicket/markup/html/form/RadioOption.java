@@ -86,7 +86,7 @@ public class RadioOption extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Container#handleComponentTagBody(wicket.markup.MarkupStream,
+	 * @see wicket.MarkupContainer#handleComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
 	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)

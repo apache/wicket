@@ -147,7 +147,7 @@ public final class ModificationWatcher
 		}
 	}
 
-	// Container class for holding modifiable entries to watch
+	// MarkupContainer class for holding modifiable entries to watch
 	private static final class Entry
 	{
 		// The modifiable thing

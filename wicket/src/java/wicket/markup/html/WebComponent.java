@@ -23,10 +23,10 @@ import wicket.Component;
 
 /**
  * Base class for simple HTML components which do not hold nested components. If
- * you need to support nested components, see WebContainer or use Panel if the
+ * you need to support nested components, see WebMarkupContainer or use Panel if the
  * component will have its own associated markup.
  * 
- * @see wicket.markup.html.WebContainer
+ * @see wicket.markup.html.WebMarkupContainer
  * @author Jonathan Locke
  */
 public abstract class WebComponent extends Component

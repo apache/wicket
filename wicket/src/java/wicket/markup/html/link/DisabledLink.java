@@ -18,7 +18,7 @@
  */
 package wicket.markup.html.link;
 
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * Handy class for holding markup to display when a link is disabled.
@@ -26,7 +26,7 @@ import wicket.markup.html.WebContainer;
  * @see Link
  * @author Jonathan Locke
  */
-public final class DisabledLink extends WebContainer
+public final class DisabledLink extends WebMarkupContainer
 {
     /** Serial Version ID. */
 	private static final long serialVersionUID = 5315730184113248127L;

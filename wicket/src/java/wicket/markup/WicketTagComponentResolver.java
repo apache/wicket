@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.Container;
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.util.string.StringValueConversionException;
 
@@ -61,7 +61,7 @@ public class WicketTagComponentResolver implements IComponentResolver
     private Map nestedComponents = new HashMap();
     
     /**
-     * @see wicket.markup.IComponentResolver#resolve(Container, MarkupStream,
+     * @see wicket.markup.IComponentResolver#resolve(MarkupContainer, MarkupStream,
      *      ComponentTag)
      * @param container
      *            The container parsing its markup
@@ -72,7 +72,7 @@ public class WicketTagComponentResolver implements IComponentResolver
      * @return true, if componentName was handle by the resolver. False,
      *         otherwise
      */
-    public boolean resolve(final Container container, final MarkupStream markupStream,
+    public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
             final ComponentTag tag)
     {
         // It must be <wicket:...>
@@ -107,7 +107,7 @@ public class WicketTagComponentResolver implements IComponentResolver
         // Re-parent children of <wicket:component>. 
         if ((tag.getComponentName() != null) && nestedComponents.containsKey(container))
         {
-            final Container parent = container.getParent();
+            final MarkupContainer parent = container.getParent();
             if (parent != null)
             {
                 final Component component = parent.get(tag.getComponentName());
@@ -132,7 +132,7 @@ public class WicketTagComponentResolver implements IComponentResolver
      * @throws WicketRuntimeException in case the component could not be created
      */
     // Wicket is current not using any bean util jar, which is why ...
-    private Component createComponent(final Container container, final ComponentWicketTag tag)
+    private Component createComponent(final MarkupContainer container, final ComponentWicketTag tag)
     {
         // If no component name is given, create a page-unique one yourself.
         String componentName = tag.getNameAttribute();

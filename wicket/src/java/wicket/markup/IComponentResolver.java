@@ -17,7 +17,7 @@
  */
 package wicket.markup;
 
-import wicket.Container;
+import wicket.MarkupContainer;
 
 /**
  * ApplicationSettings maintains a list of IComponentNameResolvers.
@@ -41,6 +41,6 @@ public interface IComponentResolver
 	 * @return True if componentName was handled by the resolver, false
 	 *         otherwise.
 	 */
-	public boolean resolve(final Container container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag);
 }

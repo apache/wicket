@@ -94,7 +94,7 @@ public final class Home extends WicketExamplePage
     }
 
     /**
-     * @see wicket.Container#handleRender()
+     * @see wicket.MarkupContainer#handleRender()
      */
     protected void handleRender()
     {

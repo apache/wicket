@@ -25,7 +25,7 @@ import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.list.ListItem;
@@ -59,7 +59,7 @@ public class ExampleStyles extends Displaytag
         add(new BookmarkablePageLink("mark", this.getClass()).setParameter("class", "mark").setAutoEnable(false));
 
         // Apply style on current tag (based on URL parameter)
-        WebContainer htmlTable = new WebContainer("htmlTable");
+        WebMarkupContainer htmlTable = new WebMarkupContainer("htmlTable");
         htmlTable.add(
                 new AttributeModifier(
                         "class", 
