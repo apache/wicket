@@ -417,15 +417,10 @@ public abstract class RequestCycle
 			}
 			catch (RuntimeException e)
 			{
-				try
-				{
-					// current page should be detached.
-					getPage().detachModels();
-				}
-				catch (RuntimeException e1)
-				{
-					log.debug("Error detaching models when exception is thrown", e1);
-				}
+                // Reset page for re-rendering after exception
+                getPage().reset();
+                
+                // Handle the exception
 				handleRenderingException(e);
 			}
 			finally

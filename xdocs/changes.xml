@@ -8,6 +8,11 @@
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="fix" dev="Jonathan Locke" issue="1116805">
+		Added Page.reset() method that is called when runtime exceptions prevent full 
+		rendering of pages.  I highly suspect this is behind bug #1116805 where eelco 
+		reported that "Exception when rendering leaves markup in invalid state".
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1116805">
 		Added BufferedHttpResponse class, along with ApplicationSettings.setBufferResponse
 		to enable response buffering.  Response buffering is on by default. 
       </action>
