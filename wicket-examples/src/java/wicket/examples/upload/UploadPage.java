@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.upload.FileInputField;
+import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.upload.UploadForm;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -139,7 +139,7 @@ public class UploadPage extends WicketExamplePage
 			super(name);
 
 			// add one file input field
-			add(new FileInputField("fileInput", fileModel));
+			add(new FileUploadField("fileInput", fileModel));
 		}
 
 		/**
