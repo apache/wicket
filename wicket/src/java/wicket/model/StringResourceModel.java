@@ -275,7 +275,7 @@ public class StringResourceModel extends DetachableModel
         super(null);
         if (resourceKey == null)
         {
-            throw new NullPointerException("Resource key must not be null");
+            throw new IllegalArgumentException("Resource key must not be null");
         }
         this.resourceKey = resourceKey;
         this.relativeComponent = relativeComponent;

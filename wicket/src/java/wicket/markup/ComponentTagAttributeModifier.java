@@ -130,11 +130,11 @@ public class ComponentTagAttributeModifier implements Serializable
 	{
 		if (attribute == null)
 		{
-			throw new NullPointerException("'attribute' parameter cannot be null");
+			throw new IllegalArgumentException("Attribute parameter cannot be null");
 		}
 		if (replaceModel == null)
 		{
-			throw new NullPointerException("'replaceModel' paramater cannot be null");
+			throw new IllegalArgumentException("ReplaceModel parameter cannot be null");
 		}
 
 		this.attribute = attribute;

@@ -118,7 +118,7 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
             if (!(value instanceof Boolean))
             {
                 throw new RuntimeException(
-                        "model objects for checkboxes have to be of type Boolean");
+                        "Model objects for checkboxes have to be of type Boolean");
             }
 
             if (((Boolean)value).booleanValue())
