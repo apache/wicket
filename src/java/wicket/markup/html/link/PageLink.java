@@ -107,7 +107,7 @@ public class PageLink extends Link
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
-	public final void onClick()
+	public void onClick()
 	{
 		// Set page source's page as response page
 		getRequestCycle().setPage(pageLink.getPage());
