@@ -102,9 +102,9 @@ public final class CheckBox extends FormComponent
     }
 
     /**
-     * @see FormComponent#getSupportsPersistence()
+     * @see FormComponent#supportsPersistence()
      */
-    public boolean getSupportsPersistence()
+    public boolean supportsPersistence()
     {
         return true;
     }

@@ -212,9 +212,9 @@ public final class ListChoice extends DropDownChoice
 	}
 
     /**
-     * @see wicket.markup.html.form.FormComponent#getSupportsPersistence()
+     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
      */
-    public boolean getSupportsPersistence()
+    public boolean supportsPersistence()
     {
         return true;
     }
