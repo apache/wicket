@@ -18,6 +18,8 @@
  */
 package encodings;
 
+import java.util.Locale;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -49,8 +51,10 @@ public class Home extends HtmlPage
      * deployment descriptors, this is a workaround for 
      * servlet 2.3 
      */
-    protected void handleResponseSetup(final RequestCycle cycle)
+    protected void configureResponse(final RequestCycle cycle)
     {
+        final Locale orgLocale = cycle.getSession().getLocale();
+        cycle.getSession().setLocale(Locale.GERMANY);
     	super.configureResponse(cycle);
     	
     	final String encoding = "text/" 
@@ -59,6 +63,8 @@ public class Home extends HtmlPage
 			+ CharSetUtil.configureResponse(cycle);;
     	
     	((HttpResponse)cycle.getResponse()).setContentType(encoding);
+
+    	cycle.getSession().setLocale(orgLocale);
     }
 }
 
