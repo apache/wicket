@@ -51,6 +51,9 @@ public final class MetaPatternTest extends TestCase
         assertEquals("9", matcher.group(2));
     }
 
+    /**
+     * Test assignment of variables.
+     */
     public void testVariableAssignmentParser()
     {
         VariableAssignmentParser parser = new VariableAssignmentParser("foo = 9");
@@ -64,6 +67,9 @@ public final class MetaPatternTest extends TestCase
         assertEquals("9", parser.getValue());
     }
     
+    /**
+     * Test assignment of integers.
+     */
     public void testIntegerVariableAssignmentParser()
     {
         IntegerVariableAssignmentParser parser = 
@@ -83,6 +89,9 @@ public final class MetaPatternTest extends TestCase
 	    assertFalse(parser.matches());
     }
 
+    /**
+     * Test parsing of comma separated variables.
+     */
     public void testCommaSeparatedVariableParser()
     {
         CommaSeparatedVariableParser parser = new CommaSeparatedVariableParser("a,b,c");
@@ -128,6 +137,9 @@ public final class MetaPatternTest extends TestCase
 	    assertEquals("a", parser.getValues().get(0));
     }
 
+    /**
+     * Test the tag parser.
+     */
     public void testTagParser()
     {
         String tag = "name";
