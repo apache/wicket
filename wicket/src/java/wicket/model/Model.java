@@ -25,7 +25,7 @@ import wicket.WicketRuntimeException;
  * Model is the basic implementation of an AbstractModel. It just wraps a simple
  * model object. The model object must be serializable, as it is stored in the
  * session. If you have large objects to store, consider using
- * {@link wicket.model.DetachableModel} instead of this class.
+ * {@link AbstractDetachableModel} instead of this class.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -49,7 +49,7 @@ public class Model extends AbstractModel
 	 * Construct the model, setting the given object as the wrapped object.
 	 * 
 	 * @param object
-	 *            de model object proper
+	 *            The model object proper
 	 */
 	public Model(final Serializable object)
 	{
@@ -59,7 +59,7 @@ public class Model extends AbstractModel
 	/**
 	 * Get the model object proper.
 	 * 
-	 * @return the model object proper
+	 * @return The model object proper
 	 */
 	public Object getObject()
 	{

@@ -878,18 +878,21 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Sets the backing model object; shorthand for getModel().setObject(value).
+	 * Sets the backing model object; shorthand for getModel().setObject(object).
 	 * 
-	 * @param value
-	 *            The value to set
+	 * @param object
+	 *            The object to set
 	 */
-	public final void setModelObject(final Object value)
+	public final void setModelObject(final Object object)
 	{
 		final IModel model = getModel();
 		if (model != null)
 		{
-			model.setObject(value);
-			modelChanged();
+			if (model.getObject() != object)
+			{
+				model.setObject(object);
+				modelChanged();
+			}
 		}
 	}
 

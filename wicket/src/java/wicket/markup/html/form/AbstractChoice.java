@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.6 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,13 +18,13 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.form.model.ChoiceList;
+import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.model.IChoiceList;
 
 /**
  * Abstract base class for all choice (html select) options.
@@ -44,20 +44,32 @@ abstract class AbstractChoice extends FormComponent
 	/** Is the null value a valid value? */
 	private boolean nullValid = false;
 
-	/** The list of values. */
-	private List values;
-	
+	/** The list of choices. */
+	private IChoiceList choices;
+
 	/**
 	 * @param name
 	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the dropdown
+	 * @param choices
+	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(String name, final Collection values)
+	public AbstractChoice(String name, final IChoiceList choices)
 	{
 		super(name);
-		setValues(values);
+		this.choices = choices;
+	}
+
+	/**
+	 * @param name
+	 *            See Component constructor
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(String name, final Collection choices)
+	{
+		this(name, new ChoiceList(choices));
 	}
 
 	/**
@@ -65,14 +77,28 @@ abstract class AbstractChoice extends FormComponent
 	 *            See Component constructor
 	 * @param object
 	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the dropdown
+	 * @param choices
+	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
-	public AbstractChoice(String name, Serializable object, final Collection values)
+	public AbstractChoice(String name, Serializable object, final Collection choices)
+	{
+		this(name, object, new ChoiceList(choices));
+	}
+
+	/**
+	 * @param name
+	 *            See Component constructor
+	 * @param object
+	 *            See Component constructor
+	 * @param choices
+	 *            The drop down choices
+	 * @see wicket.Component#Component(String, Serializable)
+	 */
+	public AbstractChoice(String name, Serializable object, final IChoiceList choices)
 	{
 		super(name, object);
-		setValues(values);
+		this.choices = choices;
 	}
 
 	/**
@@ -82,29 +108,43 @@ abstract class AbstractChoice extends FormComponent
 	 *            See Component constructor
 	 * @param expression
 	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the dropdown
+	 * @param choices
+	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public AbstractChoice(String name, Serializable object, String expression,
-			final Collection values)
+			final Collection choices)
 	{
-		super(name, object, expression);
-		setValues(values);
+		this(name, object, new ChoiceList(choices));
 	}
 
 	/**
-	 * Gets the list of values.
-	 * 
-	 * @return the list of values
+	 * @param name
+	 *            See Component constructor
+	 * @param object
+	 *            See Component constructor
+	 * @param expression
+	 *            See Component constructor
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
-	public List getValues()
+	public AbstractChoice(String name, Serializable object, String expression,
+			final IChoiceList choices)
 	{
-		if (values instanceof IDetachableChoiceList)
-		{
-			((IDetachableChoiceList)values).attach();
-		}
-		return this.values;
+		super(name, object, expression);
+		this.choices = choices;
+	}
+
+	/**
+	 * Gets the list of choices.
+	 * 
+	 * @return The list of choices
+	 */
+	public IChoiceList getChoices()
+	{
+		choices.attach();
+		return this.choices;
 	}
 
 	/**
@@ -130,60 +170,24 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Sets the values to use for the dropdown.
-	 * 
-	 * @param values
-	 *            values to set
-	 * @return dropdown choice
-	 */
-	public AbstractChoice setValues(final Collection values)
-	{
-		if (values == null)
-		{
-			this.values = Collections.EMPTY_LIST;
-		}
-		else if (values instanceof List)
-		{
-			this.values = (List)values;
-		}
-		else
-		{
-			this.values = new ArrayList(values);
-		}
-		return this;
-	}
-
-	/**
 	 * @see wicket.Component#detachModel()
 	 */
 	protected void detachModel()
 	{
 		super.detachModel();
-		if (values instanceof IDetachableChoiceList)
-		{
-			((IDetachableChoiceList)values).detach();
-		}
+		choices.detach();
 	}
 
 	/**
 	 * Gets whether the given value represents the current selection.
 	 * 
 	 * @param currentValue
-	 *            the current list value
-	 * @return whether the given value represents the current selection
+	 *            The current list value
+	 * @return Whether the given value represents the current selection
 	 */
-	protected boolean isSelected(Object currentValue)
+	protected boolean isSelected(final Object currentValue)
 	{
-		Object modelObject = getModelObject();
-		if (modelObject == null)
-		{
-			if (currentValue == null)
-				return true;
-			else
-				return false;
-		}
-		boolean equals = currentValue.equals(modelObject);
-		return equals;
+		return currentValue == getModelObject();
 	}
 
 	/**
@@ -213,7 +217,7 @@ abstract class AbstractChoice extends FormComponent
 	{
 		final StringBuffer options = new StringBuffer();
 		final Object selected = getModelObject();
-		final List list = getValues();
+		final IChoiceList choices = getChoices();
 
 		// Is null a valid selection value?
 		if (nullValid)
@@ -223,19 +227,19 @@ abstract class AbstractChoice extends FormComponent
 
 			// Add option tag
 			options.append("\n<option");
-			
+
 			// If null is selected, indicate that
 			if (selected == null)
 			{
 				options.append(" selected=\"selected\"");
 			}
-			
+
 			// Add body of option tag
 			options.append(" value=\"\">").append(option).append("</option>");
 		}
 		else
 		{
-			// Null is not valid.  Is it selected anyway?
+			// Null is not valid. Is it selected anyway?
 			if (selected == null)
 			{
 				// Force the user to pick a non-null value
@@ -246,34 +250,19 @@ abstract class AbstractChoice extends FormComponent
 			}
 		}
 
-		for (int i = 0; i < list.size(); i++)
+		for (int i = 0; i < choices.size(); i++)
 		{
-			final Object value = list.get(i);
-
-			if (value != null)
+			final IChoice choice = choices.get(i);
+			if (choice != null)
 			{
-				final String id;
-				final String displayValue;
-				if (list instanceof IDetachableChoiceList)
-				{
-					IDetachableChoiceList choiceList = (IDetachableChoiceList)list;
-					id = choiceList.getId(i);
-					displayValue = choiceList.getDisplayValue(i);
-
-				}
-				else
-				{
-					id = Integer.toString(i);
-					displayValue = value.toString();
-				}
-				final boolean currentOptionIsSelected = isSelected(value);
+				final String displayValue = choice.getDisplayValue();
 				options.append("\n<option ");
-				if (currentOptionIsSelected)
+				if (isSelected(choice.getObject()))
 				{
 					options.append("selected=\"selected\"");
 				}
 				options.append("value=\"");
-				options.append(id);
+				options.append(choice.getId());
 				options.append("\">");
 				options.append(getLocalizer().getString(getName() + "." + displayValue, this,
 						displayValue));
@@ -281,8 +270,7 @@ abstract class AbstractChoice extends FormComponent
 			}
 			else
 			{
-				throw new IllegalArgumentException(
-						"Dropdown choice contains null value in values collection at index " + i);
+				throw new IllegalArgumentException("Choice list has null value at index " + i);
 			}
 		}
 

@@ -19,10 +19,12 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
+import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.model.IChoiceList;
+import wicket.util.string.Strings;
 
 /**
  * A choice implemented as a dropdown menu/list. Framework users can extend this
@@ -42,40 +44,51 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public DropDownChoice(String name, final Collection values)
+	public DropDownChoice(String name, final Collection choices)
 	{
-		super(name, values);
+		super(name, choices);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param values
-	 *            The drop down values
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
-	public DropDownChoice(String name, Serializable object, final Collection values)
+	public DropDownChoice(String name, final IChoiceList choices)
 	{
-		super(name, object, values);
+		super(name, choices);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The drop down values
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
+	 */
+	public DropDownChoice(String name, Serializable object, final Collection choices)
+	{
+		super(name, object, choices);
+	}
+	
+	/**
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, IChoiceList)
+	 */
+	public DropDownChoice(String name, Serializable object, final IChoiceList choices)
+	{
+		super(name, object, choices);
+	}
+	
+	/**
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
 	 */
 	public DropDownChoice(String name, Serializable object, String expression,
-			final Collection values)
+			final Collection choices)
 	{
-		super(name, object, expression, values);
+		super(name, object, expression, choices);
+	}
+	
+	/**
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, IChoiceList)
+	 */
+	public DropDownChoice(String name, Serializable object, String expression,
+			final IChoiceList choices)
+	{
+		super(name, object, expression, choices);
 	}
 
 	/**
@@ -83,20 +96,12 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	 */
 	public final String getValue()
 	{
-		final List list = getValues();
-		if (list instanceof IDetachableChoiceList)
+		final IChoice choice = getChoices().choiceForObject(getModelObject());
+		if (choice != null)
 		{
-			final int index = list.indexOf(getModelObject());
-			if (index != -1)
-			{
-				return ((IDetachableChoiceList)list).getId(index);
-			}
-			return "-1";
+			return choice.getId();
 		}
-		else
-		{
-			return Integer.toString(list.indexOf(getModelObject()));
-		}
+		return "-1";
 	}
 
 	/**
@@ -104,7 +109,8 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	 */
 	public final void onSelectionChanged()
 	{
-		onSelectionChanged(internalUpdateModel());
+		updateModel();
+		onSelectionChanged(getModelObject());
 	}
 
 	/**
@@ -112,15 +118,7 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	 */
 	public final void setValue(final String value)
 	{
-		final List list = getValues();
-		if (list instanceof IDetachableChoiceList)
-		{
-			setModelObject(((IDetachableChoiceList)list).objectForId(value));
-		}
-		else
-		{
-			setModelObject(list.get(Integer.parseInt(value)));
-		}
+		setModelObject(getChoices().choiceForId(value).getObject());
 	}
 
 	/**
@@ -172,7 +170,15 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	 */
 	protected final void updateModel()
 	{
-		internalUpdateModel();
+		final String id = getInput();
+		if (Strings.isEmpty(id))
+		{
+			setModelObject(null);
+		}
+		else
+		{
+			setModelObject(getChoices().choiceForId(id).getObject());
+		}
 	}
 
 	/**
@@ -182,33 +188,6 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	protected boolean wantOnSelectionChangedNotifications()
 	{
 		return false;
-	}
-
-	/**
-	 * Update model and return the object.
-	 * 
-	 * @return the object
-	 */
-	private Object internalUpdateModel()
-	{
-		final String indexOrId = getInput();
-		Object object = null;
-		final List list = getValues();
-		if (indexOrId == null || "".equals(indexOrId))
-		{
-			setModelObject(null);
-		}
-		else if (list instanceof IDetachableChoiceList)
-		{
-			object = ((IDetachableChoiceList)list).objectForId(indexOrId);
-			setModelObject(object);
-		}
-		else
-		{
-			object = list.get(Integer.parseInt(indexOrId));
-			setModelObject(object);
-		}
-		return object;
 	}
 
 	static

@@ -53,13 +53,9 @@ import wicket.util.string.Strings;
  * given person object like this:
  * 
  * <pre>
- * 
- *  
  *              Person person = getSomePerson();
  *              ...
  *              add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
- *   
- *  
  * </pre>
  * 
  * Where 'myLabel' is the name of the component, and 'name' is the Ognl
@@ -71,11 +67,7 @@ import wicket.util.string.Strings;
  * updates the name property of a person like this:
  * 
  * <pre>
- * 
- *  
  *              add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
- *   
- *  
  * </pre>
  * 
  * </p>
@@ -96,6 +88,7 @@ import wicket.util.string.Strings;
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class PropertyModel extends AbstractDetachableModel implements IConvertible, INestedModel
 {
@@ -260,44 +253,6 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	}
 
 	/**
-	 * Gets the value that results when the given Ognl expression is applied to
-	 * the model object (Ognl.getValue).
-	 * 
-	 * @return the value that results when the given Ognl expression is applied
-	 *         to the model object
-	 * @see wicket.model.IModel#getObject()
-	 */
-	public Object getObject()
-	{
-		if (Strings.isEmpty(expression))
-		{
-			// No expression will cause OGNL to throw an exception. The OGNL
-			// expression to return the current object is "#this". Instead
-			// of throwing that exception, we'll provide a meaningfull
-			// return value
-			return model.getObject();
-		}
-
-		if (model != null)
-		{
-			final Object modelObject = model.getObject();
-			if (modelObject != null)
-			{
-				try
-				{
-					// note: if property type is null it is ignored by Ognl
-					return Ognl.getValue(expression, getContext(), modelObject, propertyType);
-				}
-				catch (OgnlException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Gets the type to be used for conversion instead of the type that is
 	 * figured out by Ognl.
 	 * 
@@ -353,6 +308,15 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	}
 
 	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[PropertyModel model = " + model + ", expression = " + expression + ", object = "
+				+ getObject() + "]";
+	}
+
+	/**
 	 * Gets the Ognl context that is used for evaluating expressions. It
 	 * contains the type converter that is used to access the converter
 	 * framework.
@@ -369,7 +333,14 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 		}
 		return context;
 	}
-
+	
+	/**
+	 * @see wicket.model.AbstractDetachableModel#onAttach()
+	 */
+	protected void onAttach()
+	{
+	}
+	
 	/**
 	 * Unsets this property model's instance variables and detaches the model.
 	 * 
@@ -384,6 +355,44 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	}
 
 	/**
+	 * Gets the value that results when the given Ognl expression is applied to
+	 * the model object (Ognl.getValue).
+	 * 
+	 * @return the value that results when the given Ognl expression is applied
+	 *         to the model object
+	 * @see wicket.model.IModel#getObject()
+	 */
+	protected final Object onGetObject()
+	{
+		if (Strings.isEmpty(expression))
+		{
+			// No expression will cause OGNL to throw an exception. The OGNL
+			// expression to return the current object is "#this". Instead
+			// of throwing that exception, we'll provide a meaningfull
+			// return value
+			return model.getObject();
+		}
+
+		if (model != null)
+		{
+			final Object modelObject = model.getObject();
+			if (modelObject != null)
+			{
+				try
+				{
+					// note: if property type is null it is ignored by Ognl
+					return Ognl.getValue(expression, getContext(), modelObject, propertyType);
+				}
+				catch (OgnlException e)
+				{
+					throw new WicketRuntimeException(e);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Sets the Ognl context that is used for evaluating expressions. It
 	 * contains the type converter that is used to access the converter
 	 * framework.
@@ -394,14 +403,5 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	protected final void setContext(OgnlContext context)
 	{
 		this.context = context;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return "[PropertyModel model = " + model + ", expression = " + expression + ", object = "
-				+ getObject() + "]";
 	}
 }

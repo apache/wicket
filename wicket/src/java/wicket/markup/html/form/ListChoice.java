@@ -166,7 +166,7 @@ public class ListChoice extends DropDownChoice
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.put("size", Math.min(maxRows, getValues().size()));
+		tag.put("size", Math.min(maxRows, getChoices().size()));
 	}
 
     /**

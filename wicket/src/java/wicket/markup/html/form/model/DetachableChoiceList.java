@@ -15,65 +15,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form;
+package wicket.markup.html.form.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
+
 /**
- * Partial adapter for {@link wicket.markup.html.form.IDetachableChoiceList}that makes it
- * easier to work with anonymous implementations.
- * <p>
- * An example of how to use this:
- * 
- * <pre>
- * class TypesList extends DetachableChoiceList
- * {
- * 	// load all needed object when attaching
- * 	public void onAttach(RequestCycle cycle)
- * 	{
- * 		List definitionTypes = definitionDAO.findDefinitionTypes();
- * 		addAll(definitionTypes);
- * 	}
- * 
- * 	// clear the list when detaching
- * 	public void onDetach(RequestCycle cycle)
- * 	{
- * 		clear();
- * 	}
- * 
- * 	// gets the value that is used for displaying
- * 	public String getDisplayValue(int row)
- * 	{
- * 		DefinitionType type = (DefinitionType)get(row);
- * 		return type.getName();
- * 	}
- * 
- * 	// gets the backing id used for rendering the selection
- * 	public String getIdValue(int row)
- * 	{
- * 		DefinitionType type = (DefinitionType)get(row);
- * 		return type.getId().toString();
- * 	}
- * 
- * 	// gets the object based on the given id
- * 	public Object getObjectById(String id)
- * 	{
- * 		if (id == null)
- * 			return null;
- * 		return definitionDAO.loadDefinitionType(Long.valueOf(id));
- * 		// note: more efficient would be to just look up the object in this list
- * 		// as it is loaded allready
- * 	}
- * }
- * </pre>
- * 
- * </p>
+ * Adds attach/detach logic to ChoiceList. 
  * 
  * @author Johan Compagner
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public abstract class DetachableChoiceList extends ArrayList implements IDetachableChoiceList
+public abstract class DetachableChoiceList extends ChoiceList
 {
 	/**
 	 * Transient flag to prevent multiple detach/attach scenario.
@@ -92,9 +46,9 @@ public abstract class DetachableChoiceList extends ArrayList implements IDetacha
 	 * Construct.
 	 * 
 	 * @param initialCapacity
-	 *            the initial capacity
+	 *            The initial capacity
 	 */
-	public DetachableChoiceList(int initialCapacity)
+	public DetachableChoiceList(final int initialCapacity)
 	{
 		super(initialCapacity);
 	}
@@ -111,9 +65,7 @@ public abstract class DetachableChoiceList extends ArrayList implements IDetacha
 	}
 
 	/**
-	 * Attach to the current request.
-	 * 
-	 * @see wicket.markup.html.form.IDetachableChoiceList#attach()
+	 * @see wicket.model.IDetachable#attach()
 	 */
 	public final void attach()
 	{
@@ -125,9 +77,7 @@ public abstract class DetachableChoiceList extends ArrayList implements IDetacha
 	}
 
 	/**
-	 * Detach from the current request.
-	 * 
-	 * @see wicket.markup.html.form.IDetachableChoiceList#detach()
+	 * @see wicket.model.IDetachable#detach()
 	 */
 	public final void detach()
 	{
@@ -152,5 +102,6 @@ public abstract class DetachableChoiceList extends ArrayList implements IDetacha
 	 */
 	protected void onDetach()
 	{
+		clear();
 	}
 }

@@ -19,23 +19,17 @@
 package wicket.model;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.text.MessageFormat;
-
-import wicket.RequestCycle;
-import wicket.markup.html.WebPage;
-import wicket.model.DetachableModel;
-import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
-import wicket.model.StringResourceModel;
-import wicket.protocol.http.WebRequestCycle;
-import wicket.protocol.http.MockWebApplication;
-import wicket.protocol.http.MockPage;
-import wicket.resource.BundleStringResourceLoader;
+import java.util.Calendar;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.RequestCycle;
+import wicket.markup.html.WebPage;
+import wicket.protocol.http.MockPage;
+import wicket.protocol.http.MockWebApplication;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.resource.BundleStringResourceLoader;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
@@ -204,16 +198,23 @@ public class StringResourceModelTest extends TestCase
 	 */
 	public void testDetachAttachDetachableModel() throws Exception
 	{
-		IModel wsDetachModel = new DetachableModel(wsModel)
+		IModel wsDetachModel = new AbstractDetachableModel()
 		{
+			private transient WeatherStation station;
+			
 			protected void onAttach()
 			{
-				setObject(new WeatherStation());
+				station = new WeatherStation();
 			}
 
 			protected void onDetach()
 			{
-				setObject(null);
+				station = null;
+			}
+
+			protected Object onGetObject()
+			{
+				return station;
 			}
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);

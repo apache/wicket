@@ -18,9 +18,10 @@
 package wicket.markup.html.list;
 
 import java.util.AbstractList;
+import java.util.List;
 
 import wicket.markup.html.basic.Label;
-import wicket.model.DetachableModel;
+import wicket.model.AbstractDetachableModel;
 import wicket.model.IModel;
 
 /**
@@ -130,11 +131,13 @@ public class PageableListViewNavigation extends ListView
 	 */
 	protected IModel initModel()
 	{
-		return new DetachableModel()
+		return new AbstractDetachableModel()
 		{
+			private transient List list;
+			
 			protected void onAttach()
 			{
-				setObject(new AbstractList()
+				this.list = new AbstractList()
 				{
 					public Object get(final int index)
 					{
@@ -145,12 +148,17 @@ public class PageableListViewNavigation extends ListView
 					{
 						return pageableListView.getPageCount();
 					}
-				});
+				};
 			}
 
 			protected void onDetach()
 			{
-				setObject(null);
+				this.list = null;
+			}
+
+			protected Object onGetObject()
+			{
+				return list;
 			}
 		};
 	}
