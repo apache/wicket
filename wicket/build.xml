@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <project default="jar" name="wicket:null" basedir=".">
   <property name="defaulttargetdir" value="build">
@@ -48,6 +48,13 @@
       <classpath refid="build.classpath">
       </classpath>
     </javac>
+    <copy todir="${classesdir}">
+        <fileset dir="src/java">
+            <include name="**/*.*" />
+            <exclude name="**/*.java" />
+            <exclude name="**/package.html"/>
+        </fileset>
+    </copy>
   </target>
   <target name="jar" description="o Create the jar" depends="compile,test">
     <jar jarfile="${defaulttargetdir}/${final.name}.jar" excludes="**/package.html" basedir="${classesdir}">
@@ -119,6 +126,12 @@
         </pathelement>
       </classpath>
     </javac>
+    <copy todir="${testclassesdir}">
+        <fileset dir="src/test">
+            <include name="**/*.*" />
+            <exclude name="**/*.java" />
+        </fileset>
+    </copy>
   </target>
   <target name="javadoc" description="o Generate javadoc">
     <mkdir dir="${javadocdir}">
