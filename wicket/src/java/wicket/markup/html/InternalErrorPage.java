@@ -22,21 +22,20 @@ import wicket.PageParameters;
 
 /**
  * Internal error display page.
+ *
  * @author Jonathan Locke
  */
 public class InternalErrorPage extends HtmlPage
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = -4676797850273383367L;
 
 	/**
-     * Constructor
-     * @param parameters
+     * Constructor.
+     * @param parameters the page parameters
      */
     public InternalErrorPage(final PageParameters parameters)
     {
         add(homePageLink("homePageLink"));
     }
 }
-
-

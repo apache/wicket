@@ -30,12 +30,12 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public class ExceptionErrorPage extends HtmlPage
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = 5578704587965089202L;
 
 	/**
-     * Constructor
+     * Constructor.
      * @param e The markup exception to show
      */
     public ExceptionErrorPage(final RuntimeException e)
@@ -75,5 +75,3 @@ public class ExceptionErrorPage extends HtmlPage
         markupHighlight.setVisible(markupStream != null);
     }
 }
-
-

@@ -25,15 +25,16 @@ import wicket.markup.html.link.PageLink;
 
 /**
  * Stale data error page.
+ *
  * @author Jonathan Locke
  */
 public class StaleDataErrorPage extends HtmlPage
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = -3703752578058679886L;
 
 	/**
-     * Constructor
+     * Constructor.
      * @param page The page to send the user to
      */
     public StaleDataErrorPage(final Page page)
@@ -55,5 +56,3 @@ public class StaleDataErrorPage extends HtmlPage
         }));
     }
 }
-
-
