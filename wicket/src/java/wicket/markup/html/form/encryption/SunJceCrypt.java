@@ -19,6 +19,7 @@ package wicket.markup.html.form.encryption;
 
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 
@@ -30,6 +31,8 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import wicket.WicketRuntimeException;
 
 /**
  * Provide some simple means to encrypt and decrypt strings such as passwords.
@@ -105,7 +108,24 @@ public class SunJceCrypt extends AbstractCrypt implements ICrypt
 
 	static
 	{
-		// Initialize and add a security provider required for encryption
-		Security.addProvider(new com.sun.crypto.provider.SunJCE());
+	    try
+	    {
+			// Initialize and add a security provider required for encryption
+			//Security.addProvider(new com.sun.crypto.provider.SunJCE());
+	        final Class clazz = Class.forName("com.sun.crypto.provider.SunJCE");
+	        Security.addProvider((Provider)clazz.newInstance());
+	    }
+	    catch (ClassNotFoundException ex)
+	    {
+	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+	    }
+	    catch (IllegalAccessException ex)
+	    {
+	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+	    }
+	    catch (InstantiationException ex)
+	    {
+	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+	    }
 	}
 }
