@@ -22,19 +22,19 @@ import java.net.URL;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.resource.IResource;
-import wicket.util.resource.UrlResource;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.UrlResourceStream;
 
 /**
- * IResourceLocator implementation that locates resources using a class loader.
+ * IResourceStreamLocator implementation that locates resources using a class loader.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public final class ClassLoaderResourceLocator extends AbstractResourceLocator
+public final class ClassLoaderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(ResourceLocator.class);
+	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
 
 	/** The path to search along */
 	private ClassLoader classloader;
@@ -42,7 +42,7 @@ public final class ClassLoaderResourceLocator extends AbstractResourceLocator
 	/**
 	 * Constructor
 	 */
-	public ClassLoaderResourceLocator()
+	public ClassLoaderResourceStreamLocator()
 	{
 	}
 
@@ -52,15 +52,15 @@ public final class ClassLoaderResourceLocator extends AbstractResourceLocator
 	 * @param classloader
 	 *            The class loader to search
 	 */
-	public ClassLoaderResourceLocator(final ClassLoader classloader)
+	public ClassLoaderResourceStreamLocator(final ClassLoader classloader)
 	{
 		this.classloader = classloader;
 	}
 
 	/**
-	 * @see wicket.util.resource.locator.AbstractResourceLocator#locate(java.lang.String)
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.String)
 	 */
-	protected IResource locate(final String path)
+	protected IResourceStream locate(final String path)
 	{
 		// Ensure classloader
 		if (classloader == null)
@@ -75,7 +75,7 @@ public final class ClassLoaderResourceLocator extends AbstractResourceLocator
 		final URL url = classloader.getResource(path);
 		if (url != null)
 		{
-			return new UrlResource(url);
+			return new UrlResourceStream(url);
 		}
 		return null;
 	}

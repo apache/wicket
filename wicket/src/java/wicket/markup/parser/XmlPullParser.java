@@ -31,9 +31,9 @@ import wicket.markup.MarkupElement;
 import wicket.util.io.Streams;
 import wicket.util.parse.metapattern.parsers.TagNameParser;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
-import wicket.util.resource.StringResource;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.resource.StringResourceStream;
 
 /**
  * A fairly shallow markup pull or streaming parser. Parses a markup string of a
@@ -263,12 +263,12 @@ public final class XmlPullParser implements IXmlPullParser
 	 *            The input string
 	 * @throws IOException
 	 *             Error while reading the resource
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 *             Resource not found
 	 */
-	public void parse(final CharSequence string) throws IOException, ResourceNotFoundException
+	public void parse(final CharSequence string) throws IOException, ResourceStreamNotFoundException
 	{
-		parse(new StringResource(string));
+		parse(new StringResourceStream(string));
 	}
 
 	/**
@@ -277,9 +277,9 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @param resource
 	 *            The resource to read and parse
 	 * @throws IOException
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 */
-	public void parse(final IResource resource) throws IOException, ResourceNotFoundException
+	public void parse(final IResourceStream resource) throws IOException, ResourceStreamNotFoundException
 	{
 		// reset: Must come from markup
 		this.encoding = null;

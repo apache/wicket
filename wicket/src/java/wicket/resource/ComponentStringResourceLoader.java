@@ -30,8 +30,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.value.ValueMap;
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
 
@@ -180,7 +180,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// Do the resource load
 		final Properties properties = new Properties();
-		final IResource resource = component.getApplication().getResourceLocator().locate(
+		final IResourceStream resource = component.getApplication().getResourceLocator().locate(
 				component.getClass(), style, locale, "properties");
 		if (resource != null)
 		{
@@ -196,7 +196,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 					resource.close();
 				}
 			}
-			catch (ResourceNotFoundException e)
+			catch (ResourceStreamNotFoundException e)
 			{
 				log.warn("Unable to find resource " + resource, e);
 				strings = ValueMap.EMPTY_MAP;

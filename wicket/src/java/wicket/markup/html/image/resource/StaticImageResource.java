@@ -24,7 +24,7 @@ import java.util.Map;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.util.lang.Packages;
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * An image component represents a localizable image resource. The image name
@@ -42,7 +42,7 @@ public class StaticImageResource extends ImageResource
 	private static Map imageResourceMap = new HashMap();
 
 	/** The image resource */
-	private transient IResource resource;
+	private transient IResourceStream resource;
 
 	/** The path to the resource */
 	final String absolutePath;
@@ -109,7 +109,7 @@ public class StaticImageResource extends ImageResource
 	/**
 	 * @return Gets the image resource for the component.
 	 */
-	public IResource getResource()
+	public IResourceStream getResource()
 	{
 		if (resource == null)
 		{

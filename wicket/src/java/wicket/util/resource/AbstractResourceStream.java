@@ -25,11 +25,11 @@ import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
 
 /**
- * @see wicket.util.resource.IResource
+ * @see wicket.util.resource.IResourceStream
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractResource implements IStringResource
+public abstract class AbstractResourceStream implements IStringResourceStream
 {
 	/** Charset for resource */
 	private Charset charset;
@@ -65,7 +65,7 @@ public abstract class AbstractResource implements IStringResource
 		{
 			throw new WicketRuntimeException("Unable to read resource as String", e);
 		}
-		catch (ResourceNotFoundException e)
+		catch (ResourceStreamNotFoundException e)
 		{
 			throw new WicketRuntimeException("Unable to read resource as String", e);
 		}

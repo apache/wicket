@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.image.resource.DynamicImageResource;
 import wicket.markup.html.image.resource.ImageResource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
  * Image resource that dynamically scales the given original resource to a thumbnail.
@@ -102,7 +102,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 		{
 			throw new WicketRuntimeException(e);
 		}
-		catch (ResourceNotFoundException e)
+		catch (ResourceStreamNotFoundException e)
 		{
 			throw new WicketRuntimeException(e);
 		}

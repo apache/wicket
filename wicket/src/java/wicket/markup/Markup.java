@@ -20,7 +20,7 @@ package wicket.markup;
 
 import java.util.List;
 
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Holds markup as a resource (the stream that the markup came from) and 
@@ -37,7 +37,7 @@ public final class Markup
 	private final List markup;
 	
 	/** The markup's resource stream for diagnostic purposes */
-	private final IResource resource;
+	private final IResourceStream resource;
 	
 	/** If found in the markup, the <?xml ...?> string */
 	private final String xmlDeclaration;
@@ -55,7 +55,7 @@ public final class Markup
 	 * @param xmlDeclaration The <?xml ...?> string from markup, if avaiable
 	 * @param encoding The encoding of the markup file read taken from <?xml ..encoding=".." ?>
 	 */
-	Markup(final IResource resource, final List markup, final String xmlDeclaration, final String encoding)
+	Markup(final IResourceStream resource, final List markup, final String xmlDeclaration, final String encoding)
 	{
 		this.resource = resource;
 		this.markup = markup;
@@ -84,7 +84,7 @@ public final class Markup
 	 * Gets the resource that contains this markup
 	 * @return The resource where this markup came from
 	 */
-	IResource getResource()
+	IResourceStream getResource()
 	{
 		return resource;
 	}

@@ -19,6 +19,9 @@ package wicket.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
+
+import wicket.util.watch.IModifiable;
 
 /**
  * Interface to a streamed resource. The resource stream can be retrieved by
@@ -35,17 +38,25 @@ import java.io.InputStream;
  * 
  * @author Jonathan Locke
  */
-public interface IResourceStream
+public interface IResourceStream extends IModifiable, Serializable
 {
+	/**
+	 * Gets the mime type of this resource
+	 * 
+	 * @return The mime type of this resource, such as "image/jpeg" or
+	 *         "text/html"
+	 */
+	public String getContentType();
+	
 	/**
 	 * Gets the resource stream. You should not directly close this stream.
 	 * Instead call the close() method on IResourceStream.
 	 * 
 	 * @see IResourceStream#close()
 	 * @return Returns the inputStream.
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 */
-	public InputStream getInputStream() throws ResourceNotFoundException;
+	public InputStream getInputStream() throws ResourceStreamNotFoundException;
 
 	/**
 	 * Closes the resource. Normally, this includes closing any underlying input

@@ -29,7 +29,7 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractStringResource extends AbstractResource
+public abstract class AbstractStringResourceStream extends AbstractResourceStream
 {
 	/** MIME content type */
 	private final String contentType;
@@ -40,7 +40,7 @@ public abstract class AbstractStringResource extends AbstractResource
 	/**
 	 * Constructor.
 	 */
-	public AbstractStringResource()
+	public AbstractStringResourceStream()
 	{
 		this("text");
 	}
@@ -51,7 +51,7 @@ public abstract class AbstractStringResource extends AbstractResource
 	 * @param contentType The mime type of this resource, such as "image/jpeg" or
 	 *         "text/html"
 	 */
-	public AbstractStringResource(final String contentType)
+	public AbstractStringResourceStream(final String contentType)
 	{
 		this.contentType = contentType;
 	}
@@ -64,7 +64,7 @@ public abstract class AbstractStringResource extends AbstractResource
 	}
 	
 	/**
-	 * @see wicket.util.resource.IResource#getContentType()
+	 * @see wicket.util.resource.IResourceStream#getContentType()
 	 */
 	public String getContentType()
 	{
@@ -74,7 +74,7 @@ public abstract class AbstractStringResource extends AbstractResource
 	/**
 	 * @see wicket.util.resource.IResourceStream#getInputStream()
 	 */
-	public InputStream getInputStream() throws ResourceNotFoundException
+	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		final byte[] bytes;
 		if (getCharset() != null)
@@ -85,7 +85,7 @@ public abstract class AbstractStringResource extends AbstractResource
 			}
 			catch (UnsupportedEncodingException e)
 			{
-				throw new ResourceNotFoundException("Could not encode resource", e);
+				throw new ResourceStreamNotFoundException("Could not encode resource", e);
 			}
 		}
 		else

@@ -29,8 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Component;
 import wicket.Page;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.value.ValueMap;
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
 
@@ -125,7 +125,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
 
 		// Do the resource load
 		final Properties properties = new Properties();
-		final IResource resource = application.getResourceLocator().locate(application.getClass(),
+		final IResourceStream resource = application.getResourceLocator().locate(application.getClass(),
 				style, locale, "properties");
 		if (resource != null)
 		{
@@ -141,7 +141,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
 					resource.close();
 				}
 			}
-			catch (ResourceNotFoundException e)
+			catch (ResourceStreamNotFoundException e)
 			{
 				log.warn("Unable to find resource " + resource, e);
 				strings = ValueMap.EMPTY_MAP;

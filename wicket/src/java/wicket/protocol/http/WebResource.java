@@ -18,7 +18,7 @@
 package wicket.protocol.http;
 
 import wicket.Resource;
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * A resource is something that implements IResourceListener.
@@ -30,5 +30,5 @@ public abstract class WebResource extends Resource
 	/**
 	 * @see Resource#getResource()
 	 */
-	protected abstract IResource getResource();
+	protected abstract IResourceStream getResource();
 }

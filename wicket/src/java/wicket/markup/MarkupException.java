@@ -18,7 +18,7 @@
 package wicket.markup;
 
 import wicket.WicketRuntimeException;
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Runtime exception that is thrown when markup parsing fails.
@@ -48,7 +48,7 @@ public final class MarkupException extends WicketRuntimeException
 	 * @param message
 	 *            The message
 	 */
-	public MarkupException(final IResource resource, final String message)
+	public MarkupException(final IResourceStream resource, final String message)
 	{
 		super(resource.toString() + ": " + message);
 		markupStream = null;
@@ -62,7 +62,7 @@ public final class MarkupException extends WicketRuntimeException
 	 * @param cause
 	 *            The causing exception
 	 */
-	public MarkupException(final IResource resource, final String message, final Throwable cause)
+	public MarkupException(final IResourceStream resource, final String message, final Throwable cause)
 	{
 		super(resource.toString() + ": " + message, cause);
 		markupStream = null;

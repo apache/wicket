@@ -31,13 +31,13 @@ import wicket.ApplicationSettings;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.XmlPullParser;
-import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.markup.parser.filter.HtmlHandler;
+import wicket.markup.parser.filter.WicketLinkTagHandler;
+import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
-import wicket.markup.parser.filter.WicketParamTagHandler;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
 
 
 /**
@@ -139,10 +139,10 @@ public final class MarkupParser
      * @return The markup
      * @throws ParseException
      * @throws IOException
-     * @throws ResourceNotFoundException
+     * @throws ResourceStreamNotFoundException
      */
-    public Markup readAndParse(final IResource resource) throws ParseException, IOException,
-            ResourceNotFoundException
+    public Markup readAndParse(final IResourceStream resource) throws ParseException, IOException,
+            ResourceStreamNotFoundException
     {
         xmlParser.parse(resource);
         return new Markup(resource, parseMarkup(), getXmlDeclaration(), getEncoding());
@@ -154,10 +154,10 @@ public final class MarkupParser
      * @return The markup
      * @throws ParseException
      * @throws IOException
-     * @throws ResourceNotFoundException
+     * @throws ResourceStreamNotFoundException
      */
     Markup parse(final String string) throws ParseException, IOException,
-    	ResourceNotFoundException
+    	ResourceStreamNotFoundException
     {
         xmlParser.parse(string);
         return new Markup(null, parseMarkup(), getXmlDeclaration(), getEncoding());

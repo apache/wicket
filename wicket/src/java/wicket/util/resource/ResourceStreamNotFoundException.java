@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceNotFoundException.java,v 1.4 2005/01/15 19:23:55 jonathanlocke
+ * $Id: ResourceStreamNotFoundException.java,v 1.4 2005/01/15 19:23:55 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -22,12 +22,12 @@ package wicket.util.resource;
  * 
  * @author Jonathan Locke
  */
-public final class ResourceNotFoundException extends Exception
+public final class ResourceStreamNotFoundException extends Exception
 {
 	/**
 	 * Constructor
 	 */
-	public ResourceNotFoundException()
+	public ResourceStreamNotFoundException()
 	{
 		super();
 	}
@@ -38,7 +38,7 @@ public final class ResourceNotFoundException extends Exception
 	 * @param message
 	 *            Description of the problem
 	 */
-	public ResourceNotFoundException(final String message)
+	public ResourceStreamNotFoundException(final String message)
 	{
 		super(message);
 	}
@@ -49,7 +49,7 @@ public final class ResourceNotFoundException extends Exception
 	 * @param cause
 	 *            Nested stack trace
 	 */
-	public ResourceNotFoundException(final Throwable cause)
+	public ResourceStreamNotFoundException(final Throwable cause)
 	{
 		super(cause);
 	}
@@ -62,7 +62,7 @@ public final class ResourceNotFoundException extends Exception
 	 * @param cause
 	 *            Nested stack trace
 	 */
-	public ResourceNotFoundException(final String message, final Throwable cause)
+	public ResourceStreamNotFoundException(final String message, final Throwable cause)
 	{
 		super(message, cause);
 	}

@@ -22,9 +22,9 @@ import java.util.Locale;
 import junit.framework.TestCase;
 import wicket.util.file.Folder;
 import wicket.util.file.Path;
-import wicket.util.resource.locator.ClassLoaderResourceLocator;
-import wicket.util.resource.locator.DefaultResourceLocator;
-import wicket.util.resource.locator.ResourceLocator;
+import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
+import wicket.util.resource.locator.DefaultResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.string.Strings;
 
 
@@ -51,13 +51,13 @@ public class ResourceTest extends TestCase
 	private Locale locale_fr_FR_WIN = new Locale("fr", "FR", "WIN");
 	private Locale locale_fr_WIN = new Locale("fr", "", "WIN");
 
-	private void compareFilename(IResource resource, String name)
+	private void compareFilename(IResourceStream resource, String name)
 	{
 		assertNotNull("Did not find resource: " + name, resource);
 
 		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/");
 		filename += name + ".txt";
-		String resourcePath = Strings.replaceAll(((UrlResource)resource).getFile()
+		String resourcePath = Strings.replaceAll(((UrlResourceStream)resource).getFile()
 				.getAbsolutePath(), "\\", "/");
 		if (false == resourcePath.endsWith(filename))
 		{
@@ -76,8 +76,8 @@ public class ResourceTest extends TestCase
 	 */
 	public void createAndTestResource(Path sourcePath, String style, Locale locale, String extension)
 	{
-		ResourceLocator locator = new DefaultResourceLocator(sourcePath);
-		IResource resource = locator.locate(this.getClass(), style, locale, "txt");
+		ResourceStreamLocator locator = new DefaultResourceStreamLocator(sourcePath);
+		IResourceStream resource = locator.locate(this.getClass(), style, locale, "txt");
 		compareFilename(resource, extension);
 	}
 
@@ -124,9 +124,9 @@ public class ResourceTest extends TestCase
 		executeMultiple(new Path());
 
 		// Determine source path
-		ResourceLocator locator = new ResourceLocator(new ClassLoaderResourceLocator());
-		IResource resource = locator.locate(getClass(), null, null, "txt");
-		String path = Strings.replaceAll(((UrlResource)resource).getFile().getAbsolutePath(), "\\",
+		ResourceStreamLocator locator = new ResourceStreamLocator(new ClassLoaderResourceStreamLocator());
+		IResourceStream resource = locator.locate(getClass(), null, null, "txt");
+		String path = Strings.replaceAll(((UrlResourceStream)resource).getFile().getAbsolutePath(), "\\",
 				"/");
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
 

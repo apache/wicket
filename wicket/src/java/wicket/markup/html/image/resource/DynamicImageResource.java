@@ -27,8 +27,8 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
 import wicket.WicketRuntimeException;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
 
 /**
@@ -76,9 +76,9 @@ public abstract class DynamicImageResource extends ImageResource
 	/**
 	 * @return Gets the image resource to attach to the component.
 	 */
-	public IResource getResource()
+	public IResourceStream getResource()
 	{
-		return new IResource()
+		return new IResourceStream()
 		{
 			/** Transient input stream to resource */
 			private transient InputStream inputStream = null;
@@ -96,7 +96,7 @@ public abstract class DynamicImageResource extends ImageResource
 			}
 
 			/**
-			 * @see wicket.util.resource.IResource#getContentType()
+			 * @see wicket.util.resource.IResourceStream#getContentType()
 			 */
 			public String getContentType()
 			{
@@ -106,7 +106,7 @@ public abstract class DynamicImageResource extends ImageResource
 			/**
 			 * @see wicket.util.resource.IResourceStream#getInputStream()
 			 */
-			public InputStream getInputStream() throws ResourceNotFoundException
+			public InputStream getInputStream() throws ResourceStreamNotFoundException
 			{
 				if (inputStream == null)
 				{

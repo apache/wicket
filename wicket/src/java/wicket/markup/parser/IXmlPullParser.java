@@ -19,8 +19,8 @@ package wicket.markup.parser;
 
 import java.io.IOException;
 
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
  * The interface of a streaming XML parser as required by Wicket.
@@ -82,11 +82,11 @@ public interface IXmlPullParser extends IMarkupFilter
 	 *			  The markup to be parsed
 	 * @throws IOException
 	 *			   Error while reading the resource
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 *			   Resource not found
 	 */
 	public abstract void parse(final CharSequence string) throws IOException,
-		ResourceNotFoundException;
+		ResourceStreamNotFoundException;
 
 	/**
 	 * Reads and parses markup from a resource like file. Use nextTag() to
@@ -96,11 +96,11 @@ public interface IXmlPullParser extends IMarkupFilter
 	 *			  A resource like e.g. a file
 	 * @throws IOException
 	 *			   Error while reading the resource
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 *			   Resource not found
 	 */
-	public abstract void parse(final IResource resource) throws IOException,
-			ResourceNotFoundException;
+	public abstract void parse(final IResourceStream resource) throws IOException,
+			ResourceStreamNotFoundException;
 
 	/**
 	 * Set the position marker of the markup at the current position.
