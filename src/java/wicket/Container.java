@@ -397,7 +397,7 @@ public abstract class Container extends Component
     /**
      * Removes all children from this container.
      */
-    protected final void removeAll()
+    public void removeAll()
     {
         childForName.clear();
     }
