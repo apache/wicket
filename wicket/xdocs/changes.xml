@@ -6,7 +6,10 @@
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
   </properties>
   <body>
-    <release version="0.9.15-alpha" date="in CVS" description="State of CVS">
+    <release version="0.9.15-alpha" date="in CVS" description="Last release before march to 1.0">
+      <action type="add" dev="Eelco Hillenius" issue="1032507">Create a contrib section (site &amp; cvs) where high level components and other contributions that should not be part of the core can be put.</action>
+      <action type="add" dev="Martijn Dashorst">Added quickstart project</action>
+      <action type="update" dev="Eelco Hillenius" issue="1087152">Move packages from com.voicetribe.* to wicket.*</action>
       <action type="add" dev="Martijn Dashorst" issue="1081709">Replaced the default design of a maven generated website with a more pleasing, non standard look and feel.</action>
       <action type="add" dev="Martijn Dashorst" issue="1061782">Added Clover logo to front page of our website.</action>
       <action type="add" dev="Juergen Donnerstag">Added support for a configurable character encoding (i18n) for markup files and HTTP response. And added a new example to show how it works.</action>
