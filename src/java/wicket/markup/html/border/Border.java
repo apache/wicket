@@ -1,14 +1,14 @@
 /*
  * $Id$ $Revision$
  * $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -64,13 +64,13 @@ import wicket.markup.html.HtmlContainer;
  * In other words, the body of the myBorder component is substituted into the
  * border's associated markup at the position indicated by the
  * &lt;wicket:body&gt; tag.
- * 
+ *
  * @author Jonathan Locke
  */
 public abstract class Border extends HtmlContainer
 {
 	/** The open tag for this border component. */
-	private ComponentTag openTag;
+	private transient ComponentTag openTag;
 
 	/**
      * @see wicket.Component#Component(String)
@@ -96,9 +96,9 @@ public abstract class Border extends HtmlContainer
 
 	/**
 	 * Border makes use of a &lt;wicket:body&gt; tag to indentify the position
-	 * to insert within the border's body. As &lt;wicket:body&gt; is a special 
+	 * to insert within the border's body. As &lt;wicket:body&gt; is a special
      * tag and Container is not able to handle it, we do that here.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The current markup stream
 	 * @param tag
