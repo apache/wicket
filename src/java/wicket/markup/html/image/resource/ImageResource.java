@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.image.resource;
 
-import wicket.protocol.http.WebResource;
+import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
 
 /**

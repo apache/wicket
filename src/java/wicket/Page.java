@@ -354,6 +354,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		});
 		return buffer.toString();
 	}
+	
+	/**
+	 * @return True if this page is intended to display an error to the end user.
+	 */
+	public boolean isErrorPage()
+	{
+		return false;
+	}
 
 	/**
 	 * @return Gets a PageState record for this page
