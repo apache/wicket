@@ -455,7 +455,7 @@ public abstract class Container extends Component
 	 * @param exceptionMessage
 	 *           message that will be used for exceptions
 	 */
-	protected final void renderAssociatedMarkup(final RequestCycle cycle, final String name,
+	protected final void renderAssociatedMarkup(final RequestCycle cycle, final String openTagName,
 			final String exceptionMessage)
 	{
 		// Get markup associated with Border or Panel component
@@ -469,9 +469,9 @@ public abstract class Container extends Component
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!associatedMarkupStream.atOpenTag("[" + name + "]") &&
-		        !(associatedMarkupStream.atOpenTag("region") 
-		                && name.equalsIgnoreCase(((ComponentWicketTag) associatedMarkupOpenTag).getNameAttribute())))
+		if (!associatedMarkupStream.atOpenTag("[" + openTagName + "]") &&
+		    !(associatedMarkupStream.atOpenTag("region") 
+		    && openTagName.equalsIgnoreCase(((ComponentWicketTag) associatedMarkupOpenTag).getNameAttribute())))
 		{
 		    associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}

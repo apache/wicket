@@ -875,7 +875,7 @@ public class ApplicationSettings
     }
     
     /**
-     * @param markupParserClass The markupParserClass to set.
+     * @param markupParserClassName The markupParserClass to set.
      */
     public final void setMarkupParserClassName(final String markupParserClassName)
     {
