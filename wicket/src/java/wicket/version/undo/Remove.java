@@ -30,6 +30,8 @@ class Remove extends Change
 	private final Component component;
 	private final MarkupContainer container;
 	
+	// TODO detach model when components are removed / reattach when added.
+	
 	Remove(final Component component)
 	{
 		this.component = component;

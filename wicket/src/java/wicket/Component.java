@@ -719,20 +719,6 @@ public abstract class Component implements Serializable
 	 * 
 	 * @param c
 	 *            The class of page to create
-	 * @param parameters
-	 *            Any parameters to pass to the constructor
-	 * @return The new page
-	 */
-	public final Page newPage(final Class c, final PageParameters parameters)
-	{
-		return getPageFactory().newPage(c, parameters);
-	}
-
-	/**
-	 * Creates a new page using the component's page factory
-	 * 
-	 * @param c
-	 *            The class of page to create
 	 * @return The new page
 	 */
 	public final Page newPage(final Class c)
@@ -741,14 +727,17 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Redirects browser to the given page
+	 * Creates a new page using the component's page factory
 	 * 
-	 * @param page
-	 *            The page to redirect to
+	 * @param c
+	 *            The class of page to create
+	 * @param parameters
+	 *            Any parameters to pass to the constructor
+	 * @return The new page
 	 */
-	protected void redirectTo(final Page page)
+	public final Page newPage(final Class c, final PageParameters parameters)
 	{
-		getRequestCycle().redirectTo(page);
+		return getPageFactory().newPage(c, parameters);
 	}
 
 	/**
@@ -945,6 +934,10 @@ public abstract class Component implements Serializable
 				model.setObject(this, object);
 				modelChanged();
 			}
+		}
+		else
+		{
+			throw new IllegalStateException("Attempt to set model object on null model");
 		}
 	}
 
@@ -1224,6 +1217,17 @@ public abstract class Component implements Serializable
 	 * Implementation that renders this component.
 	 */
 	protected abstract void onRender();
+
+	/**
+	 * Redirects browser to the given page
+	 * 
+	 * @param page
+	 *            The page to redirect to
+	 */
+	protected void redirectTo(final Page page)
+	{
+		getRequestCycle().redirectTo(page);
+	}
 
 	/**
 	 * Renders the component at the current position in the given markup stream.
