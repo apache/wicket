@@ -32,6 +32,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.form.validation.ValidationErrorMessage;
+import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
@@ -54,11 +55,62 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	private IFormComponentPersistenceManager persister = null;
 
     /** The delegate to be used for execution of validation of this form. */
-    private IFormValidationDelegate validationDelegate =
-    	new DefaultFormValidationDelegate();
+    private IFormValidationDelegate validationDelegate = defaultFormValidationDelegate;
 
     /** The validation error handling delegate. */
     private final IValidationErrorHandler validationErrorHandler;
+    
+    /** Single instance of default form validation delegate */
+    private static final IFormValidationDelegate defaultFormValidationDelegate = 
+        new DefaultFormValidationDelegate();
+    
+    /**
+     * The default form validation delegate.
+     */
+    private static final class DefaultFormValidationDelegate implements IFormValidationDelegate
+    {
+        /** Log. */
+        private static final Log log = LogFactory.getLog(DefaultFormValidationDelegate.class);
+
+        /**
+         * Validates all children of this form, recording all messages that are
+         * returned by the validators.
+         * 
+         * @param form
+         *            the form that the validation is applied to
+         * @return the list of validation messages that were recorded during
+         *         validation
+         */
+        public FeedbackMessages validate(Form form)
+        {
+            final FeedbackMessages messages = FeedbackMessages.get();
+            form.visitChildren(FormComponent.class, new IVisitor()
+            {
+                public Object component(final Component component)
+                {
+                    final ValidationErrorMessage message = ((FormComponent)component).validate();
+                    if (message != ValidationErrorMessage.NO_MESSAGE)
+                    {
+                        if (log.isDebugEnabled())
+                        {
+                            log.debug("validation error: " + message);
+                        }
+                        messages.add(message);
+
+                        // Replace the model
+                        // TODO examine ways to avoid this
+                        ValidationErrorModelDecorator deco = new ValidationErrorModelDecorator(
+                                component, message.getInput());
+                        component.setModel(deco);
+                    }
+
+                    // Continue until the end
+                    return IVisitor.CONTINUE_TRAVERSAL;
+                }
+            });
+            return messages;
+        }
+    }
 
     /**
      * Constructor that uses the provided {@link IModel} as its model. All components have

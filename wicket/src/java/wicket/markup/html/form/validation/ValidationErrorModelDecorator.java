@@ -6,7 +6,6 @@ import wicket.Component;
 import wicket.model.IModel;
 import wicket.model.Model;
 
-
 /**
  * Decorates a model, using the given input (that was the cause of a validation
  * error) as the model object instead of the 'real' model object.
