@@ -25,7 +25,7 @@ import wicket.PageParameters;
  * @author Jonathan Locke
  */
 public class InternalErrorPage extends HtmlPage
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = -4676797850273383367L;
 

@@ -23,7 +23,7 @@ package wicket.util.listener;
  * @author Jonathan Locke
  */
 public interface IChangeListener
-{
+{ // TODO finalize javadoc
     /**
      * Client method that is called when something changes.
      */

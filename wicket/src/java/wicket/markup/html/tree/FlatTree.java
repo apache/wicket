@@ -63,7 +63,7 @@ import wicket.model.Model;
  * @author Eelco Hillenius
  */
 public abstract class FlatTree extends AbstractTree
-{
+{ // TODO finalize javadoc
     /** table for the current visible tree paths. */
     private ListView visibleTreePathTable;
 

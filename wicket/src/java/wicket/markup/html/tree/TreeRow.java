@@ -29,7 +29,7 @@ import wicket.markup.html.panel.Panel;
  * @author Eelco Hillenius
  */
 public final class TreeRow extends Panel
-{
+{ // TODO finalize javadoc
     /**
      * Construct.
      * @param componentName name of the component

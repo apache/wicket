@@ -31,7 +31,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  */
 public class TreeRowReplacementModel implements IModel
-{
+{ // TODO finalize javadoc
     /** model of one tree node. */
     private final TreeNodeModel treeNodeModel;
 

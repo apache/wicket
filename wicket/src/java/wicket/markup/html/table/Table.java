@@ -33,7 +33,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  */
 public abstract class Table extends ListView
-{
+{ // TODO finalize javadoc
     /** The page to show */
     private int currentPage;
 

@@ -31,7 +31,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * @author Jonathan Locke W. Locke
  */
 public class ListParser extends MetaPatternParser
-{
+{ // TODO finalize javadoc
     private final Group entryGroup;
 
     private final MetaPattern separatorPattern;

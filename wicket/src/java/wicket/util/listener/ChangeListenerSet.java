@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Jonathan Locke
  */
 public final class ChangeListenerSet
-{
+{ // TODO finalize javadoc
     // Set of listeners
     private final Set listeners = new HashSet();
 

@@ -28,7 +28,7 @@ import java.util.List;
  * @author Jonathan Locke
  */
 public abstract class AbstractStringList implements IStringSequence, Serializable
-{
+{ // TODO finalize javadoc
     /**
      * @return String iterator
      * @see wicket.util.string.IStringSequence#iterator()

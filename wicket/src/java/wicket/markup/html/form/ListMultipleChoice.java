@@ -37,7 +37,7 @@ import wicket.model.Model;
  * @author Jonathan Locke
  */
 public final class ListMultipleChoice extends AbstractDropDownChoice
-{
+{ // TODO finalize javadoc
 	/** Serial Version ID */
 	private static final long serialVersionUID = -1000324612688307682L;
 

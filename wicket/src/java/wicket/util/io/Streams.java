@@ -30,7 +30,7 @@ import java.io.Reader;
  * @author Jonathan Locke
  */
 public final class Streams
-{
+{ // TODO finalize javadoc
     /**
      * Private to prevent instantiation.
      */

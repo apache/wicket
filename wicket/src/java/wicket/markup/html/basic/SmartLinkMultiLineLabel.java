@@ -45,7 +45,7 @@ import wicket.util.string.Strings;
  * @author Juergen Donnerstag
  */
 public final class SmartLinkMultiLineLabel extends MultiLineLabel
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 6614585065978596357L;
 

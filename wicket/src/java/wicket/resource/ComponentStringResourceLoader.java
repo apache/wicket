@@ -73,7 +73,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  * @author Chris Turner
  */
 public class ComponentStringResourceLoader implements IStringResourceLoader
-{
+{ // TODO finalize javadoc
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
 

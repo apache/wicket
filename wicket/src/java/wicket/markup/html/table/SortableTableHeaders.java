@@ -38,7 +38,7 @@ import wicket.markup.html.HtmlContainer;
  * @author Juergen Donnerstag
  */
 public class SortableTableHeaders extends HtmlContainer
-{
+{ // TODO finalize javadoc
     /** Logging */
     final private Log log = LogFactory.getLog(SortableTableHeaders.class);
     

@@ -32,7 +32,7 @@ import wicket.util.profile.IObjectProfileNode;
  * @author Jonathan Locke
  */
 public final class HttpPageTester
-{
+{ // TODO finalize javadoc
     private final RequestCycle cycle;
 
     private boolean consoleOutput = true;

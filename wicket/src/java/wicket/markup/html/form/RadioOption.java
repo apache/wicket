@@ -33,7 +33,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  */
 public final class RadioOption extends FormComponent
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = -2933133745573428936L;
 	

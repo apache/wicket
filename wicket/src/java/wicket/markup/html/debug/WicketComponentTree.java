@@ -47,7 +47,7 @@ import wicket.util.string.Strings;
  * @author Juergen Donnerstag
  */
 public class WicketComponentTree extends Panel 
-{
+{ // TODO finalize javadoc
     /**
      * Constructor.
      * @param componentName name of the component

@@ -29,7 +29,7 @@ import wicket.markup.html.form.FormComponent;
  * @author Jonathan Locke
  */
 public final class DecimalValidator extends AbstractValidator
-{
+{ // TODO finalize javadoc
     /**
      * Validator that ensures int value.
      */

@@ -33,7 +33,7 @@ import wicket.markup.html.HtmlComponent;
  * @author Jonathan Locke
  */
 public final class ImageMap extends HtmlComponent
-{
+{ // TODO finalize javadoc
     /** Serial Version ID. */
 	private static final long serialVersionUID = 209001445308790198L;
 

@@ -24,6 +24,6 @@ package wicket.protocol.http.documentvalidation;
  * @author Chris Turner
  */
 public interface DocumentElement
-{
+{ // TODO finalize javadoc
 
 }

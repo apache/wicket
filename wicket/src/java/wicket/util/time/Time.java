@@ -33,7 +33,7 @@ import java.util.Date;
  * @author Jonathan Locke
  */
 public final class Time extends AbstractTime
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 4441606416914169210L;
 

@@ -29,7 +29,7 @@ import wicket.util.convert.Formatter;
  * base class for localized converters.
  */
 public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
-{
+{ // TODO finalize javadoc
     // ----------------------------------------------------- Instance Variables
 
     /** The locale specified to our Constructor, by default - system locale. */

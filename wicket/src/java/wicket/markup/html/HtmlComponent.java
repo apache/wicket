@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  */
 public abstract class HtmlComponent extends Component
-{
+{ // TODO finalize javadoc
     /**
      * Constructor.
      * @param name Component name

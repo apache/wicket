@@ -57,7 +57,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  */
 public abstract class OnClickLink extends AbstractLink
-{
+{ // TODO finalize javadoc
     /**
      * Construct.
      * @param componentName the name of the component

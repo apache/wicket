@@ -48,7 +48,7 @@ import wicket.util.value.ValueMap;
  * @author Chris Turner
  */
 public class ComponentTagAttributeModifier implements Serializable
-{
+{ // TODO finalize javadoc
 	/** Attribute specification. */
 	private String attribute;
 

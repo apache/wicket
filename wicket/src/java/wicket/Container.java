@@ -92,7 +92,7 @@ import wicket.util.watch.Watcher;
  * @author Jonathan Locke
  */
 public abstract class Container extends Component
-{
+{ // TODO finalize javadoc
 	/** Map of markup tags by class. */
 	private static final Map markupCache = new HashMap();
 

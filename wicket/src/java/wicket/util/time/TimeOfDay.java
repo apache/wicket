@@ -30,7 +30,7 @@ import wicket.util.lang.EnumeratedType;
  * @author Jonathan Locke
  */
 public final class TimeOfDay extends AbstractTime
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 981684175051766950L;
 

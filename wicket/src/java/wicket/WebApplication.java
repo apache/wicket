@@ -40,7 +40,7 @@ import wicket.protocol.http.HttpApplication;
  * @see ApplicationSettings
  */
 public class WebApplication extends HttpApplication
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 1152456333052646498L;
 

@@ -22,7 +22,7 @@ package wicket.util.convert;
  * Interface for formatting values.
  */
 public interface Formatter
-{
+{ // TODO finalize javadoc
     /**
      * Convert the specified input object into a locale-sensitive output string.
      * @param value The input object to be formatted

@@ -34,7 +34,7 @@ import wicket.model.Model;
  * @author Eelco Hillenius
  */
 public final class TreeNodeModel extends Model
-{
+{ // TODO finalize javadoc
     /** tree node. */
     private final DefaultMutableTreeNode treeNode;
 

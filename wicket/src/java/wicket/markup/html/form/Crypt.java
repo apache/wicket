@@ -33,7 +33,7 @@ import sun.misc.BASE64Encoder;
  * @author Juergen Donnerstag
  */
 public class Crypt implements ICrypt
-{
+{ // TODO finalize javadoc
     /** Name of encryption method */
     private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
     

@@ -34,7 +34,7 @@ import wicket.util.convert.ConversionException;
  * </p>
  */
 public abstract class DecimalLocaleConverter extends BaseLocaleConverter
-{
+{ // TODO finalize javadoc
     protected Pattern nonDigitPattern = Pattern.compile(".*[^0-9&&[^\\,]&&[^\\.]&&[^\\-]].*");
 
     // ----------------------------------------------------------- Constructors

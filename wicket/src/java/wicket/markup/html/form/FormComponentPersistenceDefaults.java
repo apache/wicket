@@ -25,7 +25,7 @@ package wicket.markup.html.form;
  * @author Juergen Donnerstag
  */
 public class FormComponentPersistenceDefaults
-{
+{ // TODO finalize javadoc
     /** max age that the component will be persisted. */
     private int maxAge = 3600 * 24 * 30; // 30 days
 

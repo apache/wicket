@@ -28,7 +28,7 @@ import java.lang.reflect.Field;
  *         </a>, 2003
  */
 final class ClassFieldLink implements ILink
-{
+{ // TODO finalize javadoc
     // private: ...............................................................
     private final Field m_field;
 

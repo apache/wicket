@@ -29,7 +29,7 @@ import wicket.util.string.StringList;
  * @author Jonathan Locke
  */
 public final class LengthValidator extends AbstractValidator
-{
+{ // TODO finalize javadoc
     /** True if minimum bound should be checked. */
     private final boolean checkMin;
 

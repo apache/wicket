@@ -23,7 +23,7 @@ package wicket.util.lang;
  * @author Jonathan Locke
  */
 public final class Primitives
-{
+{ // TODO finalize javadoc
     /**
      * @param value The long value
      * @return Hash code

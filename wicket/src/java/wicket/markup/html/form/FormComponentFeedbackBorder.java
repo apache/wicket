@@ -33,7 +33,7 @@ import wicket.markup.html.form.validation.IValidationErrorHandler;
  * @author Eelco Hillenius
  */
 public final class FormComponentFeedbackBorder extends Border implements IValidationErrorHandler
-{
+{ // TODO finalize javadoc
     /** Serial Version ID. */
 	private static final long serialVersionUID = -7070716217601930304L;
 	

@@ -30,7 +30,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * @author Jonathan Locke
  */
 public final class PatternValidator extends AbstractValidator
-{
+{ // TODO finalize javadoc
     /** The regexp pattern. */
     private final Pattern pattern;
 

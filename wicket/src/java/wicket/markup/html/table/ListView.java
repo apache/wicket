@@ -64,7 +64,7 @@ import wicket.model.IModel;
  * @author Juergen Donnerstag
  */
 public abstract class ListView extends HtmlContainer 
-{
+{ // TODO finalize javadoc
     /** Index of the first listItem to show */
     private int firstIndex = 0;
  

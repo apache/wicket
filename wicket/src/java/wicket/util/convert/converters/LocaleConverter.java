@@ -25,7 +25,7 @@ import wicket.util.convert.Converter;
  * BeanUtils package, so it's easy to convert/ re-use converters.
  */
 public interface LocaleConverter extends Converter
-{
+{ // TODO finalize javadoc
     /**
      * Convert the specified locale-sensitive input object into an output object of the
      * specified type.

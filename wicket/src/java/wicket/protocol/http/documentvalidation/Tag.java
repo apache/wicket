@@ -31,7 +31,7 @@ import java.util.HashSet;
  * @author Chris Turner
  */
 public class Tag implements DocumentElement
-{
+{ // TODO finalize javadoc
 
     private String tag;
 

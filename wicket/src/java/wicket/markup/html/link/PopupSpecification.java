@@ -26,7 +26,7 @@ import java.io.Serializable;
  * new window with the links' URL.
  */
 public class PopupSpecification implements Serializable
-{
+{ // TODO finalize javadoc
     // Width and height of any popup window
     private int width = -1;
 

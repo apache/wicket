@@ -124,7 +124,7 @@ import wicket.util.watch.Watcher;
  * @author Chris Turner
  */
 public class ApplicationSettings
-{
+{ // TODO finalize javadoc
     // registry with converters
     private ConverterRegistry converterRegistry = new ConverterRegistry();
 

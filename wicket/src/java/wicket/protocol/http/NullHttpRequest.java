@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Jonathan Locke
  */
 public class NullHttpRequest extends HttpRequest
-{
+{ // TODO finalize javadoc
     /** singleton instance. */
     private static NullHttpRequest NULL = new NullHttpRequest();
 

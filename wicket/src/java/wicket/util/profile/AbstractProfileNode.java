@@ -31,7 +31,7 @@ import java.util.LinkedList;
  *         </a>, 2003
  */
 abstract class AbstractProfileNode implements IObjectProfileNode, Comparable
-{
+{ // TODO finalize javadoc
     static final IObjectProfileNode[] EMPTY_OBJECTPROFILENODE_ARRAY = new IObjectProfileNode[0];
 
     int m_size;

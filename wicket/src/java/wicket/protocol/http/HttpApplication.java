@@ -44,7 +44,7 @@ import wicket.util.lang.Classes;
  * @author Jonathan Locke
  */
 public abstract class HttpApplication extends HttpServlet implements IApplication
-{
+{ // TODO finalize javadoc
     // Code broadcaster for reporting
     private static final Log code = LogFactory.getLog(HttpApplication.class);
 

@@ -30,7 +30,7 @@ import wicket.util.string.StringList;
  * @author Jonathan Locke
  */
 public final class Path
-{
+{ // TODO finalize javadoc
     // The list of folders
     private final List folders = new ArrayList();
 

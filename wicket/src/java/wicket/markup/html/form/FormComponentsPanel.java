@@ -35,7 +35,7 @@ import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
  * @author Eelco Hillenius
  */
 public abstract class FormComponentsPanel extends FormComponent
-{
+{ // TODO finalize javadoc
 	/** log. */
 	private static Log log = LogFactory.getLog(FormComponentsPanel.class);
 

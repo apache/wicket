@@ -32,7 +32,7 @@ package wicket;
  * @author Jonathan Locke
  */
 public interface IResourceListener extends IListener
-{
+{ // TODO finalize javadoc
     /**
      * Called when a resource is requested.
      * @param cycle The request cycle

@@ -73,7 +73,7 @@ import wicket.RequestCycle;
  * @author Eelco Hillenius
  */
 public abstract class IdListAdapter extends ArrayList implements IIdList
-{
+{ // TODO finalize javadoc
     /**
      * Transient flag to prevent multiple detach/attach scenario.
      */

@@ -24,7 +24,7 @@ package wicket.protocol.http.documentvalidation;
  * @author Chris Turner
  */
 public class Comment implements DocumentElement
-{
+{ // TODO finalize javadoc
 
     private String text;
 

@@ -27,7 +27,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public final class MarkupStream
-{
+{ // TODO finalize javadoc
     // Current index in markup stream
     private int currentIndex = 0;
 

@@ -27,7 +27,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public final class Classes
-{
+{ // TODO finalize javadoc
     /**
      * Instantiation not allowed
      */

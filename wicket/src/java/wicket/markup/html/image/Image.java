@@ -48,7 +48,7 @@ import java.io.Serializable;
  * @author Jonathan Locke
  */
 public class Image extends HtmlComponent implements IResourceListener
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
 

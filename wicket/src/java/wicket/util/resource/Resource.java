@@ -44,7 +44,7 @@ import wicket.util.watch.IChangeable;
  * @author Jonathan Locke
  */
 public final class Resource implements IResource, IChangeable
-{
+{ // TODO finalize javadoc
     /** Logging  */
     private static Log log = LogFactory.getLog(Resource.class);
     

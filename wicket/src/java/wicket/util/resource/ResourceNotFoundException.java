@@ -23,7 +23,7 @@ package wicket.util.resource;
  * @author Jonathan Locke
  */
 public final class ResourceNotFoundException extends Exception
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID */
 	private static final long serialVersionUID = -2885564637243403116L;
 

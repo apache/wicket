@@ -24,7 +24,7 @@ package wicket.markup;
  * @author Jonathan Locke
  */
 public abstract class MarkupElement
-{
+{ // TODO finalize javadoc
     /**
      * Construct.
      */

@@ -26,7 +26,7 @@ package wicket.resource;
  * @author Chris Turner
  */
 public class InvalidResourceSpecificationException extends RuntimeException
-{
+{ // TODO finalize javadoc
 
 	/** Serial Version ID */
 	private static final long serialVersionUID = 638223850328845976L;

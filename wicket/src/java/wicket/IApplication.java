@@ -28,7 +28,7 @@ package wicket;
  * @author Jonathan Locke
  */
 public interface IApplication
-{
+{ // TODO finalize javadoc
     /**
      * Gets the name of this application.
      * @return Returns the name.

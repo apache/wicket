@@ -25,7 +25,7 @@ import wicket.Response;
  * @author Jonathan Locke
  */
 public class ConsoleResponse extends Response
-{
+{ // TODO finalize javadoc
     // The one and only instance
     private static final ConsoleResponse instance = new ConsoleResponse();
 

@@ -31,7 +31,7 @@ import wicket.markup.html.HtmlContainer;
  * @author Juergen Donnerstag
  */
 public class ExternalLink extends HtmlContainer
-{
+{ // TODO finalize javadoc
     final private String href;
     final private String label;
     

@@ -64,7 +64,7 @@ import wicket.util.convert.converters.ShortLocaleConverter;
  * setLocalizedDefaults() and setNonLocalizedDefaults().
  */
 public final class ConverterRegistry
-{
+{ // TODO finalize javadoc
     /**
      * converter for fallthrough.
      */

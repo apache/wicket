@@ -31,7 +31,7 @@ import wicket.util.string.StringValue;
  * @author Jonathan Locke
  */
 public class EnumeratedType extends StringValue
-{
+{ // TODO finalize javadoc
     // Map of type values by class
     private static final Map valueListByClass = new HashMap();
 

@@ -25,7 +25,7 @@ import wicket.util.time.Time;
  * @author Jonathan Locke
  */
 public interface IChangeable
-{
+{ // TODO finalize javadoc
     /**
      * @return The last modification time.
      */

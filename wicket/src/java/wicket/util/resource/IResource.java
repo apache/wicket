@@ -22,7 +22,7 @@ package wicket.util.resource;
  * @author Jonathan Locke
  */
 public interface IResource extends IResourceStream
-{
+{ // TODO finalize javadoc
     /**
      * @return The extension of this resource, such as "jpeg" or "html"
      */

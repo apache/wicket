@@ -27,7 +27,7 @@ import java.io.Serializable;
  * class.
  */
 public class Model implements IModel
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 3031804965001519439L;
 	

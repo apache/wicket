@@ -28,7 +28,7 @@ import java.io.Serializable;
  * @see wicket.model.IDetachableModel
  */
 public interface IModel extends Serializable
-{
+{ // TODO finalize javadoc
     /**
      * Gets the model object.
      * @return the model object

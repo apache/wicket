@@ -25,7 +25,7 @@ import wicket.markup.html.HtmlContainer;
  * @author Jonathan Locke
  */
 public final class DisabledLink extends HtmlContainer
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 5315730184113248127L;
 

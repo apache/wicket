@@ -35,7 +35,7 @@ import wicket.util.collections.MicroMap;
  * @author Juergen Donnerstag
  */
 public class SortableTableHeaderGroup
-{
+{ // TODO finalize javadoc
     /** contains the name of SortableTableHeader to be sorted */
     final private MicroMap sorted = new MicroMap();
 

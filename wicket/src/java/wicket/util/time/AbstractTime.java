@@ -29,7 +29,7 @@ import java.util.Date;
  * @author Jonathan Locke
  */
 abstract class AbstractTime extends AbstractTimeValue
-{
+{ // TODO finalize javadoc
     // Calendar for the local timezone
     static final Calendar localtime = Calendar.getInstance();
 

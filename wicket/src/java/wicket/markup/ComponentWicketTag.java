@@ -33,7 +33,7 @@ package wicket.markup;
  * @author Juergen Donnerstag
  */
 public final class ComponentWicketTag extends ComponentTag
-{
+{ // TODO finalize javadoc
     /**
      * Standard wicket tag name always available for components regardless of
      * user ApplicationSettings; value == 'wicket'.

@@ -36,7 +36,7 @@ import wicket.util.convert.ConversionException;
  * </p>
  */
 public class DateLocaleConverter extends BaseLocaleConverter
-{
+{ // TODO finalize javadoc
     private boolean lenient = false;
 
     private int dateStyle = DateFormat.SHORT;

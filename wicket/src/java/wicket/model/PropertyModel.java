@@ -105,7 +105,7 @@ import wicket.util.convert.ConverterRegistry;
  * @see wicket.util.convert.FormattingUtils
  */
 public class PropertyModel extends DetachableModel
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = -3136339624173288385L;
 

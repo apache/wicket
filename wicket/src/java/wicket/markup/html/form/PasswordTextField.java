@@ -37,7 +37,7 @@ import wicket.model.PropertyModel;
  * @author Jonathan Locke
  */
 public final class PasswordTextField extends FormComponent implements FormComponent.ICookieValue
-{
+{ // TODO finalize javadoc
     // Code broadcaster for reporting
     private static final Log log = LogFactory.getLog(PasswordTextField.class);
 

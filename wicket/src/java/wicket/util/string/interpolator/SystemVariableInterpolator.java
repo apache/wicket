@@ -23,7 +23,7 @@ package wicket.util.string.interpolator;
  * @author Jonathan Locke
  */
 public final class SystemVariableInterpolator extends MapVariableInterpolator
-{
+{ // TODO finalize javadoc
     /**
      * Constructor
      * @param string The string to interpolate with system properties

@@ -34,7 +34,7 @@ import wicket.FeebackMessage;
  * @author Eelco Hillenius
  */
 public final class ValidationErrorMessage extends FeebackMessage
-{
+{ // TODO finalize javadoc
     /** the input (that caused the error). */
     private final Serializable input;
 

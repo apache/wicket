@@ -27,7 +27,7 @@ package wicket.util.profile;
  *         </a>, 2003
  */
 interface ILink
-{
+{ // TODO finalize javadoc
     // public: ................................................................
 
     /**

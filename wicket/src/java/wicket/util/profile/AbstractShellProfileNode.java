@@ -27,7 +27,7 @@ package wicket.util.profile;
  *         </a>, 2003
  */
 abstract class AbstractShellProfileNode extends AbstractProfileNode
-{
+{ // TODO finalize javadoc
     // protected: .............................................................
     // package: ...............................................................
     AbstractShellProfileNode(final IObjectProfileNode parent)

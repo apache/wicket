@@ -32,7 +32,7 @@ import wicket.RequestCycle;
  * representing the model.
  */
 public abstract class DetachableModel implements IDetachableModel
-{
+{ // TODO finalize javadoc
     /**
      * The wrapped model object. Note that this object is transient to ensure we never
      * serialize it even if the user forgets to set the object to null in their detach()

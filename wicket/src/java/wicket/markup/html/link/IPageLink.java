@@ -29,7 +29,7 @@ import wicket.Page;
  * @author Jonathan Locke
  */
 public interface IPageLink extends Serializable
-{
+{ // TODO finalize javadoc
     /**
      * @return The page linked to
      */

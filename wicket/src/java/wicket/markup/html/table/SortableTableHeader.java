@@ -35,7 +35,7 @@ import wicket.markup.html.link.Link;
  * @author Juergen Donnerstag
  */
 public abstract class SortableTableHeader extends Border
-{
+{ // TODO finalize javadoc
     /** The group, the table header belongs to */
     private final SortableTableHeaderGroup group;
 

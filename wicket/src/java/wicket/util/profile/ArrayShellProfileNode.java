@@ -26,7 +26,7 @@ package wicket.util.profile;
  *         </a>, 2003
  */
 final class ArrayShellProfileNode extends AbstractShellProfileNode
-{
+{ // TODO finalize javadoc
     // private: ...............................................................
     private final Class m_type;
 

@@ -25,7 +25,7 @@ import java.util.List;
  * @author Jonathan Locke
  */
 public final class OptionalMetaPattern extends MetaPattern
-{
+{ // TODO finalize javadoc
     /**
      * Constructor
      * @param pattern

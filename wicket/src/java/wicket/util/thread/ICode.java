@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
  * @author Jonathan Locke
  */
 public interface ICode
-{
+{ // TODO finalize javadoc
     /**
      * Override this method to provide the code to run as a task
      * @param log the log that will be used.

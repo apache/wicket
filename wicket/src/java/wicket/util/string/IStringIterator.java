@@ -23,7 +23,7 @@ package wicket.util.string;
  * @author Jonathan Locke
  */
 public interface IStringIterator
-{
+{ // TODO finalize javadoc
     /**
      * @return True if there is a next string
      */

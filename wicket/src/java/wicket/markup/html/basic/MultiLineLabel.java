@@ -41,7 +41,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public class MultiLineLabel extends HtmlComponent
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 7949493094618802759L;
 

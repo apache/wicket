@@ -55,7 +55,7 @@ import wicket.protocol.http.HttpRequest;
  * @author Eelco Hillenius
  */
 public abstract class AbstractTree extends Panel implements ILinkListener
-{
+{ // TODO finalize javadoc
     /** tree state for this component. */
     private TreeStateCache treeState;
 

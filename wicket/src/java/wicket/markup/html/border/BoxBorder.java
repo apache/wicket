@@ -23,7 +23,7 @@ package wicket.markup.html.border;
  * @author Jonathan Locke
  */
 public final class BoxBorder extends Border
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 5906713416472971827L;
 

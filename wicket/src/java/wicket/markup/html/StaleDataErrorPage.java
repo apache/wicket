@@ -28,7 +28,7 @@ import wicket.markup.html.link.PageLink;
  * @author Jonathan Locke
  */
 public class StaleDataErrorPage extends HtmlPage
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = -3703752578058679886L;
 

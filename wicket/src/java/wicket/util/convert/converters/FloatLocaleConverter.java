@@ -29,7 +29,7 @@ import wicket.util.convert.ConversionException;
  * localized float converter.
  */
 public class FloatLocaleConverter extends DecimalLocaleConverter
-{
+{ // TODO finalize javadoc
     // ----------------------------------------------------------- Constructors
 
     /**

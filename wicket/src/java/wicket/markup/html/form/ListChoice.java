@@ -36,7 +36,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  */
 public final class ListChoice extends DropDownChoice implements FormComponent.ICookieValue
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 1227773600645861006L;
 

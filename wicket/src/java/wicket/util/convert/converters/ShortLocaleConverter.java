@@ -24,7 +24,7 @@ import java.util.Locale;
  * localized short converter.
  */
 public class ShortLocaleConverter extends DecimalLocaleConverter
-{
+{ // TODO finalize javadoc
     // ----------------------------------------------------------- Constructors
 
     /**

@@ -24,7 +24,7 @@ package wicket.util.time;
  * @author Jonathan Locke
  */
 public interface ITimeFrameSource
-{
+{ // TODO finalize javadoc
     /**
      * @return Gets current time frame value
      */

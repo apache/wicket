@@ -25,7 +25,7 @@ import wicket.util.value.ValueMap;
  * @author Jonathan Locke
  */
 public final class Tag
-{
+{ // TODO finalize javadoc
     int pos;
 
     int length;
