@@ -69,7 +69,7 @@ public final class ImagePopupLink extends Link
 				return img.getResource();
 			}
 		};
-		getRequestCycle().setPage(new ImagePopup(imgResource));
+		getRequestCycle().setResponsePage(new ImagePopup(imgResource));
 	}
 
 	/**

@@ -96,7 +96,7 @@ public final class SignIn extends WicketExamplePage
                 final RequestCycle cycle = getRequestCycle();
                 if (!cycle.continueToOriginalDestination())
                 {
-                    cycle.setPage(new Home(PageParameters.NULL));
+                    cycle.setResponsePage(new Home(PageParameters.NULL));
                 }
             }
             else

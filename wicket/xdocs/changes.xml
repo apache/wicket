@@ -9,6 +9,9 @@
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
       <action type="update" dev="Jonathan Locke" issue="">
+      Changed RequestCycle.setPage() -> RequestCycle.setResponsePage().
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Added isVersioned boolean to Component.  Any child of a Component that is not versioned is not versioned itself.  So if you setVersioned(false) on a Page, then no component on that Page will be versioned.  Fixed various problems with undoing and tested it a little with Guestbook, which was broken and is now fixed.  Added setVersioned(false) to FeedbackPanel's listview so that no listview components will ever be versioned.  Made internalX pattern consistent in the framework.  Added RequestCycle factory method to WebApplication.  Moved static method for creating/attaching sessions from WebSession to WebApplication.  Added a notion of Charset to AbstractResource and then used this to implement asString().  Added Component.remove().  
 	  </action>
       <action type="update" dev="Jonathan Locke" issue="">

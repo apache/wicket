@@ -43,7 +43,7 @@ public class Lose extends HangmanPage
 			{
 				getHangman().newGame();
 				guessPage.resetLetters();
-				getRequestCycle().setPage(guessPage);
+				getRequestCycle().setResponsePage(guessPage);
 			}
 		});
 	}

@@ -272,7 +272,7 @@ public class SearchPage extends WicketExamplePage
 		{
 			final RequestCycle requestCycle = getRequestCycle();
 			final Long id = (Long)getModelObject();
-			requestCycle.setPage(new EditPage(SearchPage.this, id));
+			requestCycle.setResponsePage(new EditPage(SearchPage.this, id));
 		}	
 	}
 

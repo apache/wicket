@@ -106,12 +106,12 @@ public class Guess extends HangmanPage
 			if (getHangman().isGuessed())
 			{
 				// Redirect to win page
-				requestCycle.setPage(new Win(Guess.this));
+				requestCycle.setResponsePage(new Win(Guess.this));
 			}
 			else if (getHangman().isAllGuessesUsed())
 			{
 				// Redirect to loose page
-				requestCycle.setPage(new Lose(Guess.this));
+				requestCycle.setResponsePage(new Lose(Guess.this));
 			}
 			// else return to guess page with new state to display
 		}

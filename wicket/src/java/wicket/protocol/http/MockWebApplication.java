@@ -221,7 +221,7 @@ public class MockWebApplication extends WebApplication
         WebRequestCycle cycle = new WebRequestCycle(this, wicketSession, wicketRequest,
                 wicketResponse);
         cycle.request();
-        lastRenderedPage = cycle.getPage();
+        lastRenderedPage = cycle.getResponsePage();
     }
 
     /**

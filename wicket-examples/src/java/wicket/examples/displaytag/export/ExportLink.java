@@ -57,6 +57,6 @@ public class ExportLink extends Link
         new Export().doExport(cycle, exportView, data);
         
         // rendering completed
-        cycle.setPage((Page)null);
+        cycle.setResponsePage((Page)null);
     }
 }

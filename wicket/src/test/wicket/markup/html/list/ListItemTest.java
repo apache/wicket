@@ -134,7 +134,7 @@ public class ListItemTest extends TestCase
 				application.getWicketRequest(), application.getWicketResponse());
 
 		MockPage page = new MockPage(null);
-		cycle.setPage(page);
+		cycle.setResponsePage(page);
 
 		return cycle;
 	}
@@ -151,7 +151,7 @@ public class ListItemTest extends TestCase
 		ListView lv = createListView(4);
 
 		// add the ListView to the page
-		cycle.getPage().add(lv);
+		cycle.getResponsePage().add(lv);
 
 		// Create a ListItem for list object at index 1.
 		ListItem li = new ListItem(lv, 1);
@@ -207,7 +207,7 @@ public class ListItemTest extends TestCase
 		ListView lv = createListView(4);
 
 		// add the ListView to the page
-		cycle.getPage().add(lv);
+		cycle.getResponsePage().add(lv);
 
 		// Create a ListItem for list object at index 1.
 		ListItem li = new ListItem(lv, 1);
@@ -263,7 +263,7 @@ public class ListItemTest extends TestCase
 		ListView lv = createListView(4);
 
 		// add the ListView to the page
-		cycle.getPage().add(lv);
+		cycle.getResponsePage().add(lv);
 
 		// Create a ListItem for list object at index 1.
 		ListItem li = new ListItem(lv, 1);

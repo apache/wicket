@@ -183,10 +183,8 @@ public abstract class RequestCycle
 	/** The session object. */
 	protected final Session session;
 
-	// TODO CHANGE to responsePage
-
 	/** The page to render to the user. */
-	private Page page;
+	private Page responsePage;
 
 	/**
 	 * If the page is set to null, we'll first set the current page to this
@@ -318,9 +316,9 @@ public abstract class RequestCycle
 	 * 
 	 * @return The page
 	 */
-	public final Page getPage()
+	public final Page getResponsePage()
 	{
-		return page;
+		return responsePage;
 	}
 
 	/**
@@ -436,7 +434,7 @@ public abstract class RequestCycle
 				if (onRespond())
 				{
 					// Get page set by subclass response
-					final Page page = getPage();
+					final Page page = getResponsePage();
 					if (page != null)
 					{
 						try
@@ -491,9 +489,9 @@ public abstract class RequestCycle
 	 * @param page
 	 *            The page to render as a response
 	 */
-	public final void setPage(final Page page)
+	public final void setResponsePage(final Page page)
 	{
-		this.page = page;
+		this.responsePage = page;
 	}
 
 	/**
@@ -647,18 +645,18 @@ public abstract class RequestCycle
 				if (settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
 				{
 					// use internal error page
-					setPage(getPageFactory().newPage(application.getPages().getInternalErrorPage()));
+					setResponsePage(getPageFactory().newPage(application.getPages().getInternalErrorPage()));
 				}
 				else
 				{
 					// otherwise show full details
-					setPage(new ExceptionErrorPage(e, getPage()));
+					setResponsePage(new ExceptionErrorPage(e, getResponsePage()));
 				}
 
 				// We generally want to redirect the response because we were
 				// in the middle of rendering and the page may end up looking
 				// like spaghetti otherwise
-				redirectToPage(getPage());
+				redirectToPage(getResponsePage());
 			}
 		}
 		catch (RuntimeException ignored)
@@ -672,7 +670,7 @@ public abstract class RequestCycle
 		}
 
 		// Reset page for re-rendering after exception
-		final Page currentPage = getPage();
+		final Page currentPage = getResponsePage();
 
 		// Could be null when it expired
 		if (currentPage != null)

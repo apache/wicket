@@ -85,7 +85,7 @@ public class ListViewTest extends TestCase
 				application.getWicketRequest(), application.getWicketResponse());
 
 		MockPage page = new MockPage(null);
-		cycle.setPage(page);
+		cycle.setResponsePage(page);
 
 		return cycle;
 	}

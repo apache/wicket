@@ -104,7 +104,7 @@ public final class EditPage extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					getRequestCycle().setPage(searchCDPage);
+					getRequestCycle().setResponsePage(searchCDPage);
 				}
 			});
 		}
@@ -128,7 +128,7 @@ public final class EditPage extends WicketExamplePage
 				// if it was a new cd, set the search page to page 1
 				searchCDPage.setCurrentResultPageToFirst();
 			}
-			getRequestCycle().setPage(searchCDPage); // navigate back to search page
+			getRequestCycle().setResponsePage(searchCDPage); // navigate back to search page
 		}
 	}
 
