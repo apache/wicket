@@ -22,9 +22,11 @@ import java.io.Serializable;
 import java.rmi.server.UID;
 import java.util.Collections;
 import java.util.Enumeration;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
+
 import com.voicetribe.util.value.ValueMap;
 
 /**
@@ -35,7 +37,10 @@ import com.voicetribe.util.value.ValueMap;
  */
 public class MockHttpSession implements HttpSession, Serializable {
 
-    // Time related information
+	/** Serial Version ID */
+	private static final long serialVersionUID = 7638042159794505659L;
+	
+	// Time related information
     private final long creationTime = System.currentTimeMillis();
     private long lastAccessedTime = 0;
 

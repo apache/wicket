@@ -31,10 +31,16 @@ import com.voicetribe.wicket.RequestCycle;
  */
 public class MockPage extends HtmlPage {
 
-    public MockPage(final PageParameters parameters) {
+	/** Serial Version ID */
+	private static final long serialVersionUID = 2957175986254155110L;
+
+	public MockPage(final PageParameters parameters) {
         // Action link counts link clicks
         final Link actionLink = new Link("actionLink") {
-            public void linkClicked(final RequestCycle cycle) {
+			/** Serial Version ID */
+			private static final long serialVersionUID = 6609669501359176769L;
+
+			public void linkClicked(final RequestCycle cycle) {
                 linkClickCount++;
 
                 // Redirect back to result to avoid refresh updating the link count
