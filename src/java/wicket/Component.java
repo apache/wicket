@@ -721,16 +721,7 @@ public abstract class Component implements Serializable
      */
     protected final void checkTag(final ComponentTag tag, final String name)
     {
-        String tagName = tag.getName();
-        
-        // if available, remove namespace first
-        final int pos = tagName.indexOf(":");
-        if (pos != -1)
-        {
-            tagName = tagName.substring(pos + 1);
-        }
-
-        if (!tagName.equalsIgnoreCase(name))
+        if (!tag.getName().equalsIgnoreCase(name))
         {
             findMarkupStream().throwMarkupException(
                     "Component " + getName() + " must be applied to a tag of type '"

@@ -71,15 +71,6 @@ public class ComponentTag extends MarkupElement
     /** Attribute map. */
     ValueMap attributes = new ValueMap();
 
-    /** True if this tag automatically creates a corresponding component. */
-    //boolean automaticLink = false;
-
-    /** Automatic link destination information. */
-    //Class automaticLinkPageClass;
-
-    /** page parameters for automatic links. */
-    //PageParameters automaticLinkPageParameters;
-
     /** Any component tag that this tag closes. */
     ComponentTag closes;
 
@@ -104,6 +95,9 @@ public class ComponentTag extends MarkupElement
     /** Name of tag, such as "img" or "input". */
     String name;
 
+    /** Namespace of the tag, if available, such as &lt;wicket:link ...&gt; */
+    String namespace;
+    
     /** True if the name of this tag was changed. */
     private boolean nameChanged = false;
 
@@ -142,6 +136,7 @@ public class ComponentTag extends MarkupElement
     {
         final ComponentTag tag = new ComponentTag();
 
+        tag.namespace = this.namespace;
         tag.name = this.name;
         tag.type = CLOSE;
         tag.text = tag.toString();
@@ -205,6 +200,15 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
+     * Namespace of the tag, if available, such as &lt;wicket:link ...&gt;
+     * @return The tag's namespace
+     */
+    public String getNamespace()
+    {
+        return namespace;
+    }
+    
+    /**
      * Get whether the name of this component tag was changed.
      * @return Returns true if the name of this component tag was changed
      */
@@ -241,16 +245,6 @@ public class ComponentTag extends MarkupElement
         return type;
     }
 
-    /**
-     * Gets whether this tag represents an automatic link.
-     * @return Returns the automaticLink.
-     */
-/*    
-    public boolean isAutomaticLink()
-    {
-        return automaticLink;
-    }
-*/
     /**
      * Gets whether this is a close tag.
      * @return True if this tag is a close tag
@@ -335,6 +329,7 @@ public class ComponentTag extends MarkupElement
         {
             final ComponentTag tag = new ComponentTag();
 
+            tag.namespace = namespace;
             tag.name = name;
             tag.pos = pos;
             tag.length = length;
@@ -483,6 +478,12 @@ public class ComponentTag extends MarkupElement
                 buffer.append('/');
             }
 
+            if (namespace != null)
+            {
+                buffer.append(namespace);
+                buffer.append(':');
+            }
+            
             buffer.append(name);
 
             if (attributes.size() > 0)

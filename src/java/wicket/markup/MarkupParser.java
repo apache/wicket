@@ -34,9 +34,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.RenderException;
 import wicket.util.io.Streams;
 import wicket.util.parse.metapattern.MetaPattern;
-import wicket.util.parse.metapattern.OptionalMetaPattern;
+import wicket.util.parse.metapattern.parsers.TagNameParser;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import wicket.util.parse.metapattern.parsers.WordParser;
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.StringValue;
@@ -93,13 +92,6 @@ public final class MarkupParser implements IMarkupParser
 
     /** if true, <wicket:param ..> tags will be removed from markup */
     private boolean removeWicketParamTags;
-
-    /** pattern for tag names with optional namespace */
-    private static final MetaPattern tagNamePattern =
-        new MetaPattern(new MetaPattern[] {
-            MetaPattern.WORD, 
-            new OptionalMetaPattern(new MetaPattern[] {
-                    MetaPattern.COLON, MetaPattern.WORD})});
     
     /**
      * Constructor.
@@ -788,53 +780,37 @@ public final class MarkupParser implements IMarkupParser
         final int tagTextLength = tagText.length();
         
         // If we match tagname pattern
-        final WordParser tagnameParser = new WordParser(tagText);
+        final TagNameParser tagnameParser = new TagNameParser(tagText);
 
         if (tagnameParser.matcher().lookingAt())
         {
             // Extract the tag from the pattern matcher
-            final String tagName = tagnameParser.getWord().toLowerCase();
+            final String tagName = tagnameParser.getName().toLowerCase();
+            String namespace = tagnameParser.getNamespace();
+            if (namespace != null)
+            {
+                namespace = namespace.toLowerCase();
+            }
             
             int pos;
             final ComponentTag tag;
             
-            if (!wicketTagName.equalsIgnoreCase(tagName))
-            {
-                tag = new ComponentTag();
-                
-                tag.name = tagnameParser.getWord().toLowerCase();
-                pos = tagnameParser.matcher().end(0);
-            }
-            else
+            if (wicketTagName.equals(namespace))
             {
                 tag = new ComponentWicketTag();
                 
-                // make sure there is a colon next and a word
-                pos = tagnameParser.matcher().end(0);
-                
-                // 2 chars: ":" and at least one character
-                if ((tagTextLength <= (pos + 2)) || (tagText.charAt(pos) != ':'))
-                {
-                    throw new ParseException("No valid wicket tag name found: '" 
-                            + tagText 
-                            + "'. Must be like <wicket:param ...", 0 /* tag.getPos() */);
-                    // TODO where to get tag.getPos() from
-                }
-                
-                int endPos = tagText.indexOf(' ', pos);
-                if (endPos == -1)
-                {
-                    tag.name = tagText.substring(pos + 1).toLowerCase();
-                    pos = tagTextLength;
-                }
-                else
-                {
-                    tag.name = tagText.substring(pos + 1, endPos).toLowerCase();
-                    pos = endPos;
-                }
-
-                tag.componentName = tag.name;
+                // make sure this compoent will go into the list
+                tag.componentName = tagName;
             }
+            else
+            {
+                tag = new ComponentTag();
+            }
+            
+            tag.name = tagName;
+            tag.namespace = namespace;
+            
+            pos = tagnameParser.matcher().end(0);
 
             // Are we at the end? Then there are no attributes, so we just
             // return the tag
@@ -916,6 +892,8 @@ public final class MarkupParser implements IMarkupParser
                     return tag;
                 }
             }
+            
+            return tag;
         }
 
         return null;
