@@ -42,19 +42,24 @@ import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
- * Request cycle implementation for HTTP protocol.
+ * RequestCycle implementation for HTTP protocol. Holds the application,
+ * session, request and response objects for a given HTTP request. Contains
+ * methods (urlFor*) which yield a URL for bookmarkable pages as well as
+ * non-bookmarkable component interfaces. The protected handleRender method is
+ * the internal entrypoint which takes care of the details of rendering a
+ * response to an HTTP request.
  * 
+ * @see RequestCycle
  * @author Jonathan Locke
  */
 public class HttpRequestCycle extends RequestCycle
-{ 
-    // TODO finalize javadoc
-    
+{
     /** Logging object */
     private static final Log log = LogFactory.getLog(HttpRequestCycle.class);
 
     /**
-     * Constructor
+     * Constructor which simply passes arguments to superclass for storage
+     * there.
      * 
      * @param application
      *            The application
@@ -73,7 +78,9 @@ public class HttpRequestCycle extends RequestCycle
 
     /**
      * Returns a bookmarkable URL that references a given page class using a
-     * given set of page parameters
+     * given set of page parameters. Since the URL which is returned contains
+     * all information necessary to instantiate and render the page, it can be
+     * stored in a user's browser as a stable bookmark.
      * 
      * @param pageClass
      *            Class of page
@@ -107,7 +114,8 @@ public class HttpRequestCycle extends RequestCycle
     /**
      * Returns a URL that references a given interface on a component. When the
      * URL is requested from the server at a later time, the interface will be
-     * called.
+     * called. A URL returned by this method will not be stable across sessions
+     * and cannot be bookmarked by a user.
      * 
      * @param component
      *            The component to reference
@@ -139,7 +147,8 @@ public class HttpRequestCycle extends RequestCycle
     }
 
     /**
-     * @return Prefix for URLs
+     * @return Prefix for URLs including the context path, servlet path and
+     *         application name (if servlet path is empty).
      */
     public StringBuffer urlPrefix()
     {
@@ -173,11 +182,11 @@ public class HttpRequestCycle extends RequestCycle
      * invocation, then that invocation will occur and is expected to generate a
      * response.
      * <p>
-     * 2. If the URL is to a bookmarkable page, then an instance of that page
-     * will render a response.
+     * 2. If the URL is to a bookmarkable page, then an instance of that page is
+     * created and is expected render a response.
      * <p>
      * 3. If the URL is for the application's home page, an instance of the home
-     * page will render a response.
+     * page will be created and is expected to render a response.
      * <p>
      * 4. Finally, an attempt is made to render the requested resource as static
      * content, available through the servlet context.
@@ -415,7 +424,7 @@ public class HttpRequestCycle extends RequestCycle
     {
         final String pathInfo = ((HttpRequest)request).getPathInfo();
 
-        if ((pathInfo == null) || "/".equals(pathInfo) || "".equals(pathInfo))
+        if (pathInfo == null || "/".equals(pathInfo) || "".equals(pathInfo))
         {
             try
             {
@@ -431,7 +440,6 @@ public class HttpRequestCycle extends RequestCycle
 
         return false;
     }
-
 
     /**
      * Creates a new page.
@@ -480,7 +488,6 @@ public class HttpRequestCycle extends RequestCycle
             response.setContentType(context.getMimeType(url));
 
             // NOTE: Servlet container prevents accessing WEB-INF/** already.
-            // TODO Maybe a kind of exclude/include list would good as well.
             final InputStream in = context.getResourceAsStream(url);
             if (in != null)
             {
@@ -492,8 +499,8 @@ public class HttpRequestCycle extends RequestCycle
                 }
                 finally
                 {
-                    // NOTE: Do not close servlet OutputStream. Close
-                    // InputStream only
+                    // NOTE: We close only the InputStream. The app server will
+                    // close the output stream.
                     in.close();
                 }
                 return true;

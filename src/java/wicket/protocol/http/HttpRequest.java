@@ -28,18 +28,20 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Subclass of Request for HTTP requests. Holds request parameters as well as
- * the underlying HttpServletRequest object.
+ * Subclass of Request for HTTP protocol requests which holds an underlying
+ * HttpServletRequest object. A NULL request object implementing all methods as
+ * NOPs is available via HttpRequest#NULL. A variety of convenience methods are
+ * available that operate on the HttpServletRequest object. These methods do
+ * things such as providing access to parameters, cookies, URLs and path
+ * information.
  * 
  * @author Jonathan Locke
  */
 public class HttpRequest extends Request
 {
-    // TODO finalize javadoc
-
     /** Null HttpRequest object that does nothing */
     public static final HttpRequest NULL = new NullHttpRequest();
-    
+
     /** Servlet request information. */
     private final HttpServletRequest servletRequest;
 
@@ -200,7 +202,7 @@ public class HttpRequest extends Request
             url += pathInfo;
         }
 
-        String queryString = servletRequest.getQueryString();
+        final String queryString = servletRequest.getQueryString();
 
         if (queryString != null)
         {
