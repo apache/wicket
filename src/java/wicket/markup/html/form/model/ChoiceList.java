@@ -140,7 +140,7 @@ public class ChoiceList implements IChoiceList
 	}
 
 	/**
-	 * @see wicket.model.IDetachable#attach()
+	 * @see IChoiceList#attach()
 	 */
 	public void attach()
 	{

@@ -30,6 +30,12 @@ import wicket.model.IDetachable;
 public interface IChoiceList extends IDetachable
 {
 	/**
+	 * Attaches model for use. This is generally used to fill in transient
+	 * fields in a model which has been serialized during session replication.
+	 */
+	public void attach();
+
+	/**
 	 * Gets an choice by id
 	 * 
 	 * @param id

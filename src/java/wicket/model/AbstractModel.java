@@ -19,7 +19,7 @@ package wicket.model;
 
 /**
  * AbstractModel is an adapter base class for implementing models which have no
- * attach/detach logic.
+ * detach logic.
  * 
  * @author Jonathan Locke
  */
@@ -27,13 +27,6 @@ public abstract class AbstractModel implements IModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 3031804965001519439L;
-
-	/**
-	 * @see wicket.model.IModel#attach()
-	 */
-	public void attach()
-	{
-	}
 
 	/**
 	 * @see wicket.model.IModel#detach()

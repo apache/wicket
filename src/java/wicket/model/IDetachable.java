@@ -27,12 +27,6 @@ import java.io.Serializable;
 public interface IDetachable extends Serializable
 {
 	/**
-	 * Attaches model for use. This is generally used to fill in transient
-	 * fields in a model which has been serialized during session replication.
-	 */
-	public void attach();
-
-	/**
 	 * Detaches model after use. This is generally used to null out transient
 	 * references that can be re-attached via attach().
 	 */
