@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Wicket-contrib</title>
+    </properties>
+    <meta name="keyword" content="wicket, web, j2ee, java"/>
+    <body>
+        <section name="Welcome to Wicket-contrib">
+			<p>
+				This is a contributions project for the <a href="http://wicket.sourceforge.net">Wicket</a> framework.
+			</p>
+			<ul>
+				<li>Read <a href="apidocs/index.html">the javadocs</a> for more information.</li>
+			</ul>
+        </section>
+    </body>
+</document>
