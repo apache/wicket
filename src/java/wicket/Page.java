@@ -879,11 +879,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// Start new version?
 			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
 			{
+				// Start new version
 				newVersion();
+				
+				// Okay to record version information
+				return true;
 			}
 
-			// Okay to record version information
-			return true;
+			// Not tracking changes or component not versioned
+			return false;
 		}
 	}
 
