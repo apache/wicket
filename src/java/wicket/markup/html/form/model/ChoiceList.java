@@ -136,7 +136,7 @@ public class ChoiceList implements IChoiceList
 	public void addAll(final Collection collection)
 	{
 		attach();
-		list.add(collection);
+		list.addAll(collection);
 	}
 
 	/**
