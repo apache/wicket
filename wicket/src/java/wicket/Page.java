@@ -541,17 +541,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Note: 
 		
 		final MarkupStream markupStream = findMarkupStream();
-		if (markupStream != null)
-		{
-		    if (markupStream.getXmlDeclaration() != null)
-		    {
-				// Set content type based on markup type for page
-				response.setContentType("text/" + getMarkupType() + "; charset=" 
-				        + markupStream.getEncoding());
-				
-		        response.write(markupStream.getXmlDeclaration());
-		    }
-		}
+		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null))
+	    {
+			// Set content type based on markup type for page
+			response.setContentType("text/" + getMarkupType() + "; charset=" 
+			        + markupStream.getEncoding());
+			
+	        response.write(markupStream.getXmlDeclaration());
+	    }
 		else
 		{
 			// Set content type based on markup type for page
