@@ -4,6 +4,7 @@
   <properties>
     <title>Wicket changes</title>
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
+    <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
