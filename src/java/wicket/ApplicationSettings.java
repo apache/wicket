@@ -107,7 +107,6 @@ import wicket.util.time.Duration;
  */
 public final class ApplicationSettings
 {
-    // TODO finalize javadoc
     /** Log */
     private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
