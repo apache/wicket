@@ -74,11 +74,23 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	}
 
 	/**
-	 * Called when a link is clicked.
+	 * THIS METHOD IS NOT PART OF THE WICKET API.  DO NOT ATTEMPT TO OVERRIDE 
+	 * OR CALL IT.
+	 * 
+	 * Called when a link is clicked.  The implementation of this method is currently
+	 * to simply call onClick(), but this may be augmented in the future.
 	 * 
 	 * @see ILinkListener
 	 */
-	public abstract void onLinkClicked();
+	public final void onLinkClicked()
+	{
+		onClick();
+	}
+
+	/**
+	 * Called when a link is clicked.
+	 */
+	public abstract void onClick();
 
 	/**
 	 * Sets the popup specification. If not-null, a javascript on-click event

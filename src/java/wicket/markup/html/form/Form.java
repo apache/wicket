@@ -245,12 +245,25 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET API.  DO NOT ATTEMPT TO OVERRIDE 
+	 * OR CALL IT.
+	 * 
 	 * Handles form submissions. By default, this method simply calls validate()
-	 * to validate the form and update the model.
+	 * to validate the form and update the model if there is only one button.
+	 * If there is more than one button, it calls the onClick() method for the
+	 * button which submitted the form.
 	 * 
 	 * @see Form#validate()
 	 */
-	public void onFormSubmitted()
+	public final void onFormSubmitted()
+	{
+		onValidate();
+	}
+	
+	/**
+	 * Called when a form that has been submitted needs to be validated.
+	 */
+	protected void onValidate()
 	{
 		final int buttons = countButtons();
 		if (buttons <= 1)

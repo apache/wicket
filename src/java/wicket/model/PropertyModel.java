@@ -342,9 +342,9 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * the wrapped model is a {@link IDetachableModel}, calls attach on the
 	 * wrapped model.
 	 * 
-	 * @see wicket.model.DetachableModel#doAttach()
+	 * @see wicket.model.DetachableModel#onAttach()
 	 */
-	protected final void doAttach()
+	protected final void onAttach()
 	{
 		if (model instanceof IDetachableModel)
 		{
@@ -356,9 +356,9 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * Unsets this property model's instance variables and, in case the wrapped
 	 * model is a {@link IDetachableModel}, calls dettach on the wrapped model.
 	 * 
-	 * @see wicket.model.DetachableModel#doDetach()
+	 * @see wicket.model.DetachableModel#onDetach()
 	 */
-	protected final void doDetach()
+	protected final void onDetach()
 	{
 		if (model instanceof IDetachableModel)
 		{

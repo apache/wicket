@@ -8,6 +8,12 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="update" dev="Jonathan Locke" issue="">
+		Made Link.onLinkClicked() final and added an onClick() method that it calls.  This
+		avoids exposing the interface method to subclassing directly.  Did a similar thing 
+		to Form by making onFormSubmitted() final and exposing onValidate() as the overridable
+		method.  Also did a little early refactoring of resources that should affect nobody.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1121946">
 		The getResource() method in Image now uses the new findParentWithAssociatedMarkup() 
 		method to find the nearest parent with associated markup, which it then uses as the 

@@ -68,7 +68,7 @@ public abstract class DetachableModel implements IDetachableModel
 	{
 		if (!attached)
 		{
-			doAttach();
+			onAttach();
 			attached = true;
 		}
 	}
@@ -81,7 +81,7 @@ public abstract class DetachableModel implements IDetachableModel
 	{
 		if (attached)
 		{
-			doDetach();
+			onDetach();
 			attached = false;
 		}
 	}
@@ -119,11 +119,11 @@ public abstract class DetachableModel implements IDetachableModel
 	 * Attaches to the given session. Implement this method with custom behaviour, such as
 	 * loading the model object.
 	 */
-	protected abstract void doAttach();
+	protected abstract void onAttach();
 
 	/**
 	 * Detaches from the given session. Implement this method with custom behaviour, such
 	 * as setting the model object to null.
 	 */
-	protected abstract void doDetach();
+	protected abstract void onDetach();
 }

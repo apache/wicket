@@ -58,7 +58,7 @@ public abstract class SortableListViewHeader extends Border
 		final SortableListViewHeader me = this;
 		add(new Link("actionLink")
 		{
-			public void onLinkClicked()
+			public void onClick()
 			{
 				// call SortableTableHeaders implementation
 				me.linkClicked();

@@ -384,7 +384,7 @@ public class StringResourceModel extends DetachableModel
 	/**
 	 * Attaches to the given session.
 	 */
-	protected final void doAttach()
+	protected final void onAttach()
 	{
 		// Attach the model if necessary
 		if (model != null && model instanceof IDetachableModel)
@@ -401,7 +401,7 @@ public class StringResourceModel extends DetachableModel
 	/**
 	 * Detaches from the given session
 	 */
-	protected final void doDetach()
+	protected final void onDetach()
 	{
 		// Detach the model if necessary
 		if (model != null && model instanceof IDetachableModel)

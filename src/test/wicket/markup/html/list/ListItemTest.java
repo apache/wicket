@@ -159,7 +159,7 @@ public class ListItemTest extends TestCase
 		// Create a move-up Link for the listItem and simulate a user
 		// clicking it
 		Link link = li.moveUpLink("1");
-		link.onLinkClicked();
+		link.onClick();
 		assertEquals(new Integer(1), lv.getListObject(0));
 		assertEquals(new Integer(0), lv.getListObject(1));
 		assertEquals(new Integer(2), lv.getListObject(2));
@@ -170,7 +170,7 @@ public class ListItemTest extends TestCase
 		link = li.moveUpLink("1");
 		try
 		{
-			link.onLinkClicked();
+			link.onClick();
 		}
 		catch (ArrayIndexOutOfBoundsException ex)
 		{
@@ -180,7 +180,7 @@ public class ListItemTest extends TestCase
 
 		li = new ListItem(3, lv);
 		link = li.moveUpLink("1");
-		link.onLinkClicked();
+		link.onClick();
 		assertEquals(new Integer(1), lv.getListObject(0));
 		assertEquals(new Integer(0), lv.getListObject(1));
 		assertEquals(new Integer(3), lv.getListObject(2));
@@ -188,7 +188,7 @@ public class ListItemTest extends TestCase
 
 		// Be aware: listItem is linked to the index, not the component. Thus
 		// repeating the click-event will again swap item 3 and 4.
-		link.onLinkClicked();
+		link.onClick();
 		assertEquals(new Integer(1), lv.getListObject(0));
 		assertEquals(new Integer(0), lv.getListObject(1));
 		assertEquals(new Integer(2), lv.getListObject(2));
@@ -215,7 +215,7 @@ public class ListItemTest extends TestCase
 		// Create a move-up Link for the listItem and simulate a user
 		// clicking it
 		Link link = li.moveDownLink("1");
-		link.onLinkClicked();
+		link.onClick();
 		assertEquals(new Integer(0), lv.getListObject(0));
 		assertEquals(new Integer(2), lv.getListObject(1));
 		assertEquals(new Integer(1), lv.getListObject(2));
@@ -226,7 +226,7 @@ public class ListItemTest extends TestCase
 		link = li.moveDownLink("1");
 		try
 		{
-			link.onLinkClicked();
+			link.onClick();
 		}
 		catch (IndexOutOfBoundsException ex)
 		{
@@ -236,7 +236,7 @@ public class ListItemTest extends TestCase
 
 		li = new ListItem(0, lv);
 		link = li.moveDownLink("1");
-		link.onLinkClicked();
+		link.onClick();
 		assertEquals(new Integer(2), lv.getListObject(0));
 		assertEquals(new Integer(0), lv.getListObject(1));
 		assertEquals(new Integer(1), lv.getListObject(2));
@@ -244,7 +244,7 @@ public class ListItemTest extends TestCase
 
 		// Be aware: listItem is linked to the index, not the component. Thus
 		// repeating the click-event will again swap item 0 and 1.
-		link.onLinkClicked();
+		link.onClick();
 		assertEquals(new Integer(0), lv.getListObject(0));
 		assertEquals(new Integer(2), lv.getListObject(1));
 		assertEquals(new Integer(1), lv.getListObject(2));
@@ -271,7 +271,7 @@ public class ListItemTest extends TestCase
 		// Create a remove-Link for the listItem and simulate a user
 		// clicking it
 		Link removeLink = li.removeLink("1");
-		removeLink.onLinkClicked();
+		removeLink.onClick();
 		assertEquals(new Integer(0), lv.getListObject(0));
 		assertEquals(new Integer(2), lv.getListObject(1));
 		assertEquals(new Integer(3), lv.getListObject(2));
@@ -279,18 +279,18 @@ public class ListItemTest extends TestCase
 		// Repeat the procedure for "critical" entries
 		li = new ListItem(0, lv);
 		removeLink = li.removeLink("0");
-		removeLink.onLinkClicked();
+		removeLink.onClick();
 		assertEquals(new Integer(2), lv.getListObject(0));
 		assertEquals(new Integer(3), lv.getListObject(1));
 
 		li = new ListItem(1, lv);
 		removeLink = li.removeLink("3");
-		removeLink.onLinkClicked();
+		removeLink.onClick();
 		assertEquals(new Integer(2), lv.getListObject(0));
 
 		li = new ListItem(0, lv);
 		removeLink = li.removeLink("xxx");
-		removeLink.onLinkClicked();
+		removeLink.onClick();
 		assertEquals(0, lv.getList().size());
 	}
 }
