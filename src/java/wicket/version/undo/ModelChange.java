@@ -34,7 +34,16 @@ class ModelChange extends Change
 	ModelChange(final Component component)
 	{
 		this.component = component;
-		originalModel = (IModel)Objects.clone(component.getModel()); 
+		final IModel model = component.getModel();
+		if (model != null)
+		{
+			model.detach();
+			originalModel = (IModel)Objects.clone(model); 
+		}
+		else
+		{
+			originalModel = null;
+		}
 	}
 
 	void undo()

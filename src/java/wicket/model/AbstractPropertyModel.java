@@ -37,7 +37,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyModel extends AbstractDetachableModel implements IConvertible
+public abstract class AbstractPropertyModel extends AbstractDetachableModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
@@ -45,86 +45,8 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 	/** Ognl context wrapper object. It contains the type converter. */
 	private transient OgnlContext context;
 
-	/** The converter source for converters to be used by this model. */
-	private IConverterSource converterSource;
-
 	/** Any model object (which may or may not implement IModel) */
 	private final Object nestedModel;
-
-	/**
-	 * This class is registered with the Ognl context before parsing in order to
-	 * be able to use our converters. It implements Ognl TypeConverter and uses
-	 * the ConverterRegistry to lookup converters. If no converter is found for
-	 * a given type, the default conversion of Ognl is used.
-	 */
-	protected final class OgnlConverterWrapper extends DefaultTypeConverter
-	{
-		/**
-		 * Construct.
-		 */
-		public OgnlConverterWrapper()
-		{
-		}
-
-		/**
-		 * Converts the provided value to provided type using provided context.
-		 * 
-		 * @param context
-		 *            Ognl context
-		 * @param value
-		 *            The current, unconverted value
-		 * @param toType
-		 *            The type that should be converted to
-		 * @return Object the converted value
-		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
-		 *      java.lang.Object, java.lang.Class)
-		 */
-		public Object convertValue(Map context, Object value, Class toType)
-		{
-			if (value == null)
-			{
-				return null;
-			}
-
-			if (!toType.isArray() && value instanceof String[] && ((String[])value).length == 1)
-			{
-				value = ((String[])value)[0];
-			}
-
-			if (value instanceof String && ((String)value).trim().equals(""))
-			{
-				return null;
-			}
-			return converterSource.getConverter().convert(value, toType);
-		}
-
-		/**
-		 * This method is only here to satisfy the interface. Method
-		 * convertValue(Map, Object, Class) is called, so parameters member and
-		 * propertyName are ignored.
-		 * 
-		 * @param context
-		 *            The context
-		 * @param target
-		 *            The target
-		 * @param member
-		 *            The member
-		 * @param propertyName
-		 *            The name of the property
-		 * @param value
-		 *            The value
-		 * @param toType
-		 *            The type to convert to
-		 * @return the converted value
-		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
-		 *      java.lang.Object,java.lang.Class)
-		 */
-		public Object convertValue(Map context, Object target, Member member, String propertyName,
-				Object value, Class toType)
-		{
-			return convertValue(context, value, toType);
-		}
-	}
 
 	/**
 	 * Constructor
@@ -148,14 +70,6 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 	public final Object getNestedModel()
 	{
 		return nestedModel;
-	}
-
-	/**
-	 * @see wicket.model.IConvertible#setConverterSource(IConverterSource)
-	 */
-	public final void setConverterSource(final IConverterSource converterSource)
-	{
-		this.converterSource = converterSource;
 	}
 
 	/**
@@ -196,7 +110,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 	{
 		// Reset OGNL context
 		this.context = null;
-		
+
 		// Detach nested object if it's an IModel
 		if (nestedModel instanceof IModel)
 		{
@@ -225,8 +139,8 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 			try
 			{
 				// note: if property type is null it is ignored by Ognl
-				return Ognl
-						.getValue(expression, getContext(), modelObject, propertyType(component));
+				return Ognl.getValue(expression, getContext(component), modelObject,
+						propertyType(component));
 			}
 			catch (OgnlException e)
 			{
@@ -264,13 +178,13 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 					if (propertyType != null)
 					{
 						// convert the String to the right type
-						object = converterSource.getConverter().convert(string, propertyType);
+						object = component.getConverter().convert(string, propertyType);
 					}
 				}
 			}
 
 			// Let OGNL set the value
-			Ognl.setValue(ognlExpression(component), getContext(), modelObject, object);
+			Ognl.setValue(ognlExpression(component), getContext(component), modelObject, object);
 		}
 		catch (OgnlException e)
 		{
@@ -290,15 +204,52 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 	 * contains the type converter that is used to access the converter
 	 * framework.
 	 * 
-	 * @return the Ognl context that is used for evaluating expressions.
+	 * @param component
+	 *            The Component
+	 * @return The Ognl context that is used for evaluating expressions.
 	 */
-	private final OgnlContext getContext()
+	private final OgnlContext getContext(final Component component)
 	{
 		if (context == null)
 		{
 			// Setup ognl context for this request
 			this.context = new OgnlContext();
-			context.setTypeConverter(new OgnlConverterWrapper());
+			context.setTypeConverter(new DefaultTypeConverter()
+			{
+				/**
+				 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
+				 *      java.lang.Object, java.lang.Class)
+				 */
+				public Object convertValue(Map context, Object value, Class toType)
+				{
+					if (value == null)
+					{
+						return null;
+					}
+
+					if (!toType.isArray() && value instanceof String[]
+							&& ((String[])value).length == 1)
+					{
+						value = ((String[])value)[0];
+					}
+
+					if (value instanceof String && ((String)value).trim().equals(""))
+					{
+						return null;
+					}
+					return component.getConverter().convert(value, toType);
+				}
+
+				/**
+				 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
+				 *      java.lang.Object,java.lang.Class)
+				 */
+				public Object convertValue(Map context, Object target, Member member,
+						String propertyName, Object value, Class toType)
+				{
+					return convertValue(context, value, toType);
+				}
+			});
 		}
 		return context;
 	}
