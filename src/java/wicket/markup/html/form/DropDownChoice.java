@@ -260,7 +260,7 @@ public class DropDownChoice extends AbstractDropDownChoice
 
 	static
 	{
-		// allow optional use of the IOnChangeListener interface
+		// Allow optional use of the IOnChangeListener interface
 		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
 	}
 }
