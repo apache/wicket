@@ -17,13 +17,13 @@
 					framework and its examples. This release contains major refactoring work
 					and interface changes, including:
 					<ul>
-						<li>the Java API</li>
+						<li>The Java API</li>
 						<li>
 							Wicket component markup:
 							<![CDATA[<wicket:xxxxx>]]>
 						</li>
-						<li>web.xml configuration</li>
-						<li>major updates of the javadoc</li>
+						<li>Changes to web.xml configuration</li>
+						<li>Major updates of the javadoc</li>
 					</ul>
 					Please see the
 					<a href="ExampleHelloWorld.html">Hello World</a>
@@ -41,7 +41,7 @@
 					also new support for dynamic languages, (see the
 					<a
 						href="http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-examples/src/java/wicket/examples/groovy/">
-						Wicket-examples
+						wicket-examples
 					</a>
 					project for more information) and for
 					<a href="http://www.springframework.org">Spring framework</a>
