@@ -22,13 +22,11 @@ import wicket.FeedbackMessage;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * A specialized version of a {@link wicket.FeedbackMessage}that represents a
- * message about the failure of a validation.
- * 
+ * A specialized version of a {@link wicket.FeedbackMessage}that represents a message
+ * about the failure of a validation.
  * @see wicket.markup.html.form.validation.IValidator
  * @see wicket.FeedbackMessage
  * @see wicket.markup.html.form.validation.IValidationErrorHandler
- * 
  * @author Eelco Hillenius
  */
 public final class ValidationErrorMessage extends FeedbackMessage
@@ -38,11 +36,8 @@ public final class ValidationErrorMessage extends FeedbackMessage
 
 	/**
 	 * Construct using fields.
-	 * 
-	 * @param reporter
-	 *            the message reporter
-	 * @param message
-	 *            the actual message
+	 * @param reporter the message reporter
+	 * @param message the actual message
 	 */
 	public ValidationErrorMessage(final Component reporter, final String message)
 	{
@@ -51,7 +46,6 @@ public final class ValidationErrorMessage extends FeedbackMessage
 
 	/**
 	 * Get the input that caused this validation error message.
-	 * 
 	 * @return The input, or null if none is available.
 	 */
 	public String getInput()

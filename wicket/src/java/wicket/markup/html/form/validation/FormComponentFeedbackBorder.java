@@ -23,58 +23,50 @@ import wicket.markup.html.border.Border;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * A border that can be placed around a form bordered to indicate when the
- * bordered has a validation error.
- * 
+ * A border that can be placed around a form bordered to indicate when the bordered has a
+ * validation error.
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
 public final class FormComponentFeedbackBorder extends Border implements IValidationErrorHandler
 { // TODO finalize javadoc
-    /** Serial Version ID. */
-    private static final long serialVersionUID = -7070716217601930304L;
+	/** Serial Version ID. */
+	private static final long serialVersionUID = -7070716217601930304L;
 
-    /** The error indicator child which should be shown if an error occurs. */
-    private final HtmlContainer errorIndicator;
+	/** The error indicator child which should be shown if an error occurs. */
+	private final HtmlContainer errorIndicator;
 
-    /** The child to border; is used to get whether there is an error for it. */
-    private final FormComponent child;
+	/** The child to border; is used to get whether there is an error for it. */
+	private final FormComponent child;
 
-    /**
-     * Constructor.
-     * 
-     * @param componentName
-     *            This component's name
-     * @param child
-     *            The child to border
-     */
-    public FormComponentFeedbackBorder(final String componentName, FormComponent child)
-    {
-        super(componentName);
+	/**
+	 * Constructor.
+	 * @param componentName This component's name
+	 * @param child The child to border
+	 */
+	public FormComponentFeedbackBorder(final String componentName, FormComponent child)
+	{
+		super(componentName);
 
-        this.child = child;
-        add(child);
+		this.child = child;
+		add(child);
 
-        // Create invisible error indicator bordered that will be shown when a
-        // validation error occurs
-        errorIndicator = new HtmlContainer("errorIndicator");
-        errorIndicator.setVisible(false);
-        add(errorIndicator);
-    }
+		// Create invisible error indicator bordered that will be shown when a
+		// validation error occurs
+		errorIndicator = new HtmlContainer("errorIndicator");
+		errorIndicator.setVisible(false);
+		add(errorIndicator);
+	}
 
-    /**
-     * Handles validation errors. If any errors were registered, the decorated
-     * error indicator will be set to invisible.
-     * 
-     * @param errors
-     *            Collection of
-     *            {@link wicket.markup.html.form.validation.ValidationErrorMessage}
-     *            s
-     * @see wicket.markup.html.form.validation.IValidationErrorHandler#validationError(wicket.FeedbackMessages)
-     */
-    public void validationError(final FeedbackMessages errors)
-    {
-        errorIndicator.setVisible(errors.hasErrorMessageFor(child));
-    }
+	/**
+	 * Handles validation errors. If any errors were registered, the decorated error
+	 * indicator will be set to invisible.
+	 * @param errors Collection of
+	 *           {@link wicket.markup.html.form.validation.ValidationErrorMessage}s
+	 * @see wicket.markup.html.form.validation.IValidationErrorHandler#validationError(wicket.FeedbackMessages)
+	 */
+	public void validationError(final FeedbackMessages errors)
+	{
+		errorIndicator.setVisible(errors.hasErrorMessageFor(child));
+	}
 }
-

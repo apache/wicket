@@ -22,119 +22,113 @@ import wicket.markup.html.form.FormComponent;
 import wicket.util.string.StringList;
 
 /**
- * Validates that a form component's value is of a certain min/max length.
- * Validators are constructed by calling the min, max and range static
- * factory methods.  For example, LengthValidator.min(6) would return a
- * validator valid only when the input of the component it is attached
- * to is at least 6 characters long.  Likewise, LengthValidator.range(3, 5)
- * would only validate a component containing between 3 and 5 characters
- * (inclusive).
- *
+ * Validates that a form component's value is of a certain min/max length. Validators are
+ * constructed by calling the min, max and range static factory methods. For example,
+ * LengthValidator.min(6) would return a validator valid only when the input of the
+ * component it is attached to is at least 6 characters long. Likewise,
+ * LengthValidator.range(3, 5) would only validate a component containing between 3 and 5
+ * characters (inclusive).
  * @author Jonathan Locke
  */
 public class LengthValidator extends AbstractValidator
 {
-    /** True if minimum bound should be checked. */
-    private final boolean checkMin;
+	/** True if minimum bound should be checked. */
+	private final boolean checkMin;
 
-    /** True if maximum bound should be checked. */
-    private final boolean checkMax;
+	/** True if maximum bound should be checked. */
+	private final boolean checkMax;
 
-    /** Lower bound on valid length. */
-    private final int min;
+	/** Lower bound on valid length. */
+	private final int min;
 
-    /** Upper bound on valid length. */
-    private final int max;
+	/** Upper bound on valid length. */
+	private final int max;
 
-    /**
-     * Private constructor forces use of static factory method and static instances.
-     * @param checkMin True if minimum bound should be checked
-     * @param min Lower bound on valid length
-     * @param checkMax True if maximum bound should be checked
-     * @param max Upper bound on valid length
-     */
-    private LengthValidator(final boolean checkMin, final int min,
-    		final boolean checkMax, final int max)
-    {
-        this.min = min;
-        this.max = max;
-        this.checkMin = checkMin;
-        this.checkMax = checkMax;
-    }
+	/**
+	 * Private constructor forces use of static factory method and static instances.
+	 * @param checkMin True if minimum bound should be checked
+	 * @param min Lower bound on valid length
+	 * @param checkMax True if maximum bound should be checked
+	 * @param max Upper bound on valid length
+	 */
+	private LengthValidator(final boolean checkMin, final int min, final boolean checkMax,
+			final int max)
+	{
+		this.min = min;
+		this.max = max;
+		this.checkMin = checkMin;
+		this.checkMax = checkMax;
+	}
 
-    /**
-     * Gets a length validator object that requires a minimum number of characters.
-     * @param min Minimum number of characters
-     * @return Validator object
-     */
-    public final static LengthValidator min(final int min)
-    {
-        return new LengthValidator(true, min, false, 0);
-    }
+	/**
+	 * Gets a length validator object that requires a minimum number of characters.
+	 * @param min Minimum number of characters
+	 * @return Validator object
+	 */
+	public final static LengthValidator min(final int min)
+	{
+		return new LengthValidator(true, min, false, 0);
+	}
 
-    /**
-     * Gets a length validator object that requires a maximum number of characters.
-     * @param max Maximum number of characters
-     * @return Validator object
-     */
-    public final static LengthValidator max(final int max)
-    {
-        return new LengthValidator(false, 0, true, max);
-    }
+	/**
+	 * Gets a length validator object that requires a maximum number of characters.
+	 * @param max Maximum number of characters
+	 * @return Validator object
+	 */
+	public final static LengthValidator max(final int max)
+	{
+		return new LengthValidator(false, 0, true, max);
+	}
 
-    /**
-     * Gets a length validator object that requires a minimum and maximum number of
-     * characters.
-     * @param min Minimum number of characters
-     * @param max Maximum number of characters
-     * @return Validator object
-     */
-    public final static LengthValidator range(final int min, final int max)
-    {
-        return new LengthValidator(true, min, true, max);
-    }
+	/**
+	 * Gets a length validator object that requires a minimum and maximum number of
+	 * characters.
+	 * @param min Minimum number of characters
+	 * @param max Maximum number of characters
+	 * @return Validator object
+	 */
+	public final static LengthValidator range(final int min, final int max)
+	{
+		return new LengthValidator(true, min, true, max);
+	}
 
-    /**
-     * Validates the given form component.
-     * Validates that a form component's value is of a certain minimum 
-     * and/or maximum length.
-     * @param component The component to validate
-     * @return Error for component or NO_ERROR if none
-     */
-    public final ValidationErrorMessage validate(final FormComponent component)
-    {
-        // Get component value
-        final String value = component.getRequestString();
-        
-        // Check length
-        if ((checkMin && value.length() < min) || 
-            (checkMax && value.length() > max))
-        {
-            return errorMessage(value, component);
-        }
+	/**
+	 * Validates the given form component. Validates that a form component's value is of a
+	 * certain minimum and/or maximum length.
+	 * @param component The component to validate
+	 * @return Error for component or NO_ERROR if none
+	 */
+	public final ValidationErrorMessage validate(final FormComponent component)
+	{
+		// Get component value
+		final String value = component.getRequestString();
 
-        return NO_ERROR;
-    }
+		// Check length
+		if ((checkMin && value.length() < min) || (checkMax && value.length() > max))
+		{
+			return errorMessage(value, component);
+		}
 
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString()
-    {
-        final StringList list = new StringList();
+		return NO_ERROR;
+	}
 
-        if (checkMin)
-        {
-            list.add("min = " + min);
-        }
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		final StringList list = new StringList();
 
-        if (checkMax)
-        {
-            list.add("max = " + max);
-        }
+		if (checkMin)
+		{
+			list.add("min = " + min);
+		}
 
-        return list.toString();
-    }
+		if (checkMax)
+		{
+			list.add("max = " + max);
+		}
+
+		return list.toString();
+	}
 }
-
-

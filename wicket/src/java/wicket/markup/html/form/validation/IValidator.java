@@ -23,55 +23,52 @@ import java.io.Serializable;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * Interface to code that validates Form components.  When the validate()
- * method of the interface is called by the framework, the IValidator
- * implementation is expected to check the input String it is passed 
- *
+ * Interface to code that validates Form components. When the validate() method of the
+ * interface is called by the framework, the IValidator implementation is expected to
+ * check the input String it is passed
  * @author Jonathan Locke
  */
 public interface IValidator extends Serializable
 {
-    /**
-     * Special value to indicate no validation error/ message.
-     */
-    public static final ValidationErrorMessage NO_ERROR = null;
+	/**
+	 * Special value to indicate no validation error/ message.
+	 */
+	public static final ValidationErrorMessage NO_ERROR = null;
 
-    /**
-     * An implementation of IValidator that does nothing at all.
-     */
-    public static final IValidator NULL = new NullValidator();
+	/**
+	 * An implementation of IValidator that does nothing at all.
+	 */
+	public static final IValidator NULL = new NullValidator();
 
-    /**
-     * Validates the given input. The input corresponds to the input from the 
-     * request for a component.
-     * @param component Component to validate
-     * @return the validation message or NO_ERROR
-     */
-    public ValidationErrorMessage validate(final FormComponent component);
+	/**
+	 * Validates the given input. The input corresponds to the input from the request for a
+	 * component.
+	 * @param component Component to validate
+	 * @return the validation message or NO_ERROR
+	 */
+	public ValidationErrorMessage validate(final FormComponent component);
 
-    /**
-     * Validator that does nothing.
-     */
-    static final class NullValidator implements IValidator
-    {
-        /**
-         * Returns null.
-         * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
-         */
-        public ValidationErrorMessage validate(final FormComponent component)
-        {
-            return null;
-        }
+	/**
+	 * Validator that does nothing.
+	 */
+	static final class NullValidator implements IValidator
+	{
+		/**
+		 * Returns null.
+		 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
+		 */
+		public ValidationErrorMessage validate(final FormComponent component)
+		{
+			return null;
+		}
 
-        /**
-         * Returns the string representation.
-         * @see java.lang.Object#toString()
-         */
-        public String toString()
-        {
-            return "[null]";
-        }
-    }
+		/**
+		 * Returns the string representation.
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "[null]";
+		}
+	}
 }
-
-
