@@ -19,6 +19,7 @@
 package wicket.examples.groovy;
 
 import wicket.IClassResolver;
+import wicket.contrib.utils.groovy.GroovyClassResolver;
 import wicket.protocol.http.WebApplication;
 import wicket.util.time.Duration;
 
