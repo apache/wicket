@@ -117,8 +117,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
             final String id)
     {
         // Make sure someone else didn't load our resources while we were
-        // waiting
-        // for the synchronized lock on the method
+        // waiting for the synchronized lock on the method
         ValueMap strings = (ValueMap)resourceCache.get(id);
         if (strings != null)
         {
