@@ -33,6 +33,7 @@ import wicket.util.parse.metapattern.parsers.TagNameParser;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.StringResource;
 import wicket.util.string.StringValue;
 
 /**
@@ -47,19 +48,13 @@ public final class XmlPullParser implements IXmlPullParser
 {
 	/** Regex to find <?xml encoding ... ?> */
 	private static final Pattern encodingPattern = Pattern
-			.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
+			.compile("[\\s\\n\\r]*<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
 
 	/** Logging */
 	private static final Log log = LogFactory.getLog(XmlPullParser.class);
 
 	/** current column number. */
 	private int columnNumber = 1;
-
-	/**
-	 * True to compress multiple spaces/tabs or line endings to a single space
-	 * or line ending.
-	 */
-	private boolean compressWhitespace;
 
 	/** Null, if JVM default. Else from <?xml encoding=""> */
 	private String encoding;
@@ -253,10 +248,14 @@ public final class XmlPullParser implements IXmlPullParser
 	 *
 	 * @param string
 	 *            The input string
+	 * @throws IOException
+	 *             Error while reading the resource
+	 * @throws ResourceNotFoundException
+	 *             Resource not found
 	 */
-	public void parse(final CharSequence string)
+	public void parse(final CharSequence string) throws IOException, ResourceNotFoundException
 	{
-		setInput(string);
+		parse(new StringResource(string));
 	}
 
 	/**
@@ -306,6 +305,7 @@ public final class XmlPullParser implements IXmlPullParser
 			{
 				// Use the encoding as specified in <?xml encoding=".." ?>
 				// Don't re-read <?xml ..> again
+			    // Ignore ALL characters preceding <?xml>
 				markup = Streams.readString(bin, encoding);
 			}
 
@@ -315,17 +315,6 @@ public final class XmlPullParser implements IXmlPullParser
 		{
 			resource.close();
 		}
-	}
-
-	/**
-	 * Set whether whitespace should be compressed.
-	 *
-	 * @param compressWhitespace
-	 *            whether whitespace should be compressed.
-	 */
-	public void setCompressWhitespace(boolean compressWhitespace)
-	{
-		this.compressWhitespace = compressWhitespace;
 	}
 
 	/**
@@ -420,7 +409,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 		// Does the string match the <?xml .. ?> pattern
 		final Matcher matcher = encodingPattern.matcher(pushBack);
-		if (!matcher.find())
+		if (!matcher.matches())
 		{
 			// No
 			return null;
