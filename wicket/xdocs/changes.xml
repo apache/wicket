@@ -8,7 +8,12 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
-	  <action typ="update" dev="Eelco Hillenius" issue="1152615">
+	  <action type="fix" dev="Eelco Hillenius" issue="1149610">
+		Removed all the convenience stuff in order to get a better
+		focus. Added FileInput that correspons to the HTML file input tag
+		and that updates it's model with the FileItem commons-fileupload provides.
+	  </action>
+	  <action type="update" dev="Eelco Hillenius" issue="1152615">
 	    Removed OnClickLink; onclick JS event handler generation is now supported
 	    for all link components. Also removed AbstractLink as there is no good
 	    reason to have that anymore, and Link seems the best base class.
