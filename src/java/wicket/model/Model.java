@@ -78,7 +78,7 @@ public class Model implements IModel
         {
             if (!(object instanceof Serializable))
             {
-                throw new RuntimeException("object must be Serializable");
+                throw new RuntimeException("Model object must be Serializable");
             }
         }
 

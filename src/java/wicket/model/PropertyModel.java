@@ -200,7 +200,7 @@ public class PropertyModel extends DetachableModel
     {
         if (model == null)
         {
-            throw new NullPointerException("Parameter 'model' must not be null");
+            throw new IllegalArgumentException("Model parameter must not be null");
         }
     }
 

@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.form.upload;
 
@@ -39,7 +38,7 @@ import wicket.protocol.http.HttpRequest;
 
 /**
  * Base class for upload components.
- *
+ * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractUploadForm extends Form
@@ -49,17 +48,23 @@ public abstract class AbstractUploadForm extends Form
 
     /**
      * Construct.
-     * @param name component name
-     * @param validationErrorHandler validation error handler
+     * 
+     * @param name
+     *            component name
+     * @param validationErrorHandler
+     *            validation error handler
      */
-    public AbstractUploadForm(String name, IValidationErrorHandler validationErrorHandler)
+    public AbstractUploadForm(String name,
+            IValidationErrorHandler validationErrorHandler)
     {
         super(name, validationErrorHandler);
     }
 
     /**
      * Processes the component tag.
-     * @param tag the component tag
+     * 
+     * @param tag
+     *            the component tag
      * @see wicket.Component#handleComponentTag(ComponentTag)
      */
     protected final void handleComponentTag(final ComponentTag tag)
@@ -70,34 +75,39 @@ public abstract class AbstractUploadForm extends Form
 
     /**
      * Handles an upload.
+     * 
      * @see wicket.markup.html.form.Form#handleSubmit()
      */
     public void handleSubmit()
     {
-		try
+        try
         {
-			HttpRequest httpRequest = (HttpRequest)getRequest();
+            HttpRequest httpRequest = (HttpRequest) getRequest();
             HttpServletRequest request = (httpRequest).getServletRequest();
-			boolean isMultipart = FileUpload.isMultipartContent(request);
-			if(!isMultipart)
-			{
-			    throw new IllegalStateException("request is not a multipart request");
-			}
-			prepareUpload();
-			FileUploadBase upload = createUpload();
+            boolean isMultipart = FileUpload.isMultipartContent(request);
+            if (!isMultipart)
+            {
+                throw new IllegalStateException(
+                        "Request is not a multipart request");
+            }
+            prepareUpload();
+            FileUploadBase upload = createUpload();
             List items = parseRequest(request, upload);
-			processFileItems(items);
-			finishUpload();
+            processFileItems(items);
+            finishUpload();
         }
         catch (FileUploadException e)
         {
-            throw new RuntimeException(e); // for the time being, we throw
+            // For the time being, we throw
+            throw new RuntimeException(e);
         }
     }
 
     /**
      * Process the list of file items.
-     * @param items List of {@link FileItem}s
+     * 
+     * @param items
+     *            List of {@link FileItem}s
      */
     protected void processFileItems(List items)
     {
@@ -117,16 +127,16 @@ public abstract class AbstractUploadForm extends Form
     }
 
     /**
-     * Template method that is called before the handling of the upload form starts.
-     * Use for initialization of directories etc.
+     * Template method that is called before the handling of the upload form
+     * starts. Use for initialization of directories etc.
      */
     protected void prepareUpload()
-    {  
+    {
     }
 
     /**
-     * Template method that is called after the handling of the upload form finishes.
-     * Use for things like re-rendering the UI etc.
+     * Template method that is called after the handling of the upload form
+     * finishes. Use for things like re-rendering the UI etc.
      */
     protected void finishUpload()
     {
@@ -134,34 +144,42 @@ public abstract class AbstractUploadForm extends Form
 
     /**
      * Process a form field.
-     * @param item form field item (item.isFormField() == true)
+     * 
+     * @param item
+     *            form field item (item.isFormField() == true)
      */
     protected abstract void processFormField(FileItem item);
 
     /**
      * Process an upload item.
-     * @param item upload item (item.isFormField() == false)
+     * 
+     * @param item
+     *            upload item (item.isFormField() == false)
      */
     protected abstract void processUploadedFile(FileItem item);
 
     /**
      * parse the request and return a List of {@link FileItem}s.
-     * @param request http servlet request
-     * @param upload upload object
+     * 
+     * @param request
+     *            http servlet request
+     * @param upload
+     *            upload object
      * @return List with {@link FileItem}s
      * @throws FileUploadException
      */
-    protected List parseRequest(HttpServletRequest request, FileUploadBase upload)
-    	throws FileUploadException
+    protected List parseRequest(HttpServletRequest request,
+            FileUploadBase upload) throws FileUploadException
     {
         List items = upload.parseRequest(request);
         return items;
     }
 
     /**
-     * Create an upload object. Override this to
-     * use anything else than {@link DiskFileUpload} or to parameterize the upload object
-     * (e.g. set the max size, temp dir, etc).
+     * Create an upload object. Override this to use anything else than
+     * {@link DiskFileUpload}or to parameterize the upload object (e.g. set the
+     * max size, temp dir, etc).
+     * 
      * @return upload object
      */
     protected FileUploadBase createUpload()

@@ -315,7 +315,7 @@ public abstract class IndentTree extends Tree
 
             if (userObject == null)
             {
-                throw new RuntimeException("userObject == null");
+                throw new RuntimeException("User object cannot be null");
             }
             TreeNodeLink expandCollapsLink = IndentTree.this.createJunctionLink(treeNodeModel);
             nodeContainer.add(expandCollapsLink);

@@ -66,7 +66,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
 	{
 		if (application == null)
 		{
-			throw new NullPointerException("Application cannot be null");
+			throw new IllegalArgumentException("Application cannot be null");
 		}
 		this.application = application;
 		this.resourceCache = new ConcurrentReaderHashMap();
