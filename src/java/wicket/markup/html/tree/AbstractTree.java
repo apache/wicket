@@ -172,9 +172,9 @@ public abstract class AbstractTree extends Panel implements ILinkListener
      */
     public final void linkClicked(final RequestCycle cycle)
     {
-    	String param = TreeNodeLink.REQUEST_PARAMETER_LINK_ID;
+    	String param = AbstractTreeNodeLink.REQUEST_PARAMETER_LINK_ID;
         String linkId = ((HttpRequest)cycle.getRequest()).getParameter(param);
-        TreeNodeLink link = (TreeNodeLink) links.get(linkId);
+        AbstractTreeNodeLink link = (AbstractTreeNodeLink) links.get(linkId);
         if (link == null)
         {
             throw new IllegalStateException("link " + linkId + " not found");
