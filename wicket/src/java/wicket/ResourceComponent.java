@@ -150,4 +150,9 @@ public abstract class ResourceComponent extends Component implements IResourceLi
 			}
 	    }
 	}
+
+	static
+    {
+        RequestCycle.registerRequestListenerInterface(IResourceListener.class);
+    }
 }

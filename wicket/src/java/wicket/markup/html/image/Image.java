@@ -21,9 +21,7 @@ package wicket.markup.html.image;
 import java.io.Serializable;
 import java.util.Locale;
 
-import wicket.IResourceListener;
 import wicket.MarkupContainer;
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -42,7 +40,7 @@ import wicket.util.string.Strings;
  *
  * @author Jonathan Locke
  */
-public class Image extends AbstractImage implements IResourceListener
+public class Image extends AbstractImage
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
@@ -136,11 +134,6 @@ public class Image extends AbstractImage implements IResourceListener
 	    locale = getLocale();
     	
         super.onComponentTag(tag);
-    }
-
-	static
-    {
-        RequestCycle.registerRequestListenerInterface(IResourceListener.class);
     }
 }
 

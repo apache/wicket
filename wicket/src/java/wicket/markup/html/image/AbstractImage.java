@@ -21,7 +21,6 @@ package wicket.markup.html.image;
 import java.io.Serializable;
 
 import wicket.IResourceListener;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebResourceComponent;
@@ -31,7 +30,7 @@ import wicket.markup.html.WebResourceComponent;
  *
  * @author Jonathan Locke
  */
-public abstract class AbstractImage extends WebResourceComponent implements IResourceListener
+public abstract class AbstractImage extends WebResourceComponent
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
@@ -97,10 +96,5 @@ public abstract class AbstractImage extends WebResourceComponent implements IRes
      */
     protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
-    }
-
-	static
-    {
-        RequestCycle.registerRequestListenerInterface(IResourceListener.class);
     }
 }

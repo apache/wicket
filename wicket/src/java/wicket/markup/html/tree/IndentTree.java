@@ -183,7 +183,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	{
 		Link junctionLink = new Link("junctionLink")
 		{
-			public void onLinkClicked()
+			public void onClick()
 			{
 				junctionLinkClicked(node);
 			}
@@ -255,7 +255,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 		Object userObject = node.getUserObject();
 		Link nodeLink = new Link("nodeLink")
 		{
-			public void onLinkClicked()
+			public void onClick()
 			{
 				nodeLinkClicked(node);
 			}

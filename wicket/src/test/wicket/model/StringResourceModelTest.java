@@ -206,12 +206,12 @@ public class StringResourceModelTest extends TestCase
 	{
 		IModel wsDetachModel = new DetachableModel(wsModel)
 		{
-			protected void doAttach()
+			protected void onAttach()
 			{
 				setObject(new WeatherStation());
 			}
 
-			protected void doDetach()
+			protected void onDetach()
 			{
 				setObject(null);
 			}
