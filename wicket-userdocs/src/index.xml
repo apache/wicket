@@ -6,6 +6,7 @@
 <!ENTITY introduction         SYSTEM "introduction.xml">
 <!ENTITY chapter2-helloworld  SYSTEM "chapter2 - helloworld.xml">
 <!ENTITY chapter3-linkomatic  SYSTEM "chapter3 - linkomatic.xml">
+<!ENTITY chapter4             SYSTEM "chapter4.xml">
 ]>
 
 
