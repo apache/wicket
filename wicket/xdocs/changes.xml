@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="update" dev="Jonathan Locke" issue="">
+      File uploading now has its own first class model that abstracts FileItem away.  The example has been updated.  See that for details.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1138660">
       It is now possible to create AttributeModifiers that do arbitrary things to the original and replacement values, such as appending one to the other.  See javadoc in AttributeModifier for details.
 	  </action>

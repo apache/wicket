@@ -85,7 +85,7 @@ public class FileUploadForm extends UploadForm
 		public File resolveConflict(final File file)
 		{
 			// Try to delete the file
-			if (!Files.delete(file))
+			if (!Files.remove(file))
 			{
 				throw new IllegalStateException("Unable to overwrite " + file.getAbsolutePath());
 			}

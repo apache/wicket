@@ -21,7 +21,6 @@ import org.apache.commons.fileupload.FileItem;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
-import wicket.model.IModel;
 
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
@@ -33,6 +32,9 @@ import wicket.model.IModel;
  */
 public class FileUploadField extends FormComponent
 {
+	/** The model for the uploaded file */
+	private FileUpload fileUpload;
+	
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -42,11 +44,26 @@ public class FileUploadField extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @return The uploaded file
 	 */
-	public FileUploadField(final String id, IModel model)
+	public FileUpload getFileUpload()
 	{
-		super(id, model);
+		return fileUpload;
+	}
+	
+	/**
+	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(ComponentTag tag)
+	{
+		// must be attached to an input tag
+		checkComponentTag(tag, "input");
+
+		// check for file type
+		checkComponentTagAttribute(tag, "type", "file");
+
+		// Default handling for component tag
+		super.onComponentTag(tag);
 	}
 
 	/**
@@ -70,22 +87,7 @@ public class FileUploadField extends FormComponent
 		// only update the model when there is a file (larger than zero bytes)
 		if (item != null && item.getSize() > 0)
 		{
-			setModelObject(item);
+			this.fileUpload = new FileUpload(item);
 		}
-	}
-
-	/**
-	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
-	 */
-	protected void onComponentTag(ComponentTag tag)
-	{
-		// must be attached to an input tag
-		checkComponentTag(tag, "input");
-
-		// check for file type
-		checkComponentTagAttribute(tag, "type", "file");
-
-		// Default handling for component tag
-		super.onComponentTag(tag);
 	}
 }

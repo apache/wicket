@@ -22,20 +22,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.upload.UploadForm;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.Model;
 import wicket.util.file.Files;
 import wicket.util.file.Folder;
 
@@ -67,8 +66,8 @@ public class UploadPage extends WicketExamplePage
 	public UploadPage(final PageParameters parameters)
 	{
 		// set upload folder to tempdir + 'wicket-uploads'.
-		this.uploadFolder = uploadFolder = new Folder(
-				System.getProperty("java.io.tmpdir"), "wicket-uploads");
+		this.uploadFolder = uploadFolder = new Folder(System.getProperty("java.io.tmpdir"),
+				"wicket-uploads");
 
 		// Create feedback panels
 		final FeedbackPanel simpleUploadFeedback = new FeedbackPanel("simpleUploadFeedback");
@@ -102,14 +101,16 @@ public class UploadPage extends WicketExamplePage
 
 	/**
 	 * Check whether the file allready exists, and if so, try to delete it.
-	 * @param newFile the file to check
+	 * 
+	 * @param newFile
+	 *            the file to check
 	 */
 	private void checkFileExists(File newFile)
 	{
-		if(newFile.exists())
+		if (newFile.exists())
 		{
 			// Try to delete the file
-			if (!Files.delete(newFile))
+			if (!Files.remove(newFile))
 			{
 				throw new IllegalStateException("Unable to overwrite " + newFile.getAbsolutePath());
 			}
@@ -121,19 +122,20 @@ public class UploadPage extends WicketExamplePage
 	 */
 	private class FileUploadForm extends UploadForm
 	{
-		/** model to put the reference to the uploaded file in. */
-		private final Model fileModel = new Model();
+		private FileUploadField fileUploadField;
 
 		/**
 		 * Construct.
-		 * @param name Component name
+		 * 
+		 * @param name
+		 *            Component name
 		 */
 		public FileUploadForm(String name)
 		{
 			super(name);
 
 			// add one file input field
-			add(new FileUploadField("fileInput", fileModel));
+			add(fileUploadField = new FileUploadField("fileInput"));
 		}
 
 		/**
@@ -141,45 +143,40 @@ public class UploadPage extends WicketExamplePage
 		 */
 		protected void onSubmit()
 		{
-			// get the uploaded file
-			FileItem item = (FileItem)fileModel.getObject(this);
-
-			if(item != null)
+			final FileUpload upload = fileUploadField.getFileUpload();
+			if (upload != null)
 			{
-				// the original file name
-				String fileName = item.getName();
-	
-				// hack a bit to get at least an acceptable file name
-				fileName = afterLast(fileName, ':');
-				fileName = afterLast(fileName, '\\');
-				fileName = afterLast(fileName, '/');
-				log.info("uploaded item: " + fileName);
-	
+				log.info("Uploaded file: " + upload.getFile());
+
 				// create a new file
-				File newFile = new File(uploadFolder, fileName);
-	
+				File newFile = new File(uploadFolder, upload.getFile().getName());
+
 				// check new file, delete if it allready existed
 				checkFileExists(newFile);
 				try
 				{
-					newFile.createNewFile(); // create it
-					item.write(newFile); // write the uploaded file to our new file
+					// Save to new file
+					newFile.createNewFile(); 
+					upload.writeTo(newFile); 
 				}
 				catch (Exception e)
 				{
 					throw new IllegalStateException("Unable to write file");
 				}
-	
+
 				// refresh the file list view
 				refreshFiles();
 			}
 		}
 
 		/**
-		 * Gets the last part of the string after c or the string itself when c is
-		 * not found.
-		 * @param s the string
-		 * @param c the char
+		 * Gets the last part of the string after c or the string itself when c
+		 * is not found.
+		 * 
+		 * @param s
+		 *            the string
+		 * @param c
+		 *            the char
 		 * @return part of string
 		 */
 		private String afterLast(final String s, final char c)
@@ -223,7 +220,7 @@ public class UploadPage extends WicketExamplePage
 				public void onClick()
 				{
 					log.info("Deleting " + file);
-					Files.delete(file);
+					Files.remove(file);
 					refreshFiles();
 				}
 			});

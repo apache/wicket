@@ -17,6 +17,8 @@
  */
 package wicket.util.file;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 import wicket.util.time.Time;
@@ -93,5 +95,25 @@ public class File extends java.io.File implements IModifiable
 	public final Time lastModifiedTime()
 	{
 		return Time.milliseconds(lastModified());
+	}
+
+	/**
+	 * @see java.io.File#delete()
+	 */
+	public final void remove()
+	{
+		Files.remove(this);
+	}
+	
+	/**
+	 * Writes the given input stream to this file
+	 * 
+	 * @param input
+	 *            The input
+	 * @throws IOException 
+	 */
+	public final void writeTo(final InputStream input) throws IOException
+	{
+		Files.writeTo(this, input);
 	}
 }
