@@ -21,7 +21,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 
 /**
- * Items of the ListView.
+ * Container that holds components in a ListView.
  * 
  * @author Jonathan Locke
  */

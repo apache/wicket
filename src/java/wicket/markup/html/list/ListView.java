@@ -38,12 +38,10 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- * 
  *       &lt;tbody&gt;
  *         &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
  *             &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
  *         ...    
- *  
  * </pre>
  * 
  * <p>
@@ -75,7 +73,7 @@ public abstract class ListView extends WebMarkupContainer
 	private int firstIndex = 0;
 
 	/**
-	 * If true re-rendering the list view is more efficient if the windows
+	 * If true, re-rendering the list view is more efficient if the window
 	 * doesn't get changed at all or if it gets scrolled (compared to paging).
 	 * But if you modify the listView model object, than you must manually call
 	 * listView.removeAll() in order to rebuild the ListItems.
@@ -91,9 +89,9 @@ public abstract class ListView extends WebMarkupContainer
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String componentName, final IModel model)
+	public ListView(final String id, final IModel model)
 	{
-		super(componentName, model);
+		super(id, model);
 
 		if (model == null)
 		{
@@ -107,15 +105,15 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * @param componentName
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param list
 	 *            List to cast to Serializable
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String componentName, final List list)
+	public ListView(final String id, final List list)
 	{
-		this(componentName, new Model((Serializable)list));
+		this(id, new Model((Serializable)list));
 	}
 
 	/**
@@ -161,7 +159,7 @@ public abstract class ListView extends WebMarkupContainer
 		final Object modelObject = getModelObject();
 		if (modelObject == null)
 		{
-			return (size == Integer.MAX_VALUE ? 0 : size);
+			return size == Integer.MAX_VALUE ? 0 : size;
 		}
 
 		// Adjust view size to model object's list size
@@ -203,15 +201,15 @@ public abstract class ListView extends WebMarkupContainer
 	 * Returns a link that will move the given listItem "down" (towards the end)
 	 * in the listView.
 	 * 
-	 * @param componentName
+	 * @param id
 	 *            Name of move-down link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveDownLink(final String componentName, final ListItem item)
+	public final Link moveDownLink(final String id, final ListItem item)
 	{
 		final int index = getList().indexOf(item.getModelObject());
-		final Link link = new Link(componentName)
+		final Link link = new Link(id)
 		{
 			public void onClick()
 			{
@@ -235,15 +233,15 @@ public abstract class ListView extends WebMarkupContainer
 	 * Returns a link that will move the given listItem "up" (towards the
 	 * beginning) in the listView.
 	 * 
-	 * @param componentName
+	 * @param id
 	 *            Name of move-up link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveUpLink(final String componentName, final ListItem item)
+	public final Link moveUpLink(final String id, final ListItem item)
 	{
 		final int index = getList().indexOf(item.getModelObject());
-		final Link link = new Link(componentName)
+		final Link link = new Link(id)
 		{
 			public void onClick()
 			{
@@ -267,14 +265,14 @@ public abstract class ListView extends WebMarkupContainer
 	 * Returns a link that will remove this ListItem from the ListView that
 	 * holds it.
 	 * 
-	 * @param componentName
+	 * @param id
 	 *            Name of remove link component to create
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link removeLink(final String componentName, final ListItem item)
+	public final Link removeLink(final String id, final ListItem item)
 	{
-		return new Link(componentName)
+		return new Link(id)
 		{
 			public void onClick()
 			{
@@ -360,19 +358,6 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * Provide list object at index. May be subclassed for virtual list, which
-	 * don't implement List.
-	 * 
-	 * @param index
-	 *            The list object's index
-	 * @return the model list's object
-	 */
-	protected Object getListObject(final int index)
-	{
-		return getList().get(index);
-	}
-
-	/**
 	 * @see wicket.Component#initModel()
 	 */
 	protected IModel initModel()
@@ -426,20 +411,15 @@ public abstract class ListView extends WebMarkupContainer
 			else
 			{
 				// Remove all ListItems no longer required
-				// TODO or does it make more sense to flag them being rendered
-				// and thus avoid the error msg?
 				final int maxIndex = firstIndex + size;
 				for (final Iterator iterator = iterator(); iterator.hasNext();)
 				{
 					// Get next child component
 					final ListItem child = (ListItem)iterator.next();
-
-					// Is the child of the correct class (or was no class
-					// specified)?
 					if (child != null)
 					{
 						final int index = child.getIndex();
-						if ((index < firstIndex) || (index >= maxIndex))
+						if (index < firstIndex || index >= maxIndex)
 						{
 							iterator.remove();
 						}
@@ -447,33 +427,31 @@ public abstract class ListView extends WebMarkupContainer
 				}
 			}
 
-			// Loop through the markup in this container for each child
-			// container
+			// Loop through the markup in this container for each item 
 			for (int i = 0; i < size; i++)
 			{
-				int index = firstIndex + i;
-
-				// Get the name of the component for listItem i
-				final String componentName = Integer.toString(index);
+				// Get index
+				final int index = firstIndex + i;
 
 				// If this component does not already exist, populate it
-				ListItem listItem = (ListItem)get(componentName);
+				ListItem listItem = (ListItem)get(Integer.toString(index));
 				if (listItem == null)
 				{
-					// Create listItem for index i of the list
+					// Create listItem for index
 					listItem = newItem(index);
 
+					// Populate the list item
 					onBeginPopulateItem(listItem);
 					populateItem(listItem);
 
-					// Add cell to list view
+					// Add list item
 					add(listItem);
 				}
 
 				// Rewind to start of markup for kids
 				markupStream.setCurrentIndex(markupStart);
 
-				// Render cell
+				// Render
 				renderItem(listItem, i >= (size - 1));
 			}
 		}
@@ -492,6 +470,8 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected abstract void populateItem(final ListItem listItem);
 
+	// TODO Remove lastItem boolean?
+	
 	/**
 	 * Render a single listItem.
 	 * 

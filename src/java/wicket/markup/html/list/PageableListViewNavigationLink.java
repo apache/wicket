@@ -84,11 +84,9 @@ public final class PageableListViewNavigationLink extends PageLink
 		this.pageableListView = pageableListView;
 	}
 
+	// TODO We need to explain this onClick method!
+
 	/**
-	 * Handles a link click by asking for a concrete Page instance through the
-	 * IPageLink.getPage() delayed linking interface. This call will normally
-	 * cause the destination page to be created.
-	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
 	public void onClick()
