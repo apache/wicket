@@ -118,7 +118,7 @@ public abstract class DetachableChoiceList extends ArrayList implements IDetacha
 	{
 		if (!attached)
 		{
-			doAttach();
+			onAttach();
 			attached = true;
 		}
 	}
@@ -132,7 +132,7 @@ public abstract class DetachableChoiceList extends ArrayList implements IDetacha
 	{
 		if (attached)
 		{
-			doDetach();
+			onDetach();
 			attached = false;
 		}
 	}
@@ -141,7 +141,7 @@ public abstract class DetachableChoiceList extends ArrayList implements IDetacha
 	 * Attach to the current request. Implement this method with custom
 	 * behaviour, such as loading the list of object you need for this list.
 	 */
-	protected void doAttach()
+	protected void onAttach()
 	{
 	}
 
@@ -149,7 +149,7 @@ public abstract class DetachableChoiceList extends ArrayList implements IDetacha
 	 * Detach from the current request. Implement this method with custom
 	 * behaviour, such as clearing the list.
 	 */
-	protected void doDetach()
+	protected void onDetach()
 	{
 	}
 }
