@@ -35,6 +35,9 @@ import wicket.FeebackMessage;
  */
 public final class ValidationErrorMessage extends FeebackMessage
 { // TODO finalize javadoc
+    /** constant for representing an empty message (same as null). */
+    public static final ValidationErrorMessage NO_MESSAGE = null;
+
     /** the input (that caused the error). */
     private final Serializable input;
 
