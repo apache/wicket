@@ -308,7 +308,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final void onRedirect()
 	{
 		// This method is used when redirecting to a page
-		getRequestCycle().setPage(this);
+		getRequestCycle().setResponsePage(this);
 	}
 
 	/**

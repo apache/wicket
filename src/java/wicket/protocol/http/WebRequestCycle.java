@@ -264,7 +264,7 @@ public class WebRequestCycle extends RequestCycle
 		if (pageClassName != null)
 		{
 			final Class pageClass = getSession().getClassResolver().resolveClass(pageClassName);
-			setPage(getPageFactory().newPage(pageClass,
+			setResponsePage(getPageFactory().newPage(pageClass,
 					new PageParameters(getRequest().getParameterMap())));
 			return true;
 		}
@@ -343,7 +343,7 @@ public class WebRequestCycle extends RequestCycle
 		{
 			try
 			{
-				setPage(newPage(application.getPages().getHomePage()));
+				setResponsePage(newPage(application.getPages().getHomePage()));
 			}
 			catch (WicketRuntimeException e)
 			{
@@ -384,7 +384,7 @@ public class WebRequestCycle extends RequestCycle
 		// and expire any pages in the session cache that are
 		// newer than the given page since they will no longer
 		// be accessible.
-		setPage(page);
+		setResponsePage(page);
 
 		// Invoke interface on the component at the given path on the page
 		final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
@@ -401,7 +401,7 @@ public class WebRequestCycle extends RequestCycle
 			// Must be an internal error of some kind or someone is hacking
 			// around with URLs in their browser.
 			log.error("No component found for " + path);
-			setPage(newPage(application.getPages().getInternalErrorPage()));
+			setResponsePage(newPage(application.getPages().getInternalErrorPage()));
 		}
 	}
 
@@ -438,7 +438,7 @@ public class WebRequestCycle extends RequestCycle
 	{
 		// Page was expired from session, probably because backtracking
 		// limit was reached
-		setPage(newPage(application.getPages().getPageExpiredErrorPage()));
+		setResponsePage(newPage(application.getPages().getPageExpiredErrorPage()));
 	}
 
 	/**

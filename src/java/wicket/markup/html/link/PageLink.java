@@ -100,7 +100,7 @@ public class PageLink extends Link
 	public void onClick()
 	{
 		// Set page source's page as response page
-		getRequestCycle().setPage(pageLink.getPage());
+		getRequestCycle().setResponsePage(pageLink.getPage());
 	}
 
 	/**
