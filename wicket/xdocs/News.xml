@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>Home</title>
+        <title>News archive</title>
     </properties>
     <meta name="keyword" content="wicket, web, j2ee, java"/>
     <body>
-        <section name="News">
+        <section name="News archive">
+            <p>Here is an overview of all Wicket related news items posted on 
+                our <a href="http://wicket.sourceforge.net">front page</a>.</p>
             <subsection name="December 19, 2004 - 0.9.15-beta released">
                 <p>The Wicket team is proud to present yet another release of 
                     the Wicket core framework. This release encompasses a <a 
