@@ -50,9 +50,6 @@ public class PageFactoryTest extends TestCase
         assertEquals(application, factory.getApplication());
     }
 
-    /**
-     * test using a child factory.
-     */
     public void testChildFactory()
     {
         assertNull(factory.getChildFactory());
@@ -75,31 +72,21 @@ public class PageFactoryTest extends TestCase
     }
 
     /**
-     * Dummy PageFactory .
+     * Dummy PageFactory 
      */
     private class MyPageFactory extends PageFactory
     {
-        /**
-         * Construct.
-         * @param application
-         */
         public MyPageFactory(final IApplication application)
         {
             super(application);
         }
 
-        /**
-         * @see wicket.PageFactory#getClassInstance(java.lang.String)
-         */
         public Class getClassInstance(final String classname)
         {
             return Object.class;
         }
     }
 
-    /**
-     * Test creating a new page using a class.
-     */
     public void testNewPageClass()
     {
         // MyPage0: no constructor at all
@@ -153,9 +140,6 @@ public class PageFactoryTest extends TestCase
         */
     }
 
-    /**
-     * Test creating a new page using a string.
-     */
     public void testNewPageString()
     {
         // MyPage0: no constructor at all
@@ -220,10 +204,6 @@ public class PageFactoryTest extends TestCase
         assertNotNull("String does not extend Page. Should habe thrown an exception", e);
     }
     
-    /**
-     * Test a new page using a class and page parameters.
-     * @throws IOException
-     */
     public void testNewPageClassPageParameters() throws IOException 
     {
         assertEquals(MyPage0.class, factory.newPage(MyPage0.class, (PageParameters)null).getClass());
@@ -279,10 +259,6 @@ public class PageFactoryTest extends TestCase
         */
     }
     
-    /**
-     * Test a new page using a string and parameters.
-     * @throws IOException
-     */
     public void testNewPageStringPageParameters() throws IOException 
     {
         assertEquals(MyPage0.class, factory.newPage(MyPage0.class.getName(), (PageParameters)null).getClass());
@@ -338,10 +314,6 @@ public class PageFactoryTest extends TestCase
         */
     }
     
-    /**
-     * Test creating a new page using a class and a request. 
-     * @throws IOException
-     */
     public void testNewPageClassRequest() throws IOException 
     {
         application.setupRequestAndResponse();
@@ -399,10 +371,6 @@ public class PageFactoryTest extends TestCase
         */
     }
     
-    /**
-     * Test creating a new page using a string and a request.
-     * @throws IOException
-     */
     public void testNewPageStringRequest() throws IOException
     {
         application.setupRequestAndResponse();
@@ -459,10 +427,6 @@ public class PageFactoryTest extends TestCase
         */
     }
 
-    /**
-     * Test creating a new page using a class and a page.
-     * @throws IOException
-     */
     public void testNewPageClassPage() throws IOException 
     {
         final Page page = new MockPage(null);
@@ -543,10 +507,6 @@ public class PageFactoryTest extends TestCase
         assertNotNull("String does not extend Page. Should habe thrown an exception", e);
     }
 
-    /**
-     * Test creating a new page using a string and a page.
-     * @throws IOException
-     */
     public void testNewPageStringPage() throws IOException 
     {
         final Page page = new MockPage(null);
