@@ -20,7 +20,6 @@ package wicket;
 import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
-import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
@@ -181,10 +180,7 @@ public class AttributeModifier implements Serializable
 	 */
 	final void detachModel()
 	{
-		if (replaceModel instanceof IDetachableModel)
-		{
-			((IDetachableModel)replaceModel).detach();
-		}
+		replaceModel.detach();
 	}
 
 	/**
@@ -226,10 +222,6 @@ public class AttributeModifier implements Serializable
 	 */
 	final IModel getReplaceModel()
 	{
-		if (replaceModel instanceof IDetachableModel)
-		{
-			((IDetachableModel)replaceModel).attach();
-		}
 		return replaceModel;
 	}
 

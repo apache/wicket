@@ -20,6 +20,7 @@ package wicket.examples.springframework2;
 
 import org.springframework.context.ApplicationContext;
 
+import wicket.model.AbstractModel;
 import wicket.model.IModel;
 
 /**
@@ -28,7 +29,7 @@ import wicket.model.IModel;
  * 
  * @author Martin Fey
  */
-public abstract class SpringAwareModel implements IModel
+public abstract class SpringAwareModel extends AbstractModel
 {
     protected SpringBeanModel springBeanModel = null;
 

@@ -27,6 +27,7 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.AbstractModel;
 import wicket.model.IModel;
 
 /**
@@ -66,7 +67,7 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 		protected void populateItem(final ListItem listItem)
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
-			IModel replacementModel = new IModel()
+			IModel replacementModel = new AbstractModel()
 			{
 				/**
 				 * Returns feedbackPanel + the message level, eg

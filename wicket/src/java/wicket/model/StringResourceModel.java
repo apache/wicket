@@ -431,12 +431,6 @@ public class StringResourceModel extends DetachableModel implements INestedModel
 	 */
 	protected final void onAttach()
 	{
-		// Attach the model if necessary
-		if (model != null && model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).attach();
-		}
-
 		// Initialise information that we need to work successfully
 		Session session = RequestCycle.get().getSession();
 		localizer = session.getApplication().getLocalizer();
@@ -448,10 +442,10 @@ public class StringResourceModel extends DetachableModel implements INestedModel
 	 */
 	protected final void onDetach()
 	{
-		// Detach the model if necessary
-		if (model != null && model instanceof IDetachableModel)
+		// Detach any model
+		if (model != null)
 		{
-			((IDetachableModel)model).detach();
+			model.detach();
 		}
 
 		// Clear down any information we don't want held in the session

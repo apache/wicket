@@ -22,6 +22,7 @@ import java.util.Collections;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
+import wicket.model.AbstractModel;
 import wicket.model.IModel;
 
 /**
@@ -40,7 +41,7 @@ public class ListItem extends WebMarkupContainer
 	/**
 	 * Model for list items.
 	 */
-	private class ListItemModel implements IModel
+	private class ListItemModel extends AbstractModel
 	{
 		/**
 		 * @see IModel#getObject()

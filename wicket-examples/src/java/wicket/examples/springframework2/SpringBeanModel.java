@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationContext;
 
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.model.AbstractModel;
 import wicket.model.DetachableModel;
 import wicket.model.IModel;
 
@@ -78,7 +79,7 @@ public class SpringBeanModel extends DetachableModel
             throw new IllegalArgumentException("beanName must not be null");
         }
         
-        this.model = new IModel()
+        this.model = new AbstractModel()
         {
             private Object object = null;
 
@@ -164,6 +165,7 @@ public class SpringBeanModel extends DetachableModel
      */
     public Object getObject()
     {
+    	attach();
         return this.model.getObject();
     }
 

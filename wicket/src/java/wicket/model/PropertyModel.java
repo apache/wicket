@@ -54,9 +54,11 @@ import wicket.util.string.Strings;
  * 
  * <pre>
  * 
- *             Person person = getSomePerson();
- *             ...
- *             add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *  
+ *              Person person = getSomePerson();
+ *              ...
+ *              add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *   
  *  
  * </pre>
  * 
@@ -70,7 +72,9 @@ import wicket.util.string.Strings;
  * 
  * <pre>
  * 
- *             add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *  
+ *              add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *   
  *  
  * </pre>
  * 
@@ -367,17 +371,13 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	}
 
 	/**
-	 * Unsets this property model's instance variables and, in case the wrapped
-	 * model is a {@link IDetachableModel}, calls dettach on the wrapped model.
+	 * Unsets this property model's instance variables and detaches the model.
 	 * 
 	 * @see AbstractDetachableModel#onDetach()
 	 */
 	protected final void onDetach()
 	{
-		if (model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).detach();
-		}
+		model.detach();
 
 		// Reset OGNL context
 		this.context = null;

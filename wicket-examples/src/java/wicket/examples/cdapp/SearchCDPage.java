@@ -44,7 +44,6 @@ import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListViewNavigationLink;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 
 
@@ -268,7 +267,7 @@ public class SearchCDPage extends WicketExamplePage
 		 */
 		public void modelChangedStructure()
 		{
-			((IDetachableModel)getModel()).detach(); // force reload right away
+			getModel().detach(); // force reload right away
 			super.modelChangedStructure();
 		}
 	}

@@ -9,7 +9,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IDetachableChoiceList;
-import wicket.model.IModel;
+import wicket.model.AbstractModel;
 
 /**
  * @author jcompagner
@@ -56,7 +56,7 @@ public class Home extends WicketExamplePage
 		}
 	}
 	
-	class SelectModel implements IModel
+	class SelectModel extends AbstractModel
 	{
 		private Object selection;
 		

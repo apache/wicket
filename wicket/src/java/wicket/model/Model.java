@@ -22,15 +22,15 @@ import java.io.Serializable;
 import wicket.WicketRuntimeException;
 
 /**
- * Model is the basic implementation of IModel. It just wraps the model object.
- * The model object must be serializable, as it is stored in the session. If you
- * have large objects to store, consider using
- * {@link wicket.model.IDetachableModel}instead of this class.
+ * Model is the basic implementation of an AbstractModel. It just wraps a simple
+ * model object. The model object must be serializable, as it is stored in the
+ * session. If you have large objects to store, consider using
+ * {@link wicket.model.DetachableModel} instead of this class.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class Model implements IModel
+public class Model extends AbstractModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 3031804965001519439L;
