@@ -21,11 +21,13 @@ package wicket.util.parse.metapattern;
 import java.util.List;
 
 /**
- * Makes any meta pattern optional
+ * Makes any MetaPattern optional by enclosing the pattern in
+ * an optionality expression like this: (?:&lt;pattern&gt;)?
+ * 
  * @author Jonathan Locke
  */
 public final class OptionalMetaPattern extends MetaPattern
-{ // TODO finalize javadoc
+{
     /**
      * Constructor
      * @param pattern

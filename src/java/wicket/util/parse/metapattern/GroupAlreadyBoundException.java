@@ -19,11 +19,13 @@
 package wicket.util.parse.metapattern;
 
 /**
- * Thrown if an attempt is made to re-bind a Group to a second MetaPattern.
- * @author Jonathan Locke W. Locke
+ * Thrown if an attempt is made to re-bind a Group to a second capturing
+ * group or MetaPattern.
+ * 
+ * @author Jonathan Locke
  */
 public final class GroupAlreadyBoundException extends RuntimeException
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 5110506464403807991L;
 
