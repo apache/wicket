@@ -174,10 +174,18 @@ public class WebRequestCycle extends RequestCycle
 		final String pageClassName = request.getParameter("bookmarkablePage");
 		if (pageClassName != null)
 		{
-			final Class pageClass = session.getClassResolver().resolveClass(pageClassName);
-			setResponsePage(session.getPageFactory().newPage(pageClass,
-					new PageParameters(getRequest().getParameterMap())));
-			return true;
+		    try
+		    {
+				final Class pageClass = session.getClassResolver().resolveClass(pageClassName);
+				setResponsePage(session.getPageFactory().newPage(pageClass,
+						new PageParameters(getRequest().getParameterMap())));
+				return true;
+		    }
+		    catch (RuntimeException e)
+		    {
+		        throw new WicketRuntimeException("Unable to instantiate Page class: " 
+		                + pageClassName + ". See below for details.", e);
+		    }
 		}
 		return false;
 	}
