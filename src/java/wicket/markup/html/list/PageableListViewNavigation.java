@@ -143,7 +143,7 @@ public class PageableListViewNavigation extends ListView
 
 					public int size()
 					{
-						return getViewSize();
+						return Integer.MAX_VALUE;
 					}
 				});
 			}
@@ -164,7 +164,7 @@ public class PageableListViewNavigation extends ListView
 	 */
 	public int getViewSize()
 	{
-		return pageableListView.getPageCount();
+		return Math.min(pageableListView.getPageCount(), super.getViewSize());
 	}
 
 	/**
