@@ -28,9 +28,8 @@ import java.util.List;
  * @author Johan Compagner
  * @author Eelco Hillenius
  */
-public interface IIdList extends List, Serializable
+public interface IDetachableChoiceList extends List, Serializable
 {
-    // TODO This interface should go away. See comment in IdListAdapter
     /**
      * Detach from a request.
      */
@@ -43,22 +42,22 @@ public interface IIdList extends List, Serializable
 
     /**
      * Gets the display value.
-     * @param row the row number
-     * @return the display value
+     * @param index The index in the list
+     * @return The display value
      */
-    public String getDisplayValue(int row);
+    public String getDisplayValue(int index);
 
     /**
      * Gets the id value.
-     * @param row the row number
-     * @return the id value
+     * @param index The list index
+     * @return The id
      */
-    public String getIdValue(int row);
+    public String getId(int index);
 
     /**
      * Gets an object using the given id.
      * @param id the object's id
      * @return the object
      */
-    public Object getObjectById(String id);
+    public Object objectForId(String id);
 }

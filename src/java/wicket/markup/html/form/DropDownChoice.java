@@ -107,12 +107,12 @@ public class DropDownChoice extends Choice
 	public final String getValue()
 	{
 		final List list = getValues();
-		if (list instanceof IIdList)
+		if (list instanceof IDetachableChoiceList)
 		{
 			final int index = list.indexOf(getModelObject());
 			if (index != -1)
 			{
-				return ((IIdList)list).getIdValue(index);
+				return ((IDetachableChoiceList)list).getId(index);
 			}
 			return "-1";
 		}
@@ -154,9 +154,9 @@ public class DropDownChoice extends Choice
 	public final void setValue(final String value)
 	{
 		final List list = getValues();
-		if (list instanceof IIdList)
+		if (list instanceof IDetachableChoiceList)
 		{
-			setModelObject(((IIdList)list).getObjectById(value));
+			setModelObject(((IDetachableChoiceList)list).objectForId(value));
 		}
 		else
 		{
@@ -209,9 +209,9 @@ public class DropDownChoice extends Choice
 		{
 			setModelObject(null);
 		}
-		else if (list instanceof IIdList)
+		else if (list instanceof IDetachableChoiceList)
 		{
-			object = ((IIdList)list).getObjectById(indexOrId);
+			object = ((IDetachableChoiceList)list).objectForId(indexOrId);
 			setModelObject(object);
 		}
 		else

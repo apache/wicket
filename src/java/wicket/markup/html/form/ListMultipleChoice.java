@@ -78,7 +78,7 @@ public final class ListMultipleChoice extends Choice
 	{
 		// Get the list of selected values
 		final Collection selectedValues = (Collection)getModelObject();
-		final StringBuffer cookieValue = new StringBuffer();
+		final StringBuffer value = new StringBuffer();
 		if (selectedValues != null)
 		{
 			final List list = getValues();
@@ -86,20 +86,20 @@ public final class ListMultipleChoice extends Choice
 			while (it.hasNext())
 			{
 				final int index = list.indexOf(it.next());
-				if (list instanceof IIdList)
+				if (list instanceof IDetachableChoiceList)
 				{
-					cookieValue.append(((IIdList)list).getIdValue(index));
+					value.append(((IDetachableChoiceList)list).getId(index));
 				}
 				else
 				{
-					cookieValue.append(index);
+					value.append(index);
 				}
 				// the id's can't have ; in there id!! should we escape it or
 				// something??
-				cookieValue.append(";");
+				value.append(";");
 			}
 		}
-		return cookieValue.toString();
+		return value.toString();
 	}
 
 	/**
@@ -126,9 +126,9 @@ public final class ListMultipleChoice extends Choice
 		while (st.hasMoreTokens())
 		{
 			final String idOrIndex = st.nextToken();
-			if (list instanceof IIdList)
+			if (list instanceof IDetachableChoiceList)
 			{
-				selectedValues.add(((IIdList)list).getObjectById(idOrIndex));
+				selectedValues.add(((IDetachableChoiceList)list).objectForId(idOrIndex));
 			}
 			else
 			{
@@ -168,9 +168,9 @@ public final class ListMultipleChoice extends Choice
 			// Loop through selected indices
 			for (int i = 0; i < indicesOrIds.length; i++)
 			{
-				if (list instanceof IIdList)
+				if (list instanceof IDetachableChoiceList)
 				{
-					selectedValues.add(((IIdList)list).getObjectById(indicesOrIds[i]));
+					selectedValues.add(((IDetachableChoiceList)list).objectForId(indicesOrIds[i]));
 				}
 				else
 				{

@@ -132,9 +132,9 @@ abstract class Choice extends FormComponent
 	 */
 	public List getValues()
 	{
-		if (values instanceof IIdList)
+		if (values instanceof IDetachableChoiceList)
 		{
-			((IIdList)values).attach();
+			((IDetachableChoiceList)values).attach();
 		}
 		return this.values;
 	}
@@ -224,18 +224,18 @@ abstract class Choice extends FormComponent
 
 			if (value != null)
 			{
-				final String idValue;
+				final String id;
 				final String displayValue;
-				if (list instanceof IIdList)
+				if (list instanceof IDetachableChoiceList)
 				{
-					IIdList idList = (IIdList)list;
-					idValue = idList.getIdValue(i);
-					displayValue = idList.getDisplayValue(i);
+					IDetachableChoiceList choiceList = (IDetachableChoiceList)list;
+					id = choiceList.getId(i);
+					displayValue = choiceList.getDisplayValue(i);
 
 				}
 				else
 				{
-					idValue = Integer.toString(i);
+					id = Integer.toString(i);
 					displayValue = value.toString();
 				}
 				final boolean currentOptionIsSelected = isSelected(value);
@@ -245,7 +245,7 @@ abstract class Choice extends FormComponent
 					options.append("selected ");
                 }
 				options.append("value=\"");
-				options.append(idValue);
+				options.append(id);
 				options.append("\">");
 				options.append(getLocalizer().getString(getName() + "." + displayValue, this,
 						displayValue));
@@ -262,9 +262,9 @@ abstract class Choice extends FormComponent
 		replaceBody(markupStream, openTag, options.toString());
 
 		// Deattach the list after this. Check if this is the right place!
-		if (list instanceof IIdList)
+		if (list instanceof IDetachableChoiceList)
 		{
-			((IIdList)list).detach();
+			((IDetachableChoiceList)list).detach();
 		}
 	}
 
