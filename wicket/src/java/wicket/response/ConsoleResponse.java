@@ -21,12 +21,13 @@ package wicket.response;
 import wicket.Response;
 
 /**
- * A response which writes to the console.
+ * A Response implementation which writes to the console.
+ * 
  * @author Jonathan Locke
  */
 public class ConsoleResponse extends Response
-{ // TODO finalize javadoc
-    // The one and only instance
+{
+    /** The one and only instance */
     private static final ConsoleResponse instance = new ConsoleResponse();
 
     /**

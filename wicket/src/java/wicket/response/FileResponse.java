@@ -18,7 +18,6 @@
  */
 package wicket.response;
 
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,12 +27,13 @@ import wicket.Response;
 import wicket.util.file.File;
 
 /**
- * Writes response to file
+ * A Response implementation that writes to a file.
+ * 
  * @author Jonathan Locke
  */
 public final class FileResponse extends Response
-{ // TODO finalize javadoc
-    // Writer to write to
+{
+    /** Output PrintWriter to write to */
     private final PrintWriter out;
 
     /**

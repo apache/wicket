@@ -21,16 +21,17 @@ package wicket.response;
 import wicket.Response;
 
 /**
- * Response object that discards all output.
+ * Response implementation that discards all output.
+ * 
  * @author Jonathan Locke
  */
 public class NullResponse extends Response
-{ // TODO finalize javadoc
-    // The one and only instance
+{
+    /** The one and only instance of NullResponse */
     private static final NullResponse instance = new NullResponse();
 
     /**
-     * Private constructor to force use of static factory method
+     * Private constructor to force use of static factory method.
      */
     private NullResponse()
     {
@@ -49,6 +50,7 @@ public class NullResponse extends Response
      */
     public void write(String string)
     {
+        // Does nothing
     }
 }
 
