@@ -9,7 +9,16 @@
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1"> 
       <action type="update" dev="Jonathan Locke" issue="">
-      Final checkin for RC1.  Changed initModel in Component to search the whole parent
+      Removed Localizer methods that don't work with Components.  Added getString(String key)
+      and getString(String key, IModel model) methods to Component for easy access to localized
+      strings.  Changed inheritance hierarchy of models so that AbstractModels are non-detachable
+      and AbstractDetachableModels are all detachable (and consequently implement IModel rather 
+      than extends AbstractModel).  Finally, removed MapModel class and created two factory methods
+      in Model that take List and Map objects and do appropriate wrapping for non-serializable 
+      instances.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+      Almost final checkin for RC1.  Changed initModel in Component to search the whole parent
       hierarchy for CompoundModels.  Added logic that allows Components to know if they
       are the root model or a child sharing the parent's compound model.  This allowed
       me to remove getRootModelObject() and incorporate the logic necessary to get the

@@ -620,6 +620,30 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * @param key
+	 *            Key of string resource in property file
+	 * @return The String
+	 * @see Localizer
+	 */
+	public final String getString(final String key)
+	{
+		return getString(key, getModel());
+	}
+
+	/**
+	 * @param key
+	 *            The resource key
+	 * @param model
+	 *            The model
+	 * @return The formatted string
+	 * @see Localizer
+	 */
+	public final String getString(final String key, final IModel model)
+	{
+		return getLocalizer().getString(key, this, model);
+	}
+
+	/**
 	 * Gets the (skin) style of this component.
 	 * 
 	 * @return The (skin) style of this component

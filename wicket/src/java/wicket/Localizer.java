@@ -52,6 +52,43 @@ public class Localizer
 	}
 
 	/**
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that
+	 *             exception should be thrown
+	 * @see #getString(String, Component, String)
+	 */
+	public String getString(final String key, final Component component)
+			throws MissingResourceException
+	{
+		return getString(key, component, null, component.getLocale(), component.getStyle(), null);
+	}
+
+	/**
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for (optional)
+	 * @param model
+	 *            The model to use for OGNL substitutions in the strings
+	 *            (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that
+	 *             exception should be thrown
+	 * @see #getString(String, Component, IModel, String)
+	 */
+	public String getString(final String key, final Component component, final IModel model)
+			throws MissingResourceException
+	{
+		return getString(key, component, model, component.getLocale(), component.getStyle(), null);
+	}
+
+	/**
 	 * Get the localized string using all of the supplied parameters. This
 	 * method is left public to allow developers full control over string
 	 * resource loading. However, it is recommended that one of the other
@@ -121,50 +158,6 @@ public class Localizer
 	 * null in which case the component string resource loader will not be used.
 	 * It the component is not null then it must be a component that has already
 	 * been added to a page, either directly or via a parent container. The
-	 * locale and style are obtained from the current user session.
-	 * 
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @param component
-	 *            The component to get the resource for (optional)
-	 * @param defaultValue
-	 *            The default value (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 */
-	public String getString(final String key, final Component component, final String defaultValue)
-			throws MissingResourceException
-	{
-		Session session = Session.get();
-		return getString(key, component, null, session.getLocale(), session.getStyle(),
-				defaultValue);
-	}
-
-	/**
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @param component
-	 *            The component to get the resource for (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 * @see #getString(String, Component, String)
-	 */
-	public String getString(final String key, final Component component)
-			throws MissingResourceException
-	{
-		Session session = Session.get();
-		return getString(key, component, null, session.getLocale(), session.getStyle(), null);
-	}
-
-	/**
-	 * Get the localized string for the given component. The component may be
-	 * null in which case the component string resource loader will not be used.
-	 * It the component is not null then it must be a component that has already
-	 * been added to a page, either directly or via a parent container. The
 	 * locale and style are obtained from the current user session. If the model
 	 * is not null then OGNL substitution will be carried out on the string,
 	 * using the object contained within the model.
@@ -186,40 +179,21 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel model,
 			final String defaultValue) throws MissingResourceException
 	{
-		Session session = Session.get();
-		return getString(key, component, model, session.getLocale(), session.getStyle(),
+		return getString(key, component, model, component.getLocale(), component.getStyle(),
 				defaultValue);
 	}
 
 	/**
+	 * Get the localized string for the given component. The component may be
+	 * null in which case the component string resource loader will not be used.
+	 * It the component is not null then it must be a component that has already
+	 * been added to a page, either directly or via a parent container. The
+	 * locale and style are obtained from the current user session.
+	 * 
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
 	 *            The component to get the resource for (optional)
-	 * @param model
-	 *            The model to use for OGNL substitutions in the strings
-	 *            (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 * @see #getString(String, Component, IModel, String)
-	 */
-	public String getString(final String key, final Component component, final IModel model)
-			throws MissingResourceException
-	{
-		Session session = Session.get();
-		return getString(key, component, model, session.getLocale(), session.getStyle(), null);
-	}
-
-	/**
-	 * Get the localized string. This method does not take a component instance
-	 * and hence the component string resource loader will not be used when
-	 * looking for the string resource. The locale and style are obtained from
-	 * the current user session.
-	 * 
-	 * @param key
-	 *            The key to obtain the resource for
 	 * @param defaultValue
 	 *            The default value (optional)
 	 * @return The string resource
@@ -227,83 +201,11 @@ public class Localizer
 	 *             If resource not found and configuration dictates that
 	 *             exception should be thrown
 	 */
-	public String getString(final String key, final String defaultValue)
+	public String getString(final String key, final Component component, final String defaultValue)
 			throws MissingResourceException
 	{
-		Session session = Session.get();
-		return getString(key, null, null, session.getLocale(), session.getStyle(), defaultValue);
-	}
-
-	/**
-	 * Get the localized string. This method does not take a component instance
-	 * and hence the component string resource loader will not be used when
-	 * looking for the string resource. The locale and style are obtained from
-	 * the current user session.
-	 * 
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 * @see #getString(String, String)
-	 */
-	public String getString(final String key) throws MissingResourceException
-	{
-		Session session = Session.get();
-		return getString(key, null, null, session.getLocale(), session.getStyle(), null);
-	}
-
-	/**
-	 * Get the localized string. This method does not take a component instance
-	 * and hence the component string resource loader will not be used when
-	 * looking for the string resource. The locale and style are obtained from
-	 * the current user session. If the model is not null then OGNL substitution
-	 * will be carried out on the string, using the object contained within the
-	 * model.
-	 * 
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @param model
-	 *            The model to use for OGNL substitutions in the strings
-	 *            (optional)
-	 * @param defaultValue
-	 *            The default value (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 */
-	public String getString(final String key, final IModel model, final String defaultValue)
-			throws MissingResourceException
-	{
-		Session session = Session.get();
-		return getString(key, null, model, session.getLocale(), session.getStyle(), defaultValue);
-	}
-
-	/**
-	 * Get the localized string. This method does not take a component instance
-	 * and hence the component string resource loader will not be used when
-	 * looking for the string resource. The locale and style are obtained from
-	 * the current user session. If the model is not null then OGNL substitution
-	 * will be carried out on the string, using the object contained within the
-	 * model.
-	 * 
-	 * @param key
-	 *            The key to obtain the resource for
-	 * @param model
-	 *            The model to use for OGNL substitutions in the strings
-	 *            (optional)
-	 * @return The string resource
-	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
-	 * @see #getString(String, IModel, String)
-	 */
-	public String getString(final String key, final IModel model) throws MissingResourceException
-	{
-		Session session = Session.get();
-		return getString(key, null, model, session.getLocale(), session.getStyle(), null);
+		return getString(key, component, null, component.getLocale(), component.getStyle(),
+				defaultValue);
 	}
 
 	/**

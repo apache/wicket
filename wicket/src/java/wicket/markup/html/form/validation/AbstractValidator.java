@@ -23,7 +23,7 @@ import java.util.Map;
 import wicket.Localizer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
-import wicket.model.MapModel;
+import wicket.model.Model;
 import wicket.util.lang.Classes;
 
 /**
@@ -102,7 +102,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final String resourceKey, final Map map)
 	{
-		error(resourceKey, MapModel.valueOf(map));
+		error(resourceKey, Model.valueOf(map));
 	}
 
 	/**
@@ -114,7 +114,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final Map map)
 	{
-		error(resourceKey(), MapModel.valueOf(map));
+		error(resourceKey(), Model.valueOf(map));
 	}
 
 	/**
