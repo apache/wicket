@@ -121,8 +121,8 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	public void addFeedbackMessages(final Component component, final boolean recurse)
 	{
 		// Force re-rendering of the list
+		messageListView.modelChangeImpending();
 		messageListView.getList().addAll(getPage().getFeedbackMessages().messages(component, recurse));
-		messageListView.modelChangedStructure();
 	}
 
 	/**

@@ -78,10 +78,12 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 *            The component to bind
 	 * @param ognlExpression
 	 *            An OGNL expression pointing to the property in this model
+	 * @return The component, for convenience in adding components
 	 */
-	public void bind(final Component component, final String ognlExpression)
+	public Component bind(final Component component, final String ognlExpression)
 	{
 		bind(component, ognlExpression, null);
+		return component;
 	}
 
 	/**
@@ -91,10 +93,12 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 *            The component to bind
 	 * @param type
 	 *            The type of the property
+	 * @return The component, for convenience in adding components
 	 */
-	public void bind(final Component component, final Class type)
+	public Component bind(final Component component, final Class type)
 	{
 		bind(component, component.getName(), type);
+		return component;
 	}
 
 	/**
@@ -106,11 +110,13 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 *            An OGNL expression pointing to the property in this model
 	 * @param type
 	 *            The type of the property
+	 * @return The component, for convenience in adding components
 	 */
-	public void bind(final Component component, final String ognlExpression, final Class type)
+	public Component bind(final Component component, final String ognlExpression, final Class type)
 	{
 		// Add new binding
 		bindings.add(new Binding(component, ognlExpression, type));
+		return component;
 	}
 
 	/**

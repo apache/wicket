@@ -242,37 +242,46 @@ public abstract class Session implements Serializable
 	 * 
 	 * @param path
 	 *            Component path
-	 * @param revisionNumber
-	 *            The revision of the page required
-	 * @return The page based on the first path component (the page id)
+	 * @param versionNumber
+	 *            The version of the page required
+	 * @return The page based on the first path component (the page id), or null
+	 *         if the requested version of the page cannot be found.
 	 */
-	public final Page getPage(final String path, final int revisionNumber)
+	public final Page getPage(final String path, final int versionNumber)
 	{
 		// Retrieve the page for the first path component from this session
 		Page page = getPage(Integer.parseInt(Strings.firstPathComponent(path,
 				componentPathSeparator)));
-
-		// Get the revision of the page requested from the page
-		final Page revision = page.getRevision(revisionNumber);
-
-		// Need to update session with new page?
-		if (revision != page)
+		
+		// Is there a page with the right id at all?
+		if (page != null)
 		{
-			// This is our new page
-			page = revision;
-
-			// Replaces old page entry
-			getPageMap().put(new Integer(page.getId()), page);
-			pageChanged(page);
+			// Get the version of the page requested from the page
+			final Page version = page.getVersion(versionNumber);
+	
+			// Is the requested version available?
+			if (version != null)
+			{
+				// Need to update session with new page?
+				if (version != page)
+				{
+					// This is our new page
+					page = version;
+		
+					// Replaces old page entry
+					getPageMap().put(new Integer(page.getId()), page);
+					pageChanged(page);
+				}
+		
+				// Modifications to this page are potentially beginning
+				page.onInternalBeginRequest();
+				page.onBeginRequest();
+		
+				return page;
+			}
 		}
-
-		// Modifications to this page are potentially beginning
-		page.onInternalBeginRequest();
-		page.onBeginRequest();
-
-		return page;
+		return null;
 	}
-
 	/**
 	 * @return The page factory for this session
 	 */

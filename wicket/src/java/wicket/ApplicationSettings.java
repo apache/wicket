@@ -43,9 +43,9 @@ import wicket.util.time.Duration;
  * <p>
  * <ul>
  * <i>bufferResponse </i> (defaults to true) - True if the application should
- * buffer responses.  This does require some additional memory, but helps keep
- * exception displays accurate because the whole rendering process completes 
- * before the page is sent to the user, thus avoiding the possibility of a 
+ * buffer responses. This does require some additional memory, but helps keep
+ * exception displays accurate because the whole rendering process completes
+ * before the page is sent to the user, thus avoiding the possibility of a
  * partially rendered page.
  * <p>
  * <ul>
@@ -131,15 +131,15 @@ public final class ApplicationSettings
 			"SHOW_NO_EXCEPTION_PAGE");
 	/** Log */
 	private static final Log log = LogFactory.getLog(ApplicationSettings.class);
-	
+
 	/** The application */
 	private Application application;
 
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
-    
-    /** True if the response should be buffered */
-    private boolean bufferResponse = true;
+
+	/** True if the response should be buffered */
+	private boolean bufferResponse = true;
 
 	/** Component attribute name */
 	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
@@ -181,9 +181,9 @@ public final class ApplicationSettings
 	/** Encryption key used to encode/decode passwords e.g. */
 	private String encryptionKey = "WiCkEt-FRAMEwork";
 
-	/** The maximum number of revisions of a page to track */
-	private int maxPageRevisions = 10;
-	
+	/** The maximum number of versions of a page to track */
+	private int maxPageVersions = 10;
+
 	/** The maximum number of pages in a session */
 	private int maxSessionPages = 10;
 
@@ -216,6 +216,9 @@ public final class ApplicationSettings
 
 	/** Determines behavior of string resource loading if string is missing */
 	private boolean useDefaultOnMissingResource = true;
+
+	/** Determines if pages should be managed by a version manager by default */
+	private boolean versionPagesByDefault = true;
 
 	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
@@ -287,14 +290,14 @@ public final class ApplicationSettings
 		return automaticLinking;
 	}
 
-    /**
+	/**
 	 * @return True if this application buffers its responses
 	 */
 	public boolean getBufferResponse()
 	{
 		return bufferResponse;
 	}
-    
+
 	/**
 	 * Gets component name attribute in use in this application. Normally, this
 	 * is "wicket", but it can be changed in the unlikely event that tag
@@ -391,13 +394,13 @@ public final class ApplicationSettings
 	{
 		return encryptionKey;
 	}
-	
+
 	/**
-	 * @return Returns the maxPageRevisions.
+	 * @return Returns the maxPageVersions.
 	 */
-	public int getMaxPageRevisions()
+	public int getMaxPageVersions()
 	{
-		return maxPageRevisions;
+		return maxPageVersions;
 	}
 
 	/**
@@ -488,6 +491,14 @@ public final class ApplicationSettings
 	{
 		return useDefaultOnMissingResource;
 	}
+	
+	/**
+	 * @return Returns the pagesVersionedByDefault.
+	 */
+	public boolean getVersionPagesByDefault()
+	{
+		return versionPagesByDefault;
+	}
 
 	/** 
 	 * If true and if componentNameAttribute has been changed, than not only
@@ -514,15 +525,16 @@ public final class ApplicationSettings
 	{
 		this.automaticLinking = automaticLinking;
 	}
-    
-    /**
-     * @param bufferResponse True if this application should buffer responses.
-     */
-    public void setBufferResponse(boolean bufferResponse)
-    {
-    	this.bufferResponse = bufferResponse;
-    }
-    
+
+	/**
+	 * @param bufferResponse
+	 *            True if this application should buffer responses.
+	 */
+	public void setBufferResponse(boolean bufferResponse)
+	{
+		this.bufferResponse = bufferResponse;
+	}
+
 	/**
 	 * Sets component name attribute in use in this application. Normally, this
 	 * is "wicket", but it can be changed in the unlikely event that tag
@@ -666,13 +678,14 @@ public final class ApplicationSettings
 		this.encryptionKey = encryptionKey;
 		return this;
 	}
-	
+
 	/**
-	 * @param maxPageRevisions The maxPageRevision to set.
+	 * @param maxPageVersions
+	 *            The maxPageVersion to set.
 	 */
-	public void setMaxPageRevisions(int maxPageRevisions)
+	public void setMaxPageVersions(int maxPageVersions)
 	{
-		this.maxPageRevisions = maxPageRevisions;
+		this.maxPageVersions = maxPageVersions;
 	}
 
 	/**
@@ -720,10 +733,10 @@ public final class ApplicationSettings
 	public final ApplicationSettings setSourcePath(final Path sourcePath)
 	{
 		this.sourcePath = sourcePath;
-		
-		// Cause resource locator to get recreated 
+
+		// Cause resource locator to get recreated
 		application.sourcePathChanged();
-		
+
 		return this;
 	}
 
@@ -742,11 +755,11 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Determines if componentName attributes and "wicket-" from id attributes 
-	 * should be stripped from tags when rendering. Component name attributes in 
-	 * rendered pages can be a helpful debugging tool, but they are not helpful 
-	 * to end-users and do not increase efficiency in delivering pages over 
-	 * any protocol.
+	 * Determines if componentName attributes and "wicket-" from id attributes
+	 * should be stripped from tags when rendering. Component name attributes in
+	 * rendered pages can be a helpful debugging tool, but they are not helpful
+	 * to end-users and do not increase efficiency in delivering pages over any
+	 * protocol.
 	 * 
 	 * @param stripComponentNames
 	 *            The stripComponentNames to set.
@@ -825,6 +838,14 @@ public final class ApplicationSettings
 	{
 		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
 		return this;
+	}
+	
+	/**
+	 * @param pagesVersionedByDefault The pagesVersionedByDefault to set.
+	 */
+	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
+	{
+		this.versionPagesByDefault = pagesVersionedByDefault;
 	}
 
 	/**

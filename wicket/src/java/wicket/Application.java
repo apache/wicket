@@ -73,14 +73,14 @@ public abstract class Application
 	/** Pages for application */
 	private final ApplicationPages pages = new ApplicationPages();
 
+	/** The default resource locator for this application */
+	private ResourceLocator resourceLocator;
+
 	/** ModificationWatcher to watch for changes in markup files */
 	private transient ModificationWatcher resourceWatcher;
 
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
-
-	/** The default resource locator for this application */
-	private ResourceLocator resourceLocator;
 
 	/**
 	 * Constructor
@@ -193,17 +193,6 @@ public abstract class Application
 		}
 		return resourceLocator;
 	}
-
-	/**
-	 * Change the resource locator which will be used to locate resources
-	 * like e.g. markup files.
-	 * 
-	 * @param locator
-	 */
-	protected void setResourceLocator(final ResourceLocator locator)
-	{
-	    this.resourceLocator = locator;
-	}
 	
 	/**
 	 * @return Resource watcher with polling frequency determined by setting, or
@@ -223,6 +212,11 @@ public abstract class Application
 	}
 
 	/**
+	 * @return Factory for creating sessions
+	 */
+	public abstract ISessionFactory getSessionFactory();
+
+	/**
 	 * @return Application settings
 	 */
 	public ApplicationSettings getSettings()
@@ -235,9 +229,15 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Factory for creating sessions
+	 * Change the resource locator which will be used to locate resources
+	 * like e.g. markup files.
+	 * 
+	 * @param locator
 	 */
-	public abstract ISessionFactory getSessionFactory();
+	protected void setResourceLocator(final ResourceLocator locator)
+	{
+	    this.resourceLocator = locator;
+	}
 
 	/**
 	 * Called by ApplicationSettings when source path property is changed. This

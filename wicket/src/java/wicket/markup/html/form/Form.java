@@ -223,6 +223,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 */
 	public void onFormSubmitted()
 	{
+		// Validate form
 		onValidate();
 
 		// Update validation feedback no matter how the form was validated
