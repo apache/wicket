@@ -914,7 +914,7 @@ public abstract class MarkupContainer extends Component
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();
 
-		// If it a tag like <wicket..> or <span id="wicket-..." >
+		// If it a tag like <wicket..> or <span wicket:id="..." >
 		if (element instanceof ComponentTag && !markupStream.atCloseTag())
 		{
 			// Get element as tag
