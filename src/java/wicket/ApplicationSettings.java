@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
 import wicket.markup.html.form.encryption.Crypt;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.resource.ApplicationStringResourceLoader;
@@ -33,6 +32,7 @@ import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
 import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;
+import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.time.Duration;
 
 /**
@@ -190,9 +190,6 @@ public final class ApplicationSettings
 
 	/** Determines behavior of string resource loading if string is missing */
 	private boolean useDefaultOnMissingResource = true;
-
-	/** Default xhtml wicket namespace: e.g. <wicket:> */
-	private String wicketNamespace = ComponentWicketTag.DEFAULT_WICKET_NAMESPACE;
 
 	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
@@ -435,16 +432,6 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Get the current tag name
-	 * 
-	 * @return wicket tag name
-	 */
-	public final String getWicketNamespace()
-	{
-		return this.wicketNamespace;
-	}
-
-	/**
 	 * Application default for automatic link resolution.
 	 * 
 	 * @param automaticLinking
@@ -466,6 +453,12 @@ public final class ApplicationSettings
 	 */
 	public final ApplicationSettings setComponentNameAttribute(final String componentNameAttribute)
 	{
+	    if (!MetaPattern.VARIABLE_NAME.matcher(componentNameAttribute).matches())
+	    {
+	        throw new IllegalArgumentException(
+	                "Component name attribute must be a valid variable name ([a-z][a-z0-9_]*)");
+	    }
+	    
 		this.componentNameAttribute = componentNameAttribute;
 		return this;
 	}
@@ -736,19 +729,6 @@ public final class ApplicationSettings
 			final boolean useDefaultOnMissingResource)
 	{
 		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
-		return this;
-	}
-
-	/**
-	 * Define a new wicket namespace to use instead of "wicket"
-	 * 
-	 * @param wicketNamespace
-	 *            the tag name
-	 * @return This
-	 */
-	public final ApplicationSettings setWicketNamespace(final String wicketNamespace)
-	{
-		this.wicketNamespace = wicketNamespace;
 		return this;
 	}
 

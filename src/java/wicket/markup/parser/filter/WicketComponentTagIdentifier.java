@@ -31,7 +31,7 @@ import wicket.markup.parser.XmlTag;
 
 /**
  * This is a markup inline filter. It identifies xml tags which have a special
- * meaning for Wicket. There two type of tags which have a special meaning for
+ * meaning for Wicket. There are two type of tags which have a special meaning for
  * Wicket.<p>
  * <ul>
  * <li>All tags with Wicket namespace, e.g. &lt;wicket:remove&gt;</li>
@@ -47,9 +47,6 @@ public class WicketComponentTagIdentifier implements IMarkupFilter
     
     /** Name of desired componentName tag attribute. */
     private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
-    
-    /** Name of the desired wicket tag: e.g. &lt;wicket&gt; */
-    private String wicketNamespace = ComponentWicketTag.DEFAULT_WICKET_NAMESPACE;
 
     /** if true, "wicket-" will be removed from id="wicket-xxx" */
     private boolean stripWicketFromComponentTag = false;
@@ -85,21 +82,6 @@ public class WicketComponentTagIdentifier implements IMarkupFilter
         if (!ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
         {
             log.info("You are using a non-standard component name: " + componentNameAttribute);
-        }
-    }
-
-    /** 
-     * Name of the desired wicket namespace: e.g. &lt;wicket:remove&gt; 
-     * @param namespace wicket namespace (xmlns:wicket) 
-     */
-    public void setWicketNamespace(final String namespace)
-    {
-        this.wicketNamespace = namespace;
-
-        if (!ComponentWicketTag.DEFAULT_WICKET_NAMESPACE.equals(namespace))
-        {
-            log.info("You are using a non-standard wicket namespace: " 
-                    + namespace);
         }
     }
     
@@ -140,7 +122,8 @@ public class WicketComponentTagIdentifier implements IMarkupFilter
 
         // Identify tags with Wicket namespace
         ComponentTag tag;
-        if (wicketNamespace.equalsIgnoreCase(xmlTag.getNamespace()))
+        if (componentNameAttribute.equalsIgnoreCase(xmlTag.getNamespace()) 
+            || ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.equalsIgnoreCase(xmlTag.getNamespace()))
         {
             // It is <wicket:...>
             tag = new ComponentWicketTag(xmlTag);
@@ -161,6 +144,18 @@ public class WicketComponentTagIdentifier implements IMarkupFilter
         {
             // extract component name from value
             tag.setComponentName(id.substring(componentNameAttribute.length() + 1).trim());
+
+            // Depending on apps setting, "wicket-" will be removed or not
+            if (this.stripWicketFromComponentTag)
+            {
+                tag.put("id", tag.getComponentName());
+            }
+        }
+        else if ((id != null) && id.startsWith(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
+        {
+            // extract component name from value
+            tag.setComponentName(id.substring(
+                    ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.length() + 1).trim());
 
             // Depending on apps setting, "wicket-" will be removed or not
             if (this.stripWicketFromComponentTag)

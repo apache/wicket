@@ -44,7 +44,7 @@ public final class MarkupParserTest extends TestCase
      */
     public final void testTagParsing() throws StringValueConversionException, ParseException
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName", "wicket");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
         final Markup markup = parser
                 .parse("This is a test <a componentName=\"a\" href=\"foo.html\"> <b componentName=\"b\">Bold!</b> "
                         + "<img componentName=\"img\" width=9 height=10 src=\"foo\"> <marker componentName=\"marker\"/> </a>");
@@ -108,7 +108,7 @@ public final class MarkupParserTest extends TestCase
      */
     public final void test() throws StringValueConversionException, ParseException
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName", "wicket");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
         final Markup tokens = parser
                 .parse("This is a test <a componentName=9> <b>bold</b> <b componentName=10/></a> of the emergency broadcasting system");
 
@@ -148,7 +148,7 @@ public final class MarkupParserTest extends TestCase
            "<head><title>Some Page</title></head>" +
            "<body><h1>XHTML Test</h1></body>" +
            "</html>";
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName", "wicket");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
         final Markup tokens = parser.parse(docText);
 
         System.out.println("tok(0)=" + tokens.get(0));
@@ -164,7 +164,7 @@ public final class MarkupParserTest extends TestCase
     public final void testFileDocument() throws ParseException,
             ResourceNotFoundException, IOException
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn", "wicket");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
         Resource resource = Resource.locate(null, this.getClass(), "1", null, "html");
         Markup tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
@@ -211,7 +211,7 @@ public final class MarkupParserTest extends TestCase
     public final void testWicketTag() throws ParseException,
     	ResourceNotFoundException, IOException
    	{
-	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wicket", "wicket");
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wicket");
 	    
 	    parser.parse("<span wicket=\"test\"/>");
 
@@ -287,7 +287,33 @@ public final class MarkupParserTest extends TestCase
 	    }
 	    
 	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
+	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
+	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span id=\"wicket-msg\">hello world!</span></wicket:component>");
 	    
 	    parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span id=\"wicket-contentPanel\"/></div></wicket:panel>");
+   	}
+
+    /**
+     * Test &lt;wicket: .
+     * @throws ParseException
+     * @throws ResourceNotFoundException
+     * @throws IOException
+     */
+    public final void testDefaultWicketTag() throws ParseException,
+    	ResourceNotFoundException, IOException
+   	{
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
+	    
+	    Markup markup = parser.parse("<span wcn=\"test\"/>");
+	    assertEquals(1, markup.size());
+
+	    markup = parser.parse("<span wicket=\"test\"/>");
+	    assertEquals(1, markup.size());
+	    
+	    markup = parser.parse("<wcn:xxx>  </wcn:xxx>");
+	    assertEquals(3, markup.size());
+	    
+	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
+	    assertEquals(3, markup.size());
    	}
 }

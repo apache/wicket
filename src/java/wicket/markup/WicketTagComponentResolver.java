@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.Container;
 import wicket.WicketRuntimeException;
-import wicket.Session;
 import wicket.util.string.StringValueConversionException;
 
 /**
@@ -119,7 +118,7 @@ public class WicketTagComponentResolver implements IComponentResolver
         // the name might be a Groovy file.
         // Note: Spring based components are not supported this way. May be we
         //  should provide a ComponentFactory like we provide a PageFactory.
-        final Class componentClass = Session.get().getClassResolver().resolveClass(classname);
+        final Class componentClass = container.getSession().getClassResolver().resolveClass(classname);
 
         // construct the component. It must have a constructor with a single
         // String (componentName) parameter.
