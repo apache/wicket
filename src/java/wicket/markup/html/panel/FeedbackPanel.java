@@ -137,9 +137,9 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	/**
 	 * Sets an error message to be displayed by this feedback panel.
 	 * 
-	 * @see wicket.markup.html.form.validation.IValidationFeedback#update()
+	 * @see wicket.markup.html.form.validation.IValidationFeedback#updateValidationFeedback()
 	 */
-	public void update()
+	public void updateValidationFeedback()
 	{
 		// Force re-rendering of the list
 		removeAll();

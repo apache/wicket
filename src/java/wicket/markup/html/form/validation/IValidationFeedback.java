@@ -38,5 +38,5 @@ public interface IValidationFeedback
 	/**
 	 * Called to update validation feedback
 	 */
-	public void update();
+	public void updateValidationFeedback();
 }
