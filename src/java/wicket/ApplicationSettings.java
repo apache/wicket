@@ -40,7 +40,7 @@ import wicket.util.convert.ConverterRegistry;
 import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.time.Duration;
-import wicket.util.watch.Watcher;
+import wicket.util.watch.ModificationWatcher;
 
 /**
  * Contains application settings as property values. All settings exposed are generic to
@@ -174,8 +174,8 @@ public class ApplicationSettings
 
     private String defaultAfterDisabledLink = "</i>";
 
-    // Watcher to watch for changes in markup files
-    private Watcher resourceWatcher;
+    // ModificationWatcher to watch for changes in markup files
+    private ModificationWatcher resourceWatcher;
 
     private boolean triedToCreateResouceWatcher = false;
 
@@ -725,14 +725,14 @@ public class ApplicationSettings
      * @return Resource watcher with polling frequency determined by setting, or null if
      *         no polling frequency has been set.
      */
-    public Watcher getResourceWatcher()
+    public ModificationWatcher getResourceWatcher()
     {
         if (!triedToCreateResouceWatcher)
         {
             final Duration frequency = getResourcePollFrequency();
             if (frequency != null)
             {
-                resourceWatcher = new Watcher(frequency);
+                resourceWatcher = new ModificationWatcher(frequency);
             }
             triedToCreateResouceWatcher = true;
         }

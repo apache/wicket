@@ -32,31 +32,32 @@ import wicket.util.thread.Task;
 import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
-
 /**
- * Monitors changes to changeables, calling a change listener when a changeable changes.
+ * Monitors one or more Modifiable objects, calling a ChangeListener when a given
+ * object's modification time changes.
+ * 
  * @author Jonathan Locke
  */
-public final class Watcher
-{ // TODO finalize javadoc
-    // Code broadcaster for reporting
-    private static final Log log = LogFactory.getLog(Watcher.class);
+public final class ModificationWatcher
+{
+    /** Logging */
+    private static final Log log = LogFactory.getLog(ModificationWatcher.class);
 
-    // The changeable to entry map
-    private final Map changeableToEntry = new HashMap();
+    /** Maps Modifiable objects to Entry objects */
+    private final Map modifiableToEntry = new HashMap();
 
     /**
      * For two-phase construction
      */
-    public Watcher()
+    public ModificationWatcher()
     {
     }
 
     /**
      * Constructor
-     * @param pollFrequency How often to check on changeables
+     * @param pollFrequency How often to check on modifiables
      */
-    public Watcher(final Duration pollFrequency)
+    public ModificationWatcher(final Duration pollFrequency)
     {
         start(pollFrequency);
     }
@@ -68,29 +69,29 @@ public final class Watcher
     public void start(final Duration pollFrequency)
     {
         // Construct task with the given polling frequency
-        final Task task = new Task("Watcher");
+        final Task task = new Task("ModificationWatcher");
 
         task.run(pollFrequency, new ICode()
         {
-            public void run(final Log codeListener)
+            public void run(final Log log)
             {
-                for (final Iterator iterator = changeableToEntry.values().iterator(); iterator
-                        .hasNext();)
+                for (final Iterator iterator = modifiableToEntry.values().iterator(); 
+                     iterator.hasNext();)
                 {
                     // Get next entry
                     final Entry entry = (Entry) iterator.next();
 
-                    // If the changeable has been modified after the last known
+                    // If the modifiable has been modified after the last known
                     // modification time
-                    final Time changeableLastModified = entry.changeable.lastModifiedTime();
+                    final Time modifiableLastModified = entry.modifiable.lastModifiedTime();
 
-                    if (changeableLastModified.after(entry.lastModifiedTime))
+                    if (modifiableLastModified.after(entry.lastModifiedTime))
                     {
-                        // Notify all listeners that the changeable changed
+                        // Notify all listeners that the modifiable was modified
                         entry.listeners.notifyListeners();
 
                         // Update timestamp
-                        entry.lastModifiedTime = changeableLastModified;
+                        entry.lastModifiedTime = modifiableLastModified;
                     }
                 }
             }
@@ -98,33 +99,35 @@ public final class Watcher
     }
 
     /**
-     * Adds a changeable and change listener to this monitor
-     * @param changeable The changeable thing to monitor
-     * @param listener The listener to call if the changeable changes
+     * Adds a Modifiable object and an IChangeListener to call when the modifiable
+     * object is modified.
+     * @param modifiable The modifiable thing to monitor
+     * @param listener The listener to call if the modifiable is modified
      */
-    public final void add(final IChangeable changeable, final IChangeListener listener)
+    public final void add(final IModifiable modifiable, final IChangeListener listener)
     {
-        // Look up entry for changeable
-        final Entry entry = (Entry) changeableToEntry.get(changeable);
+        // Look up entry for modifiable
+        final Entry entry = (Entry)modifiableToEntry.get(modifiable);
 
         // Found it?
         if (entry == null)
         {
-            if (changeable.lastModifiedTime() != null)
+            if (modifiable.lastModifiedTime() != null)
             {
                 // Construct new entry
                 final Entry newEntry = new Entry();
 
-                newEntry.changeable = changeable;
-                newEntry.lastModifiedTime = changeable.lastModifiedTime();
+                newEntry.modifiable = modifiable;
+                newEntry.lastModifiedTime = modifiable.lastModifiedTime();
                 newEntry.listeners.add(listener);
 
                 // Put in map
-                changeableToEntry.put(changeable, newEntry);
+                modifiableToEntry.put(modifiable, newEntry);
             }
             else
             {
-                log.info("Cannot track changes to resource " + changeable);
+                // The IModifiable is not returning a valid lastModifiedTime
+                log.info("Cannot track modifications to resource " + modifiable);
             }
         }
         else
@@ -134,16 +137,16 @@ public final class Watcher
         }
     }
 
-    // Container class for holding changeable entries to watch
+    // Container class for holding modifiable entries to watch
     private static final class Entry
     {
-        // The changeable
-        IChangeable changeable;
+        // The modifiable thing
+        IModifiable modifiable;
 
-        // The last time the changeable was changed
+        // The most recent lastModificationTime polled on the object
         Time lastModifiedTime;
 
-        // The set of listeners to call when the changeable changes
+        // The set of listeners to call when the modifiable changes
         final ChangeListenerSet listeners = new ChangeListenerSet();
     }
 }

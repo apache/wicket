@@ -21,12 +21,14 @@ package wicket.util.watch;
 import wicket.util.time.Time;
 
 /**
- * Interface to get the last time something changed.
+ * Interface to get the last time something was modified.
+ * 
  * @author Jonathan Locke
  */
-public interface IChangeable
-{ // TODO finalize javadoc
+public interface IModifiable
+{
     /**
+     * Gets the last time this modifiable thing changed.
      * @return The last modification time.
      */
     public Time lastModifiedTime();

@@ -20,12 +20,13 @@ package wicket.util.listener;
 
 /**
  * Generic "something changed" listener interface.
+ * 
  * @author Jonathan Locke
  */
 public interface IChangeListener
-{ // TODO finalize javadoc
+{
     /**
-     * Client method that is called when something changes.
+     * Client method that is called to indicate that something changed.
      */
     public void changed();
 }

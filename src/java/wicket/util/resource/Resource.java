@@ -32,7 +32,7 @@ import wicket.util.file.File;
 import wicket.util.file.Path;
 import wicket.util.string.Strings;
 import wicket.util.time.Time;
-import wicket.util.watch.IChangeable;
+import wicket.util.watch.IModifiable;
 
 
 /**
@@ -43,7 +43,7 @@ import wicket.util.watch.IChangeable;
  * 
  * @author Jonathan Locke
  */
-public final class Resource implements IResource, IChangeable
+public final class Resource implements IResource, IModifiable
 { // TODO finalize javadoc
     /** Logging  */
     private static Log log = LogFactory.getLog(Resource.class);
@@ -334,7 +334,7 @@ public final class Resource implements IResource, IChangeable
     }
 
     /**
-     * @see wicket.util.watch.IChangeable#lastModifiedTime()
+     * @see wicket.util.watch.IModifiable#lastModifiedTime()
      */
     public Time lastModifiedTime()
     {
