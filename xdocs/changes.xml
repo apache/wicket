@@ -7,6 +7,14 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="update" dev="Jonathan Locke" issue="">
+		Added ISessionFactory interface for creating sessions and added an abstract 
+		method getSessionFactory() to Application so applications can implement 
+		their own session factories.  Since the downcasting of getProperty() is 
+		obviated by this, removed session properties.  Will add a FAQ entry on how 
+		to set values on a session using the session factory approach since this 
+		will come up /a lot/.
+      </action>
       <action type="remove" dev="Jonathan Locke" issue="">
 		Removed IModel constructors throughout the project and added instanceof 
 		logic to Component to wrap model objects unless they are already IModel 
