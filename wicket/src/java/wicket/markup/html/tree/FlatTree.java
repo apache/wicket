@@ -46,25 +46,38 @@ public abstract class FlatTree extends AbstractTree
     private VisibleTreePathListView visibleTreePathTable;
 
     /**
-     * Construct.
-     * @param componentName
-     * @param model
+     * Constructor.
+     * @param componentName The name of this container
+     * @param model the underlying tree model
      */
-    public FlatTree(String componentName, TreeModel model)
+    public FlatTree(final String componentName, final TreeModel model)
     {
         super(componentName, model);
     }
 
     /**
-     * Add components.
+     * Constructor.
+     * @param componentName The name of this container
+     * @param model the underlying tree model
+     * @param makeTreeModelUnique whether to make the user objects of the tree model
+     * unique. If true, the default implementation will wrapp all user objects in
+     * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
+     * user objects are unique within the tree in order to have the tree working properly
      */
-    protected void setSelectedPaths()
+    public FlatTree(final String componentName, final TreeModel model,
+    		final boolean makeTreeModelUnique)
     {
-        TreeStateCache treeState = getTreeState();
-        TreePath selectedPath = treeState.getSelectedPath();
+        super(componentName, model, makeTreeModelUnique);
+    }
+
+    /**
+     * Builds the structures needed to display the currently visible tree paths.
+     * @param treeState the current tree state
+     */
+    protected void applySelectedPaths(TreeStateCache treeState)
+    {
         Enumeration e = treeState.getVisiblePathsFromRoot();
         List visiblePathsList = new ArrayList();
-
         while (e.hasMoreElements())
         {
             TreePath path = (TreePath)e.nextElement();

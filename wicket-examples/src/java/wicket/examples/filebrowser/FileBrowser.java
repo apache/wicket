@@ -139,7 +139,7 @@ public class FileBrowser extends HtmlPage
             final AbstractTree tree;
             if(TYPE_NESTED.equals(type))
             {
-                tree = new Tree("fileTree", FileBrowser.this.model);
+                tree = new Tree("fileTree", FileBrowser.this.model, true);
             }
             else if(TYPE_FLAT.equals(type))
             {
@@ -163,7 +163,7 @@ public class FileBrowser extends HtmlPage
 		 */
 		public FileTree(String componentName, TreeModel model)
 		{
-			super(componentName, model);
+			super(componentName, model, true);
 		}
 
 		/**
@@ -191,7 +191,7 @@ public class FileBrowser extends HtmlPage
 		 */
 		public FlatFileTree(String componentName, TreeModel model)
 		{
-			super(componentName, model);
+			super(componentName, model, true);
 		}
 
 		/**

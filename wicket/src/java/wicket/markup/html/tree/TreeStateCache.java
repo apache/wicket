@@ -35,18 +35,18 @@ import java.util.List;
  */
 public final class TreeStateCache extends VariableHeightLayoutCache implements Serializable
 {
-    /* currently selected path */
+    /** currently selected path. */
     private TreePath selectedPath;
 
-    /* query that was used to select the current selected path */
+    /** query that was used to select the current selected path. */
     private String selectedPathQuery;
 
-    /* the objects owned by the selected path */
+    /** the objects owned by the selected path. */
     private List pathContent;
 
     /**
-     * expand the selected path and set selection to currently selected path
-     * @param selection new selection.
+     * Expands the selected path and set selection to currently selected path.
+     * @param selection the new selection.
      */
     public void setSelectedPath(TreePath selection)
     {
@@ -55,10 +55,10 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
     }
 
     /**
-     * expand the selected path and set selection to currently selected path and set the
+     * Expands the selected path and sets the selection to currently selected path and set the
      * content owned by the selected path.
-     * @param selection new selection
-     * @param pathContent path owned by selection
+     * @param selection the new selection
+     * @param pathContent the path owned by the selection
      */
     public void setSelectedPath(TreePath selection, List pathContent)
     {
@@ -67,22 +67,23 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
     }
 
     /**
-     * expand the selected path and set selection to currently selected path , set the
-     * content owned by the selected path and set query that was used to get the
-     * selection.
+     * Expands the selected path and sets the selection to currently selected path,
+     * sets the content owned by the selected path and sets the query that was used
+     * to get the selection.
      * @param selection new selection
      * @param pathContent path owned by selection
      * @param selectedPathQuery query that was used to get selection
      */
-    public void setSelectedPath(TreePath selection, List pathContent, String selectedPathQuery)
+    public void setSelectedPath(TreePath selection, List pathContent,
+    		String selectedPathQuery)
     {
         setSelectedPath(selection, pathContent);
         this.selectedPathQuery = selectedPathQuery;
     }
 
     /**
-     * get the currently selected path.
-     * @return TreePath
+     * Gets the currently selected path.
+     * @return the currently selected path
      */
     public TreePath getSelectedPath()
     {
@@ -95,8 +96,8 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
     }
 
     /**
-     * get the content that is owned by the current path.
-     * @return List list of content
+     * Gets the content that is owned by the current path.
+     * @return list of content
      */
     public List getPathContent()
     {

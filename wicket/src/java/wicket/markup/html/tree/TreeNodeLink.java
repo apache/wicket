@@ -38,6 +38,9 @@ import wicket.markup.html.link.Link;
  */
 public class TreeNodeLink extends AbstractLink
 {
+	/** the request parameter for the link id; value == 'lid'. */
+	public static final String REQUEST_PARAMETER_LINK_ID = "lid";
+
     /** force static block to execute (registers ILinkListener). */
     private static final Class LINK = Link.class;
 
@@ -48,7 +51,7 @@ public class TreeNodeLink extends AbstractLink
     private final TreeNodeModel node;
 
     /** object id. */
-    Object id;
+    private final Serializable id;
 
     /**
      * Construct.
@@ -62,6 +65,20 @@ public class TreeNodeLink extends AbstractLink
         super(componentName);
         this.tree = tree;
         this.node = node;
+
+        // get the user object. WARNING: do not call node.getUserObject, as we want the
+        // wrapped user object in case it was made unique
+        Object userObject = node.getTreeNode().getUserObject();
+
+        // links can change, but the target user object should be the same, so
+        // if a new link is added that actually points to the same userObject, it will
+        // replace the old one thus allowing the old link to be GC-ed.
+        // Te id is a combination of the 
+        String linkId = String.valueOf(userObject.hashCode());
+        id = linkId;
+
+        // add the link to the tree. By adding it to the tree instead of one of the tree's nested components,
+        // we have it decoupled and thus reachable for as long as the tree exists
         tree.addLink(this);
     }
 
@@ -83,7 +100,10 @@ public class TreeNodeLink extends AbstractLink
      */
     public void linkClicked(RequestCycle cycle, TreeNodeModel node)
     {
-        Serializable userObject = node.getUserObject();
+        // get the user object. WARNING: do not call node.getUserObject, as we want the
+        // wrapped user object in case it was made unique
+        Object userObject = node.getTreeNode().getUserObject();
+
         TreeStateCache state = tree.getTreeState();
         TreePath selection = state.findTreePath(userObject);
         tree.setExpandedState(selection, (!node.isExpanded())); // inverse
@@ -95,7 +115,8 @@ public class TreeNodeLink extends AbstractLink
      */
     protected String getURL(final RequestCycle cycle)
     {
-        return cycle.urlFor(tree, ILinkListener.class) + "&linkId=" + id;
+        return cycle.urlFor(tree, ILinkListener.class)
+        	+ "&" + REQUEST_PARAMETER_LINK_ID + "=" + id;
     }
 
     /**
@@ -117,19 +138,10 @@ public class TreeNodeLink extends AbstractLink
     }
 
     /**
-     * Sets the link's unique id.
-     * @param id the link's unique id
-     */
-    final void setId(Object id)
-    {
-        this.id = id;
-    }
-
-    /**
      * Gets the link's unique id.
      * @return the link's unique id
      */
-    final Object getId()
+    final Serializable getId()
     {
         return id;
     }
@@ -156,6 +168,7 @@ public class TreeNodeLink extends AbstractLink
         super.handleComponentTag(cycle, tag);
 
         // Set href to link to this link's linkClicked method
-        tag.put("href", getURL(cycle));
+        String url = getURL(cycle);
+		tag.put("href", url);
     }
 }

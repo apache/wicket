@@ -64,6 +64,7 @@ public final class FileModelProvider
             if(model == null)
             {
                 model = buildTree();
+                debugTree(model);
             }
         }
         return model;
@@ -152,25 +153,25 @@ public final class FileModelProvider
      * Debug tree to logger.
      * @param treeModel tree model
      */
-    private void debugTree(DefaultTreeModel treeModel)
+    private static void debugTree(TreeModel treeModel)
     {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeModel.getRoot();
-        Enumeration e = node.breadthFirstEnumeration();
-
-        e = node.preorderEnumeration();
-        log.info("-- DUMPING TREE --");
-
-        while (e.hasMoreElements())
-        {
-            DefaultMutableTreeNode nd = (DefaultMutableTreeNode) e.nextElement();
-            String tabs = "|";
-
-            for (int i = 0; i < nd.getLevel(); i++)
-            {
-                tabs += "-";
-            }
-
-            log.info(tabs + nd);
-        }
+    	if(log.isDebugEnabled())
+    	{
+	        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) treeModel.getRoot();
+	        Enumeration e = rootNode.preorderEnumeration();
+	        log.debug("-- DUMPING TREE --");
+	        while (e.hasMoreElements())
+	        {
+	            DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+	            String tabs = "|";
+	
+	            for (int i = 0; i < node.getLevel(); i++)
+	            {
+	                tabs += "-";
+	            }
+	
+	            log.debug(tabs + node);
+	        }
+    	}
     }
 }

@@ -19,6 +19,7 @@
 package wicket.markup.html.tree;
 
 import java.io.Serializable;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,22 @@ import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.HttpRequest;
 
 /**
- * Base component for trees.
+ * Base component for trees. The trees from this package work with the Swing tree models
+ * and {@link javax.swing.tree.DefaultMutableTreeNode}s. Hence, users can re-use their
+ * Swing trees.
+ *
+ * An important requirement of the trees in this package, is that the user objects of the
+ * {@link javax.swing.tree.DefaultMutableTreeNode}s must be unique (have a unique hashcode)
+ * within the tree. Users can either ensure this themselves, or use the makeUnique
+ * method or constructor parameter for this.
+ * 
+ * We need unique user objects to be able to decouple the links in the trees from
+ * actual components that are used for rendering the visible tree paths.
+ * As every expand, collapse and select action has the effect of a structural change
+ * of the components that are used for rendering, the tree would be marked stale on every
+ * request. That would mean that we could never allow for using the back button. By
+ * decoupling the tree links, we support trees that keep working when end-users fool
+ * around with their back buttons.
  *
  * @author Eelco Hillenius
  */
@@ -51,12 +67,74 @@ public abstract class AbstractTree extends Panel implements ILinkListener
      * @param componentName The name of this container
      * @param model the underlying tree model
      */
-    public AbstractTree(final String componentName, TreeModel model)
+    public AbstractTree(final String componentName, final TreeModel model)
+    {
+        this(componentName, model, false);
+    }
+
+    /**
+     * Constructor.
+     * @param componentName The name of this container
+     * @param model the underlying tree model
+     * @param makeTreeModelUnique whether to make the user objects of the tree model
+     * unique. If true, the default implementation will wrapp all user objects in
+     * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
+     * user objects are unique within the tree in order to have the tree working properly
+     */
+    public AbstractTree(final String componentName, final TreeModel model,
+    		final boolean makeTreeModelUnique)
     {
         super(componentName);
         treeState = new TreeStateCache();
         setTreeModel(model);
-        setSelectedPaths();
+        applySelectedPaths(treeState);
+        if(makeTreeModelUnique)
+        {
+        	makeUnique(model);
+        }
+    }
+
+    /**
+     * Loops through all tree nodes and make the user object of each tree node unique.
+     * By default, this is done by wrapping the found user objects in instances
+     * of {@link IdWrappedUserObject}.
+     * @param treeModel the tree model
+     */
+    public void makeUnique(TreeModel treeModel)
+    {
+        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)treeModel.getRoot();
+        makeUnique(rootNode);
+        DefaultMutableTreeNode node;
+        Enumeration e = rootNode.preorderEnumeration();
+        while (e.hasMoreElements())
+        {
+            node = (DefaultMutableTreeNode)e.nextElement();
+            makeUnique(node);
+        }
+    }
+
+    /**
+     * Makes the user object of the given tree node unique. This implementation
+     * wraps the user object in a {@link IdWrappedUserObject}.
+     * @param node the tree node with the user object
+     */
+    protected void makeUnique(DefaultMutableTreeNode node)
+    {
+    	Object userObject = node.getUserObject();
+    	if(!(userObject instanceof Serializable))
+    	{
+    		throw new IllegalArgumentException(
+    				"user objects of tree nodes must be serializable");
+    	}
+    	else if(userObject instanceof IdWrappedUserObject)
+    	{
+    		// nothing needs to be done
+    	}
+    	else
+    	{
+			IdWrappedUserObject wrapped = new IdWrappedUserObject((Serializable)userObject);
+	    	node.setUserObject(wrapped);
+    	}
     }
 
     /**
@@ -65,17 +143,7 @@ public abstract class AbstractTree extends Panel implements ILinkListener
      */
     final void addLink(TreeNodeLink link)
     {
-        TreeNodeModel node = link.getNode();
-        Serializable userObject = node.getUserObject();
-
-        // links can change, but the target user object should be the same, so
-        // if a new link is added that actually points to the same userObject, it will
-        // replace the old one thus allowing the old link to be GC-ed. We need the creator hash
-        // to be able to have more trees in the same page with the same link names
-        String linkId = link.getName() + "." + userObject.hashCode();
-
-        link.setId(linkId);
-        links.put(linkId, link);
+        links.put(link.getId(), link);
     }
 
     /**
@@ -85,7 +153,8 @@ public abstract class AbstractTree extends Panel implements ILinkListener
      */
     public final void linkClicked(final RequestCycle cycle)
     {
-        String linkId = ((HttpRequest) cycle.getRequest()).getParameter("linkId");
+    	String param = TreeNodeLink.REQUEST_PARAMETER_LINK_ID;
+        String linkId = ((HttpRequest)cycle.getRequest()).getParameter(param);
         TreeNodeLink link = (TreeNodeLink) links.get(linkId);
         if (link == null)
         {
@@ -95,8 +164,8 @@ public abstract class AbstractTree extends Panel implements ILinkListener
     }
 
     /**
-     * Set tree model.
-     * @param model tree model
+     * Sets the tree model and creates an empty tree selection model.
+     * @param model the tree model
      */
     protected final void setTreeModel(TreeModel model)
     {
@@ -107,18 +176,18 @@ public abstract class AbstractTree extends Panel implements ILinkListener
     }
 
     /**
-     * Set expanded property in tree state for selection.
+     * Sets the expanded property in the stree state for selection.
      * @param selection the selection to set the expanded property for
      * @param expanded true if the selection is expanded, false otherwise
      */
     public final void setExpandedState(TreePath selection, boolean expanded)
     {
         treeState.setExpandedState(selection, expanded);
-        setSelectedPaths();
+        applySelectedPaths(treeState);
     }
 
     /**
-     * Find tree path for the given user object.
+     * Finds the tree path for the given user object.
      * @param userObject the user object to find the path for
      * @return tree path of given user object
      */
@@ -147,7 +216,9 @@ public abstract class AbstractTree extends Panel implements ILinkListener
     }
 
     /**
-     * Applies the current selection.
+     * Applies the current selection. Implementations need to prepare the model
+     * of the concrete tree for rendering.
+     * @param treeState the current tree state
      */
-    protected abstract void setSelectedPaths();
+    protected abstract void applySelectedPaths(TreeStateCache treeState);
 }
