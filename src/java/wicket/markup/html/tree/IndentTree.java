@@ -29,8 +29,10 @@ import javax.swing.tree.TreePath;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTagAttributeModifier;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.IModel;
@@ -73,9 +75,6 @@ import wicket.model.Model;
  */
 public abstract class IndentTree extends Tree
 {
-	/** table for the current visible tree paths. */
-	private ListView visibleTreePathTable;
-
 	/**
 	 * Constructor.
 	 * @param componentName The name of this container
@@ -84,80 +83,33 @@ public abstract class IndentTree extends Tree
 	public IndentTree(final String componentName, final TreeModel model)
 	{
 		super(componentName, model);
+		VisibleTreePathListView treePathsListView = createTreePathsListView();
+		add(treePathsListView);
 	}
 
 	/**
-	 * Constructor.
-	 * @param componentName The name of this container
-	 * @param model the underlying tree model
-	 * @param makeTreeModelUnique whether to make the user objects of the tree model
-	 *           unique. If true, the default implementation will wrapp all user objects in
-	 *           instances of {@link IdWrappedUserObject}. If false, users must ensure
-	 *           that the user objects are unique within the tree in order to have the tree
-	 *           working properly
+	 * Creates the tree paths list view.
+	 * @return the tree paths list view
 	 */
-	public IndentTree(final String componentName, final TreeModel model,
-			final boolean makeTreeModelUnique)
+	protected final VisibleTreePathListView createTreePathsListView()
 	{
-		super(componentName, model, makeTreeModelUnique);
-	}
-
-	/**
-	 * Constructor using the given tree state. This tree state holds the tree model and the
-	 * currently visible paths.
-	 * @param componentName The name of this container
-	 * @param treeState the tree state that holds the tree model and the currently visible
-	 *           paths
-	 */
-	public IndentTree(final String componentName, TreeStateCache treeState)
-	{
-		super(componentName, treeState);
-	}
-
-	/**
-	 * Builds the structures needed to display the currently visible tree paths.
-	 * @param treeState the current tree state
-	 */
-	protected final void applySelectedPaths(TreeStateCache treeState)
-	{
-		Enumeration e = treeState.getVisiblePathsFromRoot();
-		List visiblePathsList = new ArrayList();
-		boolean skip = (!treeState.isRootVisible());
+		TreeModel model = (TreeModel)getTreeState().getModel();
+		TreeStateCache treeState = getTreeState();
+		List treePathList = new ArrayList();
+		DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
+		Enumeration e = rootNode.preorderEnumeration();
 		while (e.hasMoreElements())
 		{
-			TreePath path = (TreePath)e.nextElement();
-			if (skip) // skip root if not visible
-			{
-				skip = false;
-				continue;
-			}
-			DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)path.getLastPathComponent();
-			TreeNodeModel treeNodeModel = new TreeNodeModel(treeNode, treeState, path);
-			visiblePathsList.add(treeNodeModel);
+			DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)e.nextElement();
+			TreePath path = new TreePath(treeNode.getPath());
+			TreeNodeModel treeNodeModel = new TreeNodeModel(
+					treeNode, treeState, path);
+			treePathList.add(treeNodeModel);
 		}
-		Model model = new Model((Serializable)visiblePathsList);
-
-		if (visibleTreePathTable == null)
-		{
-			visibleTreePathTable = newVisibleTreePathListView(model);
-			add(visibleTreePathTable);
-		}
-		else
-		{
-			visibleTreePathTable.removeAll();
-			visibleTreePathTable.setModel(model);
-		}
-	}
-
-	/**
-	 * Creates a {@link ListView}to use for rendering the visible tree rows. The model
-	 * parameter should be used as the model for the <code>ListView</code>.
-	 * @param model a model that contains a list of {@link TreeNodeModel}s
-	 * @return a new <code>ListView</code> that uses the provided model
-	 */
-	protected final ListView newVisibleTreePathListView(Model model)
-	{
-		return new VisibleTreePathListView("tree", model);
+		VisibleTreePathListView treePathsListView =
+				new VisibleTreePathListView("tree",
+				new Model((Serializable)treePathList));
+		return treePathsListView;
 	}
 
 	/**
@@ -165,19 +117,24 @@ public abstract class IndentTree extends Tree
 	 * @param node the model of the node
 	 * @return link for expanding/ collapsing the tree
 	 */
-	private final TreeNodeLink createJunctionLink(TreeNodeModel node)
+	private final Link createJunctionLink(final TreeNodeModel node)
 	{
-		TreeNodeLink junctionLink = new TreeNodeLink("junctionLink", this, node)
+		Link junctionLink = new Link("junctionLink")
 		{
-
-			public void linkClicked(TreeNodeModel node)
+			public void linkClicked()
 			{
 				junctionLinkClicked(node);
 			}
 		};
 		HtmlContainer junctionImg = new HtmlContainer("junctionImg");
-		junctionImg.add(new ComponentTagAttributeModifier("src", true, new Model(
-				getJunctionImageName(node))));
+		junctionImg.add(new ComponentTagAttributeModifier(
+				"src", true, new Model()
+		{
+			public Object getObject()
+			{
+				return getJunctionImageName(node);
+			}
+		}));
 		junctionLink.add(junctionImg);
 		return junctionLink;
 	}
@@ -196,7 +153,7 @@ public abstract class IndentTree extends Tree
 	 */
 	protected void junctionLinkClicked(TreeNodeModel node)
 	{
-		setExpandedState(node);
+		setExpandedState(node.getTreeNode());
 	}
 
 	/**
@@ -204,20 +161,25 @@ public abstract class IndentTree extends Tree
 	 * @param node the model of the node
 	 * @return link for selection
 	 */
-	private final TreeNodeLink createNodeLink(TreeNodeModel node)
+	private final Link createNodeLink(final TreeNodeModel node)
 	{
 		Object userObject = node.getTreeNode().getUserObject();
-		TreeNodeLink nodeLink = new TreeNodeLink("nodeLink", this, node)
+		Link nodeLink = new Link("nodeLink")
 		{
-
-			public void linkClicked(TreeNodeModel node)
+			public void linkClicked()
 			{
 				nodeLinkClicked(node);
 			}
 		};
 		HtmlContainer nodeImg = new HtmlContainer("nodeImg");
-		nodeImg
-				.add(new ComponentTagAttributeModifier("src", true, new Model(getNodeImageName(node))));
+		nodeImg.add(new ComponentTagAttributeModifier(
+				"src", true, new Model()
+		{
+			public Object getObject()
+			{
+				return getNodeImageName(node);
+			}
+		}));
 		nodeLink.add(nodeImg);
 		String userObjectAsString = getNodeLabel(node);
 		nodeLink.add(new Label("label", userObjectAsString));
@@ -247,7 +209,7 @@ public abstract class IndentTree extends Tree
 	 */
 	protected void nodeLinkClicked(TreeNodeModel node)
 	{
-		setSelected(node);
+		setSelected(node.getTreeNode());
 	}
 
 	/**
@@ -301,6 +263,62 @@ public abstract class IndentTree extends Tree
 		}
 
 		/**
+		 * Renders the tree paths.
+		 */
+		protected void handleRender()
+		{
+			TreeStateCache treeState = getTreeState();
+			// Ask parents for markup stream to use
+			final MarkupStream markupStream = findMarkupStream();
+			// Save position in markup stream
+			final int markupStart = markupStream.getCurrentIndex();
+			// Get number of listItems to be displayed
+			int size = getViewSize();
+			if (size > 0)
+			{
+				// Loop through the markup in this container for each child
+				// container
+				for (int i = 0; i < size; i++)
+				{
+					// Get the name of the component for listItem i
+					final String componentName = Integer.toString(i);
+
+					// If this component does not already exist, populate it
+					ListItem listItem = (ListItem)get(componentName);
+					if (listItem == null)
+					{
+						// Create listItem for index i of the list
+						listItem = newItem(i);
+						populateItem(listItem);
+
+						// Add cell to list view
+						add(listItem);
+					}
+
+					TreeNodeModel treeNodeModel = (TreeNodeModel)listItem.getModelObject();
+					TreePath path = treeNodeModel.getPath();
+					int row = treeState.getRowForPath(path);
+					if(row != -1)
+					{
+						listItem.setVisible(true);
+					}
+					else
+					{
+						listItem.setVisible(false);
+					}
+					// Rewind to start of markup for kids
+					markupStream.setCurrentIndex(markupStart);
+					// Render cell
+					renderItem(listItem, i >= (size - 1));
+				}
+			}
+			else
+			{
+				markupStream.skipComponent();
+			}
+		}
+
+		/**
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
 		protected void populateItem(ListItem listItem)
@@ -319,10 +337,10 @@ public abstract class IndentTree extends Tree
 			{
 				throw new WicketRuntimeException("User object cannot be null");
 			}
-			TreeNodeLink expandCollapsLink = IndentTree.this.createJunctionLink(treeNodeModel);
+			Link expandCollapsLink = IndentTree.this.createJunctionLink(treeNodeModel);
 			nodeContainer.add(expandCollapsLink);
 
-			TreeNodeLink selectLink = IndentTree.this.createNodeLink(treeNodeModel);
+			Link selectLink = IndentTree.this.createNodeLink(treeNodeModel);
 			nodeContainer.add(selectLink);
 			listItem.add(nodeContainer);
 
