@@ -220,7 +220,7 @@ public class DropDownChoice extends Choice
 	{
 		if (this instanceof IOnChangeListener)
 		{
-			// if a user subclasses this class and implements IOnChangeListener
+			// If a user subclasses this class and implements IOnChangeListener
 			// an onChange scriptlet is added
 			String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
 			url = url.replaceAll("&", "&amp;");
