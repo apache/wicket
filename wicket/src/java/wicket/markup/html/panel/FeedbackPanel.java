@@ -79,7 +79,6 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
 			IModel replacementModel = new IModel()
 			{
-
 				/**
 				 * Returns feedbackPanel + the message level, eg
 				 * 'feedbackPanelERROR'. This is used as the class of the li /
