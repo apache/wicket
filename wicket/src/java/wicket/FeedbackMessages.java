@@ -134,11 +134,11 @@ public final class FeedbackMessages
 		{
 			if (level == FeedbackMessage.UNDEFINED)
 			{
-				return getMessages();
+				return messages();
 			}
 			else
 			{
-				return getMessages(level);
+				return messages(level);
 			}
 		}
 
@@ -189,72 +189,6 @@ public final class FeedbackMessages
 		{
 			messages.clear();
 		}
-	}
-
-
-	/**
-	 * Gets the list with messages (not sorted; the same ordering as they were
-	 * added).
-	 * 
-	 * @return the list with messages
-	 */
-	public List getMessages()
-	{
-		return (this.messages != null)
-				? Collections.unmodifiableList(this.messages)
-				: Collections.EMPTY_LIST;
-	}
-
-	/**
-	 * Gets a sub list of messages with messages that are of the given level or
-	 * above.
-	 * 
-	 * @param level
-	 *            the level to get the messages for
-	 * @return the sub list of message with messages that are of the given level
-	 *         or above, or an empty list
-	 */
-	public FeedbackMessages getMessages(int level)
-	{
-		if (messages != null)
-		{
-			final List sublist = new ArrayList();
-			for (final Iterator i = messages.iterator(); i.hasNext();)
-			{
-				final FeedbackMessage message = (FeedbackMessage)i.next();
-				if (message.isLevel(level))
-				{
-					sublist.add(message);
-				}
-			}
-			return new FeedbackMessages().setMessages(sublist);
-		}
-		else
-		{
-			return new FeedbackMessages();
-		}
-	}
-
-	/**
-	 * Gets the list with messages sorted on level ascending (from UNDEFINED/
-	 * DEBUG up to FATAL).
-	 * 
-	 * @return the list with messages
-	 */
-	public List getMessagesAscending()
-	{
-		return getMessagesSorted(true);
-	}
-
-	/**
-	 * Gets the list with messages sorted on level descending (from FATAL down
-	 * to UNDEFINED/ DEBUG).
-	 * 
-	 * @return the list with messages
-	 */
-	public List getMessagesDescending()
-	{
-		return getMessagesSorted(false);
 	}
 
 	/**
@@ -313,7 +247,73 @@ public final class FeedbackMessages
 	 */
 	public Iterator iterator()
 	{
-		return getMessages().iterator();
+		return messages().iterator();
+	}
+
+
+	/**
+	 * Gets the list with messages (not sorted; the same ordering as they were
+	 * added).
+	 * 
+	 * @return the list with messages
+	 */
+	public List messages()
+	{
+		return (this.messages != null)
+				? Collections.unmodifiableList(this.messages)
+				: Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * Gets a sub list of messages with messages that are of the given level or
+	 * above.
+	 * 
+	 * @param level
+	 *            the level to get the messages for
+	 * @return the sub list of message with messages that are of the given level
+	 *         or above, or an empty list
+	 */
+	public FeedbackMessages messages(int level)
+	{
+		if (messages != null)
+		{
+			final List sublist = new ArrayList();
+			for (final Iterator i = messages.iterator(); i.hasNext();)
+			{
+				final FeedbackMessage message = (FeedbackMessage)i.next();
+				if (message.isLevel(level))
+				{
+					sublist.add(message);
+				}
+			}
+			return new FeedbackMessages().setMessages(sublist);
+		}
+		else
+		{
+			return new FeedbackMessages();
+		}
+	}
+
+	/**
+	 * Gets the list with messages sorted on level ascending (from UNDEFINED/
+	 * DEBUG up to FATAL).
+	 * 
+	 * @return the list with messages
+	 */
+	public List messagesAscending()
+	{
+		return messagesSorted(true);
+	}
+
+	/**
+	 * Gets the list with messages sorted on level descending (from FATAL down
+	 * to UNDEFINED/ DEBUG).
+	 * 
+	 * @return the list with messages
+	 */
+	public List messagesDescending()
+	{
+		return messagesSorted(false);
 	}
 
 	/**
@@ -345,7 +345,7 @@ public final class FeedbackMessages
 	 */
 	public String toString()
 	{
-		return "[feedbackMessages = " + StringList.valueOf(getMessages()) + "]";
+		return "[feedbackMessages = " + StringList.valueOf(messages()) + "]";
 	}
 
 	/**
@@ -521,7 +521,7 @@ public final class FeedbackMessages
 	 *            Whether to sort ascending (true) or descending (false)
 	 * @return sorted list
 	 */
-	private List getMessagesSorted(boolean ascending)
+	private List messagesSorted(boolean ascending)
 	{
 		if (messages != null)
 		{

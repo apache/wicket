@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.form;
 
-
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -31,13 +30,16 @@ import wicket.model.IModel;
  * The options are descendant components of the RadioChoice and come in two flavors.
  * RadioOption, which is attached to an invidual radio input tag, and RadioOptionSet,
  * which automatically generates a list of options from a collection.
+ * 
  * @author Jonathan Locke
  */
 public final class RadioChoice extends FormComponent
 {
+     // TODO finalize javadoc
+    
 	// Index value for null choice
     private static final int NULL_VALUE = -1;
- // TODO finalize javadoc
+    
     /** Serial Version ID */
 	private static final long serialVersionUID = -1560593550286375796L;
 
@@ -116,14 +118,6 @@ public final class RadioChoice extends FormComponent
     }
 
     /**
-     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-     */
-    public boolean supportsPersistence()
-    {
-        return true;
-    }
-
-    /**
      * @see FormComponent#getValue()
      */
     public String getValue()
@@ -139,6 +133,14 @@ public final class RadioChoice extends FormComponent
     public void setValue(final String value)
     {
         setModelObject(values.get(Integer.parseInt(value)));
+    }
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+     */
+    public boolean supportsPersistence()
+    {
+        return true;
     }
 
     /**
