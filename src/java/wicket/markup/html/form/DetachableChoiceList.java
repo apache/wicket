@@ -30,14 +30,14 @@ import java.util.Collection;
  * class TypesList extends DetachableChoiceList
  * {
  * 	// load all needed object when attaching
- * 	public void doAttach(RequestCycle cycle)
+ * 	public void onAttach(RequestCycle cycle)
  * 	{
  * 		List definitionTypes = definitionDAO.findDefinitionTypes();
  * 		addAll(definitionTypes);
  * 	}
  * 
  * 	// clear the list when detaching
- * 	public void doDetach(RequestCycle cycle)
+ * 	public void onDetach(RequestCycle cycle)
  * 	{
  * 		clear();
  * 	}
