@@ -127,7 +127,7 @@ public abstract class Session implements Serializable
 	{
 		// This value will be true when the page is added and false on
 		// whatever server this object is replicated to
-		private transient boolean addedToSession = true;
+		private transient boolean addedToSession;
 
 		/**
 		 * @return The Page.
@@ -450,12 +450,20 @@ public abstract class Session implements Serializable
 		{
 			// Copy state into Session
 			this.state = state;
+		}
 
-			// Copy any changed pages into our (transient) Session
-			for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		// Copy any changed pages into our (transient) Session
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		{
+			// Get next attribute name
+			final String attributeName = (String)iterator.next();
+
+			// Get attribute value
+			final Object value = getAttribute(attributeName);
+			if (value instanceof PageState)
 			{
 				// Get next pageState guy
-				final PageState pageState = (PageState)getAttribute((String)iterator.next());
+				final PageState pageState = (PageState)value;
 
 				// If PageState has not been added to the session
 				if (!pageState.addedToSession())
@@ -469,8 +477,6 @@ public abstract class Session implements Serializable
 					// Page has been added to session now
 					pageState.addedToSession = true;
 				}
-
-				iterator.remove();
 			}
 		}
 	}
