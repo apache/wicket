@@ -279,7 +279,7 @@ public abstract class ListView extends WebMarkupContainer
 					markupStream.setCurrentIndex(markupStart);
 	
 					// Render cell
-					renderItem(listItem, i >= (size - 1));
+					renderItem(listItem, i == (size - 1));
 				}
 			}
 		}
