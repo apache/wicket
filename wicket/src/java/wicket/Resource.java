@@ -20,7 +20,6 @@ package wicket;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
-import java.util.Locale;
 
 import wicket.util.io.Streams;
 import wicket.util.resource.IResource;
@@ -89,76 +88,6 @@ public abstract class Resource implements IResourceListener
 
 		// Respond with resource
 		respond(response);
-	}
-
-	/**
-	 * @param application
-	 *            The application
-	 * @param name
-	 *            The logical name
-	 * @return A shared resource reference to this resource
-	 */
-	public SharedResource getShared(final Application application,
-			final String name)
-	{
-		return getShared(application, Application.class, name, null, null);
-	}
-
-	/**
-	 * @param application
-	 *            The application
-	 * @param scope
-	 *            The scope of sharing
-	 * @param name
-	 *            The logical name
-	 * @return A shared resource reference to this resource
-	 */
-	public SharedResource getShared(final Application application, final Class scope,
-			final String name)
-	{
-		return getShared(application, scope, name, null, null);
-	}
-
-	/**
-	 * @param application
-	 *            The application
-	 * @param scope
-	 *            The scope of sharing
-	 * @param name
-	 *            The logical name
-	 * @param locale
-	 *            The locale
-	 * @return A shared resource reference to this resource
-	 */
-	public SharedResource getShared(final Application application, final Class scope,
-			final String name, final Locale locale)
-	{
-		return getShared(application, scope, name, locale, null);
-	}
-
-	/**
-	 * @param application
-	 *            The application
-	 * @param scope
-	 *            The scope of sharing
-	 * @param name
-	 *            The logical name
-	 * @param locale
-	 *            The locale
-	 * @param style
-	 *            The style
-	 * @return A shared resource reference to this resource
-	 */
-	public SharedResource getShared(final Application application, final Class scope,
-			final String name, final Locale locale, final String style)
-	{
-		// Lazy loading of shared resource
-		final Resource resource = application.getResource(scope, name, locale, style);
-		if (resource == null)
-		{
-			application.addResource(scope, name, locale, style, this);
-		}
-		return new SharedResource(scope, name);
 	}
 
 	/**

@@ -17,6 +17,7 @@
  */
 package wicket.examples.images;
 
+import wicket.Resource;
 import wicket.SharedResource;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
@@ -28,23 +29,23 @@ import wicket.markup.html.image.resource.DefaultButtonImageResource;
  */
 public class ImagesApplication extends WicketExampleApplication
 {
-	static private final DefaultButtonImageResource okButtonImageResource = new DefaultButtonImageResource(
-			"Ok");
-
 	/**
 	 * Constructor
 	 */
 	public ImagesApplication()
 	{
 		getPages().setHomePage(Home.class);
-
 		addResource("cancelButton", new DefaultButtonImageResource("Cancel"));
 	}
 
-	final SharedResource getOkButtonImageResource()
+	final SharedResource getOkButtonImage()
 	{
-		// Return image shared as an application resource under the name
-		// "okButton"
-		return okButtonImageResource.getShared(this, "okButton");
+		return new SharedResource("okButton")
+		{
+			protected Resource newResource()
+			{
+				return new DefaultButtonImageResource("Ok");
+			}
+		};
 	}
 }

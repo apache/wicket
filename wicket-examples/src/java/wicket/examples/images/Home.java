@@ -22,7 +22,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import wicket.ISharedResourceFactory;
 import wicket.Resource;
 import wicket.SharedResource;
 import wicket.examples.WicketExamplePage;
@@ -67,7 +66,7 @@ public final class Home extends WicketExamplePage
 		add(new Image("image5", getImage5Resource()));
 
 		// Add okay button image
-		add(new Image("okButton", application.getOkButtonImageResource()));
+		add(new Image("okButton", application.getOkButtonImage()));
 
 		// Add cancel button image
 		add(new Image("cancelButton", new SharedResource("cancelButton")));
@@ -78,19 +77,17 @@ public final class Home extends WicketExamplePage
 	 */
 	public SharedResource getImage5Resource()
 	{
-		return getApplication().getSharedResource(Home.class, "image5",
-				new ISharedResourceFactory()
-				{
-					public Resource newResource()
-					{
-						final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
-						final BufferedImage image = new BufferedImage(100, 100,
-								BufferedImage.TYPE_INT_RGB);
-						drawCircle((Graphics2D)image.getGraphics());
-						resource.setImage(image);
-						return resource;
-					}
-				});
+		return new SharedResource(Home.class, "image5")
+		{
+			public Resource newResource()
+			{
+				final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
+				final BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+				drawCircle((Graphics2D)image.getGraphics());
+				resource.setImage(image);
+				return resource;
+			}
+		};
 	}
 
 	/**

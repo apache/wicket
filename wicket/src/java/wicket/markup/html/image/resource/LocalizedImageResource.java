@@ -146,15 +146,28 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		this.component = component;
 	}
+	
+	/**
+	 * Binds this resource if it is shared
+	 */
+	public final void bind()
+	{
+		// Rebind resource to application if it is a shared reference
+		if (resource instanceof SharedResource)
+		{
+			((SharedResource)resource).bind(component.getApplication());
+		}
+	}
 
 	/**
 	 * @see wicket.IResourceListener#onResourceRequested()
 	 */
 	public final void onResourceRequested()
 	{
+		bind();
 		resource.onResourceRequested();
 	}
-
+	
 	/**
 	 * @param resource
 	 *            The resource to set.
@@ -162,18 +175,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	public final void setResource(final Resource resource)
 	{
 		this.resource = resource;
-	}
-
-	/**
-	 * Registers any shared resource with the Application. Called when a
-	 * component is deserialized as part of session replication.
-	 */
-	public final void sessionAttach()
-	{
-		if (resource instanceof SharedResource)
-		{
-			((SharedResource)resource).add(component.getApplication());
-		}
+		bind();
 	}
 
 	/**

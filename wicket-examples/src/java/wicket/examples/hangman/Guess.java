@@ -80,8 +80,8 @@ public class Guess extends HangmanPage
 						}
 					}
 				};
-				link.add(new Image("enabled", letter.getImage(getApplication(), true)));
-				link.add(new Image("disabled", letter.getImage(getApplication(), false)));
+				link.add(new Image("enabled", letter.getSharedImageResource(true)));
+				link.add(new Image("disabled", letter.getSharedImageResource(false)));
 				listItem.add(link);
 			}
 		});

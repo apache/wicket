@@ -25,7 +25,6 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ISharedResourceFactory;
 import wicket.Resource;
 import wicket.SharedResource;
 import wicket.markup.html.image.Image;
@@ -111,13 +110,13 @@ public class MyTree extends Tree
 	 */
 	private SharedResource getImage(final String name)
 	{
-		return getApplication().getSharedResource(MyTree.class, name, new ISharedResourceFactory()
+		return new SharedResource(MyTree.class, name)
 		{
 			public Resource newResource()
 			{
 				return StaticImageResource.get(MyTree.class.getPackage(), name, null, null);
 			}
-		});
+		};
 	}
 
 	/**

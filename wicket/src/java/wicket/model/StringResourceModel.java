@@ -435,6 +435,10 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 		{
 			model.detach();
 		}
+		
+		// Null out references
+		this.localizer = null;
+		this.locale = null;
 	}
 
 	/**

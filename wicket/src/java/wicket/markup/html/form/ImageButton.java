@@ -115,6 +115,6 @@ public class ImageButton extends Button implements IResourceListener
 	 */
 	protected void onSessionAttach()
 	{
-		localizedImageResource.sessionAttach();
+		localizedImageResource.bind();
 	}
 }

@@ -178,6 +178,14 @@ public abstract class Application
 		final String key = scope.getName() + "_" + name
 				+ (locale == null ? "" : "_" + locale.toString())
 				+ (style == null ? "" : "_" + style);
+		
+		// Check type
+		if (resource instanceof SharedResource)
+		{
+			throw new WicketRuntimeException("Cannot add a SharedResource.  SharedResource is a reference to a resource, not an actual resource.");
+		}
+		
+		// Save resource
 		resourceMap.put(key, resource);
 	}
 
@@ -346,32 +354,6 @@ public abstract class Application
 	 *			  The resource's scope
 	 * @param name
 	 *			  Name of resource to get
-	 * @return The logical resource
-	 */
-	public Resource getResource(final Class scope, final String name)
-	{
-		return getResource(scope, name, null, null);
-	}
-
-	/**
-	 * @param scope
-	 *			  The resource's scope
-	 * @param name
-	 *			  Name of resource to get
-	 * @param locale
-	 *			  The locale of the resource
-	 * @return The logical resource
-	 */
-	public Resource getResource(final Class scope, final String name, final Locale locale)
-	{
-		return getResource(scope, name, locale, null);
-	}
-
-	/**
-	 * @param scope
-	 *			  The resource's scope
-	 * @param name
-	 *			  Name of resource to get
 	 * @param locale
 	 *			  The locale of the resource
 	 * @param style
@@ -472,61 +454,6 @@ public abstract class Application
 			throw new IllegalStateException("Application settings not found");
 		}
 		return settings;
-	}
-
-	/**
-	 * @param scope
-	 *			  Scope of resource
-	 * @param name
-	 *			  Logical name of resource
-	 * @param factory
-	 *			  The factory for lazy-initializing the shared resource
-	 * @return The shared resource
-	 */
-	public SharedResource getSharedResource(final Class scope, final String name,
-			final ISharedResourceFactory factory)
-	{
-		return getSharedResource(scope, name, null, null, factory);
-	}
-
-	/**
-	 * @param scope
-	 *			  Scope of resource
-	 * @param name
-	 *			  Logical name of resource
-	 * @param locale
-	 *			  The locale of the resource
-	 * @param factory
-	 *			  The factory for lazy-initializing the shared resource
-	 * @return The shared resource
-	 */
-	public SharedResource getSharedResource(final Class scope, final String name,
-			final Locale locale, final ISharedResourceFactory factory)
-	{
-		return getSharedResource(scope, name, locale, null, factory);
-	}
-
-	/**
-	 * @param scope
-	 *			  Scope of resource
-	 * @param name
-	 *			  Logical name of resource
-	 * @param locale
-	 *			  The locale of the resource
-	 * @param style
-	 *			  The resource style
-	 * @param factory
-	 *			  The factory for lazy-initializing the shared resource
-	 * @return The shared resource
-	 */
-	public SharedResource getSharedResource(final Class scope, final String name,
-			final Locale locale, final String style, final ISharedResourceFactory factory)
-	{
-		if (getResource(scope, name, locale, style) == null)
-		{
-			addResource(scope, name, locale, style, factory.newResource());
-		}
-		return new SharedResource(scope, name);
 	}
 
 	/**

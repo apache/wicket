@@ -20,8 +20,6 @@ package wicket.examples.hangman;
 import java.awt.Color;
 import java.io.Serializable;
 
-import wicket.Application;
-import wicket.ISharedResourceFactory;
 import wicket.Resource;
 import wicket.SharedResource;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
@@ -66,42 +64,34 @@ public class Letter implements Serializable
 	{
 		if (object instanceof Letter)
 		{
-			Letter that = (Letter)object;
+			final Letter that = (Letter)object;
 			return that.letter == this.letter && that.isGuessed == this.isGuessed;
 		}
 		return false;
 	}
 
 	/**
-	 * @param application
-	 *            Application where shared resources are stored
 	 * @param enabled
 	 *            True to get the enabled resource, false to get the disabled
 	 *            resource
-	 * @return Shared image resource
+	 * @return SharedResource token for this letter
 	 */
-	public SharedResource getImage(final Application application, final boolean enabled)
+	public SharedResource getSharedImageResource(final boolean enabled)
 	{
-		// Return a shared resource scoped by the Letter class. The resource
-		// will only be constructed the first time this method is called for a
-		// given letter. In each case, a SharedResource will be returned, which
-		// is a logical reference to the resource in Application, and not the
-		// resource itself.
-		final String name = asString() + (enabled ? "_enabled" : "_disabled");
-		return application.getSharedResource(Letter.class, name, new ISharedResourceFactory()
+		return new SharedResource(Letter.class, asString() + (enabled ? "_enabled" : "_disabled"))
 		{
-			public Resource newResource()
+			protected Resource newResource()
 			{
 				// Lazy loading of shared resource
-				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(
-						30, 30, asString());
+				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(30, 30,
+						asString());
 				if (!enabled)
 				{
 					buttonResource.setColor(Color.GRAY);
 				}
-				return buttonResource;
+				return buttonResource;				
 			}
-		});
+		};
 	}
 
 	/**

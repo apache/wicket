@@ -8,6 +8,15 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1"> 
+      <action type="update" dev="Jonathan Locke" issue="">
+      Reworked SharedResource a bit to address clustering issues for Chris.
+      I think the new structure will work finally, but I don't have a cluster
+      to test it on (which is why I checked in code that didn't work the first time).
+      See SharedResource javadoc and updated Images and Hangman applications for
+      details on how this works now.  Updated tree to use this new style.
+      Also, added a small change for Johan to get rid of inefficient asString()
+      implementation in StringBufferResouce and StringResource.  Nice find!
+      </action>
   	  <action type="update" dev="Eelco Hillenius" issue="">
 		We've got a new project: Wicket Stuff (aka Wicket Contrib) at: http://sourceforge.net/projects/wicket-stuff
 		Wicket stuff is the project that is meant for contribution components/ utility classes
