@@ -82,19 +82,15 @@ public final class Streams
     }
 
     /**
-     * Writes the input stream to the output stream.
+     * Writes the input stream to the output stream.  Input is done without
+     * a Reader object, meaning that the input is copied in its raw form.
      * @param in The input stream
      * @param out The output stream
      * @throws IOException
      */
     public static void writeStream(final InputStream in, final OutputStream out) throws IOException
     {
-        // TODO this method is currently only used to copy static content 
-        // (gif, png, html, etc.) from a file (the whole file) to the servlet
-        // output. This might be a problem, as text (html) should be read with
-        // a Reader, taking the encoding of the file's content into account.
         int c;
-
         while ((c = in.read()) != -1)
         {
             out.write(c);
