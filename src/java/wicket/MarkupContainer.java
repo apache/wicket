@@ -368,7 +368,7 @@ public abstract class MarkupContainer extends Component
 			buffer.append(", markupStream = " + markupStream);
 		}
 
-		if (childForName.size() != 0)
+		if (childForName != null && childForName.size() != 0)
 		{
 			buffer.append(", children = " + childForName);
 		}

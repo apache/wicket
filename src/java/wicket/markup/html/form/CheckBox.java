@@ -34,6 +34,14 @@ public class CheckBox extends FormComponent
 	private static final long serialVersionUID = 7559827519977114184L;
 
 	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public CheckBox(final String name)
+	{
+		super(name);
+	}
+	
+	/**
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public CheckBox(String name, Serializable object)

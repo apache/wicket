@@ -166,6 +166,7 @@ public abstract class Component implements Serializable, IConverterSource
 	public Component(final String name)
 	{
 		setName(name);
+		onNullModel();
 	}
 
 	/**
@@ -207,10 +208,12 @@ public abstract class Component implements Serializable, IConverterSource
 	 * <pre>
 	 * 
 	 *  
-	 *                      IModel model;
-	 *                      String expression;
-	 *                      ...
-	 *                      new MyComponent(name, new PropertyModel(model, expression));
+	 *   
+	 *                       IModel model;
+	 *                       String expression;
+	 *                       ...
+	 *                       new MyComponent(name, new PropertyModel(model, expression));
+	 *    
 	 *   
 	 *  
 	 * </pre>
@@ -223,10 +226,12 @@ public abstract class Component implements Serializable, IConverterSource
 	 * <pre>
 	 * 
 	 *  
-	 *                      Serializable model;
-	 *                      String expression;
-	 *                      ...
-	 *                      new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 *   
+	 *                       Serializable model;
+	 *                       String expression;
+	 *                       ...
+	 *                       new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 *    
 	 *   
 	 *  
 	 * </pre>
@@ -447,12 +452,21 @@ public abstract class Component implements Serializable, IConverterSource
 	 * 
 	 * @return The model
 	 */
-	public final IModel getModel()
+	public IModel getModel()
 	{
+		// If model is null
+		if (model == null)
+		{
+			// give subclass a chance to lazy-init model
+			onNullModel();
+		}
+		
+		// Attach model if need be
 		if (model instanceof IDetachableModel)
 		{
 			((IDetachableModel)model).attach();
 		}
+		
 		return model;
 	}
 
@@ -745,10 +759,10 @@ public abstract class Component implements Serializable, IConverterSource
 		// check the return value for null here since getPage() will throw
 		// an IllegalState exception if its return value is null.
 		final Page page = getPage();
-	
+
 		// Make all previous renderings of the page stale
 		page.setStaleRendering(page.getRendering());
-	
+
 		// Visit all pages in the session
 		getSession().visitPages(new Session.IPageVisitor()
 		{
@@ -824,7 +838,7 @@ public abstract class Component implements Serializable, IConverterSource
 	{
 		return sameRootModel(component.getModel());
 	}
-	
+
 	/**
 	 * @param model
 	 *            The model to compare with
@@ -866,13 +880,10 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	public final Component setModel(final IModel model)
 	{
-		// See if there is a current model
-		final IModel currentModel = getModel();
-
-		// Detach if IDetachableModel
-		if (currentModel != null && currentModel instanceof IDetachableModel)
+		// Detach current model if it's an IDetachableModel
+		if (this.model != null && this.model instanceof IDetachableModel)
 		{
-			((IDetachableModel)currentModel).detach();
+			((IDetachableModel)this.model).detach();
 		}
 
 		// Set self in case the model is component aware
@@ -1061,13 +1072,6 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Called anytime a model is changed via setModel or setModelObject.
-	 */
-	protected void onModelChanged()
-	{
-	}
-
-	/**
 	 * Processes the body.
 	 * 
 	 * @param markupStream
@@ -1078,6 +1082,22 @@ public abstract class Component implements Serializable, IConverterSource
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		markupStream.throwMarkupException("Required handleComponentTagBody() was not provided");
+	}
+
+	/**
+	 * Called anytime a model is changed via setModel or setModelObject.
+	 */
+	protected void onModelChanged()
+	{
+	}
+
+	/**
+	 * Called anytime a null model is about to be retrieved. This gives the
+	 * FormComponent subclass an opportunity to instantiate a model on the fly
+	 * using the containing Form's model.
+	 */
+	protected void onNullModel()
+	{
 	}
 
 	/**

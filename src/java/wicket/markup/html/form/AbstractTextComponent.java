@@ -35,6 +35,14 @@ abstract class AbstractTextComponent extends FormComponent
 	 * request parameter when redirecting.
 	 */
 	private String invalidInput;
+	
+	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractTextComponent(String name)
+	{
+		super(name);
+	}
 
 	/**
      * @see wicket.Component#Component(String, Serializable)
