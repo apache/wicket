@@ -23,9 +23,7 @@ import java.io.Serializable;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.AttributeModifier;
-import wicket.markup.parser.XmlTag;
 import wicket.model.Model;
-import wicket.util.value.ValueMap;
 
 /**
  * Test case for the component tag attribute modifer test.
