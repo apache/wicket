@@ -69,6 +69,17 @@ import wicket.model.Model;
 public class Label extends WebComponent
 {
 	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 *            See Component
+	 */
+	public Label(final String id)
+	{
+		super(id);
+	}
+	
+	/**
 	 * Convenience constructor. Same as Label(String, new Model(String))
 	 * 
 	 * @param id
