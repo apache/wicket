@@ -27,7 +27,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.util.lang.Classes;
 import wicket.util.resource.IResource;
-import wicket.util.resource.Resource;
+import wicket.util.resource.ResourceLocator;
 import wicket.util.string.Strings;
 
 /**
@@ -98,7 +98,7 @@ public class Image extends AbstractImage
         
         final MarkupContainer markupContainer = findParentWithAssociatedMarkup();
         final String path = Classes.packageName(markupContainer.getClass()) + "." + resourcePath;
-        return Resource.locate
+        return ResourceLocator.locate
         (
             getApplicationSettings().getSourcePath(),
             getPage().getClass().getClassLoader(),
@@ -136,5 +136,3 @@ public class Image extends AbstractImage
         super.onComponentTag(tag);
     }
 }
-
-

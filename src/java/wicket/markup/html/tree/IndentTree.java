@@ -46,7 +46,7 @@ import wicket.model.Model;
 import wicket.util.file.Path;
 import wicket.util.lang.Classes;
 import wicket.util.resource.IResource;
-import wicket.util.resource.Resource;
+import wicket.util.resource.ResourceLocator;
 
 /**
  * A Tree that renders as a flat (not-nested) list, using spacers for indentation and
@@ -590,7 +590,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	    {
 	    	final String imageResource = getModelObjectAsString();
 			final String path = Classes.packageName(IndentTree.class) + "." + imageResource;
-	        return Resource.locate
+	        return ResourceLocator.locate
 	        (
 	            new Path(),
 	            IndentTree.class.getClassLoader(),

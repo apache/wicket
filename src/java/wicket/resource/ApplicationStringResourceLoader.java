@@ -26,13 +26,13 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Component;
 import wicket.Application;
+import wicket.Component;
 import wicket.Page;
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResource;
+import wicket.util.resource.ResourceLocator;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.value.ValueMap;
-
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
 
 /**
@@ -127,7 +127,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
 
         // Do the resource load
         final Properties properties = new Properties();
-        final Resource resource = Resource.locate(application.getSettings().getSourcePath(),
+        final IResource resource = ResourceLocator.locate(application.getSettings().getSourcePath(),
                 application.getClass(), style, locale, "properties");
         if (resource != null)
         {

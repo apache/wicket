@@ -19,7 +19,7 @@ package wicket.markup.parser;
 
 import java.io.IOException;
 
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
 
 /**
@@ -86,7 +86,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * @throws ResourceNotFoundException
 	 *             Resource not found
 	 */
-	public abstract void parse(final Resource resource) throws IOException,
+	public abstract void parse(final IResource resource) throws IOException,
 			ResourceNotFoundException;
 
 	/**

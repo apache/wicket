@@ -22,13 +22,13 @@ import java.io.InputStream;
 
 /**
  * Interface to a streamed resource. The resource stream can be retrieved by
- * calling getInputStream(), but the resource is later closed by calling close()
- * on the IResourceStream (as opposed to calling close on the InputStream
- * returned by getInputStream()).
+ * calling getInputStream(), but the resource should later be closed by calling
+ * close() on the IResourceStream (as opposed to calling close on the
+ * InputStream returned by getInputStream()).
  * <p>
- * Once a resource has been closed with a call to close(), it is possible to
- * call getInputStream() again to retrieve a new input stream on the same
- * resource.
+ * Once a resource has been closed with a call to close(), it is normally
+ * possible to call getInputStream() again to retrieve a new input stream on the
+ * same resource.
  * <p>
  * Implementations of this interface are typically unsafe for use from multiple
  * threads.
