@@ -25,6 +25,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.util.file.File;
 import wicket.util.file.Path;
 import wicket.util.string.Strings;
@@ -42,6 +45,9 @@ import wicket.util.watch.IChangeable;
  */
 public final class Resource implements IResource, IChangeable
 {
+    /** Logging  */
+    private static Log log = LogFactory.getLog(Resource.class);
+    
     /** Any associated file */
     private File file;
 
@@ -188,6 +194,7 @@ public final class Resource implements IResource, IChangeable
 	             */
 	            protected Resource locate(final String filename)
 	            {
+	                log.debug("locate Resource from source path: " + filename);
 	                final File file = sourcePath.find(filename);
 
 	                if (file != null)
@@ -215,6 +222,7 @@ public final class Resource implements IResource, IChangeable
              */
             protected Resource locate(final String filename)
             {
+                log.debug("locate Resource from class path: " + filename);
                 // Try loading filename on classpath
                 final URL url = classloader.getResource(filename);
 
