@@ -34,7 +34,7 @@ import wicket.util.convert.FormattingUtils;
 
 
 /**
- * A PropertyModel is used to dynamically acces a model using an <a
+ * A PropertyModel is used to dynamically access a model using an <a
  * href="www.ognl.org">Ognl expression </a>.
  * <p>
  * For example, take the following bean:
