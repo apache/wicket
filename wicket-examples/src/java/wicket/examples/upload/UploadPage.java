@@ -82,12 +82,6 @@ public class UploadPage extends WicketExamplePage
 		final FileUploadForm simpleUploadForm = new FileUploadForm("simpleUpload");
 		simpleUploadForm.add(simpleUploadFeedback);
 		add(simpleUploadForm);
-//
-//		// Add multiple upload form, which is hooked up explicitly to its
-//		// feedback panel by passing the feedback panel to the form constructor.
-//		final MultipleFilesUploadForm uploadForm = new MultipleFilesUploadForm("upload",
-//				uploadFeedback);
-//		add(uploadForm);
 
 		// Add folder view
 		add(new Label("dir", uploadFolder.getAbsolutePath()));
