@@ -94,6 +94,7 @@ public class DecimalValidator extends AbstractValidator
     {
         // Get component value
         final String value = component.getRequestString();
+        
         // Don't test emtpy/null values that should required validator do.
         if(value != null && !"".equals(value))
         {
