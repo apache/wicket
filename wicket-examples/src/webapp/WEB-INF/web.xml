@@ -15,7 +15,19 @@
 		</locale-encoding-mapping>
 	</locale-encoding-mapping-list>
     -->	
-		
+
+    <servlet>
+        <servlet-name>HelloWorldApplication</servlet-name>
+        <servlet-class>wicket.examples.helloworld.HelloWorldApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>NestedApplication</servlet-name>
+        <servlet-class>wicket.examples.nested.NestedApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
     <servlet>
         <servlet-name>GuestBookApplication</servlet-name>
         <servlet-class>wicket.examples.guestbook.GuestBookApplication</servlet-class>
@@ -25,12 +37,6 @@
     <servlet>
         <servlet-name>GuestBook2Application</servlet-name>
         <servlet-class>wicket.examples.guestbook2.GuestBook2Application</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <servlet-name>HelloWorldApplication</servlet-name>
-        <servlet-class>wicket.examples.helloworld.HelloWorldApplication</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -122,6 +128,11 @@
     <servlet-mapping>
         <servlet-name>SignInApplication</servlet-name>
         <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>NestedApplication</servlet-name>
+        <url-pattern>/nested</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

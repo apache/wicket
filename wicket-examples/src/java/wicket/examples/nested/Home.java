@@ -1,0 +1,62 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package wicket.examples.nested;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import wicket.PageParameters;
+import wicket.examples.util.NavigationPanel;
+import wicket.markup.html.HtmlPage;
+
+/**
+ * Examples that shows how you can display a tree like structure (in this case
+ * nested lists with string elements) using nested panels.
+ *
+ * @author Eelco Hillenius
+ */
+public class Home extends HtmlPage
+{
+    /**
+     * Constructor.
+     * @param parameters Page parameters
+     */
+    public Home(final PageParameters parameters)
+    {
+        add(new NavigationPanel("mainNavigation", "Nested Structure Example"));
+
+        // create a list with sublists
+        List l1 = new ArrayList();
+        l1.add("test 1.1");
+        l1.add("test 1.2");
+        List l2 = new ArrayList();
+        l2.add("test 2.1");
+        l2.add("test 2.2");
+        l2.add("test 2.3");
+        List l3 = new ArrayList();
+        l3.add("test 3.1");
+        l2.add(l3);
+        l2.add("test 2.4");
+        l1.add(l2);
+        l1.add("test 1.3");
+
+        // construct the panel
+        add(new NestedList("nestedList", l1));
+    }
+}
