@@ -26,7 +26,7 @@ package wicket.util.profile;
  *         </a>, 2003
  */
 final class ObjectShellProfileNode extends AbstractShellProfileNode
-{ // TODO finalize javadoc
+{
     // private: ...............................................................
     private final int m_primitiveFieldCount;
 

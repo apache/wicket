@@ -26,7 +26,7 @@ package wicket.util.profile;
  *         </a>, 2003
  */
 final class ArrayIndexLink implements ILink
-{ // TODO finalize javadoc
+{
     // private: ...............................................................
     private final ILink m_container;
 

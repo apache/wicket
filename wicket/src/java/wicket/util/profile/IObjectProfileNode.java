@@ -28,7 +28,7 @@ package wicket.util.profile;
  *         </a>, 2003
  */
 public interface IObjectProfileNode
-{ // TODO finalize javadoc
+{
     /**
      * Returns the object associated with this node. This is never null except for shell
      * pseudo-nodes.
