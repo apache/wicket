@@ -43,7 +43,8 @@ public final class FloatConverter extends AbstractConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
+				|| c == Float.TYPE)
 		{
 			if (value instanceof Float)
 			{

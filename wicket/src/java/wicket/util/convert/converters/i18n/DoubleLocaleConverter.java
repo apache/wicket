@@ -64,7 +64,8 @@ public final class DoubleLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
+				|| c == Double.TYPE)
 		{
 			String pattern = getPattern();
 			Number temp = getNumber(value);

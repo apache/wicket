@@ -65,7 +65,8 @@ public final class ByteLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
+				|| c == Byte.TYPE)
 		{
 			Number temp = getNumber(value);
 			return (temp instanceof Byte) ? (Byte)temp : new Byte(temp.byteValue());

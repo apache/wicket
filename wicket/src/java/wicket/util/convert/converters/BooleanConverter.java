@@ -43,7 +43,8 @@ public final class BooleanConverter extends AbstractConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Boolean.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Boolean.class.isAssignableFrom(c)
+				|| c == Boolean.TYPE)
 		{
 			if (value instanceof Boolean)
 			{

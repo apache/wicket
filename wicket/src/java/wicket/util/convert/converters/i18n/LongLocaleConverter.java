@@ -63,7 +63,8 @@ public final class LongLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
+				|| c == Long.TYPE)
 		{
 			Number temp = getNumber(value);
 			return (temp instanceof Long) ? (Long)temp : new Long(temp.longValue());
