@@ -28,7 +28,7 @@ public interface IDetachable extends Serializable
 {
 	/**
 	 * Detaches model after use. This is generally used to null out transient
-	 * references that can be re-attached via attach().
+	 * references that can be re-attached later.
 	 */
 	public void detach();
 }
