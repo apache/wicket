@@ -380,9 +380,15 @@ public class HttpRequestCycle extends RequestCycle
 							throw new WicketRuntimeException("Method " + method + " of interface "
 									+ interfaceName + " threw an exception", e);
 						}
-
 						// Set form component values from cookies
 						setFormComponentValuesFromCookies(page);
+						// Test if the current page is also the next page. Or if a redirect will happen. 
+						if(getPage() != page || getRedirect())
+						{
+							// if it is not the same or a redirect then do call deattach models to deattach 
+							// any models that can be loaded by the component listener
+							deattachModels(page);
+						}
 						return true;
 					}
 					else

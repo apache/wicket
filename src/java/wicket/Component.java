@@ -407,7 +407,7 @@ public abstract class Component implements Serializable
 	 */
 	public final IModel getModel()
 	{
-		if (model != null && model instanceof IDetachableModel)
+		if (model instanceof IDetachableModel)
 		{
 			((IDetachableModel)model).attach();
 		}
@@ -1236,6 +1236,14 @@ public abstract class Component implements Serializable
 			}
 		});
 	}
+	
+	protected void detachModel()
+	{
+		if(model instanceof IDetachableModel)
+		{
+			((IDetachableModel)model).detach();
+		}
+	}
 
 	/**
 	 * Detach all models that the components of this page have.
@@ -1249,11 +1257,7 @@ public abstract class Component implements Serializable
 		{
 			public Object component(final Component component)
 			{
-				IModel componentModel = component.getModel();
-				if ((componentModel != null) && (componentModel instanceof IDetachableModel))
-				{
-					((IDetachableModel)componentModel).detach();
-				}
+				component.detachModel();
 
 				// Also detach models from any contained attribute modifiers
 				if (component.attributeModifiers != null)
@@ -1261,12 +1265,7 @@ public abstract class Component implements Serializable
 					for (Iterator iterator = component.attributeModifiers.iterator(); iterator
 							.hasNext();)
 					{
-						IModel modifierModel = (IModel)((ComponentTagAttributeModifier)iterator
-								.next()).getReplaceModel();
-						if ((modifierModel != null) && (modifierModel instanceof IDetachableModel))
-						{
-							((IDetachableModel)modifierModel).detach();
-						}
+						((ComponentTagAttributeModifier)iterator.next()).detachModel();
 					}
 				}
 				return CONTINUE_TRAVERSAL;

@@ -173,6 +173,18 @@ public class ComponentTagAttributeModifier implements Serializable
 	{
 		return pattern;
 	}
+	
+	/**
+	 * Detach the model if it was a IDetachableModel
+	 * Internal method. shouldn't be called from the outside
+	 */
+	public final void detachModel()
+	{
+		if (replaceModel instanceof IDetachableModel)
+		{
+			((IDetachableModel)replaceModel).detach();
+		}
+	}
 
 	/**
 	 * Gets the model that the value will be replaced with.
@@ -181,7 +193,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	 */
 	public final IModel getReplaceModel()
 	{
-		if ((replaceModel != null) && (replaceModel instanceof IDetachableModel))
+		if (replaceModel instanceof IDetachableModel)
 		{
 			((IDetachableModel)replaceModel).attach();
 		}
