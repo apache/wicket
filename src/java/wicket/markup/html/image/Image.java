@@ -210,10 +210,13 @@ public class Image extends HtmlComponent implements IResourceListener
 
     /**
      * Implementation of IResourceListener.  Renders resource back to requester.
-     * @see wicket.IResourceListener#resourceRequested(wicket.RequestCycle)
+     * @see wicket.IResourceListener#resourceRequested()
      */
-    public void resourceRequested(final RequestCycle cycle)
+    public void resourceRequested()
     {
+        // Get request cycle
+        final RequestCycle cycle = getRequestCycle();
+        
         // The cycle's page is set to null so that it won't be rendered back to
         // the client since the resource being requested has nothing to do with pages
         cycle.setPage((Page)null);

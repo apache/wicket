@@ -101,13 +101,11 @@ public abstract class DetachableModel implements IDetachableModel
      */
     public final void attach(final RequestCycle cycle)
     {
-        if (attached)
+        if (!attached)
         {
-            return;
+            doAttach(cycle);
+            attached = true;
         }
-
-        doAttach(cycle);
-        attached = true;
     }
 
     /**
@@ -117,13 +115,11 @@ public abstract class DetachableModel implements IDetachableModel
      */
     public final void detach(final RequestCycle cycle)
     {
-        if (!attached)
+        if (attached)
         {
-            return;
+            doDetach(cycle);
+            attached = false;
         }
-
-        doDetach(cycle);
-        attached = false;
     }
 
     /**

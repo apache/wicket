@@ -104,7 +104,7 @@ public final class LengthValidator extends AbstractValidator
     public ValidationErrorMessage validate(final FormComponent component)
     {
         // Get component value
-        final String value = component.getStringValue();
+        final String value = component.getRequestString();
         
         // Check length
         if ((checkMin && value.length() < min) || 

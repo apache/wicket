@@ -20,11 +20,9 @@ package wicket.markup.html.table;
 
 import java.util.Collections;
 
-import wicket.RequestCycle;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.Model;
-
 
 /**
  * Items of the ListView. 
@@ -81,7 +79,7 @@ public class ListItem extends HtmlContainer
     {
         final Link link = new Link(componentName)
         {
-			public void linkClicked(final RequestCycle cycle)
+			public void linkClicked()
             {
                 // Swap listItems and invalidate listView
                 Collections.swap(listView.getList(), index, index - 1);
@@ -108,7 +106,7 @@ public class ListItem extends HtmlContainer
     {
         final Link link = new Link(componentName)
         {
-			public void linkClicked(final RequestCycle cycle)
+			public void linkClicked()
             {
                 // Swap listeItem and invalidate listView
                 Collections.swap(listView.getList(), index, index + 1);
@@ -135,7 +133,7 @@ public class ListItem extends HtmlContainer
     {
         return new Link(componentName)
         {
-			public void linkClicked(final RequestCycle cycle)
+			public void linkClicked()
             {
                 // Remove listItem and invalidate listView
 			    listView.getList().remove(index);

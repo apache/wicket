@@ -69,14 +69,13 @@ public abstract class AbstractUploadForm extends Form
 
     /**
      * Handles an upload.
-     * @param cycle the request cycle
-     * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
+     * @see wicket.markup.html.form.Form#handleSubmit()
      */
-    public void handleSubmit(RequestCycle cycle)
+    public void handleSubmit()
     {
 		try
         {
-			HttpServletRequest request = ((HttpRequest)cycle.getRequest()).getServletRequest();
+			HttpServletRequest request = ((HttpRequest)getRequestCycle().getRequest()).getServletRequest();
 			boolean isMultipart = FileUpload.isMultipartContent(request);
 			if(!isMultipart)
 			{

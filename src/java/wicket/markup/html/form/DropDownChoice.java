@@ -140,21 +140,20 @@ public class DropDownChoice extends AbstractDropDownChoice
     }
 
 	/**
-	 * @see wicket.markup.html.form.AbstractDropDownChoice#updateModel(wicket.RequestCycle)
+	 * @see wicket.markup.html.form.AbstractDropDownChoice#updateModel()
 	 */
-	public final void updateModel(RequestCycle cycle)
+	public final void updateModel()
 	{
-		internalUpdateModel(cycle);
+		internalUpdateModel();
 	}
 
     /**
      * Update model and return the object.
-     * @param cycle request object
      * @return the object
      */
-    private Object internalUpdateModel(RequestCycle cycle)
+    private Object internalUpdateModel()
     {
-        final String indexOrId = getRequestString(cycle);
+        final String indexOrId = getRequestString();
         Object object = null;
         final List list = getValues();
         if(list instanceof IIdList)
@@ -216,28 +215,26 @@ public class DropDownChoice extends AbstractDropDownChoice
 	}
 
     /**
-     * called when a selection changed.
-     * @param cycle the request cycle
+     * Called when a selection changes.
      */
-    public final void selectionChanged(RequestCycle cycle)
+    public final void selectionChanged()
     {
-        Object value = internalUpdateModel(cycle);
-        selectionChanged(cycle, value);
+        selectionChanged(internalUpdateModel());
     }
 
     /**
      * Template method that can be overriden by clients that implement
      * IOnChangeListener to be notified by onChange events of a select element.
      * This method does nothing by default.
-     * 
-     * @param cycle
-     *           the request cycle
-     * @param newSelection
-     *           the newly selected object
-     * @see wicket.markup.html.form.IOnChangeListener#selectionChanged(wicket.RequestCycle,java.lang.Object)
+     * <p>
+     * Called when a option is selected of a dropdown list that wants 
+     * to be notified of this event. This method is to be implemented 
+     * by clients that want to be notified of selection events.
+     * @param newSelection The newly selected object of the backing model 
+     * NOTE this is the same as you would get by calling getModelObject() 
+     * if the new selection were current
      */
-    public void selectionChanged(RequestCycle cycle, Object newSelection)
+    public void selectionChanged(final Object newSelection)
     {
-        // no nada
     }
 }

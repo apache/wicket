@@ -133,11 +133,11 @@ public final class TextField extends FormComponent implements FormComponent.ICoo
     }
 
     /**
-     * @see wicket.markup.html.form.FormComponent#updateModel(wicket.RequestCycle)
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    public void updateModel(final RequestCycle cycle)
+    public void updateModel()
     {
-        setModelObject(getRequestString(cycle));
+        setModelObject(getRequestString());
     }
 }
 

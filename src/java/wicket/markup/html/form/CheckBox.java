@@ -120,7 +120,7 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
                         "model objects for checkboxes have to be of type Boolean");
             }
 
-            if (((Boolean) value).booleanValue())
+            if (((Boolean)value).booleanValue())
             {
                 tag.put("checked", "true");
             }
@@ -128,11 +128,11 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
     }
 
     /**
-     * @see wicket.markup.html.form.FormComponent#updateModel(wicket.RequestCycle)
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    public void updateModel(final RequestCycle cycle)
+    public void updateModel()
     {
-        setModelObject(getRequestBoolean(cycle));
+        setModelObject(getRequestBoolean());
     }
 
     /**

@@ -18,7 +18,6 @@
  */
 package wicket.protocol.http;
 
-
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.Session;
@@ -91,6 +90,21 @@ public class HttpSession extends Session
     public javax.servlet.http.HttpSession getHttpServletSession()
     {
         return httpServletSession;
+    }
+    
+    /**
+     * Invalidates this session
+     */
+    public void invalidate()
+    {
+        try
+        {
+            httpServletSession.invalidate();
+        }
+        catch (IllegalStateException e)
+        {
+            ; // ignore
+        }        
     }
 }
 

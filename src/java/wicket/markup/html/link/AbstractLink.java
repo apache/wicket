@@ -109,9 +109,8 @@ public abstract class AbstractLink extends HtmlContainer implements ILinkListene
     /**
      * Called when a link is clicked.
      * @see ILinkListener
-     * @param cycle The cycle object
      */
-    public abstract void linkClicked(final RequestCycle cycle);
+    public abstract void linkClicked();
 
     /**
      * Gets the url to use for this link.

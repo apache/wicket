@@ -19,19 +19,16 @@
 package wicket.markup.html.form;
 
 import wicket.IRequestListener;
-import wicket.RequestCycle;
 
 /**
- * Listener interface for form submits
+ * Listener interface that is called when a form is submitted.
+ * 
  * @author Jonathan Locke
  */
 public interface IFormSubmitListener extends IRequestListener
-{ // TODO finalize javadoc
+{
     /**
      * Called when a form is submitted
-     * @param cycle The request cycle
      */
-    public void formSubmitted(RequestCycle cycle);
+    public void formSubmitted();
 }
-
-

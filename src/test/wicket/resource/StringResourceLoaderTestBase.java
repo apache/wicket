@@ -65,6 +65,9 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 		this.application = new DummyApplication();
 		Session.set(new Session(this.application)
 		{
+            public void invalidate()
+            {
+            }
 		});
 		this.component = new DummyComponent("test", this.application);
 		DummyPage page = new DummyPage();

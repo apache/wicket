@@ -111,52 +111,47 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			final String style) throws InvalidResourceSpecificationException
 	{
 		// Check rules
-		if (component == null)
-			return null;
-		if (component.getPage() == null)
-		{
-			throw new InvalidResourceSpecificationException(
-					"Components used for locating resources must be attached to pages: "
-							+ component.getClass().getName());
-		}
-
-		// Build search stack
-		Stack searchStack = new Stack();
-		searchStack.push(component);
-		if (!(component instanceof Page))
-		{
-			Container c = component.getParent();
-			while (true)
-			{
-				searchStack.push(c);
-				if (c instanceof Page)
-					break;
-				c = c.getParent();
-			}
-		}
-
-		// Iterate through search stack
-		String value = null;
-		while (!searchStack.isEmpty())
-		{
-			Component c = (Component) searchStack.pop();
-
-			// Locate previously loaded resources from the cache
-			final String id = createCacheId(c, style, locale);
-			ValueMap strings = (ValueMap) resourceCache.get(id);
-			if (strings == null)
-			{
-				// No resources previously loaded, attempt to load them
-				strings = loadResources(c, style, locale, id);
-			}
-
-			value = strings.getString(key);
-			if (value != null)
-				break;
-		}
-
-		// Return the resource value (may be null if resource was not found)
-		return value;
+		if (component != null && component.getPage() != null)
+        {
+    		// Build search stack
+    		Stack searchStack = new Stack();
+    		searchStack.push(component);
+    		if (!(component instanceof Page))
+    		{
+    			Container c = component.getParent();
+    			while (true)
+    			{
+    				searchStack.push(c);
+    				if (c instanceof Page)
+    					break;
+    				c = c.getParent();
+    			}
+    		}
+    
+    		// Iterate through search stack
+    		String value = null;
+    		while (!searchStack.isEmpty())
+    		{
+    			Component c = (Component)searchStack.pop();
+    
+    			// Locate previously loaded resources from the cache
+    			final String id = createCacheId(c, style, locale);
+    			ValueMap strings = (ValueMap) resourceCache.get(id);
+    			if (strings == null)
+    			{
+    				// No resources previously loaded, attempt to load them
+    				strings = loadResources(c, style, locale, id);
+    			}
+    
+    			value = strings.getString(key);
+    			if (value != null)
+    				break;
+    		}
+    
+    		// Return the resource value (may be null if resource was not found)
+    		return value;
+        }
+        return null;
 	}
 
 	/**

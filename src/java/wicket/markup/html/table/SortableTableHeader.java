@@ -62,10 +62,13 @@ public abstract class SortableTableHeader extends Border
         // Action link to define a linkClicked action
         add(new Link("actionLink")
         {
-            public void linkClicked(final RequestCycle cycle)
+            public void linkClicked()
             {
+                // Retrieve request cycle
+                final RequestCycle cycle = getRequestCycle();
+                
                 // call SortableTableHeaders implementation
-                me.linkClicked(cycle);
+                me.linkClicked();
 
                 // Redirect back to result to avoid refresh updating the link count
                 cycle.setRedirect(true);
@@ -75,10 +78,8 @@ public abstract class SortableTableHeader extends Border
 
     /**
      * Header has been clicked. Define what to do.
-     *
-     * @param cycle
      */
-    protected void linkClicked(final RequestCycle cycle)
+    protected void linkClicked()
     {
         // change sorting order: ascending <-> descending
         ascending = !ascending;
@@ -90,7 +91,7 @@ public abstract class SortableTableHeader extends Border
         sort();
 
         // Redirect back to result to avoid refresh updating the link count
-        cycle.setRedirect(true);
+        getRequestCycle().setRedirect(true);
     }
 
     /**

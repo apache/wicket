@@ -390,7 +390,17 @@ public abstract class Component implements Serializable
 	 */
 	public final Page getPage()
 	{
-		return (Page) (this instanceof Page ? this : findParent(Page.class));
+        // Search for page
+		final Page page = (Page)(this instanceof Page ? this : findParent(Page.class));
+        
+        // If no Page was found
+        if (page == null)
+        {
+            // Give up with a nice exception
+            throw new IllegalStateException("No Page found for component " + this);
+        }
+        
+        return page;
 	}
 
 	/**
@@ -441,32 +451,29 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the request parameter for this component as a string.
-	 * @param cycle The request
 	 * @return The value in the request for this component
 	 */
-	public final String getRequestString(final RequestCycle cycle)
+	public final String getRequestString()
 	{
-		return cycle.getRequest().getParameter(getPath());
+		return getRequestCycle().getRequest().getParameter(getPath());
 	}
 
 	/**
 	 * Gets the request parameter for this component as a boolean.
-	 * @param cycle The request
 	 * @return The value in the request for this component
 	 */
-	public final Boolean getRequestBoolean(final RequestCycle cycle)
+	public final Boolean getRequestBoolean()
 	{
-		return Boolean.valueOf(!Strings.isEmpty(getRequestString(cycle)));
+		return Boolean.valueOf(!Strings.isEmpty(getRequestString()));
 	}
 
 	/**
 	 * Gets the request parameter for this component as an int.
-	 * @param cycle The request
 	 * @return The value in the request for this component
 	 */
-	public final int getRequestInt(final RequestCycle cycle)
+	public final int getRequestInt()
 	{
-		final String string = getRequestString(cycle);
+		final String string = getRequestString();
 		try
 		{
 			return Integer.parseInt(string);
@@ -481,14 +488,13 @@ public abstract class Component implements Serializable
 	/**
 	 * Gets the request parameter for this component as an int, using the given default in
 	 * case no corresponding request parameter was found.
-	 * @param cycle The request
 	 * @param defaultValue Default value to return if request does not have an integer for
 	 *            this component
 	 * @return The value in the request for this component
 	 */
-	public final int getRequestInt(final RequestCycle cycle, final int defaultValue)
+	public final int getRequestInt(final int defaultValue)
 	{
-		final String string = getRequestString(cycle);
+		final String string = getRequestString();
 		if (string != null)
 		{
 			try
@@ -497,9 +503,8 @@ public abstract class Component implements Serializable
 			}
 			catch (NumberFormatException e)
 			{
-				throw new IllegalArgumentException(
-						exceptionMessage("Internal error.  Request string '"
-								+ string + "' not a valid integer"));
+				throw new IllegalArgumentException(exceptionMessage(
+                        "Request string '" + string + "' is not a valid integer"));
 			}
 		}
 		else
@@ -510,12 +515,11 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the request parameters for this component as ints.
-	 * @param cycle The request
 	 * @return The values in the request for this component
 	 */
-	public final int[] getRequestInts(final RequestCycle cycle)
+	public final int[] getRequestInts()
 	{
-		final String[] strings = getRequestStrings(cycle);
+		final String[] strings = getRequestStrings();
 		if (strings != null)
 		{
 			final int[] ints = new int[strings.length];
@@ -530,12 +534,11 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the request parameters for this component as strings.
-	 * @param cycle The request
 	 * @return The valuess in the request for this component
 	 */
-	public final String[] getRequestStrings(final RequestCycle cycle)
+	public final String[] getRequestStrings()
 	{
-		return cycle.getRequest().getParameters(getPath());
+		return getRequestCycle().getRequest().getParameters(getPath());
 	}
 
 	/**
@@ -546,19 +549,27 @@ public abstract class Component implements Serializable
 	 */
 	public Session getSession()
 	{
-		Page page = getPage();
-		if (page == null)
-		{
-			throw new IllegalStateException(exceptionMessage("no Page for this component " + this));
-		}
+        // Get Session from Page object for this component
 		final Session session = getPage().getSession();
+        
+        // Did we find the session?
 		if (session == null)
 		{
 			// This should NEVER happen. But if it does, we'll want a nice error message.
 			throw new IllegalStateException(exceptionMessage("Page not attached to session"));
 		}
+        
 		return session;
 	}
+    
+    /**
+     * Gets the active request cycle for this component
+     * @return The request cycle
+     */
+    public final RequestCycle getRequestCycle()
+    {
+        return getSession().getRequestCycle();
+    }
 
 	/**
 	 * Gets whether model strings should be escaped.

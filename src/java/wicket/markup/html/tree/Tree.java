@@ -29,7 +29,6 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import wicket.RequestCycle;
 import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.HttpRequest;
@@ -172,19 +171,19 @@ public abstract class Tree extends Panel implements ILinkListener
 
     /**
      * Called when a link is clicked.
-     * @param cycle The current request cycle
      * @see ILinkListener
      */
-    public final void linkClicked(final RequestCycle cycle)
+    public final void linkClicked()
     {
     	String param = AbstractTreeNodeLink.REQUEST_PARAMETER_LINK_ID;
-        String linkId = ((HttpRequest)cycle.getRequest()).getParameter(param);
+        // TODO Shouldn't this be getRequestString() now?
+        String linkId = ((HttpRequest)getRequestCycle().getRequest()).getParameter(param);
         AbstractTreeNodeLink link = (AbstractTreeNodeLink) links.get(linkId);
         if (link == null)
         {
             throw new IllegalStateException("link " + linkId + " not found");
         }
-        link.linkClicked(cycle);
+        link.linkClicked();
     }
 
 	/**

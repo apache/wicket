@@ -93,7 +93,7 @@ public final class DecimalValidator extends AbstractValidator
     public ValidationErrorMessage validate(final FormComponent component)
     {
         // Get component value
-        final String value = component.getStringValue();
+        final String value = component.getRequestString();
         
         try
         {

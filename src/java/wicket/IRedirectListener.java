@@ -27,9 +27,8 @@ public interface IRedirectListener extends IRequestListener
 {
     /**
      * Called when a page redirect happens.
-     * @param cycle The request cycle
      */
-    public void redirect(RequestCycle cycle);
+    public void redirect();
 }
 
 

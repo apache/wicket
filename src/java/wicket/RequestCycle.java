@@ -185,37 +185,37 @@ public abstract class RequestCycle
      * Adds an interface to the map of interfaces that can be invoked by outsiders.
      * The interface must have a single method with the signature methodName(RequestCycle).
      * NOTE: THIS METHOD IS NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
-     * @param c The interface class, which must extend IRequestListener.
+     * @param i The interface class, which must extend IRequestListener.
      */
-    public static void registerRequestListenerInterface(final Class c)
+    public static void registerRequestListenerInterface(final Class i)
     {
-        // Ensure that c extends IRequestListener
-        if (!IRequestListener.class.isAssignableFrom(c))
+        // Ensure that i extends IRequestListener
+        if (!IRequestListener.class.isAssignableFrom(i))
         {
-            throw new IllegalArgumentException("Class " + c + " must extend IRequestListener");
+            throw new IllegalArgumentException("Class " + i + " must extend IRequestListener");
         }
 
-        // Search methods in class
-        final Method[] methods = c.getMethods();
-        for (int i = 0; i < methods.length; i++)
+        // Get interface methods
+        final Method[] methods = i.getMethods();
+        
+        // If there is only one method
+        if (methods.length == 1)
         {
-            // Get method parameter types
-            final Class[] parameters = methods[i].getParameterTypes();
-
-            // If there is only one parameter, and it is RequestCycle
-            if (parameters.length == 1 && parameters[0] == RequestCycle.class)
+            // and that method takes no parameters
+            if (methods[0].getParameterTypes().length == 0)
             {
                 // Save this interface method by the non-qualified class name
-                listenerInterfaceMethods.put(Classes.name(c), methods[i]);
-
-                // Done!
-                return;
+                listenerInterfaceMethods.put(Classes.name(i), methods[0]);
+            }
+            else
+            {
+                throw new IllegalArgumentException("Method in interface " + i + " cannot have parameters");
             }
         }
-
-        // Failed to find interface method
-        throw new IllegalArgumentException("Internal error: " + c
-                + " does not have a method that takes RequestCycle as a parameter");
+        else
+        {
+            throw new IllegalArgumentException("Interface " + i + " can have only one method");
+        }
     }
 
     /**
@@ -509,17 +509,16 @@ public abstract class RequestCycle
 
     /**
      * Looks up an interface method by name.
-     * @param interfaceName The interface
+     * @param name The interface
      * @return The method
      * @throws RenderException
      */
-    protected final Method getInterfaceMethod(final String interfaceName)
+    protected final Method getInterfaceMethod(final String name)
     {
-        final Method method = (Method)listenerInterfaceMethods.get(interfaceName);
+        final Method method = (Method)listenerInterfaceMethods.get(name);
         if (method == null)
         {
-            throw new RenderException("Attempt to access unknown interface "
-                    + interfaceName);
+            throw new RenderException("Attempt to access unknown interface " + name);
         }
         return method;
     }

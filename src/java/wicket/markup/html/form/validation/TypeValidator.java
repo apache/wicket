@@ -101,14 +101,14 @@ public class TypeValidator extends AbstractValidator
 	public ValidationErrorMessage validate(FormComponent component)
 	{
         // Get component value
-        final String value = component.getStringValue();
+        final String value = component.getRequestString();
         
         // Check value by attempting to convert it
 		final ConversionUtils conversionUtils = getConversionUtils();
 		final Locale localeForValidation = getLocaleForValidation();
 		try
 		{
-			conversionUtils.convert(component.getStringValue(), type, localeForValidation);
+			conversionUtils.convert(component.getRequestString(), type, localeForValidation);
 			return ValidationErrorMessage.NO_MESSAGE;
 		}
 		catch (ConversionException e)

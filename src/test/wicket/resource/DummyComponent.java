@@ -43,6 +43,9 @@ public class DummyComponent extends Component
 		super(name);
 		testSession = new Session(application)
 		{
+            public void invalidate()
+            {
+            }
 		};
 	}
 
