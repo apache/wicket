@@ -94,6 +94,19 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * @param application
 	 *            The application
+	 * @param name
+	 *            The logical name
+	 * @return A shared resource reference to this resource
+	 */
+	public SharedResource getShared(final Application application,
+			final String name)
+	{
+		return getShared(application, Application.class, name, null, null);
+	}
+
+	/**
+	 * @param application
+	 *            The application
 	 * @param scope
 	 *            The scope of sharing
 	 * @param name
