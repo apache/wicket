@@ -30,7 +30,7 @@ import javax.swing.tree.VariableHeightLayoutCache;
  * 
  * @author Eelco Hillenius
  */
-public final class TreeStateCache extends VariableHeightLayoutCache
+public final class TreeState extends VariableHeightLayoutCache
 	implements Serializable, TreeModelListener
 {
 	/** currently selected path. */
