@@ -79,6 +79,8 @@ public class PagedTableTest extends TestCase
      */
     private boolean validatePage1(String document)
     {
+        System.err.println(document);
+        
         HtmlDocumentValidator validator = new HtmlDocumentValidator();
         Tag html = new Tag("html");
         Tag head = new Tag("head");

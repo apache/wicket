@@ -133,4 +133,30 @@ public class ListViewTest extends TestCase
         assertEquals(0, li.getIndex());
         assertEquals(new Integer(0), li.getModelObject());
     }
+    
+    public void testEmptyListView() throws IOException
+    {
+        // Empty tables
+        ListView lv = createListView(0);
+        assertEquals(0, lv.getStartIndex());
+        assertEquals(0, lv.getViewSize());
+
+        // null tables are a special case used for table navigation
+        // bar, where there is no underlying model necessary, as 
+        // listItem.getIndex() is equal to the required listItem.getModelObject()
+        lv = new ListView("listView", new Model(null))
+	    {
+	        protected void populateItem(final ListItem listItem)
+	        {
+	            ; // do nothing
+	        }
+	    };
+        assertEquals(0, lv.getStartIndex());
+        assertEquals(0, lv.getViewSize());
+        
+        lv.setStartIndex(5);
+        lv.setViewSize(10);
+        assertEquals(5, lv.getStartIndex());
+        assertEquals(10, lv.getViewSize());
+    }
 }
