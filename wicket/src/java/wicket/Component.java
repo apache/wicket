@@ -408,22 +408,6 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * @return Lock object to synchronize on when reading or updating a model
-	 *         which might require synchronization, such as a list
-	 */
-	public final Object getModelLock()
-	{
-		// Use model object as lock
-		final IModel model = getModel();
-		if (model == null)
-		{
-			// If no model object, then provide no synchronization
-			return new Object();
-		}
-		return model;
-	}
-
-	/**
 	 * Gets the backing model object; this is shorthand for
 	 * getModel().getObject().
 	 * 
@@ -752,10 +736,14 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Called to indicate that the model for this component has been changed
+	 * Called to indicate that the model for this component is about to change
 	 */
 	public final void modelChanging()
 	{
+		// Call user code
+		internalOnModelChanging();
+		onModelChanging();
+
 		// Tell the page that our model changed
 		final Page page = findPage();
 		if (page != null)
@@ -832,19 +820,14 @@ public abstract class Component implements Serializable
 			cycle.setResponse(NullResponse.getInstance());
 		}
 
-		// Synchronize on model lock while rendering to help ensure
-		// that the model doesn't change while its being read
-		synchronized (getModelLock())
-		{
-			// Call implementation to render component
-			onRender();
+		// Call implementation to render component
+		onRender();
 
-			// Component has been rendered
-			rendered();
+		// Component has been rendered
+		rendered();
 
-			// Detach models now that rendering is fully completed
-			detachModels();
-		}
+		// Detach models now that rendering is fully completed
+		detachModels();
 
 		// Restore original response if any
 		if (isVisible)
@@ -1436,19 +1419,6 @@ public abstract class Component implements Serializable
 			// Write the tag
 			getResponse().write(tag.toString(settings.getStripWicketTags()));
 		}
-	}
-
-	/**
-	 * Writes a simple tag out to the response stream. Any components that might
-	 * be referenced by the tag are ignored.
-	 * 
-	 * @param markupStream
-	 *            The markup stream to advance (where the tag came from)
-	 */
-	protected final void renderComponentTag(final MarkupStream markupStream)
-	{
-		renderComponentTag(markupStream.getTag());
-		markupStream.next();
 	}
 
 	/**

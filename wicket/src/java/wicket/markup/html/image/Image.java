@@ -18,6 +18,7 @@
 package wicket.markup.html.image;
 
 import wicket.IResourceListener;
+import wicket.Resource;
 import wicket.SharedResource;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -115,6 +116,14 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
+	 * @return Resource returned from subclass
+	 */
+	protected Resource getImageResource()
+	{
+		return null;
+	}
+
+	/**
 	 * @see wicket.Component#initModel()
 	 */
 	protected IModel initModel()
@@ -132,6 +141,11 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		checkComponentTag(tag, "img");
 		super.onComponentTag(tag);
+		final Resource resource = getImageResource();
+		if (resource != null)
+		{
+			localizedImageResource.setResource(resource);
+		}
 		localizedImageResource.setSrcAttribute(tag);
 	}
 
@@ -141,7 +155,7 @@ public class Image extends WebComponent implements IResourceListener
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 	}
-	
+
 	/**
 	 * @see wicket.Component#onSessionAttach()
 	 */

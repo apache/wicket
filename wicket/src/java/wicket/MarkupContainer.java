@@ -624,26 +624,6 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * The MarkupContainer was not able to resolve the component id. Subclasses
-	 * may augment the default strategy by subclassing resolveComponent().
-	 * 
-	 * @see wicket.markup.html.border.Border for an example.
-	 *      <p>
-	 *      Note: resolveComponent must also render the components created
-	 * 
-	 * @param markupStream
-	 *            The current markup stream
-	 * @param tag
-	 *            The current component tag
-	 * @return True, if MarkupContainer was able to resolve the component id and
-	 *         render the component
-	 */
-	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
-	{
-		return false;
-	}
-
-	/**
 	 * Set markup stream for this container.
 	 * 
 	 * @param markupStream
@@ -924,28 +904,16 @@ public abstract class MarkupContainer extends Component
 			}
 			else
 			{
-				// 2nd try: all static id resolvers
+				// Try application's component resolvers
 				final List componentResolvers = this.getApplication().getComponentResolvers();
-				final Iterator iter = componentResolvers.iterator();
-				while (iter.hasNext())
+				final Iterator iterator = componentResolvers.iterator();
+				while (iterator.hasNext())
 				{
-					final IComponentResolver resolver = (IComponentResolver)iter.next();
+					final IComponentResolver resolver = (IComponentResolver)iterator.next();
 					if (resolver.resolve(this, markupStream, tag))
 					{
 						return;
 					}
-				}
-
-				// 3rd try: a subclass replacing resolveComponent()
-				MarkupContainer container = this;
-				while (container != null)
-				{
-					if (container.resolveComponent(markupStream, tag))
-					{
-						return;
-					}
-
-					container = container.findParent(MarkupContainer.class);
 				}
 
 				// No one was able to handle the component id

@@ -34,6 +34,9 @@
 		the soon to be removed wicket-contrib project anymore.
   	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
+      Added Image.getImageResource() method.  Removed Component.getModelLock().
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Removed Localizer methods that don't work with Components.  Added getString(String key)
       and getString(String key, IModel model) methods to Component for easy access to localized
       strings.  Changed inheritance hierarchy of models so that AbstractModels are non-detachable

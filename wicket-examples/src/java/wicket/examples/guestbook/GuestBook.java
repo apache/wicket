@@ -101,10 +101,7 @@ public final class GuestBook extends WicketExamplePage
 
 			// Add the component we edited to the list of comments
 			commentListView.modelChanging();
-            synchronized (commentListView.getModelLock())
-            {
-    			commentList.add(0, newComment);
-            }
+			commentList.add(0, newComment);
 			commentListView.modelChanged();
 
 			// Clear out the text component
