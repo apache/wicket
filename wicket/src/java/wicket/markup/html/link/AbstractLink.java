@@ -32,7 +32,6 @@ import wicket.model.IModel;
  */
 public abstract class AbstractLink extends HtmlContainer implements ILinkListener
 {
-
     /**
      * The popup specification. If not-null, a javascript on-click event handler will be
      * generated that opens a new window using the popup properties.
