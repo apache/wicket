@@ -100,6 +100,7 @@ class ParsedHTML {
 
     /**
      * Returns the forms found in the page in the order in which they appear.
+     * @return Forms
      **/
     public WebForm[] getForms() {
         if (_forms == null) {
@@ -112,6 +113,7 @@ class ParsedHTML {
 
     /**
      * Returns the links found in the page in the order in which they appear.
+     * @return Links
      **/
     public WebLink[] getLinks() {
         if (_links == null) {
@@ -124,6 +126,7 @@ class ParsedHTML {
 
     /**
      * Returns a proxy for each applet found embedded in this page.
+     * @return Applets
      */
     public WebApplet[] getApplets() {
         if (_applets == null) {
@@ -136,6 +139,7 @@ class ParsedHTML {
 
     /**
      * Returns the images found in the page in the order in which they appear.
+     * @return Images
      **/
     public WebImage[] getImages() {
         if (_images == null) {
@@ -148,6 +152,7 @@ class ParsedHTML {
 
     /**
      * Returns the top-level block elements found in the page in the order in which they appear.
+     * @return Text blocks
      */
     public TextBlock[] getTextBlocks() {
         if (_blocks == null) {
@@ -160,6 +165,9 @@ class ParsedHTML {
 
     /**
      * Returns the first text block found in the page which matches the specified predicate and value.
+     * @param predicate 
+     * @param criteria 
+     * @return Text block
      */
     public TextBlock getFirstMatchingTextBlock( HTMLElementPredicate predicate, Object criteria ) {
         TextBlock[] blocks = getTextBlocks();
@@ -170,6 +178,10 @@ class ParsedHTML {
     }
 
 
+    /**
+     * @param block
+     * @return Text block
+     */
     public TextBlock getNextTextBlock( TextBlock block ) {
         int index = _blocksList.indexOf( block );
         if (index < 0 || index == _blocksList.size() - 1) return null;
@@ -179,6 +191,7 @@ class ParsedHTML {
 
     /**
      * Returns the top-level tables found in the page in the order in which they appear.
+     * @return Tables
      **/
     public WebTable[] getTables() {
         if (_tables == null) {
@@ -191,6 +204,8 @@ class ParsedHTML {
 
     /**
      * Returns the HTMLElement with the specified ID.
+     * @param id 
+     * @return Element
      */
     public HTMLElement getElementWithID( String id ) {
         return (HTMLElement) getElementWithID( id, HTMLElement.class );
@@ -199,6 +214,8 @@ class ParsedHTML {
 
     /**
      * Returns the HTML elements with the specified name.
+     * @param name 
+     * @return Element
      */
     public HTMLElement[] getElementsWithName( String name ) {
         loadElements();
@@ -209,6 +226,9 @@ class ParsedHTML {
 
     /**
      * Returns the HTML elements with an attribute with the specified name and value.
+     * @param name 
+     * @param value 
+     * @return Elements
      */
     public HTMLElement[] getElementsWithAttribute( String name, String value ) {
         loadElements();
@@ -223,6 +243,7 @@ class ParsedHTML {
 
     /**
      * Returns a list of HTML element names contained in this HTML section.
+     * @return Names
      */
     public String[] getElementNames() {
         loadElements();
@@ -256,6 +277,8 @@ class ParsedHTML {
 
     /**
      * Returns the form found in the page with the specified ID.
+     * @param id 
+     * @return Form
      **/
     public WebForm getFormWithID( String id ) {
         return (WebForm) getElementWithID( id, WebForm.class );
@@ -264,6 +287,8 @@ class ParsedHTML {
 
     /**
      * Returns the link found in the page with the specified ID.
+     * @param id 
+     * @return Link
      **/
     public WebLink getLinkWithID( String id ) {
         return (WebLink) getElementWithID( id, WebLink.class );
@@ -284,6 +309,9 @@ class ParsedHTML {
 
     /**
      * Returns the first link found in the page matching the specified criteria.
+     * @param predicate 
+     * @param criteria 
+     * @return Form
      **/
     public WebForm getFirstMatchingForm( HTMLElementPredicate predicate, Object criteria ) {
         WebForm[] forms = getForms();
@@ -296,6 +324,9 @@ class ParsedHTML {
 
     /**
      * Returns all links found in the page matching the specified criteria.
+     * @param predicate 
+     * @param criteria 
+     * @return Forms
      **/
     public WebForm[] getMatchingForms( HTMLElementPredicate predicate, Object criteria ) {
         ArrayList matches = new ArrayList();
@@ -309,6 +340,8 @@ class ParsedHTML {
 
     /**
      * Returns the form found in the page with the specified name.
+     * @param name 
+     * @return Form
       **/
     public WebForm getFormWithName( String name ) {
         return getFirstMatchingForm( WebForm.MATCH_NAME, name );
@@ -821,6 +854,8 @@ class ParsedHTML {
 
     /**
      * Returns the first link which contains the specified text.
+     * @param text 
+     * @return Link
      **/
     public WebLink getLinkWith( String text ) {
         return getFirstMatchingLink( WebLink.MATCH_CONTAINED_TEXT, text );
@@ -829,6 +864,8 @@ class ParsedHTML {
 
     /**
      * Returns the link which contains the first image with the specified text as its 'alt' attribute.
+     * @param text 
+     * @return Link
      **/
     public WebLink getLinkWithImageText( String text ) {
         WebImage image = getImageWithAltText( text );
@@ -838,6 +875,8 @@ class ParsedHTML {
 
     /**
      * Returns the link found in the page with the specified name.
+     * @param name 
+     * @return Link
      **/
     public WebLink getLinkWithName( String name ) {
         return getFirstMatchingLink( WebLink.MATCH_NAME, name );
@@ -846,6 +885,9 @@ class ParsedHTML {
 
     /**
      * Returns the first link found in the page matching the specified criteria.
+     * @param predicate 
+     * @param criteria 
+     * @return Link
      **/
     public WebLink getFirstMatchingLink( HTMLElementPredicate predicate, Object criteria ) {
         WebLink[] links = getLinks();
@@ -858,6 +900,9 @@ class ParsedHTML {
 
     /**
      * Returns all links found in the page matching the specified criteria.
+     * @param predicate 
+     * @param criteria 
+     * @return Links
      **/
     public WebLink[] getMatchingLinks( HTMLElementPredicate predicate, Object criteria ) {
         ArrayList matches = new ArrayList();
@@ -871,6 +916,8 @@ class ParsedHTML {
 
     /**
      * Returns the image found in the page with the specified name.
+     * @param name 
+     * @return Image
      **/
     public WebImage getImageWithName( String name ) {
         WebImage[] images = getImages();
@@ -883,6 +930,8 @@ class ParsedHTML {
 
     /**
      * Returns the first image found in the page with the specified src attribute.
+     * @param source 
+     * @return Image
      **/
     public WebImage getImageWithSource( String source ) {
         WebImage[] images = getImages();
@@ -895,6 +944,8 @@ class ParsedHTML {
 
     /**
      * Returns the first image found in the page with the specified alt attribute.
+     * @param altText 
+     * @return Image
      **/
     public WebImage getImageWithAltText( String altText ) {
         WebImage[] images = getImages();
@@ -908,6 +959,8 @@ class ParsedHTML {
     /**
      * Returns the first table in the response which matches the specified predicate and value.
      * Will recurse into any nested tables, as needed.
+     * @param predicate 
+     * @param criteria 
      * @return the selected table, or null if none is found
      **/
     public WebTable getFirstMatchingTable( HTMLElementPredicate predicate, Object criteria ) {
@@ -917,6 +970,8 @@ class ParsedHTML {
      /**
       * Returns the tables in the response which match the specified predicate and value.
       * Will recurse into any nested tables, as needed.
+     * @param predicate 
+     * @param criteria 
       * @return the selected tables, or null if none are found
       **/
      public WebTable[] getMatchingTables( HTMLElementPredicate predicate, Object criteria ) {
@@ -927,6 +982,7 @@ class ParsedHTML {
     /**
      * Returns the first table in the response which has the specified text as the full text of
      * its first non-blank row and non-blank column. Will recurse into any nested tables, as needed.
+     * @param text 
      * @return the selected table, or null if none is found
      **/
     public WebTable getTableStartingWith( String text ) {
@@ -937,6 +993,7 @@ class ParsedHTML {
     /**
      * Returns the first table in the response which has the specified text as a prefix of the text
      * in its first non-blank row and non-blank column. Will recurse into any nested tables, as needed.
+     * @param text 
      * @return the selected table, or null if none is found
      **/
     public WebTable getTableStartingWithPrefix( String text ) {
@@ -947,6 +1004,7 @@ class ParsedHTML {
     /**
      * Returns the first table in the response which has the specified text as its summary attribute.
      * Will recurse into any nested tables, as needed.
+     * @param summary 
      * @return the selected table, or null if none is found
      **/
     public WebTable getTableWithSummary( String summary ) {
@@ -957,6 +1015,7 @@ class ParsedHTML {
     /**
      * Returns the first table in the response which has the specified text as its ID attribute.
      * Will recurse into any nested tables, as needed.
+     * @param ID 
      * @return the selected table, or null if none is found
      **/
     public WebTable getTableWithID( String ID ) {
@@ -966,6 +1025,7 @@ class ParsedHTML {
 
     /**
      * Returns a copy of the domain object model associated with this page.
+     * @return Node
      **/
     public Node getDOM() {
         // JDo: see README
@@ -976,7 +1036,9 @@ class ParsedHTML {
 
 //---------------------------------- Object methods --------------------------------
 
-
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         return _baseURL.toExternalForm() + System.getProperty( "line.separator" ) +
                _rootNode;
@@ -1027,6 +1089,7 @@ class ParsedHTML {
 
     /**
      * Returns the frames found in the page in the order in which they appear.
+     * @return Frames
      **/
     public WebFrame[] getFrames() {
         if (_frames == null) {
@@ -1108,6 +1171,12 @@ class ParsedHTML {
 
     class WebIFrame extends WebFrame implements ContentConcealer {
 
+        /**
+         * Constructor
+         * @param baseURL
+         * @param frameNode
+         * @param parentFrame
+         */
         public WebIFrame( URL baseURL, Node frameNode, FrameSelector parentFrame ) {
             super( _response, baseURL, frameNode, parentFrame );
         }
@@ -1116,6 +1185,10 @@ class ParsedHTML {
 
     class NoScriptElement extends HTMLElementBase implements ContentConcealer {
 
+        /**
+         * Constructor
+         * @param node
+         */
         public NoScriptElement( Node node ) {
             super( node );
         }
