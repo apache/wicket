@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -28,6 +27,7 @@ import wicket.protocol.http.WebRequest;
  * Form for handling (file) uploads with multipart requests.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public abstract class UploadForm extends Form
 {
