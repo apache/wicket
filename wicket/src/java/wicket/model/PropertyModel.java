@@ -293,7 +293,10 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 		{
 			String expr = getExpression(); // get the ognl expression
 			Object target = getModel().getObject(); // get the real object
-			if(propertyType != null) // convert the incomming object to the target type
+			//	convert the incomming object to the target type when not null and
+			// the property type is set and the incomming object is a non-empty string
+			if(object != null && propertyType != null &&
+					(object instanceof String) && (!((String)object).trim().equals("")))
 			{
 				IConverter converter = component.getConverter(); // get converter
 				object = converter.convert(object, propertyType); // convert to set type
