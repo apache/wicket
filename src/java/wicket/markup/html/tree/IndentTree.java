@@ -30,14 +30,23 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import wicket.AttributeModifier;
+import wicket.Component;
+import wicket.IResourceListener;
+import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.image.AbstractImage;
+import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.file.Path;
+import wicket.util.lang.Classes;
+import wicket.util.resource.IResource;
+import wicket.util.resource.Resource;
 
 /**
  * A Tree that renders as a flat (not-nested) list, using spacers for indentation and
@@ -76,6 +85,38 @@ import wicket.model.Model;
  */
 public abstract class IndentTree extends Tree implements TreeModelListener
 {
+	/** name of the junction image component; value = 'junctionImage'. */
+	protected static final String JUNCTION_IMAGE_NAME = "junctionImage";
+
+	/** name of the node image component; value = 'nodeImage'. */
+	protected static final String NODE_IMAGE_NAME = "nodeImage";
+
+	/** a blank image for junctions. */
+	private static final StaticLocalImage JUNCTION_IMG_BLANK =
+		new StaticLocalImage(JUNCTION_IMAGE_NAME, "blank.gif");
+
+	/** an image that draws a '+'. */
+	private static final StaticLocalImage JUNCTION_IMG_PLUS =
+		new StaticLocalImage(JUNCTION_IMAGE_NAME, "plus.gif");
+
+	/** an image that draws a '-'. */
+	private static final StaticLocalImage JUNCTION_IMG_MINUS =
+		new StaticLocalImage(JUNCTION_IMAGE_NAME, "minus.gif");
+
+
+	/** a blank image for nodes. */
+	private static final StaticLocalImage NODE_IMG_BLANK =
+		new StaticLocalImage(NODE_IMAGE_NAME, "blank.gif");
+
+	// set scope of images
+	static
+	{
+		JUNCTION_IMG_BLANK.setSharing(Component.APPLICATION_SHARED);
+		JUNCTION_IMG_PLUS.setSharing(Component.APPLICATION_SHARED);
+		JUNCTION_IMG_MINUS.setSharing(Component.APPLICATION_SHARED);
+		NODE_IMG_BLANK.setSharing(Component.APPLICATION_SHARED);
+	}
+
 	/** list with tree paths. */
 	private List treePathList;
 
@@ -148,25 +189,50 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 				junctionLinkClicked(node);
 			}
 		};
-		WebMarkupContainer junctionImg = new WebMarkupContainer("junctionImg");
-		junctionImg.add(new AttributeModifier(
-				"src", true, new Model()
-		{
-			public Object getObject()
-			{
-				return getJunctionImageName(node);
-			}
-		}));
-		junctionLink.add(junctionImg);
+		AbstractImage img = getJunctionImage(node);
+		junctionLink.add(img);
 		return junctionLink;
 	}
 
 	/**
-	 * Get image name for junction; used by method createExpandCollapseLink.
+	 * Get image for a junction; used by method createExpandCollapseLink.
+	 * If you use the packaged panel (IndentTree.html), you must name the component
+	 * using JUNCTION_IMAGE_NAME.
 	 * @param node the tree node
-	 * @return image name
+	 * @return the image for the junction
 	 */
-	protected abstract String getJunctionImageName(final DefaultMutableTreeNode node);
+	protected AbstractImage getJunctionImage(final DefaultMutableTreeNode node)
+	{
+		if (!node.isLeaf())
+		{
+			// we want the image to be dynamically, yet resolving to a application
+			// static image.
+			IModel imgModel = new Model()
+			{
+				public Object getObject()
+				{
+					final String url;
+					if(isExpanded(node))
+					{
+						url = getRequestCycle().urlFor(
+								JUNCTION_IMG_MINUS, IResourceListener.class);
+					}
+					else
+					{
+						url = getRequestCycle().urlFor(
+								JUNCTION_IMG_PLUS, IResourceListener.class);
+					}
+					return url;
+				}
+			};
+			DynamicLocalImage img = new DynamicLocalImage(JUNCTION_IMAGE_NAME, imgModel);
+			return img;
+		}
+		else
+		{
+			return JUNCTION_IMG_BLANK;
+		}
+	}
 
 	/**
 	 * Handler that is called when a junction link is clicked; this implementation sets the
@@ -193,16 +259,8 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 				nodeLinkClicked(node);
 			}
 		};
-		WebMarkupContainer nodeImg = new WebMarkupContainer("nodeImg");
-		nodeImg.add(new AttributeModifier(
-				"src", true, new Model()
-		{
-			public Object getObject()
-			{
-				return getNodeImageName(node);
-			}
-		}));
-		nodeLink.add(nodeImg);
+		AbstractImage img = getNodeImage(node);
+		nodeLink.add(img);
 		String userObjectAsString = getNodeLabel(node);
 		nodeLink.add(new Label("label", userObjectAsString));
 		return nodeLink;
@@ -214,14 +272,22 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 * @param node the tree node
 	 * @return the label of the node that is used for the node link
 	 */
-	protected abstract String getNodeLabel(final DefaultMutableTreeNode node);
+	protected String getNodeLabel(final DefaultMutableTreeNode node)
+	{
+		return String.valueOf(node.getUserObject());
+	}
 
 	/**
-	 * Get image name for node; used by method createExpandCollapseLink.
+	 * Get image for a node; used by method createNodeLink.
+	 * If you use the packaged panel (IndentTree.html), you must name the component
+	 * using NODE_IMAGE_NAME.
 	 * @param node the tree node
-	 * @return image name
+	 * @return the image for the node
 	 */
-	protected abstract String getNodeImageName(final DefaultMutableTreeNode node);
+	protected AbstractImage getNodeImage(final DefaultMutableTreeNode node)
+	{
+		return NODE_IMG_BLANK;
+	}
 
 	/**
 	 * Handler that is called when a node link is clicked; this implementation sets the
@@ -496,5 +562,84 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 		// just totally rebuild the tree paths structure
 		this.treePathList.clear();
 		addNodesToTreePathList();
+	}
+
+	/**
+	 * Image that loads from this package (instead of Image's page)
+	 * without locale, style etc.
+	 */
+	private static class LocalImage extends Image
+	{
+		/**
+		 * Construct.
+		 * @param name component name
+		 * @param object model
+		 */
+		public LocalImage(String name, Serializable object)
+		{
+			super(name, object);
+		}
+
+	    /**
+	     * @return Gets the image resource for the component.
+	     */
+	    protected IResource getResource()
+	    {
+	    	final String imageResource = getModelObjectAsString();
+			final String path = Classes.packageName(IndentTree.class) + "." + imageResource;
+	        return Resource.locate
+	        (
+	            new Path(),
+	            IndentTree.class.getClassLoader(),
+	            path,
+	            null,
+	            null,
+	            null
+	        );
+	    }
+	}
+
+	/**
+	 * Image that loads a static image from this package.
+	 */
+	private static final class StaticLocalImage extends LocalImage
+	{
+		/**
+		 * Construct.
+		 * @param name component name
+		 * @param object model
+		 */
+		public StaticLocalImage(String name, Serializable object)
+		{
+			super(name, object);
+		}
+	}
+
+	/**
+	 * Image that loads a static image from this package, but that is determined
+	 * dynamically.
+	 */
+	private static final class DynamicLocalImage extends LocalImage
+	{
+		/**
+		 * Construct.
+		 * @param name component name
+		 * @param object model
+		 */
+		public DynamicLocalImage(String name, Serializable object)
+		{
+			super(name, object);
+		}
+
+	    /**
+	     * @see wicket.Component#onComponentTag(ComponentTag)
+	     */
+	    protected void onComponentTag(final ComponentTag tag)
+	    {
+	        checkComponentTag(tag, "img");
+	        super.onComponentTag(tag);
+	        final String url = getModelObjectAsString();
+			tag.put("src", url.replaceAll("&", "&amp;"));
+	    }
 	}
 }
