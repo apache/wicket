@@ -29,7 +29,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * Parses an arbitrary list format with a pattern for list entries 
  * and a pattern for list separators.
  * 
- * @author Jonathan Locke W. Locke
+ * @author Jonathan Locke
  */
 public class ListParser extends MetaPatternParser
 {

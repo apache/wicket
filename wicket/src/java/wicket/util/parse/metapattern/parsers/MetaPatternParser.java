@@ -26,7 +26,7 @@ import wicket.util.parse.metapattern.MetaPattern;
 /**
  * Base class for various MetaPattern based parsers.
  * 
- * @author Jonathan Locke W. Locke
+ * @author Jonathan Locke
  */
 public abstract class MetaPatternParser
 { 

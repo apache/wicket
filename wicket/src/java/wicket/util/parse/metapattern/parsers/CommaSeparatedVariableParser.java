@@ -31,7 +31,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  *         the "a" only.</li>
  * </lu>  
  * 
- * @author Jonathan Locke W. Locke
+ * @author Jonathan Locke
  */
 public final class CommaSeparatedVariableParser extends ListParser
 {
