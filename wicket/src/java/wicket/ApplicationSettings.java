@@ -116,15 +116,24 @@ import wicket.util.watch.ModificationWatcher;
  * type converters.
  * <p>
  * <i>pageFactory </i> - the factory class that is used for constructing page instances.
+ * <p>
+ * <i>pageFactory </i> - Whether the PropertyModel instances apply formatting
+ * by default; default == false.
  * </ul>
  * <p>
  * More documentation is available about each setting in the setter method for the
  * property.
+ *
  * @author Jonathan Locke
  * @author Chris Turner
+ * @author Eelco Hillenius
  */
 public class ApplicationSettings
 { // TODO finalize javadoc
+    
+    /** Log. */
+    private static final Log log = LogFactory.getLog(ApplicationSettings.class);
+
     // registry with converters
     private ConverterRegistry converterRegistry = new ConverterRegistry();
 
@@ -215,9 +224,12 @@ public class ApplicationSettings
 
     /** Pluggable markup parser */
     private String markupParserClassName = MarkupParser.class.getName();
-    
-    // Code broadcaster for reporting
-    private static final Log log = LogFactory.getLog(ApplicationSettings.class);
+
+    /**
+     * Whether the {@link wicket.model.PropertyModel} instances apply formatting
+     * by default; default == false.
+     */
+    private boolean propertyModelDefaultApplyFormatting = false;
 
     /**
      * Enumerated type for different ways of displaying unexpected exceptions.
@@ -856,11 +868,19 @@ public class ApplicationSettings
         return this.wicketTagName;
     }
     
+    /**
+     * Gets whether to remove wicket tags from the output.
+     * @return whether to remove wicket tags from the output
+     */
     public final boolean getRemoveWicketTagsFromOutput()
     {
         return removeWicketTagsFromOutput;
     }
     
+    /**
+     * Sets whether to remove wicket tags from the output.
+     * @param remove whether to remove wicket tags from the output
+     */
     public final void setRemoveWicketTagsFromOutput(boolean remove)
     {
         this.removeWicketTagsFromOutput = remove;
@@ -875,12 +895,29 @@ public class ApplicationSettings
     }
     
     /**
-     * @param markupParserClassName The markupParserClass to set.
-     */
-    public final void setMarkupParserClassName(final String markupParserClassName)
-    {
-        this.markupParserClassName = markupParserClassName;
-    }
-}
+	 * @param markupParserClassName The markupParserClass to set.
+	 */
+	public final void setMarkupParserClassName(final String markupParserClassName)
+	{
+		this.markupParserClassName = markupParserClassName;
+	}
 
-///////////////////////////////// End of File /////////////////////////////////
+	/**
+	 * Gets whether the {@link wicket.model.PropertyModel} instances apply formatting by default.
+	 * @return whether the {@link wicket.model.PropertyModel} instances apply formatting by default
+	 */
+	public boolean isPropertyModelDefaultApplyFormatting()
+	{
+		return propertyModelDefaultApplyFormatting;
+	}
+
+	/**
+	 * Sets whether the {@link wicket.model.PropertyModel} instances apply formatting by default.
+	 * @param propertyModelDefaultApplyFormatting whether the
+	 * 	{@link wicket.model.PropertyModel} instances apply formatting by default
+	 */
+	public void setPropertyModelDefaultApplyFormatting(boolean propertyModelDefaultApplyFormatting)
+	{
+		this.propertyModelDefaultApplyFormatting = propertyModelDefaultApplyFormatting;
+	}
+}
