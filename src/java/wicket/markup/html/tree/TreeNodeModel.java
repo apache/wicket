@@ -71,7 +71,7 @@ public final class TreeNodeModel extends Model
     /**
      * Gets the wrapped treeNode. NOTE: if you made the tree's user
      * objects unique by calling the <code>makeUnique</code> method of
-     * {@link AbstractTree}, the user objects are wrapped in instances
+     * {@link Tree}, the user objects are wrapped in instances
      * of {@link IdWrappedUserObject}.
      * @return the wrapped treeNode
      */

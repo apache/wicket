@@ -37,7 +37,8 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * A Tree that renders as a flat list, using spacers and nodes.
+ * A Tree that renders as a flat (not-nested) list, using spacers for indentation
+ * and nodes at the end of one row.
  * <p>
  * The visible tree rows are put in one flat list. For each row, a list is constructed
  * with fillers, that can be used to create indentation. After the fillers, the actual
@@ -63,7 +64,7 @@ import wicket.model.Model;
  *
  * @author Eelco Hillenius
  */
-public abstract class FlatTree extends AbstractTree
+public abstract class IndentTree extends Tree
 { // TODO finalize javadoc
     /** table for the current visible tree paths. */
     private ListView visibleTreePathTable;
@@ -73,7 +74,7 @@ public abstract class FlatTree extends AbstractTree
      * @param componentName The name of this container
      * @param model the underlying tree model
      */
-    public FlatTree(final String componentName, final TreeModel model)
+    public IndentTree(final String componentName, final TreeModel model)
     {
         super(componentName, model);
     }
@@ -87,7 +88,7 @@ public abstract class FlatTree extends AbstractTree
      * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
      * user objects are unique within the tree in order to have the tree working properly
      */
-    public FlatTree(final String componentName, final TreeModel model,
+    public IndentTree(final String componentName, final TreeModel model,
     		final boolean makeTreeModelUnique)
     {
         super(componentName, model, makeTreeModelUnique);
@@ -100,7 +101,7 @@ public abstract class FlatTree extends AbstractTree
      * @param treeState the tree state that holds the tree model and the currently visible
      * paths
      */
-    public FlatTree(final String componentName, TreeStateCache treeState)
+    public IndentTree(final String componentName, TreeStateCache treeState)
     {
         super(componentName, treeState);
     }
