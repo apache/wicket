@@ -24,7 +24,7 @@ import java.io.Serializable;
  * A IModel wraps the actual model objects of components. IModel implementations are used
  * as a facade for the real model so that users have control over the actual persistence
  * strategy. Note that instances of implementations of this class will be stored in the
- * session. Hence, you should use (non-transient) instance variables sparcelingly.
+ * session. Hence, you should use (non-transient) instance variables sparingly.
  *
  * @see wicket.model.IDetachableModel
  *
