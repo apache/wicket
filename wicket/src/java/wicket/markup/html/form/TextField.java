@@ -28,7 +28,7 @@ import wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public final class TextField extends FormComponent
+public class TextField extends FormComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -2913294206388017417L;
@@ -116,7 +116,7 @@ public final class TextField extends FormComponent
 	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
-	public boolean supportsPersistence()
+	public final boolean supportsPersistence()
 	{
 		return true;
 	}
@@ -136,7 +136,7 @@ public final class TextField extends FormComponent
 	 * @param tag Tag to modify
 	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected final void handleComponentTag(final ComponentTag tag)
 	{
 		checkTag(tag, "input");
 		checkAttribute(tag, "type", "text");
