@@ -32,120 +32,135 @@ import wicket.util.value.ValueMap;
 
 /**
  * The AutolinkComponentResolver is responsible to handle automatic link
- * resolution. Autolink components are automatically created by MarkupParser 
- * for anchor tags with no explicit wicket component. 
- * E.g. &lt;a href="Home.html"&gt;
+ * resolution. Autolink components are automatically created by MarkupParser for
+ * anchor tags with no explicit wicket component. E.g. &lt;a
+ * href="Home.html"&gt;
  * <p>
- * For each such tag a BookmarkablePageLink will be automatically created.
+ * For each such tag a BookmarkablePageLink will be automatically created, with
+ * one exception. An ExternalLink is created is if the URL is absolute (starts
+ * with "/") and does not reference a valid Page class.
  * <p>
- * It resolves the given URL by searching for a page class at
- * the relative URL specified by the href attribute of the tag. The href URL is
- * relative to the package containing the page where this component is contained.
+ * It resolves the given URL by searching for a page class, either relative or
+ * absolute, specified by the href attribute of the tag. If relative the href
+ * URL must be relative to the package containing the associated page. An
+ * exception is thrown if no Page class was found.
+ * <p>
  * 
+ * @see wicket.markup.parser.filter.AutolinkHandler
  * @author Juergen Donnerstag
  */
 public class AutolinkComponentResolver implements IComponentResolver
 {
-    /** Logging */
-    private static Log log = LogFactory.getLog(AutolinkComponentResolver.class);
-    
-    /**
-     * Automatically creates a BookmarkablePageLink component.
-     * 
-     * @see wicket.markup.IComponentResolver#resolve(Container, MarkupStream, ComponentTag)
-     * @param markupStream The current markupStream
-     * @param tag The current component tag while parsing the markup
-     * @param container The container parsing its markup
-     * @return true, if componentName was handle by the resolver. False, otherwise  
-     */
+	/** Logging */
+	private static Log log = LogFactory.getLog(AutolinkComponentResolver.class);
+
+	/**
+	 * Automatically creates a BookmarkablePageLink component.
+	 * 
+	 * @see wicket.markup.IComponentResolver#resolve(Container, MarkupStream,
+	 *      ComponentTag)
+	 * @param markupStream
+	 *           The current markupStream
+	 * @param tag
+	 *           The current component tag while parsing the markup
+	 * @param container
+	 *           The container parsing its markup
+	 * @return true, if componentName was handle by the resolver. False,
+	 *         otherwise
+	 */
 	public boolean resolve(final Container container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-	    // Must be marked as autolink tag
-        if (tag.isAutolinkEnabled())
-        {
-            // Try to find the Page matching the href
-    	    final String componentName = tag.getComponentName();
-            final Component link = resolveAutomaticLink(container.getPage(), componentName, tag);
+		// Must be marked as autolink tag
+		if (tag.isAutolinkEnabled())
+		{
+			// Try to find the Page matching the href
+			final String componentName = tag.getComponentName();
+			final Component link = resolveAutomaticLink(container.getPage(), componentName, tag);
 
-	        // Add the link to the container
+			// Add the link to the container
 			container.add(link);
-			if (log.isDebugEnabled()) 
+			if (log.isDebugEnabled())
 			{
 				log.debug("Added autolink " + link);
 			}
 
 			// Render the Link
 			link.render();
-			
+
 			// Tell the container, we handled the componentName
 			return true;
 		}
-	
-        // We were not able to handle the componentName
-        return false;
+
+		// We were not able to handle the componentName
+		return false;
 	}
-	
-    /**
-     * Resolves the given tag's page class and page page parameters
-     * by parsing the tag component name and then searching for a page class at
-     * the relative URL specified by the href attribute of the tag. The href URL is
-     * relative to the package containing the page where this component is contained.
-     * @param page The page where the link is
-     * @param componentName the name of the component
-     * @param tag the component tag
-     * @return A BookmarkablePageLink to handle the href
-     */
-    private Component resolveAutomaticLink(final Page page, 
-    		final String componentName, final ComponentTag tag)
-    {
-        final String originalHref = tag.getAttributes().getString("href");
-        final int pos = originalHref.indexOf(".html");
-        
-        String classPath = originalHref.substring(0, pos);
-        PageParameters pageParameters = null;
-        
-        // ".html?" => 6 chars
-        if ((classPath.length() + 6) < originalHref.length())
-        {
-            String queryString = originalHref.substring(classPath.length() + 6);
-            pageParameters = new PageParameters(new ValueMap(queryString, "&"));
-        }
-        
-        // Make the componentName (page-)unique
-        final String id = componentName + page.getAutoIndex();
-        
-        // Obviously a href like href="myPkg.MyLabel.html" will do as well. 
-        // Wicket will not throw an exception. It accepts it.
-        classPath = classPath.replaceAll("/", ".");
-        
-        if (!classPath.startsWith("."))
-        {
-            // Href is relative. Resolve the url given relative to the current page
-	        final String className = page.getClass().getPackage().getName() + "." + classPath;
-	        final Class clazz = page.getApplicationSettings().getDefaultClassResolver().resolveClass(className);
-	        
-	        return new BookmarkablePageLink(id, clazz, pageParameters);
-        }
-        else
-        {
-            // href is absolute. If class with the same absolute path exists, use it.
-            // Else don't change the href.
-            final String className = classPath.substring(1);
-            try
-            {
-                final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
-                		.resolveClass(className);
-    	        
-    	        return new BookmarkablePageLink(id, clazz, pageParameters);
-            }
-            catch (WicketRuntimeException ex)
-            {
-                ; // fall through
-            }
-        }
-        
-        // Don't change the href. Did not find a proper Wicket page
-        return new ExternalLink(id, originalHref);
-    }
+
+	/**
+	 * Resolves the given tag's page class and page parameters by parsing the tag
+	 * component name and then searching for a page class at the absolute or
+	 * relative URL specified by the href attribute of the tag.
+	 * 
+	 * @param page
+	 *           The page where the link is
+	 * @param componentName
+	 *           the name of the component
+	 * @param tag
+	 *           the component tag
+	 * @return A BookmarkablePageLink to handle the href
+	 */
+	private Component resolveAutomaticLink(final Page page, final String componentName,
+			final ComponentTag tag)
+	{
+		final String originalHref = tag.getAttributes().getString("href");
+		final int pos = originalHref.indexOf(".html");
+
+		String classPath = originalHref.substring(0, pos);
+		PageParameters pageParameters = null;
+
+		// ".html?" => 6 chars
+		if ((classPath.length() + 6) < originalHref.length())
+		{
+			String queryString = originalHref.substring(classPath.length() + 6);
+			pageParameters = new PageParameters(new ValueMap(queryString, "&"));
+		}
+
+		// Make the componentName (page-)unique
+		final String id = componentName + page.getAutoIndex();
+
+		// Obviously a href like href="myPkg.MyLabel.html" will do as well.
+		// Wicket will not throw an exception. It accepts it.
+		classPath = classPath.replaceAll("/", ".");
+
+		if (!classPath.startsWith("."))
+		{
+			// Href is relative. Resolve the url given relative to the current page
+			final String className = page.getClass().getPackage().getName() + "." + classPath;
+			final Class clazz = page.getApplicationSettings().getDefaultClassResolver().resolveClass(
+					className);
+
+			return new BookmarkablePageLink(id, clazz, pageParameters);
+		}
+		else
+		{
+			// href is absolute. If class with the same absolute path exists, use
+			// it.
+			// Else don't change the href.
+			final String className = classPath.substring(1);
+			try
+			{
+				final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
+						.resolveClass(className);
+
+				return new BookmarkablePageLink(id, clazz, pageParameters);
+			}
+			catch (WicketRuntimeException ex)
+			{
+				; // fall through
+			}
+		}
+
+		// Don't change the href. Did not find a proper Wicket page
+		return new ExternalLink(id, originalHref);
+	}
 }
