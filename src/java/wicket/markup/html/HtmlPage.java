@@ -56,6 +56,6 @@ public class HtmlPage extends Page
      */
     protected final BookmarkablePageLink homePageLink(final String componentName)
     {
-        return new BookmarkablePageLink(componentName, getApplicationSettings().getHomePage());
+        return new BookmarkablePageLink(componentName, getApplicationPages().getHomePage());
     }
 }

@@ -22,6 +22,7 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.Page;
 import wicket.protocol.http.HttpApplication;
@@ -90,6 +91,9 @@ public class MockHttpApplication extends HttpApplication
 
 	/** application settings. */
 	private final ApplicationSettings settings;
+    
+    /** standard application pages */
+    private final ApplicationPages pages;
 
 	/** session. */
 	private HttpSession wicketSession;
@@ -112,6 +116,7 @@ public class MockHttpApplication extends HttpApplication
 	public MockHttpApplication(final String path)
 	{
 		settings = new ApplicationSettings(this);
+        pages = new ApplicationPages();
 		context = new MockServletContext(this, path);
 		servletSession = new MockHttpSession(context);
 		servletRequest = new MockHttpServletRequest(this, servletSession, context);
@@ -160,6 +165,14 @@ public class MockHttpApplication extends HttpApplication
 		return lastRenderedPage;
 	}
 
+    /**
+     * @see wicket.IApplication#getPages()
+     */
+    public ApplicationPages getPages()
+    {
+        return pages;
+    }
+    
 	/**
 	 * Get the application settings.
 	 *

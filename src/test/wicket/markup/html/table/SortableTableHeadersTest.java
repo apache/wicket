@@ -60,7 +60,7 @@ public class SortableTableHeadersTest extends TestCase
     public void testPagedTable() throws Exception
     {
         MockHttpApplication application = new MockHttpApplication(null);
-        application.getSettings().setHomePage(SortableTableHeadersPage.class);
+        application.getPages().setHomePage(SortableTableHeadersPage.class);
         application.setupRequestAndResponse();
         application.processRequestCycle();
         SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();

@@ -24,7 +24,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.protocol.http.HttpRequest;
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -37,14 +36,14 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
  * instantiate a object of class Page with constructor argument first, and
  * default constructor second.
  * 
- * @see ApplicationSettings on how to change the default PageFactory used.
+ * @see ApplicationSettings on how to change the default DefaultPageFactory used.
  * 
  * @author Juergen Donnerstag
  */
-public class PageFactory implements IPageFactory
+public final class DefaultPageFactory implements IPageFactory
 { // TODO finalize javadoc
     /** Logging */
-    private final Log log = LogFactory.getLog(PageFactory.class);
+    private final Log log = LogFactory.getLog(DefaultPageFactory.class);
 
     /** Map class name to Constructor. */
     private final Map constructors = new ConcurrentHashMap();
@@ -52,37 +51,15 @@ public class PageFactory implements IPageFactory
     /** The application object */
     private final IApplication application;
 
-    /** Chain of factories */
-    private IPageFactory childFactory;
-
     /**
      * Constructor
      * 
      * @param application
      *            The application object
      */
-    public PageFactory(final IApplication application)
+    public DefaultPageFactory(final IApplication application)
     {
         this.application = application;
-    }
-
-    /**
-     * Set a child factory to use next, if parent factory is not able to get the
-     * Page object.
-     * 
-     * @param childFactory
-     */
-    public final void setChildFactory(final IPageFactory childFactory)
-    {
-        this.childFactory = childFactory;
-    }
-
-    /**
-     * @return The child factory if defined, else return null.
-     */
-    public final IPageFactory getChildFactory()
-    {
-        return this.childFactory;
     }
 
     /**
@@ -107,52 +84,6 @@ public class PageFactory implements IPageFactory
     public final Page newPage(final Class pageClass)
     {
         return newPage(pageClass, (PageParameters) null);
-    }
-
-    /**
-     * Creates a new page. If Page with PageParameter argument constructor
-     * exists, PageParameter will be null.
-     * 
-     * @param pageClassName
-     *            The name of the page class to instantiate
-     * @return The page
-     * @throws RenderException
-     */
-    public final Page newPage(final String pageClassName)
-    {
-        return newPage(this.classForName(pageClassName), (PageParameters) null);
-    }
-
-    /**
-     * Creates a new page. Take the PageParameters from the request.
-     * 
-     * @param pageClass
-     *            The page class to instantiate
-     * @param request
-     *            The HTTP request to get the page parameters from
-     * @return The page
-     * @throws RenderException
-     */
-    public final Page newPage(final Class pageClass, final HttpRequest request)
-    {
-        return newPage(pageClass, new PageParameters(request.getParameterMap()));
-    }
-
-    /**
-     * Creates a new page. Take the PageParameters from the request.
-     * 
-     * @param pageClassName
-     *            The name of the page class to instantiate
-     * @param request
-     *            The HTTP request to get the page parameters from
-     * @return The page
-     * @throws RenderException
-     */
-    public final Page newPage(final String pageClassName,
-            final HttpRequest request)
-    {
-        return newPage(this.classForName(pageClassName), new PageParameters(
-                request.getParameterMap()));
     }
 
     /**
@@ -195,23 +126,6 @@ public class PageFactory implements IPageFactory
     }
 
     /**
-     * Creates a new Page and apply the PageParameters to the Page constructor
-     * if a proper constructor exists. Else use the default constructor.
-     * 
-     * @param pageClassName
-     *            The name of the page class to create
-     * @param parameters
-     *            The page parameters
-     * @return The new page
-     * @throws RenderException
-     */
-    public Page newPage(final String pageClassName,
-            final PageParameters parameters)
-    {
-        return newPage(this.classForName(pageClassName), parameters);
-    }
-
-    /**
      * Creates a new instance of a page using the given class name. If pageClass
      * implements a constructor with Page argument, page will be forwarded to
      * that constructor. Else, the default constructor will be used and page be
@@ -240,24 +154,6 @@ public class PageFactory implements IPageFactory
         throw new RenderException("Could not find constructor for page '"
                 + pageClass
                 + "' with Page argument constructor or default constructor");
-    }
-
-    /**
-     * Creates a new instance of a page using the given class name. If pageClass
-     * implements a constructor with Page argument, page will be forwarded to
-     * that constructor. Else, the default constructor will be used and page be
-     * neglected.
-     * 
-     * @param pageClassName
-     *            The name of the class of page to create
-     * @param page
-     *            Parameter to page constructor
-     * @return The new page
-     * @throws RenderException
-     */
-    public final Page newPage(final String pageClassName, final Page page)
-    {
-        return newPage(this.classForName(pageClassName), page);
     }
 
     /**
@@ -348,8 +244,7 @@ public class PageFactory implements IPageFactory
         {
             // In order to avoid classloader issues within Wicket, wicket.jar
             // has to be in /WEB-INF/lib
-            ApplicationSettings settings = application.getSettings();
-            Class homePageClass = settings.getHomePage();
+            final Class homePageClass = application.getPages().getHomePage();
             if (homePageClass.getClassLoader() != constructor.getClass()
                     .getClassLoader())
             {
@@ -360,31 +255,5 @@ public class PageFactory implements IPageFactory
 
             throw new RenderException("Exception thrown by " + constructor, e);
         }
-    }
-
-    /**
-     * Object Factory: Simply load the Class with name. Subclasses may overwrite
-     * it to load Groovy classes e.g..
-     * 
-     * @param classname
-     *            fully qualified classname
-     * @return Class
-     */
-    public Class classForName(final String classname)
-    {
-        try
-        {
-            return PageFactory.class.getClassLoader().loadClass(classname);
-        }
-        catch (ClassNotFoundException ex)
-        {
-            if (childFactory == null)
-            {
-                throw new RenderException("Unable to load class with name: "
-                        + classname);
-            }
-        }
-
-        return childFactory.classForName(classname);
     }
 }

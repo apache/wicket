@@ -21,7 +21,6 @@ package wicket;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import wicket.protocol.http.HttpRequest;
 import wicket.protocol.http.MockHttpApplication;
 import wicket.protocol.http.MockPage;
 import wicket.resource.DummyApplication;
@@ -32,7 +31,7 @@ import wicket.resource.DummyApplication;
 public class PageFactoryTest extends TestCase
 {
     private MockHttpApplication application;
-    private PageFactory factory;
+    private DefaultPageFactory factory;
 
     /**
      * Create the test case.
@@ -46,55 +45,8 @@ public class PageFactoryTest extends TestCase
     protected void setUp() throws Exception {
         super.setUp();
         application = new DummyApplication();
-        factory = new PageFactory(application);
+        factory = new DefaultPageFactory(application);
         assertEquals(application, factory.getApplication());
-    }
-
-    /**
-     * test using a child factory.
-     */
-    public void testChildFactory()
-    {
-        assertNull(factory.getChildFactory());
-        
-        final PageFactory childFactory = new MyPageFactory(application);
-        Exception ex = null;
-        try
-        {
-            factory.classForName("dummyPackage.dummyClass");
-        }
-        catch (RenderException e)
-        {
-            ex = e;
-        }
-        assertNotNull("Should have thrown an exception, indicating that no class could be found", ex);
-        
-        factory.setChildFactory(childFactory);
-        assertEquals(childFactory, factory.getChildFactory());
-        assertEquals(Object.class, factory.classForName("dummyPackage.dummyClass"));
-    }
-
-    /**
-     * Dummy PageFactory .
-     */
-    private class MyPageFactory extends PageFactory
-    {
-        /**
-         * Construct.
-         * @param application
-         */
-        public MyPageFactory(final IApplication application)
-        {
-            super(application);
-        }
-
-        /**
-         * @see wicket.PageFactory#classForName(java.lang.String)
-         */
-        public Class classForName(final String classname)
-        {
-            return Object.class;
-        }
     }
 
     /**
@@ -151,73 +103,6 @@ public class PageFactoryTest extends TestCase
         }
         assertNotNull("String does not extend Page. Should habe thrown an exception", e);
         */
-    }
-
-    /**
-     * Test creating a new page using a string.
-     */
-    public void testNewPageString()
-    {
-        // MyPage0: no constructor at all
-        assertEquals(MyPage0.class, factory.newPage(MyPage0.class.getName()).getClass());
-
-        // MyPage1 has only a default constructor
-        assertEquals(MyPage1.class, factory.newPage(MyPage1.class.getName()).getClass());
-        
-        // MyPage2: PageParameter parameter constructor only
-        assertEquals(MyPage2.class, factory.newPage(MyPage2.class.getName()).getClass());
-        
-        // MyPage3: Page parameter constructor only
-        Exception e = null;
-        try
-        {
-            factory.newPage(MyPage3.class.getName()).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage3 should have thrown an exception as it does not have a default or no constructor", e);
-        
-        // MyPage4: Illegal String parameter constructor only
-        e = null;
-        try
-        {
-            factory.newPage(MyPage4.class.getName()).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage4 should have thrown an exception as it does not have a default or no constructor", e);
-
-        // MyPage5: PageParameter and default constructor 
-        assertEquals(MyPage5.class, factory.newPage(MyPage5.class.getName()).getClass());
-
-        // String: Illegal String parameter constructor only
-        e = null;
-        /*
-        try
-        {
-            factory.newPage(String.class.getName()).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("String does not extend Page. Should habe thrown an exception", e);
-*/
-        // String: Illegal String parameter constructor only
-        e = null;
-        try
-        {
-            factory.newPage("any text");
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("String does not extend Page. Should habe thrown an exception", e);
     }
     
     /**
@@ -278,187 +163,7 @@ public class PageFactoryTest extends TestCase
         assertNotNull("String does not extend Page. Should habe thrown an exception", e);
         */
     }
-    
-    /**
-     * Test a new page using a string and parameters.
-     * @throws IOException
-     */
-    public void testNewPageStringPageParameters() throws IOException 
-    {
-        assertEquals(MyPage0.class, factory.newPage(MyPage0.class.getName(), (PageParameters)null).getClass());
-
-        // MyPage0: no constructor at all
-        assertEquals(MyPage0.class, factory.newPage(MyPage0.class.getName(), new PageParameters()).getClass());
-
-        // MyPage1 has only a default constructor
-        assertEquals(MyPage1.class, factory.newPage(MyPage1.class.getName(), new PageParameters()).getClass());
-        
-        // MyPage2: PageParameter parameter constructor only
-        assertEquals(MyPage2.class, factory.newPage(MyPage2.class.getName(), new PageParameters()).getClass());
-        
-        // MyPage3: Page parameter constructor only
-        Exception e = null;
-        try
-        {
-            factory.newPage(MyPage3.class.getName(), new PageParameters()).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage4 should have thrown an exception as it does not have a default or no constructor", e);
-        
-        // MyPage4: Illegal String parameter constructor only
-        e = null;
-        try
-        {
-            factory.newPage(MyPage4.class.getName(), new PageParameters()).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage4 should have thrown an exception as it does not have a default or no constructor", e);
-
-        // MyPage5: PageParameter and default constructor 
-        assertEquals(MyPage5.class, factory.newPage(MyPage5.class.getName(), new PageParameters()).getClass());
-
-        // String: Illegal String parameter constructor only
-        e = null;
-        /*
-        try
-        {
-            factory.newPage(String.class, request).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("String does not extend Page. Should habe thrown an exception", e);
-        */
-    }
-    
-    /**
-     * Test creating a new page using a class and a request. 
-     * @throws IOException
-     */
-    public void testNewPageClassRequest() throws IOException 
-    {
-        application.setupRequestAndResponse();
-        HttpRequest request = application.getWicketRequest();
-        assertNotNull(request);
-        
-        // MyPage0: no constructor at all
-        assertEquals(MyPage0.class, factory.newPage(MyPage0.class, request).getClass());
-
-        // MyPage1 has only a default constructor
-        assertEquals(MyPage1.class, factory.newPage(MyPage1.class, request).getClass());
-        
-        // MyPage2: PageParameter parameter constructor only
-        assertEquals(MyPage2.class, factory.newPage(MyPage2.class, request).getClass());
-        
-        // MyPage3: Page parameter constructor only
-        Exception e = null;
-        try
-        {
-            factory.newPage(MyPage3.class, request).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage3 should have thrown an exception as it does not have a default or no constructor", e);
-        
-        // MyPage4: Illegal String parameter constructor only
-        e = null;
-        try
-        {
-            factory.newPage(MyPage4.class, request).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage4 should have thrown an exception as it does not have a default or no constructor", e);
-
-        // MyPage5: PageParameter and default constructor 
-        assertEquals(MyPage5.class, factory.newPage(MyPage5.class, request).getClass());
-
-        // String: Illegal String parameter constructor only
-        e = null;
-        /*
-        try
-        {
-            factory.newPage(String.class, request).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("String does not extend Page. Should habe thrown an exception", e);
-        */
-    }
-    
-    /**
-     * Test creating a new page using a string and a request.
-     * @throws IOException
-     */
-    public void testNewPageStringRequest() throws IOException
-    {
-        application.setupRequestAndResponse();
-        HttpRequest request = application.getWicketRequest();
-        assertNotNull(request);
-        
-        // MyPage0: no constructor at all
-        assertEquals(MyPage0.class, factory.newPage(MyPage0.class.getName(), request).getClass());
-
-        // MyPage1 has only a default constructor
-        assertEquals(MyPage1.class, factory.newPage(MyPage1.class.getName(), request).getClass());
-        
-        // MyPage2: PageParameter parameter constructor only
-        assertEquals(MyPage2.class, factory.newPage(MyPage2.class.getName(), request).getClass());
-        
-        // MyPage3: Page parameter constructor only
-        Exception e = null;
-        try
-        {
-            factory.newPage(MyPage3.class.getName(), request).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage3 should have thrown an exception as it does not have a default or no constructor", e);
-        
-        // MyPage4: Illegal String parameter constructor only
-        e = null;
-        try
-        {
-            factory.newPage(MyPage4.class.getName(), request).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage4 should have thrown an exception as it does not have a default or no constructor", e);
-
-        // MyPage5: PageParameter and default constructor 
-        assertEquals(MyPage5.class, factory.newPage(MyPage5.class.getName(), request).getClass());
-
-        // String: Illegal String parameter constructor only
-        e = null; /*
-        try
-        {
-            factory.newPage(String.class.getName(), request).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("String does not extend Page. Should habe thrown an exception", e);
-        */
-    }
-
+         
     /**
      * Test creating a new page using a class and a page.
      * @throws IOException
@@ -535,90 +240,6 @@ public class PageFactoryTest extends TestCase
         try
         {
             factory.newPage(String.class, page).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("String does not extend Page. Should habe thrown an exception", e);
-    }
-
-    /**
-     * Test creating a new page using a string and a page.
-     * @throws IOException
-     */
-    public void testNewPageStringPage() throws IOException 
-    {
-        final Page page = new MockPage(null);
-        
-        // MyPage0: no constructor at all
-        Exception e = null;
-        try
-        {
-            factory.newPage(MyPage0.class.getName(), page).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage0 should have thrown an exception", e);
-
-        // MyPage1 has only a default constructor
-        e = null;
-        try
-        {
-            factory.newPage(MyPage1.class.getName(), page).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage1 should have thrown an exception", e);
-        
-        // MyPage2: PageParameter parameter constructor only
-        e = null;
-        try
-        {
-            factory.newPage(MyPage2.class.getName(), page).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage2 should have thrown an exception as it does not have a default or no constructor", e);
-        
-        // MyPage3: Page parameter constructor only
-        assertEquals(MyPage3.class, factory.newPage(MyPage3.class.getName(), page).getClass());
-        
-        // MyPage4: Illegal String parameter constructor only
-        e = null;
-        try
-        {
-            factory.newPage(MyPage4.class.getName(), page).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage4 should have thrown an exception as it does not have a default or no constructor", e);
-
-        // MyPage5: PageParameter and default constructor 
-        e = null;
-        try
-        {
-            factory.newPage(MyPage5.class.getName(), page).getClass();
-        }
-        catch (RenderException ex)
-        {
-            e = ex;
-        }
-        assertNotNull("MyPage1 should have thrown an exception", e);
-
-        // String: Illegal String parameter constructor only
-        e = null;
-        try
-        {
-            factory.newPage(String.class.getName(), page).getClass();
         }
         catch (RenderException ex)
         {

@@ -302,7 +302,19 @@ public abstract class Component implements Serializable
      */
     public final ApplicationSettings getApplicationSettings()
     {
-        return getSession().getApplication().getSettings();
+        return getApplication().getSettings();
+    }
+    
+    /**
+     * Gets the application pages from the application that this component 
+     * belongs to.
+     * 
+     * @return The application pages
+     * @see ApplicationPages
+     */
+    public final ApplicationPages getApplicationPages()
+    {
+        return getApplication().getPages();
     }
 
     /**
@@ -367,10 +379,10 @@ public abstract class Component implements Serializable
      */
     public final String getModelObjectAsString()
     {
-        IModel mod = getModel();
-        if (mod != null)
+        IModel model = getModel();
+        if (model != null)
         {
-            final Object property = getModel().getObject();
+            final Object property = model.getObject();
             if (property != null)
             {
                 // Model string from property
@@ -440,10 +452,8 @@ public abstract class Component implements Serializable
      */
     public final Page getPage()
     {
-        // Search for page
-        final Page page = (Page) (this instanceof Page
-                ? this
-                : findParent(Page.class));
+        // Search for nearest Page
+        final Page page = findPage();
 
         // If no Page was found
         if (page == null)
@@ -454,6 +464,14 @@ public abstract class Component implements Serializable
         }
 
         return page;
+    }
+
+    /**
+     * @return The page factory for the session that this component is in
+     */
+    public final IPageFactory getPageFactory()
+    {
+        return getSession().getPageFactory();
     }
 
     /**
@@ -642,19 +660,32 @@ public abstract class Component implements Serializable
      */
     public Session getSession()
     {
-        // Get Session from Page object for this component
-        final Session session = getPage().getSession();
+        // Fetch page if possible
+        final Page page = findPage();
 
-        // Did we find the session?
-        if (session == null)
+        // If this component is attached to a page
+        if (page != null)
         {
-            // This should NEVER happen. But if it does, we'll want a nice error
-            // message.
-            throw new IllegalStateException(
-                    exceptionMessage("Page not attached to session"));
-        }
+            // Get Session from Page object for this component
+            final Session session = page.getSession();
 
-        return session;
+            // Did we find the session?
+            if (session != null)
+            {
+                return session;
+            }
+            else
+            {
+                // This should NEVER happen. But if it does, we'll want a nice
+                // error message.
+                throw new IllegalStateException(
+                        exceptionMessage("Page not attached to session"));
+            }
+        }
+        else
+        {
+            return Session.get();
+        }
     }
 
     /**
@@ -1256,7 +1287,7 @@ public abstract class Component implements Serializable
      * @param tag
      *            The tag to strip
      */
-    private void stripComponentName(final ComponentTag tag)
+    private final void stripComponentName(final ComponentTag tag)
     {
         // Strip component name attribute if desired
         final ApplicationSettings settings = getApplication().getSettings();
@@ -1266,6 +1297,19 @@ public abstract class Component implements Serializable
             tag.mutable().removeComponentName(
                     settings.getComponentNameAttribute());
         }
+    }
+
+    /**
+     * If this Component is a Page, returns self. Otherwise, searches for the
+     * nearest Page parent in the component hierarchy. If no Page parent can be
+     * found, null is returned
+     * 
+     * @return The Page or null if none can be found
+     */
+    private final Page findPage()
+    {
+        // Search for page
+        return (Page) (this instanceof Page ? this : findParent(Page.class));
     }
 
     /**

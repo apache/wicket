@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket;
 
@@ -29,32 +28,33 @@ import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.string.Strings;
 
 /**
- * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT INTENDED TO
- * BE SUBCLASSED BY FRAMEWORK CLIENTS.
+ * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
+ * INTENDED TO BE SUBCLASSED BY FRAMEWORK CLIENTS.
  * <p>
- * Holds information about a user session, including some fixed number of most recent
- * pages (and all their nested component information).
+ * Holds information about a user session, including some fixed number of most
+ * recent pages (and all their nested component information).
  * <p>
- * The Session for a RequestCycle can be retrieved by calling RequestCycle.getSession().
- * If a RequestCycle object is not available, the Session can be retrieved for a Component
- * by calling Component.getSession().
+ * The Session for a RequestCycle can be retrieved by calling
+ * RequestCycle.getSession(). If a RequestCycle object is not available, the
+ * Session can be retrieved for a Component by calling Component.getSession().
  * <p>
- * As currently implemented, each Component does not itself have a reference to the
- * session that contains it. However, the Page component at the root of the containment
- * hierarchy does have a reference to the Session that holds the page. So
- * Component.getSession() traverses the component hierarchy to the root Page and then
- * calls Page.getSession().
+ * As currently implemented, each Component does not itself have a reference to
+ * the session that contains it. However, the Page component at the root of the
+ * containment hierarchy does have a reference to the Session that holds the
+ * page. So Component.getSession() traverses the component hierarchy to the root
+ * Page and then calls Page.getSession().
  * <p>
- * A session has a locale property to support localization. The locale for a session can
- * be set by calling setLocale(). The locale determines how localized resources are found
- * and loaded. Besides having an appearance based on locale, resources can also have
- * different looks in the same locale (a.k.a. "skins"). The style for a session determines
- * the look which is used within the appopriate locale. The session style ("skin") can be
- * set with the setStyle() method.
+ * A session has a locale property to support localization. The locale for a
+ * session can be set by calling setLocale(). The locale determines how
+ * localized resources are found and loaded. Besides having an appearance based
+ * on locale, resources can also have different looks in the same locale (a.k.a.
+ * "skins"). The style for a session determines the look which is used within
+ * the appopriate locale. The session style ("skin") can be set with the
+ * setStyle() method.
  * <p>
- * Searching for resources occurs in the following order (where sourcePath is set via the
- * ApplicationSettings object for the current Application, and style and locale are
- * Session properties):
+ * Searching for resources occurs in the following order (where sourcePath is
+ * set via the ApplicationSettings object for the current Application, and style
+ * and locale are Session properties):
  * <p>
  * <ul>
  * 1. [sourcePath]/name[style][locale].[extension] <br>
@@ -67,13 +67,13 @@ import wicket.util.string.Strings;
  * 8. [classPath]/name.[extension] <br>
  * </ul>
  * <p>
- * Arbitrary objects can be attached to a Session via setProperty() and retrieved again
- * via getProperty(). Session properties no longer in use can be removed via
- * removeProperty().
+ * Arbitrary objects can be attached to a Session via setProperty() and
+ * retrieved again via getProperty(). Session properties no longer in use can be
+ * removed via removeProperty().
  * <p>
- * Although public, the expireNewerThan and getFreshestPage methods are intended for
- * internal use only and may not be supported in the future. Framework clients should not
- * call these methods.
+ * Although public, the expireNewerThan and getFreshestPage methods are intended
+ * for internal use only and may not be supported in the future. Framework
+ * clients should not call these methods.
  * 
  * @author Jonathan Locke
  */
@@ -84,10 +84,13 @@ public abstract class Session implements Serializable
 
     /** Application that this is a session of. */
     private transient IApplication application;
-    
+
     /** Factory for constructing Pages for this Session */
     private IPageFactory pageFactory;
-    
+
+    /** Resolver for finding classes for this Session */
+    private IClassResolver classResolver;
+
     /** Active request cycle */
     private transient RequestCycle cycle;
 
@@ -114,21 +117,26 @@ public abstract class Session implements Serializable
 
     /**
      * Interface called when visiting session pages.
+     * 
      * @author Jonathan Locke
      */
     static interface IPageVisitor
     {
         /**
          * Visit method.
-         * @param page the page
+         * 
+         * @param page
+         *            the page
          */
         public void page(final Page page);
     }
 
     /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN THE
-     * FUTURE. Sets session for calling thread.
-     * @param session The session
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+     * THE FUTURE. Sets session for calling thread.
+     * 
+     * @param session
+     *            The session
      */
     public static void set(final Session session)
     {
@@ -137,39 +145,47 @@ public abstract class Session implements Serializable
 
     /**
      * Get the session for the calling thread.
+     * 
      * @return Session for calling thread
      */
-    final static Session get()
+    public static Session get()
     {
-        return (Session)current.get();
+        return (Session) current.get();
     }
 
     /**
      * Constructor.
-     * @param application The application that this is a session of
+     * 
+     * @param application
+     *            The application that this is a session of
      */
     protected Session(final IApplication application)
     {
         this.application = application;
-        this.pages = MostRecentlyUsedMap
-                .newInstance(application.getSettings().getMaxSessionPages());
+        setPageFactory(application.getSettings().getDefaultPageFactory());
+        setClassResolver(application.getSettings().getDefaultClassResolver());
+        this.pages = MostRecentlyUsedMap.newInstance(application.getSettings()
+                .getMaxSessionPages());
     }
 
     /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN THE
-     * FUTURE. Expires any pages in the session page map that are newer than the given
-     * page. It is called by implementors of RequestCycle to expire pages from the session
-     * page map which are no longer accessible in the user's browser by using the back
-     * button.
-     * @param page The page
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+     * THE FUTURE. Expires any pages in the session page map that are newer than
+     * the given page. It is called by implementors of RequestCycle to expire
+     * pages from the session page map which are no longer accessible in the
+     * user's browser by using the back button.
+     * 
+     * @param page
+     *            The page
      */
     public final void expireNewerThan(final Page page)
     {
         // Loop through pages in page map
-        for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+        for (final Iterator iterator = pages.values().iterator(); iterator
+                .hasNext();)
         {
             // Get next page
-            final Page current = (Page)iterator.next();
+            final Page current = (Page) iterator.next();
 
             // If the page has a higher id than the given page
             if (current.getId() > page.getId())
@@ -182,6 +198,7 @@ public abstract class Session implements Serializable
 
     /**
      * Get the application that is currently working with this session.
+     * 
      * @return Returns the application.
      */
     public final IApplication getApplication()
@@ -190,9 +207,17 @@ public abstract class Session implements Serializable
     }
 
     /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
-     * SUPPORTED IN THE FUTURE.
-     * Get the freshest page in the session.
+     * @return The class resolver for this Session
+     */
+    public IClassResolver getClassResolver()
+    {
+        return classResolver;
+    }
+
+    /**
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+     * THE FUTURE. Get the freshest page in the session.
+     * 
      * @return The freshest page in the session
      */
     public final Page getFreshestPage()
@@ -201,10 +226,11 @@ public abstract class Session implements Serializable
         Page freshest = null;
 
         // Loop through session pages
-        for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+        for (final Iterator iterator = pages.values().iterator(); iterator
+                .hasNext();)
         {
             // Get next page
-            final Page current = (Page)iterator.next();
+            final Page current = (Page) iterator.next();
 
             // If the page isn't stale
             if (!current.isStale())
@@ -224,6 +250,7 @@ public abstract class Session implements Serializable
 
     /**
      * Get this session's locale.
+     * 
      * @return This session's locale
      */
     public final Locale getLocale()
@@ -233,18 +260,31 @@ public abstract class Session implements Serializable
 
     /**
      * Get the page for the given path.
-     * @param path Component path
+     * 
+     * @param path
+     *            Component path
      * @return The page based on the first path component (the page id)
      */
     public final Page getPage(final String path)
     {
         // Retrieve the page for the first path component from this session
-        return getPage(Integer.parseInt(Strings.firstPathComponent(path, componentPathSeparator)));
+        return getPage(Integer.parseInt(Strings.firstPathComponent(path,
+                componentPathSeparator)));
+    }
+
+    /**
+     * @return The page factory for this session
+     */
+    public IPageFactory getPageFactory()
+    {
+        return pageFactory;
     }
 
     /**
      * Get the page property with the given key.
-     * @param key The key
+     * 
+     * @param key
+     *            The key
      * @return The value for the key
      */
     public final Object getProperty(final String key)
@@ -256,10 +296,11 @@ public abstract class Session implements Serializable
 
         return null;
     }
-    
+
     /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
-     * SUPPORTED IN THE FUTURE.
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+     * THE FUTURE.
+     * 
      * @return The currently active request cycle for this session
      */
     public final RequestCycle getRequestCycle()
@@ -269,6 +310,7 @@ public abstract class Session implements Serializable
 
     /**
      * Get the style.
+     * 
      * @return Returns the style.
      */
     public final String getStyle()
@@ -283,7 +325,9 @@ public abstract class Session implements Serializable
 
     /**
      * Removes a property on this session by key.
-     * @param key The key
+     * 
+     * @param key
+     *            The key
      */
     public final void removeProperty(final String key)
     {
@@ -294,17 +338,21 @@ public abstract class Session implements Serializable
     }
 
     /**
-     * Set the application that is currently working with this session.
-     * @param application The current application
+     * Set class resolver for this session
+     * 
+     * @param classResolver
+     *            The class resolver
      */
-    public final void setApplication(final IApplication application)
+    public void setClassResolver(final IClassResolver classResolver)
     {
-        this.application = application;
+        this.classResolver = classResolver;
     }
 
     /**
      * Set the locale.
-     * @param locale New locale
+     * 
+     * @param locale
+     *            New locale
      */
     public final void setLocale(final Locale locale)
     {
@@ -312,9 +360,23 @@ public abstract class Session implements Serializable
     }
 
     /**
+     * Set page factory for this session
+     * 
+     * @param pageFactory
+     *            The page factory
+     */
+    public void setPageFactory(final IPageFactory pageFactory)
+    {
+        this.pageFactory = pageFactory;
+    }
+
+    /**
      * Sets a property on this session.
-     * @param key The key
-     * @param value The value
+     * 
+     * @param key
+     *            The key
+     * @param value
+     *            The value
      */
     public final void setProperty(final String key, final Object value)
     {
@@ -325,12 +387,13 @@ public abstract class Session implements Serializable
 
         properties.put(key, value);
     }
-        
+
     /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
-     * SUPPORTED IN THE FUTURE.
-     * Sets the currently active request cycle for this session. 
-     * @param cycle The request cycle
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+     * THE FUTURE. Sets the currently active request cycle for this session.
+     * 
+     * @param cycle
+     *            The request cycle
      */
     public final void setRequestCycle(final RequestCycle cycle)
     {
@@ -339,7 +402,9 @@ public abstract class Session implements Serializable
 
     /**
      * Set the style.
-     * @param style The style to set.
+     * 
+     * @param style
+     *            The style to set.
      */
     public final void setStyle(final String style)
     {
@@ -348,7 +413,9 @@ public abstract class Session implements Serializable
 
     /**
      * Adds page to session if not already added.
-     * @param page Page to add to this session
+     * 
+     * @param page
+     *            Page to add to this session
      */
     final void addPage(final Page page)
     {
@@ -362,6 +429,7 @@ public abstract class Session implements Serializable
 
     /**
      * Get the interceptContinuationURL.
+     * 
      * @return Returns the interceptContinuationURL.
      */
     final String getInterceptContinuationURL()
@@ -371,17 +439,21 @@ public abstract class Session implements Serializable
 
     /**
      * Get the page with the given id.
-     * @param id Page id
+     * 
+     * @param id
+     *            Page id
      * @return Page with the given id
      */
     final Page getPage(final int id)
     {
-        return (Page)pages.get(new Integer(id));
+        return (Page) pages.get(new Integer(id));
     }
 
     /**
      * Set the interceptContinuationURL.
-     * @param interceptContinuationURL The interceptContinuationURL to set.
+     * 
+     * @param interceptContinuationURL
+     *            The interceptContinuationURL to set.
      */
     final void setInterceptContinuationURL(final String interceptContinuationURL)
     {
@@ -390,15 +462,18 @@ public abstract class Session implements Serializable
 
     /**
      * Visits the pages in this session.
-     * @param visitor The visitor to call
+     * 
+     * @param visitor
+     *            The visitor to call
      */
     final void visitPages(final IPageVisitor visitor)
     {
         // Loop through pages in page map
-        for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+        for (final Iterator iterator = pages.values().iterator(); iterator
+                .hasNext();)
         {
             // Visit next page
-            visitor.page((Page)iterator.next());
+            visitor.page((Page) iterator.next());
         }
     }
 }

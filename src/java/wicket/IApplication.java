@@ -38,9 +38,14 @@ public interface IApplication
 
     /**
      * Gets settings for this application.
-     * @return The applications settings.
+     * @return The applications settings
      */
     public ApplicationSettings getSettings();
+    
+    /**
+     * Gets special pages for this application
+     * @return The pages
+     */
+    public ApplicationPages getPages();
 }
-
 

@@ -20,6 +20,7 @@ package wicket.resource;
 
 import java.util.Locale;
 
+import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.IApplication;
 import wicket.resource.ApplicationStringResourceLoader;
@@ -67,7 +68,13 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 			{
 				return settings;
 			}
+            
+            public ApplicationPages getPages()
+            {
+                return pages;
+            }
 
+            private ApplicationPages pages = new ApplicationPages();
 			private ApplicationSettings settings = new ApplicationSettings(this);
 		};
 
