@@ -45,6 +45,11 @@ public class CookieTest extends TestCase
     private MockHttpApplication application;
     private SignInPanel panel;
     private Form form;
+    private Cookie cookieUsername;
+    private Cookie cookiePassword;
+    private Cookie[] cookies;
+    private HtmlPage page;
+    private HttpRequestCycle cycle;
     
     /**
      * Create the test case.
@@ -66,31 +71,35 @@ public class CookieTest extends TestCase
 
         this.panel = new SignInPanel("panel")
 		{
-            protected String signIn(final RequestCycle cycle, final String username, final String password)
+            public String signIn(final RequestCycle cycle, final String username, final String password)
             {
             	return null;
             }
 		};
         
+		this.panel.setPersistent(true);
 		this.form = (Form)panel.get("signInForm");
-    }
-    
-    public void testSetCookieOnForm() throws IOException, ServletException
-    {
-    	// initialize 
-        final Cookie cookieUsername = new Cookie("signInForm.username", "juergen");
-        final Cookie cookiePassword = new Cookie("signInForm.password", "test");
-        final Cookie[] cookies = new Cookie[] {cookieUsername, cookiePassword};
+
+        final String encryptedPassword = "test"; // application.getSettings().getCryptInstance().encryptStringToString("test");
+        this.cookieUsername = new Cookie("panel.signInForm.username", "juergen");
+        this.cookiePassword = new Cookie("panel.signInForm.password", encryptedPassword);
+        this.cookies = new Cookie[] {cookieUsername, cookiePassword};
         
         application.getServletRequest().setCookies(cookies);
 
-        HttpRequestCycle cycle = new HttpRequestCycle(
+        cycle = new HttpRequestCycle(
         		application, 
 				application.getWicketSession(),
 				application.getWicketRequest(),
 				application.getWicketResponse());
         
-        // test
+        this.page = new MockPage(null);
+		page.add(this.panel);
+    }
+    
+    public void testSetCookieOnForm() throws IOException, ServletException
+    {
+    	// initialize 
 		this.form.setFormComponentValuesFromPersister(cycle);
 		
 		// validate
@@ -98,24 +107,12 @@ public class CookieTest extends TestCase
         FormComponent password = (FormComponent)panel.get("signInForm.password");
         
         Assert.assertEquals(cookieUsername.getValue(), username.getModelObjectAsString());
-        Assert.assertEquals(cookiePassword.getValue(), password.getModelObjectAsString());
+        Assert.assertEquals("test", password.getModelObjectAsString());
     }
     
     public void testSetCookieOnPage() throws IOException, ServletException
     {
-    	// initialize
-        final Cookie cookieUsername = new Cookie("panel.signInForm.username", "juergen");
-        final Cookie cookiePassword = new Cookie("panel.signInForm.password", "test");
-        final Cookie[] cookies = new Cookie[] {cookieUsername, cookiePassword};
-        
-        application.getServletRequest().setCookies(cookies);
-        
-        HtmlPage page = new MockPage(null);
-		page.add(this.panel);
-
 		application.getServletRequest().setRequestToComponent(this.form);
-        
-		// test
         application.processRequestCycle();
         
         // validate
@@ -123,53 +120,28 @@ public class CookieTest extends TestCase
         FormComponent password = (FormComponent)panel.get("signInForm.password");
         
         Assert.assertEquals(cookieUsername.getValue(), username.getModelObjectAsString());
-        Assert.assertEquals(cookiePassword.getValue(), password.getModelObjectAsString());
+        Assert.assertEquals("test", password.getModelObjectAsString());
     }
     
     public void testPersistCookieWithPersistenceDisabled() throws IOException, ServletException
     {
-    	// initialize 
-        HtmlPage page = new MockPage(null);
-		page.add(this.panel);
-		
-        HttpRequestCycle cycle = new HttpRequestCycle(
-        		application, 
-				application.getWicketSession(),
-				application.getWicketRequest(),
-				application.getWicketResponse());
-        
-        FormComponent username = (FormComponent)panel.get("signInForm.username");
-        FormComponent password = (FormComponent)panel.get("signInForm.password");
-        
-        //username.setPersistent(true);
-        //password.setPersistent(true);
-        
         // test
         // will call persistFromComponentData(), which is private
+		this.panel.setPersistent(false);
 		this.form.formSubmitted(cycle);
 		
 		// validate
         Collection cookies = application.getServletResponse().getCookies();
-        Assert.assertEquals(cookies.size(), 0);
+        Iterator iter = cookies.iterator();
+        while (iter.hasNext())
+        {
+            Assert.assertEquals(0, ((Cookie)iter.next()).getMaxAge());
+        }
     }
     
     public void testPersistCookie() throws IOException, ServletException
     {
-    	// initialize 
-        HtmlPage page = new MockPage(null);
-		page.add(this.panel);
-		
-        HttpRequestCycle cycle = new HttpRequestCycle(
-        		application, 
-				application.getWicketSession(),
-				application.getWicketRequest(),
-				application.getWicketResponse());
-        
-        FormComponent username = (FormComponent)panel.get("signInForm.username");
-        FormComponent password = (FormComponent)panel.get("signInForm.password");
-        
-        username.setPersistent(true);
-        password.setPersistent(true);
+        panel.setPersistent(true);
         
         // test
         // will call persistFromComponentData(), which is private
@@ -177,40 +149,31 @@ public class CookieTest extends TestCase
 		
 		// validate
         Collection cookies = application.getServletResponse().getCookies();
-        Assert.assertEquals(cookies.size(), 2);
+        Assert.assertEquals(2, cookies.size());
         Iterator iter = cookies.iterator();
         while (iter.hasNext()) 
         {
         	Cookie cookie = (Cookie)iter.next();
         	Assert.assertNotNull(page.get(cookie.getName()));
-        	Assert.assertEquals(cookie.getValue(), page.get(cookie.getName()).getModelObjectAsString());
+        	// Skip "deleted" cookies
+        	if (page.get(cookie.getName()).getModelObjectAsString() != "")
+        	{
+        	    Assert.assertEquals(cookie.getValue(), page.get(cookie.getName()).getModelObjectAsString());
+        	}
         }
     }
     
     public void testRemoveFromPage() throws IOException, ServletException
     {
-    	// initialize 
-        HtmlPage page = new MockPage(null);
-		page.add(this.panel);
-		
-        HttpRequestCycle cycle = new HttpRequestCycle(
-        		application, 
-				application.getWicketSession(),
-				application.getWicketRequest(),
-				application.getWicketResponse());
-        
-        FormComponent username = (FormComponent)panel.get("signInForm.username");
-        FormComponent password = (FormComponent)panel.get("signInForm.password");
-        
-        username.setPersistent(true);
-        password.setPersistent(true);
+        panel.setPersistent(true);
         
         // test
 		page.removePersistedFormData(cycle, SignInPanel.SignInForm.class, true);
 		
 		// validate
         Collection cookieCollection = application.getServletResponse().getCookies();
-        Assert.assertEquals(0, cookieCollection.size());
+        // Cookies are remove by setting maxAge == 0
+        Assert.assertEquals(2, cookieCollection.size());
 
         // initialize
         final Cookie cookieUsername = new Cookie("panel.signInForm.username", "juergen");
@@ -224,7 +187,7 @@ public class CookieTest extends TestCase
 		
 		// validate
         cookieCollection = application.getServletResponse().getCookies();
-        Assert.assertEquals(2, cookieCollection.size());
+        Assert.assertEquals(4, cookieCollection.size());
         Iterator iter = cookieCollection.iterator();
         while (iter.hasNext()) 
         {
