@@ -72,7 +72,7 @@ import wicket.util.watch.ModificationWatcher;
  * The type of markup held in a given container subclass can be determined by
  * calling getMarkupType(). Markup is accessed via a MarkupStream object which
  * allows a component to traverse ComponentTag and RawMarkup MarkupElements
- * while rendering a response. Markup in the stream may be HTML or some
+ * while rendering a wicket.response. Markup in the stream may be HTML or some
  * other kind of markup, such as VXML, as determined by the specific container
  * subclass.
  * <p>
@@ -423,7 +423,7 @@ public abstract class Container extends Component
 	 * Renders this component.
 	 * 
 	 * @param cycle
-	 *           The response to write to
+	 *           The wicket.response to write to
 	 */
 	protected void handleRender(final RequestCycle cycle)
 	{
@@ -489,7 +489,7 @@ public abstract class Container extends Component
 	 * Renders markup until the closing tag for openTag is reached.
 	 * 
 	 * @param cycle
-	 *           The response to write to
+	 *           The wicket.response to write to
 	 * @param markupStream
 	 *           The markup stream
 	 * @param openTag
@@ -655,7 +655,7 @@ public abstract class Container extends Component
 	 * stream.
 	 * 
 	 * @param cycle
-	 *           The response to write to
+	 *           The wicket.response to write to
 	 * @param markupStream
 	 *           The markup stream
 	 */
@@ -796,7 +796,7 @@ public abstract class Container extends Component
 	 * Renders the next element of markup in the given markup stream.
 	 * 
 	 * @param cycle
-	 *           The response to write to
+	 *           The wicket.response to write to
 	 * @param markupStream
 	 *           The markup stream
 	 */
