@@ -32,6 +32,15 @@
       </properties>
     </dependency>
     <dependency>
+        <groupId>wicket</groupId>
+        <artifactId>wicket-contrib</artifactId>
+        <version>SNAPSHOT</version>
+        <properties>
+        	<eclipse.dependency>true</eclipse.dependency>
+            <war.bundle>true</war.bundle>
+        </properties>
+    </dependency>
+    <dependency>
       <groupId>hibernate</groupId>
       <artifactId>hibernate</artifactId>
       <version>2.1.6</version>
@@ -229,7 +238,10 @@
       <groupId>groovy</groupId>
       <artifactId>groovy</artifactId>
       <version>1.0-beta-7</version>
-      <!-- don't use 1.0-beta-8. It is uses an incompatible asm version. Incompatible with hibernate -->
+      <!--
+      	don't use 1.0-beta-8 or 9. It is uses an incompatible asm version.
+      	Incompatible with cglib that is used by Hibernate
+      -->
 
       <jar>groovy-1.0-beta-7.jar</jar>
       <type>jar</type>
