@@ -23,6 +23,7 @@ import java.util.Map;
 import wicket.markup.MarkupElement;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.string.StringValue;
+import wicket.util.string.Strings;
 import wicket.util.value.LowerCaseKeyValueMap;
 
 /**
@@ -542,7 +543,7 @@ public class XmlTag extends MarkupElement
 					if(value != null) // attributes without values are possible, e.g. 'disabled'
 					{
 						buffer.append("=\"");
-						value = value.replaceAll("\"", "\\\"");
+						value = Strings.replaceAll(value,"\"", "\\\"");
 						buffer.append(value);
 						buffer.append("\"");
 					}

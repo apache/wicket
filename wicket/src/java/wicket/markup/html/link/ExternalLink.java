@@ -20,6 +20,7 @@ package wicket.markup.html.link;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.util.string.Strings;
 
 /**
  * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL. 
@@ -77,7 +78,7 @@ public class ExternalLink extends WebMarkupContainer
 	{
 		if (href != null)
 		{
-			tag.put("href", href.replaceAll("&", "&amp;"));
+			tag.put("href", Strings.replaceAll(href,"&", "&amp;"));
 		}
 	}
 

@@ -24,6 +24,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
+import wicket.util.string.Strings;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor
@@ -348,7 +349,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			if (tag.getName().equalsIgnoreCase("a"))
 			{
 				// generate the href attribute
-				tag.put("href", url.replaceAll("&", "&amp;"));
+				tag.put("href", Strings.replaceAll(url,"&", "&amp;"));
 
 				// Add any popup script
 				if (popupSettings != null)
