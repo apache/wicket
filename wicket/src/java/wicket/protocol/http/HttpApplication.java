@@ -48,11 +48,13 @@ import wicket.util.lang.Classes;
  * 
  * <pre>
  * 
- *   public void init() throws ServletException
- *   {
- *     ServletConfig config = getServletConfig();
- *     String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *     ...
+ *  
+ *    public void init() throws ServletException
+ *    {
+ *      ServletConfig config = getServletConfig();
+ *      String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *      ...
+ *   
  *  
  * </pre>
  * 

@@ -53,6 +53,7 @@ import wicket.protocol.http.HttpApplication;
  * @author Jonathan Locke
  * @author Chris Turner
  * @see ApplicationSettings
+ * @see ApplicationPages
  */
 public class WebApplication extends HttpApplication
 {
@@ -66,21 +67,12 @@ public class WebApplication extends HttpApplication
     private final ApplicationPages pages;
 
     /**
-     * Trivial default web application.
-     */
-    public static final WebApplication DEFAULT = new WebApplication()
-    {
-        /** Serial Version ID. */
-        private static final long serialVersionUID = 4094024481329675018L;
-    };
-
-    /**
      * Constructor.
      */
     public WebApplication()
     {
-        settings = new ApplicationSettings(this);
-        pages = new ApplicationPages();
+        this.settings = new ApplicationSettings(this);
+        this.pages = new ApplicationPages();
 
         // Set default error pages for HTML markup
         pages.setPageExpiredErrorPage(PageExpiredErrorPage.class)
