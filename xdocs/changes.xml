@@ -9,8 +9,8 @@
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">
-      Enhanced WicketComponentTree and added this diagnostic to the bottom of the 
-      ExceptionErrorPage.
+        Enhanced WicketComponentTree and added this diagnostic to the bottom of the 
+        ExceptionErrorPage.
       </action>
       <action type="update" dev="Jonathan Locke" issue="">
 		Reorganized components and examples for final 1.0 structure.  This included moving
@@ -197,7 +197,7 @@
       </action>
       <action type="fix" dev="Jonathan Locke" issue="1116800">
 		Added Page.reset() method that is called when runtime exceptions prevent full 
-		rendering of pages.  I highly suspect this is behind bug 1116800 where eelco 
+		rendering of pages.  I highly suspect this is behind bug 1116800 where Eelco 
 		reported that "Exception when rendering leaves markup in invalid state".
       </action>
       <action type="fix" dev="Jonathan Locke" issue="1116805">
