@@ -14,6 +14,11 @@
 	display: block;
 }
 
+.treerow-selected {
+	display: block;
+	background-color: #E7E7FF;
+}
+
 #spacers {
 	padding-left: 16px;
 }
