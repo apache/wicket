@@ -107,6 +107,12 @@
     </servlet>
 
     <servlet>
+        <servlet-name>HelloMozillaApplication</servlet-name>
+        <servlet-class>wicket.examples.hellomozilla.HelloMozillaApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
         <servlet-name>SpringApplication</servlet-name>
         <!-- DO NOT USE YOUR WICKET APPLICATION. USE SPRING'S DISPATCHER SERVLET -->
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -198,6 +204,11 @@
     <servlet-mapping>
         <servlet-name>EncodingsApplication</servlet-name>
         <url-pattern>/encodings</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>HelloMozillaApplication</servlet-name>
+        <url-pattern>/hellomozilla</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
