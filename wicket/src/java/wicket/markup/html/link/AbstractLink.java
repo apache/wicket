@@ -31,7 +31,7 @@ import wicket.markup.html.HtmlContainer;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-abstract class AbstractLink extends HtmlContainer implements ILinkListener
+public abstract class AbstractLink extends HtmlContainer implements ILinkListener
 {
     static
     {
