@@ -56,7 +56,7 @@ public class Signin2Test extends WebTestCase
         
         this.setFormElement("1.signInPanel.signInForm.username", "jonathan");
         this.setFormElement("1.signInPanel.signInForm.password", "password");
-        this.checkCheckbox("1.signInPanel.signInForm.rememberMe");
+        this.checkCheckbox("1.signInPanel.signInForm.rememberMeRow.rememberMe");
         this.submit("submit");
         
         //this.dumpResponse(System.err);
@@ -71,7 +71,7 @@ public class Signin2Test extends WebTestCase
         //this.dumpCookies(System.err);
         //this.assertCookiePresent("signInPanel.signInForm.username");
         //this.assertCookiePresent("signInPanel.signInForm.password");
-        this.clickLinkWithText("Logout");
+        this.clickLinkWithText("Sign Out");
         
         assertTitleEquals("Wicket Examples - signin2");
         this.clickLinkWithText("Home");
