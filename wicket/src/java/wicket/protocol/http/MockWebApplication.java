@@ -221,6 +221,21 @@ public class MockWebApplication extends WebApplication
         WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest,
                 wicketResponse);
         cycle.request();
+        
+        // handle redirects which are usually managed by the browser transparently
+        final MockHttpServletResponse httpResponse = 
+            	(MockHttpServletResponse)cycle.getWebResponse().getHttpServletResponse();
+        
+        if (httpResponse.isRedirect())
+        {
+            lastRenderedPage = cycle.getResponsePage();
+            
+            final MockHttpServletRequest httpRequest = 
+                	(MockHttpServletRequest)cycle.getWebRequest().getHttpServletRequest();
+            
+            httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
+            cycle.request();
+        }
         lastRenderedPage = cycle.getResponsePage();
     }
 
