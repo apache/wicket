@@ -18,8 +18,6 @@
  */
 package wicket.markup.html.form.validation;
 
-
-import java.io.Serializable;
 import java.util.regex.Pattern;
 
 import wicket.markup.html.form.FormComponent;
@@ -27,6 +25,7 @@ import wicket.util.parse.metapattern.MetaPattern;
 
 /**
  * Validates component with Java regexp.
+ *
  * @author Jonathan Locke
  */
 public final class PatternValidator extends AbstractValidator
@@ -78,7 +77,7 @@ public final class PatternValidator extends AbstractValidator
      * @return Error for component or NO_ERROR if none
      */
     public ValidationErrorMessage validate(
-            final Serializable input, final FormComponent component)
+            final String input, final FormComponent component)
     {
         final String value = (String)input;
 

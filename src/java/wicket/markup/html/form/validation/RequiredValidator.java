@@ -18,13 +18,12 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
-
 import wicket.markup.html.form.FormComponent;
+
 
 /**
  * Validator that ensures a component has a non-null and non-empty value.
- * 
+ *
  * @author Jonathan Locke
  */
 public final class RequiredValidator extends AbstractValidator
@@ -36,11 +35,11 @@ public final class RequiredValidator extends AbstractValidator
      * @return Error for component or NO_ERROR if none
      */
     public ValidationErrorMessage validate(
-            final Serializable input, final FormComponent component)
+            final String input, final FormComponent component)
     {
         final String value = (String)input;
 
-        if (value == null || value.trim().equals(""))
+        if ((value == null) || value.trim().equals(""))
         {
             return errorMessage(input, component);
         }
@@ -57,5 +56,3 @@ public final class RequiredValidator extends AbstractValidator
         return "[required]";
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

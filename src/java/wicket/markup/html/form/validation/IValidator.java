@@ -22,14 +22,13 @@ import java.io.Serializable;
 
 import wicket.markup.html.form.FormComponent;
 
-
 /**
  * Interface to code that validates form components.
  *
  * @author Jonathan Locke
  */
 public interface IValidator extends Serializable
-{ // TODO finalize javadoc
+{
     /**
      * Special value to indicate no validation error/ message.
      */
@@ -48,7 +47,7 @@ public interface IValidator extends Serializable
      * @return the validation message or NO_ERROR
      */
     public ValidationErrorMessage validate(
-            final Serializable input, final FormComponent component);
+            final String input, final FormComponent component);
 
     /**
      * Validator that does nothing.
@@ -57,15 +56,16 @@ public interface IValidator extends Serializable
     {
         /**
          * Returns null.
-         * @see wicket.markup.html.form.validation.IValidator#validate(java.io.Serializable, wicket.markup.html.form.FormComponent)
+         * @see wicket.markup.html.form.validation.IValidator#validate(java.lang.String, wicket.markup.html.form.FormComponent)
          */
         public ValidationErrorMessage validate(
-                final Serializable input, final FormComponent component)
+                final String input, final FormComponent component)
         {
             return null;
         }
 
         /**
+         * Returns the string representation.
          * @see java.lang.Object#toString()
          */
         public String toString()
@@ -74,5 +74,3 @@ public interface IValidator extends Serializable
         }
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

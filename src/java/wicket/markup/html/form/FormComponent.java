@@ -172,21 +172,10 @@ public abstract class FormComponent extends HtmlContainer
     public final ValidationErrorMessage validate()
     {
         // Perform validation
-        final ValidationErrorMessage message = validator.validate(getInput(), this);
+    	String input = getRequestString(RequestCycle.get());
+        final ValidationErrorMessage message = validator.validate(input, this);
         // Return message
         return message;
-    }
-
-    /**
-     * Gets the input for this form component from the request.
-     * Override this method for any other behaviour than just getting the string
-     * from the request for this component.
-     * @return the request input for this component. This implementation returns
-     * a string. Override this method if you need anything else.
-     */
-    public Serializable getInput()
-    {
-        return getRequestString(RequestCycle.get());
     }
 
     /**
@@ -306,7 +295,7 @@ public abstract class FormComponent extends HtmlContainer
          * @return The error returned by the first validator in the list which reported an
          *         error or null if no validator reported an error
          */
-        public ValidationErrorMessage validate(final Serializable input, final FormComponent component)
+        public ValidationErrorMessage validate(final String input, final FormComponent component)
         {
             final ValidationErrorMessage message = left.validate(input, component);
 
