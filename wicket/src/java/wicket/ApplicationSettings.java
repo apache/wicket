@@ -133,7 +133,8 @@ import wicket.util.watch.ModificationWatcher;
  * @author Eelco Hillenius
  */
 public class ApplicationSettings
-{ // TODO finalize javadoc
+{
+    // TODO finalize javadoc
     /** Log */
     private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
@@ -161,6 +162,12 @@ public class ApplicationSettings
     /** Default markup for before a disabled link */
     private String defaultBeforeDisabledLink = "<i>";
 
+    /** Default class resolver to find classes */
+    private IClassResolver defaultClassResolver = new DefaultClassResolver();
+
+    /** Default factory to create new Page objects */
+    private IPageFactory defaultPageFactory;
+
     /** Encryption key used to encode/decode passwords e.g. */
     private String encryptionKey = "WiCkEt-FRAMEwork";
 
@@ -181,12 +188,6 @@ public class ApplicationSettings
 
     /** True if string resource loaders have been overridden */
     private boolean overriddenStringResourceLoaders = false;
-
-    /** Default factory to create new Page objects */
-    private IPageFactory defaultPageFactory;
-
-    /** Default class resolver to find classes */
-    private IClassResolver defaultClassResolver = new DefaultClassResolver();
 
     /**
      * Whether the {@link wicket.model.PropertyModel}instances apply formatting
@@ -224,6 +225,27 @@ public class ApplicationSettings
     /** Default xhtml wicket tag name: e.g. <wicket> */
     private String wicketTagName = ComponentWicketTag.WICKET_TAG_NAME;
 
+    /**
+     * Indicates that an exception page appropriate to development should be
+     * shown when an unexpected exception is thrown.
+     */
+    public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+            "SHOW_EXCEPTION_PAGE");
+
+    /**
+     * Indicates a generic internal error page should be shown when an
+     * unexpected exception is thrown.
+     */
+    public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
+            "SHOW_INTERNAL_ERROR_PAGE");
+
+    /**
+     * Indicates that no exception page should be shown when an unexpected
+     * exception is thrown.
+     */
+    public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+            "SHOW_NO_EXCEPTION_PAGE");
+    
     /**
      * Enumerated type for different ways of displaying unexpected exceptions.
      */
@@ -372,16 +394,6 @@ public class ApplicationSettings
     }
 
     /**
-     * Gets the default factory to be used when creating pages
-     * 
-     * @return The default page factory
-     */
-    public IPageFactory getDefaultPageFactory()
-    {
-        return defaultPageFactory;
-    }
-
-    /**
      * Gets the default resolver to use when finding classes
      * 
      * @return Default class resolver
@@ -389,6 +401,16 @@ public class ApplicationSettings
     public IClassResolver getDefaultClassResolver()
     {
         return defaultClassResolver;
+    }
+
+    /**
+     * Gets the default factory to be used when creating pages
+     * 
+     * @return The default page factory
+     */
+    public IPageFactory getDefaultPageFactory()
+    {
+        return defaultPageFactory;
     }
 
     /**
@@ -647,20 +669,6 @@ public class ApplicationSettings
     }
 
     /**
-     * Sets the default factory to be used when creating pages.
-     * 
-     * @param defaultPageFactory
-     *            The default factory
-     * @return This
-     */
-    public ApplicationSettings setDefaultPageFactory(
-            final IPageFactory defaultPageFactory)
-    {
-        this.defaultPageFactory = defaultPageFactory;
-        return this;
-    }
-
-    /**
      * Sets the default class resolver to use when finding classes.
      * 
      * @param defaultClassResolver
@@ -671,6 +679,20 @@ public class ApplicationSettings
             final IClassResolver defaultClassResolver)
     {
         this.defaultClassResolver = defaultClassResolver;
+        return this;
+    }
+
+    /**
+     * Sets the default factory to be used when creating pages.
+     * 
+     * @param defaultPageFactory
+     *            The default factory
+     * @return This
+     */
+    public ApplicationSettings setDefaultPageFactory(
+            final IPageFactory defaultPageFactory)
+    {
+        this.defaultPageFactory = defaultPageFactory;
         return this;
     }
 
@@ -745,19 +767,6 @@ public class ApplicationSettings
     }
 
     /**
-     * Sets whether to remove wicket tags from the output.
-     * 
-     * @param stripWicketTags
-     *            whether to remove wicket tags from the output
-     * @return This
-     */
-    public final ApplicationSettings setStripWicketTags(boolean stripWicketTags)
-    {
-        this.stripWicketTags = stripWicketTags;
-        return this;
-    }
-
-    /**
      * Sets the resource polling frequency. This is the duration of time between
      * checks of resource modification times. If a resource, such as an HTML
      * file, has changed, it will be reloaded. Default is for no resource
@@ -819,6 +828,19 @@ public class ApplicationSettings
             final boolean stripComponentNames)
     {
         this.stripComponentNames = stripComponentNames;
+        return this;
+    }
+
+    /**
+     * Sets whether to remove wicket tags from the output.
+     * 
+     * @param stripWicketTags
+     *            whether to remove wicket tags from the output
+     * @return This
+     */
+    public final ApplicationSettings setStripWicketTags(boolean stripWicketTags)
+    {
+        this.stripWicketTags = stripWicketTags;
         return this;
     }
 
@@ -888,27 +910,6 @@ public class ApplicationSettings
     {
         return Collections.unmodifiableList(stringResourceLoaders);
     }
-
-    /**
-     * Indicates that an exception page appropriate to development should be
-     * shown when an unexpected exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-            "SHOW_EXCEPTION_PAGE");
-
-    /**
-     * Indicates a generic internal error page should be shown when an
-     * unexpected exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
-            "SHOW_INTERNAL_ERROR_PAGE");
-
-    /**
-     * Indicates that no exception page should be shown when an unexpected
-     * exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-            "SHOW_NO_EXCEPTION_PAGE");
 }
 
 
