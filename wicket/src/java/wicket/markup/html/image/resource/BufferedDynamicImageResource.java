@@ -47,6 +47,14 @@ public class BufferedDynamicImageResource extends DynamicImageResource
 	private Time lastModifiedTime;
 
 	/**
+	 * @see wicket.markup.html.image.resource.DynamicImageResource#lastModifiedTime()
+	 */
+	public Time lastModifiedTime()
+	{
+		return lastModifiedTime;
+	}
+
+	/**
 	 * @param image
 	 *            The image to set
 	 */
@@ -62,13 +70,5 @@ public class BufferedDynamicImageResource extends DynamicImageResource
 	protected byte[] getImageData()
 	{
 		return imageData;
-	}
-
-	/**
-	 * @see wicket.markup.html.image.resource.DynamicImageResource#lastModifiedTime()
-	 */
-	public Time lastModifiedTime()
-	{
-		return lastModifiedTime;
 	}
 }
