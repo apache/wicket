@@ -39,7 +39,7 @@ public class AuthenticatedHtmlPage extends HtmlPage
         boolean signedIn = cycle.getSession().getProperty("wicket.examples.signin2.user") != null;
         if (!signedIn)
         {
-            cycle.redirectToInterceptPage(SignIn2.class);
+            cycle.redirectToInterceptPage(new SignIn2(null));
         }
         return signedIn;
     }

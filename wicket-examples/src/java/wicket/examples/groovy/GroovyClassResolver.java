@@ -80,46 +80,47 @@ public class GroovyClassResolver implements IClassResolver
      */
     public Class resolveClass(final String classname)
     {
-        final Class pageClass = defaultClassResolver.resolveClass(classname);
-        if (pageClass != null)
+        try
         {
-            return pageClass;
+        	return defaultClassResolver.resolveClass(classname);
+        }
+        catch (WicketRuntimeException ex)
+        {
+            ; // default resolver failed. Try the groovy specific loader next
+        }
+
+        // If definition already loaded, ...
+        Class groovyPageClass = (Class)classCache.get(classname);
+        if (groovyPageClass != null)
+        {
+            return groovyPageClass;
+        }
+
+        // Else, try Groovy.
+        final Resource resource = Resource.locate(classname, ".groovy");
+        if (resource != null)
+        {
+            try
+            {
+                // Load the groovy file, get the Class and watch for changes
+                groovyPageClass = loadGroovyFileAndWatchForChanges(classname, resource);
+                if (groovyPageClass != null)
+                {
+                    return groovyPageClass;
+                }
+            }
+            catch (WicketRuntimeException ex)
+            {
+                throw new WicketRuntimeException(
+                        "Unable to load class with name: " + classname, ex);
+            }
         }
         else
         {
-            // If definition already loaded, ...
-            Class groovyPageClass = (Class)classCache.get(classname);
-            if (groovyPageClass != null)
-            {
-                return groovyPageClass;
-            }
-
-            // Else, try Groovy.
-            final Resource resource = Resource.locate(classname, ".groovy");
-            if (resource != null)
-            {
-                try
-                {
-                    // Load the groovy file, get the Class and watch for changes
-                    groovyPageClass = loadGroovyFileAndWatchForChanges(classname, resource);
-                    if (groovyPageClass != null)
-                    {
-                        return groovyPageClass;
-                    }
-                }
-                catch (WicketRuntimeException ex)
-                {
-                    throw new WicketRuntimeException(
-                            "Unable to load class with name: " + classname, ex);
-                }
-            }
-            else
-            {
-                throw new WicketRuntimeException("File not found: " + resource);
-            }
-
-            throw new WicketRuntimeException("Unable to load class with name: " + classname);
+            throw new WicketRuntimeException("File not found: " + resource);
         }
+
+        throw new WicketRuntimeException("Unable to load class with name: " + classname);
     }
 
     /**

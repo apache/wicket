@@ -111,7 +111,12 @@ public class SpringApplication extends HttpApplication implements InitializingBe
         {
             setSettings(new ApplicationSettings(this));
         }
-        
+
+        if (getPages() == null)
+        {
+            setPages(new ApplicationPages());
+        }
+
         initSettings();
     }
     
