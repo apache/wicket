@@ -30,7 +30,6 @@ import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
 
 /**
- * 
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
  * INTENDED TO BE SUBCLASSED BY FRAMEWORK CLIENTS.
  * <p>
