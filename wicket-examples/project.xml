@@ -25,7 +25,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>SNAPSHOT</version>
+      <version>0.9.18-beta</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -34,7 +34,7 @@
     <dependency>
         <groupId>wicket</groupId>
         <artifactId>wicket-contrib</artifactId>
-        <version>SNAPSHOT</version>
+        <version>0.9.18-beta</version>
         <properties>
         	<eclipse.dependency>true</eclipse.dependency>
             <war.bundle>true</war.bundle>
@@ -43,7 +43,7 @@
     <dependency>
         <groupId>wicket</groupId>
         <artifactId>wicket-extensions</artifactId>
-        <version>SNAPSHOT</version>
+        <version>0.9.18-beta</version>
         <properties>
         	<eclipse.dependency>true</eclipse.dependency>
             <war.bundle>true</war.bundle>
