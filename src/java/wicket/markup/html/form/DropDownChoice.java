@@ -187,23 +187,19 @@ public class DropDownChoice extends AbstractDropDownChoice
         final String indexOrId = getRequestString();
         Object object = null;
         final List list = getValues();
-        if (list instanceof IIdList)
+        if (indexOrId == null || "".equals(indexOrId))
+        {
+            setModelObject(null);
+        }
+        else if (list instanceof IIdList)
         {
             object = ((IIdList) list).getObjectById(indexOrId);
             setModelObject(object);
         }
         else
         {
-            final int index = Integer.parseInt(indexOrId);
-            if (index == NULL_VALUE)
-            {
-                setModelObject(null);
-            }
-            else
-            {
-                object = list.get(index);
-                setModelObject(object);
-            }
+				object = list.get(Integer.parseInt(indexOrId));
+				setModelObject(object);
         }
         return object;
     }
