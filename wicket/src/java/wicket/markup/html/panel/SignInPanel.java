@@ -19,6 +19,7 @@
 package wicket.markup.html.panel;
 
 import wicket.Page;
+import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
@@ -148,7 +149,7 @@ public abstract class SignInPanel extends Panel
                 {
                     cycle.setPage(
                             getApplicationSettings().getDefaultPageFactory().newPage(
-                                    getApplicationPages().getHomePage()));
+                                    getApplicationPages().getHomePage(), (PageParameters)null));
                 }
             }
             else
