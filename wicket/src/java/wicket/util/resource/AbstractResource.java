@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,13 @@
  */
 package wicket.util.resource;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+
+import wicket.WicketRuntimeException;
+import wicket.util.io.Streams;
+
 /**
  * @see wicket.util.resource.IResource
  * 
@@ -24,4 +31,44 @@ package wicket.util.resource;
  */
 public abstract class AbstractResource implements IResource
 {
+	/** Charset for resource */
+	private Charset charset;
+
+	/**
+	 * Sets the character set used for reading this resource.
+	 * 
+	 * @param charset
+	 *            Charset for component
+	 */
+	public void setCharset(final Charset charset)
+	{
+		this.charset = charset;
+	}
+
+	/**
+	 * @return This resource as a String.
+	 */
+	public String asString()
+	{
+		try
+		{
+			return Streams.readString(new InputStreamReader(getInputStream(), charset));
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Unable to read resource as String", e);
+		}
+		catch (ResourceNotFoundException e)
+		{
+			throw new WicketRuntimeException("Unable to read resource as String", e);
+		}
+	}
+
+	/**
+	 * @return Charset for resource
+	 */
+	protected Charset getCharset()
+	{
+		return charset;
+	}
 }

@@ -36,7 +36,7 @@ class ModelChange extends Change
 		this.component = component;
 		originalModel = (IModel)Objects.clone(component.getModel()); 
 	}
-	
+
 	void undo()
 	{
 		component.setModel(originalModel);

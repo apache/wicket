@@ -25,6 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
@@ -93,6 +96,9 @@ public abstract class Session implements Serializable
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
+
+	/** Logging object */
+	private static final Log log = LogFactory.getLog(Session.class);
 
 	/** Session state that can be replicated when dirty */
 	transient State state = new State();
@@ -249,6 +255,11 @@ public abstract class Session implements Serializable
 	 */
 	public final Page getPage(final String path, final int versionNumber)
 	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("Getting page [path = " + path + ", versionNumber = " + versionNumber + "]");
+		}
+
 		// Retrieve the page for the first path component from this session
 		Page page = getPage(Integer.parseInt(Strings.firstPathComponent(path,
 				componentPathSeparator)));
@@ -271,12 +282,7 @@ public abstract class Session implements Serializable
 					// Replaces old page entry
 					getPageMap().put(new Integer(page.getId()), page);
 					pageChanged(page);
-				}
-		
-				// Modifications to this page are potentially beginning
-				page.onInternalBeginRequest();
-				page.onBeginRequest();
-		
+				}				
 				return page;
 			}
 		}

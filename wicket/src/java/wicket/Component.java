@@ -36,6 +36,7 @@ import wicket.model.IConvertible;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
@@ -102,6 +103,9 @@ public abstract class Component implements Serializable, IConverterSource
 
 	/** Collection of AttributeModifiers to be applied for this Component */
 	private List attributeModifiers = null;
+
+	/** True if this component desires versioning */
+	private boolean isVersioned = true;
 
 	/** The model for this component. */
 	private IModel model;
@@ -667,6 +671,32 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * @return Returns the isVersioned.
+	 */
+	public boolean isVersioned()
+	{
+		// Is the component itself versioned?
+		if (!isVersioned)
+		{
+			return false;
+		}
+		else
+		{
+			// If there's a parent and this component is versioned
+			if (parent != null)
+			{
+				// Check if the parent is unversioned. If any parent
+				// (recursively) is unversioned, then this component is too
+				if (!parent.isVersioned())
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+	/**
 	 * Gets whether this component and any children are visible.
 	 * 
 	 * @return True if component and any children are visible
@@ -674,6 +704,16 @@ public abstract class Component implements Serializable, IConverterSource
 	public boolean isVisible()
 	{
 		return visible;
+	}
+
+	/**
+	 * Called to indicate that the model for this component has been changed
+	 */
+	public final void modelChanged()
+	{
+		// Call user code
+		internalOnModelChanged();
+		onModelChanged();
 	}
 
 	/**
@@ -690,13 +730,12 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Called to indicate that the model for this component has been changed
+	 * Removes this component from its parent. It's important to remember that a
+	 * component that is removed cannot be referenced from the markup still.
 	 */
-	public final void modelChanged()
+	public void remove()
 	{
-		// Call user code
-		onInternalModelChanged();
-		onModelChanged();
+		parent.remove(getName());
 	}
 
 	/**
@@ -705,11 +744,16 @@ public abstract class Component implements Serializable, IConverterSource
 	public final void render()
 	{
 		// Rendering is beginning
-		onInternalBeginRender();
+		internalOnBeginRender();
 		onBeginRender();
+		if (log.isDebugEnabled())
+		{
+			log.debug("Begin render " + this);
+		}
 
-		RuntimeException exception = null;
-		
+		// Any runtime exception that was thrown during rendering
+		RuntimeException renderException = null;
+
 		try
 		{
 			// Get request cycle to render to
@@ -740,45 +784,33 @@ public abstract class Component implements Serializable, IConverterSource
 		}
 		catch (RuntimeException e)
 		{
-		    // Remember the exception until finally block is
-		    // done and then re-throw it.
-		    exception = e;    
+			// Remember exception in finally block
+			renderException = e;
+			throw e;
 		}
 		finally
 		{
-		    try
-		    {
+			if (log.isDebugEnabled())
+			{
+				log.debug("End render " + this);
+			}
+
+			try
+			{
 				// Rendering has completed
 				onEndRender();
-				onInternalEndRender();
-	
+				internalOnEndRender();
+
 				// Detach models now that rendering is fully completed
 				detachModels();
-		    }
-		    catch (RuntimeException ex)
-		    {
-		        // Prepare for re-throw only if another exception
-		        // is not yet registered
-		        if (exception == null)
-		        {
-		            exception = ex;
-		        }
-		    }
+			}
+			catch (RuntimeException e)
+			{
+				throw new WicketRuntimeException(
+						"Exception thrown while cleaning up from the following exception which was thrown during rendering: "
+								+ Strings.toString(renderException), e);
+			}
 		}
-		
-		// Ret-throw the exception
-		if (exception != null)
-		{
-		    throw exception;
-		}
-	}
-
-	/**
-	 * Removes this component from its parent.
-	 */
-	public void remove()
-	{
-		parent.remove(getName());
 	}
 
 	/**
@@ -878,6 +910,15 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * @param isVersioned
+	 *            The isVersioned to set.
+	 */
+	public void setVersioned(boolean isVersioned)
+	{
+		this.isVersioned = isVersioned;
+	}
+
+	/**
 	 * Sets whether this component and any children are visible.
 	 * 
 	 * @param visible
@@ -897,7 +938,7 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	public String toString()
 	{
-		return "[Component page = " + findPage() + ", path = " + getPath() + "]";
+		return Classes.name(getClass()) + " " + getPath();
 	}
 
 	/**
@@ -1014,6 +1055,26 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * Called anytime a model is changed via setModel or setModelObject.
+	 */
+	protected void internalOnModelChanged()
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * Called anytime a model is changed via setModel or setModelObject.
+	 */
+	protected void internalOnModelChanging()
+	{
+	}
+
+	/**
 	 * This method is called immediately before a component is rendered
 	 */
 	protected void onBeginRender()
@@ -1040,7 +1101,7 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		markupStream.throwMarkupException("Required handleComponentTagBody() was not provided");
+		markupStream.throwMarkupException("Required onComponentTagBody() was not provided");
 	}
 
 	/**
@@ -1051,16 +1112,16 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Called anytime a model is changed, but before the change actually occurs
+	 * Called anytime a model is changed after the change has occurred
 	 */
-	protected void onModelChanging()
+	protected void onModelChanged()
 	{
 	}
 
 	/**
-	 * Called anytime a model is changed after the change has occurred
+	 * Called anytime a model is changed, but before the change actually occurs
 	 */
-	protected void onModelChanged()
+	protected void onModelChanging()
 	{
 	}
 
@@ -1146,9 +1207,8 @@ public abstract class Component implements Serializable, IConverterSource
 			{
 				// Get mutable copy of tag and remove component name
 				tag = tag.mutable();
-				tag.removeComponentName(
-				        settings.getComponentNameAttribute(), 
-				        settings.getApplyDefaultComponentName());
+				tag.removeComponentName(settings.getComponentNameAttribute(), settings
+						.getApplyDefaultComponentName());
 			}
 
 			// Write the tag
@@ -1275,34 +1335,14 @@ public abstract class Component implements Serializable, IConverterSource
 	/**
 	 * This method is called immediately before a component is rendered
 	 */
-	void onInternalBeginRender()
+	void internalOnBeginRender()
 	{
 	}
 
 	/**
 	 * This method is called after rendering is completed
 	 */
-	void onInternalEndRender()
-	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called anytime a model is changed via setModel or setModelObject.
-	 */
-	protected void onInternalModelChanged()
-	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called anytime a model is changed via setModel or setModelObject.
-	 */
-	protected void onInternalModelChanging()
+	void internalOnEndRender()
 	{
 	}
 

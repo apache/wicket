@@ -180,7 +180,7 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * Parses a request.  The following four steps are followed:
+	 * Parses a request. The following four steps are followed:
 	 * <p>
 	 * 1. If the URL requested is in the form of a component listener
 	 * invocation, then that invocation will occur and is expected to generate a
@@ -266,7 +266,6 @@ public class WebRequestCycle extends RequestCycle
 			final Class pageClass = getSession().getClassResolver().resolveClass(pageClassName);
 			setPage(getPageFactory().newPage(pageClass,
 					new PageParameters(getRequest().getParameterMap())));
-
 			return true;
 		}
 
@@ -292,12 +291,12 @@ public class WebRequestCycle extends RequestCycle
 		{
 			// Get version number
 			final String versionNumberString = request.getParameter("version");
-			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer.parseInt(versionNumberString);
-			
+			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
+					.parseInt(versionNumberString);
+
 			// Get page from path
-			log.debug("Getting page [path = " + path + ", versionNumber = " + versionNumber + "]");
 			final Page page = session.getPage(path, versionNumber);
-			
+
 			// Does page exist?
 			if (page != null)
 			{

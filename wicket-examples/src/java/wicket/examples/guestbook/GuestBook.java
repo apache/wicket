@@ -62,7 +62,7 @@ public final class GuestBook extends WicketExamplePage
 				listItem.add(new Label("date", new Model(comment.getDate())));
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
-		});
+		}).setVersioned(false);
 	}
 
 	/**

@@ -83,6 +83,14 @@ public class Comment implements Serializable
 	{
 		this.date = date;
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[Comment date = " + date + ", text = " + text + "]";
+	}
 }
 
 

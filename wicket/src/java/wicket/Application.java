@@ -212,11 +212,6 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Factory for creating sessions
-	 */
-	public abstract ISessionFactory getSessionFactory();
-
-	/**
 	 * @return Application settings
 	 */
 	public ApplicationSettings getSettings()
@@ -227,6 +222,11 @@ public abstract class Application
 		}
 		return settings;
 	}
+
+	/**
+	 * @return Factory for creating sessions
+	 */
+	protected abstract ISessionFactory getSessionFactory();
 
 	/**
 	 * Change the resource locator which will be used to locate resources
