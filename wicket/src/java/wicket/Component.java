@@ -989,7 +989,16 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	protected final String exceptionMessage(final String message)
 	{
-		String s = "Page " + getPage();
+		String s;
+		try
+		{
+			s = "Page " + getPage();
+		}
+		catch (IllegalStateException e)
+		{
+			// happens when we're still in a constructor; just ignore that message part
+			s = "";
+		}
 		if (!(this instanceof Page))
 		{
 			s += ", component " + this;
