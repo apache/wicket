@@ -18,9 +18,8 @@
  */
 package wicket.examples.signin2;
 
-import wicket.RequestCycle;
+import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
-
 
 /**
  * Base class to check access to a page. If user is not logged in,
@@ -31,16 +30,31 @@ import wicket.examples.WicketExamplePage;
 public class AuthenticatedHtmlPage extends WicketExamplePage
 {
     /**
+     * Get downcast session object
+     * 
+     * @return The session
+     */
+    public SignIn2Session getSignIn2Session()
+    {
+        return (SignIn2Session)getSession();
+    }
+    
+    /**
      * @see wicket.Page#checkAccess()
      */
     protected boolean checkAccess()
     {
-        final RequestCycle cycle = getRequestCycle();
-        boolean signedIn = cycle.getSession().getProperty("wicket.examples.signin2.user") != null;
+        // Is a user signed into this cycle's session?
+        boolean signedIn = getSignIn2Session().isSignedIn();
+
+        // If nobody is signed in
         if (!signedIn)
         {
-            cycle.redirectToInterceptPage(new SignIn2(null));
+            // Redirect request to SignIn page
+            getRequestCycle().redirectToInterceptPage(SignIn2.class, (PageParameters)null);
         }
+
+        // Return true if someone is signed in and access is okay
         return signedIn;
     }
 }

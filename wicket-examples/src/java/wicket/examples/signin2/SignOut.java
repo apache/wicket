@@ -24,24 +24,14 @@ import wicket.PageParameters;
  * Simple logout page.
  * @author Jonathan Locke
  */
-public class Logout extends AuthenticatedHtmlPage
+public class SignOut extends AuthenticatedHtmlPage
 {
     /**
      * Constructor
      * @param parameters Page parameters (ignored since this is the home page)
      */
-    public Logout(final PageParameters parameters)
+    public SignOut(final PageParameters parameters)
     {
+        getSession().invalidate();
     }
-    
-	/**
-	 * @see wicket.Page#checkAccess()
-	 */
-	protected boolean checkAccess() 
-	{
-	    new SignIn2(null).logout();
-		return true;
-	}
 }
-
-///////////////////////////////// End of File /////////////////////////////////

@@ -85,14 +85,14 @@ public final class SignIn extends WicketExamplePage
          */
         public final void handleSubmit()
         {
+            // Get session info
+            SignInSession session = (SignInSession)getSession();
+                    
             // Sign the user in
-            if (properties.getString("username").equals("jonathan")
-                && properties.getString("password").equals("password"))
+            if (session.authenticate(properties.getString("username"),  
+                    properties.getString("password")))
             {
                 final RequestCycle cycle = getRequestCycle();
-                
-                cycle.getSession().setProperty("wicket.examples.signin.user", "jonathan");
-
                 if (!cycle.continueToOriginalDestination())
                 {
                     cycle.setPage(new Home(PageParameters.NULL));

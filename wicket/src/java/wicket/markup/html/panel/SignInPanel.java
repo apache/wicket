@@ -20,6 +20,8 @@ package wicket.markup.html.panel;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
 import wicket.markup.html.form.TextField;
@@ -45,13 +47,31 @@ public abstract class SignInPanel extends Panel
 
 	/** Field for password. */
 	private PasswordTextField password;
+    
+    /** True if the user should be remembered via form persistence (cookies) */
+    private boolean rememberMe = true;
+    
+    /** True if the panel should display a remember-me checkbox */
+    private boolean includeRememberMe = true;
 
-	/**
-	 * @see wicket.Component#Component(String)
-	 */
-	public SignInPanel(String componentName)
+    /**
+     * @see wicket.Component#Component(String)
+     */
+    public SignInPanel(final String componentName)
+    {
+    	this(componentName, true);
+    }
+
+    /**
+     * @param componentName See Component constructor
+     * @param includeRememberMe True if form should include a remember-me checkbox
+     * @see wicket.Component#Component(String)
+     */
+    public SignInPanel(final String componentName, final boolean includeRememberMe)
 	{
 		super(componentName);
+        
+        this.includeRememberMe = includeRememberMe;
 
 		// Create feedback panel and add to page
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
@@ -101,9 +121,30 @@ public abstract class SignInPanel extends Panel
 	 *            The username
 	 * @param password
 	 *            The password
-	 * @return Error message to display, or null if the user was signed in
+	 * @return True if signin was successful
 	 */
-	public abstract String signIn(final String username, final String password);
+	public abstract boolean signIn(final String username, final String password);
+
+    /**
+     * Get model object of the rememberMe checkbox
+     * 
+     * @return True if user should be remembered in the future
+     */
+    public boolean getRememberMe()
+    {
+        return rememberMe;
+    }
+
+    /**
+     * Set model object for rememberMe checkbox
+     * 
+     * @param rememberMe
+     */
+    public void setRememberMe(boolean rememberMe)
+    {
+        this.rememberMe = rememberMe;
+        this.setPersistent(rememberMe);
+    }
 
 	/**
 	 * Sign in form.
@@ -132,6 +173,19 @@ public abstract class SignInPanel extends Panel
 			// in lieu of a formal beans model
 			add(username = new TextField("username", properties, "username"));
 			add(password = new PasswordTextField("password", properties, "password"));
+            
+            // Container row for remember me checkbox
+            HtmlContainer rememberMeRow = new HtmlContainer("rememberMeRow");
+            add(rememberMeRow);
+
+            // Add rememberMe checkbox
+            rememberMeRow.add(new CheckBox("rememberMe", SignInPanel.this, "rememberMe"));
+
+            // Make form values persistent
+            setPersistent(rememberMe);   
+
+            // Show remember me checkbox?
+            rememberMeRow.setVisible(includeRememberMe);
 		}
 
 		/**
@@ -139,17 +193,14 @@ public abstract class SignInPanel extends Panel
 		 */
 		public final void handleSubmit()
 		{
-			// Sign the user in
-			final String error = signIn(getUsername(), getPassword());
-
-			if (error == null)
+			if (signIn(getUsername(), getPassword()))
 			{
 				// Get active request cycle
 				final RequestCycle cycle = getRequestCycle();
 
 				// If login has been called because the user was not yet
-				// logged in, than continue to the original destination.
-				// Else to the Home page
+				// logged in, than continue to the original destination,
+				// otherwise to the Home page
 				if (cycle.continueToOriginalDestination())
 				{
 					// HTTP redirect response has been committed. No more data
@@ -162,11 +213,22 @@ public abstract class SignInPanel extends Panel
 							getApplicationPages().getHomePage(), (PageParameters)null));
 				}
 			}
-			else
-			{
-				error(error);
-			}
+            else
+            {
+                // TODO this should be localized
+            	error("Unable to sign you in");
+            }
 		}
 	}
+    
+    /**
+     * Removes persisted form data for the signin panel (forget me)
+     */
+    public final void forgetMe()
+    {
+        // Remove persisted user data. Search for child component
+        // of type SignInForm and remove its related persistence values.
+        getPage().removePersistedFormData(SignInPanel.SignInForm.class, true);
+    }
 }
 

@@ -18,6 +18,8 @@
  */
 package wicket.examples.signin;
 
+import wicket.ISessionFactory;
+import wicket.Session;
 import wicket.examples.WicketExampleApplication;
 
 /**
@@ -32,6 +34,20 @@ public final class SignInApplication extends WicketExampleApplication
     public SignInApplication()
     {
         getPages().setHomePage(Home.class);
+    }
+    
+    /**
+     * @see wicket.protocol.http.WebApplication#getSessionFactory()
+     */
+    public ISessionFactory getSessionFactory()
+    {
+        return new ISessionFactory()
+        {
+            public Session newSession()
+            {
+                return new SignInSession(SignInApplication.this);
+            }
+        };
     }
 }
 

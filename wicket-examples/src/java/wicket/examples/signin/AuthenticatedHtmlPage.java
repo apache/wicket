@@ -19,6 +19,7 @@
 package wicket.examples.signin;
 
 import wicket.examples.WicketExamplePage;
+import wicket.examples.signin.SignInSession;
 
 /**
  *
@@ -27,12 +28,22 @@ import wicket.examples.WicketExamplePage;
 public class AuthenticatedHtmlPage extends WicketExamplePage
 {
     /**
+     * Get downcast session object
+     * 
+     * @return The session
+     */
+    public SignInSession getSignInSession()
+    {
+        return (SignInSession)getSession();
+    }
+    
+    /**
      * @see wicket.Page#checkAccess()
      */
     protected boolean checkAccess()
     {
         // Is a user signed into this cycle's session?
-        boolean signedIn = getSession().getProperty("wicket.examples.signin.user") != null;
+        boolean signedIn = getSignInSession().isSignedIn();
 
         // If nobody is signed in
         if (!signedIn)
