@@ -185,7 +185,7 @@ public class AutolinkComponentResolver implements IComponentResolver
                 try
                 {
                     automaticLinkPageClass = RequestCycle.get().getApplication()
-                    	.getSettings().getPageFactory().getClassInstance(
+                    	.getSettings().getDefaultPageFactory().classForName(
                     	        page.getClass().getPackage().getName() + "." + path);
 
                     if (parameters != null)

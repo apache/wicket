@@ -18,7 +18,6 @@
  */
 package wicket;
 
-
 import java.io.Serializable;
 
 import java.util.HashMap;
@@ -86,6 +85,9 @@ public abstract class Session implements Serializable
     /** Application that this is a session of. */
     private transient IApplication application;
     
+    /** Factory for constructing Pages for this Session */
+    private IPageFactory pageFactory;
+    
     /** Active request cycle */
     private transient RequestCycle cycle;
 
@@ -111,14 +113,16 @@ public abstract class Session implements Serializable
     private String interceptContinuationURL;
 
     /**
-     * Constructor.
-     * @param application The application that this is a session of
+     * Interface called when visiting session pages.
+     * @author Jonathan Locke
      */
-    protected Session(final IApplication application)
+    static interface IPageVisitor
     {
-        this.application = application;
-        this.pages = MostRecentlyUsedMap
-                .newInstance(application.getSettings().getMaxSessionPages());
+        /**
+         * Visit method.
+         * @param page the page
+         */
+        public void page(final Page page);
     }
 
     /**
@@ -126,7 +130,7 @@ public abstract class Session implements Serializable
      * FUTURE. Sets session for calling thread.
      * @param session The session
      */
-    public static void set(Session session)
+    public static void set(final Session session)
     {
         current.set(session);
     }
@@ -141,9 +145,15 @@ public abstract class Session implements Serializable
     }
 
     /**
-     * Invalidates this session
+     * Constructor.
+     * @param application The application that this is a session of
      */
-    public abstract void invalidate();
+    protected Session(final IApplication application)
+    {
+        this.application = application;
+        this.pages = MostRecentlyUsedMap
+                .newInstance(application.getSettings().getMaxSessionPages());
+    }
 
     /**
      * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN THE
@@ -169,27 +179,6 @@ public abstract class Session implements Serializable
             }
         }
     }
-    
-    /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
-     * SUPPORTED IN THE FUTURE.
-     * @return The currently active request cycle for this session
-     */
-    public final RequestCycle getRequestCycle()
-    {
-        return cycle;
-    }
-        
-    /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
-     * SUPPORTED IN THE FUTURE.
-     * Sets the currently active request cycle for this session. 
-     * @param cycle The request cycle
-     */
-    public final void setRequestCycle(final RequestCycle cycle)
-    {
-        this.cycle = cycle;
-    }
 
     /**
      * Get the application that is currently working with this session.
@@ -198,15 +187,6 @@ public abstract class Session implements Serializable
     public final IApplication getApplication()
     {
         return application;
-    }
-
-    /**
-     * Set the application that is currently working with this session.
-     * @param application The current application
-     */
-    public final void setApplication(final IApplication application)
-    {
-        this.application = application;
     }
 
     /**
@@ -276,6 +256,16 @@ public abstract class Session implements Serializable
 
         return null;
     }
+    
+    /**
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
+     * SUPPORTED IN THE FUTURE.
+     * @return The currently active request cycle for this session
+     */
+    public final RequestCycle getRequestCycle()
+    {
+        return cycle;
+    }
 
     /**
      * Get the style.
@@ -287,6 +277,11 @@ public abstract class Session implements Serializable
     }
 
     /**
+     * Invalidates this session
+     */
+    public abstract void invalidate();
+
+    /**
      * Removes a property on this session by key.
      * @param key The key
      */
@@ -296,6 +291,15 @@ public abstract class Session implements Serializable
         {
             properties.remove(key);
         }
+    }
+
+    /**
+     * Set the application that is currently working with this session.
+     * @param application The current application
+     */
+    public final void setApplication(final IApplication application)
+    {
+        this.application = application;
     }
 
     /**
@@ -320,6 +324,17 @@ public abstract class Session implements Serializable
         }
 
         properties.put(key, value);
+    }
+        
+    /**
+     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
+     * SUPPORTED IN THE FUTURE.
+     * Sets the currently active request cycle for this session. 
+     * @param cycle The request cycle
+     */
+    public final void setRequestCycle(final RequestCycle cycle)
+    {
+        this.cycle = cycle;
     }
 
     /**
@@ -385,19 +400,6 @@ public abstract class Session implements Serializable
             // Visit next page
             visitor.page((Page)iterator.next());
         }
-    }
-
-    /**
-     * Interface called when visiting session pages.
-     * @author Jonathan Locke
-     */
-    static interface IPageVisitor
-    {
-        /**
-         * Visit method.
-         * @param page the page
-         */
-        public void page(final Page page);
     }
 }
 

@@ -62,7 +62,7 @@ public abstract class AbstractValidator implements IValidator
      * @param component The component where the error occurred
      * @return The validation error message
      */
-    public final ValidationErrorMessage errorMessage(
+    public ValidationErrorMessage errorMessage(
             final String input, final FormComponent component)
     {
     	return errorMessage(getResourceKey(component), input, component);
@@ -79,7 +79,7 @@ public abstract class AbstractValidator implements IValidator
      * @param component The component where the error occurred
      * @return The validation error message
      */
-    public final ValidationErrorMessage errorMessage(
+    public ValidationErrorMessage errorMessage(
     		final String resourceKey, final IModel resourceModel,
             final String input, final FormComponent component)
     {
@@ -100,7 +100,7 @@ public abstract class AbstractValidator implements IValidator
      * @param component The component where the error occurred
      * @return The validation error message
      */
-    public final ValidationErrorMessage errorMessage(
+    public ValidationErrorMessage errorMessage(
     		final String resourceKey, final Map map,
             final String input, final FormComponent component)
     {
@@ -130,7 +130,7 @@ public abstract class AbstractValidator implements IValidator
      * @param component The component where the error occurred
      * @return The validation error message
      */
-    public final ValidationErrorMessage errorMessage(
+    public ValidationErrorMessage errorMessage(
     		final String resourceKey,
             final String input, final FormComponent component)
     {
@@ -167,7 +167,7 @@ public abstract class AbstractValidator implements IValidator
      * @param component the form component
      * @return the resource key based on the form component
      */
-    protected final String getResourceKey(final FormComponent component)
+    protected String getResourceKey(final FormComponent component)
     {
         // Resource key must be <form-name>.<component-name>.<validator-class>
         final Component parentForm = component.findParent(Form.class);

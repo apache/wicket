@@ -415,7 +415,7 @@ public abstract class RequestCycle
      */
     public final IPageFactory getPageFactory()
     {
-        return getApplication().getSettings().getPageFactory();
+        return getApplication().getSettings().getDefaultPageFactory();
     }
     
     /**

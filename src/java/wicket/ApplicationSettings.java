@@ -115,10 +115,10 @@ import wicket.util.watch.ModificationWatcher;
  * convenience method in converterRegistry to swith to a localized/ non-localized set of
  * type converters.
  * <p>
- * <i>pageFactory </i> - the factory class that is used for constructing page instances.
+ * <i>defaultPageFactory </i> - the factory class that is used for constructing page instances.
  * <p>
- * <i>pageFactory </i> - Whether the PropertyModel instances apply formatting
- * by default; default == false.
+ * <i>propertyModelDefaultApplyFormatting </i> - Whether the PropertyModel instances 
+ * apply formatting by default; default == false.
  * </ul>
  * <p>
  * More documentation is available about each setting in the setter method for the
@@ -192,7 +192,7 @@ public class ApplicationSettings
     private Class pageExpiredErrorPage;
 
     /** Factory to create new Page objects */
-    private IPageFactory pageFactory;
+    private IPageFactory defaultPageFactory;
 
     /**
      * Whether the {@link wicket.model.PropertyModel} instances apply formatting
@@ -245,27 +245,6 @@ public class ApplicationSettings
     }
 
     /**
-     * Indicates that an exception page appropriate to development should be shown when an
-     * unexpected exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE =
-        new UnexpectedExceptionDisplay("SHOW_EXCEPTION_PAGE");
-
-    /**
-     * Indicates a generic internal error page should be shown when an unexpected
-     * exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE =
-        new UnexpectedExceptionDisplay("SHOW_INTERNAL_ERROR_PAGE");
-
-    /**
-     * Indicates that no exception page should be shown when an unexpected exception is
-     * thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE =
-        new UnexpectedExceptionDisplay("SHOW_NO_EXCEPTION_PAGE");
-
-    /**
      * Create the application settings, carrying out any necessary initialisations.
      * @param application The application that these settings are for
      */
@@ -274,7 +253,7 @@ public class ApplicationSettings
         localizer = new Localizer(this);
         stringResourceLoaders.add(new ComponentStringResourceLoader());
         stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
-        pageFactory = new PageFactory(application);
+        defaultPageFactory = new PageFactory(application);
         
         componentResolvers = new ArrayList();
         componentResolvers.add(new AutolinkComponentResolver());
@@ -388,6 +367,15 @@ public class ApplicationSettings
     }
 
     /**
+     * Gets the factory class to be used when creating pages
+     * @return the factory class to be used when creating pages
+     */
+    public IPageFactory getDefaultPageFactory()
+    {
+        return defaultPageFactory;
+    }
+
+    /**
      * Get encryption key used to encode/decode passwords e.g.
      * @return encryption key
      */
@@ -427,7 +415,7 @@ public class ApplicationSettings
 
         if (homePageClassName != null && homePageClassName.trim().length() > 0)
         {
-            final Class homePage = getPageFactory().getClassInstance(homePageClassName);
+            final Class homePage = getDefaultPageFactory().classForName(homePageClassName);
             if (homePage != null)
             {
                 return homePage;
@@ -460,7 +448,8 @@ public class ApplicationSettings
      */
     public final Class getMarkupParserClass()
     {
-        return getPageFactory().getClassInstance(markupParserClassName);
+        // TODO If we're loading a markup parser like this, is it really a page factory?
+        return getDefaultPageFactory().classForName(markupParserClassName);
     }
 
     /**
@@ -481,15 +470,6 @@ public class ApplicationSettings
     public final Class getPageExpiredErrorPage()
     {
         return pageExpiredErrorPage;
-    }
-
-    /**
-     * Gets the factory class to be used when creating pages
-     * @return the factory class to be used when creating pages
-     */
-    public IPageFactory getPageFactory()
-    {
-        return pageFactory;
     }
 
     /**
@@ -677,6 +657,15 @@ public class ApplicationSettings
     }
 
     /**
+     * Sets the factory class to be used when creating pages.
+     * @param defaultPageFactory the factory class to be used when creating pages.
+     */
+    public void setDefaultPageFactory(final IPageFactory defaultPageFactory)
+    {
+        this.defaultPageFactory = defaultPageFactory;
+    }
+
+    /**
      * Set encryption key used to encode/decode PasswordTextFields e.g.
      * @param encryptionKey
      */
@@ -765,15 +754,6 @@ public class ApplicationSettings
     {
         this.pageExpiredErrorPage = pageExpiredErrorPage;
         return this;
-    }
-
-    /**
-     * Sets the factory class to be used when creating pages.
-     * @param pageFactory the factory class to be used when creating pages.
-     */
-    public void setPageFactory(final IPageFactory pageFactory)
-    {
-        this.pageFactory = pageFactory;
     }
 
 	/**
@@ -916,6 +896,27 @@ public class ApplicationSettings
     {
         return Collections.unmodifiableList(stringResourceLoaders);
     }
+
+    /**
+     * Indicates that an exception page appropriate to development should be shown when an
+     * unexpected exception is thrown.
+     */
+    public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE =
+        new UnexpectedExceptionDisplay("SHOW_EXCEPTION_PAGE");
+
+    /**
+     * Indicates a generic internal error page should be shown when an unexpected
+     * exception is thrown.
+     */
+    public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE =
+        new UnexpectedExceptionDisplay("SHOW_INTERNAL_ERROR_PAGE");
+
+    /**
+     * Indicates that no exception page should be shown when an unexpected exception is
+     * thrown.
+     */
+    public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE =
+        new UnexpectedExceptionDisplay("SHOW_NO_EXCEPTION_PAGE");
 }
 
 

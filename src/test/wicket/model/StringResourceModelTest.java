@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.text.MessageFormat;
 
 import wicket.RequestCycle;
+import wicket.Session;
 import wicket.markup.html.HtmlPage;
 import wicket.model.DetachableModel;
 import wicket.model.IModel;
@@ -193,9 +194,9 @@ public class StringResourceModelTest extends TestCase
 		application.setupRequestAndResponse();
 		RequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
-		model.attach(cycle);
+		model.attach(cycle.getSession());
 		Assert.assertNotNull(model.getLocalizer());
-		model.detach(cycle);
+		model.detach(cycle.getSession());
 		Assert.assertNull(model.getLocalizer());
 	}
 
@@ -206,12 +207,12 @@ public class StringResourceModelTest extends TestCase
 	{
 		IModel wsDetachModel = new DetachableModel(wsModel)
 		{
-			protected void doAttach(RequestCycle cycle)
+			protected void doAttach(final Session session)
 			{
 				setObject(new WeatherStation());
 			}
 
-			protected void doDetach(RequestCycle cycle)
+			protected void doDetach(final Session session)
 			{
 				setObject(null);
 			}
@@ -220,10 +221,10 @@ public class StringResourceModelTest extends TestCase
 		application.setupRequestAndResponse();
 		RequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
-		model.attach(cycle);
+		model.attach(cycle.getSession());
 		Assert.assertNotNull(model.getModel().getObject());
 		Assert.assertNotNull(model.getLocalizer());
-		model.detach(cycle);
+		model.detach(cycle.getSession());
 		Assert.assertNull(model.getModel().getObject());
 		Assert.assertNull(model.getLocalizer());
 	}
