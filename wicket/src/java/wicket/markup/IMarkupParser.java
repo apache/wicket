@@ -20,96 +20,48 @@ package wicket.markup;
 import java.io.IOException;
 import java.text.ParseException;
 
+import wicket.ApplicationSettings;
 import wicket.Page;
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
 
 /**
- * A fairly shallow markup parser. Parses a markup string of a given type of
- * markup (for example, html, xml, vxml or wml) into Tag and RawMarkup tokens.
- * The Tag tokens must have the attributeName attribute that was passed to the
- * scanner's constructor. Only tags having an attribute with the same name as
- * the attributeName with which this markup scanner was constructed are
- * returned. Text before, between and after such tags are returned as String
- * values. A check is done to ensure that tags returned balance correctly.
+ * Interface to a markup parser which parses wicket markup according to various
+ * settings.
  * 
  * @author Jonathan Locke
  */
 public interface IMarkupParser
-{ // TODO finalize javadoc
-    /**
-     * Name of desired componentName tag attribute.
-     * 
-     * @param name
-     *            component name
-     */
-    public void setComponentNameAttribute(final String name);
+{
+	/**
+	 * Settings to use when configuring this markup parser
+	 * 
+	 * @param settings
+	 *            Application settings
+	 */
+	public void configure(final ApplicationSettings settings);
 
-    /**
-     * Name of the desired wicket tag: e.g. &lt;wicket&gt;
-     * 
-     * @param name
-     *            wicket xml namespace (xmlns:wicket)
-     */
-    public void setWicketNamespace(final String name);
+	/**
+	 * Return the encoding used while reading the markup file.
+	 * 
+	 * @return if null, than JVM default
+	 */
+	public String getEncoding();
 
-    /**
-     * &lt;wicket:param ...&gt; tags may be included with the output for markup
-     * debugging purposes.
-     * 
-     * @param remove
-     *            If true, markup elements will not be forwarded
-     */
-    public void setStripWicketParamTag(boolean remove);
-
-    /**
-     * Return the encoding used while reading the markup file.
-     * 
-     * @return if null, than JVM default
-     */
-    public String getEncoding();
-
-    /**
-     * Set whether to strip components.
-     * 
-     * @param stripComments
-     *            whether to strip components.
-     */
-    public void setStripComments(boolean stripComments);
-
-    /**
-     * Set whether whitespace should be compressed.
-     * 
-     * @param compressWhitespace
-     *            whether whitespace should be compressed.
-     */
-    public void setCompressWhitespace(boolean compressWhitespace);
-
-    /**
-     * Set default autolink setting for the markup.
-     * @param enable automatic linking
-     */
-    public void setAutolinking(final boolean enable);
-    
-    /**
-     * Autolinks are resolved relative to a page. The page provided
-     * will serve as the reference for autolinks on the current
-     * markup.
-     * 
-     * @param page Autolink reference page
-     */
-    public void setAutolinkBasePage(final Page page);
-
-    /**
-     * Reads and parses markup from a file.
-     * 
-     * @param resource
-     *            The file
-     * @return The markup
-     * @throws ParseException
-     * @throws IOException
-     * @throws ResourceNotFoundException
-     */
-    public Markup read(final Resource resource) throws ParseException,
-            IOException, ResourceNotFoundException;
+	/**
+	 * Reads and parses markup from a file. Autolinks are resolved relative to
+	 * the autolinkBasePage passed in The page provided will serve as the
+	 * reference for autolinks on the current markup.
+	 * 
+	 * @param resource
+	 *            The file
+	 * @param autolinkBasePage
+	 *            Autolink reference page
+	 * @return The markup
+	 * @throws ParseException
+	 * @throws IOException
+	 * @throws ResourceNotFoundException
+	 */
+	public Markup read(final Resource resource, final Page autolinkBasePage) throws ParseException,
+			IOException, ResourceNotFoundException;
 }

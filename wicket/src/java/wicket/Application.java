@@ -153,24 +153,15 @@ public abstract class Application
 	/**
 	 * Get and initialize a markup parser.
 	 * 
-	 * @param page
-	 *            Autolinks are resolved relative to a Page.
 	 * @return A new MarkupParser
 	 */
-	public IMarkupParser getMarkupParser(final Page page)
+	public IMarkupParser getMarkupParser()
 	{
-		final ApplicationSettings settings = getSettings();
 		try
 		{
 			final IMarkupParser parser = (IMarkupParser)settings.getMarkupParserClass()
 					.newInstance();
-			parser.setComponentNameAttribute(settings.getComponentNameAttribute());
-			parser.setWicketNamespace(settings.getWicketNamespace());
-			parser.setStripComments(settings.getStripComments());
-			parser.setCompressWhitespace(settings.getCompressWhitespace());
-			parser.setStripWicketParamTag(settings.getStripWicketParamTag());
-			parser.setAutolinking(settings.getAutomaticLinking());
-			parser.setAutolinkBasePage(page);
+			parser.configure(getSettings());
 			return parser;
 		}
 		catch (IllegalAccessException e)

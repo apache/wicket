@@ -52,205 +52,205 @@ import wicket.util.value.ValueMap;
  */
 public class ComponentTagAttributeModifier implements Serializable
 {
-    /** Whether to add the attribute if it is not an attribute in the markup. */
-    private boolean addAttributeIfNotPresent;
+	/** Whether to add the attribute if it is not an attribute in the markup. */
+	private boolean addAttributeIfNotPresent;
 
-    /** Attribute specification. */
-    private String attribute;
+	/** Attribute specification. */
+	private String attribute;
 
-    /** Modification information. */
-    private boolean enabled;
+	/** Modification information. */
+	private boolean enabled;
 
-    /** The pattern. */
-    private String pattern = null;
+	/** The pattern. */
+	private String pattern = null;
 
-    /** The model that is to be used for the replacement. */
-    private IModel replaceModel;
+	/** The model that is to be used for the replacement. */
+	private IModel replaceModel;
 
-    /**
-     * Create a new attribute modifier with the given attribute name and model
-     * to replace with. The additional boolean flag specifies whether to add the
-     * attribute if it is not present.
-     * 
-     * @param attribute
-     *            The attribute name to replace the value for
-     * @param addAttributeIfNotPresent
-     *            Whether to add the attribute if it is not present
-     * @param replaceModel
-     *            The model to replace the value with
-     */
-    public ComponentTagAttributeModifier(final String attribute,
-            final boolean addAttributeIfNotPresent, final IModel replaceModel)
-    {
-        this(attribute, null, addAttributeIfNotPresent, replaceModel);
-    }
+	/**
+	 * Create a new attribute modifier with the given attribute name and model
+	 * to replace with. The additional boolean flag specifies whether to add the
+	 * attribute if it is not present.
+	 * 
+	 * @param attribute
+	 *            The attribute name to replace the value for
+	 * @param addAttributeIfNotPresent
+	 *            Whether to add the attribute if it is not present
+	 * @param replaceModel
+	 *            The model to replace the value with
+	 */
+	public ComponentTagAttributeModifier(final String attribute,
+			final boolean addAttributeIfNotPresent, final IModel replaceModel)
+	{
+		this(attribute, null, addAttributeIfNotPresent, replaceModel);
+	}
 
-    /**
-     * Create a new attribute modifier with the given attribute name and model
-     * to replace with. The attribute will not be added if it is not present.
-     * 
-     * @param attribute
-     *            The attribute name to replace the value for
-     * @param replaceModel
-     *            The model to replace the value with
-     */
-    public ComponentTagAttributeModifier(final String attribute, final IModel replaceModel)
-    {
-        this(attribute, null, false, replaceModel);
-    }
+	/**
+	 * Create a new attribute modifier with the given attribute name and model
+	 * to replace with. The attribute will not be added if it is not present.
+	 * 
+	 * @param attribute
+	 *            The attribute name to replace the value for
+	 * @param replaceModel
+	 *            The model to replace the value with
+	 */
+	public ComponentTagAttributeModifier(final String attribute, final IModel replaceModel)
+	{
+		this(attribute, null, false, replaceModel);
+	}
 
-    /**
-     * Create a new attribute modifier with the given attribute name and
-     * expected pattern to match plus the model to replace with. A null pattern
-     * will match the attribute regardless of its value. The additional boolean
-     * flag specifies whether to add the attribute if it is not present.
-     * 
-     * @param attribute
-     *            The attribute name to replace the value for
-     * @param pattern
-     *            The pattern of the current attribute value to match
-     * @param addAttributeIfNotPresent
-     *            Whether to add the attribute if it is not present and the
-     *            replacement value is not null
-     * @param replaceModel
-     *            The model to replace the value with
-     */
-    public ComponentTagAttributeModifier(final String attribute, final String pattern,
-            final boolean addAttributeIfNotPresent, final IModel replaceModel)
-    {
-        if (attribute == null)
-        {
-            throw new IllegalArgumentException("Attribute parameter cannot be null");
-        }
-        if (replaceModel == null)
-        {
-            throw new IllegalArgumentException("ReplaceModel parameter cannot be null");
-        }
+	/**
+	 * Create a new attribute modifier with the given attribute name and
+	 * expected pattern to match plus the model to replace with. A null pattern
+	 * will match the attribute regardless of its value. The additional boolean
+	 * flag specifies whether to add the attribute if it is not present.
+	 * 
+	 * @param attribute
+	 *            The attribute name to replace the value for
+	 * @param pattern
+	 *            The pattern of the current attribute value to match
+	 * @param addAttributeIfNotPresent
+	 *            Whether to add the attribute if it is not present and the
+	 *            replacement value is not null
+	 * @param replaceModel
+	 *            The model to replace the value with
+	 */
+	public ComponentTagAttributeModifier(final String attribute, final String pattern,
+			final boolean addAttributeIfNotPresent, final IModel replaceModel)
+	{
+		if (attribute == null)
+		{
+			throw new IllegalArgumentException("Attribute parameter cannot be null");
+		}
+		if (replaceModel == null)
+		{
+			throw new IllegalArgumentException("ReplaceModel parameter cannot be null");
+		}
 
-        this.attribute = attribute;
-        this.pattern = pattern;
-        this.enabled = true;
-        this.addAttributeIfNotPresent = addAttributeIfNotPresent;
-        this.replaceModel = replaceModel;
-    }
+		this.attribute = attribute;
+		this.pattern = pattern;
+		this.enabled = true;
+		this.addAttributeIfNotPresent = addAttributeIfNotPresent;
+		this.replaceModel = replaceModel;
+	}
 
-    /**
-     * Create a new attribute modifier with the given attribute name and
-     * expected pattern to match plus the model to replace with. A null pattern
-     * will match the attribute regardless of its value. The attribute will not
-     * be added if it is not present.
-     * 
-     * @param attribute
-     *            The attribute name to replace the value for
-     * @param pattern
-     *            The pattern of the current attribute value to match
-     * @param replaceModel
-     *            The model to replace the value with
-     */
-    public ComponentTagAttributeModifier(final String attribute, final String pattern,
-            final IModel replaceModel)
-    {
-        this(attribute, pattern, false, replaceModel);
-    }
+	/**
+	 * Create a new attribute modifier with the given attribute name and
+	 * expected pattern to match plus the model to replace with. A null pattern
+	 * will match the attribute regardless of its value. The attribute will not
+	 * be added if it is not present.
+	 * 
+	 * @param attribute
+	 *            The attribute name to replace the value for
+	 * @param pattern
+	 *            The pattern of the current attribute value to match
+	 * @param replaceModel
+	 *            The model to replace the value with
+	 */
+	public ComponentTagAttributeModifier(final String attribute, final String pattern,
+			final IModel replaceModel)
+	{
+		this(attribute, pattern, false, replaceModel);
+	}
 
-    /**
-     * Gets the name of the attribute whose value is being replaced.
-     * 
-     * @return The name of the attribute
-     */
-    public final String getAttribute()
-    {
-        return attribute;
-    }
+	/**
+	 * Gets the name of the attribute whose value is being replaced.
+	 * 
+	 * @return The name of the attribute
+	 */
+	public final String getAttribute()
+	{
+		return attribute;
+	}
 
-    /**
-     * Gets the pattern that the current value must match in order to be
-     * replaced.
-     * 
-     * @return The pattern
-     */
-    public final String getPattern()
-    {
-        return pattern;
-    }
+	/**
+	 * Gets the pattern that the current value must match in order to be
+	 * replaced.
+	 * 
+	 * @return The pattern
+	 */
+	public final String getPattern()
+	{
+		return pattern;
+	}
 
-    /**
-     * Gets the model that the value will be replaced with.
-     * 
-     * @return The model used for replacement
-     */
-    public final IModel getReplaceModel()
-    {
-        if ((replaceModel != null) && (replaceModel instanceof IDetachableModel))
-        {
-            ((IDetachableModel)replaceModel).attach();
-        }
-        return replaceModel;
-    }
+	/**
+	 * Gets the model that the value will be replaced with.
+	 * 
+	 * @return The model used for replacement
+	 */
+	public final IModel getReplaceModel()
+	{
+		if ((replaceModel != null) && (replaceModel instanceof IDetachableModel))
+		{
+			((IDetachableModel)replaceModel).attach();
+		}
+		return replaceModel;
+	}
 
-    /**
-     * Checks whether this modifier will add an attribute to the tag if it is
-     * not present in the markup and the replacement value is not null.
-     * 
-     * @return Whether the attribute will be added if not present or not
-     */
-    public final boolean isAddAttributeIfNotPresent()
-    {
-        return addAttributeIfNotPresent;
-    }
+	/**
+	 * Checks whether this modifier will add an attribute to the tag if it is
+	 * not present in the markup and the replacement value is not null.
+	 * 
+	 * @return Whether the attribute will be added if not present or not
+	 */
+	public final boolean isAddAttributeIfNotPresent()
+	{
+		return addAttributeIfNotPresent;
+	}
 
-    /**
-     * Checks whether this attribute modifier is enabled or not.
-     * 
-     * @return Whether enabled or not
-     */
-    public final boolean isEnabled()
-    {
-        return enabled;
-    }
+	/**
+	 * Checks whether this attribute modifier is enabled or not.
+	 * 
+	 * @return Whether enabled or not
+	 */
+	public final boolean isEnabled()
+	{
+		return enabled;
+	}
 
-    /**
-     * Checks the given component tag for an instance of the attribute to modify
-     * and if all criteria are met then replace the value of this attribute with
-     * the value of the contained model object.
-     * 
-     * @param tag
-     *            The tag to replace the attribute value for
-     */
-    public void replaceAttibuteValue(final ComponentTag tag)
-    {
-        if (enabled)
-        {
-            ValueMap attributes = tag.getAttributes();
-            Object replacementValue = getReplaceModel().getObject();
+	/**
+	 * Checks the given component tag for an instance of the attribute to modify
+	 * and if all criteria are met then replace the value of this attribute with
+	 * the value of the contained model object.
+	 * 
+	 * @param tag
+	 *            The tag to replace the attribute value for
+	 */
+	public void replaceAttibuteValue(final ComponentTag tag)
+	{
+		if (enabled)
+		{
+			ValueMap attributes = tag.getAttributes();
+			Object replacementValue = getReplaceModel().getObject();
 
-            // Only do something when we have a replacement
-            if (replacementValue != null)
-            {
-                if (attributes.containsKey(attribute))
-                {
-                    String value = attributes.get(attribute).toString();
-                    if (pattern == null || value.matches(pattern))
-                    {
-                        attributes.put(attribute, replacementValue);
-                    }
-                }
-                else if (addAttributeIfNotPresent)
-                {
-                    attributes.put(attribute, replacementValue);
-                }
-            }
-        }
-    }
+			// Only do something when we have a replacement
+			if (replacementValue != null)
+			{
+				if (attributes.containsKey(attribute))
+				{
+					String value = attributes.get(attribute).toString();
+					if (pattern == null || value.matches(pattern))
+					{
+						attributes.put(attribute, replacementValue);
+					}
+				}
+				else if (addAttributeIfNotPresent)
+				{
+					attributes.put(attribute, replacementValue);
+				}
+			}
+		}
+	}
 
-    /**
-     * Sets whether this attribute modifier is enabled or not.
-     * 
-     * @param enabled
-     *            Whether enabled or not
-     */
-    public final void setEnabled(final boolean enabled)
-    {
-        this.enabled = enabled;
-    }
+	/**
+	 * Sets whether this attribute modifier is enabled or not.
+	 * 
+	 * @param enabled
+	 *            Whether enabled or not
+	 */
+	public final void setEnabled(final boolean enabled)
+	{
+		this.enabled = enabled;
+	}
 }
