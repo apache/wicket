@@ -21,8 +21,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.model.IModel;
-
 /**
  * A radio choice allows the user to select between several options using radio
  * buttons. The options are descendant components of the RadioChoice and come in
@@ -42,22 +40,6 @@ public class RadioChoice extends FormComponent
 
 	/** List of choices attached to this model */
 	private final List values = new ArrayList();
-
-	/**
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public RadioChoice(String name, IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public RadioChoice(String name, IModel model, String expression)
-	{
-		super(name, model, expression);
-	}
 
 	/**
 	 * @see wicket.Component#Component(String, Serializable)

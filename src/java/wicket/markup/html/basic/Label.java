@@ -22,7 +22,6 @@ import java.io.Serializable;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
-import wicket.model.IModel;
 
 /**
  * A Label component replaces its body with the String version of its model
@@ -69,22 +68,6 @@ public class Label extends HtmlComponent
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = -2180588252471379004L;
-
-	/**
-     * @see wicket.Component#Component(String, IModel)
-	 */
-	public Label(String name, IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-     * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public Label(String name, IModel model, String expression)
-	{
-		super(name, model, expression);
-	}
 
 	/**
      * @see wicket.Component#Component(String, Serializable)

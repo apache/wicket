@@ -20,7 +20,6 @@ package wicket.markup.html;
 import java.io.Serializable;
 
 import wicket.Component;
-import wicket.model.IModel;
 
 /**
  * Base class for simple HTML components which do not hold nested components. If
@@ -38,22 +37,6 @@ public abstract class HtmlComponent extends Component
 	public HtmlComponent(final String name)
 	{
 		super(name);
-	}
-
-	/**
-	 * @see Component#Component(String, IModel)
-	 */
-	public HtmlComponent(final String name, final IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-	 * @see Component#Component(String, IModel, String)
-	 */
-	public HtmlComponent(final String name, final IModel model, final String expression)
-	{
-		super(name, model, expression);
 	}
 
 	/**

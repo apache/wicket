@@ -25,7 +25,6 @@ import java.util.List;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.validation.IValidator;
-import wicket.model.IModel;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringList;
 
@@ -171,22 +170,6 @@ public abstract class FormComponent extends HtmlContainer
 	public FormComponent(final String componentName)
 	{
 		super(componentName);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public FormComponent(String name, IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public FormComponent(String name, IModel model, String expression)
-	{
-		super(name, model, expression);
 	}
 
 	/**

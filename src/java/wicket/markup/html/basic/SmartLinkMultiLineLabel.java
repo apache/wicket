@@ -22,7 +22,6 @@ import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.model.IModel;
 import wicket.util.string.Strings;
 
 /**
@@ -43,22 +42,6 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 6614585065978596357L;
-
-	/**
-     * @see wicket.Component#Component(String, IModel)
-     */
-    public SmartLinkMultiLineLabel(String name, IModel model)
-    {
-        super(name, model);
-    }
-
-    /**
-     * @see wicket.Component#Component(String, IModel, String)
-     */
-    public SmartLinkMultiLineLabel(String name, IModel model, String expression)
-    {
-        super(name, model, expression);
-    }
 
     /**
      * @see wicket.Component#Component(String, Serializable)

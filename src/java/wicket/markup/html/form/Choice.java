@@ -25,7 +25,6 @@ import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.model.IModel;
 
 /**
  * Abstract base class for all Choice (html select) options.
@@ -50,39 +49,6 @@ abstract class Choice extends FormComponent
 
 	/** The list of values. */
 	private List values;
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param model
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the dropdown
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public Choice(String name, IModel model, final Collection values)
-	{
-		super(name, model);
-		setValues(values);
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param model
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the dropdown
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public Choice(String name, IModel model, String expression,
-			final Collection values)
-	{
-		super(name, model, expression);
-		setValues(values);
-	}
 
 	/**
 	 * @param name

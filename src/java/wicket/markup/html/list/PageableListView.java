@@ -1,34 +1,30 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.list;
 
 import java.io.Serializable;
 import java.util.List;
 
-import wicket.WicketRuntimeException;
-import wicket.model.IModel;
-
-
 /**
- * PageableListView is similar to ListView but provides in addition pageable views. A
- * PageableListView holds pageable rows of information. The rows can be re-ordered and
- * deleted, either one at a time or many at a time.
+ * PageableListView is similar to ListView but provides in addition pageable
+ * views. A PageableListView holds pageable rows of information. The rows can be
+ * re-ordered and deleted, either one at a time or many at a time.
+ * 
  * @author Jonathan Locke
  */
 public abstract class PageableListView extends ListView
@@ -40,51 +36,16 @@ public abstract class PageableListView extends ListView
 	private final int rowsPerPage;
 
 	/**
-	 * Creates a pagable list view that uses the provided {@link IModel}as its model. All
-	 * components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param model the model
-	 * @param rowsPerPage number of rows on one page
-	 * @throws WicketRuntimeException Thrown if the component has been given a null name.
-	 */
-	public PageableListView(String name, IModel model, int rowsPerPage)
-	{
-		super(name, model);
-		this.rowsPerPage = rowsPerPage;
-	}
-
-	/**
-	 * Creates a pagable list view that uses the provided instance of {@link IModel}as a
-	 * dynamic model. This model will be wrapped in an instance of
-	 * {@link wicket.model.PropertyModel}using the provided expression. Thus, using this
-	 * constructor is a short-hand for:
+	 * Creates a pagable list view having the given number of rows per page that
+	 * uses the provided object as a simple model.
 	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(myIModel, expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param model the instance of {@link IModel}from which the model object will be used
-	 *           as the subject for the given expression
-	 * @param expression the OGNL expression that works on the given object
-	 * @param rowsPerPage number of pages
-	 * @throws WicketRuntimeException Thrown if the component has been given a null name.
-	 */
-	public PageableListView(String name, IModel model, String expression, int rowsPerPage)
-	{
-		super(name, model, expression);
-		this.rowsPerPage = rowsPerPage;
-	}
-
-	/**
-	 * Creates a pagable list view that uses the provided object as a simple model. This
-	 * object will be wrapped in an instance of {@link wicket.model.Model}. All components
-	 * have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param object the object that will be used as a simple model
-	 * @param rowsPerPage number of pages
-	 * @throws WicketRuntimeException Thrown if the component has been given a null name.
+	 * @see wicket.Component#Component(String, Serializable)
+	 * @param name
+	 *            See Component constructor
+	 * @param object
+	 *            See Component constructor
+	 * @param rowsPerPage
+	 *            Number of rows to show on a page
 	 */
 	public PageableListView(String name, Serializable object, int rowsPerPage)
 	{
@@ -93,21 +54,18 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-	 * Creates a pagable list view that uses the provided object as a dynamic model. This
-	 * object will be wrapped in an instance of {@link wicket.model.Model}that will be
-	 * wrapped in an instance of {@link wicket.model.PropertyModel}using the provided
-	 * expression. Thus, using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(new Model(object), expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param object the object that will be used as the subject for the given expression
-	 * @param expression the OGNL expression that works on the given object
-	 * @param rowsPerPage number of pages
-	 * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * Creates a pagable list view having the given number of rows per page that
+     * uses the provided object as a simple model.
+     * 
+     * @see wicket.Component#Component(String, Serializable)
+     * @param name
+     *            See Component constructor
+     * @param object
+     *            See Component constructor
+	 * @param expression
+     *            See Component constructor
+     * @param rowsPerPage
+     *            Number of rows to show on a page
 	 */
 	public PageableListView(String name, Serializable object, String expression, int rowsPerPage)
 	{
@@ -116,13 +74,16 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-	 * Creates a pagable list view that uses the provided object as a simple model. This
-	 * object will be wrapped in an instance of {@link wicket.model.Model}. All components
-	 * have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param object the object that will be used as a simple model
-	 * @param rowsPerPage number of pages
-	 * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * Creates a pagable list view having the given number of rows per page that
+     * uses the provided object as a simple model.
+     * 
+     * @see wicket.Component#Component(String, Serializable)
+     * @param name
+     *            See Component constructor
+     * @param object
+     *            See Component constructor
+     * @param rowsPerPage
+     *            Number of rows to show on a page
 	 */
 	public PageableListView(String name, List object, int rowsPerPage)
 	{
@@ -131,6 +92,7 @@ public abstract class PageableListView extends ListView
 
 	/**
 	 * Gets the index of the current page being displayed by this list view.
+	 * 
 	 * @return Returns the currentPage.
 	 */
 	public final int getCurrentPage()
@@ -146,6 +108,7 @@ public abstract class PageableListView extends ListView
 
 	/**
 	 * Gets the number of pages in this list view.
+	 * 
 	 * @return The number of pages in this list view
 	 */
 	public final int getPageCount()
@@ -155,7 +118,9 @@ public abstract class PageableListView extends ListView
 
 	/**
 	 * Sets the current page that this list view should show.
-	 * @param currentPage The currentPage to set.
+	 * 
+	 * @param currentPage
+	 *            The currentPage to set.
 	 */
 	public final void setCurrentPage(final int currentPage)
 	{
@@ -167,9 +132,8 @@ public abstract class PageableListView extends ListView
 		int pageCount = getPageCount();
 		if (currentPage > 0 && (currentPage >= pageCount))
 		{
-			throw new IllegalArgumentException("Cannot set current page to "
-					+ currentPage + " because this pageable list view only has "
-					+ pageCount + " pages");
+			throw new IllegalArgumentException("Cannot set current page to " + currentPage
+					+ " because this pageable list view only has " + pageCount + " pages");
 		}
 
 		this.currentPage = currentPage;
@@ -177,6 +141,7 @@ public abstract class PageableListView extends ListView
 
 	/**
 	 * Get the maximum number of rows on each page.
+	 * 
 	 * @return the maximum number of rows on each page.
 	 */
 	public final int getRowsPerPage()
@@ -199,7 +164,9 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-	 * Prevent users from accidentially using it. Throw an IllegalArgumentException.
+	 * Prevent users from accidentially using it. Throw an
+	 * IllegalArgumentException.
+	 * 
 	 * @see wicket.markup.html.list.ListView#setStartIndex(int)
 	 */
 	public ListView setStartIndex(int startIndex) throws IllegalArgumentException
@@ -209,8 +176,11 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-	 * Prevent users from accidentially using it. Throw an IllegalArgumentException.
-	 * @param size the view size
+	 * Prevent users from accidentially using it. Throw an
+	 * IllegalArgumentException.
+	 * 
+	 * @param size
+	 *            the view size
 	 * @return This
 	 * @throws IllegalArgumentException
 	 * @see wicket.markup.html.list.ListView#setStartIndex(int)

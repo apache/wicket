@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.42 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -108,7 +108,7 @@ public abstract class Component implements Serializable
 	private IModel model;
 
 	/** Component name. */
-	private final String name;
+	private String name;
 
 	/** Any parent container. */
 	private Container parent;
@@ -162,61 +162,14 @@ public abstract class Component implements Serializable
 	 */
 	public Component(final String name)
 	{
-		if (name == null && !(this instanceof Page))
-		{
-			throw new WicketRuntimeException("Null component name is not allowed.");
-		}
-		this.name = name;
+		setName(name);
 	}
 
 	/**
-	 * Constructor that uses the provided {@link IModel}as its model. All
+	 * Constructor that uses the provided object as a model. If the object given
+	 * is an instance of IModel, the object will be used directly. Otherwise,
+	 * the object will be wrapped in an instance of {@link Model}. All
 	 * components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
-	 */
-	public Component(String name, IModel model)
-	{
-		this(name);
-		setModel(model);
-	}
-
-	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a
-	 * dynamic model. This model will be wrapped in an instance of
-	 * {@link PropertyModel}using the provided OGNL expression. Thus, using
-	 * this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(myIModel, expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            The instance of {@link IModel}from which the model object
-	 *            will be used as the subject for the given expression
-	 * @param expression
-	 *            The OGNL expression that works on the given object
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
-	 */
-	public Component(String name, IModel model, String expression)
-	{
-		this(name);
-		setModel(new PropertyModel(model, expression));
-	}
-
-	/**
-	 * Constructor that uses the provided object as a simple model. This object
-	 * will be wrapped in an instance of {@link Model}. All components have
-	 * names. A component's name cannot be null.
 	 * 
 	 * @param name
 	 *            The non-null name of this component
@@ -227,17 +180,44 @@ public abstract class Component implements Serializable
 	 */
 	public Component(String name, Serializable object)
 	{
-		this(name, new Model(object));
+		setName(name);
+        
+        // If the object is already an IModel
+		if (object instanceof IModel)
+		{
+            // just cast and store it
+			this.model = (IModel)object;
+		}
+		else
+		{
+            // otherwise, create a Model wrapper for the object
+			this.model = new Model(object);
+		}
 	}
 
 	/**
-	 * Constructor that uses the provided object as a dynamic model. This object
-	 * will be wrapped in an instance of {@link Model}that will be wrapped in
-	 * an instance of {@link PropertyModel}using the provided expression. Thus,
-	 * using this constructor is a short-hand for:
+     * Constructor that uses the provided object as a model. If the object given
+     * is an instance of PropertyModel, the object will be used directly.  If
+     * the object is an instance of IModel, it will be wrapped in a PropertyModel
+     * instance using the OGNL expression.  This is the equivalent of: 
+     * 
+     * <pre>
+     * IModel model;
+     * String expression;
+     * ...
+     * new MyComponent(name, new PropertyModel(model, expression));
+     * </pre>
+     * 
+     * If the object is not an instance of PropertyModel or IModel, the object
+	 * will be wrapped in an instance of {@link Model} that will in turn be 
+     * wrapped in an instance of {@link PropertyModel}using the provided expression. 
+     * Thus, this is the equivalent of:
 	 * 
 	 * <pre>
-	 * new MyComponent(name, new PropertyModel(new Model(object), expression));
+     * Serializable model;
+     * String expression;
+     * ...
+     * new MyComponent(name, new PropertyModel(new Model(model), expression));
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
@@ -245,16 +225,34 @@ public abstract class Component implements Serializable
 	 * @param name
 	 *            The non-null name of this component
 	 * @param object
-	 *            the object that will be used as the subject for the given
-	 *            expression
+	 *            The object that will be used as the subject for the given
+	 *            OGNL expression
 	 * @param expression
-	 *            the OGNL expression that works on the given object
+	 *            The OGNL expression that works on the given model object
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null name.
 	 */
 	public Component(String name, Serializable object, String expression)
 	{
-		this(name, new Model(object), expression);
+        setName(name);
+
+        // If object is already a property model, set that
+        if (object instanceof PropertyModel)
+        {
+        	this.model = (PropertyModel)object;
+        }
+        else
+        // If object is already an IModel
+        if (object instanceof IModel)
+        {
+            // wrap in a PropertyModel
+        	this.model = new PropertyModel((IModel)object, expression);
+        }
+        else
+        {
+            // wrap object in a Model and then in a PropertyModel 
+        	this.model = new PropertyModel(new Model(object), expression);
+        }
 	}
 
 	/**
@@ -435,7 +433,7 @@ public abstract class Component implements Serializable
 	public final Object getModelLock()
 	{
 		final Object lock = getModelObject();
-        return lock == null ? this : lock;
+		return lock == null ? this : lock;
 	}
 
 	/**
@@ -836,16 +834,16 @@ public abstract class Component implements Serializable
 	 */
 	public final Component setModel(final IModel model)
 	{
-        // See if there is a current model
+		// See if there is a current model
 		final IModel currentModel = getModel();
 
-        // Detach if IDetachableModel
+		// Detach if IDetachableModel
 		if (currentModel != null && currentModel instanceof IDetachableModel)
 		{
 			((IDetachableModel)currentModel).detach();
 		}
-        
-        // Set self in case the model is component aware
+
+		// Set self in case the model is component aware
 		if (model instanceof IConvertable)
 		{
 			((IConvertable)model).setConverter(getConverter());
@@ -1362,5 +1360,21 @@ public abstract class Component implements Serializable
 	{
 		// Search for page
 		return (Page)(this instanceof Page ? this : findParent(Page.class));
+	}
+
+	/**
+	 * Sets the name of this component. This method is private because the only
+	 * time a component's name can be set is in its constructor.
+	 * 
+	 * @param name
+	 *            The component's name
+	 */
+	private final void setName(final String name)
+	{
+		if (name == null && !(this instanceof Page))
+		{
+			throw new WicketRuntimeException("Null component name is not allowed.");
+		}
+		this.name = name;
 	}
 }

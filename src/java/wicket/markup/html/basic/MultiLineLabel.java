@@ -22,7 +22,6 @@ import java.io.Serializable;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
-import wicket.model.IModel;
 import wicket.util.string.Strings;
 
 /**
@@ -39,22 +38,6 @@ public class MultiLineLabel extends HtmlComponent
 { 
 	/** Serial Version ID */
 	private static final long serialVersionUID = 7949493094618802759L;
-
-	/**
-     * @see wicket.Component#Component(String, IModel)
-	 */
-	public MultiLineLabel(String name, IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-     * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public MultiLineLabel(String name, IModel model, String expression)
-	{
-		super(name, model, expression);
-	}
 
 	/**
      * @see wicket.Component#Component(String, Serializable)

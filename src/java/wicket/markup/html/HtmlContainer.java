@@ -21,7 +21,6 @@ import java.io.Serializable;
 
 import wicket.Component;
 import wicket.Container;
-import wicket.model.IModel;
 
 /**
  * A container of HTML markup and components. It is very similar to the base
@@ -42,21 +41,6 @@ public class HtmlContainer extends Container
 		super(name);
 	}
 
-	/**
-	 * @see Component#Component(String, IModel)
-	 */
-	public HtmlContainer(final String name, final IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-	 * @see Component#Component(String, IModel, String)
-	 */
-	public HtmlContainer(final String name, final IModel model, final String expression)
-	{
-		super(name, model, expression);
-	}
 
 	/**
 	 * @see Component#Component(String, Serializable)
