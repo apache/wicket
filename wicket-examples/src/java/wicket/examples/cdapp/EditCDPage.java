@@ -25,6 +25,7 @@ import net.sf.hibernate.Transaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IFeedback;
 import wicket.WicketRuntimeException;
 import wicket.contrib.data.model.PersistentObjectModel;
 import wicket.contrib.data.model.hibernate.HibernateObjectModel;
@@ -35,7 +36,6 @@ import wicket.examples.cdapp.model.CD;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.form.validation.LengthValidator;
 import wicket.markup.html.form.validation.RequiredValidator;
@@ -73,7 +73,7 @@ public final class EditCDPage extends WicketExamplePage
 		 * @param validationErrorHandler error handler
 		 * @param cdModel the model
 		 */
-		public DetailForm(String name, IValidationFeedback validationErrorHandler,
+		public DetailForm(String name, IFeedback validationErrorHandler,
 				PersistentObjectModel cdModel)
 		{
 			super(name, cdModel, validationErrorHandler);

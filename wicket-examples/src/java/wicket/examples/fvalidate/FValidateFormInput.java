@@ -20,13 +20,13 @@ package wicket.examples.fvalidate;
 import java.util.Date;
 import java.util.Locale;
 
+import wicket.IFeedback;
 import wicket.PageParameters;
 import wicket.Session;
 import wicket.contrib.markup.html.form.fvalidate.FValidateTextField;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -61,7 +61,7 @@ public class FValidateFormInput extends WicketExamplePage
 		 * @param name componentnaam
 		 * @param validationFeedback error handler
 		 */
-		public InputForm(String name, IValidationFeedback validationFeedback)
+		public InputForm(String name, IFeedback validationFeedback)
 		{
 			super(name, validationFeedback);
 

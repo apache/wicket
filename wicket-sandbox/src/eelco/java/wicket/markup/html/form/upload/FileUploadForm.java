@@ -24,8 +24,8 @@ import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
 
+import wicket.IFeedback;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.util.file.Files;
 import wicket.util.file.Folder;
 import wicket.util.string.Strings;
@@ -147,7 +147,7 @@ public class FileUploadForm extends UploadForm
 	 * @param validationErrorHandler
 	 *            Error handler for validation errors
 	 */
-	public FileUploadForm(final String name, final IValidationFeedback validationErrorHandler)
+	public FileUploadForm(final String name, final IFeedback validationErrorHandler)
 	{
 		super(name, validationErrorHandler);
 	}

@@ -22,12 +22,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import wicket.IFeedback;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ImageButton;
 import wicket.markup.html.form.RequiredTextField;
-import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
@@ -100,12 +100,12 @@ public class FormInput extends WicketExamplePage
 		 * 
 		 * @param name
 		 *            Component name
-		 * @param validationFeedback
+		 * @param feedback
 		 *            Feedback display for form
 		 */
-		public InputForm(String name, IValidationFeedback validationFeedback)
+		public InputForm(String name, IFeedback feedback)
 		{
-			super(name, new FormInputModel(), validationFeedback);
+			super(name, new FormInputModel(), feedback);
 
 			add(new RequiredTextField("stringProperty"));
 			add(new RequiredTextField("integerProperty", Integer.class));

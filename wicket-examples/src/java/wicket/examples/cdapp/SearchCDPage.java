@@ -27,6 +27,7 @@ import net.sf.hibernate.Transaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IFeedback;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
@@ -37,7 +38,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
@@ -176,7 +176,7 @@ public class SearchCDPage extends WicketExamplePage
 		 * @param componentName Name of the form component
 		 * @param errorHandler the error handler
 		 */
-		public SearchForm(final String componentName, final IValidationFeedback errorHandler)
+		public SearchForm(final String componentName, final IFeedback errorHandler)
 		{
 			super(componentName, errorHandler);
 			add(new TextField("search", this, "search"));

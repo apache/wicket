@@ -118,15 +118,17 @@ public final class EditBook extends AuthenticatedWebPage
 			title.add(RequiredValidator.getInstance());
 			title.add(LengthValidator.max(30));
 			final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(
-					"titleFeedback", title);
+					"titleFeedback");
 			add(titleFeedback);
+			titleFeedback.add(title);
 
 			// Create a required text field that edits the book's author
 			final TextField author = new TextField("author");
 			author.add(RequiredValidator.getInstance());
 			final FormComponentFeedbackBorder authorFeedback = new FormComponentFeedbackBorder(
-					"authorFeedback", author);
+					"authorFeedback");
 			add(authorFeedback);
+			authorFeedback.add(author);
 
 			// Add fiction checkbox
 			add(new CheckBox("fiction"));
