@@ -29,7 +29,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.ÍComponentResolver;
+import wicket.markup.IComponentResolver;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
@@ -816,7 +816,7 @@ public abstract class Container extends Component
 			    final Iterator iter = componentResolvers.iterator();
 			    while (iter.hasNext())
 			    {
-			        final ÍComponentResolver resolver = (ÍComponentResolver) iter.next();
+			        final IComponentResolver resolver = (IComponentResolver) iter.next();
 			        if (resolver.resolve(cycle, markupStream, tag, this) == true)
 			        {
 			            return;
