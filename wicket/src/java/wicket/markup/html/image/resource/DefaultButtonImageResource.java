@@ -212,31 +212,46 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * 
 	 * @see RenderedDynamicImageResource#render(Graphics2D)
 	 */
-	protected void render(final Graphics2D graphics)
+	protected boolean render(final Graphics2D graphics)
 	{
 		// Get width and height
 		final int width = getWidth();
-		final int height = getHeight();
-
-		// Turn on anti-aliasing
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-
-		// Draw background
-		graphics.setColor(backgroundColor);
-		graphics.fillRect(0, 0, width, height);
-
-		// Draw round rectangle
-		graphics.setColor(color);
-		graphics.setBackground(backgroundColor);
-		graphics.fillRoundRect(0, 0, getWidth(), getHeight(), arcWidth, arcHeight);
+		final int height = getHeight();		
 		
-		// Draw text
-		graphics.setColor(textColor);
+		// Get size of text
 		graphics.setFont(font);
 		final FontMetrics fontMetrics = graphics.getFontMetrics();
-		final int x = (getWidth() - fontMetrics.stringWidth(label)) / 2;
-		final int y = (getHeight() - fontMetrics.getHeight()) / 2;
-		graphics.drawString(label, x, y + fontMetrics.getAscent());
+		final int dxText = fontMetrics.stringWidth(label);
+		final int dxMargin = 10;
+		
+		// Does text fit with a nice margin?
+		if (dxText > width - dxMargin)
+		{
+			// Re-render as a larger button
+			setWidth(dxText + dxMargin);
+			return false;
+		}
+		else
+		{
+			// Turn on anti-aliasing
+			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+	
+			// Draw background
+			graphics.setColor(backgroundColor);
+			graphics.fillRect(0, 0, width, height);
+	
+			// Draw round rectangle
+			graphics.setColor(color);
+			graphics.setBackground(backgroundColor);
+			graphics.fillRoundRect(0, 0, width, height, arcWidth, arcHeight);
+			
+			// Draw text
+			graphics.setColor(textColor);
+			final int x = (width - dxText) / 2;
+			final int y = (getHeight() - fontMetrics.getHeight()) / 2;
+			graphics.drawString(label, x, y + fontMetrics.getAscent());
+			return true;
+		}
 	}
 }

@@ -29,7 +29,7 @@ import java.awt.image.BufferedImage;
  * over the wire and then will be recreated when required.
  * <p>
  * The extension/format of the image resource can be specified with
- * setFormat(String). 
+ * setFormat(String).
  * 
  * @see wicket.markup.html.image.resource.DefaultButtonImageResource
  * @see wicket.markup.html.image.resource.DefaultButtonImageResourceFactory
@@ -43,11 +43,11 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	/** Height of image */
 	private int height = 100;
 
-	/** Width of image */
-	private int width = 100;
-
 	/** Transient image data so that image only needs to be generated once per VM */
 	private transient byte[] imageData;
+
+	/** Width of image */
+	private int width = 100;
 
 	/**
 	 * Constructor.
@@ -78,7 +78,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	{
 		return width;
 	}
-	
+
 	/**
 	 * Causes the image to be redrawn the next time its requested.
 	 */
@@ -112,11 +112,24 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	{
 		if (imageData == null)
 		{
-			final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-			render((Graphics2D)image.getGraphics());
-			imageData = toImageData(image);
+			imageData = render();
 		}
 		return imageData;
+	}
+
+	/**
+	 * Renders this image
+	 * 
+	 * @return The image data
+	 */
+	protected byte[] render()
+	{
+		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		if (render((Graphics2D)image.getGraphics()))
+		{
+			return toImageData(image);
+		}
+		return render();
 	}
 
 	/**
@@ -124,6 +137,9 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 * 
 	 * @param graphics
 	 *            The graphics context to render on
+	 * @return True if the image was rendered. False if the image size was
+	 *         changed by the rendering implementation and the image should be
+	 *         re-rendered at the new size.
 	 */
-	protected abstract void render(Graphics2D graphics);
+	protected abstract boolean render(Graphics2D graphics);
 }
