@@ -47,6 +47,14 @@ public class FileUpload implements Serializable
 	}
 
 	/**
+	 * @return Uploaded file as an array of bytes
+	 */
+	public byte[] getBytes()
+	{
+		return item.get();
+	}
+	
+	/**
 	 * @return Content type for upload
 	 */
 	public String getContentType()
