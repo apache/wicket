@@ -1,0 +1,39 @@
+
+<html>
+<head>
+	<title>How to do tables like displaytag with Wicket</title>
+	<meta http-equiv="Expires" content="-1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+	
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+	</thead>
+    <tbody>
+      <span id="wcn-rows">
+	      <tr id="wcn-class" class="even">
+          <td><span id="wcn-id">Test ID</span></td>
+          <td><span id="wcn-email">Test EMail</span></td>
+          <td><span id="wcn-status">Test Status</span></td>
+          <td><span id="wcn-date">Test Date</span></td>
+  		  </tr>
+      </span>
+    </tbody>
+  </table>
+	<div class="exportlinks">Export options: 
+    <a id="wcn-exportCsv"><span class="export csv">CSV </span></a>| 
+    <a id="wcn-exportExcel"><span class="export excel">Excel </span></a>| 
+    <a id="wcn-exportXml"><span class="export xml">XML </span></a>
+  </div>	
+</body>
+</html>

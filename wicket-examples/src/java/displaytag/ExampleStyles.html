@@ -1,0 +1,55 @@
+
+<html>
+<head>
+	<title>How to do tables like displaytag with Wicket</title>
+	<meta http-equiv="Expires" content="-1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+	
+<body>
+	<h2><a href="./index.jsp">Examples</a> > Basic, columns - different styles</h2>
+  <ul id="wcn-stylelist">
+	  <li><a id="wcn-isis">ISIS</a></li>
+	  <li><a id="wcn-its">ITS</a></li>
+	  <li><a id="wcn-mars">Mars</a></li>
+	  <li><a id="wcn-simple">Simple</a></li>
+	  <li><a id="wcn-report">Report</a></li>
+	  <li><a id="wcn-mark">Mark Column</a></li>
+  </ul>
+
+  <table id="wcn-htmlTable" class="isis">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+	</thead>
+    <tbody>
+      <span id="wcn-rows">
+	    <tr id="wcn-class" class="even">
+          <td class="idcol"><span id="wcn-id">Test ID</span></td>
+          <td><span id="wcn-name">Test Name</span></td>
+          <td><span id="wcn-email">Test EMail</span></td>
+          <td class="tableCellError"><span id="wcn-status">Test Status</span></td>
+          <td><span id="wcn-comments">Test Comments</span></td>
+		</tr>
+      </span>
+      <span id="wcn-[remove]">
+		<tr class="odd">
+		  <td class="idcol">Test ID</td>
+		  <td>Test Name</td>
+		  <td>Test Email</td>
+		  <td class="tableCellError">Test Status</td>
+		  <td>Test Comments</td>
+		</tr>
+      </span>
+    </tbody>
+  </table>
+</body>
+</html>

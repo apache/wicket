@@ -1,0 +1,51 @@
+
+<html>
+<head>
+	<title>How to do tables like displaytag with Wicket</title>
+	<meta http-equiv="Expires" content="-1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+	
+<body>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Status</th>
+      </tr>
+	</thead>
+    <tbody>
+      <span id="wcn-rows">
+	      <tr id="wcn-class" class="even">
+          <td><a id="wcn-idLink"><span id="wcn-id">Test ID</span></a></td>
+          <td><a id="wcn-mailLink"><span id="wcn-email">Test EMail</span></a></td>
+          <td><a id="wcn-statusLink"><span id="wcn-status">Test Status</span></a></td>
+		    </tr>
+      </span>
+    </tbody>
+  </table>
+	<br/>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+	</thead>
+    <tbody>
+      <span id="wcn-rows2">
+	      <tr id="wcn-class" class="even">
+          <td><a id = "wcn-idLink"><span id="wcn-id">Test ID</span></a></td>
+          <td><span id="wcn-email">Test EMail</span></td>
+          <td><a id = "wcn-view">View</a> | <a id = "wcn-edit">Edit</a> | <a id = "wcn-delete">Delete</a></td>
+		    </tr>
+      </span>
+    </tbody>
+  </table>
+</body>
+</html>
