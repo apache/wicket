@@ -26,7 +26,12 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
+ * This is a very basic loop component. It's model is simply a size value. During
+ *  render phase it iterates from 0 to size - 1, creates a new LoopItem for each
+ *  index, populates and renders it.
  * 
+ * @author Juergen Donnerstag
+ * @author Eelco Hillenius
  */
 public abstract class Loop extends WebMarkupContainer
 {
@@ -34,9 +39,11 @@ public abstract class Loop extends WebMarkupContainer
 	private static Log log = LogFactory.getLog(Loop.class);
 	
 	/**
+	 * Construct.
+	 * 
 	 * @see wicket.Component#Component(String, IModel)
-	 * @param id
-	 * @param size
+	 * @param id component id
+	 * @param size max index of the loop
 	 */
 	public Loop(final String id, final int size)
 	{
@@ -44,7 +51,12 @@ public abstract class Loop extends WebMarkupContainer
 	}
 	
 	/**
+	 * Construct.
+	 * 
 	 * @see wicket.Component#Component(String, IModel)
+	 * 
+	 * @param id component id
+	 * @param model must contain a Integer model object
 	 */
 	public Loop(final String id, final IModel model)
 	{
@@ -52,6 +64,7 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
+	 * The size of the loop
 	 * 
 	 * @return size
 	 */
@@ -61,7 +74,7 @@ public abstract class Loop extends WebMarkupContainer
 	}
 	
 	/**
-	 * Renders this ListView (container).
+	 * Renders this Loop (container).
 	 */
 	protected void onRender()
 	{
@@ -71,7 +84,7 @@ public abstract class Loop extends WebMarkupContainer
 		// Save position in markup stream
 		final int markupStart = markupStream.getCurrentIndex();
 
-		// Get number of listItems to be displayed
+		// Get number of loopItems to be displayed
 		final int size = getSize();
 		if (size > 0)
 		{
@@ -79,20 +92,20 @@ public abstract class Loop extends WebMarkupContainer
 			// container
 			for (int i = 0; i < size; i++)
 			{
-				// Get the name of the component for listItem i
+				// Get the name of the component for loopItem i
 				final String componentName = Integer.toString(i);
 
 				// If this component does not already exist, populate it
 				LoopItem loopItem = (LoopItem)get(componentName);
 				if (loopItem == null)
 				{
-					// Create listItem for index i of the list
+					// Create loopItem for index i of the list
 					loopItem = newItem(i);
 
 				    onBeginPopulateItem(loopItem);
 					populateItem(loopItem);
 
-					// Add cell to list view
+					// Add item to loop
 					add(loopItem);
 				}
 
@@ -111,7 +124,7 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * Create a new LoopItem for list item at index.
+	 * Create a new LoopItem for loop item at index.
 	 * 
 	 * @param index
 	 * @return LoopItem
@@ -122,21 +135,21 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * Populate a given listItem.
+	 * Populate a given loopItem.
 	 * 
-	 * @param listItem
+	 * @param loopItem
 	 *            The listItem to populate
 	 */
-	protected abstract void populateItem(final LoopItem listItem);
+	protected abstract void populateItem(final LoopItem loopItem);
 
 	/**
-	 * Comes handy for ready made ListView based components which must implement
+	 * Comes handy for ready made Loop based components which must implement
 	 * populateItem() but you don't want to loose compile time error checking 
 	 * reminding the user to implement abstract populateItem().
 	 * 
-	 * @param listItem
+	 * @param loopItem
 	 */
-	protected void onBeginPopulateItem(final LoopItem listItem)
+	protected void onBeginPopulateItem(final LoopItem loopItem)
 	{
 	}
 

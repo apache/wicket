@@ -58,6 +58,11 @@ public class MarkupInheritanceResolver implements IComponentResolver
             if (wicketTag.isExtendTag())
             {
                 markupStream.next();
+                
+                // weave in the parent's java classes markup
+                //resolveComponent(markupStream, wicketTag);
+                
+                // now go on with 
                 return true;
             }
         }
@@ -65,4 +70,106 @@ public class MarkupInheritanceResolver implements IComponentResolver
         // We were not able to handle the componentId
         return false;
     }
+
+	/**
+	 * Renders the entire associated markup stream for a container such as a
+	 * Border or Panel. Any leading or trailing raw markup in the associated
+	 * markup is skipped.
+	 * 
+	 * @param openTagName
+	 *			  the tag to render the associated markup for
+	 * @param exceptionMessage
+	 *			  message that will be used for exceptions
+	 */
+/*    
+	protected final void renderAssociatedMarkup(final String openTagName,
+			final String exceptionMessage)
+	{
+		// Get markup associated with Border or Panel component
+		final MarkupStream originalMarkupStream = getMarkupStream();
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
+
+		associatedMarkupStream.skipRawMarkup();
+		setMarkupStream(associatedMarkupStream);
+
+		// Get open tag in associated markup of border component
+		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
+
+		// Check for required open tag name
+		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof ComponentWicketTag)))
+		{
+			associatedMarkupStream.throwMarkupException(exceptionMessage);
+		}
+
+		renderComponentTag(associatedMarkupOpenTag);
+		associatedMarkupStream.next();
+		renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
+		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag);
+		setMarkupStream(originalMarkupStream);
+	}
+*/
+	/**
+	 *
+	 * @param markupStream
+	 *            The current markup stream
+	 * @param tag
+	 *            The current component tag
+	 * @return True, if MarkupContainer was able to resolve the component name and to
+	 *         render the component
+	 */
+/*    
+	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
+	{
+		// Determine if tag is a <wicket:body> tag
+		final boolean isBodyTag = (tag instanceof ComponentWicketTag && markupStream.atOpenCloseTag("body"));
+
+		// If we're being asked to resolve a component for a <wicket:body> tag
+		if (!isBodyTag)
+        {
+            return false;
+        }
+        else
+		{
+			// Check that it's <wicket:body/> not <wicket:body>
+			if (!markupStream.atOpenCloseTag())
+			{
+				markupStream.throwMarkupException("A <wicket:body> tag must be an open-close tag.");
+			}
+
+			// Render the body tag
+			renderComponentTag(tag);
+			markupStream.next();
+
+			// Find nearest Border at or above this container
+			Border border = (Border)((this instanceof Border) ? this : findParent(Border.class));
+
+			// If markup stream is null, that indicates we already recursed into
+			// this block of log and set it to null (below). If we did that,
+			// then we want to go up another level of border nesting.
+			if (border.getMarkupStream() == null)
+			{
+				// Find Border at or above parent of this border
+				final MarkupContainer borderParent = border.getParent();
+				border = (Border)((borderParent instanceof Border) ? borderParent : borderParent
+						.findParent(Border.class));
+			}
+
+			// Get the border's markup
+			final MarkupStream borderMarkup = border.findMarkupStream();
+
+			// Set markup of border to null. This allows us to find the border's
+			// parent's markup. It also indicates that we've been here in the
+			// log just above.
+			border.setMarkupStream(null);
+
+			// Draw the children of the border component using its original
+			// in-line markup stream (not the border's associated markup stream)
+			border.renderComponentTagBody(border.findMarkupStream(), border.openTag);
+
+			// Restore border markup so it can continue rendering
+			border.setMarkupStream(borderMarkup);
+			return true;
+		}
+	}
+	*/
 }

@@ -92,18 +92,12 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		super(componentName, model);
 
-		if (model != null)
+		if (model == null)
 		{
-			if (getModelObject() == null)
-			{
-				this.setModelObject(Collections.EMPTY_LIST);
-			}
-			else if (!(getModelObject() instanceof List))
-			{
-				throw new IllegalArgumentException("A ListView model object must be of type List");
-			}
+		    throw new IllegalArgumentException(
+		            "null models are not allowed. You may a Loop type instead");
 		}
-
+		
 		// A reasonable default for viewSize can not be determined right now,
 		// because list items might be added or removed until ListView
 		// gets rendered.
@@ -126,7 +120,7 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected IModel initModel()
 	{
-		return new Model((Serializable)Collections.EMPTY_LIST);
+		return new Model(null);
 	}
 	
 	/**
@@ -138,7 +132,12 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public final List getList()
 	{
-		return (List)getModelObject();
+	    final List list = (List)getModelObject();
+	    if (list == null)
+	    {
+	        return Collections.EMPTY_LIST;
+	    }
+	    return list;
 	}
 
 	/**
@@ -177,8 +176,13 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		int size = this.viewSize;
 
-		// Adjust view size to model object's list size
 		final Object modelObject = getModelObject();
+		if (modelObject == null)
+		{
+		    return (size == Integer.MAX_VALUE ? 0 : size);
+		}
+
+		// Adjust view size to model object's list size
 		final int modelSize = getList().size();
 		if (firstIndex > modelSize)
 		{

@@ -26,12 +26,12 @@ import wicket.markup.html.WebMarkupContainer;
  */
 public class LoopItem extends WebMarkupContainer
 {
-	/** The index of the ListItem in the parent listView */
+	/** The index of the LoopItem in the parent Loop */
 	private final int index;
 
 	/**
 	 * A constructor which uses the index and the list provided to create a
-	 * ListItem. This constructor is the default one.
+	 * LoopItem. This constructor is the default one.
 	 * 
 	 * @param index The index of the item
 	 */
@@ -42,13 +42,12 @@ public class LoopItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the index of the listItem in the parent listView.
+	 * Gets the index of the loopItem in the parent Loop.
 	 * 
-	 * @return The index of this listItem in the parent listView
+	 * @return The index of this loopItem in the parent Loop
 	 */
 	public final int getIndex()
 	{
 		return index;
 	}
 }
-
