@@ -87,16 +87,18 @@ public class WicketTagComponentResolver implements IComponentResolver
                 final Component component = createComponent(container, wicketTag);
                 if (component != null)
                 {
+                    // 1. push the current component onto the stack
                     nestedComponents.put(component, null);
                     
                     try
                     {
-	                    // Add it to the hierarchy and render it
+	                    // 2. Add it to the hierarchy and render it
 	                    container.add(component);
 	                    component.render();
                     }
                     finally
                     {
+                        // 3. remove it from the stack
                         nestedComponents.remove(component);
                     }
                     
@@ -108,7 +110,14 @@ public class WicketTagComponentResolver implements IComponentResolver
         // Re-parent children of <wicket:component>. 
         if ((tag.getComponentName() != null) && nestedComponents.containsKey(container))
         {
-            final MarkupContainer parent = container.getParent();
+            MarkupContainer parent = container.getParent();
+            
+            // Take care of nested <wicket:component>
+            while ((parent != null) && nestedComponents.containsKey(parent))
+            {
+                parent = parent.getParent();
+            }
+            
             if (parent != null)
             {
                 final Component component = parent.get(tag.getComponentName());
