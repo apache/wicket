@@ -112,9 +112,6 @@ public abstract class Component implements Serializable, IConverterSource
 	/** Any parent container. */
 	private MarkupContainer parent;
 
-	/** Component rendering number useful in debugging. */
-	private int rendering = 0;
-
 	/** True if the component allows unescaped HTML. */
 	private boolean shouldEscapeModelStrings = true;
 
@@ -521,17 +518,6 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Gets the number of times this component has been rendered.
-	 * 
-	 * @return The number of times this component has been rendered. This can be
-	 *         useful in debugging.
-	 */
-	public final int getRendering()
-	{
-		return rendering;
-	}
-
-	/**
 	 * @return The request for this component's active request cycle
 	 */
 	public final Request getRequest()
@@ -688,58 +674,16 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	public final void modelChanged()
 	{
-		onModelChanged();
-	}
-
-	/**
-	 * Invalidates the model attached to this component. Traverses all pages in
-	 * the session associated with this component. Within each page in the
-	 * session, traverses all components looking for a component attached to the
-	 * same model and having the same name as this component. For each such
-	 * model, the corresponding page is made stale. In addition, all previous
-	 * renderings of the page holding this component are made stale.
-	 */
-	public void modelChangedStructure()
-	{
-		// Find the page where this component lives. There is no need to
-		// check the return value for null here since getPage() will throw
-		// an IllegalState exception if its return value is null.
-		final Page page = getPage();
-
-		// Make all previous renderings of the page stale
-		page.setStaleRendering(page.getRendering());
-
-		// Visit all pages in the session
-		getSession().visitPages(new Session.IPageVisitor()
+		// Tell the page that our model changed
+		final Page page = findPage();
+		if (page != null)
 		{
-			public void page(final Page currentPage)
-			{
-				// If page is not the component's own page
-				if (currentPage != page)
-				{
-					// Visit child components on page
-					currentPage.visitChildren(new IVisitor()
-					{
-						public Object component(final Component current)
-						{
-							// If the components have the same equals identity
-							// (which is assumed to be implemented in terms of
-							// database identity) and component is accessing
-							// the same property of the model
-							if (current.getModel() != null && getModel() != null
-									&& current.getModel().equals(getModel())
-									&& current.getName().equals(getName()))
-							{
-								// then make the page holding the component
-								// stale
-								currentPage.setStale(true);
-							}
-							return CONTINUE_TRAVERSAL;
-						}
-					});
-				}
-			}
-		});
+			page.componentModelChanged(this);
+		}
+
+		// Call user code
+		onInternalModelChanged();
+		onModelChanged();
 	}
 
 	/**
@@ -748,8 +692,9 @@ public abstract class Component implements Serializable, IConverterSource
 	public final void render()
 	{
 		// Rendering is beginning
+		onInternalBeginRender();
 		onBeginRender();
-		
+
 		try
 		{
 			// Get request cycle to render to
@@ -770,6 +715,9 @@ public abstract class Component implements Serializable, IConverterSource
 			{
 				// Call implementation to render component
 				onRender();
+				
+				// Tell the page that the component rendered
+				getPage().componentRendered(this);
 			}
 	
 			// Restore original response
@@ -777,11 +725,9 @@ public abstract class Component implements Serializable, IConverterSource
 		}
 		finally
 		{
-			// Increase render count for component
-			rendering++;
-
 			// Rendering has completed
 			onEndRender();
+			onInternalEndRender();
 			
 			// Detach models now that rendering is fully completed
 			detachModels();
@@ -1084,13 +1030,6 @@ public abstract class Component implements Serializable, IConverterSource
 	protected abstract void onRender();
 
 	/**
-	 * Called when component is being reset for future use.
-	 */
-	protected void onReset()
-	{
-	}
-
-	/**
 	 * Renders the component at the current position in the given markup stream.
 	 * The method onComponentTag() is called to allow the component to mutate
 	 * the start tag. The method onComponentTagBody() is then called to permit
@@ -1260,29 +1199,16 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Check if all components rendered and throw an exception when this is not
-	 * the case.
+	 * If this Component is a Page, returns self. Otherwise, searches for the
+	 * nearest Page parent in the component hierarchy. If no Page parent can be
+	 * found, null is returned
 	 * 
-	 * @param page
-	 *            the page
+	 * @return The Page or null if none can be found
 	 */
-	final void checkRendering(final Page page)
+	final Page findPage()
 	{
-		page.visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// If component never rendered
-				if (component.rendering == 0)
-				{
-					// Throw exception
-					throw new WicketRuntimeException(component
-							.exceptionMessage("Component never rendered. You probably failed to "
-									+ "reference it in your markup."));
-				}
-				return CONTINUE_TRAVERSAL;
-			}
-		});
+		// Search for page
+		return (Page)(this instanceof Page ? this : findParent(Page.class));
 	}
 
 	/**
@@ -1302,6 +1228,27 @@ public abstract class Component implements Serializable, IConverterSource
 		throw new IllegalArgumentException(
 				exceptionMessage("Component is not a container and so does not contain the path "
 						+ path));
+	}
+
+	/**
+	 * This method is called immediately before a component is rendered
+	 */	
+	void onInternalBeginRender()
+	{
+	}
+
+	/**
+	 * This method is called after rendering is completed
+	 */
+	void onInternalEndRender()
+	{
+	}
+
+	/**
+	 * Called anytime a model is changed via setModel or setModelObject.
+	 */
+	void onInternalModelChanged()
+	{
 	}
 
 	/**
@@ -1382,19 +1329,6 @@ public abstract class Component implements Serializable, IConverterSource
 				((AttributeModifier)iterator.next()).detachModel();
 			}
 		}
-	}
-
-	/**
-	 * If this Component is a Page, returns self. Otherwise, searches for the
-	 * nearest Page parent in the component hierarchy. If no Page parent can be
-	 * found, null is returned
-	 * 
-	 * @return The Page or null if none can be found
-	 */
-	private final Page findPage()
-	{
-		// Search for page
-		return (Page)(this instanceof Page ? this : findParent(Page.class));
 	}
 
 	/**

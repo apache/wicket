@@ -39,15 +39,23 @@ import wicket.WicketRuntimeException;
  * <pre>
  * 
  *  
- *           &lt;servlet&gt;
- *               &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *               &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *               &lt;init-param&gt;
- *                   &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                   &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *               &lt;/init-param&gt;
- *               &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *            &lt;/servlet&gt;
+ *   
+ *    
+ *     
+ *      
+ *               &lt;servlet&gt;
+ *                   &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                   &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                   &lt;init-param&gt;
+ *                       &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                       &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                   &lt;/init-param&gt;
+ *                   &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *                &lt;/servlet&gt;
+ *       
+ *      
+ *     
+ *    
  *   
  *  
  * </pre>
@@ -69,11 +77,19 @@ import wicket.WicketRuntimeException;
  * <pre>
  * 
  *  
- *              public void init() throws ServletException
- *              {
- *                  ServletConfig config = getServletConfig();
- *                  String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                  ...
+ *   
+ *    
+ *     
+ *      
+ *                  public void init() throws ServletException
+ *                  {
+ *                      ServletConfig config = getServletConfig();
+ *                      String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                      ...
+ *       
+ *      
+ *     
+ *    
  *   
  *  
  * </pre>
@@ -165,8 +181,6 @@ public class WicketServlet extends HttpServlet
 		final WebResponse response = webApplication.getSettings().getBufferResponse()
 				? new BufferedWebResponse(servletResponse)
 				: new WebResponse(servletResponse);
-				
-		session.updateSession();
 
 		try
 		{

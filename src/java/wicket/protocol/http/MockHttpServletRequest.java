@@ -903,7 +903,7 @@ public class MockHttpServletRequest implements HttpServletRequest
     public void setRequestToComponent(final Component component)
     {
         parameters.put("component", component.getPath());
-        parameters.put("rendering", "" + component.getPage().getRendering());
+        parameters.put("version", "" + component.getPage().getVersion());
         Class c = null;
         if (component instanceof IRedirectListener)
         {

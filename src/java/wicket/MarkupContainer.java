@@ -137,10 +137,12 @@ public abstract class MarkupContainer extends Component
 	 */
 	public MarkupContainer add(final Component child)
 	{
+		// Check for degenerate case
 		if (child == this)
 		{
 			throw new IllegalArgumentException("Component can't be added to itself");
 		}
+		
 		// Get child name
 		final String childName = child.getName();
 
@@ -175,6 +177,13 @@ public abstract class MarkupContainer extends Component
 		{
 			throw new IllegalArgumentException(exceptionMessage("A child component with the name '"
 					+ childName + "' already exists"));
+		}
+
+		// Tell the page a component was added
+		final Page page = findPage();
+		if (page != null)
+		{
+			page.componentAdded(child);
 		}
 
 		return this;
@@ -265,13 +274,57 @@ public abstract class MarkupContainer extends Component
 		}
 	}
 
+	/**
+	 * Removes the named component
+	 * 
+	 * @param name
+	 *            The component to remove
+	 */
+	public void remove(final String name)
+	{
+		final Component component = get(name);
+		if (component != null)
+		{
+			// Remove from map
+			childForName.remove(name);
+			
+			// Notify Page
+			final Page page = findPage();
+			if (page != null)
+			{
+				page.componentRemoved(component);
+			}
+		}
+		else
+		{
+			throw new WicketRuntimeException("Unable to find a component named '" + name
+					+ "' to remove");
+		}
+	}
 
 	/**
 	 * Removes all children from this container.
 	 */
 	public void removeAll()
 	{
-		childForName.clear();
+		// Get page for efficiency
+		final Page page = findPage();
+
+		// Loop through child components
+		for (final Iterator iterator = childForName.values().iterator(); iterator.hasNext();)
+		{
+			// Get next child
+			final Component component = (Component)iterator.next();
+
+			// Remove child
+			iterator.remove();
+
+			// Tell the page we removed the component
+			if (page != null)
+			{
+				page.componentRemoved(component);
+			}
+		}
 	}
 
 	/**
@@ -318,17 +371,27 @@ public abstract class MarkupContainer extends Component
 			}
 
 			// Add to map
-			final Object replaced = childForName.put(childName, child);
+			final Component replaced = (Component)childForName.put(childName, child);
 
 			// Look up to make sure it was already in the map
 			if (replaced == null)
 			{
 				throw new IllegalArgumentException(
 						exceptionMessage("A child component with the name '" + childName
-								+ "' didn't exists"));
+								+ "' didn't exist"));
 			}
-			((Component)replaced).setParent(null);
+			
+			replaced.setParent(null);
+			
+			// Notify the page that the replace happened
+			final Page page = findPage();
+			if (page != null)
+			{
+				page.componentRemoved(replaced);
+				page.componentAdded(child);
+			}
 		}
+		
 		return this;
 	}
 

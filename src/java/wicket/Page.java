@@ -17,6 +17,9 @@
  */
 package wicket;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -64,6 +67,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Used to create page-unique numbers */
 	private int autoIndex;
 
+	/** Number of changes that have occurred since beginVersion() was called */
+	private int changeCount;
+
 	/** Any feedback display for this page */
 	private IFeedback feedback;
 
@@ -73,14 +79,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** This page's identifier. */
 	private int id = -1;
 
+	/** Set of components that rendered if component use checking is enabled */
+	private transient Set renderedComponents;
+
 	/** The session that this page is in. */
 	private transient Session session = null;
 
 	/** True if this page is stale. */
 	private boolean stale = false;
 
-	/** The rendering before which all pages are stale. */
-	private int staleRendering = 0;
+	/** True when changes to the Page should be tracked by versioning */
+	private boolean trackChanges = false;
+
+	/** Version manager for this page */
+	private transient IPageVersionManager versionManager;
 
 	/**
 	 * Constructor.
@@ -105,6 +117,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
 	 * Get a page unique number, which will be increased with each call.
 	 * 
 	 * @return A page unique number
@@ -162,17 +176,26 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Checks a rendering number against the stale rendering threshold for this
-	 * page. If the rendering occurred before the stale-rendering number, then
-	 * the rendering is considered stale.
-	 * 
-	 * @param rendering
-	 *            The rendering number to check against this page
-	 * @return Returns true if the given rendering of the page is stale.
+	 * @return The version of this page.
 	 */
-	public final boolean isRenderingStale(final int rendering)
+	public final int getVersion()
 	{
-		return rendering < staleRendering;
+		return getVersionManager().getVersion();
+	}
+
+	/**
+	 * Override this method to implement a custom way of producing a version of
+	 * a Page when it cannot be found in the Session.
+	 * 
+	 * @param version
+	 *            The version required
+	 * @return A Page object with the given component/model hierarchy that was
+	 *         attached to this page at the time represented by the requested
+	 *         version.
+	 */
+	public Page getVersion(final int version)
+	{
+		return getVersionManager().getVersion(version);
 	}
 
 	/**
@@ -190,7 +213,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public PageState newPageState()
 	{
-		// Add to list of pages to replicate
 		return new PageState()
 		{
 			public Page getPage()
@@ -297,31 +319,53 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * @return Gets any version manager for this Page
+	 */
+	protected IPageVersionManager getVersionManager()
+	{
+		if (versionManager == null)
+		{
+			versionManager = IPageVersionManager.NULL;
+		}
+		return versionManager;
+	}
+
+	/**
 	 * @see wicket.Component#initModel()
 	 */
 	protected IModel initModel()
 	{
+		// A Page has no default model
 		return null;
 	}
-	
+
+	/**
+	 * @return Factory method that creates a version manager for this Page
+	 */
+	protected IPageVersionManager newVersionManager()
+	{
+		return new UndoPageVersionManager(this);
+	}
+
+	/**
+	 * Called when a request begins working with this page
+	 */
+	protected void onBeginRequest()
+	{
+	}
+
 	/**
 	 * Called when this page is no longer being used in a request
 	 */
 	protected void onEndRequest()
-	{		
+	{
 	}
 
 	/**
 	 * Renders this container to the given response object.
 	 */
-	protected void onRender()
+	protected final void onRender()
 	{
-		// Adds any feedback messages on this page to the given component
-		if (feedback != null)
-		{
-			feedback.addFeedbackMessages(this, false);
-		}
-
 		// Configure response object with locale and content type
 		configureResponse();
 
@@ -335,17 +379,128 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// Render all the page's markup
 			renderAll(markupStream);
 		}
+	}
 
+	/**
+	 * @param component
+	 *            The component that was added
+	 */
+	final void componentAdded(Component component)
+	{
+		changed();
+		getVersionManager().componentAdded(component);
+	}
+
+	/**
+	 * @param component
+	 *            The component whose model changed
+	 */
+	final void componentModelChanged(Component component)
+	{
+		changed();
+		getVersionManager().componentModelChanged(component);
+	}
+
+	/**
+	 * @param component
+	 *            The component that was removed
+	 */
+	final void componentRemoved(Component component)
+	{
+		changed();
+		getVersionManager().componentRemoved(component);
+	}
+
+	/**
+	 * Adds a component to the set of rendered components
+	 * 
+	 * @param component
+	 *            The component that was rendered
+	 */
+	final void componentRendered(final Component component)
+	{
+		// Inform the page that this component rendered
+		if (getSession().getApplication().getSettings().getComponentUseCheck())
+		{
+			if (renderedComponents == null)
+			{
+				renderedComponents = new HashSet();
+			}
+			renderedComponents.add(component);
+		}
+	}
+
+	/**
+	 * @see wicket.Component#onInternalBeginRender()
+	 */
+	final void onInternalBeginRender()
+	{
+		// Adds any feedback messages on this page to the given component
+		if (feedback != null)
+		{
+			feedback.addFeedbackMessages(this, false);
+		}
+	}
+
+	/**
+	 * Called when a request begins working with this page
+	 */
+	final void onInternalBeginRequest()
+	{
+		changeCount = 0;
+	}
+
+	/**
+	 * @see wicket.Component#onInternalEndRender()
+	 */
+	final void onInternalEndRender()
+	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
 		if (getApplicationSettings().getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			// Visit components on page
-			checkRendering(this);
+			checkRendering();
 		}
 
 		// Clear all feedback messages
 		getFeedbackMessages().clear();
+	}
+
+	/**
+	 * Called when this page is no longer being used in a request
+	 */
+	final void onInternalEndRequest()
+	{
+		// Any changes to the page after this point will be versioned
+		trackChanges = true;
+
+		// If there have been changes to the page in this version
+		if (changeCount > 0)
+		{
+			// We're done with this version
+			getVersionManager().endVersion();
+		}
+	}
+
+	/**
+	 * @see wicket.Component#onInternalModelChanged()
+	 */
+	void onInternalModelChanged()
+	{
+		// Visit all the form components and validate each
+		visitChildren(new Component.IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// If form component is using form model
+				if (component.sameRootModel(Page.this))
+				{
+					component.modelChanged();
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**
@@ -391,25 +546,64 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Set rendering before which all renderings are stale for this page.
-	 * 
-	 * @param staleRendering
-	 *            Rendering before which all renderings are stale for this page
-	 */
-	final void setStaleRendering(final int staleRendering)
-	{
-		this.staleRendering = staleRendering;
-	}
-
-	/**
 	 * Adds this page to the current session
 	 */
-	private void addToSession()
+	private final void addToSession()
 	{
 		// Add page to session. This ensures that all the nice attributes
 		// of a page, such as its session and application are accessible in
 		// the page constructor.
 		getSession().addPage(this);
+	}
+
+	/**
+	 * Install version manager if need be
+	 */
+	private final void changed()
+	{
+		// If we are creating a revision of the original Page
+		if (trackChanges)
+		{
+			// Install a real version manager now if we don't already have one
+			if (versionManager == IPageVersionManager.NULL)
+			{
+				versionManager = newVersionManager();
+			}
+
+			// If there have not been any changes yet
+			if (changeCount == 0)
+			{
+				// start a new version
+				getVersionManager().beginVersion();
+			}
+
+			// Increase number of changes
+			changeCount++;
+		}
+	}
+
+	/**
+	 * Throw an exception if not all components rendered.
+	 */
+	private final void checkRendering()
+	{
+		visitChildren(new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// If component never rendered
+				if (!renderedComponents.contains(component))
+				{
+					// Throw exception
+					throw new WicketRuntimeException(component
+							.exceptionMessage("Component never rendered. You probably failed to "
+									+ "reference it in your markup."));
+				}
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+
+		renderedComponents = null;
 	}
 
 	static

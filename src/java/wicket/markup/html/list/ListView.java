@@ -178,10 +178,8 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public void modelChangedStructure()
 	{
-		// Now that a structural change has been made to the model,
-		// All pages using the same model should be expired
-		super.modelChangedStructure();
-
+		// TODO this method should go away before 1.0!
+		
 		// Remove child listItems from listView since they came
 		// from the old and now invalid model
 		removeAll();
@@ -250,6 +248,9 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected void onRender()
 	{
+		// Remove any former children
+		removeAll();
+		
 		// Ask parents for markup stream to use
 		final MarkupStream markupStream = findMarkupStream();
 
@@ -257,7 +258,7 @@ public abstract class ListView extends WebMarkupContainer
 		final int markupStart = markupStream.getCurrentIndex();
 
 		// Get number of listItems to be displayed
-		int size = getViewSize();
+		final int size = getViewSize();
 		if (size > 0)
 		{
 			// Loop through the markup in this container for each child

@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
+import wicket.util.string.Strings;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -416,6 +417,9 @@ public abstract class RequestCycle
 	 */
 	public final void respond() throws ServletException
 	{
+		// Response is beginning
+		beginResponse();
+
 		// Serialize renderings on the session object so that only one page
 		// can be rendered at a time for a given session.
 		synchronized (session)
@@ -432,24 +436,35 @@ public abstract class RequestCycle
 					final Page page = getPage();
 					if (page != null)
 					{
-						// Should page be redirected to?
-						if (getRedirect())
+						try
 						{
-							// Redirect to the page
-							redirectToPage(page);
+							// Should page be redirected to?
+							if (getRedirect())
+							{
+								// Redirect to the page
+								redirectToPage(page);
+							}
+							else
+							{
+								// Render the page
+								page.render();
+							}
 						}
-						else
+						finally
 						{
-							// Render the page
-							page.render();
-							
-							// Replicate session if need be
-							session.updateCluster();
-							
+							// Response is ending
+							endResponse();
+
 							// The request is over
+							page.onInternalEndRequest();
 							page.onEndRequest();
 						}
 					}
+				}
+				else
+				{
+					// Response is ending
+					endResponse();
 				}
 			}
 			catch (RuntimeException e)
@@ -535,6 +550,27 @@ public abstract class RequestCycle
 	public abstract String urlFor(final Component component, final Class listenerInterface);
 
 	/**
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected void beginResponse()
+	{
+		// Before the beginning of the response, we need to update
+		// our session based on any information that might be in
+		// session attributes
+		session.updateSession();
+	}
+
+	/**
+	 * Called when the request cycle object has finished its response
+	 */
+	protected void endResponse()
+	{
+		// At the end of our response, we need to set any session
+		// attributes that might be required to update the cluster
+		session.updateCluster();
+	}
+
+	/**
 	 * Looks up an interface method by name.
 	 * 
 	 * @param name
@@ -606,9 +642,8 @@ public abstract class RequestCycle
 			// page because we are just going to rethrow the exception anyway
 			// and the original problem will be displayed on the console by
 			// the container. It's better this way because users of the
-			// framework
-			// will not want to be distracted by any internal problems rendering
-			// a runtime exception error display page.
+			// framework will not want to be distracted by any internal problems
+			// rendering a runtime exception error display page.
 		}
 
 		// Reset page for re-rendering after exception
@@ -621,7 +656,7 @@ public abstract class RequestCycle
 		}
 
 		// Rethrow error for console / container
-		throw new ServletException("Wicket could not render page", e);
+		throw new ServletException("Wicket could not render page: " + Strings.toString(e), e);
 	}
 
 	/**
@@ -659,8 +694,8 @@ public abstract class RequestCycle
 		// Set the active request cycle back to null since we are
 		// done rendering the requested page
 		session.setRequestCycle(null);
-		        
-        // This thread is no longer attached to a Session
-        Session.set(null);
+
+		// This thread is no longer attached to a Session
+		Session.set(null);
 	}
 }
