@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>Wicket example: Images</title>
+		<title>Wicket Example: Images</title>
 	</properties>
 
 	<meta
@@ -9,7 +9,7 @@
 		content="wicket, example, web, j2ee, java" />
 
 	<body>
-		<section name="Wicket example: Images">
+		<section name="Images Example">
 			<p>
 				The Images application shows how to display a static image, a localized image
 				resource (that can be included in a component JAR file) and a dynamically created

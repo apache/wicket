@@ -5,7 +5,7 @@
 	</properties>
 	<meta name="keyword" content="wicket, web, j2ee, java" />
 	<body>
-		<section name="News archive">
+		<section name="News Archive">
 			<p>
 				Here is an overview of all Wicket related news items posted on our
 				<a href="http://wicket.sourceforge.net">front page</a>

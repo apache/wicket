@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>Wicket example: Nav-o-matic</title>
+		<title>Wicket Example: Navomatic</title>
 	</properties>
 
 	<meta name="keyword" content="wicket, example, web, j2ee, java" />
 
 	<body>
-		<section name="Wicket example: Nav-o-matic">
+		<section name="Navomatic Example">
 			<p>
-				The <em>Nav-o-matic</em> application shows the use of border components and links to 
+				The <em>Navomatic</em> application shows the use of border components and links to 
 				create a navigation component that can easily be dropped into any web page.
 			</p>
 			<p>

@@ -5,44 +5,44 @@
 	    <menu name="Wicket">
 	        <item name="Home" href="/index.html"/>
 	        <item name="Introduction" href="/Introduction.html" collapse="true">
-	        	<item name="Why Wicket" href="#Why_Wicket"/>
+	        	<item name="Why Wicket?" href="#Why_Wicket"/>
 	        	<item name="Motivations" href="#Motivations"/>
 	        	<item name="Goals" href="#Goals"/>
 	        </item>
             <item name="License" href="/license.html"/>
 	    </menu>
-        <menu name="Getting started">
-            <item name="Download" 
-                href="http://sourceforge.net/projects/wicket/files"/>
-            <item name="Quick start" href="/QuickStart.html" collapse="true">
-                <item name="Summary" />
-                <item name="Setting up" href="#Setting_up"/>
-                <item name="Running Eclipse" href="#Running_Eclipse" />
-                <item name="Further development" href="#Further_development"/>
-            </item>
+        <menu name="Getting Started">
 	        <item name="Examples" href="/Examples.html" collapse="true">
-	        	<item name="Helloworld" href="/ExampleHelloworld.html"/>
-	        	<item name="Nav-o-matic" href="/ExampleNavomatic.html"/>
+	        	<item name="Hello World!" href="/ExampleHelloworld.html"/>
+	        	<item name="Navomatic" href="/ExampleNavomatic.html"/>
 	        	<item name="Images" href="/ExampleImages.html"/>
 	        	<item name="Tables" href="/ExampleTables.html"/>
 			</item>
+            <item name="Download" 
+                href="http://sourceforge.net/projects/wicket/files"/>
+            <item name="QuickStart" href="/QuickStart.html" collapse="true">
+                <item name="Summary" />
+                <item name="Setting Up" href="#Setting_up"/>
+                <item name="Running Eclipse" href="#Running_Eclipse" />
+                <item name="Next Steps" href="#Next_Steps"/>
+            </item>
         </menu>
-	    <menu name="Project info">
+	    <menu name="Project Info">
 	        <item name="News" href="/News.html"/>
 	        <item name="Mailing Lists" href="/mail-lists.html" />
 	        <item name="SourceForge" href="/SourceForge.html"/>
-            <item name="Issue tracker" href="http://sourceforge.net/tracker/?group_id=119783"/>
-	        <item name="Changes" href="/changes-report.html"/>
+            <item name="Issue Tracker" href="http://sourceforge.net/tracker/?group_id=119783"/>
+	        <item name="Release History" href="/changes-report.html"/>
         </menu>
         <menu name="Documentation">
-	        <item name="User's guide" href="/manual.html" />
-            <item name="Wiki" href="/wiki" />
-	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
-	        <item name="The Wicket Vision" href="/Vision.html"/>
+	        <item name="Vision" href="/Vision.html"/>
 	        <item name="FAQ" href="/FAQ.html"/>
+	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
+	        <item name="User's Guide" href="/manual.html" />
+            <item name="Wiki" href="/wiki" />
 	        <item name="Dependencies" href="/dependencies.html"/>
         </menu>
-	    <menu name="Wicket development">
+	    <menu name="Development">
             <item name="Releasing Wicket" href="/BuildingARelease.html" 
                 collapse="true">
                 <item name="Introduction" href="#Introduction"/>
@@ -52,10 +52,10 @@
                 <item name="Publicizing" href="#Publicizing_the_release"/>
             </item>
 	        <item name="Developers" href="/team-list.html"/>
-	        <item name="CVS access" href="/cvs-usage.html"/>
-	        <item name="Build reports" href="/maven-reports.html" collapse="true">
-    	        <item name="Unit tests" href="/junit-report.html"/>
-    	        <item name="Clover tests" href="/clover/index.html" target="_blank" class="newwindow"/>
+	        <item name="CVS Access" href="/cvs-usage.html"/>
+	        <item name="Build Reports" href="/maven-reports.html" collapse="true">
+    	        <item name="Unit Tests" href="/junit-report.html"/>
+    	        <item name="Clover Tests" href="/clover/index.html" target="_blank" class="newwindow"/>
     	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
 	        </item>
 	    </menu>

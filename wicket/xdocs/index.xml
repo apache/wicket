@@ -16,52 +16,48 @@
 			</p>
 			<ul>
 				<li>
-					<em>Find out</em>
+					Find out
 					<a href="Introduction.html">why you should use Wicket</a>
 				</li>
 				<li>
-					<em>Read</em>
+					Read
 					<a href="http://www.theserverside.com/news/thread.tss?thread_id=28162">
 						comments on TheServerSide.com
 					</a>
 				</li>
 				<li>
-					<em>View</em>
+					Check out
 					<a href="Examples.html">some examples</a>
 				</li>
 				<li>
-					<em>See</em>
+					See
 					<a href="QuickStart.html">how easy it is to get started</a>
 				</li>
 				<li>
-					<em>Join</em>
-					<a href="mail-lists.html">a mailinglist</a>
+					Join
+					<a href="mail-lists.html">a mailing list</a>
 				</li>
 				<li>
-					<em>Download</em>
-					<a href="http://sourceforge.net/projects/wicket/files">the SDK</a>
+					Download
+					<a href="http://sourceforge.net/projects/wicket/files">wicket release files</a>
 				</li>
 			</ul>
 		</section>
 		<section name="Latest News">
-			<p>
-				See
-				<a href="News.html">the news archive</a>
-				for more (older) news.
-			</p>
+			<div class = "dottedbox">
 			<subsection name="January 25, 2005 - 0.9.17-beta released">
 				<p>
 					The Wicket team is proud to present yet another release of the Wicket core
 					framework and its examples. This release contains major refactoring work
 					and interface changes, including:
 					<ul>
-						<li>the Java API</li>
+						<li>The Java API</li>
 						<li>
 							Wicket component markup:
 							<![CDATA[<wicket:xxxxx>]]>
 						</li>
-						<li>web.xml configuration</li>
-						<li>major updates of the javadoc</li>
+						<li>Changes to web.xml configuration</li>
+						<li>Major updates of the javadoc</li>
 					</ul>
 					Please see the
 					<a href="ExampleHelloWorld.html">Hello World</a>
@@ -88,45 +84,29 @@
 					.
 				</p>
 			</subsection>
+			</div>
+			<p>
+				See
+				<a href="News.html">the news archive</a>
+				for more (older) news.
+			</p>
 		</section>
-		<section name="Special thanks">
+		<section name="Special Thanks">
 			<p>
 				The Wicket development team would like to thank the following partners for
-				supporting the Open Source movement in general and Wicket in particular. Without
-				them, Wicket would not be where it is now.
+				supporting Open Source in general and Wicket in particular. 
 			</p>
-			<table>
-				<tr>
-					<th>Partner</th>
-					<th>Thanks for</th>
-				</tr>
-				<tr class="none">
-					<td>
-						<a href="http://www.sourceforge.net" target="_blank" class="none">
-							<img alt="SourceForge.net"
-								src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1" />
-						</a>
-					</td>
-					<td>Hosting our project.</td>
-				</tr>
-				<tr class="none">
-					<td>
-						<a href="http://www.cenqua.com" target="_blank" class="none">
-							<img alt="Clover"
-								src="http://www.cenqua.com/clover/doc/skin/images/clover_logo.gif" />
-						</a>
-					</td>
-					<td>Licensing the code coverage tool Clover.</td>
-				</tr>
-				<tr class="none">
-					<td>
-						<a href="http://www.yourkit.com" target="_blank" class="none">
-							<img alt="YourKit" src="images/yip_logo.gif" />
-						</a>
-					</td>
-					<td>Licensing the CPU and memory profiler YourKit.</td>
-				</tr>
-			</table>
+			<a href="http://www.yourkit.com" target="_blank" class="logoLink">
+				<img alt="YourKit" src="images/yip_logo.gif" />
+			</a>
+			<a href="http://www.cenqua.com" target="_blank" class="logoLink">
+				<img alt="Clover"
+					src="http://www.cenqua.com/clover/doc/skin/images/clover_logo.gif" />
+			</a>
+			<a href="http://www.sourceforge.net" target="_blank" class="logoLink">
+				<img alt="SourceForge.net"
+					src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1" />
+			</a>
 		</section>
 	</body>
 </document>
