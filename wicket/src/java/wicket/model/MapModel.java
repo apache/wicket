@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -22,8 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A Model subclass that holds a Map, wrapping it in a HashMap (if necessary) to ensure
- * that it is Serializable.
+ * A Model subclass that holds a Map, wrapping it in a HashMap (if necessary) to
+ * ensure that it is Serializable.
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -35,7 +36,9 @@ public class MapModel extends Model
 
 	/**
 	 * Static factory method for creating a MapModel for a given Map.
-	 * @param map The map to construct a MapModel for
+	 * 
+	 * @param map
+	 *            The map to construct a MapModel for
 	 * @return The MapModel
 	 */
 	public static MapModel valueOf(final Map map)
@@ -52,7 +55,9 @@ public class MapModel extends Model
 
 	/**
 	 * Private constructor forces use of static factory method.
-	 * @param object The model object
+	 * 
+	 * @param object
+	 *            The model object
 	 */
 	private MapModel(Serializable object)
 	{
