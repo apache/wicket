@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.size;
+package wicket.util.lang;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -98,7 +98,7 @@ public final class Bytes extends LongValue
 	private static final long serialVersionUID = -2131507164691475126L;
 	
 	/** Pattern for string parsing. */
-    private static final Pattern PATTERN = Pattern.compile
+    private static final Pattern valuePattern = Pattern.compile
         ("([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);
 
     /**
@@ -267,7 +267,7 @@ public final class Bytes extends LongValue
      */
     public static Bytes valueOf(final String string, final Locale locale) throws StringValueConversionException
     {
-        final Matcher matcher = PATTERN.matcher(string);
+        final Matcher matcher = valuePattern.matcher(string);
 
         // Valid input?
         if (matcher.matches())
