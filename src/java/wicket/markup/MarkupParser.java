@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ApplicationSettings;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
@@ -67,54 +68,54 @@ import wicket.util.value.ValueMap;
 /* TODO Class needs some refactoring. It is already on my laptop, but not yet committed */
 public final class MarkupParser implements IMarkupParser
 {
+
+    /** Regex to find &lt;?xml encoding=... ?&gt; */
+    private static final Pattern encodingPattern = Pattern.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
     /** Logging */
     private static final Log log = LogFactory.getLog(MarkupParser.class);
+
+    /** Allow to have nested link regions */
+    private Stack autolinkStatus;
+    
+    /** current autolink setting */
+    private boolean automaticLinking;
+
+    /** current column number. */
+    private int columnNumber = 1;
 
     /** Name of desired componentName tag attribute. 
      * E.g. &lt;tag id="wicket-..."&gt; or &lt;tag wicket=..&gt; */
     private String componentNameAttribute;
 
-    /** The desired wicket tag's namespace: e.g. &lt;wicket:.. &gt; */
-    private String wicketTagName;
-    
-    /** Position in parse. */
-    private int inputPosition;
-
-    /** Input to parse. */
-    private String input;
-
-    /** True to strip out HTML comments. */
-    private boolean stripComments;
-
     /** True to compress multiple spaces/tabs or line endings to a single space or line ending. */
     private boolean compressWhitespace;
-
-    /** Current line and column numbers during parse. */
-    private int lineNumber = 1;
-
-    /** current column number. */
-    private int columnNumber = 1;
-
-    /** Last place we counted lines from. */
-    private int lastLineCountIndex;
 
     /** Null, if JVM default. Else taken from <?xml encoding=""> */
     private String encoding;
 
-    /** Regex to find &lt;?xml encoding=... ?&gt; */
-    private static final Pattern encodingPattern = Pattern.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
+    /** Input to parse. */
+    private String input;
+    
+    /** Position in parse. */
+    private int inputPosition;
+
+    /** Last place we counted lines from. */
+    private int lastLineCountIndex;
+
+    /** Current line and column numbers during parse. */
+    private int lineNumber = 1;
+
+    /** The Page (not the component) used to create autolinks */
+    private Page autolinkBasePage;
+
+    /** True to strip out HTML comments. */
+    private boolean stripComments;
 
     /** if true, &lt;wicket:param ..&gt; tags will be removed from markup */
     private boolean stripWicketParamTag;
-    
-    /** current autolink setting */
-    private boolean autolinking;
 
-    /** Allow to have nested link regions */
-    private Stack autolinkStatus;
-
-    /** The Page (not the component) used to create autolinks */
-    private Page page;
+    /** The desired wicket tag's namespace: e.g. &lt;wicket:.. &gt; */
+    private String wicketTagName;
    
     /**
      * Constructor.
@@ -133,51 +134,20 @@ public final class MarkupParser implements IMarkupParser
         setComponentNameAttribute(componentNameAttribute);
         setWicketNamespace(wicketTagName);
     }
-
-    /** 
-     * Name of desired componentName tag attribute. E.g. &lt;tag id="wicket-..."&gt;
-     * 
-     * @param name component name 
-     */
-    public void setComponentNameAttribute(final String name)
-    {
-        this.componentNameAttribute = name;
-        
-        if (!ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
-        {
-            log.info("You are using a non-standard component name attribute: " 
-                    + componentNameAttribute);
-        }
-    }
-    
-    /** 
-     * Name of the desired wicket tag napespace: e.g. &lt;wicket:..&gt; 
-     * 
-     * @param name wicket xml namespace (xmlns:wicket) 
-     */
-    public void setWicketNamespace(final String name)
-    {
-        this.wicketTagName = name;
-        
-        if (!ComponentWicketTag.DEFAULT_WICKET_NAMESPACE.equals(wicketTagName))
-        {
-            log.info("You are using a non-standard wicket tag name: " 
-                    + wicketTagName);
-        }
-    }
     
     /**
-     * &lt;wicket:param ...&gt; tags may be included with the output for 
-     * markup debugging purposes.
-     *   
-     * @param remove If true, &lt;wicket:param ...&gt; markup elements 
-     *    will be removed
-     */
-    public void setStripWicketParamTag(boolean remove)
-    {
-        this.stripWicketParamTag = remove;
-    }
-    
+	 * @see wicket.markup.IMarkupParser#configure(wicket.ApplicationSettings)
+	 */
+	public void configure(ApplicationSettings settings)
+	{
+        setComponentNameAttribute(settings.getComponentNameAttribute());
+        setWicketNamespace(settings.getWicketNamespace());
+        this.stripWicketParamTag = settings.getStripWicketParamTag();
+        this.stripComments = settings.getStripComments();
+        this.compressWhitespace = settings.getCompressWhitespace();
+        this.automaticLinking = settings.getAutomaticLinking();
+	}
+        
     /**
      * Return the encoding used while reading the markup file.
      * You need to call @see #read(Resource) first to initialise
@@ -191,45 +161,6 @@ public final class MarkupParser implements IMarkupParser
     }
     
     /**
-     * Set whether to strip components.
-     * @param stripComments whether to strip components.
-     */
-    public void setStripComments(boolean stripComments)
-    {
-        this.stripComments = stripComments;
-    }
-
-    /**
-     * Set whether whitespace should be compressed.
-     * @param compressWhitespace whether whitespace should be compressed.
-     */
-    public void setCompressWhitespace(boolean compressWhitespace)
-    {
-        this.compressWhitespace = compressWhitespace;
-    }
-
-    /**
-     * Set default autolink setting for the markup.
-     * @param enable automatic linking
-     */
-    public void setAutolinking(final boolean enable)
-    {
-        this.autolinking = enable;
-    }
-    
-    /**
-     * Autolinks are resolved relative to a page. The page provided
-     * will serve as the reference for autolinks on the current
-     * markup.
-     * 
-     * @param page Autolink reference page
-     */
-    public void setAutolinkBasePage(final Page page)
-    {
-        this.page = page;
-    }
-    
-    /**
      * Reads and parses markup from a Resource such as a file.
      * @param resource The file
      * @return The markup
@@ -237,9 +168,12 @@ public final class MarkupParser implements IMarkupParser
      * @throws IOException
      * @throws ResourceNotFoundException
      */
-    public Markup read(final Resource resource) throws ParseException, IOException,
+    public Markup read(final Resource resource, final Page autolinkBasePage) throws ParseException, IOException,
             ResourceNotFoundException
-    {
+    {        
+        // Set autolink base page
+        this.autolinkBasePage = autolinkBasePage;
+
         // reset: Must come from markup
         this.encoding = null;
         
@@ -282,6 +216,40 @@ public final class MarkupParser implements IMarkupParser
         {
             resource.close();
         }
+    }
+            
+    /**
+     * Parse the markup.
+     * @param string The markup
+     * @return The markup
+     * @throws ParseException
+     */
+    Markup parse(final String string) throws ParseException
+    {
+        return new Markup(null, parseMarkup(string));
+    }
+
+    /**
+     * Counts lines between indices.
+     * @param string String
+     * @param end End index
+     */
+    private void countLinesTo(final String string, final int end)
+    {
+        for (int i = lastLineCountIndex; i < end; i++)
+        {
+            if (string.charAt(i) == '\n')
+            {
+                columnNumber = 1;
+                lineNumber++;
+            }
+            else
+            {
+                columnNumber++;
+            }
+        }
+
+        lastLineCountIndex = end;
     }
 
     /**
@@ -333,16 +301,183 @@ public final class MarkupParser implements IMarkupParser
         
         return encoding;
     }
-    
+
     /**
-     * Parse the markup.
-     * @param string The markup
-     * @return The markup
+     * 
+     * @param tag
+     * @return
      * @throws ParseException
      */
-    Markup parse(final String string) throws ParseException
+    private boolean handleAutolinks(final ComponentTag tag) throws ParseException
     {
-        return new Markup(null, parseMarkup(string));
+        if (tag == null)
+        {
+            return false;
+        }
+
+        // Only xml tags not already identified as Wicket components will be considered
+        // for autolinking. This is because it is assumed that Wicket components
+        // like images, or all other kind of Wicket Links intend to handle it
+        // themselves.
+        if ((automaticLinking == true) && (tag.getComponentName() == null) 
+                && tag.getAttributes().containsKey("href"))
+        {
+            // Just a dummy name. The ComponentTag will not be forwarded.
+            return resolveAutomaticLink(tag);
+        }
+        
+        // For all <wicket:link ..> tags
+        if (tag instanceof ComponentWicketTag)
+        {
+            final ComponentWicketTag wtag = (ComponentWicketTag) tag;
+            if (wtag.isLinkTag())
+            {
+                // Beginning of the region
+    	        if (tag.isOpen())
+    	        {
+    	            if (autolinkStatus == null)
+    	            {
+    	                autolinkStatus = new Stack();
+    	            }
+    	            
+    		        // remember the current setting to be reset after the region
+    		        autolinkStatus.push(new Boolean(automaticLinking));
+    		        
+    		        // html allows to represent true in different ways
+    		        final String autolink = tag.getAttributes().getString("autolink");
+		            if ((autolink == null) 
+		                    || "".equals(autolink) 
+		                    || "true".equalsIgnoreCase(autolink) 
+		                    || "1".equals(autolink))
+		            {
+		                automaticLinking = true;
+		            }
+		            else 
+		            {
+		                automaticLinking = false;
+    		        }
+    	        } 
+    	        else if (tag.isClose())
+    	        {
+    	            // restore the autolink setting from before the region
+    	            automaticLinking = ((Boolean)autolinkStatus.pop()).booleanValue();
+    	        }
+    	        else
+    	        {
+                    throw new ParseException(
+                            "<wicket:link> can not be a open-close tag", 
+                            tag.getPos());
+    	        }
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Gets the next tag from the input string.
+     * @return The extracted tag.
+     * @throws ParseException
+     */
+    private ComponentTag nextTag() throws ParseException
+    {
+        // Index of open bracket
+        int openBracketIndex = input.indexOf('<', this.inputPosition);
+
+        // While we can find an open tag, parse the tag
+        if (openBracketIndex != -1)
+        {
+            // Determine line number
+            countLinesTo(input, openBracketIndex);
+
+            // Get index of closing tag and advance past the tag
+            final int closeBracketIndex = input.indexOf('>', openBracketIndex);
+
+            if (closeBracketIndex == -1)
+            {
+                throw new ParseException("No matching close bracket at position "
+                        + openBracketIndex, this.inputPosition);
+            }
+
+            // Get the tag text between open and close brackets
+            String tagText = input.substring(openBracketIndex + 1, closeBracketIndex);
+
+            // Handle comments
+            if (tagText.startsWith("!--"))
+            {
+                // Skip ahead to -->
+                this.inputPosition = input.indexOf("-->", openBracketIndex + 4) + 3;
+
+                if (this.inputPosition == -1)
+                {
+                    throw new ParseException(
+                            "Unclosed comment beginning at " + openBracketIndex, openBracketIndex);
+                }
+
+                return nextTag();
+            }
+            else
+            {
+                // Type of tag
+                ComponentTag.Type type = ComponentTag.OPEN;
+
+                // If the tag ends in '/', it's a "simple" tag like <foo/>
+                if (tagText.endsWith("/"))
+                {
+                    type = ComponentTag.OPEN_CLOSE;
+                    tagText = tagText.substring(0, tagText.length() - 1);
+                }
+                else if (tagText.startsWith("/"))
+                {
+                    // The tag text starts with a '/', it's a simple close tag
+                    type = ComponentTag.CLOSE;
+                    tagText = tagText.substring(1);
+                }
+
+                // We don't deeply parse tags like DOCTYPE that start with !
+                // or XML document definitions that start with ?
+                if (tagText.startsWith("!") || tagText.startsWith("?") )
+                {
+                    // Move to position after the tag
+                    this.inputPosition = closeBracketIndex + 1;
+
+                    // Return next tag
+                    return nextTag();
+                }
+                else
+                {
+                    // Parse remaining tag text, obtaining a tag object or null
+                    // if it's invalid
+                    final ComponentTag tag = parseTagText(tagText);
+
+                    if (tag != null)
+                    {
+                        // Populate tag fields
+                        tag.type = type;
+                        tag.pos = openBracketIndex;
+                        tag.length = (closeBracketIndex + 1) - openBracketIndex;
+                        tag.text = input.substring(openBracketIndex, closeBracketIndex + 1);
+                        tag.lineNumber = lineNumber;
+                        tag.columnNumber = columnNumber;
+
+                        // Move to position after the tag
+                        this.inputPosition = closeBracketIndex + 1;
+
+                        // Return the tag we found!
+                        return tag;
+                    }
+                    else
+                    {
+                        throw new ParseException(
+                                "Malformed tag (line " + lineNumber + ", column "
+                                + columnNumber + ")", openBracketIndex);
+                    }
+                }
+            }
+        }
+
+        // There is no next matching tag
+        return null;
     }
 
     /**
@@ -541,442 +676,6 @@ public final class MarkupParser implements IMarkupParser
     }
 
     /**
-     * 
-     * @param tag
-     * @return
-     * @throws ParseException
-     */
-    private boolean handleAutolinks(final ComponentTag tag) throws ParseException
-    {
-        if (tag == null)
-        {
-            return false;
-        }
-
-        // Only xml tags not already identified as Wicket components will be considered
-        // for autolinking. This is because it is assumed that Wicket components
-        // like images, or all other kind of Wicket Links intend to handle it
-        // themselves.
-        if ((autolinking == true) && (tag.getComponentName() == null) 
-                && tag.getAttributes().containsKey("href"))
-        {
-            // Just a dummy name. The ComponentTag will not be forwarded.
-            return resolveAutomaticLink(tag);
-        }
-        
-        // For all <wicket:link ..> tags
-        if (tag instanceof ComponentWicketTag)
-        {
-            final ComponentWicketTag wtag = (ComponentWicketTag) tag;
-            if (wtag.isLinkTag())
-            {
-                // Beginning of the region
-    	        if (tag.isOpen())
-    	        {
-    	            if (autolinkStatus == null)
-    	            {
-    	                autolinkStatus = new Stack();
-    	            }
-    	            
-    		        // remember the current setting to be reset after the region
-    		        autolinkStatus.push(new Boolean(autolinking));
-    		        
-    		        // html allows to represent true in different ways
-    		        final String autolink = tag.getAttributes().getString("autolink");
-		            if ((autolink == null) 
-		                    || "".equals(autolink) 
-		                    || "true".equalsIgnoreCase(autolink) 
-		                    || "1".equals(autolink))
-		            {
-		                autolinking = true;
-		            }
-		            else 
-		            {
-		                autolinking = false;
-    		        }
-    	        } 
-    	        else if (tag.isClose())
-    	        {
-    	            // restore the autolink setting from before the region
-    	            autolinking = ((Boolean)autolinkStatus.pop()).booleanValue();
-    	        }
-    	        else
-    	        {
-                    throw new ParseException(
-                            "<wicket:link> can not be a open-close tag", 
-                            tag.getPos());
-    	        }
-            }
-        }
-        
-        return false;
-    }
-	
-    /**
-     * Resolves the given tag's automaticLinkPageClass and automaticLinkPageParameters
-     * variables by parsing the tag component name and then searching for a page class at
-     * the relative URL specified by the href attribute of the tag. The href URL is
-     * relative to the package containing the page where this component is contained.
-     * @param tag the component tag
-     * @return
-     * @throws ParseException
-     */
-    private boolean resolveAutomaticLink(final ComponentTag tag)
-    	throws ParseException
-    {
-        final String originalHref = tag.getAttributes().getString("href");
-
-        final int pos = originalHref.indexOf(".html");
-        if (pos <= 0)
-        {
-            return false;
-        }
-        
-        String classPath = originalHref.substring(0, pos);
-        PageParameters pageParameters = null;
-        
-        // ".html?" => 6 chars
-        if ((classPath.length() + 6) < originalHref.length())
-        {
-            String queryString = originalHref.substring(classPath.length() + 6);
-            pageParameters = new PageParameters(new ValueMap(queryString, "&"));
-        }
-        
-        classPath = classPath.replaceAll("/", ".");
-        classPath = page.getClass().getPackage().getName() + "." + classPath;
-
-        Class clazz = page.getApplicationSettings().getDefaultClassResolver().resolveClass(classPath);
-        
-        String url = RequestCycle.get().urlFor(clazz, pageParameters);
-        tag.put("href", url);
-        tag.enableAutolink(true);
-        
-        return true;
-    }
-
-    /**
-     * Validate wicket-param tag are following component tags, assign
-     * the params to the ComponentTag immediately preceding and remove
-     * the <wicket:param ..> from output.
-     * 
-     * @param markupElements
-     * @throws ParseException
-     */
-    // TODO this is one of methods which I'd like to see being moved out of 
-    //      the parser. It has nothing todo with markup parsing.
-    private final void validateWicketTags(final List markupElements)
-    	throws ParseException
-    {
-        // For each ComponentWicketTag found ...
-        for (int i=0; i < markupElements.size(); i++)
-        {
-            final Object elem = markupElements.get(i);
-            
-            if (!(elem instanceof ComponentWicketTag))
-            {
-                continue;
-            }
-            
-            // There might be more than one wicket parameter tag. 
-            // Find the component tag (which is not a param tag) preceding
-            // that element.
-            MarkupElement parentTag = (MarkupElement) elem;
-            int pos = i;
-            while (parentTag instanceof ComponentWicketTag)
-            {
-                pos -= 1;
-                if (pos < 0)
-                {
-                    throw new ParseException(
-                            "Found Wicket parameter tag without related component tag.",
-                            ((ComponentTag)elem).getPos());
-                }
-                
-                parentTag = (MarkupElement) markupElements.get(pos);
-                
-                // param tags may be in the next line with empty RawMarkup between 
-                // the ComponentTag and the param tag. 
-                if (parentTag instanceof RawMarkup)
-                {
-                    String text = ((RawMarkup)parentTag).toString();
-                    text = text.replaceAll("\n", "");
-                    text = text.replaceAll("\r", "");
-                    text = text.trim();
-                    if (text.length() == 0)
-                    {
-                        pos -= 1;
-                        if (pos < 0)
-                        {
-                            throw new ParseException(
-                                    "Found Wicket parameter tag without related component tag.",
-                                    ((ComponentTag)elem).getPos());
-                        }
-                        
-                        parentTag = (MarkupElement) markupElements.get(pos);
-                    }
-                }
-            }
-            
-	        if (!(parentTag instanceof ComponentTag))
-	        {
-	            throw new ParseException(
-	                    "Wicket parameter tag must immediately follow a wicket parameter "
-	                    + "or wicket component tag.", 
-	                    ((ComponentTag)elem).getPos());
-	        }
-	        
-	        // TODO: <wicket:params name = "myProperty">My completely free text that can
-	        //   contain everything</wicket:params> is currently not supported
-	        
-	        // Add the parameters to the component tag
-	        final ComponentTag tag = (ComponentTag)parentTag;
-	        ValueMap params = new ValueMap(tag.attributes);
-	        params.putAll(((ComponentTag)elem).getAttributes());
-	        params.makeImmutable();
-	        tag.attributes = params;
-	        
-	        // Shall the wicket tag be removed from output?
-	        if (stripWicketParamTag == true)
-	        {
-	            // TODO "empty" RawMarkup could also be removed: 
-	            //  like <wicket:param..> being the only tag in the whole line 
-	            markupElements.remove(elem);
-	            
-	            // adjust the index to match the removal
-	            i -= 1;
-	        }
-        }
-    }
-    
-    /**
-     * Removes region enclosed by <wicket:remove> tags.
-     * ComponentTag are not allowed within this region for obvious reasons.
-     * 
-     * @param list The list to process
-     */
-    private void removePreviewComponents(final List list)
-    {
-        // Remove any <wicket:remove> components
-        for (int i = 0; i < list.size(); i++)
-        {
-            // Get next element
-            final MarkupElement element = (MarkupElement) list.get(i);
-
-            // If element is a component tag
-            if (element instanceof ComponentTag)
-            {
-                // Check for open tag 
-                final ComponentTag openTag = (ComponentTag) element;
-                
-                // TODO to be removed for Wicket 1.0
-                boolean remove = (openTag.isOpen() && openTag.componentName.equalsIgnoreCase("[remove]"));
-                if (remove == true)
-                {
-                    throw new WicketRuntimeException(
-                            "[remove] has been replaced by <wicket:remove>. Please modify your markup accordingly");
-                }
-                
-                if ((remove == false) && (element instanceof ComponentWicketTag))
-                {
-                    remove = ((ComponentWicketTag)element).isRemoveTag();
-                }
-                
-                if (remove == true)
-                {
-                    if (openTag.isOpenClose())
-                    {
-                        throw new MarkupException("Wicket remove tag must not be an open-close tag. Position:" + openTag.getPos());
-                    }
-                    
-                    // Remove open tag
-                    list.remove(i);
-
-                    // If a raw markup tag follows (new value at index i after
-                    // deletion)
-                    if ((i < list.size()) && (list.get(i) instanceof RawMarkup))
-                    {
-                        // remove any raw markup
-                        list.remove(i);
-                    }
-
-                    // Must have close tag
-                    if ((i < list.size()) && (list.get(i) instanceof ComponentTag))
-                    {
-                        // Get close tag
-                        ComponentTag closeTag = (ComponentTag) list.get(i);
-
-                        // Does it close the open tag?
-                        if (closeTag.closes(openTag))
-                        {
-                            // Remove close tag
-                            list.remove(i);
-
-                            // Back up one because i++ is coming at the bottom
-                            // of the loop
-                            // and we still need to process list[i].
-                            i--;
-                            
-                            continue;
-                        }
-                    }
-
-                    if (i < list.size())
-                    {
-                        throw new MarkupException("<wicket:remove> open tag "
-                                + openTag + " not closed by " + list.get(i) 
-                                + ". It must not contain a nested wicket component.");
-                    }
-                    else
-                    {
-                        throw new MarkupException("<wicket:remove> open tag "
-                                + openTag + " not closed."
-                        		+ " It must nt contain a nested wicket component.");
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Sets the input string to parse.
-     * @param input The input string
-     */
-    private void setInput(final String input)
-    {
-        this.input = input;
-        this.inputPosition = 0;
-    }
-
-    /**
-     * Counts lines between indices.
-     * @param string String
-     * @param end End index
-     */
-    private void countLinesTo(final String string, final int end)
-    {
-        for (int i = lastLineCountIndex; i < end; i++)
-        {
-            if (string.charAt(i) == '\n')
-            {
-                columnNumber = 1;
-                lineNumber++;
-            }
-            else
-            {
-                columnNumber++;
-            }
-        }
-
-        lastLineCountIndex = end;
-    }
-
-    /**
-     * Gets the next tag from the input string.
-     * @return The extracted tag.
-     * @throws ParseException
-     */
-    private ComponentTag nextTag() throws ParseException
-    {
-        // Index of open bracket
-        int openBracketIndex = input.indexOf('<', this.inputPosition);
-
-        // While we can find an open tag, parse the tag
-        if (openBracketIndex != -1)
-        {
-            // Determine line number
-            countLinesTo(input, openBracketIndex);
-
-            // Get index of closing tag and advance past the tag
-            final int closeBracketIndex = input.indexOf('>', openBracketIndex);
-
-            if (closeBracketIndex == -1)
-            {
-                throw new ParseException("No matching close bracket at position "
-                        + openBracketIndex, this.inputPosition);
-            }
-
-            // Get the tag text between open and close brackets
-            String tagText = input.substring(openBracketIndex + 1, closeBracketIndex);
-
-            // Handle comments
-            if (tagText.startsWith("!--"))
-            {
-                // Skip ahead to -->
-                this.inputPosition = input.indexOf("-->", openBracketIndex + 4) + 3;
-
-                if (this.inputPosition == -1)
-                {
-                    throw new ParseException(
-                            "Unclosed comment beginning at " + openBracketIndex, openBracketIndex);
-                }
-
-                return nextTag();
-            }
-            else
-            {
-                // Type of tag
-                ComponentTag.Type type = ComponentTag.OPEN;
-
-                // If the tag ends in '/', it's a "simple" tag like <foo/>
-                if (tagText.endsWith("/"))
-                {
-                    type = ComponentTag.OPEN_CLOSE;
-                    tagText = tagText.substring(0, tagText.length() - 1);
-                }
-                else if (tagText.startsWith("/"))
-                {
-                    // The tag text starts with a '/', it's a simple close tag
-                    type = ComponentTag.CLOSE;
-                    tagText = tagText.substring(1);
-                }
-
-                // We don't deeply parse tags like DOCTYPE that start with !
-                // or XML document definitions that start with ?
-                if (tagText.startsWith("!") || tagText.startsWith("?") )
-                {
-                    // Move to position after the tag
-                    this.inputPosition = closeBracketIndex + 1;
-
-                    // Return next tag
-                    return nextTag();
-                }
-                else
-                {
-                    // Parse remaining tag text, obtaining a tag object or null
-                    // if it's invalid
-                    final ComponentTag tag = parseTagText(tagText);
-
-                    if (tag != null)
-                    {
-                        // Populate tag fields
-                        tag.type = type;
-                        tag.pos = openBracketIndex;
-                        tag.length = (closeBracketIndex + 1) - openBracketIndex;
-                        tag.text = input.substring(openBracketIndex, closeBracketIndex + 1);
-                        tag.lineNumber = lineNumber;
-                        tag.columnNumber = columnNumber;
-
-                        // Move to position after the tag
-                        this.inputPosition = closeBracketIndex + 1;
-
-                        // Return the tag we found!
-                        return tag;
-                    }
-                    else
-                    {
-                        throw new ParseException(
-                                "Malformed tag (line " + lineNumber + ", column "
-                                + columnNumber + ")", openBracketIndex);
-                    }
-                }
-            }
-        }
-
-        // There is no next matching tag
-        return null;
-    }
-
-    /**
      * Parses the text between tags. For example, "a href=foo.html".
      * @param tagText The text between tags
      * @return A new Tag object or null if the tag is invalid
@@ -1102,6 +801,273 @@ public final class MarkupParser implements IMarkupParser
         }
 
         return null;
+    }
+    
+    /**
+     * Removes region enclosed by <wicket:remove> tags.
+     * ComponentTag are not allowed within this region for obvious reasons.
+     * 
+     * @param list The list to process
+     */
+    private void removePreviewComponents(final List list)
+    {
+        // Remove any <wicket:remove> components
+        for (int i = 0; i < list.size(); i++)
+        {
+            // Get next element
+            final MarkupElement element = (MarkupElement) list.get(i);
+
+            // If element is a component tag
+            if (element instanceof ComponentTag)
+            {
+                // Check for open tag 
+                final ComponentTag openTag = (ComponentTag) element;
+                
+                // TODO to be removed for Wicket 1.0
+                boolean remove = (openTag.isOpen() && openTag.componentName.equalsIgnoreCase("[remove]"));
+                if (remove == true)
+                {
+                    throw new WicketRuntimeException(
+                            "[remove] has been replaced by <wicket:remove>. Please modify your markup accordingly");
+                }
+                
+                if ((remove == false) && (element instanceof ComponentWicketTag))
+                {
+                    remove = ((ComponentWicketTag)element).isRemoveTag();
+                }
+                
+                if (remove == true)
+                {
+                    if (openTag.isOpenClose())
+                    {
+                        throw new MarkupException("Wicket remove tag must not be an open-close tag. Position:" + openTag.getPos());
+                    }
+                    
+                    // Remove open tag
+                    list.remove(i);
+
+                    // If a raw markup tag follows (new value at index i after
+                    // deletion)
+                    if ((i < list.size()) && (list.get(i) instanceof RawMarkup))
+                    {
+                        // remove any raw markup
+                        list.remove(i);
+                    }
+
+                    // Must have close tag
+                    if ((i < list.size()) && (list.get(i) instanceof ComponentTag))
+                    {
+                        // Get close tag
+                        ComponentTag closeTag = (ComponentTag) list.get(i);
+
+                        // Does it close the open tag?
+                        if (closeTag.closes(openTag))
+                        {
+                            // Remove close tag
+                            list.remove(i);
+
+                            // Back up one because i++ is coming at the bottom
+                            // of the loop
+                            // and we still need to process list[i].
+                            i--;
+                            
+                            continue;
+                        }
+                    }
+
+                    if (i < list.size())
+                    {
+                        throw new MarkupException("<wicket:remove> open tag "
+                                + openTag + " not closed by " + list.get(i) 
+                                + ". It must not contain a nested wicket component.");
+                    }
+                    else
+                    {
+                        throw new MarkupException("<wicket:remove> open tag "
+                                + openTag + " not closed."
+                        		+ " It must nt contain a nested wicket component.");
+                    }
+                }
+            }
+        }
+    }
+	
+    /**
+     * Resolves the given tag's automaticLinkPageClass and automaticLinkPageParameters
+     * variables by parsing the tag component name and then searching for a page class at
+     * the relative URL specified by the href attribute of the tag. The href URL is
+     * relative to the package containing the page where this component is contained.
+     * @param tag the component tag
+     * @return
+     * @throws ParseException
+     */
+    private boolean resolveAutomaticLink(final ComponentTag tag)
+    	throws ParseException
+    {
+        final String originalHref = tag.getAttributes().getString("href");
+
+        final int pos = originalHref.indexOf(".html");
+        if (pos <= 0)
+        {
+            return false;
+        }
+        
+        String classPath = originalHref.substring(0, pos);
+        PageParameters pageParameters = null;
+        
+        // ".html?" => 6 chars
+        if ((classPath.length() + 6) < originalHref.length())
+        {
+            String queryString = originalHref.substring(classPath.length() + 6);
+            pageParameters = new PageParameters(new ValueMap(queryString, "&"));
+        }
+        
+        classPath = classPath.replaceAll("/", ".");
+        classPath = autolinkBasePage.getClass().getPackage().getName() + "." + classPath;
+
+        Class clazz = autolinkBasePage.getApplicationSettings().getDefaultClassResolver().resolveClass(classPath);
+        
+        String url = RequestCycle.get().urlFor(clazz, pageParameters);
+        tag.put("href", url);
+        tag.enableAutolink(true);
+        
+        return true;
+    }
+
+    /** 
+     * Name of desired componentName tag attribute. E.g. &lt;tag id="wicket-..."&gt;
+     * 
+     * @param name component name 
+     */
+    private void setComponentNameAttribute(final String name)
+    {
+        this.componentNameAttribute = name;
+        
+        if (!ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
+        {
+            log.info("You are using a non-standard component name attribute: " 
+                    + componentNameAttribute);
+        }
+    }
+
+    /**
+     * Sets the input string to parse.
+     * @param input The input string
+     */
+    private void setInput(final String input)
+    {
+        this.input = input;
+        this.inputPosition = 0;
+    }
+    
+    /** 
+     * Name of the desired wicket tag napespace: e.g. &lt;wicket:..&gt; 
+     * 
+     * @param name wicket xml namespace (xmlns:wicket) 
+     */
+    private void setWicketNamespace(final String name)
+    {
+        this.wicketTagName = name;
+        
+        if (!ComponentWicketTag.DEFAULT_WICKET_NAMESPACE.equals(wicketTagName))
+        {
+            log.info("You are using a non-standard wicket tag name: " 
+                    + wicketTagName);
+        }
+    }
+
+    /**
+     * Validate wicket-param tag are following component tags, assign
+     * the params to the ComponentTag immediately preceding and remove
+     * the <wicket:param ..> from output.
+     * 
+     * @param markupElements
+     * @throws ParseException
+     */
+    // TODO this is one of methods which I'd like to see being moved out of 
+    //      the parser. It has nothing todo with markup parsing.
+    private final void validateWicketTags(final List markupElements)
+    	throws ParseException
+    {
+        // For each ComponentWicketTag found ...
+        for (int i=0; i < markupElements.size(); i++)
+        {
+            final Object elem = markupElements.get(i);
+            
+            if (!(elem instanceof ComponentWicketTag))
+            {
+                continue;
+            }
+            
+            // There might be more than one wicket parameter tag. 
+            // Find the component tag (which is not a param tag) preceding
+            // that element.
+            MarkupElement parentTag = (MarkupElement) elem;
+            int pos = i;
+            while (parentTag instanceof ComponentWicketTag)
+            {
+                pos -= 1;
+                if (pos < 0)
+                {
+                    throw new ParseException(
+                            "Found Wicket parameter tag without related component tag.",
+                            ((ComponentTag)elem).getPos());
+                }
+                
+                parentTag = (MarkupElement) markupElements.get(pos);
+                
+                // param tags may be in the next line with empty RawMarkup between 
+                // the ComponentTag and the param tag. 
+                if (parentTag instanceof RawMarkup)
+                {
+                    String text = ((RawMarkup)parentTag).toString();
+                    text = text.replaceAll("\n", "");
+                    text = text.replaceAll("\r", "");
+                    text = text.trim();
+                    if (text.length() == 0)
+                    {
+                        pos -= 1;
+                        if (pos < 0)
+                        {
+                            throw new ParseException(
+                                    "Found Wicket parameter tag without related component tag.",
+                                    ((ComponentTag)elem).getPos());
+                        }
+                        
+                        parentTag = (MarkupElement) markupElements.get(pos);
+                    }
+                }
+            }
+            
+	        if (!(parentTag instanceof ComponentTag))
+	        {
+	            throw new ParseException(
+	                    "Wicket parameter tag must immediately follow a wicket parameter "
+	                    + "or wicket component tag.", 
+	                    ((ComponentTag)elem).getPos());
+	        }
+	        
+	        // TODO: <wicket:params name = "myProperty">My completely free text that can
+	        //   contain everything</wicket:params> is currently not supported
+	        
+	        // Add the parameters to the component tag
+	        final ComponentTag tag = (ComponentTag)parentTag;
+	        ValueMap params = new ValueMap(tag.attributes);
+	        params.putAll(((ComponentTag)elem).getAttributes());
+	        params.makeImmutable();
+	        tag.attributes = params;
+	        
+	        // Shall the wicket tag be removed from output?
+	        if (stripWicketParamTag == true)
+	        {
+	            // TODO "empty" RawMarkup could also be removed: 
+	            //  like <wicket:param..> being the only tag in the whole line 
+	            markupElements.remove(elem);
+	            
+	            // adjust the index to match the removal
+	            i -= 1;
+	        }
+        }
     }
 }
 
