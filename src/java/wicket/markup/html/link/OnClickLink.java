@@ -57,7 +57,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  */
 public abstract class OnClickLink extends AbstractLink
-{ // TODO finalize javadoc
+{
     /**
      * Construct.
      * @param componentName the name of the component
@@ -121,14 +121,32 @@ public abstract class OnClickLink extends AbstractLink
     }
 
     /**
+	 * Processes the component tag.
+	 * @param cycle Request cycle
+	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
      */
     protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
     {
         // Add simple javascript on click handler that links to this
         // link's linkClicked method
-        String url = getURL(cycle);
-        url = url.replaceAll("&", "&amp;");
-		tag.put("onclick", "location.href='"+ url + "';");
+        final String url = getURL(cycle).replaceAll("&", "&amp;");
+        PopupSpecification popupSpecification = getPopupSpecification();
+        if (popupSpecification != null)
+        {
+        	PopupSpecification spec = new PopupSpecification(popupSpecification){
+        		public String getTarget()
+        		{
+        			return "'" + url + "'"; // return the complete url
+        		}
+        	};
+            String popupScript = spec.getPopupJavaScript();
+            popupScript = popupScript.replaceAll("&", "&amp;");
+            tag.put("onclick", popupScript);
+        }
+        else
+        {
+        	tag.put("onclick", "location.href='" + url + "';");
+        }
     }
 }
