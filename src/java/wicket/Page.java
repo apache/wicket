@@ -17,8 +17,10 @@
  */
 package wicket;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -27,6 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
+import wicket.util.lang.Classes;
+import wicket.util.string.StringValue;
 import wicket.util.value.Count;
 import wicket.version.undo.UndoPageVersionManager;
 
@@ -303,6 +307,30 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * @return This page's component hierarchy as a string
+	 */
+	public final String hierarchyAsString()
+	{
+		final StringBuffer buffer = new StringBuffer();
+		buffer.append("Page " + getId() + " (version " + getCurrentVersionNumber() + ")");
+		visitChildren(new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				int levels = 0;
+				for (Component current = component; current != null; current = current.getParent())
+				{
+					levels++;
+				}
+				buffer.append(StringValue.repeat(levels, "  ") + component.getPageRelativePath()
+						+ "." + Classes.name(component.getClass()));
+				return null;
+			}
+		});
+		return buffer.toString();
+	}
+
+	/**
 	 * @return Gets a PageState record for this page
 	 */
 	public PageState newPageState()
@@ -389,7 +417,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 			// Handle request by rendering page
 			render();
-			
+
 			// Check rendering if it happened fully
 			checkRendering();
 		}
@@ -644,14 +672,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentAdded(final Component component)
 	{
-		if (!component.isAuto())
+		if (isVersioned(component))
 		{
-			checkModification();
-			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
-			{
-				newVersion();
-				versionManager.componentAdded(component);
-			}
+			versionManager.componentAdded(component);
 		}
 	}
 
@@ -661,14 +684,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentModelChanging(final Component component)
 	{
-		if (!component.isAuto())
+		if (isVersioned(component))
 		{
-			checkModification();
-			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
-			{
-				newVersion();
-				versionManager.componentModelChanging(component);
-			}
+			versionManager.componentModelChanging(component);
 		}
 	}
 
@@ -678,31 +696,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentRemoved(final Component component)
 	{
-		if (!component.isAuto())
+		if (isVersioned(component))
 		{
-			checkModification();
-			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
-			{
-				newVersion();
-				versionManager.componentRemoved(component);
-			}
-		}
-	}
-
-	/**
-	 * @param component
-	 *            The component that was removed
-	 */
-	final void componentVisibilityChanged(final Component component)
-	{
-		if (!component.isAuto())
-		{
-			checkModification();
-			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
-			{
-				newVersion();
-				versionManager.componentVisibilityChanged(component);
-			}
+			versionManager.componentRemoved(component);
 		}
 	}
 
@@ -726,6 +722,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			{
 				log.debug("Rendered " + component);
 			}
+		}
+	}
+
+	/**
+	 * @param component
+	 *            The component that was removed
+	 */
+	final void componentVisibilityChanged(final Component component)
+	{
+		if (isVersioned(component))
+		{
+			versionManager.componentVisibilityChanged(component);
 		}
 	}
 
@@ -761,20 +769,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Throws exception is page is currently rendering
-	 * 
-	 * @throws WicketRuntimeException
-	 */
-	private final void checkModification()
-	{
-		if (getFlag(FLAG_IS_RENDERING))
-		{
-			throw new WicketRuntimeException(
-					"Cannot modify component hierarchy during render phase");
-		}
-	}
-
-	/**
 	 * Throw an exception if not all components rendered.
 	 */
 	private final void checkRendering()
@@ -785,6 +779,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			final Count unrenderedComponents = new Count();
+			final List unrenderedAutoComponents = new ArrayList();
 			final StringBuffer buffer = new StringBuffer();
 			visitChildren(new IVisitor()
 			{
@@ -793,16 +788,37 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					// If component never rendered
 					if (renderedComponents == null || !renderedComponents.contains(component))
 					{
-						unrenderedComponents.increment();
-						buffer.append("" + unrenderedComponents.getCount() + ". " + component + "\n");
+						if (component.isAuto())
+						{
+							// Add to list of unrendered auto components to
+							// delete below
+							unrenderedAutoComponents.add(component);
+						}
+						else
+						{
+							// Increase number of unrendered components
+							unrenderedComponents.increment();
+
+							// Add to explanatory string to buffer
+							buffer.append(Integer.toString(unrenderedComponents.getCount()) + ". "
+									+ component + "\n");
+						}
 					}
 					return CONTINUE_TRAVERSAL;
 				}
 			});
-	
+
+			// Remove any unrendered auto components since versioning couldn't
+			// do it. We can't remove the component in the above visitChildren
+			// callback because we're traversing the list at that time.
+			for (int i = 0; i < unrenderedAutoComponents.size(); i++)
+			{
+				((Component)unrenderedAutoComponents.get(i)).remove();
+			}
+
 			// Get rid of set
 			renderedComponents = null;
-	
+
 			// Throw exception if any errors were found
 			if (unrenderedComponents.getCount() > 0)
 			{
@@ -816,7 +832,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * Initializes Page by adding it to the Session and initializing it.
 	 */
-	private void init()
+	private final void init()
 	{
 		// Get session
 		final Session session = getSession();
@@ -835,6 +851,39 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 			// Let PageSet initialize the Page
 			pageSet.init(this);
+		}
+	}
+
+	/**
+	 * @param component
+	 *            The component which is affected
+	 * @return True if the change is okay to report
+	 */
+	private final boolean isVersioned(final Component component)
+	{
+		// Auto components do not participate in versioning since they are
+		// added during the rendering phase (which is normally illegal).
+		if (component.isAuto())
+		{
+			return false;
+		}
+		else
+		{
+			// Throw exception if modification is attempted during rendering
+			if (getFlag(FLAG_IS_RENDERING))
+			{
+				throw new WicketRuntimeException(
+						"Cannot modify component hierarchy during render phase");
+			}
+
+			// Start new version?
+			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+			{
+				newVersion();
+			}
+
+			// Okay to record version information
+			return true;
 		}
 	}
 

@@ -95,14 +95,14 @@ public class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @param container
 	 *            The container where the link is
-	 * @param componentId
+	 * @param id
 	 *            the name of the component
 	 * @param tag
 	 *            the component tag
 	 * @return A BookmarkablePageLink to handle the href
 	 */
 	private Component resolveAutomaticLink(final MarkupContainer container,
-			final String componentId, final ComponentTag tag)
+			final String id, final ComponentTag tag)
 	{
 		final Page page = container.getPage();
 		final String originalHref = tag.getAttributes().getString("href");
@@ -118,11 +118,11 @@ public class AutoLinkResolver implements IComponentResolver
 			pageParameters = new PageParameters(new ValueMap(queryString, "&"));
 		}
 
-		// Make the componentId (page-)unique
-		final String id = componentId + page.getAutoIndex();
+		// Make the id (page-)unique
+		final String autoId = id + Integer.toString(page.getAutoIndex());
 
 		// The component name on the tag changed
-		tag.setId(id);
+		tag.setId(autoId);
 
 		// Obviously a href like href="myPkg.MyLabel.html" will do as well.
 		// Wicket will not throw an exception. It accepts it.
@@ -136,7 +136,7 @@ public class AutoLinkResolver implements IComponentResolver
 			final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
 					.resolveClass(className);
 
-			return new BookmarkablePageLink(id, clazz, pageParameters);
+			return new BookmarkablePageLink(autoId, clazz, pageParameters);
 		}
 		else
 		{
@@ -148,7 +148,7 @@ public class AutoLinkResolver implements IComponentResolver
 				final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
 						.resolveClass(className);
 
-				return new BookmarkablePageLink(id, clazz, pageParameters);
+				return new BookmarkablePageLink(autoId, clazz, pageParameters);
 			}
 			catch (WicketRuntimeException ex)
 			{
@@ -157,6 +157,6 @@ public class AutoLinkResolver implements IComponentResolver
 		}
 
 		// Don't change the href. Did not find a proper Wicket page
-		return new ExternalLink(id, originalHref);
+		return new ExternalLink(autoId, originalHref);
 	}
 }

@@ -670,7 +670,6 @@ public abstract class MarkupContainer extends Component
 		add(component);
 		component.internalBeginRequest();
 		component.render();
-		component.setAuto(false);
 	}
 
 	/**
