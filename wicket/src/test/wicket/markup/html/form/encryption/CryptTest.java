@@ -46,6 +46,7 @@ public class CryptTest extends TestCase
 
 		try
 		{
+			// TODO: This causes tests to fail on US XP machines
 			assertEquals("KxMxhk6i4Us=", crypt.encryptString("test"));
 			assertEquals("test", crypt.decryptString("KxMxhk6i4Us="));
 		}
