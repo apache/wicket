@@ -35,7 +35,7 @@ import wicket.model.IModel;
 
 
 /**
- * Structure for recording  {@link wicket.FeebackMessage}s;
+ * Structure for recording  {@link wicket.FeedbackMessage}s;
  * wraps a list and acts as a {@link wicket.model.IModel}.
  *
  * @author Eelco Hillenius
@@ -79,8 +79,8 @@ public final class FeedbackMessages
          */
         public int compare(Object o1, Object o2)
         {
-            int l1 = ((FeebackMessage)o1).getLevel();
-            int l2 = ((FeebackMessage)o2).getLevel();
+            int l1 = ((FeedbackMessage)o1).getLevel();
+            int l2 = ((FeedbackMessage)o2).getLevel();
             if(l1 < l2)
             {
                 return sign * -1;
@@ -102,7 +102,7 @@ public final class FeedbackMessages
     private static class UIMessagesModel implements IModel
     {
         /** level to narrow the model to. If undefined (the default), it is not used. */
-        private int level = FeebackMessage.UNDEFINED;
+        private int level = FeedbackMessage.UNDEFINED;
 
         /**
          * Construct.
@@ -128,7 +128,7 @@ public final class FeedbackMessages
         public Object getObject()
         {
             FeedbackMessages uim = get();
-            if(level == FeebackMessage.UNDEFINED)
+            if(level == FeedbackMessage.UNDEFINED)
             {
                 return uim.getMessages();
             }
@@ -140,7 +140,7 @@ public final class FeedbackMessages
 
         /**
          * Sets the messages; the object should either be of type {@link java.util.List}
-         * or an array of {@link FeebackMessage}s.
+         * or an array of {@link FeedbackMessage}s.
          * @see wicket.model.IModel#setObject(java.lang.Object)
          */
         public void setObject(Object object)
@@ -150,11 +150,11 @@ public final class FeedbackMessages
             {
                 uim.setMessages((List)object);
             }
-            else if(object instanceof FeebackMessage[])
+            else if(object instanceof FeedbackMessage[])
             {
                 if(object != null)
                 {
-                    uim.setMessages(Arrays.asList((FeebackMessage[])object));
+                    uim.setMessages(Arrays.asList((FeedbackMessage[])object));
                 }
                 else
                 {
@@ -304,7 +304,7 @@ public final class FeedbackMessages
      */
     public static void debug(Component reporter, String message)
     {
-        get().add(FeebackMessage.debug(reporter, message));
+        get().add(FeedbackMessage.debug(reporter, message));
     }
 
     /**
@@ -314,7 +314,7 @@ public final class FeedbackMessages
      */
     public static void info(Component reporter, String message)
     {
-        get().add(FeebackMessage.info(reporter, message));
+        get().add(FeedbackMessage.info(reporter, message));
     }
 
     /**
@@ -324,7 +324,7 @@ public final class FeedbackMessages
      */
     public static void warn(Component reporter, String message)
     {
-        get().add(FeebackMessage.warn(reporter, message));
+        get().add(FeedbackMessage.warn(reporter, message));
     }
 
     /**
@@ -334,7 +334,7 @@ public final class FeedbackMessages
      */
     public static void error(Component reporter, String message)
     {
-        get().add(FeebackMessage.error(reporter, message));
+        get().add(FeedbackMessage.error(reporter, message));
     }
 
     /**
@@ -344,7 +344,7 @@ public final class FeedbackMessages
      */
     public static void fatal(Component reporter, String message)
     {
-        get().add(FeebackMessage.fatal(reporter, message));
+        get().add(FeedbackMessage.fatal(reporter, message));
     }
 
     /**
@@ -352,7 +352,7 @@ public final class FeedbackMessages
      * @param message the message
      * @return This
      */
-    public FeedbackMessages add(FeebackMessage message)
+    public FeedbackMessages add(FeedbackMessage message)
     {
         if(log.isDebugEnabled())
         {
@@ -375,13 +375,13 @@ public final class FeedbackMessages
     /**
      * Convenience method that gets whether this list contains any messages with level
      * ERROR or up. This is the same as
-     * calling 'hasMessages(FeebackMessage.ERROR)'.
+     * calling 'hasMessages(FeedbackMessage.ERROR)'.
      * @return whether this list contains any messages with level
      * ERROR or up
      */
     public boolean hasErrorMessages()
     {
-        return hasMessages(FeebackMessage.ERROR);
+        return hasMessages(FeedbackMessage.ERROR);
     }
 
     /**
@@ -396,7 +396,7 @@ public final class FeedbackMessages
         {
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                FeebackMessage message = (FeebackMessage)i.next();
+                FeedbackMessage message = (FeedbackMessage)i.next();
                 if(message.isLevel(level))
                 {
                     errors = true;
@@ -472,14 +472,14 @@ public final class FeedbackMessages
      * @return the message that is found for the given component (first match) or
      * null if none was found
      */
-    public FeebackMessage getMessageFor(Component component)
+    public FeedbackMessage getMessageFor(Component component)
     {
         if(messages != null)
         {
-            FeebackMessage message = null;
+            FeedbackMessage message = null;
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                FeebackMessage toTest = (FeebackMessage)i.next();
+                FeedbackMessage toTest = (FeedbackMessage)i.next();
                 if((toTest.getReporter() != null) && (toTest.getReporter().equals(component)))
                 {
                     message = toTest;
@@ -513,7 +513,7 @@ public final class FeedbackMessages
      */
     public boolean hasErrorMessageFor(Component component)
     {
-        return hasMessageFor(component, FeebackMessage.ERROR);
+        return hasMessageFor(component, FeedbackMessage.ERROR);
     }
 
     /**
@@ -526,7 +526,7 @@ public final class FeedbackMessages
      */
     public boolean hasMessageFor(Component component, int level)
     {
-        FeebackMessage message = getMessageFor(component);
+        FeedbackMessage message = getMessageFor(component);
         if(message != null)
         {
             return (message.isLevel(level));
@@ -540,13 +540,13 @@ public final class FeedbackMessages
     /**
      * Convenience method that gets a sub list of messages with messages that are
      * of level ERROR or above (FATAL). This is the same as calling
-     * 'getMessages(FeebackMessage.ERROR)'.
+     * 'getMessages(FeedbackMessage.ERROR)'.
      * @return the sub list of message with messages that are of level ERROR or above,
      * or an empty list
      */
     public FeedbackMessages getErrorMessages()
     {
-        return getMessages(FeebackMessage.ERROR);
+        return getMessages(FeedbackMessage.ERROR);
     }
 
     /**
@@ -562,7 +562,7 @@ public final class FeedbackMessages
             List sublist = new ArrayList();
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                FeebackMessage message = (FeebackMessage)i.next();
+                FeedbackMessage message = (FeedbackMessage)i.next();
                 if(message.isLevel(level))
                 {
                     sublist.add(message);
@@ -599,8 +599,8 @@ public final class FeedbackMessages
             Set subset = new HashSet();
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                FeebackMessage message = (FeebackMessage)i.next();
-                if(message.isLevel(FeebackMessage.ERROR))
+                FeedbackMessage message = (FeedbackMessage)i.next();
+                if(message.isLevel(FeedbackMessage.ERROR))
                 {
                     subset.add(message.getReporter());
                 }
@@ -625,7 +625,7 @@ public final class FeedbackMessages
             Set subset = new HashSet();
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                FeebackMessage message = (FeebackMessage)i.next();
+                FeedbackMessage message = (FeedbackMessage)i.next();
                 if(message.isLevel(level))
                 {
                     subset.add(message.getReporter());

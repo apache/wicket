@@ -19,7 +19,7 @@
 package wicket.markup.html.panel;
 
 import wicket.RequestCycle;
-import wicket.FeebackMessage;
+import wicket.FeedbackMessage;
 import wicket.FeedbackMessages;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
@@ -30,9 +30,9 @@ import wicket.model.IModel;
 
 
 /**
- * A simple panel that displays {@link wicket.FeebackMessage}s.
+ * A simple panel that displays {@link wicket.FeedbackMessage}s.
  *
- * @see wicket.FeebackMessage
+ * @see wicket.FeedbackMessage
  * @see wicket.FeedbackMessages
  * @see wicket.markup.html.form.validation.IValidationErrorHandler
  *
@@ -98,7 +98,7 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
          */
         protected void populateItem(final ListItem listItem)
         {
-            final FeebackMessage message = (FeebackMessage)listItem.getModelObject();
+            final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
             IModel replacementModel = new IModel() {
 
                 /**
