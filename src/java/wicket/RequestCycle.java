@@ -383,6 +383,19 @@ public abstract class RequestCycle
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
 	 * 
+	 * @param c
+	 *            The sign in page class
+	 * @param parameters
+	 *            The page parameters
+	 */
+	public final void redirectToInterceptPage(final Class c, final PageParameters parameters)
+	{
+		redirectToInterceptPage(getPageFactory().newPage(c, parameters));
+	}
+
+	/**
+	 * Redirects browser to an intermediate page such as a sign-in page.
+	 * 
 	 * @param page
 	 *            The sign in page
 	 */
@@ -417,10 +430,10 @@ public abstract class RequestCycle
 			}
 			catch (RuntimeException e)
 			{
-                // Reset page for re-rendering after exception
-                getPage().reset();
-                
-                // Handle the exception
+				// Reset page for re-rendering after exception
+				getPage().reset();
+
+				// Handle the exception
 				handleRenderingException(e);
 			}
 			finally
@@ -585,7 +598,7 @@ public abstract class RequestCycle
 		{
 			// Since we are explicitly redirecting to a page already, we do not
 			// want a second redirect to occur automatically
-			setRedirect(false);            
+			setRedirect(false);
 		}
 
 		// Clear ThreadLocal reference

@@ -54,11 +54,11 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 		catch (InstantiationException e)
 		{
-			throw new WicketRuntimeException("Unable to create page from class " + pageClass, e);
+			throw new WicketRuntimeException("Unable to create page from " + pageClass, e);
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new WicketRuntimeException("Unable to create page from class " + pageClass, e);
+			throw new WicketRuntimeException("Unable to create page from " + pageClass, e);
 		}
 	}
 

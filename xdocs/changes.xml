@@ -7,9 +7,15 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
-      <action type="fix" dev="Jonathan Locke" issue="1116805">
+      <action type="update" dev="Jonathan Locke" issue="">
+		Reworked signin panel and signin examples, including the library example so 
+		that they work with the new session factory model.  Also added remember me
+		functionality to the signin panel and moved localizations of the signin panel
+		into the core.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1116800">
 		Added Page.reset() method that is called when runtime exceptions prevent full 
-		rendering of pages.  I highly suspect this is behind bug #1116805 where eelco 
+		rendering of pages.  I highly suspect this is behind bug 1116800 where eelco 
 		reported that "Exception when rendering leaves markup in invalid state".
       </action>
       <action type="fix" dev="Jonathan Locke" issue="1116805">

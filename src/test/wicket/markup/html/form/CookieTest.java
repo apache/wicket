@@ -79,9 +79,9 @@ public class CookieTest extends TestCase
 
         this.panel = new SignInPanel("panel")
 		{
-            public String signIn(final String username, final String password)
+            public boolean signIn(final String username, final String password)
             {
-            	return null;
+            	return true;
             }
 		};
         

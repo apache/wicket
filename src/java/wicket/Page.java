@@ -202,7 +202,7 @@ public abstract class Page extends Container implements IRedirectListener
 
 	/**
 	 * Convenience method. Search for children of type fromClass and invoke
-	 * their respectiv removePersistedFormData() method.
+	 * their respective removePersistedFormData() methods.
 	 * 
 	 * @see Form#removePersistedFormComponentData(boolean)
 	 * 
