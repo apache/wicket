@@ -58,6 +58,7 @@ public class SpringApplicationController extends AbstractController
     public void setApplication(final SpringApplication application)
     {
         this.application = application;
+        //this.application.setSpringApplicationContext(this.getApplicationContext());
     }
     
     /**

@@ -18,35 +18,36 @@
  */
 package wicket.examples.springframework;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.basic.Label;
+import wicket.markup.html.HtmlPage;
 
 /**
  * Everybody's favorite example.
  * @author Jonathan Locke
  */
-public class Home extends BasePage
+public class BasePage extends HtmlPage
 {
-	private static Log log = LogFactory.getLog(Home.class);
-	
     /**
      * Constructor
      * @param parameters Page parameters
      */
-    public Home(final PageParameters parameters)
+    public BasePage(final PageParameters parameters)
     {
-        super(parameters);
-        
-        // MyBean bean = (MyBean)this.getSpringApplicationContext().getBean();
-        // UserDao userDao = this.getUserDao();
-        
-        add(new NavigationPanel("mainNavigation", "Spring integration example"));
-        add(new Label("message", "Hello world! Test: הצü"));
     }
+    
+    public final ApplicationContext getSpringApplicationContext()
+    {
+        return ((SpringApplication)this.getApplication()).getSpringApplicationContext();
+    }
+    
+/*
+    public final UserDao getUserDao()
+    {
+        return ((UserDao) this.getSpringApplicationContext()).getBean("userDao");
+    }
+ */    
 }
 
-
+///////////////////////////////// End of File /////////////////////////////////

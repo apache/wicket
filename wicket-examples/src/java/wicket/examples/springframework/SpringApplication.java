@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
 
 import wicket.ApplicationSettings;
 import wicket.markup.html.InternalErrorPage;
@@ -46,6 +47,9 @@ public class SpringApplication extends HttpApplication implements InitializingBe
 	/** Settings for the application */
     private ApplicationSettings settings;
     
+    /** Spring application context */
+    private ApplicationContext springContext;
+    
     /**
      * Constructor.
      */
@@ -60,7 +64,7 @@ public class SpringApplication extends HttpApplication implements InitializingBe
      * 
      * @param settings Wicket's AppicationSettingsObject
      */
-    public void setSettings(final ApplicationSettings settings)
+    public final void setSettings(final ApplicationSettings settings)
     {
         this.settings = settings;
     }
@@ -68,7 +72,7 @@ public class SpringApplication extends HttpApplication implements InitializingBe
     /**
      * @return Returns the settings for this web application
      */
-    public ApplicationSettings getSettings()
+    public final ApplicationSettings getSettings()
     {
         if (settings == null)
         {
@@ -77,6 +81,24 @@ public class SpringApplication extends HttpApplication implements InitializingBe
         return settings;
     }
 
+    /**
+     * 
+     * @param context
+     */
+    public final void setSpringApplicationContext(final ApplicationContext context)
+    {
+        this.springContext = context;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public final ApplicationContext getSpringApplicationContext()
+    {
+        return this.springContext;
+    }
+    
     /**
      * THIS IS NOT PART IF WICKET'S PUBLIC API. IT IS ONLY MEANT TO BE USED
      * BY SPRING TO SET DEFAULT VALUES FOR THE SETTINGS. 
