@@ -35,7 +35,12 @@ import wicket.util.value.ValueMap;
  * @author Jonathan Locke
  */
 public class ComponentTag extends MarkupElement
-{ // TODO finalize javadoc
+{
+    /**
+     * A close tag, like &lt;/TAG&gt;.
+     */
+    public static final Type CLOSE = new Type("CLOSE");
+ // TODO finalize javadoc
     /**
      * Standard component name attribute always available for components regardless of
      * user ApplicationSettings for componentName attribute; value == 'wicket'.
@@ -48,25 +53,12 @@ public class ComponentTag extends MarkupElement
     public static final Type OPEN = new Type("OPEN");
 
     /**
-     * A close tag, like &lt;/TAG&gt;.
-     */
-    public static final Type CLOSE = new Type("CLOSE");
-
-    /**
      * An open/close tag, like &lt;TAG componentName = "xyz"/&gt;.
      */
     public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Map of simple tags. */
     private static final Map doesNotRequireCloseTag = new HashMap();
-
-    static
-    {
-        doesNotRequireCloseTag.put("p", Boolean.TRUE);
-        doesNotRequireCloseTag.put("br", Boolean.TRUE);
-        doesNotRequireCloseTag.put("img", Boolean.TRUE);
-        doesNotRequireCloseTag.put("input", Boolean.TRUE);
-    }
 
     /** Attribute map. */
     ValueMap attributes = new ValueMap();
@@ -80,12 +72,6 @@ public class ComponentTag extends MarkupElement
     /** Convenient copy of componentName attribute. */
     String componentName;
 
-    /** If mutable, the immutable tag that this tag is a mutable copy of. */
-    private ComponentTag copyOf = this;
-
-    /** True if this tag is mutable, false otherwise. */
-    private boolean isMutable;
-
     /** Length of this tag in characters. */
     int length;
 
@@ -97,9 +83,6 @@ public class ComponentTag extends MarkupElement
 
     /** Namespace of the tag, if available, such as &lt;wicket:link ...&gt; */
     String namespace;
-    
-    /** True if the name of this tag was changed. */
-    private boolean nameChanged = false;
 
     /** Position of this tag in the input that was parsed. */
     int pos;
@@ -112,6 +95,30 @@ public class ComponentTag extends MarkupElement
     
     /** True if a href attribute is available and autolinking is on */
     private boolean autolink = false;
+
+    /** If mutable, the immutable tag that this tag is a mutable copy of. */
+    private ComponentTag copyOf = this;
+
+    /** True if this tag is mutable, false otherwise. */
+    private boolean isMutable;
+    
+    /** True if the name of this tag was changed. */
+    private boolean nameChanged = false;
+
+    /**
+     * Enumerated type for different kinds of component tags.
+     */
+    public static final class Type extends EnumeratedType
+    {
+        /**
+         * Construct.
+         * @param name name of type
+         */
+        Type(final String name)
+        {
+            super(name);
+        }
+    }
 
     /**
      * Construct.
@@ -146,6 +153,16 @@ public class ComponentTag extends MarkupElement
         tag.isMutable = false;
 
         return tag;
+    }
+    
+    /**
+     * If autolink is set to true, href attributes will automatically be
+     * converted into Wicket bookmarkable URLs.
+     * @param autolink enable/disable automatic href conversion
+     */
+    public void enableAutolink(final boolean autolink)
+    {
+        this.autolink = autolink;
     }
 
     /**
@@ -201,15 +218,6 @@ public class ComponentTag extends MarkupElement
     {
         return name;
     }
-
-    /**
-     * Namespace of the tag, if available, such as &lt;wicket:link ...&gt;
-     * @return The tag's namespace
-     */
-    public String getNamespace()
-    {
-        return namespace;
-    }
     
     /**
      * Get whether the name of this component tag was changed.
@@ -218,6 +226,15 @@ public class ComponentTag extends MarkupElement
     public boolean getNameChanged()
     {
         return nameChanged;
+    }
+
+    /**
+     * Namespace of the tag, if available, such as &lt;wicket:link ...&gt;
+     * @return The tag's namespace
+     */
+    public String getNamespace()
+    {
+        return namespace;
     }
 
     /**
@@ -246,6 +263,15 @@ public class ComponentTag extends MarkupElement
     public Type getType()
     {
         return type;
+    }
+    
+    /**
+     * True if autolink is enabled and the tag contains a href attribute.
+     * @return True, if the href contained should automatically be converted
+     */
+    public boolean isAutolinkEnabled()
+    {
+        return this.autolink;
     }
 
     /**
@@ -293,15 +319,6 @@ public class ComponentTag extends MarkupElement
     public boolean isOpenClose(final String componentName)
     {
         return isOpenClose() && componentName.equals(componentName);
-    }
-
-    /**
-     * Gets whether this tag does not require a closing tag.
-     * @return True if this tag does not require a closing tag
-     */
-    public boolean requiresCloseTag()
-    {
-        return doesNotRequireCloseTag.get(name) == null;
     }
 
     /**
@@ -417,6 +434,15 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
+     * Gets whether this tag does not require a closing tag.
+     * @return True if this tag does not require a closing tag
+     */
+    public boolean requiresCloseTag()
+    {
+        return doesNotRequireCloseTag.get(name) == null;
+    }
+
+    /**
      * Sets the tag name.
      * @param name New tag name
      */
@@ -448,25 +474,6 @@ public class ComponentTag extends MarkupElement
             throw new UnsupportedOperationException("Attempt to set type of immutable tag");
         }
     }
-    
-    /**
-     * True if autolink is enabled and the tag contains a href attribute.
-     * @return True, if the href contained should automatically be converted
-     */
-    public boolean isAutolinkEnabled()
-    {
-        return this.autolink;
-    }
-    
-    /**
-     * If autolink is set to true, href attributes will automatically be
-     * converted into Wicket bookmarkable URLs.
-     * @param autolink enable/disable automatic href conversion
-     */
-    public void enableAutolink(final boolean autolink)
-    {
-        this.autolink = autolink;
-    }
 
     /**
      * Converts this object to a string representation.
@@ -477,6 +484,31 @@ public class ComponentTag extends MarkupElement
         return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber
         	+ ", length = " + length + ", attributes = ["
         	+ attributes + "], type = " + type + "]";
+    }
+
+    /**
+     * Converts this object to a string representation.
+     * @return String version of this object
+     */
+    public String toString()
+    {
+        if (!isMutable)
+        {
+            return text;
+        }
+        else
+        {
+            return toXmlString();
+        }
+    }
+
+    /**
+     * Converts this object to a string representation.
+     * @return String version of this object
+     */
+    public String toUserDebugString()
+    {
+        return "'" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
     }
 
     /**
@@ -518,44 +550,12 @@ public class ComponentTag extends MarkupElement
         return buffer.toString();
     }
 
-    /**
-     * Converts this object to a string representation.
-     * @return String version of this object
-     */
-    public String toString()
+    static
     {
-        if (!isMutable)
-        {
-            return text;
-        }
-        else
-        {
-            return toXmlString();
-        }
-    }
-
-    /**
-     * Converts this object to a string representation.
-     * @return String version of this object
-     */
-    public String toUserDebugString()
-    {
-        return "'" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
-    }
-
-    /**
-     * Enumerated type for different kinds of component tags.
-     */
-    public static final class Type extends EnumeratedType
-    {
-        /**
-         * Construct.
-         * @param name name of type
-         */
-        Type(final String name)
-        {
-            super(name);
-        }
+        doesNotRequireCloseTag.put("p", Boolean.TRUE);
+        doesNotRequireCloseTag.put("br", Boolean.TRUE);
+        doesNotRequireCloseTag.put("img", Boolean.TRUE);
+        doesNotRequireCloseTag.put("input", Boolean.TRUE);
     }
 }
 
