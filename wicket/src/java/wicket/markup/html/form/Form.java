@@ -30,7 +30,7 @@ import wicket.Page;
 import wicket.PropertyModel;
 import wicket.RenderException;
 import wicket.RequestCycle;
-import wicket.UIMessages;
+import wicket.FeedbackMessages;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
@@ -170,7 +170,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      * error handler of this form is called.
      * @param errors the recorded errors
      */
-    public final void handleErrors(final UIMessages errors)
+    public final void handleErrors(final FeedbackMessages errors)
     {
         // call the validation handlers of the child components of this form
         // Traverse parents from this component up to the containing form
@@ -201,7 +201,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      */
     public final void handleError(final ValidationErrorMessage message)
     {
-        handleErrors(UIMessages.get().add(message));
+        handleErrors(FeedbackMessages.get().add(message));
     }
 
     /**
@@ -217,7 +217,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
         cycle.setRedirect(true);
 
         // Validate model
-        final UIMessages messages = validate();
+        final FeedbackMessages messages = validate();
 
         // Update model using form data
         updateFormComponentModels(cycle);
@@ -262,9 +262,9 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      * validators.
      * @return the list of validation messages that were recorded during validation
      */
-    private UIMessages validate()
+    private FeedbackMessages validate()
     {
-        final UIMessages messages = UIMessages.get();
+        final FeedbackMessages messages = FeedbackMessages.get();
         visitChildren(FormComponent.class, new IVisitor()
         {
             public Object component(final Component component)

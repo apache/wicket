@@ -20,8 +20,8 @@ package wicket.markup.html.panel;
 
 import wicket.IModel;
 import wicket.RequestCycle;
-import wicket.UIMessage;
-import wicket.UIMessages;
+import wicket.FeebackMessage;
+import wicket.FeedbackMessages;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
@@ -30,10 +30,10 @@ import wicket.markup.html.table.ListView;
 
 
 /**
- * A simple panel that displays {@link wicket.UIMessage}s.
+ * A simple panel that displays {@link wicket.FeebackMessage}s.
  *
- * @see wicket.UIMessage
- * @see wicket.UIMessages
+ * @see wicket.FeebackMessage
+ * @see wicket.FeedbackMessages
  * @see wicket.markup.html.form.validation.IValidationErrorHandler
  *
  * @author Jonathan Locke
@@ -70,9 +70,9 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
     /**
      * Sets an error message to be displayed by this feedback panel.
      * @param errors The errors structure
-     * @see wicket.markup.html.form.validation.IValidationErrorHandler#validationError(wicket.UIMessages)
+     * @see wicket.markup.html.form.validation.IValidationErrorHandler#validationError(wicket.FeedbackMessages)
      */
-    public void validationError(final UIMessages errors)
+    public void validationError(final FeedbackMessages errors)
     {
         // force re-rendering of the list
         removeAll();
@@ -90,7 +90,7 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
          */
         public MessageList(String name)
         {
-            super(name, UIMessages.model());
+            super(name, FeedbackMessages.model());
         }
 
         /**
@@ -98,7 +98,7 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
          */
         protected void populateItem(final ListItem listItem)
         {
-            final UIMessage message = (UIMessage)listItem.getModelObject();
+            final FeebackMessage message = (FeebackMessage)listItem.getModelObject();
             IModel replacementModel = new IModel() {
 
                 /**

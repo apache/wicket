@@ -19,7 +19,7 @@
 package wicket.markup.html.form;
 
 import wicket.Component;
-import wicket.UIMessages;
+import wicket.FeedbackMessages;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
@@ -64,9 +64,9 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
      * Handles validation errors. If any errors were registered, the decorated error
      * indicator will be set to invisible.
      * @param errors list with {@link wicket.markup.html.form.validation.ValidationErrorMessage}s
-     * @see wicket.markup.html.form.validation.IValidationErrorHandler#validationError(wicket.UIMessages)
+     * @see wicket.markup.html.form.validation.IValidationErrorHandler#validationError(wicket.FeedbackMessages)
      */
-    public void validationError(final UIMessages errors)
+    public void validationError(final FeedbackMessages errors)
     {
         errorIndicator.setVisible(errors.hasErrorMessageFor(bordered));
     }

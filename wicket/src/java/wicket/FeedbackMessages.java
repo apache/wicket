@@ -34,17 +34,17 @@ import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
 
 
 /**
- * Structure for recording  {@link wicket.UIMessage}s;
+ * Structure for recording  {@link wicket.FeebackMessage}s;
  * wraps a list and acts as a {@link wicket.IModel}.
  *
  * @author Eelco Hillenius
  */
-public final class UIMessages
+public final class FeedbackMessages
 {
     /** Log. */
-    private static Log log = LogFactory.getLog(UIMessages.class);
+    private static Log log = LogFactory.getLog(FeedbackMessages.class);
 
-    /** holder for the current UIMessages. */
+    /** holder for the current FeedbackMessages. */
     private static ThreadLocal current = new ThreadLocal();
 
     /**
@@ -78,8 +78,8 @@ public final class UIMessages
          */
         public int compare(Object o1, Object o2)
         {
-            int l1 = ((UIMessage)o1).getLevel();
-            int l2 = ((UIMessage)o2).getLevel();
+            int l1 = ((FeebackMessage)o1).getLevel();
+            int l2 = ((FeebackMessage)o2).getLevel();
             if(l1 < l2)
             {
                 return sign * -1;
@@ -96,12 +96,12 @@ public final class UIMessages
     }
 
     /**
-     * The {@link IModel} representation of UIMessages.
+     * The {@link IModel} representation of FeedbackMessages.
      */
     private static class UIMessagesModel implements IModel
     {
         /** level to narrow the model to. If undefined (the default), it is not used. */
-        private int level = UIMessage.UNDEFINED;
+        private int level = FeebackMessage.UNDEFINED;
 
         /**
          * Construct.
@@ -126,8 +126,8 @@ public final class UIMessages
          */
         public Object getObject()
         {
-            UIMessages uim = get();
-            if(level == UIMessage.UNDEFINED)
+            FeedbackMessages uim = get();
+            if(level == FeebackMessage.UNDEFINED)
             {
                 return uim.getMessages();
             }
@@ -139,21 +139,21 @@ public final class UIMessages
 
         /**
          * Sets the messages; the object should either be of type {@link java.util.List}
-         * or an array of {@link UIMessage}s.
+         * or an array of {@link FeebackMessage}s.
          * @see wicket.IModel#setObject(java.lang.Object)
          */
         public void setObject(Object object)
         {
-            UIMessages uim = get();
+            FeedbackMessages uim = get();
             if(object instanceof List)
             {
                 uim.setMessages((List)object);
             }
-            else if(object instanceof UIMessage[])
+            else if(object instanceof FeebackMessage[])
             {
                 if(object != null)
                 {
-                    uim.setMessages(Arrays.asList((UIMessage[])object));
+                    uim.setMessages(Arrays.asList((FeebackMessage[])object));
                 }
                 else
                 {
@@ -162,7 +162,7 @@ public final class UIMessages
             }
             else
             {
-                throw new RuntimeException("invalid model type for UIMessages");
+                throw new RuntimeException("invalid model type for FeedbackMessages");
             }
         }
     }
@@ -171,7 +171,7 @@ public final class UIMessages
      * Hidden constructor; clients are not allowed to create instances as this
      * class is managed by the framework.
      */
-    private UIMessages()
+    private FeedbackMessages()
     {
 
     }
@@ -182,16 +182,16 @@ public final class UIMessages
      * and are stored in a thread local variable.
      * @return the messages for the calling Thread
      */
-    public static UIMessages get()
+    public static FeedbackMessages get()
     {
-        UIMessages currentMessages = (UIMessages)current.get();
+        FeedbackMessages currentMessages = (FeedbackMessages)current.get();
         if(currentMessages == null)
         {
-            currentMessages = new UIMessages();
+            currentMessages = new FeedbackMessages();
             current.set(currentMessages);
             if(log.isDebugEnabled())
             {
-                log.debug("UIMessages created for thread " + Thread.currentThread());
+                log.debug("FeedbackMessages created for thread " + Thread.currentThread());
             }
         }
         return currentMessages;
@@ -201,7 +201,7 @@ public final class UIMessages
      * Sets the messages for the current thread. Is used for handling redirects. 
      * @param messages the messages to use with the current thread
      */
-    static void set(UIMessages messages)
+    static void set(FeedbackMessages messages)
     {
         if(current.get() != null) // that would be wrong
         {
@@ -228,12 +228,12 @@ public final class UIMessages
      */
     static void release()
     {
-        UIMessages currentMessages = (UIMessages)current.get();
+        FeedbackMessages currentMessages = (FeedbackMessages)current.get();
         if(currentMessages != null)
         {
             if(log.isDebugEnabled())
             {
-                log.debug("UIMessages " + currentMessages + " released for thread "
+                log.debug("FeedbackMessages " + currentMessages + " released for thread "
                         + Thread.currentThread());
             }
             // only error level components have their models (possibly) replaced
@@ -260,7 +260,7 @@ public final class UIMessages
         {
             if(log.isDebugEnabled())
             {
-                log.debug("no UIMessages to release for thread " + Thread.currentThread());
+                log.debug("no FeedbackMessages to release for thread " + Thread.currentThread());
             }
         }
     }
@@ -272,14 +272,14 @@ public final class UIMessages
     {
         if(log.isDebugEnabled())
         {
-            log.debug("UIMessages cleared without releasing for thread "+ Thread.currentThread());
+            log.debug("FeedbackMessages cleared without releasing for thread "+ Thread.currentThread());
         }
         current.set(null);
     }
 
     /**
-     * Gets the UIMessages as an instance of {@link IModel}.
-     * @return the UIMessages as an instance of {@link IModel}
+     * Gets the FeedbackMessages as an instance of {@link IModel}.
+     * @return the FeedbackMessages as an instance of {@link IModel}
      */
     public static IModel model()
     {
@@ -287,9 +287,9 @@ public final class UIMessages
     }
 
     /**
-     * Gets the UIMessages as an instance of {@link IModel}, narrowed down to the given level.
+     * Gets the FeedbackMessages as an instance of {@link IModel}, narrowed down to the given level.
      * @param level the level to narrow down to
-     * @return tthe UIMessages as an instance of {@link IModel}, narrowed down to the given level
+     * @return tthe FeedbackMessages as an instance of {@link IModel}, narrowed down to the given level
      */
     public static IModel model(int level)
     {
@@ -303,7 +303,7 @@ public final class UIMessages
      */
     public static void debug(Component reporter, String message)
     {
-        get().add(UIMessage.debug(reporter, message));
+        get().add(FeebackMessage.debug(reporter, message));
     }
 
     /**
@@ -313,7 +313,7 @@ public final class UIMessages
      */
     public static void info(Component reporter, String message)
     {
-        get().add(UIMessage.info(reporter, message));
+        get().add(FeebackMessage.info(reporter, message));
     }
 
     /**
@@ -323,7 +323,7 @@ public final class UIMessages
      */
     public static void warn(Component reporter, String message)
     {
-        get().add(UIMessage.warn(reporter, message));
+        get().add(FeebackMessage.warn(reporter, message));
     }
 
     /**
@@ -333,7 +333,7 @@ public final class UIMessages
      */
     public static void error(Component reporter, String message)
     {
-        get().add(UIMessage.error(reporter, message));
+        get().add(FeebackMessage.error(reporter, message));
     }
 
     /**
@@ -343,7 +343,7 @@ public final class UIMessages
      */
     public static void fatal(Component reporter, String message)
     {
-        get().add(UIMessage.fatal(reporter, message));
+        get().add(FeebackMessage.fatal(reporter, message));
     }
 
     /**
@@ -351,7 +351,7 @@ public final class UIMessages
      * @param message the message
      * @return This
      */
-    public UIMessages add(UIMessage message)
+    public FeedbackMessages add(FeebackMessage message)
     {
         if(log.isDebugEnabled())
         {
@@ -374,13 +374,13 @@ public final class UIMessages
     /**
      * Convenience method that gets whether this list contains any messages with level
      * ERROR or up. This is the same as
-     * calling 'hasMessages(UIMessage.ERROR)'.
+     * calling 'hasMessages(FeebackMessage.ERROR)'.
      * @return whether this list contains any messages with level
      * ERROR or up
      */
     public boolean hasErrorMessages()
     {
-        return hasMessages(UIMessage.ERROR);
+        return hasMessages(FeebackMessage.ERROR);
     }
 
     /**
@@ -395,7 +395,7 @@ public final class UIMessages
         {
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                UIMessage message = (UIMessage)i.next();
+                FeebackMessage message = (FeebackMessage)i.next();
                 if(message.isLevel(level))
                 {
                     errors = true;
@@ -471,14 +471,14 @@ public final class UIMessages
      * @return the message that is found for the given component (first match) or
      * null if none was found
      */
-    public UIMessage getMessageFor(Component component)
+    public FeebackMessage getMessageFor(Component component)
     {
         if(messages != null)
         {
-            UIMessage message = null;
+            FeebackMessage message = null;
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                UIMessage toTest = (UIMessage)i.next();
+                FeebackMessage toTest = (FeebackMessage)i.next();
                 if((toTest.getReporter() != null) && (toTest.getReporter().equals(component)))
                 {
                     message = toTest;
@@ -512,7 +512,7 @@ public final class UIMessages
      */
     public boolean hasErrorMessageFor(Component component)
     {
-        return hasMessageFor(component, UIMessage.ERROR);
+        return hasMessageFor(component, FeebackMessage.ERROR);
     }
 
     /**
@@ -525,7 +525,7 @@ public final class UIMessages
      */
     public boolean hasMessageFor(Component component, int level)
     {
-        UIMessage message = getMessageFor(component);
+        FeebackMessage message = getMessageFor(component);
         if(message != null)
         {
             return (message.isLevel(level));
@@ -539,13 +539,13 @@ public final class UIMessages
     /**
      * Convenience method that gets a sub list of messages with messages that are
      * of level ERROR or above (FATAL). This is the same as calling
-     * 'getMessages(UIMessage.ERROR)'.
+     * 'getMessages(FeebackMessage.ERROR)'.
      * @return the sub list of message with messages that are of level ERROR or above,
      * or an empty list
      */
-    public UIMessages getErrorMessages()
+    public FeedbackMessages getErrorMessages()
     {
-        return getMessages(UIMessage.ERROR);
+        return getMessages(FeebackMessage.ERROR);
     }
 
     /**
@@ -554,24 +554,24 @@ public final class UIMessages
      * @return the sub list of message with messages that are of the given level or above,
      * or an empty list
      */
-    public UIMessages getMessages(int level)
+    public FeedbackMessages getMessages(int level)
     {
         if(messages != null)
         {
             List sublist = new ArrayList();
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                UIMessage message = (UIMessage)i.next();
+                FeebackMessage message = (FeebackMessage)i.next();
                 if(message.isLevel(level))
                 {
                     sublist.add(message);
                 }
             }
-            return new UIMessages().setMessages(sublist);
+            return new FeedbackMessages().setMessages(sublist);
         }
         else
         {
-            return new UIMessages();
+            return new FeedbackMessages();
         }
     }
 
@@ -580,7 +580,7 @@ public final class UIMessages
      * @param messages the messages
      * @return This
      */
-    private UIMessages setMessages(List messages)
+    private FeedbackMessages setMessages(List messages)
     {
         this.messages = messages;
         return this;
@@ -598,8 +598,8 @@ public final class UIMessages
             Set subset = new HashSet();
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                UIMessage message = (UIMessage)i.next();
-                if(message.isLevel(UIMessage.ERROR))
+                FeebackMessage message = (FeebackMessage)i.next();
+                if(message.isLevel(FeebackMessage.ERROR))
                 {
                     subset.add(message.getReporter());
                 }
@@ -624,7 +624,7 @@ public final class UIMessages
             Set subset = new HashSet();
             for(Iterator i = messages.iterator(); i.hasNext();)
             {
-                UIMessage message = (UIMessage)i.next();
+                FeebackMessage message = (FeebackMessage)i.next();
                 if(message.isLevel(level))
                 {
                     subset.add(message.getReporter());
@@ -643,7 +643,7 @@ public final class UIMessages
      */
     public String toString()
     {
-        StringBuffer b = new StringBuffer("UIMessages{");
+        StringBuffer b = new StringBuffer("FeedbackMessages{");
         List msgs = getMessages();
         if(!msgs.isEmpty())
         {

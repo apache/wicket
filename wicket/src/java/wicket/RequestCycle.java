@@ -364,14 +364,14 @@ public abstract class RequestCycle
             setRedirect(false);
             if(page != null)
             {
-                page.messages = UIMessages.get();
-                UIMessages.remove(); // only clean thread local; in fact we moved the
+                page.messages = FeedbackMessages.get();
+                FeedbackMessages.remove(); // only clean thread local; in fact we moved the
                 	// reference from the thread local to the page temporarily
             }
             else // hmmm, no page, which probably means we are rendering directely
                 // ourselves; as a fallthrough, we have to clear things up
             {
-                UIMessages.release(); 
+                FeedbackMessages.release(); 
             }
         }
         else
@@ -379,7 +379,7 @@ public abstract class RequestCycle
             // clear the ui messages and reset the original component models
             // the components have had the possibility of rendering the messages,
             // and the messages are meant for 'one time use' only.
-            UIMessages.release();
+            FeedbackMessages.release();
         }
         current.set(null); // reset ThreadLocal reference
     }
