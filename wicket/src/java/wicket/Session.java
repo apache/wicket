@@ -101,7 +101,7 @@ public abstract class Session implements Serializable
 	private static final Log log = LogFactory.getLog(Session.class);
 
 	/** Session state that can be replicated when dirty */
-	transient State state = new State();
+	transient State state;
 
 	/** Application that this is a session of. */
 	private transient Application application;
@@ -154,7 +154,7 @@ public abstract class Session implements Serializable
 		private String interceptContinuationURL;
 
 		/** The locale to use when loading resources for this session. */
-		private Locale locale = Locale.getDefault();
+		private Locale locale;
 
 		/** Next available page identifier. */
 		private int pageId = 0;
@@ -195,6 +195,8 @@ public abstract class Session implements Serializable
 	protected Session(final Application application)
 	{
 		this.application = application;
+		this.state = new State();
+		this.state.locale = application.getSettings().getDefaultLocale();
 	}
 
 	/**
