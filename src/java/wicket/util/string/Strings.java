@@ -574,7 +574,7 @@ public final class Strings
 		{
 			final StringWriter stringWriter = new StringWriter();
 			throwable.printStackTrace(new PrintWriter(stringWriter));
-			return stringWriter.toString().replaceAll("\t", "    ");
+			return Strings.replaceAll(stringWriter.toString(),"\t", "    ");
 		}
 		else
 		{

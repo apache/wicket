@@ -295,7 +295,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
 		tag.put("method", "POST");
-		tag.put("action", urlFor(IFormSubmitListener.class).replaceAll("&", "&amp;"));
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class),"&", "&amp;"));
 	}
 
 	/**

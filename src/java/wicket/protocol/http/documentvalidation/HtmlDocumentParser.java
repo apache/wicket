@@ -23,6 +23,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.util.string.Strings;
+
 /**
  * Lightweight document parser for HTML. This parser is only intended to process
  * well formed and simple HTML of the kind that would generally be utilised
@@ -34,252 +36,255 @@ public class HtmlDocumentParser
 {
 	private static Log log = LogFactory.getLog(HtmlDocumentParser.class);
 
-    /** Constant for close tag token. */
-    public static final int CLOSE_TAG = 4;
+	/** Constant for close tag token. */
+	public static final int CLOSE_TAG = 4;
 
-    /** Constant for comment token. */
-    public static final int COMMENT = 1;
+	/** Constant for comment token. */
+	public static final int COMMENT = 1;
 
-    /** Constant for end token. */
-    public static final int END = 0;
+	/** Constant for end token. */
+	public static final int END = 0;
 
-    /** Constant for open tag token. */
-    public static final int OPEN_TAG = 2;
+	/** Constant for open tag token. */
+	public static final int OPEN_TAG = 2;
 
-    /** Constant for open/close tag token. */
-    public static final int OPENCLOSE_TAG = 3;
+	/** Constant for open/close tag token. */
+	public static final int OPENCLOSE_TAG = 3;
 
-    /** Constant for text token. */
-    public static final int TEXT = 5;
+	/** Constant for text token. */
+	public static final int TEXT = 5;
 
-    /** constant for unknown token. */
-    public static final int UNKNOWN = -1;
+	/** constant for unknown token. */
+	public static final int UNKNOWN = -1;
 
-    private Map attributes;
+	private Map attributes;
 
-    /** Extracted content */
-    private String comment;
+	/** Extracted content */
+	private String comment;
 
-    /** Document parse elements */
-    private String document;
+	/** Document parse elements */
+	private String document;
 
-    private int pos;
+	private int pos;
 
-    private String tag;
+	private String tag;
 
-    private String text;
+	private String text;
 
-    /**
-     * Create the parser for the current document.
-     * 
-     * @param document
-     *            The document to parse
-     */
-    public HtmlDocumentParser(final String document)
-    {
-        this.document = document.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\t", " ");
-        pos = 0;
-    }
+	/**
+	 * Create the parser for the current document.
+	 * 
+	 * @param document
+	 *            The document to parse
+	 */
+	public HtmlDocumentParser(final String document)
+	{
+		this.document = Strings.replaceAll(document, "\n", "");
+		this.document = Strings.replaceAll(document, "\r", "");
+		this.document = Strings.replaceAll(document, "\t", " ");
+		pos = 0;
+	}
 
-    /**
-     * Get the attributes of the tag.
-     * 
-     * @return The attributes
-     */
-    public Map getAttributes()
-    {
-        return attributes;
-    }
+	/**
+	 * Get the attributes of the tag.
+	 * 
+	 * @return The attributes
+	 */
+	public Map getAttributes()
+	{
+		return attributes;
+	}
 
-    /**
-     * Get the comment.
-     * 
-     * @return The comment
-     */
-    public String getComment()
-    {
-        return comment;
-    }
+	/**
+	 * Get the comment.
+	 * 
+	 * @return The comment
+	 */
+	public String getComment()
+	{
+		return comment;
+	}
 
-    /**
-     * Iterates through the document searching for tokens. Returns the type of
-     * token that was found. If an unexpected token was encountered then the
-     * parser writes this fact to the console and continues
-     * 
-     * @return The token that was found
-     */
-    public int getNextToken()
-    {
-        while (pos < document.length())
-        {
-            char ch = document.charAt(pos);
-            if (ch == '<')
-            {
-                return processDirective();
-            }
-            else
-            {
-                return processText();
-            }
-        }
-        return END;
-    }
+	/**
+	 * Iterates through the document searching for tokens. Returns the type of
+	 * token that was found. If an unexpected token was encountered then the
+	 * parser writes this fact to the console and continues
+	 * 
+	 * @return The token that was found
+	 */
+	public int getNextToken()
+	{
+		while (pos < document.length())
+		{
+			char ch = document.charAt(pos);
+			if (ch == '<')
+			{
+				return processDirective();
+			}
+			else
+			{
+				return processText();
+			}
+		}
+		return END;
+	}
 
-    /**
-     * Get the tag name.
-     * 
-     * @return The tag name
-     */
-    public String getTag()
-    {
-        return tag;
-    }
+	/**
+	 * Get the tag name.
+	 * 
+	 * @return The tag name
+	 */
+	public String getTag()
+	{
+		return tag;
+	}
 
-    /**
-     * Get the text.
-     * 
-     * @return The text
-     */
-    public String getText()
-    {
-        return text;
-    }
+	/**
+	 * Get the text.
+	 * 
+	 * @return The text
+	 */
+	public String getText()
+	{
+		return text;
+	}
 
-    /**
-     * Extract attributes from the given string.
-     * 
-     * @param attributeString
-     *            The string
-     * @return The map of attributes
-     */
-    private Map extractAttributes(String attributeString)
-    {
-        Map m = new HashMap();
-        attributeString = attributeString.trim().replaceAll("\t", " ").replaceAll(" = ", "=");
-        String[] attributeElements = attributeString.split(" ");
-        for (int i = 0; i < attributeElements.length; i++)
-        {
-            String[] bits = attributeElements[i].split("=");
-            if (bits.length == 1)
-            {
-                m.put(bits[0].trim().toLowerCase(), "");
-            }
-            else
-            {
-                bits[0] = bits[0].trim();
-                StringBuffer value = new StringBuffer();
-                for (int j = 1; j < bits.length; j++)
-                {
-                    value.append(bits[j]);
-                    if (j < (bits.length - 1))
-                        value.append('=');
-                }
-                bits[1] = value.toString().trim();
-                if (bits[1].startsWith("\""))
-                    bits[1] = bits[1].substring(1);
-                if (bits[1].endsWith("\""))
-                    bits[1] = bits[1].substring(0, bits[1].length() - 1);
-                m.put(bits[0].toLowerCase(), bits[1]);
-            }
-        }
-        return m;
-    }
+	/**
+	 * Extract attributes from the given string.
+	 * 
+	 * @param attributeString
+	 *            The string
+	 * @return The map of attributes
+	 */
+	private Map extractAttributes(String attributeString)
+	{
+		Map m = new HashMap();
+		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ");
+		attributeString = Strings.replaceAll(attributeString, " = ", "=");
+		String[] attributeElements = attributeString.split(" ");
+		for (int i = 0; i < attributeElements.length; i++)
+		{
+			String[] bits = attributeElements[i].split("=");
+			if (bits.length == 1)
+			{
+				m.put(bits[0].trim().toLowerCase(), "");
+			}
+			else
+			{
+				bits[0] = bits[0].trim();
+				StringBuffer value = new StringBuffer();
+				for (int j = 1; j < bits.length; j++)
+				{
+					value.append(bits[j]);
+					if (j < (bits.length - 1))
+						value.append('=');
+				}
+				bits[1] = value.toString().trim();
+				if (bits[1].startsWith("\""))
+					bits[1] = bits[1].substring(1);
+				if (bits[1].endsWith("\""))
+					bits[1] = bits[1].substring(0, bits[1].length() - 1);
+				m.put(bits[0].toLowerCase(), bits[1]);
+			}
+		}
+		return m;
+	}
 
-    /**
-     * Process a directive starting at the current position.
-     * 
-     * @return The token found
-     */
-    private int processDirective()
-    {
-        String part = document.substring(pos);
-        if (part.matches("<!--.*-->.*"))
-        {
-            // This is a comment
-            comment = part.substring(4, part.indexOf("-->")).trim();
-            pos += part.indexOf("-->") + 3;
-            return COMMENT;
-        }
-        else if (part.matches("</.*>.*"))
-        {
-            // This is a closing tag
-            tag = part.substring(2, part.indexOf('>')).trim().toLowerCase();
-            pos += part.indexOf(">") + 1;
-            return CLOSE_TAG;
-        }
-        else if (part.matches("<[^/]+[^>]*/>.*"))
-        {
-            // This is an openclose tag
-            if (part.matches("<([a-zA-Z]+:)?[a-zA-Z]+/>.*"))
-            {
-                // No attributes
-                tag = part.substring(1, part.indexOf("/>")).toLowerCase();
-                attributes = new HashMap();
-            }
-            else
-            {
-                // Attributes
-                tag = part.substring(1, part.indexOf(' ')).toLowerCase();
-                String attributeString = part.substring(part.indexOf(' '), part.indexOf("/>"));
-                attributes = extractAttributes(attributeString);
-            }
-            pos += part.indexOf("/>") + 2;
-            return OPENCLOSE_TAG;
-        }
-        else if (part.matches("<[^/>]+.*>.*"))
-        {
-            // This is an opening tag
-            if (part.matches("<([a-zA-Z]+:)?[a-zA-Z]*>.*"))
-            {
-                // No attributes
-                tag = part.substring(1, part.indexOf('>')).toLowerCase();
-                attributes = new HashMap();
-            }
-            else
-            {
-                // Attributes
-                tag = part.substring(1, part.indexOf(' ')).toLowerCase();
-                String attributeString = part.substring(part.indexOf(' '), part.indexOf('>'));
-                attributes = extractAttributes(attributeString);
-            }
-            pos += part.indexOf(">") + 1;
-            return OPEN_TAG;
-        }
-        else
-        {
-            int size = (part.length() > 30) ? 30 : part.length();
-            log.error("Unexpected markup found: " + part.substring(0, size) + "...");
-            return UNKNOWN;
-        }
-    }
+	/**
+	 * Process a directive starting at the current position.
+	 * 
+	 * @return The token found
+	 */
+	private int processDirective()
+	{
+		String part = document.substring(pos);
+		if (part.matches("<!--.*-->.*"))
+		{
+			// This is a comment
+			comment = part.substring(4, part.indexOf("-->")).trim();
+			pos += part.indexOf("-->") + 3;
+			return COMMENT;
+		}
+		else if (part.matches("</.*>.*"))
+		{
+			// This is a closing tag
+			tag = part.substring(2, part.indexOf('>')).trim().toLowerCase();
+			pos += part.indexOf(">") + 1;
+			return CLOSE_TAG;
+		}
+		else if (part.matches("<[^/]+[^>]*/>.*"))
+		{
+			// This is an openclose tag
+			if (part.matches("<([a-zA-Z]+:)?[a-zA-Z]+/>.*"))
+			{
+				// No attributes
+				tag = part.substring(1, part.indexOf("/>")).toLowerCase();
+				attributes = new HashMap();
+			}
+			else
+			{
+				// Attributes
+				tag = part.substring(1, part.indexOf(' ')).toLowerCase();
+				String attributeString = part.substring(part.indexOf(' '), part.indexOf("/>"));
+				attributes = extractAttributes(attributeString);
+			}
+			pos += part.indexOf("/>") + 2;
+			return OPENCLOSE_TAG;
+		}
+		else if (part.matches("<[^/>]+.*>.*"))
+		{
+			// This is an opening tag
+			if (part.matches("<([a-zA-Z]+:)?[a-zA-Z]*>.*"))
+			{
+				// No attributes
+				tag = part.substring(1, part.indexOf('>')).toLowerCase();
+				attributes = new HashMap();
+			}
+			else
+			{
+				// Attributes
+				tag = part.substring(1, part.indexOf(' ')).toLowerCase();
+				String attributeString = part.substring(part.indexOf(' '), part.indexOf('>'));
+				attributes = extractAttributes(attributeString);
+			}
+			pos += part.indexOf(">") + 1;
+			return OPEN_TAG;
+		}
+		else
+		{
+			int size = (part.length() > 30) ? 30 : part.length();
+			log.error("Unexpected markup found: " + part.substring(0, size) + "...");
+			return UNKNOWN;
+		}
+	}
 
-    /**
-     * Process text up to the next token.
-     * 
-     * @return The token code
-     */
-    private int processText()
-    {
-        StringBuffer buf = new StringBuffer();
-        while (pos < document.length())
-        {
-            char ch = document.charAt(pos);
-            if (ch == '<')
-            {
-                text = buf.toString();
-                return TEXT;
-            }
-            else
-            {
-                buf.append(ch);
-            }
-            pos++;
-        }
-        if (buf.length() > 0)
-        {
-            text = buf.toString();
-            return TEXT;
-        }
-        return END;
-    }
+	/**
+	 * Process text up to the next token.
+	 * 
+	 * @return The token code
+	 */
+	private int processText()
+	{
+		StringBuffer buf = new StringBuffer();
+		while (pos < document.length())
+		{
+			char ch = document.charAt(pos);
+			if (ch == '<')
+			{
+				text = buf.toString();
+				return TEXT;
+			}
+			else
+			{
+				buf.append(ch);
+			}
+			pos++;
+		}
+		if (buf.length() > 0)
+		{
+			text = buf.toString();
+			return TEXT;
+		}
+		return END;
+	}
 }

@@ -24,6 +24,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
+import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
 /**
@@ -126,7 +127,7 @@ public class AutoLinkResolver implements IComponentResolver
 
 		// Obviously a href like href="myPkg.MyLabel.html" will do as well.
 		// Wicket will not throw an exception. It accepts it.
-		classPath = classPath.replaceAll("/", ".");
+		classPath = Strings.replaceAll(classPath,"/", ".");
 
 		if (!classPath.startsWith("."))
 		{
