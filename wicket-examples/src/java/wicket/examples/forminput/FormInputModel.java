@@ -31,6 +31,7 @@ public final class FormInputModel implements Serializable
 	private Double doubleProperty = new Double(20.5);
 	private Date dateProperty = new Date();
 	private Integer integerInRangeProperty = new Integer(50);
+	private Boolean booleanProperty;
 
 	/**
 	 * Gets dateProperty.
@@ -138,12 +139,31 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
+	 * Gets the booleanProperty.
+	 * @return booleanProperty
+	 */
+	public Boolean getBooleanProperty()
+	{
+		return booleanProperty;
+	}
+	
+	/**
+	 * Sets the booleanProperty.
+	 * @param booleanProperty booleanProperty
+	 */
+	public void setBooleanProperty(Boolean booleanProperty)
+	{
+		this.booleanProperty = booleanProperty;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
 		return "[TestInputObject stringProperty = '" + stringProperty + "', integerProperty = "
 				+ integerProperty + ", doubleProperty = " + doubleProperty + ", dateProperty = "
-				+ dateProperty + ", integerInRangeProperty = " + integerInRangeProperty + "]";
+				+ dateProperty + ", booleanProperty = " + booleanProperty
+				+ ", integerInRangeProperty = " + integerInRangeProperty + "]";
 	}
 }
