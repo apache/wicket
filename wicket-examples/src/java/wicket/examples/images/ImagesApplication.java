@@ -23,7 +23,7 @@ import wicket.util.time.Duration;
 
 
 /**
- * HttpApplication class for wicket.examples.linkomatic example.
+ * WicketServlet class for wicket.examples.linkomatic example.
  * @author Jonathan Locke
  */
 public class ImagesApplication extends WebApplication

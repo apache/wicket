@@ -18,12 +18,6 @@
  */
 package wicket.examples.springframework;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,16 +25,16 @@ import org.springframework.context.ApplicationContext;
 
 import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
+import wicket.WebApplication;
 import wicket.markup.html.InternalErrorPage;
 import wicket.markup.html.PageExpiredErrorPage;
 import wicket.markup.html.StaleDataErrorPage;
-import wicket.protocol.http.HttpApplication;
 
 /**
- * HttpApplication class for hello world example.
+ * WicketServlet class for hello world example.
  * @author Juergen Donnerstag
  */
-public class SpringApplication extends HttpApplication implements InitializingBean  
+public class SpringApplication extends WebApplication implements InitializingBean  
 {
     /** Logging */
     private static final Log log = LogFactory.getLog(SpringApplication.class);
@@ -150,23 +144,5 @@ public class SpringApplication extends HttpApplication implements InitializingBe
         getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class)
         	.setInternalErrorPage(InternalErrorPage.class)
             .setStaleDataErrorPage(StaleDataErrorPage.class);
-    }
-
-    /**
-     * DO NOT CALL THIS METHOD YOURSELF. IT IS NOT PART OF THE PUBLIC API
-     * OF WICKET. IT MAY BE REMOVED IN THE FUTURE.
-     * 
-     * HttpApplication's doGet() is protected and not directly accessible from 
-     * the controller. doService() simply delegates to super.doGet().
-     *  
-     * @param servletRequest The http servlet request
-     * @param servletResponse The http servlet response
-     * @throws IOException
-     * @throws ServletException
-     */
-    public void doService(HttpServletRequest servletRequest,
-            HttpServletResponse servletResponse) throws IOException, ServletException
-    {
-        doGet(servletRequest, servletResponse);
     }
 }

@@ -29,10 +29,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IApplication;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.PageParameters;
+import wicket.WebApplication;
 import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
 import wicket.Response;
@@ -50,7 +50,7 @@ public class HttpRequestCycle extends RequestCycle
 { // TODO finalize javadoc
     /** Logging object */
     private static final Log log = LogFactory.getLog(HttpRequestCycle.class);
-
+    
     /**
      * Constructor
      * 
@@ -63,9 +63,8 @@ public class HttpRequestCycle extends RequestCycle
      * @param response
      *            The response
      */
-    public HttpRequestCycle(final IApplication application,
-            final HttpSession session, final HttpRequest request,
-            final Response response)
+    public HttpRequestCycle(final WebApplication application, final HttpSession session,
+            final HttpRequest request, final Response response)
     {
         super(application, session, request, response);
     }
@@ -89,10 +88,9 @@ public class HttpRequestCycle extends RequestCycle
 
         if (parameters != null)
         {
-            for (final Iterator iterator = parameters.keySet().iterator(); iterator
-                    .hasNext();)
+            for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
             {
-                final String key = (String) iterator.next();
+                final String key = (String)iterator.next();
 
                 buffer.append('&');
                 buffer.append(key);
@@ -115,15 +113,13 @@ public class HttpRequestCycle extends RequestCycle
      *            The listener interface on the component
      * @return A URL that encodes a page, component and interface to call
      */
-    public String urlFor(final Component component,
-            final Class listenerInterface)
+    public String urlFor(final Component component, final Class listenerInterface)
     {
         // Ensure that component instanceof listenerInterface
         if (!listenerInterface.isAssignableFrom(component.getClass()))
         {
-            throw new WicketRuntimeException("The component " + component
-                    + " of class " + component.getClass()
-                    + " does not implement " + listenerInterface);
+            throw new WicketRuntimeException("The component " + component + " of class "
+                    + component.getClass() + " does not implement " + listenerInterface);
         }
 
         // Compose the URL
@@ -138,6 +134,33 @@ public class HttpRequestCycle extends RequestCycle
 
         // Return the encoded URL
         return response.encodeURL(buffer.toString());
+    }
+
+    /**
+     * @return Prefix for URLs
+     */
+    public StringBuffer urlPrefix()
+    {
+        final StringBuffer buffer = new StringBuffer();
+
+        if (request != null)
+        {
+            buffer.append(((HttpRequest)request).getContextPath());
+
+            final String servletPath = ((HttpRequest)request).getServletPath();
+
+            if (servletPath.equals(""))
+            {
+                buffer.append('/');
+                buffer.append(application.getName());
+            }
+            else
+            {
+                buffer.append(servletPath);
+            }
+        }
+
+        return buffer;
     }
 
     /**
@@ -222,7 +245,7 @@ public class HttpRequestCycle extends RequestCycle
             // For each FormComponent found on the Page (not Form)
             public Object component(final Component component)
             {
-                ((Form) component).setFormComponentValuesFromPersister();
+                ((Form)component).setFormComponentValuesFromPersister();
                 return CONTINUE_TRAVERSAL;
             }
         });
@@ -242,8 +265,7 @@ public class HttpRequestCycle extends RequestCycle
 
         if (pageClassName != null)
         {
-            final Class pageClass = getSession().getClassResolver()
-                    .resolveClass(pageClassName);
+            final Class pageClass = getSession().getClassResolver().resolveClass(pageClassName);
             setPage(getPageFactory().newPage(pageClass,
                     new PageParameters(getRequest().getParameterMap())));
 
@@ -278,8 +300,7 @@ public class HttpRequestCycle extends RequestCycle
             final Page page = session.getPage(path);
 
             // Get the rendering of the page
-            final int rendering = Integer.parseInt(request
-                    .getParameter("rendering"));
+            final int rendering = Integer.parseInt(request.getParameter("rendering"));
 
             // Does page exist?
             if (page != null)
@@ -294,8 +315,8 @@ public class HttpRequestCycle extends RequestCycle
 
                     if (freshestPage != null)
                     {
-                        setPage(newPage(application.getPages()
-                                .getStaleDataErrorPage(), freshestPage));
+                        setPage(newPage(application.getPages().getStaleDataErrorPage(),
+                                freshestPage));
                     }
                     else
                     {
@@ -308,16 +329,15 @@ public class HttpRequestCycle extends RequestCycle
                 {
                     // Just a particular rendering of the page is stale, so send
                     // the user back to the page
-                    setPage(newPage(application.getPages()
-                            .getStaleDataErrorPage(), page));
+                    setPage(newPage(application.getPages().getStaleDataErrorPage(), page));
 
                     return true;
                 }
                 else
                 {
                     // Get the component at the given path on the page
-                    final Component component = page.get(Strings
-                            .afterFirstPathComponent(path, '.'));
+                    final Component component = page
+                            .get(Strings.afterFirstPathComponent(path, '.'));
 
                     // Got component?
                     if (component != null)
@@ -331,8 +351,7 @@ public class HttpRequestCycle extends RequestCycle
                         session.expireNewerThan(page);
 
                         // Look up interface to call
-                        final String interfaceName = request
-                                .getParameter("interface");
+                        final String interfaceName = request.getParameter("interface");
                         final Method method = getInterfaceMethod(interfaceName);
 
                         try
@@ -342,16 +361,13 @@ public class HttpRequestCycle extends RequestCycle
                         }
                         catch (IllegalAccessException e)
                         {
-                            throw new WicketRuntimeException(
-                                    "Cannot access method " + method
-                                            + " of interface " + interfaceName,
-                                    e);
+                            throw new WicketRuntimeException("Cannot access method " + method
+                                    + " of interface " + interfaceName, e);
                         }
                         catch (InvocationTargetException e)
                         {
-                            throw new WicketRuntimeException("Method " + method
-                                    + " of interface " + interfaceName
-                                    + " threw an exception", e);
+                            throw new WicketRuntimeException("Method " + method + " of interface "
+                                    + interfaceName + " threw an exception", e);
                         }
 
                         // Set form component values from cookies
@@ -368,8 +384,7 @@ public class HttpRequestCycle extends RequestCycle
                         // kind or
                         // someone is hacking around with URLs in their browser.
                         log.error("No component found for " + path);
-                        setPage(newPage(application.getPages()
-                                .getInternalErrorPage()));
+                        setPage(newPage(application.getPages().getInternalErrorPage()));
 
                         return true;
                     }
@@ -379,8 +394,7 @@ public class HttpRequestCycle extends RequestCycle
             {
                 // Page was expired from session, probably because backtracking
                 // limit was reached
-                setPage(newPage(application.getPages()
-                        .getPageExpiredErrorPage()));
+                setPage(newPage(application.getPages().getPageExpiredErrorPage()));
 
                 return true;
             }
@@ -397,7 +411,7 @@ public class HttpRequestCycle extends RequestCycle
      */
     private boolean homePage()
     {
-        final String pathInfo = ((HttpRequest) request).getPathInfo();
+        final String pathInfo = ((HttpRequest)request).getPathInfo();
 
         if ((pathInfo == null) || "/".equals(pathInfo) || "".equals(pathInfo))
         {
@@ -416,6 +430,36 @@ public class HttpRequestCycle extends RequestCycle
         return false;
     }
 
+
+    /**
+     * Creates a new page.
+     * 
+     * @param pageClass
+     *            The page class to instantiate
+     * @return The page
+     * @throws WicketRuntimeException
+     */
+    private final Page newPage(final Class pageClass)
+    {
+        final PageParameters parameters = new PageParameters(getRequest().getParameterMap());
+        return getPageFactory().newPage(pageClass, parameters);
+    }
+
+    /**
+     * Creates a new instance of a page using the given class name.
+     * 
+     * @param pageClass
+     *            The class of page to create
+     * @param page
+     *            Parameter to page constructor
+     * @return The new page
+     * @throws WicketRuntimeException
+     */
+    private final Page newPage(final Class pageClass, final Page page)
+    {
+        return getPageFactory().newPage(pageClass, page);
+    }
+
     /**
      * @return True if static content was returned
      */
@@ -424,10 +468,10 @@ public class HttpRequestCycle extends RequestCycle
         try
         {
             // Get URL
-            final String url = ((HttpRequest) getRequest()).getURL();
+            final String url = ((HttpRequest)getRequest()).getURL();
 
             // Get servlet context
-            final ServletContext context = ((HttpApplication) application)
+            final ServletContext context = ((WebApplication)application).getWicketServlet()
                     .getServletContext();
 
             // Set content type
@@ -441,8 +485,8 @@ public class HttpRequestCycle extends RequestCycle
                 try
                 {
                     // Copy resource input stream to servlet output stream
-                    Streams.writeStream(in, ((HttpResponse) response)
-                            .getServletResponse().getOutputStream());
+                    Streams.writeStream(in, ((HttpResponse)response).getServletResponse()
+                            .getOutputStream());
                 }
                 finally
                 {
@@ -460,66 +504,7 @@ public class HttpRequestCycle extends RequestCycle
         }
         catch (IOException e)
         {
-            throw new WicketRuntimeException("Cannot load static content for request "
-                    + request, e);
+            throw new WicketRuntimeException("Cannot load static content for request " + request, e);
         }
-    }
-
-    /**
-     * @return Prefix for URLs
-     */
-    public StringBuffer urlPrefix()
-    {
-        final StringBuffer buffer = new StringBuffer();
-
-        if (request != null)
-        {
-            buffer.append(((HttpRequest) request).getContextPath());
-
-            final String servletPath = ((HttpRequest) request).getServletPath();
-
-            if (servletPath.equals(""))
-            {
-                buffer.append('/');
-                buffer.append(application.getName());
-            }
-            else
-            {
-                buffer.append(servletPath);
-            }
-        }
-
-        return buffer;
-    }
-
-
-    /**
-     * Creates a new page.
-     * 
-     * @param pageClass
-     *            The page class to instantiate
-     * @return The page
-     * @throws WicketRuntimeException
-     */
-    private final Page newPage(final Class pageClass)
-    {
-        final PageParameters parameters = new PageParameters(getRequest()
-                .getParameterMap());
-        return getPageFactory().newPage(pageClass, parameters);
-    }
-
-    /**
-     * Creates a new instance of a page using the given class name.
-     * 
-     * @param pageClass
-     *            The class of page to create
-     * @param page
-     *            Parameter to page constructor
-     * @return The new page
-     * @throws WicketRuntimeException
-     */
-    private final Page newPage(final Class pageClass, final Page page)
-    {
-        return getPageFactory().newPage(pageClass, page);
     }
 }

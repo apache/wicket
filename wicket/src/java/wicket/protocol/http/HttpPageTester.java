@@ -18,9 +18,11 @@
  */
 package wicket.protocol.http;
 
+import wicket.Application;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Session;
+import wicket.WebApplication;
 import wicket.response.ConsoleResponse;
 import wicket.response.NullResponse;
 import wicket.util.profile.IObjectProfileNode;
@@ -44,9 +46,9 @@ public final class HttpPageTester
     /**
      * Constructor.
      * @param application The application class to instantiate (must extend
-     *            HttpApplication)
+     *            WicketServlet)
      */
-    public HttpPageTester(final HttpApplication application)
+    public HttpPageTester(final Application application)
     {
         this(new HttpSession(application, null)
         {
@@ -61,7 +63,7 @@ public final class HttpPageTester
      */
     public HttpPageTester(final HttpSession session)
     {
-        this(new HttpRequestCycle((HttpApplication) session.getApplication(), session,
+        this(new HttpRequestCycle((WebApplication)session.getApplication(), session,
                 HttpRequest.NULL, NullResponse.getInstance()));
     }
 

@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
 
-import wicket.ApplicationSettings;
+import wicket.Application;
 import wicket.DefaultClassResolver;
 import wicket.IClassResolver;
 import wicket.WicketRuntimeException;
@@ -54,18 +54,18 @@ public class GroovyClassResolver implements IClassResolver
     /** Default class resolver */
     private final IClassResolver defaultClassResolver = new DefaultClassResolver();
 
-    /** Application settings */
-    private final ApplicationSettings settings;
+    /** Application */
+    private final Application application;
 
     /**
      * Constructor
      * 
-     * @param settings
-     *            Application settings
+     * @param application
+     *            Application
      */
-    public GroovyClassResolver(final ApplicationSettings settings)
+    public GroovyClassResolver(final Application application)
     {
-        this.settings = settings;
+        this.application = application;
     }
 
     /**
@@ -210,7 +210,7 @@ public class GroovyClassResolver implements IClassResolver
     private Class loadGroovyFileAndWatchForChanges(final String classname, final Resource resource)
     {
         // Watch file in the future
-        final ModificationWatcher watcher = settings.getResourceWatcher();
+        final ModificationWatcher watcher = application.getResourceWatcher();
 
         if (watcher != null)
         {

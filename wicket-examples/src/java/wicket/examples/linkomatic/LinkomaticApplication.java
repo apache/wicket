@@ -21,7 +21,7 @@ package wicket.examples.linkomatic;
 import wicket.WebApplication;
 
 /**
- * HttpApplication class for wicket.examples.linkomatic example.
+ * WicketServlet class for wicket.examples.linkomatic example.
  * @author Jonathan Locke
  */
 public class LinkomaticApplication extends WebApplication

@@ -29,27 +29,29 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * Utility class that encapsulates all of the localization related functionality
  * in a way that is can be accessed by all areas of the framework in a
  * consistent way. A singleton instance of this class is available via the
- * <code>ApplicationSettings</code> object.
+ * <code>Application</code> object.
  * 
  * @author Chris Turner
- * @see ApplicationSettings#getLocalizer()
+ * @see Application#getLocalizer()
  */
 public class Localizer
 { // TODO finalize javadoc
-    /** The settings to use to control the utils. */
-    private ApplicationSettings settings;
+    /** The application and its settings to use to control the utils. */
+    private Application application;
 
     /**
      * Create the utils instance class backed by the configuration information
      * contained within the supplied settings object.
      * 
-     * @param settings
-     *            The settings describing how the utils should behave
+     * @param application
+     *            The application to localize for
      */
-    public Localizer(final ApplicationSettings settings)
+    public Localizer(final Application application)
     {
-        this.settings = settings;
+        this.application = application;
     }
+    
+    
 
     /**
      * Get the localized string using all of the supplied parameters. This
@@ -81,11 +83,17 @@ public class Localizer
             throws MissingResourceException
     {
         String string = null;
+        
+        final ApplicationSettings settings = application.getSettings();        
+        if (settings == null)
+        {
+            throw new IllegalStateException("Application did not contain configured settings");
+        }
 
         // Search each loader in turn and return the string if it is found
-        for (Iterator it = settings.getStringResourceLoaders().iterator(); it.hasNext();)
+        for (final Iterator iterator = settings.getStringResourceLoaders().iterator(); iterator.hasNext();)
         {
-            IStringResourceLoader loader = (IStringResourceLoader)it.next();
+            IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
             string = loader.loadStringResource(component, key, locale, style);
             if (string != null)
             {
@@ -100,7 +108,7 @@ public class Localizer
             return defaultValue;
         }
 
-        if (settings.getExceptionOnMissingResource())
+        if (settings.getThrowExceptionOnMissingResource())
         {
             throw new MissingResourceException("Unable to find resource: " + key, getClass()
                     .getName(), key);

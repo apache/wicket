@@ -36,7 +36,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import wicket.IApplication;
+import wicket.Application;
 import wicket.util.value.ValueMap;
 
 /**
@@ -58,7 +58,7 @@ public class MockServletContext implements ServletContext
 	private final ValueMap mimeTypes = new ValueMap();
 
 	// Context information
-	private IApplication application;
+	private Application application;
 
 	private File webappRoot;
 
@@ -75,7 +75,7 @@ public class MockServletContext implements ServletContext
 	 * @param application The application that this context is for
 	 * @param path The path to the root of the web application
 	 */
-	public MockServletContext(final IApplication application, final String path)
+	public MockServletContext(final Application application, final String path)
 	{
 		this.application = application;
 

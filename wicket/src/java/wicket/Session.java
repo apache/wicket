@@ -83,7 +83,7 @@ public abstract class Session implements Serializable
     private static final ThreadLocal current = new ThreadLocal();
 
     /** Application that this is a session of. */
-    private transient IApplication application;
+    private transient Application application;
 
     /** Factory for constructing Pages for this Session */
     private IPageFactory pageFactory;
@@ -159,7 +159,7 @@ public abstract class Session implements Serializable
      * @param application
      *            The application that this is a session of
      */
-    protected Session(final IApplication application)
+    protected Session(final Application application)
     {
         this.application = application;
         setPageFactory(application.getSettings().getDefaultPageFactory());
@@ -201,7 +201,7 @@ public abstract class Session implements Serializable
      * 
      * @return Returns the application.
      */
-    public final IApplication getApplication()
+    public final Application getApplication()
     {
         return application;
     }

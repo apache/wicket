@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -20,10 +20,10 @@ package wicket;
 import wicket.markup.html.InternalErrorPage;
 import wicket.markup.html.PageExpiredErrorPage;
 import wicket.markup.html.StaleDataErrorPage;
-import wicket.protocol.http.HttpApplication;
+import wicket.protocol.http.WicketServlet;
 
 /**
- * A web application is an HttpApplication that serves HTML pages. This class is
+ * A web application is an WicketServlet that serves HTML pages. This class is
  * intended to be subclassed by framework clients to define settings relevant to
  * a given web application.
  * <p>
@@ -40,11 +40,13 @@ import wicket.protocol.http.HttpApplication;
  * 
  * <pre>
  * 
- *    public void init() throws ServletException
- *    {
- *      ServletConfig config = getServletConfig();
- *      String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *      ...
+ *  
+ *     public void init() throws ServletException
+ *     {
+ *       ServletConfig config = getServletConfig();
+ *       String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *       ...
+ *   
  *  
  * </pre>
  * 
@@ -55,16 +57,19 @@ import wicket.protocol.http.HttpApplication;
  * @see ApplicationSettings
  * @see ApplicationPages
  */
-public class WebApplication extends HttpApplication
+public abstract class WebApplication extends Application
 {
     /** Serial Version ID. */
     private static final long serialVersionUID = 1152456333052646498L;
 
     /** Settings for application. */
     private final ApplicationSettings settings;
-    
+
     /** Pages for application */
     private final ApplicationPages pages;
+
+    /** The WicketServlet that this application is attached to */
+    private WicketServlet wicketServlet;
 
     /**
      * Constructor.
@@ -75,24 +80,52 @@ public class WebApplication extends HttpApplication
         this.pages = new ApplicationPages();
 
         // Set default error pages for HTML markup
-        pages.setPageExpiredErrorPage(PageExpiredErrorPage.class)
-             .setInternalErrorPage(InternalErrorPage.class)
-             .setStaleDataErrorPage(StaleDataErrorPage.class);
+        pages.setPageExpiredErrorPage(PageExpiredErrorPage.class).setInternalErrorPage(
+                InternalErrorPage.class).setStaleDataErrorPage(StaleDataErrorPage.class);
     }
 
     /**
-     * @see wicket.IApplication#getSettings()
+     * @see wicket.Application#getSettings()
      */
     public ApplicationSettings getSettings()
     {
         return settings;
     }
-    
+
     /**
-     * @see wicket.IApplication#getPages()
+     * @see wicket.Application#getPages()
      */
     public ApplicationPages getPages()
     {
         return pages;
+    }
+    
+    /**
+     * @return The Wicket servlet for this application
+     */
+    public WicketServlet getWicketServlet()
+    {
+        return wicketServlet;
+    }
+
+    /**
+     * THIS METHOD IS ONLY FOR INTERNAL USE.
+     * 
+     * @param wicketServlet
+     *            The wicket servlet instance for this application
+     * @throws IllegalStateException
+     *             If an attempt is made to call this method once the wicket
+     *             servlet has been set for the application.
+     */
+    public void setWicketServlet(WicketServlet wicketServlet)
+    {
+        if (this.wicketServlet == null)
+        {
+            this.wicketServlet = wicketServlet;
+        }
+        else
+        {
+            throw new IllegalStateException("WicketServlet cannot be changed once it is set");
+        }
     }
 }

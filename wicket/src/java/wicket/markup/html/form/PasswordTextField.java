@@ -159,7 +159,7 @@ public final class PasswordTextField extends FormComponent implements FormCompon
         final String value = getModelObjectAsString();
         try
         {
-            return getApplicationSettings().getCryptInstance().encryptString(value);
+            return getApplication().getCrypt().encryptString(value);
         }
         catch (Exception ex) 
         {
@@ -179,7 +179,7 @@ public final class PasswordTextField extends FormComponent implements FormCompon
         String decryptedValue;
         try
         {
-            decryptedValue = getApplicationSettings().getCryptInstance().decryptString(value);
+            decryptedValue = getApplication().getCrypt().decryptString(value);
         } 
         catch (Exception ex) 
         {

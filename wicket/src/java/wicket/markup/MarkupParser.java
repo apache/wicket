@@ -543,6 +543,7 @@ public final class MarkupParser implements IMarkupParser
     /**
      * 
      * @param tag
+     * @return
      * @throws ParseException
      */
     private boolean handleAutolinks(final ComponentTag tag) throws ParseException
@@ -616,10 +617,9 @@ public final class MarkupParser implements IMarkupParser
      * variables by parsing the tag component name and then searching for a page class at
      * the relative URL specified by the href attribute of the tag. The href URL is
      * relative to the package containing the page where this component is contained.
-     * @param page The page where the link is
-     * @param markupStream Markup stream to use when throwing any exceptions
-     * @param componentName the name of the component
      * @param tag the component tag
+     * @return
+     * @throws ParseException
      */
     private boolean resolveAutomaticLink(final ComponentTag tag)
     	throws ParseException

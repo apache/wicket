@@ -50,7 +50,7 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
 		Assert.assertTrue("exceptionOnMissingResource should default to true", settings
-				.getExceptionOnMissingResource());
+				.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -59,9 +59,9 @@ public class ApplicationSettingsTest extends TestCase
 	public void testExceptionOnMissingResourceSetsCorrectly() throws Exception
 	{
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-		Assert.assertSame(settings, settings.setExceptionOnMissingResource(false));
+		Assert.assertSame(settings, settings.setThrowExceptionOnMissingResource(false));
 		Assert.assertFalse("exceptionOnMissingResource should have been set to false", settings
-				.getExceptionOnMissingResource());
+				.getThrowExceptionOnMissingResource());
 	}
 
 	/**
@@ -118,8 +118,9 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testLocalizer()
 	{
-		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-		Assert.assertNotNull("Localizer should be available", settings.getLocalizer());
+        Application dummy = new DummyApplication();
+		ApplicationSettings settings = new ApplicationSettings(dummy);
+		Assert.assertNotNull("Localizer should be available", dummy.getLocalizer());
 	}
 }
 

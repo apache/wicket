@@ -72,7 +72,7 @@ public class SpringApplicationController extends AbstractController
     {
         if (application != null)
         {
-            application.doService(servletRequest, servletResponse);
+             application.getWicketServlet().doGet(servletRequest, servletResponse);
         }
         else
         {

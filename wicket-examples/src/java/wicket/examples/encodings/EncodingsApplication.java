@@ -23,7 +23,7 @@ import wicket.util.time.Duration;
 
 
 /**
- * HttpApplication class for hello world example.
+ * WicketServlet class for hello world example.
  * @author Jonathan Locke
  */
 public class EncodingsApplication extends WebApplication

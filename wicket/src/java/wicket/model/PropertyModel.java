@@ -295,10 +295,8 @@ public class PropertyModel extends DetachableModel
         Session session = RequestCycle.get().getSession();
         this.locale = session.getLocale();
 
-        ApplicationSettings settings = session.getApplication().getSettings();
-
         // Save the reference to the current converter registry instance
-        this.converterRegistry = settings.getConverterRegistry();
+        this.converterRegistry = session.getApplication().getConverterRegistry();
     }
 
     /**

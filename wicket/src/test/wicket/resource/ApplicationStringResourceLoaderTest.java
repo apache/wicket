@@ -20,9 +20,9 @@ package wicket.resource;
 
 import java.util.Locale;
 
+import wicket.Application;
 import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
-import wicket.IApplication;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
 import junit.framework.Assert;
@@ -57,7 +57,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	 */
 	public void testLoaderUnknownResources()
 	{
-		IApplication app = new IApplication()
+		Application app = new Application()
 		{
 			public String getName()
 			{

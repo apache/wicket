@@ -18,7 +18,21 @@
 package wicket;
 
 /**
- * Holder for Wicket pages with special meanings.
+ * Holder for Wicket pages with special meanings such as the application's home
+ * page and any error display pages.
+ * <p>
+ * <i>homePage </i> (required, no default) - You must set this property to the
+ * bookmarkable page that you want the framework to respond with when no path
+ * information is specified.
+ * <p>
+ * <i>internalErrorPage </i>- You can override this with your own page class to
+ * display internal errors in a different way.
+ * <p>
+ * <i>pageExpiredErrorPage </i>- You can override this with your own
+ * bookmarkable page class to display expired page errors in a different way.
+ * <p>
+ * <i>staleDataErrorPage </i>- You can override this with your own bookmarkable
+ * page class to display stale data errors in a different way.
  * 
  * @author Jonathan Locke
  */
@@ -48,8 +62,7 @@ public class ApplicationPages
         if (homePageClass == null)
         {
             // give up with an exception
-            throw new IllegalStateException(
-                    "No home page was specified in application settings");
+            throw new IllegalStateException("No home page was specified in application settings");
         }
 
         return homePageClass;
@@ -111,8 +124,7 @@ public class ApplicationPages
      *            The internalErrorPage to set.
      * @return This
      */
-    public final ApplicationPages setInternalErrorPage(
-            final Class internalErrorPage)
+    public final ApplicationPages setInternalErrorPage(final Class internalErrorPage)
     {
         this.internalErrorPageClass = internalErrorPage;
         return this;
@@ -127,8 +139,7 @@ public class ApplicationPages
      *            The pageExpiredErrorPage to set.
      * @return This
      */
-    public final ApplicationPages setPageExpiredErrorPage(
-            final Class pageExpiredErrorPage)
+    public final ApplicationPages setPageExpiredErrorPage(final Class pageExpiredErrorPage)
     {
         this.pageExpiredErrorPageClass = pageExpiredErrorPage;
         return this;
@@ -143,8 +154,7 @@ public class ApplicationPages
      *            The staleDataErrorPage to set
      * @return This
      */
-    public final ApplicationPages setStaleDataErrorPage(
-            final Class staleDataErrorPage)
+    public final ApplicationPages setStaleDataErrorPage(final Class staleDataErrorPage)
     {
         this.staleDataErrorPageClass = staleDataErrorPage;
         return this;

@@ -20,7 +20,6 @@ package wicket.model;
 import java.text.MessageFormat;
 import java.util.Locale;
 
-import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.Localizer;
 import wicket.RequestCycle;
@@ -37,10 +36,10 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * The model should be created with four parameters, which are described in
  * detail below:
  * <ul>
- * <li><b>resourceKey </b>- This is the most important parameter as it
- * contains the key that should be used to obtain resources from any string
- * resource loaders. This paramater is mandatory: a null value will throw an
- * exception. Typically it will contain an ordinary string such as
+ * <li><b>resourceKey </b>- This is the most important parameter as it contains
+ * the key that should be used to obtain resources from any string resource
+ * loaders. This paramater is mandatory: a null value will throw an exception.
+ * Typically it will contain an ordinary string such as
  * &quot;label.username&quot;. To add extra power to the key functionality the
  * key may also contain an OGNL expression which will be evaluated if the model
  * parameter (see below) is not null. This allows keys to be changed dynamically
@@ -49,17 +48,17 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * model.getObject().getProduct().getId() and substitute this value into the
  * resource key before is is passed to the loader.
  * 
- * <li><b>relativeComponent </b>- This parameter should be a component that
- * the string resource is relative to. In a simple application this will usually
- * be the Page on which the component resides. For reusable
- * components/containers that are packaged with their own string resource
- * bundles it should be the actual component/container rather than the page. For
- * more information on this please see
- * {@link wicket.resource.ComponentStringResourceLoader}. The relative
- * component may actually be <code>null</code> when all resource loading is to
- * be done from a global resource loader. However, we recommend that a relative
- * component is still supplied even in these cases in order to 'future proof'
- * your application with regards to changing resource loading strategies.
+ * <li><b>relativeComponent </b>- This parameter should be a component that the
+ * string resource is relative to. In a simple application this will usually be
+ * the Page on which the component resides. For reusable components/containers
+ * that are packaged with their own string resource bundles it should be the
+ * actual component/container rather than the page. For more information on this
+ * please see {@link wicket.resource.ComponentStringResourceLoader}. The
+ * relative component may actually be <code>null</code> when all resource
+ * loading is to be done from a global resource loader. However, we recommend
+ * that a relative component is still supplied even in these cases in order to
+ * 'future proof' your application with regards to changing resource loading
+ * strategies.
  * 
  * <li><b>model </b>- This parameter is mandatory if either the resourceKey,
  * the found string resource (see below) or any of the substitution parameters
@@ -93,13 +92,15 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *  public MyPage extends HtmlPage 
- *  {
- *      public MyPage(final PageParameters parameters) 
- *      {
- *          add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
- *      }
- *  }
+ *  
+ *   public MyPage extends HtmlPage 
+ *   {
+ *       public MyPage(final PageParameters parameters) 
+ *       {
+ *           add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
+ *       }
+ *   }
+ *   
  *  
  * </pre>
  * 
@@ -113,15 +114,17 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *  public MyPage extends HtmlPage 
- *  {
- *      public MyPage(final PageParameters parameters) 
- *      {
- *          WeatherStation ws = new WeatherStation();
- *          add(new Label(&quot;weatherMessage&quot;,
- *                        new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
- *      }
- *  }
+ *  
+ *   public MyPage extends HtmlPage 
+ *   {
+ *       public MyPage(final PageParameters parameters) 
+ *       {
+ *           WeatherStation ws = new WeatherStation();
+ *           add(new Label(&quot;weatherMessage&quot;,
+ *                         new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
+ *       }
+ *   }
+ *   
  *  
  * </pre>
  * 
@@ -131,10 +134,12 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *  weather.sunny=Don't forget sunscreen!
- *  weather.raining=You might need an umberella
- *  weather.snowing=Got your skis?
- *  weather.overcast=Best take a coat to be safe
+ *  
+ *   weather.sunny=Don't forget sunscreen!
+ *   weather.raining=You might need an umberella
+ *   weather.snowing=Got your skis?
+ *   weather.overcast=Best take a coat to be safe
+ *   
  *  
  * </pre>
  * 
@@ -146,15 +151,17 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *  public MyPage extends HtmlPage 
- *  {
- *      public MyPage(final PageParameters parameters) 
- *      {
- *          WeatherStation ws = new WeatherStation();
- *          add(new Label(&quot;weatherMessage&quot;,
- *                        new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
- *      }
- *  }
+ *  
+ *   public MyPage extends HtmlPage 
+ *   {
+ *       public MyPage(final PageParameters parameters) 
+ *       {
+ *           WeatherStation ws = new WeatherStation();
+ *           add(new Label(&quot;weatherMessage&quot;,
+ *                         new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
+ *       }
+ *   }
+ *   
  *  
  * </pre>
  * 
@@ -170,24 +177,26 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *  public MyPage extends HtmlPage 
- *  {
- *      public MyPage(final PageParameters parameters) 
- *      {
- *          WeatherStation ws = new WeatherStation();
- *          Model model = new Model(ws);
- *          add(new Label(&quot;weatherMessage&quot;,
- *                    new StringResourceModel(
- *                        &quot;weather.detail&quot;, this, model,
- *                        new Object[] 
- *                        {
- *                            new Date(),
- *                            new PropertyModel(model, &quot;currentStatus&quot;),
- *                            new PropertyModel(model, &quot;currentTemperature&quot;),
- *                            new PropertyModel(model, &quot;units&quot;)
- *                        }));
- *      }
- *  }
+ *  
+ *   public MyPage extends HtmlPage 
+ *   {
+ *       public MyPage(final PageParameters parameters) 
+ *       {
+ *           WeatherStation ws = new WeatherStation();
+ *           Model model = new Model(ws);
+ *           add(new Label(&quot;weatherMessage&quot;,
+ *                     new StringResourceModel(
+ *                         &quot;weather.detail&quot;, this, model,
+ *                         new Object[] 
+ *                         {
+ *                             new Date(),
+ *                             new PropertyModel(model, &quot;currentStatus&quot;),
+ *                             new PropertyModel(model, &quot;currentTemperature&quot;),
+ *                             new PropertyModel(model, &quot;units&quot;)
+ *                         }));
+ *       }
+ *   }
+ *   
  *  
  * </pre>
  * 
@@ -195,8 +204,10 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *  weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
- *                 and the weather to be {1}
+ *  
+ *   weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
+ *                  and the weather to be {1}
+ *   
  *  
  * </pre>
  * 
@@ -239,8 +250,8 @@ public class StringResourceModel extends DetachableModel
      *            The model to use for OGNL substitutions
      * @see #StringResourceModel(String, Component, IModel, Object[])
      */
-    public StringResourceModel(final String resourceKey,
-            final Component relativeComponent, final IModel model)
+    public StringResourceModel(final String resourceKey, final Component relativeComponent,
+            final IModel model)
     {
         this(resourceKey, relativeComponent, model, null);
     }
@@ -268,9 +279,8 @@ public class StringResourceModel extends DetachableModel
      * @param parameters
      *            The parameters to substitute using a Java MessageFormat object
      */
-    public StringResourceModel(final String resourceKey,
-            final Component relativeComponent, final IModel model,
-            final Object[] parameters)
+    public StringResourceModel(final String resourceKey, final Component relativeComponent,
+            final IModel model, final Object[] parameters)
     {
         super(null);
         if (resourceKey == null)
@@ -345,12 +355,12 @@ public class StringResourceModel extends DetachableModel
             {
                 if (parameters[i] instanceof IModel)
                 {
-                    realParams[i] = ((IModel) parameters[i]).getObject();
+                    realParams[i] = ((IModel)parameters[i]).getObject();
                 }
                 else if (model != null && parameters[i] instanceof String)
                 {
-                    realParams[i] = OgnlVariableInterpolator.interpolate(
-                            (String) parameters[i], model.getObject());
+                    realParams[i] = OgnlVariableInterpolator.interpolate((String)parameters[i],
+                            model.getObject());
                 }
                 else
                 {
@@ -419,13 +429,12 @@ public class StringResourceModel extends DetachableModel
         // Attach the model if necessary
         if (model != null && model instanceof IDetachableModel)
         {
-            ((IDetachableModel) model).attach();
+            ((IDetachableModel)model).attach();
         }
 
         // Initialise information that we need to work successfully
         Session session = RequestCycle.get().getSession();
-        ApplicationSettings settings = session.getApplication().getSettings();
-        localizer = settings.getLocalizer();
+        localizer = session.getApplication().getLocalizer();
         locale = session.getLocale();
     }
 
@@ -437,7 +446,7 @@ public class StringResourceModel extends DetachableModel
         // Detach the model if necessary
         if (model != null && model instanceof IDetachableModel)
         {
-            ((IDetachableModel) model).detach();
+            ((IDetachableModel)model).detach();
         }
 
         // Clear down any information we don't want held in the session
@@ -456,8 +465,7 @@ public class StringResourceModel extends DetachableModel
     {
         if (model != null)
         {
-            return OgnlVariableInterpolator.interpolate(resourceKey, model
-                    .getObject());
+            return OgnlVariableInterpolator.interpolate(resourceKey, model.getObject());
         }
         else
         {

@@ -27,8 +27,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.RequestCycle;
+import wicket.WebApplication;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.HttpApplication;
 
 
 /**
@@ -59,7 +59,7 @@ public class CharSetUtil
     	if (charSetMap == null)
    		{
             // Get servlet context
-            final ServletContext context = ((HttpApplication) cycle.getApplication()).getServletContext();
+            final ServletContext context = ((WebApplication)cycle.getApplication()).getWicketServlet().getServletContext();
     		final InputStream inputStream = context.getResourceAsStream("/WEB-INF/" + CharSetMap.CHARSET_RESOURCE);
     		if (inputStream == null)
     		{

@@ -21,7 +21,7 @@ package wicket.examples.nested;
 import wicket.WebApplication;
 
 /**
- * HttpApplication class for nested structure example.
+ * WicketServlet class for nested structure example.
  *
  * @author Eelco Hillenius
  */

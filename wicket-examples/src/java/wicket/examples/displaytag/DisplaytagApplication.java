@@ -23,7 +23,7 @@ import wicket.util.time.Duration;
 
 
 /**
- * HttpApplication to support the wicket.examples.wicket.examples.displaytag examples
+ * WicketServlet to support the wicket.examples.wicket.examples.displaytag examples
  * 
  * @author Juergen Donnerstag
  */

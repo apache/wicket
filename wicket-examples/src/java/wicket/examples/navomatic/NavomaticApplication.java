@@ -22,7 +22,7 @@ import wicket.ApplicationSettings;
 import wicket.WebApplication;
 
 /**
- * HttpApplication class for hello world example.
+ * WicketServlet class for hello world example.
  * @author Jonathan Locke
  */
 public class NavomaticApplication extends WebApplication

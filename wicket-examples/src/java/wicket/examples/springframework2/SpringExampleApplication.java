@@ -51,7 +51,7 @@ import wicket.util.time.Duration;
  * There are so many possible ways of configuration with Spring. I like
  * your approach of integration with the mvc framework of Spring, because
  * it give me the possibility to configure the objects and the wiring of
- * ApplicationSettings and HttpApplication and I can also use some advanced
+ * ApplicationSettings and WicketServlet and I can also use some advanced
  * features of the Spring framework (e.g. interception). But if one wants
  * to set up the Wicket servlet in web.xml, he could also use the
  * SpringBeanModel when he also sets up the ContextLoaderListener.

@@ -22,7 +22,7 @@ import wicket.WebApplication;
 
 
 /**
- * HttpApplication class for hello mozilla example.
+ * WicketServlet class for hello mozilla example.
  *
  * @author Eelco Hillenius
  */

@@ -21,7 +21,7 @@ package wicket.examples.library;
 import wicket.WebApplication;
 
 /**
- * HttpApplication class for example.
+ * WicketServlet class for example.
  * @author Jonathan Locke
  */
 public final class LibraryApplication extends WebApplication
@@ -32,7 +32,7 @@ public final class LibraryApplication extends WebApplication
     public LibraryApplication()
     {
         getPages().setHomePage(Home.class);
-        getSettings().setExceptionOnMissingResource(false);
+        getSettings().setThrowExceptionOnMissingResource(false);
     }
 }
 

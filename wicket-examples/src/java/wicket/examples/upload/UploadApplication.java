@@ -23,7 +23,7 @@ import wicket.util.time.Duration;
 
 
 /**
- * HttpApplication class for wicket.examples.upload example.
+ * WicketServlet class for wicket.examples.upload example.
  * @author Eelco Hillenius
  */
 public class UploadApplication extends WebApplication
