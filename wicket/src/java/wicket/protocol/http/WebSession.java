@@ -39,10 +39,10 @@ public class WebSession extends Session
 	private static final long serialVersionUID = -7738551549126761943L;
 
 	/** The underlying HttpSession object */
-	transient javax.servlet.http.HttpSession httpSession;
+	private transient javax.servlet.http.HttpSession httpSession;
 
 	/** The attribute in the HttpSession where this WebSession object is stored */
-	transient String sessionAttributeName;
+	private transient String sessionAttributeName;
 
 	/**
 	 * Constructor
@@ -119,5 +119,25 @@ public class WebSession extends Session
 	protected void setAttribute(final String name, final Object object)
 	{
 		httpSession.setAttribute(sessionAttributeName + "-" + name, object);
+	}
+
+	/**
+	 * Initializes this session for a request
+	 * 
+	 * @param httpSession
+	 *            The http session to attach
+	 * @param sessionAttributeName
+	 *            The session attribute name
+	 */
+	final void init(final HttpSession httpSession, final String sessionAttributeName)
+	{
+		// Set session attribute name
+		this.sessionAttributeName = sessionAttributeName;
+
+		// Attach / reattach http servlet session
+		this.httpSession = httpSession;
+		
+		// Set the current session to the session we just retrieved
+		set(this);
 	}
 }

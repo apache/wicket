@@ -344,19 +344,19 @@ public abstract class RequestCycle
 	 */
 	public final void request() throws ServletException
 	{
-		// Any page used to respond to the request
-		Page page = null;
-		
-		// Response is beginning
-		internalOnBeginRequest();
-		onBeginRequest();
-
 		// Serialize renderings on the session object so that only one page
 		// can be rendered at a time for a given session.
 		synchronized (session)
 		{
 			// Attach thread local resources for request
 			threadAttach();
+			
+			// Any page used to respond to the request
+			Page page = null;
+			
+			// Response is beginning
+			internalOnBeginRequest();
+			onBeginRequest();
 
 			try
 			{
