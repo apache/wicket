@@ -2,13 +2,13 @@ package wicket.examples.nested;
 
 import java.util.List;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.tree.IndentTree;
-import wicket.markup.html.tree.TreeNodeModel;
 
 /** indent tree implementation. */
 public class MyTree extends IndentTree
@@ -27,35 +27,33 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#junctionLinkClicked(wicket.markup.html.tree.TreeNodeModel)
+	 * @see wicket.markup.html.tree.IndentTree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected void junctionLinkClicked(TreeNodeModel node)
+	protected void junctionLinkClicked(DefaultMutableTreeNode node)
 	{
 		super.junctionLinkClicked(node);
 		log.info("tree junction link was clicked, user object: " + node.getUserObject());
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#nodeLinkClicked(wicket.markup.html.tree.TreeNodeModel)
+	 * @see wicket.markup.html.tree.IndentTree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected void nodeLinkClicked(TreeNodeModel node)
+	protected void nodeLinkClicked(DefaultMutableTreeNode node)
 	{
 		super.nodeLinkClicked(node);
 		log.info("tree node link was clicked, user object: " + node.getUserObject());
 	}
 
 	/**
-	 * Get image name for junction.
-	 * @param node the model with the current node
-	 * @return image name
+	 * @see wicket.markup.html.tree.IndentTree#getJunctionImageName(javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected String getJunctionImageName(TreeNodeModel node)
+	protected String getJunctionImageName(DefaultMutableTreeNode node)
 	{
 		final String img;
 
 		if (!node.isLeaf())
 		{
-			if (node.isExpanded())
+			if (isExpanded(node))
 			{
 				img = "nested/minus.gif";
 			}
@@ -73,11 +71,9 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * Get image name for node.
-	 * @param node the model with the current node
-	 * @return image name
+	 * @see wicket.markup.html.tree.IndentTree#getNodeImageName(javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected String getNodeImageName(TreeNodeModel node)
+	protected String getNodeImageName(DefaultMutableTreeNode node)
 	{
 		final String img;
 
@@ -87,7 +83,7 @@ public class MyTree extends IndentTree
 		}
 		else
 		{
-			if (node.isExpanded())
+			if (isExpanded(node))
 			{
 				img = "nested/folderopen.gif";
 			}
@@ -101,9 +97,9 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#getNodeLabel(wicket.markup.html.tree.TreeNodeModel)
+	 * @see wicket.markup.html.tree.IndentTree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected String getNodeLabel(TreeNodeModel node)
+	protected String getNodeLabel(DefaultMutableTreeNode node)
 	{
 		Object userObject = node.getUserObject();
 		if (userObject instanceof List)
