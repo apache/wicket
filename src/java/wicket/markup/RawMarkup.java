@@ -20,14 +20,12 @@ package wicket.markup;
 
 /**
  * This class is for framework purposes only, which is why the class is
- * (default) protected.<p>
- * Wicket divides markup like (x)html, wml etc. into two type of markup elements.
- * <ul>
- *   <li>ComponentTag, which represents a single xml tag, though including a
- *       close tag if available
- *   <li>RawMarkup, which all the rest. An uninterpreted markup string.
- * </ul>
+ * (default) protected.
+ * <p>
+ * A RawMarkup element represents a hunk of unparsed HTML containing any
+ * arbitrary content.  
  * 
+ * @see MarkupElement
  * @author Jonathan Locke
  */
 final class RawMarkup extends MarkupElement
@@ -37,20 +35,11 @@ final class RawMarkup extends MarkupElement
 
     /**
      * Create a RawMarkup element referencing an uninterpreted markup string.
-     *  
      * @param string The raw markup
      */
     RawMarkup(final CharSequence string)
     {
         this.string = string;
-    }
-
-    /**
-     * @return This raw markup string
-     */
-    public String toString()
-    {
-        return string.toString();
     }
 
     /**
@@ -67,26 +56,35 @@ final class RawMarkup extends MarkupElement
 
         if (o instanceof RawMarkup)
         {
-            return string.equals(((RawMarkup) o).string);
+            return string.equals(((RawMarkup)o).string);
         }
 
         return false;
     }
 
     /**
-     * @see wicket.markup.MarkupElement#toUserDebugString()
-     */
-    public String toUserDebugString()
-    {
-        return "<Raw markup>";
-    }
-
-    /**
+     * We must override hashCode since we overrode equals.
      * @return Hashcode for this object
      */
     public int hashCode()
     {
         return string.hashCode();
+    }
+
+    /**
+     * @return This raw markup string
+     */
+    public String toString()
+    {
+        return string.toString();
+    }
+
+    /**
+     * @see MarkupElement#toUserDebugString()
+     */
+    public String toUserDebugString()
+    {
+        return "[Raw markup]";
     }
 }
 

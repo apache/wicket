@@ -19,18 +19,28 @@
 package wicket.markup;
 
 /**
- * Base class for different kinds of markup: RawMarkup and Tag.
+ * Base class for different kinds of markup elements.  Markup elements are 
+ * held in a Markup container object.
+ * <p>
+ * Wicket divides markup like (x)html, wml etc. into two types of MarkupElements:
+ * <ul>
+ *   <li>ComponentTag, which represents a "significant" markup tag (meaning that
+ *       the tag has some meaning to Wicket)
+ *   <li>RawMarkup, which is a section of unparsed markup having no meaning to Wicket.
+ * </ul>
  *
+ * @see Markup
+ * @see RawMarkup
+ * @see ComponentTag
  * @author Jonathan Locke
  */
 public abstract class MarkupElement
-{ // TODO finalize javadoc
+{
     /**
-     * Construct.
+     * Constructor.
      */
     public MarkupElement()
-    {
-        
+    {       
     }
 
     /**
@@ -45,8 +55,8 @@ public abstract class MarkupElement
 
     /**
      * Gets a string represenetation.
-     * @return A string representation suitable for displaying to the user when something
-     *         goes wrong.
+     * @return A string representation suitable for displaying to the user 
+     * when something goes wrong.
      */
     public abstract String toUserDebugString();
 }
