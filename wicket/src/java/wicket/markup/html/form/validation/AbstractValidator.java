@@ -162,7 +162,7 @@ public abstract class AbstractValidator implements IValidator
     protected Map getMessageContextVariables(final String input,
             final FormComponent component)
     {
-        final Map resourceModel = new HashMap(2);
+        final Map resourceModel = new HashMap(4);
         resourceModel.put("input", input);
         resourceModel.put("name", component.getName());
         return resourceModel;
