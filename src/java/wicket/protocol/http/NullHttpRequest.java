@@ -24,16 +24,17 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * A dummy request.
+ * A placeholder HttpRequest where everything is null.
+ * 
  * @author Jonathan Locke
  */
 public class NullHttpRequest extends HttpRequest
-{ // TODO finalize javadoc
-    /** singleton instance. */
+{
+    /** Singleton instance. */
     private static NullHttpRequest NULL = new NullHttpRequest();
 
     /**
-     * Constructor.
+     * Private constructor to force use of static factory method.
      */
     private NullHttpRequest()
     {
