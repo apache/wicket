@@ -20,11 +20,11 @@ package wicket.examples.displaytag;
 
 import java.util.List;
 
+import wicket.AttributeModifier;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
-import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -61,7 +61,7 @@ public class ExampleStyles extends Displaytag
         // Apply style on current tag (based on URL parameter)
         HtmlContainer htmlTable = new HtmlContainer("htmlTable");
         htmlTable.add(
-                new ComponentTagAttributeModifier(
+                new AttributeModifier(
                         "class", 
                         new Model(parameters.getString("class"))));
         

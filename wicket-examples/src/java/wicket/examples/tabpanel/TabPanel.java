@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import wicket.Component;
-import wicket.markup.ComponentTagAttributeModifier;
+import wicket.AttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -55,10 +55,10 @@ public class TabPanel extends Panel
 				tab.setAutoEnable(false);
 				tab.add(new Label("tablabel", model, "label"));
 
-				tab.add(new ComponentTagAttributeModifier("disabled", true, new PropertyModel(
+				tab.add(new AttributeModifier("disabled", true, new PropertyModel(
 						model, "disabled")));
 
-				tab.add(new ComponentTagAttributeModifier("class", true, new PropertyModel(model,
+				tab.add(new AttributeModifier("class", true, new PropertyModel(model,
 						"getHTMLClass()")));
 
 				listItem.add(tab);

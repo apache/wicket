@@ -19,8 +19,8 @@ package wicket.markup.html.panel;
 
 import java.util.Collections;
 
+import wicket.AttributeModifier;
 import wicket.FeedbackMessage;
-import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.list.ListItem;
@@ -101,7 +101,7 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 			};
 
 			final Label label = new Label("message", message, "message");
-			final ComponentTagAttributeModifier levelModifier = new ComponentTagAttributeModifier(
+			final AttributeModifier levelModifier = new AttributeModifier(
 					"class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);

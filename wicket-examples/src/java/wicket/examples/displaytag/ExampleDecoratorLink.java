@@ -20,11 +20,11 @@ package wicket.examples.displaytag;
 
 import java.util.List;
 
+import wicket.AttributeModifier;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.examples.linkomatic.Page3;
-import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.list.ListItem;
@@ -60,7 +60,7 @@ public class ExampleDecoratorLink extends Displaytag
                 final ListObject value = (ListObject) listItem.getModelObject();
 
                 // alternating row styles
-                listItem.add(new ComponentTagAttributeModifier("class",
+                listItem.add(new AttributeModifier("class",
                                                           new Model(listItem.isEvenIndex() ? "even" : "odd")));
                 
                 BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);
@@ -87,7 +87,7 @@ public class ExampleDecoratorLink extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new ComponentTagAttributeModifier("class",
+                listItem.add(new AttributeModifier("class",
                                                           new Model(listItem.isEvenIndex() ? "even" : "odd")));
                 
                 BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);

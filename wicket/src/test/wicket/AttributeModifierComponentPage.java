@@ -19,7 +19,6 @@
 package wicket;
 
 import wicket.PageParameters;
-import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.model.IDetachableModel;
@@ -48,25 +47,25 @@ public class AttributeModifierComponentPage extends HtmlPage
 
 		// Lavel with override attribute modifier
 		Label label2 = new Label("label2", new Model("Label 2"));
-		label2.add(new ComponentTagAttributeModifier("class", new Model("overrideLabel")));
-		label2.add(new ComponentTagAttributeModifier("unknown", new Model("invalid")));
+		label2.add(new AttributeModifier("class", new Model("overrideLabel")));
+		label2.add(new AttributeModifier("unknown", new Model("invalid")));
 		add(label2);
 
 		// Lavel with attribute inserter
 		Label label3 = new Label("label3", new Model("Label 3"));
-		label3.add(new ComponentTagAttributeModifier("class", true, new IDetachableModel()
+		label3.add(new AttributeModifier("class", true, new IDetachableModel()
 		{
 			private String text = null;
 
 			public void detach()
 			{
-				System.out.println("ComponentTagAttributeModifier model detached");
+				System.out.println("AttributeModifier model detached");
 				text = null;
 			}
 
 			public void attach()
 			{
-				System.out.println("ComponentTagAttributeModifier model attached");
+				System.out.println("AttributeModifier model attached");
 				text = "insertLabel";
 			}
 

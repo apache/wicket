@@ -20,7 +20,7 @@ package wicket.examples.displaytag.utils;
 
 import java.util.List;
 
-import wicket.markup.ComponentTagAttributeModifier;
+import wicket.AttributeModifier;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.model.Model;
@@ -54,7 +54,7 @@ public abstract class PagedTableWithAlternatingRowStyle extends PageableListView
     protected void populateItem(final ListItem listItem)
     {
         listItem.add(
-                new ComponentTagAttributeModifier(
+                new AttributeModifier(
                         "class",
                         new Model(listItem.isEvenIndex() ? "even" : "odd")));
         

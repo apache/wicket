@@ -20,8 +20,8 @@ package wicket.examples.library;
 
 import java.util.Iterator;
 
+import wicket.AttributeModifier;
 import wicket.PageParameters;
-import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.model.Model;
@@ -87,7 +87,7 @@ public final class BookDetails extends AuthenticatedHtmlPage
 
         Label writingStylesLabel = new Label("writingStyles", writingStyles);
 
-        final ComponentTagAttributeModifier italic = new ComponentTagAttributeModifier("class", new Model("italic"));
+        final AttributeModifier italic = new AttributeModifier("class", new Model("italic"));
         italic.setEnabled(!hasStyles);
 
         add(writingStylesLabel.add(italic));
