@@ -61,7 +61,6 @@ public class MockWebApplicationTest extends TestCase {
 
         // Validate the document
         String document = application.getServletResponse().getDocument();
-        //System.out.println(document);
         Assert.assertTrue(validateDocument(document, 0));
 
         // Inspect the page & model
@@ -92,7 +91,6 @@ public class MockWebApplicationTest extends TestCase {
 
         // Validate the document
         String document = application.getServletResponse().getDocument();
-        //System.out.println(document);
         Assert.assertTrue(validateDocument(document, 1));
 
         // Inspect the page & model

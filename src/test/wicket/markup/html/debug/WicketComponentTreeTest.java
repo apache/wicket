@@ -20,6 +20,10 @@ package wicket.markup.html.debug;
 import java.io.IOException;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.MarkupContainer;
 import wicket.markup.html.list.DiffUtil;
 import wicket.markup.html.list.ListView;
@@ -32,6 +36,8 @@ import wicket.protocol.http.MockWebApplication;
  */
 public class WicketComponentTreeTest extends TestCase
 {
+	private static Log log = LogFactory.getLog(WicketComponentTreeTest.class);
+
 	private MockWebApplication application;
 
 	/**
@@ -70,7 +76,7 @@ public class WicketComponentTreeTest extends TestCase
 		
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+		log.info(document);
 		assertTrue(validatePage(document, "WicketComponentTreeTestPage_ExpectedResult.html"));
 	}
 	
@@ -78,5 +84,4 @@ public class WicketComponentTreeTest extends TestCase
 	{
 		return DiffUtil.validatePage(document, this.getClass(), file);
 	}
-
 }

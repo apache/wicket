@@ -59,13 +59,11 @@ public class AttributeModifierComponentPage extends WebPage
 
 			public void onDetach()
 			{
-				System.out.println("AttributeModifier model detached");
 				text = null;
 			}
 
 			public void onAttach()
 			{
-				System.out.println("AttributeModifier model attached");
 				text = "insertLabel";
 			}
 

@@ -19,6 +19,10 @@
 package wicket.markup;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 
@@ -30,6 +34,7 @@ import wicket.protocol.http.MockWebApplication;
  */
 public class ComponentCreateTagTest extends TestCase
 {
+	private static Log log = LogFactory.getLog(ComponentCreateTagTest.class);
 
 	private MockWebApplication application;
 
@@ -111,7 +116,7 @@ public class ComponentCreateTagTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+		log.info(document);
 
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
