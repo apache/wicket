@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>Wicket Example: Hello World!</title>
+		<title>Wicket QuickTour: Hello World!</title>
 	</properties>
 
 	<meta
@@ -9,7 +9,7 @@
 		content="wicket, example, web, j2ee, java" />
 
 	<body>
-		<section name="Hello World! Example">
+		<section name="Hello World!">
 			<p>
 				HelloWorld demonstrates the basic structure of a web application in Wicket. A Label
 				component is used to display a message on the home page for the application.
@@ -17,7 +17,7 @@
 			<img src="images/image001.png" alt="HelloWorld" />
 			<subsection name="HelloWorldApplication.java">
 				<p>
-					Each Wicket application needs an
+					Each Wicket application is defined by an 
 					<code>Application</code>
 					object. This object defines what the
 					<em>home page</em>

@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>Wicket Example: Navomatic</title>
+		<title>Wicket QuickTour: Navomatic</title>
 	</properties>
 
 	<meta name="keyword" content="wicket, example, web, j2ee, java" />
 
 	<body>
-		<section name="Navomatic Example">
+		<section name="Navomatic">
 			<p>
 				The <em>Navomatic</em> application shows the use of border components and links to 
 				create a navigation component that can easily be dropped into any web page.
@@ -19,11 +19,11 @@
 			</p>
 			<img src="images/image003.png" alt="Navomatic1" />
 			<p>
-				When you click on the <em>Page2</em> link, you get the following screen capture.
+				When you click on the <em>Page2</em> link, you get the following screen.
 			</p>
 			<img src="images/image004.jpg" alt="Navomatic2" />
 			<p>
-				As you can see, <em>Page1</em> has no special markup anymore, and <em>Page2</em>
+				As you can see, <em>Page1</em> has no special style anymore, and <em>Page2</em>
 				is now displayed in <i>italics</i>. Also the message box shows that we are viewing
 				<code>Page2</code> instead of <code>Page1</code>.
 			</p>
@@ -44,16 +44,17 @@
 					in rendering the border is denoted by a 
 					<code><![CDATA[<wicket:border>]]></code> tag. The children of the border 
 					component instance are then inserted into this markup, replacing the first 
-					<code><![CDATA[<wicket:body>]]></code> tag in the border's associated markup. 
+					<code><![CDATA[<wicket:body/>]]></code> tag in the border's associated markup. 
 				</p>
 			</blockquote>
 			<p>
-				For example, if a border's associated markup looked like this:
+				For example, here is markup for a simple <code>Border</code> subclass, a 
+				usage of that border, and the markup which would be output on rendering:
 <table>
 <tr>
-	<th>Component markup</th>
-	<th>Component usage</th>
-	<th>Resulting markup</th>
+	<th>Border markup</th>
+	<th>Border usage</th>
+	<th>Rendered markup</th>
 </tr>
 <tr>
 	<td><pre><![CDATA[<html>
@@ -79,16 +80,18 @@
 </table>
 			</p>
 			<p>
-				In other words, the body of the myBorder component is 
-				substituted into the border's associated markup at the 
-				position indicated by the 
-				<code><![CDATA[<wicket:body>]]></code> tag.
+				In other words, the markup around the <code><![CDATA[<wicket:body/>]]></code> tag
+				in the border component is sort of "wrapped around" the body of the <![CDATA[<span>]]>
+				tag where the border is used.  This seems simple in this example, but keep in mind
+				that nested components and even nested borders can appear anywhere in either 
+				markup file.  This can be used to create quite complex effects with relatively 
+				little code.
 			</p>
 		</subsection>
 
 		<subsection name="NavomaticApplication.java">
 			<p>
-				Just as in the <a href="Helloworld.html">HelloWorld example</a>, we need to
+				Just as in the <a href="ExampleHelloWorld.html">Hello World!</a> example, we need to
 				define our application. In this case, we set <code>Page1</code> to be our
 				home page.
 			</p>
@@ -103,38 +106,51 @@ public class NavomaticApplication extends WebApplication
         getPages().setHomePage(Page1.class);
     }
 }]]></source>
-			</subsection>
-
-			<subsection name="Page1.html">
-				<source><![CDATA[<html>
-<body> 
-    <span componentName = "navomaticBorder"> 
-    You are viewing Page1 
-    </span>   
-</body>
-</html>]]></source>
+			<p>
+			The <code>Page1</code> Java and HTML files look like this:
+			</p>
 			</subsection>
 
 			<subsection name="Page1.java">
 				<source><![CDATA[package wicket.examples.navomatic;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 public class Page1 extends WebPage
 {
-    public Page1(PageParameters parameters)
+    public Page1()
     {
         add(new NavomaticBorder("navomaticBorder"));
     }
 }]]></source>
+</subsection>
+
+			<subsection name="Page1.html">
+				<source><![CDATA[<html>
+<body> 
+    <span id = "wicket-navomaticBorder">
+        You are viewing Page1
+    </span>
+</body>
+</html>]]></source>
+			<p>
+			Notice that the NavomaticBorder component is attached to the <![CDATA[<span>]]> 
+			tag because the name of the component in the Java code is "navomaticBorder"
+			and the <![CDATA[<span>]]> tag's id attribute is set to "wicket-navomaticBorder".
+			Because the two names match, Wicket associates the NavomaticBorder Java 
+			component with the <![CDATA[<span>]]> tag.
+			</p>
 			</subsection>
 			<subsection name="Page2.java">
+			<p>
+			The <code>Page2</code> Java and HTML files look almost identical (and we'll omit 
+			the sources for <code>Page3</code> altogether because it follows the same pattern):
+			</p>
 				<source>
 					<![CDATA[
 public class Page2 extends WebPage
 {
-    public Page2(PageParameters parameters)
+    public Page2()
     {
         add(new NavomaticBorder("navomaticBorder"));
     }
@@ -146,65 +162,92 @@ public class Page2 extends WebPage
 					<![CDATA[
 <html>
 <body>
- 
-    <span componentName = "navomaticBorder">
- 
-    You are viewing Page2
- 
+    <span id = "wicket-navomaticBorder">
+        You are viewing Page2
     </span>
-   
 </body>
 </html>]]>
 				</source>
+				<p>
+				So how does <code>NavomaticBorder</code> work?  Glad you asked.  
+				The Java code below simply adds the two BoxBorder components you see.  
+				These components are nested borders which each draw a thin black
+				line around their contents.  The rest of the magic is in the 
+				<code>NavomaticBorder</code> markup.
+				</p>
 			</subsection>
 			<subsection name="NavomaticBorder.java">
 				<source>
 					<![CDATA[
 public class NavomaticBorder extends Border
 {
-    /**
-     * Constructor
-     * @param componentName The name of this component
-     */
     public NavomaticBorder(final String componentName)
     {
         super(componentName);
-        add(new BoxBorder("boxBorder"));
-        add(new BoxBorder("boxBorder2"));
+        add(new BoxBorder("navigationBorder"));
+        add(new BoxBorder("bodyBorder"));
     }
 }]]>
 				</source>
 			</subsection>
 			<subsection name="NavomaticBorder.html">
 				<source>
-					<![CDATA[<html>
+					<![CDATA[
+<html>
 <body>
-    <span componentName = "[border]">
-        <h1>Welcome to Navomatic!</h1>
+    <wicket:border> 
         <p>
         <table>
             <tr>
                 <td>
-                    <span componentName = "boxBorder">
-                        <b>Navigation Links</b><p>
-                        <a componentName = "[autolink]" href = "Page1.html">Page1</a><br>
-                        <a componentName = "[autolink]" href = "Page2.html">Page2</a><br>
-                        <a componentName = "[autolink]" href = "Page3.html">Page3</a>
+                    <span id = "wicket-navigationBorder">
+                      <b>Navigation Links</b>
+                      <p>
+                        <wicket:link>
+                          <a href = "Page1.html">Page1</a><br/>
+                          <a href = "Page2.html">Page2</a><br/>
+                          <a href = "Page3.html">Page3</a>
+                        </wicket:link>
+                      </p>
                     </span>
                 </td>
                 <td>
-                    <span componentName = "boxBorder2">
-                        <span componentName = "[children]"/>
+                    <span id = "wicket-bodyBorder">
+                        <wicket:body/>
                     </span>
                 </td>
             </tr>
         </table>
-        <p>
-        <i><font size = "-1">Copyright (C) 2004, Jonathan Locke. All Rights Reserved.</font></i>
-    </span>
+        </p>
+    </wicket:border>
  </body>
 </html>]]>
 				</source>
+				<p>
+				Notice that the markup above encloses the entire contents of the markup file's
+				<![CDATA[<body>]]> with a <code><![CDATA[<wicket:border>]]></code> tag, 
+				as we described earlier.  This lets the <code>NavomaticBorder</code> know how
+				much of its markup to use when it wraps itself around the markup it finds in
+				the context where it is used.  Notice also the <code><![CDATA[<wicket:body/>]]></code>
+				marker which designates where to put whatever is found inside the tag at the
+				use context.
+				</p>
+				<p>
+				Next, notice that the navigation links and the border's <code><![CDATA[<wicket:body/>]]></code>
+				are both enclosed in <![CDATA[<span>]]> tags which have id attributes that
+				associate those tags with the BoxBorder components added in the NavomaticBorder
+				contstructor.  These nested border components will each draw a thin black line
+				around their contents.
+				</p>
+				<p>
+				Finally, the <code><![CDATA[<wicket:link>]]></code> tag is used to mark the links
+				in the navigation as <i>automatic links</i>.  Ordinarily, you would need to create
+				link components and attach them to your page manually, but anchor links that are 
+				marked as automatic are parsed and hooked up to link components for you, as
+				appropriate.  The italicizing behavior is also automatic.  Since Wicket knows which 
+				page is current, it removes the anchor link tag for any link that points to the 
+				current page (since the link would be useless) and italicizes the link text.
+				</p>
 			</subsection>
 		</section>
 	</body>

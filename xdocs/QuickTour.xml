@@ -17,10 +17,9 @@
 		</p>
 		<p>
 		<ul>
-			<li><a href="ExampleHelloworld.html">Hello World!</a> - Everybody's favourite</li>
-			<li><a href="ExampleNavomatic.html">Navomatic</a> - Navigation using links</li>
-			<li><a href="ExampleImages.html">Images</a> - Showing images</li>
-			<li><a href="ExampleTables.html">Tables</a> - A little guestbook showing tables and forms</li>
+			<li><a href="ExampleHelloworld.html">Hello World!</a> - Everybody's favorite example</li>
+			<li><a href="ExampleNavomatic.html">Navomatic</a> - Automatic navigation using Borders and Links</li>
+			<li><a href="ExampleGuestBook.html">GuestBook</a> - A tiny blogger demonstrating ListViews and Forms</li>
 		</ul>
 		</p>
 		</section>
