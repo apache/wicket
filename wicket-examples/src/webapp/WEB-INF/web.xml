@@ -127,6 +127,16 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>SignIn2Application</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.signin2.SignIn2Application</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>UploadApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
@@ -159,6 +169,11 @@
 	<servlet-mapping>
 		<servlet-name>SignInApplication</servlet-name>
 		<url-pattern>/signin/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SignIn2Application</servlet-name>
+		<url-pattern>/signin2/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
