@@ -57,8 +57,7 @@ public class ResourceTest extends TestCase
 
 		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/");
 		filename += name + ".txt";
-		String resourcePath = Strings.replaceAll(((UrlResourceStream)resource).getFile()
-				.getAbsolutePath(), "\\", "/");
+		String resourcePath = Strings.replaceAll(((UrlResourceStream)resource).getURL().getFile(), "\\", "/");
 		if (false == resourcePath.endsWith(filename))
 		{
 			filename = Strings.afterLast(filename, '/');
@@ -126,8 +125,7 @@ public class ResourceTest extends TestCase
 		// Determine source path
 		ResourceStreamLocator locator = new ResourceStreamLocator(new ClassLoaderResourceStreamLocator());
 		IResourceStream resource = locator.locate(getClass(), null, null, "txt");
-		String path = Strings.replaceAll(((UrlResourceStream)resource).getFile().getAbsolutePath(), "\\",
-				"/");
+		String path = Strings.replaceAll(((UrlResourceStream)resource).getURL().getFile(), "\\","/");
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
 
 		// and execute
