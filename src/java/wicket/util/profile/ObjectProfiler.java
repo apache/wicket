@@ -33,8 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import wicket.WicketRuntimeException;
-
 // ----------------------------------------------------------------------------
 
 /**
@@ -345,7 +343,7 @@ public abstract class ObjectProfiler
                     }
                     catch (Exception e)
                     {
-                        throw new WicketRuntimeException("cannot get field ["
+                        throw new RuntimeException("cannot get field ["
                                 + field.getName() + "] of class ["
                                 + field.getDeclaringClass().getName() + "]: " + e.toString());
                     }
@@ -458,7 +456,7 @@ public abstract class ObjectProfiler
                     }
                     catch (Exception e)
                     {
-                        throw new WicketRuntimeException("cannot get field ["
+                        throw new RuntimeException("cannot get field ["
                                 + field.getName() + "] of class ["
                                 + field.getDeclaringClass().getName() + "]: " + e.toString());
                     }
@@ -566,7 +564,7 @@ public abstract class ObjectProfiler
         }
         catch (PrivilegedActionException pae)
         {
-            throw new WicketRuntimeException("could not access declared fields of class "
+            throw new RuntimeException("could not access declared fields of class "
                     + cls.getName() + ": " + pae.getException());
         }
 
@@ -599,7 +597,7 @@ public abstract class ObjectProfiler
                     }
                     catch (PrivilegedActionException pae)
                     {
-                        throw new WicketRuntimeException("could not make field "
+                        throw new RuntimeException("could not make field "
                                 + field + " accessible: " + pae.getException());
                     }
                 }

@@ -26,8 +26,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import wicket.WicketRuntimeException;
-
 // ----------------------------------------------------------------------------
 
 /**
@@ -118,7 +116,7 @@ public abstract class ObjectProfileVisitors
         {
             if (out == null)
             {
-                throw new WicketRuntimeException("null input: out");
+                throw new RuntimeException("null input: out");
             }
 
             m_out = out;
@@ -201,7 +199,7 @@ public abstract class ObjectProfileVisitors
         {
             if (out == null)
             {
-                throw new WicketRuntimeException("null input: out");
+                throw new RuntimeException("null input: out");
             }
 
             try
