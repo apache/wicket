@@ -73,7 +73,7 @@ public abstract class Application
 	private final ApplicationPages pages = new ApplicationPages();
 
 	/** ModificationWatcher to watch for changes in markup files */
-	private ModificationWatcher resourceWatcher;
+	private transient ModificationWatcher resourceWatcher;
 
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
