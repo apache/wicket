@@ -90,4 +90,4 @@ public final class TagNameParser extends MetaPatternParser
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

@@ -98,4 +98,4 @@ public abstract class Response
     public abstract void write(final String string);
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

@@ -353,4 +353,4 @@ public final class Resource implements IResource, IModifiable
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

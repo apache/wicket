@@ -76,4 +76,4 @@ public abstract class EnumeratedType extends StringValue
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

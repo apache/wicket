@@ -64,4 +64,4 @@ public final class WordParser extends MetaPatternParser
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

@@ -39,4 +39,4 @@ public interface IResource extends IResourceStream
     public String getExtension();
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

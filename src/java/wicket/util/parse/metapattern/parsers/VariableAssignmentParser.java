@@ -109,4 +109,4 @@ public final class VariableAssignmentParser extends MetaPatternParser
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

@@ -123,4 +123,4 @@ public class ApplicationSettingsTest extends TestCase
 	}
 }
 
-// /////////////////////////////// End of File /////////////////////////////////
+// 

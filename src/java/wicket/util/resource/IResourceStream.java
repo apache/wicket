@@ -55,4 +55,4 @@ public interface IResourceStream
     public void close() throws IOException;
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+
