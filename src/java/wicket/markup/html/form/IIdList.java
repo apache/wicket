@@ -58,13 +58,6 @@ public interface IIdList extends List
     public String getIdValue(int row);
 
     /**
-     * Gets the id value by object.
-     * @param object the object
-     * @return the id from this object
-     */
-    public String getIdValue(Object object);
-
-    /**
      * Gets an object using the given id.
      * @param id the object's id
      * @return the object
