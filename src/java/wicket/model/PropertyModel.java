@@ -271,9 +271,6 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 		{
 			((IDetachableModel)model).attach();
 		}
-
-		// Save the reference to the current locale
-		Session session = RequestCycle.get().getSession();
 	}
 
 	/**
