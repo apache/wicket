@@ -7,7 +7,7 @@
   </properties>
   <body>
     <release version="0.9.17-beta" date="in cvs" description="Major refactorings">
-    	<action type="update" dev="Martijn Dashorst" issue="">Moved wicket-examples-hangman into the wicket-examples project.</action>
+    	<action type="update" dev="Martijn Dashorst" issue="1107845">Moved wicket-examples-hangman into the wicket-examples project.</action>
     	<action type="fix" dev="Martijn Dashorst">Made 'maven eclipse:generate-classpath' plugin work with eclipse projects.</action>
     </release>
     <release version="0.9.16-beta" date="2004-12-26" description="Really the last release before march to 1.0">
