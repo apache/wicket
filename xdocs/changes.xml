@@ -9,6 +9,10 @@
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">
+      Enhanced WicketComponentTree and added this diagnostic to the bottom of the 
+      ExceptionErrorPage.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
 		Reorganized components and examples for final 1.0 structure.  This included moving
 		sortable list view and sign in panel to wicket-contrib and SmartLinkLabel classes to 
 		wicket-extensions.  Also moved ButtonImageResource to wicket-extensions.  In the 

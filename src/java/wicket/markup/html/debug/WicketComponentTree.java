@@ -63,9 +63,12 @@ public final class WicketComponentTree extends Panel
 
 		// Create an empty list. It'll be filled later
 		final List data = new ArrayList();
+		
+		// Name of page
+		add(new Label("page", page));
 
 		// Create the table
-		add(new ListView("rows2", data)
+		add(new ListView("components", data)
 		{
 			// Assuming all other components are already populated
 			// (and rendered), determine the components and fill

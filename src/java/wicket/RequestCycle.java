@@ -578,7 +578,7 @@ public abstract class RequestCycle
 				else
 				{
 					// otherwise show full details
-					setPage(new ExceptionErrorPage(e));
+					setPage(new ExceptionErrorPage(e, getPage()));
 				}
 				// We generally want to redirect the response because we were
 				// in the middle of rendering and the page may end up looking

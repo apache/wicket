@@ -279,7 +279,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public String toString()
 	{
-		return "[class = " + getClass().getName() + ", id = " + id + "]";
+		return "[Page class = " + getClass().getName() + ", id = " + id + "]";
 	}
 
 	/**
