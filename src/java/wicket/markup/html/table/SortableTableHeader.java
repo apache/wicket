@@ -21,57 +21,55 @@ package wicket.markup.html.table;
 import java.util.Collections;
 import java.util.Comparator;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.link.Link;
 
 
 /**
- * Sortable table header component. Functionality provided includes
- * sorting the underlying table and changing the colours etc. (the style)
- * of the header.
+ * Sortable table header component for a single table column. Functionality 
+ * provided includes sorting the underlying table and changing 
+ * the colours (style) of the header.
  *
+ * @see SortableTableHeaderGroup
+ * @see SortableTableHeaders
+ * 
  * @author Juergen Donnerstag
  */
 public abstract class SortableTableHeader extends Border
-{ // TODO finalize javadoc
-    /** The group, the table header belongs to */
+{
+    /** All sortable columns of a single table are grouped */
     private final SortableTableHeaderGroup group;
 
     /** Sort ascending or descending */
     private boolean ascending;
 
     /**
-     * Constructor.
+     * Construct.
      *
-     * @param componentName The name of this component
-     * @param group
+     * @param componentName The component name
+     * @param group The group of headers the new one will be added to 
      */
     public SortableTableHeader(final String componentName,
             final SortableTableHeaderGroup group)
     {
         super(componentName);
 
-        // Default to descending. Next/first linkClick will make it ascending
+        // Default to descending.
         this.ascending = false;
         this.group = group;
 
+        // If user clicks on the header, sorting will reverse
         final SortableTableHeader me = this;
-
-        // Action link to define a linkClicked action
         add(new Link("actionLink")
         {
             public void linkClicked()
             {
-                // Retrieve request cycle
-                final RequestCycle cycle = getRequestCycle();
-                
                 // call SortableTableHeaders implementation
                 me.linkClicked();
 
                 // Redirect back to result to avoid refresh updating the link count
-                cycle.setRedirect(true);
+                getRequestCycle().setRedirect(true);
             }
         });
     }
@@ -95,7 +93,8 @@ public abstract class SortableTableHeader extends Border
     }
 
     /**
-     * Get CSS style for the header
+     * Get CSS style for the header based on ascending / descending.
+     * Delegate to the header group to determine the style.
      *
      * @return css class
      */
@@ -105,7 +104,9 @@ public abstract class SortableTableHeader extends Border
     }
 
     /**
+     * Delegate to the header group to handle the tag.
      * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+     * @param tag The current ComponentTag to handle
      */
     protected void handleComponentTag(final ComponentTag tag)
     {
@@ -113,13 +114,13 @@ public abstract class SortableTableHeader extends Border
     }
     
     /**
-     * Compare two object (list elements of table's model object). Both
+     * Compare two objects (list elements of table's model object). Both
      * objects must implement Comparable. In order to compare basic
-     * types like int or double, subclasses may override this method.
+     * types like int or double, simply subclass the method.
      *
-     * @param o1
-     * @param o2
-     * @return compare result
+     * @param o1 first object
+     * @param o2 second object
+     * @return comparision result
      */
     protected int compareTo(Object o1, Object o2)
     {
@@ -132,8 +133,8 @@ public abstract class SortableTableHeader extends Border
      * Returns the comparable object of the table the header/column is
      * referring to, e.g. obj.getId();
      *
-     * @param object
-     * @return comparable object
+     * @param object the ListItems model object
+     * @return The object to compare
      */
     protected Comparable getObjectToCompare(Object object)
     {
@@ -141,7 +142,7 @@ public abstract class SortableTableHeader extends Border
     }
 
     /**
-     * Sort table's model object
+     * Sort table's model object based on column data
      */
     protected void sort()
     {
@@ -161,5 +162,3 @@ public abstract class SortableTableHeader extends Border
         });
     }
 }
-
-
