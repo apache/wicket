@@ -99,10 +99,9 @@ public class SearchCDPage extends WicketExamplePage
 		add(resultsListView);
 		WebMarkupContainer resultsTableHeader = new WebMarkupContainer("resultsHeader")
 		{
-			public void render()
+			public boolean isVisible()
 			{
-				setVisible(searchModel.hasResults());
-				super.render();
+				return searchModel.hasResults();
 			}
 		};
 		resultsTableHeader.add(new SortLink("sortOnArtist", "performers"));
