@@ -34,6 +34,10 @@ import wicket.util.string.StringList;
  * implement IValidator can be added to the component. They will be evaluated in
  * the order they were added and the first Validator that returns an error
  * message determines the error message returned by the component.
+ * <p>
+ * FormComponents are not versioned by default.  If you need versioning for
+ * your FormComponents, you will need to call Form.setVersioned(true), which
+ * will set versioning on for the form and all form component children.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -200,6 +204,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	public FormComponent(final String id)
 	{
 		super(id);
+		setVersioned(false);
 	}
 
 	/**
@@ -208,6 +213,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	public FormComponent(final String id, IModel model)
 	{
 		super(id, model);
+		setVersioned(false);
 	}
 
 	/**
