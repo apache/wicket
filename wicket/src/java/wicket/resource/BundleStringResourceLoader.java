@@ -62,7 +62,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	 * @param style Not used for this implementation
 	 * @return The string resource value or null if resource not found
 	 */
-	public final String get(final Component component, final String key, Locale locale,
+	public final String loadStringResource(final Component component, final String key, Locale locale,
 			final String style)
 	{
 		if (locale == null)
