@@ -70,6 +70,9 @@ public abstract class Page extends Container implements IRedirectListener
 	/** The rendering before which all pages are stale. */
 	private int staleRendering = 0;
 
+    /** Used to create page-unique numbers */
+    private int autoIndex;
+
 	/**
 	 * Constructor.
 	 */
@@ -322,6 +325,16 @@ public abstract class Page extends Container implements IRedirectListener
 	{
 		// Allow calls through the IRedirectListener interface
 		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
+	}
+	
+	/**
+	 * Get a page unique number, which will be increased with each call.
+	 * 
+	 * @return A page unique number
+	 */
+	public int getAutoIndex()
+	{
+	    return this.autoIndex ++;
 	}
 }
 

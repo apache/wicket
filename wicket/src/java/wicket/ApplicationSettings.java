@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
-import wicket.markup.MarkupParser;
 import wicket.markup.html.form.Crypt;
 import wicket.markup.html.form.FormComponentPersistenceDefaults;
 import wicket.resource.ApplicationStringResourceLoader;
@@ -142,9 +141,6 @@ public final class ApplicationSettings
 
     /** Default values for persistence of form data (by means of cookies) */
     private FormComponentPersistenceDefaults formComponentPersistenceDefaults = new FormComponentPersistenceDefaults();
-
-    /** Pluggable markup parser */
-    private Class markupParserClass = MarkupParser.class;
 
     /** The maximum number of pages in a session */
     private int maxSessionPages = 10;
@@ -358,14 +354,6 @@ public final class ApplicationSettings
     public final FormComponentPersistenceDefaults getFormComponentPersistenceDefaults()
     {
         return formComponentPersistenceDefaults;
-    }
-
-    /**
-     * @return The class to use for parsing markup
-     */
-    public final Class getMarkupParserClass()
-    {
-        return markupParserClass;
     }
 
     /**
@@ -615,17 +603,6 @@ public final class ApplicationSettings
     public final ApplicationSettings setEncryptionKey(String encryptionKey)
     {
         this.encryptionKey = encryptionKey;
-        return this;
-    }
-
-    /**
-     * @param markupParserClass
-     *            The markupParserClass to set.
-     * @return This
-     */
-    public final ApplicationSettings setMarkupParserClass(final Class markupParserClass)
-    {
-        this.markupParserClass = markupParserClass;
         return this;
     }
 
