@@ -270,6 +270,8 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * 
 	 * Get the page for the given path.
 	 * 
 	 * @param path
@@ -279,7 +281,13 @@ public abstract class Session implements Serializable
 	public final Page getPage(final String path)
 	{
 		// Retrieve the page for the first path component from this session
-		return getPage(Integer.parseInt(Strings.firstPathComponent(path, componentPathSeparator)));
+		final Page page = getPage(Integer.parseInt(Strings.firstPathComponent(path, componentPathSeparator)));
+		
+		// Modifications to this page are potentially beginning
+		page.onInternalBeginRequest();
+		page.onBeginRequest();
+		
+		return page;
 	}
 
 	/**

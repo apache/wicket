@@ -135,8 +135,8 @@ public class WebRequestCycle extends RequestCycle
 		final StringBuffer buffer = urlPrefix();
 		buffer.append("?component=");
 		buffer.append(component.getPath());
-		buffer.append("&rendering=");
-		buffer.append(component.getPage().getRendering());
+		buffer.append("&version=");
+		buffer.append(component.getPage().getVersion());
 		buffer.append("&interface=");
 		buffer.append(Classes.name(listenerInterface));
 		return response.encodeURL(buffer.toString());
@@ -293,7 +293,7 @@ public class WebRequestCycle extends RequestCycle
 			// Get page from path
 			log.debug("Getting page for path " + path);
 			final Page page = session.getPage(path);
-
+			
 			// Does page exist?
 			if (page != null)
 			{
@@ -303,13 +303,9 @@ public class WebRequestCycle extends RequestCycle
 					onStalePage();
 					return true;
 				}
-				else if (page.isRenderingStale(Integer.parseInt(request.getParameter("rendering"))))
-				{
-					onStaleRendering(page);
-					return true;
-				}
 				else
 				{
+					// Execute the user's code
 					invokeInterface(page, path, request.getParameter("interface"));
 					return true;
 				}
@@ -349,7 +345,7 @@ public class WebRequestCycle extends RequestCycle
 	{
 		final String pathInfo = ((WebRequest)request).getPathInfo();
 
-		if (pathInfo == null || "/".equals(pathInfo) || "".equals(pathInfo))
+		if (Strings.isEmpty(pathInfo) || "/".equals(pathInfo))
 		{
 			try
 			{

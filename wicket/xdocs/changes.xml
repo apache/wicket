@@ -9,6 +9,9 @@
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
       <action type="update" dev="Jonathan Locke" issue="">
+      Added the first portion of our framework for doing page versioning, including the IPageVersionManager interface and calls into that from MarkupContainer, Component and elsewhere.  Removed all render count functionality and reworked the code to check component renderings as a debug-only Set in Page.  Also made more structural changes to onX() handlers so that all internal handlers are onInternalX() now, meaning that user code does not have to call super.onX() ever to have the core functionality work.  There are now user methods for each lifecycle event that the user might care about.  These are called in the following order: Page.onBeginRequest(), Component.onBeginRender(), Component.onRender(), Component.onEndRender(), Page.onEndRequest().  Component.onModelChanged() is called when a component's model is changed.  This is detected when Component.setModel() or Component.setModelObject() are called.  If a Component's model is changed by the programmer and they wish to let the framework know that a model change happened, they can call Component.modelChanged() directly.
+	  </action>
+      <action type="update" dev="Jonathan Locke" issue="">
 	   Straightened out resource serialization issues.  IResource is now serializable and all subclasses need to implement serialization semantics, which is done for all core components now.  In particular, all DynamicImageResources now have transient input streams that are recreated using the subclass' image data.  The only non-transient image resource is BufferedDynamicImageResource, which rightly has image data that it serializes.  Also fixed problems with lastModified timestamps.
 	  </action>
       <action type="update" dev="Jonathan Locke" issue="">

@@ -115,12 +115,12 @@ public class SearchPage extends WicketExamplePage
 	}
 
 	/**
-	 * @see wicket.Component#modelChangedStructure()
+	 * This method needs changing for 1.0
 	 */
 	public void modelChangedStructure()
 	{
+		// TODO this method should be different when 1.0 ships
 		resultsListView.modelChangedStructure(); // let list view re-populate
-		super.modelChangedStructure();
 	}
 
 	/**
@@ -142,14 +142,13 @@ public class SearchPage extends WicketExamplePage
 		this.infoMessageForNextRendering = externalMessage;
 	}
 
-	protected void onRender()
+	protected void onBeginRender()
 	{
 		if (infoMessageForNextRendering != null)
 		{
 			searchForm.setMessage(infoMessageForNextRendering);
 			infoMessageForNextRendering = null;
 		}
-		super.onRender();
 	}
 
 	/**
