@@ -18,9 +18,9 @@
 package wicket.protocol.http;
 
 import wicket.Application;
-import wicket.markup.html.InternalErrorPage;
-import wicket.markup.html.PageExpiredErrorPage;
-import wicket.markup.html.StaleDataErrorPage;
+import wicket.markup.html.pages.InternalErrorPage;
+import wicket.markup.html.pages.PageExpiredErrorPage;
+import wicket.markup.html.pages.StaleDataErrorPage;
 import wicket.protocol.http.WicketServlet;
 
 /**

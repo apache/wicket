@@ -25,7 +25,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupParser;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.PageExpiredErrorPage;
+import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.StringValueConversionException;
