@@ -51,7 +51,7 @@ public abstract class DynamicImageResource extends ImageResource
 	/**
 	 * @return Returns the image format.
 	 */
-	public String getFormat()
+	public final String getFormat()
 	{
 		return format;
 	}
