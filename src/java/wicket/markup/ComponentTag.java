@@ -40,7 +40,7 @@ public class ComponentTag extends MarkupElement
      * Standard component name attribute always available for components regardless of
      * user ApplicationSettings for componentName attribute; value == 'wicket'.
      */
-    public static final String WICKET_COMPONENT_NAME_ATTRIBUTE = "wicket";
+    public static final String DEFAULT_COMPONENT_NAME_ATTRIBUTE = "wicket";
 
     /**
      * An open tag, like &lt;TAG componentName = "xyz"&gt;.
@@ -404,7 +404,7 @@ public class ComponentTag extends MarkupElement
         {
             this.componentName = null;
             remove(componentNameAttribute);
-            remove(WICKET_COMPONENT_NAME_ATTRIBUTE);
+            remove(DEFAULT_COMPONENT_NAME_ATTRIBUTE);
         }
         else
         {

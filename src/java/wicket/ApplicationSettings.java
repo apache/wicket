@@ -99,7 +99,7 @@ import wicket.util.watch.ModificationWatcher;
  * <i>useDefaultOnMissingResource </i> (defaults to true) - Set to true to return a
  * default value if available when a required string resource is not found. If set to
  * false then the exceptionOnMissingResource flag is used to determine how to behave. If
- * not default is available then this is the same as if this flag were false
+ * no default is available then this is the same as if this flag were false
  * <p>
  * <i>stringResourceLoaders </i>- A chain of <code>IStringResourceLoader</code>
  * instances that are searched in order to obtain string resources used during
@@ -130,100 +130,69 @@ import wicket.util.watch.ModificationWatcher;
  */
 public class ApplicationSettings
 { // TODO finalize javadoc
-    
-    /** Log. */
+    /** Log */
     private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
-    // registry with converters
-    private ConverterRegistry converterRegistry = new ConverterRegistry();
-
-    // Component attribute name
-    private String componentNameAttribute = ComponentTag.WICKET_COMPONENT_NAME_ATTRIBUTE;
-
-    // Default xhtml wicket tag name: e.g. <wicket>
-    private String wicketTagName = ComponentWicketTag.WICKET_TAG_NAME;
-    
-    // True to check that each component on a page is used
-    private boolean componentUseCheck = true;
-
-    // True if multiple tabs/spaces should be compressed to a single space
-    private boolean compressWhitespace = false;
-
-    // True if runtime exceptions should not be shown
-    private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
-
-    // Home page class name
-    private Class homePage;
-
-    private String homePageClassName;
-
-    private Class internalErrorPage;
-
-    private Class staleDataErrorPage;
-
-    private Class pageExpiredErrorPage;
-
-    // The maximum number of pages in a session
-    private int maxSessionPages = 10;
-
-    // Frequency at which files should be polled
-    private Duration resourcePollFrequency = null;
-
-    // Source path
-    private Path sourcePath = new Path();
-
-    // Should HTML comments be stripped during rendering?
-    private boolean stripComments = false;
-
-    // Should component names be stripped during rendering?
-    private boolean stripComponentNames = false;
-
-    // Default before/after disabled link markup
-    private String defaultBeforeDisabledLink = "<i>";
-
-    private String defaultAfterDisabledLink = "</i>";
-
-    // ModificationWatcher to watch for changes in markup files
-    private ModificationWatcher resourceWatcher;
-
-    private boolean triedToCreateResouceWatcher = false;
-
-    // Flags used to determine how to behave if resources are not found
-    private boolean exceptionOnMissingResource = true;
-
-    private boolean useDefaultOnMissingResource = true;
+    /** Component attribute name */
+    private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
     
     /** List of (static) ComponentResolvers */
     private List componentResolvers;
+    
+    /** True to check that each component on a page is used */
+    private boolean componentUseCheck = true;
 
-    // Chain of string resource loaders to use and internal flag
-    // that keeps track of whether the user has overridden the defaults
-    private List stringResourceLoaders = new ArrayList(2);
+    /** True if multiple tabs/spaces should be compressed to a single space */
+    private boolean compressWhitespace = false;
 
-    private boolean overriddenStringResourceLoaders = false;
-
-    // The single application wide localization class
-    private Localizer localizer;
-
-    // Responsible to persist and retrieve FormComponent data
-    // (e.g. by means of Cookies)
-    private FormComponentPersistenceDefaults formComponentPersister =
-        new FormComponentPersistenceDefaults();
-
-    // Encryption key used to encode/decode passwords e.g.
-    private String encryptionKey = "WiCkEt-FRAMEwork";
+    // Registry with converters
+    private ConverterRegistry converterRegistry = new ConverterRegistry();
 
     // Class of type ICrypt to implement encryption
     private Class cryptClass = Crypt.class;
 
-    /** Factory to create new Page objects */
-    private IPageFactory pageFactory;
-    
-    // If true, wicket tags (<wicket ..>) shall be removed from output
-    private boolean stripWicketParamTag = false;
+    /** Default markup for after a disabled link */
+    private String defaultAfterDisabledLink = "</i>";
+
+    /** Default markup for before a disabled link */
+    private String defaultBeforeDisabledLink = "<i>";
+
+    /** Encryption key used to encode/decode passwords e.g. */
+    private String encryptionKey = "WiCkEt-FRAMEwork";
+
+    /** Flags used to determine how to behave if resources are not found */
+    private boolean exceptionOnMissingResource = true;
+
+    /** Default values for persistence of form data (by means of cookies) */
+    private FormComponentPersistenceDefaults formComponentPersistenceDefaults =
+        new FormComponentPersistenceDefaults();
+
+    /** Home page class */
+    private Class homePage;
+
+    /** Home page class name */
+    private String homePageClassName;
+
+    /** Class of internal error page */
+    private Class internalErrorPage;
+
+    /** The single application-wide localization class */
+    private Localizer localizer;
 
     /** Pluggable markup parser */
     private String markupParserClassName = MarkupParser.class.getName();
+
+    /** The maximum number of pages in a session */
+    private int maxSessionPages = 10;
+
+    /** True if string resource loaders have been overridden */
+    private boolean overriddenStringResourceLoaders = false;
+
+    /** The error page displayed when an expired page is accessed */
+    private Class pageExpiredErrorPage;
+
+    /** Factory to create new Page objects */
+    private IPageFactory pageFactory;
 
     /**
      * Whether the {@link wicket.model.PropertyModel} instances apply formatting
@@ -231,6 +200,39 @@ public class ApplicationSettings
      */
     private boolean propertyModelDefaultApplyFormatting = false;
 
+    /** Frequency at which files should be polled */
+    private Duration resourcePollFrequency = null;
+
+    /** ModificationWatcher to watch for changes in markup files */
+    private ModificationWatcher resourceWatcher;
+
+    /** Source path */
+    private Path sourcePath = new Path();
+
+    /** Error page to show when stale markup renderings are encountered */
+    private Class staleDataErrorPage;
+
+    /** Chain of string resource loaders to use */
+    private List stringResourceLoaders = new ArrayList(2);
+
+    /** Should HTML comments be stripped during rendering? */
+    private boolean stripComments = false;
+
+    /** Should component names be stripped during rendering? */
+    private boolean stripComponentNames = false;
+    
+    /** If true, wicket tags (<wicket ..>) shall be removed from output */
+    private boolean stripWicketParamTag = false;
+
+    /** Type of handling for unexpected exceptions */
+    private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
+
+    /** Determines behavior of string resource loading if string is missing */
+    private boolean useDefaultOnMissingResource = true;
+
+    /** Default xhtml wicket tag name: e.g. <wicket> */
+    private String wicketTagName = ComponentWicketTag.WICKET_TAG_NAME;
+    
     /**
      * Enumerated type for different ways of displaying unexpected exceptions.
      */
@@ -241,6 +243,13 @@ public class ApplicationSettings
             super(name);
         }
     }
+
+    /**
+     * Indicates that an exception page appropriate to development should be shown when an
+     * unexpected exception is thrown.
+     */
+    public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE =
+        new UnexpectedExceptionDisplay("SHOW_EXCEPTION_PAGE");
 
     /**
      * Indicates a generic internal error page should be shown when an unexpected
@@ -255,13 +264,6 @@ public class ApplicationSettings
      */
     public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE =
         new UnexpectedExceptionDisplay("SHOW_NO_EXCEPTION_PAGE");
-
-    /**
-     * Indicates that an exception page appropriate to development should be shown when an
-     * unexpected exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE =
-        new UnexpectedExceptionDisplay("SHOW_EXCEPTION_PAGE");
 
     /**
      * Create the application settings, carrying out any necessary initialisations.
@@ -280,6 +282,24 @@ public class ApplicationSettings
     }
 
     /**
+     * Add a string resource loader to the chain of loaders. If this is the first call to
+     * this method since the creation of the application settings then the existing chain
+     * is cleared before the new loader is added.
+     * @param loader The loader to be added
+     * @return This
+     */
+    public ApplicationSettings addStringResourceLoader(final IStringResourceLoader loader)
+    {
+        if (!overriddenStringResourceLoaders)
+        {
+            stringResourceLoaders.clear();
+            overriddenStringResourceLoaders = true;
+        }
+        stringResourceLoaders.add(loader);
+        return this;
+    }
+
+    /**
      * Gets component name attribute in use in this application. Normally, this is
      * "componentName", but it can be changed in the unlikely event that tag attribute
      * naming conflicts arise.
@@ -289,6 +309,16 @@ public class ApplicationSettings
     public final String getComponentNameAttribute()
     {
         return componentNameAttribute;
+    }
+
+    /**
+     * Get the (modifiable) List of ComponentResolvers.
+     * @see wicket.markup.AutolinkComponentResolver for an example
+     * @return List of ComponentResolvers
+     */
+    public final List getComponentResolvers()
+    {
+        return componentResolvers;
     }
 
     /**
@@ -311,12 +341,76 @@ public class ApplicationSettings
     }
 
     /**
-     * @return Returns the unexpectedExceptionDisplay.
-     * @see ApplicationSettings#setUnexpectedExceptionDisplay(ApplicationSettings.UnexpectedExceptionDisplay)
+     * Get converterRegistry.
+     * @return converterRegistry.
      */
-    public final UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
+    public final ConverterRegistry getConverterRegistry()
     {
-        return unexpectedExceptionDisplay;
+        return converterRegistry;
+    }
+
+    /**
+     * Get instance of de-/encryption class.
+     * @return instance of de-/encryption class
+     */
+    public ICrypt getCryptInstance()
+    {
+        try
+        {
+            final ICrypt crypt = (ICrypt)this.cryptClass.newInstance();
+            crypt.setKey(getEncryptionKey());
+            return crypt;
+        }
+        catch (InstantiationException e)
+        {
+            throw new RuntimeException("Encryption/decryption object can not be instantiated", e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException("Encryption/decryption object can not be instantiated", e);
+        }
+    }
+
+    /**
+     * @return Returns the defaultAfterDisabledLink.
+     */
+    public String getDefaultAfterDisabledLink()
+    {
+        return defaultAfterDisabledLink;
+    }
+
+    /**
+     * @return Returns the defaultBeforeDisabledLink.
+     */
+    public String getDefaultBeforeDisabledLink()
+    {
+        return defaultBeforeDisabledLink;
+    }
+
+    /**
+     * Get encryption key used to encode/decode passwords e.g.
+     * @return encryption key
+     */
+    public String getEncryptionKey()
+    {
+        return encryptionKey;
+    }
+
+    /**
+     * @return Whether to throw an exception when a missing resource is requested
+     */
+    public final boolean getExceptionOnMissingResource()
+    {
+        return exceptionOnMissingResource;
+    }
+
+    /**
+     * Get the defaults to be used by persistence manager
+     * @return FormComponentPersistenceDefaults
+     */
+    public FormComponentPersistenceDefaults getFormComponentPersistenceDefaults()
+    {
+        return formComponentPersistenceDefaults;
     }
 
     /**
@@ -331,7 +425,7 @@ public class ApplicationSettings
             return homePage;
         }
 
-        if ((homePageClassName != null) && (homePageClassName.trim().length() > 0))
+        if (homePageClassName != null && homePageClassName.trim().length() > 0)
         {
             final Class homePage = getPageFactory().getClassInstance(homePageClassName);
             if (homePage != null)
@@ -351,6 +445,22 @@ public class ApplicationSettings
     public final Class getInternalErrorPage()
     {
         return internalErrorPage;
+    }
+
+    /**
+     * @return The application wide localizer instance
+     */
+    public Localizer getLocalizer()
+    {
+        return localizer;
+    }
+    
+    /**
+     * @return Returns the markupParserClass.
+     */
+    public final Class getMarkupParserClass()
+    {
+        return getPageFactory().getClassInstance(markupParserClassName);
     }
 
     /**
@@ -374,12 +484,47 @@ public class ApplicationSettings
     }
 
     /**
+     * Gets the factory class to be used when creating pages
+     * @return the factory class to be used when creating pages
+     */
+    public IPageFactory getPageFactory()
+    {
+        return pageFactory;
+    }
+
+    /**
+     * Gets whether the {@link wicket.model.PropertyModel} instances apply formatting by default.
+     * @return whether the {@link wicket.model.PropertyModel} instances apply formatting by default
+     */
+    public boolean getPropertyModelDefaultApplyFormatting()
+    {
+        return propertyModelDefaultApplyFormatting;
+    }
+
+    /**
      * @return Returns the resourcePollFrequency.
      * @see ApplicationSettings#setResourcePollFrequency(Duration)
      */
     public Duration getResourcePollFrequency()
     {
         return resourcePollFrequency;
+    }
+
+    /**
+     * @return Resource watcher with polling frequency determined by setting, or null if
+     *         no polling frequency has been set.
+     */
+    public ModificationWatcher getResourceWatcher()
+    {
+        if (resourceWatcher == null)
+        {
+            final Duration pollFrequency = getResourcePollFrequency();
+            if (pollFrequency != null)
+            {
+                resourceWatcher = new ModificationWatcher(pollFrequency);
+            }
+        }
+        return resourceWatcher;
     }
 
     /**
@@ -421,6 +566,42 @@ public class ApplicationSettings
     {
         return stripComponentNames;
     }
+    
+    /**
+     * Gets whether to remove wicket tags from the output.
+     * @return whether to remove wicket tags from the output
+     */
+    public final boolean getStripWicketParamTag()
+    {
+        return this.stripWicketParamTag;
+    }
+
+    /**
+     * @return Returns the unexpectedExceptionDisplay.
+     * @see ApplicationSettings#setUnexpectedExceptionDisplay(ApplicationSettings.UnexpectedExceptionDisplay)
+     */
+    public final UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
+    {
+        return unexpectedExceptionDisplay;
+    }
+
+    /**
+     * @return Whether to use a default value (if available) when a missing resource is
+     *         requested
+     */
+    public final boolean getUseDefaultOnMissingResource()
+    {
+        return useDefaultOnMissingResource;
+    }
+    
+    /**
+     * Get the current tag name
+     * @return wicket tag name
+     */
+    public final String getWicketTagName()
+    {
+        return this.wicketTagName;
+    }
 
     /**
      * Sets component name attribute in use in this application. Normally, this is
@@ -429,8 +610,7 @@ public class ApplicationSettings
      * @param componentNameAttribute The componentNameAttribute to set.
      * @return This
      */
-    public final ApplicationSettings setComponentNameAttribute(
-            final String componentNameAttribute)
+    public final ApplicationSettings setComponentNameAttribute(final String componentNameAttribute)
     {
         this.componentNameAttribute = componentNameAttribute;
         return this;
@@ -472,29 +652,48 @@ public class ApplicationSettings
     }
 
     /**
-     * The exception display type determines how the framework displays exceptions to you
-     * as a developer or user.
-     * <p>
-     * The default value for exception display type is SHOW_EXCEPTION_PAGE. When this
-     * value is set and an unhandled runtime exception is thrown by a page, a redirect to
-     * a helpful exception display page will occur.
-     * <p>
-     * This is a developer feature, however, and you may want to instead show an internal
-     * error page without developer details that allows a user to start over at the
-     * application's home page. This can be accomplished by setting the exception display
-     * type to SHOW_INTERNAL_ERROR_PAGE.
-     * <p>
-     * Finally, if you are having trouble with the exception display pages themselves, you
-     * can disable exception displaying entirely with the value SHOW_NO_EXCEPTION_PAGE.
-     * This will cause the framework to re-throw any unhandled runtime exceptions after
-     * wrapping them in a ServletException wrapper.
-     * @param unexpectedExceptionDisplay The unexpectedExceptionDisplay to set.
+     * Set new Class to be used for de-/encryption
+     * @param crypt
+     */
+    public void setCrypt(Class crypt)
+    {
+        this.cryptClass = crypt;
+    }
+
+    /**
+     * @param defaultAfterDisabledLink The defaultAfterDisabledLink to set.
+     */
+    public void setDefaultAfterDisabledLink(String defaultAfterDisabledLink)
+    {
+        this.defaultAfterDisabledLink = defaultAfterDisabledLink;
+    }
+
+    /**
+     * @param defaultBeforeDisabledLink The defaultBeforeDisabledLink to set.
+     */
+    public void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
+    {
+        this.defaultBeforeDisabledLink = defaultBeforeDisabledLink;
+    }
+
+    /**
+     * Set encryption key used to encode/decode PasswordTextFields e.g.
+     * @param encryptionKey
+     */
+    public void setEncryptionKey(String encryptionKey)
+    {
+        this.encryptionKey = encryptionKey;
+    }
+
+    /**
+     * @param exceptionOnMissingResource Whether to throw an exception when a missing
+     *            resource is requested
      * @return This
      */
-    public final ApplicationSettings setUnexpectedExceptionDisplay(
-            final UnexpectedExceptionDisplay unexpectedExceptionDisplay)
+    public final ApplicationSettings setExceptionOnMissingResource(
+            final boolean exceptionOnMissingResource)
     {
-        this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
+        this.exceptionOnMissingResource = exceptionOnMissingResource;
         return this;
     }
 
@@ -533,6 +732,14 @@ public class ApplicationSettings
         this.internalErrorPage = internalErrorPage;
         return this;
     }
+    
+    /**
+	 * @param markupParserClassName The markupParserClass to set.
+	 */
+	public final void setMarkupParserClassName(final String markupParserClassName)
+	{
+		this.markupParserClassName = markupParserClassName;
+	}
 
     /**
      * Sets the maximum number of pages held in a session. If a page is added to a user's
@@ -558,6 +765,34 @@ public class ApplicationSettings
     {
         this.pageExpiredErrorPage = pageExpiredErrorPage;
         return this;
+    }
+
+    /**
+     * Sets the factory class to be used when creating pages.
+     * @param pageFactory the factory class to be used when creating pages.
+     */
+    public void setPageFactory(final IPageFactory pageFactory)
+    {
+        this.pageFactory = pageFactory;
+    }
+
+	/**
+	 * Sets whether the {@link wicket.model.PropertyModel} instances apply formatting by default.
+	 * @param propertyModelDefaultApplyFormatting whether the
+	 * 	{@link wicket.model.PropertyModel} instances apply formatting by default
+	 */
+	public void setPropertyModelDefaultApplyFormatting(boolean propertyModelDefaultApplyFormatting)
+	{
+		this.propertyModelDefaultApplyFormatting = propertyModelDefaultApplyFormatting;
+	}
+    
+    /**
+     * Sets whether to remove wicket tags from the output.
+     * @param remove whether to remove wicket tags from the output
+     */
+    public final void setRemoveWicketTagsFromOutput(boolean remove)
+    {
+        this.stripWicketParamTag = remove;
     }
 
     /**
@@ -625,64 +860,30 @@ public class ApplicationSettings
     }
 
     /**
-     * @return Returns the defaultAfterDisabledLink.
-     */
-    public String getDefaultAfterDisabledLink()
-    {
-        return defaultAfterDisabledLink;
-    }
-
-    /**
-     * @param defaultAfterDisabledLink The defaultAfterDisabledLink to set.
-     */
-    public void setDefaultAfterDisabledLink(String defaultAfterDisabledLink)
-    {
-        this.defaultAfterDisabledLink = defaultAfterDisabledLink;
-    }
-
-    /**
-     * @return Returns the defaultBeforeDisabledLink.
-     */
-    public String getDefaultBeforeDisabledLink()
-    {
-        return defaultBeforeDisabledLink;
-    }
-
-    /**
-     * @param defaultBeforeDisabledLink The defaultBeforeDisabledLink to set.
-     */
-    public void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
-    {
-        this.defaultBeforeDisabledLink = defaultBeforeDisabledLink;
-    }
-
-    /**
-     * @return Whether to throw an exception when a missing resource is requested
-     */
-    public final boolean isExceptionOnMissingResource()
-    {
-        return exceptionOnMissingResource;
-    }
-
-    /**
-     * @param exceptionOnMissingResource Whether to throw an exception when a missing
-     *            resource is requested
+     * The exception display type determines how the framework displays exceptions to you
+     * as a developer or user.
+     * <p>
+     * The default value for exception display type is SHOW_EXCEPTION_PAGE. When this
+     * value is set and an unhandled runtime exception is thrown by a page, a redirect to
+     * a helpful exception display page will occur.
+     * <p>
+     * This is a developer feature, however, and you may want to instead show an internal
+     * error page without developer details that allows a user to start over at the
+     * application's home page. This can be accomplished by setting the exception display
+     * type to SHOW_INTERNAL_ERROR_PAGE.
+     * <p>
+     * Finally, if you are having trouble with the exception display pages themselves, you
+     * can disable exception displaying entirely with the value SHOW_NO_EXCEPTION_PAGE.
+     * This will cause the framework to re-throw any unhandled runtime exceptions after
+     * wrapping them in a ServletException wrapper.
+     * @param unexpectedExceptionDisplay The unexpectedExceptionDisplay to set.
      * @return This
      */
-    public final ApplicationSettings setExceptionOnMissingResource(
-            final boolean exceptionOnMissingResource)
+    public final ApplicationSettings setUnexpectedExceptionDisplay(
+            final UnexpectedExceptionDisplay unexpectedExceptionDisplay)
     {
-        this.exceptionOnMissingResource = exceptionOnMissingResource;
+        this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
         return this;
-    }
-
-    /**
-     * @return Whether to use a default value (if available) when a missing resource is
-     *         requested
-     */
-    public final boolean isUseDefaultOnMissingResource()
-    {
-        return useDefaultOnMissingResource;
     }
 
     /**
@@ -696,23 +897,14 @@ public class ApplicationSettings
         this.useDefaultOnMissingResource = useDefaultOnMissingResource;
         return this;
     }
-
+    
     /**
-     * Add a string resource loader to the chain of loaders. If this is the first call to
-     * this method since the creation of the application settings then the existing chain
-     * is cleared before the new loader is added.
-     * @param loader The loader to be added
-     * @return This
+     * Define a new wicket tag name to use instead of "wicket"
+     * @param wicketTagName the tag name
      */
-    public ApplicationSettings addStringResourceLoader(final IStringResourceLoader loader)
+    public final void setWicketTagName(final String wicketTagName)
     {
-        if (!overriddenStringResourceLoaders)
-        {
-            stringResourceLoaders.clear();
-            overriddenStringResourceLoaders = true;
-        }
-        stringResourceLoaders.add(loader);
-        return this;
+        this.wicketTagName = wicketTagName;
     }
 
     /**
@@ -724,202 +916,6 @@ public class ApplicationSettings
     {
         return Collections.unmodifiableList(stringResourceLoaders);
     }
-
-    /**
-     * @return The application wide localizer instance
-     */
-    public Localizer getLocalizer()
-    {
-        return localizer;
-    }
-
-    /**
-     * @return Resource watcher with polling frequency determined by setting, or null if
-     *         no polling frequency has been set.
-     */
-    public ModificationWatcher getResourceWatcher()
-    {
-        if (!triedToCreateResouceWatcher)
-        {
-            final Duration frequency = getResourcePollFrequency();
-            if (frequency != null)
-            {
-                resourceWatcher = new ModificationWatcher(frequency);
-            }
-            triedToCreateResouceWatcher = true;
-        }
-        return resourceWatcher;
-    }
-
-    /**
-     * Get converterRegistry.
-     * @return converterRegistry.
-     */
-    public final ConverterRegistry getConverterRegistry()
-    {
-        return converterRegistry;
-    }
-
-    /**
-     * Get the defaults to be used by persistence manager
-     * @return FormComponentPersistenceDefaults
-     */
-    public FormComponentPersistenceDefaults getFormComponentPersistenceDefaults()
-    {
-        return formComponentPersister;
-    }
-
-    /**
-     * Get encryption key used to encode/decode passwords e.g.
-     * @return encryption key
-     */
-    public String getEncryptionKey()
-    {
-        return encryptionKey;
-    }
-
-    /**
-     * Set encryption key used to encode/decode PasswordTextFields e.g.
-     * @param encryptionKey
-     */
-    public void setEncryptionKey(String encryptionKey)
-    {
-        this.encryptionKey = encryptionKey;
-    }
-
-    /**
-     * Get instance of de-/encryption class.
-     * @return instance of de-/encryption class
-     */
-    public ICrypt getCryptInstance()
-    {
-        final ICrypt crypt;
-        try
-        {
-            crypt = (ICrypt) this.cryptClass.newInstance();
-            crypt.setKey(getEncryptionKey());
-            return crypt;
-        }
-        catch (InstantiationException e)
-        {
-            throw new RuntimeException("De-/Encryption object can not be instantiated", e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new RuntimeException("De-/Encryption object can not be instantiated", e);
-        }
-    }
-
-    /**
-     * Set new Class to be used for de-/encryption
-     * @param crypt
-     */
-    public void setCrypt(Class crypt)
-    {
-        this.cryptClass = crypt;
-    }
-
-    /**
-     * Gets the factory class to be used when creating pages
-     * @return the factory class to be used when creating pages
-     */
-    public IPageFactory getPageFactory()
-    {
-        return pageFactory;
-    }
-
-    /**
-     * Sets the factory class to be used when creating pages.
-     * @param pageFactory the factory class to be used when creating pages.
-     */
-    public void setPageFactory(final IPageFactory pageFactory)
-    {
-        this.pageFactory = pageFactory;
-    }
-
-    /**
-     * Get the (modifiable) List of ComponentResolvers.
-     * @see wicket.markup.AutolinkComponentResolver for an example
-     * 
-     * @return List of ComponentResolvers
-     */
-    public final List getComponentResolvers()
-    {
-        return componentResolvers;
-    }
-    
-    /**
-     * Define a new wicket tag name to use instead of "wicket"
-     * 
-     * @param wicketTagName the tag name
-     */
-    public final void setWicketTagName(final String wicketTagName)
-    {
-        this.wicketTagName = wicketTagName;
-    }
-    
-    /**
-     * Get the current tag name
-     * 
-     * @return wicket tag name
-     */
-    public final String getWicketTagName()
-    {
-        return this.wicketTagName;
-    }
-    
-    /**
-     * Gets whether to remove wicket tags from the output.
-     * @return whether to remove wicket tags from the output
-     */
-    public final boolean getStripWicketParamTag()
-    {
-        return this.stripWicketParamTag;
-    }
-    
-    /**
-     * Sets whether to remove wicket tags from the output.
-     * @param remove whether to remove wicket tags from the output
-     */
-    public final void setRemoveWicketTagsFromOutput(boolean remove)
-    {
-        this.stripWicketParamTag = remove;
-    }
-    
-    /**
-     * @return Returns the markupParserClass.
-     */
-    public final Class getMarkupParserClass()
-    {
-        return getPageFactory().getClassInstance(markupParserClassName);
-    }
-    
-    /**
-	 * @param markupParserClassName The markupParserClass to set.
-	 */
-	public final void setMarkupParserClassName(final String markupParserClassName)
-	{
-		this.markupParserClassName = markupParserClassName;
-	}
-
-	/**
-	 * Gets whether the {@link wicket.model.PropertyModel} instances apply formatting by default.
-	 * @return whether the {@link wicket.model.PropertyModel} instances apply formatting by default
-	 */
-	public boolean isPropertyModelDefaultApplyFormatting()
-	{
-		return propertyModelDefaultApplyFormatting;
-	}
-
-	/**
-	 * Sets whether the {@link wicket.model.PropertyModel} instances apply formatting by default.
-	 * @param propertyModelDefaultApplyFormatting whether the
-	 * 	{@link wicket.model.PropertyModel} instances apply formatting by default
-	 */
-	public void setPropertyModelDefaultApplyFormatting(boolean propertyModelDefaultApplyFormatting)
-	{
-		this.propertyModelDefaultApplyFormatting = propertyModelDefaultApplyFormatting;
-	}
 }
 
 ///////////////////////////////// End of File /////////////////////////////////

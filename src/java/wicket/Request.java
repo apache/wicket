@@ -21,28 +21,38 @@ package wicket;
 import java.util.Map;
 
 /**
- * Base class for page request implementations allowing access to request parameters.
+ * Base class for page request implementations allowing access to request 
+ * parameters.  A Request has a URL and a parameter map.  You can retrieve
+ * the URL of the request with getURL().  The entire parameter map can be
+ * retrieved via getParameterMap().  Individual parameters can be retrieved
+ * via getParameter(String).  If multiple values are available for a given
+ * parameter, they can be retrieved via getParameters(String).
+ * 
  * @author Jonathan Locke
  */
 public abstract class Request
-{ // TODO finalize javadoc
+{
     /**
+     * Retrieves the URL of this request.
      * @return The full original request URL
      */
     public abstract String getURL();
 
     /**
+     * Gets a map of (query) parameters sent with the request.
      * @return Map of parameters
      */
     public abstract Map getParameterMap();
 
     /**
+     * Gets a given (query) parameter by name.
      * @param key Parameter name
      * @return Parameter value
      */
     public abstract String getParameter(final String key);
 
     /**
+     * Gets an array of multiple parameters by name. 
      * @param key Parameter name
      * @return Parameter values
      */

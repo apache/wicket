@@ -162,7 +162,7 @@ public class PropertyModel extends DetachableModel
         if (RequestCycle.get() != null)
         {
 	        ApplicationSettings settings = RequestCycle.get().getApplication().getSettings();
-	        this.applyFormatting = settings.isPropertyModelDefaultApplyFormatting();
+	        this.applyFormatting = settings.getPropertyModelDefaultApplyFormatting();
         }
     }
 
