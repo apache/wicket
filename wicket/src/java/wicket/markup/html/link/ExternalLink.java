@@ -21,7 +21,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 
-
 /**
  * Simple &lt;a href="..."&gt; pointing to any URL. Usually this is used for
  * links to destinations outside of Wicket.

@@ -15,29 +15,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.version.undo;
-
-import wicket.Component;
-import wicket.MarkupContainer;
+package wicket.pageset;
 
 /**
- * A remove change operation.
  * 
  * @author Jonathan Locke
  */
-class Remove extends Change
+public class OrderedPageSetMap
 {
-	private final Component component;
-	private final MarkupContainer container;
-	
-	Remove(final Component component)
+	/**
+	 * Constructor
+	 */
+	public OrderedPageSetMap()
 	{
-		this.component = component;
-		this.container = component.getParent();
-	}
-	
-	void undo()
-	{
-		container.add(component);
+		super();
 	}
 }

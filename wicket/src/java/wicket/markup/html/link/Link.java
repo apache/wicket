@@ -285,7 +285,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	protected String getURL()
 	{
-		return getRequestCycle().urlFor(Link.this, ILinkListener.class);
+		return getPage().urlFor(Link.this, ILinkListener.class);
 	}
 
 	/**

@@ -276,32 +276,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Redirects to any intercept page previously specified by a call to
-	 * redirectToInterceptPage.
-	 * 
-	 * @return True if an original destination was redirected to
-	 * @see RequestCycle#redirectToInterceptPage(Class)
-	 * @see RequestCycle#redirectToInterceptPage(Page)
-	 */
-	public final boolean continueToOriginalDestination()
-	{
-		final String url = session.getInterceptContinuationURL();
-		if (url != null)
-		{
-			response.redirect(url);
-
-			// Since we are explicitly redirecting to a page already, we do not
-			// want a second redirect to occur automatically
-			setRedirect(false);
-
-			// Reset interception URL
-			session.setInterceptContinuationURL(null);
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Gets the application object.
 	 * 
 	 * @return Application interface
@@ -319,16 +293,6 @@ public abstract class RequestCycle
 	public final Page getResponsePage()
 	{
 		return responsePage;
-	}
-
-	/**
-	 * Convinience method to get the Page factory
-	 * 
-	 * @return DefaultPageFactory from application settings
-	 */
-	public final IPageFactory getPageFactory()
-	{
-		return getSession().getPageFactory();
 	}
 
 	/**
@@ -372,43 +336,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
-	 * 
-	 * @param c
-	 *            The sign in page class
-	 */
-	public final void redirectToInterceptPage(final Class c)
-	{
-		redirectToInterceptPage(getPageFactory().newPage(c));
-	}
-
-	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
-	 * 
-	 * @param c
-	 *            The sign in page class
-	 * @param parameters
-	 *            The page parameters
-	 */
-	public final void redirectToInterceptPage(final Class c, final PageParameters parameters)
-	{
-		redirectToInterceptPage(getPageFactory().newPage(c, parameters));
-	}
-
-	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
-	 * 
-	 * @param page
-	 *            The sign in page
-	 */
-	public final void redirectToInterceptPage(final Page page)
-	{
-		// Access was denied. Construct sign in page with
-		session.setInterceptContinuationURL(response.encodeURL(request.getURL()));
-		redirectToPage(page);
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Responds to a request.
@@ -417,6 +344,9 @@ public abstract class RequestCycle
 	 */
 	public final void request() throws ServletException
 	{
+		// Any page used to respond to the request
+		Page page = null;
+		
 		// Response is beginning
 		internalOnBeginRequest();
 		onBeginRequest();
@@ -434,7 +364,7 @@ public abstract class RequestCycle
 				if (onRespond())
 				{
 					// Get page set by subclass response
-					final Page page = getResponsePage();
+					page = getResponsePage();
 					if (page != null)
 					{
 						try
@@ -473,7 +403,7 @@ public abstract class RequestCycle
 			catch (RuntimeException e)
 			{
 				// Handle any runtime exception
-				onRuntimeException(e);
+				onRuntimeException(page, e);
 			}
 			finally
 			{
@@ -527,32 +457,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Gets the url for the given page class using the given parameters.
-	 * 
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public abstract String urlFor(final Class pageClass, final PageParameters parameters);
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Gets the url for the given component/ listener interface.
-	 * 
-	 * @param component
-	 *            Component that has listener interface
-	 * @param listenerInterface
-	 *            The listener interface
-	 * @return A URL that encodes a page, component and interface to call
-	 */
-	public abstract String urlFor(final Component component, final Class listenerInterface);
-
-	/**
 	 * Looks up an interface method by name.
 	 * 
 	 * @param interfaceName
@@ -571,8 +475,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE THIS METHOD.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE
+	 * THIS METHOD.
 	 * 
 	 * Called when the request cycle object is beginning its response
 	 */
@@ -585,8 +489,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE THIS METHOD.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE
+	 * THIS METHOD.
 	 * 
 	 * Called when the request cycle object has finished its response
 	 */
@@ -629,12 +533,15 @@ public abstract class RequestCycle
 	/**
 	 * Sets up to handle a runtime exception thrown during rendering
 	 * 
+	 * @param page
+	 *            Any page context where the exception was thrown
 	 * @param e
 	 *            The exception
 	 * @throws ServletException
 	 *             The exception rethrown for the servlet container
 	 */
-	private final void onRuntimeException(final RuntimeException e) throws ServletException
+	private final void onRuntimeException(final Page page, final RuntimeException e)
+			throws ServletException
 	{
 		try
 		{
@@ -645,7 +552,8 @@ public abstract class RequestCycle
 				if (settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
 				{
 					// use internal error page
-					setResponsePage(getPageFactory().newPage(application.getPages().getInternalErrorPage()));
+					setResponsePage(session.getPageFactory(page).newPage(
+							application.getPages().getInternalErrorPage()));
 				}
 				else
 				{

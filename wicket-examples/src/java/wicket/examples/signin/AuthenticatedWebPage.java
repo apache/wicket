@@ -49,7 +49,7 @@ public class AuthenticatedWebPage extends WicketExamplePage
         if (!signedIn)
         {
             // Redirect request to SignIn page
-            getRequestCycle().redirectToInterceptPage(SignIn.class);
+            redirectToInterceptPage(newPage(SignIn.class));
         }
 
         // Return true if someone is signed in and access is okay

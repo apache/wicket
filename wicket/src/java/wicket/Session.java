@@ -21,14 +21,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
@@ -103,9 +104,6 @@ public abstract class Session implements Serializable
 	/** Application that this is a session of. */
 	private transient Application application;
 
-	/** Resolver for finding classes for this Session */
-	private transient IClassResolver classResolver;
-
 	/** The converter instance. */
 	private transient IConverter converter;
 
@@ -115,11 +113,8 @@ public abstract class Session implements Serializable
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** The still-live pages for this user session. */
-	private transient MostRecentlyUsedMap pages;
-
 	/** Session state that can be replicated when dirty */
-	private State state;
+	private State state = new State();
 
 	/**
 	 * Interface called when visiting session pages.
@@ -142,25 +137,37 @@ public abstract class Session implements Serializable
 	 * 
 	 * @author Jonathan Locke
 	 */
-	static class State implements Serializable
+	class State implements Serializable
 	{
-		/** Next available access number */
-		int accessNumber;
+		/** Next available page state sequence number */
+		int pageStateSequenceNumber;
 
 		/** True if any of this state has changed */
 		private boolean dirty = false;
 
-		/** URL to continue to after a given page. */
-		private String interceptContinuationURL;
-
 		/** The locale to use when loading resources for this session. */
 		private Locale locale;
 
-		/** Next available page identifier. */
-		private int pageId = 0;
+		/** Maps from name to page map */
+		private final Map pageMapForName = new HashMap();
 
 		/** Any special "skin" style to use when loading resources. */
 		private String style;
+
+		/**
+		 * Attaches state to session, restoring transient values
+		 */
+		void attach()
+		{
+			// Go through each page map in the session
+			for (final Iterator iterator = state.pageMapForName.values().iterator(); iterator
+					.hasNext();)
+			{
+				// Remove all pages from the current page map
+				PageMap pageMap = ((PageMap)iterator.next());
+				pageMap.setSession(Session.this);
+			}
+		}
 	}
 
 	/**
@@ -194,9 +201,14 @@ public abstract class Session implements Serializable
 	 */
 	protected Session(final Application application)
 	{
+		// Save application
 		this.application = application;
-		this.state = new State();
-		this.state.locale = application.getSettings().getDefaultLocale();
+
+		// Set locale to default locale
+		setLocale(application.getSettings().getDefaultLocale());
+
+		// Create default page map
+		newPageMap(PageMap.defaultName);
 	}
 
 	/**
@@ -214,8 +226,7 @@ public abstract class Session implements Serializable
 	 */
 	public final IClassResolver getClassResolver()
 	{
-		return classResolver != null ? classResolver : application.getSettings()
-				.getDefaultClassResolver();
+		return application.getSettings().getDefaultClassResolver();
 	}
 
 	/**
@@ -248,6 +259,8 @@ public abstract class Session implements Serializable
 	 * 
 	 * Get the page for the given path.
 	 * 
+	 * @param pageMapName
+	 *            The name of the page map where the page is
 	 * @param path
 	 *            Component path
 	 * @param versionNumber
@@ -255,7 +268,7 @@ public abstract class Session implements Serializable
 	 * @return The page based on the first path component (the page id), or null
 	 *         if the requested version of the page cannot be found.
 	 */
-	public final Page getPage(final String path, final int versionNumber)
+	public final Page getPage(final String pageMapName, final String path, final int versionNumber)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -263,7 +276,7 @@ public abstract class Session implements Serializable
 		}
 
 		// Retrieve the page for the first path component from this session
-		Page page = getPage(Strings.firstPathComponent(path, componentPathSeparator));
+		Page page = getPage(pageMapName, Strings.firstPathComponent(path, componentPathSeparator));
 
 		// Is there a page with the right id at all?
 		if (page != null)
@@ -281,7 +294,7 @@ public abstract class Session implements Serializable
 					page = version;
 
 					// Replaces old page entry
-					getPageMap().put(page.getId(), page);
+					page.getPageMap().put(page);
 					pageChanged(page);
 				}
 				return page;
@@ -295,8 +308,40 @@ public abstract class Session implements Serializable
 	 */
 	public final IPageFactory getPageFactory()
 	{
-		return pageFactory != null ? pageFactory : application.getSettings()
-				.getDefaultPageFactory();
+		if (pageFactory == null)
+		{
+			pageFactory = application.getSettings().getDefaultPageFactory();
+		}
+		return pageFactory;
+	}
+
+	/**
+	 * @param page
+	 *            The page, or null if no page context is available
+	 * @return The page factory for the page, or the default page factory if
+	 *         page was null
+	 */
+	public IPageFactory getPageFactory(final Page page)
+	{
+		if (page != null)
+		{
+			return page.getPageFactory();
+		}
+		return getPageFactory();
+	}
+
+	/**
+	 * @param pageMapName
+	 *            Name of page map, or null for default page map
+	 * @return PageMap for name
+	 */
+	public PageMap getPageMap(String pageMapName)
+	{
+		if (pageMapName == null)
+		{
+			pageMapName = PageMap.defaultName;
+		}
+		return (PageMap)state.pageMapForName.get(pageMapName);
 	}
 
 	/**
@@ -325,6 +370,20 @@ public abstract class Session implements Serializable
 	public abstract void invalidate();
 
 	/**
+	 * Creates a new page map with a given name
+	 * 
+	 * @param name
+	 *            The name for the new page map
+	 * @return The newly created page map
+	 */
+	public PageMap newPageMap(final String name)
+	{
+		final PageMap pageMap = new PageMap(name, this);
+		state.pageMapForName.put(name, pageMap);
+		return pageMap;
+	}
+
+	/**
 	 * Called when an PageState record should be added to the replicated state
 	 * 
 	 * @param page
@@ -333,9 +392,8 @@ public abstract class Session implements Serializable
 	{
 		// Create PageState for page
 		final PageState pageState = newPageState(page);
-
-		// The page must have been added to the session already
 		pageState.addedToSession = true;
+		pageState.pageMapName = page.getPageMap().getName();
 
 		// Set HttpSession attribute for new PageState
 		setAttribute(page.getId(), pageState);
@@ -351,7 +409,7 @@ public abstract class Session implements Serializable
 	 */
 	public final void remove(final Page page)
 	{
-		getPageMap().remove(page.getId());
+		page.getPageMap().remove(page);
 	}
 
 	/**
@@ -360,7 +418,12 @@ public abstract class Session implements Serializable
 	 */
 	public final void removeAll()
 	{
-		getPageMap().clear();
+		// Go through each page map in the session
+		for (final Iterator iterator = state.pageMapForName.values().iterator(); iterator.hasNext();)
+		{
+			// Remove all pages from the current page map
+			((PageMap)iterator.next()).removeAll();
+		}
 	}
 
 	/**
@@ -377,17 +440,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Set class resolver for this session
-	 * 
-	 * @param classResolver
-	 *            The class resolver
-	 */
-	public final void setClassResolver(final IClassResolver classResolver)
-	{
-		this.classResolver = classResolver;
-	}
-
-	/**
 	 * Set the locale.
 	 * 
 	 * @param locale
@@ -396,19 +448,8 @@ public abstract class Session implements Serializable
 	public final void setLocale(final Locale locale)
 	{
 		this.state.locale = locale;
-		this.state.dirty = true;
 		this.converter = null;
-	}
-
-	/**
-	 * Set page factory for this session
-	 * 
-	 * @param pageFactory
-	 *            The page factory
-	 */
-	public final void setPageFactory(final IPageFactory pageFactory)
-	{
-		this.pageFactory = pageFactory;
+		dirty();
 	}
 
 	/**
@@ -433,7 +474,7 @@ public abstract class Session implements Serializable
 	public final void setStyle(final String style)
 	{
 		this.state.style = style;
-		this.state.dirty = true;
+		dirty();
 	}
 
 	/**
@@ -441,8 +482,13 @@ public abstract class Session implements Serializable
 	 */
 	public final void updateCluster()
 	{
+		// If state is dirty
 		if (this.state.dirty)
 		{
+			// State is no longer dirty
+			this.state.dirty = false;
+
+			// Set attribute
 			setAttribute("state", state);
 		}
 	}
@@ -459,62 +505,18 @@ public abstract class Session implements Serializable
 		{
 			// Copy state into Session
 			this.state = state;
+			state.attach();
 		}
 
-		// PageStates to add
-		final List pageStates = new ArrayList();
+		// Get PageStates from session attributes
+		final List pageStates = getPageStateAttributes();
 
-		// Copy any changed pages into our (transient) Session
-		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
-		{
-			// Get attribute value
-			final Object value = getAttribute((String)iterator.next());
-			if (value instanceof PageState)
-			{
-				pageStates.add(value);
-			}
-		}
+		// Sort page states so that they can be added in reverse order of
+		// creation. This ensures that any newer pages will bump out older ones.
+		sortBySequenceNumber(pageStates);
 
-		// Sort in ascending order by access number so that pages which have
-		// a higher access number (which means they were accessed more recently)
-		// are added /last/.
-		Collections.sort(pageStates, new Comparator()
-		{
-			public int compare(Object object1, Object object2)
-			{
-				int accessNumber1 = ((PageState)object1).accessNumber;
-				int accessNumber2 = ((PageState)object2).accessNumber;
-				if (accessNumber1 < accessNumber2)
-				{
-					return -1;
-				}
-				if (accessNumber1 > accessNumber2)
-				{
-					return 1;
-				}
-				return 0;
-			}
-		});
-
-		// Add page states as need be
-		for (final Iterator iterator = pageStates.iterator(); iterator.hasNext();)
-		{
-			// Get next attribute name
-			final PageState pageState = (PageState)iterator.next();
-
-			// If PageState has not been added to the session
-			if (!pageState.addedToSession)
-			{
-				// Get page from page state
-				final Page page = pageState.getPage();
-
-				// Add to page map
-				getPageMap().put(page.getId(), page);
-
-				// Page has been added to session now
-				pageState.addedToSession = true;
-			}
-		}
+		// Adds pages to session
+		addPages(pageStates);
 	}
 
 	/**
@@ -523,18 +525,17 @@ public abstract class Session implements Serializable
 	 * @param page
 	 *            Page to add to this session
 	 */
-	protected final void addPage(final Page page)
+	protected final void add(final Page page)
 	{
-		// Set session and identifier
-		page.setId(this.state.pageId++);
-		state.dirty = true;
+		// Set page map for page
+		final String pageMapName = cycle == null ? PageMap.defaultName : cycle.getRequest()
+				.getParameter("pageMap");
+		page.setPageMap(getPageMap(pageMapName));
 
 		// Add to page local transient page map
-		final MostRecentlyUsedMap pageMap = getPageMap();
-		pageMap.put(page.getId(), page);
+		final Page removedPage = page.getPageMap().add(page);
 
 		// Get any page that was removed
-		final Page removedPage = (Page)pageMap.getRemovedValue();
 		if (removedPage != null)
 		{
 			removeAttribute(removedPage.getId());
@@ -584,75 +585,109 @@ public abstract class Session implements Serializable
 	 *            The attribute value
 	 */
 	protected abstract void setAttribute(final String name, final Object object);
-	
+
 	/**
-	 * Get the interceptContinuationURL.
-	 * 
-	 * @return Returns the interceptContinuationURL.
+	 * Marks session state as dirty
 	 */
-	final String getInterceptContinuationURL()
+	final void dirty()
 	{
-		return state.interceptContinuationURL;
+		state.dirty = true;
 	}
 
 	/**
 	 * Get the page with the given id.
 	 * 
+	 * @param pageMapName
+	 *            Page map name
 	 * @param id
 	 *            Page id
 	 * @return Page with the given id
 	 */
-	final Page getPage(final String id)
+	final Page getPage(final String pageMapName, final String id)
 	{
-		return (Page)getPageMap().get(id);
+		return (Page)getPageMap(pageMapName).get(id);
 	}
 
 	/**
 	 * @return The next access number
 	 */
-	int nextAccessNumber()
+	int nextPageStateSequenceNumber()
 	{
-		return state.accessNumber++;
+		dirty();
+		return state.pageStateSequenceNumber++;
 	}
 
 	/**
-	 * Set the interceptContinuationURL.
-	 * 
-	 * @param interceptContinuationURL
-	 *            The interceptContinuationURL to set.
+	 * @param pageStates
 	 */
-	final void setInterceptContinuationURL(final String interceptContinuationURL)
+	private void addPages(final List pageStates)
 	{
-		this.state.interceptContinuationURL = interceptContinuationURL;
-		this.state.dirty = true;
-	}
-
-	/**
-	 * Visits the pages in this session.
-	 * 
-	 * @param visitor
-	 *            The visitor to call
-	 */
-	final void visitPages(final IPageVisitor visitor)
-	{
-		// Loop through pages in page map
-		for (final Iterator iterator = getPageMap().values().iterator(); iterator.hasNext();)
+		// Add page states as need be
+		for (final Iterator iterator = pageStates.iterator(); iterator.hasNext();)
 		{
-			// Visit next page
-			visitor.page((Page)iterator.next());
+			// Get next attribute name
+			final PageState pageState = (PageState)iterator.next();
+
+			// If PageState has not been added to the session
+			if (!pageState.addedToSession)
+			{
+				// Get page from page state
+				final Page page = pageState.getPage();
+
+				// Add to page map specified in page state info
+				getPageMap(pageState.pageMapName).put(page);
+
+				// Page has been added to session now
+				pageState.addedToSession = true;
+			}
 		}
 	}
 
 	/**
-	 * @return Most recently used Page map
+	 * @return List of PageState values set as session attributes
 	 */
-	private MostRecentlyUsedMap getPageMap()
+	private List getPageStateAttributes()
 	{
-		if (this.pages == null)
+		// PageStates to add
+		final List pageStates = new ArrayList();
+
+		// Copy any changed pages into our (transient) Session
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
 		{
-			this.pages = MostRecentlyUsedMap.newInstance(application.getSettings()
-					.getMaxSessionPages());
+			// Get attribute value
+			final Object value = getAttribute((String)iterator.next());
+			if (value instanceof PageState)
+			{
+				pageStates.add(value);
+			}
 		}
-		return this.pages;
+		return pageStates;
+	}
+
+	/**
+	 * @param pageStates
+	 */
+	private void sortBySequenceNumber(final List pageStates)
+	{
+		// Sort in ascending order by access number so that pages which have
+		// a higher access number (which means they were accessed more recently)
+		// are added /last/.
+		Collections.sort(pageStates, new Comparator()
+		{
+			public int compare(Object object1, Object object2)
+			{
+				int accessNumber1 = ((PageState)object1).sequenceNumber;
+				int accessNumber2 = ((PageState)object2).sequenceNumber;
+				if (accessNumber1 < accessNumber2)
+				{
+					return -1;
+				}
+				if (accessNumber1 > accessNumber2)
+				{
+					return 1;
+				}
+				return 0;
+			}
+		});
 	}
 }

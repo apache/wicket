@@ -565,9 +565,16 @@ public final class Strings
 	 */
 	public static String toString(final Throwable throwable)
 	{
-		final StringWriter stringWriter = new StringWriter();
-		throwable.printStackTrace(new PrintWriter(stringWriter));
-		return stringWriter.toString().replaceAll("\t", "    ");
+		if (throwable != null)
+		{
+			final StringWriter stringWriter = new StringWriter();
+			throwable.printStackTrace(new PrintWriter(stringWriter));
+			return stringWriter.toString().replaceAll("\t", "    ");
+		}
+		else
+		{
+			return "<Null Throwable>";
+		}
 	}
 
 	/**

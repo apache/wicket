@@ -18,7 +18,6 @@
 package wicket.markup.html.link;
 
 import wicket.Page;
-import wicket.Session;
 
 /**
  * Links to a given page via an object implementing the IPageLink delayed
@@ -45,6 +44,39 @@ public class PageLink extends Link
 	 * 
 	 * @param id
 	 *            See Component
+	 * @param c
+	 *            Page class
+	 */
+	public PageLink(final String id, final Class c)
+	{
+		super(id);
+
+		this.pageLink = new IPageLink()
+		{
+			public Page getPage()
+			{
+				// Create page using page factory
+				return PageLink.this.getPage().getPageFactory().newPage(c);
+			}
+
+			public Class getPageIdentity()
+			{
+				return c;
+			}
+		};
+
+		// Ensure that c is a subclass of Page
+		if (!Page.class.isAssignableFrom(c))
+		{
+			throw new IllegalArgumentException("Class " + c + " is not a subclass of Page");
+		}
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
 	 * @param pageLink
 	 *            An implementation of IPageLink which will create the page
 	 *            linked to if and when this hyperlink is clicked at a later
@@ -57,37 +89,14 @@ public class PageLink extends Link
 	}
 
 	/**
-	 * Constructor.
+	 * Returns true if the given page is of the same class as the (delayed)
+	 * destination of this page link.
 	 * 
-	 * @param id
-	 *            See Component
-	 * @param c
-	 *            Page class
+	 * @see wicket.markup.html.link.Link#linksTo(wicket.Page)
 	 */
-	public PageLink(final String id, final Class c)
+	public boolean linksTo(final Page page)
 	{
-		this(id, new IPageLink()
-		{
-			/** Serial Version ID */
-			private static final long serialVersionUID = 319659497178801753L;
-
-			public Page getPage()
-			{
-				// Create page using page factory
-				return Session.get().getPageFactory().newPage(c);
-			}
-
-			public Class getPageIdentity()
-			{
-				return c;
-			}
-		});
-
-		// Ensure that c is a subclass of Page
-		if (!Page.class.isAssignableFrom(c))
-		{
-			throw new IllegalArgumentException("Class " + c + " is not a subclass of Page");
-		}
+		return page.getClass() == pageLink.getPageIdentity();
 	}
 
 	/**
@@ -101,16 +110,5 @@ public class PageLink extends Link
 	{
 		// Set page source's page as response page
 		getRequestCycle().setResponsePage(pageLink.getPage());
-	}
-
-	/**
-	 * Returns true if the given page is of the same class as the (delayed)
-	 * destination of this page link.
-	 * 
-	 * @see wicket.markup.html.link.Link#linksTo(wicket.Page)
-	 */
-	public boolean linksTo(final Page page)
-	{
-		return page.getClass() == pageLink.getPageIdentity();
 	}
 }

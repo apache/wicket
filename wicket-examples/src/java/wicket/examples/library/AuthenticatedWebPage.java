@@ -101,7 +101,7 @@ public class AuthenticatedWebPage extends WicketExamplePage
         else
         {
             // Force sign in
-            getRequestCycle().redirectToInterceptPage(SignIn.class);
+            redirectToInterceptPage(newPage(SignIn.class));
             return false;
         }
     }

@@ -18,7 +18,6 @@
  */
 package wicket.examples.signin2;
 
-import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 
 /**
@@ -51,7 +50,7 @@ public class AuthenticatedWebPage extends WicketExamplePage
         if (!signedIn)
         {
             // Redirect request to SignIn page
-            getRequestCycle().redirectToInterceptPage(SignIn2.class, (PageParameters)null);
+            redirectToInterceptPage(newPage(SignIn2.class));
         }
 
         // Return true if someone is signed in and access is okay

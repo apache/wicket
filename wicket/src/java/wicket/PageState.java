@@ -28,11 +28,14 @@ import java.io.Serializable;
 public abstract class PageState implements Serializable
 {
 	// Access number
-	int accessNumber = Session.get().nextAccessNumber();
+	int sequenceNumber = Session.get().nextPageStateSequenceNumber();
 
 	// This value will be true when the page is added and false on
 	// whatever server this object is replicated to
 	transient boolean addedToSession;
+
+	// Name of PageMap where this PageState belongs
+	String pageMapName;
 
 	/**
 	 * @return The Page.

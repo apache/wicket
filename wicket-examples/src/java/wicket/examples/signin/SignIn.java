@@ -19,7 +19,6 @@
 package wicket.examples.signin;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
@@ -93,10 +92,9 @@ public final class SignIn extends WicketExamplePage
             if (session.authenticate(properties.getString("username"),  
                     properties.getString("password")))
             {
-                final RequestCycle cycle = getRequestCycle();
-                if (!cycle.continueToOriginalDestination())
+                if (!getPage().continueToOriginalDestination())
                 {
-                    cycle.setResponsePage(new Home(PageParameters.NULL));
+                    setResponsePage(new Home(PageParameters.NULL));
                 }
             }
             else

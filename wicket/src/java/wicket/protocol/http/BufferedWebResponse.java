@@ -37,7 +37,7 @@ public class BufferedWebResponse extends WebResponse
 	private static final Log log = LogFactory.getLog(BufferedWebResponse.class);
 
 	/** URL to redirect to when response is flushed, if any */
-	private String redirectUrl;
+	private String redirectURL;
 
 	/** Buffer to hold page */
 	private StringBuffer buffer = new StringBuffer(1024);
@@ -68,10 +68,10 @@ public class BufferedWebResponse extends WebResponse
 	public void close()
 	{
         // If a redirection was specified
-        if (redirectUrl != null)
+        if (redirectURL != null)
         {
             // actually redirect
-            super.redirect(redirectUrl);
+            super.redirect(redirectURL);
         }
         else
         {
@@ -93,10 +93,10 @@ public class BufferedWebResponse extends WebResponse
 	{
         if (redirect)
         {
-        	throw new WicketRuntimeException("Already redirecting to '" + redirectUrl + "'. Cannot redirect more than once");
+        	throw new WicketRuntimeException("Already redirecting to '" + redirectURL + "'. Cannot redirect more than once");
         }
 		super.redirect = true;
-		this.redirectUrl = url;
+		this.redirectURL = url;
 	}
 
 	/**

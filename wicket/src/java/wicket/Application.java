@@ -18,6 +18,7 @@
 package wicket;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import wicket.markup.MarkupParser;
@@ -182,6 +183,31 @@ public abstract class Application
 	}
 
 	/**
+	 * @param page
+	 *            The Page for which a list of PageSets should be retrieved
+	 * @return Sequence of PageSets for a given Page
+	 */
+	public Iterator getPageSets(final Page page)
+	{
+		return new Iterator()
+		{
+			public void remove()
+			{
+			}
+
+			public boolean hasNext()
+			{
+				return false;
+			}
+
+			public Object next()
+			{
+				return null;
+			}
+		};
+	}
+
+	/**
 	 * @return Resource locator for this application
 	 */
 	public ResourceLocator getResourceLocator()
@@ -237,8 +263,8 @@ public abstract class Application
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
-	 * CALL THIS METHOD.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR CALL
+	 * THIS METHOD.
 	 * 
 	 * Internal intialization.
 	 */

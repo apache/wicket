@@ -20,15 +20,14 @@ package wicket.examples;
 
 import java.io.StringReader;
 
+import net.sourceforge.jwebunit.WebTestCase;
+
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
 import org.xml.sax.InputSource;
 
 import com.meterware.httpunit.HttpUnitUtils;
-
-import net.sourceforge.jwebunit.WebTestCase;
 
 /**
  * Add XPATH based validation

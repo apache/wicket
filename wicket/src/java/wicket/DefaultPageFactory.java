@@ -30,7 +30,6 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
  * A factory that constructs Pages.
  *
  * @see ApplicationSettings#setDefaultPageFactory(IPageFactory)
- * @see Session#setPageFactory(IPageFactory)
  * @see IPageFactory
  * @author Juergen Donnerstag
  * @author Jonathan Locke

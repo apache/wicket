@@ -17,21 +17,21 @@
  */
 package wicket.markup.html.link;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebComponent;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * An image map holds links with different hot-area shapes.
  * 
  * @author Jonathan Locke
  */
-public final class ImageMap extends WebComponent
+public final class ImageMap extends WebMarkupContainer
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 209001445308790198L;
@@ -46,7 +46,7 @@ public final class ImageMap extends WebComponent
 	{
 		/** The circle's radius. */
 		private final int radius;
-		
+
 		/** Upper left x */
 		private final int x;
 
@@ -282,8 +282,8 @@ public final class ImageMap extends WebComponent
 	 */
 	public ImageMap addCircleLink(final int x1, final int y1, final int radius, final Link link)
 	{
+		add(link);
 		shapeLinks.add(new CircleLink(x1, y1, radius, link));
-
 		return this;
 	}
 
@@ -298,8 +298,8 @@ public final class ImageMap extends WebComponent
 	 */
 	public ImageMap addPolygonLink(final int[] coordinates, final Link link)
 	{
+		add(link);
 		shapeLinks.add(new PolygonLink(coordinates, link));
-
 		return this;
 	}
 
@@ -320,8 +320,8 @@ public final class ImageMap extends WebComponent
 	public ImageMap addRectangleLink(final int x1, final int y1, final int x2, final int y2,
 			final Link link)
 	{
+		add(link);
 		shapeLinks.add(new RectangleLink(x1, y1, x2, y2, link));
-
 		return this;
 	}
 
@@ -356,9 +356,11 @@ public final class ImageMap extends WebComponent
 		for (Iterator iterator = shapeLinks.iterator(); iterator.hasNext();)
 		{
 			final ShapeLink shapeLink = (ShapeLink)iterator.next();
-
 			imageMap.append('\n');
 			imageMap.append(shapeLink.toString());
+
+			// Tell framework that this link was actually rendered
+			shapeLink.link.rendered();
 		}
 
 		imageMap.append("\n</map>");

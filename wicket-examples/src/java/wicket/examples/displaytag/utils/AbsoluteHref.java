@@ -48,7 +48,7 @@ public class AbsoluteHref extends WebComponent
         {
             WebRequestCycle hcycle = (WebRequestCycle)getRequestCycle();
             String requestUrl = ((WebRequest)hcycle.getRequest()).getHttpServletRequest().getRequestURL().toString();
-            String urlPrefix = hcycle.urlPrefix().toString();
+            String urlPrefix = getPage().urlFor("");
             int idx = requestUrl.indexOf(urlPrefix);
             if (idx > 0)
             {
