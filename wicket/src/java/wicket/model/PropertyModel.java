@@ -24,7 +24,6 @@ import ognl.DefaultTypeConverter;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
-import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.util.convert.IConverter;
 
@@ -102,7 +101,7 @@ import wicket.util.convert.IConverter;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class PropertyModel extends DetachableModel implements IComponentAware
+public class PropertyModel extends DetachableModel implements IConvertable
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
@@ -127,8 +126,8 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 	 */
 	private final Class propertyType;
 	
-	/** The component that uses this model. */
-	private Component component;
+	/** The converter to be used by this model. */
+	private IConverter converter;
 
 	/**
 	 * This class is registered with the Ognl context before parsing in order to be able to
@@ -170,7 +169,6 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 			{
 				return null;
 			}
-			IConverter converter = component.getConverter();
 			return converter.convert(value, toType);
 		}
 
@@ -230,13 +228,17 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 	}
 
 	/**
-	 * Sets the component that uses this model.
-	 * @param component the component that uses this model
-	 * @see wicket.model.IComponentAware#setComponent(wicket.Component)
+	 * The converter to be used by this property model.
+	 * @param converter the converter converter
+	 * @see wicket.model.IConvertable#setConverter(wicket.util.convert.IConverter)
 	 */
-	public void setComponent(Component component)
+	public final void setConverter(IConverter converter)
 	{
-		this.component = component;
+		if(converter == null)
+		{
+			throw new IllegalArgumentException("the converter must be not-null");
+		}
+		this.converter = converter;
 	}
 	
 	/**
@@ -298,7 +300,6 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 			if(object != null && propertyType != null &&
 					(object instanceof String) && (!((String)object).trim().equals("")))
 			{
-				IConverter converter = component.getConverter(); // get converter
 				object = converter.convert(object, propertyType); // convert to set type
 			}
 			OgnlContext ctx = getContext(); // get the ognl context instance

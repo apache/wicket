@@ -30,7 +30,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
-import wicket.model.IComponentAware;
+import wicket.model.IConvertable;
 import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -846,9 +846,9 @@ public abstract class Component implements Serializable
 		}
         
         // Set self in case the model is component aware
-		if (model instanceof IComponentAware)
+		if (model instanceof IConvertable)
 		{
-			((IComponentAware)model).setComponent(this);
+			((IConvertable)model).setConverter(getConverter());
 		}
 		this.model = (IModel)model;
 		return this;
