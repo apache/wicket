@@ -26,6 +26,7 @@ import ognl.OgnlContext;
 import ognl.OgnlException;
 import wicket.WicketRuntimeException;
 import wicket.util.convert.IConverter;
+import wicket.util.string.Strings;
 
 /**
  * A PropertyModel is used to dynamically access a model using an <a
@@ -58,9 +59,11 @@ import wicket.util.convert.IConverter;
  *  
  *   
  *    
- *          Person person = getSomePerson();
- *          ...
- *          add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *     
+ *           Person person = getSomePerson();
+ *           ...
+ *           add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *      
  *     
  *    
  *   
@@ -80,7 +83,9 @@ import wicket.util.convert.IConverter;
  *  
  *   
  *    
- *          add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *     
+ *           add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *      
  *     
  *    
  *   
@@ -267,8 +272,8 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	 */
 	public Object getObject()
 	{
-		String expr = getExpression();
-		if (expr == null || expr.trim().length() == 0)
+		final String expression = getExpression();
+		if (Strings.isEmpty(expression))
 		{
 			// No expression will cause OGNL to throw an exception. The OGNL
 			// expression to return the current object is "#this". Instead
@@ -276,27 +281,24 @@ public class PropertyModel extends DetachableModel implements IConvertable
 			// return value
 			return model.getObject();
 		}
-		IModel theModel = getModel();
-		if (theModel == null)
+
+		if (model != null)
 		{
-			return null;
+			final Object modelObject = model.getObject();
+			if (modelObject != null)
+			{
+				try
+				{
+					// note: if property type is null it is ignored by Ognl
+					return Ognl.getValue(expression, getContext(), modelObject, propertyType);
+				}
+				catch (OgnlException e)
+				{
+					throw new WicketRuntimeException(e);
+				}
+			}
 		}
-		Object modelObject = theModel.getObject();
-		if (modelObject == null)
-		{
-			return null;
-		}
-		try
-		{
-			OgnlContext ctx = getContext();
-			Object result = Ognl.getValue(expr, ctx, modelObject, propertyType);
-			// note: if property type is null it is ignored by Ognl
-			return result;
-		}
-		catch (OgnlException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		return null;
 	}
 
 	/**
@@ -322,7 +324,7 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	{
 		if (converter == null)
 		{
-			throw new IllegalArgumentException("the converter must be not-null");
+			throw new IllegalArgumentException("Converter cannot be null");
 		}
 		this.converter = converter;
 	}
@@ -342,14 +344,14 @@ public class PropertyModel extends DetachableModel implements IConvertable
 		{
 			String expr = getExpression(); // get the ognl expression
 			Object target = getModel().getObject(); // get the real object
-			//	convert the incomming object to the target type when not null and
+			// convert the incoming object to the target type when not null and
 			// the property type is set and the incomming object is a non-empty
 			// string
 			if (object != null && propertyType != null && (object instanceof String)
 					&& (!((String)object).trim().equals("")))
 			{
 				object = converter.convert(object, propertyType); // convert to
-																  // set type
+				// set type
 			}
 			OgnlContext ctx = getContext(); // get the ognl context instance
 			Ognl.setValue(expr, ctx, target, object); // let ognl set the value
