@@ -31,6 +31,7 @@ import java.util.List;
 public interface IIdList extends List, Serializable
 {
     // TODO should not extend List interface
+    // TODO is this interface useful enough to exist?
     /**
      * Detach from a request.
      */

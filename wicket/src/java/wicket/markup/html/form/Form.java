@@ -49,34 +49,16 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 { // TODO finalize javadoc
     /** Log. */
     private static Log log = LogFactory.getLog(Form.class);
-
-    static
-    {
-        // Allow use of IFormSubmitListener interface
-        RequestCycle.registerRequestListenerInterface(IFormSubmitListener.class);
-    }
-
-    /** The validation error handling delegate. */
-    private final IValidationErrorHandler validationErrorHandler;
-
-    /** the delegate to be used for execution of validation of this form. */
-    private IFormValidationDelegate validationDelegate =
-    	new IFormValidationDelegate.DefaultFormValidationDelegate();
     
     /** Manager responsible to persist and retrieve FormComponent data. */
 	private IFormComponentPersistenceManager persister = null;
 
-    /**
-     * Constructor.
-     * @param name Name of this form component
-     * @param validationErrorHandler Interface to a component that can handle/display
-     *            validation errors
-     */
-    public Form(final String name, final IValidationErrorHandler validationErrorHandler)
-    {
-        super(name);
-        this.validationErrorHandler = validationErrorHandler;
-    }
+    /** The delegate to be used for execution of validation of this form. */
+    private IFormValidationDelegate validationDelegate =
+    	new IFormValidationDelegate.DefaultFormValidationDelegate();
+
+    /** The validation error handling delegate. */
+    private final IValidationErrorHandler validationErrorHandler;
 
     /**
      * Constructor that uses the provided {@link IModel} as its model. All components have
@@ -115,6 +97,18 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
             final IValidationErrorHandler validationErrorHandler)
     {
         super(name, model, expression);
+        this.validationErrorHandler = validationErrorHandler;
+    }
+
+    /**
+     * Constructor.
+     * @param name Name of this form component
+     * @param validationErrorHandler Interface to a component that can handle/display
+     *            validation errors
+     */
+    public Form(final String name, final IValidationErrorHandler validationErrorHandler)
+    {
+        super(name);
         this.validationErrorHandler = validationErrorHandler;
     }
 
@@ -161,9 +155,54 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
     }
 
     /**
-     * Implemented by subclasses to deal with form submits.
+     * Handles form submissions.
      */
-    public abstract void handleSubmit();
+    public final void formSubmitted()
+    {
+        // Redirect back to result to avoid postback warnings. But we turn
+        // redirecting on as the first thing because the user's handleSubmit
+        // implementation may wish to redirect somewhere else. In that case,
+        // they can simply call setRedirect(false) in handleSubmit.
+        getRequestCycle().setRedirect(true);
+
+        // Validate model
+        final FeedbackMessages messages = validate();
+
+        // Update model using form data
+        updateFormComponentModels();
+
+        // Persist FormComponents if requested
+        persistFormComponentData();
+
+        if (messages.hasErrorMessages())
+        {
+            // Handle any validation error
+            handleErrors(messages.getErrorMessages());
+        }
+        else
+        {
+            handleSubmit();
+        }
+    }
+
+	/**
+	 * Gets the delegate to be used for execution of validation of this form.
+	 * @return the delegate to be used for execution of validation of this form
+	 */
+	public IFormValidationDelegate getValidationDelegate()
+	{
+		return validationDelegate;
+	}
+
+    /**
+     * Convenience method in case there is one known (validation) error that is to be
+     * registered with the form directly.
+     * @param message the message
+     */
+    public final void handleError(final ValidationErrorMessage message)
+    {
+        handleErrors(FeedbackMessages.get().add(message));
+    }
 
     /**
      * Sets error messages for form. First all childs (form components) are asked to
@@ -195,76 +234,116 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
     }
 
     /**
-     * Convenience method in case there is one known (validation) error that is to be
-     * registered with the form directly.
-     * @param message the message
+     * Implemented by subclasses to deal with form submits.
      */
-    public final void handleError(final ValidationErrorMessage message)
-    {
-        handleErrors(FeedbackMessages.get().add(message));
-    }
+    public abstract void handleSubmit();
+	
+	/**
+	 * Removes already persisted data for all FormComponent childs and disable
+	 * persistence for the same components. 
+	 *
+	 * @see Page#removePersistedFormData(Class, boolean)
+	 *  
+	 * @param disablePersistence if true, disable persistence for all
+	 * FormComponents on that page. If false, it will remain unchanged. 
+	 */
+	public void removePersistedFormComponentData(final boolean disablePersistence)
+	{
+		// The persistence manager responsible to persist and retrieve FormComponent data
+    	final IFormComponentPersistenceManager persister =
+    	    getFormComponentPersistenceManager();
 
-    /**
-     * Handles form submissions.
-     */
-    public final void formSubmitted()
-    {
-        // Redirect back to result to avoid postback warnings. But we turn
-        // redirecting on as the first thing because the user's handleSubmit
-        // implementation may wish to redirect somewhere else. In that case,
-        // they can simply call setRedirect(false) in handleSubmit.
-        getRequestCycle().setRedirect(true);
-
-        // Validate model
-        final FeedbackMessages messages = validate();
-
-        // Update model using form data
-        updateFormComponentModels();
-
-        // Persist FormComponents if requested
-        persistFormComponentData();
-
-        if (messages.hasErrorMessages())
-        {
-            // Handle any validation error
-            handleErrors(messages.getErrorMessages());
-        }
-        else
-        {
-            handleSubmit();
-        }
-    }
-
-    /**
-     * Update the model of all form components.
-     * @see wicket.markup.html.form.FormComponent#updateModel()
-     */
-    private void updateFormComponentModels()
-    {
-        visitChildren(FormComponent.class, new IVisitor()
+		// Search for FormComponents like TextField etc.
+		visitChildren(FormComponent.class, new IVisitor()
         {
             public Object component(final Component component)
             {
-                // Update model of form component
-                final FormComponent formComponent = (FormComponent)component;
-                if(formComponent.isVisible()) // only update the component when it is visible
-                {
-                	formComponent.updateModel();
-                }
+        		// remove the FormComponents persisted data
+            	FormComponent formComponent = (FormComponent)component;
+           		persister.remove(formComponent.getPageRelativePath());
+           		
+           		// Disable persistence if requested. Leave unchanged otherwise.
+            	if (formComponent.isPersistenceEnabled() && disablePersistence)
+            	{
+            		formComponent.setPersistenceEnabled(false);
+            	}
+                return CONTINUE_TRAVERSAL;
+            }
+        });
+	}
 
+    /**
+     * Retrieves FormComponent values related to the page using the persister
+     * and assign the values to the FormComponent. Thus initializing them.
+     * NOTE: THIS METHOD IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY
+     * FRAMEWORK CLIENTS. IT MAY BE REMOVED IN THE FUTURE.
+     */
+    final public void setFormComponentValuesFromPersister()
+    {
+		// Visit all FormComponent contained in the page
+        visitChildren(FormComponent.class, new Component.IVisitor()
+        {
+            // For each FormComponent found on the Page (not Form)
+            public Object component(final Component component)
+            {
+                // Component must implement persister interface and
+                // persistence for that component must be enabled.
+                // Else ignore the persisted value. It'll be deleted
+                // once the user submits the Form containing that FormComponent.
+                // Note: if that is true, values may remain persisted longer
+                // than really necessary
+                if (component instanceof FormComponent.ICookieValue
+                        && ((FormComponent)component).isPersistenceEnabled())
+                {
+                    // The persistence manager responsible to persist and retrieve
+                    // FormComponent data
+                    final IFormComponentPersistenceManager persister =
+                        getFormComponentPersistenceManager();
+
+                    // Retrieve persisted value
+                    final String persistedValue =
+                        persister.retrieveValue(component.getPageRelativePath());
+                    if (persistedValue != null)
+                    {
+                        // Assign the retrieved/persisted value to the component
+                        ((FormComponent.ICookieValue)component).setCookieValue(persistedValue);
+                    }
+                }
                 return CONTINUE_TRAVERSAL;
             }
         });
     }
 
+	/**
+	 * Sets the delegate to be used for execution of validation of this form.
+	 * @param validationDelegate the delegate to be used for execution of validation of this form
+	 */
+	public void setValidationDelegate(IFormValidationDelegate validationDelegate)
+	{
+		this.validationDelegate = validationDelegate;
+	}
+
     /**
-     * Validates all children of this form, recording all messages that are returned by the
-     * validators.
-     * @return the list of validation messages that were recorded during validation
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    private FeedbackMessages validate()
+    protected void handleComponentTag(final ComponentTag tag)
     {
-        return validationDelegate.validate(this);
+        checkTag(tag, "form");
+        super.handleComponentTag(tag);
+        tag.put("method", "POST");
+        String url = getRequestCycle().urlFor(Form.this, IFormSubmitListener.class);
+        url = url.replaceAll("&", "&amp;");
+		tag.put("action", url);
+    }
+
+    /**
+     * Sets the FormComponentPersistenceManager.
+     * @param persister the FormComponentPersistenceManager
+     */
+    protected void setFormComponentPersistenceManager(
+            IFormComponentPersistenceManager persister)
+    {
+        this.persister = persister;
     }
     
     /**
@@ -278,16 +357,6 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
     		persister = new FormComponentPersistenceManager();
     	}
     	return persister;
-    }
-
-    /**
-     * Sets the FormComponentPersistenceManager.
-     * @param persister the FormComponentPersistenceManager
-     */
-    protected void setFormComponentPersistenceManager(
-            IFormComponentPersistenceManager persister)
-    {
-        this.persister = persister;
     }
 
     /**
@@ -335,109 +404,40 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
     }
 
     /**
-     * Retrieves FormComponent values related to the page using the persister
-     * and assign the values to the FormComponent. Thus initializing them.
-     * NOTE: THIS METHOD IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY
-     * FRAMEWORK CLIENTS. IT MAY BE REMOVED IN THE FUTURE.
+     * Update the model of all form components.
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    final public void setFormComponentValuesFromPersister()
+    private void updateFormComponentModels()
     {
-		// Visit all FormComponent contained in the page
-        visitChildren(FormComponent.class, new Component.IVisitor()
+        visitChildren(FormComponent.class, new IVisitor()
         {
-            // For each FormComponent found on the Page (not Form)
             public Object component(final Component component)
             {
-                // Component must implement persister interface and
-                // persistence for that component must be enabled.
-                // Else ignore the persisted value. It'll be deleted
-                // once the user submits the Form containing that FormComponent.
-                // Note: if that is true, values may remain persisted longer
-                // than really necessary
-                if (component instanceof FormComponent.ICookieValue
-                        && ((FormComponent)component).isPersistenceEnabled())
+                // Update model of form component
+                final FormComponent formComponent = (FormComponent)component;
+                if(formComponent.isVisible()) // only update the component when it is visible
                 {
-                    // The persistence manager responsible to persist and retrieve
-                    // FormComponent data
-                    final IFormComponentPersistenceManager persister =
-                        getFormComponentPersistenceManager();
-
-                    // Retrieve persisted value
-                    final String persistedValue =
-                        persister.retrieveValue(component.getPageRelativePath());
-                    if (persistedValue != null)
-                    {
-                        // Assign the retrieved/persisted value to the component
-                        ((FormComponent.ICookieValue)component).setCookieValue(persistedValue);
-                    }
+                	formComponent.updateModel();
                 }
+
                 return CONTINUE_TRAVERSAL;
             }
         });
     }
-	
-	/**
-	 * Removes already persisted data for all FormComponent childs and disable
-	 * persistence for the same components. 
-	 *
-	 * @see Page#removePersistedFormData(Class, boolean)
-	 *  
-	 * @param disablePersistence if true, disable persistence for all
-	 * FormComponents on that page. If false, it will remain unchanged. 
-	 */
-	public void removePersistedFormComponentData(final boolean disablePersistence)
-	{
-		// The persistence manager responsible to persist and retrieve FormComponent data
-    	final IFormComponentPersistenceManager persister =
-    	    getFormComponentPersistenceManager();
-
-		// Search for FormComponents like TextField etc.
-		visitChildren(FormComponent.class, new IVisitor()
-        {
-            public Object component(final Component component)
-            {
-        		// remove the FormComponents persisted data
-            	FormComponent formComponent = (FormComponent)component;
-           		persister.remove(formComponent.getPageRelativePath());
-           		
-           		// Disable persistence if requested. Leave unchanged otherwise.
-            	if (formComponent.isPersistenceEnabled() && disablePersistence)
-            	{
-            		formComponent.setPersistenceEnabled(false);
-            	}
-                return CONTINUE_TRAVERSAL;
-            }
-        });
-	}
 
     /**
-     * @see wicket.Component#handleComponentTag(ComponentTag)
+     * Validates all children of this form, recording all messages that are returned by the
+     * validators.
+     * @return the list of validation messages that were recorded during validation
      */
-    protected void handleComponentTag(final ComponentTag tag)
+    private FeedbackMessages validate()
     {
-        checkTag(tag, "form");
-        super.handleComponentTag(tag);
-        tag.put("method", "POST");
-        String url = getRequestCycle().urlFor(Form.this, IFormSubmitListener.class);
-        url = url.replaceAll("&", "&amp;");
-		tag.put("action", url);
+        return validationDelegate.validate(this);
     }
 
-	/**
-	 * Gets the delegate to be used for execution of validation of this form.
-	 * @return the delegate to be used for execution of validation of this form
-	 */
-	public IFormValidationDelegate getValidationDelegate()
-	{
-		return validationDelegate;
-	}
-
-	/**
-	 * Sets the delegate to be used for execution of validation of this form.
-	 * @param validationDelegate the delegate to be used for execution of validation of this form
-	 */
-	public void setValidationDelegate(IFormValidationDelegate validationDelegate)
-	{
-		this.validationDelegate = validationDelegate;
-	}
+    static
+    {
+        // Allow use of IFormSubmitListener interface
+        RequestCycle.registerRequestListenerInterface(IFormSubmitListener.class);
+    }
 }
