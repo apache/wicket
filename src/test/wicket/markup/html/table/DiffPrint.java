@@ -1,5 +1,8 @@
 /*
  * $Log$
+ * Revision 1.3  2005/01/16 20:21:25  jonathanlocke
+ * *** empty log message ***
+ *
  * Revision 1.2  2004/12/28 12:27:18  eelco12
  * javadoc fixes (to stop Eclipse from complaining)
  *
@@ -66,6 +69,7 @@ interface UnaryPredicate
 
 public class DiffPrint
 {
+    // TODO This class seems like it belongs in the test tree, along with PagedTableNavigatorTest 
     /**
      * A Base class for printing edit scripts produced by Diff. This class
      * divides the change list into "hunks", and calls <code>print_hunk</code>
