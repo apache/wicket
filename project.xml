@@ -77,6 +77,11 @@
             <id>-</id>
             <email>-</email>
         </contributor>
+        <contributor>
+            <name>Peter Veenendaal</name>
+            <id>-</id>
+            <email>-</email>
+        </contributor>
     </contributors>
     <dependencies>
         <dependency>
