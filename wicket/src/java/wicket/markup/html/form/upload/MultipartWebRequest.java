@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,23 +38,23 @@ import wicket.util.value.ValueMap;
  * @author Jonathan Locke
  */
 public class MultipartWebRequest extends WebRequest
-{	
+{
 	/** Map of file items */
 	private final ValueMap files = new ValueMap();
-	
+
 	/** Map of parameters */
 	private final ValueMap parameters = new ValueMap();
-	
+
 	/**
 	 * Constructor
 	 * 
 	 * @param httpServletRequest
 	 *            The servlet request
 	 */
-	MultipartWebRequest(HttpServletRequest httpServletRequest)
+	MultipartWebRequest(final HttpServletRequest httpServletRequest)
 	{
 		super(httpServletRequest);
-		
+
 		try
 		{
 			// Check that request is multipart
@@ -64,15 +63,15 @@ public class MultipartWebRequest extends WebRequest
 			{
 				throw new IllegalStateException("Request does not contain multipart content");
 			}
-			
+
 			// Parse multipart request into items
 			final List items = new DiskFileUpload().parseRequest(httpServletRequest);
-			
+
 			// Loop through items
 			for (Iterator i = items.iterator(); i.hasNext();)
 			{
 				// Get next item
-				FileItem item = (FileItem)i.next();
+				final FileItem item = (FileItem)i.next();
 
 				// If item is a form field
 				if (item.isFormField())
@@ -93,7 +92,7 @@ public class MultipartWebRequest extends WebRequest
 			throw new WicketRuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * @return Returns the files.
 	 */
@@ -104,22 +103,24 @@ public class MultipartWebRequest extends WebRequest
 
 	/**
 	 * Gets the file that was uploaded using the given field name.
-	 * @param fieldName the field name that was used for the upload
+	 * 
+	 * @param fieldName
+	 *            the field name that was used for the upload
 	 * @return the upload with the given field name
 	 */
-	public FileItem getFile(String fieldName)
+	public FileItem getFile(final String fieldName)
 	{
 		return (FileItem)files.get(fieldName);
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebRequest#getParameter(java.lang.String)
 	 */
-	public String getParameter(String key)
+	public String getParameter(final String key)
 	{
 		return parameters.getString(key);
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebRequest#getParameterMap()
 	 */
@@ -127,11 +128,11 @@ public class MultipartWebRequest extends WebRequest
 	{
 		return parameters;
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebRequest#getParameters(java.lang.String)
 	 */
-	public String[] getParameters(String key)
+	public String[] getParameters(final String key)
 	{
 		return getParameter(key).split(",");
 	}
