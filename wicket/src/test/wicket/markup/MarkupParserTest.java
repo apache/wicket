@@ -284,6 +284,8 @@ public final class MarkupParserTest extends TestCase
 	    
 
 	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
+	    
+	    parser.parse("<wicket:region name=\"panel\"><div id=\"definitionsContentBox\"><span id=\"wicket-contentPanel\"/></div></wicket:region>");
    	}
 }
 
