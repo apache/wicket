@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -94,7 +94,7 @@ public abstract class Session implements Serializable
 {
 	/** Separator for component paths. */
 	private static final char componentPathSeparator = '.';
-    
+
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
 
@@ -204,26 +204,26 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Gets the converter instance.
+	 * 
 	 * @return the converter
 	 */
 	public final IConverter getConverter()
 	{
-		if(converter == null)
+		if (converter == null)
 		{
-			// get the converter factory, possibly overriden by the client
-			IConverterFactory converterFactory =
-				getApplication().getConverterFactory();
+			// Get the converter factory, possibly overriden by the client
+			IConverterFactory converterFactory = getApplication().getConverterFactory();
 
-			// let the factory create a new converter
+			// Let the factory create a new converter
 			converter = converterFactory.newConverter();
-			if(converter instanceof ILocalizable)
+			if (converter instanceof ILocalizable)
 			{
 				((ILocalizable)converter).setLocale(locale);
 			}
 		}
 		return converter;
 	}
-	
+
 	/**
 	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
 	 * THE FUTURE. Get the freshest page in the session.
@@ -415,7 +415,7 @@ public abstract class Session implements Serializable
 	{
 		this.locale = locale;
 		// set the new locale on the converter instance
-		if(converter instanceof ILocalizable)
+		if (converter instanceof ILocalizable)
 		{
 			((ILocalizable)getConverter()).setLocale(locale);
 		}
