@@ -45,7 +45,7 @@ public class TreeNodeLink extends AbstractLink
     private final Tree tree;
 
     /** node. */
-    private final NodeModel node;
+    private final TreeNodeModel node;
 
     /** object id. */
     Object id;
@@ -56,7 +56,7 @@ public class TreeNodeLink extends AbstractLink
      * @param tree tree component
      * @param node current node (subject)
      */
-    public TreeNodeLink(final String componentName, final Tree tree, final NodeModel node)
+    public TreeNodeLink(final String componentName, final Tree tree, final TreeNodeModel node)
     {
         super(componentName);
         this.tree = tree;
@@ -80,7 +80,7 @@ public class TreeNodeLink extends AbstractLink
      * @param cycle The cycle object
      * @param node
      */
-    public void linkClicked(RequestCycle cycle, NodeModel node)
+    public void linkClicked(RequestCycle cycle, TreeNodeModel node)
     {
         Serializable userObject = node.getUserObject();
         TreeStateCache state = tree.getTreeState();
@@ -101,7 +101,7 @@ public class TreeNodeLink extends AbstractLink
      * Gets the node model.
      * @return the node model
      */
-    public NodeModel getNode()
+    public TreeNodeModel getNode()
     {
         return node;
     }
