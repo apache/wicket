@@ -61,7 +61,7 @@ public final class NestedList extends Panel
         }
 
         /**
-         * @see wicket.markup.html.table.ListView#populateItem(wicket.markup.html.table.ListItem)
+         * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
          */
         protected void populateItem(ListItem listItem)
         {

@@ -129,7 +129,7 @@ public class ExampleSorting extends Displaytag
 	        /**
 	         * Define how to do sorting
 	         * 
-	         * @see wicket.markup.html.table.SortableTableHeaders#getObjectToCompare(wicket.markup.html.table.SortableTableHeader, java.lang.Object)
+	         * @see wicket.markup.html.list.SortableListViewHeaders#getObjectToCompare(wicket.markup.html.list.SortableListViewHeader, java.lang.Object)
 	         */
 	        protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
 	        {

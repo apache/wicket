@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Partial adapter for {@link wicket.markup.html.form.IIdList}that makes it
+ * Partial adapter for {@link wicket.markup.html.form.IDetachableChoiceList}that makes it
  * easier to work with anonymous implementations.
  * <p>
  * An example of how to use this:
  * 
  * <pre>
- * class TypesList extends IdListAdapter
+ * class TypesList extends DetachableChoiceList
  * {
  * 	// load all needed object when attaching
  * 	public void doAttach(RequestCycle cycle)
@@ -72,9 +72,8 @@ import java.util.Collection;
  * 
  * @author Eelco Hillenius
  */
-public abstract class IdListAdapter extends ArrayList implements IIdList
+public abstract class DetachableChoiceList extends ArrayList implements IDetachableChoiceList
 {
-	// TODO This should aggregate a list rather than subclass ArrayList. It should be called IdList and should not be abstract.
 	/**
 	 * Transient flag to prevent multiple detach/attach scenario.
 	 */
@@ -83,7 +82,7 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
 	/**
 	 * Construct.
 	 */
-	public IdListAdapter()
+	public DetachableChoiceList()
 	{
 		super();
 	}
@@ -94,7 +93,7 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
 	 * @param initialCapacity
 	 *            the initial capacity
 	 */
-	public IdListAdapter(int initialCapacity)
+	public DetachableChoiceList(int initialCapacity)
 	{
 		super(initialCapacity);
 	}
@@ -105,7 +104,7 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
 	 * @param collection
 	 *            a collection
 	 */
-	public IdListAdapter(Collection collection)
+	public DetachableChoiceList(Collection collection)
 	{
 		super(collection);
 	}
@@ -113,7 +112,7 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
 	/**
 	 * Attach to the current request.
 	 * 
-	 * @see wicket.markup.html.form.IIdList#attach()
+	 * @see wicket.markup.html.form.IDetachableChoiceList#attach()
 	 */
 	public final void attach()
 	{
@@ -127,7 +126,7 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
 	/**
 	 * Detach from the current request.
 	 * 
-	 * @see wicket.markup.html.form.IIdList#detach()
+	 * @see wicket.markup.html.form.IDetachableChoiceList#detach()
 	 */
 	public final void detach()
 	{

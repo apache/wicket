@@ -8,7 +8,7 @@ import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.IIdList;
+import wicket.markup.html.form.IDetachableChoiceList;
 import wicket.model.IModel;
 
 /**
@@ -73,10 +73,10 @@ public class Home extends HtmlPage
 		}
 	}
 	
-	class UserIdList extends ArrayList implements IIdList
+	class UserIdList extends ArrayList implements IDetachableChoiceList
 	{
 		/*
-		 * @see wicket.markup.html.form.IIdList#detach()
+		 * @see wicket.markup.html.form.IDetachableChoiceList#detach()
 		 */
 		public void detach()
 		{
@@ -84,7 +84,7 @@ public class Home extends HtmlPage
 		}
 
 		/*
-		 * @see wicket.markup.html.form.IIdList#attach()
+		 * @see wicket.markup.html.form.IDetachableChoiceList#attach()
 		 */
 		public void attach()
 		{
@@ -97,7 +97,7 @@ public class Home extends HtmlPage
 		}
 
 		/*
-		 * @see wicket.markup.html.form.IIdList#getDisplayValue(int)
+		 * @see wicket.markup.html.form.IDetachableChoiceList#getDisplayValue(int)
 		 */
 		public String getDisplayValue(int row)
 		{
@@ -105,17 +105,17 @@ public class Home extends HtmlPage
 		}
 
 		/*
-		 * @see wicket.markup.html.form.IIdList#getIdValue(int)
+		 * @see wicket.markup.html.form.IDetachableChoiceList#getIdValue(int)
 		 */
-		public String getIdValue(int row)
+		public String getId(int row)
 		{
 			return ((User)get(row)).getId().toString();
 		}
 
 		/*
-		 * @see wicket.markup.html.form.IIdList#getObjectById(java.lang.String)
+		 * @see wicket.markup.html.form.IDetachableChoiceList#getObjectById(java.lang.String)
 		 */
-		public Object getObjectById(String id)
+		public Object objectForId(String id)
 		{
 			Long longId = new Long(id);
 			Iterator it = iterator();

@@ -58,12 +58,12 @@ import wicket.model.IModel;
  */
 public abstract class Link extends AbstractLink
 {
-
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
 	 * link </i>.
 	 */
 	private String afterDisabledLink;
+    
 	/** True if link should automatically enable/disable based on current page. */
 	private boolean autoEnable = true;
 
