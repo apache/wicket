@@ -24,6 +24,7 @@ import java.util.List;
 
 import wicket.IModel;
 import wicket.RequestCycle;
+import wicket.markup.ComponentTag;
 
 
 /**
@@ -39,6 +40,13 @@ import wicket.RequestCycle;
 public class DropDownChoice extends AbstractDropDownChoice
 {
 	private static final long serialVersionUID = 122777360064586107L;
+
+    static
+    {
+        // allow optional use of the IOnChangeListener interface
+        RequestCycle.registerListenerInterface(IOnChangeListener.class);
+    }
+
 	/**
 	 * @param name
 	 * @param model
@@ -81,19 +89,47 @@ public class DropDownChoice extends AbstractDropDownChoice
 		super(name, model, values);
 		
 	}
-	
+
+    /**
+     * @see wicket.Component#handleComponentTag(RequestCycle, wicket.markup.ComponentTag)
+     */
+    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    {
+        if (this instanceof IOnChangeListener)
+        {
+            // if a user subclasses this class and implements IOnChangeListener
+            // an onChange scriptlet is added
+            String url = cycle.urlFor(this, IOnChangeListener.class);
+
+            tag.put("onChange", "location.href='"
+                    + url + "&" + getPath() + "=' + this.options[this.selectedIndex].value;");
+        }
+
+        super.handleComponentTag(cycle, tag);
+    }
 
 	/**
 	 * @see wicket.markup.html.form.AbstractDropDownChoice#updateModel(wicket.RequestCycle)
 	 */
 	public final void updateModel(RequestCycle cycle)
 	{
-		final String indexOrId = getRequestString(cycle);
-		final List list = getValues();
-		
-		if(list instanceof IIdList)
+		internalUpdateModel(cycle);
+	}
+
+    /**
+     * Update model and return the object.
+     * @param cycle request object
+     * @return the object
+     */
+    private Object internalUpdateModel(RequestCycle cycle)
+    {
+        final String indexOrId = getRequestString(cycle);
+        Object object = null;
+        final List list = getValues();
+        if(list instanceof IIdList)
 		{
-			setModelObject(((IIdList)list).getObjectById(indexOrId));
+			object = ((IIdList)list).getObjectById(indexOrId);
+            setModelObject(object);
 		}
 		else
 		{
@@ -104,10 +140,12 @@ public class DropDownChoice extends AbstractDropDownChoice
 			}
 			else
 			{
-				setModelObject(list.get(index));
+				object = list.get(index);
+                setModelObject(object);
 			}
 		}
-	}
+        return object;
+    }
 
 	/**
 	 * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
@@ -145,4 +183,30 @@ public class DropDownChoice extends AbstractDropDownChoice
 			setModelObject(list.get(Integer.parseInt(value)));
 		}
 	}
+
+    /**
+     * called when a selection changed.
+     * @param cycle the request cycle
+     */
+    public final void selectionChanged(RequestCycle cycle)
+    {
+        Object value = internalUpdateModel(cycle);
+        selectionChanged(cycle, value);
+    }
+
+    /**
+     * Template method that can be overriden by clients that implement
+     * IOnChangeListener to be notified by onChange events of a select element.
+     * This method does nothing by default.
+     * 
+     * @param cycle
+     *           the request cycle
+     * @param newSelection
+     *           the newly selected object
+     * @see wicket.markup.html.form.IOnChangeListener#selectionChanged(wicket.RequestCycle,java.lang.Object)
+     */
+    public void selectionChanged(RequestCycle cycle, Object newSelection)
+    {
+        // no nada
+    }
 }
