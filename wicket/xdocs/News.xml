@@ -11,6 +11,25 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="Februari 20, 2005 - 0.9.18-beta released">
+				<p>
+					The Wicket team has worked really hard to make this beta release possible.
+					The march to the big 1.0 is on, and the first release candidate will surface 
+					in the next few weeks.
+				</p>
+				<p>
+					A lot has changed in this release, so you will receive some compile time errors if you are
+					coming from a previous release. Among the changes are the following:
+					<ul>
+						<li>Added a <a href="faqs.html" title="Frequently Asked Questions">FAQ</a> section to our site</li>
+						<li>Renamed handleX() methods and other events to conform to the onX() pattern.</li>
+						<li>Added Button class and Form buttons support. When it has two or more buttons, the onSubmit() handler is called on the button which submitted the Form.</li>
+						<li>Changed HtmlPage to WebPage, HtmlContainer to WebContainer and HtmlComponent to WebComponent</li>
+						<li>Reorganized components and examples for final 1.0 structure.</li>
+					</ul>
+					<a href="changes-report.html">Check out</a> all modifications on our <a href="changes-report.html">release history page</a>.
+				</p>
+			</subsection>
 			<subsection name="January 25, 2005 - 0.9.17-beta released">
 				<p>
 					The Wicket team is proud to present yet another release of the Wicket core
