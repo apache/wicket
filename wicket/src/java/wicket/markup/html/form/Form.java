@@ -53,7 +53,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
     static
     {
         // Allow use of IFormSubmitListener interface
-        RequestCycle.registerListenerInterface(IFormSubmitListener.class);
+        RequestCycle.registerRequestListenerInterface(IFormSubmitListener.class);
     }
 
     /** The validation error handling delegate. */

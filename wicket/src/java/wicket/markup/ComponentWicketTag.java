@@ -89,3 +89,5 @@ public final class ComponentWicketTag extends ComponentTag
         return this.getAttributes().getString("name");
     }
 }
+
+///////////////////////////////// End of File /////////////////////////////////

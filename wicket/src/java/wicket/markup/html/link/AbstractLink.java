@@ -35,7 +35,7 @@ public abstract class AbstractLink extends HtmlContainer implements ILinkListene
     static
     {
         // Allow calls through the ILinkListener interface
-        RequestCycle.registerListenerInterface(ILinkListener.class);
+        RequestCycle.registerRequestListenerInterface(ILinkListener.class);
     }
 
     /**
