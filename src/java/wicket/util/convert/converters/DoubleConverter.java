@@ -25,7 +25,7 @@ import java.util.Locale;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class DoubleConverter extends DecimalConverter
+public final class DoubleConverter extends AbstractDecimalConverter
 {
 	/**
 	 * Constructor.

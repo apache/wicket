@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractDecimalConverter.java,v 1.2 2005/02/09 04:55:38 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,20 +17,23 @@
  */
 package wicket.util.convert.converters;
 
+import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * Converts from Object to Integer.
+ * Base class for all number converters.
  * 
- * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class IntegerConverter extends AbstractIntegerConverter
+public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 {
+	/** Current format */
+	private NumberFormat numberFormat;
+
 	/**
 	 * Constructor
 	 */
-	public IntegerConverter()
+	public AbstractIntegerConverter()
 	{
 	}
 
@@ -40,26 +43,22 @@ public final class IntegerConverter extends AbstractIntegerConverter
 	 * @param locale
 	 *            The locale for this converter
 	 */
-	public IntegerConverter(final Locale locale)
+	public AbstractIntegerConverter(final Locale locale)
 	{
 		super(locale);
 	}
 
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * @return Returns the numberFormat.
 	 */
-	public Object convert(final Object value)
+	public final NumberFormat getNumberFormat()
 	{
-		final Number number = value instanceof Number ? (Number)value : parse(value,
-				Integer.MIN_VALUE, Integer.MAX_VALUE);
-		return new Integer(number.intValue());
-	}
-
-	/**
-	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
-	 */
-	protected Class getTargetType()
-	{
-		return Integer.class;
+		if (numberFormat == null)
+		{
+			numberFormat = NumberFormat.getIntegerInstance(getLocale());
+			numberFormat.setParseIntegerOnly(true);
+			numberFormat.setGroupingUsed(false);
+		}
+		return numberFormat;
 	}
 }

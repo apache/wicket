@@ -1,4 +1,4 @@
-#Sun Jan 23 18:32:38 CET 2005
+#Wed Feb 09 13:42:55 PST 2005
 org.eclipse.jdt.core.formatter.insert_space_before_comma_in_for_inits=do not insert
 org.eclipse.jdt.core.formatter.brace_position_for_block=next_line
 org.eclipse.jdt.core.formatter.insert_space_after_at_in_annotation_type_declaration=do not insert
@@ -70,7 +70,7 @@ org.eclipse.jdt.core.formatter.insert_space_after_binary_operator=insert
 org.eclipse.jdt.core.classpath.multipleOutputLocations=enabled
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_block=insert
 org.eclipse.jdt.core.formatter.insert_space_after_prefix_operator=do not insert
-org.eclipse.jdt.core.formatter.brace_position_for_enum_declaration=next_line
+org.eclipse.jdt.core.formatter.brace_position_for_enum_declaration=end_of_line
 org.eclipse.jdt.core.formatter.insert_space_after_comma_in_explicitconstructorcall_arguments=insert
 org.eclipse.jdt.core.compiler.problem.hiddenCatchBlock=warning
 org.eclipse.jdt.core.formatter.insert_space_before_at_in_annotation_type_declaration=insert
@@ -264,7 +264,7 @@ org.eclipse.jdt.core.compiler.maxProblemPerUnit=100
 org.eclipse.jdt.core.compiler.source=1.3
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_anonymous_type_declaration=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_method_body=insert
-org.eclipse.jdt.core.formatter.tabulation.size=3
+org.eclipse.jdt.core.formatter.tabulation.size=4
 org.eclipse.jdt.core.compiler.problem.assertIdentifier=warning
 org.eclipse.jdt.core.formatter.brace_position_for_array_initializer=end_of_line
 org.eclipse.jdt.core.compiler.problem.varargsArgumentNeedCast=warning
