@@ -24,11 +24,9 @@ import java.util.Locale;
  * Thrown for conversion exceptions.
  */
 public final class ConversionException extends RuntimeException
-{ // TODO finalize javadoc
-	/** serialVersionUID */
+{
+	/** serialVersionUID. */
 	private static final long serialVersionUID = 3751845072374225603L;
-
-    // these fields can be set by converters, but might be null!.
 	
 	/**
      * Target type for the failed conversion.
@@ -84,8 +82,8 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
-     * Get converter.
-     * @return converter.
+     * Gets the used converter.
+     * @return the used converter.
      */
     public final Converter getConverter()
     {
@@ -93,20 +91,19 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
-     * Set converter.
-     * @param converter converter.
+     * Sets the used converter.
+     * @param converter the converter.
      * @return This
      */
     public final ConversionException setConverter(Converter converter)
     {
         this.converter = converter;
-
         return this;
     }
 
     /**
-     * Get targetType.
-     * @return targetType.
+     * Gets the target property type.
+     * @return the target property type.
      */
     public final Class getTargetType()
     {
@@ -114,20 +111,19 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
-     * Set targetType.
-     * @param targetType targetType.
+     * Sets the target property type.
+     * @param targetType sets the target property type
      * @return This
      */
     public final ConversionException setTargetType(Class targetType)
     {
         this.targetType = targetType;
-
         return this;
     }
 
     /**
-     * Get triedValue.
-     * @return triedValue.
+     * Gets the tried value.
+     * @return the tried value.
      */
     public final Object getTriedValue()
     {
@@ -135,20 +131,19 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
-     * Set triedValue.
-     * @param triedValue triedValue.
+     * Sets the tried value.
+     * @param triedValue the tried value.
      * @return This
      */
     public final ConversionException setTriedValue(Object triedValue)
     {
         this.triedValue = triedValue;
-
         return this;
     }
 
     /**
-     * Get pattern.
-     * @return pattern.
+     * Get the used pattern.
+     * @return the used pattern
      */
     public final String getPattern()
     {
@@ -156,20 +151,19 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
-     * Set pattern.
-     * @param pattern pattern.
+     * Sets the used pattern.
+     * @param pattern the used pattern.
      * @return This
      */
     public final ConversionException setPattern(String pattern)
     {
         this.pattern = pattern;
-
         return this;
     }
 
     /**
-     * Get locale.
-     * @return locale.
+     * Gets the used locale.
+     * @return the used locale.
      */
     public final Locale getLocale()
     {
@@ -177,14 +171,13 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
-     * Set locale.
-     * @param locale locale.
+     * Sets the used locale.
+     * @param locale the used locale.
      * @return This
      */
     public final ConversionException setLocale(Locale locale)
     {
         this.locale = locale;
-
         return this;
     }
 }
