@@ -49,7 +49,7 @@ class Version
 	void undo()
 	{
 		// Go through changes in reverse time order to undo the version
-		for (int i = changes.size() - 1; i >= 0; i++)
+		for (int i = changes.size() - 1; i >= 0; i--)
 		{
 			((Change)changes.get(i)).undo();
 		}
