@@ -19,7 +19,6 @@ package wicket.examples.hangman;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -43,7 +42,7 @@ public class Game implements Serializable
 	private int guessesRemaining;
 
 	/** The letters */
-	private List letters;
+	private final List letters = new ArrayList();
 	
 	/** The word being guessed by the user */
 	private Word word;
@@ -90,12 +89,16 @@ public class Game implements Serializable
 	 */
 	public boolean guess(final Letter letter)
 	{
-		final boolean correct = word.guess(letter);
-		if (!correct)
+		if (!letter.isGuessed())
 		{
-			guessesRemaining--;		
+			final boolean correct = word.guess(letter);
+			if (!correct)
+			{
+				guessesRemaining--;		
+			}
+			return correct;
 		}
-		return correct;
+		return false;
 	}
 
 	/**
@@ -138,27 +141,15 @@ public class Game implements Serializable
 	public void newGame(final int guessesAllowed, final WordGenerator wordGenerator)
 	{
 		this.guessesAllowed = guessesAllowed;
+		this.guessesRemaining = guessesAllowed;
 		this.word = wordGenerator.next();
 		this.wordGenerator = wordGenerator;
-		guessesRemaining = guessesAllowed;
 		
 		// Add letters
-		if (letters == null)
+		letters.clear();
+		for (char c = 'a'; c <= 'z'; c++)
 		{
-			letters = new ArrayList();
-			for (char c = 'a'; c <= 'z'; c++)
-			{
-				letters.add(new Letter(c));
-			}		
-		}
-		else
-		{
-			// Reset guesses
-			for (Iterator iterator = letters.iterator(); iterator.hasNext();)
-			{
-				Letter letter = (Letter)iterator.next();
-				letter.reset();
-			}
-		}
+			letters.add(new Letter(c));
+		}		
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -32,13 +32,14 @@ public class HangmanSession extends WebSession
 
 	/**
 	 * Constructor
+	 * 
 	 * @param application
 	 */
-	protected HangmanSession(Application application)
+	protected HangmanSession(final Application application)
 	{
 		super(application);
 	}
-	
+
 	/**
 	 * @return Returns the game.
 	 */

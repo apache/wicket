@@ -54,7 +54,7 @@ public class HelloWorldTest extends WicketWebTestCase
         beginAt("/helloworld");
         //this.dumpResponse(System.out);
         assertTitleEquals("Wicket Examples - helloworld");
-        assertXPath("//body/span[@wicket:id='message']", "Hello World");
+        assertXPath("//body/span[@wicket:id='message']", "Hello World!");
         assertWicketIdTagText("message", "Hello World");
         //assertTextInElement("message", "Hello World!");
     }

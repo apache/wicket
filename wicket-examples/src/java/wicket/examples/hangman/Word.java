@@ -46,42 +46,13 @@ public class Word
 	}
 
 	/**
-	 * @param letter
-	 *            The letter to guess
-	 * @return True if guess was correct
+	 * @return This word
 	 */
-	public boolean guess(final Letter letter)
+	public String asString()
 	{
-		letter.guess();
-		boolean correct = false;
-		for (Iterator iterator = letters.iterator(); iterator.hasNext();)
-		{
-			final Letter current = (Letter)iterator.next();
-			if (current.equals(letter))
-			{
-				current.guess();
-				correct = true;
-			}
-		}
-		return correct;
+		return asString(false);
 	}
-
-	/**
-	 * @return True if the word has been guessed
-	 */
-	public boolean isGuessed()
-	{
-		for (Iterator iterator = letters.iterator(); iterator.hasNext();)
-		{
-			Letter letter = (Letter)iterator.next();
-			if (!letter.isGuessed())
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
+	
 	/**
 	 * @param hideUnguessed
 	 *            True if unguessed letters should be hidden
@@ -92,7 +63,7 @@ public class Word
 		final StringBuffer buffer = new StringBuffer();
 		for (Iterator iterator = letters.iterator(); iterator.hasNext();)
 		{
-			Letter letter = (Letter)iterator.next();
+			final Letter letter = (Letter)iterator.next();
 			if (hideUnguessed)
 			{
 				buffer.append(letter.isGuessed() ? letter.asString() : "_");
@@ -103,6 +74,64 @@ public class Word
 			}
 		}
 		return buffer.toString();
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(final Object object)
+	{
+		if (object instanceof Word)
+		{
+			final Word that = (Word)object;
+			return this.asString().equalsIgnoreCase(that.asString());
+		}
+		return false;
+	}
+
+	/**
+	 * @param letter
+	 *            The letter to guess
+	 * @return True if guess was correct
+	 */
+	public boolean guess(final Letter letter)
+	{
+		boolean correct = false;
+		for (Iterator iterator = letters.iterator(); iterator.hasNext();)
+		{
+			final Letter current = (Letter)iterator.next();
+			if (current.equals(letter))
+			{
+				current.guess();
+				correct = true;
+			}
+		}
+		letter.guess();
+		return correct;
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		return asString().hashCode();
+	}
+
+	/**
+	 * @return True if the word has been guessed
+	 */
+	public boolean isGuessed()
+	{
+		for (final Iterator iterator = letters.iterator(); iterator.hasNext();)
+		{
+			final Letter letter = (Letter)iterator.next();
+			if (!letter.isGuessed())
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

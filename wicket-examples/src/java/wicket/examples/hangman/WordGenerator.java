@@ -46,7 +46,7 @@ public class WordGenerator implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** List of words */
-	private List words;
+	private final List words;
 
 	/** Index into words */
 	private int index;

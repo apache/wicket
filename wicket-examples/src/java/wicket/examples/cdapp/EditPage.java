@@ -233,7 +233,7 @@ public final class EditPage extends CdAppBasePage
 
 			public String getPath()
 			{
-				reset(); // force getting the resource on each request;
+				invalidate(); // force getting the resource on each request;
 				return super.getPath();
 			}
 		};

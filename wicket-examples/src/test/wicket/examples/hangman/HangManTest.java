@@ -124,7 +124,7 @@ public class HangManTest extends WebTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testHangmanLooseGame() throws Exception
+	public void testHangmanLoseGame() throws Exception
 	{
 		Game hangman = new Game();
 		hangman.newGame(2, new WordGenerator(new String[] { "foo" }));

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.13 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,6 +18,8 @@
 package wicket.examples.hangman;
 
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.image.Image;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.PropertyModel;
@@ -44,10 +46,48 @@ public class Guess extends HangmanPage
 		// Show the game's letters
 		add(new ListView("letters", getGame().getLetters())
 		{
-			protected void populateItem(ListItem listItem)
+			protected void populateItem(final ListItem listItem)
 			{
 				final Letter letter = (Letter)listItem.getModelObject();
-				listItem.add(letter.getGuessLink(getGame()));
+				final Link link = new Link("letter")
+				{
+					protected void onBeginRender()
+					{
+						// Set enable state of link
+						setAutoEnable(false);
+						setEnabled(!letter.isGuessed());
+					}
+
+					public void onClick()
+					{
+						// Guess the letter
+						getGame().guess(letter);
+
+						// This letter can no longer be guessed
+						setEnabled(false);
+
+						// Is the game over?
+						if (getGame().isWon())
+						{
+							// Redirect to win page
+							setResponsePage(new Win());
+						}
+						else if (getGame().isLost())
+						{
+							// Redirect to lose page
+							setResponsePage(new Lose());
+						}
+						else
+						{
+							// Return to guess page with new state to display
+						}
+					}
+				};
+				final HangmanApplication application = (HangmanApplication)getSession()
+						.getApplication();
+				link.add(new Image("enabled", application.imageForLetter(letter)));
+				link.add(new Image("disabled", application.imageForLetter(letter)));
+				listItem.add(link);
 			}
 		});
 	}

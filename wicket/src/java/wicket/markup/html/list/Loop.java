@@ -17,46 +17,48 @@
  */
 package wicket.markup.html.list;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * This is a very basic loop component. It's model is simply a size value. During
- *  render phase it iterates from 0 to size - 1, creates a new LoopItem for each
- *  index, populates and renders it.
+ * A very simple loop component whose model is an Integer defining the number of
+ * iterations the loop should render. During rendering, Loop iterates from 0 to
+ * getIterations() - 1, creating a new MarkupContainer for each iteration. The
+ * MarkupContainer is populated by the Loop subclass by implementing the
+ * abstract method populate(MarkupContainer container, int iteration). The
+ * populate() method is called just before the container is rendered.
  * 
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public abstract class Loop extends WebMarkupContainer
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(Loop.class);
-	
 	/**
 	 * Construct.
 	 * 
+	 * @param id
+	 *            See Component
+	 * @param iterations
+	 *            max index of the loop
 	 * @see wicket.Component#Component(String, IModel)
-	 * @param id component id
-	 * @param size max index of the loop
 	 */
-	public Loop(final String id, final int size)
+	public Loop(final String id, final int iterations)
 	{
-		super(id, new Model(new Integer(size)));
+		super(id, new Model(new Integer(iterations)));
 	}
-	
+
 	/**
 	 * Construct.
 	 * 
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            Must contain a Integer model object
 	 * @see wicket.Component#Component(String, IModel)
-	 * 
-	 * @param id component id
-	 * @param model must contain a Integer model object
 	 */
 	public Loop(final String id, final IModel model)
 	{
@@ -64,17 +66,15 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * The size of the loop
-	 * 
-	 * @return size
+	 * @return The number of loop iterations
 	 */
-	public int getSize()
+	public final int getIterations()
 	{
-	    return ((Integer)getModelObject()).intValue();
+		return ((Integer)getModelObject()).intValue();
 	}
-	
+
 	/**
-	 * Renders this Loop (container).
+	 * Renders this Loop container.
 	 */
 	protected final void onRender()
 	{
@@ -84,61 +84,56 @@ public abstract class Loop extends WebMarkupContainer
 		// Save position in markup stream
 		final int markupStart = markupStream.getCurrentIndex();
 
-		// Get number of loopItems to be displayed
-		final int size = getSize();
-		if (size > 0)
+		// Get number of iterations
+		final int iterations = getIterations();
+		if (iterations > 0)
 		{
-			// Loop through the markup in this container for each child
-			// container
-			for (int i = 0; i < size; i++)
+			// Loop through the markup in this container for each iteration
+			for (int iteration = 0; iteration < iterations; iteration++)
 			{
-				// Get the name of the component for loopItem i
-				final String componentName = Integer.toString(i);
-
-				// If this component does not already exist, populate it
-				LoopItem loopItem = (LoopItem)get(componentName);
-				if (loopItem == null)
+				// Create container for the given loop iteration
+				final MarkupContainer container = new MarkupContainer(Integer.toString(iteration))
 				{
-					// Create loopItem for index i of the list
-					loopItem = new LoopItem(i);
-					populateItem(loopItem);
+				};
 
-					// Add item to loop
-					add(loopItem);
-				}
+				// Add container and populate it
+				add(container);
+				populateContainer(container, iteration);
 
 				// Rewind to start of markup for kids
 				markupStream.setCurrentIndex(markupStart);
 
-				// Render cell
-				renderItem(loopItem, i >= (size - 1));
+				// Render container
+				container.render();
 			}
 		}
 		else
 		{
-		    removeAll();
+			removeAll();
 			markupStream.skipComponent();
 		}
 	}
 
 	/**
-	 * Populate a given loopItem.
+	 * Populates the container for a given iteration of the loop
 	 * 
-	 * @param loopItem
-	 *            The listItem to populate
+	 * @param container
+	 *            The container to populate
+	 * @param iteration
+	 *            The iteration of the loop
 	 */
-	protected abstract void populateItem(final LoopItem loopItem);
+	protected abstract void populateContainer(MarkupContainer container, int iteration);
 
 	/**
-	 * Render a single loopItem.
+	 * Renders the container for this loop iteration
 	 * 
-	 * @param loopItem
-	 *            the loopItem to be rendered
-	 * @param lastItem
-	 *            True, if item is last loopItem in loopView
+	 * @param container
+	 *            The container to render
+	 * @param iteration
+	 *            The loop iteration
 	 */
-	protected void renderItem(final LoopItem loopItem, final boolean lastItem)
+	protected void renderContainer(final MarkupContainer container, final int iteration)
 	{
-		loopItem.render();
+		container.render();
 	}
 }

@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.IFeedback;
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.examples.cdapp.model.CD;
@@ -33,7 +34,6 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.LoopItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListViewNavigationLink;
@@ -346,25 +346,24 @@ public class SearchPage extends CdAppBasePage
 		}
 
 		/**
-		 * @see wicket.markup.html.list.Loop#populateItem(wicket.markup.html.list.LoopItem)
+		 * @see wicket.markup.html.list.PageableListViewNavigation#populateContainer(wicket.MarkupContainer, int)
 		 */
-		protected void populateItem(final LoopItem item)
+		protected void populateContainer(MarkupContainer container, int iteration)
 		{
-			final int page = item.getIndex();
 			final PageableListViewNavigationLink link =
-				new PageableListViewNavigationLink("pageLink", pageableListView, page);
+				new PageableListViewNavigationLink("pageLink", pageableListView, iteration);
 
-			if (page > 0)
+			if (iteration > 0)
 			{
-				item.add(new Label("separator", "|"));
+				container.add(new Label("separator", "|"));
 			}
 			else
 			{
-				item.add(new Label("separator", ""));
+				container.add(new Label("separator", ""));
 			}
-			link.add(new Label("pageNumber", String.valueOf(page + 1)));
+			link.add(new Label("pageNumber", String.valueOf(iteration + 1)));
 			link.add(new Label("pageLabel", "page"));
-			item.add(link);
+			container.add(link);
 		}
 	}
 }

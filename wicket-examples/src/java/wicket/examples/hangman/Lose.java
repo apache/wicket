@@ -33,7 +33,7 @@ public class Lose extends HangmanPage
 	 */
 	public Lose()
 	{
-		add(new Label("currentWord", getGame().getWord().asString(false)));
+		add(new Label("currentWord", getGame().getWord().asString()));
 		add(new Link("playAgain")
 		{
 			public void onClick()

@@ -17,12 +17,9 @@
  */
 package wicket.examples.hangman;
 
-import java.awt.Color;
 import java.io.Serializable;
 
-import wicket.markup.html.image.Image;
-import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.markup.html.link.Link;
+import wicket.util.lang.Primitives;
 
 /**
  * Model for a letter in the game of hangman
@@ -31,81 +28,11 @@ import wicket.markup.html.link.Link;
  */
 public class Letter implements Serializable
 {
-
-	/** Link to guess this letter */
-	private SelectableLetterLink guessLink;
 	/** True if the letter has been guessed */
 	private boolean isGuessed;
 
 	/** The letter */
 	private char letter;
-
-	/**
-	 * Link representing a letter that can be selected in the game.
-	 */
-	private class SelectableLetterLink extends Link
-	{
-		/** The game this link is attached to */
-		private final Game game;
-
-		/**
-		 * Create a new selectable letter link given the supplied parameters.
-		 * 
-		 * @param game
-		 *            The game for this link
-		 */
-		public SelectableLetterLink(final Game game)
-		{
-			super("letter");
-
-			// Save game
-			this.game = game;
-
-			// We want this link to be manually enabled
-			setEnabled(true);
-			setAutoEnable(false);
-
-			// Install enabled button image
-			DefaultButtonImageResource enabled = new DefaultButtonImageResource(30, 30, Letter.this
-					.asString());
-			add(new Image("enabled", enabled));
-
-			// Add disabled image
-			DefaultButtonImageResource disabled = new DefaultButtonImageResource(30, 30,
-					Letter.this.asString());
-			disabled.setColor(Color.GRAY);
-			add(new Image("disabled", disabled));
-		}
-
-		/**
-		 * Handle clicking of this link. Redirects the request cycle based on
-		 * the current state of the game.
-		 */
-		public void onClick()
-		{
-			// Guess the letter
-			game.guess(Letter.this);
-
-			// This letter can no longer be guessed
-			setEnabled(false);
-
-			// Is the game over?
-			if (game.isWon())
-			{
-				// Redirect to win page
-				setResponsePage(new Win());
-			}
-			else if (game.isLost())
-			{
-				// Redirect to lose page
-				setResponsePage(new Lose());
-			}
-			else
-			{
-				// Return to guess page with new state to display
-			}
-		}
-	}
 
 	/**
 	 * Constructor
@@ -129,27 +56,14 @@ public class Letter implements Serializable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object that)
+	public boolean equals(final Object object)
 	{
-		if (that instanceof Letter)
+		if (object instanceof Letter)
 		{
-			return ((Letter)that).letter == this.letter;
+			Letter that = (Letter)object;
+			return that.letter == this.letter && that.isGuessed == this.isGuessed;
 		}
 		return false;
-	}
-
-	/**
-	 * @param game
-	 *            The game this link is in
-	 * @return Link that guesses this letter
-	 */
-	public Link getGuessLink(final Game game)
-	{
-		if (guessLink == null)
-		{
-			guessLink = new SelectableLetterLink(game);
-		}
-		return guessLink;
 	}
 
 	/**
@@ -158,6 +72,14 @@ public class Letter implements Serializable
 	public void guess()
 	{
 		this.isGuessed = true;
+	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		return Primitives.hashCode(letter << (isGuessed ? 1 : 0));
 	}
 
 	/**
@@ -174,7 +96,6 @@ public class Letter implements Serializable
 	public void reset()
 	{
 		this.isGuessed = false;
-		this.guessLink.setEnabled(true);
 	}
 
 	/**
