@@ -23,6 +23,7 @@ import java.util.Locale;
 import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.Localizer;
+import wicket.RequestCycle;
 import wicket.Session;
 import wicket.util.string.interpolator.OgnlVariableInterpolator;
 
@@ -416,15 +417,16 @@ public class StringResourceModel extends DetachableModel
      * @param session
      *            The session
      */
-    protected final void doAttach(final Session session)
+    protected final void doAttach()
     {
         // Attach the model if necessary
         if (model != null && model instanceof IDetachableModel)
         {
-            ((IDetachableModel) model).attach(session);
+            ((IDetachableModel) model).attach();
         }
 
         // Initialise information that we need to work successfully
+        Session session = RequestCycle.get().getSession();
         ApplicationSettings settings = session.getApplication().getSettings();
         localizer = settings.getLocalizer();
         locale = session.getLocale();
@@ -436,12 +438,12 @@ public class StringResourceModel extends DetachableModel
      * @param session
      *            The session
      */
-    protected final void doDetach(final Session session)
+    protected final void doDetach()
     {
         // Detach the model if necessary
         if (model != null && model instanceof IDetachableModel)
         {
-            ((IDetachableModel) model).detach(session);
+            ((IDetachableModel) model).detach();
         }
 
         // Clear down any information we don't want held in the session

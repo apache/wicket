@@ -17,7 +17,6 @@
  */
 package wicket.model;
 
-import wicket.Session;
 
 /**
  * This provide a base class to work with {@link wicket.model.IDetachableModel}.
@@ -103,15 +102,13 @@ public abstract class DetachableModel implements IDetachableModel
     /**
      * Attaches to the current session
      * 
-     * @param session
-     *            The current session
-     * @see wicket.model.IDetachableModel#attach(wicket.Session)
+     * @see wicket.model.IDetachableModel#attach()
      */
-    public final void attach(final Session session)
+    public final void attach()
     {
         if (!attached)
         {
-            doAttach(session);
+            doAttach();
             attached = true;
         }
     }
@@ -119,15 +116,13 @@ public abstract class DetachableModel implements IDetachableModel
     /**
      * Detaches from the current session.
      * 
-     * @param session
-     *            The current session
-     * @see wicket.model.IDetachableModel#detach(wicket.Session)
+     * @see wicket.model.IDetachableModel#detach()
      */
-    public final void detach(final Session session)
+    public final void detach()
     {
         if (attached)
         {
-            doDetach(session);
+            doDetach();
             attached = false;
         }
     }
@@ -139,7 +134,7 @@ public abstract class DetachableModel implements IDetachableModel
      * @param session
      *            The session
      */
-    protected abstract void doAttach(final Session session);
+    protected abstract void doAttach();
 
     /**
      * Detaches from the given session. Implement this method with custom
@@ -148,5 +143,5 @@ public abstract class DetachableModel implements IDetachableModel
      * @param session
      *            The session
      */
-    protected abstract void doDetach(final Session session);
+    protected abstract void doDetach();
 }

@@ -165,7 +165,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     {
         if (values instanceof IIdList)
         {
-            ((IIdList) values).attach(RequestCycle.get());
+            ((IIdList) values).attach();
         }
         return this.values;
     }
@@ -252,7 +252,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
         // Deattach the list after this. Check if this is the right place!
         if (list instanceof IIdList)
         {
-            ((IIdList)list).detach(getRequestCycle());
+            ((IIdList)list).detach();
         }
     }
 

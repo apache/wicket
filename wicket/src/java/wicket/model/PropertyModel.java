@@ -283,14 +283,15 @@ public class PropertyModel extends DetachableModel
      * 
      * @see wicket.model.DetachableModel#doAttach(Session)
      */
-    protected final void doAttach(final Session session)
+    protected final void doAttach()
     {
         if (model instanceof IDetachableModel)
         {
-            ((IDetachableModel) model).attach(session);
+            ((IDetachableModel) model).attach();
         }
 
         // Save the reference to the current locale
+        Session session = RequestCycle.get().getSession();
         this.locale = session.getLocale();
 
         ApplicationSettings settings = session.getApplication().getSettings();
@@ -306,11 +307,11 @@ public class PropertyModel extends DetachableModel
      * 
      * @see wicket.model.DetachableModel#doDetach(Session)
      */
-    protected final void doDetach(final Session session)
+    protected final void doDetach()
     {
         if (model instanceof IDetachableModel)
         {
-            ((IDetachableModel) model).detach(session);
+            ((IDetachableModel) model).detach();
         }
 
         // Reset OGNL context
