@@ -31,30 +31,58 @@ import wicket.util.parse.metapattern.OptionalMetaPattern;
  */
 public final class VariableAssignmentParser extends MetaPatternParser
 {
-    /** The optional namespace like "namespace:* */
-    private static final MetaPattern namespace = new OptionalMetaPattern(
-            new MetaPattern[] { MetaPattern.VARIABLE_NAME, MetaPattern.COLON });
+    /** The optional namespace like "namespace:*" */
+    private static final MetaPattern namespace = new OptionalMetaPattern
+    (
+        new MetaPattern[] 
+        { 
+            MetaPattern.VARIABLE_NAME, MetaPattern.COLON 
+        }
+    );
 
     /** The key (lvalue) like "name" or "namespace:name" */
-    private static final Group key = new Group(new MetaPattern(
-            new MetaPattern[] { namespace, MetaPattern.VARIABLE_NAME }));
+    private static final Group key = new Group
+    (
+        new MetaPattern
+        (
+            new MetaPattern[] 
+            { 
+                namespace, MetaPattern.VARIABLE_NAME 
+            }
+        )
+    );
 
     /** The rvalue of the assignment */
     private static final Group value = new Group(MetaPattern.STRING);
 
     /** The whole assignment without optional leading and trailing spaces */ 
-    private static final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {
+    private static final MetaPattern variableAssignment = new MetaPattern
+    (
+        new MetaPattern[] 
+        {
             MetaPattern.OPTIONAL_WHITESPACE,
-            MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE, value});
+            MetaPattern.EQUALS, 
+            MetaPattern.OPTIONAL_WHITESPACE, 
+            value
+        }
+    );
 
     /** Ignore leading and trailing spaces surrounding the assignment */
-    private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {
-            MetaPattern.OPTIONAL_WHITESPACE, key, 
-            new OptionalMetaPattern(variableAssignment), MetaPattern.OPTIONAL_WHITESPACE});
+    private static final MetaPattern pattern = new MetaPattern
+    (
+        new MetaPattern[] 
+        {
+            MetaPattern.OPTIONAL_WHITESPACE, 
+            key, 
+            new OptionalMetaPattern(variableAssignment), 
+            MetaPattern.OPTIONAL_WHITESPACE
+        }
+    );
 
     /**
-     * Construct.
-     * @param input to parse
+     * Construct a variable assignment parser against a given input 
+     * character sequence
+     * @param input The input to parse
      */
     public VariableAssignmentParser(final CharSequence input)
     {
@@ -63,9 +91,8 @@ public final class VariableAssignmentParser extends MetaPatternParser
 
     /**
      * Gets the key part (eg 'foo' in 'foo=bar'). The key will include
-     * the otional namespace (eg 'html:foo' in 'html:foo=bar').
-     * 
-     * @return the key part
+     * the optional namespace (eg 'html:foo' in 'html:foo=bar').
+     * @return The key part
      */
     public String getKey()
     {
@@ -74,7 +101,7 @@ public final class VariableAssignmentParser extends MetaPatternParser
 
     /**
      * Gets the value part (eg 'bar' in 'foo=bar').
-     * @return the value part
+     * @return The value part
      */
     public String getValue()
     {

@@ -43,10 +43,11 @@ public class ListParser extends MetaPatternParser
     private final List values = new ArrayList();
 
     /**
-     * Construct.
+     * Constructs a list parser from an entry MetaPattern, a separator MetaPattern
+     * and an input character sequence.
      * @param entryPattern The pattern in between the separators
      * @param separatorPattern The separator pattern
-     * @param input to parse
+     * @param input The input to parse
      */
     public ListParser(final MetaPattern entryPattern, final MetaPattern separatorPattern,
             final CharSequence input)
@@ -59,7 +60,6 @@ public class ListParser extends MetaPatternParser
     /**
      * Parse the input and add the elements to an internal list to be accessed by
      * @see #getValues() 
-     * 
      * @see wicket.util.parse.metapattern.parsers.MetaPatternParser#matches()
      */
     public final boolean matches()
@@ -89,7 +89,6 @@ public class ListParser extends MetaPatternParser
     /**
      * Gets the parsed values. It depends on the elements pattern, whether
      * empty elements, double or single quotes or escape characters are supported.
-     * 
      * @return the parsed values
      */
     public final List getValues()

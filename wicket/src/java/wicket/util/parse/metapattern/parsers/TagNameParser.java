@@ -23,34 +23,41 @@ import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.parse.metapattern.OptionalMetaPattern;
 
 /**
- * Parses XML tag names and attribute names which may include 
- * optional namespaces like "namespace:name" or "name".
- * Both ":name" and "namespace:" are not allowed. Both,
- * the namespace and the name have to follow nameing rules for
- * variable names (identifier).
+ * Parses XML tag names and attribute names which may include optional 
+ * namespaces like "namespace:name" or "name".  Both ":name" and 
+ * "namespace:" are not allowed. Both, the namespace and the name have 
+ * to follow naming rules for variable names (identifier).
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-// TODO: do we need to support ":name" according to the xml spec?
 public final class TagNameParser extends MetaPatternParser
 { 
-    /** Namespace names must comply with variable name guidelines */
-    private static final Group namespace = new Group(MetaPattern.VARIABLE_NAME);
+    /** Namespaces must comply with variable name guidelines */
+    private static final Group namespaceGroup = new Group(MetaPattern.VARIABLE_NAME);
 
     /** Tag names must comply with variable name guidelines */
-    private static final Group name = new Group(MetaPattern.VARIABLE_NAME);
+    private static final Group nameGroup = new Group(MetaPattern.VARIABLE_NAME);
 
-    /** pattern for tag names with optional namespace: (namespace:)?name */
-    private static final MetaPattern pattern =
-        	new MetaPattern( new MetaPattern[] {
-        	        new OptionalMetaPattern(new MetaPattern[] {
-        	                namespace, MetaPattern.COLON }),
-        	        name });
+    /** Pattern for tag names with optional namespace: (namespace:)?name */
+    private static final MetaPattern pattern = new MetaPattern
+    ( 
+        new MetaPattern[] 
+        {
+    	    new OptionalMetaPattern
+            (
+                new MetaPattern[] 
+                {
+    	            namespaceGroup, MetaPattern.COLON 
+                }
+            ),
+    	    nameGroup 
+        }
+    );
 
     /**
-     * Construct.
-     * @param input to parse
+     * Constructs a tag name parser for a given input character sequence.
+     * @param input The input to parse
      */
     public TagNameParser(final CharSequence input)
     {
@@ -58,31 +65,28 @@ public final class TagNameParser extends MetaPatternParser
     }
 
     /**
-     * Get the namespace part (eg 'html' in 'html:form') converted
-     * to all lower case characters.
-     * 
+     * Get the namespace part (eg 'html' in 'html:form') converted to all 
+     * lower case characters.
      * @return the namespace part. Will be null, if optonal namespace was not found
      */
     public String getNamespace()
     {
-        String namespaceBuf = namespace.get(matcher());
-        if (namespaceBuf != null)
+        final String namespace = namespaceGroup.get(matcher());
+        if (namespace != null)
         {
-            namespaceBuf = namespaceBuf.toLowerCase();
+            return namespace.toLowerCase();
         }
-        
-        return namespaceBuf;
+        return namespace;
     }
 
     /**
-     * Gets the value part (eg 'form' in 'html:form' or 'form')
-     * converted to all lower case characters.
-     * 
+     * Gets the tag name part (eg 'form' in 'html:form' or 'form') converted 
+     * to all lower case characters.
      * @return the name part
      */
     public String getName()
     {
-        return name.get(matcher()).toLowerCase();
+        return nameGroup.get(matcher()).toLowerCase();
     }
 }
 

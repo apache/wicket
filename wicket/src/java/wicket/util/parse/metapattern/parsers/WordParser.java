@@ -30,12 +30,19 @@ import wicket.util.parse.metapattern.MetaPattern;
  */
 public final class WordParser extends MetaPatternParser
 { 
-    /** Make it a group to be able to access the word without surrounding whitespaces */
+    /** Make it a group to be able to access the word without surrounding whitespace */
     private static final Group word = new Group(MetaPattern.WORD);
 
     /** Parse word surrounded by whitespace */
-    private static final MetaPattern wordPattern = new MetaPattern(new MetaPattern[] {
-            MetaPattern.OPTIONAL_WHITESPACE, word, MetaPattern.OPTIONAL_WHITESPACE,});
+    private static final MetaPattern wordPattern = new MetaPattern
+    (
+        new MetaPattern[] 
+        {
+            MetaPattern.OPTIONAL_WHITESPACE, 
+            word, 
+            MetaPattern.OPTIONAL_WHITESPACE
+        }
+    );
 
     /**
      * Construct.
