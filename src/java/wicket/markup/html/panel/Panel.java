@@ -17,8 +17,10 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.parser.XmlTag;
 
 /**
  * A panel is a reusable component that holds markup and other components.
@@ -72,11 +74,22 @@ public class Panel extends WebMarkupContainer
             markupStream.throwMarkupException("A panel must be referenced by an openclose tag.");
         }
 
-        renderComponentTag(markupStream);
+        // In order to be html compliant (though we are xhtml compliant already) 
+        // and even more intuitiv, we open up the tag, change it from open-close to
+        // open, the panel now becomes the tag body and we'll close it manually
+        // later.
+        final ComponentTag openTag = markupStream.getTag().mutable();
+        openTag.setType(XmlTag.OPEN);
+		renderComponentTag(openTag);
 
         // Render the associated markup
         renderAssociatedMarkup("panel",
                 "Markup for a panel component must begin with '<wicket:panel>'");
+        
+        // Close the manually opened panel tag.
+        final String closeTag = "</" + markupStream.getTag().getName() + ">";
+        getResponse().write(closeTag);
+		markupStream.next();
     }
 }
 
