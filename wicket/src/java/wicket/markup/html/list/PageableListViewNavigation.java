@@ -111,15 +111,15 @@ public class PageableListViewNavigation extends ListView
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The name of the component
 	 * @param pageableListView
 	 *            The underlying list view to navigate
 	 */
-	public PageableListViewNavigation(final String componentName,
+	public PageableListViewNavigation(final String name,
 			final PageableListView pageableListView)
 	{
-		super(componentName, (IModel)null);
+		super(name, (IModel)null);
 
 		this.pageableListView = pageableListView;
 		this.setStartIndex(0);

@@ -31,9 +31,9 @@ public final class BoxBorder extends Border
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public BoxBorder(final String componentName)
+	public BoxBorder(final String name)
 	{
-		super(componentName);
+		super(name);
 	}
 }
 

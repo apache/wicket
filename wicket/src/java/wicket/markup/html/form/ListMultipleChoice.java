@@ -43,19 +43,19 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
 	 */
-	public ListMultipleChoice(final String componentName, final Serializable model,
+	public ListMultipleChoice(final String name, final Serializable model,
 			final String expression, final Collection values)
 	{
-		super(componentName, new PropertyModel(new Model(model), expression), values);
+		super(name, new PropertyModel(new Model(model), expression), values);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
 	 */
-	public ListMultipleChoice(final String componentName, final Serializable model,
+	public ListMultipleChoice(final String name, final Serializable model,
 			final Collection values)
 	{
-		super(componentName, model, values);
+		super(name, model, values);
 	}
 
 	/**

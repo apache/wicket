@@ -81,9 +81,9 @@ public abstract class OnClickLink extends AbstractLink
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public OnClickLink(String componentName)
+	public OnClickLink(String name)
 	{
-		super(componentName);
+		super(name);
 	}
 
 	/**

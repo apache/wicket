@@ -43,30 +43,30 @@ public class PageLink extends Link
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The name of this component
 	 * @param pageLink
 	 *            An implementation of IPageLink which will create the page
 	 *            linked to if and when this hyperlink is clicked at a later
 	 *            time.
 	 */
-	public PageLink(final String componentName, final IPageLink pageLink)
+	public PageLink(final String name, final IPageLink pageLink)
 	{
-		super(componentName);
+		super(name);
 		this.pageLink = pageLink;
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            Name of this component
 	 * @param c
 	 *            Page class
 	 */
-	public PageLink(final String componentName, final Class c)
+	public PageLink(final String name, final Class c)
 	{
-		this(componentName, new IPageLink()
+		this(name, new IPageLink()
 		{
 			/** Serial Version ID */
 			private static final long serialVersionUID = 319659497178801753L;

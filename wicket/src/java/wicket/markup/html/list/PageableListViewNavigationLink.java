@@ -41,7 +41,7 @@ public final class PageableListViewNavigationLink extends PageLink
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
+	 * @param name
 	 *            The name of this component
 	 * @param pageableListView
 	 *            The list view for this page link
@@ -49,10 +49,10 @@ public final class PageableListViewNavigationLink extends PageLink
 	 *            The page number in the PageableListView that this link links
 	 *            to
 	 */
-	public PageableListViewNavigationLink(final String componentName,
+	public PageableListViewNavigationLink(final String name,
 			final PageableListView pageableListView, final int pageNumber)
 	{
-		super(componentName, new IPageLink()
+		super(name, new IPageLink()
 		{
 			/** Serial Version ID. */
 			private static final long serialVersionUID = 7836120196635892372L;
