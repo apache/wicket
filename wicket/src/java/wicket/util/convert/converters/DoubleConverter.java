@@ -18,6 +18,8 @@
  */
 package wicket.util.convert.converters;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -31,39 +33,48 @@ import wicket.util.convert.ConversionException;
  */
 public final class DoubleConverter extends DecimalConverter
 {
-    /**
-     * Constructor
-     */
-    public DoubleConverter()
-    {
-    }
-    
-    /**
-     * Constructor
-     * @param locale The locale for this converter
-     */
-    public DoubleConverter(final Locale locale)
-    {
-        super(locale);
-    }
+	/**
+	 * Constructor.
+	 */
+	public DoubleConverter()
+	{
+	}
 
-    /**
-     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-     */
-    public Object convert(final Object value)
-    {
-        if (value instanceof Number)
-        {
-            return new Double(((Number)value).doubleValue());
-        }
+	/**
+	 * Constructor.
+	 * 
+	 * @param locale The locale for this converter
+	 */
+	public DoubleConverter(final Locale locale)
+	{
+		super(locale);
+	}
 
-        try
-        {
-            return new Double(getNumberFormat().parse(value.toString()).doubleValue());
-        }
-        catch (ParseException e)
-        {
-            throw new ConversionException("Cannot convert '" + value + "' to Double", e);
-        }
-    }
+	/**
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 */
+	public Object convert(final Object value)
+	{
+		if (value instanceof Number)
+		{
+			return new Double(((Number)value).doubleValue());
+		}
+
+		NumberFormat format = getNumberFormat();
+		try
+		{
+			return new Double(format.parse(value.toString()).doubleValue());
+		}
+		catch (ParseException e)
+		{
+			ConversionException conversionException =
+				new ConversionException("Cannot convert '" + value + "' to Double", e);
+			if(format instanceof DecimalFormat)
+			{
+				String pattern = ((DecimalFormat)format).toLocalizedPattern();
+				conversionException.setPattern(pattern);
+			}
+			throw conversionException;
+		}
+	}
 }
