@@ -37,6 +37,7 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.util.file.Files;
 import wicket.util.file.Folder;
+import wicket.util.lang.Bytes;
 
 /**
  * Upload example.
@@ -65,14 +66,14 @@ public class UploadPage extends WicketExamplePage
 	 */
 	public UploadPage(final PageParameters parameters)
 	{
-		// set upload folder to tempdir + 'wicket-uploads'.
+		// Set upload folder to tempdir + 'wicket-uploads'.
 		this.uploadFolder = uploadFolder = new Folder(System.getProperty("java.io.tmpdir"),
 				"wicket-uploads");
+		
+		// Ensure folder exists
+		uploadFolder.mkdirs();
 
-        // Ensure folder exists 
-        uploadFolder.mkdirs(); 
-
-        // Create feedback panels
+		// Create feedback panels
 		final FeedbackPanel simpleUploadFeedback = new FeedbackPanel("simpleUploadFeedback");
 		final FeedbackPanel uploadFeedback = new FeedbackPanel("uploadFeedback");
 
@@ -137,8 +138,11 @@ public class UploadPage extends WicketExamplePage
 		{
 			super(name);
 
-			// add one file input field
+			// Add one file input field
 			add(fileUploadField = new FileUploadField("fileInput"));
+			
+			// Set maximum size to 100K for demo purposes
+			setMaxSize(Bytes.kilobytes(100));
 		}
 
 		/**
@@ -151,10 +155,10 @@ public class UploadPage extends WicketExamplePage
 			{
 				log.info("Uploaded file: " + upload.getFile());
 
-				// create a new file
+				// Create a new file
 				File newFile = new File(uploadFolder, upload.getFile().getName());
 
-				// check new file, delete if it allready existed
+				// Check new file, delete if it allready existed
 				checkFileExists(newFile);
 				try
 				{
