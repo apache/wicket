@@ -426,7 +426,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 				final Button button = (Button)component;
 
 				// Check for button-name or button-name.x request string
-				if (!Strings.isEmpty(button.getRequestString())
+				if (!Strings.isEmpty(button.getInput())
 						|| !Strings.isEmpty(getRequest().getParameter(button.getPath() + ".x")))
 				{
 					return button;

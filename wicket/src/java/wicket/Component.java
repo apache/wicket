@@ -588,16 +588,6 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Gets the request parameter for this component as a boolean.
-	 * 
-	 * @return The value in the request for this component
-	 */
-	public final Boolean getRequestBoolean()
-	{
-		return Boolean.valueOf(!Strings.isEmpty(getRequestString()));
-	}
-
-	/**
 	 * Gets the active request cycle for this component
 	 * 
 	 * @return The request cycle
@@ -605,95 +595,6 @@ public abstract class Component implements Serializable, IConverterSource
 	public final RequestCycle getRequestCycle()
 	{
 		return getSession().getRequestCycle();
-	}
-
-	/**
-	 * Gets the request parameter for this component as an int.
-	 * 
-	 * @return The value in the request for this component
-	 */
-	public final int getRequestInt()
-	{
-		final String string = getRequestString();
-		try
-		{
-			return Integer.parseInt(string);
-		}
-		catch (NumberFormatException e)
-		{
-			throw new IllegalArgumentException(exceptionMessage("Internal error.  Request string '"
-					+ string + "' not a valid integer"));
-		}
-	}
-
-	/**
-	 * Gets the request parameter for this component as an int, using the given
-	 * default in case no corresponding request parameter was found.
-	 * 
-	 * @param defaultValue
-	 *            Default value to return if request does not have an integer
-	 *            for this component
-	 * @return The value in the request for this component
-	 */
-	public final int getRequestInt(final int defaultValue)
-	{
-		final String string = getRequestString();
-		if (string != null)
-		{
-			try
-			{
-				return Integer.parseInt(string);
-			}
-			catch (NumberFormatException e)
-			{
-				throw new IllegalArgumentException(exceptionMessage("Request string '" + string
-						+ "' is not a valid integer"));
-			}
-		}
-		else
-		{
-			return defaultValue;
-		}
-	}
-
-	/**
-	 * Gets the request parameters for this component as ints.
-	 * 
-	 * @return The values in the request for this component
-	 */
-	public final int[] getRequestInts()
-	{
-		final String[] strings = getRequestStrings();
-		if (strings != null)
-		{
-			final int[] ints = new int[strings.length];
-			for (int i = 0; i < strings.length; i++)
-			{
-				ints[i] = Integer.parseInt(strings[i]);
-			}
-			return ints;
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the request parameter for this component as a string.
-	 * 
-	 * @return The value in the request for this component
-	 */
-	public final String getRequestString()
-	{
-		return getRequest().getParameter(getPath());
-	}
-
-	/**
-	 * Gets the request parameters for this component as strings.
-	 * 
-	 * @return The valuess in the request for this component
-	 */
-	public final String[] getRequestStrings()
-	{
-		return getRequest().getParameters(getPath());
 	}
 
 	/**

@@ -221,6 +221,16 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * Gets the request parameter for this component as a string.
+	 * 
+	 * @return The value in the request for this component
+	 */
+	public final String getInput()
+	{
+		return getRequest().getParameter(getPath());
+	}
+
+	/**
 	 * Gets the registered validators as a list.
 	 * 
 	 * @return the validators as a list
@@ -318,6 +328,114 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * Gets the request parameter for this component as an int.
+	 * 
+	 * @return The value in the request for this component
+	 */
+	protected final int inputAsInt()
+	{
+		final String string = getInput();
+		try
+		{
+			return Integer.parseInt(string);
+		}
+		catch (NumberFormatException e)
+		{
+			throw new IllegalArgumentException(exceptionMessage("Internal error.  Request string '"
+					+ string + "' not a valid integer"));
+		}
+	}
+
+	/**
+	 * Gets the request parameter for this component as an int, using the given
+	 * default in case no corresponding request parameter was found.
+	 * 
+	 * @param defaultValue
+	 *            Default value to return if request does not have an integer
+	 *            for this component
+	 * @return The value in the request for this component
+	 */
+	protected final int inputAsInt(final int defaultValue)
+	{
+		final String string = getInput();
+		if (string != null)
+		{
+			try
+			{
+				return Integer.parseInt(string);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new IllegalArgumentException(exceptionMessage("Request string '" + string
+						+ "' is not a valid integer"));
+			}
+		}
+		else
+		{
+			return defaultValue;
+		}
+	}
+
+	/**
+	 * Gets the request parameters for this component as ints.
+	 * 
+	 * @return The values in the request for this component
+	 */
+	protected final int[] inputAsIntArray()
+	{
+		final String[] strings = inputAsStringArray();
+		if (strings != null)
+		{
+			final int[] ints = new int[strings.length];
+			for (int i = 0; i < strings.length; i++)
+			{
+				ints[i] = Integer.parseInt(strings[i]);
+			}
+			return ints;
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the request parameters for this component as strings.
+	 * 
+	 * @return The valuess in the request for this component
+	 */
+	protected final String[] inputAsStringArray()
+	{
+		return getRequest().getParameters(getPath());
+	}
+
+	/**
+	 * Processes the component tag.
+	 * 
+	 * @param tag
+	 *            Tag to modify
+	 * @see wicket.Component#onComponentTag(ComponentTag)
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		tag.put("name", getPath());
+	}
+
+	/**
+	 * Template method that can be implemented by form component subclass to
+	 * react on validation errors. This implementation is a noop.
+	 */
+	protected void onInvalid()
+	{
+	}
+
+	/**
+	 * Template method that can be implemented by form component subclass to
+	 * react when validation errors are cleared. This implementation is a noop.
+	 */
+	protected void onValid()
+	{
+	}
+
+	/**
 	 * @return True if this type of FormComponent can be persisted.
 	 */
 	protected boolean supportsPersistence()
@@ -337,34 +455,5 @@ public abstract class FormComponent extends WebMarkupContainer
 	protected final void validate()
 	{
 		validator.validate(this);
-	}
-
-	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag
-	 *            Tag to modify
-	 * @see wicket.Component#onComponentTag(ComponentTag)
-	 */
-	protected void onComponentTag(final ComponentTag tag)
-	{
-		super.onComponentTag(tag);
-		tag.put("name", getPath());
-	}
-
-	/**
-	 * Template method that can be implemented by form component subclass to
-	 * react when validation errors are cleared. This implementation is a noop.
-	 */
-	protected void onValid()
-	{
-	}
-
-	/**
-	 * Template method that can be implemented by form component subclass to
-	 * react on validation errors. This implementation is a noop.
-	 */
-	protected void onInvalid()
-	{
 	}
 }

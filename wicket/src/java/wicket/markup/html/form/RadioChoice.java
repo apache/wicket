@@ -80,7 +80,7 @@ public class RadioChoice extends FormComponent
 	 */
 	public final void updateModel()
 	{
-		final int index = getRequestInt(NULL_VALUE);
+		final int index = inputAsInt(NULL_VALUE);
 
 		if (index != NULL_VALUE)
 		{

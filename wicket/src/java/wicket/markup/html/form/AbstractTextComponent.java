@@ -67,7 +67,7 @@ abstract class AbstractTextComponent extends FormComponent
 	 */
     protected void updateModel()
 	{
-		setModelObject(getRequestString());
+		setModelObject(getInput());
 	}
     
     /**
@@ -84,7 +84,7 @@ abstract class AbstractTextComponent extends FormComponent
 	protected void onInvalid()
 	{
 		// Store the user input for form repopulation
-		invalidInput = getRequestString();
+		invalidInput = getInput();
 	}
  
     /**
