@@ -151,6 +151,30 @@ A: Because Wicket has a first class component object model where the state
    a user uses their back button to access the stale page at a later time, they
    will receive an appropriate warning.
    
+Q: Why Wicket?  And what does "voicetribe" mean?
+
+A: VoiceTribe was the name of the company I was founding with a friend when I
+   got so distracted by the ugly state of web frameworks that I decided to write 
+   Wicket over the course of about 2 months of intensive effort.  
+   
+   The name "wicket" was at first selected simply because it was unique, memorable 
+   and easy to say... and yet not used by a serious software project (the owner 
+   of the "dodgy IRC bot" called "wicket" which shows up in a Google search was 
+   kind enough to give his blessings to me via email to use the name).  It is 
+   surprisingly hard to find /any/ short word that is not already used as the 
+   name of some software project or other!
+   
+   Although the name was selected for no particular reason, there are a couple
+   of interesting coincidences.  For one thing, web frameworks have been somewhat 
+   of a "sticky wicket".  For another, "wicket" sounds a bit like "wiki" which 
+   is Hawaiian for "quick" (you could even think of the name as "wik" "it" ;-)).  
+   And finally, the original meaning of wicket was that of a small door.  But,
+   especially a small door within a larger door.  I like this image quite a lot.  
+   It's modular ;-) and doors represent freedom (from the big J2EE door?).  A 
+   picture of a small door within another door might make a nice cover for the 
+   User's Guide when it's done.  Either that or a cute little squirrel staring 
+   back at the reader through a croquet wicket!
+   
 
 Future Directions
 -----------------
@@ -174,8 +198,8 @@ Open Issues
 
  - Table navigation is broken and needs to be re-thought
  
- - The resource searching mechanism Christopher Turner and I came up with needs
-   to be implemented (unless further refinements are discovered)
+ - Christopher Turner is writing a specification for resource searching and
+   localization.  When complete, this needs to be peer reviewed and implemented.
    
  - The bind-time of OGNL during page rendering needs to be figured out.  Currently,
    it is too static for some needs.  But this issue is very subtle and needs to be
