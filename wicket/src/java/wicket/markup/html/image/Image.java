@@ -92,6 +92,7 @@ public class Image extends AbstractImage implements IResourceListener
      */
     protected IResource getResource()
     {
+    	// TODO we might want to consider relaxing this in the future so people can stash images in subfolders and the like
         if (resourcePath.indexOf("..") != -1 || resourcePath.indexOf("/") != -1)
         {
             throw new WicketRuntimeException("Source for image resource cannot contain a path");
