@@ -43,7 +43,7 @@ public final class CharacterConverter extends AbstractConverter
 		{
 			return null;
 		}
-		if(Character.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Character.class.isAssignableFrom(c))
 		{
 			if (value instanceof Character)
 			{
@@ -58,7 +58,7 @@ public final class CharacterConverter extends AbstractConverter
 				throw new ConversionException(e);
 			}
 		}
-		if(String.class.isAssignableFrom(c))
+		else if(String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}

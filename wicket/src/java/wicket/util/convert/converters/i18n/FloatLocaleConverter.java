@@ -29,7 +29,7 @@ import wicket.util.convert.ConversionException;
  *
  * @author Eelco Hillenius
  */
-public class FloatLocaleConverter extends DecimalLocaleConverter
+public final class FloatLocaleConverter extends DecimalLocaleConverter
 {
 	/**
 	 * Construct.
@@ -66,12 +66,12 @@ public class FloatLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
 		{
 			Number temp = getNumber(value);
 			return (temp instanceof Float) ? (Float)temp : new Float(temp.floatValue());
 		}
-		if(String.class.isAssignableFrom(c))
+		else if(String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}

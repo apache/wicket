@@ -22,7 +22,7 @@ import wicket.util.convert.IConverter;
 import wicket.util.convert.IStringConverter;
 
 /**
- * Converts to and from Boolean objects.
+ * Abstract converter class.
  *
  * @author Eelco Hillenius
  */
@@ -53,6 +53,6 @@ public abstract class AbstractConverter implements IConverter, IStringConverter
 	 */
 	public Object valueOf(String string)
 	{
-		return convert(string, String.class);
+		return convert(string, null);
 	}
 }

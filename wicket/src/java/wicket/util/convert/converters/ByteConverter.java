@@ -43,7 +43,7 @@ public final class ByteConverter extends AbstractConverter
 		{
 			return null;
 		}
-		if(Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
 		{
 			if (value instanceof Byte)
 			{
@@ -62,7 +62,7 @@ public final class ByteConverter extends AbstractConverter
 				throw new ConversionException(e);
 			}
 		}
-		if(String.class.isAssignableFrom(c))
+		else if(String.class.isAssignableFrom(c))
 		{
 			return toString(value);
 		}

@@ -26,9 +26,16 @@ package wicket.util.convert;
 public interface IConverter
 {
 	/**
+	 * if this/ null is passed to the convert method as the class argument,
+	 * it indicates that the default object conversion should be applied.
+	 */
+	public static final Class CONVERT_TO_DEFAULT_TYPE = null;
+
+	/**
 	 * Converts the given value to class c.
 	 * @param value the value to convert
-	 * @param c the class to convert to
+	 * @param c the class to convert to. If this argument is null, it could be used
+	 * as an indicator that the converter's default conversion should be applied.
 	 * @return the converted value
 	 */
 	public Object convert(Object value, Class c);
