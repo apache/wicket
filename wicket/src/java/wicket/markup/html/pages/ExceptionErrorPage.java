@@ -25,7 +25,6 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
 import wicket.util.string.Strings;
 
-
 /**
  * Shows a runtime exception on a nice HTML page.
  * 

@@ -165,7 +165,7 @@ public class Image extends HtmlComponent implements IResourceListener
     /**
      * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    protected void handleBody(MarkupStream markupStream, ComponentTag openTag)
+    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
     }
 
