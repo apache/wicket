@@ -380,13 +380,16 @@ public class HtmlDocumentValidator
                         	System.err.println("Attribute " + name + " was expected but not found");
                         	valid = false;
                         }
-                        if (!value.matches(pattern))
+                        else
                         {
-                            System.err.println("The value '" + value + "' of attribute '" + name
-                                    + "' of tag <" + workingTag.getTag()
-                                    + "> was expected to match the pattern '" + pattern
-                                    + "' but it does not");
-                            valid = false;
+	                        if (!value.matches(pattern))
+	                        {
+	                            System.err.println("The value '" + value + "' of attribute '" + name
+	                                    + "' of tag <" + workingTag.getTag()
+	                                    + "> was expected to match the pattern '" + pattern
+	                                    + "' but it does not");
+	                            valid = false;
+	                        }
                         }
                     }
 
