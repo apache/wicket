@@ -18,7 +18,6 @@
 package wicket.model;
 
 import java.lang.reflect.Member;
-import java.util.Locale;
 import java.util.Map;
 
 import ognl.DefaultTypeConverter;
@@ -26,11 +25,12 @@ import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 import wicket.ApplicationSettings;
+import wicket.Component;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.util.convert.ConverterRegistry;
-import wicket.util.convert.FormattingUtils;
+import wicket.util.convert.IConverter;
+import wicket.util.convert.IStringConverter;
 
 /**
  * A PropertyModel is used to dynamically access a model using an <a
@@ -93,13 +93,10 @@ import wicket.util.convert.FormattingUtils;
  * @see wicket.model.IModel
  * @see wicket.model.Model
  * @see wicket.model.DetachableModel
- * @see wicket.util.convert.ConverterRegistry
- * @see wicket.util.convert.ConversionUtils
- * @see wicket.util.convert.FormattingUtils
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class PropertyModel extends DetachableModel
+public class PropertyModel extends DetachableModel implements IComponentAware
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
@@ -114,23 +111,14 @@ public class PropertyModel extends DetachableModel
 	/** Ognl context wrapper object. It contains the type converter. */
 	private transient OgnlContext context;
 
-	/** The current instance of converterRegistry. */
-	private transient ConverterRegistry converterRegistry;
-
 	/** Ognl expression for property access. */
 	private final String expression;
 
-	/** Pattern to use when formatting. */
-	private String formatPattern;
-
-	/** Named formatter. */
-	private String formatterName;
-
-	/** The current locale. */
-	private Locale locale;
-
 	/** The model. */
 	private final IModel model;
+
+	/** The component that uses this model. */
+	private Component component;
 
 	/**
 	 * This class is registered with the Ognl context before parsing in order to be able to
@@ -172,8 +160,8 @@ public class PropertyModel extends DetachableModel
 			{
 				return null;
 			}
-
-			return converterRegistry.getConversionUtils().convert(value, toType, getLocale());
+			IConverter converter = component.getConverter();
+			return converter.convert(value, toType);
 		}
 
 		/**
@@ -189,7 +177,8 @@ public class PropertyModel extends DetachableModel
 		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,
 		 *      java.lang.Class)
 		 */
-		public Object convertValue(Map context, Object target, Member member, String propertyName,
+		public Object convertValue(Map context, Object target,
+				Member member, String propertyName,
 				Object value, Class toType)
 		{
 			return convertValue(context, value, toType);
@@ -242,16 +231,15 @@ public class PropertyModel extends DetachableModel
 	}
 
 	/**
-	 * Gets the instance of {@link ConverterRegistry }that is used for conversions and
-	 * formatting.
-	 * @return The instance of {@link ConverterRegistry}that is used for conversions and
-	 *         formatting.
+	 * Sets the component that uses this model.
+	 * @param component the component that uses this model
+	 * @see wicket.model.IComponentAware#setComponent(wicket.Component)
 	 */
-	public final ConverterRegistry getConverterRegistry()
+	public void setComponent(Component component)
 	{
-		return converterRegistry;
+		this.component = component;
 	}
-
+	
 	/**
 	 * Gets the value that results when the given Ognl expression is applied to the model
 	 * object (Ognl.getValue).
@@ -261,7 +249,8 @@ public class PropertyModel extends DetachableModel
 	 */
 	public Object getObject()
 	{
-		if (getExpression() == null || getExpression().trim().length() == 0)
+		String expr = getExpression();
+		if (expr == null || expr.trim().length() == 0)
 		{
 			// No expression will cause OGNL to throw an exception. The OGNL
 			// expression to return the current object is "#this". Instead
@@ -281,12 +270,12 @@ public class PropertyModel extends DetachableModel
 		}
 		try
 		{
-			Object raw = Ognl.getValue(getExpression(), getContext(), modelObject);
+			OgnlContext ctx = getContext();
+			Object raw = Ognl.getValue(expr, ctx, modelObject);
 			if (applyFormatting)
 			{
-				FormattingUtils formattingUtils = converterRegistry.getFormattingUtils();
-				return formattingUtils.getObjectFormatted(raw, getLocale(), getFormatPattern(),
-						getFormatPattern());
+				IStringConverter converter = component.getConverter();
+				return converter.toString(raw);
 			}
 			else
 			{
@@ -297,43 +286,6 @@ public class PropertyModel extends DetachableModel
 		{
 			throw new WicketRuntimeException(e);
 		}
-	}
-
-	/**
-	 * Sets whether to apply formatting when getObject is invoked.
-	 * @param applyFormatting Whether to apply formatting when getObject is invoked
-	 * @return This
-	 */
-	public final PropertyModel setApplyFormatting(boolean applyFormatting)
-	{
-		this.applyFormatting = applyFormatting;
-
-		return this;
-	}
-
-	/**
-	 * Sets an optional format pattern to use when formatting is used.
-	 * @param formatPattern The format pattern to use
-	 * @return This
-	 */
-	public final PropertyModel setFormatPattern(String formatPattern)
-	{
-		this.formatPattern = formatPattern;
-
-		return this;
-	}
-
-	/**
-	 * Sets the keyed formatter that should be used when formatting is used.
-	 * @param formatterName The keyed formatter that should be used when formatting is
-	 *           used.
-	 * @return This
-	 */
-	public final PropertyModel setFormatterName(String formatterName)
-	{
-		this.formatterName = formatterName;
-
-		return this;
 	}
 
 	/**
@@ -359,7 +311,7 @@ public class PropertyModel extends DetachableModel
 	}
 
 	/**
-	 * Sets the current {@link Locale}and the {@link ConverterRegistry}, and in case the
+	 * Initializes the instance variables of this property model, and in case the
 	 * wrapped model is a {@link IDetachableModel}, calls attach on the wrapped model.
 	 * @see wicket.model.DetachableModel#doAttach()
 	 */
@@ -372,15 +324,12 @@ public class PropertyModel extends DetachableModel
 
 		// Save the reference to the current locale
 		Session session = RequestCycle.get().getSession();
-		this.locale = session.getLocale();
-
-		// Save the reference to the current converter registry instance
-		this.converterRegistry = session.getApplication().getConverterRegistry();
 	}
 
 	/**
-	 * Unsets the current {@link Locale}and {@link ConverterRegistry}and, in case the
-	 * wrapped model is a {@link IDetachableModel}, calls dettach on the wrapped model.
+	 * Unsets this property model's instance variables and, in case the
+	 * wrapped model is a {@link IDetachableModel}, calls dettach on the
+	 * wrapped model.
 	 * @see wicket.model.DetachableModel#doDetach()
 	 */
 	protected final void doDetach()
@@ -392,12 +341,6 @@ public class PropertyModel extends DetachableModel
 
 		// Reset OGNL context
 		this.context = null;
-
-		// Reset the reference to the current locale
-		this.locale = null;
-
-		// reset the reference to the current converter registry
-		this.converterRegistry = null;
 	}
 
 	/**
@@ -437,35 +380,6 @@ public class PropertyModel extends DetachableModel
 	protected final String getExpression()
 	{
 		return expression;
-	}
-
-	/**
-	 * Gets the format pattern to use when formatting is used.
-	 * @return Format pattern to use when formatting is used.
-	 */
-	protected final String getFormatPattern()
-	{
-		return formatPattern;
-	}
-
-	/**
-	 * Gets the keyed formatter that should be used when formatting is used.
-	 * @return The keyed formatter that should be used when formatting is used.
-	 */
-	protected final String getFormatterName()
-	{
-		return formatterName;
-	}
-
-	/**
-	 * Gets the current locale. The locale will be used for conversions and formatting if
-	 * localized Converters and Formatters are registered for the target types of the
-	 * applied expression on the model.
-	 * @return the current locale.
-	 */
-	protected final Locale getLocale()
-	{
-		return locale;
 	}
 
 	/**

@@ -16,20 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.convert;
+package wicket.model;
+
+import wicket.Component;
 
 /**
- * General purpose data type converter.
- *
- * @author Eelco Hillenius
+ * Interface that can be implemented by instances of {@link wicket.model.IModel}
+ * to indicate that they want to have the component that the model is set on
+ * being set.
  */
-public interface IConverter
+public interface IComponentAware
 {
 	/**
-	 * Converts the given value to class c.
-	 * @param value the value to convert
-	 * @param c the class to convert to
-	 * @return the converted value
+	 * Sets the component that uses this model.
+	 * @param component the component that uses this model
 	 */
-	public Object convert(Object value, Class c);
+	void setComponent(Component component);
 }

@@ -16,22 +16,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.convert.converters;
+package wicket.util.convert.converters.i18n;
 
 import wicket.util.convert.ConversionException;
 
+
 /**
- * Converts to and from Integer objects.
- * 
+ * Converts to and from Double objects using the current locale and optionally
+ * a pattern for it conversion.
+ *
  * @author Eelco Hillenius
  */
-public final class IntegerConverter extends AbstractConverter
+public class DoubleLocaleConverter extends DecimalLocaleConverter
 {
 	/**
 	 * Construct.
 	 */
-	public IntegerConverter()
+	public DoubleLocaleConverter()
 	{
+	}
+
+	/**
+	 * Construct. An unlocalized pattern is used for the convertion.
+	 * @param pattern The convertion pattern
+	 */
+	public DoubleLocaleConverter(String pattern)
+	{
+		this(pattern, false);
+	}
+
+	/**
+	 * Construct.
+	 * @param pattern The convertion pattern
+	 * @param locPattern Indicate whether the pattern is localized or not
+	 */
+	public DoubleLocaleConverter(String pattern, boolean locPattern)
+	{
+		super(pattern, locPattern);
 	}
 
 	/**
@@ -45,23 +66,9 @@ public final class IntegerConverter extends AbstractConverter
 		}
 		if(Number.class.isAssignableFrom(c))
 		{
-			if (value instanceof Integer)
-			{
-				return (value);
-			}
-			else if (value instanceof Number)
-			{
-				return new Integer(((Number)value).intValue());
-			}
-
-			try
-			{
-				return (new Integer(value.toString()));
-			}
-			catch (Exception e)
-			{
-				throw new ConversionException(e);
-			}
+			String pattern = getPattern();
+			Number temp = getNumber(value);
+			return (temp instanceof Double) ? (Double)temp : new Double(temp.doubleValue());
 		}
 		if(String.class.isAssignableFrom(c))
 		{

@@ -19,53 +19,57 @@
 package wicket.util.convert.converters;
 
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.IConverter;
 
 /**
- * {@link wicket.util.convert.IConverter} implementation that converts an incoming String
- * into a <code>java.lang.Double</code> object, throwing a
- * {@link wicket.util.convert.ConversionException} if a conversion error occurs.
- * </p>
+ * Converts to and from Double objects.
+ * 
+ * @author Eelco Hillenius
  */
-public final class DoubleConverter implements IConverter
+public final class DoubleConverter extends AbstractConverter
 {
-    /**
-     * Construct.
-     */
-    public DoubleConverter()
-    {
-    }
+	/**
+	 * Construct.
+	 */
+	public DoubleConverter()
+	{
+	}
 
-    /**
-     * Converts the specified input object into an output object of the specified type.
-     * @param value The input value to be converted
-     * @return converted object
-     * @exception ConversionException if conversion cannot be performed successfully
-     */
-    public Object convert(Object value)
-    {
-        if (value == null)
-        {
-            return null;
-        }
-        else if (value instanceof Double)
-        {
-            return (value);
-        }
-        else if (value instanceof Number)
-        {
-            return new Double(((Number) value).doubleValue());
-        }
-        else
-        {
-            try
-            {
-                return (new Double(value.toString()));
-            }
-            catch (Exception e)
-            {
-                throw new ConversionException(e);
-            }
-        }
-    }
+	/**
+	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
+	 */
+	public Object convert(Object value, Class c)
+	{
+		if (value == null)
+		{
+			return null;
+		}
+		if(Number.class.isAssignableFrom(c))
+		{
+			if (value instanceof Double)
+			{
+				return (value);
+			}
+			else if (value instanceof Number)
+			{
+				return new Double(((Number)value).doubleValue());
+			}
+			else
+			{
+				try
+				{
+					return (new Double(value.toString()));
+				}
+				catch (Exception e)
+				{
+					throw new ConversionException(e);
+				}
+			}
+		}
+		if(String.class.isAssignableFrom(c))
+		{
+			return toString(value);
+		}
+		throw new ConversionException(this +
+				" cannot handle conversions of type " + c);
+	}
 }

@@ -19,51 +19,56 @@
 package wicket.util.convert.converters;
 
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.IConverter;
 
 /**
- * {@link wicket.util.convert.IConverter} implementation that converts an incoming String
- * into a <code>java.lang.Short</code> object, throwing a
- * {@link wicket.util.convert.ConversionException} if a conversion error occurs.
+ * Converts to and from Short objects.
+ * 
+ * @author Eelco Hillenius
  */
-public final class ShortConverter implements IConverter
+public final class ShortConverter extends AbstractConverter
 {
-    /**
-     * Construct.
-     */
-    public ShortConverter()
-    {
-    }
+	/**
+	 * Construct.
+	 */
+	public ShortConverter()
+	{
+	}
 
-    /**
-     * Converts the specified input object into an output object of the specified type.
-     * @param value The input value to be converted
-     * @return converted object
-     * @exception ConversionException if conversion cannot be performed successfully
-     */
-    public Object convert(Object value)
-    {
-        if (value == null)
-        {
-            return null;
-        }
+	/**
+	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
+	 */
+	public Object convert(Object value, Class c)
+	{
+		if (value == null)
+		{
+			return null;
+		}
+		if(Number.class.isAssignableFrom(c))
+		{
+			if (value instanceof Short)
+			{
+				return (value);
+			}
+			else if (value instanceof Number)
+			{
+				return new Short(((Number)value).shortValue());
+			}
 
-        if (value instanceof Short)
-        {
-            return (value);
-        }
-        else if (value instanceof Number)
-        {
-            return new Short(((Number) value).shortValue());
-        }
+			try
+			{
+				return (new Short(value.toString()));
+			}
+			catch (Exception e)
+			{
+				throw new ConversionException(e);
+			}
+		}
+		if(String.class.isAssignableFrom(c))
+		{
+			return toString(value);
+		}
+		throw new ConversionException(this +
+				" cannot handle conversions of type " + c);
 
-        try
-        {
-            return (new Short(value.toString()));
-        }
-        catch (Exception e)
-        {
-            throw new ConversionException(e);
-        }
-    }
+	}
 }

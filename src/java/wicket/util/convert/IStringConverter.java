@@ -19,17 +19,23 @@
 package wicket.util.convert;
 
 /**
- * General purpose data type converter.
+ * Converts (formats) objects to a string.
  *
  * @author Eelco Hillenius
  */
-public interface IConverter
+public interface IStringConverter extends IConverter
 {
 	/**
-	 * Converts the given value to class c.
-	 * @param value the value to convert
-	 * @param c the class to convert to
-	 * @return the converted value
+	 * Converts the given value to a string.
+	 * @param value the value to convert to a string
+	 * @return to value as a string
 	 */
-	public Object convert(Object value, Class c);
+	String toString(Object value);
+
+	/**
+	 * Converts the given value to an object.
+	 * @param string the string to convert to an object
+	 * @return the converted string
+	 */
+	Object valueOf(String string);
 }
