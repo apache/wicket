@@ -52,19 +52,18 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  */
 public abstract class Link extends AbstractLink
-{ // TODO finalize javadoc
-
+{
     /** True if link should automatically enable/disable based on current page. */
     private boolean autoEnable = true;
 
     /** 
-     * Simple insertion strings to allow disabled links to
+     * Simple insertion string to allow disabled links to
      * look like <i>Disabled link</i>.
      */
     private String beforeDisabledLink;
 
     /** 
-     * Simple insertion strings to allow disabled links to
+     * Simple insertion string to allow disabled links to
      * look like <i>Disabled link</i>.
      */
     private String afterDisabledLink;
@@ -141,8 +140,8 @@ public abstract class Link extends AbstractLink
 
     /**
      * Whether link should automatically enable/disable based on current page
-     * @return Returns True if link should automatically enable/disable based on current
-     *         page.
+     * @return Whether this link should automatically enable/disable
+     * based on current page.
      */
     public final boolean getAutoEnable()
     {
@@ -150,7 +149,7 @@ public abstract class Link extends AbstractLink
     }
 
     /**
-     * Set whether this link should automatically enable/disable based on current page.
+     * Sets whether this link should automatically enable/disable based on current page.
      * @param autoEnable whether this link should automatically enable/disable based on
      *            current page.
      * @return This
@@ -163,8 +162,8 @@ public abstract class Link extends AbstractLink
     }
 
     /**
-     * Whether this link is enabled.
-     * @return Returns whether this link is enabled.
+     * Gets whether this link is enabled.
+     * @return whether this link is enabled.
      */
     public final boolean isEnabled()
     {
@@ -180,7 +179,6 @@ public abstract class Link extends AbstractLink
     {
         // Set enabled state
         this.enabled = enabled;
-
         return this;
     }
 
@@ -194,22 +192,8 @@ public abstract class Link extends AbstractLink
     }
 
     /**
-     * Set the after disabled link.
-     * @param afterDisabledLink The afterDisabledLink to set.
-     */
-    public void setAfterDisabledLink(final String afterDisabledLink)
-    {
-        if (afterDisabledLink == null)
-        {
-            throw new IllegalArgumentException(
-                    "Value cannot be null.  For no text, specify an empty String instead.");
-        }
-
-        this.afterDisabledLink = afterDisabledLink;
-    }
-
-    /**
-     * @param beforeDisabledLink The beforeDisabledLink to set.
+     * Sets the insertion string to allow disabled links to look like <i>Disabled link</i>.
+     * @param beforeDisabledLink The insertion string
      */
     public void setBeforeDisabledLink(final String beforeDisabledLink)
     {
@@ -218,8 +202,39 @@ public abstract class Link extends AbstractLink
             throw new IllegalArgumentException(
                     "Value cannot be null.  For no text, specify an empty String instead.");
         }
-
         this.beforeDisabledLink = beforeDisabledLink;
+    }
+
+    /**
+     * Gets the insertion string to allow disabled links to look like <i>Disabled link</i>.
+     * @return The insertion string
+     */
+    public String getBeforeDisabledLink()
+    {
+    	return beforeDisabledLink;
+    }
+
+    /**
+     * Sets the insertion string to allow disabled links to look like <i>Disabled link</i>.
+     * @param afterDisabledLink The insertion string
+     */
+    public void setAfterDisabledLink(final String afterDisabledLink)
+    {
+        if (afterDisabledLink == null)
+        {
+            throw new IllegalArgumentException(
+                    "Value cannot be null.  For no text, specify an empty String instead.");
+        }
+        this.afterDisabledLink = afterDisabledLink;
+    }
+
+    /**
+     * Gets the insertion string to allow disabled links to look like <i>Disabled link</i>.
+     * @return The insertion string
+     */
+    public String getAfterDisabledLink()
+    {
+    	return afterDisabledLink;
     }
 
     /**
@@ -244,10 +259,14 @@ public abstract class Link extends AbstractLink
     }
 
     /**
+     * Renders this link's body.
+     * @param cycle the request cycle
+     * @param markupStream the markup stream
+     * @param openTag the open part of this tag
      * @see wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
      */
-    protected final void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-            final ComponentTag openTag)
+    protected final void handleBody(final RequestCycle cycle,
+    		final MarkupStream markupStream, final ComponentTag openTag)
     {
         // Get disabled component of the same name with "Disabled" appended
         final Container disabledContainer = (Container) get("disabled");
@@ -286,6 +305,9 @@ public abstract class Link extends AbstractLink
     }
 
     /**
+     * Handles this link's tag.
+     * @param cycle the request cycle
+     * @param tag the component tag
      * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
      */
     protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
