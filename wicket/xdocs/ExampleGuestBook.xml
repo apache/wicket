@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>Wicket Example: Tables</title>
+		<title>Wicket Example: GuestBook</title>
 	</properties>
 
 	<meta
@@ -9,7 +9,7 @@
 		content="wicket, example, web, j2ee, java" />
 
 	<body>
-		<section name="Tables Example">
+		<section name="GuestBook Example">
 			<p>
 				A quick teaser here that shows what Tables look like in Wicket. The GuestBook
 				example in the Wicket SDK has a form that allows users to enter comments. It draws
