@@ -56,8 +56,8 @@ public final class MarkupParserTest extends TestCase
     {
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
         final Markup markup = parser.parse(
-                "This is a test <a componentName=\"a\" href=\"foo.html\"> <b componentName=\"b\">Bold!</b> "
-                + "<img componentName=\"img\" width=9 height=10 src=\"foo\"> <marker componentName=\"marker\"/> </a>");
+                "This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
+                + "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
 
         final MarkupStream markupStream = new MarkupStream(markup);
 
@@ -119,7 +119,7 @@ public final class MarkupParserTest extends TestCase
     {
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
         final Markup tokens = parser
-                .parse("This is a test <a componentName=9> <b>bold</b> <b componentName=10/></a> of the emergency broadcasting system");
+                .parse("This is a test <a componentName:id=9> <b>bold</b> <b componentName:id=10/></a> of the emergency broadcasting system");
 
         log.info("tok(0)=" + tokens.get(0));
         log.info("tok(1)=" + tokens.get(1));
@@ -132,12 +132,12 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag a = (ComponentTag) tokens.get(1);
 
-        Assert.assertEquals(9, a.getAttributes().getInt("componentName"));
+        Assert.assertEquals(9, a.getAttributes().getInt("componentName:id"));
         Assert.assertTrue(tokens.get(2).equals(" <b>bold</b> "));
 
         final ComponentTag b = (ComponentTag) tokens.get(3);
 
-        Assert.assertEquals(10, b.getAttributes().getInt("componentName"));
+        Assert.assertEquals(10, b.getAttributes().getInt("componentName:id"));
 
         final ComponentTag closeA = (ComponentTag) tokens.get(4);
 
@@ -225,27 +225,23 @@ public final class MarkupParserTest extends TestCase
    	{
 	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wicket");
 	    
-	    parser.parse("<span wicket=\"test\"/>");
+	    parser.parse("<span wicket:id=\"test\"/>");
 
-	    parser.parse("<span wicket=\"test\">Body</span>");
+	    parser.parse("<span wicket:id=\"test\">Body</span>");
 	    
-	    parser.parse("This is a test <span wicket=\"test\"/>");
+	    parser.parse("This is a test <span wicket:id=\"test\"/>");
 
-	    parser.parse("This is a test <span wicket=\"test\">Body</span>");
+	    parser.parse("This is a test <span wicket:id=\"test\">Body</span>");
 	    
-	    parser.parse("<span id=\"wicket-test\"/>");
-
-	    parser.parse("<span id=\"wicket-test\">Body</span>");
+	    parser.parse("<a wicket:id=\"[autolink]\" href=\"test.html\">Home</a>");
 	    
-	    parser.parse("<a wicket=\"[autolink]\" href=\"test.html\">Home</a>");
+	    parser.parse("<span wicket:id=\"test\"/><wicket:param key=value/>");
 	    
-	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=value/>");
-	    
-	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=\"value\" />");
+	    parser.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" />");
 	    
 	    try
 	    {
-	        parser.parse("<span id=\"wicket-test\"/>whatever<wicket:param key=\"value\" />");
+	        parser.parse("<span wicket:id=\"test\"/>whatever<wicket:param key=\"value\" />");
 	        assertTrue("Should have thrown an exception", false);
 	    }
 	    catch (MarkupException ex)
@@ -253,13 +249,13 @@ public final class MarkupParserTest extends TestCase
 	        ; // ignore
 	    }
 	    
-	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
+	    parser.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
 	    
-	    parser.parse("<span id=\"wicket-test\"/>   <wicket:param key=\"value\" />   <wicket:param key2=\"value2\" />");
+	    parser.parse("<span wicket:id=\"test\"/>   <wicket:param key=\"value\" />   <wicket:param key2=\"value2\" />");
 	    
-	    parser.parse("<span id=\"wicket-test\"/> \n\r   <wicket:param key=\"value\" />\n\r\t   <wicket:param key2=\"value2\" />");
+	    parser.parse("<span wicket:id=\"test\"/> \n\r   <wicket:param key=\"value\" />\n\r\t   <wicket:param key2=\"value2\" />");
 	    
-	    //parser.parse("<span id=\"wicket-test\"/><wicket:param name=myParam>value</wicket>", null);
+	    //parser.parse("<span wicket:id=\"test\"/><wicket:param name=myParam>value</wicket>", null);
 	    
 	    parser.parse("<wicket:body/>");
 	    
@@ -316,10 +312,10 @@ public final class MarkupParserTest extends TestCase
    	{
 	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
 	    
-	    Markup markup = parser.parse("<span wcn=\"test\"/>");
+	    Markup markup = parser.parse("<span wcn:id=\"test\"/>");
 	    assertEquals(1, markup.size());
 
-	    markup = parser.parse("<span wicket=\"test\"/>");
+	    markup = parser.parse("<span wicket:id=\"test\"/>");
 	    assertEquals(1, markup.size());
 	    
 	    markup = parser.parse("<wcn:xxx>  </wcn:xxx>");
@@ -327,11 +323,6 @@ public final class MarkupParserTest extends TestCase
 
 	    final ApplicationSettings settings = new ApplicationSettings(new MockWebApplication(null));
 	    settings.setComponentIdAttribute("wcn");
-	    parser.configure(settings);
-	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
-	    assertEquals(3, markup.size());
-	    
-	    settings.setApplyDefaultComponentId(false);
 	    parser.configure(settings);
 	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
 	    assertEquals(1, markup.size());

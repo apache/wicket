@@ -487,7 +487,7 @@ public class XmlTag extends MarkupElement
 			return text;
 		}
 
-		return toXmlString();
+		return toXmlString(null);
 	}
 
 	/**
@@ -504,9 +504,10 @@ public class XmlTag extends MarkupElement
 	 * Assuming some attributes have been changed, toXmlString() rebuilds the
 	 * String on based on the tags informations.
 	 * 
+	 * @param attributeToBeIgnored  
 	 * @return A xml string matching the tag
 	 */
-	public String toXmlString()
+	public String toXmlString(final String attributeToBeIgnored)
 	{
 		final StringBuffer buffer = new StringBuffer();
 
@@ -527,8 +528,22 @@ public class XmlTag extends MarkupElement
 
 		if (attributes.size() > 0)
 		{
-			buffer.append(' ');
-			buffer.append(attributes);
+			final Iterator iterator = attributes.keySet().iterator();
+			for (; iterator.hasNext();)
+			{
+				final String key = (String)iterator.next();
+				if ((key != null) && ((attributeToBeIgnored == null) || 
+				        !key.equalsIgnoreCase(attributeToBeIgnored)))
+				{
+				    buffer.append(" ");
+				    buffer.append(key);
+				    buffer.append("=\"");
+				    String value = getString(key);
+				    value = value.replaceAll("\"", "\\\"");
+				    buffer.append(value);
+				    buffer.append("\"");
+				}
+			}
 		}
 
 		if (type == OPEN_CLOSE)

@@ -56,8 +56,7 @@ public class ComponentTag extends MarkupElement
 	private boolean autolink = false;
 
 	/**
-	 * The component's id. Wicket supports several means to identify Wicket
-	 * components. E.g. wicket="id", id="wicket-id"
+	 * The component's id identified by wicket:id="xxx"
 	 */
 	private String id;
 
@@ -359,34 +358,6 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Clears component id attribute from this tag if the tag is mutable.
-	 * 
-	 * @param componentIdAttribute
-	 *            The attribute id to remove
-	 * @param removeComponentsWithDefaultName
-	 *            If true, components with name "wicket" get removed as
-	 */
-	public void removeComponentId(final String componentIdAttribute,
-			final boolean removeComponentsWithDefaultName)
-	{
-		if (xmlTag.isMutable())
-		{
-			this.id = null;
-			xmlTag.remove(componentIdAttribute);
-
-			if (removeComponentsWithDefaultName)
-			{
-				xmlTag.remove(DEFAULT_COMPONENT_ID_ATTRIBUTE);
-			}
-		}
-		else
-		{
-			throw new UnsupportedOperationException(
-					"Attempt to clear component name attribute of immutable tag");
-		}
-	}
-
-	/**
 	 * Gets whether this tag does not require a closing tag.
 	 * 
 	 * @return True if this tag does not require a closing tag
@@ -463,6 +434,25 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * Converts this object to a string representation.
+	 * 
+	 * @param stripWicketAttributes If true, tag attributes with namespace
+	 * 		'wicket# will not be printed. 
+	 * @return String version of this object
+	 */
+	public String toString(final boolean stripWicketAttributes)
+	{
+	    if (stripWicketAttributes == false)
+	    {
+	        return xmlTag.toXmlString(null);
+	    }
+	    else
+	    {
+	        return xmlTag.toXmlString(DEFAULT_COMPONENT_ID_ATTRIBUTE + ":id");
+	    }
+	}
+	
+	/**
 	 * Converts this object to a string representation including useful
 	 * information for debugging
 	 * 
@@ -481,5 +471,3 @@ public class ComponentTag extends MarkupElement
 		return xmlTag;
 	}
 }
-
-// /////////////////////////////// End of File /////////////////////////////////
