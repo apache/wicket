@@ -30,7 +30,7 @@ public class WicketPanel extends Panel
 {
 	/**
 	 * Construct.
-	 * @param parameters
+	 * @param componentName
 	 */
 	public WicketPanel(final String componentName) 
 	{

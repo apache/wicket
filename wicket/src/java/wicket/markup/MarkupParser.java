@@ -466,7 +466,6 @@ public final class MarkupParser implements IMarkupParser
      * Handle wicket parameter tags
      * 
      * @param markupElements
-     * @param tag
      * @throws ParseException
      */
     private final void validateWicketTag(final List markupElements)
@@ -781,6 +780,7 @@ public final class MarkupParser implements IMarkupParser
      * Parses the text between tags. For example, "a href=foo.html".
      * @param tagText The text between tags
      * @return A new Tag object or null if the tag is invalid
+     * @throws ParseException
      */
     private ComponentTag parseTagText(final String tagText) throws ParseException
     {
