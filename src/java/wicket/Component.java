@@ -304,9 +304,9 @@ public abstract class Component implements Serializable
     {
         return getApplication().getSettings();
     }
-    
+
     /**
-     * Gets the application pages from the application that this component 
+     * Gets the application pages from the application that this component
      * belongs to.
      * 
      * @return The application pages
@@ -348,7 +348,7 @@ public abstract class Component implements Serializable
     {
         if ((model != null) && (model instanceof IDetachableModel))
         {
-            ((IDetachableModel) model).attach();
+            ((IDetachableModel)model).attach();
         }
         return model;
     }
@@ -386,9 +386,8 @@ public abstract class Component implements Serializable
             if (property != null)
             {
                 // Model string from property
-                final String modelString = (property instanceof String)
-                        ? (String) property
-                        : String.valueOf(property);
+                final String modelString = (property instanceof String) ? (String)property : String
+                        .valueOf(property);
 
                 // If we should escape the markup
                 if (shouldEscapeModelStrings)
@@ -414,9 +413,9 @@ public abstract class Component implements Serializable
         final IModel currentModel = getModel();
         if (currentModel != null && currentModel instanceof IDetachableModel)
         {
-            ((IDetachableModel) currentModel).detach();
+            ((IDetachableModel)currentModel).detach();
         }
-        this.model = (IModel) model;
+        this.model = (IModel)model;
         return this;
     }
 
@@ -459,8 +458,7 @@ public abstract class Component implements Serializable
         if (page == null)
         {
             // Give up with a nice exception
-            throw new IllegalStateException("No Page found for component "
-                    + this);
+            throw new IllegalStateException("No Page found for component " + this);
         }
 
         return page;
@@ -584,9 +582,8 @@ public abstract class Component implements Serializable
         }
         catch (NumberFormatException e)
         {
-            throw new IllegalArgumentException(
-                    exceptionMessage("Internal error.  Request string '"
-                            + string + "' not a valid integer"));
+            throw new IllegalArgumentException(exceptionMessage("Internal error.  Request string '"
+                    + string + "' not a valid integer"));
         }
     }
 
@@ -610,9 +607,8 @@ public abstract class Component implements Serializable
             }
             catch (NumberFormatException e)
             {
-                throw new IllegalArgumentException(
-                        exceptionMessage("Request string '" + string
-                                + "' is not a valid integer"));
+                throw new IllegalArgumentException(exceptionMessage("Request string '" + string
+                        + "' is not a valid integer"));
             }
         }
         else
@@ -678,8 +674,7 @@ public abstract class Component implements Serializable
             {
                 // This should NEVER happen. But if it does, we'll want a nice
                 // error message.
-                throw new IllegalStateException(
-                        exceptionMessage("Page not attached to session"));
+                throw new IllegalStateException(exceptionMessage("Page not attached to session"));
             }
         }
         else
@@ -705,8 +700,7 @@ public abstract class Component implements Serializable
      *            True is model strings should be escaped
      * @return This
      */
-    public final Component setShouldEscapeModelStrings(
-            final boolean escapeMarkup)
+    public final Component setShouldEscapeModelStrings(final boolean escapeMarkup)
     {
         this.shouldEscapeModelStrings = escapeMarkup;
         return this;
@@ -807,10 +801,9 @@ public abstract class Component implements Serializable
                 if (component.rendering == 0)
                 {
                     // Throw exception
-                    throw new WicketRuntimeException(
-                            component
-                                    .exceptionMessage("Component never rendered. You probably failed to "
-                                            + "reference it in your markup."));
+                    throw new WicketRuntimeException(component
+                            .exceptionMessage("Component never rendered. You probably failed to "
+                                    + "reference it in your markup."));
                 }
                 return CONTINUE_TRAVERSAL;
             }
@@ -830,25 +823,22 @@ public abstract class Component implements Serializable
             public Object component(final Component component)
             {
                 IModel componentModel = component.getModel();
-                if ((componentModel != null)
-                        && (componentModel instanceof IDetachableModel))
+                if ((componentModel != null) && (componentModel instanceof IDetachableModel))
                 {
-                    ((IDetachableModel) componentModel).detach();
+                    ((IDetachableModel)componentModel).detach();
                 }
 
                 // Also detach models from any contained attribute modifiers
                 if (component.attributeModifiers != null)
                 {
-                    for (Iterator iterator = component.attributeModifiers
-                            .iterator(); iterator.hasNext();)
+                    for (Iterator iterator = component.attributeModifiers.iterator(); iterator
+                            .hasNext();)
                     {
-                        IModel modifierModel = (IModel) ((ComponentTagAttributeModifier) iterator
+                        IModel modifierModel = (IModel)((ComponentTagAttributeModifier)iterator
                                 .next()).getReplaceModel();
-                        if ((modifierModel != null)
-                                && (modifierModel instanceof IDetachableModel))
+                        if ((modifierModel != null) && (modifierModel instanceof IDetachableModel))
                         {
-                            ((IDetachableModel) modifierModel)
-                                    .detach();
+                            ((IDetachableModel)modifierModel).detach();
                         }
                     }
                 }
@@ -869,20 +859,17 @@ public abstract class Component implements Serializable
      * @throws MarkupException
      *             Thrown if the tag does not have the required attribute value
      */
-    protected final void checkAttribute(final ComponentTag tag,
-            final String key, final String value)
+    protected final void checkAttribute(final ComponentTag tag, final String key, final String value)
     {
         if (key != null)
         {
             final String tagAttributeValue = tag.getAttributes().getString(key);
-            if (tagAttributeValue == null
-                    || !value.equalsIgnoreCase(tagAttributeValue))
+            if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
             {
                 findMarkupStream().throwMarkupException(
-                        "Component " + getName()
-                                + " must be applied to a tag with '" + key
-                                + "' attribute matching '" + value + "', not '"
-                                + tagAttributeValue + "'");
+                        "Component " + getName() + " must be applied to a tag with '" + key
+                                + "' attribute matching '" + value + "', not '" + tagAttributeValue
+                                + "'");
             }
         }
     }
@@ -902,8 +889,7 @@ public abstract class Component implements Serializable
         if (!tag.getName().equalsIgnoreCase(name))
         {
             findMarkupStream().throwMarkupException(
-                    "Component " + getName()
-                            + " must be applied to a tag of type '" + name
+                    "Component " + getName() + " must be applied to a tag of type '" + name
                             + "', not " + tag.toUserDebugString());
         }
     }
@@ -946,8 +932,7 @@ public abstract class Component implements Serializable
      * @param openTag
      *            The open tag for the body
      */
-    protected void handleBody(final MarkupStream markupStream,
-            final ComponentTag openTag)
+    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
         markupStream.throwMarkupException("No handleBody implementation found");
     }
@@ -1009,8 +994,7 @@ public abstract class Component implements Serializable
                             // identity)
                             // and component is accessing the same property of
                             // the model
-                            if (current.getModel() != null
-                                    && getModel() != null
+                            if (current.getModel() != null && getModel() != null
                                     && current.getModel().equals(getModel())
                                     && current.getName().equals(getName()))
                             {
@@ -1091,8 +1075,7 @@ public abstract class Component implements Serializable
             tag = tag.mutable();
             for (Iterator it = attributeModifiers.iterator(); it.hasNext();)
             {
-                ((ComponentTagAttributeModifier) it.next())
-                        .replaceAttibuteValue(tag);
+                ((ComponentTagAttributeModifier)it.next()).replaceAttibuteValue(tag);
             }
         }
 
@@ -1121,8 +1104,7 @@ public abstract class Component implements Serializable
      * @param tag
      *            The tag to write
      */
-    protected final void renderTag(final MarkupStream markupStream,
-            final ComponentTag tag)
+    protected final void renderTag(final MarkupStream markupStream, final ComponentTag tag)
     {
         // Optionally strip componentName tag
         stripComponentName(tag);
@@ -1142,8 +1124,8 @@ public abstract class Component implements Serializable
      * @param body
      *            The new markup
      */
-    protected final void replaceBody(final MarkupStream markupStream,
-            final ComponentTag tag, final String body)
+    protected final void replaceBody(final MarkupStream markupStream, final ComponentTag tag,
+            final String body)
     {
         // If tag has body
         if (tag.isOpen())
@@ -1230,15 +1212,13 @@ public abstract class Component implements Serializable
      * @param openTag
      *            the tag to render
      */
-    final void renderCloseTag(final MarkupStream markupStream,
-            final ComponentTag openTag)
+    final void renderCloseTag(final MarkupStream markupStream, final ComponentTag openTag)
     {
         // Tag should be open tag and not openclose tag
         if (openTag.isOpen())
         {
             // If we found a close tag and it closes the open tag, we're good
-            if (markupStream.atCloseTag()
-                    && markupStream.getTag().closes(openTag))
+            if (markupStream.atCloseTag() && markupStream.getTag().closes(openTag))
             {
                 // Get the close tag from the stream
                 ComponentTag closeTag = markupStream.getTag();
@@ -1259,8 +1239,7 @@ public abstract class Component implements Serializable
                 if (openTag.requiresCloseTag())
                 {
                     // Missing close tag
-                    markupStream.throwMarkupException("Expected close tag for "
-                            + openTag);
+                    markupStream.throwMarkupException("Expected close tag for " + openTag);
                 }
             }
         }
@@ -1294,8 +1273,7 @@ public abstract class Component implements Serializable
         if (settings.getStripComponentNames())
         {
             // Get mutable copy of tag and remove component name
-            tag.mutable().removeComponentName(
-                    settings.getComponentNameAttribute());
+            tag.mutable().removeComponentName(settings.getComponentNameAttribute());
         }
     }
 
@@ -1309,7 +1287,7 @@ public abstract class Component implements Serializable
     private final Page findPage()
     {
         // Search for page
-        return (Page) (this instanceof Page ? this : findParent(Page.class));
+        return (Page)(this instanceof Page ? this : findParent(Page.class));
     }
 
     /**

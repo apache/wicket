@@ -43,7 +43,7 @@ import wicket.util.time.Duration;
  * Application settings properties:
  * <p>
  * <ul>
- * <i>componentNameAttribute </i> (defaults to "componentName") - The markup
+ * <i>componentNameAttribute </i> (defaults to "wicket") - The markup
  * attribute which denotes the names of components to be attached
  * <p>
  * <i>componentUseCheck </i> (defaults to true) - Causes the framework to do a
@@ -84,6 +84,12 @@ import wicket.util.time.Duration;
  * found. If set to false then the throwExceptionOnMissingResource flag is used
  * to determine how to behave. If no default is available then this is the same
  * as if this flag were false
+ * <p>
+ * <i>stringResourceLoaders </i>- A chain of <code>IStringResourceLoader</code>
+ * instances that are searched in order to obtain string resources used during
+ * localization. By default the chain is set up to first search for resources
+ * against a particular component (e.g. page etc.) and then against the
+ * application.
  * <p>
  * <i>defaultPageFactory </i>- the factory class that is used for constructing
  * page instances.
@@ -203,7 +209,7 @@ public final class ApplicationSettings
      */
     public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
             "SHOW_NO_EXCEPTION_PAGE");
-    
+
     /**
      * Enumerated type for different ways of displaying unexpected exceptions.
      */
@@ -260,7 +266,7 @@ public final class ApplicationSettings
 
     /**
      * Gets component name attribute in use in this application. Normally, this
-     * is "componentName", but it can be changed in the unlikely event that tag
+     * is "wicket", but it can be changed in the unlikely event that tag
      * attribute naming conflicts arise.
      * 
      * @return The current component name attribute
@@ -488,7 +494,7 @@ public final class ApplicationSettings
 
     /**
      * Sets component name attribute in use in this application. Normally, this
-     * is "componentName", but it can be changed in the unlikely event that tag
+     * is "wicket", but it can be changed in the unlikely event that tag
      * attribute naming conflicts arise.
      * 
      * @param componentNameAttribute
@@ -509,7 +515,7 @@ public final class ApplicationSettings
      * @param componentUseCheck
      * @return This
      */
-    public final ApplicationSettings setComponentUseCheck(boolean componentUseCheck)
+    public final ApplicationSettings setComponentUseCheck(final boolean componentUseCheck)
     {
         this.componentUseCheck = componentUseCheck;
         return this;
@@ -533,7 +539,7 @@ public final class ApplicationSettings
      *            The compressWhitespace to set.
      * @return This
      */
-    public final ApplicationSettings setCompressWhitespace(boolean compressWhitespace)
+    public final ApplicationSettings setCompressWhitespace(final boolean compressWhitespace)
     {
         this.compressWhitespace = compressWhitespace;
         return this;
@@ -556,7 +562,8 @@ public final class ApplicationSettings
      *            The defaultAfterDisabledLink to set.
      * @return This
      */
-    public final ApplicationSettings setDefaultAfterDisabledLink(String defaultAfterDisabledLink)
+    public final ApplicationSettings setDefaultAfterDisabledLink(
+            final String defaultAfterDisabledLink)
     {
         this.defaultAfterDisabledLink = defaultAfterDisabledLink;
         return this;
@@ -687,7 +694,6 @@ public final class ApplicationSettings
         return this;
     }
 
-
     /**
      * Enables stripping of markup comments denoted in markup by HTML comment
      * tagging.
@@ -788,7 +794,7 @@ public final class ApplicationSettings
     }
 
     /**
-     * Define a new wicket tag name to use instead of "wicket"
+     * Define a new wicket namespace to use instead of "wicket"
      * 
      * @param wicketNamespace
      *            the tag name

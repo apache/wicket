@@ -145,7 +145,7 @@ public final class MarkupParser implements IMarkupParser
         
         if (!ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
         {
-            log.info("You are using a non-standard component name: " 
+            log.info("You are using a non-standard component name attribute: " 
                     + componentNameAttribute);
         }
     }
@@ -1074,6 +1074,7 @@ public final class MarkupParser implements IMarkupParser
                     Matcher matcher = MetaPattern.VARIABLE_NAME.matcher(value);
                     if (!matcher.matches())
                     {
+                        // TODO we should throw an exception here for 1.0
                         log.warn("WILL BE ACTIVATED SOON: Invalid character in component name '" 
                                 + componentNameAttribute + "-" + value + "'"
                                 + " Regex: [a-z_]+ (case insensitive)");

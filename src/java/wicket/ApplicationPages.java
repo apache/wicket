@@ -18,8 +18,8 @@
 package wicket;
 
 /**
- * Holder for Wicket pages with special meanings such as the application's home
- * page and any error display pages.
+ * Holder for specifying Wicket page classes that have special meaning to an
+ * application, such as an application's home page and any error display pages.
  * <p>
  * <i>homePage </i> (required, no default) - You must set this property to the
  * bookmarkable page that you want the framework to respond with when no path
