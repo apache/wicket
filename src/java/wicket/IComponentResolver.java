@@ -15,14 +15,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup;
+package wicket;
 
-import wicket.MarkupContainer;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 
 /**
- * ApplicationSettings maintains a list of IcomponentIdResolvers.
- * IcomponentIdResolvers are responsible for mapping component names to Wicket
- * components. 
+ * ApplicationSettings maintains a list of IComponentResolvers.
+ * IComponentResolvers are responsible for mapping component names to Wicket
+ * components.
  * 
  * @author Juergen Donnerstag
  */
@@ -38,8 +39,7 @@ public interface IComponentResolver
 	 *            The current markupStream
 	 * @param tag
 	 *            The current component tag while parsing the markup
-	 * @return True if componentId was handled by the resolver, false
-	 *         otherwise.
+	 * @return True if componentId was handled by the resolver, false otherwise.
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag);

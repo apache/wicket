@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.16 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,28 +20,28 @@ package wicket.markup;
 import wicket.markup.parser.XmlTag;
 
 /**
- * ComponentWicketTag extends ComponentTag and will be createtd by a
- * MarkupParser whenever it parses a tag in the wicket namespace. By default,
- * this namespace is "wicket", so wicket tags are then of the form
- * &lt;wicket:*&gt;
+ * WicketTag extends ComponentTag and will be createtd by a MarkupParser
+ * whenever it parses a tag in the wicket namespace. By default, this namespace
+ * is "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
  * <p>
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
  * Note 2: The namespace name is configurable through ApplicationSettings.
- *   @see wicket.ApplicationSettings#setWicketNamespace(String)
+ * 
+ * @see wicket.ApplicationSettings#setWicketNamespace(String)
  * 
  * @author Juergen Donnerstag
  */
-public final class ComponentWicketTag extends ComponentTag
+public final class WicketTag extends ComponentTag
 {
 	/**
 	 * Constructor
 	 * 
 	 * @param tag
-	 *            The xml tag which this component tag is based upon.
+	 *            The XML tag which this component tag is based upon.
 	 */
-	public ComponentWicketTag(final XmlTag tag)
+	public WicketTag(final XmlTag tag)
 	{
 		super(tag);
 	}
@@ -49,7 +49,7 @@ public final class ComponentWicketTag extends ComponentTag
 	/**
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
 	 * 
-	 * @return the tag's name attribute
+	 * @return The tag's name attribute
 	 */
 	public final String getNameAttribute()
 	{
@@ -119,7 +119,7 @@ public final class ComponentWicketTag extends ComponentTag
 		}
 		else
 		{
-			final ComponentWicketTag tag = new ComponentWicketTag(xmlTag.mutable());
+			final WicketTag tag = new WicketTag(xmlTag.mutable());
 			tag.setId(getId());
 			return tag;
 		}

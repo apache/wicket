@@ -63,42 +63,27 @@ public final class WicketComponentTree extends Panel
 	public WicketComponentTree(final String id, final Page page)
 	{
 		super(id);
-
+		
 		// Create an empty list. It'll be filled later
 		final List data = new ArrayList();
 
 		// Name of page
 		add(new Label("page", page.toString()));
 
+		// Get the components data and fill and sort the list
+		data.clear();
+		data.addAll(getComponentData(page));
+		Collections.sort(data, new Comparator()
+		{
+			public int compare(Object o1, Object o2)
+			{
+				return ((ComponentData)o1).path.compareTo(((ComponentData)o2).path);
+			}
+		});
+		
 		// Create the table containing the list the components
 		add(new ListView("components", data)
 		{
-			/**
-			 * Assuming all other components of the page to be analyzed are
-			 * already populated (and rendered), determine the components and
-			 * fill the ListView's model object.
-			 * <p>
-			 * Why don't we load the model object earlier? Because the page's
-			 * components must already be added to the page. Else, we can not
-			 * find them.
-			 */
-			protected void onRender()
-			{
-				// Get the components data and fill and sort the list
-				data.clear();
-				data.addAll(getComponentData(page));
-				Collections.sort(data, new Comparator()
-				{
-					public int compare(Object o1, Object o2)
-					{
-						return ((ComponentData)o1).path.compareTo(((ComponentData)o2).path);
-					}
-				});
-
-				// Go on and render the table
-				super.onRender();
-			}
-
 			/**
 			 * Populate the table with Wicket elements
 			 */
@@ -124,13 +109,12 @@ public final class WicketComponentTree extends Panel
 	private List getComponentData(final Page page)
 	{
 		final List data = new ArrayList();
-		final Component me = this;
 
 		page.visitChildren(new IVisitor()
 		{
 			public Object component(final Component component)
 			{
-			    if (!component.getPath().startsWith(me.getPath()))
+			    if (!component.getPath().startsWith(WicketComponentTree.this.getPath()))
 			    {
 					final ComponentData object = new ComponentData();
 	

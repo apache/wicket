@@ -650,11 +650,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentAdded(final Component component)
 	{
-		checkModification();
-		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+		if (!component.isAuto())
 		{
-			newVersion();
-			versionManager.componentAdded(component);
+			checkModification();
+			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+			{
+				newVersion();
+				versionManager.componentAdded(component);
+			}
 		}
 	}
 
@@ -664,11 +667,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentModelChanging(final Component component)
 	{
-		checkModification();
-		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+		if (!component.isAuto())
 		{
-			newVersion();
-			versionManager.componentModelChanging(component);
+			checkModification();
+			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+			{
+				newVersion();
+				versionManager.componentModelChanging(component);
+			}
 		}
 	}
 
@@ -678,11 +684,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentRemoved(final Component component)
 	{
-		checkModification();
-		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+		if (!component.isAuto())
 		{
-			newVersion();
-			versionManager.componentRemoved(component);
+			checkModification();
+			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+			{
+				newVersion();
+				versionManager.componentRemoved(component);
+			}
 		}
 	}
 
@@ -692,11 +701,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentVisibilityChanged(final Component component)
 	{
-		checkModification();
-		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+		if (!component.isAuto())
 		{
-			newVersion();
-			versionManager.componentVisibilityChanged(component);
+			checkModification();
+			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+			{
+				newVersion();
+				versionManager.componentVisibilityChanged(component);
+			}
 		}
 	}
 

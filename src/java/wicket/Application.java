@@ -23,7 +23,6 @@ import java.util.List;
 
 import wicket.markup.MarkupInheritanceResolver;
 import wicket.markup.MarkupParser;
-import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.encryption.ICrypt;
 import wicket.markup.parser.XmlPullParser;
 import wicket.util.convert.ConverterFactory;
@@ -96,14 +95,14 @@ public abstract class Application
 		this.localizer = new Localizer(this);
 
 		// Install default component resolvers
-		componentResolvers.add(new WicketTagComponentResolver());
+		componentResolvers.add(new AutoComponentResolver());
 		componentResolvers.add(new MarkupInheritanceResolver());	
 	}
 
 	/**
-	 * Get the (modifiable) List of ComponentResolvers.
+	 * Get the (modifiable) list of IComponentResolvers.
 	 * 
-	 * @see WicketTagComponentResolver for an example
+	 * @see AutoComponentResolver for an example
 	 * @return List of ComponentResolvers
 	 */
 	public final List getComponentResolvers()

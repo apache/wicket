@@ -1,5 +1,5 @@
 /*
- * $Id: WicketTagComponentResolver.java,v 1.4 2005/01/18 08:04:29 jonathanlocke
+ * $Id: AutoComponentResolver.java,v 1.4 2005/01/18 08:04:29 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup;
+package wicket;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -27,9 +27,10 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Component;
-import wicket.MarkupContainer;
-import wicket.WicketRuntimeException;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupException;
+import wicket.markup.MarkupStream;
+import wicket.markup.WicketTag;
 import wicket.util.string.StringValueConversionException;
 
 /**
@@ -47,10 +48,10 @@ import wicket.util.string.StringValueConversionException;
  * 
  * @author Juergen Donnerstag
  */
-public class WicketTagComponentResolver implements IComponentResolver
+public class AutoComponentResolver implements IComponentResolver
 {
     /** Logging */
-    private static Log log = LogFactory.getLog(WicketTagComponentResolver.class);
+    private static Log log = LogFactory.getLog(AutoComponentResolver.class);
 
     /** 
      * Temporary storage for containers currently being rendered. Thus child
@@ -62,7 +63,7 @@ public class WicketTagComponentResolver implements IComponentResolver
     private Map nestedComponents = new HashMap();
     
     /**
-     * @see wicket.markup.IComponentResolver#resolve(MarkupContainer, MarkupStream,
+     * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
      *      ComponentTag)
      * @param container
      *            The container parsing its markup
@@ -77,10 +78,10 @@ public class WicketTagComponentResolver implements IComponentResolver
             final ComponentTag tag)
     {
         // It must be <wicket:...>
-        if (tag instanceof ComponentWicketTag)
+        if (tag instanceof WicketTag)
         {
             // It must be <wicket:component...>
-            final ComponentWicketTag wicketTag = (ComponentWicketTag)tag;
+            final WicketTag wicketTag = (WicketTag)tag;
             if (wicketTag.isComponentTag())
             {
                 // Create and initialize the component
@@ -93,8 +94,7 @@ public class WicketTagComponentResolver implements IComponentResolver
                     try
                     {
 	                    // 2. Add it to the hierarchy and render it
-	                    container.add(component);
-	                    component.render();
+	                    container.autoAdd(component);
                     }
                     finally
                     {
@@ -142,7 +142,7 @@ public class WicketTagComponentResolver implements IComponentResolver
      * @throws WicketRuntimeException in case the component could not be created
      */
     // Wicket is current not using any bean util jar, which is why ...
-    private Component createComponent(final MarkupContainer container, final ComponentWicketTag tag)
+    private Component createComponent(final MarkupContainer container, final WicketTag tag)
     {
         // If no component name is given, create a page-unique one yourself.
         String componentId = tag.getNameAttribute();

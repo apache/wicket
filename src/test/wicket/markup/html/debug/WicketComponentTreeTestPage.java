@@ -40,15 +40,9 @@ public class WicketComponentTreeTestPage extends WebPage
 	    add(new Label("label1", "test1"));
 	    
 	    // Create a dummy component with inner class
-	    add(new Label("label2", "test2")
-	            {
-	        		public void onRender()
-	        		{
-	        		    setModelObject("test22");
-	        		    super.onRender();
-	        		}
-	            });
+	    add(new Label("label2", "test22"));
 	    
+	    // Add component tree
 		add(new WicketComponentTree("componentList", this));
 	}
 }

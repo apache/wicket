@@ -8,6 +8,11 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+      <action type="update" dev="Jonathan Locke" issue="">
+      Made changes to AutoComponentResolver and AutoLinkResolver (new names) so that
+      they can sneakily add components that don't participate in either versioning or
+      modification checking.  
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1167112">
       Fixed problem with URL.getFile() using the sun suggestion.
       </action>
