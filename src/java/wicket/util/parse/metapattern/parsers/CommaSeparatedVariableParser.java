@@ -22,16 +22,30 @@ import wicket.util.parse.metapattern.MetaPattern;
 
 /**
  * Parses out strings separated by commas.
+ * <p>Notes:<p>
+ * <ul>
+ *   <li>It'll not trim the elements (it'll not remove whitespaces)</li>
+ *   <li>It is able to handle quotes like "a", 'b', "b,c" etc..</li>
+ *   <li>But no escapes like "c\"d"</li>
+ *   <li>Empty list elements like "a,," are not supported. It'll return
+ *         the "a" only.</li>
+ * </lu>  
+ * 
  * @author Jonathan Locke W. Locke
  */
 public final class CommaSeparatedVariableParser extends ListParser
-{ // TODO finalize javadoc
+{
     /** pattern to use. */
-    private static final MetaPattern patternEntry = new MetaPattern(new MetaPattern[] {
-            MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.STRING, MetaPattern.OPTIONAL_WHITESPACE});
+    private static final MetaPattern patternEntry = 
+        	new MetaPattern(new MetaPattern[] {
+        	        MetaPattern.OPTIONAL_WHITESPACE, 
+        	        MetaPattern.STRING, 
+        	        MetaPattern.OPTIONAL_WHITESPACE});
 
     /**
-     * Construct.
+     * Construct a new parser with parameter 'input' to be parsed. Base classes
+     * provide the method to access the elements of the input parsed.
+     * 
      * @param input to parse
      */
     public CommaSeparatedVariableParser(final CharSequence input)

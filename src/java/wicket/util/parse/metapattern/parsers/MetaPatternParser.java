@@ -25,20 +25,29 @@ import wicket.util.parse.metapattern.MetaPattern;
 
 /**
  * Base class for various MetaPattern based parsers.
+ * 
  * @author Jonathan Locke W. Locke
  */
 public abstract class MetaPatternParser
-{ // TODO finalize javadoc
-    protected final CharSequence input;
+{ 
+    /** the input to parse */
+    private final CharSequence input;
 
-    protected final int length;
+    /** The length of the input; no. of characters */
+    private final int length;
 
-    protected int pos;
+    /** The position (index) behind the last pattern group matched while 
+     * advancing from one pattern group to the next one.
+     */
+    private int pos;
 
-    protected Matcher matcher;
+    /** The object maintaing all the regex details */
+    private Matcher matcher;
 
     /**
-     * Construct.
+     * Construct the parser. You must call @see #advance(MetaPattern) to 
+     * intialize the matcher with the pattern.
+     * 
      * @param input to parse
      */
     public MetaPatternParser(final CharSequence input)
@@ -48,7 +57,8 @@ public abstract class MetaPatternParser
     }
 
     /**
-     * Construct.
+     * Construct the parser and initialize the matcher with the pattern given.
+     * 
      * @param pattern meta pattern
      * @param input to parse
      */
@@ -60,28 +70,36 @@ public abstract class MetaPatternParser
     }
 
     /**
-     * Advance parsing.
+     * Advance parsing to the next element. The internal cursor will be moved
+     * to end of the string matched. 
+     * 
      * @param pattern pattern
      * @return true if found, false otherwise
      */
     protected final boolean advance(final MetaPattern pattern)
     {
+        // get the remaining part of the input
         final CharSequence s = input.subSequence(pos, length);
 
+        // does the pattern match?
         this.matcher = pattern.matcher(s);
-
         if (matcher.lookingAt())
         {
+            // Yes, it does. Move the cursor to the end of the
+            // char sequence matched.
             pos += matcher.end();
 
+            // Found the pattern
             return true;
         }
 
+        // Did not find the pattern.
         return false;
     }
 
     /**
-     * Whether the matcher matches.
+     * Whether the matcher matches the pattern.
+     * 
      * @return whether the matcher matches
      */
     public boolean matches()
@@ -91,6 +109,7 @@ public abstract class MetaPatternParser
 
     /**
      * Gets the matcher.
+     * 
      * @return the matcher
      */
     public final Matcher matcher()
@@ -99,7 +118,8 @@ public abstract class MetaPatternParser
     }
 
     /**
-     * Whether the input is parsed.
+     * Whether the internal cursor has advanced to the end of the input.
+     * 
      * @return whether the input is parsed
      */
     public final boolean atEnd()

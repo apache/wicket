@@ -26,23 +26,27 @@ import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.MetaPattern;
 
 /**
- * Parses an arbitrary list format with a pattern for list entries and a pattern for list
- * separators.
+ * Parses an arbitrary list format with a pattern for list entries 
+ * and a pattern for list separators.
+ * 
  * @author Jonathan Locke W. Locke
  */
 public class ListParser extends MetaPatternParser
-{ // TODO finalize javadoc
+{
+    /** The pattern in between the separators */
     private final Group entryGroup;
 
+    /** The separator */
     private final MetaPattern separatorPattern;
 
+    /** The list elements parsed */
     private final List values = new ArrayList();
 
     /**
      * Construct.
-     * @param entryPattern
-     * @param separatorPattern
-     * @param input
+     * @param entryPattern The pattern in between the separators
+     * @param separatorPattern The separator pattern
+     * @param input to parse
      */
     public ListParser(final MetaPattern entryPattern, final MetaPattern separatorPattern,
             final CharSequence input)
@@ -53,34 +57,39 @@ public class ListParser extends MetaPatternParser
     }
 
     /**
+     * Parse the input and add the elements to an internal list to be accessed by
+     * @see #getValues() 
+     * 
      * @see wicket.util.parse.metapattern.parsers.MetaPatternParser#matches()
      */
     public final boolean matches()
     {
+        // Are there any more elements
         if (advance(entryGroup))
         {
-            final String value = entryGroup.get(matcher);
-
+            // Add the first element
+            final String value = entryGroup.get(matcher());
             values.add(value);
 
-            while (true)
+            // All remaining elements must be preceded by the separator pattern
+            while (advance(separatorPattern) && advance(entryGroup))
             {
-                if (advance(separatorPattern) && advance(entryGroup))
-                {
-                    values.add(entryGroup.get(matcher));
-                }
-                else
-                {
-                    return false;
-                }
+                // Add the value not including the separator
+                values.add(entryGroup.get(matcher()));
             }
+
+            // Yes, we found at least on element
+            return true;
         }
 
+        // Nothing found, not even one element without separator
         return false;
     }
 
     /**
-     * Gets the parsed values.
+     * Gets the parsed values. It depends on the elements pattern, whether
+     * empty elements, double or single quotes or escape characters are supported.
+     * 
      * @return the parsed values
      */
     public final List getValues()
