@@ -19,6 +19,7 @@
 package displaytag;
 
 import java.util.List;
+
 import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
@@ -28,6 +29,7 @@ import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
 import com.voicetribe.wicket.markup.html.table.Cell;
+
 import displaytag.utils.ListObject;
 import displaytag.utils.MyTable;
 import displaytag.utils.TestList;
@@ -59,10 +61,12 @@ public class ExampleStyles extends HtmlPage
         styleList.add(new ExternalPageLink("mark", this.getClass()).setParameter("class", "mark").setAutoEnable(false));
 
         // Apply style on current tag
-        addAttributeModifier(new ComponentTagAttributeModifier("class", new Model(parameters.getString("class"))));
-
+        HtmlContainer htmlTable = new HtmlContainer("htmlTable");
+        htmlTable.addAttributeModifier(new ComponentTagAttributeModifier("class", new Model(parameters.getString("class"))));
+        add(htmlTable);
+        
         // Add table of existing comments
-        add(new MyTable("rows", data)
+        htmlTable.add(new MyTable("rows", data)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
