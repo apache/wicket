@@ -24,7 +24,7 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public abstract class TextComponent extends FormComponent
+public abstract class AbstractTextComponent extends FormComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1323747673401786242L;
@@ -39,7 +39,7 @@ public abstract class TextComponent extends FormComponent
 	/**
      * @see wicket.Component#Component(String, Serializable)
 	 */
-	public TextComponent(final String name, final Serializable object)
+	public AbstractTextComponent(final String name, final Serializable object)
 	{
 		super(name, object);
 	}
@@ -47,7 +47,7 @@ public abstract class TextComponent extends FormComponent
 	/**
      * @see wicket.Component#Component(String, Serializable, String)
 	 */
-	public TextComponent(final String name, final Serializable object, final String expression)
+	public AbstractTextComponent(final String name, final Serializable object, final String expression)
 	{
 		super(name, object, expression);
 	}

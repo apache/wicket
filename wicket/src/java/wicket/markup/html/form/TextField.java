@@ -26,7 +26,7 @@ import wicket.markup.ComponentTag;
  * 
  * @author Jonathan Locke
  */
-public class TextField extends TextComponent
+public class TextField extends AbstractTextComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -2913294206388017417L;

@@ -7,6 +7,13 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="update" dev="Jonathan Locke" issue="">
+      	Changed inheritance hierarchy of text form components and added an abstract base
+      	class AbstractTextComponent.  Now PasswordTextField inherits from TextField and 
+      	TextField inherits from AbstractTextComponent.  TextArea also inherits from 
+      	AbstractTextComponent.  This restructuing got rid of some duplication of methods 
+      	and fields among the text components.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1118466">
       	Reworked conversion code to deal with the fact that the java.text Format 
       	parsing parses /leading/ values and not complete values.  In other words,
