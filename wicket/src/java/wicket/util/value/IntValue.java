@@ -18,22 +18,23 @@
  */
 package wicket.util.value;
 
-
 import java.io.Serializable;
 
 import wicket.util.lang.Primitives;
 
 /**
- * A base class for value classes based on a Java int primitive which want to implement
- * standard operations on that value without the pain of aggregating a Int object.
+ * A base class for value classes based on a Java int primitive which want 
+ * to implement standard operations on that value without the pain of 
+ * aggregating a Integer object.
+ * 
  * @author Jonathan Locke
  */
 public class IntValue implements Comparable, Serializable
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1458111047822645764L;
 	
-	// The int value
+	/** The int value */
     protected final int value;
 
     /**
@@ -89,7 +90,7 @@ public class IntValue implements Comparable, Serializable
     {
         if (that instanceof IntValue)
         {
-            return this.value == ((IntValue) that).value;
+            return this.value == ((IntValue)that).value;
         }
 
         return false;
@@ -109,7 +110,7 @@ public class IntValue implements Comparable, Serializable
      */
     public final int compareTo(final Object object)
     {
-        final IntValue that = (IntValue) object;
+        final IntValue that = (IntValue)object;
 
         if (this.value < that.value)
         {
@@ -125,8 +126,8 @@ public class IntValue implements Comparable, Serializable
     }
 
     /**
-     * Converts this byte count to a string
-     * @return The string for this byte count
+     * Converts this to a string
+     * @return The string for this int value
      */
     public String toString()
     {
