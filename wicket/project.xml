@@ -12,11 +12,11 @@
     <inceptionYear>2004</inceptionYear>
     <package>com.voicetribe</package>
     <description>
-	    Wicket is a Java web application framework that takes simplicity, 
-	    separation of concerns and ease of development to a whole new level. Wicket 
-	    pages can be mocked up, previewed and later revised using standard WYSIWYG 
-	    HTML design tools. Dynamic content processing and form handling is all handled 
-	    in Java code using a Swing-like component model backed by POJO data beans that 
+	    Wicket is a Java web application framework that takes simplicity,
+	    separation of concerns and ease of development to a whole new level. Wicket
+	    pages can be mocked up, previewed and later revised using standard WYSIWYG
+	    HTML design tools. Dynamic content processing and form handling is all handled
+	    in Java code using a Swing-like component model backed by POJO data beans that
 	    can easily be persisted with frameworks like Hibernate.
     </description>
     <shortDescription>a Java web application framework.</shortDescription>
@@ -115,14 +115,20 @@
             <version>2.3</version>
             <jar>servletapi-2.3.jar</jar>
         </dependency>
-		<dependency>
-			<id>commons-fileupload</id>
-			<version>1.0</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
-			<url>http://jakarta.apache.org/commons/beanutils/</url>
-		</dependency>
+        <dependency>
+            <groupId>concurrent</groupId>
+            <artifactId>concurrent</artifactId>
+            <version>1.3.3</version>
+            <properties/>
+        </dependency>
+        <dependency>
+            <id>commons-fileupload</id>
+            <version>1.0</version>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+            <url>http://jakarta.apache.org/commons/beanutils/</url>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
