@@ -1,19 +1,69 @@
 <project>
     <pomVersion>3</pomVersion>
-    <artifactId>wicket</artifactId>
+    <id>wicket</id>
     <name>Wicket</name>
     <groupId>wicket</groupId>
-    <currentVersion>1.0</currentVersion>
+    <currentVersion>0.9.11-alpha</currentVersion>
+    <organization>
+        <name>SourceForge</name>
+        <url>http://sourceforge.net</url>
+        <logo>http://sourceforge.net/sflogo.php?group_id=${maven.sourceforge.project.groupId}&amp;type=5</logo>
+    </organization>
     <inceptionYear>2004</inceptionYear>
-    <logo>/images/logo.gif</logo>
+    <package>com.voicetribe</package>
+    <logo/> <!-- /images/logo.gif</logo> -->
+    <description>
+	    Wicket is a Java web application framework that takes simplicity, 
+	    separation of concerns and ease of development to a whole new level. Wicket 
+	    pages can be mocked up, previewed and later revised using standard WYSIWYG 
+	    HTML design tools. Dynamic content processing and form handling is all handled 
+	    in Java code using a Swing-like component model backed by POJO data beans that 
+	    can easily be persisted with Hibernate.
+    </description>
+    <shortDescription>a Java web application framework.</shortDescription>
+    <url>http://wicket.sourceforge.net</url>
+    <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
+
+	<siteAddress>shell.sourceforge.net</siteAddress>
+	<siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
+
     <mailingLists>
         <mailingList>
             <name>${pom.name} Dev List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
         </mailingList>
         <mailingList>
             <name>${pom.name} User List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-user</archive>
+        </mailingList>
+        <mailingList>
+            <name>${pom.name} CVS commit List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-autocvs</archive>
         </mailingList>
     </mailingLists>
+    <developers>
+    	<developer>
+    		<name>Eelco Hillenius</name>
+    		<id>eelco12</id>
+    		<email>eelco12 at users.sourceforge.net</email>
+    	</developer>
+    	<developer>
+    		<name>Johan Compagner</name>
+    		<id>joco01</id>
+    		<email>joco01 at users.sourceforge.net</email>
+    	</developer>
+    	<developer>
+    		<name>Martijn Dashorst</name>
+    		<id>dashorst</id>
+    		<email>dashorst at users.sourceforge.net</email>
+    	</developer>
+    </developers>
     <dependencies>
         <dependency>
             <groupId>dom4j</groupId>
@@ -66,6 +116,9 @@
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
+        <includes>
+        	<include>**/*.java</include>
+        </includes>
         <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
         <unitTest>
             <includes>
@@ -73,5 +126,9 @@
             </includes>
         </unitTest>
     </build>
-    <properties/>
+    <reports>
+    	<report>maven-changes-plugin</report>
+    	<report>maven-tasklist-plugin</report>
+    	<report>maven-javadoc-plugin</report>
+    </reports>
 </project>
