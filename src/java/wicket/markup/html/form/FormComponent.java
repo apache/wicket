@@ -263,6 +263,14 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		return getModelObjectAsString();
 	}
+	
+	/** 
+	 * Called to indicate that 
+	 */
+	public final void invalid()
+	{
+		onInvalid();
+	}
 
 	/**
 	 * @return True if this component supports persistence AND it has been asked
@@ -325,6 +333,14 @@ public abstract class FormComponent extends WebMarkupContainer
 	public void setValue(final String value)
 	{
 		setModelObject(value);
+	}
+	
+	/** 
+	 * Called to indicate that 
+	 */
+	public final void valid()
+	{
+		onValid();
 	}
 
 	/**

@@ -8,6 +8,19 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1151403">
+		Added modelChanged() method to Component which is called when setModel() or
+		setModelObject() are called.  This method calls onModelChanged() to allow 
+		subclasses to respond to model changes.  Changed Form to handle onModelChanged() 
+		by calling the onModelChanged() method of each contained FormComponent that
+		uses the same root model as the form, as determined by the new sameRootModel()
+		method in Component (which uses the INestedModel interface to look inside
+		compound models such as PropertyModel and StringResourceModel to find the
+		root model).  The call to FormComponent.onModelChanged() resets any invalid 
+		state information from user editing since the model must now be correct by 
+		definition.  For example, AbstractTextComponent overrides onModelChanged() 
+		and calls onValid() to reset its invalidInput memory.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1144885">
 		Added automatic image buttons (as demonstrated in FormInput example now)
 		as well as automatic images.  Each can generate an image using an image

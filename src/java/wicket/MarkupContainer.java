@@ -20,6 +20,7 @@ package wicket;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -101,7 +102,7 @@ public abstract class MarkupContainer extends Component
 	private static final boolean optimizeChildMapsForSpace = false;
 
 	/** Map of children by name. */
-	private Map childForName;
+	private Map childForName = Collections.EMPTY_MAP;
 
 	/** The markup stream for this container. */
 	private transient MarkupStream markupStream;
@@ -227,9 +228,12 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final Iterator iterator()
 	{
+		if (childForName == null)
+		{
+			childForName = Collections.EMPTY_MAP;
+		}
 		return childForName.values().iterator();
 	}
-
 
 	/**
 	 * @param component

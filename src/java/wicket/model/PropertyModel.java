@@ -89,7 +89,7 @@ import wicket.util.string.Strings;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class PropertyModel extends DetachableModel implements IConvertible
+public class PropertyModel extends DetachableModel implements IConvertible, INestedModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
@@ -241,6 +241,19 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	}
 
 	/**
+	 * Gets the model on which the Ognl expressions are applied. The expression
+	 * will actually not be applied on the instance of IModel, but (naturally)
+	 * on the wrapped model object or more accurate, the object that results
+	 * from calling getObject on the instance of IModel.
+	 * 
+	 * @return The model on which the Ognl expressions are applied.
+	 */
+	public final IModel getNestedModel()
+	{
+		return model;
+	}
+
+	/**
 	 * Gets the value that results when the given Ognl expression is applied to
 	 * the model object (Ognl.getValue).
 	 * 
@@ -316,7 +329,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 			String expression = getExpression();
 
 			// Get the real object
-			Object target = getModel().getObject();
+			Object target = getNestedModel().getObject();
 
 			// Convert the incoming object to the target type when not null and
 			// the property type is set and the incoming object is a non-empty
@@ -335,38 +348,6 @@ public class PropertyModel extends DetachableModel implements IConvertible
 		{
 			throw new WicketRuntimeException(e);
 		}
-	}
-
-	/**
-	 * Initializes the instance variables of this property model, and in case
-	 * the wrapped model is a {@link IDetachableModel}, calls attach on the
-	 * wrapped model.
-	 * 
-	 * @see wicket.model.DetachableModel#onAttach()
-	 */
-	protected final void onAttach()
-	{
-		if (model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).attach();
-		}
-	}
-
-	/**
-	 * Unsets this property model's instance variables and, in case the wrapped
-	 * model is a {@link IDetachableModel}, calls dettach on the wrapped model.
-	 * 
-	 * @see wicket.model.DetachableModel#onDetach()
-	 */
-	protected final void onDetach()
-	{
-		if (model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).detach();
-		}
-
-		// Reset OGNL context
-		this.context = null;
 	}
 
 	/**
@@ -404,16 +385,35 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	}
 
 	/**
-	 * Gets the model on which the Ognl expressions are applied. The expression
-	 * will actually not be applied on the instance of IModel, but (naturally)
-	 * on the wrapped model object or more accurate, the object that results
-	 * from calling getObject on the instance of IModel.
+	 * Initializes the instance variables of this property model, and in case
+	 * the wrapped model is a {@link IDetachableModel}, calls attach on the
+	 * wrapped model.
 	 * 
-	 * @return The model on which the Ognl expressions are applied.
+	 * @see wicket.model.DetachableModel#onAttach()
 	 */
-	protected final IModel getModel()
+	protected final void onAttach()
 	{
-		return model;
+		if (model instanceof IDetachableModel)
+		{
+			((IDetachableModel)model).attach();
+		}
+	}
+
+	/**
+	 * Unsets this property model's instance variables and, in case the wrapped
+	 * model is a {@link IDetachableModel}, calls dettach on the wrapped model.
+	 * 
+	 * @see wicket.model.DetachableModel#onDetach()
+	 */
+	protected final void onDetach()
+	{
+		if (model instanceof IDetachableModel)
+		{
+			((IDetachableModel)model).detach();
+		}
+
+		// Reset OGNL context
+		this.context = null;
 	}
 
 	/**

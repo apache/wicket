@@ -221,10 +221,10 @@ public class StringResourceModelTest extends TestCase
 		RequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
-		Assert.assertNotNull(model.getModel().getObject());
+		Assert.assertNotNull(model.getNestedModel().getObject());
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
-		Assert.assertNull(model.getModel().getObject());
+		Assert.assertNull(model.getNestedModel().getObject());
 		Assert.assertNull(model.getLocalizer());
 	}
 

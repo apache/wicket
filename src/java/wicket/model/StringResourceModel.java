@@ -192,7 +192,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * @author Chris Turner
  */
-public class StringResourceModel extends DetachableModel
+public class StringResourceModel extends DetachableModel implements INestedModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 6659487382203513733L;
@@ -273,6 +273,15 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
+	 * Gets the model used for OGNL substitutions.
+	 * @return The model
+	 */
+	public final IModel getNestedModel()
+	{
+		return model;
+	}
+
+	/**
 	 * Gets the string that this string resource model currently represents. The string is
 	 * returned as an object to allow it to be used generically within components.
 	 * @return The string for this model object
@@ -308,7 +317,7 @@ public class StringResourceModel extends DetachableModel
 
 		// Get the string resource, doing any OGNL substitutions as part
 		// of the get operation
-		String s = localizer.getString(getResourceKey(), c, getModel());
+		String s = localizer.getString(getResourceKey(), c, getNestedModel());
 
 		// Substitute any parameters if necessary
 		Object[] parameters = getParameters();
@@ -382,48 +391,6 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Attaches to the given session.
-	 */
-	protected final void onAttach()
-	{
-		// Attach the model if necessary
-		if (model != null && model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).attach();
-		}
-
-		// Initialise information that we need to work successfully
-		Session session = RequestCycle.get().getSession();
-		localizer = session.getApplication().getLocalizer();
-		locale = session.getLocale();
-	}
-
-	/**
-	 * Detaches from the given session
-	 */
-	protected final void onDetach()
-	{
-		// Detach the model if necessary
-		if (model != null && model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).detach();
-		}
-
-		// Clear down any information we don't want held in the session
-		localizer = null;
-		locale = null;
-	}
-
-	/**
-	 * Gets the model used for OGNL substitutions.
-	 * @return The model
-	 */
-	protected final IModel getModel()
-	{
-		return model;
-	}
-
-	/**
 	 * Gets the Java MessageFormat substitution parameters.
 	 * @return The substitution parameters
 	 */
@@ -457,5 +424,38 @@ public class StringResourceModel extends DetachableModel
 		{
 			return resourceKey;
 		}
+	}
+
+	/**
+	 * Attaches to the given session.
+	 */
+	protected final void onAttach()
+	{
+		// Attach the model if necessary
+		if (model != null && model instanceof IDetachableModel)
+		{
+			((IDetachableModel)model).attach();
+		}
+
+		// Initialise information that we need to work successfully
+		Session session = RequestCycle.get().getSession();
+		localizer = session.getApplication().getLocalizer();
+		locale = session.getLocale();
+	}
+
+	/**
+	 * Detaches from the given session
+	 */
+	protected final void onDetach()
+	{
+		// Detach the model if necessary
+		if (model != null && model instanceof IDetachableModel)
+		{
+			((IDetachableModel)model).detach();
+		}
+
+		// Clear down any information we don't want held in the session
+		localizer = null;
+		locale = null;
 	}
 }

@@ -121,12 +121,12 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 					if (!formComponent.isValid())
 					{
 						// tell component to deal with invalidity
-						formComponent.onInvalid();
+						formComponent.invalid();
 					}
 					else
 					{
 						// tell component that it is valid now
-						formComponent.onValid();
+						formComponent.valid();
 					}
 
 					// Continue until the end
@@ -327,6 +327,28 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
+	 * @see wicket.Component#onModelChanged()
+	 */
+	protected void onModelChanged()
+	{
+		// Visit all the form components and validate each
+		visitChildren(FormComponent.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// If form component is using form model
+				if (component.sameRootModel(Form.this))
+				{
+					component.modelChanged();
+				}
+
+				// Continue until the end
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+
+	/**
 	 * Implemented by subclasses to deal with form submits.
 	 */
 	protected abstract void onSubmit();
@@ -385,6 +407,9 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		}
 	}
 
+	/**
+	 * @return Number of buttons on this form
+	 */
 	private int countButtons()
 	{
 		final Count count = new Count();
@@ -399,6 +424,9 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		return count.count;
 	}
 
+	/**
+	 * @return The button which submitted this form
+	 */
 	private Button findSubmittingButton()
 	{
 		return (Button)visitChildren(Button.class, new IVisitor()

@@ -1,14 +1,14 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
+ * $Id$ $Revision:
+ * 1.21 $ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import wicket.markup.MarkupStream;
 
 /**
  * Multi-row text editing component.
- *
+ * 
  * @author Jonathan Locke
  */
 public class TextArea extends AbstractTextComponent
@@ -33,7 +33,7 @@ public class TextArea extends AbstractTextComponent
 	private static final long serialVersionUID = -1323747673401786242L;
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public TextArea(final String name, final Serializable object)
 	{
@@ -41,7 +41,7 @@ public class TextArea extends AbstractTextComponent
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public TextArea(final String name, final Serializable object, final String expression)
 	{
@@ -50,26 +50,18 @@ public class TextArea extends AbstractTextComponent
 
 	/**
 	 * Handle the container's body.
-	 *
+	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
 	{
-		final String bodyContent;
-		if (getInvalidInput() == null)
-		{
-            // No validation errors
-			bodyContent = getModelObjectAsString();
-		}
-		else
-		{
-            // Invalid input detected
-			bodyContent = getInvalidInput();
-		}
-		replaceComponentTagBody(markupStream, openTag, bodyContent);
+		replaceComponentTagBody(markupStream, openTag, (getInvalidInput() == null)
+				? getModelObjectAsString()
+				: getInvalidInput());
 	}
 }
