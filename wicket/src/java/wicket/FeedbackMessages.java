@@ -50,7 +50,7 @@ public final class FeedbackMessages implements Serializable
 	/**
 	 * Comparator for sorting messages on level.
 	 */
-	public static final class LevelComparator implements Comparator
+	private static final class LevelComparator implements Comparator
 	{
 		private static final int ASCENDING = 1;
 		private static final int DESCENDING = -1;
@@ -64,7 +64,7 @@ public final class FeedbackMessages implements Serializable
 		 * @param ascending
 		 *            whether to sort ascending (otherwise, it sorts descending)
 		 */
-		public LevelComparator(boolean ascending)
+		private LevelComparator(boolean ascending)
 		{
 			sign = ascending ? ASCENDING : DESCENDING;
 		}
