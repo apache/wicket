@@ -7,6 +7,13 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1118784">
+    	Fixed problem with autolink component resolver where it would continually 
+    	resolve the same links on every render.  The solution is to set the component's
+    	name when the auto-id is generated so that it can be found in the container
+    	the next time (so the resolver doesn't get called again).  Also moved the
+    	AutolinkComponentResolver class into markup.html since it is html specific.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1118413">
     	The Component.getModelLock() method was changed to respond more appropriately
     	when a real model doesn't exist.  The code now returns model (without attaching
