@@ -20,10 +20,11 @@ package wicket.util.string;
 
 /**
  * Typesafe string iterator interface
+ * 
  * @author Jonathan Locke
  */
 public interface IStringIterator
-{ // TODO finalize javadoc
+{
     /**
      * @return True if there is a next string
      */

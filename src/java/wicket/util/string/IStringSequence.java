@@ -19,11 +19,16 @@
 package wicket.util.string;
 
 /**
- * Typesafe interface to an ordered sequence of strings
+ * Typesafe interface to an ordered sequence of strings.  An 
+ * IStringIterator can be retrieved for the sequence by calling 
+ * iterator(), the number of Strings in the sequence can be 
+ * determined by calling size() and a given String can be retrieved 
+ * by calling get(int index).
+ * 
  * @author Jonathan Locke
  */
 public interface IStringSequence
-{ // TODO finalize javadoc
+{
     /**
      * @return Typesafe string iterator
      */
@@ -35,6 +40,7 @@ public interface IStringSequence
     public int size();
 
     /**
+     * Gets a string at a given index in the sequence
      * @param index The index
      * @return The string at the given index
      * @throws IndexOutOfBoundsException
