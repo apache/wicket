@@ -122,7 +122,7 @@ public class Model extends AbstractModel
 	 *            The serializable model object
 	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
-	public void setObject(Serializable object)
+	public void setObject(final Serializable object)
 	{
 		this.object = object;
 	}
