@@ -33,6 +33,14 @@
 -->
 	        <item name="CVS access" href="/cvs-usage.html"/>
         </menu>
+        <menu name="Developers">
+	        <item name="The Wicket Vision" href="/Vision.html" collapse="true">
+				<item name="The Overall Wicket Vision" href="#The_Overall_Wicket_Vision" />
+				<item name="Design Decision Q&amp;A" href="#Design_Decision_Q_and_A" />
+				<item name="Future Directions" href="#Future_Directions" />
+				<item name="Open Issues" href="#Open_Issues" />
+	        </item>
+        </menu>
 	    <menu name="Sourceforge">
 	        <item name="Project page" href="http://sourceforge.net/projects/wicket"/>
 	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
