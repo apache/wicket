@@ -45,8 +45,7 @@ public class PageFactoryTest extends TestCase
     protected void setUp() throws Exception {
         super.setUp();
         application = new DummyApplication();
-        factory = new DefaultPageFactory(application);
-        assertEquals(application, factory.getApplication());
+        factory = new DefaultPageFactory();
     }
 
     /**
@@ -62,7 +61,7 @@ public class PageFactoryTest extends TestCase
         
         // MyPage2: PageParameter parameter constructor only
         // will call PageParameter constructor with parameter = null
-        assertEquals(MyPage2.class, factory.newPage(MyPage2.class).getClass());
+        assertEquals(MyPage2.class, factory.newPage(MyPage2.class, (PageParameters)null).getClass());
         
         // MyPage3: Page parameter constructor only
         Exception e = null;
