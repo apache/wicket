@@ -484,7 +484,7 @@ public final class XmlPullParser implements IXmlPullParser
 				final String key = attributeParser.getKey();
 
 				// Put the attribute in the attributes hash
-				if (null != tag.attributes.put(key, value))
+				if (null != tag.put(key, value))
 				{
 				    throw new ParseException("Same attribute found twice: " 
 				            + key, this.inputPosition);
