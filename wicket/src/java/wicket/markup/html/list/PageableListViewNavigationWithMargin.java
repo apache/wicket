@@ -20,7 +20,7 @@ package wicket.markup.html.list;
 /**
  * Assuming a PageableListView has 1000 entries and not more than 10 lines shall
  * be printed per page. A standard navigation bar would have 100 entries.
- * Because this is not feasible. PageableListViewNavigationWithMargin provides a
+ * Because this is not feasible PageableListViewNavigationWithMargin provides a
  * pageable navigation bar displaying only some page links.
  * <p>
  * The page links displayed are automatically adjusted based on the number of
@@ -37,7 +37,7 @@ public class PageableListViewNavigationWithMargin extends PageableListViewNaviga
 	 * cell somewhere near the middle.
 	 */
 	private int margin;
-
+	
 	/** Default separator between page numbers. Null: no separator. */
 	private String separator = null;
 
@@ -81,18 +81,18 @@ public class PageableListViewNavigationWithMargin extends PageableListViewNaviga
 	 * @param margin
 	 *            the margin
 	 */
-	public void setMargin(int margin)
+	public void setMargin(final int margin)
 	{
 		this.margin = margin;
 	}
-
+	
 	/**
 	 * Sets the seperator. Null meaning, no separator at all.
 	 * 
 	 * @param separator
 	 *            the seperator
 	 */
-	public void setSeparator(String separator)
+	public void setSeparator(final String separator)
 	{
 		this.separator = separator;
 	}
@@ -108,8 +108,7 @@ public class PageableListViewNavigationWithMargin extends PageableListViewNaviga
 		// may have pages.
 
 		// The index of the first page link depends on the PageableListView's
-		// page
-		// current printed.
+		// page currently printed.
 		this.setStartIndex();
 
 		// continue with default
