@@ -201,7 +201,7 @@ public abstract class Page extends Container implements IRedirectListener
 	}
 
 	/**
-	 * Convinience method. Search for children of type fromClass and invoke
+	 * Convenience method. Search for children of type fromClass and invoke
 	 * their respectiv removePersistedFormData() method.
 	 * 
 	 * @see Form#removePersistedFormComponentData(boolean)
@@ -215,6 +215,12 @@ public abstract class Page extends Container implements IRedirectListener
 	public final void removePersistedFormData(final Class formClass,
 			final boolean disablePersistence)
 	{
+        // Check that formClass is an instanceof Form
+        if (!Form.class.isAssignableFrom(formClass))
+        {
+            throw new WicketRuntimeException("Form class " + formClass.getName() + " is not a subclass of Form");
+        }
+        
 		// Visit all children which are an instance of formClass
 		visitChildren(formClass, new IVisitor()
 		{
@@ -230,6 +236,37 @@ public abstract class Page extends Container implements IRedirectListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
+	}
+
+	/**
+	 * Reset this page. Called if rendering is interrupted by an exception to
+	 * put the page back into a state where it can function again.
+	 */
+	final void reset()
+	{
+		try
+		{
+			// Models should be detached
+			detachModels();
+		}
+		catch (RuntimeException e1)
+		{
+			log.debug("Error detaching models when exception is thrown", e1);
+		}
+        
+		// When an exception is thrown while rendering a page, there may
+		// be invalid markup streams set on various containers. We need
+		// to reset these to null to ensure they get recreated correctly.
+        visitChildren(Container.class, new IVisitor()
+        {
+            public Object component(final Component component)
+            {
+                final Container container = (Container)component;
+                container.setMarkupStream(null);
+                return CONTINUE_TRAVERSAL;
+            }
+        });
+
 	}
 
 	/**
