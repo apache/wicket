@@ -26,6 +26,9 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
+import wicket.markup.html.image.AbstractImage;
+import wicket.markup.html.image.Image;
 import wicket.markup.html.tree.IndentTree;
 
 /** indent tree implementation. */
@@ -33,6 +36,23 @@ public class MyTree extends IndentTree
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
+
+	/** node image. */
+	private static final Image IMG_NODE = new Image(NODE_IMAGE_NAME, "node.gif");
+
+	/** folder image. */
+	private static final Image IMG_FOLDER = new Image(NODE_IMAGE_NAME, "folder.gif");
+
+	/** open folder image. */
+	private static final Image IMG_FOLDER_OPEN = new Image(NODE_IMAGE_NAME, "folderopen.gif");
+
+	// set scope of images
+	static
+	{
+		IMG_NODE.setSharing(Component.APPLICATION_SHARED);
+		IMG_FOLDER.setSharing(Component.APPLICATION_SHARED);
+		IMG_FOLDER_OPEN.setSharing(Component.APPLICATION_SHARED);
+	}
 
 	/**
 	 * Construct.
@@ -62,56 +82,23 @@ public class MyTree extends IndentTree
 		log.info("tree node link was clicked, user object: " + node.getUserObject());
 	}
 
-	/**
-	 * @see wicket.markup.html.tree.IndentTree#getJunctionImageName(javax.swing.tree.DefaultMutableTreeNode)
-	 */
-	protected String getJunctionImageName(DefaultMutableTreeNode node)
+	protected AbstractImage getNodeImage(final DefaultMutableTreeNode node)
 	{
-		final String img;
-
-		if (!node.isLeaf())
-		{
-			if (isExpanded(node))
-			{
-				img = "nested/minus.gif";
-			}
-			else
-			{
-				img = "nested/plus.gif";
-			}
-		}
-		else
-		{
-			img = "nested/blank.gif";
-		}
-
-		return img;
-	}
-
-	/**
-	 * @see wicket.markup.html.tree.IndentTree#getNodeImageName(javax.swing.tree.DefaultMutableTreeNode)
-	 */
-	protected String getNodeImageName(DefaultMutableTreeNode node)
-	{
-		final String img;
-
 		if (node.isLeaf())
 		{
-			img = "nested/node.gif";
+			return IMG_NODE;
 		}
 		else
 		{
 			if (isExpanded(node))
 			{
-				img = "nested/folderopen.gif";
+				return IMG_FOLDER_OPEN;
 			}
 			else
 			{
-				img = "nested/folder.gif";
+				return IMG_FOLDER;
 			}
 		}
-
-		return img;
 	}
 
 	/**
