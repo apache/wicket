@@ -17,8 +17,6 @@
  */
 package wicket.model;
 
-import java.io.Serializable;
-
 /**
  * A IModel wraps the actual model objects of components. IModel implementations
  * are used as a facade for the real model so that users have control over the
@@ -27,13 +25,14 @@ import java.io.Serializable;
  * instance variables sparingly.
  * <p>
  * IModel also provides a call back mechanism for reacting to the start/end of a
- * request. Please use the abstract class {@link wicket.model.DetachableModel}
- * for implementations instead of implementing this interface directely.
+ * request. Please use the abstract class
+ * {@link wicket.model.AbstractDetachableModel}for implementations instead of
+ * implementing this interface directely.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public interface IModel extends Serializable
+public interface IModel extends IDetachable
 {
 	/**
 	 * Gets the model object.
@@ -49,16 +48,4 @@ public interface IModel extends Serializable
 	 *            The model object
 	 */
 	public void setObject(Object object);
-
-	/**
-	 * Attaches model for use. This is generally used to fill in transient
-	 * fields in a model which has been serialized during session replication.
-	 */
-	public void attach();
-
-	/**
-	 * Detaches model after use. This is generally used to null out transient
-	 * references that can be re-attached via attach().
-	 */
-	public void detach();
 }

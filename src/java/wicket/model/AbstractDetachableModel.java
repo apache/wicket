@@ -66,6 +66,23 @@ public abstract class AbstractDetachableModel implements IModel
 	}
 
 	/**
+	 * @see wicket.model.IModel#getObject()
+	 */
+	public final Object getObject()
+	{
+		attach();
+		return onGetObject();
+	}
+	
+	/**
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
+	 */
+	public void setObject(Object object)
+	{
+		throw new UnsupportedOperationException("DetachableModel " + getClass() + " does not support setObject(Object)");
+	}
+	
+	/**
 	 * Gets whether this model has been attached to the current session.
 	 * 
 	 * @return whether this model has been attached to the current session
@@ -79,15 +96,20 @@ public abstract class AbstractDetachableModel implements IModel
 	 * Attaches to the given session. Implement this method with custom
 	 * behaviour, such as loading the model object.
 	 */
-	protected void onAttach()
-	{
-	}
+	protected abstract void onAttach();
 
 	/**
 	 * Detaches from the given session. Implement this method with custom
 	 * behaviour, such as setting the model object to null.
 	 */
-	protected void onDetach()
-	{
-	}
+	protected abstract void onDetach();
+
+	/**
+	 * Called when getObject() is called in order to retrieve the detachable
+	 * object. Before this method is called, getObject() always calls attach()
+	 * to ensure that the object is attached.
+	 * 
+	 * @return The object
+	 */
+	protected abstract Object onGetObject();
 }

@@ -495,8 +495,8 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		tag.put("name", getPath());		
 		super.onComponentTag(tag);
-		tag.put("name", getPath());
 	}
 
 	/**

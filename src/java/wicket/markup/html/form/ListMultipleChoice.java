@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,17 +21,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.util.string.Strings;
 
 /**
  * A multiple choice list component.
- *
+ * 
  * @author Jonathan Locke
  * @author Johan Compagner
  */
@@ -51,17 +52,17 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
 	 */
-	public ListMultipleChoice(final String name, final Serializable model,
-			final Collection values)
+	public ListMultipleChoice(final String name, final Serializable model, final Collection values)
 	{
 		super(name, model, values);
 	}
-	
+
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
+	 *      Collection)
 	 */
-	public ListMultipleChoice(final String name, final Serializable model,
-			final String expression, final Collection values)
+	public ListMultipleChoice(final String name, final Serializable model, final String expression,
+			final Collection values)
 	{
 		super(name, new PropertyModel(new Model(model), expression), values);
 	}
@@ -76,21 +77,14 @@ public class ListMultipleChoice extends AbstractChoice
 		final StringBuffer value = new StringBuffer();
 		if (selectedValues != null)
 		{
-			final List list = getValues();
-			final Iterator it = selectedValues.iterator();
-			while (it.hasNext())
+			final IChoiceList choices = getChoices();
+			for (final Iterator iterator = selectedValues.iterator(); iterator.hasNext() ;)
 			{
-				final int index = list.indexOf(it.next());
-				if (list instanceof IDetachableChoiceList)
-				{
-					value.append(((IDetachableChoiceList)list).getId(index));
-				}
-				else
-				{
-					value.append(index);
-				}
-				// the id's can't have ; in there id!! should we escape it or
-				// something??
+				final IChoice choice = choices.choiceForObject(iterator.next());
+				value.append(choice.getId());
+
+				// NOTE ids can't have semicolons (should we escape it or
+				// something?)
 				value.append(";");
 			}
 		}
@@ -99,7 +93,7 @@ public class ListMultipleChoice extends AbstractChoice
 
 	/**
 	 * Sets the cookie value for this component.
-	 *
+	 * 
 	 * @param value
 	 *            the cookie value for this component
 	 * @see FormComponent#setValue(java.lang.String)
@@ -116,26 +110,17 @@ public class ListMultipleChoice extends AbstractChoice
 		{
 			selectedValues.clear();
 		}
-		final List list = getValues();
-		final StringTokenizer st = new StringTokenizer(value, ";");
-		while (st.hasMoreTokens())
+		final IChoiceList choices = getChoices();
+		for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
+				.hasMoreTokens();)
 		{
-			final String idOrIndex = st.nextToken();
-			if (list instanceof IDetachableChoiceList)
-			{
-				selectedValues.add(((IDetachableChoiceList)list).objectForId(idOrIndex));
-			}
-			else
-			{
-				final int index = Integer.parseInt(idOrIndex);
-				selectedValues.add(list.get(index));
-			}
+			selectedValues.add(choices.choiceForId(tokenizer.nextToken()));
 		}
 	}
 
 	/**
 	 * Gets whether the given value represents the current selection.
-	 *
+	 * 
 	 * @param currentValue
 	 *            the current list value
 	 * @return whether the given value represents the current selection
@@ -143,15 +128,17 @@ public class ListMultipleChoice extends AbstractChoice
 	 */
 	protected final boolean isSelected(Object currentValue)
 	{
-		Collection collection = (Collection)getModelObject();
+		final Collection collection = (Collection)getModelObject();
 		if (collection != null)
+		{
 			return collection.contains(currentValue);
+		}
 		return false;
 	}
 
 	/**
 	 * Processes the component tag.
-	 *
+	 * 
 	 * @param tag
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
@@ -164,7 +151,7 @@ public class ListMultipleChoice extends AbstractChoice
 
 	/**
 	 * Updates this forms model from the request.
-	 *
+	 * 
 	 * @see FormComponent#updateModel()
 	 */
 	protected final void updateModel()
@@ -183,30 +170,19 @@ public class ListMultipleChoice extends AbstractChoice
 		}
 
 		// Get indices selected from request
-		final String[] indicesOrIds = inputAsStringArray();
+		final String[] ids = inputAsStringArray();
 
 		// If one or more ids is selected
-		if (indicesOrIds != null && indicesOrIds.length > 0 && !Strings.isEmpty(indicesOrIds[0]))
+		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 		{
 			// Get values that could be selected
-			final List list = getValues();
+			final IChoiceList choices = getChoices();
 
 			// Loop through selected indices
-			for (int i = 0; i < indicesOrIds.length; i++)
+			for (int i = 0; i < ids.length; i++)
 			{
-				if (list instanceof IDetachableChoiceList)
-				{
-					selectedValues.add(((IDetachableChoiceList)list).objectForId(indicesOrIds[i]));
-				}
-				else
-				{
-					// Get index
-					final int index = Integer.parseInt(indicesOrIds[i]);
-					
-					// Add the value at the given index to the collection of
-					// selected values
-					selectedValues.add(list.get(index));
-				}
+				final IChoice choice = choices.choiceForId(ids[i]);
+				selectedValues.add(choice.getObject());
 			}
 		}
 	}
