@@ -28,8 +28,8 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.CompoundPropertyModel;
 import wicket.model.Model;
-import wicket.model.PropertyModel;
 
 /**
  * A simple "guest book" example that allows visitors to the page to add a
@@ -72,9 +72,6 @@ public final class GuestBook extends WicketExamplePage
 	 */
 	public final class CommentForm extends Form
 	{
-		/** The comment model that this form is editing */
-		private final Comment comment = new Comment();
-
 		/**
 		 * Constructor
 		 * 
@@ -84,10 +81,10 @@ public final class GuestBook extends WicketExamplePage
 		public CommentForm(final String componentName)
 		{
 			// Construct form with no validation listener
-			super(componentName);
-
+			super(componentName, new CompoundPropertyModel(new Comment()), null);
+			
 			// Add text entry widget
-			add(new TextArea("text", new PropertyModel(comment, "text")));
+			add(new TextArea("text"));
 		}
 
 		/**
@@ -96,25 +93,21 @@ public final class GuestBook extends WicketExamplePage
 		public final void onSubmit()
 		{
 			// Construct a copy of the edited comment
+			final Comment comment = (Comment)getRootModelObject();
 			final Comment newComment = new Comment(comment);
 
 			// Set date of comment to add
 			newComment.setDate(new Date());
 
 			// Add the component we edited to the list of comments
+			commentListView.modelChangeImpending();
             synchronized (commentListView.getModelLock())
             {
     			commentList.add(0, newComment);
             }
-
-			// Invalidate the commentListView's model since a structural change
-			// was made to the comment list (we added an entry)
-			commentListView.modelChangedStructure();
 
 			// Clear out the text component
 			comment.setText("");
 		}
 	}
 }
-
-

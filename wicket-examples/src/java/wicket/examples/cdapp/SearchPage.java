@@ -115,15 +115,6 @@ public class SearchPage extends WicketExamplePage
 	}
 
 	/**
-	 * This method needs changing for 1.0
-	 */
-	public void modelChangedStructure()
-	{
-		// TODO this method should be different when 1.0 ships
-		resultsListView.modelChangedStructure(); // let list view re-populate
-	}
-
-	/**
 	 * Sets the result page to the first page.
 	 */
 	public void setCurrentResultPageToFirst()
@@ -187,7 +178,7 @@ public class SearchPage extends WicketExamplePage
 		{
 			searchModel.setSearchString(search); // set search query on model
 			setCurrentResultPageToFirst(); // start with first page
-			SearchPage.this.modelChangedStructure();
+			// SearchPage.this.modelChangedStructure();
 
 			if(search != null && (!search.trim().equals("")))
 			{
@@ -259,15 +250,6 @@ public class SearchPage extends WicketExamplePage
 			// add a delete link for each found record
 			item.add(new DeleteLink("delete", id));
 		}
-
-		/**
-		 * @see wicket.markup.html.list.ListView#modelChangedStructure()
-		 */
-		public void modelChangedStructure()
-		{
-			getModel().detach(); // force reload right away
-			super.modelChangedStructure();
-		}
 	}
 
 	/** link to detail edit page. */
@@ -315,7 +297,7 @@ public class SearchPage extends WicketExamplePage
 			final Long id = (Long)getModelObject();
 			dao.delete(id);
 			info(" cd deleted");
-			SearchPage.this.modelChangedStructure();
+			// SearchPage.this.modelChangedStructure();
 		}
 	}
 
@@ -345,7 +327,7 @@ public class SearchPage extends WicketExamplePage
 		public void onClick()
 		{
 			searchModel.addOrdering(field);
-			SearchPage.this.modelChangedStructure();
+			// SearchPage.this.modelChangedStructure();
 		}
 	}
 

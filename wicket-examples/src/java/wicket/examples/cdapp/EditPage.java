@@ -121,7 +121,8 @@ public final class EditPage extends WicketExamplePage
 			dao.save(cd);
 			// set message for search page to display on next rendering
 			searchCDPage.setInfoMessageForNextRendering("cd " + cd.getTitle() + " saved");
-			searchCDPage.modelChangedStructure(); // force reload of data
+			
+			// TODO searchCDPage.; // force reload of data
 			if (isNew)
 			{
 				// if it was a new cd, set the search page to page 1

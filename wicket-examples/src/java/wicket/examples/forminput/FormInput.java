@@ -135,7 +135,7 @@ public class FormInput extends WicketExamplePage
 		public void onSubmit()
 		{
 			// Form validation successful. Display message showing edited model.
-			info("Saved model " + getRootModel());
+			info("Saved model " + getRootModelObject());
 		}
 	}
 }

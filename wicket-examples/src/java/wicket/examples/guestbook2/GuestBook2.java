@@ -151,6 +151,7 @@ public class GuestBook2 extends WicketExamplePage
 			newComment.setDate(new Date());
 
 			// Add the component we edited to the list of comments
+			commentListView.modelChangeImpending();
 			commentList.add(0, newComment);
 
 			try
@@ -178,9 +179,6 @@ public class GuestBook2 extends WicketExamplePage
 			{
 				throw new WicketRuntimeException("Unable to save comment", e);
 			}
-
-			// Tell list view that its model was changed
-			commentListView.modelChangedStructure();
 		}
 	}
 }
