@@ -241,7 +241,9 @@ abstract class Choice extends FormComponent
 				final boolean currentOptionIsSelected = isSelected(value);
 				options.append("\n<option ");
 				if (currentOptionIsSelected)
+                {
 					options.append("selected ");
+                }
 				options.append("value=\"");
 				options.append(idValue);
 				options.append("\">");
