@@ -82,6 +82,13 @@ public class ExceptionErrorPage extends WebPage
 		markupHighlight.setVisible(markupStream != null);
 
 		// Show component tree of the page
-		add(new WicketComponentTree("componentTree", page));
+		if (page != null)
+		{
+		    add(new WicketComponentTree("componentTree", page));
+		}
+		else
+		{
+		    add(new Label("componentTree", ""));
+		}
 	}
 }
