@@ -38,11 +38,20 @@ class Version
 
 	void componentModelChangeImpending(Component component)
 	{
-		
+		changes.add(new ModelChange(component));
 	}
 
 	void componentRemoved(Component component)
 	{
 		changes.add(new Remove(component));		
+	}
+	
+	void undo()
+	{
+		// Go through changes in reverse time order to undo the version
+		for (int i = changes.size() - 1; i >= 0; i++)
+		{
+			((Change)changes.get(i)).undo();
+		}
 	}
 }

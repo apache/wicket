@@ -98,7 +98,12 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public Page getVersion(int version)
 	{
-		return null;
+		// Undo each version to get the version we're after
+		for (int i = versions.size() - 1; i >= version; i--)
+		{
+			((Version)versions.get(i)).undo();
+		}
+		return page; 
 	}
 
 	/**
