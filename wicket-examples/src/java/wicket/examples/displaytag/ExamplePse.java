@@ -93,7 +93,7 @@ public class ExamplePse extends Displaytag
         add(table);
         
         // Add the sortable header and define how to sort the different columns
-        add(new SortableTableHeaders("header", table, true)
+        add(new SortableTableHeaders("header", table)
         {
 	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
 	        {

@@ -111,7 +111,7 @@ public class ExampleSorting extends Displaytag
         add(table);
         
         // And this is with a little bit of magic
-        add(new SortableTableHeaders("header", table, true)
+        add(new SortableTableHeaders("header", table)
         {
             /*
              * If object does not support equals()

@@ -77,7 +77,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         add(table);
 
         // Add a sortable header to the table
-        add(new SortableTableHeaders("header", table, true)
+        add(new SortableTableHeaders("header", table)
         {
 	        protected int compareTo(SortableTableHeader header, Object o1, Object o2)
 	        {
