@@ -70,7 +70,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage3.class).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -82,7 +82,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage4.class).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -97,7 +97,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(String.class).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -128,7 +128,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage3.class, new PageParameters()).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -140,7 +140,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage4.class, new PageParameters()).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -156,7 +156,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(String.class, request).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -178,7 +178,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage0.class, page).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -190,7 +190,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage1.class, page).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -202,7 +202,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage2.class, page).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -217,7 +217,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage4.class, page).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -229,7 +229,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(MyPage5.class, page).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }
@@ -241,7 +241,7 @@ public class PageFactoryTest extends TestCase
         {
             factory.newPage(String.class, page).getClass();
         }
-        catch (RenderException ex)
+        catch (WicketRuntimeException ex)
         {
             e = ex;
         }

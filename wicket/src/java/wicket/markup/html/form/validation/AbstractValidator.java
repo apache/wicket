@@ -22,7 +22,7 @@ import java.util.Map;
 
 import wicket.Component;
 import wicket.Localizer;
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
@@ -187,7 +187,7 @@ public abstract class AbstractValidator implements IValidator
         }
         else
         {
-            throw new RenderException(
+            throw new WicketRuntimeException(
                     "Unable to find Form parent for FormComponent " + component);
         }
     }

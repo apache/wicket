@@ -19,7 +19,7 @@
 package wicket.markup.html.link;
 
 import wicket.Page;
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 
 /**
  * Links to a given page via an object implementing the IPageLink delayed
@@ -27,7 +27,7 @@ import wicket.RenderException;
  * IPageLink interface or with a Page Class object.  In the latter case,
  * an IPageLink implementation is provided which constructs a Page of the
  * given class when the link is clicked.  A default no-args constructor
- * must be available in this case or a RenderException will be thrown when 
+ * must be available in this case or a WicketRuntimeException will be thrown when 
  * Wicket fails to instantiate the class.
  * 
  * @see IPageLink
@@ -74,11 +74,11 @@ public class PageLink extends Link
                 }
                 catch (InstantiationException e)
                 {
-                    throw new RenderException("Cannot instantiate page class " + c, e);
+                    throw new WicketRuntimeException("Cannot instantiate page class " + c, e);
                 }
                 catch (IllegalAccessException e)
                 {
-                    throw new RenderException("Cannot instantiate page class " + c, e);
+                    throw new WicketRuntimeException("Cannot instantiate page class " + c, e);
                 }
             }
 

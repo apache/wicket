@@ -22,7 +22,7 @@ package wicket;
  * Runtime exception thrown during request processing.
  * @author Jonathan Locke
  */
-public class RenderException extends RuntimeException
+public class WicketRuntimeException extends RuntimeException
 { // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 3796104527069637919L;
@@ -30,7 +30,7 @@ public class RenderException extends RuntimeException
 	/**
      * Constructor
      */
-    public RenderException()
+    public WicketRuntimeException()
     {
         super();
     }
@@ -39,7 +39,7 @@ public class RenderException extends RuntimeException
      * Constructor
      * @param message
      */
-    public RenderException(final String message)
+    public WicketRuntimeException(final String message)
     {
         super(message);
     }
@@ -49,7 +49,7 @@ public class RenderException extends RuntimeException
      * @param message
      * @param cause
      */
-    public RenderException(final String message, final Throwable cause)
+    public WicketRuntimeException(final String message, final Throwable cause)
     {
         super(message, cause);
     }
@@ -58,7 +58,7 @@ public class RenderException extends RuntimeException
      * Constructor
      * @param cause
      */
-    public RenderException(final Throwable cause)
+    public WicketRuntimeException(final Throwable cause)
     {
         super(cause);
     }

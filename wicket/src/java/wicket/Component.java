@@ -150,14 +150,14 @@ public abstract class Component implements Serializable
      * 
      * @param name
      *            The non-null name of this component
-     * @throws RenderException
+     * @throws WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Component(final String name)
     {
         if (name == null && !(this instanceof Page))
         {
-            throw new RenderException("Null component name is not allowed.");
+            throw new WicketRuntimeException("Null component name is not allowed.");
         }
         this.name = name;
     }
@@ -171,7 +171,7 @@ public abstract class Component implements Serializable
      *            The non-null name of this component
      * @param object
      *            the object that will be used as a simple model
-     * @throws RenderException
+     * @throws WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Component(String name, Serializable object)
@@ -186,7 +186,7 @@ public abstract class Component implements Serializable
      * @param name
      *            The non-null name of this component
      * @param model
-     * @throws RenderException
+     * @throws WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Component(String name, IModel model)
@@ -214,7 +214,7 @@ public abstract class Component implements Serializable
      *            expression
      * @param expression
      *            the OGNL expression that works on the given object
-     * @throws RenderException
+     * @throws WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Component(String name, Serializable object, String expression)
@@ -241,7 +241,7 @@ public abstract class Component implements Serializable
      *            will be used as the subject for the given expression
      * @param expression
      *            the OGNL expression that works on the given object
-     * @throws RenderException
+     * @throws WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Component(String name, IModel model, String expression)
@@ -807,7 +807,7 @@ public abstract class Component implements Serializable
                 if (component.rendering == 0)
                 {
                     // Throw exception
-                    throw new RenderException(
+                    throw new WicketRuntimeException(
                             component
                                     .exceptionMessage("Component never rendered. You probably failed to "
                                             + "reference it in your markup."));

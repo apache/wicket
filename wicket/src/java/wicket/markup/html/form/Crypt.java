@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+import wicket.WicketRuntimeException;
 
 /**
  * Provide some simple means to encrypt and decrypt strings (e.g. passwords).
@@ -182,7 +183,7 @@ public class Crypt implements ICrypt
         }
         catch (IOException e)
         {
-            throw new RuntimeException(e.getMessage());
+            throw new WicketRuntimeException(e.getMessage());
         }
         catch (GeneralSecurityException e)
         {

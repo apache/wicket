@@ -78,7 +78,7 @@ public class Label extends HtmlComponent
      *            The non-null name of this component
      * @param model
      *            the model
-     * @throws wicket.RenderException
+     * @throws wicket.WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Label(String name, IModel model)
@@ -105,7 +105,7 @@ public class Label extends HtmlComponent
      *            will be used as the subject for the given expression
      * @param expression
      *            The OGNL expression that works on the given object
-     * @throws wicket.RenderException
+     * @throws wicket.WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Label(String name, IModel model, String expression)
@@ -122,7 +122,7 @@ public class Label extends HtmlComponent
      *            The non-null name of this component
      * @param object
      *            the object that will be used as a simple model
-     * @throws wicket.RenderException
+     * @throws wicket.WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Label(String name, Serializable object)
@@ -147,7 +147,7 @@ public class Label extends HtmlComponent
      *            expression
      * @param expression
      *            The OGNL expression that works on the given object
-     * @throws wicket.RenderException
+     * @throws wicket.WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public Label(String name, Serializable object, String expression)

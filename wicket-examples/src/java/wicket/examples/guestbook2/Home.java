@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import wicket.PageParameters;
+import wicket.WicketRuntimeException;
 import wicket.examples.util.NavigationPanel;
 import wicket.examples.util.hibernate.HibernateHelper;
 import wicket.markup.html.HtmlPage;
@@ -170,11 +171,11 @@ public class Home extends HtmlPage
             }
             catch (MappingException e)
             {
-                throw new RuntimeException("Unable to map hibernate object", e);
+                throw new WicketRuntimeException("Unable to map hibernate object", e);
             }
             catch (HibernateException e)
             {
-                throw new RuntimeException("Unable to save comment", e);
+                throw new WicketRuntimeException("Unable to save comment", e);
             }
 
             table.invalidateModel();

@@ -26,8 +26,8 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RenderException;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.protocol.http.HttpApplication;
 
 
@@ -75,7 +75,7 @@ public class CharSetUtil
     			}
     			catch (IOException ex)
     			{
-    				throw new RenderException("Error while reading CharSetMap", ex);
+    				throw new WicketRuntimeException("Error while reading CharSetMap", ex);
     			}
     		}
     	}

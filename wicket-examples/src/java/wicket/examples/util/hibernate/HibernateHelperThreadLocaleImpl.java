@@ -28,6 +28,8 @@ import net.sf.hibernate.cfg.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketRuntimeException;
+
 import java.net.URL;
 
 /**
@@ -259,7 +261,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
             }
             else
             {
-                throw new RuntimeException("invallid action "
+                throw new WicketRuntimeException("Invalid action "
                     + actionForCurrentSession);
             }
         }
@@ -373,17 +375,17 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
         catch (ClassNotFoundException e)
         {
             log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new WicketRuntimeException(e);
         }
         catch (InstantiationException e)
         {
             log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new WicketRuntimeException(e);
         }
         catch (IllegalAccessException e)
         {
             log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new WicketRuntimeException(e);
         }
 
         interceptorClassName = className;

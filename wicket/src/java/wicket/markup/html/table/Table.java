@@ -21,7 +21,7 @@ package wicket.markup.html.table;
 import java.io.Serializable;
 import java.util.List;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.model.IModel;
 
 
@@ -46,7 +46,7 @@ public abstract class Table extends ListView
      * @param name The non-null name of this component
      * @param model the model
      * @param rowsPerPage number of rows on one page
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Table(String name, IModel model, int rowsPerPage)
     {
@@ -69,7 +69,7 @@ public abstract class Table extends ListView
      *            used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
      * @param rowsPerPage number of pages
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Table(String name, IModel model, String expression, int rowsPerPage)
     {
@@ -84,7 +84,7 @@ public abstract class Table extends ListView
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
      * @param rowsPerPage number of pages
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Table(String name, Serializable object, int rowsPerPage)
     {
@@ -107,7 +107,7 @@ public abstract class Table extends ListView
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
      * @param rowsPerPage number of pages
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Table(String name, Serializable object, String expression, int rowsPerPage)
     {
@@ -122,7 +122,7 @@ public abstract class Table extends ListView
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
      * @param rowsPerPage number of pages
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Table(String name, List object, int rowsPerPage)
     {

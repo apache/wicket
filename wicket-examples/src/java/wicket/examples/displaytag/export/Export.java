@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RenderException;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.protocol.http.HttpResponse;
 
 
@@ -73,7 +73,7 @@ public class Export
         // response can't be already committed at this time
         if (servletResponse.isCommitted())
         {
-            throw new RenderException("HTTP response already committed. Can not change that any more");
+            throw new WicketRuntimeException("HTTP response already committed. Can not change that any more");
         }
 
         // if cache is disabled using http header, export will not work.
@@ -102,7 +102,7 @@ public class Export
         }
         catch (Exception e)
         {
-            throw new RenderException("Unable to reset HTTP response", e);
+            throw new WicketRuntimeException("Unable to reset HTTP response", e);
         }
 
         response.setContentType(mimeType);

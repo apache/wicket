@@ -28,6 +28,7 @@ import ognl.OgnlException;
 import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Session;
+import wicket.WicketRuntimeException;
 import wicket.util.convert.ConversionUtils;
 import wicket.util.convert.ConverterRegistry;
 import wicket.util.convert.FormattingUtils;
@@ -250,7 +251,7 @@ public class PropertyModel extends DetachableModel
         }
         catch (OgnlException e)
         {
-            throw new RuntimeException(e);
+            throw new WicketRuntimeException(e);
         }
     }
 
@@ -272,7 +273,7 @@ public class PropertyModel extends DetachableModel
         }
         catch (OgnlException e)
         {
-            throw new RuntimeException(e);
+            throw new WicketRuntimeException(e);
         }
     }
 

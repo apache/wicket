@@ -169,7 +169,7 @@ public final class FeedbackMessages
             }
             else
             {
-                throw new RuntimeException("Invalid model type for FeedbackMessages");
+                throw new WicketRuntimeException("Invalid model type for FeedbackMessages");
             }
         }
     }

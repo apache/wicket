@@ -37,7 +37,7 @@ public class DefaultClassResolver implements IClassResolver
         }
         catch (ClassNotFoundException ex)
         {
-            throw new RenderException("Unable to load class with name: "
+            throw new WicketRuntimeException("Unable to load class with name: "
                     + classname);
         }
     }

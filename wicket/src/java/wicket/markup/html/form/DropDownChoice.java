@@ -57,7 +57,7 @@ public class DropDownChoice extends AbstractDropDownChoice
      *            the model
      * @param values
      *            the drop down values
-     * @throws wicket.RenderException
+     * @throws wicket.WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public DropDownChoice(String name, IModel model, final Collection values)
@@ -86,7 +86,7 @@ public class DropDownChoice extends AbstractDropDownChoice
      *            the drop down values
      * @param expression
      *            the OGNL expression that works on the given object
-     * @throws wicket.RenderException
+     * @throws wicket.WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public DropDownChoice(String name, IModel model, String expression,
@@ -106,7 +106,7 @@ public class DropDownChoice extends AbstractDropDownChoice
      *            the object that will be used as a simple model
      * @param values
      *            the drop down values
-     * @throws wicket.RenderException
+     * @throws wicket.WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public DropDownChoice(String name, Serializable object,
@@ -136,7 +136,7 @@ public class DropDownChoice extends AbstractDropDownChoice
      *            the OGNL expression that works on the given object
      * @param values
      *            the drop down values
-     * @throws wicket.RenderException
+     * @throws wicket.WicketRuntimeException
      *             Thrown if the component has been given a null name.
      */
     public DropDownChoice(String name, Serializable object, String expression,

@@ -18,7 +18,7 @@
  */
 package wicket.markup;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.util.resource.Resource;
 
 
@@ -26,7 +26,7 @@ import wicket.util.resource.Resource;
  * Exception thrown when markup parsing fails
  * @author Jonathan Locke
  */
-public final class MarkupException extends RenderException
+public final class MarkupException extends WicketRuntimeException
 { // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 8431706931407810523L;

@@ -23,6 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import java.util.Locale;
 
+import wicket.WicketRuntimeException;
+
 /**
  * Utiltiy for formatting that works with the given instance of converter registry.
  */
@@ -153,19 +155,19 @@ public final class FormattingUtils
             }
             catch (NoSuchMethodException e)
             {
-                throw new RuntimeException(e);
+                throw new WicketRuntimeException(e);
             }
             catch (InstantiationException e)
             {
-                throw new RuntimeException(e);
+                throw new WicketRuntimeException(e);
             }
             catch (IllegalAccessException e)
             {
-                throw new RuntimeException(e);
+                throw new WicketRuntimeException(e);
             }
             catch (InvocationTargetException e)
             {
-                throw new RuntimeException(e);
+                throw new WicketRuntimeException(e);
             }
 
             if ((converter != null) && (converter instanceof IFormatter))

@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.springframework.context.ApplicationContext;
 
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.model.DetachableModel;
 import wicket.model.IModel;
 
@@ -130,20 +131,20 @@ public class SpringBeanModel extends DetachableModel
         } 
         catch (NoSuchMethodException e)
         {
-            throw new RuntimeException(e);
+            throw new WicketRuntimeException(e);
         } 
         catch (InstantiationException e)
         {
-            throw new RuntimeException("Cannot instantiate model object with "
+            throw new WicketRuntimeException("Cannot instantiate model object with "
                     + constructor, e);
         } 
         catch (IllegalAccessException e)
         {
-            throw new RuntimeException("Cannot access " + constructor, e);
+            throw new WicketRuntimeException("Cannot access " + constructor, e);
         } 
         catch (InvocationTargetException e)
         {
-            throw new RuntimeException("Exception thrown by " + constructor, e);
+            throw new WicketRuntimeException("Exception thrown by " + constructor, e);
         }
     }
 

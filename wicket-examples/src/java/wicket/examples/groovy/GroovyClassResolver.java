@@ -29,7 +29,7 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import wicket.ApplicationSettings;
 import wicket.DefaultClassResolver;
 import wicket.IClassResolver;
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.Resource;
 import wicket.util.watch.ModificationWatcher;
@@ -95,17 +95,17 @@ public class GroovyClassResolver implements IClassResolver
 	                return clazz;
 	            }
 	        }
-	        catch (RenderException ex)
+	        catch (WicketRuntimeException ex)
 	        {
-	            throw new RenderException("Unable to load class with name: " + classname, ex);
+	            throw new WicketRuntimeException("Unable to load class with name: " + classname, ex);
 	        }
         }
         else
         {
-            throw new RenderException("File not found: " + resource);
+            throw new WicketRuntimeException("File not found: " + resource);
         }
         
-        throw new RenderException("Unable to load class with name: " + classname);
+        throw new WicketRuntimeException("Unable to load class with name: " + classname);
     }
 
     /**
@@ -154,17 +154,17 @@ public class GroovyClassResolver implements IClassResolver
         } 
         catch (CompilationFailedException e) 
         {
-            throw new RenderException("Error parsing groovy file: " 
+            throw new WicketRuntimeException("Error parsing groovy file: " 
                     + resource, e);
         } 
         catch (IOException e) 
         {
-            throw new RenderException("Error reading groovy file: " 
+            throw new WicketRuntimeException("Error reading groovy file: " 
                     + resource, e);
         }
         catch (Throwable e) 
         {
-            throw new RenderException("Error while reading groovy file: " 
+            throw new WicketRuntimeException("Error while reading groovy file: " 
                     + resource, e);
         }
         finally

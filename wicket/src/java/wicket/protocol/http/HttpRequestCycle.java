@@ -33,7 +33,7 @@ import wicket.IApplication;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.markup.html.form.Form;
@@ -121,7 +121,7 @@ public class HttpRequestCycle extends RequestCycle
         // Ensure that component instanceof listenerInterface
         if (!listenerInterface.isAssignableFrom(component.getClass()))
         {
-            throw new RenderException("The component " + component
+            throw new WicketRuntimeException("The component " + component
                     + " of class " + component.getClass()
                     + " does not implement " + listenerInterface);
         }
@@ -233,7 +233,7 @@ public class HttpRequestCycle extends RequestCycle
      * 
      * @return True if a bookmarkable page was created and returned for the
      *         request.
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     private boolean bookmarkablePage()
     {
@@ -262,7 +262,7 @@ public class HttpRequestCycle extends RequestCycle
      * RequestDispatcher implementation.
      * 
      * @return True if the component listener was successfully called
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     private boolean callComponentListener()
     {
@@ -342,14 +342,14 @@ public class HttpRequestCycle extends RequestCycle
                         }
                         catch (IllegalAccessException e)
                         {
-                            throw new RenderException(
+                            throw new WicketRuntimeException(
                                     "Cannot access method " + method
                                             + " of interface " + interfaceName,
                                     e);
                         }
                         catch (InvocationTargetException e)
                         {
-                            throw new RenderException("Method " + method
+                            throw new WicketRuntimeException("Method " + method
                                     + " of interface " + interfaceName
                                     + " threw an exception", e);
                         }
@@ -393,7 +393,7 @@ public class HttpRequestCycle extends RequestCycle
      * If no context path was provided, activates the home page.
      * 
      * @return True if the home page was activated
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     private boolean homePage()
     {
@@ -405,9 +405,9 @@ public class HttpRequestCycle extends RequestCycle
             {
                 setPage(newPage(application.getPages().getHomePage()));
             }
-            catch (RenderException e)
+            catch (WicketRuntimeException e)
             {
-                throw new RenderException("Could not create home page", e);
+                throw new WicketRuntimeException("Could not create home page", e);
             }
 
             return true;
@@ -460,7 +460,7 @@ public class HttpRequestCycle extends RequestCycle
         }
         catch (IOException e)
         {
-            throw new RenderException("Cannot load static content for request "
+            throw new WicketRuntimeException("Cannot load static content for request "
                     + request, e);
         }
     }
@@ -499,7 +499,7 @@ public class HttpRequestCycle extends RequestCycle
      * @param pageClass
      *            The page class to instantiate
      * @return The page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     private final Page newPage(final Class pageClass)
     {
@@ -516,7 +516,7 @@ public class HttpRequestCycle extends RequestCycle
      * @param page
      *            Parameter to page constructor
      * @return The new page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     private final Page newPage(final Class pageClass, final Page page)
     {

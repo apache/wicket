@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -70,7 +70,7 @@ public final class SmartLinkLabel extends Label
      * names. A component's name cannot be null.
      * @param name The non-null name of this component
      * @param model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public SmartLinkLabel(String name, IModel model)
     {
@@ -91,7 +91,7 @@ public final class SmartLinkLabel extends Label
      * @param model the instance of {@link IModel}from which the model object will be
      *            used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public SmartLinkLabel(String name, IModel model, String expression)
     {
@@ -104,7 +104,7 @@ public final class SmartLinkLabel extends Label
      * name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public SmartLinkLabel(String name, Serializable object)
     {
@@ -125,7 +125,7 @@ public final class SmartLinkLabel extends Label
      * @param name The non-null name of this component
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public SmartLinkLabel(String name, Serializable object, String expression)
     {

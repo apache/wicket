@@ -19,6 +19,8 @@ package wicket.model;
 
 import java.io.Serializable;
 
+import wicket.WicketRuntimeException;
+
 /**
  * Model is the basic implementation of IModel. It just wraps the model object.
  * The model object must be serializable, as it is stored in the session. If you
@@ -78,7 +80,7 @@ public class Model implements IModel
         {
             if (!(object instanceof Serializable))
             {
-                throw new RuntimeException("Model object must be Serializable");
+                throw new WicketRuntimeException("Model object must be Serializable");
             }
         }
 

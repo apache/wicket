@@ -21,6 +21,7 @@ import java.io.File;
 
 import org.apache.commons.fileupload.FileItem;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 
 /**
@@ -212,7 +213,7 @@ public class FileUploadForm extends AbstractUploadForm
 
         if (fileName == null || fileName.trim().equals(""))
         {
-            throw new RuntimeException("No file name given");
+            throw new WicketRuntimeException("No file name given");
         }
 
         File targetFile = new File(targetDirectory, fileName + "." + ext);
@@ -236,7 +237,7 @@ public class FileUploadForm extends AbstractUploadForm
         }
         catch (Exception e)
         {
-            throw new RuntimeException(e);
+            throw new WicketRuntimeException(e);
         }
     }
 

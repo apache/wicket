@@ -21,7 +21,7 @@ package wicket.markup.html.image;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
 
@@ -99,7 +99,7 @@ public class DynamicImage extends Image
         }
         catch (IOException e)
         {
-            throw new RenderException("Unable to convert dynamic image to stream", e);
+            throw new WicketRuntimeException("Unable to convert dynamic image to stream", e);
         }
 
         return this;

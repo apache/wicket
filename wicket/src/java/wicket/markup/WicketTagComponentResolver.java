@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.Container;
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.Session;
 import wicket.util.string.StringValueConversionException;
 
@@ -102,27 +102,27 @@ public class WicketTagComponentResolver implements IComponentResolver
         }
         catch (NoSuchMethodException ex)
         {
-            throw new RenderException(
+            throw new WicketRuntimeException(
                     "Unable to create Component derived from wicket tag", ex);
         }
         catch (InvocationTargetException ex)
         {
-            throw new RenderException(
+            throw new WicketRuntimeException(
                     "Unable to create Component derived from wicket tag", ex);
         }
         catch (IllegalAccessException ex)
         {
-            throw new RenderException(
+            throw new WicketRuntimeException(
                     "Unable to create Component derived from wicket tag", ex);
         }
         catch (InstantiationException ex)
         {
-            throw new RenderException(
+            throw new WicketRuntimeException(
                     "Unable to create Component derived from wicket tag", ex);
         }
         catch (ClassCastException ex)
         {
-            throw new RenderException(
+            throw new WicketRuntimeException(
                     "Unable to create Component derived from wicket tag", ex);
         }
 
@@ -151,7 +151,7 @@ public class WicketTagComponentResolver implements IComponentResolver
 
             if (method == null)
             {
-                throw new RenderException(
+                throw new WicketRuntimeException(
                         "Unable to initialize Component. Method with name "
                                 + methodName + " not found");
             }
@@ -159,7 +159,7 @@ public class WicketTagComponentResolver implements IComponentResolver
             final Class[] parameterClasses = method.getParameterTypes();
             if (parameterClasses.length != 1)
             {
-                throw new RenderException(
+                throw new WicketRuntimeException(
                         "Unable to initialize Component. Method with name "
                                 + methodName
                                 + " must have one and only one parameter");
@@ -185,19 +185,19 @@ public class WicketTagComponentResolver implements IComponentResolver
             }
             catch (IllegalAccessException ex)
             {
-                throw new RenderException(
+                throw new WicketRuntimeException(
                         "Unable to initialize Component. Failure while invoking method "
                                 + methodName, ex);
             }
             catch (InvocationTargetException ex)
             {
-                throw new RenderException(
+                throw new WicketRuntimeException(
                         "Unable to initialize Component. Failure while invoking method "
                                 + methodName, ex);
             }
             catch (StringValueConversionException ex)
             {
-                throw new RenderException(
+                throw new WicketRuntimeException(
                         "Unable to initialize Component. Failure while invoking method "
                                 + methodName, ex);
             }

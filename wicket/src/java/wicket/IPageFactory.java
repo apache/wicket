@@ -32,7 +32,7 @@ public interface IPageFactory
      * @param pageClass
      *            The page class to instantiate
      * @return The page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      *             Thrown if the page cannot be constructed with the default
      *             constructor
      */
@@ -47,7 +47,7 @@ public interface IPageFactory
      * @param parameters
      *            The page parameters
      * @return The new page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      *             Thrown if the page cannot be constructed with a
      *             PageParameters constructor
      */
@@ -62,7 +62,7 @@ public interface IPageFactory
      * @param page
      *            The page
      * @return The new page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      *             Thrown if the page cannot be constructed with a Page
      *             constructor
      */
