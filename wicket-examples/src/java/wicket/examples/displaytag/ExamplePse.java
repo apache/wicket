@@ -25,12 +25,12 @@ import wicket.examples.displaytag.export.CsvView;
 import wicket.examples.displaytag.export.ExcelView;
 import wicket.examples.displaytag.export.ExportLink;
 import wicket.examples.displaytag.export.XmlView;
+import wicket.examples.displaytag.utils.MyPageableListViewNavigator;
 import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListViewNavigator;
 
 
 
@@ -112,7 +112,7 @@ public class ExamplePse extends Displaytag
         });
 
         // Add a table navigator
-        add(new PageableListViewNavigator("pageTableNav", table));
+        add(new MyPageableListViewNavigator("pageTableNav", table));
 
         // Add export links
         add(new ExportLink("exportCsv", data, new CsvView(data, true, false, false)));

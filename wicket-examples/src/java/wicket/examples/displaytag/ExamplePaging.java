@@ -23,11 +23,11 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
+import wicket.examples.displaytag.utils.MyPageableListViewNavigator;
 import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListViewNavigator;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListViewNavigationWithMargin;
@@ -69,7 +69,7 @@ public class ExamplePaging extends Displaytag
         };
 
         add(table);
-        add(new PageableListViewNavigator("pageTableNav", table));
+        add(new MyPageableListViewNavigator("pageTableNav", table));
 
 /*
         final TableNavigation tableNavigation = new TableNavigation("navigation", table, 5, 2);
@@ -118,7 +118,7 @@ public class ExamplePaging extends Displaytag
         };
         add(table2);
         
-        add(new PageableListViewNavigator("pageTableNav2", table2));
+        add(new MyPageableListViewNavigator("pageTableNav2", table2));
         
         // Add pageable table with alternating row styles
         final PagedTableWithAlternatingRowStyle table3 = new PagedTableWithAlternatingRowStyle("rows3", data, 10)
@@ -138,7 +138,7 @@ public class ExamplePaging extends Displaytag
         };
         add(table3);
         
-        PageableListViewNavigator nav3 = new PageableListViewNavigator("pageTableNav3", table3)
+        MyPageableListViewNavigator nav3 = new MyPageableListViewNavigator("pageTableNav3", table3)
         {
             protected PageableListViewNavigation newNavigation(final PageableListView table)
             {
@@ -171,7 +171,7 @@ public class ExamplePaging extends Displaytag
         };
         add(table4);
         
-        PageableListViewNavigator nav4 = new PageableListViewNavigator("pageTableNav4", table4)
+        MyPageableListViewNavigator nav4 = new MyPageableListViewNavigator("pageTableNav4", table4)
         {
             protected PageableListViewNavigation newNavigation(final PageableListView table)
             {
