@@ -54,7 +54,7 @@ public abstract class WicketExampleApplication extends WebApplication
         getSettings().setCryptClass(NoCrypt.class);
 
         // Use development settings 
-        getSettings().configure("development", "src\\java");
+        getSettings().configure("development", "src/java");
     }
 	/**
 	 * Main function, starts the jetty server.
