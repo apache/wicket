@@ -45,6 +45,13 @@ public abstract class DetachableModel implements IDetachableModel
     private transient boolean attached = false;
 
     /**
+     * Construct.
+     */
+    public DetachableModel()
+    {
+    }
+
+    /**
      * Construct the detachable model with the given model object.
      * @param object the model object
      */
