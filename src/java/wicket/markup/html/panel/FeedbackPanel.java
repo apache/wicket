@@ -134,8 +134,8 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
          */
         protected void handleRender(final RequestCycle cycle)
         {
-            removeAll();
             super.handleRender(cycle);
+            removeAll();
         }
     }
 }
