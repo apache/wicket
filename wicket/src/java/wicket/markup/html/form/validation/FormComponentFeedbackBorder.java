@@ -67,9 +67,9 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	 * Handles validation errors. If any errors were registered, the decorated
 	 * error indicator will be set to invisible.
 	 * 
-	 * @see wicket.markup.html.form.validation.IValidationFeedback#update()
+	 * @see wicket.markup.html.form.validation.IValidationFeedback#updateValidationFeedback()
 	 */
-	public void update()
+	public void updateValidationFeedback()
 	{
 		errorIndicator.setVisible(child.hasErrorMessage());
 	}

@@ -373,7 +373,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 			public Object component(final Component component)
 			{
 				// Call validation error handler
-				((IValidationFeedback)component).update();
+				((IValidationFeedback)component).updateValidationFeedback();
 
 				// Traverse all children
 				return CONTINUE_TRAVERSAL;
@@ -383,7 +383,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		// Call the validation handler that is registered with this form, if any
 		if (validationFeedback != null)
 		{
-			validationFeedback.update();
+			validationFeedback.updateValidationFeedback();
 		}
 	}
 
