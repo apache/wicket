@@ -21,9 +21,14 @@ package wicket.markup.html.form.validation;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.string.StringList;
 
-
 /**
  * Validates that a form component's value is of a certain min/max length.
+ * Validators are constructed by calling the min, max and range static
+ * factory methods.  For example, LengthValidator.min(6) would return a
+ * validator valid only when the input of the component it is attached
+ * to is at least 6 characters long.  Likewise, LengthValidator.range(3, 5)
+ * would only validate a component containing between 3 and 5 characters
+ * (inclusive).
  *
  * @author Jonathan Locke
  */
@@ -35,18 +40,18 @@ public final class LengthValidator extends AbstractValidator
     /** True if maximum bound should be checked. */
     private final boolean checkMax;
 
-    /** Lower bound on valid decimal number. */
+    /** Lower bound on valid length. */
     private final int min;
 
-    /** Upper bound on valid decimal number. */
+    /** Upper bound on valid length. */
     private final int max;
 
     /**
      * Private constructor forces use of static factory method and static instances.
      * @param checkMin True if minimum bound should be checked
-     * @param min Lower bound on valid decimal number
+     * @param min Lower bound on valid length
      * @param checkMax True if maximum bound should be checked
-     * @param max Upper bound on valid decimal number
+     * @param max Upper bound on valid length
      */
     private LengthValidator(final boolean checkMin, final int min,
     		final boolean checkMax, final int max)
@@ -91,19 +96,18 @@ public final class LengthValidator extends AbstractValidator
 
     /**
      * Validates the given form component.
-     * Validates that a form component's value is of a certain min/max length.
-     * @param input the input to validate
+     * Validates that a form component's value is of a certain minimum 
+     * and/or maximum length.
+     * @param input The input to validate
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
     public ValidationErrorMessage validate(
             final String input, final FormComponent component)
     {
-        // Get value
-        final String value = (String)input;
-
         // Check length
-        if ((checkMin && (value.length() < min)) || (checkMax && (value.length() > max)))
+        if ((checkMin && input.length() < min) || 
+            (checkMax && input.length() > max))
         {
             return errorMessage(input, component);
         }
@@ -131,3 +135,5 @@ public final class LengthValidator extends AbstractValidator
         return list.toString();
     }
 }
+
+///////////////////////////////// End of File /////////////////////////////////

@@ -20,9 +20,11 @@ package wicket.markup.html.form.validation;
 
 import wicket.markup.html.form.FormComponent;
 
-
 /**
  * Validator that ensures a component has a non-null and non-empty value.
+ * If the component's value is null or empty (a value is considered empty
+ * if it just contains whitespace) when its containing form is submitted 
+ * then the errorMessage() method will be called by the framework.
  *
  * @author Jonathan Locke
  */
@@ -30,16 +32,14 @@ public final class RequiredValidator extends AbstractValidator
 {
     /**
      * Validates the given form component.
-     * @param input the input to validate
+     * @param input The input to validate
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
     public ValidationErrorMessage validate(
             final String input, final FormComponent component)
     {
-        final String value = (String)input;
-
-        if ((value == null) || value.trim().equals(""))
+        if (input == null || input.trim().equals(""))
         {
             return errorMessage(input, component);
         }
@@ -48,11 +48,12 @@ public final class RequiredValidator extends AbstractValidator
     }
 
     /**
-     * Converts this object to a String.
-     * @return String representation of this object
+     * @see Object#toString()
      */
     public String toString()
     {
         return "[required]";
     }
 }
+
+///////////////////////////////// End of File /////////////////////////////////
