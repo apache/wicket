@@ -41,21 +41,21 @@ import wicket.util.resource.ResourceNotFoundException;
 
 
 /**
- * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a 
+ * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a
  * streaming XML parser to read the markup and IMarkupFilters to remove
  * comments, identify Wicket relevant tags, apply html specific treatments
  * etc.. <p>
  * The result will be an Markup object, which is basically a list, containing
- * Wicket relevant tags and RawMarkup.      
- * 
+ * Wicket relevant tags and RawMarkup.
+ *
  * @author Jonathan Locke
  */
-public final class MarkupParser 
+public final class MarkupParser
 {
     /** Logging */
     private static final Log log = LogFactory.getLog(MarkupParser.class);
 
-    /** Name of desired componentName tag attribute. 
+    /** Name of desired componentName tag attribute.
      * E.g. &lt;tag id="wicket-..."&gt; or &lt;tag wicket=..&gt; */
     private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
 
@@ -70,7 +70,7 @@ public final class MarkupParser
 
     /** if true, "wicket-" will be removed from id="wicket-xxx" */
     private boolean stripWicketFromComponentTag = false;
-    
+
     /** If true, MarkupParser will automatically create a ComponentWicketTag for
      * all tags surrounding a href attribute with a relative path to a
      * html file. E.g. &lt;a href="Home.html"&gt;
@@ -78,7 +78,7 @@ public final class MarkupParser
     private boolean automaticLinking = false;
 
     private IXmlPullParser xmlParser = new XmlPullParser();
-    
+
     /**
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
@@ -89,7 +89,7 @@ public final class MarkupParser
         this.xmlParser = xmlParser;
         this.componentNameAttribute = componentNameAttribute;
     }
-    
+
     /**
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
@@ -98,7 +98,7 @@ public final class MarkupParser
     {
         this.xmlParser = xmlParser;
     }
-    
+
     /**
 	 * Configure the markup parser based on Wicket application settings
 	 * @param settings Wicket application settings
@@ -112,19 +112,19 @@ public final class MarkupParser
         this.automaticLinking = settings.getAutomaticLinking();
         this.stripWicketFromComponentTag = settings.getStripComponentNames();
 	}
-    
+
     /**
      * Return the encoding used while reading the markup file.
      * You need to call @see #read(Resource) first to initialise
      * the value.
-     * 
+     *
      * @return if null, than JVM default is used.
      */
     public String getEncoding()
     {
         return xmlParser.getEncoding();
     }
-    
+
     /**
      * Reads and parses markup from a file.
      * @param resource The file
@@ -139,7 +139,7 @@ public final class MarkupParser
         xmlParser.parse(resource);
         return new Markup(resource, parseMarkup());
     }
-    
+
     /**
      * Parse the markup.
      * @param string The markup
@@ -171,12 +171,12 @@ public final class MarkupParser
         wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
 
         final PreviewComponentTagRemover previewComponentTagRemover = new PreviewComponentTagRemover(wicketParamTagHandler);
-        
+
         final AutolinkHandler autolinkHandler = new AutolinkHandler(previewComponentTagRemover);
         autolinkHandler.setAutomaticLinking(this.automaticLinking);
-        
+
         final IMarkupFilter parser = autolinkHandler;
-        
+
         // Loop through tags
         for (ComponentTag tag; null != (tag = (ComponentTag)parser.nextTag());)
         {
@@ -185,13 +185,13 @@ public final class MarkupParser
             {
                 add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getComponentName() != null));
             }
-            
+
             // Add tag to list?
             if (add == true)
             {
-                final CharSequence text = 
+                final CharSequence text =
                     	xmlParser.getInputFromPositionMarker(tag.getPos());
-                
+
                 // Add text from last position to tag position
                 if (text.length() > 0)
                 {
@@ -217,19 +217,19 @@ public final class MarkupParser
 	                tag.makeImmutable();
 	                list.add(tag);
                 }
-                
+
                 // Position is after tag
                 xmlParser.setPositionMarker();
             }
         }
 
         // Add tail?
-        final CharSequence text = ((XmlPullParser)xmlParser).getInputFromPositionMarker(-1);
+        final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
         if (text.length() > 0)
         {
             list.add(new RawMarkup(text));
         }
-        
+
         // Return immutable list of all MarkupElements
         return Collections.unmodifiableList(list);
     }

@@ -1,14 +1,14 @@
 /*
  * $Id$ $Revision$
  * $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,7 @@ import wicket.WicketRuntimeException;
  * the <a
  * href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES
  * </a> method to encrypt and decrypt the data.
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class Crypt implements ICrypt
@@ -75,7 +75,7 @@ public class Crypt implements ICrypt
 
     /**
      * Set encryption private key
-     * 
+     *
      * @param key
      *            private key to make de-/encryption unique
      */
@@ -90,7 +90,7 @@ public class Crypt implements ICrypt
      * Note: if you don't provide your own encryption key, the implementation
      * will use a default. Be aware that this is potential security risk. Thus
      * make sure you always provide your own one.
-     * 
+     *
      * @return secretKey the security key generated
      * @throws NoSuchAlgorithmException
      *             unable to find encryption algorithm specified
@@ -111,7 +111,7 @@ public class Crypt implements ICrypt
 
     /**
      * Crypts the given byte array
-     * 
+     *
      * @param input
      *            byte array to be crypted
      * @param mode
@@ -122,18 +122,16 @@ public class Crypt implements ICrypt
     private final byte[] crypt(final byte[] input, final int mode)
             throws GeneralSecurityException
     {
-        byte[] result = null;
         SecretKey key = generateKey();
         PBEParameterSpec spec = new PBEParameterSpec(salt, count);
         Cipher ciph = Cipher.getInstance(CRYPT_METHOD);
         ciph.init(mode, key, spec);
-        result = ciph.doFinal(input);
-        return result;
+        return ciph.doFinal(input);
     }
 
     /**
      * Encrypts the given text into a byte array.
-     * 
+     *
      * @param plainText
      *            text to encrypt
      * @return the string encrypted
@@ -147,7 +145,7 @@ public class Crypt implements ICrypt
 
     /**
      * Encrypt a string into a string
-     * 
+     *
      * @param plainText
      *            text to encrypt
      * @return encrypted string
@@ -168,7 +166,7 @@ public class Crypt implements ICrypt
 
     /**
      * Decrypts a String into a byte array.
-     * 
+     *
      * @param encrypted
      *            text to decrypt
      * @return the decrypted text
@@ -194,7 +192,7 @@ public class Crypt implements ICrypt
 
     /**
      * Decrypts a string into a string.
-     * 
+     *
      * @param text
      *            text to decript
      * @return the decrypted text

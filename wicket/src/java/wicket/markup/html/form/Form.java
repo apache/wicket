@@ -1,14 +1,14 @@
 /*
  * $Id$ $Revision$
  * $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.FeedbackMessages;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
@@ -56,7 +55,7 @@ import wicket.util.string.Strings;
  * <p>
  * To get form components to persist their values for users via cookies, simply
  * call setPersistent(true) on the form component.
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
@@ -71,7 +70,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 
 	/**
 	 * Trivial class for holding button count while counting buttons
-	 * 
+	 *
 	 * @author Jonathan Locke
 	 */
 	private static class Count
@@ -101,15 +100,12 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		/**
 		 * Validates all children of this form, recording all messages that are
 		 * returned by the validators.
-		 * 
+		 *
 		 * @param form
 		 *            the form that the validation is applied to
 		 */
 		public void validate(final Form form)
 		{
-			// Remove any old feedback messages
-			final FeedbackMessages messages = form.getPage().getFeedbackMessages();
-
 			// Visit all the form components and validate each
 			form.visitChildren(FormComponent.class, new IVisitor()
 			{
@@ -142,7 +138,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 
 	/**
 	 * Constructs a form with no validation.
-	 * 
+	 *
 	 * @param componentName
 	 *            Name of this form
 	 */
@@ -202,7 +198,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 
 	/**
 	 * Gets the delegate to be used for execution of validation of this form.
-	 * 
+	 *
 	 * @return the delegate to be used for execution of validation of this form
 	 */
 	public IFormValidationDelegate getValidationDelegate()
@@ -245,21 +241,21 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET API.  DO NOT ATTEMPT TO OVERRIDE 
+	 * THIS METHOD IS NOT PART OF THE WICKET API.  DO NOT ATTEMPT TO OVERRIDE
 	 * OR CALL IT.
-	 * 
+	 *
 	 * Handles form submissions. By default, this method simply calls validate()
 	 * to validate the form and update the model if there is only one button.
 	 * If there is more than one button, it calls the onClick() method for the
 	 * button which submitted the form.
-	 * 
+	 *
 	 * @see Form#validate()
 	 */
 	public final void onFormSubmitted()
 	{
 		onValidate();
 	}
-	
+
 	/**
 	 * Called when a form that has been submitted needs to be validated.
 	 */
@@ -279,9 +275,9 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	/**
 	 * Removes already persisted data for all FormComponent childs and disable
 	 * persistence for the same components.
-	 * 
+	 *
 	 * @see Page#removePersistedFormData(Class, boolean)
-	 * 
+	 *
 	 * @param disablePersistence
 	 *            if true, disable persistence for all FormComponents on that
 	 *            page. If false, it will remain unchanged.
@@ -314,7 +310,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 
 	/**
 	 * Gets the form component persistence manager; it is lazy loaded.
-	 * 
+	 *
 	 * @return The form component value persister
 	 */
 	protected IValuePersister getValuePersister()
@@ -372,7 +368,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 * Validates the form and updates the models of form components. If the form
 	 * validates successfully, handleValidSubmit() is called. If not,
 	 * handleErrors() is called.
-	 * 
+	 *
 	 * @see Form#onSubmit()
 	 * @see Form#onError()
 	 */
@@ -479,7 +475,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned
 	 * to the FormComponent automatically when the page is visited by the user
 	 * next time.
-	 * 
+	 *
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	private void persistFormComponentData()
@@ -520,7 +516,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 
 	/**
 	 * Update the model of all form components.
-	 * 
+	 *
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	private void updateFormComponentModels()

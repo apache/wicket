@@ -125,7 +125,7 @@ public class IntegerValidator extends AbstractValidator
                 final Map map = messageModel(component, value);
                 map.put("min", new Long(min));
                 map.put("max", new Long(max));
-                error(component, resourceKey(component), map, value); 
+                error(component, resourceKey(component), map); 
             }
 		}
 	}

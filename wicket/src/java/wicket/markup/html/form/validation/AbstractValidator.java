@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -67,11 +67,9 @@ public abstract class AbstractValidator implements IValidator
 	 * variable interpolation.
 	 * @param resourceKey the resource key to be used for the message
 	 * @param resourceModel the model for variable interpolation
-	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
 	 */
-	public void error(final FormComponent component, final String resourceKey, final IModel resourceModel,
-			final String input)
+	public void error(final FormComponent component, final String resourceKey, final IModel resourceModel)
 	{
 		// Return formatted error message
 		Localizer localizer = component.getLocalizer();
@@ -86,13 +84,11 @@ public abstract class AbstractValidator implements IValidator
 	 * variable interpolation.
 	 * @param resourceKey the resource key to be used for the message
 	 * @param map the model for variable interpolation
-	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
 	 */
-	public void error(final FormComponent component, final String resourceKey, final Map map,
-			final String input)
+	public void error(final FormComponent component, final String resourceKey, final Map map)
 	{
-		error(component, resourceKey, MapModel.valueOf(map), input);
+		error(component, resourceKey, MapModel.valueOf(map));
 	}
 
 	/**
@@ -115,8 +111,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent component, final String resourceKey, final String input)
 	{
-		final Map resourceModel = messageModel(component, input);
-		error(component, resourceKey, resourceModel, input);
+		error(component, resourceKey, messageModel(component, input));
 	}
 
 	/**

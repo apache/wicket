@@ -131,7 +131,7 @@ public class TypeValidator extends AbstractValidator
 	protected void conversionError(final FormComponent component, final String input,
 			final ConversionException e)
 	{
-		error(component, resourceKey(component), messageModel(component, input, e), input);
+		error(component, resourceKey(component), messageModel(component, input, e));
 	}
 
 	/**

@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import wicket.markup.html.form.validation.IValidationFeedback;
  * Form that uploads files and writes them to the file system. It uses a
  * conflict handler that is called when a file with the same name exists in the
  * same directory when trying to save an uploaded file.
- * 
+ *
  * @author Eelco Hillenius
  */
 public class FileUploadForm extends AbstractUploadForm
@@ -51,8 +51,7 @@ public class FileUploadForm extends AbstractUploadForm
 			final String fileName = uploadFile.getName();
 			final int extloc = fileName.lastIndexOf('.');
 			final String ext = fileName.substring((extloc + 1), fileName.length());
-			final String name = fileName.substring(0, extloc);
-			File newFile = null;
+			File newFile;
 			int i = 1;
 			while (true)
 			{
@@ -141,7 +140,7 @@ public class FileUploadForm extends AbstractUploadForm
 	{
 		/**
 		 * Get the file handle that should be used to save the upload to.
-		 * 
+		 *
 		 * @param uploadFile
 		 *            the current, allready existing file.
 		 * @return the file that should be used to save the upload to
@@ -152,7 +151,7 @@ public class FileUploadForm extends AbstractUploadForm
 	/**
 	 * Construct; uses NUMBER_FILE_CONFLICT_HANDLER as the
 	 * fileExistsConflictHandler.
-	 * 
+	 *
 	 * @param name
 	 *            component name
 	 * @param validationErrorHandler
@@ -168,7 +167,7 @@ public class FileUploadForm extends AbstractUploadForm
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param name
 	 *            component name
 	 * @param validationErrorHandler
@@ -190,7 +189,7 @@ public class FileUploadForm extends AbstractUploadForm
 
 	/**
 	 * Processes a form field.
-	 * 
+	 *
 	 * @param item
 	 *            a file item
 	 * @see wicket.markup.html.form.upload.AbstractUploadForm#processFormField(org.apache.commons.fileupload.FileItem)
@@ -202,7 +201,7 @@ public class FileUploadForm extends AbstractUploadForm
 
 	/**
 	 * Process an upload item.
-	 * 
+	 *
 	 * @param item
 	 *            upload item (item.isFormField() == false)
 	 * @see wicket.markup.html.form.upload.AbstractUploadForm#processUploadedFile(org.apache.commons.fileupload.FileItem)
@@ -232,7 +231,7 @@ public class FileUploadForm extends AbstractUploadForm
 
 	/**
 	 * Saves the uploaded file to disk.
-	 * 
+	 *
 	 * @param item
 	 *            the upload item
 	 * @param targetFile

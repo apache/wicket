@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -40,7 +40,7 @@ import wicket.util.string.StringValue;
  * given type of markup (for example, html, xml, vxml or wml) into Tag and
  * RawMarkup tokens. IMarkupFilters may be used to handle markup specifics like
  * identifying Wicket components or HTML which is not 100% xml compliant.
- * 
+ *
  * @author Jonathan Locke
  */
 public final class XmlPullParser implements IXmlPullParser
@@ -90,7 +90,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Return the encoding used while reading the markup file.
-	 * 
+	 *
 	 * @return if null, than JVM default
 	 */
 	public String getEncoding()
@@ -100,7 +100,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Get the character sequence from the position marker to toPos.
-	 * 
+	 *
 	 * @param toPos
 	 *            index of first character not included
 	 * @return Raw markup (a string) in between these two positions.
@@ -116,7 +116,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Get the character sequence in between both positions.
-	 * 
+	 *
 	 * @param fromPos
 	 *            first index
 	 * @param toPos
@@ -131,7 +131,7 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * As the xml parser will always be the last element on the chain, it will
 	 * always return null.
-	 * 
+	 *
 	 * @return always null.
 	 */
 	public final IMarkupFilter getParent()
@@ -141,7 +141,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Gets the next tag from the input string.
-	 * 
+	 *
 	 * @return The extracted tag (will always be of type XmlTag).
 	 * @throws ParseException
 	 */
@@ -250,7 +250,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * <p>
 	 * Note: xml character encoding is NOT applied. It is assumed the input
 	 * provided does have the correct encoding already.
-	 * 
+	 *
 	 * @param string
 	 *            The input string
 	 */
@@ -261,7 +261,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Reads and parses markup from a resource such as file.
-	 * 
+	 *
 	 * @param resource
 	 *            The resource to read and parse
 	 * @throws IOException
@@ -319,7 +319,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Set whether whitespace should be compressed.
-	 * 
+	 *
 	 * @param compressWhitespace
 	 *            whether whitespace should be compressed.
 	 */
@@ -338,7 +338,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Set whether to strip components.
-	 * 
+	 *
 	 * @param stripComments
 	 *            whether to strip components.
 	 */
@@ -357,7 +357,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Counts lines between indices.
-	 * 
+	 *
 	 * @param string
 	 *            String
 	 * @param end
@@ -386,7 +386,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * encoding=".." ?&gt;, than set this.encoding and return null. If not,
 	 * return all characters read so far. determineEncoding will read-ahead at
 	 * max. the very first line of the markup.
-	 * 
+	 *
 	 * @param in
 	 *            The markup file
 	 * @param readAheadSize
@@ -438,13 +438,12 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Parses the text between tags. For example, "a href=foo.html".
-	 * 
+	 *
 	 * @param tagText
 	 *            The text between tags
 	 * @return A new Tag object or null if the tag is invalid
-	 * @throws ParseException
 	 */
-	private XmlTag parseTagText(final String tagText) throws ParseException
+	private XmlTag parseTagText(final String tagText)
 	{
 		// Get the length of the tagtext
 		final int tagTextLength = tagText.length();
@@ -516,7 +515,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Sets the input string to parse.
-	 * 
+	 *
 	 * @param input
 	 *            The input string
 	 */

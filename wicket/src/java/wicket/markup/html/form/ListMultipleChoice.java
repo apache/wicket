@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
+import wicket.model.PropertyModel;
+import wicket.model.Model;
 
 /**
  * A multiple choice list component.
- * 
+ *
  * @author Jonathan Locke
  * @author Johan Compagner
  */
@@ -43,7 +45,7 @@ public class ListMultipleChoice extends AbstractChoice
 	public ListMultipleChoice(final String componentName, final Serializable model,
 			final String expression, final Collection values)
 	{
-		super(componentName, model, values);
+		super(componentName, new PropertyModel(new Model(model), expression), values);
 		setRenderNullOption(false);
 	}
 
@@ -90,7 +92,7 @@ public class ListMultipleChoice extends AbstractChoice
 
 	/**
 	 * Sets the cookie value for this component.
-	 * 
+	 *
 	 * @param value
 	 *            the cookie value for this component
 	 * @see FormComponent#setValue(java.lang.String)
@@ -126,7 +128,7 @@ public class ListMultipleChoice extends AbstractChoice
 
 	/**
 	 * Updates this forms model from the request.
-	 * 
+	 *
 	 * @see FormComponent#updateModel()
 	 */
 	public final void updateModel()
@@ -171,7 +173,7 @@ public class ListMultipleChoice extends AbstractChoice
 
 	/**
 	 * Processes the component tag.
-	 * 
+	 *
 	 * @param tag
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
@@ -184,7 +186,7 @@ public class ListMultipleChoice extends AbstractChoice
 
 	/**
 	 * Gets whether the given value represents the current selection.
-	 * 
+	 *
 	 * @param currentValue
 	 *            the current list value
 	 * @return whether the given value represents the current selection
