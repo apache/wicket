@@ -92,6 +92,9 @@ import wicket.util.string.Strings;
  */
 public abstract class Session implements Serializable
 {
+	/** Session attribute used for storing session state */
+	private static final String stateSessionAttribute = "state";
+
 	/** Separator for component paths. */
 	private static final char componentPathSeparator = '.';
 
@@ -137,7 +140,7 @@ public abstract class Session implements Serializable
 	 * 
 	 * @author Jonathan Locke
 	 */
-	class State implements Serializable
+	static class State implements Serializable
 	{
 		/** Next available page state sequence number */
 		int pageStateSequenceNumber;
@@ -156,16 +159,18 @@ public abstract class Session implements Serializable
 
 		/**
 		 * Attaches state to session, restoring transient values
+		 * 
+		 * @param session
+		 *            The session to attach to
 		 */
-		void attach()
+		void attach(final Session session)
 		{
 			// Go through each page map in the session
-			for (final Iterator iterator = state.pageMapForName.values().iterator(); iterator
-					.hasNext();)
+			for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
 			{
 				// Remove all pages from the current page map
 				PageMap pageMap = ((PageMap)iterator.next());
-				pageMap.setSession(Session.this);
+				pageMap.setSession(session);
 			}
 		}
 	}
@@ -489,7 +494,7 @@ public abstract class Session implements Serializable
 			this.state.dirty = false;
 
 			// Set attribute
-			setAttribute("state", state);
+			setAttribute(stateSessionAttribute, state);
 		}
 	}
 
@@ -500,11 +505,11 @@ public abstract class Session implements Serializable
 	public final void updateSession()
 	{
 		// Get any replicated state from the session
-		final State state = (State)getAttribute("state");
+		final State state = (State)getAttribute(stateSessionAttribute);
 		if (state != null)
 		{
 			// Copy state into Session
-			state.attach();
+			state.attach(this);
 			this.state = state;
 		}
 
@@ -527,7 +532,8 @@ public abstract class Session implements Serializable
 	 */
 	protected final void add(final Page page)
 	{
-		// TODO This could potentially enable denial of service attacks.  We may want to limit pagemaps.
+		// TODO This could potentially enable denial of service attacks. We may
+		// want to limit pagemaps.
 
 		// Set page map for page. If cycle is null, we may be being called from
 		// some kind of test harness, so we will just use the default page map
@@ -679,13 +685,13 @@ public abstract class Session implements Serializable
 		{
 			public int compare(Object object1, Object object2)
 			{
-				int accessNumber1 = ((PageState)object1).sequenceNumber;
-				int accessNumber2 = ((PageState)object2).sequenceNumber;
-				if (accessNumber1 < accessNumber2)
+				int sequenceNumber1 = ((PageState)object1).sequenceNumber;
+				int sequenceNumber2 = ((PageState)object2).sequenceNumber;
+				if (sequenceNumber1 < sequenceNumber2)
 				{
 					return -1;
 				}
-				if (accessNumber1 > accessNumber2)
+				if (sequenceNumber1 > sequenceNumber2)
 				{
 					return 1;
 				}

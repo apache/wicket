@@ -50,13 +50,15 @@ import wicket.markup.html.pages.PageExpiredErrorPage;
  *   
  *    
  *     
- *                       public void init()
- *                       {
- *                         String webXMLParameter = getWicketServlet()
- *                         			.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                         URL schedulersConfig = getWicketServlet().getServletContext()
- *                         			.getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                         ...
+ *      
+ *                        public void init()
+ *                        {
+ *                          String webXMLParameter = getWicketServlet()
+ *                          			.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                          URL schedulersConfig = getWicketServlet().getServletContext()
+ *                          			.getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                          ...
+ *       
  *      
  *     
  *    
@@ -214,7 +216,6 @@ public abstract class WebApplication extends Application
 			if (session instanceof WebSession)
 			{
 				webSession = (WebSession)session;
-				webSession.sessionAttributeName = sessionAttributeName;
 			}
 			else
 			{
@@ -229,11 +230,8 @@ public abstract class WebApplication extends Application
 			httpSession.setAttribute(sessionAttributeName, webSession);
 		}
 
-		// Attach / reattach http servlet session
-		webSession.httpSession = httpSession;
-
-		// Set the current session to the session we just retrieved
-		Session.set(webSession);
+		// Set session attribute name and attach/reattach http servlet session
+		webSession.init(httpSession, sessionAttributeName);
 
 		return webSession;
 	}
