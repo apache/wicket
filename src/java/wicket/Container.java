@@ -748,6 +748,11 @@ public abstract class Container extends Component
                 // If it's a [body] tag
                 if (componentName.equals("[body]"))
                 {
+                    if (!markupStream.atOpenCloseTag())
+                    {
+                        markupStream.throwMarkupException(
+                                "A [body] tag must be an openclose tag.");
+                    }
                     // Render the children tag
                     renderTag(cycle, tag);
                     markupStream.next();
