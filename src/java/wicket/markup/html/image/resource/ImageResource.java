@@ -21,10 +21,7 @@ import wicket.protocol.http.WebResource;
 import wicket.util.resource.IResource;
 
 /**
- * An image subclass that allows easy rendering of dynamic images. An image can
- * be set with setImage(BufferedImage) and its format can be specified with
- * setExtension(String). After this, the image will be cached as an input stream
- * and will render as would any other Image resource.
+ * Base class for image resources.
  * 
  * @author Jonathan Locke
  */
