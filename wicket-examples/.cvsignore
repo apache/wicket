@@ -6,3 +6,4 @@ guestbook.properties
 guestbook.script
 build
 velocity.log
+*.backup
