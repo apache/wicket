@@ -195,6 +195,17 @@ public abstract class Application
 	}
 
 	/**
+	 * Change the resource locator which will be used to locate resources
+	 * like e.g. markup files.
+	 * 
+	 * @param locator
+	 */
+	protected void setResourceLocator(final ResourceLocator locator)
+	{
+	    this.resourceLocator = locator;
+	}
+	
+	/**
 	 * @return Resource watcher with polling frequency determined by setting, or
 	 *         null if no polling frequency has been set.
 	 */
