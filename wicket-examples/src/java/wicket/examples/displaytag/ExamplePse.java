@@ -19,12 +19,12 @@
 package wicket.examples.displaytag;
 
 import wicket.PageParameters;
-import wicket.contrib.markup.html.list.SortableListViewHeader;
-import wicket.contrib.markup.html.list.SortableListViewHeaders;
 import wicket.examples.displaytag.export.CsvView;
 import wicket.examples.displaytag.export.ExcelView;
 import wicket.examples.displaytag.export.ExportLink;
 import wicket.examples.displaytag.export.XmlView;
+import wicket.examples.displaytag.list.SortableListViewHeader;
+import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.MyPageableListViewNavigator;
 import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.ReportList;

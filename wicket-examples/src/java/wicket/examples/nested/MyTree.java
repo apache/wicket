@@ -26,13 +26,13 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.contrib.markup.html.tree.IndentTree;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.Image;
+import wicket.markup.html.tree.Tree;
 import wicket.model.Model;
 
 /** indent tree implementation. */
-public class MyTree extends IndentTree
+public class MyTree extends Tree
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
@@ -51,7 +51,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.contrib.markup.html.tree.IndentTree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected void junctionLinkClicked(DefaultMutableTreeNode node)
 	{
@@ -60,7 +60,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.contrib.markup.html.tree.IndentTree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected void nodeLinkClicked(DefaultMutableTreeNode node)
 	{
@@ -69,7 +69,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.contrib.markup.html.tree.IndentTree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.markup.html.tree.Tree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected Image getNodeImage(final DefaultMutableTreeNode node)
 	{
@@ -94,7 +94,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.contrib.markup.html.tree.IndentTree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.markup.html.tree.Tree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected String getNodeLabel(DefaultMutableTreeNode node)
 	{
@@ -127,8 +127,6 @@ public class MyTree extends IndentTree
 		{
 			super(name, new Model(object));
 		}
-
-		// TODO EELCO: this is busted now.  talk to me about new resource model...
 		
 		/**
 		 * @return Gets the image resource for the component.

@@ -23,15 +23,12 @@ import junit.framework.TestSuite;
 import nl.openedge.util.jetty.JettyDecorator;
 import wicket.examples.displaytag.DisplaytagTest;
 import wicket.examples.forminput.FormInputTest;
-import wicket.examples.groovy.GroovyTest;
 import wicket.examples.guestbook.GuestbookTest;
 import wicket.examples.hangman.HangManTest;
 import wicket.examples.hangman.WordGeneratorTest;
 import wicket.examples.helloworld.HelloWorldTest;
 import wicket.examples.linkomatic.LinkomaticTest;
 import wicket.examples.signin2.Signin2Test;
-import wicket.examples.springframework.SpringFrameworkTest;
-import wicket.examples.springframework2.SpringFramework2Test;
 
 /**
  * All tests in the project; used by Maven.
@@ -86,9 +83,6 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(HelloWorldTest.class);
 		suite.addTestSuite(GuestbookTest.class);
 		suite.addTestSuite(DisplaytagTest.class);
-		suite.addTestSuite(SpringFrameworkTest.class);
-		suite.addTestSuite(SpringFramework2Test.class);
-		suite.addTestSuite(GroovyTest.class);
 		suite.addTestSuite(FormInputTest.class);
 		suite.addTestSuite(LinkomaticTest.class);
 		suite.addTestSuite(Signin2Test.class);

@@ -21,8 +21,8 @@ package wicket.examples.displaytag;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.contrib.markup.html.list.SortableListViewHeader;
-import wicket.contrib.markup.html.list.SortableListViewHeaders;
+import wicket.examples.displaytag.list.SortableListViewHeader;
+import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.markup.ComponentTag;

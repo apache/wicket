@@ -14,19 +14,7 @@
 			<encoding>UTF-8</encoding>
 		</locale-encoding-mapping>
 	</locale-encoding-mapping-list>
-	-->	
-
-  <!-- Used for Springframwork2 example -->	   
-	<context-param>
-	  <param-name>contextConfigLocation</param-name> 
-	  <param-value>/WEB-INF/spring.xml</param-value> 
-	</context-param>
-	
-	<!-- Prefer using the spring context listener instead of the loader servlet --> 
-	<listener>
-	  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> 
-	</listener>
-  <!-- End-of: Used for Springframwork2 example -->	   
+	-->	  
 
 	<servlet>
 		<servlet-name>HelloWorldApplication</servlet-name>
@@ -149,16 +137,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>SignIn2Application</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.signin2.SignIn2Application</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet>
 		<servlet-name>DisplaytagApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
@@ -177,61 +155,6 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
-	<servlet>
-		<servlet-name>HelloMozillaApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.hellomozilla.HelloMozillaApplication</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet>
-		<servlet-name>SpringApplication</servlet-name>
-		<!-- DO NOT USE YOUR WICKET APPLICATION. USE SPRING'S DISPATCHER SERVLET -->
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>SpringApplication2</servlet-name>
-		<!-- DO NOT USE YOUR WICKET APPLICATION. USE SPRING'S DISPATCHER SERVLET -->
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>GroovyApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.groovy.GroovyApplication</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
-		<servlet-name>SelectTagApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.selecttag.SelectTagApplication</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet>
-		<servlet-name>TabPanelApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.tabpanel.TabPanelApplication</param-value>
-		</init-param>
-	</servlet>
-
-	<!-- servlet>
-		<servlet-name>Wicket-Appfuse</servlet-name>
-		<servlet-class>wicket.examples.appfuse.AppfuseApplication</servlet-class>
-	</servlet -->
 
 	<servlet>
 		<servlet-name>cdapp</servlet-name>
@@ -260,11 +183,6 @@
 	<servlet-mapping>
 		<servlet-name>NestedApplication</servlet-name>
 		<url-pattern>/nested/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>SignIn2Application</servlet-name>
-		<url-pattern>/signin2/*</url-pattern>
 	</servlet-mapping>
 	 
 	<servlet-mapping>
@@ -321,41 +239,6 @@
 		<servlet-name>EncodingsApplication</servlet-name>
 		<url-pattern>/encodings/*</url-pattern>
 	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>HelloMozillaApplication</servlet-name>
-		<url-pattern>/hellomozilla/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>SpringApplication</servlet-name>
-		<url-pattern>/spring/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>SpringApplication2</servlet-name>
-		<url-pattern>/spring2/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>GroovyApplication</servlet-name>
-		<url-pattern>/groovy/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>SelectTagApplication</servlet-name>
-		<url-pattern>/selecttag/*</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>TabPanelApplication</servlet-name>
-		<url-pattern>/tabpanel/*</url-pattern>
-	</servlet-mapping>
-
-	<!-- servlet-mapping>
-		<servlet-name>Wicket-Appfuse</servlet-name>
-		<url-pattern>/appfuse/*</url-pattern>
-	</servlet-mapping -->
 	
 	<welcome-file-list>
 	<welcome-file>index.html</welcome-file>
