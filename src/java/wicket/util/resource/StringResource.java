@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.util.time.Time;
 
 /**
- * A StringResource is an IResource implementation for strings. 
+ * A StringResource is an IResource implementation for strings.
  * 
  * @see wicket.util.resource.IResource
  * @see wicket.util.resource.IResourceStream
@@ -39,29 +39,43 @@ public final class StringResource extends AbstractResource
 	/** Logging */
 	private static Log log = LogFactory.getLog(StringResource.class);
 
+	/** resource data */
 	private final CharSequence string;
-	private final CharSequence contentType;
-	
+
+	/** content data mime type */
+	private final String contentType;
+
+	/** Current time */
+	private Time modificationTime = Time.now();
+
 	/**
-	 * Private constructor to force use of static factory methods.
+	 * Construct. Content type defaults to "text/plain".
+	 * <p>
+	 * Note: Class String is derived from CharSequence. Thus you can easily
+	 * create a StringResource like
+	 * 
+	 * <pre>
+	 * new StringResource(&quot;&lt;html&gt;....&quot;);
+	 * </pre>
 	 * 
 	 * @param string
 	 *            The resource string
 	 */
 	public StringResource(final CharSequence string)
 	{
-		this(string, "text/html");
+		this(string, "text/plain");
 	}
-	
+
 	/**
-	 * Private constructor to force use of static factory methods.
+	 * Construct.
 	 * 
 	 * @param string
 	 *            The resource string
-	 * @param contentType The mime type of this resource, such as "image/jpeg" or
-	 *         "text/html"
+	 * @param contentType
+	 *            The mime type of this resource, such as "text/html" or
+	 *            "text/xml"
 	 */
-	public StringResource(final CharSequence string, final CharSequence contentType)
+	public StringResource(final CharSequence string, final String contentType)
 	{
 		this.string = string;
 		this.contentType = contentType;
@@ -77,7 +91,7 @@ public final class StringResource extends AbstractResource
 	}
 
 	/**
-	 * @return The extension of this resource, such as "jpeg" or "html"
+	 * @return The MIME type of this resource, such as "text/plain" or "text/html"
 	 */
 	public String getContentType()
 	{
@@ -90,16 +104,28 @@ public final class StringResource extends AbstractResource
 	 */
 	public InputStream getInputStream() throws ResourceNotFoundException
 	{
-	    return new ByteArrayInputStream(string.toString().getBytes());
+		return new ByteArrayInputStream(string.toString().getBytes());
 	}
 
 	/**
 	 * @see wicket.util.watch.IModifiable#lastModifiedTime()
-	 * @return always null
+	 * @return last modification time. Default: object creation time
 	 */
 	public Time lastModifiedTime()
 	{
-		return null;
+		return this.modificationTime;
+	}
+
+	/**
+	 * Assuming you read the string resource from a database, you might as well
+	 * use a database field to determine the strings last modifcation time.
+	 * 
+	 * @param time
+	 *            The time the string was modified
+	 */
+	public void setModifiedTime(final Time time)
+	{
+		this.modificationTime = time;
 	}
 
 	/**
