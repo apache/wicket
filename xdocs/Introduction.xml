@@ -35,9 +35,6 @@ Java web frameworks can you name? The answer they show looks like this:
 <tr><td>Japple</td><td>Helma</td><td>Dinamica</td><td>WebOnSwing</td></tr>
 <tr><td>Nacho</td><td>Cassandra</td><td>Baritus</td><td></td></tr>
 </table>
-<p>
-My own personal list of the more interesting and popular presentation layer frameworks is:
-</p>
 </subsection>
 </section>
 <section name='Why "Reinvent the Wheel"?'>
