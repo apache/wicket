@@ -26,7 +26,7 @@ import java.io.Serializable;
  * @author Eelco Hillenius
  */
 public class FeedbackMessage implements Serializable
-{ // TODO finalize javadoc
+{
     /**
      * Constant for an undefined level; note that components might decide
      * not to render anything when this level is used.
