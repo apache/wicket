@@ -63,7 +63,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** Used to create page-unique numbers */
 	private int autoIndex;
-	
+
 	/** Any feedback display for this page */
 	private IFeedback feedback;
 
@@ -195,7 +195,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			}
 		};
 	}
-	
+
 	/**
 	 * Redirect to this page.
 	 * 
@@ -244,38 +244,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
-
-	/**
-	 * Performs a render of this component.
-	 */
-	public void render()
-	{
-		// Adds any feedback messages on this page to the given component
-		if (feedback != null)
-		{
-			feedback.addFeedbackMessages(this, false);
-		}
-		
-		// Rendering is beginning
-		onBeginRender();
-		
-		// Render markup in page
-		super.render();
-
-		// Rendering is complete
-		onEndRender();
-		
-		// If the application wants component uses checked and
-		// the response is not a redirect
-		if (getApplicationSettings().getComponentUseCheck() && !getResponse().isRedirect())
-		{
-			// Visit components on page
-			checkRendering(this);
-		}
-
-		// Reset page for future use
-		reset();
 	}
 
 	/**
@@ -331,26 +299,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return null;
 	}
-
+	
 	/**
-	 * This method is called immediately before a page is rendered
-	 */	
-	protected void onBeginRender()
+	 * Called when this page is no longer being used in a request
+	 */
+	protected void onEndRequest()
 	{		
 	}
 
-	/**
-	 * This method is called after page rendering is completed
-	 */
-	protected void onEndRender()
-	{
-	}
-	
 	/**
 	 * Renders this container to the given response object.
 	 */
 	protected void onRender()
 	{
+		// Adds any feedback messages on this page to the given component
+		if (feedback != null)
+		{
+			feedback.addFeedbackMessages(this, false);
+		}
+
 		// Configure response object with locale and content type
 		configureResponse();
 
@@ -364,15 +331,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// Render all the page's markup
 			renderAll(markupStream);
 		}
-	}
 
-	/**
-	 * Reset at end of request by resetting each component on the page
-	 */
-	protected void onReset()
-	{
-		// Reset the page container
-		super.onReset();
+		// If the application wants component uses checked and
+		// the response is not a redirect
+		if (getApplicationSettings().getComponentUseCheck() && !getResponse().isRedirect())
+		{
+			// Visit components on page
+			checkRendering(this);
+		}
 
 		// Clear all feedback messages
 		getFeedbackMessages().clear();

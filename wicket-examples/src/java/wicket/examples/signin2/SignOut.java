@@ -32,9 +32,9 @@ public class SignOut extends AuthenticatedWebPage
 	}
 	
 	/**
-	 * @see wicket.Page#onEndRender()
+	 * @see wicket.Page#onEndRequest()
 	 */
-	public void onEndRender()
+	public void onEndRequest()
 	{
 		getSession().invalidate();		
 	}

@@ -442,6 +442,12 @@ public abstract class RequestCycle
 						{
 							// Render the page
 							page.render();
+							
+							// Replicate session if need be
+							session.updateCluster();
+							
+							// The request is over
+							page.onEndRequest();
 						}
 					}
 				}

@@ -510,22 +510,6 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * @see wicket.Component#onReset()
-	 */
-	protected void onReset()
-	{
-		// Reset this container component
-		super.onReset();
-		
-		// Iterate through children on this container
-		for (Iterator iterator = iterator(); iterator.hasNext();)
-		{
-			// Reset child
-			((Component)iterator.next()).reset();
-		}
-	}
-
-	/**
 	 * Renders the entire associated markup stream for a container such as a
 	 * Border or Panel. Any leading or trailing raw markup in the associated
 	 * markup is skipped.
