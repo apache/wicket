@@ -14,7 +14,7 @@ What I like about Wicket's design is that it shows restraint and focus in
 providing a powerful solution to a very specific problem:
 </p>
 <blockquote>
-  enabling abstract, fully component-oriented, programmatic manipulation of markup
+  enabling component-oriented, programmatic manipulation of markup
 </blockquote>
 <p>
 I once heard Josh Bloch talk about the <em>power to weight ratio</em> of an API.  
