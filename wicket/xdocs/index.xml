@@ -170,10 +170,10 @@
 			<script language="JavaScript" type="text/javascript"
 				src="http://m1.nedstatbasic.net/basic.js">
 			</script>
-			<script language="JavaScript" type="text/javascript">
-				<!--
-					nedstatbasic("ADUqkAqz13yUdWzu82RZ+ob42qQg", 0);
-					// -->
+ <script type="text/javascript">
+ //<![CDATA[
+ 					nedstatbasic("ADUqkAqz13yUdWzu82RZ+ob42qQg", 0);
+					//]]> -->
 			</script>
 			<noscript>
 				<a target="_blank"
