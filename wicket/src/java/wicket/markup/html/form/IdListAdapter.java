@@ -72,6 +72,7 @@ import java.util.Collection;
  */
 public abstract class IdListAdapter extends ArrayList implements IIdList
 {
+    // TODO This should aggregate a list rather than subclass ArrayList
     /**
      * Transient flag to prevent multiple detach/attach scenario.
      */

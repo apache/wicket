@@ -41,14 +41,14 @@ public class TypeValidator extends AbstractValidator
     /** Log. */
     private static Log log = LogFactory.getLog(TypeValidator.class);
 
-    /** The type to use for checking. */
-    private Class type;
-
     /**
      * The locale to use. If null and useLocaled == true, the session's locale
      * will be used.
      */
     private Locale locale = null;
+
+    /** The type to use for checking. */
+    private Class type;
 
     /** Whether to use either the set locale or the session's locale. */
     private boolean useLocalized = true;
@@ -62,21 +62,6 @@ public class TypeValidator extends AbstractValidator
     public TypeValidator(final Class type)
     {
         this(type, null);
-    }
-
-    /**
-     * Construct. If not-null, the given locale will be used for conversion.
-     * Otherwise the session's locale will be used for conversion.
-     * 
-     * @param type
-     *            the type to use for checking
-     * @param locale
-     *            the locale to use
-     */
-    public TypeValidator(final Class type, final Locale locale)
-    {
-        this.type = type;
-        this.locale = locale;
     }
 
     /**
@@ -94,6 +79,21 @@ public class TypeValidator extends AbstractValidator
     {
         this(type, null);
         this.useLocalized = useLocalized;
+    }
+
+    /**
+     * Construct. If not-null, the given locale will be used for conversion.
+     * Otherwise the session's locale will be used for conversion.
+     * 
+     * @param type
+     *            the type to use for checking
+     * @param locale
+     *            the locale to use
+     */
+    public TypeValidator(final Class type, final Locale locale)
+    {
+        this.type = type;
+        this.locale = locale;
     }
 
     /**
@@ -126,6 +126,28 @@ public class TypeValidator extends AbstractValidator
     }
 
     /**
+     * Gets the conversion utilities.
+     * 
+     * @return the conversion utilities
+     */
+    protected final ConversionUtils getConversionUtils()
+    {
+        RequestCycle requestCycle = RequestCycle.get();
+        if (requestCycle != null)
+        {
+            ConverterRegistry converterRegistry = requestCycle.getApplication()
+                    .getConverterRegistry();
+            return converterRegistry.getConversionUtils();
+        }
+        else
+        // we must be in a test case; just give a dummy
+        {
+            log.error("no current request cycle found; using a dummy converter registry");
+            return new ConversionUtils(new ConverterRegistry());
+        }
+    }
+
+    /**
      * Gets the error message.
      * 
      * @param input
@@ -141,6 +163,17 @@ public class TypeValidator extends AbstractValidator
     {
         Map ctx = getMessageContext(input, component, e);
         return errorMessage(getResourceKey(component), ctx, input, component);
+    }
+
+    /**
+     * Gets the locale to use. if null and useLocaled == true, the session's
+     * locale will be used..
+     * 
+     * @return the locale to use
+     */
+    protected final Locale getLocale()
+    {
+        return locale;
     }
 
     /**
@@ -167,25 +200,23 @@ public class TypeValidator extends AbstractValidator
     }
 
     /**
-     * Gets the conversion utilities.
+     * Gets the type to use for checking.
      * 
-     * @return the conversion utilities
+     * @return the type to use for checking
      */
-    protected final ConversionUtils getConversionUtils()
+    protected final Class getType()
     {
-        RequestCycle requestCycle = RequestCycle.get();
-        if (requestCycle != null)
-        {
-            ConverterRegistry converterRegistry = requestCycle.getApplication()
-                    .getConverterRegistry();
-            return converterRegistry.getConversionUtils();
-        }
-        else
-        // we must be in a test case; just give a dummy
-        {
-            log.error("no current request cycle found; using a dummy converter registry");
-            return new ConversionUtils(new ConverterRegistry());
-        }
+        return type;
+    }
+
+    /**
+     * Gets whether to use either the set locale or the session's locale.
+     * 
+     * @return whether to use either the set locale or the session's locale.
+     */
+    protected final boolean isUseLocalized()
+    {
+        return useLocalized;
     }
 
     /**
@@ -205,36 +236,5 @@ public class TypeValidator extends AbstractValidator
             }
         }
         return localeForValidation;
-    }
-
-    /**
-     * Gets the locale to use. if null and useLocaled == true, the session's
-     * locale will be used..
-     * 
-     * @return the locale to use
-     */
-    protected final Locale getLocale()
-    {
-        return locale;
-    }
-
-    /**
-     * Gets the type to use for checking.
-     * 
-     * @return the type to use for checking
-     */
-    protected final Class getType()
-    {
-        return type;
-    }
-
-    /**
-     * Gets whether to use either the set locale or the session's locale.
-     * 
-     * @return whether to use either the set locale or the session's locale.
-     */
-    protected final boolean isUseLocalized()
-    {
-        return useLocalized;
     }
 }
