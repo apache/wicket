@@ -53,12 +53,12 @@ import wicket.markup.html.form.Form;
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener
 {
-
 	/** static for access allowed flag (value == true). */
 	protected static final boolean ACCESS_ALLOWED = true;
 
 	/** static for access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
+	
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
 

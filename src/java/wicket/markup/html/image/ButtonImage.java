@@ -89,7 +89,7 @@ public class ButtonImage extends DynamicImage
 		setModel(new Model(object));
 		setWidth(defaultWidth);
 		setHeight(defaultHeight);
-		setExtension("png");
+		setFormat("png");
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class ButtonImage extends DynamicImage
 		setModel(new PropertyModel(new Model(object), expression));
 		setWidth(defaultWidth);
 		setHeight(defaultHeight);
-		setExtension("png");
+		setFormat("png");
 	}
 	
 	/**

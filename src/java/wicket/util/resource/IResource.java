@@ -31,9 +31,9 @@ package wicket.util.resource;
 public interface IResource extends IResourceStream
 {
 	/**
-	 * Gets the extension of this resource
+	 * Gets the mime type of this resource
 	 * 
-	 * @return The extension of this resource, such as "jpeg" or "html"
+	 * @return The mime type of this resource, such as "image/jpeg" or "text/html"
 	 */
-	public String getExtension();
+	public String getContentType();
 }

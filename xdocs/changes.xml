@@ -8,6 +8,14 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1121959">
+      	Added ResourceComponent base class for components that provide resources by
+      	implementing IResourceListener.  There doesn't appear to be an easy way to 
+      	generalize this to Pages since they inherit from Component and since their
+      	behavior is quite different.  Also changed IResource.getExtension() to 
+      	getContentType() and changed the implementation of this interface in Resource
+      	to use the JDK's FileNameMap class to map from filenames to mime types.
+	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
 		Renamed handleX() methods and other events to conform to the onX() 
 		pattern.
