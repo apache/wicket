@@ -70,17 +70,29 @@ public class WebPage extends Page
 	 * all information necessary to instantiate and render the page, it can be
 	 * stored in a user's browser as a stable bookmark.
 	 * 
+	 * @param pageMapName
+	 *            Name of pagemap to use
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public String urlFor(final Class pageClass, final PageParameters parameters)
+	public String urlFor(final String pageMapName, final Class pageClass,
+			final PageParameters parameters)
 	{
 		final WebRequestCycle cycle = getWebRequestCycle();
 		final StringBuffer buffer = urlPrefix(cycle);
-		appendPageMapName(buffer);
+		if (pageMapName == null)
+		{
+			appendPageMapName(buffer);
+		}
+		else
+		{
+			buffer.append("?pagemap=");
+			buffer.append(pageMapName);
+			buffer.append('&');
+		}
 		buffer.append("bookmarkablePage=");
 		buffer.append(pageClass.getName());
 		if (parameters != null)
@@ -154,7 +166,7 @@ public class WebPage extends Page
 	 * 
 	 * @return Markup type for HTML
 	 */
-	protected final String getMarkupType()
+	protected String getMarkupType()
 	{
 		return "html";
 	}

@@ -741,6 +741,17 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Redirects browser to the given page
+	 * 
+	 * @param page
+	 *            The page to redirect to
+	 */
+	protected void redirectTo(final Page page)
+	{
+		getRequestCycle().redirectTo(page);
+	}
+
+	/**
 	 * Removes this component from its parent. It's important to remember that a
 	 * component that is removed cannot be referenced from the markup still.
 	 */
@@ -1004,6 +1015,15 @@ public abstract class Component implements Serializable
 		return Classes.name(getClass()) + " " + getPath();
 	}
 
+	/**
+	 * @param listenerInterface The listener interface that the URL should call
+	 * @return The URL
+	 */
+	public final String urlFor(final Class listenerInterface)
+	{
+		return getPage().urlFor(this, listenerInterface);
+	}
+	
 	/**
 	 * Registers a warning message for this component
 	 * 

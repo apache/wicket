@@ -373,7 +373,7 @@ public abstract class RequestCycle
 							if (getRedirect())
 							{
 								// Redirect to the page
-								redirectToPage(page);
+								redirectTo(page);
 							}
 							else
 							{
@@ -528,7 +528,7 @@ public abstract class RequestCycle
 	 * @param page
 	 *            The page to redirect to
 	 */
-	protected abstract void redirectToPage(final Page page);
+	protected abstract void redirectTo(final Page page);
 
 	/**
 	 * Sets up to handle a runtime exception thrown during rendering
@@ -564,7 +564,7 @@ public abstract class RequestCycle
 				// We generally want to redirect the response because we were
 				// in the middle of rendering and the page may end up looking
 				// like spaghetti otherwise
-				redirectToPage(getResponsePage());
+				redirectTo(getResponsePage());
 			}
 		}
 		catch (RuntimeException ignored)

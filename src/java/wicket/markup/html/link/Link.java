@@ -35,7 +35,6 @@ import wicket.model.IModel;
  * You can use a link like:
  * 
  * <pre>
- * 
  *       add(new Link(&quot;myLink&quot;){
  *      
  *         public void linkClicked(RequestCycle cycle)
@@ -43,23 +42,18 @@ import wicket.model.IModel;
  *            // do something here...  
  *         }
  *       );
- *  
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- * 
  *        &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
- *  
  * </pre>
  * 
  * or:
  * 
  * <pre>
- * 
  *        &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
- *  
  * </pre>
  * 
  * </p>
@@ -69,7 +63,6 @@ import wicket.model.IModel;
  */
 public abstract class Link extends WebMarkupContainer implements ILinkListener
 {
-
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
 	 * link </i>.
@@ -87,6 +80,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 
 	/** True if this link is enabled. */
 	private boolean enabled = true;
+	
 	/**
 	 * The popup specification. If not-null, a javascript on-click event handler
 	 * will be generated that opens a new window using the popup properties.
@@ -187,6 +181,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		// to our resulting page so this won't happen.
 		setRedirect(true);
 
+		// Invoke subclass handler
 		onClick();
 	}
 
@@ -262,7 +257,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 *            the popup specification.
 	 * @return This
 	 */
-	public final Link setPopupSettings(PopupSettings popupSettings)
+	public final Link setPopupSettings(final PopupSettings popupSettings)
 	{
 		this.popupSettings = popupSettings;
 		return this;
@@ -285,7 +280,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	protected String getURL()
 	{
-		return getPage().urlFor(Link.this, ILinkListener.class);
+		return urlFor(ILinkListener.class);
 	}
 
 	/**

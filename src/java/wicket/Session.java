@@ -527,10 +527,13 @@ public abstract class Session implements Serializable
 	 */
 	protected final void add(final Page page)
 	{
-		// Set page map for page
+		// TODO This could potentially enable denial of service attacks.  We may want to limit pagemaps.
+
+		// Set page map for page. If cycle is null, we may be being called from
+		// some kind of test harness, so we will just use the default page map
 		final String pageMapName = cycle == null ? PageMap.defaultName : cycle.getRequest()
-				.getParameter("pageMap");
-		page.setPageMap(getPageMap(pageMapName));
+				.getParameter("pagemap");
+		page.setPageMap(pageMapName);
 
 		// Add to page local transient page map
 		final Page removedPage = page.getPageMap().add(page);
