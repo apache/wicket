@@ -150,7 +150,14 @@ public class WebPage extends Page
 	 */
 	public String urlFor(final String path)
 	{
-		return urlPrefix(getWebRequestCycle()) + "/" + path;
+	    if ((path == null) || (path.trim().length() == 0))
+	    {
+	        return urlPrefix(getWebRequestCycle()).toString();
+	    }
+	    else
+	    {
+	        return urlPrefix(getWebRequestCycle()) + "/" + path;
+	    }
 	}
 
 	/**
@@ -160,6 +167,7 @@ public class WebPage extends Page
 	 * appropriate package under wicket.markup. To support VXML (voice markup),
 	 * one might create the package wicket.markup.vxml and a subclass of Page
 	 * called VoicePage.
+	 * TODO not sure. Subclassing and basically copying everything from WebPage doesn't seem right
 	 * <p>
 	 * Note: The markup type must be equal to the extension of the markup file.
 	 * In the case of WebPages, it must always be "html".
