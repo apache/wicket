@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Wicket example: Nav-o-matic</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, example, web, j2ee, java" />
+
+	<body>
+		<section name="Wicket example: Nav-o-matic">
+			<p>
+				The <em>Nav-o-matic</em> application shows the use of border components and links to 
+				create a navigation component that can easily be dropped into any web page.
+			</p>
+			<p>
+				The link in the navigation to the current page is automatically turned into italic
+				text to indicate to the user what page they are on. The first screen capture shows
+				the	<em>Page1</em> page with the <em>Page1</em> link in <i>italics</i>.
+			</p>
+			<img src="images/image003.png" alt="Navomatic1" />
+			<p>
+				When you click on the <em>Page2</em> link, you get the following screen capture.
+			</p>
+			<img src="images/image004.jpg" alt="Navomatic2" />
+			<p>
+				As you can see, <em>Page1</em> has no special markup anymore, and <em>Page2</em>
+				is now displayed in <i>italics</i>. Also the message box shows that we are viewing
+				<code>Page2</code> instead of <code>Page1</code>.
+			</p>
+
+			<subsection name="NavomaticApplication.java">
+				<p>
+					Just as in the <a href="Helloworld.html">HelloWorld example</a>, we need to
+					define our application. In this case, we set <code>Page1</code> to be our
+					home page.
+				</p>
+				<source><![CDATA[package wicket.examples.navomatic;
+
+import wicket.protocol.http.WebApplication;
+
+public class NavomaticApplication extends WebApplication
+{
+    public NavomaticApplication()
+    {
+        getPages().setHomePage(Page1.class);
+    }
+}]]></source>
+			</subsection>
+
+			<subsection name="Page1.java">
+				<source>
+					<![CDATA[
+public class Page1 extends HtmlPage
+{
+    public Page1(PageParameters parameters)
+    {
+        add(new NavomaticBorder("navomaticBorder"));
+    }
+}]]>
+				</source>
+			</subsection>
+			<subsection name="Page1.html">
+				<source>
+					<![CDATA[
+<html>
+<body>
+ 
+    <span componentName = "navomaticBorder">
+ 
+    You are viewing Page1
+ 
+    </span>
+   
+</body>
+</html>]]>
+				</source>
+			</subsection>
+			<subsection name="Page2.java">
+				<source>
+					<![CDATA[
+public class Page2 extends HtmlPage
+{
+    public Page2(PageParameters parameters)
+    {
+        add(new NavomaticBorder("navomaticBorder"));
+    }
+}]]>
+				</source>
+			</subsection>
+			<subsection name="Page2.html">
+				<source>
+					<![CDATA[
+<html>
+<body>
+ 
+    <span componentName = "navomaticBorder">
+ 
+    You are viewing Page2
+ 
+    </span>
+   
+</body>
+</html>]]>
+				</source>
+			</subsection>
+			<subsection name="NavomaticBorder.java">
+				<source>
+					<![CDATA[
+public class NavomaticBorder extends Border
+{
+    /**
+     * Constructor
+     * @param componentName The name of this component
+     */
+    public NavomaticBorder(final String componentName)
+    {
+        super(componentName);
+        add(new BoxBorder("boxBorder"));
+        add(new BoxBorder("boxBorder2"));
+    }
+}]]>
+				</source>
+			</subsection>
+			<subsection name="NavomaticBorder.html">
+				<source>
+					<![CDATA[<html>
+<body>
+    <span componentName = "[border]">
+        <h1>Welcome to Navomatic!</h1>
+        <p>
+        <table>
+            <tr>
+                <td>
+                    <span componentName = "boxBorder">
+                        <b>Navigation Links</b><p>
+                        <a componentName = "[autolink]" href = "Page1.html">Page1</a><br>
+                        <a componentName = "[autolink]" href = "Page2.html">Page2</a><br>
+                        <a componentName = "[autolink]" href = "Page3.html">Page3</a>
+                    </span>
+                </td>
+                <td>
+                    <span componentName = "boxBorder2">
+                        <span componentName = "[children]"/>
+                    </span>
+                </td>
+            </tr>
+        </table>
+        <p>
+        <i><font size = "-1">Copyright (C) 2004, Jonathan Locke. All Rights Reserved.</font></i>
+    </span>
+ </body>
+</html>]]>
+				</source>
+			</subsection>
+		</section>
+	</body>
+</document>
