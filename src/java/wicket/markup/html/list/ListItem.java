@@ -27,15 +27,17 @@ import wicket.model.IModel;
  */
 public class ListItem extends WebMarkupContainer
 {
-	/** The index of the ListItem in the parent listView */
+	/** The index of the ListItem in the parent ListView */
 	private final int index;
 
 	/**
 	 * A constructor which uses the index and the list provided to create a
 	 * ListItem. This constructor is the default one.
 	 * 
-	 * @param index The index of the item
-	 * @param model The model object of the item
+	 * @param index
+	 *            The index of the item
+	 * @param model
+	 *            The model object of the item
 	 */
 	protected ListItem(final int index, final IModel model)
 	{
@@ -53,4 +55,3 @@ public class ListItem extends WebMarkupContainer
 		return index;
 	}
 }
-

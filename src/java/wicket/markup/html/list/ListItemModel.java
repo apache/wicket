@@ -34,15 +34,17 @@ public class ListItemModel extends AbstractDetachableModel
 
 	/** The ListView's model */
 	private IModel listViewModel;
-	
-	/* The list items index */
+
+	/* The list item's index */
 	private int index;
-	
+
 	/**
 	 * Construct
 	 * 
 	 * @param listViewModel
+	 *            The ListView's model
 	 * @param index
+	 *            The index of this model
 	 */
 	public ListItemModel(final IModel listViewModel, final int index)
 	{
@@ -58,13 +60,13 @@ public class ListItemModel extends AbstractDetachableModel
 	{
 		return null;
 	}
-	
+
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onAttach()
 	 */
 	protected void onAttach()
 	{
-	    // re-attach the model object based on index and listView model object
+		// Re-attach the model object based on index and ListView model object
 		this.object = ((List)listViewModel.getObject(null)).get(index);
 	}
 
@@ -74,7 +76,6 @@ public class ListItemModel extends AbstractDetachableModel
 	protected void onDetach()
 	{
 		this.object = null;
-		
 	}
 
 	/**
@@ -86,7 +87,8 @@ public class ListItemModel extends AbstractDetachableModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component, java.lang.Object)
+	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component,
+	 *      java.lang.Object)
 	 */
 	protected void onSetObject(Component component, Object object)
 	{

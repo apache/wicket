@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.26 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,10 +38,12 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *      &lt;tbody&gt;
- *        &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
- *            &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *        ...    
+ * 
+ *       &lt;tbody&gt;
+ *         &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
+ *             &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *         ...    
+ *  
  * </pre>
  * 
  * <p>
@@ -53,11 +55,11 @@ import wicket.model.Model;
  * <pre>
  * add(new ListView(&quot;rows&quot;, listData)
  * {
- * 	 public void populateItem(final ListItem item)
- * 	 {
+ * 	public void populateItem(final ListItem item)
+ * 	{
  * 		final UserDetails user = (UserDetails)item.getModelObject();
  * 		cell.add(new Label(&quot;id&quot;, user.getId()));
- * 	 }
+ * 	}
  * });
  * </pre>
  * 
@@ -69,22 +71,23 @@ public abstract class ListView extends WebMarkupContainer
 	/** Log. */
 	private static Log log = LogFactory.getLog(ListView.class);
 
-	/** Max number (not index) of listItems to show */
-	private int viewSize = Integer.MAX_VALUE;
-
 	/** Index of the first listItem to show */
 	private int firstIndex = 0;
 
-	/** If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging). 
-	 * But if you modify the listView model object, than you must manually 
-	 * call listView.removeAll() in order to rebuild the ListItems.
+	/**
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems.
 	 * 
-	 * TODO this could go away if we were able to automatically detect changes 
+	 * TODO this could go away if we were able to automatically detect changes
 	 * to the underlying list. May be a delegate List could do?
 	 */
 	private boolean optimizeRenderProcess = false;
-	
+
+	/** Max number (not index) of listItems to show */
+	private int viewSize = Integer.MAX_VALUE;
+
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
@@ -94,10 +97,10 @@ public abstract class ListView extends WebMarkupContainer
 
 		if (model == null)
 		{
-		    throw new IllegalArgumentException(
-		            "null models are not allowed. You may a Loop type instead");
+			throw new IllegalArgumentException(
+					"null models are not allowed. You may a Loop type instead");
 		}
-		
+
 		// A reasonable default for viewSize can not be determined right now,
 		// because list items might be added or removed until ListView
 		// gets rendered.
@@ -116,14 +119,6 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		return new Model(null);
-	}
-	
-	/**
 	 * Gets the list of items in the listView. This method is final because it
 	 * is not designed to be overridden. If it were allowed to be overridden,
 	 * the values returned by getModelObject() and getList() might not coincide.
@@ -132,25 +127,12 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public final List getList()
 	{
-	    final List list = (List)getModelObject();
-	    if (list == null)
-	    {
-	        return Collections.EMPTY_LIST;
-	    }
-	    return list;
-	}
-
-	/**
-	 * Provide list object at index. May be subclassed for virtual list, which
-	 * don't implement List.
-	 * 
-	 * @param index
-	 *            The list object's index
-	 * @return the model list's object
-	 */
-	protected Object getListObject(final int index)
-	{
-		return getList().get(index);
+		final List list = (List)getModelObject();
+		if (list == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+		return list;
 	}
 
 	/**
@@ -179,7 +161,7 @@ public abstract class ListView extends WebMarkupContainer
 		final Object modelObject = getModelObject();
 		if (modelObject == null)
 		{
-		    return (size == Integer.MAX_VALUE ? 0 : size);
+			return (size == Integer.MAX_VALUE ? 0 : size);
 		}
 
 		// Adjust view size to model object's list size
@@ -202,6 +184,117 @@ public abstract class ListView extends WebMarkupContainer
 		}
 
 		return size;
+	}
+
+	/**
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems.
+	 * 
+	 * @return Returns the optimizeRenderProcess.
+	 */
+	public boolean getOptimizeRenderProcess()
+	{
+		return optimizeRenderProcess;
+	}
+
+	/**
+	 * Returns a link that will move the given listItem "down" (towards the end)
+	 * in the listView.
+	 * 
+	 * @param componentName
+	 *            Name of move-down link component to create
+	 * @param item
+	 * @return The link component
+	 */
+	public final Link moveDownLink(final String componentName, final ListItem item)
+	{
+		final int index = getList().indexOf(item.getModelObject());
+		final Link link = new Link(componentName)
+		{
+			public void onClick()
+			{
+				// Swap list items and invalidate listView
+				Collections.swap(getList(), index, index + 1);
+
+				// Make sure you re-render the list properly
+				ListView.this.removeAll();
+			}
+		};
+
+		if (index == (getList().size() - 1))
+		{
+			link.setVisible(false);
+		}
+
+		return link;
+	}
+
+	/**
+	 * Returns a link that will move the given listItem "up" (towards the
+	 * beginning) in the listView.
+	 * 
+	 * @param componentName
+	 *            Name of move-up link component to create
+	 * @param item
+	 * @return The link component
+	 */
+	public final Link moveUpLink(final String componentName, final ListItem item)
+	{
+		final int index = getList().indexOf(item.getModelObject());
+		final Link link = new Link(componentName)
+		{
+			public void onClick()
+			{
+				// Swap listItems and invalidate listView
+				Collections.swap(getList(), index, index - 1);
+
+				// Make sure you re-render the list properly
+				ListView.this.removeAll();
+			}
+		};
+
+		if (index == 0)
+		{
+			link.setVisible(false);
+		}
+
+		return link;
+	}
+
+	/**
+	 * Returns a link that will remove this ListItem from the ListView that
+	 * holds it.
+	 * 
+	 * @param componentName
+	 *            Name of remove link component to create
+	 * @param item
+	 * @return The link component
+	 */
+	public final Link removeLink(final String componentName, final ListItem item)
+	{
+		return new Link(componentName)
+		{
+			public void onClick()
+			{
+				// Remove listItem and invalidate listView
+				getList().remove(item.getModelObject());
+
+				// Make sure you re-render the list properly
+				ListView.this.removeAll();
+			}
+		};
+	}
+
+	/**
+	 * @see #getOptimizeRenderProcess()
+	 * @param optimizeRenderProcess
+	 *            The optimizeRenderProcess to set.
+	 */
+	public void setOptimizeRenderProcess(boolean optimizeRenderProcess)
+	{
+		this.optimizeRenderProcess = optimizeRenderProcess;
 	}
 
 	/**
@@ -245,7 +338,70 @@ public abstract class ListView extends WebMarkupContainer
 
 		return this;
 	}
-	
+
+	/**
+	 * Subclasses may provide their own ListItemModel with extended
+	 * functionality. The default ListItemModel works fine with mostly static
+	 * lists where index remains valid. In cases where the underlying list
+	 * changes a lot (many users using the application), it may not longer be
+	 * appropriate. In that case your own ListItemModel implementation should
+	 * use an id (e.g. the database' record id) to identify and load the list
+	 * item model object.
+	 * 
+	 * @param listViewModel
+	 *            The ListView's model
+	 * @param index
+	 *            The list item index
+	 * @return The ListItemModel created
+	 */
+	protected IModel getListItemModel(final IModel listViewModel, final int index)
+	{
+		return new ListItemModel(listViewModel, index);
+	}
+
+	/**
+	 * Provide list object at index. May be subclassed for virtual list, which
+	 * don't implement List.
+	 * 
+	 * @param index
+	 *            The list object's index
+	 * @return the model list's object
+	 */
+	protected Object getListObject(final int index)
+	{
+		return getList().get(index);
+	}
+
+	/**
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		return new Model(null);
+	}
+
+	/**
+	 * Create a new ListItem for list item at index.
+	 * 
+	 * @param index
+	 * @return ListItem
+	 */
+	protected ListItem newItem(final int index)
+	{
+		return new ListItem(index, getListItemModel(getModel(), index));
+	}
+
+	/**
+	 * Comes handy for ready made ListView based components which must implement
+	 * populateItem() but you don't want to lose compile time error checking
+	 * reminding the user to implement abstract populateItem().
+	 * 
+	 * @param listItem
+	 */
+	protected void onBeginPopulateItem(final ListItem listItem)
+	{
+	}
+
 	/**
 	 * Renders this ListView (container).
 	 */
@@ -261,34 +417,36 @@ public abstract class ListView extends WebMarkupContainer
 		final int size = getViewSize();
 		if (size > 0)
 		{
-		    if (optimizeRenderProcess == false)
-		    {
-		        // Automatically rebuild all ListItems before rendering the 
-		        // list view
-		        removeAll();
-		    }
-		    else
-		    {
+			if (optimizeRenderProcess == false)
+			{
+				// Automatically rebuild all ListItems before rendering the
+				// list view
+				removeAll();
+			}
+			else
+			{
 				// Remove all ListItems no longer required
-			    // TODO or does it make more sense to flag them being rendered and thus avoid the error msg?
-			    final int maxIndex = firstIndex + size;
+				// TODO or does it make more sense to flag them being rendered
+				// and thus avoid the error msg?
+				final int maxIndex = firstIndex + size;
 				for (final Iterator iterator = iterator(); iterator.hasNext();)
 				{
 					// Get next child component
 					final ListItem child = (ListItem)iterator.next();
-	
-					// Is the child of the correct class (or was no class specified)?
+
+					// Is the child of the correct class (or was no class
+					// specified)?
 					if (child != null)
 					{
-					    final int index = child.getIndex();
-					    if ((index < firstIndex) || (index >= maxIndex))
-					    {
-					        iterator.remove();
-					    }
+						final int index = child.getIndex();
+						if ((index < firstIndex) || (index >= maxIndex))
+						{
+							iterator.remove();
+						}
 					}
 				}
-		    }
-			
+			}
+
 			// Loop through the markup in this container for each child
 			// container
 			for (int i = 0; i < size; i++)
@@ -305,7 +463,7 @@ public abstract class ListView extends WebMarkupContainer
 					// Create listItem for index i of the list
 					listItem = newItem(index);
 
-				    onBeginPopulateItem(listItem);
+					onBeginPopulateItem(listItem);
 					populateItem(listItem);
 
 					// Add cell to list view
@@ -321,38 +479,9 @@ public abstract class ListView extends WebMarkupContainer
 		}
 		else
 		{
-		    removeAll();
+			removeAll();
 			markupStream.skipComponent();
 		}
-	}
-
-	/**
-	 * Create a new ListItem for list item at index.
-	 * 
-	 * @param index
-	 * @return ListItem
-	 */
-	protected ListItem newItem(final int index)
-	{
-		return new ListItem(index, getListItemModel(getModel(), index));
-	}
-	
-	/**
-	 * Subclasses may provide their own ListItemModel with extended 
-	 * functionality. The default ListItemModel works fine with mostly static
-	 * lists where index remains valid. In cases where the underlying list
-	 * changes a lot (many users using the application), it may not longer
-	 * be appropriate. In that case your own ListItemModel implementation
-	 * should use an id (e.g. the database' record id) to identify and
-	 * load the list item model object.  
-	 * 
-	 * @param listViewModel The livtView's model
-	 * @param index The list item indem 
-	 * @return The ListItemModel created
-	 */
-	protected IModel getListItemModel(final IModel listViewModel, final int index)
-	{
-        return new ListItemModel(listViewModel, index);
 	}
 
 	/**
@@ -364,136 +493,15 @@ public abstract class ListView extends WebMarkupContainer
 	protected abstract void populateItem(final ListItem listItem);
 
 	/**
-	 * Comes handy for ready made ListView based components which must implement
-	 * populateItem() but you don't want to loose compile time error checking 
-	 * reminding the user to implement abstract populateItem().
-	 * 
-	 * @param listItem
-	 */
-	protected void onBeginPopulateItem(final ListItem listItem)
-	{
-	}
-
-	/**
 	 * Render a single listItem.
 	 * 
 	 * @param listItem
-	 *            the listItem to be rendered
+	 *            The listItem to be rendered
 	 * @param lastItem
 	 *            True, if item is last listItem in listView
 	 */
 	protected void renderItem(final ListItem listItem, final boolean lastItem)
 	{
 		listItem.render();
-	}
-
-	/**
-	 * Returns a link that will move the given listItem "down" (towards the end)
-	 * in the listView.
-	 * 
-	 * @param componentName
-	 *            Name of move-down link component to create
-	 * @param item
-	 * @return The link component
-	 */
-	public final Link moveDownLink(final String componentName, final ListItem item)
-	{
-		final int index = getList().indexOf(item.getModelObject());
-		final Link link = new Link(componentName)
-		{
-			public void onClick()
-			{
-				// Swap list items and invalidate listView
-				Collections.swap(getList(), index, index + 1);
-				
-				// Make sure you re-render the list properly
-				ListView.this.removeAll();
-			}
-		};
-
-		if (index == (getList().size() - 1))
-		{
-			link.setVisible(false);
-		}
-
-		return link;
-	}
-
-	/**
-	 * Returns a link that will move the given listItem "up" (towards the
-	 * beginning) in the listView.
-	 * 
-	 * @param componentName
-	 *            Name of move-up link component to create
-	 * @param item
-	 * @return The link component
-	 */
-	public final Link moveUpLink(final String componentName, final ListItem item)
-	{
-		final int index = getList().indexOf(item.getModelObject());
-		final Link link = new Link(componentName)
-		{
-			public void onClick()
-			{
-				// Swap listItems and invalidate listView
-				Collections.swap(getList(), index, index - 1);
-				
-				// Make sure you re-render the list properly
-				ListView.this.removeAll();
-			}
-		};
-
-		if (index == 0)
-		{
-			link.setVisible(false);
-		}
-
-		return link;
-	}
-
-	/**
-	 * Returns a link that will remove this ListItem from the ListView that
-	 * holds it.
-	 * 
-	 * @param componentName
-	 *            Name of remove link component to create
-	 * @param item
-	 * @return The link component
-	 */
-	public final Link removeLink(final String componentName, final ListItem item)
-	{
-		return new Link(componentName)
-		{
-			public void onClick()
-			{
-				// Remove listItem and invalidate listView
-				getList().remove(item.getModelObject());
-				
-				// Make sure you re-render the list properly
-				ListView.this.removeAll();
-			}
-		};
-	}
-	
-	/** 
-	 * If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging). 
-	 * But if you modify the listView model object, than you must manually 
-	 * call listView.removeAll() in order to rebuild the ListItems.
-
-	 * @return Returns the optimizeRenderProcess.
-	 */
-	public boolean isOptimizeRenderProcess()
-	{
-		return optimizeRenderProcess;
-	}
-	
-	/**
-	 * @see #isOptimizeRenderProcess()
-	 * @param optimizeRenderProcess The optimizeRenderProcess to set.
-	 */
-	public void setOptimizeRenderProcess(boolean optimizeRenderProcess)
-	{
-		this.optimizeRenderProcess = optimizeRenderProcess;
 	}
 }
