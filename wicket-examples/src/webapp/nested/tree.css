@@ -15,11 +15,11 @@
 	background-color: #E7E7FF;
 }
 
-#wicket-spacers {
+#wicket-tree #wicket-spacers {
 	padding-left: 16px;
 }
 
-#wicket-junctionImg {
+#wicket-tree #wicket-junctionImg {
 	padding-left: 4px;
 	padding-right: 4px;
 	padding-top: 0px;
@@ -27,7 +27,7 @@
 	margin: 1px;
 }
 
-#wicket-nodeImg {
+#wicket-tree #wicket-nodeImg {
 	padding-left: 4px;
 	padding-right: 4px;
 	padding-top: 0px;
@@ -35,62 +35,6 @@
 	margin: 1px;
 }
 
-#wicket-label {
+#wicket-tree #wicket-label {
 	margin: 2px;
-}
-
-.customtree {
-	width: 1px;
-}
-
-.customtree ul {
-	margin: 0;
-	padding: 0;
-}
-
-.customtree li {
-	list-style-type: none;
-	list-style-position: outside;
-	background-image: none;
-	background-repeat: no-repeat;
-	background-position: 0 0.2em;
-	padding-left: 24px;
-	line-height: 18px;
-	cursor: pointer;
-}
-
-.customtree ul ul {
-	margin-left: 20px;
-}
-
-.customtree ul ul li {
-	padding-left: 20px;
-}
-
-.customtree #wicket-link {
-	background-color: white;
-}
-
-.customtree #wicket-label {
-	background-color: white;
-}
-
-.customtree .tree-leaf-end {
-
-}
-
-.customtree .tree-junction-expanded-siblings {
-	background-image: url('minus.gif');
-}
-
-.customtree .tree-junction-closed-siblings {
-	background-image: url('plus.gif');
-}
-
-.customtree .tree-junction-expanded-end {
-	background-image: url('minus.gif');
-}
-
-.customtree .tree-junction-closed-end {
-	background-image: url('plus.gif');
 }
