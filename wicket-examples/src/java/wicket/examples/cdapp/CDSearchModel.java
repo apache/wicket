@@ -107,6 +107,14 @@ public final class CDSearchModel extends AbstractReadOnlyDetachableModel
 	}
 
 	/**
+	 * @see wicket.model.IModel#getNestedModel()
+	 */
+	public Object getNestedModel()
+	{
+		return list;
+	}
+
+	/**
 	 * Gets number of rows on each page.
 	 * @return number of rows on each page
 	 */

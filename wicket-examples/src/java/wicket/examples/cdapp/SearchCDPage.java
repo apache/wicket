@@ -45,6 +45,8 @@ import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListViewNavigationLink;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 
 
 /**
@@ -179,7 +181,7 @@ public class SearchCDPage extends WicketExamplePage
 		public SearchForm(final String componentName, final IFeedback errorHandler)
 		{
 			super(componentName, errorHandler);
-			add(new TextField("search", this, "search"));
+			add(new TextField("search", new PropertyModel(this, "search")));
 		}
 
 		/**
@@ -282,7 +284,7 @@ public class SearchCDPage extends WicketExamplePage
 		 */
 		public DetailLink(String name, Long id)
 		{
-			super(name, id);
+			super(name, new Model(id));
 		}
 
 		/**
@@ -306,7 +308,7 @@ public class SearchCDPage extends WicketExamplePage
 		 */
 		public DeleteLink(String name, Long id)
 		{
-			super(name, id);
+			super(name, new Model(id));
 		}
 
 		/**

@@ -33,6 +33,7 @@ import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListViewNavigationIncrementLink;
 import wicket.markup.html.list.PageableListViewNavigationLink;
 import wicket.markup.html.panel.Panel;
+import wicket.model.Model;
 
 /**
  * Sortable + pageable table example
@@ -67,7 +68,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
                 
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(new Label("name", value.getName()));
                 listItem.add(new Label("email", value.getEmail()));
                 listItem.add(new Label("status", value.getStatus()));
@@ -114,7 +115,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         });
 
         // Add a headline
-        add(new Label("headline", null)
+        add(new Label("headline", new Model(null))
         {
             protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
             {

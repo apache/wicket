@@ -28,6 +28,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.list.ListItem;
+import wicket.model.Model;
 
 
 
@@ -55,10 +56,10 @@ public class ExampleCheckbox extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(new Label("name", value.getName()));
-                listItem.add(new CheckBox("activ", new Boolean(value.isActive())));
-                listItem.add(new TextField("comment", value.getStatus()));
+                listItem.add(new CheckBox("activ", new Model(new Boolean(value.isActive()))));
+                listItem.add(new TextField("comment", new Model(value.getStatus())));
             }
         });
     }

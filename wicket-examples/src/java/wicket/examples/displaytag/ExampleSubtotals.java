@@ -30,6 +30,7 @@ import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.PropertyModel;
 
 
 
@@ -86,8 +87,8 @@ public class ExampleSubtotals extends Displaytag
                 startIndex = size;
                 
                 listItem.add(subtable);
-                listItem.add(new Label("name", subtable, "group1"));
-                listItem.add(new Label("value", subtable, "subtotal"));
+                listItem.add(new Label("name", new PropertyModel(subtable, "group1")));
+                listItem.add(new Label("value", new PropertyModel(subtable, "subtotal")));
             }
         });
     }
@@ -151,7 +152,7 @@ public class ExampleSubtotals extends Displaytag
                 listItem.add(new Label("project", equal ? "" : value.getProject()));
             }
 
-            listItem.add(new Label("hours", new Double(value.getAmount())));
+            listItem.add(new Label("hours", Double.toString(value.getAmount())));
             listItem.add(new Label("task", value.getTask()));
             
             subtotal += value.getAmount();

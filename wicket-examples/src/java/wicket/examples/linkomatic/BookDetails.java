@@ -21,7 +21,6 @@ package wicket.examples.linkomatic;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 
-
 /**
  * A book details page.  Shows information about a book.
  * @author Jonathan Locke
@@ -34,7 +33,7 @@ public final class BookDetails extends WicketExamplePage
      */
     public BookDetails(final Book book)
     {
-        add(new Label("title", book, "title"));
+        add(new Label("title", book.getTitle()));
     }
 }
 

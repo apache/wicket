@@ -56,7 +56,7 @@ public class ExampleImpObjects extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(new Label("name", value.getName()));
                 listItem.add(new Label("rowNumber", String.valueOf(i++)));
                 //listItem.add(new Label("rowNumber", String.valueOf(listItem.getIndex())));

@@ -41,7 +41,7 @@ public class MyPageableListViewNavigator extends PageableListViewNavigator
 
 		// model = null; the headline test will be auto-generated during
 		// handleBody.
-		add(new Label("headline", null)
+		add(new Label("headline", (String)null)
 		{
 			// Dynamically - at runtime - create the text
 			protected void onComponentTagBody(final MarkupStream markupStream,

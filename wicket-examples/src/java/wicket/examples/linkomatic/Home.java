@@ -27,6 +27,7 @@ import wicket.markup.html.link.ImageMap;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.link.PopupSettings;
+import wicket.model.PropertyModel;
 
 /**
  * Demonstrates different flavors of hyperlinks.
@@ -54,7 +55,7 @@ public class Home extends WicketExamplePage
 				linkClickCount++;
 			}
 		};
-		actionLink.add(new Label("linkClickCount", this, "linkClickCount"));
+		actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
 		add(actionLink);
 
 		// Action link counts link clicks on works with onclick handler
@@ -67,7 +68,7 @@ public class Home extends WicketExamplePage
 		};
 
 		add(actionOnClickLink);
-		add(new Label("onClickLinkClickCount", this, "onClickLinkClickCount"));
+		add(new Label("onClickLinkClickCount", new PropertyModel(this, "onClickLinkClickCount")));
 
 		// Link to Page1 is a simple external page link
 		add(new BookmarkablePageLink("page1Link", Page1.class));

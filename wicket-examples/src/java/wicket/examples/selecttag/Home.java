@@ -9,6 +9,7 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.model.DetachableChoiceList;
 import wicket.markup.html.form.model.IChoice;
 import wicket.model.AbstractModel;
+import wicket.model.PropertyModel;
 
 /**
  * @author jcompagner
@@ -42,7 +43,7 @@ public class Home extends WicketExamplePage
 		{
 			super(name, null);
 			model = new SelectModel();
-			label = new Label("label", model, "name");
+			label = new Label("label", new PropertyModel(model, "name"));
 			add(label);
 			DropDownChoice choice = new DropDownChoice("users", model, new UserIdList());
 			add(choice);
@@ -75,6 +76,14 @@ public class Home extends WicketExamplePage
 		public void setObject(final Component component, final Object object)
 		{
 			selection = object;
+		}
+
+		/**
+		 * @see wicket.model.IModel#getNestedModel()
+		 */
+		public Object getNestedModel()
+		{
+			return selection;
 		}
 	}
 

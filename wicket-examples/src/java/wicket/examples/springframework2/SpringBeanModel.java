@@ -52,53 +52,6 @@ public class SpringBeanModel extends AbstractDetachableModel
     private IModel model = null;
 
     /**
-     * @return The spring application context
-     */
-    public final ApplicationContext getApplicationContext()
-    {
-        return applicationContext;
-    }
-
-    /**
-     * Creates a new instance of a SpringBeanModel. An instance of interface
-     * IModel will be created and stored as an instance member that delegates
-     * all calls for the getObject method to
-     * applicationContext.getBean($beanName) of this SpringBeanModel's reference
-     * of the ApplicationContext. The calls for getObject and setObject on the
-     * SpringBeanModel object will be delegated to the created IModel member
-     * instance.
-     * 
-     * @param beanName The name of the Spring managed bean as defined in the
-     * Spring ApplicationContext.
-     */
-    public SpringBeanModel(final String beanName)
-    {
-        if (beanName == null)
-        {
-            throw new IllegalArgumentException("beanName must not be null");
-        }
-        
-        this.model = new AbstractModel()
-        {
-            private Object object = null;
-
-            public void setObject(final Component component, final Object object)
-            {
-                this.object = object;
-            }
-
-            public Object getObject(final Component component)
-            {
-                if (object == null)
-                {
-                    object = getApplicationContext().getBean(beanName);
-                }
-                return object;
-            }
-        };
-    }
-
-    /**
      * Creates a new instance of SpringBeanModel taking a class of type
      * SpringAwareModel An object of class beanClass will be created by passing
      * this class' object to the beanClass' constructor. The created
@@ -150,19 +103,71 @@ public class SpringBeanModel extends AbstractDetachableModel
     }
 
     /**
+     * Creates a new instance of a SpringBeanModel. An instance of interface
+     * IModel will be created and stored as an instance member that delegates
+     * all calls for the getObject method to
+     * applicationContext.getBean($beanName) of this SpringBeanModel's reference
+     * of the ApplicationContext. The calls for getObject and setObject on the
+     * SpringBeanModel object will be delegated to the created IModel member
+     * instance.
+     * 
+     * @param beanName The name of the Spring managed bean as defined in the
+     * Spring ApplicationContext.
+     */
+    public SpringBeanModel(final String beanName)
+    {
+        if (beanName == null)
+        {
+            throw new IllegalArgumentException("beanName must not be null");
+        }
+        
+        this.model = new AbstractModel()
+        {
+            private Object object = null;
+
+            public Object getObject(final Component component)
+            {
+                if (object == null)
+                {
+                    object = getApplicationContext().getBean(beanName);
+                }
+                return object;
+            }
+
+            public void setObject(final Component component, final Object object)
+            {
+                this.object = object;
+            }
+
+			public Object getNestedModel()
+			{
+				return object;
+			}
+        };
+    }
+
+    /**
+     * @return The spring application context
+     */
+    public final ApplicationContext getApplicationContext()
+    {
+        return applicationContext;
+    }
+
+	/**
+	 * @see wicket.model.IModel#getNestedModel()
+	 */
+	public Object getNestedModel()
+	{
+		return model;
+	}
+
+    /**
      * @see AbstractDetachableModel#onSetObject(Component, Object)
      */
     public void onSetObject(final Component component, final Object object)
     {
         this.model.setObject(component, object);
-    }
-
-    /**
-     * @see AbstractDetachableModel#onGetObject(Component)
-     */
-    protected Object onGetObject(final Component component)
-    {
-        return this.model.getObject(component);
     }
 
     /**
@@ -181,6 +186,14 @@ public class SpringBeanModel extends AbstractDetachableModel
     protected void onDetach()
     {
         this.applicationContext = null;
+    }
+
+    /**
+     * @see AbstractDetachableModel#onGetObject(Component)
+     */
+    protected Object onGetObject(final Component component)
+    {
+        return this.model.getObject(component);
     }
 
 }

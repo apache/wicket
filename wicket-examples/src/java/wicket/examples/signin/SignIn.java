@@ -25,6 +25,7 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.PropertyModel;
 import wicket.util.value.ValueMap;
 
 /**
@@ -76,8 +77,8 @@ public final class SignIn extends WicketExamplePage
             super(componentName, feedback);
 
             // Attach textfield components that edit properties map model
-            add(new TextField("username", properties, "username"));
-            add(new PasswordTextField("password", properties, "password"));
+            add(new TextField("username", new PropertyModel(properties, "username")));
+            add(new PasswordTextField("password", new PropertyModel(properties, "password")));
         }
 
         /**

@@ -22,6 +22,7 @@ import java.awt.Graphics2D;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.resource.RenderedDynamicImageResource;
+import wicket.model.Model;
 
 /**
  * Demonstrates different flavors of wicket.examples.images.
@@ -51,7 +52,7 @@ public final class Home extends WicketExamplePage
 		}));
 
 		// Simple model
-		add(new Image("image4", "Image2.gif"));
+		add(new Image("image4", new Model("Image2.gif")));
 
 		// Dynamically created buffered image
 		add(new Image("image5", application.getImage5Resource()));

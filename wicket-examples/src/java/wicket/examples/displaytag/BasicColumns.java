@@ -54,7 +54,7 @@ public class BasicColumns extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(new Label("name", value.getName()));
                 listItem.add(new Label("email", value.getEmail()));
                 listItem.add(new Label("status", value.getStatus()));

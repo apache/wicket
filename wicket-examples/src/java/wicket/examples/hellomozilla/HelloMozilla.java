@@ -22,6 +22,7 @@ import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
+import wicket.model.PropertyModel;
 import wicket.protocol.http.WebResponse;
 
 /**
@@ -40,7 +41,7 @@ public class HelloMozilla extends WebPage
      */
     public HelloMozilla(final PageParameters parameters)
     {
-		add(new XulDescription("hellomessage", this, "message"));
+		add(new XulDescription("hellomessage", new PropertyModel(this, "message")));
 		add(new MessageForm("messageForm"));
     }
 
@@ -82,7 +83,7 @@ public class HelloMozilla extends WebPage
     	public MessageForm(String name)
     	{
     		super(name, null);
-    		add(new TextField("messageInput", HelloMozilla.this, "message"));
+    		add(new TextField("messageInput", new PropertyModel(HelloMozilla.this, "message")));
     	}
 
 		/**

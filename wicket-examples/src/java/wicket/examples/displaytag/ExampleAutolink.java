@@ -52,7 +52,7 @@ public class ExampleAutolink extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(new SmartLinkLabel("email", value.getEmail()));
                 listItem.add(new SmartLinkLabel("url", value.getUrl()));
             }

@@ -36,7 +36,7 @@ import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.PropertyModel;
+import wicket.model.CompoundPropertyModel;
 import wicket.util.lang.EnumeratedType;
 
 /**
@@ -110,7 +110,7 @@ public final class EditBook extends AuthenticatedWebPage
 		public EditBookForm(final String componentName, final Book book,
 				final FeedbackPanel feedback)
 		{
-			super(componentName, book, feedback);
+			super(componentName, new CompoundPropertyModel(book), feedback);
 
 			// Create a required text field with a max length of 30 characters
 			// that edits the book's title
@@ -147,8 +147,7 @@ public final class EditBook extends AuthenticatedWebPage
 			add(relatedBook);
 
 			// Multi-select among writing styles
-			add(new ListMultipleChoice("writingStyles", new PropertyModel(getModel(),
-					"writingStyles"), EnumeratedType.getValues(Book.WritingStyle.class)));
+			add(new ListMultipleChoice("writingStyles", EnumeratedType.getValues(Book.WritingStyle.class)));
 		}
 		
 		/**
@@ -158,7 +157,7 @@ public final class EditBook extends AuthenticatedWebPage
 		{
 			final RequestCycle cycle = getRequestCycle();
 			PageParameters parameters = new PageParameters();
-			final Book book = (Book)getModelObject();
+			final Book book = (Book)getRootModel();
 			parameters.put("id", new Long(book.getId()));
 			cycle.setPage(getPageFactory().newPage(BookDetails.class, parameters));
 			cycle.setRedirect(true);

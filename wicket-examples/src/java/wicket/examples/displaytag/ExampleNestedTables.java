@@ -53,7 +53,7 @@ public class ExampleNestedTables extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(new Label("status", value.getStatus()));
                 listItem.add(new Label("comments", value.getDescription()));
 

@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.RequestCycle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.model.PropertyModel;
 
 /**
  * The main guess page for the hangman application.
@@ -42,10 +43,10 @@ public class Guess extends HangmanPage
 		log.error("Created the guess page");
 
 		// Components for displaying the guesses remaining & the hangman
-		add(new Label("guessesRemaining", getHangman(), "guessesRemaining"));
+		add(new Label("guessesRemaining", new PropertyModel(getHangman(), "guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label("letters", getHangman(), "letters"));
+		add(new Label("letters", new PropertyModel(getHangman(), "letters")));
 
 		// Components for displaying the letters that can be selected
 		for (int i = 0; i < 26; i++)

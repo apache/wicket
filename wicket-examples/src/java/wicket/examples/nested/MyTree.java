@@ -30,6 +30,7 @@ import wicket.contrib.markup.html.tree.IndentTree;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.AbstractImage;
 import wicket.markup.html.image.Image;
+import wicket.model.Model;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResource;
 
@@ -127,7 +128,7 @@ public class MyTree extends IndentTree
 		 */
 		public LocalImage(String name, Serializable object)
 		{
-			super(name, object);
+			super(name, new Model(object));
 		}
 
 		/**

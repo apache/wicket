@@ -28,6 +28,8 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 
 /**
  * A simple "guest book" example that allows visitors to the page to add a
@@ -57,7 +59,7 @@ public final class GuestBook extends WicketExamplePage
 			public void populateItem(final ListItem listItem)
 			{
 				final Comment comment = (Comment)listItem.getModelObject();
-				listItem.add(new Label("date", comment.getDate()));
+				listItem.add(new Label("date", new Model(comment.getDate())));
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
 		});
@@ -85,7 +87,7 @@ public final class GuestBook extends WicketExamplePage
 			super(componentName);
 
 			// Add text entry widget
-			add(new TextArea("text", comment, "text"));
+			add(new TextArea("text", new PropertyModel(comment, "text")));
 		}
 
 		/**

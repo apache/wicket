@@ -57,4 +57,12 @@ public class UserModel extends SpringAwareModel
         }
         return user;
     }
+
+	/**
+	 * @see wicket.model.IModel#getNestedModel()
+	 */
+	public Object getNestedModel()
+	{
+		return user;
+	}
 }

@@ -44,6 +44,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractDetachableModel;
 import wicket.model.IModel;
+import wicket.model.PropertyModel;
 
 
 /**
@@ -78,18 +79,18 @@ public final class EditCDPage extends WicketExamplePage
 				PersistentObjectModel cdModel)
 		{
 			super(name, cdModel, validationErrorHandler);
-			TextField titleField = new TextField("title", cdModel, "title");
+			TextField titleField = new TextField("title", new PropertyModel(cdModel, "title"));
 			titleField.add(RequiredValidator.getInstance());
 			titleField.add(LengthValidator.max(50));
 			add(titleField);
-			TextField performersField = new TextField("performers", cdModel, "performers");
+			TextField performersField = new TextField("performers", new PropertyModel(cdModel, "performers"));
 			performersField.add(RequiredValidator.getInstance());
 			performersField.add(LengthValidator.max(50));
 			add(performersField);
-			TextField labelField = new TextField("label", cdModel, "label");
+			TextField labelField = new TextField("label", new PropertyModel(cdModel, "label"));
 			labelField.add(LengthValidator.max(50));
 			add(labelField);
-			TextField yearField = new TextField("year", cdModel, "year");
+			TextField yearField = new TextField("year", new PropertyModel(cdModel, "year"));
 			yearField.add(RequiredValidator.getInstance());
 			yearField.add(IntegerValidator.POSITIVE_INT);
 			add(yearField);
@@ -202,6 +203,14 @@ public final class EditCDPage extends WicketExamplePage
 			{
 				return "<NEW CD>";
 			}
+		}
+
+		/**
+		 * @see wicket.model.IModel#getNestedModel()
+		 */
+		public Object getNestedModel()
+		{
+			return cdModel;
 		}
 	}
 

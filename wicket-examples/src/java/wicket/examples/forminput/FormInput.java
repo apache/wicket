@@ -32,6 +32,8 @@ import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.CompoundPropertyModel;
+import wicket.model.PropertyModel;
 
 /**
  * Example for form input.
@@ -55,7 +57,7 @@ public class FormInput extends WicketExamplePage
 		add(new InputForm("inputForm", feedback));
 
 		// Dropdown for selecting locale
-		add(new DropDownChoice("localeSelect", this, "locale", ALL_LOCALES) 
+		add(new DropDownChoice("localeSelect", new PropertyModel(this, "locale"), ALL_LOCALES) 
 		{
 			protected boolean wantOnSelectionChangedNotifications()
 			{
@@ -105,7 +107,7 @@ public class FormInput extends WicketExamplePage
 		 */
 		public InputForm(String name, IFeedback feedback)
 		{
-			super(name, new FormInputModel(), feedback);
+			super(name, new CompoundPropertyModel(new FormInputModel()), feedback);
 
 			add(new RequiredTextField("stringProperty"));
 			add(new RequiredTextField("integerProperty", Integer.class));
@@ -131,7 +133,7 @@ public class FormInput extends WicketExamplePage
 		public void onSubmit()
 		{
 			// Form validation successful. Display message showing edited model.
-			info("Saved model " + getModelObject());
+			info("Saved model " + getRootModel());
 		}
 	}
 }

@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.MappingException;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.Transaction;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.examples.WicketExamplePage;
@@ -31,11 +35,8 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
-
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.MappingException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 
 /**
  * A simple "guest book" example that allows visitors to the page to add a
@@ -107,7 +108,7 @@ public class GuestBook2 extends WicketExamplePage
 			public void populateItem(final ListItem listItem)
 			{
 				final Comment comment = (Comment)listItem.getModelObject();
-				listItem.add(new Label("date", comment.getDate()));
+				listItem.add(new Label("date", new Model(comment.getDate())));
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
 		});
@@ -135,7 +136,7 @@ public class GuestBook2 extends WicketExamplePage
 			super(componentName, null);
 
 			// Add text entry widget
-			add(new TextArea("text", comment, "text"));
+			add(new TextArea("text", new PropertyModel(comment, "text")));
 		}
 
 		/**

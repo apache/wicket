@@ -27,6 +27,7 @@ import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
+import wicket.model.PropertyModel;
 import wicket.util.time.Time;
 
 
@@ -55,7 +56,7 @@ public class ExampleDecorator extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(new Label("email", value.getEmail()));
                 listItem.add(new Label("status", value.getStatus()));
                 listItem.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd")));
@@ -72,9 +73,9 @@ public class ExampleDecorator extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", listItem.getModel(), "id"));
-                listItem.add(new Label("email", listItem.getModel(), "email"));
-                listItem.add(new Label("status", listItem.getModel(), "status"));
+                listItem.add(new Label("id", new PropertyModel(listItem.getModel(), "id")));
+                listItem.add(new Label("email", new PropertyModel(listItem.getModel(), "email")));
+                listItem.add(new Label("status", new PropertyModel(listItem.getModel(), "status")));
                 listItem.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd HH:mm:ss")));
             }
         });

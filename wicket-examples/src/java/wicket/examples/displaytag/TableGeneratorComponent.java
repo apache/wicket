@@ -27,6 +27,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
+import wicket.model.PropertyModel;
 
 
 
@@ -120,7 +121,7 @@ public class TableGeneratorComponent extends Panel
                         if (populateColumn(colItem, column) == false)
                         {
                             String value = (String)(column instanceof String ? column : ((IModel)column).getObject(null));
-                            colItem.add(new Label("column", rowItem.getModel(), value));
+                            colItem.add(new Label("column", new PropertyModel(rowItem.getModel(), value)));
                         }
                     }
                 });

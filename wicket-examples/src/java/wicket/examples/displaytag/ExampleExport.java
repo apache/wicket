@@ -58,7 +58,7 @@ public class ExampleExport extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(new Label("email", value.getEmail()));
                 listItem.add(new Label("status", value.getStatus()));
                 listItem.add(new Label("date", Time.valueOf(value.getDate()).toDateString()));

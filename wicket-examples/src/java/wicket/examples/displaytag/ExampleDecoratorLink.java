@@ -65,7 +65,7 @@ public class ExampleDecoratorLink extends Displaytag
                 
                 BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
-                idLink.add(new Label("id", new Integer(value.getId())));
+                idLink.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(idLink);
 
                 BookmarkablePageLink emailLink = new BookmarkablePageLink("mailLink", Page3.class);
@@ -92,7 +92,7 @@ public class ExampleDecoratorLink extends Displaytag
                 
                 BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
-                idLink.add(new Label("id", new Integer(value.getId())));
+                idLink.add(new Label("id", Integer.toString(value.getId())));
                 listItem.add(idLink);
 
                 listItem.add(new Label("email", value.getEmail()));

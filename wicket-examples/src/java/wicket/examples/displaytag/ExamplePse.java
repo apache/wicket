@@ -82,7 +82,7 @@ public class ExamplePse extends Displaytag
                 }
 
                 // Not included in grouping
-                listItem.add(new Label("hours", new Double(value.getAmount())));
+                listItem.add(new Label("hours", Double.toString(value.getAmount())));
                 listItem.add(new Label("task", value.getTask()));
                 
                 // remember the current value for the next row

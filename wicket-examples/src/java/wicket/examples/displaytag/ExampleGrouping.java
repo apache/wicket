@@ -70,7 +70,7 @@ public class ExampleGrouping extends Displaytag
                 }
 
                 // These values are not grouped
-                listItem.add(new Label("hours", new Double(value.getAmount())));
+                listItem.add(new Label("hours", Double.toString(value.getAmount())));
                 listItem.add(new Label("task", value.getTask()));
                 
                 // Remember current value
