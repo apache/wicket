@@ -18,6 +18,8 @@
 package wicket.protocol.http;
 
 import wicket.Application;
+import wicket.ISessionFactory;
+import wicket.Session;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.html.pages.StaleDataErrorPage;
@@ -72,7 +74,21 @@ public abstract class WebApplication extends Application
         getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class).setInternalErrorPage(
                 InternalErrorPage.class).setStaleDataErrorPage(StaleDataErrorPage.class);
 	}
-
+   
+    /**
+	 * @see wicket.Application#getSessionFactory()
+	 */
+	public ISessionFactory getSessionFactory()
+	{
+		return new ISessionFactory()
+		{
+			public Session newSession()
+			{
+				return new HttpSession(WebApplication.this);
+			}
+		};
+	}
+    
 	/**
 	 * Initialize; if you need the wicket servlet for initialization, e.g.
 	 * because you want to read an initParameter from web.xml or you want to

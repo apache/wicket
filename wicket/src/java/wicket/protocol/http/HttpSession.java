@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import wicket.Application;
 import wicket.Session;
+import wicket.WicketRuntimeException;
 
 /**
  * Session subclass for HTTP protocol which holds an underlying HttpSession
@@ -57,29 +58,40 @@ public class HttpSession extends Session
         final String sessionAttributeName = "session" + request.getServletPath();
         
         // Get Session abstraction from httpSession attribute
-        HttpSession session = (HttpSession)httpServletSession.getAttribute(sessionAttributeName);
+        HttpSession httpSession = (HttpSession)httpServletSession.getAttribute(sessionAttributeName);
 
-        if (session == null)
+        if (httpSession == null)
         {
-            // Create session
-            session = new HttpSession(application, httpServletSession);
+            // Create session using session factory
+            final Session session = application.getSessionFactory().newSession();
+            if (session instanceof HttpSession)
+            {
+                httpSession = (HttpSession)session;            	
+            }
+            else
+            {
+                throw new WicketRuntimeException("Session created by a WebApplication session factory must be a subclass of HttpSession");
+            }
+            
+            // Save servlet session in there
+            httpSession.httpServletSession = httpServletSession;
 
             // Set the client Locale for this session
-            session.setLocale(request.getLocale());
+            httpSession.setLocale(request.getLocale());
 
             // Attach to httpSession
-            httpServletSession.setAttribute(sessionAttributeName, session);
+            httpServletSession.setAttribute(sessionAttributeName, httpSession);
         }
         else
         {
             // Reattach http servlet session
-            session.httpServletSession = httpServletSession;
+            httpSession.httpServletSession = httpServletSession;
         }
 
         // Set the current session to the session we just retrieved
-        Session.set(session);
+        Session.set(httpSession);
 
-        return session;
+        return httpSession;
     }
 
     /**
@@ -87,14 +99,10 @@ public class HttpSession extends Session
      * 
      * @param application
      *            The application
-     * @param httpServletSession
-     *            The underlying servlet session
      */
-    protected HttpSession(final Application application,
-            final javax.servlet.http.HttpSession httpServletSession)
+    protected HttpSession(final Application application)
     {
         super(application);
-        this.httpServletSession = httpServletSession;
     }
 
     /**

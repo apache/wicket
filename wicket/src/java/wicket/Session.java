@@ -19,7 +19,6 @@ package wicket;
 
 import java.io.Serializable;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -122,9 +121,6 @@ public abstract class Session implements Serializable
 
 	/** The still-live pages for this user session. */
 	private final Map pages;
-
-	/** Session properties. */
-	private Map properties;
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
@@ -280,23 +276,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Get the page property with the given key.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value for the key
-	 */
-	public final Object getProperty(final String key)
-	{
-		if (properties != null)
-		{
-			return properties.get(key);
-		}
-
-		return null;
-	}
-
-	/**
 	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
 	 * THE FUTURE.
 	 * 
@@ -345,20 +324,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Removes a property on this session by key.
-	 * 
-	 * @param key
-	 *            The key
-	 */
-	public final void removeProperty(final String key)
-	{
-		if (properties != null)
-		{
-			properties.remove(key);
-		}
-	}
-
-	/**
 	 * Set class resolver for this session
 	 * 
 	 * @param classResolver
@@ -390,24 +355,6 @@ public abstract class Session implements Serializable
 	public final void setPageFactory(final IPageFactory pageFactory)
 	{
 		this.pageFactory = pageFactory;
-	}
-
-	/**
-	 * Sets a property on this session.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param value
-	 *            The value
-	 */
-	public final void setProperty(final String key, final Object value)
-	{
-		if (properties == null)
-		{
-			properties = new HashMap();
-		}
-
-		properties.put(key, value);
 	}
 
 	/**
