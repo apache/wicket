@@ -17,9 +17,6 @@
  */
 package wicket;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +28,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
-import wicket.util.resource.IResourceStream;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -202,9 +198,6 @@ public abstract class RequestCycle
 	/** The page to render to the user. */
 	private Page responsePage;
 
-	/** The AJAX response resource that must be send to the user. */
-	private IResourceStream ajaxResponse;
-	
 	/**
 	 * Gets request cycle for calling thread.
 	 * 
@@ -567,65 +560,27 @@ public abstract class RequestCycle
 	private void respond() throws ServletException
 	{
 		// Get any page that is to be used to respond to the request
-		final IResourceStream ajax = getAjaxResponse();
-		if(ajax != null)
+		final Page page = getResponsePage();
+		if (page != null)
 		{
-			getResponse().setContentType(ajax.getContentType());
-			OutputStream os = getResponse().getOutputStream();
 			try
 			{
-				InputStream is = ajax.getInputStream();
-				byte[] bytes = new byte[512];
-				int read = is.read(bytes);
-				while(read != -1)
+				// Should page be redirected to?
+				if (getRedirect())
 				{
-					os.write(bytes, 0, read);
-					read = is.read(bytes);
+					// Redirect to the page
+					redirectTo(page);
 				}
-				os.flush();
-				// TODO CHECK no os.close()???
-			}
-			catch (Exception e)
-			{
-				log.error("Error sending AJAX response", e);
-				throw new ServletException(e);
-			}
-			finally
-			{
-				try
+				else
 				{
-					ajax.close();
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
+					// Make request to page
+					page.request();
 				}
 			}
-		}
-		else
-		{
-			final Page page = getResponsePage();
-			if (page != null)
+			catch (RuntimeException e)
 			{
-				try
-				{
-					// Should page be redirected to?
-					if (getRedirect())
-					{
-						// Redirect to the page
-						redirectTo(page);
-					}
-					else
-					{
-						// Make request to page
-						page.request();
-					}
-				}
-				catch (RuntimeException e)
-				{
-					// Handle any runtime exception
-					onRuntimeException(page, e);
-				}
+				// Handle any runtime exception
+				onRuntimeException(page, e);
 			}
 		}
 	}
@@ -666,16 +621,4 @@ public abstract class RequestCycle
 		// This thread is no longer attached to a Session
 		Session.set(null);
 	}
-
-	public IResourceStream getAjaxResponse()
-	{
-		return ajaxResponse;
-	}
-	
-
-	public void setAjaxResponse(IResourceStream ajaxResponse)
-	{
-		this.ajaxResponse = ajaxResponse;
-	}
-	
 }
