@@ -26,19 +26,19 @@ package wicket;
  */
 public class DefaultClassResolver implements IClassResolver
 {
-    /**
-     * @see wicket.IClassResolver#resolveClass(java.lang.String)
-     */
-    public Class resolveClass(String classname)
-    {
-        try
-        {
-            return DefaultClassResolver.class.getClassLoader().loadClass(classname);
-        }
-        catch (ClassNotFoundException ex)
-        {
-            throw new WicketRuntimeException("Unable to load class with name: " + classname);
-        }
-    }
+	/**
+	 * @see wicket.IClassResolver#resolveClass(java.lang.String)
+	 */
+	public Class resolveClass(String classname)
+	{
+		try
+		{
+			return DefaultClassResolver.class.getClassLoader().loadClass(classname);
+		}
+		catch (ClassNotFoundException ex)
+		{
+			throw new WicketRuntimeException("Unable to load class with name: " + classname);
+		}
+	}
 }
 
