@@ -19,6 +19,9 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
@@ -217,6 +220,29 @@ public abstract class FormComponent extends HtmlContainer
     }
 
     /**
+     * Gets the registered validators as a list.
+    * @return the validators as a list
+    */
+   public final List getValidators()
+    {
+    	final List l;
+    	if(this.validator == null)
+    	{
+    		l = Collections.EMPTY_LIST;
+    	}
+    	else if(this.validator instanceof ValidatorList)
+    	{
+    		l = ((ValidatorList)this.validator).asList();
+    	}
+    	else
+    	{
+    		l = new ArrayList(1);	
+	    	l.add(validator);
+    	}
+    	return l;
+    }
+
+    /**
      * Gets whether this component is to be validated.
      * @return True if this component has one or more validators
      */
@@ -285,6 +311,30 @@ public abstract class FormComponent extends HtmlContainer
             }
 
             current.right = new ValidatorList(current.right, validator);
+        }
+
+        /**
+         * Gets the validators as a List.
+         * @return the validators as a List
+         */
+        List asList()
+        {
+         ValidatorList current = this;
+         List validators = new ArrayList();
+         while (true)
+         {
+         	validators.add(current.left);
+             if (current.right instanceof ValidatorList)
+             {
+                 current = (ValidatorList)current.right;
+             }
+             else
+             {
+             	validators.add(current.right);
+                 break;
+             }
+         }
+         return validators;
         }
 
         /**
