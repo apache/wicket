@@ -38,6 +38,12 @@ import wicket.markup.html.form.Form;
  * to the session. The session-unique identifier assigned to a page can be
  * retrieved by calling getId(). This id serves as the Page's component name. So
  * the first page added to a new user session will always be named "0".
+ * <p>
+ * Pages can be constructed with any constructor when they are being used in a
+ * Wicket session, but if you wish to link to a Page using a URL that is
+ * bookmarkable (doesn't have session information encoded into it), you need to
+ * implement your Page with a constructor that accepts a single PageParameters
+ * argument.
  * 
  * @see wicket.markup.html.HtmlPage
  * @see Container
@@ -54,9 +60,9 @@ public abstract class Page extends Container implements IRedirectListener
 
 	/** static for access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
-    
-    /** Feedback messages for this page */
-    private FeedbackMessages feedbackMessages;
+
+	/** Feedback messages for this page */
+	private FeedbackMessages feedbackMessages;
 
 	/** This page's identifier. */
 	private int id = -1;
@@ -88,18 +94,18 @@ public abstract class Page extends Container implements IRedirectListener
 		this.session = Session.get();
 		this.session.addPage(this);
 	}
-    
-    /**
-     * @return Returns the feedbackMessages.
-     */
-    public FeedbackMessages getFeedbackMessages()
-    {
-        if (feedbackMessages == null)
-        {
-            feedbackMessages = new FeedbackMessages();   
-        }
-        return feedbackMessages;
-    }
+
+	/**
+	 * @return Returns the feedbackMessages.
+	 */
+	public FeedbackMessages getFeedbackMessages()
+	{
+		if (feedbackMessages == null)
+		{
+			feedbackMessages = new FeedbackMessages();
+		}
+		return feedbackMessages;
+	}
 
 	/**
 	 * Get the identifier for this page.
@@ -218,7 +224,7 @@ public abstract class Page extends Container implements IRedirectListener
 		}
 		finally
 		{
-            // Be sure to detach models
+			// Be sure to detach models
 			detachModels(this);
 		}
 	}
