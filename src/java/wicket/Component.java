@@ -990,13 +990,10 @@ public abstract class Component implements Serializable
 	 */
 	protected void invalidateModel()
 	{
-		// Find the page where this component lives
+		// Find the page where this component lives.  There is no need to
+        // check the return value for null here since getPage() will throw
+        // an IllegalState exception if its return value is null.
 		final Page page = getPage();
-
-		if (page == null)
-		{
-			return;
-		}
 
 		// Make all previous renderings of the page stale
 		page.setStaleRendering(page.getRendering());
@@ -1015,17 +1012,14 @@ public abstract class Component implements Serializable
 						public Object component(final Component current)
 						{
 							// If the components have the same equals identity
-							// (which is
-							// assumed to be implemented in terms of database
-							// identity)
-							// and component is accessing the same property of
-							// the model
+							// (which is assumed to be implemented in terms of 
+                            // database identity) and component is accessing 
+                            // the same property of the model
 							if (current.getModel() != null && getModel() != null
 									&& current.getModel().equals(getModel())
 									&& current.getName().equals(getName()))
 							{
-								// then make the page holding the component
-								// stale
+								// then make the page holding the component stale
 								currentPage.setStale(true);
 							}
 							return CONTINUE_TRAVERSAL;
