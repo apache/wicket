@@ -22,7 +22,6 @@ import wicket.markup.html.WebPage;
 
 /**
  * Dummy Page with no constructor at all
- * Rememeber: Page must have at least a default constructor
  */
 public class MyPage0 extends WebPage
 {
