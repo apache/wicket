@@ -77,15 +77,8 @@ public final class DefaultPageFactory implements IPageFactory
 			return newPage(constructor, parameters);
 		}
 
-		// If PageParameters is null or empty, try default constructor
-		if (parameters == null || parameters.isEmpty())
-		{
-			return newPage(pageClass);
-		}
-
-		// Couldn't find PageParameters constructor and parameters were passed
-		throw new WicketRuntimeException("Could not find a constructor in " + pageClass
-				+ " that would accept PageParameters argument " + parameters);
+		// Always try default constructor if one exists
+		return newPage(pageClass);
 	}
 
 	/**

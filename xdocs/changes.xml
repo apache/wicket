@@ -7,6 +7,10 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1119725">
+		Changed DefaultPageFactory so that it always tries default constructor if 
+		PageParameters constructor cannot be found and one exists.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
 		Restructed image component hierarchy to deal with clustering issues that
 		Chris brought up.  Changed example to demonstrate both BufferedDynamicImages
