@@ -79,7 +79,7 @@ public abstract class AbstractDetachableModel implements IModel
 	 */
 	public void setObject(Object object)
 	{
-		throw new UnsupportedOperationException("DetachableModel " + getClass() + " does not support setObject(Object)");
+		throw new UnsupportedOperationException("AbstractDetachableModel " + getClass() + " does not support setObject(Object)");
 	}
 	
 	/**
