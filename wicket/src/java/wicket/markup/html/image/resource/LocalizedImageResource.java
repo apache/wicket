@@ -256,7 +256,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		if (this.resource instanceof SharedResource)
 		{
 			// Create URL to shared resource
-			url = component.getPage().urlFor("shared/" + ((SharedResource)resource).getPath());
+			url = component.getPage().urlFor(((SharedResource)resource).getPath());
 		}
 		else
 		{

@@ -18,6 +18,7 @@
 package wicket.examples.linkomatic;
 
 import wicket.Page;
+import wicket.SharedResource;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -27,6 +28,7 @@ import wicket.markup.html.link.ImageMap;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.link.PopupSettings;
+import wicket.markup.html.link.SharedResourceLink;
 import wicket.model.PropertyModel;
 
 /**
@@ -118,6 +120,9 @@ public class Home extends WicketExamplePage
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
+		
+		// Shared resource link
+		add(new SharedResourceLink("cancelButtonLink", new SharedResource("cancelButton")));
 	}
 
 	/**

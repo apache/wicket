@@ -19,6 +19,7 @@
 package wicket.examples.linkomatic;
 
 import wicket.examples.WicketExampleApplication;
+import wicket.markup.html.image.resource.DefaultButtonImageResource;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
@@ -32,6 +33,7 @@ public class LinkomaticApplication extends WicketExampleApplication
     public LinkomaticApplication()
     {
         getPages().setHomePage(Home.class);
+		addResource("cancelButton", new DefaultButtonImageResource("Cancel"));
     }
 }
 
