@@ -18,25 +18,34 @@
  */
 package wicket.examples.displaytag;
 
-import wicket.WebApplication;
-import wicket.util.time.Duration;
+import wicket.PageParameters;
+import wicket.examples.util.NavigationPanel;
+
 
 
 /**
- * HttpApplication to support the wicket.examples.wicket.examples.displaytag examples
+ * Start page for different wicket.examples.wicket.examples.displaytag pages
  * 
  * @author Juergen Donnerstag
  */
-public class DisplaytagApplication extends WebApplication
+public class DisplaytagIndex extends Displaytag
 {
     /**
-     * Constructor.
+     * 
+     *
      */
-    public DisplaytagApplication()
+    public DisplaytagIndex()
     {
-        getSettings().setHomePage(DisplaytagIndex.class);
-        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+        this(null);
+    }
+    
+    /**
+     * Constructor.
+     * 
+     * @param parameters Page parameters
+     */
+    public DisplaytagIndex(final PageParameters parameters)
+    {
+        add(new NavigationPanel("mainNavigation", "Helloworld example"));
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////
