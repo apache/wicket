@@ -66,7 +66,10 @@ import com.voicetribe.wicket.Page;
  */
 public class MockHttpApplication extends HttpApplication {
 
-    // Mock http objects
+	/** Serial Version ID */
+	private static final long serialVersionUID = 8409647488957949834L;
+	
+	// Mock http objects
     private final MockHttpSession servletSession;
     private final MockHttpServletRequest servletRequest;
     private final MockHttpServletResponse servletResponse;
