@@ -100,7 +100,7 @@ public class Home extends HtmlPage
 				return new BookDetails(new Book("The Hobbit"));
 			}
 
-			public Class getIdentity()
+			public Class getPageIdentity()
 			{
 				return BookDetails.class;
 			}
@@ -114,7 +114,7 @@ public class Home extends HtmlPage
 				return new BookDetails(new Book("Inside The Matrix"));
 			}
 
-			public Class getIdentity()
+			public Class getPageIdentity()
 			{
 				return BookDetails.class;
 			}

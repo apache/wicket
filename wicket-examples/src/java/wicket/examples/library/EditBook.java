@@ -83,7 +83,7 @@ public final class EditBook extends AuthenticatedHtmlPage
                     return new EditBook(Book.get(id));
                 }
 
-                public Class getIdentity()
+                public Class getPageIdentity()
                 {
                     return EditBook.class;
                 }
