@@ -231,6 +231,20 @@ public final class Resource implements IResource, IChangeable
     }
 
     /**
+     * Create a Resource based on a Class's name and an extension
+     * @param classname A 'path' with dotted separators
+     * @param extension The file's extension incl. '.'
+     * @return null, if file does not exist
+     */
+    public static Resource locate(final String classname, final String extension)
+    {
+        String filename = Strings.replaceAll(classname, ".", "/") + extension;
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
+        
+        return (url != null ? new Resource(url) : null);
+    }
+
+    /**
      * Closes input stream
      * @throws IOException
      */
