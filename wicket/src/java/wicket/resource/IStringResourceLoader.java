@@ -43,7 +43,7 @@ import wicket.Component;
  * @see wicket.ApplicationSettings
  */
 public interface IStringResourceLoader
-{ // TODO finalize javadoc
+{
     /**
      * Get the string resource for the given combination of component class,
      * resource key, locale and style. The component is provided used to allow
