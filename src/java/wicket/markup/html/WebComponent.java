@@ -28,7 +28,7 @@ import wicket.model.IModel;
  * @see wicket.markup.html.WebMarkupContainer
  * @author Jonathan Locke
  */
-public abstract class WebComponent extends Component
+public class WebComponent extends Component
 {
 	/**
 	 * @see Component#Component(String)
