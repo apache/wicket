@@ -25,6 +25,8 @@ import wicket.examples.displaytag.DisplaytagTest;
 import wicket.examples.forminput.FormInputTest;
 import wicket.examples.groovy.GroovyTest;
 import wicket.examples.guestbook.GuestbookTest;
+import wicket.examples.hangman.HangManTest;
+import wicket.examples.hangman.WordGeneratorTest;
 import wicket.examples.helloworld.HelloWorldTest;
 import wicket.examples.linkomatic.LinkomaticTest;
 import wicket.examples.signin2.Signin2Test;
@@ -79,15 +81,17 @@ public final class AllTests extends TestSuite
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite();
-		suite.addTest(new HelloWorldTest("testHelloWorld"));
-		suite.addTest(new GuestbookTest("testHomePage"));
-		suite.addTest(new DisplaytagTest("testHomePage"));
-		suite.addTest(new SpringFrameworkTest("testHomePage"));
-		suite.addTest(new SpringFramework2Test("testHomePage"));
-		suite.addTest(new GroovyTest("testHomePage"));
-		suite.addTest(new FormInputTest("testHelloWorld"));
-		suite.addTest(new LinkomaticTest("testHelloWorld"));
-		suite.addTest(new Signin2Test("testHelloWorld"));
+		suite.addTestSuite(HangManTest.class);
+		suite.addTestSuite(WordGeneratorTest.class);
+		suite.addTestSuite(HelloWorldTest.class);
+		suite.addTestSuite(GuestbookTest.class);
+		suite.addTestSuite(DisplaytagTest.class);
+		suite.addTestSuite(SpringFrameworkTest.class);
+		suite.addTestSuite(SpringFramework2Test.class);
+		suite.addTestSuite(GroovyTest.class);
+		suite.addTestSuite(FormInputTest.class);
+		suite.addTestSuite(LinkomaticTest.class);
+		suite.addTestSuite(Signin2Test.class);
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");

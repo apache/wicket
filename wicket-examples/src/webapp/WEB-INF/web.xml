@@ -39,6 +39,16 @@
     </servlet>
 
     <servlet>
+        <servlet-name>HangmanApplication</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.hangman.HangmanApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
         <servlet-name>FormInputApplication</servlet-name>
         <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
         <init-param>
@@ -221,6 +231,11 @@
     <servlet-mapping>
         <servlet-name>SignInApplication</servlet-name>
         <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>HangmanApplication</servlet-name>
+        <url-pattern>/hangman</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
