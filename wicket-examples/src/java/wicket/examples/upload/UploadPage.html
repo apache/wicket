@@ -6,16 +6,35 @@
 <body>
     <span id="wicket-mainNavigation"/>
 
-    <form id="wicket-upload">
+    <form id="wicket-simpleUpload">
+	 <fieldset>
+	  <legend>Upload form that uses the original file name to save</legend>
     	<p>
-	    <label for="filename">Name</label><br/>
-	    <input id="wicket-filename" type="text" size="20"/>
-	    </p>
-	    <p>
-	    <label for="upload">File</label><br/>
-	    <input name="upload" type="file"/>
+	    <label for="upload">File</label>
+	    <input name="upload1" type="file"/>
 	    </p>
 	    <input type="submit" value="Upload!"/>
+	 </fieldset>
+    </form>
+
+    <form id="wicket-upload">
+	 <fieldset>
+	  <legend>Upload form with multiple files that uses input
+	  	fields to save</legend>
+    	<p>
+	    <label for="wicket-name1">Name</label>
+	    <input id="wicket-name1" type="text" size="20"/>
+	    &nbsp;&nbsp;<label for="upload1">File</label>
+	    <input name="upload1" type="file"/>
+	    </p>
+    	<p>
+	    <label for="wicket-name2">Name</label>
+	    <input id="wicket-name2" type="text" size="20"/>
+	    &nbsp;&nbsp;<label for="upload2">File</label>
+	    <input name="upload2" type="file"/>
+	    </p>
+	    <input type="submit" value="Upload!"/>
+	 </fieldset>
     </form>
 
     <div>

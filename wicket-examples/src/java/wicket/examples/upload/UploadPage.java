@@ -29,8 +29,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.upload.FileUploadForm;
+import wicket.markup.html.form.upload.UploadModel;
+import wicket.markup.html.form.upload.UploadTextField;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -71,7 +72,8 @@ public class UploadPage extends WicketExamplePage
 		{
 			uploadFolder.mkdir();
 		}
-		add(new UploadForm("upload", null, uploadFolder));
+		add(new MultipleFilesUploadForm("upload", null, uploadFolder));
+		add(new SimpleUploadForm("simpleUpload", null, uploadFolder));
 		add(new Label("dir", uploadFolder.getAbsolutePath()));
 		files.addAll(Arrays.asList(uploadFolder.list()));
 		fileListView = new FileListView("fileList", files);
@@ -90,12 +92,45 @@ public class UploadPage extends WicketExamplePage
 	}
 
 	/**
-	 * Form for uploads.
+	 * Form for uploads that just uses the original file name
+	 * for the uploaded file.
 	 */
-	private class UploadForm extends FileUploadForm
+	private class SimpleUploadForm extends FileUploadForm
 	{
-		/** File name to upload to */
-		private String filename;
+		/**
+		 * Construct.
+		 * 
+		 * @param name
+		 *            Component name
+		 * @param validationErrorHandler
+		 *            Error handler
+		 * @param uploadFolder
+		 *            Folder in which to save uploads
+		 */
+		public SimpleUploadForm(String name, IValidationFeedback validationErrorHandler,
+				Folder uploadFolder)
+		{
+			super(name, validationErrorHandler, uploadFolder);
+		}
+
+		/**
+		 * @see wicket.markup.html.form.upload.UploadForm#onSubmit()
+		 */
+		protected void onSubmit()
+		{
+			super.onSubmit();
+			refreshFiles();
+		}
+	}
+	
+	/**
+	 * Form for uploads that uploads multiple files and uses textfield
+	 * for getting the names of uploads.
+	 */
+	private class MultipleFilesUploadForm extends FileUploadForm
+	{
+		private UploadModel model1;
+		private UploadModel model2;
 
 		/**
 		 * Construct.
@@ -107,44 +142,35 @@ public class UploadPage extends WicketExamplePage
 		 * @param uploadFolder
 		 *            Folder in which to save uploads
 		 */
-		public UploadForm(String name, IValidationFeedback validationErrorHandler,
+		public MultipleFilesUploadForm(String name, IValidationFeedback validationErrorHandler,
 				Folder uploadFolder)
 		{
 			super(name, validationErrorHandler, uploadFolder);
-			add(new RequiredTextField("filename", this, "filename"));
-		}
-		
-		/**
-		 * @see wicket.markup.html.form.upload.FileUploadForm#onUpload(org.apache.commons.fileupload.FileItem)
-		 */
-		protected void onUpload(FileItem fileItem)
-		{
-			saveFile(fileItem, new File(uploadFolder, getFilename()));
+			model1 = new UploadModel();
+			model2 = new UploadModel();
+			// first upload must be given
+			add(new UploadTextField("name1", "upload1", model1, true));
+			// second is optional
+			add(new UploadTextField("name2", "upload2", model2, false));
 		}
 
 		/**
-		 * @see wicket.markup.html.form.upload.AbstractUploadForm#onSubmit()
+		 * @see wicket.markup.html.form.upload.UploadForm#onSubmit()
 		 */
 		protected void onSubmit()
 		{
-			super.onSubmit();
+			// do not call super.submit as that will save the uploads using their
+			// file names
+
+			// first will allways be set if we come here
+			saveFile(model1.getFile(), new File(uploadFolder, model1.getName()));
+			FileItem file2 = model2.getFile();
+			if(file2 != null && (file2.getSize() > 0)) // second might be set
+			{
+				// but if set, the name will allways be given
+				saveFile(file2, new File(uploadFolder, model2.getName()));
+			}
 			refreshFiles();
-		}
-		
-		/**
-		 * @return Returns the filename.
-		 */
-		public String getFilename()
-		{
-			return filename;
-		}
-		
-		/**
-		 * @param filename The filename to set.
-		 */
-		public void setFilename(String filename)
-		{
-			this.filename = filename;
 		}
 	}
 
@@ -175,13 +201,13 @@ public class UploadPage extends WicketExamplePage
 			listItem.add(new Label("file", filename));
 			listItem.add(new Link("delete")
 			{
-
 				public void onClick()
 				{
 					final File file = new File(uploadFolder, filename);
 					log.info("Deleting " + file);
 					Files.delete(file);
 					refreshFiles();
+					getRequestCycle().setRedirect(true);
 				}
 			});
 		}
