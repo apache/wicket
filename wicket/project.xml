@@ -23,7 +23,7 @@
     <url>http://wicket.sourceforge.net</url>
     <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
     <siteAddress>shell.sourceforge.net</siteAddress>
-    <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
+    <siteDirectory>/home/groups/w/wi/wicket/htdocs/cruisecontrol</siteDirectory>
     <repository>
         <connection>scm:cvs:pserver:anoncvs@cvs.sourceforge.net:/cvsroot/wicket:Wicket</connection>
         <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
