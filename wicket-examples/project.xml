@@ -172,6 +172,46 @@
         <war.bundle>false</war.bundle>
       </properties>
     </dependency>
+    <dependency>
+      <groupId>springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>1.1.3</version>
+      <jar>spring-core-1.1.3.jar</jar>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>1.1.3</version>
+      <jar>spring-context-1.1.3.jar</jar>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>1.1.3</version>
+      <jar>spring-webmvc-1.1.3.jar</jar>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>1.1.3</version>
+      <jar>spring-web-1.1.3.jar</jar>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
