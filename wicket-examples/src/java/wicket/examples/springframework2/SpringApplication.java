@@ -25,9 +25,9 @@ import org.springframework.beans.factory.InitializingBean;
 import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.protocol.http.WebApplication;
-import wicket.markup.html.InternalErrorPage;
-import wicket.markup.html.PageExpiredErrorPage;
-import wicket.markup.html.StaleDataErrorPage;
+import wicket.markup.html.pages.InternalErrorPage;
+import wicket.markup.html.pages.PageExpiredErrorPage;
+import wicket.markup.html.pages.StaleDataErrorPage;
 
 /**
  * WicketServlet class for hello world example.

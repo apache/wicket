@@ -26,7 +26,7 @@ import javax.servlet.ServletException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.html.ExceptionErrorPage;
+import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
 
 /**
