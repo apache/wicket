@@ -28,23 +28,23 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 /**
  * Dummy page used for resource testing.
  */
-public class SimpleTablePage extends HtmlPage {
+public class PagedTablePage extends HtmlPage {
 
     /**
      * Construct.
      * @param parameters page parameters.
      */
-    public SimpleTablePage(final PageParameters parameters) {
+    public PagedTablePage(final PageParameters parameters) {
         super();
         List list = new ArrayList();
         list.add("one");
         list.add("two");
         list.add("three");
-        add(new SimpleTable("table", list));
+        add(new SimplePagedTable("table", list));
     }
 
     /** simple table. */
-    class SimpleTable extends Table
+    class SimplePagedTable extends Table
     {
 
         /**
@@ -52,9 +52,9 @@ public class SimpleTablePage extends HtmlPage {
          * @param name
          * @param object
          */
-        public SimpleTable(String name, List object)
+        public SimplePagedTable(String name, List object)
         {
-            super(name, object);
+            super(name, object, 2);
         }
 
         /**
