@@ -28,7 +28,6 @@ import wicket.SharedResource;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.resource.BufferedDynamicImageResource;
-import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.markup.html.image.resource.RenderedDynamicImageResource;
 import wicket.model.Model;
 
@@ -39,9 +38,6 @@ import wicket.model.Model;
  */
 public final class Home extends WicketExamplePage
 {
-	static final DefaultButtonImageResource cancelButtonImageResource = new DefaultButtonImageResource(
-			30, 30, "Cancel!");
-
 	/**
 	 * Constructor
 	 */
@@ -70,9 +66,11 @@ public final class Home extends WicketExamplePage
 		// Dynamically created buffered image
 		add(new Image("image5", getImage5Resource()));
 
+		// Add okay button image
+		add(new Image("okButton", application.getOkButtonImageResource()));
+
 		// Add cancel button image
-		add(new Image("cancelButton", cancelButtonImageResource.getShared(getApplication(),
-				Home.class, "cancel")));
+		add(new Image("cancelButton", new SharedResource("cancelButton")));
 	}
 
 	/**
