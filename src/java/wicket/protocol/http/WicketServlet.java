@@ -82,12 +82,12 @@ public final class WicketServlet extends HttpServlet
     private static final Log log = LogFactory.getLog(WicketServlet.class);
 
     /** The application this servlet is serving */
-    private final WebApplication webApplication;
+    private WebApplication webApplication;
 
     /**
-     * Constructor
+     * Servlet initialization
      */
-    public WicketServlet()
+    public void init()
     {
         final String applicationClassName = getInitParameter("applicationClassName");
         try
