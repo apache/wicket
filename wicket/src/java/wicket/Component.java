@@ -377,7 +377,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Gets the converter that should be used by this component.
 	 * 
-	 * @return the converter that should be used by this component
+	 * @return The converter that should be used by this component
 	 */
 	public IConverter getConverter()
 	{
