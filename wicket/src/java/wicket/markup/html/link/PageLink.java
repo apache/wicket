@@ -23,22 +23,31 @@ import wicket.RenderException;
 import wicket.RequestCycle;
 
 /**
- * Links to a given page via an object implementing the IPageLink interface.
+ * Links to a given page via an object implementing the IPageLink delayed
+ * linking interface.  PageLinks can be constructed directly with an 
+ * IPageLink interface or with a Page Class object.  In the latter case,
+ * an IPageLink implementation is provided which constructs a Page of the
+ * given class when the link is clicked.  A default no-args constructor
+ * must be available in this case or a RenderException will be thrown when 
+ * Wicket fails to instantiate the class.
+ * 
+ * @see IPageLink
  * @author Jonathan Locke
  */
 public class PageLink extends Link
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 8530958543148278216L;
 	
-	// The page source
+	/** The delayed linking Page source */
     private final IPageLink pageLink;
 
     /**
      * Constructor.
      * @param componentName The name of this component
-     * @param pageLink The page source object which will produce the page linked to when
-     *            the hyperlink is clicked at a later time.
+     * @param pageLink An implementation of IPageLink which will create
+     * the page linked to if and when this hyperlink is clicked at a 
+     * later time.
      */
     public PageLink(final String componentName, final IPageLink pageLink)
     {
@@ -62,7 +71,7 @@ public class PageLink extends Link
             {
                 try
                 {
-                    return (Page) c.newInstance();
+                    return (Page)c.newInstance();
                 }
                 catch (InstantiationException e)
                 {
@@ -88,6 +97,9 @@ public class PageLink extends Link
     }
 
     /**
+     * Handles a link click by asking for a concrete Page instance through the 
+     * IPageLink.getPage() delayed linking interface.  This call will normally 
+     * cause the destination page to be created. 
      * @see wicket.markup.html.link.ILinkListener#linkClicked(wicket.RequestCycle)
      */
     public final void linkClicked(final RequestCycle cycle)
@@ -97,6 +109,8 @@ public class PageLink extends Link
     }
 
     /**
+     * Returns true if the given page is of the same class as the (delayed)
+     * destination of this page link.
      * @see wicket.markup.html.link.Link#linksTo(wicket.Page)
      */
     public boolean linksTo(final Page page)
