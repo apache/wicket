@@ -58,8 +58,8 @@ import wicket.protocol.http.HttpSession;
  * <p>
  * After completion of processRequestCycle() you will probably just be
  * testing component states. However, you also have full access to
- * the wicket.response document (or binary data) and result codes via the
- * servlet wicket.response object.
+ * the response document (or binary data) and result codes via the
+ * servlet response object.
  * <p>
  * IMPORTANT NOTES
  * <ul>
@@ -120,9 +120,9 @@ public class MockHttpApplication extends HttpApplication
 	}
 
 	/**
-	 * Reset the request and the wicket.response back to a starting state
-	 * and recreate the necessary wicket request, wicket.response and
-	 * session objects. The request and wicket.response objects can be
+	 * Reset the request and the response back to a starting state
+	 * and recreate the necessary wicket request, response and
+	 * session objects. The request and response objects can be
 	 * accessed and initialised at this point.
 	 * @throws IOException
 	 */
@@ -137,7 +137,7 @@ public class MockHttpApplication extends HttpApplication
 
 	/**
 	 * Create and process the request cycle using the current request
-	 * and wicket.response information.
+	 * and response information.
 	 *
 	 * @throws ServletException If the render cycle fails
 	 */
@@ -191,9 +191,9 @@ public class MockHttpApplication extends HttpApplication
 	}
 
 	/**
-	 * Get the wicket.response object so that we can apply configurations to it.
+	 * Get the response object so that we can apply configurations to it.
 	 *
-	 * @return The wicket.response object
+	 * @return The response object
 	 */
 	public MockHttpServletResponse getServletResponse()
 	{
@@ -234,9 +234,9 @@ public class MockHttpApplication extends HttpApplication
 	}
 
 	/**
-	 * Get the wicket wicket.response object.
+	 * Get the wicket response object.
 	 *
-	 * @return The wicket wicket.response object
+	 * @return The wicket response object
 	 */
 	public HttpResponse getWicketResponse()
 	{

@@ -21,7 +21,7 @@ package wicket.response;
 import wicket.Response;
 
 /**
- * A wicket.response which writes to the console.
+ * A response which writes to the console.
  * @author Jonathan Locke
  */
 public class ConsoleResponse extends Response

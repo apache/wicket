@@ -48,7 +48,7 @@ public class DummyComponent extends Component
 
 	/**
 	 * Implementation which renders this component.
-	 * @param cycle The wicket.response to write to
+	 * @param cycle The response to write to
 	 */
 	protected void handleRender(RequestCycle cycle)
 	{

@@ -28,7 +28,7 @@ import wicket.Response;
 import wicket.util.file.File;
 
 /**
- * Writes wicket.response to file
+ * Writes response to file
  * @author Jonathan Locke
  */
 public final class FileResponse extends Response

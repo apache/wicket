@@ -41,10 +41,10 @@ public class HttpResponse extends Response
     /** Log. */
     private static final Log log = LogFactory.getLog(HttpResponse.class);
 	
-    /** The underlying wicket.response object. */
+    /** The underlying response object. */
     private final HttpServletResponse httpServletResponse;
     
-    /** True if wicket.response is a redirect. */
+    /** True if response is a redirect. */
     private boolean redirect;
 
     /**
@@ -57,7 +57,7 @@ public class HttpResponse extends Response
 
     /**
      * Package private constructor.
-     * @param httpServletResponse The servlet wicket.response object
+     * @param httpServletResponse The servlet response object
      * @throws IOException
      */
     HttpResponse(final HttpServletResponse httpServletResponse) throws IOException
@@ -66,8 +66,8 @@ public class HttpResponse extends Response
     }
 
     /**
-     * Gets the wrapped http servlet wicket.response object.
-     * @return The wrapped http servlet wicket.response object
+     * Gets the wrapped http servlet response object.
+     * @return The wrapped http servlet response object
      */
     public final HttpServletResponse getServletResponse()
     {
@@ -84,7 +84,7 @@ public class HttpResponse extends Response
     }
 
     /**
-     * Set the content type on the wicket.response.
+     * Set the content type on the response.
      * @param mimeType The mime type
      */
     public final void setContentType(final String mimeType)
@@ -121,7 +121,7 @@ public class HttpResponse extends Response
     }
 */    
     /**
-     * Writes string to wicket.response output.
+     * Writes string to response output.
      * @param string The string to write
      */
     public void write(final String string)
@@ -137,7 +137,7 @@ public class HttpResponse extends Response
     }
 
     /**
-     * Closes wicket.response output.
+     * Closes response output.
      */
     public void close()
     {
@@ -176,8 +176,8 @@ public class HttpResponse extends Response
     }
 
     /**
-     * Whether this wicket.response is going to redirect the user agent.
-     * @return True if this wicket.response is going to redirect the user agent
+     * Whether this response is going to redirect the user agent.
+     * @return True if this response is going to redirect the user agent
      */
     public boolean isRedirect()
     {

@@ -79,7 +79,7 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	}
 
 	/**
-	 * Convinience method to get the http wicket response.
+	 * Convinience method to get the http response.
 	 * @return HttpResponse related to the RequestCycle
 	 */
 	private HttpResponse getResponse() 
