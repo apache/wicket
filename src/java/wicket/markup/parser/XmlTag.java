@@ -23,7 +23,7 @@ import java.util.Map;
 import wicket.markup.MarkupElement;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.string.StringValue;
-import wicket.util.value.ValueMap;
+import wicket.util.value.LowerCaseKeyValueMap;
 
 /**
  * A subclass of MarkupElement which represents a tag including namespace and
@@ -48,7 +48,7 @@ public class XmlTag extends MarkupElement
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */
-	private ValueMap attributes = new ValueMap();
+	private LowerCaseKeyValueMap attributes = new LowerCaseKeyValueMap();
 
 	/** Column number. */
 	int columnNumber;
@@ -128,7 +128,7 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return The tag's attributes
 	 */
-	public ValueMap getAttributes()
+	public LowerCaseKeyValueMap getAttributes()
 	{
 		return attributes;
 	}
@@ -222,7 +222,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public String getString(final String key)
 	{
-		return attributes.getString(key.toLowerCase());
+		return attributes.getString(key);
 	}
 
 	/**
@@ -310,7 +310,7 @@ public class XmlTag extends MarkupElement
 			tag.pos = pos;
 			tag.length = length;
 			tag.text = text;
-			tag.attributes = new ValueMap(attributes);
+			tag.attributes = new LowerCaseKeyValueMap(attributes);
 			tag.type = type;
 			tag.isMutable = true;
 			tag.closes = closes;
@@ -368,7 +368,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public Object put(final String key, final String value)
 	{
-		return attributes.put(key.toLowerCase(), value);
+		return attributes.put(key, (value != null) ? value.toString() : null);
 	}
 
 	/**
@@ -385,7 +385,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public Object put(final String key, final StringValue value)
 	{
-		return attributes.put(key.toLowerCase(), value.toString());
+		return attributes.put(key, (value != null) ? value.toString() : null);
 	}
 
 	/**
@@ -399,7 +399,8 @@ public class XmlTag extends MarkupElement
 		for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext(); )
 		{
 			final String key = (String)iterator.next();
-			put(key, map.get(key).toString());
+			Object value = map.get(key);
+			put(key, (value != null) ? value.toString() : null);
 		}
 	}
 
@@ -411,7 +412,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public void remove(final String key)
 	{
-		attributes.remove(key.toLowerCase());
+		attributes.remove(key);
 	}
 
 	/**
@@ -537,11 +538,14 @@ public class XmlTag extends MarkupElement
 				{
 				    buffer.append(" ");
 				    buffer.append(key);
-				    buffer.append("=\"");
 				    String value = getString(key);
-				    value = value.replaceAll("\"", "\\\"");
-				    buffer.append(value);
-				    buffer.append("\"");
+					if(value != null) // attributes without values are possible, e.g. 'disabled'
+					{
+						buffer.append("=\"");
+					    value = value.replaceAll("\"", "\\\"");
+					    buffer.append(value);
+					    buffer.append("\"");
+					}
 				}
 			}
 		}

@@ -151,7 +151,7 @@ public class ValueMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
-	public final boolean containsKey(final Object key)
+	public boolean containsKey(final Object key)
 	{
 		return map.containsKey(key);
 	}
@@ -175,7 +175,7 @@ public class ValueMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
-	public final Object get(final Object key)
+	public Object get(final Object key)
 	{
 		return map.get(key);
 	}
@@ -294,7 +294,7 @@ public class ValueMap implements Map, Serializable
 	 *            The key
 	 * @return The string value object
 	 */
-	public final StringValue getStringValue(final String key)
+	public StringValue getStringValue(final String key)
 	{
 		return StringValue.valueOf(get(key));
 	}
@@ -346,7 +346,7 @@ public class ValueMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	public final Object put(final Object key, final Object value)
+	public Object put(final Object key, final Object value)
 	{
 		return map.put(key, value);
 	}
@@ -354,7 +354,7 @@ public class ValueMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public final void putAll(final Map t)
+	public void putAll(final Map t)
 	{
 		map.putAll(t);
 	}
@@ -362,7 +362,7 @@ public class ValueMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	public final Object remove(final Object key)
+	public Object remove(final Object key)
 	{
 		return map.remove(key);
 	}
