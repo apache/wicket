@@ -25,28 +25,33 @@ import wicket.markup.html.panel.Panel;
 
 /**
  * A Wicket panel component to draw and maintain a complete
- * page navigator, meant to be easily added to any table.
+ * page navigator, meant to be easily added to any table. A navigation
+ * which contains links to the first and last page, the current page
+ * +- some increment and which supports paged navigation bars 
+ * (@see TableNavigationWithMargin).
  *  
  * @author Juergen Donnerstag
  */
 public class PagedTableNavigator extends Panel 
 {
-    /** */
+    /** The navigation bar to be printed, e.g. 1 | 2 | 3 etc. */
     private final TableNavigation tableNavigation;
     
     /**
      * Constructor.
-     * @param componentName
-     * @param table
+     * @param componentName The component's name
+     * @param table The table the page links are referring to.
      */
     public PagedTableNavigator(final String componentName, final Table table)
     {
         super(componentName);
-        
+
+        // Get the navigation bar and add it to the hierarchy
         this.tableNavigation = newTableNavigation(table);
         add(tableNavigation);
             
-        // model = null; the model will be auto-generated during handleBody
+        // model = null; the headline test will be auto-generated during 
+        // handleBody.
         add(new Label("headline", null)
         {
             // Dynamically - at runtime - create the text
@@ -58,6 +63,7 @@ public class PagedTableNavigator extends Panel
             }
         });
         
+        // Add additional page links
         add(new TableNavigationLink("first", table, 0));
         add(new TableNavigationIncrementLink("prev", table, -1));
         add(new TableNavigationIncrementLink("next", table, 1));
