@@ -20,13 +20,13 @@ package wicket.markup.html.basic;
 
 import java.io.Serializable;
 
-import wicket.IModel;
-import wicket.Model;
-import wicket.PropertyModel;
 import wicket.RenderException;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 import wicket.util.string.Strings;
 
 

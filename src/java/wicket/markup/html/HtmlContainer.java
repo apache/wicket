@@ -22,8 +22,8 @@ package wicket.markup.html;
 import java.io.Serializable;
 
 import wicket.Container;
-import wicket.IModel;
 import wicket.RequestCycle;
+import wicket.model.IModel;
 
 /**
  * A container of HTML markup and components. It is very similar to the
@@ -59,7 +59,7 @@ public class HtmlContainer extends Container
 
     /**
      * Constructor that uses the provided instance of {@link IModel} as a dynamic model.
-     * This model will be wrapped in an instance of {@link wicket.PropertyModel}
+     * This model will be wrapped in an instance of {@link wicket.model.PropertyModel}
      * using the provided expression. Thus, using this constructor is a short-hand for:
      * 
      * <pre>
@@ -80,7 +80,7 @@ public class HtmlContainer extends Container
 
     /**
      * Constructor that uses the provided object as a simple model. This object will be
-     * wrapped in an instance of {@link wicket.Model}. All components have names.
+     * wrapped in an instance of {@link wicket.model.Model}. All components have names.
      * A component's name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
@@ -93,8 +93,8 @@ public class HtmlContainer extends Container
 
     /**
      * Constructor that uses the provided object as a dynamic model. This object will be
-     * wrapped in an instance of {@link wicket.Model} that will be wrapped in an instance of
-     * {@link wicket.PropertyModel}using the provided expression. Thus, using this constructor
+     * wrapped in an instance of {@link wicket.model.Model} that will be wrapped in an instance of
+     * {@link wicket.model.PropertyModel}using the provided expression. Thus, using this constructor
      * is a short-hand for:
      * 
      * <pre>

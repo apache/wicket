@@ -31,11 +31,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
+import wicket.model.IModel;
 
 
 /**
  * Structure for recording  {@link wicket.FeebackMessage}s;
- * wraps a list and acts as a {@link wicket.IModel}.
+ * wraps a list and acts as a {@link wicket.model.IModel}.
  *
  * @author Eelco Hillenius
  */
@@ -122,7 +123,7 @@ public final class FeedbackMessages
 
         /**
          * Gets the messages.
-         * @see wicket.IModel#getObject()
+         * @see wicket.model.IModel#getObject()
          */
         public Object getObject()
         {
@@ -140,7 +141,7 @@ public final class FeedbackMessages
         /**
          * Sets the messages; the object should either be of type {@link java.util.List}
          * or an array of {@link FeebackMessage}s.
-         * @see wicket.IModel#setObject(java.lang.Object)
+         * @see wicket.model.IModel#setObject(java.lang.Object)
          */
         public void setObject(Object object)
         {

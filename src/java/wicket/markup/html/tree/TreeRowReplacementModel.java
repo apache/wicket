@@ -18,7 +18,7 @@
  */
 package wicket.markup.html.tree;
 
-import wicket.IModel;
+import wicket.model.IModel;
 
 /**
  * A replacement model for
@@ -46,7 +46,7 @@ public class TreeRowReplacementModel implements IModel
 
     /**
      * Gets the class depending on some attributes of the current tree node.
-     * @see wicket.IModel#getObject()
+     * @see wicket.model.IModel#getObject()
      */
     public final Object getObject()
     {
@@ -54,7 +54,7 @@ public class TreeRowReplacementModel implements IModel
     }
 
     /**
-     * @see wicket.IModel#setObject(java.lang.Object)
+     * @see wicket.model.IModel#setObject(java.lang.Object)
      */
     public final void setObject(Object object)
     {

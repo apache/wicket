@@ -21,9 +21,9 @@ package wicket.markup.html.table;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import wicket.Model;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
+import wicket.model.Model;
 import wicket.protocol.http.HttpRequestCycle;
 import wicket.protocol.http.MockHttpApplication;
 import wicket.protocol.http.MockPage;

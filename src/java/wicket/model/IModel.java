@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket;
+package wicket.model;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ import java.io.Serializable;
  * as a facade for the real model so that users have control over the actual persistence
  * strategy. Note that instances of implementations of this class will be stored in the
  * session. Hence, you should use (non-transient) instance variables sparcelingly.
- * @see wicket.IDetachableModel
+ * @see wicket.model.IDetachableModel
  */
 public interface IModel extends Serializable
 {

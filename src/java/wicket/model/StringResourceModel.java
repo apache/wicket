@@ -16,11 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket;
+package wicket.model;
 
 import java.text.MessageFormat;
 import java.util.Locale;
 
+import wicket.ApplicationSettings;
+import wicket.Component;
+import wicket.Localizer;
+import wicket.RequestCycle;
 import wicket.util.string.interpolator.OgnlVariableInterpolator;
 
 /**

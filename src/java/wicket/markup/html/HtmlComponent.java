@@ -22,8 +22,8 @@ package wicket.markup.html;
 import java.io.Serializable;
 
 import wicket.Component;
-import wicket.IModel;
 import wicket.RequestCycle;
+import wicket.model.IModel;
 
 /**
  * Base class for simple HTML components which do not hold nested components. If you need
@@ -56,7 +56,7 @@ public abstract class HtmlComponent extends Component
 
     /**
      * Constructor that uses the provided instance of {@link IModel}as a dynamic model.
-     * This model will be wrapped in an instance of {@link wicket.PropertyModel}
+     * This model will be wrapped in an instance of {@link wicket.model.PropertyModel}
      * using the provided expression. Thus, using this constructor is a short-hand for:
      * 
      * <pre>
@@ -77,7 +77,7 @@ public abstract class HtmlComponent extends Component
 
     /**
      * Constructor that uses the provided object as a simple model. This object will be
-     * wrapped in an instance of {@link wicket.Model}. All components have names. A component's
+     * wrapped in an instance of {@link wicket.model.Model}. All components have names. A component's
      * name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
@@ -90,8 +90,8 @@ public abstract class HtmlComponent extends Component
 
     /**
      * Constructor that uses the provided object as a dynamic model. This object will be
-     * wrapped in an instance of {@link wicket.Model}that will be wrapped in an instance of
-     * {@link wicket.PropertyModel}using the provided expression. Thus, using this constructor
+     * wrapped in an instance of {@link wicket.model.Model}that will be wrapped in an instance of
+     * {@link wicket.model.PropertyModel}using the provided expression. Thus, using this constructor
      * is a short-hand for:
      * 
      * <pre>

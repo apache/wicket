@@ -25,16 +25,16 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.FeedbackMessages;
-import wicket.IModel;
-import wicket.Model;
 import wicket.Page;
-import wicket.PropertyModel;
 import wicket.RenderException;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.form.validation.ValidationErrorMessage;
+import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 import wicket.protocol.http.HttpRequestCycle;
 
 /**

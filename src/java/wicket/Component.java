@@ -28,6 +28,10 @@ import wicket.markup.ComponentTag;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.model.IDetachableModel;
+import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 import wicket.util.string.Strings;
 
 

@@ -25,10 +25,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import wicket.IModel;
-import wicket.Model;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 
 /**

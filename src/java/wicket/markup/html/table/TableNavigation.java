@@ -18,8 +18,8 @@
  */
 package wicket.markup.html.table;
 
-import wicket.Model;
 import wicket.markup.html.basic.Label;
+import wicket.model.Model;
 
 
 /**

@@ -21,11 +21,11 @@ package wicket.markup.html.basic;
 
 import java.io.Serializable;
 
-import wicket.IModel;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
+import wicket.model.IModel;
 
 /**
  * A Label component must be attached to a SPAN tag, and replaces its body with the model
@@ -96,7 +96,7 @@ public class Label extends HtmlComponent
 
     /**
      * Constructor that uses the provided instance of {@link IModel} as a dynamic model.
-     * This model will be wrapped in an instance of {@link wicket.PropertyModel}
+     * This model will be wrapped in an instance of {@link wicket.model.PropertyModel}
      * using the provided expression. Thus, using this constructor is a short-hand for:
      * 
      * <pre>
@@ -118,7 +118,7 @@ public class Label extends HtmlComponent
 
     /**
      * Constructor that uses the provided object as a simple model. This object will be
-     * wrapped in an instance of {@link wicket.Model}. All components have
+     * wrapped in an instance of {@link wicket.model.Model}. All components have
      * names. A component's name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
@@ -132,8 +132,8 @@ public class Label extends HtmlComponent
 
     /**
      * Constructor that uses the provided object as a dynamic model. This object will be
-     * wrapped in an instance of {@link wicket.Model} that will be wrapped
-     * in an instance of {@link wicket.PropertyModel} using the provided
+     * wrapped in an instance of {@link wicket.model.Model} that will be wrapped
+     * in an instance of {@link wicket.model.PropertyModel} using the provided
      * expression. Thus, using this constructor is a short-hand for:
      * 
      * <pre>

@@ -21,10 +21,10 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 
-import wicket.IModel;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
 
 /**
  * Represents a radio option specified in HTML which can be added to a RadioChoice
@@ -60,7 +60,7 @@ public final class RadioOption extends FormComponent
      * and that uses either the model object's string value as the resource key for the
      * label or, if the resource key cannot be found, the object's string value as the
      * label itself. This model will be wrapped in an instance of
-     * {@link wicket.PropertyModel}
+     * {@link wicket.model.PropertyModel}
      * using the provided expression. Thus, using this constructor is a short-hand for:
      *
      * <pre>
@@ -84,7 +84,7 @@ public final class RadioOption extends FormComponent
      * Constructor that uses the provided object as a simple model and that uses either
      * the model object's string value as the resource key for the label or, if the
      * resource key cannot be found, the object's string value as the label itself. This
-     * object will be wrapped in an instance of {@link wicket.Model}.
+     * object will be wrapped in an instance of {@link wicket.model.Model}.
      * All components have names. A component's name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
@@ -99,8 +99,8 @@ public final class RadioOption extends FormComponent
      * Constructor that uses the provided object as a dynamic model and that uses either
      * the model object's string value as the resource key for the label or, if the
      * resource key cannot be found, the object's string value as the label itself. This
-     * object will be wrapped in an instance of {@link wicket.Model} that
-     * will be wrapped in an instance of {@link wicket.PropertyModel}
+     * object will be wrapped in an instance of {@link wicket.model.Model} that
+     * will be wrapped in an instance of {@link wicket.model.PropertyModel}
      * using the provided expression. Thus, using this constructor is a short-hand for:
      *
      * <pre>
@@ -139,7 +139,7 @@ public final class RadioOption extends FormComponent
     /**
      * Constructor that uses the provided instance of {@link IModel} as a dynamic model
      * and the provided label either as a resource key or as the static label itself. This
-     * model will be wrapped in an instance of {@link wicket.PropertyModel}
+     * model will be wrapped in an instance of {@link wicket.model.PropertyModel}
      * using the provided expression. Thus, using this constructor is a short-hand for:
      *
      * <pre>
@@ -165,7 +165,7 @@ public final class RadioOption extends FormComponent
     /**
      * Constructor that uses the provided object as a simple model and the provided label
      * either as a resource key or as the static label itself. This object will be wrapped
-     * in an instance of {@link wicket.Model}. All components have names.
+     * in an instance of {@link wicket.model.Model}. All components have names.
      * A component's name cannot be null.
      * @param name The non-null name of this component
      * @param label the label for this option as either a resource key to lookup the label
@@ -183,8 +183,8 @@ public final class RadioOption extends FormComponent
     /**
      * Constructor that uses the provided object as a dynamic model and the provided label
      * either as a resource key or as the static label itself. This object will be wrapped
-     * in an instance of {@link wicket.Model} that will be wrapped in
-     * an instance of {@link wicket.PropertyModel}using the provided
+     * in an instance of {@link wicket.model.Model} that will be wrapped in
+     * an instance of {@link wicket.model.PropertyModel}using the provided
      * expression. Thus, using this constructor is a short-hand for:
      *
      * <pre>

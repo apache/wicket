@@ -16,12 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket;
+package wicket.model;
+
+import wicket.RequestCycle;
 
 /**
  * A IDetachableModel wraps the actual model objects of components and provides a call
  * back mechanism for reacting on the starting/ ending of a request. Please use the
- * abstract class {@link wicket.DetachableModel}for implementations instead
+ * abstract class {@link wicket.model.DetachableModel}for implementations instead
  * of implementing this interface directely.
  */
 public interface IDetachableModel extends IModel

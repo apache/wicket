@@ -21,11 +21,11 @@ package wicket.markup.html.link;
 import java.io.Serializable;
 
 import wicket.Container;
-import wicket.IModel;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
 
 
 /**
@@ -100,7 +100,7 @@ public abstract class Link extends AbstractLink
 
     /**
      * Constructor that uses the provided instance of {@link IModel}as a dynamic model.
-     * This model will be wrapped in an instance of {@link wicket.PropertyModel}using the
+     * This model will be wrapped in an instance of {@link wicket.model.PropertyModel}using the
      * provided expression.
      * @param name The non-null name of this component
      * @param model the instance of {@link IModel}from which the model object will be
@@ -115,7 +115,7 @@ public abstract class Link extends AbstractLink
 
     /**
      * Constructor that uses the provided object as a simple model. This object will be
-     * wrapped in an instance of {@link wicket.Model}.
+     * wrapped in an instance of {@link wicket.model.Model}.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
      * @throws wicket.RenderException Thrown if the component has been given a null name.
@@ -127,8 +127,8 @@ public abstract class Link extends AbstractLink
 
     /**
      * Constructor that uses the provided object as a dynamic model. This object will be
-     * wrapped in an instance of {@link wicket.Model}that will be wrapped in an instance
-     * of {@link wicket.PropertyModel}using the provided expression.
+     * wrapped in an instance of {@link wicket.model.Model}that will be wrapped in an instance
+     * of {@link wicket.model.PropertyModel}using the provided expression.
      * @param name The non-null name of this component
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object

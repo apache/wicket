@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.panel;
 
-import wicket.IModel;
 import wicket.RequestCycle;
 import wicket.FeebackMessage;
 import wicket.FeedbackMessages;
@@ -27,6 +26,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
+import wicket.model.IModel;
 
 
 /**
@@ -104,7 +104,7 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
                 /**
                  * Returns feedbackPanel + the message level, eg 'feedbackPanelERROR'.
                  * This is used as the class of the li/ span elements.
-                 * @see wicket.IModel#getObject()
+                 * @see wicket.model.IModel#getObject()
                  */
                 public Object getObject()
                 {
@@ -112,7 +112,7 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
                 }
 
                 /**
-                 * @see wicket.IModel#setObject(java.lang.Object)
+                 * @see wicket.model.IModel#setObject(java.lang.Object)
                  */
                 public void setObject(Object object)
                 {

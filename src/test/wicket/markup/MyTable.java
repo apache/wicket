@@ -21,10 +21,10 @@ package wicket.markup;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.Model;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
+import wicket.model.Model;
 
 
 /**

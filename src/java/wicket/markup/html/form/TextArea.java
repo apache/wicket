@@ -21,10 +21,10 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 
-import wicket.IModel;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
 
 /**
  * Multi-row text editing component.
@@ -50,7 +50,7 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
 
     /**
      * Constructor that uses the provided instance of {@link IModel} as a dynamic model.
-     * This model will be wrapped in an instance of {@link wicket.PropertyModel}
+     * This model will be wrapped in an instance of {@link wicket.model.PropertyModel}
      * using the provided expression. Thus, using this constructor is a short-hand for:
      * 
      * <pre>
@@ -72,7 +72,7 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
 
     /**
      * Constructor that uses the provided object as a simple model. This object will be
-     * wrapped in an instance of {@link wicket.Model}. All components have
+     * wrapped in an instance of {@link wicket.model.Model}. All components have
      * names. A component's name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
@@ -86,8 +86,8 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
 
     /**
      * Constructor that uses the provided object as a dynamic model. This object will be
-     * wrapped in an instance of {@link wicket.Model} that will be
-     * wrapped in an instance of {@link wicket.PropertyModel} using the
+     * wrapped in an instance of {@link wicket.model.Model} that will be
+     * wrapped in an instance of {@link wicket.model.PropertyModel} using the
      * provided expression. Thus, using this constructor is a short-hand for:
      * 
      * <pre>
