@@ -94,18 +94,6 @@ public final class BookmarkablePageLink extends Link
 	}
 
 	/**
-	 * Gets the url to use for this link.
-	 * 
-	 * @return The URL that this link links to
-	 * @see wicket.markup.html.link.Link#getURL()
-	 */
-	protected String getURL()
-	{
-		// add href using url to the dispatcher
-		return getRequestCycle().urlFor(pageClass, parameters);
-	}
-
-	/**
 	 * Adds a given page property value to this link.
 	 * 
 	 * @param property
@@ -114,9 +102,9 @@ public final class BookmarkablePageLink extends Link
 	 *            The value
 	 * @return This
 	 */
-	public BookmarkablePageLink setParameter(final String property, final String value)
+	public BookmarkablePageLink setParameter(final String property, final int value)
 	{
-		parameters.put(property, value);
+		parameters.put(property, Integer.toString(value));
 		return this;
 	}
 
@@ -144,9 +132,21 @@ public final class BookmarkablePageLink extends Link
 	 *            The value
 	 * @return This
 	 */
-	public BookmarkablePageLink setParameter(final String property, final int value)
+	public BookmarkablePageLink setParameter(final String property, final String value)
 	{
-		parameters.put(property, Integer.toString(value));
+		parameters.put(property, value);
 		return this;
+	}
+
+	/**
+	 * Gets the url to use for this link.
+	 * 
+	 * @return The URL that this link links to
+	 * @see wicket.markup.html.link.Link#getURL()
+	 */
+	protected String getURL()
+	{
+		// add href using url to the dispatcher
+		return getRequestCycle().urlFor(pageClass, parameters);
 	}
 }
