@@ -18,7 +18,8 @@ The 'Swingy' nature of Wicket is quickly revealed as well as "low touch" approac
 </section>
 <section name="HelloWorld">
 <p>
-HelloWorld demonstrates the basic structure of a web application in Wicket.   A Label component is used to display a message on the home page for the application.
+HelloWorld demonstrates the basic structure of a web application in Wicket.
+A Label component is used to display a message on the home page for the application.
 </p>
 <img src="images/image001.png" alt="HelloWorld"/>
 <subsection name="HelloWorldApplication.java">
@@ -246,8 +247,8 @@ public class GuestBook extends HtmlPage
             public void populateCell(final Cell cell)
             {
                 final Comment comment = (Comment)cell.getModel();
-                cell.add(new Label("date", comment));
-                cell.add(new MultiLineLabel("text", comment));
+                cell.add(new Label("date", comment.getDate()));
+                cell.add(new MultiLineLabel("text", comment.getText()));
             }  
         });
     }

@@ -28,10 +28,10 @@
 </section>
 <section name="Latest News">
 	<p>See <a href="News.html">the news archive</a> for more (older) news.</p>
-	<subsection name="September 22, 2004 - Moving to sourceforge.net">
-		<p>Wicket is moving from <a href="http://wicket.codehaus.org">codehaus</a>
-		    to <a href="http://www.sourceforge.net">SourceForge</a>. The project
-		    should be up and running shortly.</p>
+	<subsection name="September 22, 2004 - Moved to sourceforge.net">
+		<p>Wicket moved from <a href="http://wicket.codehaus.org">codehaus</a>
+		    to <a href="http://wicket.sourceforge.net">SourceForge</a>.
+        </p>
 	</subsection>
 </section>
 </body>
