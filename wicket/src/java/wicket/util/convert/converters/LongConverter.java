@@ -22,30 +22,27 @@ import wicket.util.convert.ConversionException;
 import wicket.util.convert.Converter;
 
 /**
- * <p>
- * Standard {@link Converter}implementation that converts an incoming String into a
- * <code>java.lang.Long</code> object, optionally using a default value or throwing a
- * {@link ConversionException}if a conversion error occurs.
- * </p>
+ * Standard {@link wicket.util.convert.Converter} implementation that converts an
+ * incoming String into a <code>java.lang.Long</code> object, optionally using a
+ * default value or throwing a {@link wicket.util.convert.ConversionException}
+ * if a conversion error occurs.
  */
 public final class LongConverter implements Converter
-{ // TODO finalize javadoc
+{
     /**
-     * Create a {@link Converter}that will throw a {@link ConversionException}if a
-     * conversion error occurs.
+     * Construct.
      */
     public LongConverter()
     {
     }
 
     /**
-     * Convert the specified input object into an output object of the specified type.
-     * @param type Data type to which this value should be converted
+     * Converts the specified input object into an output object of the specified type.
      * @param value The input value to be converted
      * @return converted object
      * @exception ConversionException if conversion cannot be performed successfully
      */
-    public Object convert(Class type, Object value)
+    public Object convert(Object value)
     {
         if (value == null)
         {

@@ -22,13 +22,12 @@ package wicket.util.convert;
  * General purpose data type converter.
  */
 public interface Converter
-{ // TODO finalize javadoc
+{
     /**
      * Convert the specified input object into an output object of the specified type.
-     * @param type Data type to which this value should be converted
      * @param value The input value to be converted
      * @return converted object
      * @exception ConversionException if conversion cannot be performed successfully
      */
-    public Object convert(Class type, Object value);
+    public Object convert(Object value);
 }

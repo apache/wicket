@@ -29,23 +29,20 @@ import java.util.Locale;
 import wicket.util.convert.ConversionException;
 
 /**
- * <p>
  * Standard {@link LocaleConverter}implementation that converts an incoming
  * locale-sensitive String into a <code>java.util.Date</code> object, optionally using a
  * default value or throwing a {@link ConversionException}if a conversion error occurs.
- * </p>
  */
 public class DateLocaleConverter extends BaseLocaleConverter
-{ // TODO finalize javadoc
+{
+	/** whether to use lenient parsing. */
     private boolean lenient = false;
 
+    /** de date style to use. */
     private int dateStyle = DateFormat.SHORT;
 
-    // ----------------------------------------------------------- Constructors
-
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link ConversionException}if a
-     * conversion error occurs. The locale is the default locale for this instance of the
+     * Construct. The locale is the default locale for this instance of the
      * Java Virtual Machine and an unlocalized pattern is used for the convertion.
      */
     public DateLocaleConverter()
@@ -54,8 +51,7 @@ public class DateLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link ConversionException}if a
-     * conversion error occurs. An unlocalized pattern is used for the convertion.
+     * Construct. An unlocalized pattern is used for the convertion.
      * @param locale The locale
      */
     public DateLocaleConverter(Locale locale)
@@ -64,8 +60,7 @@ public class DateLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link ConversionException}if a
-     * conversion error occurs. An unlocalized pattern is used for the convertion.
+     * Construct. An unlocalized pattern is used for the convertion.
      * @param locale The locale
      * @param pattern The convertion pattern
      */
@@ -74,10 +69,8 @@ public class DateLocaleConverter extends BaseLocaleConverter
         super(locale, pattern, false);
     }
 
-    // --------------------------------------------------------- Methods
-
     /**
-     * Returns whether date formatting is lenient.
+     * Gets whether date formatting is lenient.
      * @return true if the <code>DateFormat</code> used for formatting is lenient
      * @see java.text.DateFormat#isLenient
      */
@@ -88,8 +81,8 @@ public class DateLocaleConverter extends BaseLocaleConverter
 
     /**
      * Specify whether or not date-time parsing should be lenient.
-     * @param lenient true if the <code>DateFormat</code> used for formatting should be
-     *            lenient
+     * @param lenient true if the <code>DateFormat</code> used for
+     * formatting should be lenient
      * @see java.text.DateFormat#setLenient
      */
     public void setLenient(boolean lenient)
@@ -98,8 +91,8 @@ public class DateLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * get date style
-     * @return int date style as a constant from DateFormat
+     * Gets the date style.
+     * @return int date style (one of the constants of {@link DateFormat})
      */
     public int getDateStyle()
     {
@@ -107,18 +100,16 @@ public class DateLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * set date style
-     * @param dateStyle
+     * Sets the date style.
+     * @param dateStyle the date style (one of the constants of {@link DateFormat})
      */
     public void setDateStyle(int dateStyle)
     {
         this.dateStyle = dateStyle;
     }
 
-    // --------------------------------------------------------- Methods
-
     /**
-     * Convert the specified locale-sensitive input object into an output object of the
+     * Converts the specified locale-sensitive input object into an output object of the
      * specified type.
      * @param value The input object to be converted
      * @param pattern The pattern is used for the convertion
@@ -151,10 +142,13 @@ public class DateLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * format value with pattern or using the default pattern
+     * Formats the given value with pattern or using the default pattern.
+     * @param value the value to format
+     * @param pattern the pattern to use
+     * @return the formatted value
      * @see wicket.util.convert.Formatter#format(java.lang.Object, java.lang.String)
      */
-    public String format(Object value, String pattern) throws IllegalArgumentException
+    public String format(Object value, String pattern)
     {
         DateFormat format = getFormat(pattern, locale);
         Date date = null;
@@ -165,14 +159,14 @@ public class DateLocaleConverter extends BaseLocaleConverter
         }
         else
         {
-            date = (Date) convert(Date.class, value);
+            date = (Date) convert(value);
         }
 
         return format.format(date);
     }
 
     /**
-     * Get date format.
+     * Gets the date format.
      * @param pattern the pattern to use for formatting
      * @param locale the locale
      * @return the date format object for the given pattern and locale
@@ -208,15 +202,14 @@ public class DateLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * Convert the specified locale-sensitive input object into an output object of the
+     * Converts the specified locale-sensitive input object into an output object of the
      * specified type.
-     * @param type Data type to which this value should be converted
      * @param value The input object to be converted
      * @param pattern The pattern is used for the convertion
      * @return converted object
      * @exception ConversionException if conversion cannot be performed successfully
      */
-    public Object convert(Class type, Object value, String pattern)
+    public Object convert(Object value, String pattern)
     {
         if (value == null)
         {
