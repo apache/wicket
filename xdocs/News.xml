@@ -11,11 +11,11 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
-			<subsection name="Januari 25, 2005 - 0.9.17-beta released">
+			<subsection name="January 25, 2005 - 0.9.17-beta released">
 				<p>
 					The Wicket team is proud to present yet another release of the Wicket core
-					framework and it's examples. This release contains many interface changes,
-					amongst others:
+					framework and its examples. This release contains major refactoring work
+					and interface changes, including:
 					<ul>
 						<li>the Java API</li>
 						<li>
