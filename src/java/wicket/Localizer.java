@@ -114,7 +114,7 @@ public class Localizer
 		}
 		else
 		{
-			return "??" + key + "??";
+			return "[Warning: String resource for '" + key + "' not found]";
 		}
 	}
 
