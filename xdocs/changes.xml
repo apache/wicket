@@ -8,6 +8,14 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+	  <action typ="update" dev="Eelco Hillenius" issue="1152615">
+	    Removed OnClickLink; onclick JS event handler generation is now supported
+	    for all link components. Also removed AbstractLink as there is no good
+	    reason to have that anymore, and Link seems the best base class.
+		When a link is attached to an anchor ('a' tag), we'll generate the href
+		attribute. In all other cases (e.g. if it is attached to a 'td' tag, we
+		will generate the onclick attribute).
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1151765">       
 		Changed DropDownChoice so that you simply return true from wantOnSelectionChangedNotifications() in your subclass and you get calls to onSelectionChanged() via the javascript.  The default implementation of wantOnSelectionChangedNotifications() returns false, so this eliminates round trips for dropdowns that don't explicitly enable this feature.
       </action>
