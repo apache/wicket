@@ -1319,10 +1319,14 @@ public abstract class Component implements Serializable
 
 		// If we're an openclose tag
 		final XmlTag.Type type = tag.getType();
+		final boolean isImageTag = tag.getName().equalsIgnoreCase("img");
 		if (tag.isOpenClose())
 		{
 			// Change type to open tag
-			tag.setType(XmlTag.OPEN);
+			if (!isImageTag)
+			{
+				tag.setType(XmlTag.OPEN);
+			}
 		}
 		else
 		{
@@ -1346,7 +1350,10 @@ public abstract class Component implements Serializable
 		onComponentTagBody(markupStream, tag);
 
 		// Render close tag
-		renderClosingComponentTag(markupStream, tag);
+		if (!isImageTag)
+		{
+			renderClosingComponentTag(markupStream, tag);
+		}
 	}
 
 	/**

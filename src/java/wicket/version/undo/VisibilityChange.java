@@ -29,8 +29,6 @@ class VisibilityChange extends Change
 	private final Component component;
 	private final boolean isVisible;
 	
-	// TODO detach model when components are removed / reattach when added.
-	
 	VisibilityChange(final Component component)
 	{
 		this.component = component;

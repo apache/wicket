@@ -28,7 +28,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListViewNavigator;
 import wicket.markup.html.list.PageableListView;
 
-
 /**
  * Dummy page used for resource testing.
  */

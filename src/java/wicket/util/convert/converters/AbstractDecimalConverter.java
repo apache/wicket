@@ -29,13 +29,12 @@ import java.util.Locale;
 public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 {
 	/**
-	 * @param locale 
+	 * @param locale
+	 *            The locale
 	 * @return Returns the numberFormat.
 	 */
 	public final NumberFormat getNumberFormat(Locale locale)
 	{
-		// TODO should we cache this on locale (some caching already happens in getInstance itself!
-		// Then we do know for sure that one instance of decimal format is thread safe
-		return  DecimalFormat.getInstance(locale);
+		return DecimalFormat.getInstance(locale);
 	}
 }

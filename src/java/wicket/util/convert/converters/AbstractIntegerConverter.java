@@ -28,14 +28,13 @@ import java.util.Locale;
 public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 {
 	/**
-	 * @param locale 
+	 * @param locale
+	 *            The locale
 	 * @return Returns the numberFormat.
 	 */
 	public final NumberFormat getNumberFormat(Locale locale)
 	{
-		//TODO cache this number format based on locale??
-		// But then it can be used by more then one session!!
-		NumberFormat numberFormat = NumberFormat.getIntegerInstance(locale);
+		final NumberFormat numberFormat = NumberFormat.getIntegerInstance(locale);
 		numberFormat.setParseIntegerOnly(true);
 		numberFormat.setGroupingUsed(false);
 		return numberFormat;

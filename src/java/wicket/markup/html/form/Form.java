@@ -33,6 +33,7 @@ import wicket.markup.html.form.validation.IFormValidationStrategy;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.Strings;
+import wicket.util.value.Count;
 
 /**
  * Base class for forms. To implement a form, subclass this class, add
@@ -66,16 +67,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 
 	/** The validation error handling delegate. */
 	private final IFeedback feedback;
-
-	/**
-	 * Trivial class for holding button count while counting buttons
-	 * 
-	 * @author Jonathan Locke
-	 */
-	private static class Count
-	{
-		int count;
-	}
 
 	/**
 	 * The default form validation strategy.
@@ -459,11 +450,11 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		{
 			public Object component(final Component component)
 			{
-				count.count++;
+				count.increment();
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-		return count.count;
+		return count.getCount();
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.26 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -96,7 +96,7 @@ public abstract class MarkupContainer extends Component
 	private static final Map markupCache = new HashMap();
 
 	/** Size of MiniMaps. */
-	private static final int MINIMAP_MAX_ENTRIES = 8;
+	private static final int MINIMAP_MAX_ENTRIES = 6;
 
 	/** Whether to optimize maps of children with MicroMap and MiniMap. */
 	private static final boolean optimizeChildMapsForSpace = false;
@@ -107,59 +107,12 @@ public abstract class MarkupContainer extends Component
 	/** The markup stream for this container. */
 	private transient MarkupStream markupStream;
 
-	private class ComponentIterator implements Iterator
-	{
-		private Component component;
-		private Iterator iterator;
-
-		/**
-		 * @param iterator
-		 * 
-		 */
-		public ComponentIterator(Iterator iterator)
-		{
-			this.iterator = iterator;
-		}
-
-		/**
-		 * @see java.util.Iterator#hasNext()
-		 */
-		public boolean hasNext()
-		{
-			return iterator.hasNext();
-		}
-
-		/**
-		 * @see java.util.Iterator#next()
-		 */
-		public Object next()
-		{
-			component = (Component)iterator.next();
-			return component;
-		}
-
-		/**
-		 * @see java.util.Iterator#remove()
-		 */
-		public void remove()
-		{
-			iterator.remove();
-			// Notify Page
-			final Page page = findPage();
-			if (page != null)
-			{
-				page.componentRemoved(component);
-			}
-		}
-	}
-
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
 	public MarkupContainer(final String id)
 	{
 		super(id);
-		optimize();
 	}
 
 	/**
@@ -168,7 +121,6 @@ public abstract class MarkupContainer extends Component
 	public MarkupContainer(final String id, IModel model)
 	{
 		super(id, model);
-		optimize();
 	}
 
 	/**
@@ -183,50 +135,17 @@ public abstract class MarkupContainer extends Component
 	 */
 	public MarkupContainer add(final Component child)
 	{
-		// Check for degenerate case
-		if (child == this)
-		{
-			throw new IllegalArgumentException("Component can't be added to itself");
-		}
-
 		if (log.isDebugEnabled())
 		{
 			log.debug("Add " + child.getId() + " to " + this);
 		}
 
-		// Set child's parent
-		child.setParent(this);
-
-		// Are we using MicroMap optimization?
-		if (optimizeChildMapsForSpace)
-		{
-			if (childForId.size() == MicroMap.MAX_ENTRIES)
-			{
-				// Reallocate MicroMap as MiniMap
-				childForId = new MiniMap(childForId, MINIMAP_MAX_ENTRIES);
-			}
-			else if (childForId.size() == MINIMAP_MAX_ENTRIES)
-			{
-				// Reallocate MiniMap as full HashMap
-				childForId = new HashMap(childForId);
-			}
-		}
-
 		// Add to map
-		final Object replaced = childForId.put(child.getId(), child);
-
-		// Look up to make sure it's not already in the map
-		if (replaced != null)
+		addedComponent(child);
+		if (put(child) != null)
 		{
-			throw new IllegalArgumentException(exceptionMessage("A child component with the id '"
-					+ child.getId() + "' already exists"));
-		}
-
-		// Tell the page a component was added
-		final Page page = findPage();
-		if (page != null)
-		{
-			page.componentAdded(child);
+			throw new IllegalArgumentException(exceptionMessage("A child with id '" + child.getId()
+					+ "' already exists"));
 		}
 
 		return this;
@@ -342,17 +261,45 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Get the Iterator that iterates through children in an undefined order.
-	 * 
 	 * @return Iterator that iterates through children in an undefined order
 	 */
 	public final Iterator iterator()
 	{
 		if (childForId == null)
 		{
-			childForId = Collections.EMPTY_MAP;
+			childForId = Collections.EMPTY_MAP; 
 		}
-		return new ComponentIterator(childForId.values().iterator());
+		
+		final Iterator iterator = childForId.values().iterator();
+		return new Iterator()
+		{
+			private Component component;
+
+			/**
+			 * @see java.util.Iterator#hasNext()
+			 */
+			public boolean hasNext()
+			{
+				return iterator.hasNext();
+			}
+
+			/**
+			 * @see java.util.Iterator#next()
+			 */
+			public Object next()
+			{
+				return component = (Component)iterator.next();
+			}
+
+			/**
+			 * @see java.util.Iterator#remove()
+			 */
+			public void remove()
+			{
+				iterator.remove();
+				removedComponent(component);
+			}
+		};
 	}
 
 	/**
@@ -366,15 +313,8 @@ public abstract class MarkupContainer extends Component
 		final Component component = get(id);
 		if (component != null)
 		{
-			// Remove from map
 			childForId.remove(id);
-
-			// Notify Page
-			final Page page = findPage();
-			if (page != null)
-			{
-				page.componentRemoved(component);
-			}
+			removedComponent(component);
 		}
 		else
 		{
@@ -388,23 +328,10 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void removeAll()
 	{
-		// Get page for efficiency
-		final Page page = findPage();
-
-		// Loop through child components
-		for (final Iterator iterator = childForId.values().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = iterator(); iterator.hasNext(); )
 		{
-			// Get next child
-			final Component component = (Component)iterator.next();
-
-			// Remove child
+			iterator.next();
 			iterator.remove();
-
-			// Tell the page we removed the component
-			if (page != null)
-			{
-				page.componentRemoved(component);
-			}
 		}
 	}
 
@@ -426,30 +353,10 @@ public abstract class MarkupContainer extends Component
 
 		if (child.getParent() != this)
 		{
-			// First reset the childs parent (can't set them at once with
-			// another)
-			child.setParent(null);
-
-			// Set child's parent
-			child.setParent(this);
-
-			// Are we using MicroMap optimization?
-			if (optimizeChildMapsForSpace)
-			{
-				if (childForId.size() == MicroMap.MAX_ENTRIES)
-				{
-					// Reallocate MicroMap as MiniMap
-					childForId = new MiniMap(childForId, MINIMAP_MAX_ENTRIES);
-				}
-				else if (childForId.size() == MINIMAP_MAX_ENTRIES)
-				{
-					// Reallocate MiniMap as full HashMap
-					childForId = new HashMap(childForId);
-				}
-			}
-
 			// Add to map
-			final Component replaced = (Component)childForId.put(child.getId(), child);
+			final Component replaced = put(child);
+			addedComponent(child);
+			removedComponent(replaced);
 
 			// Look up to make sure it was already in the map
 			if (replaced == null)
@@ -457,16 +364,6 @@ public abstract class MarkupContainer extends Component
 				throw new IllegalArgumentException(
 						exceptionMessage("A child component with the id '" + child.getId()
 								+ "' didn't exist"));
-			}
-
-			replaced.setParent(null);
-
-			// Notify the page that the replace happened
-			final Page page = findPage();
-			if (page != null)
-			{
-				page.componentRemoved(replaced);
-				page.componentAdded(child);
 			}
 		}
 
@@ -492,7 +389,7 @@ public abstract class MarkupContainer extends Component
 	{
 		final StringBuffer buffer = new StringBuffer();
 
-		buffer.append("[MarkupContainer super = ");
+		buffer.append("[MarkupContainer ");
 		buffer.append(super.toString());
 
 		if (markupStream != null)
@@ -992,21 +889,6 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Optimize child id mapping.
-	 */
-	private void optimize()
-	{
-		if (optimizeChildMapsForSpace)
-		{
-			childForId = new MicroMap();
-		}
-		else
-		{
-			childForId = new HashMap();
-		}
-	}
-
-	/**
 	 * Renders the next element of markup in the given markup stream.
 	 * 
 	 * @param markupStream
@@ -1072,5 +954,86 @@ public abstract class MarkupContainer extends Component
 			getResponse().write(element.toString());
 			markupStream.next();
 		}
+	}
+
+	/**
+	 * @param component
+	 *            Component being removed
+	 */
+	private static final void removedComponent(final Component component)
+	{
+		// Notify Page that component is being removed
+		final Page page = component.findPage();
+		if (page != null)
+		{
+			page.componentRemoved(component);
+		}
+
+		// Detach model
+		component.detachModel();
+
+		// Component is removed
+		component.setParent(null);
+	}
+
+	/**
+	 * @param component
+	 *            Component being added
+	 */
+	private final void addedComponent(final Component component)
+	{
+		// Check for degenerate case
+		if (component == this)
+		{
+			throw new IllegalArgumentException("Component can't be added to itself");
+		}
+
+		// Set child's parent
+		component.setParent(this);
+
+		// Tell the page a component was added
+		final Page page = findPage();
+		if (page != null)
+		{
+			page.componentAdded(component);
+		}
+	}
+
+	/**
+	 * Ensure that there is space in childForId map for a new entry before
+	 * adding it.
+	 * 
+	 * @param child
+	 *            The child to put into the map
+	 * @return Any component that was replaced
+	 */
+	private final Component put(final Component child)
+	{
+		if (optimizeChildMapsForSpace)
+		{
+			if (childForId == Collections.EMPTY_MAP)
+			{
+				childForId = new MicroMap();
+			}
+			else if (childForId.size() == MicroMap.MAX_ENTRIES)
+			{
+				// Reallocate MicroMap as MiniMap
+				childForId = new MiniMap(childForId, MINIMAP_MAX_ENTRIES);
+			}
+			else if (childForId.size() == MINIMAP_MAX_ENTRIES)
+			{
+				// Reallocate MiniMap as full HashMap
+				childForId = new HashMap(childForId);
+			}
+		}
+		else
+		{
+			if (childForId == Collections.EMPTY_MAP)
+			{
+				childForId = new HashMap();
+			}
+		}
+
+		return (Component)childForId.put(child.getId(), child);
 	}
 }

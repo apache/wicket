@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,29 +15,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.version.undo;
-
-import wicket.Component;
-import wicket.MarkupContainer;
+package wicket.util.value;
 
 /**
- * A remove change operation.
+ * A class for counting things.
  * 
  * @author Jonathan Locke
  */
-class Remove extends Change
+public class Count
 {
-	private final Component component;
-	private final MarkupContainer container;
-	
-	Remove(final Component component)
+	/** The count */
+	private int count = 0;
+
+	/**
+	 * @return Returns the count.
+	 */
+	public int getCount()
 	{
-		this.component = component;
-		this.container = component.getParent();
+		return count;
 	}
-	
-	void undo()
+
+	/**
+	 * Increases the count
+	 */
+	public void increment()
 	{
-		container.add(component);
+		count++;
 	}
 }

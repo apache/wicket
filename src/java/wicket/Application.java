@@ -138,8 +138,7 @@ public abstract class Application
 		 */
 		public int hashCode()
 		{
-			// TODO a better hash code would be nice
-			return scope.hashCode() + name.hashCode();
+			return scope.hashCode() ^ name.hashCode();
 		}
 	}
 
