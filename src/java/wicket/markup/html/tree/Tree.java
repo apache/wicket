@@ -169,7 +169,8 @@ public class Tree extends Panel implements ILinkListener
     }
 
     /**
-     * Gets the panel which displays the tree rows.
+     * Gets the panel which displays the tree rows. Usually you'll want this panel
+     * to be attached to a UL (Unnumbered List) tag.
      * Override this if you want to provide your own panel.
      * @param nestedList the list that represents the currently visible tree paths.
      * @param componentName the name of the panel. Warning: this must be used to construct
@@ -182,7 +183,8 @@ public class Tree extends Panel implements ILinkListener
     }
 
     /**
-     * Gets the panel that displays one row.
+     * Gets the panel that displays one row. Usually you'll want this panel to
+     * be attached to a LI (List Item) tag.
      * Override this if you want to provide your own panel.
      * @param componentName the name of the panel.
      * Warning: if you did not override {@link TreeRows}, this must be
