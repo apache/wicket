@@ -31,13 +31,11 @@ import wicket.util.lang.EnumeratedType;
  * Produces a set of radio input options for a collection of values. When the form is
  * submitted, the RadioOptionSet object updates the parent RadioChoice component with the
  * selected value.
+ * 
  * @author Jonathan Locke
  */
 public final class RadioOptionSet extends FormComponent
-{ // TODO finalize javadoc
-    /** Serial Version ID */
-	private static final long serialVersionUID = 2552126944567296644L;
-
+{
 	/** Line break markup. */
 	public static final Style LINE_BREAK = new Style("<br>");
 
@@ -46,9 +44,27 @@ public final class RadioOptionSet extends FormComponent
 
     /** Space markup. */
     public static final Style SPACE = new Style(" ");
+ // TODO finalize javadoc
+    /** Serial Version ID */
+	private static final long serialVersionUID = 2552126944567296644L;
 
     /** The style to render in */
     private final Style style;
+
+    /**
+     * Typesafe enum for layout of radio options.
+     */
+    public static final class Style extends EnumeratedType
+    {
+        /**
+         * Construct.
+         * @param name style name
+         */
+        Style(final String name)
+        {
+            super(name);
+        }
+    }
 
     /**
      * Constructor.
@@ -70,6 +86,13 @@ public final class RadioOptionSet extends FormComponent
     {
         super(componentName, new ArrayList(values));
         this.style = style;
+    }
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#updateModel()
+     */
+    public void updateModel()
+    {
     }
 
     /**
@@ -120,28 +143,6 @@ public final class RadioOptionSet extends FormComponent
 
         // Replace body
         replaceBody(markupStream, openTag, options.toString());
-    }
-
-    /**
-     * @see wicket.markup.html.form.FormComponent#updateModel()
-     */
-    public void updateModel()
-    {
-    }
-
-    /**
-     * Typesafe enum for layout of radio options.
-     */
-    public static final class Style extends EnumeratedType
-    {
-        /**
-         * Construct.
-         * @param name style name
-         */
-        Style(final String name)
-        {
-            super(name);
-        }
     }
 }
 

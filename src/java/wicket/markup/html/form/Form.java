@@ -39,8 +39,9 @@ import wicket.model.PropertyModel;
 import wicket.protocol.http.HttpRequestCycle;
 
 /**
- * Base class for HTML forms. TODO elaborate documentation (validation, cookies,
- * etc...)
+ * Base class for HTML forms. 
+ * 
+ * TODO elaborate documentation (validation, cookies, etc...)
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag

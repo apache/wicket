@@ -205,33 +205,10 @@ public final class RadioOption extends FormComponent
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(ComponentTag)
+     * @see wicket.markup.html.form.FormComponent#updateModel()
      */
-    protected void handleComponentTag(final ComponentTag tag)
+    public void updateModel()
     {
-        // Check that this option is attached to a radio input
-        checkTag(tag, "input");
-        checkAttribute(tag, "type", "radio");
-
-        // Let superclass do whatever
-        super.handleComponentTag(tag);
-
-        // Find parent RadioChoice
-        final RadioChoice parent = (RadioChoice) findParent(RadioChoice.class);
-
-        // Name of this component is the name of the parent
-        tag.put("name", parent.getPath());
-
-        Object value = getModelObject();
-
-        // Value is the index of the option when added to the parent
-        tag.put("value", parent.addRadioOption(value));
-
-        // Add checked property if this is the selected component
-        if (parent.getModelObject() == value)
-        {
-            tag.put("checked", "true");
-        }
     }
 
     /**
@@ -260,10 +237,33 @@ public final class RadioOption extends FormComponent
     }
 
     /**
-     * @see wicket.markup.html.form.FormComponent#updateModel()
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    public void updateModel()
+    protected void handleComponentTag(final ComponentTag tag)
     {
+        // Check that this option is attached to a radio input
+        checkTag(tag, "input");
+        checkAttribute(tag, "type", "radio");
+
+        // Let superclass do whatever
+        super.handleComponentTag(tag);
+
+        // Find parent RadioChoice
+        final RadioChoice parent = (RadioChoice) findParent(RadioChoice.class);
+
+        // Name of this component is the name of the parent
+        tag.put("name", parent.getPath());
+
+        Object value = getModelObject();
+
+        // Value is the index of the option when added to the parent
+        tag.put("value", parent.addRadioOption(value));
+
+        // Add checked property if this is the selected component
+        if (parent.getModelObject() == value)
+        {
+            tag.put("checked", "true");
+        }
     }
 }
 
