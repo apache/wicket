@@ -14,7 +14,7 @@
 		<property name="connection.username">sa</property>
 		<property name="connection.password"></property>
 
-		<mapping resource="guestbook2/Comment.hbm.xml"/>
+		<mapping resource="wicket/examples/guestbook2/Comment.hbm.xml"/>
 
 	</session-factory>
 	

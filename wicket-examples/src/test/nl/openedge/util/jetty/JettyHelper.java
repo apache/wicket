@@ -411,7 +411,7 @@ public final class JettyHelper
 			}
 			else
 			{
-				throw new JettyMonitorException("unknown response from monitor: " + response);
+				throw new JettyMonitorException("unknown wicket.response from monitor: " + response);
 			}
 
 		}

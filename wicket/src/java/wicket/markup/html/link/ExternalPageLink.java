@@ -1,0 +1,130 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package wicket.markup.html.link;
+
+import wicket.Page;
+import wicket.PageParameters;
+import wicket.RequestCycle;
+
+/**
+ * Renders a stable link which can be cached in a web browser and used at a later time.
+ * @author Jonathan Locke
+ */
+public final class ExternalPageLink extends Link
+{
+    /** Serial Version ID */
+	private static final long serialVersionUID = 2396751463296314926L;
+
+	// The page class that this link links to
+    private final Class pageClass;
+
+    // The parameters to pass to the class constructor when instantiated
+    private final PageParameters parameters;
+
+    /**
+     * Constructor.
+     * @param componentName The name of this component
+     * @param pageClass The class of page to link to
+     */
+    public ExternalPageLink(final String componentName, final Class pageClass)
+    {
+        this(componentName, pageClass, new PageParameters());
+    }
+
+    /**
+     * Constructor.
+     * @param componentName The name of this component
+     * @param pageClass The class of page to link to
+     * @param parameters The parameters to pass to the new page when the link is clicked
+     */
+    public ExternalPageLink(final String componentName, final Class pageClass,
+            final PageParameters parameters)
+    {
+        super(componentName);
+        this.pageClass = pageClass;
+        this.parameters = parameters;
+    }
+
+    /**
+     * @see wicket.markup.html.link.Link#linksTo(wicket.Page)
+     */
+    public boolean linksTo(final Page page)
+    {
+        return page.getClass() == pageClass;
+    }
+
+    /**
+     * @see wicket.markup.html.link.Link#linkClicked(wicket.RequestCycle)
+     */
+    public void linkClicked(final RequestCycle cycle)
+    {
+        // Bookmarkable links do not have a click handler.
+        // Instead they are dispatched by the request handling servlet.
+    }
+
+    /**
+     * @see wicket.markup.html.link.Link#getURL(wicket.RequestCycle)
+     */
+    protected String getURL(final RequestCycle cycle)
+    {
+        // add href using url to the dispatcher
+        return cycle.urlFor(pageClass, parameters);
+    }
+
+    /**
+     * Adds a given page property value to this link
+     * @param property The property
+     * @param value The value
+     * @return This
+     */
+    public ExternalPageLink setParameter(final String property, final String value)
+    {
+        parameters.put(property, value);
+
+        return this;
+    }
+
+    /**
+     * Adds a given page property value to this link
+     * @param property The property
+     * @param value The value
+     * @return This
+     */
+    public ExternalPageLink setParameter(final String property, final long value)
+    {
+        parameters.put(property, Long.toString(value));
+
+        return this;
+    }
+
+    /**
+     * Adds a given page property value to this link
+     * @param property The property
+     * @param value The value
+     * @return This
+     */
+    public ExternalPageLink setParameter(final String property, final int value)
+    {
+        parameters.put(property, Integer.toString(value));
+
+        return this;
+    }
+}
+
+///////////////////////////////// End of File /////////////////////////////////
