@@ -41,15 +41,6 @@ import wicket.util.lang.Classes;
 public abstract class AbstractValidator implements IValidator
 {
     /**
-     * Implemented by subclass to validate an html form component.
-     * @param input the input to validate
-     * @param component The component to validate
-     * @return Validation message or null if okay
-     */
-    public abstract ValidationErrorMessage validate(
-            final Serializable input, FormComponent component);
-
-    /**
      * Gets the input for the given current component.
      * @param component the component to get the input for
      * @return the input for the given current component
@@ -214,5 +205,3 @@ public abstract class AbstractValidator implements IValidator
         return new ValidationErrorMessage(input, component, message);
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

@@ -18,18 +18,17 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
-
 import wicket.markup.html.form.FormComponent;
 import wicket.util.string.StringList;
 
 
 /**
  * Validates that a form component's value is of a certain min/max length.
+ *
  * @author Jonathan Locke
  */
 public final class LengthValidator extends AbstractValidator
-{ // TODO finalize javadoc
+{
     /** True if minimum bound should be checked. */
     private final boolean checkMin;
 
@@ -49,8 +48,8 @@ public final class LengthValidator extends AbstractValidator
      * @param checkMax True if maximum bound should be checked
      * @param max Upper bound on valid decimal number
      */
-    private LengthValidator(final boolean checkMin, final int min, final boolean checkMax,
-            final int max)
+    private LengthValidator(final boolean checkMin, final int min,
+    		final boolean checkMax, final int max)
     {
         this.min = min;
         this.max = max;
@@ -92,12 +91,13 @@ public final class LengthValidator extends AbstractValidator
 
     /**
      * Validates the given form component.
+     * Validates that a form component's value is of a certain min/max length.
      * @param input the input to validate
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
     public ValidationErrorMessage validate(
-            final Serializable input, final FormComponent component)
+            final String input, final FormComponent component)
     {
         // Get value
         final String value = (String)input;
@@ -131,5 +131,3 @@ public final class LengthValidator extends AbstractValidator
         return list.toString();
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

@@ -92,9 +92,15 @@ public class TypeValidator extends AbstractValidator
 	}
 
 	/**
-	 * @see wicket.markup.html.form.validation.IValidator#validate(java.io.Serializable, wicket.markup.html.form.FormComponent)
+	 * Validates input by trying it to convert to the given type using the
+	 * {@link wicket.util.convert.ConverterRegistry} instance of that can be
+	 * found in the application settings.
+	 * @param input the input to validate
+	 * @param component the component that wants to validate its input
+	 * @return validation error message
+	 * @see wicket.markup.html.form.validation.IValidator#validate(java.lang.String, wicket.markup.html.form.FormComponent)
 	 */
-	public ValidationErrorMessage validate(Serializable input, FormComponent component)
+	public ValidationErrorMessage validate(String input, FormComponent component)
 	{
 		ConversionUtils conversionUtils = getConversionUtils();
 		Locale localeForValidation = getLocaleForValidation();

@@ -18,18 +18,16 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
-
 import wicket.markup.html.form.FormComponent;
 
-
 /**
- * Ensures form component has numeric value.
+ * Ensures that the form component has a numeric value. If min and max arguments are
+ * given, this validator also ensures the value is in bounds.
  *
  * @author Jonathan Locke
  */
 public final class DecimalValidator extends AbstractValidator
-{ // TODO finalize javadoc
+{
     /**
      * Validator that ensures int value.
      */
@@ -72,7 +70,7 @@ public final class DecimalValidator extends AbstractValidator
     }
 
     /**
-     * Gets a ecimal validator with a given range.
+     * Gets a decimal validator with a given range.
      * @param min Lower bound on valid decimal number
      * @param max Upper bound on valid decimal number
      * @return Validator object
@@ -84,12 +82,14 @@ public final class DecimalValidator extends AbstractValidator
 
     /**
      * Validates the given form component.
+     * Ensures that the form component has a numeric value. If min and max arguments are
+     * given, this validator also ensures the value is in bounds.
      * @param input the input
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
     public ValidationErrorMessage validate(
-            final Serializable input, final FormComponent component)
+            final String input, final FormComponent component)
     {
         try
         {
@@ -109,5 +109,3 @@ public final class DecimalValidator extends AbstractValidator
         return NO_ERROR;
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////
