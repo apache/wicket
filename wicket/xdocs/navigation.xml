@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="Wicket">
+	<title>Wicket</title>
+	<body>
+		<links>
+		    <item name="News" href="/News.html"/>
+		    <item name="Quickstart" href="/QuickStart.html"/>
+		    <item name="SF.net page" href="http://sourceforge.net/projects/wicket"/>
+		</links>				    
+	    <menu name="Wicket">
+	        <item name="Home" href="/index.html"/>
+	        <item name="News" href="/News.html"/>
+	        <item name="Introduction" href="/Introduction.html" collapse="true">
+	        	<item name="Why Wicket" href="#Why_Wicket"/>
+	        	<item name='Why "Reinvent the Wheel"?' href='#Why_&quot;Reinvent_the_Wheel&quot;_'/>
+	        	<item name="Motivations" href="#Motivations"/>
+	        	<item name="Goals" href="#Goals"/>
+	        </item>
+	        <item name="Quick start" href="/QuickStart.html" collapse="true">
+	        	<item name="Using Jetty" href="#How_to_build_and_run_the_examples_under_Jetty"/>
+	        	<item name="Using Tomcat" href="#How_to_build_and_run_the_examples_under_Tomcat"/>
+	        </item>
+	        <item name="Examples" href="/Examples.html" collapse="true">
+	        </item>
+	    </menu>
+	    <menu name="Quick links">
+	        <item name="Javadoc" href="/apidocs/index.html" />
+	        <item name="Dependencies" href="/dependencies.html"/>
+	        <item name="Changes" href="/changes-report.html"/>
+	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
+<!--
+	        <item name="FAQ" href="/faq.html"/>
+-->
+	        <item name="CVS access" href="/cvs-usage.html"/>
+        </menu>
+	    <menu name="Sourceforge">
+	        <item name="Project page" href="http://sourceforge.net/projects/wicket"/>
+	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
+	        <item name="Lists" href="http://sourceforge.net/projects/wicket/lists" />
+	        <item name="Issue tracking" href="http://sourceforge.net/tracker/?group_id=119783"/>
+	    </menu>
+<!--	    <search /> -->
+	</body>
+</project>

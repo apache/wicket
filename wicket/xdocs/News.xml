@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Home</title>
+  </properties>
+
+  <meta name="keyword" content="wicket, web, j2ee, java"/>
+
+<body>
+
+<section name="News">
+	<subsection name="September 22, 2004">
+		<p>Wicket is moving from <a href="http://wicket.codehaus.org">codehaus</a>
+		    to <a href="http://www.sourceforge.net">SourceForge</a>. The project
+		    should be up and running shortly.</p>
+	</subsection>
+	<subsection name="September 1, 2004">
+		<p><em>Wicket is currently looking for a new development lead. Please 
+			send suggestions to 
+			<a href="mailto:jonl@muppetlabs.com">jonl@muppetlabs.com</a></em></p>
+	</subsection>
+</section>
+</body>
+</document>
