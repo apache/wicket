@@ -25,10 +25,12 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
 import wicket.examples.util.NavigationPanel;
+import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.tree.Tree;
 import wicket.markup.html.tree.TreeNodeModel;
+import wicket.markup.html.tree.TreeRowReplacementModel;
 
 /**
  * Tree example that uses the user-home dirs to populate the tree.
@@ -57,7 +59,12 @@ public class FileBrowser extends HtmlPage
              */
             protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
             {
-                return new FileTreeRow(componentName, this, nodeModel);
+                TreeRowReplacementModel replacementModel =
+                    new TreeRowReplacementModel(nodeModel);
+                Panel rowPanel = new FileTreeRow(componentName, this, nodeModel);
+                rowPanel.add(new ComponentTagAttributeModifier(
+                        "class", true, replacementModel));
+                return rowPanel;
             }   
         };
         add(fileTree);

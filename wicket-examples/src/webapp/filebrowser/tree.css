@@ -1,0 +1,52 @@
+#tree ul {
+	margin: 0;
+	padding: 0;
+	background-image: url('vert.gif');
+	background-repeat: repeat-y;
+}
+
+#tree li {
+	list-style-type: none;
+	list-style-position: outside;
+	background-image: none;
+	background-repeat: no-repeat;
+	background-position: 0 0.2em;
+	padding-left: 24px;
+	line-height: 18px;
+}
+
+#tree ul ul {
+	margin-left: 24px;
+}
+
+#tree ul ul li {
+	padding-left: 24px;
+}
+
+#tree #link {
+	background-color: white;
+}
+
+#tree #label {
+	background-color: white;
+}
+
+#tree .tree-leaf-end {
+	background-image: url('end.gif');
+}
+
+#tree .tree-junction-expanded-siblings {
+	background-image: url('mcross.gif');
+}
+
+#tree .tree-junction-closed-siblings {
+	background-image: url('pcross.gif');
+}
+
+#tree .tree-junction-expanded-end {
+	background-image: url('mend.gif');
+}
+
+#tree .tree-junction-closed-end {
+	background-image: url('pend.gif');
+}
