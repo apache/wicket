@@ -18,7 +18,6 @@
  */
 package wicket.util.parse.metapattern.parsers;
 
-
 import java.util.regex.Matcher;
 
 import wicket.util.parse.metapattern.MetaPattern;
@@ -30,24 +29,24 @@ import wicket.util.parse.metapattern.MetaPattern;
  */
 public abstract class MetaPatternParser
 { 
-    /** the input to parse */
+    /** The input to parse */
     private final CharSequence input;
 
     /** The length of the input; no. of characters */
     private final int length;
 
-    /** The position (index) behind the last pattern group matched while 
+    /** 
+     * The position (index) behind the last pattern group matched while 
      * advancing from one pattern group to the next one.
      */
     private int pos;
 
-    /** The object maintaing all the regex details */
+    /** The object maintaining all the regex match details */
     private Matcher matcher;
 
     /**
      * Construct the parser. You must call @see #advance(MetaPattern) to 
-     * intialize the matcher with the pattern.
-     * 
+     * initialize the matcher with the pattern.
      * @param input to parse
      */
     public MetaPatternParser(final CharSequence input)
@@ -58,9 +57,8 @@ public abstract class MetaPatternParser
 
     /**
      * Construct the parser and initialize the matcher with the pattern given.
-     * 
-     * @param pattern meta pattern
-     * @param input to parse
+     * @param pattern Meta pattern
+     * @param input Input to parse
      */
     public MetaPatternParser(final MetaPattern pattern, final CharSequence input)
     {
@@ -72,9 +70,8 @@ public abstract class MetaPatternParser
     /**
      * Advance parsing to the next element. The internal cursor will be moved
      * to end of the string matched. 
-     * 
-     * @param pattern pattern
-     * @return true if found, false otherwise
+     * @param pattern Meta pattern
+     * @return True if found, false otherwise
      */
     protected final boolean advance(final MetaPattern pattern)
     {
@@ -99,7 +96,6 @@ public abstract class MetaPatternParser
 
     /**
      * Whether the matcher matches the pattern.
-     * 
      * @return whether the matcher matches
      */
     public boolean matches()
@@ -109,7 +105,6 @@ public abstract class MetaPatternParser
 
     /**
      * Gets the matcher.
-     * 
      * @return the matcher
      */
     public final Matcher matcher()
@@ -119,7 +114,6 @@ public abstract class MetaPatternParser
 
     /**
      * Whether the internal cursor has advanced to the end of the input.
-     * 
      * @return whether the input is parsed
      */
     public final boolean atEnd()

@@ -32,13 +32,21 @@ public final class IntegerVariableAssignmentParser extends MetaPatternParser
     /** Parse "variable = &lt;number&gt;". */
     private static final Group variable = new Group(MetaPattern.VARIABLE_NAME);
 
-    /** group value. */
+    /** Group value. */
     private static final IntegerGroup value = new IntegerGroup();
 
-    /** meta pattern. */
-    private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {variable,
-            MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE,
-            value});
+    /** Meta pattern. */
+    private static final MetaPattern pattern = new MetaPattern
+    (
+        new MetaPattern[] 
+        {
+            variable,
+            MetaPattern.OPTIONAL_WHITESPACE, 
+            MetaPattern.EQUALS, 
+            MetaPattern.OPTIONAL_WHITESPACE,
+            value
+        }
+    );
 
     /**
      * Construct.
