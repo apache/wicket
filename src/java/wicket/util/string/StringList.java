@@ -26,12 +26,38 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * A typesafe, mutable list of strings supporting a variety of convenient operations. The
- * class is not multithread safe.
+ * A typesafe, mutable list of strings supporting a variety of convenient 
+ * operations as well as expected operations from List such as add(), size(),
+ * remove(), iterator(), get(int index) and toArray(). 
+ * <p>
+ * StringList objects can be constructed empty or they can be created using 
+ * any of several static factory methods:
+ * <ul>
+ * <li>valueOf(String[])
+ * <li>valueOf(String)
+ * <li>valueOf(Collection)
+ * <li>valueOf(Object[])
+ * </ul>
+ * In the case of the Collection and Object[] factory methods, each Object
+ * in the collection or array is converted to a String via toString() before
+ * being added to the StringList.
+ * <p>
+ * The tokenize() factory methods allow easy creation of StringLists via 
+ * StringTokenizer.  The repeat() static factory method creates a StringList 
+ * that repeats a given String a given number of times.  
+ * <p>
+ * The prepend() method adds a String to the beginning of the StringList.  
+ * The removeLast() method pops a String off the end of the list.  The sort() 
+ * method sorts strings in the List using Collections.sort().  The class 
+ * also inherits useful methods from AbstractStringList that include join()
+ * methods ala Perl and a toString() method which joins the list of strings
+ * with comma separators for easy viewing.
+ * 
+ * @note This class is not thread safe.
  * @author Jonathan Locke
  */
 public final class StringList extends AbstractStringList
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = 3913242296604884174L;
 
