@@ -30,6 +30,9 @@
             	Added reset password flag for PasswordTextField in order to support input
             	forms without emptying the contents.
             </action>
+            <action type="add" dev="Eelco Hillenius" issue="1072080">
+                Implemented multi field validation.
+            </action>
 		</release>
 	</body>
 </document>
