@@ -27,6 +27,7 @@ import wicket.model.Model;
 
 /**
  * Test case for the component tag attribute modifer test.
+ * 
  * @author Chris Turner
  */
 public class ComponentTagAttributeModifierTest extends TestCase
@@ -34,7 +35,9 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 * Create a test case instance.
-	 * @param name The test name
+	 * 
+	 * @param name
+	 *            The test name
 	 */
 	public ComponentTagAttributeModifierTest(final String name)
 	{
@@ -42,17 +45,16 @@ public class ComponentTagAttributeModifierTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void testSerializable()
 	{
-		AttributeModifier modifier = new AttributeModifier("test",
-				new Model("model"));
+		AttributeModifier modifier = new AttributeModifier("test", new Model("model"));
 		Assert.assertTrue(modifier instanceof Serializable);
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void testBadConstructor()
 	{
@@ -77,105 +79,77 @@ public class ComponentTagAttributeModifierTest extends TestCase
 		}
 	}
 
-	// TODO Need attribute modifier tests that use the public API.  These old tests use replaceAttributeValue, which is package private and should remain so.
-	
+	// TODO Need attribute modifier tests that use the public API. These old
+	// tests use replaceAttributeValue, which is package private and should
+	// remain so.
+
 	/**
 	 * Tests attribute modifier
-	 *
-	public void testModifyAttributeSuccessfully()
-	{
-		AttributeModifier modifier = new AttributeModifier("test",
-				new Model("model"));
-		ComponentTag tag = new ComponentTag(new XmlTag());
-		ValueMap attributes = tag.getAttributes();
-		attributes.put("test", "oldValue");
-		modifier.replaceAttibuteValue(tag);
-		attributes = tag.getAttributes();
-		Assert.assertEquals("Tag attribute should have been modified", "model", attributes
-				.getString("test"));
-	}
-
-	/**
-	 *
-	 *
-	public void testModifyAttributeSuccessfullyMatchingPattern()
-	{
-		AttributeModifier modifier = new AttributeModifier("test",
-				"old[A-Z].*", new Model("model"));
-		ComponentTag tag = new ComponentTag(new XmlTag());
-		ValueMap attributes = tag.getAttributes();
-		attributes.put("test", "oldValue");
-		modifier.replaceAttibuteValue(tag);
-		attributes = tag.getAttributes();
-		Assert.assertEquals("Tag attribute should have been modified", "model", attributes
-				.getString("test"));
-	}
-
-	/**
-	 *
-	 *
-	public void testModifyAttributeUnsuccessfullyMatchingPattern()
-	{
-		AttributeModifier modifier = new AttributeModifier("test",
-				"old[0-9].*", new Model("model"));
-		ComponentTag tag = new ComponentTag(new XmlTag());
-		ValueMap attributes = tag.getAttributes();
-		attributes.put("test", "oldValue");
-		modifier.replaceAttibuteValue(tag);
-		attributes = tag.getAttributes();
-		Assert.assertEquals("Tag attribute should not have been modified", "oldValue", attributes
-				.getString("test"));
-	}
-
-	/**
-	 *
-	 *
-	public void testModifyAttributeUnknownAttribute()
-	{
-		AttributeModifier modifier = new AttributeModifier("test",
-				new Model("model"));
-		ComponentTag tag = new ComponentTag(new XmlTag());
-		ValueMap attributes = tag.getAttributes();
-		attributes.put("other", "value");
-		modifier.replaceAttibuteValue(tag);
-		attributes = tag.getAttributes();
-		Assert.assertEquals("Tag attributes should not have been modified", "value", attributes
-				.getString("other"));
-		Assert.assertNull("Attribute should not have been added", attributes.get("test"));
-	}
-
-	/**
-	 *
-	 *
-	public void testModifyAttributeAddMissingAttribute()
-	{
-		AttributeModifier modifier = new AttributeModifier("test", true,
-				new Model("model"));
-		ComponentTag tag = new ComponentTag(new XmlTag());
-		ValueMap attributes = tag.getAttributes();
-		attributes.put("other", "value");
-		modifier.replaceAttibuteValue(tag);
-		attributes = tag.getAttributes();
-		Assert.assertEquals("Tag attributes should not have been modified", "value", attributes
-				.getString("other"));
-		Assert.assertEquals("Attribute should have been added", "model", attributes.get("test"));
-	}
-
-	/**
-	 *
-	 *
-	public void testDisabledModification()
-	{
-		AttributeModifier modifier = new AttributeModifier("test",
-				new Model("model"));
-		modifier.setEnabled(false);
-		ComponentTag tag = new ComponentTag(new XmlTag());
-		ValueMap attributes = tag.getAttributes();
-		attributes.put("test", "oldValue");
-		modifier.replaceAttibuteValue(tag);
-		attributes = tag.getAttributes();
-		Assert.assertEquals("Tag attribute should not have been modified", "oldValue", attributes
-				.getString("test"));
-	}
-    */
+	 * 
+	 * public void testModifyAttributeSuccessfully() { AttributeModifier
+	 * modifier = new AttributeModifier("test", new Model("model"));
+	 * ComponentTag tag = new ComponentTag(new XmlTag()); ValueMap attributes =
+	 * tag.getAttributes(); attributes.put("test", "oldValue");
+	 * modifier.replaceAttibuteValue(tag); attributes = tag.getAttributes();
+	 * Assert.assertEquals("Tag attribute should have been modified", "model",
+	 * attributes .getString("test")); }
+	 * 
+	 * /**
+	 * 
+	 * 
+	 * public void testModifyAttributeSuccessfullyMatchingPattern() {
+	 * AttributeModifier modifier = new AttributeModifier("test", "old[A-Z].*",
+	 * new Model("model")); ComponentTag tag = new ComponentTag(new XmlTag());
+	 * ValueMap attributes = tag.getAttributes(); attributes.put("test",
+	 * "oldValue"); modifier.replaceAttibuteValue(tag); attributes =
+	 * tag.getAttributes(); Assert.assertEquals("Tag attribute should have been
+	 * modified", "model", attributes .getString("test")); }
+	 * 
+	 * /**
+	 * 
+	 * 
+	 * public void testModifyAttributeUnsuccessfullyMatchingPattern() {
+	 * AttributeModifier modifier = new AttributeModifier("test", "old[0-9].*",
+	 * new Model("model")); ComponentTag tag = new ComponentTag(new XmlTag());
+	 * ValueMap attributes = tag.getAttributes(); attributes.put("test",
+	 * "oldValue"); modifier.replaceAttibuteValue(tag); attributes =
+	 * tag.getAttributes(); Assert.assertEquals("Tag attribute should not have
+	 * been modified", "oldValue", attributes .getString("test")); }
+	 * 
+	 * /**
+	 * 
+	 * 
+	 * public void testModifyAttributeUnknownAttribute() { AttributeModifier
+	 * modifier = new AttributeModifier("test", new Model("model"));
+	 * ComponentTag tag = new ComponentTag(new XmlTag()); ValueMap attributes =
+	 * tag.getAttributes(); attributes.put("other", "value");
+	 * modifier.replaceAttibuteValue(tag); attributes = tag.getAttributes();
+	 * Assert.assertEquals("Tag attributes should not have been modified",
+	 * "value", attributes .getString("other")); Assert.assertNull("Attribute
+	 * should not have been added", attributes.get("test")); }
+	 * 
+	 * /**
+	 * 
+	 * 
+	 * public void testModifyAttributeAddMissingAttribute() { AttributeModifier
+	 * modifier = new AttributeModifier("test", true, new Model("model"));
+	 * ComponentTag tag = new ComponentTag(new XmlTag()); ValueMap attributes =
+	 * tag.getAttributes(); attributes.put("other", "value");
+	 * modifier.replaceAttibuteValue(tag); attributes = tag.getAttributes();
+	 * Assert.assertEquals("Tag attributes should not have been modified",
+	 * "value", attributes .getString("other")); Assert.assertEquals("Attribute
+	 * should have been added", "model", attributes.get("test")); }
+	 * 
+	 * /**
+	 * 
+	 * 
+	 * public void testDisabledModification() { AttributeModifier modifier = new
+	 * AttributeModifier("test", new Model("model"));
+	 * modifier.setEnabled(false); ComponentTag tag = new ComponentTag(new
+	 * XmlTag()); ValueMap attributes = tag.getAttributes();
+	 * attributes.put("test", "oldValue"); modifier.replaceAttibuteValue(tag);
+	 * attributes = tag.getAttributes(); Assert.assertEquals("Tag attribute
+	 * should not have been modified", "oldValue", attributes
+	 * .getString("test")); }
+	 */
 }

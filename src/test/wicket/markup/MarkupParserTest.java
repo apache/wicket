@@ -46,9 +46,9 @@ public final class MarkupParserTest extends TestCase
     public final void testTagParsing() throws StringValueConversionException, ParseException
     {
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
-        final Markup markup = parser
-                .parse("This is a test <a componentName=\"a\" href=\"foo.html\"> <b componentName=\"b\">Bold!</b> "
-                        + "<img componentName=\"img\" width=9 height=10 src=\"foo\"> <marker componentName=\"marker\"/> </a>");
+        final Markup markup = parser.parse(
+                "This is a test <a componentName=\"a\" href=\"foo.html\"> <b componentName=\"b\">Bold!</b> "
+                + "<img componentName=\"img\" width=9 height=10 src=\"foo\"> <marker componentName=\"marker\"/> </a>");
 
         final MarkupStream markupStream = new MarkupStream(markup);
 
