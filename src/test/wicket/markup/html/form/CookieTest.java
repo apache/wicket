@@ -101,6 +101,14 @@ public class CookieTest extends TestCase
         
         this.page = new MockPage(null);
 		page.add(this.panel);
+		
+		HttpRequestCycle cycle = new HttpRequestCycle(
+		        application, 
+		        application.getWicketSession(), 
+		        application.getWicketRequest(),
+		        application.getWicketResponse());
+
+        application.getWicketSession().setRequestCycle(cycle);
     }
 
     /**
