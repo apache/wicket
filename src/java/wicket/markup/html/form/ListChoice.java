@@ -23,49 +23,181 @@ import java.io.Serializable;
 
 import java.util.Collection;
 
+import wicket.IModel;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 
 /**
  * Essentially a drop down choice that doesn't drop down. Instead, it scrolls and displays
  * a given number of rows.
+ *
  * @author Jonathan Locke
+ * @author Johan Compagner
+ * @author Eelco Hillenius
  */
 public final class ListChoice extends DropDownChoice implements FormComponent.ICookieValue
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 1227773600645861006L;
 
-	// The default maximum row value
+	/** The default maximum number of rows to display. */
     private static int defaultMaxRows = 8;
 
-    // The maximum number of rows to show
+    /** The maximum number of rows to display. */
     private int maxRows;
 
     /**
-     * Constructor
-     * @param componentName The component name
-     * @param model The model
-     * @param values The values to select from
+     * Constructor that uses the provided {@link IModel}as its model. All components have
+     * names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param model the model
+     * @param values the list values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
      */
-    public ListChoice(final String componentName, final Serializable model, final Collection values)
+    public ListChoice(String name, IModel model, final Collection values)
     {
-        this(componentName, model, values, defaultMaxRows);
+        this(name, model, values, defaultMaxRows);
     }
 
     /**
-     * Constructor
-     * @param componentName The component name
-     * @param model The model
-     * @param values The values to select from
-     * @param maxRows The maximum number of rows to display
+     * Constructor that uses the provided instance of {@link IModel}as a dynamic model.
+     * This model will be wrapped in an instance of {@link wicket.PropertyModel}using the
+     * provided expression. Thus, using this constructor is a short-hand for:
+     * 
+     * <pre>
+     * new MyComponent(name, new PropertyModel(myIModel, expression));
+     * </pre>
+     * 
+     * All components have names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param model the instance of {@link IModel}from which the model object will be
+     *            used as the subject for the given expression
+     * @param values the list values
+     * @param expression the OGNL expression that works on the given object
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
      */
-    public ListChoice(final String componentName, final Serializable model,
+    public ListChoice(String name, IModel model, String expression,
+            final Collection values)
+    {
+        this(name, model, values, defaultMaxRows);
+    }
+
+    /**
+     * Constructor that uses the provided object as a simple model. This object will be
+     * wrapped in an instance of {@link wicket.Model}. All components have names. A
+     * component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as a simple model
+     * @param values the list values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public ListChoice(String name, Serializable object, final Collection values)
+    {
+        this(name, object, values, defaultMaxRows);
+    }
+
+    /**
+     * Constructor that uses the provided object as a dynamic model. This object will be
+     * wrapped in an instance of {@link wicket.Model}that will be wrapped in an instance
+     * of {@link wicket.PropertyModel}using the provided expression. Thus, using this
+     * constructor is a short-hand for:
+     * 
+     * <pre>
+     * new MyComponent(name, new PropertyModel(new Model(object), expression));
+     * </pre>
+     * 
+     * All components have names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as the subject for the given expression
+     * @param expression the OGNL expression that works on the given object
+     * @param values the list values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public ListChoice(String name, Serializable object, String expression,
+            final Collection values)
+    {
+        this(name, object, expression, values, defaultMaxRows);
+    }
+
+    /**
+     * Constructor that uses the provided {@link IModel}as its model. All components have
+     * names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param model the model
+     * @param values the list values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public ListChoice(String name, IModel model, final Collection values, final int maxRows)
+    {
+        super(name, model, values);
+        setRenderNullOption(false);
+        this.maxRows = maxRows;
+    }
+
+    /**
+     * Constructor that uses the provided instance of {@link IModel}as a dynamic model.
+     * This model will be wrapped in an instance of {@link wicket.PropertyModel}using the
+     * provided expression. Thus, using this constructor is a short-hand for:
+     * 
+     * <pre>
+     * new MyComponent(name, new PropertyModel(myIModel, expression));
+     * </pre>
+     * 
+     * All components have names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param model the instance of {@link IModel}from which the model object will be
+     *            used as the subject for the given expression
+     * @param values the list values
+     * @param expression the OGNL expression that works on the given object
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public ListChoice(String name, IModel model, String expression,
             final Collection values, final int maxRows)
     {
-        super(componentName, model, values);
-        this.maxRows = maxRows;
+        super(name, model, expression, values);
         setRenderNullOption(false);
+        this.maxRows = maxRows;
+    }
+
+    /**
+     * Constructor that uses the provided object as a simple model. This object will be
+     * wrapped in an instance of {@link wicket.Model}. All components have names. A
+     * component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as a simple model
+     * @param values the list values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public ListChoice(String name, Serializable object, final Collection values, final int maxRows)
+    {
+        super(name, object, values);
+        setRenderNullOption(false);
+        this.maxRows = maxRows;
+    }
+
+    /**
+     * Constructor that uses the provided object as a dynamic model. This object will be
+     * wrapped in an instance of {@link wicket.Model}that will be wrapped in an instance
+     * of {@link wicket.PropertyModel}using the provided expression. Thus, using this
+     * constructor is a short-hand for:
+     * 
+     * <pre>
+     * new MyComponent(name, new PropertyModel(new Model(object), expression));
+     * </pre>
+     * 
+     * All components have names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as the subject for the given expression
+     * @param expression the OGNL expression that works on the given object
+     * @param values the list values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public ListChoice(String name, Serializable object, String expression,
+            final Collection values, final int maxRows)
+    {
+        super(name, object, expression, values);
+        setRenderNullOption(false);
+        this.maxRows = maxRows;
     }
 
     /**
@@ -78,20 +210,40 @@ public final class ListChoice extends DropDownChoice implements FormComponent.IC
     }
     
     /**
+     * Gets the default maximum number of rows to display.
      * @return Returns the defaultMaxRows.
      */
-    public static int getDefaultMaxRows()
+    protected static int getDefaultMaxRows()
     {
         return defaultMaxRows;
     }
 
     /**
+     * Sets the default maximum number of rows to display.
      * @param defaultMaxRows The defaultMaxRows to set.
      */
-    public static void setDefaultMaxRows(final int defaultMaxRows)
+    protected static void setDefaultMaxRows(final int defaultMaxRows)
     {
         ListChoice.defaultMaxRows = defaultMaxRows;
     }
-}
 
-///////////////////////////////// End of File /////////////////////////////////
+    /**
+     * Gets the maximum number of rows to display.
+     * @return the maximum number of rows to display
+     */
+    public int getMaxRows()
+    {
+        return maxRows;
+    }
+
+    /**
+     * Sets the maximum number of rows to display.
+     * @param maxRows the maximum number of rows to display
+     * @return This
+     */
+    public ListChoice setMaxRows(int maxRows)
+    {
+        this.maxRows = maxRows;
+        return this;
+    }
+}
