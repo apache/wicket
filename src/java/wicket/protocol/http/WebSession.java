@@ -18,6 +18,7 @@
 package wicket.protocol.http;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import wicket.Application;
 import wicket.Session;
@@ -38,6 +39,9 @@ public class WebSession extends Session
 	/** The underlying WebSession object */
 	private transient javax.servlet.http.HttpSession httpSession;
 
+	/** The attribute in the HttpSession where this WebSession object is stored */
+	private transient String sessionAttributeName;
+
 	/**
 	 * Gets session from request, creating a new one if it doesn't already exist
 	 * 
@@ -50,16 +54,16 @@ public class WebSession extends Session
 	static WebSession getSession(final Application application, final HttpServletRequest request)
 	{
 		// Get session, creating if it doesn't exist
-		final javax.servlet.http.HttpSession httpServletSession = request.getSession(true);
+		final HttpSession httpSession = request.getSession(true);
 
 		// The request session object is unique per web application, but wicket
-		// requires it to be unique per servlet. That is, there must be a 1..n 
-		// relationship between HTTP sessions (JSESSIONID) and Wicket applications.
+		// requires it to be unique per servlet. That is, there must be a 1..n
+		// relationship between HTTP sessions (JSESSIONID) and Wicket
+		// applications.
 		final String sessionAttributeName = "session" + request.getServletPath();
 
 		// Get Session abstraction from httpSession attribute
-		WebSession webSession = (WebSession)httpServletSession.getAttribute(sessionAttributeName);
-
+		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttributeName);
 		if (webSession == null)
 		{
 			// Create session using session factory
@@ -67,6 +71,7 @@ public class WebSession extends Session
 			if (session instanceof WebSession)
 			{
 				webSession = (WebSession)session;
+				webSession.sessionAttributeName = sessionAttributeName;
 			}
 			else
 			{
@@ -76,18 +81,13 @@ public class WebSession extends Session
 
 			// Set the client Locale for this session
 			webSession.setLocale(request.getLocale());
-		}
-		
-		// Attach / reattach http servlet session
-		webSession.httpSession = httpServletSession;
 
-		// In a clustered environment the session is not replicated
-		// if it is not dirty. If we just read the http session object
-		// and manipulate that then the http servlet session never gets
-		// flagged as being dirty. We therefore need to force a
-		// change on the http servlet session to ensure clustering
-		// replication occurs.
-		httpServletSession.setAttribute(sessionAttributeName, webSession);
+			// Save this session in the HttpSession using the attribute name
+			httpSession.setAttribute(sessionAttributeName, webSession);
+		}
+
+		// Attach / reattach http servlet session
+		webSession.httpSession = httpSession;
 
 		// Set the current session to the session we just retrieved
 		Session.set(webSession);
@@ -109,7 +109,7 @@ public class WebSession extends Session
 	/**
 	 * @return The underlying WebSession object
 	 */
-	public javax.servlet.http.HttpSession getHttpSession()
+	public HttpSession getHttpSession()
 	{
 		return httpSession;
 	}
@@ -125,7 +125,23 @@ public class WebSession extends Session
 		}
 		catch (IllegalStateException e)
 		{
-			; // ignore
+			// Ignore
 		}
+	}
+
+	/**
+	 * @see Session#getAttribute(String)
+	 */
+	protected Object getAttribute(final String name)
+	{
+		return httpSession.getAttribute(sessionAttributeName + "-" + name);
+	}
+
+	/**
+	 * @see Session#setAttribute(String, Object)
+	 */
+	protected void setAttribute(final String name, final Object object)
+	{
+		httpSession.setAttribute(sessionAttributeName + "-" + name, object);
 	}
 }

@@ -37,15 +37,19 @@ import wicket.WicketRuntimeException;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *        &lt;servlet&gt;
- *            &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *            &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *            &lt;init-param&gt;
- *                &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *            &lt;/init-param&gt;
- *            &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *         &lt;/servlet&gt;
+ * 
+ *  
+ *           &lt;servlet&gt;
+ *               &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *               &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *               &lt;init-param&gt;
+ *                   &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                   &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *               &lt;/init-param&gt;
+ *               &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *            &lt;/servlet&gt;
+ *   
+ *  
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -63,125 +67,132 @@ import wicket.WicketRuntimeException;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *           public void init() throws ServletException
- *           {
- *               ServletConfig config = getServletConfig();
- *               String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *               ...
+ * 
+ *  
+ *              public void init() throws ServletException
+ *              {
+ *                  ServletConfig config = getServletConfig();
+ *                  String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                  ...
+ *   
+ *  
  * </pre>
  * 
  * </p>
- * In order to support frameworks like Spring, the class is none-final and the variable
- * webApplication is protected instead of private. Thus subclasses may provide there
- * own means of providing the application object.
+ * In order to support frameworks like Spring, the class is non-final and the
+ * variable webApplication is protected instead of private. Thus subclasses may
+ * provide there own means of providing the application object.
  * 
  * @see wicket.RequestCycle
  * @author Jonathan Locke
  */
 public class WicketServlet extends HttpServlet
 {
-    /** Log. */
-    private static final Log log = LogFactory.getLog(WicketServlet.class);
+	/** Log. */
+	private static final Log log = LogFactory.getLog(WicketServlet.class);
 
-    /** The application this servlet is serving */
-    protected WebApplication webApplication;
+	/** The application this servlet is serving */
+	protected WebApplication webApplication;
 
-    /**
-     * Servlet initialization
-     */
-    public void init()
-    {
-        final String applicationClassName = getInitParameter("applicationClassName");
-        try
-        {
-            final Class applicationClass = Class.forName(applicationClassName);
-            if (WebApplication.class.isAssignableFrom(applicationClass))
-            {
-                // Construct WebApplication subclass
-                this.webApplication = (WebApplication)applicationClass.newInstance();
+	/**
+	 * Servlet initialization
+	 */
+	public void init()
+	{
+		final String applicationClassName = getInitParameter("applicationClassName");
+		try
+		{
+			final Class applicationClass = Class.forName(applicationClassName);
+			if (WebApplication.class.isAssignableFrom(applicationClass))
+			{
+				// Construct WebApplication subclass
+				this.webApplication = (WebApplication)applicationClass.newInstance();
 
-                // Set this WicketServlet as the servlet for the web application
-                this.webApplication.setWicketServlet(this);
+				// Set this WicketServlet as the servlet for the web application
+				this.webApplication.setWicketServlet(this);
 
-                // Finished
-                log.info("WicketServlet loaded application " + applicationClass.getName());
-                
-                // Call init method of web application
-                this.webApplication.init();
-            }
-            else
-            {
-                throw new WicketRuntimeException("Application class " + applicationClassName
-                        + " must be a subclass of WebApplication");
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new WicketRuntimeException("Unable to create application of class "
-                    + applicationClassName, e);
-        }
-        catch (InstantiationException e)
-        {
-            throw new WicketRuntimeException("Unable to create application of class "
-                    + applicationClassName, e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new WicketRuntimeException("Unable to create application of class "
-                    + applicationClassName, e);
-        }
-        catch (SecurityException e)
-        {
-            throw new WicketRuntimeException("Unable to create application of class "
-                    + applicationClassName, e);
-        }
-    }
+				// Finished
+				log.info("WicketServlet loaded application " + applicationClass.getName());
 
-    /**
-     * Handles servlet page requests.
-     * 
-     * @param servletRequest
-     *            Servlet request object
-     * @param servletResponse
-     *            Servlet response object
-     * @throws ServletException
-     *             Thrown if something goes wrong during request handling
-     * @throws IOException
-     */
-    public final void doGet(final HttpServletRequest servletRequest,
-            final HttpServletResponse servletResponse) throws ServletException, IOException
-    {
-        // Get session for request
-        final WebSession session = WebSession.getSession(webApplication, servletRequest);
-        final WebRequest request = new WebRequest(servletRequest);
-        final WebResponse response = webApplication.getSettings().getBufferResponse() ? 
-                new BufferedWebResponse(servletResponse) : new WebResponse(servletResponse);
-        final WebRequestCycle cycle = new WebRequestCycle(webApplication, session, request,
-                response);
+				// Call init method of web application
+				this.webApplication.init();
+			}
+			else
+			{
+				throw new WicketRuntimeException("Application class " + applicationClassName
+						+ " must be a subclass of WebApplication");
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new WicketRuntimeException("Unable to create application of class "
+					+ applicationClassName, e);
+		}
+		catch (InstantiationException e)
+		{
+			throw new WicketRuntimeException("Unable to create application of class "
+					+ applicationClassName, e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new WicketRuntimeException("Unable to create application of class "
+					+ applicationClassName, e);
+		}
+		catch (SecurityException e)
+		{
+			throw new WicketRuntimeException("Unable to create application of class "
+					+ applicationClassName, e);
+		}
+	}
 
-        // Render response for request cycle
-        cycle.render();
+	/**
+	 * Handles servlet page requests.
+	 * 
+	 * @param servletRequest
+	 *            Servlet request object
+	 * @param servletResponse
+	 *            Servlet response object
+	 * @throws ServletException
+	 *             Thrown if something goes wrong during request handling
+	 * @throws IOException
+	 */
+	public final void doGet(final HttpServletRequest servletRequest,
+			final HttpServletResponse servletResponse) throws ServletException, IOException
+	{
+		// Get session for request
+		final WebSession session = WebSession.getSession(webApplication, servletRequest);
+		final WebRequest request = new WebRequest(servletRequest);
+		final WebResponse response = webApplication.getSettings().getBufferResponse()
+				? new BufferedWebResponse(servletResponse)
+				: new WebResponse(servletResponse);
 
-        // Clear down the session thread local so that the only reference to it
-        // is as a Servlet WebSession
-        WebSession.set(null);
-    }
+		try
+		{
+			// Respond to request
+			new WebRequestCycle(webApplication, session, request, response).respond();
+		}
+		finally
+		{
+			// Close response
+			response.close();
+		}
+	}
 
-    /**
-     * Calls doGet with arguments.
-     * 
-     * @param servletRequest
-     *            Servlet request object
-     * @param servletResponse
-     *            Servlet response object
-     * @see WicketServlet#doGet(HttpServletRequest, HttpServletResponse)
-     * @throws ServletException
-     *             Thrown if something goes wrong during request handling
-     * @throws IOException
-     */
-    public final void doPost(final HttpServletRequest servletRequest,
-            final HttpServletResponse servletResponse) throws ServletException, IOException
-    {
-        doGet(servletRequest, servletResponse);
-    }
+	/**
+	 * Calls doGet with arguments.
+	 * 
+	 * @param servletRequest
+	 *            Servlet request object
+	 * @param servletResponse
+	 *            Servlet response object
+	 * @see WicketServlet#doGet(HttpServletRequest, HttpServletResponse)
+	 * @throws ServletException
+	 *             Thrown if something goes wrong during request handling
+	 * @throws IOException
+	 */
+	public final void doPost(final HttpServletRequest servletRequest,
+			final HttpServletResponse servletResponse) throws ServletException, IOException
+	{
+		doGet(servletRequest, servletResponse);
+	}
 }

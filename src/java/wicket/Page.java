@@ -242,9 +242,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			feedback.addFeedbackMessages(this, false);
 		}
 		
+		// Rendering is beginning
+		onBeginRender();
+		
 		// Render markup in page
 		super.render();
 
+		// Rendering is complete
+		onEndRender();
+		
 		// If the application wants component uses checked and
 		// the response is not a redirect
 		if (getApplicationSettings().getComponentUseCheck() && !getResponse().isRedirect())
@@ -311,6 +317,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		return null;
 	}
 
+	/**
+	 * This method is called immediately before a page is rendered
+	 */	
+	protected void onBeginRender()
+	{		
+	}
+
+	/**
+	 * This method is called after page rendering is completed
+	 */
+	protected void onEndRender()
+	{
+	}
+	
 	/**
 	 * Renders this container to the given response object.
 	 */

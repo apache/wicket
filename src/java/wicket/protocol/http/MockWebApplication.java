@@ -220,7 +220,7 @@ public class MockWebApplication extends WebApplication
     {
         WebRequestCycle cycle = new WebRequestCycle(this, wicketSession, wicketRequest,
                 wicketResponse);
-        cycle.render();
+        cycle.respond();
         lastRenderedPage = cycle.getPage();
     }
 
