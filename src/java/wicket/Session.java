@@ -351,7 +351,7 @@ public abstract class Session implements Serializable
 	 */
 	public final void remove(final Page page)
 	{
-		pages.remove(page.getId());
+		getPageMap().remove(page.getId());
 	}
 
 	/**
@@ -360,7 +360,7 @@ public abstract class Session implements Serializable
 	 */
 	public final void removeAll()
 	{
-		pages.clear();
+		getPageMap().clear();
 	}
 
 	/**
