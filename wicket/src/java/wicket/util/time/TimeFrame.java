@@ -191,4 +191,4 @@ public final class TimeFrame implements ITimeFrameSource
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

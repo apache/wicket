@@ -46,4 +46,4 @@ public interface IComponentResolver
 	        final Container container);
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

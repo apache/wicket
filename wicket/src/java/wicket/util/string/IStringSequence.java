@@ -48,4 +48,4 @@ public interface IStringSequence
     public String get(int index) throws IndexOutOfBoundsException;
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

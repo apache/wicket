@@ -33,4 +33,4 @@ public interface ITimeFrameSource
     public TimeFrame getTimeFrame();
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

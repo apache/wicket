@@ -246,4 +246,4 @@ public class Image extends HtmlComponent implements IResourceListener
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

@@ -137,4 +137,4 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	}
 }
 
-// /////////////////////////////// End of File /////////////////////////////////
+// 

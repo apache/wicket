@@ -152,4 +152,4 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

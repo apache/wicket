@@ -164,4 +164,4 @@ public final class MetaPatternTest extends TestCase
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

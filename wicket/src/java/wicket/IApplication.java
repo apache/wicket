@@ -43,4 +43,4 @@ public interface IApplication
     public ApplicationSettings getSettings();
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

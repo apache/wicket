@@ -68,7 +68,6 @@ public abstract class AbstractValidator implements IValidator
     	return errorMessage(getResourceKey(component), input, component);
     }
 
-
     /**
      * Returns a formatted validation error message for a given component. The error
      * message is retrieved from a message bundle associated with the page in which this
@@ -185,4 +184,4 @@ public abstract class AbstractValidator implements IValidator
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+

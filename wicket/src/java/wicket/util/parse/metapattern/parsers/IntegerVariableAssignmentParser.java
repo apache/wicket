@@ -85,4 +85,4 @@ public final class IntegerVariableAssignmentParser extends MetaPatternParser
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+
