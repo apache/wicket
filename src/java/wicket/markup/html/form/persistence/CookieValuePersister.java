@@ -29,15 +29,10 @@ import wicket.protocol.http.HttpResponse;
 import wicket.util.time.Time;
 
 /**
- * THIS CLASS IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY FRAMEWORK
- * CLIENTS. <br/>
+ * This class implements IValuePersister by means of HTTP cookies.
  * 
- * This class implements IFormComponentValuePersister by means of the HTTP
- * protocol.
- * 
- * @see CookieValuePersister
- * @see javax.servlet.http.Cookie for more details.
  * @author Juergen Donnerstag
+ * @author Jonathan Locke
  */
 public class CookieValuePersister implements IValuePersister
 {
@@ -52,9 +47,11 @@ public class CookieValuePersister implements IValuePersister
 		final Cookie cookie = getCookie(component);
 		if (cookie != null)
 		{
-			remove(cookie);
+			clear(cookie);
 			if (log.isDebugEnabled())
+            {
 				log.debug("Cookie for " + component + " removed");
+            }
 		}
 	}
 
@@ -91,6 +88,21 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
+	 * Gets debug info as a string for the given cookie.
+	 * 
+	 * @param cookie
+	 *            the cookie to debug.
+	 * @return a string that represents the internals of the cookie.
+	 */
+	private String cookieToDebugString(Cookie cookie)
+	{
+		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue()
+				+ ", domain = " + cookie.getDomain() + ", path = " + cookie.getPath()
+				+ ", maxAge = " + Time.valueOf(cookie.getMaxAge()).toDateString() + "("
+				+ cookie.getMaxAge() + ")" + "]";
+	}
+
+	/**
 	 * Gets the cookie for a given persistent form component. The name of the
 	 * cookie will be the component's page relative path (@see
 	 * wicket.markup.html.form.FormComponent#getPageRelativePath()). Be reminded
@@ -107,7 +119,7 @@ public class CookieValuePersister implements IValuePersister
 		final String name = component.getPageRelativePath();
 
 		// Get all cookies attached to the Request by the client browser
-		Cookie[] cookies = getRequest().getCookies();
+		Cookie[] cookies = getHttpRequest().getCookies();
 		if (cookies != null)
 		{
 			for (int i = 0; i < cookies.length; i++)
@@ -122,7 +134,7 @@ public class CookieValuePersister implements IValuePersister
 					{
 						if (log.isDebugEnabled())
 						{
-							log.debug("Got cookie: " + getCookieDebugString(cookie));
+							log.debug("Got cookie: " + cookieToDebugString(cookie));
 						}
 						return cookie;
 					}
@@ -142,37 +154,11 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
-	 * Gets debug info as a string for the given cookie.
-	 * 
-	 * @param cookie
-	 *            the cookie to debug.
-	 * @return a string that represents the internals of the cookie.
-	 */
-	private String getCookieDebugString(Cookie cookie)
-	{
-		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue()
-				+ ", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = "
-				+ Time.valueOf(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")"
-				+ "]";
-	}
-
-	/**
-	 * Persister defaults are maintained centrally by the Application.
-	 * 
-	 * @return Persister default value
-	 */
-	private CookieValuePersisterSettings getSettings()
-	{
-		return RequestCycle.get().getApplication().getSettings()
-				.getCookieValuePersisterSettings();
-	}
-
-	/**
 	 * Convenience method to get the http request.
 	 * 
 	 * @return HttpRequest related to the RequestCycle
 	 */
-	private HttpRequest getRequest()
+	private HttpRequest getHttpRequest()
 	{
 		return (HttpRequest)RequestCycle.get().getRequest();
 	}
@@ -182,9 +168,19 @@ public class CookieValuePersister implements IValuePersister
 	 * 
 	 * @return HttpResponse related to the RequestCycle
 	 */
-	private HttpResponse getResponse()
+	private HttpResponse getHttpResponse()
 	{
 		return (HttpResponse)RequestCycle.get().getResponse();
+	}
+
+	/**
+	 * Persister defaults are maintained centrally by the Application.
+	 * 
+	 * @return Persister default value
+	 */
+	private CookieValuePersisterSettings getSettings()
+	{
+		return RequestCycle.get().getApplication().getSettings().getCookieValuePersisterSettings();
 	}
 
 	/**
@@ -194,14 +190,14 @@ public class CookieValuePersister implements IValuePersister
 	 * @param cookie
 	 *            The cookie to delete
 	 */
-	private void remove(Cookie cookie)
+	private void clear(Cookie cookie)
 	{
 		if (cookie != null)
 		{
 			// Delete the cookie by setting its maximum age to zero
 			cookie.setMaxAge(0);
 			cookie.setValue(null);
-			cookie.setPath(getRequest().getContextPath());
+			cookie.setPath(getHttpRequest().getContextPath());
 			save(cookie);
 		}
 	}
@@ -219,27 +215,31 @@ public class CookieValuePersister implements IValuePersister
 		{
 			return null;
 		}
-
-		if (getSettings().getComment() != null)
-		{
-			cookie.setComment(getSettings().getComment());
-		}
-
-		if (getSettings().getDomain() != null)
-		{
-			cookie.setDomain(getSettings().getDomain());
-		}
-
-		cookie.setVersion(getSettings().getVersion());
-		cookie.setSecure(getSettings().isSecure());
-
-		getResponse().addCookie(cookie);
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("saved: " + getCookieDebugString(cookie));
-		}
-
-		return cookie;
+        else
+        {
+            final String comment = getSettings().getComment();
+    		if (comment != null)
+    		{
+    			cookie.setComment(comment);
+    		}
+    
+            final String domain = getSettings().getDomain();
+    		if (domain != null)
+    		{
+    			cookie.setDomain(domain);
+    		}
+    
+    		cookie.setVersion(getSettings().getVersion());
+    		cookie.setSecure(getSettings().isSecure());
+    
+    		getHttpResponse().addCookie(cookie);
+    
+    		if (log.isDebugEnabled())
+    		{
+    			log.debug("saved: " + cookieToDebugString(cookie));
+    		}
+    
+    		return cookie;
+        }
 	}
 }
