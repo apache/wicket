@@ -31,6 +31,7 @@ import javax.swing.tree.TreePath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
@@ -40,6 +41,7 @@ import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.tree.Filler;
 import com.voicetribe.wicket.markup.html.tree.Node;
 import com.voicetribe.wicket.markup.html.tree.Tree;
+import com.voicetribe.wicket.markup.html.tree.TreeNodeLink;
 import com.voicetribe.wicket.markup.html.tree.TreeStateCache;
 
 /**
@@ -72,7 +74,7 @@ public class FileBrowser extends HtmlPage
     protected TreeModel buildTree()
     {
         TreeModel model = buildTreeModel();
-        debugTree((DefaultTreeModel)model);
+        //debugTree((DefaultTreeModel)model);
         return model;
     }
 
@@ -82,8 +84,6 @@ public class FileBrowser extends HtmlPage
      */
 	protected TreeModel buildTreeModel() 
 	{
-		long tsBegin = System.currentTimeMillis();
-		
 		TreeModel model = null;
 		// build directory tree, starting with root dir
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
@@ -94,12 +94,7 @@ public class FileBrowser extends HtmlPage
 
 		addChildDirsRecursively(currentPath, rootNode);
 		model = new DefaultTreeModel(rootNode);
-		
-		long tsEnd = System.currentTimeMillis();
-		if(log.isDebugEnabled())
-		{
-			log.debug("built tree in " + (tsEnd - tsBegin) + " miliseconds");	
-		}
+
 		return model;
 	}
 
@@ -175,32 +170,57 @@ public class FileBrowser extends HtmlPage
 	    /**
 	     * @see com.voicetribe.wicket.markup.html.tree.Tree#populateNode(com.voicetribe.wicket.markup.html.tree.Node)
 	     */
-	    protected void populateNode(Node node)
+	    protected void populateNode(final Node node)
 	    {
 	       final Serializable userObject = node.getUserObject();
+	       if(userObject == null)
+	       {
+	           throw new RuntimeException("userObject == null");
+	       }
 	       File file = (File)userObject;
+//           TreeNodeLink expandCollapsLink = new TreeNodeLink("expandCollapsLink", fileTree, node)
+//           {
+//            public void linkClicked(RequestCycle cycle, Node node)
+//            {
+//                TreeStateCache state = fileTree.getTreeState();
+//                TreePath selection = state.findTreePath(userObject);
+//                fileTree.setExpandedState(selection, (!node.isExpanded())); // inverse
+//            }
+//           };
 	       Link expandCollapsLink = new Link("expandCollapsLink")
            {
 	            public void linkClicked(RequestCycle cycle)
 	            {
 	                TreeStateCache state = fileTree.getTreeState();
 	                TreePath selection = state.findTreePath(userObject);
-	                state.setSelectedPath(selection);
+	                fileTree.setExpandedState(selection, (!node.isExpanded())); // inverse
 	            }
            };
-           expandCollapsLink.add(new Image("junctionImg", getJunctionImageName(node)));
-           expandCollapsLink.add(new Image("nodeImg", getNodeImageName(node)));
+           expandCollapsLink.add(new Image("junctionImg", new Model(node)
+            {
+                public Object getObject()
+                {
+                    return getJunctionImageName((Node) super.getObject());
+                }
+            }));
+           expandCollapsLink.add(new Image("nodeImg", new Model(node)
+            {
+                public Object getObject()
+                {
+                    return getNodeImageName((Node) super.getObject());
+                }
+            }));
            node.add(expandCollapsLink);
-	       Link selectLink = new Link("link")
+           TreeNodeLink selectLink = new TreeNodeLink("selectLink", fileTree, node)
            {
-	            public void linkClicked(RequestCycle cycle)
-	            {
-	                TreeStateCache state = fileTree.getTreeState();
-	                TreePath selection = state.findTreePath(userObject);
-	                state.setSelectedPath(selection);
-	            }
+            public void linkClicked(RequestCycle cycle, Node node)
+            {
+                TreeStateCache state = fileTree.getTreeState();
+                TreePath selection = state.findTreePath(userObject);
+                state.setSelectedPath(selection);
+            }
            };
-           selectLink.add(new Label("name", file.getName()));
+           selectLink.add(new Label("fileName", file.getName()));
 	       node.add(selectLink);
 	    }
 
@@ -209,7 +229,7 @@ public class FileBrowser extends HtmlPage
 	     */
 	    protected void populateFiller(Filler filler)
 	    {
-	        // just render the tags
+	        filler.add(new Image("fillImg", "vert.gif"));
 	    }
 
 	    /**
