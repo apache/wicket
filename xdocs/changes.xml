@@ -7,6 +7,11 @@
   </properties>
   <body>
     <release version="0.9.18-beta (not yet released)" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="remove" dev="Jonathan Locke" issue="">
+		Removed IModel constructors throughout the project and added instanceof 
+		logic to Component to wrap model objects unless they are already IModel 
+		implementors.  Updated documentation to reflect this.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="">
       	Implemented getModelLock() method on Component so that client code can 
       	synchronize updates to the model for a component.  Updated core code
