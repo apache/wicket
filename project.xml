@@ -20,9 +20,9 @@
   <siteAddress>shell.sourceforge.net</siteAddress>
   <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
   <repository>
-    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:Wicket</connection>
-    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
-    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/Wicket</url>
+    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
+    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket</url>
   </repository>
   <versions>
     <version>
