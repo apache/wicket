@@ -300,7 +300,7 @@
 
     <servlet-mapping>
         <servlet-name>ImagesApplication</servlet-name>
-        <url-pattern>/images</url-pattern>
+        <url-pattern>/images/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

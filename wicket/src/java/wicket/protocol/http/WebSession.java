@@ -1,14 +1,14 @@
 /*
- * $Id$
- * $Revision$ $Date$
- *
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
+ * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,9 +17,13 @@
  */
 package wicket.protocol.http;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 
@@ -27,114 +31,158 @@ import wicket.WicketRuntimeException;
  * Session subclass for HTTP protocol which holds an underlying WebSession
  * object and provides access to that object via getHttpServletSession. A method
  * which abstracts session invalidation is also provided via invalidate().
- *
+ * 
  * @author Jonathan Locke
  */
 public class WebSession extends Session
 {
-    /** Serial Version ID */
-    private static final long serialVersionUID = -7738551549126761943L;
+	/** Serial Version ID */
+	private static final long serialVersionUID = -7738551549126761943L;
 
-    /** The underlying WebSession object */
-    private transient javax.servlet.http.HttpSession httpSession;
+	/** Reference prefix value */
+	private static final String referencePrefix = "s";
 
-    /**
-     * Gets session from request, creating a new one if it doesn't already exist
-     *
-     * @param application
-     *            The application object
-     * @param request
-     *            The http request object
-     * @return The session object
-     */
-    static WebSession getSession(final Application application, final HttpServletRequest request)
-    {
-        // Get session, creating if it doesn't exist
-        final javax.servlet.http.HttpSession httpServletSession = request.getSession(true);
+	/** The underlying WebSession object */
+	private transient javax.servlet.http.HttpSession httpSession;
 
-        // The request session object is unique per web application, but wicket requires it
-        // to be unique per servlet. That is, there must be a 1..n relationship between
-        // HTTP sessions (JSESSIONID) and Wicket applications.
-        final String sessionAttributeName = "session" + request.getServletPath();
+	/** References to components that are shared in the session */
+	private List references = new ArrayList();
 
-        // Get Session abstraction from httpSession attribute
-        WebSession httpSession = (WebSession)httpServletSession.getAttribute(sessionAttributeName);
+	/**
+	 * Gets session from request, creating a new one if it doesn't already exist
+	 * 
+	 * @param application
+	 *            The application object
+	 * @param request
+	 *            The http request object
+	 * @return The session object
+	 */
+	static WebSession getSession(final Application application, final HttpServletRequest request)
+	{
+		// Get session, creating if it doesn't exist
+		final javax.servlet.http.HttpSession httpServletSession = request.getSession(true);
 
-        if (httpSession == null)
-        {
-            // Create session using session factory
-            final Session session = application.getSessionFactory().newSession();
-            if (session instanceof WebSession)
-            {
-                httpSession = (WebSession)session;
-            }
-            else
-            {
-                throw new WicketRuntimeException("Session created by a WebApplication session factory must be a subclass of WebSession");
-            }
+		// The request session object is unique per web application, but wicket
+		// requires it
+		// to be unique per servlet. That is, there must be a 1..n relationship
+		// between
+		// HTTP sessions (JSESSIONID) and Wicket applications.
+		final String sessionAttributeName = "session" + request.getServletPath();
 
-            // Save servlet session in there
-            httpSession.httpSession = httpServletSession;
+		// Get Session abstraction from httpSession attribute
+		WebSession httpSession = (WebSession)httpServletSession.getAttribute(sessionAttributeName);
 
-            // Set the client Locale for this session
-            httpSession.setLocale(request.getLocale());
+		if (httpSession == null)
+		{
+			// Create session using session factory
+			final Session session = application.getSessionFactory().newSession();
+			if (session instanceof WebSession)
+			{
+				httpSession = (WebSession)session;
+			}
+			else
+			{
+				throw new WicketRuntimeException(
+						"Session created by a WebApplication session factory must be a subclass of WebSession");
+			}
 
-            // Attach to httpSession
-            httpServletSession.setAttribute(sessionAttributeName, httpSession);
-        }
-        else
-        {
-            // Reattach http servlet session
-            httpSession.httpSession = httpServletSession;
+			// Save servlet session in there
+			httpSession.httpSession = httpServletSession;
 
-	        // In a clustered environment the session is not replicated
-	        // if it is not dirty. If we just read the http session object
-	        // and manipulate that then the http servlet session never gets
-	        // flagged as being dirty. We therefore need to force a
-	        // change on the http servlet session to ensure clustering
-	        // occurs.
-	        httpServletSession.setAttribute(sessionAttributeName, httpSession);
-        }
+			// Set the client Locale for this session
+			httpSession.setLocale(request.getLocale());
 
-        // Set the current session to the session we just retrieved
-        Session.set(httpSession);
+			// Attach to httpSession
+			httpServletSession.setAttribute(sessionAttributeName, httpSession);
+		}
+		else
+		{
+			// Reattach http servlet session
+			httpSession.httpSession = httpServletSession;
 
-        return httpSession;
-    }
+			// In a clustered environment the session is not replicated
+			// if it is not dirty. If we just read the http session object
+			// and manipulate that then the http servlet session never gets
+			// flagged as being dirty. We therefore need to force a
+			// change on the http servlet session to ensure clustering
+			// occurs.
+			httpServletSession.setAttribute(sessionAttributeName, httpSession);
+		}
 
-    /**
-     * Constructor
-     *
-     * @param application
-     *            The application
-     */
-    protected WebSession(final Application application)
-    {
-        super(application);
-    }
+		// Set the current session to the session we just retrieved
+		Session.set(httpSession);
 
-    /**
-     * @return The underlying WebSession object
-     */
-    public javax.servlet.http.HttpSession getHttpSession()
-    {
-        return httpSession;
-    }
+		return httpSession;
+	}
 
-    /**
-     * Invalidates this session
-     */
-    public void invalidate()
-    {
-        try
-        {
-            httpSession.invalidate();
-        }
-        catch (IllegalStateException e)
-        {
-            ; // ignore
-        }
-    }
+	/**
+	 * Constructor
+	 * 
+	 * @param application
+	 *            The application
+	 */
+	protected WebSession(final Application application)
+	{
+		super(application);
+	}
+
+	/**
+	 * @return The underlying WebSession object
+	 */
+	public javax.servlet.http.HttpSession getHttpSession()
+	{
+		return httpSession;
+	}
+
+	/**
+	 * Invalidates this session
+	 */
+	public void invalidate()
+	{
+		try
+		{
+			httpSession.invalidate();
+		}
+		catch (IllegalStateException e)
+		{
+			; // ignore
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param component
+	 *            Component to create reference for
+	 * @return The reference
+	 */
+	public final String reference(final Component component)
+	{
+		if (references.contains(component))
+		{
+			return referencePrefix + references.indexOf(component);
+		}
+		else
+		{
+			references.add(component);
+			return referencePrefix + (references.size() - 1);
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param reference
+	 *            The reference to resolve
+	 * @return The component
+	 */
+	public final Component resolve(final String reference)
+	{
+		if (reference != null && reference.startsWith(referencePrefix))
+		{
+			// Return component at given index
+			return (Component)references.get(Integer.parseInt(reference.substring(1)));
+		}
+		return null;
+	}
 }
-
-
