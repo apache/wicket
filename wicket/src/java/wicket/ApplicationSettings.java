@@ -793,7 +793,7 @@ public final class ApplicationSettings
 	 * If true, automatic link resolution is enabled.
 	 * @return Returns the automaticLinking.
 	 */
-	public boolean isAutomaticLinking()
+	public boolean getAutomaticLinking()
 	{
 		return automaticLinking;
 	}
