@@ -79,16 +79,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>MenuApplication</servlet-name>
-        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-        <init-param>
-          <param-name>applicationClassName</param-name>
-          <param-value>wicket.examples.navmenu.MenuApplication</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
         <servlet-name>GuestBookApplication</servlet-name>
         <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
         <init-param>
@@ -281,11 +271,6 @@
     <servlet-mapping>
         <servlet-name>NestedApplication</servlet-name>
         <url-pattern>/nested/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>MenuApplication</servlet-name>
-        <url-pattern>/menu</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
