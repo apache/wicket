@@ -25,7 +25,7 @@ import java.io.Serializable;
  *
  * @author Eelco Hillenius
  */
-public class FeebackMessage implements Serializable
+public class FeedbackMessage implements Serializable
 { // TODO finalize javadoc
     /**
      * Constant for an undefined level; note that components might decide
@@ -74,7 +74,7 @@ public class FeebackMessage implements Serializable
      * @param message the actual message
      * @param level the level of the message
      */
-    public FeebackMessage(Component reporter, String message, int level)
+    public FeedbackMessage(Component reporter, String message, int level)
     {
         this.reporter = reporter;
         this.message = message;
@@ -87,9 +87,9 @@ public class FeebackMessage implements Serializable
      * @param message the actual message
      * @return a new message with level DEBUG
      */
-    public final static FeebackMessage debug(Component reporter, String message)
+    public final static FeedbackMessage debug(Component reporter, String message)
     {
-        return new FeebackMessage(reporter, message, DEBUG);
+        return new FeedbackMessage(reporter, message, DEBUG);
     }
 
     /**
@@ -98,9 +98,9 @@ public class FeebackMessage implements Serializable
      * @param message the actual message
      * @return a new message with level INFO
      */
-    public final static FeebackMessage info(Component reporter, String message)
+    public final static FeedbackMessage info(Component reporter, String message)
     {
-        return new FeebackMessage(reporter, message, INFO);
+        return new FeedbackMessage(reporter, message, INFO);
     }
 
     /**
@@ -109,9 +109,9 @@ public class FeebackMessage implements Serializable
      * @param message the actual message
      * @return a new message with level WARN
      */
-    public final static FeebackMessage warn(Component reporter, String message)
+    public final static FeedbackMessage warn(Component reporter, String message)
     {
-        return new FeebackMessage(reporter, message, WARN);
+        return new FeedbackMessage(reporter, message, WARN);
     }
 
     /**
@@ -120,9 +120,9 @@ public class FeebackMessage implements Serializable
      * @param message the actual message
      * @return a new message with level ERROR
      */
-    public final static FeebackMessage error(Component reporter, String message)
+    public final static FeedbackMessage error(Component reporter, String message)
     {
-        return new FeebackMessage(reporter, message, ERROR);
+        return new FeedbackMessage(reporter, message, ERROR);
     }
 
     /**
@@ -131,9 +131,9 @@ public class FeebackMessage implements Serializable
      * @param message the actual message
      * @return a new message with level FATAL
      */
-    public final static FeebackMessage fatal(Component reporter, String message)
+    public final static FeedbackMessage fatal(Component reporter, String message)
     {
-        return new FeebackMessage(reporter, message, FATAL);
+        return new FeedbackMessage(reporter, message, FATAL);
     }
 
     /**

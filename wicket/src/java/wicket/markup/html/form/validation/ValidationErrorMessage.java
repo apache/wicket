@@ -21,19 +21,19 @@ package wicket.markup.html.form.validation;
 import java.io.Serializable;
 
 import wicket.Component;
-import wicket.FeebackMessage;
+import wicket.FeedbackMessage;
 
 
 /**
- * A specialized version of a {@link wicket.FeebackMessage}
+ * A specialized version of a {@link wicket.FeedbackMessage}
  * that represents a message about the failure of a validation.
  * @see wicket.markup.html.form.validation.IValidator
- * @see wicket.FeebackMessage
+ * @see wicket.FeedbackMessage
  * @see wicket.markup.html.form.validation.IValidationErrorHandler
  *
  * @author Eelco Hillenius
  */
-public final class ValidationErrorMessage extends FeebackMessage
+public final class ValidationErrorMessage extends FeedbackMessage
 { // TODO finalize javadoc
     /** constant for representing an empty message (same as null). */
     public static final ValidationErrorMessage NO_MESSAGE = null;
