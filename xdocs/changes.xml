@@ -8,6 +8,10 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Martijn Dashorst" issue="1123536">
+        Added <code>emptyAllowed</code> to the <code>AbstractChoice</code> class allowing
+        the select components to set the model value to <code>null</code>.
+      </action>
       <action type="fix" dev="Eelco Hillenius" issue="1120137">
     	Changed selected attribute to selected = "selected" to be XHTML compliant.  
     	Added ComponentTag.syntheticCloseTagString() method which returns a close 

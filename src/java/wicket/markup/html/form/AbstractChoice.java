@@ -37,11 +37,10 @@ abstract class AbstractChoice extends FormComponent
 {
 	// TODO This string needs to be localized
 	/**
-	 * Default value to display when a null option is rendered. Initially set to
-	 * 'Choose One'.
+	 * Default value to display when a null option is rendered. Initially set to 'Choose One'.
 	 */
 	private static final String DEFAULT_NULL_OPTION_VALUE = "Choose One";
-	
+
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -8334966481181600604L;
 
@@ -50,6 +49,9 @@ abstract class AbstractChoice extends FormComponent
 
 	/** The list of values. */
 	private List values;
+
+	/** Is the null value a valid value? */
+	private boolean emptyAllowed = false;
 
 	/**
 	 * @param name
@@ -84,7 +86,7 @@ abstract class AbstractChoice extends FormComponent
 		setValues(values);
 	}
 
-    /**
+	/**
 	 * Gets the list of values.
 	 * 
 	 * @return the list of values
@@ -97,10 +99,10 @@ abstract class AbstractChoice extends FormComponent
 		}
 		return this.values;
 	}
-	
+
 	/**
-	 * Gets whether the null option must be rendered if current selection ==
-	 * null. The default is true.
+	 * Gets whether the null option must be rendered if current selection == null. The default is
+	 * true.
 	 * 
 	 * @return boolean
 	 */
@@ -110,12 +112,10 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Sets whether the null option must be rendered if current selection ==
-	 * null.
+	 * Sets whether the null option must be rendered if current selection == null.
 	 * 
 	 * @param renderNullOption
-	 *            whether the null option must be rendered if current selection ==
-	 *            null.
+	 *            whether the null option must be rendered if current selection == null.
 	 */
 	public void setRenderNullOption(boolean renderNullOption)
 	{
@@ -152,8 +152,8 @@ abstract class AbstractChoice extends FormComponent
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	public abstract void updateModel();
-    
-	
+
+
 	/*
 	 * @see wicket.Component#detachModel()
 	 */
@@ -188,19 +188,33 @@ abstract class AbstractChoice extends FormComponent
 	 *            The open tag for the body
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
 	{
 		final StringBuffer options = new StringBuffer();
 		final Object selected = getModelObject();
 		final List list = getValues();
 
-		if (selected == null && getRenderNullOption())
+		if (emptyAllowed && selected == null)
+		{
+			final String emptyOne = getLocalizer().getString(getName() + ".emptyOne", this, "");
+
+			options.append("\n<option selected=\"selected\" value=\"").append("\">").append(
+					emptyOne).append("</option>");
+		}
+		else if (emptyAllowed)
+		{
+			final String emptyOne = getLocalizer().getString(getName() + ".emptyOne", this, "");
+
+			options.append("\n<option value=\"").append("\">").append(emptyOne).append("</option>");
+		}
+		else if (selected == null && getRenderNullOption())
 		{
 			final String chooseOne = getLocalizer().getString(getName() + ".null", this,
 					DEFAULT_NULL_OPTION_VALUE);
 
-			options.append("\n<option selected value=\"").append("\">").append(chooseOne).append(
-					"</option>");
+			options.append("\n<option selected=\"selected\" value=\"").append("\">").append(
+					chooseOne).append("</option>");
 		}
 
 		for (int i = 0; i < list.size(); i++)
@@ -268,11 +282,31 @@ abstract class AbstractChoice extends FormComponent
 		return equals;
 	}
 
-    /**
-     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-     */
-    protected boolean supportsPersistence()
-    {
-        return true;
-    }
+	/**
+	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+	 */
+	protected boolean supportsPersistence()
+	{
+		return true;
+	}
+
+	/**
+	 * Is the <code>null</code> value a valid value?
+	 * 
+	 * @return <code>true</code> when the <code>null</code> value is allowed.
+	 */
+	public boolean isEmptyAllowed()
+	{
+		return emptyAllowed;
+	}
+
+	/**
+	 * Is the <code>null</code> value a valid value?
+	 * @param emptyAllowed
+	 *            The emptyAllowed to set.
+	 */
+	public void setEmptyAllowed(boolean emptyAllowed)
+	{
+		this.emptyAllowed = emptyAllowed;
+	}
 }
