@@ -8,6 +8,24 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="update" dev="Eelco Hillenius" issue="">
+		Moved tree to contrib until packaged CSS is supported.
+	  </action>
+      <action type="update" dev="Eelco Hillenius" issue="">
+		Tree now images instead of image names and attribute modifiers. Also, some
+		default images that work well with a regular tree are pacakged and used
+		by default. 
+	  </action>
+      <action type="update" dev="Eelco Hillenius" issue="">
+		The tree component is now greatly simplified. Users are not required to
+		use unique user objects, but instead the tree nodes are used. Also, as
+		a result of a different rendering strategy, normal links can be used.
+		The IndentTree is now the default tree. Removed the nested tree as that
+		tree had several usability issues.
+	  </action>
+      <action type="fix" dev="Eelco Hillenius" issue="">
+		Fixed JavaScript issue that resulted in problems with Firefox.
+	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
 		Major refactor of resource handling to separate resource referencing components
 		from the actual resources themselves.  Added new Resource base class in wicket
