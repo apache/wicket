@@ -22,6 +22,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import nl.openedge.util.jetty.JettyDecorator;
 import wicket.examples.displaytag.DisplaytagTest;
+import wicket.examples.forminput.FormInputTest;
 import wicket.examples.groovy.GroovyTest;
 import wicket.examples.guestbook.GuestbookTest;
 import wicket.examples.helloworld.HelloWorldTest;
@@ -83,6 +84,7 @@ public final class AllTests extends TestSuite
 		suite.addTest(new SpringFrameworkTest("testHomePage"));
 		suite.addTest(new SpringFramework2Test("testHomePage"));
 		suite.addTest(new GroovyTest("testHomePage"));
+		suite.addTest(new FormInputTest("testHelloWorld"));
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
