@@ -59,9 +59,6 @@ public final class MarkupParser
      * E.g. &lt;tag id="wicket-..."&gt; or &lt;tag wicket=..&gt; */
     private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
 
-    /** Name of the desired wicket tag: e.g. &lt;wicket&gt; */
-    private String wicketNamespace = ComponentWicketTag.DEFAULT_WICKET_NAMESPACE;
-
     /** True to strip out HTML comments. */
     private boolean stripComments;
 
@@ -86,13 +83,11 @@ public final class MarkupParser
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
      * @param componentNameAttribute The name of the componentName attribute
-     * @param wicketNamespace The name of the wicket namespace
      */
-    public MarkupParser(final IXmlPullParser xmlParser, final String componentNameAttribute, final String wicketNamespace)
+    public MarkupParser(final IXmlPullParser xmlParser, final String componentNameAttribute)
     {
         this.xmlParser = xmlParser;
         this.componentNameAttribute = componentNameAttribute;
-        this.wicketNamespace = wicketNamespace;
     }
     
     /**
@@ -111,7 +106,6 @@ public final class MarkupParser
 	public void configure(ApplicationSettings settings)
 	{
         this.componentNameAttribute = settings.getComponentNameAttribute();
-        this.wicketNamespace = settings.getWicketNamespace();
         this.stripWicketParamTag = settings.getStripWicketParamTag();
         this.stripComments = settings.getStripComments();
         this.compressWhitespace = settings.getCompressWhitespace();
@@ -170,7 +164,6 @@ public final class MarkupParser
 
         final WicketComponentTagIdentifier detectWicketComponents = new WicketComponentTagIdentifier(xmlParser);
         detectWicketComponents.setComponentNameAttribute(this.componentNameAttribute);
-        detectWicketComponents.setWicketNamespace(this.wicketNamespace);
         detectWicketComponents.setStripWicketFromComponentTag(this.stripWicketFromComponentTag);
 
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
