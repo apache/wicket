@@ -74,7 +74,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	private int id = -1;
 
 	/** The session that this page is in. */
-	private final Session session = Session.get();
+	private transient Session session = null;
 
 	/** True if this page is stale. */
 	private boolean stale = false;
@@ -154,6 +154,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public final Session getSession()
 	{
+		if(session == null)
+		{
+			session = Session.get();
+		}
 		return session;
 	}
 
@@ -405,7 +409,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Add page to session. This ensures that all the nice attributes
 		// of a page, such as its session and application are accessible in
 		// the page constructor.
-		this.session.addPage(this);
+		getSession().addPage(this);
 	}
 
 	static
