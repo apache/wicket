@@ -16,7 +16,7 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	color: #E9601A;
 }
 
-#extitle {
+#extitle, #wicket-extitle {
 	font-size: 12pt;
 	font-weight: bold;
 	color: #E9601A;
