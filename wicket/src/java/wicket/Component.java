@@ -39,19 +39,19 @@ import wicket.util.string.Strings;
  * Component serves as the highest level abstract base class for all components.
  * 
  * <ul>
- * <li><b>Identity</b> - All Components must have a non-null id which is retrieved by
- * calling getId(). The id must be unique within the MarkupContainer that holds
- * the Component, but does not have to be globally unique or unique within a
- * Page's component hierarchy.
+ * <li><b>Identity </b>- All Components must have a non-null id which is
+ * retrieved by calling getId(). The id must be unique within the
+ * MarkupContainer that holds the Component, but does not have to be globally
+ * unique or unique within a Page's component hierarchy.
  * 
- * <li><b>Hierarchy</b> - A component has a parent which can be retrieved with
+ * <li><b>Hierarchy </b>- A component has a parent which can be retrieved with
  * getParent(). If a component is an instance of MarkupContainer, it may have
  * children. In this way it has a place in the hierarchy of components contained
  * on a given page. The {@link Component#isAncestorOf(Component)}method returns
  * true if this Component is an ancestor of the given Component.
  * 
- * <li><b>Component Paths</b> - The path from the Page at the root of the component
- * hierarchy to a given Component is simply the concatenation with dot
+ * <li><b>Component Paths </b>- The path from the Page at the root of the
+ * component hierarchy to a given Component is simply the concatenation with dot
  * separators of each id along the way. For example, the path "a.b.c" would
  * refer to the component named "c" inside the MarkupContainer named "b" inside
  * the container named "a". The path to a component can be retrieved by calling
@@ -61,27 +61,28 @@ import wicket.util.string.Strings;
  * Component path relative to the page that contains it, you can call
  * getPageRelativePath().
  * 
- * <li><b>LifeCycle</b> - Components participate in the following lifecycle phases:
+ * <li><b>LifeCycle </b>- Components participate in the following lifecycle
+ * phases:
  * <ul>
- * <li><b>Construction</b> - A Component is constructed with the Java language new
- * operator. Children may be added during construction if the Component is a
+ * <li><b>Construction </b>- A Component is constructed with the Java language
+ * new operator. Children may be added during construction if the Component is a
  * MarkupContainer.
  * 
- * <li><b>Cluster Attachment</b> - When a Component is freshly replicated in a
+ * <li><b>Cluster Attachment </b>- When a Component is freshly replicated in a
  * clustered environment, it may need to initialize transient state. This is
  * possible by overriding the {@link Component#onSessionAttach()}method.
  * 
- * <li><b>Request Handling</b> - An incoming request is processed by a protocol
- * request handler such as WicketServlet. An associated Application object
- * creates Session, Request and Response objects for use by a given Component in
- * updating its model and rendering a response. These objects are stored inside
- * a container called {@link RequestCycle}which is accessible via
+ * <li><b>Request Handling </b>- An incoming request is processed by a
+ * protocol request handler such as WicketServlet. An associated Application
+ * object creates Session, Request and Response objects for use by a given
+ * Component in updating its model and rendering a response. These objects are
+ * stored inside a container called {@link RequestCycle}which is accessible via
  * {@link Component#getRequestCycle()}. The convenience methods
  * {@link Component#getRequest()},{@link Component#getResponse()}and
  * {@link Component#getSession()}provide easy access to the contents of this
  * container.
  * 
- * <li><b>Listener Invocation</b> - If the request references a listener on an
+ * <li><b>Listener Invocation </b>- If the request references a listener on an
  * existing Component, that listener is called, allowing arbitrary user code to
  * handle events such as link clicks or form submits. Although arbitrary
  * listeners are supported in Wicket, the need to implement a new class of
@@ -97,28 +98,29 @@ import wicket.util.string.Strings;
  * onValidate(), onSubmit() and onError() (although only the latter two are
  * likely to be overridden in practice).
  * 
- * <li><b>onBeginRequest</b> - The {@link Component#onBeginRequest()}method is
- * called.
+ * <li><b>onBeginRequest </b>- The {@link Component#onBeginRequest()}method
+ * is called.
  * 
- * <li><b>Form Submit</b> - If a Form has been submitted and the Component is a
- * FormComponent, the component's model is validated by a call to
+ * <li><b>Form Submit </b>- If a Form has been submitted and the Component is
+ * a FormComponent, the component's model is validated by a call to
  * FormComponent.validate().
  * 
- * <li><b>Form Model Update</b> - If a valid Form has been submitted and the Component
- * is a FormComponent, the component's model is updated by a call to
+ * <li><b>Form Model Update </b>- If a valid Form has been submitted and the
+ * Component is a FormComponent, the component's model is updated by a call to
  * FormComponent.updateModel().
  * 
- * <li><b>Rendering</b> - A markup response is generated by the Component via
+ * <li><b>Rendering </b>- A markup response is generated by the Component via
  * {@link Component#render()}, which calls subclass implementation code
  * contained in {@link Component#onRender()}. Once this phase begins, a
  * Component becomes immutable. Attempts to alter the Component will result in a
  * WicketRuntimeException.
  * 
- * <li><b>onEndRequest</b>() - The {@link Component#onEndRequest()}method is called.
+ * <li><b>onEndRequest </b>() - The {@link Component#onEndRequest()}method is
+ * called.
  * </ul>
  * 
- * <li><b>Component Models</b> - The primary responsibility of a component is to use
- * its model (an object that implements IModel), which can be set via
+ * <li><b>Component Models </b>- The primary responsibility of a component is
+ * to use its model (an object that implements IModel), which can be set via
  * {@link Component#setModel(IModel model)}and retrieved via
  * {@link Component#getModel()}, to render a response in an appropriate markup
  * language, such as HTML. In addition, form components know how to update their
@@ -129,30 +131,32 @@ import wicket.util.string.Strings;
  * {@link Component#getModelObjectAsString()}, is provided for the very common
  * operation of converting the wrapped model Object to a String.
  * 
- * <li><b>Visibility</b> - Components which have setVisible(false) will return false
- * from isVisible() and will not render a response (nor will their children).
+ * <li><b>Visibility </b>- Components which have setVisible(false) will return
+ * false from isVisible() and will not render a response (nor will their
+ * children).
  * 
- * <li><b>Page</b> - The Page containing any given Component can be retrieved by
- * calling {@link Component#getPage()}. If the Component is not attached to a
- * Page, an IllegalStateException will be thrown. An equivalent method,
+ * <li><b>Page </b>- The Page containing any given Component can be retrieved
+ * by calling {@link Component#getPage()}. If the Component is not attached to
+ * a Page, an IllegalStateException will be thrown. An equivalent method,
  * {@link Component#findPage()}is available for special circumstances where it
  * might be desirable to get a null reference back instead.
  * 
- * <li><b>Session</b> - The Page for a Component points back to the Session that
- * contains the Page. The Session for a component can be accessed with the
+ * <li><b>Session </b>- The Page for a Component points back to the Session
+ * that contains the Page. The Session for a component can be accessed with the
  * convenience method getSession(), which simply calls getPage().getSession().
  * 
- * <li><b>Locale</b> - The Locale for a Component is available through the convenience
- * method getLocale(), which is equivalent to getSession().getLocale().
+ * <li><b>Locale </b>- The Locale for a Component is available through the
+ * convenience method getLocale(), which is equivalent to
+ * getSession().getLocale().
  * 
- * <li><b>String Resources</b> - Components can have associated String resources via
- * the Application's Localizer, which is available through the method
- * {@link Component#getLocalizer()}. The convenience methods
+ * <li><b>String Resources </b>- Components can have associated String
+ * resources via the Application's Localizer, which is available through the
+ * method {@link Component#getLocalizer()}. The convenience methods
  * {@link Component#getString(String key)}and
  * {@link Component#getString(String key, IModel model)}wrap the identical
  * methods on the Application Localizer for easy access in Components.
  * 
- * <li><b>Style</b> - The style ("skin") for a component is available through
+ * <li><b>Style </b>- The style ("skin") for a component is available through
  * {@link Component#getStyle()}, which is equivalent to
  * getSession().getStyle(). Styles are intended to give a particular look to a
  * Component or Resource that is independent of its Locale. For example, a style
@@ -162,17 +166,17 @@ import wicket.util.string.Strings;
  * resource management logic will be prefer these resources to other resources,
  * such as default resources, which are not as good of a match.
  * 
- * <li><b>AttributeModifiers</b> - You can add one or more {@link AttributeModifier}s
- * to any component if you need to programmatically manipulate attributes of the
- * markup tag to which a Component is attached.
+ * <li><b>AttributeModifiers </b>- You can add one or more
+ * {@link AttributeModifier}s to any component if you need to programmatically
+ * manipulate attributes of the markup tag to which a Component is attached.
  * 
- * <li><b>Application, ApplicationSettings and ApplicationPages</b> - The
+ * <li><b>Application, ApplicationSettings and ApplicationPages </b>- The
  * getApplication() method provides convenient access to the Application for a
  * Component via getSession().getApplication(). The getApplicationSettings()
  * method is equivalent to getApplication().getSettings(). The
  * getApplicationPages is equivalent to getApplication().getPages().
  * 
- * <li><b>Feedback Messages</b> - The {@link Component#debug(String)},
+ * <li><b>Feedback Messages </b>- The {@link Component#debug(String)},
  * {@link Component#info(String)},{@link Component#warn(String)},
  * {@link Component#error(String)}and {@link Component#fatal(String)}methods
  * associate feedback messages with a Component. It is generally not necessary
@@ -180,11 +184,11 @@ import wicket.util.string.Strings;
  * feedback messages on Components. Any feedback message for a given Component
  * can be retrieved with {@link Component#getFeedbackMessage}.
  * 
- * <li><b>Page Factory</b> - It is possible to change the way that Pages are
+ * <li><b>Page Factory </b>- It is possible to change the way that Pages are
  * constructed by overriding the {@link Component#getPageFactory()}method,
  * returning your own implementation of {@link wicket.IPageFactory}.
  * 
- * <li><b>Versioning</b> - Pages are the unit of versioning in Wicket, but
+ * <li><b>Versioning </b>- Pages are the unit of versioning in Wicket, but
  * fine-grained control of which Components should participate in versioning is
  * possible via the {@link Component#setVersioned(boolean)}method. The
  * versioning participation of a given Component can be retrieved with
@@ -249,11 +253,11 @@ public abstract class Component implements Serializable
 		 * Called at each component in a traversal.
 		 * 
 		 * @param component
-		 *			  The component
+		 *            The component
 		 * @return CONTINUE_TRAVERSAL (null) if the traversal should continue,
-		 *		   or a non-null return value for the traversal method if it
-		 *		   should stop. If no return value is useful, the generic
-		 *		   non-null value STOP_TRAVERSAL can be used.
+		 *         or a non-null return value for the traversal method if it
+		 *         should stop. If no return value is useful, the generic
+		 *         non-null value STOP_TRAVERSAL can be used.
 		 */
 		public Object component(Component component);
 	}
@@ -264,9 +268,9 @@ public abstract class Component implements Serializable
 	 * model.
 	 * 
 	 * @param id
-	 *			  The non-null id of this component
+	 *            The non-null id of this component
 	 * @throws WicketRuntimeException
-	 *			   Thrown if the component has been given a null id.
+	 *             Thrown if the component has been given a null id.
 	 */
 	public Component(final String id)
 	{
@@ -278,12 +282,12 @@ public abstract class Component implements Serializable
 	 * This is constructor includes a model.
 	 * 
 	 * @param id
-	 *			  The non-null id of this component
+	 *            The non-null id of this component
 	 * @param model
-	 *			  The component's model
+	 *            The component's model
 	 * 
 	 * @throws WicketRuntimeException
-	 *			   Thrown if the component has been given a null id.
+	 *             Thrown if the component has been given a null id.
 	 */
 	public Component(final String id, final IModel model)
 	{
@@ -295,7 +299,7 @@ public abstract class Component implements Serializable
 	 * Adds an attribute modifier to the component.
 	 * 
 	 * @param modifier
-	 *			  The attribute modifier to be added
+	 *            The attribute modifier to be added
 	 * @return this (to allow method call chaining)
 	 */
 	public final Component add(final AttributeModifier modifier)
@@ -309,7 +313,7 @@ public abstract class Component implements Serializable
 	 * Registers a debug message for this component
 	 * 
 	 * @param message
-	 *			  The message
+	 *            The message
 	 */
 	public final void debug(final String message)
 	{
@@ -320,7 +324,7 @@ public abstract class Component implements Serializable
 	 * Registers an error message for this component
 	 * 
 	 * @param message
-	 *			  The message
+	 *            The message
 	 */
 	public final void error(final String message)
 	{
@@ -331,7 +335,7 @@ public abstract class Component implements Serializable
 	 * Registers an fatal error message for this component
 	 * 
 	 * @param message
-	 *			  The message
+	 *            The message
 	 */
 	public final void fatal(final String message)
 	{
@@ -342,9 +346,9 @@ public abstract class Component implements Serializable
 	 * Finds the first container parent of this component of the given class.
 	 * 
 	 * @param c
-	 *			  MarkupContainer class to search for
+	 *            MarkupContainer class to search for
 	 * @return First container parent that is an instance of the given class, or
-	 *		   null if none can be found
+	 *         null if none can be found
 	 */
 	public final MarkupContainer findParent(final Class c)
 	{
@@ -391,7 +395,7 @@ public abstract class Component implements Serializable
 	 * Gets interface to application that this component is a part of.
 	 * 
 	 * @return The application associated with the session that this component
-	 *		   is in.
+	 *         is in.
 	 * @see Application
 	 */
 	public final Application getApplication()
@@ -416,7 +420,7 @@ public abstract class Component implements Serializable
 	 * belongs to.
 	 * 
 	 * @return The application settings from the application that this component
-	 *		   belongs to
+	 *         belongs to
 	 * @see ApplicationSettings
 	 */
 	public final ApplicationSettings getApplicationSettings()
@@ -708,7 +712,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param key
-	 *			  Key of string resource in property file
+	 *            Key of string resource in property file
 	 * @return The String
 	 * @see Localizer
 	 */
@@ -719,15 +723,30 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param key
-	 *			  The resource key
+	 *            The resource key
 	 * @param model
-	 *			  The model
+	 *            The model
 	 * @return The formatted string
 	 * @see Localizer
 	 */
 	public final String getString(final String key, final IModel model)
 	{
 		return getLocalizer().getString(key, this, model);
+	}
+
+	/**
+	 * @param key
+	 *            The resource key
+	 * @param model
+	 *            The model
+	 * @param defaultValue
+	 *            A default value if the string cannot be found
+	 * @return The formatted string
+	 * @see Localizer
+	 */
+	public final String getString(final String key, final IModel model, final String defaultValue)
+	{
+		return getLocalizer().getString(key, this, model, defaultValue);
 	}
 
 	/**
@@ -761,7 +780,7 @@ public abstract class Component implements Serializable
 	 * Registers a info message for this component
 	 * 
 	 * @param message
-	 *			  The message
+	 *            The message
 	 */
 	public final void info(final String message)
 	{
@@ -772,7 +791,7 @@ public abstract class Component implements Serializable
 	 * Returns true if this component is an ancestor of the given component
 	 * 
 	 * @param component
-	 *			  The component to check
+	 *            The component to check
 	 * @return True if the given component has this component as an ancestor
 	 */
 	public boolean isAncestorOf(final Component component)
@@ -859,7 +878,7 @@ public abstract class Component implements Serializable
 	 * Creates a new page using the component's page factory
 	 * 
 	 * @param c
-	 *			  The class of page to create
+	 *            The class of page to create
 	 * @return The new page
 	 */
 	public final Page newPage(final Class c)
@@ -871,9 +890,9 @@ public abstract class Component implements Serializable
 	 * Creates a new page using the component's page factory
 	 * 
 	 * @param c
-	 *			  The class of page to create
+	 *            The class of page to create
 	 * @param parameters
-	 *			  Any parameters to pass to the constructor
+	 *            Any parameters to pass to the constructor
 	 * @return The new page
 	 */
 	public final Page newPage(final Class c, final PageParameters parameters)
@@ -963,9 +982,9 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param component
-	 *			  The component to compare with
+	 *            The component to compare with
 	 * @return True if the given component's model is the same as this
-	 *		   component's model.
+	 *         component's model.
 	 */
 	public final boolean sameRootModel(final Component component)
 	{
@@ -974,9 +993,9 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param model
-	 *			  The model to compare with
+	 *            The model to compare with
 	 * @return True if the given component's model is the same as this
-	 *		   component's model.
+	 *         component's model.
 	 */
 	public final boolean sameRootModel(final IModel model)
 	{
@@ -997,7 +1016,7 @@ public abstract class Component implements Serializable
 	 * Sets the given model.
 	 * 
 	 * @param model
-	 *			  the model
+	 *            the model
 	 */
 	public final void setModel(final IModel model)
 	{
@@ -1028,7 +1047,7 @@ public abstract class Component implements Serializable
 	 * getModel().setObject(object).
 	 * 
 	 * @param object
-	 *			  The object to set
+	 *            The object to set
 	 */
 	public final void setModelObject(final Object object)
 	{
@@ -1050,7 +1069,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param redirect
-	 *			  True if the response should be redirected to
+	 *            True if the response should be redirected to
 	 * @see RequestCycle#setRedirect(boolean)
 	 */
 	public final void setRedirect(final boolean redirect)
@@ -1062,7 +1081,7 @@ public abstract class Component implements Serializable
 	 * Sets the page that will respond to this request
 	 * 
 	 * @param page
-	 *			  The response page
+	 *            The response page
 	 * @see RequestCycle#setResponsePage(Page)
 	 */
 	public final void setResponsePage(final Page page)
@@ -1074,7 +1093,7 @@ public abstract class Component implements Serializable
 	 * Sets whether model strings should be escaped.
 	 * 
 	 * @param escapeMarkup
-	 *			  True is model strings should be escaped
+	 *            True is model strings should be escaped
 	 * @return This
 	 */
 	public final Component setShouldEscapeModelStrings(final boolean escapeMarkup)
@@ -1085,8 +1104,8 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param versioned
-	 *			  True to turn on versioning for this component, false to turn
-	 *			  it off for this component and any children.
+	 *            True to turn on versioning for this component, false to turn
+	 *            it off for this component and any children.
 	 */
 	public void setVersioned(boolean versioned)
 	{
@@ -1097,7 +1116,7 @@ public abstract class Component implements Serializable
 	 * Sets whether this component and any children are visible.
 	 * 
 	 * @param visible
-	 *			  True if this component and any children should be visible
+	 *            True if this component and any children should be visible
 	 * @return This
 	 */
 	public final Component setVisible(final boolean visible)
@@ -1120,7 +1139,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param detailed
-	 *			  True if a detailed string is desired
+	 *            True if a detailed string is desired
 	 * @return The string
 	 */
 	public String toString(final boolean detailed)
@@ -1151,7 +1170,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param listenerInterface
-	 *			  The listener interface that the URL should call
+	 *            The listener interface that the URL should call
 	 * @return The URL
 	 */
 	public final String urlFor(final Class listenerInterface)
@@ -1163,7 +1182,7 @@ public abstract class Component implements Serializable
 	 * Registers a warning message for this component
 	 * 
 	 * @param message
-	 *			  The message
+	 *            The message
 	 */
 	public final void warn(final String message)
 	{
@@ -1174,11 +1193,11 @@ public abstract class Component implements Serializable
 	 * Checks whether the given type has the expected name.
 	 * 
 	 * @param tag
-	 *			  The tag to check
+	 *            The tag to check
 	 * @param name
-	 *			  The expected tag name
+	 *            The expected tag name
 	 * @throws MarkupException
-	 *			   Thrown if the tag is not of the right name
+	 *             Thrown if the tag is not of the right name
 	 */
 	protected final void checkComponentTag(final ComponentTag tag, final String name)
 	{
@@ -1194,13 +1213,13 @@ public abstract class Component implements Serializable
 	 * Checks that a given tag has a required attribute value.
 	 * 
 	 * @param tag
-	 *			  The tag
+	 *            The tag
 	 * @param key
-	 *			  The attribute key
+	 *            The attribute key
 	 * @param value
-	 *			  The required value for the attribute key
+	 *            The required value for the attribute key
 	 * @throws MarkupException
-	 *			   Thrown if the tag does not have the required attribute value
+	 *             Thrown if the tag does not have the required attribute value
 	 */
 	protected final void checkComponentTagAttribute(final ComponentTag tag, final String key,
 			final String value)
@@ -1244,7 +1263,7 @@ public abstract class Component implements Serializable
 	 * component.
 	 * 
 	 * @param message
-	 *			  The message
+	 *            The message
 	 * @return The modified message
 	 */
 	protected final String exceptionMessage(final String message)
@@ -1256,8 +1275,8 @@ public abstract class Component implements Serializable
 	 * Finds the markup stream for this component.
 	 * 
 	 * @return The markup stream for this component. Since a Component cannot
-	 *		   have a markup stream, we ask this component's parent to search
-	 *		   for it.
+	 *         have a markup stream, we ask this component's parent to search
+	 *         for it.
 	 */
 	protected MarkupStream findMarkupStream()
 	{
@@ -1378,7 +1397,7 @@ public abstract class Component implements Serializable
 	 * Processes the component tag.
 	 * 
 	 * @param tag
-	 *			  Tag to modify
+	 *            Tag to modify
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
@@ -1388,9 +1407,9 @@ public abstract class Component implements Serializable
 	 * Processes the body.
 	 * 
 	 * @param markupStream
-	 *			  The markup stream
+	 *            The markup stream
 	 * @param openTag
-	 *			  The open tag for the body
+	 *            The open tag for the body
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -1433,7 +1452,7 @@ public abstract class Component implements Serializable
 	 * Redirects browser to the given page
 	 * 
 	 * @param page
-	 *			  The page to redirect to
+	 *            The page to redirect to
 	 */
 	protected void redirectTo(final Page page)
 	{
@@ -1447,7 +1466,7 @@ public abstract class Component implements Serializable
 	 * the component to render its body.
 	 * 
 	 * @param markupStream
-	 *			  The markup stream
+	 *            The markup stream
 	 */
 	protected final void renderComponent(final MarkupStream markupStream)
 	{
@@ -1502,7 +1521,7 @@ public abstract class Component implements Serializable
 	 * modifications if they have been added to the component.
 	 * 
 	 * @param tag
-	 *			  The tag to write
+	 *            The tag to write
 	 */
 	protected final void renderComponentTag(ComponentTag tag)
 	{
@@ -1528,11 +1547,11 @@ public abstract class Component implements Serializable
 	 * Replaces the body with the given one.
 	 * 
 	 * @param markupStream
-	 *			  The markup stream to replace the tag body in
+	 *            The markup stream to replace the tag body in
 	 * @param tag
-	 *			  The tag
+	 *            The tag
 	 * @param body
-	 *			  The new markup
+	 *            The new markup
 	 */
 	protected final void replaceComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag tag, final String body)
@@ -1566,9 +1585,9 @@ public abstract class Component implements Serializable
 	 * Visits the parents of this component.
 	 * 
 	 * @param c
-	 *			  Class
+	 *            Class
 	 * @param visitor
-	 *			  The visitor to call at each parent of the given type
+	 *            The visitor to call at each parent of the given type
 	 * @return First non-null value returned by visitor callback
 	 */
 	protected final Object visitParents(final Class c, final IVisitor visitor)
@@ -1599,7 +1618,7 @@ public abstract class Component implements Serializable
 	 * Gets the component at the given path.
 	 * 
 	 * @param path
-	 *			  Path to component
+	 *            Path to component
 	 * @return The component at the path
 	 */
 	Component get(final String path)
@@ -1616,7 +1635,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param flag
-	 *			  The flag to test
+	 *            The flag to test
 	 * @return True if the flag is set
 	 */
 	final boolean getFlag(final int flag)
@@ -1628,9 +1647,9 @@ public abstract class Component implements Serializable
 	 * Renders the close tag at the current position in the markup stream.
 	 * 
 	 * @param markupStream
-	 *			  the markup stream
+	 *            the markup stream
 	 * @param openTag
-	 *			  the tag to render
+	 *            the tag to render
 	 */
 	final void renderClosingComponentTag(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -1673,9 +1692,9 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param flag
-	 *			  The flag to set
+	 *            The flag to set
 	 * @param set
-	 *			  True to turn the flag on, false to turn it off
+	 *            True to turn the flag on, false to turn it off
 	 */
 	final void setFlag(final byte flag, final boolean set)
 	{
@@ -1693,7 +1712,7 @@ public abstract class Component implements Serializable
 	 * Sets the parent of a component.
 	 * 
 	 * @param parent
-	 *			  The parent container
+	 *            The parent container
 	 */
 	final void setParent(final MarkupContainer parent)
 	{
@@ -1722,7 +1741,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * @param auto
-	 *			  True to put component into auto-add mode
+	 *            True to put component into auto-add mode
 	 */
 	final void setAuto(final boolean auto)
 	{
@@ -1751,7 +1770,7 @@ public abstract class Component implements Serializable
 	 * Finds the root object for an IModel
 	 * 
 	 * @param model
-	 *			  The model
+	 *            The model
 	 * @return The root object
 	 */
 	private Object getRootModel(final IModel model)
@@ -1775,7 +1794,7 @@ public abstract class Component implements Serializable
 	 * time a component's id can be set is in its constructor.
 	 * 
 	 * @param id
-	 *			  The non-null id of this component
+	 *            The non-null id of this component
 	 */
 	private final void setId(final String id)
 	{

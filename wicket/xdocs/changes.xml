@@ -7,7 +7,12 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-  	<release version="1.0-rc1" date="2005-04-03" description="1.0 release candidate 1"> 
+  	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2"> 
+      <action type="update" dev="Jonathan Locke" issue="">
+		Added Component.getString(final String key, final IModel model, final String defaultValue)
+      </action>
+    </release> 
+  	<release version="1.0-rc1" date="2005-04-03" description="1.0 Release Candidate 1"> 
       <action type="update" dev="Jonathan Locke" issue="">
       Reworked SharedResource a bit to address clustering issues for Chris.
       I think the new structure will work finally, but I don't have a cluster
