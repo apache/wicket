@@ -69,7 +69,7 @@ public abstract class Page extends Container implements IRedirectListener
     private int autoIndex = 0;
 
     /** temporary reference to the messages in case we are redirecting. */
-    UIMessages messages;
+    FeedbackMessages messages;
 
     static
     {
@@ -209,7 +209,7 @@ public abstract class Page extends Container implements IRedirectListener
             // so, we are comming from a redirect;
             // these are the saved messages from the thread that issued 
             // the redirect. Set as the current threads' messages
-            UIMessages.set(this.messages);
+            FeedbackMessages.set(this.messages);
             
             // reset the page variable
             this.messages = null;

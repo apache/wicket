@@ -18,7 +18,7 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.UIMessages;
+import wicket.FeedbackMessages;
 
 /**
  * Interface to code which handles validation errors.
@@ -31,7 +31,7 @@ public interface IValidationErrorHandler
     /**
      * Called when any validation errors were encountered.
      * @param errors the structure where navigation errors are recorded in.
-     * @see UIMessages
+     * @see FeedbackMessages
      */
-    public void validationError(final UIMessages errors);
+    public void validationError(final FeedbackMessages errors);
 }
