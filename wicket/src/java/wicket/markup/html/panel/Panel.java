@@ -24,7 +24,29 @@ import wicket.markup.html.HtmlContainer;
 
 
 /**
- * A panel holds markup and other components.
+ * A panel holds markup and other components.<p>
+ * <p>
+ * Whereas HTMLContainer is an inline container like
+ * <pre>
+ * ...
+ * &lt;span id="wcn-xxx"&gt;
+ *   &lt;span id="wcn-mylabel"&gt;My label&lt;/span&gt;
+ *   ....
+ * &lt;/span&gt;
+ * ...
+ * </pre>
+ * A Panel does have its own associated markup file and the container
+ * content is taken from that file, like:
+ * <pre>
+ * &lt;span id="wcn-mypanel"/&gt;
+ *
+ * TestPanel.html
+ * &lt;span id="wcn-[panel]"&gt;
+ *   &lt;span id="wcn-mylabel"&gt;My label&lt;/span&gt;
+ *   ....
+ * &lt;/span&gt;
+ * </pre>
+ * 
  * @author Jonathan Locke
  */
 public class Panel extends HtmlContainer
@@ -52,7 +74,8 @@ public class Panel extends HtmlContainer
 
         if (!markupStream.atOpenCloseTag())
         {
-            markupStream.throwMarkupException("A panel must be referenced by an openclose tag.");
+            markupStream.throwMarkupException(
+                    "A panel must be referenced by an openclose tag.");
         }
 
         renderTag(cycle, markupStream);
