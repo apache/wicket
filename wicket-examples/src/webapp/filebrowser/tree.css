@@ -2,16 +2,16 @@
 	margin-bottom: 2em;	
 }
 
-#tree {
+.customtree {
 	width: 1px;
 }
 
-#tree ul {
+.customtree ul {
 	margin: 0;
 	padding: 0;
 }
 
-#tree li {
+.customtree li {
 	list-style-type: none;
 	list-style-position: outside;
 	background-image: none;
@@ -22,42 +22,49 @@
 	cursor: pointer;
 }
 
-#tree ul ul {
+.customtree ul ul {
 	margin-left: 20px;
 }
 
-#tree ul ul li {
+.customtree ul ul li {
 	padding-left: 20px;
 }
 
-#tree #link {
+.customtree #link {
 	background-color: white;
 }
 
-#tree #label {
+.customtree #label {
 	background-color: white;
 }
 
-#tree .tree-leaf-end {
+.customtree .tree-leaf-end {
 
 }
 
-#tree .tree-junction-expanded-siblings {
+.customtree .tree-junction-expanded-siblings {
 	background-image: url('minus.gif');
 }
 
-#tree .tree-junction-closed-siblings {
+.customtree .tree-junction-closed-siblings {
 	background-image: url('plus.gif');
 }
 
-#tree .tree-junction-expanded-end {
+.customtree .tree-junction-expanded-end {
 	background-image: url('minus.gif');
 }
 
-#tree .tree-junction-closed-end {
+.customtree .tree-junction-closed-end {
 	background-image: url('plus.gif');
 }
 
 #spacers {
 	padding-left: 16px;
+}
+
+#junctionImg {
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 }

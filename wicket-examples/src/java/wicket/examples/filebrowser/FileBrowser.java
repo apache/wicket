@@ -111,7 +111,7 @@ public class FileBrowser extends HtmlPage
 				}
 				else
 				{
-					return "tree";
+					return "customtree";
 				}
 			}
 
@@ -121,7 +121,8 @@ public class FileBrowser extends HtmlPage
 		};
 		
 		treeContainer.add(tree);
-		treeContainer.add(new ComponentTagAttributeModifier("id", idReplacementModel));
+		treeContainer.add(new ComponentTagAttributeModifier(
+				"class", true, idReplacementModel));
 		add(treeContainer);
 	}
 
