@@ -52,7 +52,6 @@ public class Home extends WicketExamplePage
 		 */
 		public void onSubmit()
 		{
-			getRequestCycle().setRedirect(true);
 			getRequestCycle().setPage(Home.this);
 		}
 	}

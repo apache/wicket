@@ -211,7 +211,6 @@ public class UploadPage extends WicketExamplePage
 					log.info("Deleting " + file);
 					Files.delete(file);
 					refreshFiles();
-					getRequestCycle().setRedirect(true);
 				}
 			});
 		}

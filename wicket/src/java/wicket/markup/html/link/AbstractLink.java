@@ -37,7 +37,7 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	private PopupSettings popupSettings = null;
 
 	/**
-     * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(String)
 	 */
 	public AbstractLink(String componentName)
 	{
@@ -45,7 +45,7 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public AbstractLink(String name, Serializable object)
 	{
@@ -53,7 +53,7 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public AbstractLink(String name, Serializable object, String expression)
 	{
@@ -74,17 +74,23 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET API.  DO NOT ATTEMPT TO OVERRIDE 
-	 * OR CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR
+	 * CALL IT.
 	 * 
-	 * Called when a link is clicked.  The implementation of this method is currently
-	 * to simply call onClick(), but this may be augmented in the future.
+	 * Called when a link is clicked. The implementation of this method is
+	 * currently to simply call onClick(), but this may be augmented in the
+	 * future.
 	 * 
 	 * @see ILinkListener
 	 */
 	public final void onLinkClicked()
 	{
 		onClick();
+
+		// Since the invocation of onLinkClicked occurred through a URL that
+		// would repeat the action if the user refreshed the page, we redirect
+		// to our resulting page so this won't happen.
+		getRequestCycle().setRedirect(true);
 	}
 
 	/**
@@ -116,7 +122,7 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	{
 		return getRequestCycle().urlFor(AbstractLink.this, ILinkListener.class);
 	}
-    
+
 	static
 	{
 		// Allow calls through the ILinkListener interface

@@ -18,17 +18,16 @@
 package wicket.examples.linkomatic;
 
 import wicket.Page;
-import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.html.link.ExternalLink;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.ImageMap;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.link.PopupSettings;
-import wicket.markup.html.link.ExternalLink;
 
 /**
  * Demonstrates different flavors of hyperlinks.
@@ -45,11 +44,8 @@ public class Home extends WicketExamplePage
 
 	/**
 	 * Constructor
-	 * 
-	 * @param parameters
-	 *            Page parameters (ignored since this is the home page)
 	 */
-	public Home(final PageParameters parameters)
+	public Home()
 	{
 		// Action link counts link clicks
 		final Link actionLink = new Link("actionLink")
@@ -57,10 +53,6 @@ public class Home extends WicketExamplePage
 			public void onClick()
 			{
 				linkClickCount++;
-
-				// Redirect back to result to avoid refresh updating the link
-				// count
-				getRequestCycle().setRedirect(true);
 			}
 		};
 		actionLink.add(new Label("linkClickCount", this, "linkClickCount"));
@@ -72,10 +64,6 @@ public class Home extends WicketExamplePage
 			public void onClick()
 			{
 				onClickLinkClickCount++;
-
-				// Redirect back to result to avoid refresh updating the link
-				// count
-				getRequestCycle().setRedirect(true);
 			}
 		};
 

@@ -46,9 +46,6 @@ public class MockPage extends WebPage {
 
 			public void onClick() {
                 linkClickCount++;
-
-                // Redirect back to result to avoid refresh updating the link count
-                getRequestCycle().setRedirect(true);
             }
         };
         actionLink.add(new Label("linkClickCount", this, "linkClickCount"));

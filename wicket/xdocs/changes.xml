@@ -8,6 +8,10 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1149604">
+		When core calls onClick() it automatically causes redirection to prevent
+		repeating of the action on browser refreshes.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1149566">
 		Refactored feedback messages code and added a Form parameter to 
 		IValidationFeedback which is used by FeedbackPanel to restrict its 
