@@ -56,18 +56,11 @@ public class Image extends HtmlComponent implements IResourceListener
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
 
-	static
-    {
-        RequestCycle.registerRequestListenerInterface(IResourceListener.class);
-    }
-
     /** The image resource. */
     private IResource image;
 
     /**
-     * Constructor without a model; the src tag of the img will be used to find 
-     * the image resource.
-     * @param name The non-null name of this component
+     * @see wicket.Component#Component(String)
      */
     public Image(final String name)
     {
@@ -75,12 +68,7 @@ public class Image extends HtmlComponent implements IResourceListener
     }
 
     /**
-     * Constructor that uses the provided {@link IModel}as its model; the model object
-     * will be used to find the image resource. All components have names. A component's
-     * name cannot be null.
-     * @param name The non-null name of this component
-     * @param model the model
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, IModel)
      */
     public Image(final String name, final IModel model)
     {
@@ -88,22 +76,7 @@ public class Image extends HtmlComponent implements IResourceListener
     }
 
     /**
-     * Constructor that uses the provided instance of {@link IModel}as a dynamic model;
-     * the model object will be used to find the image resource. This model will be
-     * wrapped in an instance of {@link wicket.model.PropertyModel}
-     * using the provided expression.
-     * Thus, using this constructor is a short-hand for:
-     * 
-     * <pre>
-     * new MyComponent(name, new PropertyModel(myIModel, expression));
-     * </pre>
-     * 
-     * All components have names. A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param model the instance of {@link IModel}from which the model object will be
-     *            used as the subject for the given expression
-     * @param expression the OGNL expression that works on the given object
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, IModel, String)
      */
     public Image(final String name, final IModel model, final String expression)
     {
@@ -111,13 +84,7 @@ public class Image extends HtmlComponent implements IResourceListener
     }
 
     /**
-     * Constructor that uses the provided object as a simple model; the model object will
-     * be used to find the image resource. This object will be wrapped in an instance of
-     * {@link wicket.model.Model}. All components have names.
-     * A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param object The object that will be used as a simple model
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable)
      */
     public Image(final String name, final Serializable object)
     {
@@ -125,86 +92,11 @@ public class Image extends HtmlComponent implements IResourceListener
     }
 
     /**
-     * Constructor that uses the provided object as a dynamic model; the model object will
-     * be used to find the image resource. This object will be wrapped in an instance of
-     * {@link wicket.model.Model} that will be wrapped in an instance of
-     * {@link wicket.model.PropertyModel} using
-     * the provided expression. Thus, using this constructor is a short-hand for:
-     * 
-     * <pre>
-     * new MyComponent(name, new PropertyModel(new Model(object), expression));
-     * </pre>
-     * 
-     * All components have names. A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param object the object that will be used as the subject for the given expression
-     * @param expression the OGNL expression that works on the given object
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable, String)
      */
     public Image(final String name, final Serializable object, final String expression)
     {
         super(name, object, expression);
-    }
-
-    /**
-     * @param source The source attribute of the image tag
-     * @return Gets the image resource for the component.
-     */
-    protected IResource getResource(final String source)
-    {
-        if (source.indexOf("..") != -1 || source.indexOf("/") != -1)
-        {
-            throw new WicketRuntimeException("Source for image resource cannot contain a path");
-        }
-
-        final String path = Classes.packageName(getPage().getClass()) + "." + source;
-        return Resource.locate
-        (
-            getApplicationSettings().getSourcePath(), 
-            getPage().getClass().getClassLoader(), 
-            path, 
-            getStyle(), 
-            getLocale(), 
-            null
-        );
-    }
-
-    /**
-     * @see wicket.Component#handleComponentTag(ComponentTag)
-     */
-    protected void handleComponentTag(final ComponentTag tag)
-    {
-        checkTag(tag, "img");
-        super.handleComponentTag(tag);
-
-        final String resourceToLoad;
-        final String imageResource = (String)getModelObject();
-
-        if (imageResource != null)
-        {
-            resourceToLoad = imageResource;
-        }
-        else
-        {
-            resourceToLoad = tag.getString("src");
-        }
-
-        this.image = getResource(resourceToLoad);
-
-        if (this.image == null)
-        {
-            throw new WicketRuntimeException("Could not find image resource " + resourceToLoad);
-        }
-
-        final String url = getRequestCycle().urlFor(this, IResourceListener.class);
-		tag.put("src", url.replaceAll("&", "&amp;"));
-    }
-
-    /**
-     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
-     */
-    protected void handleBody(MarkupStream markupStream, ComponentTag openTag)
-    {
     }
 
     /**
@@ -245,6 +137,72 @@ public class Image extends HtmlComponent implements IResourceListener
         {
             throw new WicketRuntimeException("Unable to render resource " + image, e);
         }
+    }
+
+    /**
+     * @param source The source attribute of the image tag
+     * @return Gets the image resource for the component.
+     */
+    protected IResource getResource(final String source)
+    {
+        if (source.indexOf("..") != -1 || source.indexOf("/") != -1)
+        {
+            throw new WicketRuntimeException("Source for image resource cannot contain a path");
+        }
+
+        final String path = Classes.packageName(getPage().getClass()) + "." + source;
+        return Resource.locate
+        (
+            getApplicationSettings().getSourcePath(), 
+            getPage().getClass().getClassLoader(), 
+            path, 
+            getStyle(), 
+            getLocale(), 
+            null
+        );
+    }
+
+    /**
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
+     */
+    protected void handleBody(MarkupStream markupStream, ComponentTag openTag)
+    {
+    }
+
+    /**
+     * @see wicket.Component#handleComponentTag(ComponentTag)
+     */
+    protected void handleComponentTag(final ComponentTag tag)
+    {
+        checkTag(tag, "img");
+        super.handleComponentTag(tag);
+
+        final String resourceToLoad;
+        final String imageResource = (String)getModelObject();
+
+        if (imageResource != null)
+        {
+            resourceToLoad = imageResource;
+        }
+        else
+        {
+            resourceToLoad = tag.getString("src");
+        }
+
+        this.image = getResource(resourceToLoad);
+
+        if (this.image == null)
+        {
+            throw new WicketRuntimeException("Could not find image resource " + resourceToLoad);
+        }
+
+        final String url = getRequestCycle().urlFor(this, IResourceListener.class);
+		tag.put("src", url.replaceAll("&", "&amp;"));
+    }
+
+	static
+    {
+        RequestCycle.registerRequestListenerInterface(IResourceListener.class);
     }
 }
 
