@@ -31,7 +31,7 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.panel.SignInPanel;
 import wicket.protocol.http.HttpRequestCycle;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.MockPage;
 
 import junit.framework.Assert;
@@ -45,7 +45,7 @@ import junit.framework.TestCase;
  */
 public class CookieTest extends TestCase 
 {
-    private MockHttpApplication application;
+    private MockWebApplication application;
     private SignInPanel panel;
     private Form form;
     private Cookie cookieUsername;
@@ -68,7 +68,7 @@ public class CookieTest extends TestCase
 	{
         super.setUp();
         
-        application = new MockHttpApplication(null);
+        application = new MockWebApplication(null);
         final ApplicationSettings settings = application.getSettings();
         application.getPages().setHomePage(MockPage.class);
         application.setupRequestAndResponse();

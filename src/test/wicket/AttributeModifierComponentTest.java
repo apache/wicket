@@ -20,7 +20,7 @@ package wicket;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
@@ -35,7 +35,7 @@ import wicket.protocol.http.documentvalidation.TextContent;
 public class AttributeModifierComponentTest extends TestCase
 {
 
-	private MockHttpApplication application;
+	private MockWebApplication application;
 
 	/**
 	 * Create a test case instance.
@@ -49,7 +49,7 @@ public class AttributeModifierComponentTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockHttpApplication(null);
+		application = new MockWebApplication(null);
 		application.getPages().setHomePage(AttributeModifierComponentPage.class);
 	}
 

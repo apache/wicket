@@ -21,7 +21,6 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.Page;
 import wicket.protocol.http.HttpRequest;
@@ -36,7 +35,7 @@ import wicket.protocol.http.HttpSession;
  * with mock objects for HttpSession, HttpServletRequest, HttpServletResponse
  * and ServletContext.
  * <p>
- * In its most basic usage you can just create a new MockHttpApplication. This
+ * In its most basic usage you can just create a new MockWebApplication. This
  * should be sufficient to allow you to construct components and pages and so on
  * for testing. To use certain features such as localization you must also call
  * setupRequestAndResponse().
@@ -67,7 +66,7 @@ import wicket.protocol.http.HttpSession;
  * 
  * @author Chris Turner
  */
-public class MockHttpApplication extends WebApplication
+public class MockWebApplication extends WebApplication
 {
     /** Serial Version ID */
     private static final long serialVersionUID = 8409647488957949834L;
@@ -77,9 +76,6 @@ public class MockHttpApplication extends WebApplication
 
     /** The last rendered page. */
     private Page lastRenderedPage;
-
-    /** Standard application pages */
-    private final ApplicationPages pages;
 
     /** Mock http servlet request. */
     private final MockHttpServletRequest servletRequest;
@@ -110,10 +106,9 @@ public class MockHttpApplication extends WebApplication
      *            (e.g. war root) - may be null
      * @see wicket.protocol.http.MockServletContext
      */
-    public MockHttpApplication(final String path)
+    public MockWebApplication(final String path)
     {
         settings = new ApplicationSettings(this);
-        pages = new ApplicationPages();
         context = new MockServletContext(this, path);
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
@@ -129,14 +124,6 @@ public class MockHttpApplication extends WebApplication
     public Page getLastRenderedPage()
     {
         return lastRenderedPage;
-    }
-
-    /**
-     * @see wicket.Application#getPages()
-     */
-    public ApplicationPages getPages()
-    {
-        return pages;
     }
 
     /**

@@ -18,7 +18,7 @@
  */
 package wicket.markup.html.table;
 
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
@@ -55,7 +55,7 @@ public class SimpleTableTest extends TestCase
      */
     public void testSimpleTable() throws Exception
     {
-        MockHttpApplication application = new MockHttpApplication(null);
+        MockWebApplication application = new MockWebApplication(null);
         application.getPages().setHomePage(SimpleTablePage.class);
         application.setupRequestAndResponse();
         application.processRequestCycle();

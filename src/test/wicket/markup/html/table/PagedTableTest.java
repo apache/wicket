@@ -19,7 +19,7 @@
 package wicket.markup.html.table;
 
 import wicket.markup.html.link.Link;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
@@ -55,7 +55,7 @@ public class PagedTableTest extends TestCase
      */
     public void testPagedTable() throws Exception
     {
-        MockHttpApplication application = new MockHttpApplication(null);
+        MockWebApplication application = new MockWebApplication(null);
         application.getPages().setHomePage(PagedTablePage.class);
         application.setupRequestAndResponse();
         application.processRequestCycle();

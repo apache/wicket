@@ -68,6 +68,9 @@ public abstract class WebApplication extends Application
 	 */
 	public WebApplication()
 	{
+        // Set default error pages for HTML markup
+        getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class).setInternalErrorPage(
+                InternalErrorPage.class).setStaleDataErrorPage(StaleDataErrorPage.class);
 	}
 
 	/**
@@ -80,9 +83,6 @@ public abstract class WebApplication extends Application
 	 */
 	public void init()
 	{
-        // Set default error pages for HTML markup
-        getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class).setInternalErrorPage(
-                InternalErrorPage.class).setStaleDataErrorPage(StaleDataErrorPage.class);
 	}
 
 	/**
