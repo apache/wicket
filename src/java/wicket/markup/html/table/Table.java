@@ -126,7 +126,7 @@ public abstract class Table extends ListView
      */
     public Table(String name, List object, int rowsPerPage)
     {
-        this(name, castToSerializable(object), rowsPerPage);
+        this(name, (Serializable)object, rowsPerPage);
     }
 
     /**
