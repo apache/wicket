@@ -990,17 +990,34 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * @param detailed
+	 *            True if a detailed string is desired
+	 * @return The string
+	 */
+	public String toString(final boolean detailed)
+	{
+		if (detailed)
+		{
+			final Page page = findPage();
+			return "[Component id = " + getId() + ", page = "
+					+ (page == null ? "<No Page>" : getPage().getClass().getName()) + ", path = "
+					+ getPath() + "." + Classes.name(getClass()) + ", isVisible = " + isVisible()
+					+ ", isVersioned = " + isVersioned() + "]";
+		}
+		else
+		{
+			return "[Component id = " + getId() + "]";
+		}
+	}
+
+	/**
 	 * Gets the string representation of this component.
 	 * 
 	 * @return The path to this component
 	 */
 	public String toString()
 	{
-		final Page page = findPage();
-		return "[Component id = " + getId() + ", page = "
-				+ (page == null ? "<No Page>" : getPage().getClass().getName()) + ", path = "
-				+ getPath() + "." + Classes.name(getClass()) + ", isVisible = " + isVisible()
-				+ ", isVersioned = " + isVersioned() + "]";
+		return toString(true);
 	}
 
 	/**

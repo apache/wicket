@@ -108,7 +108,7 @@ public class WebRequestCycle extends RequestCycle
 	 * 
 	 * @return True if a Page should be rendered back to the user
 	 */
-	protected boolean onRespond()
+	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
 		if (callComponentListener() || bookmarkablePage() || homePage())

@@ -182,9 +182,6 @@ public abstract class RequestCycle
 	/** The session object. */
 	protected final Session session;
 
-	/** The page to render to the user. */
-	private Page responsePage;
-
 	/**
 	 * If the page is set to null, we'll first set the current page to this
 	 * variable. We use this in order to be able to release resources on the
@@ -197,6 +194,9 @@ public abstract class RequestCycle
 	 * just rendering it back to the user.
 	 */
 	private boolean redirect;
+
+	/** The page to render to the user. */
+	private Page responsePage;
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -282,16 +282,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the current page.
-	 * 
-	 * @return The page
-	 */
-	public final Page getResponsePage()
-	{
-		return responsePage;
-	}
-
-	/**
 	 * Gets whether the page for this request should be redirected.
 	 * 
 	 * @return whether the page for this request should be redirected
@@ -322,6 +312,16 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Gets the current page.
+	 * 
+	 * @return The page
+	 */
+	public final Page getResponsePage()
+	{
+		return responsePage;
+	}
+
+	/**
 	 * Gets the session.
 	 * 
 	 * @return Session object
@@ -344,58 +344,25 @@ public abstract class RequestCycle
 		// can be rendered at a time for a given session.
 		synchronized (session)
 		{
-			// Attach thread local resources for request
-			threadAttach();
-
-			// Any page used to respond to the request
-			Page page = null;
-
-			// Response is beginning
-			internalOnBeginRequest();
-			onBeginRequest();
-
 			try
 			{
-				// If subclass response to request set a Page to render
-				if (onRespond())
+				// Attach thread local resources for request
+				threadAttach();
+
+				// Response is beginning
+				internalOnBeginRequest();
+				onBeginRequest();
+
+				// If request is parsed successfully
+				if (parseRequest())
 				{
-					// Get page set by subclass response
-					page = getResponsePage();
-					if (page != null)
-					{
-						try
-						{
-							// Should page be redirected to?
-							if (getRedirect())
-							{
-								// Redirect to the page
-								redirectTo(page);
-							}
-							else
-							{
-								// Make request to page
-								page.request();
-							}
-						}
-						finally
-						{
-							// Response is ending
-							internalOnEndRequest();
-							onEndRequest();
-						}
-					}
+					// respond with a page
+					respond();
 				}
-				else
-				{
-					// Response is ending
-					internalOnEndRequest();
-					onEndRequest();
-				}
-			}
-			catch (RuntimeException e)
-			{
-				// Handle any runtime exception
-				onRuntimeException(page, e);
+
+				// Response is ending
+				internalOnEndRequest();
+				onEndRequest();
 			}
 			finally
 			{
@@ -403,17 +370,6 @@ public abstract class RequestCycle
 				threadDetach();
 			}
 		}
-	}
-
-	/**
-	 * Convenience method that sets page on response object.
-	 * 
-	 * @param page
-	 *            The page to render as a response
-	 */
-	public final void setResponsePage(final Page page)
-	{
-		this.responsePage = page;
 	}
 
 	/**
@@ -446,6 +402,17 @@ public abstract class RequestCycle
 	public void setResponse(final Response response)
 	{
 		this.response = response;
+	}
+
+	/**
+	 * Convenience method that sets page on response object.
+	 * 
+	 * @param page
+	 *            The page to render as a response
+	 */
+	public final void setResponsePage(final Page page)
+	{
+		this.responsePage = page;
 	}
 
 	/**
@@ -512,7 +479,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return True if a Page should be rendered back to the user
 	 */
-	protected abstract boolean onRespond();
+	protected abstract boolean parseRequest();
 
 	/**
 	 * Redirects browser to the given page.
@@ -578,9 +545,44 @@ public abstract class RequestCycle
 			currentPage.resetMarkupStreams();
 		}
 
-		// DON'T Rethrow error for console / container because then we see the standard error page and we should see the wicket error page
-		//throw new ServletException("Wicket could not render page: " + Strings.toString(e), e);
+		// DON'T Rethrow error for console / container because then we see the
+		// standard error page and we should see the wicket error page
+		// throw new ServletException("Wicket could not render page: " +
+		// Strings.toString(e), e);
 		log.error("Rendering exception", e);
+	}
+
+	/**
+	 * Respond with response page
+	 * 
+	 * @throws ServletException
+	 */
+	private void respond() throws ServletException
+	{
+		// Get any page that is to be used to respond to the request
+		final Page page = getResponsePage();
+		if (page != null)
+		{
+			try
+			{
+				// Should page be redirected to?
+				if (getRedirect())
+				{
+					// Redirect to the page
+					redirectTo(page);
+				}
+				else
+				{
+					// Make request to page
+					page.request();
+				}
+			}
+			catch (RuntimeException e)
+			{
+				// Handle any runtime exception
+				onRuntimeException(page, e);
+			}
+		}
 	}
 
 	/**
