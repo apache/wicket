@@ -37,7 +37,7 @@ public interface IPageVersionManager
 		{
 		}
 
-		public void componentModelChanged(Component component)
+		public void componentModelChangeImpending(Component component)
 		{
 		}
 
@@ -71,23 +71,23 @@ public interface IPageVersionManager
 	 * Indicates that the given component was added.
 	 * 
 	 * @param component
-	 *            The component
+	 *            The component that was added.
 	 */
 	public void componentAdded(Component component);
 
 	/**
-	 * Indicates that the model for the given component was changed.
+	 * Indicates that the model for the given component is about to change.
 	 * 
 	 * @param component
-	 *            The component
+	 *            The component whose model is about to change
 	 */
-	public void componentModelChanged(Component component);
+	public void componentModelChangeImpending(Component component);
 
 	/**
 	 * Indicates that the given component was removed.
 	 * 
 	 * @param component
-	 *            The component
+	 *            The component that was removed.
 	 */
 	public void componentRemoved(Component component);
 

@@ -294,9 +294,9 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * @see wicket.Component#onModelChanged()
+	 * @see wicket.Component#onInternalModelChanged()
 	 */
-	protected void onModelChanged()
+	protected void onInternalModelChanged()
 	{
 		// Visit all the form components and validate each
 		visitFormComponents(new FormComponent.IVisitor()

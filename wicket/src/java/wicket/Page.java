@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
+import wicket.version.undo.UndoPageVersionManager;
 
 /**
  * Abstract base class for pages. As a MarkupContainer subclass, a Page can
@@ -393,12 +394,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * @param component
-	 *            The component whose model changed
+	 *            The component whose model is about to change
 	 */
-	final void componentModelChanged(Component component)
+	final void componentModelChangeImpending(Component component)
 	{
 		changed();
-		getVersionManager().componentModelChanged(component);
+		getVersionManager().componentModelChangeImpending(component);
 	}
 
 	/**
@@ -486,7 +487,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * @see wicket.Component#onInternalModelChanged()
 	 */
-	void onInternalModelChanged()
+	protected void onInternalModelChanged()
 	{
 		// Visit all the form components and validate each
 		visitChildren(new Component.IVisitor()

@@ -15,17 +15,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.version.undo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import wicket.Component;
+import wicket.IPageVersionManager;
+import wicket.Page;
 
 /**
+ * A version manager implemented by recording component changes as undo records
+ * which can later be reversed to get back to a given version of the Page being
+ * managed.
  * 
  * @author Jonathan Locke
  */
 public class UndoPageVersionManager implements IPageVersionManager
 {
-	/** Current version of page */
-	private int version = 0;
+	/** The page being managed */
+	private final Page page;
 	
+	/** List of versions */
+	private final List versions = new ArrayList();
+	
+	/** The current version */
+	private Version version;
+
 	/**
 	 * Constructor
 	 * 
@@ -34,6 +50,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public UndoPageVersionManager(final Page page)
 	{
+		this.page = page;
 	}
 
 	/**
@@ -41,7 +58,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public void beginVersion()
 	{
-		version++;
+		version = new Version();
 	}
 
 	/**
@@ -49,13 +66,15 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public void componentAdded(Component component)
 	{
+		version.componentAdded(component);
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentModelChanged(wicket.Component)
+	 * @see wicket.IPageVersionManager#componentModelChangeImpending(wicket.Component)
 	 */
-	public void componentModelChanged(Component component)
+	public void componentModelChangeImpending(Component component)
 	{
+		version.componentModelChangeImpending(component);
 	}
 
 	/**
@@ -63,6 +82,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public void componentRemoved(Component component)
 	{
+		version.componentRemoved(component);
 	}
 
 	/**
@@ -70,6 +90,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public void endVersion()
 	{
+		versions.add(version);
 	}
 
 	/**
@@ -85,6 +106,6 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public int getVersion()
 	{
-		return version;
+		return versions.size() - 1;
 	}
 }
