@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResource;
 
@@ -104,7 +105,6 @@ public class StaticImageResource extends ImageResource
 	{
 		// Convert resource path to absolute path relative to base package
 		this.absolutePath = Packages.absolutePath(basePackage, path);
-
 		this.locale = locale;
 		this.style = style;
 	}
@@ -119,6 +119,12 @@ public class StaticImageResource extends ImageResource
 			// Locate resource
 			this.resource = RequestCycle.get().getApplication().getResourceLocator().locate(
 					absolutePath, style, locale, null);
+			
+			// Check that resource was found
+			if (this.resource == null)
+			{
+				throw new WicketRuntimeException("Unable to find static image resource [path = " + absolutePath + ", style = " + style + ", locale = " + locale + "]");
+			}
 		}
 		return resource;
 	}
