@@ -47,6 +47,8 @@ public abstract class FormComponent extends HtmlContainer
      * This is false by default.
      */
     private boolean persistenceEnabled = false;
+    
+    // TODO add boolean "invalid" and override model getter to use request when form component is invalid
 
     /**
      * Constructor.
