@@ -182,6 +182,18 @@ public abstract class AbstractTree extends Panel implements ILinkListener
         link.linkClicked(cycle);
     }
 
+	/**
+	 * Sets the new expanded state, based on the given node
+	 * @param node the tree node model
+	 */
+	public final void setExpandedState(TreeNodeModel node)
+	{
+		TreeStateCache state = getTreeState();
+		Object userObject = node.getTreeNode().getUserObject();
+		TreePath selection = state.findTreePath(userObject);
+		setExpandedState(selection, (!node.isExpanded())); // inverse
+	}
+
     /**
      * Sets the expanded property in the stree state for selection.
      * @param selection the selection to set the expanded property for
@@ -230,11 +242,25 @@ public abstract class AbstractTree extends Panel implements ILinkListener
 	 */
 	public TreeStateCache newTreeState(final TreeModel model)
 	{
+		return newTreeState(model, true);
+	}
+
+
+	/**
+	 * Creates a new tree state by creating a new {@link TreeStateCache} object, which
+	 * is then set as the current tree state, creating a new {@link TreeSelectionModel}
+	 * and then calling setTreeModel with this
+	 * @param model the model that the new tree state applies to
+	 * @param rootVisible whether the tree node should be displayed
+	 * @return the tree state
+	 */
+	protected final TreeStateCache newTreeState(final TreeModel model, boolean rootVisible)
+	{
 		TreeStateCache treeStateCache = new TreeStateCache();
 		TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
         treeStateCache.setModel(model);
         treeStateCache.setSelectionModel(selectionModel);
-        treeStateCache.setRootVisible(true);
+        treeStateCache.setRootVisible(rootVisible);
         return treeStateCache;
 	}
 
@@ -254,4 +280,13 @@ public abstract class AbstractTree extends Panel implements ILinkListener
      * @param treeState the current tree state
      */
     protected abstract void applySelectedPaths(TreeStateCache treeState);
+
+    /**
+     * Sets whether the tree node should be displayed.
+     * @param rootVisible whether the tree node should be displayed
+     */
+    public final void setRootVisible(boolean rootVisible)
+    {
+    	treeState.setRootVisible(rootVisible);
+    }
 }

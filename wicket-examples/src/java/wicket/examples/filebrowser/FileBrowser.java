@@ -18,6 +18,7 @@
  */
 package wicket.examples.filebrowser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -346,5 +347,14 @@ public class FileBrowser extends HtmlPage
 
             return img;
         }
+
+		/**
+		 * @see wicket.markup.html.tree.FlatTree#getNodeLabel(wicket.markup.html.tree.TreeNodeModel)
+		 */
+		protected String getNodeLabel(TreeNodeModel node)
+		{
+			File file = (File)node.getUserObject();
+			return file.getName();
+		}
     }
 }

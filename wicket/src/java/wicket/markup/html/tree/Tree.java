@@ -115,9 +115,16 @@ public class Tree extends AbstractTree
         removeAll();
         List visiblePathsList = new ArrayList();
         Enumeration e = treeState.getVisiblePathsFromRoot(); // get all visible
+        boolean skip = (!treeState.isRootVisible());
         while (e.hasMoreElements()) // put enumeration in a list
         {
-            visiblePathsList.add(e.nextElement());
+        	TreePath path = (TreePath)e.nextElement();
+        	if(skip) // skip root if not visible
+        	{
+        		skip = false;
+        		continue;
+        	}
+            visiblePathsList.add(path);
         }
         List nestedList = new ArrayList(); // reference to the first level list
         buildList(visiblePathsList, 0, 0, nestedList); // build the nested lists
