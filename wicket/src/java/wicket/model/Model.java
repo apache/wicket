@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.11 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,9 +22,11 @@ import java.io.Serializable;
 import wicket.WicketRuntimeException;
 
 /**
- * Model is the basic implementation of IModel. It just wraps the model object. The model
- * object must be serializable, as it is stored in the session. If you have large objects
- * to store, consider using {@link wicket.model.IDetachableModel}instead of this class.
+ * Model is the basic implementation of IModel. It just wraps the model object.
+ * The model object must be serializable, as it is stored in the session. If you
+ * have large objects to store, consider using
+ * {@link wicket.model.IDetachableModel}instead of this class.
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
@@ -45,7 +47,9 @@ public class Model implements IModel
 
 	/**
 	 * Construct the model, setting the given object as the wrapped object.
-	 * @param object de model object proper
+	 * 
+	 * @param object
+	 *            de model object proper
 	 */
 	public Model(final Serializable object)
 	{
@@ -54,6 +58,7 @@ public class Model implements IModel
 
 	/**
 	 * Get the model object proper.
+	 * 
 	 * @return the model object proper
 	 */
 	public Object getObject()
@@ -62,9 +67,11 @@ public class Model implements IModel
 	}
 
 	/**
-	 * Set the model object; calls setObject(java.io.Serializable). The model object must
-	 * be serializable, as it is stored in the session
-	 * @param object the model object
+	 * Set the model object; calls setObject(java.io.Serializable). The model
+	 * object must be serializable, as it is stored in the session
+	 * 
+	 * @param object
+	 *            the model object
 	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
 	public void setObject(Object object)
@@ -81,9 +88,11 @@ public class Model implements IModel
 	}
 
 	/**
-	 * Sets the model object. The model object must be serializable, as it is stored in the
-	 * session
-	 * @param object the serializable model object
+	 * Sets the model object. The model object must be serializable, as it is
+	 * stored in the session
+	 * 
+	 * @param object
+	 *            the serializable model object
 	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
 	public void setObject(Serializable object)
