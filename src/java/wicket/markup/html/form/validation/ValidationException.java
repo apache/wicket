@@ -20,44 +20,43 @@ package wicket.markup.html.form.validation;
 
 /**
  * Exception class for validation problems.
- *
  * @author Eelco Hillenius
  */
 public final class ValidationException extends RuntimeException
 {
-    /**
-     * Constructor.
-     */
-    public ValidationException()
-    {
-        super();
-    }
+	/**
+	 * Constructor.
+	 */
+	public ValidationException()
+	{
+		super();
+	}
 
-    /**
-     * Constructor.
-     * @param message The message
-     */
-    public ValidationException(String message)
-    {
-        super(message);
-    }
+	/**
+	 * Constructor.
+	 * @param message The message
+	 */
+	public ValidationException(String message)
+	{
+		super(message);
+	}
 
-    /**
-     * Constructor.
-     * @param cause The cause
-     */
-    public ValidationException(Throwable cause)
-    {
-        super(cause);
-    }
+	/**
+	 * Constructor.
+	 * @param cause The cause
+	 */
+	public ValidationException(Throwable cause)
+	{
+		super(cause);
+	}
 
-    /**
-     * Constructor.
-     * @param message The message
-     * @param cause The cause
-     */
-    public ValidationException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+	/**
+	 * Constructor.
+	 * @param message The message
+	 * @param cause The cause
+	 */
+	public ValidationException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 }

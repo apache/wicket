@@ -21,29 +21,26 @@ package wicket.markup.html.form.validation;
 import wicket.FeedbackMessages;
 
 /**
- * Interface to code which handles validation errors.  FeedbackPanel and
- * FormComponentFeedbackBorder both implement this method so they can act
- * as error handlers when a Form fails to validate.  But any component can 
- * implement the IValidationErrorHandler interface if it wishes to 
- * participate in the process of form validation and user feedback.
+ * Interface to code which handles validation errors. FeedbackPanel and
+ * FormComponentFeedbackBorder both implement this method so they can act as error
+ * handlers when a Form fails to validate. But any component can implement the
+ * IValidationErrorHandler interface if it wishes to participate in the process of form
+ * validation and user feedback.
  * <p>
- * When a form is submitted and one or more validation errors occurs, 
- * logic in the Form.handleErrors() method traverses the component hierarchy
- * of the Form being submitted, calling any IValidationErrorHandler interfaces 
- * it finds and passing a FeedbackMessages object containing one or more
- * errors to the interface implementer's validationError() method.
- *
+ * When a form is submitted and one or more validation errors occurs, logic in the
+ * Form.handleErrors() method traverses the component hierarchy of the Form being
+ * submitted, calling any IValidationErrorHandler interfaces it finds and passing a
+ * FeedbackMessages object containing one or more errors to the interface implementer's
+ * validationError() method.
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
 public interface IValidationErrorHandler
 {
-    /**
-     * Called when validation errors are encountered.
-     * @param messages A structure holding any validation errors.
-     * @see FeedbackMessages
-     */
-    public void validationError(final FeedbackMessages messages);
+	/**
+	 * Called when validation errors are encountered.
+	 * @param messages A structure holding any validation errors.
+	 * @see FeedbackMessages
+	 */
+	public void validationError(final FeedbackMessages messages);
 }
-
-

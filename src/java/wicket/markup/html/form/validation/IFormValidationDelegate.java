@@ -23,9 +23,8 @@ import wicket.FeedbackMessages;
 import wicket.markup.html.form.Form;
 
 /**
- * Delegate for form validation. Implementors of this interface provide the
- * actual validation checking. 
- * 
+ * Delegate for form validation. Implementors of this interface provide the actual
+ * validation checking.
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
@@ -33,9 +32,7 @@ public interface IFormValidationDelegate extends Serializable
 {
 	/**
 	 * Validates the form and return the collected feeback messages.
-	 * 
-	 * @param form
-	 *            the form that the validation is applied to
+	 * @param form the form that the validation is applied to
 	 * @return the collected feedback messages
 	 */
 	public FeedbackMessages validate(Form form);
