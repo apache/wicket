@@ -31,12 +31,16 @@ import wicket.Component;
  * {@link wicket.model.AbstractDetachableModel}for implementations instead of
  * implementing this interface directly.
  * <p>
- * The getNestedModel() method gets any nested model within this model. This
- * allows Component.sameRootModel() to compare two models to see if they both
- * have the same root model. For example, a Form might have a Person model and
- * then a TextField might have a PropertyModel which is the "name" property of
- * the Person model. In this case, PropertyModel will implement
- * getNestedModel(), returning the Person model.
+ * IModels can be nested and the innermost model is also known as the root model
+ * since it is the model on which the outer models rely. The getNestedModel()
+ * method on IModel gets any nested model within the given model. This allows
+ * Component.sameRootModel() to compare two models to see if they both have the
+ * same root model (the same most nested model).
+ * <p>
+ * For example, a Form might have a Person model and then a TextField might have
+ * a PropertyModel which is the "name" property of the Person model. In this
+ * case, PropertyModel will implement getNestedModel(), returning the Person
+ * model which is the root model of the property model.
  * 
  * @see wicket.Component#sameRootModel(wicket.Component)
  * @see wicket.Component#sameRootModel(IModel)
