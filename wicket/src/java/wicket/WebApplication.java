@@ -22,7 +22,6 @@ import wicket.markup.html.PageExpiredErrorPage;
 import wicket.markup.html.StaleDataErrorPage;
 import wicket.protocol.http.HttpApplication;
 
-
 /**
  * A web application is an HttpApplication that serves HTML pages. This class is
  * intended to be subclassed by framework clients to define settings relevant to
