@@ -51,8 +51,13 @@ public class HttpSession extends Session
         // Get session, creating if it doesn't exist
         final javax.servlet.http.HttpSession httpServletSession = request.getSession(true);
 
+        // The request session object is unique per web application, but wicket requires it
+        // to be unique per servlet. That is, there must be a 1..n relationship between
+        // HTTP sessions (JSESSIONID) and Wicket applications.
+        final String sessionAttributeName = "session" + request.getServletPath();
+        
         // Get Session abstraction from httpSession attribute
-        HttpSession session = (HttpSession)httpServletSession.getAttribute("session");
+        HttpSession session = (HttpSession)httpServletSession.getAttribute(sessionAttributeName);
 
         if (session == null)
         {
@@ -63,7 +68,7 @@ public class HttpSession extends Session
             session.setLocale(request.getLocale());
 
             // Attach to httpSession
-            httpServletSession.setAttribute("session", session);
+            httpServletSession.setAttribute(sessionAttributeName, session);
         }
         else
         {
