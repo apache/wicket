@@ -15,11 +15,11 @@
 	background-color: #E7E7FF;
 }
 
-#wicket-tree #wicket-spacers {
+.wicket-indent-tree .wicket-indent-tree-spacer {
 	padding-left: 16px;
 }
 
-#wicket-tree #wicket-junctionImg {
+.wicket-indent-tree .wicket-indent-tree-junctionimage {
 	padding-left: 4px;
 	padding-right: 4px;
 	padding-top: 0px;
@@ -27,7 +27,7 @@
 	margin: 1px;
 }
 
-#wicket-tree #wicket-nodeImg {
+.wicket-indent-tree .wicket-indent-tree-nodeimage {
 	padding-left: 4px;
 	padding-right: 4px;
 	padding-top: 0px;
@@ -35,6 +35,6 @@
 	margin: 1px;
 }
 
-#wicket-tree #wicket-label {
+.wicket-indent-tree .wicket-indent-tree-nodelabel {
 	margin: 2px;
 }
