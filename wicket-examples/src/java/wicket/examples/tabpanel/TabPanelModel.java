@@ -1,9 +1,3 @@
-/*
- * Created on Jan 10, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package wicket.examples.tabPanel;
 
 import wicket.Component;

@@ -107,7 +107,6 @@ a.none {
 #wicket-inputForm label.non {
 	display: inline !important;
 }
-
 #wicket-tabbar a.selected {
 	background: #C3C3C3;
 	font-weight: bold;
@@ -118,4 +117,79 @@ a.none {
 	background: #F5F5F5;
 	font-weight: bold;
 	padding: 5px;
+}
+<!-- css style for TabPanel,thanks Wouter -->
+<!-- TODO clean up stuff that is not used by TabPanel-->
+#navigation
+{
+<!--	float:left;	-->
+	width:100%;
+	background:#DAE0D2 url("bg_blue.gif") repeat-x bottom;
+	font-size:100%;
+	line-height:normal;
+}
+
+#navigation ul 
+{
+	margin:0;
+	padding:10px 10px 0;
+	list-style:none;
+}
+
+#navigation li 
+{
+	margin:0;
+	padding:0;
+	display: inline;
+}
+
+#navigation a 
+{
+<!--	float:left;	-->
+	background:url("left_both_blue.gif") no-repeat left top;
+	margin:0;
+	padding:0 0 0 9px;
+	border-bottom:1px solid #765;
+	text-decoration:none;
+}
+
+#navigation a span 
+{
+<!--	float:left;	-->
+	display:block;
+	background:url("right_both_blue.gif") no-repeat right top;
+	padding:5px 15px 4px 6px;
+	color:#444444;
+}
+
+#navigation a span 
+{
+<!--	float:none;	-->
+}
+
+#navigation a:hover span 
+{
+	color:#333;
+}
+#navigation .active 
+{
+	background-position:0 -150px;
+	border-width:0;
+}
+
+#navigation .active span 
+{
+	background-position:100% -150px;
+	padding-bottom:5px;
+	color:#333;
+}
+
+#navigation a:hover 
+{
+	background-position:0% -150px;
+}
+
+#navigation a:hover span 
+{
+	background-position:100% -150px;
 }
