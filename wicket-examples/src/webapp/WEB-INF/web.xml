@@ -79,6 +79,18 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>DisplaytagApplication</servlet-name>
+        <servlet-class>displaytag.DisplaytagApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- servlet>
+        <servlet-name>Wicket-Appfuse</servlet-name>
+        <servlet-class>appfuse.AppfuseApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet -->
+
     <servlet-mapping>
         <servlet-name>SignInApplication</servlet-name>
         <url-pattern>/signin/*</url-pattern>
@@ -138,5 +150,15 @@
         <servlet-name>UploadApplication</servlet-name>
         <url-pattern>/upload/*</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DisplaytagApplication</servlet-name>
+        <url-pattern>/displaytag/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- servlet-mapping>
+        <servlet-name>Wicket-Appfuse</servlet-name>
+        <url-pattern>/appfuse/*</url-pattern>
+    </servlet-mapping -->
 
 </web-app>
