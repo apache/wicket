@@ -27,6 +27,7 @@ import wicket.SharedResource;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.resource.BufferedDynamicImageResource;
+import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.markup.html.image.resource.RenderedDynamicImageResource;
 import wicket.model.Model;
 
@@ -66,10 +67,21 @@ public final class Home extends WicketExamplePage
 		add(new Image("image5", getImage5Resource()));
 
 		// Add okay button image
-		add(new Image("okButton", application.getOkButtonImage()));
+		add(new Image("okButton", getOkButtonImage()));
 
 		// Add cancel button image
 		add(new Image("cancelButton", new SharedResource("cancelButton")));
+	}
+
+	final SharedResource getOkButtonImage()
+	{
+		return new SharedResource("okButton")
+		{
+			protected Resource newResource()
+			{
+				return new DefaultButtonImageResource("Ok");
+			}
+		};
 	}
 
 	/**
