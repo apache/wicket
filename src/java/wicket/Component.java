@@ -1052,6 +1052,26 @@ public abstract class Component implements Serializable, IConverterSource
 	{
 		return parent.findMarkupStream();
 	}
+	
+	
+	/**
+	 * @return The nearest markup container with associated markup
+	 */
+	protected final MarkupContainer findParentWithAssociatedMarkup()
+	{
+		MarkupContainer container = parent;
+		while (container != null)
+		{
+			if (container.hasAssociatedMarkup())
+			{
+				return container;
+			}
+			container = container.getParent();
+		}
+		
+		// This should never happen since Page always has associated markup
+		throw new WicketRuntimeException("Unable to find parent with associated markup");
+	}
 
 	/**
 	 * Invalidates the model attached to this component. Traverses all pages in

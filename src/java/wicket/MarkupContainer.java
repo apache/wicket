@@ -460,8 +460,7 @@ public abstract class MarkupContainer extends Component
 	 * @param openTag
 	 *            The open tag for the body
 	 */
-	protected void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		renderComponentTagBody(markupStream, openTag);
 	}
@@ -576,20 +575,16 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class.
+	 * Gets any (immutable) markup resource for this class.
 	 * 
-	 * @return A stream of MarkupElement elements
-	 * @throws MarkupException
-	 *             Runtime exception that is thrown if markup cannot be found or
-	 *             parsed correctly
+	 * @return Markup resource
 	 */
-	final MarkupStream getAssociatedMarkupStream()
+	final Markup getAssociatedMarkup()
 	{
 		synchronized (markupCache)
 		{
 			// Look up markup tag list by class, locale, style and markup type
-			final String key = getClass().getName() + getLocale() + getStyle() + getMarkupType();
+			final String key = markupKey();
 			Markup markup = (Markup)markupCache.get(key);
 
 			// If no markup in map
@@ -615,24 +610,55 @@ public abstract class MarkupContainer extends Component
 				}
 				else
 				{
-					// There is no associated markup for this class
-					throw new WicketRuntimeException(
-							exceptionMessage("Markup of type '"
-									+ getMarkupType()
-									+ "' for component '"
-									+ getClass().getName()
-									+ "' not found."
-									+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried."));
+					// flag markup as non-existent (as opposed to null, which
+					// might mean that it's simply not loaded into the cache)
+					markup = Markup.NO_MARKUP;
 				}
 
 				// Save any markup list (or absence of one) for next time
 				markupCache.put(key, markup);
 			}
 
-			// Return a MarkupStream wrapper around the immutable MarkupElement
-			// list
+			return markup;
+		}
+	}
+
+	/**
+	 * Gets a fresh markup stream that contains the (immutable) markup resource
+	 * for this class.
+	 * 
+	 * @return A stream of MarkupElement elements
+	 */
+	final MarkupStream getAssociatedMarkupStream()
+	{
+		// Look for associated markup
+		final Markup markup = getAssociatedMarkup();
+
+		// If we found markup for this container
+		if (markup != Markup.NO_MARKUP)
+		{
+			// return a MarkupStream for the markup
 			return new MarkupStream(markup);
 		}
+		else
+		{
+			// throw exception since there is no associated markup
+			throw new WicketRuntimeException(
+					exceptionMessage("Markup of type '"
+							+ getMarkupType()
+							+ "' for component '"
+							+ getClass().getName()
+							+ "' not found."
+							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried."));
+		}
+	}
+
+	/**
+	 * @return True if this markup container has associated markup
+	 */
+	final boolean hasAssociatedMarkup()
+	{
+		return getAssociatedMarkup() != Markup.NO_MARKUP;
 	}
 
 	/**
@@ -752,6 +778,15 @@ public abstract class MarkupContainer extends Component
 			throw new MarkupException(markupResource,
 					exceptionMessage("Unable to read markup from " + markupResource), e);
 		}
+	}
+
+	/**
+	 * @return Key that uniquely identifies any markup that might be associated
+	 *         with this markup container.
+	 */
+	private String markupKey()
+	{
+		return getClass().getName() + getLocale() + getStyle() + getMarkupType();
 	}
 
 	/**

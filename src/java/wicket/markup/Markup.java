@@ -38,6 +38,9 @@ public final class Markup
     
     /** The markup's resource stream for diagnostic purposes */
     private final Resource resource;
+    
+    /** Placeholder that indicates no markup */
+    public static final Markup NO_MARKUP = new Markup(null, null);
 
     /**
      * Constructor

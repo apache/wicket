@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import wicket.IResourceListener;
+import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -95,8 +96,9 @@ public class Image extends AbstractImage implements IResourceListener
         {
             throw new WicketRuntimeException("Source for image resource cannot contain a path");
         }
-
-        final String path = Classes.packageName(getPage().getClass()) + "." + resourcePath;
+        
+        final MarkupContainer markupContainer = findParentWithAssociatedMarkup();
+        final String path = Classes.packageName(markupContainer.getClass()) + "." + resourcePath;
         return Resource.locate
         (
             getApplicationSettings().getSourcePath(),
