@@ -47,9 +47,6 @@ import wicket.markup.html.tree.TreeStateCache;
  */
 public class FileBrowser extends HtmlPage
 {
-	/** our override of the nested tree with a custom row panel. */
-	private static final String TYPE_NESTED_CUSTOM_ROW = "nested tree custom row";
-
 	/** our override of the nested tree with a custom rows panel. */
 	private static final String TYPE_NESTED_CUSTOM_ROWS = "nested tree custom rows";
 
@@ -62,8 +59,7 @@ public class FileBrowser extends HtmlPage
 	/** the types of lists that are available for selection. */
 	private static final List types;
 	static {
-		types = new ArrayList(4);
-		types.add(TYPE_NESTED_CUSTOM_ROW);
+		types = new ArrayList(3);
 		types.add(TYPE_NESTED_CUSTOM_ROWS);
 		types.add(TYPE_NESTED);
 		types.add(TYPE_FLAT);
@@ -148,10 +144,6 @@ public class FileBrowser extends HtmlPage
             else if(TYPE_FLAT.equals(type))
             {
             	tree = new FileTreeFlat("fileTree", currentTree.getTreeState());
-            }
-            else if(TYPE_NESTED_CUSTOM_ROW.equals(type))
-            {
-            	tree = new FileTreeCustomRow("fileTree", currentTree.getTreeState());
             }
             else if(TYPE_NESTED_CUSTOM_ROWS.equals(type))
             {
