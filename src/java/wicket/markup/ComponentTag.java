@@ -109,6 +109,9 @@ public class ComponentTag extends MarkupElement
 
     /** The tag type (OPEN, CLOSE or OPEN_CLOSE). */
     Type type; 
+    
+    /** True if a href attribute is available and autolinking is on */
+    private boolean autolink = false;
 
     /**
      * Construct.
@@ -445,6 +448,25 @@ public class ComponentTag extends MarkupElement
             throw new UnsupportedOperationException("Attempt to set type of immutable tag");
         }
     }
+    
+    /**
+     * True if autolink is enabled and the tag contains a href attribute.
+     * @return True, if the href contained should automatically be converted
+     */
+    public boolean isAutolinkEnabled()
+    {
+        return this.autolink;
+    }
+    
+    /**
+     * If autolink is set to true, href attributes will automatically be
+     * converted into Wicket bookmarkable URLs.
+     * @param autolink enable/disable automatic href conversion
+     */
+    public void enableAutolink(final boolean autolink)
+    {
+        this.autolink = autolink;
+    }
 
     /**
      * Converts this object to a string representation.
@@ -455,6 +477,45 @@ public class ComponentTag extends MarkupElement
         return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber
         	+ ", length = " + length + ", attributes = ["
         	+ attributes + "], type = " + type + "]";
+    }
+
+    /**
+     * Converts this object to a xml string representation.
+     * @return xml string version of this object
+     */
+    public String toXmlString()
+    {
+        final StringBuffer buffer = new StringBuffer();
+
+        buffer.append('<');
+
+        if (type == CLOSE)
+        {
+            buffer.append('/');
+        }
+
+        if (namespace != null)
+        {
+            buffer.append(namespace);
+            buffer.append(':');
+        }
+        
+        buffer.append(name);
+
+        if (attributes.size() > 0)
+        {
+            buffer.append(' ');
+            buffer.append(attributes);
+        }
+
+        if (type == OPEN_CLOSE)
+        {
+            buffer.append('/');
+        }
+
+        buffer.append('>');
+
+        return buffer.toString();
     }
 
     /**
@@ -469,37 +530,7 @@ public class ComponentTag extends MarkupElement
         }
         else
         {
-            final StringBuffer buffer = new StringBuffer();
-
-            buffer.append('<');
-
-            if (type == CLOSE)
-            {
-                buffer.append('/');
-            }
-
-            if (namespace != null)
-            {
-                buffer.append(namespace);
-                buffer.append(':');
-            }
-            
-            buffer.append(name);
-
-            if (attributes.size() > 0)
-            {
-                buffer.append(' ');
-                buffer.append(attributes);
-            }
-
-            if (type == OPEN_CLOSE)
-            {
-                buffer.append('/');
-            }
-
-            buffer.append('>');
-
-            return buffer.toString();
+            return toXmlString();
         }
     }
 

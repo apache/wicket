@@ -751,10 +751,12 @@ public abstract class Container extends Component
 	    }
 	    
 		parser.setComponentNameAttribute(settings.getComponentNameAttribute()); 
-		parser.setWicketTagName(settings.getWicketTagName());
+		parser.setWicketNamespace(settings.getWicketNamespace());
 		parser.setStripComments(settings.getStripComments());
 		parser.setCompressWhitespace(settings.getCompressWhitespace());
 		parser.setStripWicketParamTag(settings.getStripWicketParamTag());
+		parser.setAutolinking(settings.isAutomaticLinking());
+		parser.setAutolinkBasePage(this.getPage());
 
 		final Markup markup = parser.read(markupResource);
 

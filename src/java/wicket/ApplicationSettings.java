@@ -222,8 +222,11 @@ public class ApplicationSettings
     /** Determines behavior of string resource loading if string is missing */
     private boolean useDefaultOnMissingResource = true;
 
-    /** Default xhtml wicket tag name: e.g. <wicket> */
-    private String wicketTagName = ComponentWicketTag.WICKET_TAG_NAME;
+    /** Default xhtml wicket namespace: e.g. <wicket:> */
+    private String wicketNamespace = ComponentWicketTag.WICKET_NAMESPACE;
+    
+    /** Application default for automatically resolving hrefs */
+    private boolean automaticLinking = false;
 
     /**
      * Indicates that an exception page appropriate to development should be
@@ -571,9 +574,9 @@ public class ApplicationSettings
      * 
      * @return wicket tag name
      */
-    public final String getWicketTagName()
+    public final String getWicketNamespace()
     {
-        return this.wicketTagName;
+        return this.wicketNamespace;
     }
 
     /**
@@ -889,13 +892,13 @@ public class ApplicationSettings
     /**
      * Define a new wicket tag name to use instead of "wicket"
      * 
-     * @param wicketTagName
+     * @param wicketNamespace
      *            the tag name
      * @return This
      */
-    public final ApplicationSettings setWicketTagName(final String wicketTagName)
+    public final ApplicationSettings setWicketNamespace(final String wicketNamespace)
     {
-        this.wicketTagName = wicketTagName;
+        this.wicketNamespace = wicketNamespace;
         return this;
     }
 
@@ -909,6 +912,23 @@ public class ApplicationSettings
     {
         return Collections.unmodifiableList(stringResourceLoaders);
     }
+    
+	/**
+	 * If true, automatic link resolution is enabled.
+	 * @return Returns the automaticLinking.
+	 */
+	public boolean isAutomaticLinking()
+	{
+		return automaticLinking;
+	}
+	
+	/**
+	 * Application default for automatic link resolution.
+	 * 
+	 * @param automaticLinking The automaticLinking to set.
+	 */
+	public void setAutomaticLinking(boolean automaticLinking)
+	{
+		this.automaticLinking = automaticLinking;
+	}
 }
-
-

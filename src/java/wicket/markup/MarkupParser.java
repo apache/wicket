@@ -32,6 +32,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Page;
+import wicket.PageParameters;
+import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -61,7 +64,7 @@ import wicket.util.value.ValueMap;
  *  
  * @author Jonathan Locke
  */
-/* TODO Class needs some refactoring */
+/* TODO Class needs some refactoring. It is already on my laptop, but not yet committed */
 public final class MarkupParser implements IMarkupParser
 {
     /** Logging */
@@ -104,6 +107,15 @@ public final class MarkupParser implements IMarkupParser
     /** if true, &lt;wicket:param ..&gt; tags will be removed from markup */
     private boolean stripWicketParamTag;
     
+    /** current autolink setting */
+    private boolean autolinking;
+
+    /** Allow to have nested link regions */
+    private Stack autolinkStatus;
+
+    /** The Page (not the component) used to create autolinks */
+    private Page page;
+   
     /**
      * Constructor.
      */
@@ -119,7 +131,7 @@ public final class MarkupParser implements IMarkupParser
     public MarkupParser(final String componentNameAttribute, final String wicketTagName)
     {
         setComponentNameAttribute(componentNameAttribute);
-        setWicketTagName(wicketTagName);
+        setWicketNamespace(wicketTagName);
     }
 
     /** 
@@ -143,11 +155,11 @@ public final class MarkupParser implements IMarkupParser
      * 
      * @param name wicket xml namespace (xmlns:wicket) 
      */
-    public void setWicketTagName(final String name)
+    public void setWicketNamespace(final String name)
     {
         this.wicketTagName = name;
         
-        if (!ComponentWicketTag.WICKET_TAG_NAME.equals(wicketTagName))
+        if (!ComponentWicketTag.WICKET_NAMESPACE.equals(wicketTagName))
         {
             log.info("You are using a non-standard wicket tag name: " 
                     + wicketTagName);
@@ -196,6 +208,27 @@ public final class MarkupParser implements IMarkupParser
         this.compressWhitespace = compressWhitespace;
     }
 
+    /**
+     * Set default autolink setting for the markup.
+     * @param enable automatic linking
+     */
+    public void setAutolinking(final boolean enable)
+    {
+        this.autolinking = enable;
+    }
+    
+    /**
+     * Autolinks are resolved relative to a page. The page provided
+     * will serve as the reference for autolinks on the current
+     * markup.
+     * 
+     * @param page Autolink reference page
+     */
+    public void setAutolinkBasePage(final Page page)
+    {
+        this.page = page;
+    }
+    
     /**
      * Reads and parses markup from a Resource such as a file.
      * @param resource The file
@@ -352,6 +385,9 @@ public final class MarkupParser implements IMarkupParser
             
             // True if tag should be added to list
             boolean addTag = false;
+            
+            // resolve autolinks inline
+            addTag = handleAutolinks(tag);
 
             // Check tag type
             if (tag.type == ComponentTag.OPEN)
@@ -360,7 +396,7 @@ public final class MarkupParser implements IMarkupParser
                 stack.push(tag);
 
                 // We add open tags if they have the componentName attribute set
-                addTag = tag.componentName != null;
+                addTag |= tag.componentName != null;
             }
             else if (tag.type == ComponentTag.CLOSE)
             {
@@ -402,7 +438,7 @@ public final class MarkupParser implements IMarkupParser
 
                     // We want to add the tag if the open Tag on the stack had a
                     // componentName attribute
-                    addTag = top.componentName != null;
+                    addTag |= top.componentName != null;
                 }
                 else
                 {
@@ -417,7 +453,7 @@ public final class MarkupParser implements IMarkupParser
                 tag.closes = tag;
 
                 // Does the open tag have the attribute we're looking for?
-                addTag = tag.componentName != null;
+                addTag |= tag.componentName != null;
             }
 
             // Add tag to list?
@@ -442,10 +478,26 @@ public final class MarkupParser implements IMarkupParser
                     list.add(new RawMarkup(rawMarkup));
                 }
 
-                // Add immutable tag
-                tag.makeImmutable();
-                list.add(tag);
-
+                if (tag.isAutolinkEnabled())
+                {
+                    final String tagString = tag.toXmlString();
+	                list.add(new RawMarkup(tagString));
+                }
+                else
+                {
+                    if ((tag instanceof ComponentWicketTag) && ((ComponentWicketTag)tag).isLinkTag())
+                    {
+                        final String tagString = tag.toXmlString();
+    	                list.add(new RawMarkup(tagString));
+                    }
+                    else
+                    {
+		                // Add immutable tag
+		                tag.makeImmutable();
+		                list.add(tag);
+                    }
+                }
+                
                 // Position is after tag
                 position = tag.getPos() + tag.getLength();
             }
@@ -489,6 +541,120 @@ public final class MarkupParser implements IMarkupParser
     }
 
     /**
+     * 
+     * @param tag
+     * @throws ParseException
+     */
+    private boolean handleAutolinks(final ComponentTag tag) throws ParseException
+    {
+        if (tag == null)
+        {
+            return false;
+        }
+
+        // Only xml tags not already identified as Wicket components will be considered
+        // for autolinking. This is because it is assumed that Wicket components
+        // like images, or all other kind of Wicket Links intend to handle it
+        // themselves.
+        if ((autolinking == true) && (tag.getComponentName() == null) 
+                && tag.getAttributes().containsKey("href"))
+        {
+            // Just a dummy name. The ComponentTag will not be forwarded.
+            return resolveAutomaticLink(tag);
+        }
+        
+        // For all <wicket:link ..> tags
+        if (tag instanceof ComponentWicketTag)
+        {
+            final ComponentWicketTag wtag = (ComponentWicketTag) tag;
+            if (wtag.isLinkTag())
+            {
+                // Beginning of the region
+    	        if (tag.isOpen())
+    	        {
+    	            if (autolinkStatus == null)
+    	            {
+    	                autolinkStatus = new Stack();
+    	            }
+    	            
+    		        // remember the current setting to be reset after the region
+    		        autolinkStatus.push(new Boolean(autolinking));
+    		        
+    		        // html allows to represent true in different ways
+    		        final String autolink = tag.getAttributes().getString("autolink");
+		            if ((autolink == null) 
+		                    || "".equals(autolink) 
+		                    || "true".equalsIgnoreCase(autolink) 
+		                    || "1".equals(autolink))
+		            {
+		                autolinking = true;
+		            }
+		            else 
+		            {
+		                autolinking = false;
+    		        }
+    	        } 
+    	        else if (tag.isClose())
+    	        {
+    	            // restore the autolink setting from before the region
+    	            autolinking = ((Boolean)autolinkStatus.pop()).booleanValue();
+    	        }
+    	        else
+    	        {
+                    throw new ParseException(
+                            "<wicket:link> can not be a open-close tag", 
+                            tag.getPos());
+    	        }
+            }
+        }
+        
+        return false;
+    }
+	
+    /**
+     * Resolves the given tag's automaticLinkPageClass and automaticLinkPageParameters
+     * variables by parsing the tag component name and then searching for a page class at
+     * the relative URL specified by the href attribute of the tag. The href URL is
+     * relative to the package containing the page where this component is contained.
+     * @param page The page where the link is
+     * @param markupStream Markup stream to use when throwing any exceptions
+     * @param componentName the name of the component
+     * @param tag the component tag
+     */
+    private boolean resolveAutomaticLink(final ComponentTag tag)
+    	throws ParseException
+    {
+        final String originalHref = tag.getAttributes().getString("href");
+
+        final int pos = originalHref.indexOf(".html");
+        if (pos <= 0)
+        {
+            return false;
+        }
+        
+        String classPath = originalHref.substring(0, pos);
+        PageParameters pageParameters = null;
+        
+        // ".html?" => 6 chars
+        if ((classPath.length() + 6) < originalHref.length())
+        {
+            String queryString = originalHref.substring(classPath.length() + 6);
+            pageParameters = new PageParameters(new ValueMap(queryString, "&"));
+        }
+        
+        classPath = classPath.replaceAll("/", ".");
+        classPath = page.getClass().getPackage().getName() + "." + classPath;
+
+        Class clazz = page.getApplicationSettings().getDefaultClassResolver().resolveClass(classPath);
+        
+        String url = RequestCycle.get().urlFor(clazz, pageParameters);
+        tag.put("href", url);
+        tag.enableAutolink(true);
+        
+        return true;
+    }
+
+    /**
      * Validate wicket-param tag are following component tags, assign
      * the params to the ComponentTag immediately preceding and remove
      * the <wicket:param ..> from output.
@@ -496,7 +662,7 @@ public final class MarkupParser implements IMarkupParser
      * @param markupElements
      * @throws ParseException
      */
-    // TODO this one of methods which I'd like to see being moved out of 
+    // TODO this is one of methods which I'd like to see being moved out of 
     //      the parser. It has nothing todo with markup parsing.
     private final void validateWicketTags(final List markupElements)
     	throws ParseException
@@ -786,7 +952,6 @@ public final class MarkupParser implements IMarkupParser
                         tag.type = type;
                         tag.pos = openBracketIndex;
                         tag.length = (closeBracketIndex + 1) - openBracketIndex;
-                        tag.getAttributes().makeImmutable();
                         tag.text = input.substring(openBracketIndex, closeBracketIndex + 1);
                         tag.lineNumber = lineNumber;
                         tag.columnNumber = columnNumber;

@@ -38,7 +38,7 @@ public final class ComponentWicketTag extends ComponentTag
      * Standard wicket tag name always available for components regardless of
      * user ApplicationSettings; value == 'wicket'.
      */
-    public static final String WICKET_TAG_NAME = "wicket";
+    public static final String WICKET_NAMESPACE = "wicket";
 
     /** Used to create unique anonymous component names */
     public static int autoIndex = 0;
@@ -76,6 +76,15 @@ public final class ComponentWicketTag extends ComponentTag
     public final boolean isComponentTag()
     {
         return "component".equalsIgnoreCase(getName());
+    }
+
+    /**
+     * 
+     * @return true, if tag name equals wicket:link
+     */
+    public final boolean isLinkTag()
+    {
+        return "link".equalsIgnoreCase(getName());
     }
 
     /**
