@@ -20,8 +20,7 @@ package wicket.examples.hangman;
 
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 
@@ -32,7 +31,7 @@ import wicket.markup.html.link.PageLink;
  * @author Chris Turner
  * @version 1.0
  */
-public class Home extends HtmlPage {
+public class Home extends WicketExamplePage {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -57,7 +56,6 @@ public class Home extends HtmlPage {
 			hangman = new Hangman(DEFAULT_ALLOWED_GUESSES);
 		}
 		hangman.newGame();
-		add(new NavigationPanel("mainNavigation", "Hangman example"));
 		add(new PageLink("start", new IPageLink() {
 			/**
 			 * Comment for <code>serialVersionUID</code>

@@ -18,8 +18,7 @@
  */
 package wicket.examples.hangman;
 
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 
@@ -29,7 +28,7 @@ import wicket.markup.html.link.Link;
  * @author Chris Turner
  * @version 1.0
  */
-public class Lose extends HtmlPage {
+public class Lose extends WicketExamplePage {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -44,7 +43,6 @@ public class Lose extends HtmlPage {
 	 */
 	public Lose(final Guess guessPage) {
 		Hangman hangman = (Hangman) guessPage.getModelObject();
-		add(new NavigationPanel("mainNavigation", "Hangman example"));
 		add(new Label("currentWord", hangman.getCurrentWord()));
 		add(new Link("playAgain") {
 			/**

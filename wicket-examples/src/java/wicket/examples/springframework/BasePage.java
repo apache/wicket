@@ -21,13 +21,13 @@ package wicket.examples.springframework;
 import org.springframework.context.ApplicationContext;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 
 /**
  * Everybody's favorite example.
  * @author Jonathan Locke
  */
-public class BasePage extends HtmlPage
+public class BasePage extends WicketExamplePage
 {
     /**
      * Constructor

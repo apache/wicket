@@ -19,7 +19,7 @@
 package wicket.examples.signin2;
 
 import wicket.RequestCycle;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 
 
 /**
@@ -28,7 +28,7 @@ import wicket.markup.html.HtmlPage;
  *  
  * @author Jonathan Locke
  */
-public class AuthenticatedHtmlPage extends HtmlPage
+public class AuthenticatedHtmlPage extends WicketExamplePage
 {
     /**
      * @see wicket.Page#checkAccess()

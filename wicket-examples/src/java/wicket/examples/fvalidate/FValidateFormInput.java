@@ -23,8 +23,7 @@ import java.util.Locale;
 import wicket.PageParameters;
 import wicket.Session;
 import wicket.contrib.markup.html.form.fvalidate.FValidateTextField;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidationFeedback;
@@ -37,7 +36,7 @@ import wicket.markup.html.panel.FeedbackPanel;
  * 
  * @author Eelco Hillenius
  */
-public class FValidateFormInput extends HtmlPage
+public class FValidateFormInput extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -46,7 +45,6 @@ public class FValidateFormInput extends HtmlPage
 	public FValidateFormInput(final PageParameters parameters)
 	{
 		Session.get().setLocale(Locale.ENGLISH);
-		add(new NavigationPanel("mainNavigation", "FValidate Form Input Example"));
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
 		add(new InputForm("inputForm", feedback));

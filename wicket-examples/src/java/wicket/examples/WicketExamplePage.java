@@ -16,26 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.util;
+package wicket.examples;
 
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.panel.Panel;
+import wicket.examples.WicketExampleHeader;
+import wicket.markup.html.HtmlPage;
+import wicket.util.lang.Classes;
+import wicket.util.string.Strings;
 
 /**
- * Navigation panel for the examples project.
- *
- * @author Eelco Hillenius
+ * Base class for all example pages.
+ * 
+ * @author Jonathan Locke
  */
-public final class NavigationPanel extends Panel
+public class WicketExamplePage extends HtmlPage
 {
     /**
-     * Construct.
-     * @param componentName name of the component
-     * @param exampleTitle title of the example
+     * Constructor
      */
-    public NavigationPanel(String componentName, String exampleTitle)
+    public WicketExamplePage()
     {
-        super(componentName);
-        add(new Label("exampleTitle", exampleTitle));
+        final String packageName = Classes.packageName(getClass());
+        add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.')));
     }
 }

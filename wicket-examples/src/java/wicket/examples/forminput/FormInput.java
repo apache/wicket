@@ -28,8 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
@@ -49,7 +48,7 @@ import wicket.model.PropertyModel;
  *
  * @author Eelco Hillenius
  */
-public class FormInput extends HtmlPage
+public class FormInput extends WicketExamplePage
 {
 	/** the current locale. */
 	private Locale currentLocale;
@@ -65,7 +64,6 @@ public class FormInput extends HtmlPage
      */
     public FormInput(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Form Input Example"));
 	    FeedbackPanel feedback = new FeedbackPanel("feedback");
 	    add(feedback);
         add(new InputForm("inputForm", feedback));

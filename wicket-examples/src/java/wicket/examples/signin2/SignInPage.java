@@ -18,7 +18,7 @@
  */
 package wicket.examples.signin2;
 
-import wicket.examples.util.NavigationPanel;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.panel.SignInPanel;
 
@@ -27,7 +27,7 @@ import wicket.markup.html.panel.SignInPanel;
  * 
  * @author Juergen Donnerstag
  */
-public abstract class SignInPage extends HtmlPage
+public abstract class SignInPage extends WicketExamplePage
 {
 	private final SignInPanel signInPanel;
 
@@ -39,7 +39,6 @@ public abstract class SignInPage extends HtmlPage
     protected SignInPage(SignInPanel signInPanel)
     {
     	super();
-    	add(new NavigationPanel("mainNavigation", "Signin example"));
     	this.signInPanel = signInPanel;
         add(signInPanel);
     }

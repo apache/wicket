@@ -19,22 +19,16 @@
 package wicket.examples.displaytag;
 
 import wicket.PageParameters;
+import wicket.examples.WicketExamplePage;
 import wicket.examples.displaytag.utils.AbsoluteHref;
-import wicket.markup.html.HtmlPage;
-
-
 
 /**
  * Start page for different wicket.examples.wicket.examples.displaytag pages
  * 
  * @author Juergen Donnerstag
  */
-public class Displaytag extends HtmlPage
+public class Displaytag extends WicketExamplePage
 {
-    /**
-     * 
-     *
-     */
     public Displaytag()
     {
         this(null);

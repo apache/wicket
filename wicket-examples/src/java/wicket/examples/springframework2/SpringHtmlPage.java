@@ -18,8 +18,7 @@
  */
 package wicket.examples.springframework2;
 
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 
 /**
@@ -27,16 +26,12 @@ import wicket.markup.html.basic.Label;
  * 
  * @author Martin Fey
  */
-public class SpringHtmlPage extends HtmlPage
+public class SpringHtmlPage extends WicketExamplePage
 {
 
     /** Creates a new instance of SpringHtmlPage */
     public SpringHtmlPage()
     {
-        // call super() so that the page gets bound to the session
-        super();
-        add(new NavigationPanel("mainNavigation", "Spring integration example with Spring models"));
-        
         // set the applicationcontext for further use
         add(new Label("message", new SpringBeanModel("message")));
         add(new Label("user", new SpringBeanPropertyModel(UserModel.class, "forename")));

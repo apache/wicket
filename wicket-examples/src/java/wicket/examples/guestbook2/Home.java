@@ -24,9 +24,8 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
-import wicket.examples.util.NavigationPanel;
+import wicket.examples.WicketExamplePage;
 import wicket.examples.util.hibernate.HibernateHelper;
-import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
 import wicket.markup.html.form.Form;
@@ -45,7 +44,7 @@ import net.sf.hibernate.Transaction;
  * and see the comments others have added.
  * @author Jonathan Locke
  */
-public class Home extends HtmlPage
+public class Home extends WicketExamplePage
 {
     // A global list of all comments from all users
     private static final List commentList = new ArrayList();
@@ -98,7 +97,6 @@ public class Home extends HtmlPage
      */
     public Home(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Guestbook example (with Hibernate)"));
         // Add comment form
         add(new CommentForm("commentForm"));
 

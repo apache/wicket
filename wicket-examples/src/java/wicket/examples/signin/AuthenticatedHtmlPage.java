@@ -18,13 +18,13 @@
  */
 package wicket.examples.signin;
 
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 
 /**
  *
  * @author Jonathan Locke
  */
-public class AuthenticatedHtmlPage extends HtmlPage
+public class AuthenticatedHtmlPage extends WicketExamplePage
 {
     /**
      * @see wicket.Page#checkAccess()

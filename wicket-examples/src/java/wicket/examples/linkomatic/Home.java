@@ -19,8 +19,7 @@ package wicket.examples.linkomatic;
 
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.IPageLink;
@@ -36,7 +35,7 @@ import wicket.markup.html.link.ExternalLink;
  * 
  * @author Jonathan Locke
  */
-public class Home extends HtmlPage
+public class Home extends WicketExamplePage
 {
 	/** click count for Link. */
 	private int linkClickCount = 0;
@@ -52,8 +51,6 @@ public class Home extends HtmlPage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new NavigationPanel("mainNavigation", "LinkOMatic example"));
-
 		// Action link counts link clicks
 		final Link actionLink = new Link("actionLink")
 		{
@@ -128,9 +125,9 @@ public class Home extends HtmlPage
 				new BookmarkablePageLink("page3", Page3.class)));
 
 		// Popup example
-		PopupSettings popupSpec = new PopupSettings().setHeight(100).setWidth(100);
+		PopupSettings popupSettings = new PopupSettings().setHeight(500).setWidth(500);
 
-		add(new BookmarkablePageLink("popupLink", Page1.class).setPopupSettings(popupSpec));
+		add(new BookmarkablePageLink("popupLink", Page1.class).setPopupSettings(popupSettings));
 
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
 	}

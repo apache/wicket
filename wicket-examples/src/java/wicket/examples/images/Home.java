@@ -18,12 +18,10 @@
  */
 package wicket.examples.images;
 
-
 import java.awt.image.BufferedImage;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.image.DynamicImage;
 import wicket.markup.html.image.Image;
 
@@ -31,7 +29,7 @@ import wicket.markup.html.image.Image;
  * Demonstrates different flavors of wicket.examples.images.
  * @author Jonathan Locke
  */
-public final class Home extends HtmlPage
+public final class Home extends WicketExamplePage
 {
     /**
      * Constructor
@@ -39,8 +37,6 @@ public final class Home extends HtmlPage
      */
     public Home(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Images example"));
-
         // Image as package resource
         add(new Image("image2"));
 

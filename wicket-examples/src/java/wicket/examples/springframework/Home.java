@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.basic.Label;
 
 /**
@@ -44,7 +43,6 @@ public class Home extends BasePage
         // MyBean bean = (MyBean)this.getSpringApplicationContext().getBean();
         // UserDao userDao = this.getUserDao();
         
-        add(new NavigationPanel("mainNavigation", "Spring integration example"));
         add(new Label("message", "Hello world! Test: הצü"));
     }
 }

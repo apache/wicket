@@ -19,9 +19,6 @@
 package wicket.examples.displaytag;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-
-
 
 /**
  * Start page for different wicket.examples.wicket.examples.displaytag pages
@@ -30,10 +27,6 @@ import wicket.examples.util.NavigationPanel;
  */
 public class DisplaytagIndex extends Displaytag
 {
-    /**
-     * 
-     *
-     */
     public DisplaytagIndex()
     {
         this(null);
@@ -46,6 +39,5 @@ public class DisplaytagIndex extends Displaytag
      */
     public DisplaytagIndex(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Displaytag like examples"));
     }
 }

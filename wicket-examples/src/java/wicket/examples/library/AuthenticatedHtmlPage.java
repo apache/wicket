@@ -20,9 +20,8 @@ package wicket.examples.library;
 
 import wicket.Component;
 import wicket.Container;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.border.Border;
-
 
 /**
  * Ensures that user is authenticated in session.  If no user is signed in, a sign
@@ -36,19 +35,9 @@ import wicket.markup.html.border.Border;
  *
  * @author Jonathan Locke
  */
-public class AuthenticatedHtmlPage extends HtmlPage
+public class AuthenticatedHtmlPage extends WicketExamplePage
 {
     private Border border;
-
-    /**
-     * Constructor
-     */
-    public AuthenticatedHtmlPage()
-    {
-        // Create border and add it to the page
-        border = new LibraryApplicationBorder("border");
-        super.add(border);
-    }
 
     /**
      * Adding children to instances of this class causes those children to
@@ -58,6 +47,12 @@ public class AuthenticatedHtmlPage extends HtmlPage
     public Container add(final Component child)
     {
         // Add children of the page to the page's border component
+        if (border == null)
+        {
+            // Create border and add it to the page
+            border = new LibraryApplicationBorder("border");
+            super.add(border);   
+        }
         border.add(child);
         return this;
     }

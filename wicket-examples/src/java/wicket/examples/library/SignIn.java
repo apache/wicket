@@ -19,8 +19,7 @@
 package wicket.examples.library;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.panel.SignInPanel;
 
 
@@ -28,7 +27,7 @@ import wicket.markup.html.panel.SignInPanel;
  * Simple example of a sign in page.
  * @author Jonathan Locke
  */
-public final class SignIn extends HtmlPage
+public final class SignIn extends WicketExamplePage
 {
     /**
      * Constructor
@@ -36,8 +35,6 @@ public final class SignIn extends HtmlPage
      */
     public SignIn(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Library example"));
-
         add(new SignInPanel("signInPanel")
         {
             public String signIn(final String username, final String password)

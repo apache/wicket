@@ -19,14 +19,14 @@
 package wicket.examples.navomatic;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 
 
 /**
  * Trivial page.
  * @author Jonathan Locke
  */
-public class Page3 extends HtmlPage
+public class Page3 extends WicketExamplePage
 {
     /**
      * Constructor

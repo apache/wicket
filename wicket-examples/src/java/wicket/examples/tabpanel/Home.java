@@ -19,8 +19,7 @@
 package wicket.examples.tabPanel;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
@@ -31,7 +30,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  * @author Marrink
  */
-public class Home extends HtmlPage
+public class Home extends WicketExamplePage
 {
 	private TabPanel tab;
 
@@ -41,8 +40,6 @@ public class Home extends HtmlPage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new NavigationPanel("mainNavigation", "TabPanel example"));
-
 		tab = new TabPanel("tabPanel");
 		add(tab);
 		// all components added to the TabPanel MUST be named tab.

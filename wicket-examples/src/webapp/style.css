@@ -57,6 +57,7 @@ h3 {
 
 a {
 	color: #6F6F6F;
+	text-decoration: underline;
 }
 
 img {
@@ -71,11 +72,6 @@ th {
 	background: #C3C3C3;
 	color: white;
 	font-weight: bold;
-}
-
-th,td {
-	padding-left: 5px;
-	padding-right: 5px;
 }
 
 tr.b {

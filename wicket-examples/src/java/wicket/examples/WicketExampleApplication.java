@@ -27,7 +27,7 @@ import wicket.util.time.Duration;
  * WicketServlet class for hello world example.
  * @author Jonathan Locke
  */
-public class WicketExampleApplication extends WebApplication
+public abstract class WicketExampleApplication extends WebApplication
 {
     /**
      * Constructor.

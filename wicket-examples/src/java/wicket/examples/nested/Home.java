@@ -26,8 +26,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 
 /**
  * Examples that shows how you can display a tree like structure (in this case
@@ -36,7 +35,7 @@ import wicket.markup.html.HtmlPage;
  * 
  * @author Eelco Hillenius
  */
-public class Home extends HtmlPage
+public class Home extends WicketExamplePage
 {
 	/**
 	 * Constructor.
@@ -44,8 +43,6 @@ public class Home extends HtmlPage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new NavigationPanel("mainNavigation", "Nested Structure Example"));
-
 		// create a list with sublists
 		List l1 = new ArrayList();
 		l1.add("test 1.1");

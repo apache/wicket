@@ -35,7 +35,6 @@ public class NavomaticBorder extends Border
     public NavomaticBorder(String componentName)
     {
         super(componentName);
-        add(new NavigationPanel("mainNavigation", "Groovy based NavoMatic example"));
         add(new BoxBorder("boxBorder"));
         add(new BoxBorder("boxBorder2"));
     }

@@ -27,8 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.upload.FileUploadForm;
@@ -42,7 +41,7 @@ import wicket.markup.html.list.ListView;
  *
  * @author Eelco Hillenius
  */
-public class UploadPage extends HtmlPage
+public class UploadPage extends WicketExamplePage
 {
     /** Log. */
     private static Log log = LogFactory.getLog(UploadPage.class);
@@ -62,8 +61,6 @@ public class UploadPage extends HtmlPage
      */
     public UploadPage(final PageParameters parameters)
     {
-        super();
-        add(new NavigationPanel("mainNavigation", "Helloworld example"));
         tempDir = new File(System.getProperty("java.io.tmpdir"), "wicketuploadtest");
         if(!tempDir.isDirectory())
         {

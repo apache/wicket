@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -16,7 +15,7 @@ import wicket.model.IModel;
  * @author jcompagner
  * @version $Id$
  */
-public class Home extends HtmlPage
+public class Home extends WicketExamplePage
 {
 	/**
 	 * Constructor
@@ -26,7 +25,6 @@ public class Home extends HtmlPage
 	 */
 	public Home(final PageParameters parameters)
 	{
-        add(new NavigationPanel("mainNavigation", "Select tag example"));
 		add(new SelectForm("selectform"));
 	}
 	

@@ -19,14 +19,14 @@
 package wicket.examples.linkomatic;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 
 
 /**
  * Trivial bookmarkable page.
  * @author Jonathan Locke
  */
-public class Page1 extends HtmlPage
+public class Page1 extends WicketExamplePage
 {
     /**
      * Constructor

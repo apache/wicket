@@ -19,12 +19,10 @@
 package wicket.examples.hangman;
 
 import wicket.RequestCycle;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.model.Model;
-
 
 /**
  * The main guess page for the hangman application.
@@ -32,7 +30,7 @@ import wicket.model.Model;
  * @author Chris Turner
  * @version 1.0
  */
-public class Guess extends HtmlPage {
+public class Guess extends WicketExamplePage {
 
     /**
 	 * Comment for <code>serialVersionUID</code>
@@ -48,8 +46,6 @@ public class Guess extends HtmlPage {
         super();
         System.err.println("Created the guess page");
         setModel(new Model(hangman));
-
-        add(new NavigationPanel("mainNavigation", "Hangman example"));
 
         // Components for displaying the guesses remaining & the hangman
         add(new Label("guessesRemaining", hangman, "guessesRemaining"));

@@ -19,7 +19,7 @@
 package wicket.examples.helloworld;
 
 import wicket.PageParameters;
-import wicket.examples.WicketExample;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 
 /**
@@ -27,7 +27,7 @@ import wicket.markup.html.basic.Label;
  * 
  * @author Jonathan Locke
  */
-public class HelloWorld extends WicketExample
+public class HelloWorld extends WicketExamplePage
 {
     /**
      * Constructor

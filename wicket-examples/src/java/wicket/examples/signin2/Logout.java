@@ -19,7 +19,6 @@
 package wicket.examples.signin2;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
 
 /**
  * Simple logout page.
@@ -33,7 +32,6 @@ public class Logout extends AuthenticatedHtmlPage
      */
     public Logout(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Signin example"));
     }
     
 	/**

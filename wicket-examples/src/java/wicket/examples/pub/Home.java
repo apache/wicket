@@ -22,8 +22,7 @@ import java.util.Locale;
 
 import wicket.PageParameters;
 import wicket.Session;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
@@ -37,7 +36,7 @@ import wicket.util.value.ValueMap;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class Home extends HtmlPage
+public final class Home extends WicketExamplePage
 {
     /** current locale. */
     private Locale currentLocale = Locale.US;
@@ -48,8 +47,6 @@ public final class Home extends HtmlPage
      */
     public Home(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Helloworld example"));
-
         add(new Image("beer"));
 
         // create a dummy object to serve as our Ognl substitution model

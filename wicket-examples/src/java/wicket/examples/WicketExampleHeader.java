@@ -18,22 +18,24 @@
  */
 package wicket.examples;
 
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
-import wicket.util.lang.Classes;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.panel.Panel;
 
 /**
- * Base class for all example pages.
- * 
- * @author Jonathan Locke
+ * Navigation panel for the examples project.
+ *
+ * @author Eelco Hillenius
  */
-public class WicketExample extends HtmlPage
+public final class WicketExampleHeader extends Panel
 {
     /**
-     * Constructor
+     * Construct.
+     * @param componentName name of the component
+     * @param exampleTitle title of the example
      */
-    public WicketExample()
+    public WicketExampleHeader(String componentName, String exampleTitle)
     {
-        add(new NavigationPanel("mainNavigation", Classes.name(getClass())));
+        super(componentName);
+        add(new Label("exampleTitle", exampleTitle));
     }
 }

@@ -19,7 +19,6 @@
 package wicket.examples.signin;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
 
 /**
  * Simple home page.
@@ -33,7 +32,6 @@ public class Home extends AuthenticatedHtmlPage
      */
     public Home(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Signin example"));
     }
 }
 
