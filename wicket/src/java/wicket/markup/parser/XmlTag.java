@@ -1,23 +1,21 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.parser;
-
 
 import java.util.Map;
 
@@ -35,14 +33,13 @@ import wicket.util.value.ValueMap;
 public class XmlTag extends MarkupElement
 {
 	/**
-	 * An open tag, like &lt;TAG componentName = "xyz"&gt;.
-	 */
-	public static final Type OPEN = new Type("OPEN");
-
-	/**
 	 * A close tag, like &lt;/TAG&gt;.
 	 */
 	public static final Type CLOSE = new Type("CLOSE");
+	/**
+	 * An open tag, like &lt;TAG componentName = "xyz"&gt;.
+	 */
+	public static final Type OPEN = new Type("OPEN");
 
 	/**
 	 * An open/close tag, like &lt;TAG componentName = "xyz"/&gt;.
@@ -52,17 +49,8 @@ public class XmlTag extends MarkupElement
 	/** Attribute map. */
 	ValueMap attributes = new ValueMap();
 
-	/** Any component tag that this tag closes. */
-	private XmlTag closes;
-
 	/** Column number. */
 	int columnNumber;
-
-	/** If mutable, the immutable tag that this tag is a mutable copy of. */
-	private XmlTag copyOf = this;
-
-	/** True if this tag is mutable, false otherwise. */
-	private boolean isMutable = true;
 
 	/** Length of this tag in characters. */
 	int length;
@@ -76,9 +64,6 @@ public class XmlTag extends MarkupElement
 	/** Namespace of the tag, if available, such as &lt;wicket:link ...&gt; */
 	String namespace;
 
-	/** True if the name of this tag was changed. */
-	private boolean nameChanged = false;
-
 	/** Position of this tag in the input that was parsed. */
 	int pos;
 
@@ -87,6 +72,35 @@ public class XmlTag extends MarkupElement
 
 	/** The tag type (OPEN, CLOSE or OPEN_CLOSE). */
 	Type type;
+
+	/** Any component tag that this tag closes. */
+	private XmlTag closes;
+
+	/** If mutable, the immutable tag that this tag is a mutable copy of. */
+	private XmlTag copyOf = this;
+
+	/** True if this tag is mutable, false otherwise. */
+	private boolean isMutable = true;
+
+	/** True if the name of this tag was changed. */
+	private boolean nameChanged = false;
+
+	/**
+	 * Enumerated type for different kinds of component tags.
+	 */
+	public static final class Type extends EnumeratedType
+	{
+		/**
+		 * Construct.
+		 * 
+		 * @param name
+		 *            name of type
+		 */
+		Type(final String name)
+		{
+			super(name);
+		}
+	}
 
 	/**
 	 * Construct.
@@ -100,21 +114,12 @@ public class XmlTag extends MarkupElement
 	 * Gets whether this tag closes the provided open tag.
 	 * 
 	 * @param open
-	 *           The open tag
+	 *            The open tag
 	 * @return True if this tag closes the given open tag
 	 */
 	public final boolean closes(final XmlTag open)
 	{
 		return (closes == open) || (closes == open.copyOf);
-	}
-
-	/**
-	 * Assuming this is a close tag, return the corresponding open tag
-	 * @return The open tag. Null, if no open tag available
-	 */
-	public final XmlTag getOpenTag()
-	{
-		return closes;
 	}
 
 	/**
@@ -186,6 +191,16 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
+	 * Get whether the name of this component tag was changed.
+	 * 
+	 * @return Returns true if the name of this component tag was changed
+	 */
+	public boolean getNameChanged()
+	{
+		return nameChanged;
+	}
+
+	/**
 	 * Namespace of the tag, if available, such as &lt;wicket:link ...&gt;
 	 * 
 	 * @return The tag's namespace
@@ -196,13 +211,13 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Get whether the name of this component tag was changed.
+	 * Assuming this is a close tag, return the corresponding open tag
 	 * 
-	 * @return Returns true if the name of this component tag was changed
+	 * @return The open tag. Null, if no open tag available
 	 */
-	public boolean getNameChanged()
+	public final XmlTag getOpenTag()
 	{
-		return nameChanged;
+		return closes;
 	}
 
 	/**
@@ -219,7 +234,7 @@ public class XmlTag extends MarkupElement
 	 * Get a string attribute.
 	 * 
 	 * @param key
-	 *           The key
+	 *            The key
 	 * @return The string value
 	 */
 	public String getString(final String key)
@@ -248,6 +263,15 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
+	 * 
+	 * @return True, if tag is mutable
+	 */
+	public final boolean isMutable()
+	{
+		return isMutable;
+	}
+
+	/**
 	 * Gets whether this is an open tag.
 	 * 
 	 * @return True if this tag is an open tag
@@ -261,7 +285,7 @@ public class XmlTag extends MarkupElement
 	 * Gets whether this tag is an open tag with the given component name.
 	 * 
 	 * @param componentName
-	 *           Required component name attribute
+	 *            Required component name attribute
 	 * @return True if this tag is an open tag with the given component name
 	 */
 	public boolean isOpen(final String componentName)
@@ -283,8 +307,9 @@ public class XmlTag extends MarkupElement
 	 * Gets whether this tag is an openclose tag with the given component name.
 	 * 
 	 * @param componentName
-	 *           Required component name attribute
-	 * @return True if this tag is an openclose tag with the given component name
+	 *            Required component name attribute
+	 * @return True if this tag is an openclose tag with the given component
+	 *         name
 	 */
 	public boolean isOpenClose(final String componentName)
 	{
@@ -341,9 +366,9 @@ public class XmlTag extends MarkupElement
 	 * Puts a boolean attribute.
 	 * 
 	 * @param key
-	 *           The key
+	 *            The key
 	 * @param value
-	 *           The value
+	 *            The value
 	 */
 	public void put(final String key, final boolean value)
 	{
@@ -354,9 +379,9 @@ public class XmlTag extends MarkupElement
 	 * Puts an int attribute.
 	 * 
 	 * @param key
-	 *           The key
+	 *            The key
 	 * @param value
-	 *           The value
+	 *            The value
 	 */
 	public void put(final String key, final int value)
 	{
@@ -367,9 +392,9 @@ public class XmlTag extends MarkupElement
 	 * Puts a string attribute.
 	 * 
 	 * @param key
-	 *           The key
+	 *            The key
 	 * @param value
-	 *           The value
+	 *            The value
 	 */
 	public void put(final String key, final String value)
 	{
@@ -380,9 +405,9 @@ public class XmlTag extends MarkupElement
 	 * Puts a {@link StringValue}attribute.
 	 * 
 	 * @param key
-	 *           The key
+	 *            The key
 	 * @param value
-	 *           The value
+	 *            The value
 	 */
 	public void put(final String key, final StringValue value)
 	{
@@ -393,7 +418,7 @@ public class XmlTag extends MarkupElement
 	 * Puts all {@link StringValue}attributes in map
 	 * 
 	 * @param map
-	 *           a key/value map
+	 *            a key/value map
 	 */
 	public void putAll(final Map map)
 	{
@@ -404,7 +429,7 @@ public class XmlTag extends MarkupElement
 	 * Removes an attribute.
 	 * 
 	 * @param key
-	 *           The key to remove
+	 *            The key to remove
 	 */
 	public void remove(final String key)
 	{
@@ -415,7 +440,7 @@ public class XmlTag extends MarkupElement
 	 * Sets the tag name.
 	 * 
 	 * @param name
-	 *           New tag name
+	 *            New tag name
 	 */
 	public void setName(final String name)
 	{
@@ -431,10 +456,23 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
+	 * Assuming this is a close tag, assign it's corresponding open tag.
+	 * 
+	 * @param tag
+	 *            the open-tag
+	 * @throws RuntimeException
+	 *             if 'this' is not a close tag
+	 */
+	public void setOpenTag(final XmlTag tag)
+	{
+		this.closes = tag;
+	}
+
+	/**
 	 * Sets type of this tag if it is not immutable.
 	 * 
 	 * @param type
-	 *           The new type
+	 *            The new type
 	 */
 	public void setType(final Type type)
 	{
@@ -446,28 +484,6 @@ public class XmlTag extends MarkupElement
 		{
 			throw new UnsupportedOperationException("Attempt to set type of immutable tag");
 		}
-	}
-
-	/**
-	 * 
-	 * @return True, if tag is mutable
-	 */
-	public final boolean isMutable()
-	{
-		return isMutable;
-	}
-
-	/**
-	 * Assuming this is a close tag, assign it's corresponding open tag.
-	 * 
-	 * @param tag
-	 *           the open-tag
-	 * @throws RuntimeException
-	 *            if 'this' is not a close tag
-	 */
-	public void setOpenTag(final XmlTag tag)
-	{
-		this.closes = tag;
 	}
 
 	/**
@@ -494,6 +510,16 @@ public class XmlTag extends MarkupElement
 		}
 
 		return toXmlString();
+	}
+
+	/**
+	 * Converts this object to a string representation.
+	 * 
+	 * @return String version of this object
+	 */
+	public String toUserDebugString()
+	{
+		return "'" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
 	}
 
 	/**
@@ -536,33 +562,4 @@ public class XmlTag extends MarkupElement
 
 		return buffer.toString();
 	}
-
-	/**
-	 * Converts this object to a string representation.
-	 * 
-	 * @return String version of this object
-	 */
-	public String toUserDebugString()
-	{
-		return "'" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";
-	}
-
-	/**
-	 * Enumerated type for different kinds of component tags.
-	 */
-	public static final class Type extends EnumeratedType
-	{
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *           name of type
-		 */
-		Type(final String name)
-		{
-			super(name);
-		}
-	}
 }
-
-// /////////////////////////////// End of File /////////////////////////////////
