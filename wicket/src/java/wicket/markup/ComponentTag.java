@@ -61,7 +61,7 @@ public class ComponentTag extends MarkupElement
 
     /**
      * Construct.
-     * @param The underlying xml tag
+     * @param tag The underlying xml tag
      */
     public ComponentTag(final XmlTag tag)
     {
@@ -207,7 +207,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#getAttributes()
+     * @see wicket.markup.parser.XmlTag#getAttributes()
      * @return The tag#s attributes
      */
     public ValueMap getAttributes()
@@ -216,7 +216,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#put(String, boolean)
+     * @see wicket.markup.parser.XmlTag#put(String, boolean)
      * @param key The key
      * @param value The value
      */
@@ -226,7 +226,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#put(String, int)
+     * @see wicket.markup.parser.XmlTag#put(String, int)
      * @param key The key
      * @param value The value
      */
@@ -236,7 +236,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#put(String, String)
+     * @see wicket.markup.parser.XmlTag#put(String, String)
      * @param key The key
      * @param value The value
      */
@@ -246,7 +246,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#put(String, StringValue)
+     * @see wicket.markup.parser.XmlTag#put(String, StringValue)
      * @param key The key
      * @param value The value
      */
@@ -256,7 +256,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#putAll(Map)
+     * @see wicket.markup.parser.XmlTag#putAll(Map)
      * @param map a key/value map
      */
     public void putAll(final Map map)
@@ -265,7 +265,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#getString(String)
+     * @see wicket.markup.parser.XmlTag#getString(String)
      * @param key The key
      * @return The string value
      */
@@ -275,7 +275,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#getName()
+     * @see wicket.markup.parser.XmlTag#getName()
      * @return The tag's name
      */
     public String getName()
@@ -284,7 +284,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#getNamespace()
+     * @see wicket.markup.parser.XmlTag#getNamespace()
      * @return The tag's namespace
      */
     public String getNamespace()
@@ -293,7 +293,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#remove(String)
+     * @see wicket.markup.parser.XmlTag#remove(String)
      * @param key The key to remove
      */
     public void remove(String key)
@@ -302,7 +302,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#getType()
+     * @see wicket.markup.parser.XmlTag#getType()
      * @return the tag type (OPEN, CLOSE or OPEN_CLOSE).
      */
     public Type getType()
@@ -311,7 +311,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#isOpen()
+     * @see wicket.markup.parser.XmlTag#isOpen()
      * @return True if this tag is an open tag
      */
     public boolean isOpen()
@@ -320,7 +320,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#isOpen(String)
+     * @see wicket.markup.parser.XmlTag#isOpen(String)
      * @param componentName Required component name attribute
      * @return True if this tag is an open tag with the given component name
      */
@@ -330,7 +330,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#isOpenClose()
+     * @see wicket.markup.parser.XmlTag#isOpenClose()
      * @return True if this tag is an open and a close tag
      */
     public boolean isOpenClose()
@@ -339,7 +339,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#isOpenClose(String)
+     * @see wicket.markup.parser.XmlTag#isOpenClose(String)
      * @param componentName Required component name attribute
      * @return True if this tag is an openclose tag with the given component name
      */
@@ -349,7 +349,7 @@ public class ComponentTag extends MarkupElement
     }
 
     /**
-     * @see wicket.util.xml.XmlTag#setType(Type)
+     * @see wicket.markup.parser.XmlTag#setType(Type)
      * @param type The new type
      */
     public void setType(Type type)
@@ -377,7 +377,7 @@ public class ComponentTag extends MarkupElement
     }
     
     /**
-     * @see wicket.util.xml.XmlTag#getNameChanged()
+     * @see wicket.markup.parser.XmlTag#getNameChanged()
      * @return Returns true if the name of this component tag was changed
      */
     public boolean getNameChanged()
@@ -386,7 +386,7 @@ public class ComponentTag extends MarkupElement
     }
     
     /**
-     * @see wicket.util.xml.XmlTag#setName(String)
+     * @see wicket.markup.parser.XmlTag#setName(String)
      * @param name New tag name
      */
     public void setName(String name)
@@ -395,7 +395,7 @@ public class ComponentTag extends MarkupElement
     }
     
     /**
-     * @see wicket.util.xml.XmlTag#isClose()
+     * @see wicket.markup.parser.XmlTag#isClose()
      * @return True if this tag is a close tag
      */
     public boolean isClose()
@@ -404,7 +404,7 @@ public class ComponentTag extends MarkupElement
     }
     
     /**
-     * @see wicket.util.xml.XmlTag#getPos()
+     * @see wicket.markup.parser.XmlTag#getPos()
 	 * @return Tag location (index in input string)
      */
     public int getPos()

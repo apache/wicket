@@ -103,7 +103,7 @@ public class WicketParamTagHandler implements IMarkupFilter
      * immediately following the IXmlPullParser. Some inline filter converting
      * XmlTags into ComponentTags must preceed it.
      * 
-     * @see wicket.util.xml.IMarkupFilter#nextTag()
+     * @see wicket.markup.parser.IMarkupFilter#nextTag()
      * @return The next MarkupElement from markup. If null, no more tags are
      *         available
      */

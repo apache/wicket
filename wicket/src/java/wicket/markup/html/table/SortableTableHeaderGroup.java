@@ -37,7 +37,7 @@ public class SortableTableHeaderGroup
     /** contains the name of SortableTableHeader to be sorted */
     final private MicroMap sorted = new MicroMap();
 
-    /** The Table tableComponentName refers to */
+    /** The underlying listView to be sorted */
     private ListView table;
 
     /** The html container the header must be added to */
@@ -73,7 +73,7 @@ public class SortableTableHeaderGroup
     /**
      * True if column with name shall be sorted
      *
-     * @param name
+     * @param name column name
      * @return True, if column must be sorted
      */
     protected final boolean isSorted(final String name)
