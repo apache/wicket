@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.markup.AutolinkComponentResolver;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Crypt;
 import wicket.markup.html.form.FormComponentPersistenceDefaults;
@@ -176,6 +177,9 @@ public class ApplicationSettings
     private boolean exceptionOnMissingResource = true;
 
     private boolean useDefaultOnMissingResource = true;
+    
+    /** List of (static) ComponentResolvers */
+    private List componentResolvers;
 
     // Chain of string resource loaders to use and internal flag
     // that keeps track of whether the user has overridden the defaults
@@ -245,6 +249,9 @@ public class ApplicationSettings
         stringResourceLoaders.add(new ComponentStringResourceLoader());
         stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
         pageFactory = new PageFactory(application);
+        
+        componentResolvers = new ArrayList();
+        componentResolvers.add(new AutolinkComponentResolver());
     }
 
     /**
@@ -803,6 +810,17 @@ public class ApplicationSettings
     public void setPageFactory(final IPageFactory pageFactory)
     {
         this.pageFactory = pageFactory;
+    }
+
+    /**
+     * Get the (modifiable) List of ComponentResolvers.
+     * @see wicket.markup.AutolinkComponentResolver for an example
+     * 
+     * @return List of ComponentResolvers
+     */
+    public List getComponentResolvers()
+    {
+        return componentResolvers;
     }
 }
 

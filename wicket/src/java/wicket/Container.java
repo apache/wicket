@@ -23,18 +23,19 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.markup.ÍComponentResolver;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupParser;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.border.Border;
 import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
 import wicket.util.listener.IChangeListener;
@@ -756,8 +757,7 @@ public abstract class Container extends Component
 	private Markup loadMarkup(final ApplicationSettings settings, final String key,
 			final Resource markupResource) throws ParseException, IOException, ResourceNotFoundException
 	{
-		final MarkupParser parser = new MarkupParser(settings.getComponentNameAttribute(), getPage()
-				.incrementAutoIndex());
+		final MarkupParser parser = new MarkupParser(settings.getComponentNameAttribute());
 
 		parser.setStripComments(settings.getStripComments());
 		parser.setCompressWhitespace(settings.getCompressWhitespace());
@@ -794,19 +794,6 @@ public abstract class Container extends Component
 			// Get the component for the component name from the given container
 			Component component = get(componentName);
 
-			// Check for automatic links
-			if ((component == null) && tag.isAutomaticLink())
-			{
-				// Add automaticLink external page link
-				component = tag.createAutomaticLink(getPage(), markupStream);
-				add(component);
-				if (log.isDebugEnabled()) // debug after adding as adding changes
-													// path/ id
-				{
-					log.debug("Added autolink " + component);
-				}
-			}
-
 			// Failed to find it?
 			if (component != null)
 			{
@@ -822,59 +809,35 @@ public abstract class Container extends Component
 					log.debug("End render of sub-component " + component);
 				}
 			}
-			else
+			else 
 			{
-				// If it's a [body] tag
-				if (componentName.equals("[body]"))
-				{
-					if (!markupStream.atOpenCloseTag())
-					{
-						markupStream.throwMarkupException("A [body] tag must be an openclose tag.");
-					}
-					// Render the children tag
-					renderTag(cycle, tag);
-					markupStream.next();
-
-					// Find nearest Border at or above this container
-					Border border = (Border) ((this instanceof Border) ? this : findParent(Border.class));
-
-					// If markup stream is null, that indicates we already
-					// recursed into
-					// this block of log and set it to null (below). If we did
-					// that,
-					// then we want to go up another level of border nesting.
-					if (border.getMarkupStream() == null)
-					{
-						// Find Border at or above parent of this border
-						Container borderParent = border.getParent();
-
-						border = (Border) ((borderParent instanceof Border) ? borderParent : borderParent
-								.findParent(Border.class));
-					}
-
-					// Get the border's markup
-					final MarkupStream borderMarkup = border.findMarkupStream();
-
-					// Set markup of border to null. This allows us to find the
-					// border's
-					// parent's markup. It also indicates that we've been here
-					// in the log
-					// just above.
-					border.setMarkupStream(null);
-
-					// Draw the children of the border component using its
-					// original in-line
-					// markup stream (not the border's associated markup stream)
-					border.renderBody(cycle, border.findMarkupStream(), border.getOpenTag());
-
-					// Restore border markup so it can continue rendering
-					border.setMarkupStream(borderMarkup);
+			    // 2nd try: all static name resolvers
+			    final List componentResolvers = this.getApplicationSettings().getComponentResolvers();
+			    final Iterator iter = componentResolvers.iterator();
+			    while (iter.hasNext())
+			    {
+			        final ÍComponentResolver resolver = (ÍComponentResolver) iter.next();
+			        if (resolver.resolve(cycle, markupStream, tag, this) == true)
+			        {
+			            return;
+			        }
 				}
-				else
-				{
-					markupStream.throwMarkupException("Unable to find component named '" + componentName + "' in "
-							+ this);
-				}
+
+			    // 3rd try: a subclass replacing resolveComponentName()
+			    Container container = this;
+			    while (container != null)
+			    {
+					if (container.resolveComponent(cycle, markupStream, tag) == true)
+					{
+					    return;
+					}
+					
+					container = container.findParent(Container.class);
+			    }
+
+			    // No one was able to handle the component name
+				markupStream.throwMarkupException("Unable to find component named '" + componentName + "' in "
+						+ this);
 			}
 		}
 		else
@@ -886,6 +849,23 @@ public abstract class Container extends Component
 		}
 	}
 
+	/**
+	 * The Container was not able to resolve the component name. Subclasses may 
+	 * augment the default strategy by subclassing resolveComponentName().
+	 * @see wicket.markup.html.border.Border for an example.<p>
+	 * Note: resolveComponentName must also render the components created
+	 *  
+	 * @param cycle The current request cycle
+	 * @param markupStream The current markup stream
+	 * @param tag The current component tag
+	 * @return true, if Container was able to resolve the component name 
+	 * 		and to render the component
+	 */
+	protected boolean resolveComponent(final RequestCycle cycle, final MarkupStream markupStream, final ComponentTag tag)
+	{
+	    return false;
+	}
+	
 	/**
 	 * Replaces a child component of this container with another
 	 * 

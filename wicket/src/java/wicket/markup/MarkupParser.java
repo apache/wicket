@@ -78,12 +78,6 @@ public final class MarkupParser
     /** Last place we counted lines from. */
     private int lastLineCountIndex;
 
-    /** Index of automaticLink values created. */
-    private int autoIndex = 0;
-
-    /** Used to make autolink unique for the whole page */
-    final private int autoIndexPrefix;
-
     /** Null, if JVM default. Else from <?xml encoding=""> */
     private String encoding;
 
@@ -93,12 +87,11 @@ public final class MarkupParser
     /**
      * Constructor.
      * @param componentNameAttribute The name of the componentName attribute
-     * @param autoIndexPrefix prefix to make autolink unique for the whole page
      */
-    public MarkupParser(final String componentNameAttribute, final int autoIndexPrefix)
+    public MarkupParser(final String componentNameAttribute)
     {
         this.componentNameAttribute = componentNameAttribute;
-        this.autoIndexPrefix = autoIndexPrefix;
+        //this.autoIndexPrefix = autoIndexPrefix;
     }
 
     /**
@@ -656,18 +649,7 @@ public final class MarkupParser
                     // extract component name from value
                     value = value.substring(componentNameAttribute.length() + 1).trim();
                 }
-
-                // If value is an automaticLink link, like [autolink], then add
-                // automaticLink numbering to keep tag value separate from other
-                // tags
-                if (value.startsWith("[autolink")
-                    && ((value.charAt(9) == ']') || (value.charAt(9) == ':')))
-                {
-                    value += ("-" + autoIndexPrefix + "-" + autoIndex);
-                    autoIndex++;
-                    tag.automaticLink = true;
-                }
-
+                
                 // If user-defined component name attribute is used OR the
                 // standard name ("wcn") is used
                 if (wcnId
