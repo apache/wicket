@@ -18,49 +18,46 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
-
 import wicket.Component;
 import wicket.FeedbackMessage;
-
+import wicket.markup.html.form.FormComponent;
 
 /**
  * A specialized version of a {@link wicket.FeedbackMessage}
  * that represents a message about the failure of a validation.
+ * 
  * @see wicket.markup.html.form.validation.IValidator
  * @see wicket.FeedbackMessage
  * @see wicket.markup.html.form.validation.IValidationErrorHandler
- *
  * @author Eelco Hillenius
  */
 public final class ValidationErrorMessage extends FeedbackMessage
-{ // TODO finalize javadoc
-    /** constant for representing an empty message (same as null). */
+{
+    /** Constant for representing an empty message (same as null). */
     public static final ValidationErrorMessage NO_MESSAGE = null;
-
-    /** the input (that caused the error). */
-    private final Serializable input;
 
     /**
      * Construct using fields.
-     * @param input the input (the cause of the validation error)
      * @param reporter the message reporter
      * @param message the actual message
      */
-    public ValidationErrorMessage(Serializable input, Component reporter, String message)
+    public ValidationErrorMessage(final Component reporter, final String message)
     {
         super(reporter, message, ERROR);
-        this.input = input;
     }
-
-    /**
-     * Gets input (that caused the error).
-     * @return the input.
-     */
-    public Serializable getInput()
-    {
-        return input;
-    }
-
     
+    /**
+     * Get the input that caused this validation error message.
+     * @return The input, or null if none is available.
+     */
+    public String getInput()
+    {
+        final Component reporter = getReporter();
+        if (reporter instanceof FormComponent)
+        {
+            return ((FormComponent)getReporter()).getStringValue();
+        }
+        return null;
+    }
 }
+

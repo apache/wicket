@@ -19,13 +19,12 @@
 package wicket.markup.html.form.validation;
 
 /**
- * Exception class for unexcepted exceptions during validation.
+ * Exception class for validation problems.
  */
 public final class ValidationException extends RuntimeException
-{ // TODO finalize javadoc
-
+{
     /**
-     * Construct.
+     * Constructor.
      */
     public ValidationException()
     {
@@ -33,8 +32,8 @@ public final class ValidationException extends RuntimeException
     }
 
     /**
-     * Construct.
-     * @param message the message
+     * Constructor.
+     * @param message The message
      */
     public ValidationException(String message)
     {
@@ -42,8 +41,8 @@ public final class ValidationException extends RuntimeException
     }
 
     /**
-     * Construct.
-     * @param cause the cause
+     * Constructor.
+     * @param cause The cause
      */
     public ValidationException(Throwable cause)
     {
@@ -51,13 +50,12 @@ public final class ValidationException extends RuntimeException
     }
 
     /**
-     * Construct.
-     * @param message the message
-     * @param cause the cause
+     * Constructor.
+     * @param message The message
+     * @param cause The cause
      */
     public ValidationException(String message, Throwable cause)
     {
         super(message, cause);
     }
-
 }

@@ -163,9 +163,9 @@ public abstract class FormComponentsPanel extends FormComponent
                         }
                         messages.add(message);
                         // replace the model
-                        ValidationErrorModelDecorator deco =
+                        ValidationErrorModelDecorator decorator =
                             new ValidationErrorModelDecorator(component, message.getInput());
-                        component.setModel(deco);
+                        component.setModel(decorator);
                     }
                     return IVisitor.CONTINUE_TRAVERSAL; // continue until the end
                 }
