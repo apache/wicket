@@ -18,10 +18,10 @@
 package wicket;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,7 +104,7 @@ public abstract class Component implements Serializable
 	 * Collections to hold instances of modifiers to be applied for this
 	 * component.
 	 */
-	private Set attributeModifiers = null;
+	private List attributeModifiers = null;
 
 	/** The model for this component. */
 	private IModel model;
@@ -270,7 +270,7 @@ public abstract class Component implements Serializable
 	{
 		if (attributeModifiers == null)
 		{
-			attributeModifiers = new HashSet();
+			attributeModifiers = new ArrayList();
 		}
 		attributeModifiers.add(modifier);
 		return this;
