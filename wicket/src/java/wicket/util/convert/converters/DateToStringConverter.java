@@ -45,6 +45,7 @@ public final class DateToStringConverter extends AbstractConverter
 	 */
 	public final DateFormat getDateFormat()
 	{
+        final Locale locale = getLocale();
 		if (dateFormat == null && locale != null)
 		{
 			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);

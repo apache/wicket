@@ -45,6 +45,7 @@ public final class NumberToStringConverter extends AbstractConverter
 	 */
 	public final NumberFormat getNumberFormat()
 	{
+        final Locale locale = getLocale();
 		if (numberFormat == null && locale != null)
 		{
 			numberFormat = NumberFormat.getInstance(locale);

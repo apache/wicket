@@ -102,7 +102,7 @@ public class StringConverter extends AbstractConverter
 		{
 			if (defaultConverter instanceof ILocalizable)
 			{
-				((ILocalizable)defaultConverter).setLocale(locale);
+				((ILocalizable)defaultConverter).setLocale(getLocale());
 			}
 			return defaultConverter.convert(value);
 		}
@@ -110,7 +110,7 @@ public class StringConverter extends AbstractConverter
 		// Set locale
 		if (converter instanceof ILocalizable)
 		{
-			((ILocalizable)converter).setLocale(locale);
+			((ILocalizable)converter).setLocale(getLocale());
 		}
 
 		try
@@ -120,11 +120,11 @@ public class StringConverter extends AbstractConverter
 		}
 		catch (ConversionException e)
 		{
-			throw e.setTypeConverter(this).setLocale(locale).setTargetType(c).setSourceValue(value);
+			throw e.setTypeConverter(this).setLocale(getLocale()).setTargetType(c).setSourceValue(value);
 		}
 		catch (Exception e)
 		{
-			throw new ConversionException(e).setTypeConverter(this).setLocale(locale)
+			throw new ConversionException(e).setTypeConverter(this).setLocale(getLocale())
 					.setTargetType(c).setSourceValue(value);
 		}
 	}
