@@ -156,20 +156,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-	<servlet>
-		<servlet-name>cdapp</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-			<param-name>applicationClassName</param-name>
-			<param-value>wicket.examples.cdapp.CdApplication</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>cdapp</servlet-name>
-		<url-pattern>/cdapp/*</url-pattern>
-	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>SignInApplication</servlet-name>
 		<url-pattern>/signin/*</url-pattern>
