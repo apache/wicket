@@ -26,8 +26,8 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
-import wicket.markup.html.form.Crypt;
-import wicket.markup.html.form.FormComponentPersistenceDefaults;
+import wicket.markup.html.form.encryption.Crypt;
+import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
@@ -42,8 +42,8 @@ import wicket.util.time.Duration;
  * Application settings properties:
  * <p>
  * <ul>
- * <i>componentNameAttribute </i> (defaults to "wicket") - The markup
- * attribute which denotes the names of components to be attached
+ * <i>componentNameAttribute </i> (defaults to "wicket") - The markup attribute
+ * which denotes the names of components to be attached
  * <p>
  * <i>componentUseCheck </i> (defaults to true) - Causes the framework to do a
  * check after rendering each page to ensure that each component was used in
@@ -106,690 +106,700 @@ import wicket.util.time.Duration;
  */
 public final class ApplicationSettings
 {
-    /** Log */
-    private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
-    /** Application default for automatically resolving hrefs */
-    private boolean automaticLinking = false;
+	/**
+	 * Indicates that an exception page appropriate to development should be
+	 * shown when an unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_EXCEPTION_PAGE");
 
-    /** Component attribute name */
-    private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
+	/**
+	 * Indicates a generic internal error page should be shown when an
+	 * unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_INTERNAL_ERROR_PAGE");
 
-    /** True to check that each component on a page is used */
-    private boolean componentUseCheck = true;
-
-    /** True if multiple tabs/spaces should be compressed to a single space */
-    private boolean compressWhitespace = false;
-
-    /** Class of type ICrypt to implement encryption */
-    private Class cryptClass = Crypt.class;
-
-    /** Default markup for after a disabled link */
-    private String defaultAfterDisabledLink = "</i>";
-
-    /** Default markup for before a disabled link */
-    private String defaultBeforeDisabledLink = "<i>";
-
-    /** Default class resolver to find classes */
-    private IClassResolver defaultClassResolver = new DefaultClassResolver();
-
-    /** Default factory to create new Page objects */
-    private IPageFactory defaultPageFactory = new DefaultPageFactory();
-
-    /** Encryption key used to encode/decode passwords e.g. */
-    private String encryptionKey = "WiCkEt-FRAMEwork";
-
-    /** Default values for persistence of form data (by means of cookies) */
-    private FormComponentPersistenceDefaults formComponentPersistenceDefaults = new FormComponentPersistenceDefaults();
-
-    /** The maximum number of pages in a session */
-    private int maxSessionPages = 10;
-
-    /** True if string resource loaders have been overridden */
-    private boolean overriddenStringResourceLoaders = false;
-
-    /**
-     * Whether the {@link wicket.model.PropertyModel}instances apply formatting
-     * by default; default == false.
-     */
-    private boolean propertyModelDefaultApplyFormatting = false;
-
-    /** Frequency at which files should be polled */
-    private Duration resourcePollFrequency = null;
-
-    /** Source path */
-    private Path sourcePath = new Path();
-
-    /** Chain of string resource loaders to use */
-    private List stringResourceLoaders = new ArrayList(2);
-
-    /** Should HTML comments be stripped during rendering? */
-    private boolean stripComments = false;
-
-    /** Should component names be stripped during rendering? */
-    private boolean stripComponentNames = false;
-
-    /** If true, wicket tags ( <wicket ..>) shall be removed from output */
-    private boolean stripWicketTags = false;
-
-    /** Flags used to determine how to behave if resources are not found */
-    private boolean throwExceptionOnMissingResource = true;
-
-    /** Type of handling for unexpected exceptions */
-    private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
-
-    /** Determines behavior of string resource loading if string is missing */
-    private boolean useDefaultOnMissingResource = true;
-
-    /** Default xhtml wicket namespace: e.g. <wicket:> */
-    private String wicketNamespace = ComponentWicketTag.DEFAULT_WICKET_NAMESPACE;
-
-    /**
-     * Indicates that an exception page appropriate to development should be
-     * shown when an unexpected exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-            "SHOW_EXCEPTION_PAGE");
-
-    /**
-     * Indicates a generic internal error page should be shown when an
-     * unexpected exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
-            "SHOW_INTERNAL_ERROR_PAGE");
-
-    /**
-     * Indicates that no exception page should be shown when an unexpected
-     * exception is thrown.
-     */
-    public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-            "SHOW_NO_EXCEPTION_PAGE");
-
-    /**
-     * Enumerated type for different ways of displaying unexpected exceptions.
-     */
-    public static final class UnexpectedExceptionDisplay extends EnumeratedType
-    {
-        UnexpectedExceptionDisplay(final String name)
-        {
-            super(name);
-        }
-    }
-
-    /**
-     * Create the application settings, carrying out any necessary
-     * initialisations.
-     * 
-     * @param application
-     *            The application that these settings are for
-     */
-    public ApplicationSettings(final Application application)
-    {
-        stringResourceLoaders.add(new ComponentStringResourceLoader());
-        stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
-    }
-
-    /**
-     * Add a string resource loader to the chain of loaders. If this is the
-     * first call to this method since the creation of the application settings
-     * then the existing chain is cleared before the new loader is added.
-     * 
-     * @param loader
-     *            The loader to be added
-     * @return This
-     */
-    public final ApplicationSettings addStringResourceLoader(final IStringResourceLoader loader)
-    {
-        if (!overriddenStringResourceLoaders)
-        {
-            stringResourceLoaders.clear();
-            overriddenStringResourceLoaders = true;
-        }
-        stringResourceLoaders.add(loader);
-        return this;
-    }
-
-    /**
-     * If true, automatic link resolution is enabled.
-     * 
-     * @return Returns the automaticLinking.
-     */
-    public boolean getAutomaticLinking()
-    {
-        return automaticLinking;
-    }
-
-    /**
-     * Gets component name attribute in use in this application. Normally, this
-     * is "wicket", but it can be changed in the unlikely event that tag
-     * attribute naming conflicts arise.
-     * 
-     * @return The current component name attribute
-     * @see ApplicationSettings#setComponentNameAttribute(String)
-     */
-    public final String getComponentNameAttribute()
-    {
-        return componentNameAttribute;
-    }
-
-    /**
-     * Get whether component use should be checked or not.
-     * 
-     * @return True if component use should be checked
-     * @see ApplicationSettings#setComponentUseCheck(boolean)
-     */
-    public final boolean getComponentUseCheck()
-    {
-        return this.componentUseCheck;
-    }
-
-    /**
-     * @return Returns the compressWhitespace.
-     * @see ApplicationSettings#setCompressWhitespace(boolean)
-     */
-    public final boolean getCompressWhitespace()
-    {
-        return compressWhitespace;
-    }
-
-    /**
-     * @return Returns the cryptClass.
-     */
-    public final Class getCryptClass()
-    {
-        return cryptClass;
-    }
-
-    /**
-     * @return Returns the defaultAfterDisabledLink.
-     */
-    public final String getDefaultAfterDisabledLink()
-    {
-        return defaultAfterDisabledLink;
-    }
-
-    /**
-     * @return Returns the defaultBeforeDisabledLink.
-     */
-    public final String getDefaultBeforeDisabledLink()
-    {
-        return defaultBeforeDisabledLink;
-    }
-
-    /**
-     * Gets the default resolver to use when finding classes
-     * 
-     * @return Default class resolver
-     */
-    public final IClassResolver getDefaultClassResolver()
-    {
-        return defaultClassResolver;
-    }
-
-    /**
-     * Gets the default factory to be used when creating pages
-     * 
-     * @return The default page factory
-     */
-    public final IPageFactory getDefaultPageFactory()
-    {
-        return defaultPageFactory;
-    }
-
-    /**
-     * Get encryption key used to encode/decode passwords e.g.
-     * 
-     * @return encryption key
-     */
-    public final String getEncryptionKey()
-    {
-        return encryptionKey;
-    }
-
-    /**
-     * Get the defaults to be used by persistence manager
-     * 
-     * @return FormComponentPersistenceDefaults
-     */
-    public final FormComponentPersistenceDefaults getFormComponentPersistenceDefaults()
-    {
-        return formComponentPersistenceDefaults;
-    }
-
-    /**
-     * Gets the maximum number of pages held in a session.
-     * 
-     * @return Returns the maxSessionPages.
-     * @see ApplicationSettings#setMaxSessionPages(int)
-     */
-    public final int getMaxSessionPages()
-    {
-        return maxSessionPages;
-    }
-
-    /**
-     * Gets whether the {@link wicket.model.PropertyModel}instances apply
-     * formatting by default.
-     * 
-     * @return whether the {@link wicket.model.PropertyModel}instances apply
-     *         formatting by default
-     */
-    public final boolean getPropertyModelDefaultApplyFormatting()
-    {
-        return propertyModelDefaultApplyFormatting;
-    }
-
-    /**
-     * @return Returns the resourcePollFrequency.
-     * @see ApplicationSettings#setResourcePollFrequency(Duration)
-     */
-    public final Duration getResourcePollFrequency()
-    {
-        return resourcePollFrequency;
-    }
-
-
-    /**
-     * Gets any source code path to use when searching for resources.
-     * 
-     * @return Returns the sourcePath.
-     * @see ApplicationSettings#setSourcePath(Path)
-     */
-    public final Path getSourcePath()
-    {
-        return sourcePath;
-    }
-
-    /**
-     * @return Returns the stripComments.
-     * @see ApplicationSettings#setStripComments(boolean)
-     */
-    public final boolean getStripComments()
-    {
-        return stripComments;
-    }
-
-    /**
-     * Returns true if componentName attributes should be stripped from tags
-     * when rendering.
-     * 
-     * @return Returns the stripComponentNames.
-     * @see ApplicationSettings#setStripComponentNames(boolean)
-     */
-    public final boolean getStripComponentNames()
-    {
-        return stripComponentNames;
-    }
-
-    /**
-     * Gets whether to remove wicket tags from the output.
-     * 
-     * @return whether to remove wicket tags from the output
-     */
-    public final boolean getStripWicketParamTag()
-    {
-        return this.stripWicketTags;
-    }
-
-    /**
-     * @return Whether to throw an exception when a missing resource is
-     *         requested
-     */
-    public final boolean getThrowExceptionOnMissingResource()
-    {
-        return throwExceptionOnMissingResource;
-    }
-
-    /**
-     * @return Returns the unexpectedExceptionDisplay.
-     * @see ApplicationSettings#setUnexpectedExceptionDisplay(ApplicationSettings.UnexpectedExceptionDisplay)
-     */
-    public final UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
-    {
-        return unexpectedExceptionDisplay;
-    }
-
-    /**
-     * @return Whether to use a default value (if available) when a missing
-     *         resource is requested
-     */
-    public final boolean getUseDefaultOnMissingResource()
-    {
-        return useDefaultOnMissingResource;
-    }
-
-    /**
-     * Get the current tag name
-     * 
-     * @return wicket tag name
-     */
-    public final String getWicketNamespace()
-    {
-        return this.wicketNamespace;
-    }
-
-    /**
-     * Application default for automatic link resolution.
-     * 
-     * @param automaticLinking
-     *            The automaticLinking to set.
-     */
-    public void setAutomaticLinking(boolean automaticLinking)
-    {
-        this.automaticLinking = automaticLinking;
-    }
-
-    /**
-     * Sets component name attribute in use in this application. Normally, this
-     * is "wicket", but it can be changed in the unlikely event that tag
-     * attribute naming conflicts arise.
-     * 
-     * @param componentNameAttribute
-     *            The componentNameAttribute to set.
-     * @return This
-     */
-    public final ApplicationSettings setComponentNameAttribute(final String componentNameAttribute)
-    {
-        this.componentNameAttribute = componentNameAttribute;
-        return this;
-    }
-
-    /**
-     * Enables or disables checking for unused components. Component checking is
-     * on by defaults and only minor efficiency can be gained from turning it
-     * off in a production environment.
-     * 
-     * @param componentUseCheck
-     * @return This
-     */
-    public final ApplicationSettings setComponentUseCheck(final boolean componentUseCheck)
-    {
-        this.componentUseCheck = componentUseCheck;
-        return this;
-    }
-
-    /**
-     * Turns on whitespace compression. Multiple occurrences of space/tab
-     * characters will be compressed to a single space. Multiple line breaks
-     * newline/carriage-return will also be compressed to a single newline.
-     * <p>
-     * Compression is currently not HTML aware and so it may be possible for
-     * whitespace compression to break pages. For this reason, whitespace
-     * compression is off by default and you should test your application
-     * throroughly after turning whitespace compression on.
-     * <p>
-     * Spaces are removed from markup at markup load time and there should be no
-     * effect on page rendering speed. In fact, your pages should render faster
-     * with whitespace compression enabled.
-     * 
-     * @param compressWhitespace
-     *            The compressWhitespace to set.
-     * @return This
-     */
-    public final ApplicationSettings setCompressWhitespace(final boolean compressWhitespace)
-    {
-        this.compressWhitespace = compressWhitespace;
-        return this;
-    }
-
-    /**
-     * Set new Class to be used for de-/encryption
-     * 
-     * @param crypt
-     * @return This
-     */
-    public final ApplicationSettings setCryptClass(Class crypt)
-    {
-        this.cryptClass = crypt;
-        return this;
-    }
-
-    /**
-     * @param defaultAfterDisabledLink
-     *            The defaultAfterDisabledLink to set.
-     * @return This
-     */
-    public final ApplicationSettings setDefaultAfterDisabledLink(
-            final String defaultAfterDisabledLink)
-    {
-        this.defaultAfterDisabledLink = defaultAfterDisabledLink;
-        return this;
-    }
-
-    /**
-     * @param defaultBeforeDisabledLink
-     *            The defaultBeforeDisabledLink to set.
-     * @return This
-     */
-    public final ApplicationSettings setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
-    {
-        this.defaultBeforeDisabledLink = defaultBeforeDisabledLink;
-        return this;
-    }
-
-    /**
-     * Sets the default class resolver to use when finding classes.
-     * 
-     * @param defaultClassResolver
-     *            The default class resolver
-     * @return This
-     */
-    public final ApplicationSettings setDefaultClassResolver(
-            final IClassResolver defaultClassResolver)
-    {
-        this.defaultClassResolver = defaultClassResolver;
-        return this;
-    }
-
-    /**
-     * Sets the default factory to be used when creating pages.
-     * 
-     * @param defaultPageFactory
-     *            The default factory
-     * @return This
-     */
-    public final ApplicationSettings setDefaultPageFactory(final IPageFactory defaultPageFactory)
-    {
-        this.defaultPageFactory = defaultPageFactory;
-        return this;
-    }
-
-    /**
-     * Set encryption key used to encode/decode PasswordTextFields e.g.
-     * 
-     * @param encryptionKey
-     * @return This
-     */
-    public final ApplicationSettings setEncryptionKey(String encryptionKey)
-    {
-        this.encryptionKey = encryptionKey;
-        return this;
-    }
-
-    /**
-     * Sets the maximum number of pages held in a session. If a page is added to
-     * a user's session when the session is full, the oldest page in the session
-     * will be expired. The primary purpose of setting a maximum number of pages
-     * in a session is to limit the resources consumed by server-side state.
-     * 
-     * @param maxSessionPages
-     *            The maxSessionPages to set.
-     * @return This
-     */
-    public final ApplicationSettings setMaxSessionPages(final int maxSessionPages)
-    {
-        this.maxSessionPages = maxSessionPages;
-        return this;
-    }
-
-    /**
-     * Sets whether the {@link wicket.model.PropertyModel}instances apply
-     * formatting by default.
-     * 
-     * @param propertyModelDefaultApplyFormatting
-     *            whether the {@link wicket.model.PropertyModel}instances apply
-     *            formatting by default
-     * @return This
-     */
-    public final ApplicationSettings setPropertyModelDefaultApplyFormatting(
-            boolean propertyModelDefaultApplyFormatting)
-    {
-        this.propertyModelDefaultApplyFormatting = propertyModelDefaultApplyFormatting;
-        return this;
-    }
-
-    /**
-     * Sets the resource polling frequency. This is the duration of time between
-     * checks of resource modification times. If a resource, such as an HTML
-     * file, has changed, it will be reloaded. Default is for no resource
-     * polling to occur.
-     * 
-     * @param resourcePollFrequency
-     *            Frequency at which to poll resources
-     * @return This
-     * @see ApplicationSettings#setSourcePath(Path)
-     */
-    public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
-    {
-        this.resourcePollFrequency = resourcePollFrequency;
-        return this;
-    }
-
-    /**
-     * Sets a source code path to use when searching for resources. Setting a
-     * source path can allow developers to "hot update" pages by simply changing
-     * markup on the fly and hitting refresh in their browser.
-     * 
-     * @param sourcePath
-     *            The sourcePath to set
-     * @return This
-     */
-    public final ApplicationSettings setSourcePath(final Path sourcePath)
-    {
-        this.sourcePath = sourcePath;
-        return this;
-    }
-
-    /**
-     * Enables stripping of markup comments denoted in markup by HTML comment
-     * tagging.
-     * 
-     * @param stripComments
-     *            True to strip markup comments from rendered pages
-     * @return This
-     */
-    public final ApplicationSettings setStripComments(boolean stripComments)
-    {
-        this.stripComments = stripComments;
-        return this;
-    }
-
-    /**
-     * Determines if componentName attributes should be stripped from tags when
-     * rendering. Component name attributes in rendered pages can be a helpful
-     * debugging tool, but they are not helpful to end-users and do not increase
-     * efficiency in delivering pages over any protocol.
-     * 
-     * @param stripComponentNames
-     *            The stripComponentNames to set.
-     * @return This
-     */
-    public final ApplicationSettings setStripComponentNames(final boolean stripComponentNames)
-    {
-        this.stripComponentNames = stripComponentNames;
-        return this;
-    }
-
-    /**
-     * Sets whether to remove wicket tags from the output.
-     * 
-     * @param stripWicketTags
-     *            whether to remove wicket tags from the output
-     * @return This
-     */
-    public final ApplicationSettings setStripWicketTags(boolean stripWicketTags)
-    {
-        this.stripWicketTags = stripWicketTags;
-        return this;
-    }
-
-    /**
-     * @param throwExceptionOnMissingResource
-     *            Whether to throw an exception when a missing resource is
-     *            requested
-     * @return This
-     */
-    public final ApplicationSettings setThrowExceptionOnMissingResource(
-            final boolean throwExceptionOnMissingResource)
-    {
-        this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
-        return this;
-    }
-
-    /**
-     * The exception display type determines how the framework displays
-     * exceptions to you as a developer or user.
-     * <p>
-     * The default value for exception display type is SHOW_EXCEPTION_PAGE. When
-     * this value is set and an unhandled runtime exception is thrown by a page,
-     * a redirect to a helpful exception display page will occur.
-     * <p>
-     * This is a developer feature, however, and you may want to instead show an
-     * internal error page without developer details that allows a user to start
-     * over at the application's home page. This can be accomplished by setting
-     * the exception display type to SHOW_INTERNAL_ERROR_PAGE.
-     * <p>
-     * Finally, if you are having trouble with the exception display pages
-     * themselves, you can disable exception displaying entirely with the value
-     * SHOW_NO_EXCEPTION_PAGE. This will cause the framework to re-throw any
-     * unhandled runtime exceptions after wrapping them in a ServletException
-     * wrapper.
-     * 
-     * @param unexpectedExceptionDisplay
-     *            The unexpectedExceptionDisplay to set.
-     * @return This
-     */
-    public final ApplicationSettings setUnexpectedExceptionDisplay(
-            final UnexpectedExceptionDisplay unexpectedExceptionDisplay)
-    {
-        this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
-        return this;
-    }
-
-    /**
-     * @param useDefaultOnMissingResource
-     *            Whether to use a default value (if available) when a missing
-     *            resource is requested
-     * @return This
-     */
-    public final ApplicationSettings setUseDefaultOnMissingResource(
-            final boolean useDefaultOnMissingResource)
-    {
-        this.useDefaultOnMissingResource = useDefaultOnMissingResource;
-        return this;
-    }
-
-    /**
-     * Define a new wicket namespace to use instead of "wicket"
-     * 
-     * @param wicketNamespace
-     *            the tag name
-     * @return This
-     */
-    public final ApplicationSettings setWicketNamespace(final String wicketNamespace)
-    {
-        this.wicketNamespace = wicketNamespace;
-        return this;
-    }
-
-    /**
-     * Internal method to expose the string resource loaders configured within
-     * the settings to the localization helpers that need to work with them.
-     * 
-     * @return The string resource loaders
-     */
-    List getStringResourceLoaders()
-    {
-        return Collections.unmodifiableList(stringResourceLoaders);
-    }
+	/**
+	 * Indicates that no exception page should be shown when an unexpected
+	 * exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_NO_EXCEPTION_PAGE");
+	/** Log */
+	private static final Log log = LogFactory.getLog(ApplicationSettings.class);
+
+	/** Application default for automatically resolving hrefs */
+	private boolean automaticLinking = false;
+
+	/** Component attribute name */
+	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
+
+	/** True to check that each component on a page is used */
+	private boolean componentUseCheck = true;
+
+	/** True if multiple tabs/spaces should be compressed to a single space */
+	private boolean compressWhitespace = false;
+
+	/** Default values for persistence of form data (by means of cookies) */
+	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
+
+	/** Class of type ICrypt to implement encryption */
+	private Class cryptClass = Crypt.class;
+
+	/** Default markup for after a disabled link */
+	private String defaultAfterDisabledLink = "</i>";
+
+	/** Default markup for before a disabled link */
+	private String defaultBeforeDisabledLink = "<i>";
+
+	/** Default class resolver to find classes */
+	private IClassResolver defaultClassResolver = new DefaultClassResolver();
+
+	/** Default factory to create new Page objects */
+	private IPageFactory defaultPageFactory = new DefaultPageFactory();
+
+	/** Encryption key used to encode/decode passwords e.g. */
+	private String encryptionKey = "WiCkEt-FRAMEwork";
+
+	/** The maximum number of pages in a session */
+	private int maxSessionPages = 10;
+
+	/** True if string resource loaders have been overridden */
+	private boolean overriddenStringResourceLoaders = false;
+
+	/**
+	 * Whether the {@link wicket.model.PropertyModel}instances apply formatting
+	 * by default; default == false.
+	 */
+	private boolean propertyModelDefaultApplyFormatting = false;
+
+	/** Frequency at which files should be polled */
+	private Duration resourcePollFrequency = null;
+
+	/** Source path */
+	private Path sourcePath = new Path();
+
+	/** Chain of string resource loaders to use */
+	private List stringResourceLoaders = new ArrayList(2);
+
+	/** Should HTML comments be stripped during rendering? */
+	private boolean stripComments = false;
+
+	/** Should component names be stripped during rendering? */
+	private boolean stripComponentNames = false;
+
+	/** If true, wicket tags ( <wicket ..>) shall be removed from output */
+	private boolean stripWicketTags = false;
+
+	/** Flags used to determine how to behave if resources are not found */
+	private boolean throwExceptionOnMissingResource = true;
+
+	/** Type of handling for unexpected exceptions */
+	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
+
+	/** Determines behavior of string resource loading if string is missing */
+	private boolean useDefaultOnMissingResource = true;
+
+	/** Default xhtml wicket namespace: e.g. <wicket:> */
+	private String wicketNamespace = ComponentWicketTag.DEFAULT_WICKET_NAMESPACE;
+
+	/**
+	 * Enumerated type for different ways of displaying unexpected exceptions.
+	 */
+	public static final class UnexpectedExceptionDisplay extends EnumeratedType
+	{
+		UnexpectedExceptionDisplay(final String name)
+		{
+			super(name);
+		}
+	}
+
+	/**
+	 * Create the application settings, carrying out any necessary
+	 * initialisations.
+	 * 
+	 * @param application
+	 *            The application that these settings are for
+	 */
+	public ApplicationSettings(final Application application)
+	{
+		stringResourceLoaders.add(new ComponentStringResourceLoader());
+		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
+	}
+
+	/**
+	 * Add a string resource loader to the chain of loaders. If this is the
+	 * first call to this method since the creation of the application settings
+	 * then the existing chain is cleared before the new loader is added.
+	 * 
+	 * @param loader
+	 *            The loader to be added
+	 * @return This
+	 */
+	public final ApplicationSettings addStringResourceLoader(final IStringResourceLoader loader)
+	{
+		if (!overriddenStringResourceLoaders)
+		{
+			stringResourceLoaders.clear();
+			overriddenStringResourceLoaders = true;
+		}
+		stringResourceLoaders.add(loader);
+		return this;
+	}
+
+	/**
+	 * If true, automatic link resolution is enabled.
+	 * 
+	 * @return Returns the automaticLinking.
+	 */
+	public boolean getAutomaticLinking()
+	{
+		return automaticLinking;
+	}
+
+	/**
+	 * Gets component name attribute in use in this application. Normally, this
+	 * is "wicket", but it can be changed in the unlikely event that tag
+	 * attribute naming conflicts arise.
+	 * 
+	 * @return The current component name attribute
+	 * @see ApplicationSettings#setComponentNameAttribute(String)
+	 */
+	public final String getComponentNameAttribute()
+	{
+		return componentNameAttribute;
+	}
+
+	/**
+	 * Get whether component use should be checked or not.
+	 * 
+	 * @return True if component use should be checked
+	 * @see ApplicationSettings#setComponentUseCheck(boolean)
+	 */
+	public final boolean getComponentUseCheck()
+	{
+		return this.componentUseCheck;
+	}
+
+	/**
+	 * @return Returns the compressWhitespace.
+	 * @see ApplicationSettings#setCompressWhitespace(boolean)
+	 */
+	public final boolean getCompressWhitespace()
+	{
+		return compressWhitespace;
+	}
+
+	/**
+	 * Get the defaults to be used by persistence manager
+	 * 
+	 * @return CookieValuePersisterSettings
+	 */
+	public final CookieValuePersisterSettings getCookieValuePersisterSettings()
+	{
+		return cookieValuePersisterSettings;
+	}
+
+	/**
+	 * @return Returns the cryptClass.
+	 */
+	public final Class getCryptClass()
+	{
+		return cryptClass;
+	}
+
+	/**
+	 * @return Returns the defaultAfterDisabledLink.
+	 */
+	public final String getDefaultAfterDisabledLink()
+	{
+		return defaultAfterDisabledLink;
+	}
+
+	/**
+	 * @return Returns the defaultBeforeDisabledLink.
+	 */
+	public final String getDefaultBeforeDisabledLink()
+	{
+		return defaultBeforeDisabledLink;
+	}
+
+	/**
+	 * Gets the default resolver to use when finding classes
+	 * 
+	 * @return Default class resolver
+	 */
+	public final IClassResolver getDefaultClassResolver()
+	{
+		return defaultClassResolver;
+	}
+
+	/**
+	 * Gets the default factory to be used when creating pages
+	 * 
+	 * @return The default page factory
+	 */
+	public final IPageFactory getDefaultPageFactory()
+	{
+		return defaultPageFactory;
+	}
+
+	/**
+	 * Get encryption key used to encode/decode passwords e.g.
+	 * 
+	 * @return encryption key
+	 */
+	public final String getEncryptionKey()
+	{
+		return encryptionKey;
+	}
+
+	/**
+	 * Gets the maximum number of pages held in a session.
+	 * 
+	 * @return Returns the maxSessionPages.
+	 * @see ApplicationSettings#setMaxSessionPages(int)
+	 */
+	public final int getMaxSessionPages()
+	{
+		return maxSessionPages;
+	}
+
+	/**
+	 * Gets whether the {@link wicket.model.PropertyModel}instances apply
+	 * formatting by default.
+	 * 
+	 * @return whether the {@link wicket.model.PropertyModel}instances apply
+	 *         formatting by default
+	 */
+	public final boolean getPropertyModelDefaultApplyFormatting()
+	{
+		return propertyModelDefaultApplyFormatting;
+	}
+
+	/**
+	 * @return Returns the resourcePollFrequency.
+	 * @see ApplicationSettings#setResourcePollFrequency(Duration)
+	 */
+	public final Duration getResourcePollFrequency()
+	{
+		return resourcePollFrequency;
+	}
+
+
+	/**
+	 * Gets any source code path to use when searching for resources.
+	 * 
+	 * @return Returns the sourcePath.
+	 * @see ApplicationSettings#setSourcePath(Path)
+	 */
+	public final Path getSourcePath()
+	{
+		return sourcePath;
+	}
+
+	/**
+	 * @return Returns the stripComments.
+	 * @see ApplicationSettings#setStripComments(boolean)
+	 */
+	public final boolean getStripComments()
+	{
+		return stripComments;
+	}
+
+	/**
+	 * Returns true if componentName attributes should be stripped from tags
+	 * when rendering.
+	 * 
+	 * @return Returns the stripComponentNames.
+	 * @see ApplicationSettings#setStripComponentNames(boolean)
+	 */
+	public final boolean getStripComponentNames()
+	{
+		return stripComponentNames;
+	}
+
+	/**
+	 * Gets whether to remove wicket tags from the output.
+	 * 
+	 * @return whether to remove wicket tags from the output
+	 */
+	public final boolean getStripWicketParamTag()
+	{
+		return this.stripWicketTags;
+	}
+
+	/**
+	 * @return Whether to throw an exception when a missing resource is
+	 *         requested
+	 */
+	public final boolean getThrowExceptionOnMissingResource()
+	{
+		return throwExceptionOnMissingResource;
+	}
+
+	/**
+	 * @return Returns the unexpectedExceptionDisplay.
+	 * @see ApplicationSettings#setUnexpectedExceptionDisplay(ApplicationSettings.UnexpectedExceptionDisplay)
+	 */
+	public final UnexpectedExceptionDisplay getUnexpectedExceptionDisplay()
+	{
+		return unexpectedExceptionDisplay;
+	}
+
+	/**
+	 * @return Whether to use a default value (if available) when a missing
+	 *         resource is requested
+	 */
+	public final boolean getUseDefaultOnMissingResource()
+	{
+		return useDefaultOnMissingResource;
+	}
+
+	/**
+	 * Get the current tag name
+	 * 
+	 * @return wicket tag name
+	 */
+	public final String getWicketNamespace()
+	{
+		return this.wicketNamespace;
+	}
+
+	/**
+	 * Application default for automatic link resolution.
+	 * 
+	 * @param automaticLinking
+	 *            The automaticLinking to set.
+	 */
+	public void setAutomaticLinking(boolean automaticLinking)
+	{
+		this.automaticLinking = automaticLinking;
+	}
+
+	/**
+	 * Sets component name attribute in use in this application. Normally, this
+	 * is "wicket", but it can be changed in the unlikely event that tag
+	 * attribute naming conflicts arise.
+	 * 
+	 * @param componentNameAttribute
+	 *            The componentNameAttribute to set.
+	 * @return This
+	 */
+	public final ApplicationSettings setComponentNameAttribute(final String componentNameAttribute)
+	{
+		this.componentNameAttribute = componentNameAttribute;
+		return this;
+	}
+
+	/**
+	 * Enables or disables checking for unused components. Component checking is
+	 * on by defaults and only minor efficiency can be gained from turning it
+	 * off in a production environment.
+	 * 
+	 * @param componentUseCheck
+	 * @return This
+	 */
+	public final ApplicationSettings setComponentUseCheck(final boolean componentUseCheck)
+	{
+		this.componentUseCheck = componentUseCheck;
+		return this;
+	}
+
+	/**
+	 * Turns on whitespace compression. Multiple occurrences of space/tab
+	 * characters will be compressed to a single space. Multiple line breaks
+	 * newline/carriage-return will also be compressed to a single newline.
+	 * <p>
+	 * Compression is currently not HTML aware and so it may be possible for
+	 * whitespace compression to break pages. For this reason, whitespace
+	 * compression is off by default and you should test your application
+	 * throroughly after turning whitespace compression on.
+	 * <p>
+	 * Spaces are removed from markup at markup load time and there should be no
+	 * effect on page rendering speed. In fact, your pages should render faster
+	 * with whitespace compression enabled.
+	 * 
+	 * @param compressWhitespace
+	 *            The compressWhitespace to set.
+	 * @return This
+	 */
+	public final ApplicationSettings setCompressWhitespace(final boolean compressWhitespace)
+	{
+		this.compressWhitespace = compressWhitespace;
+		return this;
+	}
+
+	/**
+	 * @param cookieValuePersisterSettings
+	 *            The cookieValuePersisterSettings to set.
+	 */
+	public void setCookieValuePersisterSettings(
+			CookieValuePersisterSettings cookieValuePersisterSettings)
+	{
+		this.cookieValuePersisterSettings = cookieValuePersisterSettings;
+	}
+
+	/**
+	 * Set new Class to be used for de-/encryption
+	 * 
+	 * @param crypt
+	 * @return This
+	 */
+	public final ApplicationSettings setCryptClass(Class crypt)
+	{
+		this.cryptClass = crypt;
+		return this;
+	}
+
+	/**
+	 * @param defaultAfterDisabledLink
+	 *            The defaultAfterDisabledLink to set.
+	 * @return This
+	 */
+	public final ApplicationSettings setDefaultAfterDisabledLink(
+			final String defaultAfterDisabledLink)
+	{
+		this.defaultAfterDisabledLink = defaultAfterDisabledLink;
+		return this;
+	}
+
+	/**
+	 * @param defaultBeforeDisabledLink
+	 *            The defaultBeforeDisabledLink to set.
+	 * @return This
+	 */
+	public final ApplicationSettings setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
+	{
+		this.defaultBeforeDisabledLink = defaultBeforeDisabledLink;
+		return this;
+	}
+
+	/**
+	 * Sets the default class resolver to use when finding classes.
+	 * 
+	 * @param defaultClassResolver
+	 *            The default class resolver
+	 * @return This
+	 */
+	public final ApplicationSettings setDefaultClassResolver(
+			final IClassResolver defaultClassResolver)
+	{
+		this.defaultClassResolver = defaultClassResolver;
+		return this;
+	}
+
+	/**
+	 * Sets the default factory to be used when creating pages.
+	 * 
+	 * @param defaultPageFactory
+	 *            The default factory
+	 * @return This
+	 */
+	public final ApplicationSettings setDefaultPageFactory(final IPageFactory defaultPageFactory)
+	{
+		this.defaultPageFactory = defaultPageFactory;
+		return this;
+	}
+
+	/**
+	 * Set encryption key used to encode/decode PasswordTextFields e.g.
+	 * 
+	 * @param encryptionKey
+	 * @return This
+	 */
+	public final ApplicationSettings setEncryptionKey(String encryptionKey)
+	{
+		this.encryptionKey = encryptionKey;
+		return this;
+	}
+
+	/**
+	 * Sets the maximum number of pages held in a session. If a page is added to
+	 * a user's session when the session is full, the oldest page in the session
+	 * will be expired. The primary purpose of setting a maximum number of pages
+	 * in a session is to limit the resources consumed by server-side state.
+	 * 
+	 * @param maxSessionPages
+	 *            The maxSessionPages to set.
+	 * @return This
+	 */
+	public final ApplicationSettings setMaxSessionPages(final int maxSessionPages)
+	{
+		this.maxSessionPages = maxSessionPages;
+		return this;
+	}
+
+	/**
+	 * Sets whether the {@link wicket.model.PropertyModel}instances apply
+	 * formatting by default.
+	 * 
+	 * @param propertyModelDefaultApplyFormatting
+	 *            whether the {@link wicket.model.PropertyModel}instances apply
+	 *            formatting by default
+	 * @return This
+	 */
+	public final ApplicationSettings setPropertyModelDefaultApplyFormatting(
+			boolean propertyModelDefaultApplyFormatting)
+	{
+		this.propertyModelDefaultApplyFormatting = propertyModelDefaultApplyFormatting;
+		return this;
+	}
+
+	/**
+	 * Sets the resource polling frequency. This is the duration of time between
+	 * checks of resource modification times. If a resource, such as an HTML
+	 * file, has changed, it will be reloaded. Default is for no resource
+	 * polling to occur.
+	 * 
+	 * @param resourcePollFrequency
+	 *            Frequency at which to poll resources
+	 * @return This
+	 * @see ApplicationSettings#setSourcePath(Path)
+	 */
+	public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
+	{
+		this.resourcePollFrequency = resourcePollFrequency;
+		return this;
+	}
+
+	/**
+	 * Sets a source code path to use when searching for resources. Setting a
+	 * source path can allow developers to "hot update" pages by simply changing
+	 * markup on the fly and hitting refresh in their browser.
+	 * 
+	 * @param sourcePath
+	 *            The sourcePath to set
+	 * @return This
+	 */
+	public final ApplicationSettings setSourcePath(final Path sourcePath)
+	{
+		this.sourcePath = sourcePath;
+		return this;
+	}
+
+	/**
+	 * Enables stripping of markup comments denoted in markup by HTML comment
+	 * tagging.
+	 * 
+	 * @param stripComments
+	 *            True to strip markup comments from rendered pages
+	 * @return This
+	 */
+	public final ApplicationSettings setStripComments(boolean stripComments)
+	{
+		this.stripComments = stripComments;
+		return this;
+	}
+
+	/**
+	 * Determines if componentName attributes should be stripped from tags when
+	 * rendering. Component name attributes in rendered pages can be a helpful
+	 * debugging tool, but they are not helpful to end-users and do not increase
+	 * efficiency in delivering pages over any protocol.
+	 * 
+	 * @param stripComponentNames
+	 *            The stripComponentNames to set.
+	 * @return This
+	 */
+	public final ApplicationSettings setStripComponentNames(final boolean stripComponentNames)
+	{
+		this.stripComponentNames = stripComponentNames;
+		return this;
+	}
+
+	/**
+	 * Sets whether to remove wicket tags from the output.
+	 * 
+	 * @param stripWicketTags
+	 *            whether to remove wicket tags from the output
+	 * @return This
+	 */
+	public final ApplicationSettings setStripWicketTags(boolean stripWicketTags)
+	{
+		this.stripWicketTags = stripWicketTags;
+		return this;
+	}
+
+	/**
+	 * @param throwExceptionOnMissingResource
+	 *            Whether to throw an exception when a missing resource is
+	 *            requested
+	 * @return This
+	 */
+	public final ApplicationSettings setThrowExceptionOnMissingResource(
+			final boolean throwExceptionOnMissingResource)
+	{
+		this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
+		return this;
+	}
+
+	/**
+	 * The exception display type determines how the framework displays
+	 * exceptions to you as a developer or user.
+	 * <p>
+	 * The default value for exception display type is SHOW_EXCEPTION_PAGE. When
+	 * this value is set and an unhandled runtime exception is thrown by a page,
+	 * a redirect to a helpful exception display page will occur.
+	 * <p>
+	 * This is a developer feature, however, and you may want to instead show an
+	 * internal error page without developer details that allows a user to start
+	 * over at the application's home page. This can be accomplished by setting
+	 * the exception display type to SHOW_INTERNAL_ERROR_PAGE.
+	 * <p>
+	 * Finally, if you are having trouble with the exception display pages
+	 * themselves, you can disable exception displaying entirely with the value
+	 * SHOW_NO_EXCEPTION_PAGE. This will cause the framework to re-throw any
+	 * unhandled runtime exceptions after wrapping them in a ServletException
+	 * wrapper.
+	 * 
+	 * @param unexpectedExceptionDisplay
+	 *            The unexpectedExceptionDisplay to set.
+	 * @return This
+	 */
+	public final ApplicationSettings setUnexpectedExceptionDisplay(
+			final UnexpectedExceptionDisplay unexpectedExceptionDisplay)
+	{
+		this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
+		return this;
+	}
+
+	/**
+	 * @param useDefaultOnMissingResource
+	 *            Whether to use a default value (if available) when a missing
+	 *            resource is requested
+	 * @return This
+	 */
+	public final ApplicationSettings setUseDefaultOnMissingResource(
+			final boolean useDefaultOnMissingResource)
+	{
+		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
+		return this;
+	}
+
+	/**
+	 * Define a new wicket namespace to use instead of "wicket"
+	 * 
+	 * @param wicketNamespace
+	 *            the tag name
+	 * @return This
+	 */
+	public final ApplicationSettings setWicketNamespace(final String wicketNamespace)
+	{
+		this.wicketNamespace = wicketNamespace;
+		return this;
+	}
+
+	/**
+	 * Internal method to expose the string resource loaders configured within
+	 * the settings to the localization helpers that need to work with them.
+	 * 
+	 * @return The string resource loaders
+	 */
+	List getStringResourceLoaders()
+	{
+		return Collections.unmodifiableList(stringResourceLoaders);
+	}
 }

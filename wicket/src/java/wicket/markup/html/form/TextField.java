@@ -29,7 +29,7 @@ import wicket.model.IModel;
  *
  * @author Jonathan Locke
  */
-public final class TextField extends FormComponent implements FormComponent.ICookieValue
+public final class TextField extends FormComponent
 {
     /** Serial Version ID. */
 	private static final long serialVersionUID = -2913294206388017417L;
@@ -106,23 +106,11 @@ public final class TextField extends FormComponent implements FormComponent.ICoo
     }
 
     /**
-	 * Gets the cookie value for this component.
-	 * @return the cookie value for this component
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
+     * @see FormComponent#getSupportsPersistence()
      */
-    public String getCookieValue()
+    public boolean getSupportsPersistence()
     {
-        return getModelObjectAsString();
-    }
-
-    /**
-	 * Sets the cookie value for this component
-	 * @param value the cookie value for this component
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
-     */
-    public void setCookieValue(final String value)
-    {
-        setModelObject(value);
+        return true;
     }
 
     /**

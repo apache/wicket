@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form;
+package wicket.markup.html.form.encryption;
 
 import java.io.IOException;
 import java.security.*;

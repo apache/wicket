@@ -31,7 +31,7 @@ import wicket.model.IModel;
  * @author Johan Compagner
  * @author Eelco Hillenius
  */
-public final class ListChoice extends DropDownChoice implements FormComponent.ICookieValue
+public final class ListChoice extends DropDownChoice
 {
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
@@ -210,6 +210,14 @@ public final class ListChoice extends DropDownChoice implements FormComponent.IC
 	{
 		return maxRows;
 	}
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#getSupportsPersistence()
+     */
+    public boolean getSupportsPersistence()
+    {
+        return true;
+    }
 
 	/**
 	 * Sets the maximum number of rows to display.

@@ -138,12 +138,9 @@ public class DropDownChoice extends AbstractDropDownChoice
 	}
 
 	/**
-	 * Gets the cookie value for this component.
-	 * 
-	 * @return the cookie value for this component
-	 * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
+	 * @see FormComponent#getValue()
 	 */
-	public final String getCookieValue()
+	public final String getValue()
 	{
 		final List list = getValues();
 		if (list instanceof IIdList)
@@ -188,13 +185,9 @@ public class DropDownChoice extends AbstractDropDownChoice
 	}
 
 	/**
-	 * Sets the cookie value for this component
-	 * 
-	 * @param value
-	 *            the cookie value for this component
-	 * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
+	 * @see FormComponent#setValue(java.lang.String)
 	 */
-	public final void setCookieValue(final String value)
+	public final void setValue(final String value)
 	{
 		final List list = getValues();
 		if (list instanceof IIdList)

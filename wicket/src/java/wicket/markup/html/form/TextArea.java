@@ -30,7 +30,7 @@ import wicket.model.IModel;
  *
  * @author Jonathan Locke
  */
-public final class TextArea extends FormComponent implements FormComponent.ICookieValue
+public final class TextArea extends FormComponent
 {
     /** Serial Version ID. */
 	private static final long serialVersionUID = -1323747673401786242L;
@@ -107,17 +107,6 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
     }
 
     /**
-	 * Handle the container's body.
-	 * @param markupStream The markup stream
-	 * @param openTag The open tag for the body
-     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
-     */
-    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
-    {
-        replaceBody(markupStream, openTag, getModelObjectAsString());
-    }
-
-    /**
      * Updates this components' model from the request.
      * @see wicket.markup.html.form.FormComponent#updateModel()
      */
@@ -127,22 +116,13 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
     }
 
     /**
-	 * Gets the cookie value for this component.
-	 * @return the cookie value for this component
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
+	 * Handle the container's body.
+	 * @param markupStream The markup stream
+	 * @param openTag The open tag for the body
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    public String getCookieValue()
+    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
-        return getModelObjectAsString();
-    }
-
-    /**
-	 * Sets the cookie value for this component
-	 * @param value the cookie value for this component
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
-     */
-    public void setCookieValue(String value)
-    {
-        setModelObject(value);
+        replaceBody(markupStream, openTag, getModelObjectAsString());
     }
 }
