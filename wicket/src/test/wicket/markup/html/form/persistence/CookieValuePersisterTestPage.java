@@ -23,6 +23,7 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.Model;
 
 
 /**
@@ -61,7 +62,7 @@ public class CookieValuePersisterTestPage extends WebPage
 	    {
 	        super(componentName, feedback);
 	        
-	        add(new TextField("input", "test"));
+	        add(new TextField("input", new Model("test")));
 	    }
 	    
 	    /**

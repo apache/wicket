@@ -17,11 +17,10 @@
  */
 package wicket.markup.html.image;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
+import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 
 /**
@@ -43,19 +42,11 @@ public abstract class AbstractImage extends WebComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractImage(final String name, final Serializable object)
+	public AbstractImage(final String name, final IModel model)
 	{
-		super(name, object);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public AbstractImage(final String name, final Serializable object, final String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

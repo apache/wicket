@@ -45,6 +45,14 @@ public class ListItem extends WebMarkupContainer
 	private class ListItemModel extends AbstractModel
 	{
 		/**
+		 * @see wicket.model.IModel#getNestedModel()
+		 */
+		public Object getNestedModel()
+		{
+			return listView.getListObject(index);
+		}
+		
+		/**
 		 * @see IModel#getObject(Component)
 		 */
 		public Object getObject(final Component component)

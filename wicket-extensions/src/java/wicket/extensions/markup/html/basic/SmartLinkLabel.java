@@ -17,13 +17,13 @@
  */
 package wicket.extensions.markup.html.basic;
 
-import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
+import wicket.model.IModel;
 
 /**
  * If you have email addresses or web URLs in the data that you are displaying,
@@ -58,19 +58,19 @@ public final class SmartLinkLabel extends Label
 	private static final String urlReplacePattern = "<a href=\"$0\">$1</a>";
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see Label#Label(String, String)
 	 */
-	public SmartLinkLabel(String name, Serializable object)
+	public SmartLinkLabel(String name, String label)
 	{
-		super(name, object);
+		super(name, label);
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @see Label#Label(String, IModel)
 	 */
-	public SmartLinkLabel(String name, Serializable object, String expression)
+	public SmartLinkLabel(String name, IModel model)
 	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

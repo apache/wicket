@@ -17,8 +17,6 @@
  */
 package wicket.markup.html;
 
-import java.io.Serializable;
-
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.model.IModel;
@@ -48,22 +46,6 @@ public class WebMarkupContainer extends MarkupContainer
 	public WebMarkupContainer(String name, IModel model)
 	{
 		super(name, model);
-	}
-	
-	/**
-	 * @see Component#Component(String, Serializable)
-	 */
-	public WebMarkupContainer(final String name, final Serializable object)
-	{
-		super(name, object);
-	}
-
-	/**
-	 * @see Component#Component(String, Serializable, String)
-	 */
-	public WebMarkupContainer(final String name, final Serializable object, final String expression)
-	{
-		super(name, object, expression);
 	}
 
 	/**

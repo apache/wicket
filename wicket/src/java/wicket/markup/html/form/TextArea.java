@@ -17,10 +17,9 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
 
 /**
  * Multi-row text editing component.
@@ -41,19 +40,11 @@ public class TextArea extends AbstractTextComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextArea(final String name, final Serializable object)
+	public TextArea(final String name, final IModel model)
 	{
-		super(name, object);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public TextArea(final String name, final Serializable object, final String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

@@ -17,10 +17,9 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
@@ -43,19 +42,11 @@ public class CheckBox extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public CheckBox(String name, Serializable object)
+	public CheckBox(String name, IModel model)
 	{
-		super(name, object);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public CheckBox(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

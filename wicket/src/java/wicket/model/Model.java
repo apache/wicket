@@ -56,6 +56,14 @@ public class Model extends AbstractModel
 	{
 		this.object = object;
 	}
+	
+	/**
+	 * @see wicket.model.IModel#getNestedModel()
+	 */
+	public Object getNestedModel()
+	{
+		return object;
+	}
 
 	/**
 	 * @see wicket.model.IModel#getObject(wicket.Component)

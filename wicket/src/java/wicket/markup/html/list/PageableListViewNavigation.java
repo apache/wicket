@@ -161,6 +161,11 @@ public class PageableListViewNavigation extends ListView
 			{
 				return list;
 			}
+
+			public Object getNestedModel()
+			{
+				return list;
+			}
 		};
 	}
 

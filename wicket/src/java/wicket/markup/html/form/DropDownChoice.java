@@ -17,12 +17,12 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.model.IChoiceList;
+import wicket.model.IModel;
 
 /**
  * A choice implemented as a dropdown menu/list. Framework users can extend this
@@ -56,37 +56,19 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
-	public DropDownChoice(String name, Serializable object, final Collection choices)
+	public DropDownChoice(String name, IModel model, final Collection choices)
 	{
-		super(name, object, choices);
+		super(name, model, choices);
 	}
 	
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, IChoiceList)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
-	public DropDownChoice(String name, Serializable object, final IChoiceList choices)
+	public DropDownChoice(String name, IModel model, final IChoiceList choices)
 	{
-		super(name, object, choices);
-	}
-	
-	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
-	 */
-	public DropDownChoice(String name, Serializable object, String expression,
-			final Collection choices)
-	{
-		super(name, object, expression, choices);
-	}
-	
-	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, IChoiceList)
-	 */
-	public DropDownChoice(String name, Serializable object, String expression,
-			final IChoiceList choices)
-	{
-		super(name, object, expression, choices);
+		super(name, model, choices);
 	}
 
 	/**

@@ -17,9 +17,8 @@
  */
 package wicket.markup.html;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.model.IModel;
 
 /**
  * Base class for simple HTML components which do not hold nested components. If
@@ -40,19 +39,11 @@ public abstract class WebComponent extends Component
 	}
 
 	/**
-	 * @see Component#Component(String, Serializable)
+	 * @see Component#Component(String, IModel)
 	 */
-	public WebComponent(final String name, final Serializable object)
+	public WebComponent(final String name, final IModel model)
 	{
-		super(name, object);
-	}
-
-	/**
-	 * @see Component#Component(String, Serializable, String)
-	 */
-	public WebComponent(final String name, final Serializable object, final String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

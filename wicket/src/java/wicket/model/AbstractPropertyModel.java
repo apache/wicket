@@ -48,6 +48,9 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 	/** The converter source for converters to be used by this model. */
 	private IConverterSource converterSource;
 
+	/** Any model object (which may or may not implement IModel) */
+	private final Object nestedModel;
+
 	/**
 	 * This class is registered with the Ognl context before parsing in order to
 	 * be able to use our converters. It implements Ognl TypeConverter and uses
@@ -125,9 +128,26 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 
 	/**
 	 * Constructor
+	 * 
+	 * @param modelObject
+	 *            The nested model object
 	 */
-	public AbstractPropertyModel()
+	public AbstractPropertyModel(final Object modelObject)
 	{
+		if (modelObject == null)
+		{
+			throw new IllegalArgumentException("Parameter modelObject cannot be null");
+		}
+
+		this.nestedModel = modelObject;
+	}
+
+	/**
+	 * @return The nested model object
+	 */
+	public final Object getNestedModel()
+	{
+		return nestedModel;
 	}
 
 	/**
@@ -143,7 +163,15 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 	 *            The component to get the model object for
 	 * @return The model for this property
 	 */
-	protected abstract Object modelObject(Component component);
+	protected Object modelObject(final Component component)
+	{
+		final Object modelObject = getNestedModel();
+		if (modelObject instanceof IModel)
+		{
+			return ((IModel)modelObject).getObject(component);
+		}
+		return modelObject;
+	}
 
 	/**
 	 * @param component
@@ -168,6 +196,12 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 	{
 		// Reset OGNL context
 		this.context = null;
+		
+		// Detach nested object if it's an IModel
+		if (nestedModel instanceof IModel)
+		{
+			((IModel)nestedModel).detach();
+		}
 	}
 
 	/**
@@ -191,8 +225,8 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel impl
 			try
 			{
 				// note: if property type is null it is ignored by Ognl
-				return Ognl.getValue(expression, getContext(), modelObject,
-						propertyType(component));
+				return Ognl
+						.getValue(expression, getContext(), modelObject, propertyType(component));
 			}
 			catch (OgnlException e)
 			{

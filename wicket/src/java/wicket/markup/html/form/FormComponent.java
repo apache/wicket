@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
 import wicket.model.IModel;
-import wicket.model.PropertyModel;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringList;
 
@@ -205,19 +203,11 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FormComponent(String name, Serializable object)
+	public FormComponent(String name, IModel model)
 	{
-		super(name, object);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public FormComponent(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**
@@ -408,9 +398,8 @@ public abstract class FormComponent extends WebMarkupContainer
 			final IModel model = getForm().getModel();
 			if (model != null)
 			{
-				// Create PropertyModel using the Form's model and the name of
-				// the component
-				return new PropertyModel(model, getName());
+				// Use form's model
+				return model;
 			}
 			else
 			{

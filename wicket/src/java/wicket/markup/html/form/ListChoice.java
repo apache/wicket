@@ -17,10 +17,10 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 
 /**
  * Essentially a drop down choice that doesn't drop down. Instead, it scrolls
@@ -73,67 +73,31 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @param name
 	 *            See Component constructor
-	 * @param object
+	 * @param model
 	 *            See Component constructor
 	 * @param values
 	 *            The collection of values in the list
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
 	 */
-	public ListChoice(final String name, final Serializable object, final Collection values)
+	public ListChoice(final String name, final IModel model, final Collection values)
 	{
-		this(name, object, values, defaultMaxRows);
+		this(name, model, values, defaultMaxRows);
 	}
 
 	/**
 	 * @param name
 	 *            See Component constructor
-	 * @param object
+	 * @param model
 	 *            See Component constructor
 	 * @param values
 	 *            The collection of values in the list
 	 * @param maxRows
 	 *            Maximum number of rows to show
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
 	 */
-	public ListChoice(final String name, final Serializable object, final Collection values, final int maxRows)
+	public ListChoice(final String name, final IModel model, final Collection values, final int maxRows)
 	{
-		super(name, object, values);
-		this.maxRows = maxRows;
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public ListChoice(final String name, final Serializable object, final String expression, final Collection values)
-	{
-		this(name, object, expression, values, defaultMaxRows);
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @param maxRows
-	 *            Maximum number of rows to show
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public ListChoice(final String name, final Serializable object, final String expression, final Collection values,
-			final int maxRows)
-	{
-		super(name, object, expression, values);
+		super(name, model, values);
 		this.maxRows = maxRows;
 	}
 

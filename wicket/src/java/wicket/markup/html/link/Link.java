@@ -17,14 +17,13 @@
  */
 package wicket.markup.html.link;
 
-import java.io.Serializable;
-
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.model.IModel;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor
@@ -103,19 +102,11 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+     * @see wicket.Component#Component(String, IModel)
 	 */
-	public Link(String name, Serializable object)
+	public Link(String name, IModel object)
 	{
 		super(name, object);
-	}
-
-	/**
-     * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public Link(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
 	}
 
 	/**

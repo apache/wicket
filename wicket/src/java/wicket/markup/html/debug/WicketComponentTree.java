@@ -106,7 +106,7 @@ public final class WicketComponentTree extends Panel
 			{
 				final ComponentData cdata = (ComponentData)listItem.getModelObject();
 
-				listItem.add(new Label("row", new Integer(listItem.getIndex() + 1)));
+				listItem.add(new Label("row", Integer.toString(listItem.getIndex() + 1)));
 				listItem.add(new Label("path", cdata.path));
 				listItem.add(new Label("type", cdata.type));
 				listItem.add(new Label("model", cdata.value));

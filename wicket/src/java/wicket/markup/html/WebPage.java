@@ -17,8 +17,6 @@
  */
 package wicket.markup.html;
 
-import java.io.Serializable;
-
 import wicket.Page;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.model.IModel;
@@ -55,22 +53,6 @@ public class WebPage extends Page
 	protected WebPage(final IModel model)
 	{
 		super(model);
-	}
-
-	/**
-	 * @see Page#Page(Serializable)
-	 */
-	protected WebPage(final Serializable object)
-	{
-		super(object);
-	}
-
-	/**
-	 * @see Page#Page(Serializable, String)
-	 */
-	protected WebPage(final Serializable object, final String expression)
-	{
-		super(object, expression);
 	}
 
 	/**

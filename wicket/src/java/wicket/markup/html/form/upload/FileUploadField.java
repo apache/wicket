@@ -17,12 +17,11 @@
  */
 package wicket.markup.html.form.upload;
 
-import java.io.Serializable;
-
 import org.apache.commons.fileupload.FileItem;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
+import wicket.model.IModel;
 
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
@@ -43,19 +42,11 @@ public class FileUploadField extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FileUploadField(String name, Serializable object)
+	public FileUploadField(String name, IModel model)
 	{
-		super(name, object);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public FileUploadField(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

@@ -29,7 +29,17 @@ import wicket.Component;
  * IModel also provides a call back mechanism for reacting to the start/end of a
  * request. Please use the abstract class
  * {@link wicket.model.AbstractDetachableModel}for implementations instead of
- * implementing this interface directely.
+ * implementing this interface directly.
+ * <p>
+ * The getNestedModel() method gets any nested model within this model. This
+ * allows Component.sameRootModel() to compare two models to see if they both
+ * have the same root model. For example, a Form might have a Person model and
+ * then a TextField might have a PropertyModel which is the "name" property of
+ * the Person model. In this case, PropertyModel will implement
+ * getNestedModel(), returning the Person model.
+ * 
+ * @see wicket.Component#sameRootModel(wicket.Component)
+ * @see wicket.Component#sameRootModel(IModel)
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -37,6 +47,13 @@ import wicket.Component;
  */
 public interface IModel extends IDetachable
 {
+	/**
+	 * Gets the nested model.
+	 * 
+	 * @return The nested model object, which may or may not be an IModel.
+	 */
+	public Object getNestedModel();
+
 	/**
 	 * Gets the model object.
 	 * 

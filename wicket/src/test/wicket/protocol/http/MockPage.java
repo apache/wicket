@@ -22,6 +22,7 @@ import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.model.PropertyModel;
 
 
 /**
@@ -48,7 +49,7 @@ public class MockPage extends WebPage {
                 linkClickCount++;
             }
         };
-        actionLink.add(new Label("linkClickCount", this, "linkClickCount"));
+        actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
         add(actionLink);
     }
 

@@ -17,8 +17,6 @@
  */
 package wicket.markup.html.border;
 
-import java.io.Serializable;
-
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
@@ -89,22 +87,6 @@ public abstract class Border extends WebMarkupContainer
 	public Border(final String name, final IModel model)
 	{
 		super(name, model);
-	}	
-
-	/**
-     * @see wicket.Component#Component(String, Serializable)
-	 */
-	public Border(final String name, final Serializable object)
-	{
-		super(name, object);
-	}	
-	
-	/**
-     * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public Border(final String name, final Serializable object, final String expression)
-	{
-		super(name, object, expression);
 	}	
 
 	/**

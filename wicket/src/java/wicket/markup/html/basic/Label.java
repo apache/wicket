@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.13 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,11 +17,11 @@
  */
 package wicket.markup.html.basic;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * A Label component replaces its body with the String version of its model
@@ -38,27 +38,29 @@ import wicket.markup.html.WebComponent;
  * A Label with a dynamic model can be created like this:
  * 
  * <pre>
- *      add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ * 
+ *       add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *  
  * </pre>
  * 
- * In this case, the Label component will replace the body of the tag it is 
- * attached to with the 'name' property of the given Person object, where 
- * Person might look like:
+ * In this case, the Label component will replace the body of the tag it is
+ * attached to with the 'name' property of the given Person object, where Person
+ * might look like:
  * 
  * <pre>
  * public class Person
  * {
- * 	   private String name;
+ * 	private String name;
  * 
- * 	   public String getName()
- *     {
- * 	       return name;
- * 	   }
+ * 	public String getName()
+ * 	{
+ * 		return name;
+ * 	}
  * 
- *     public void setName(String name)
- * 	   {
- * 	       this.name = name;
- * 	   }
+ * 	public void setName(String name)
+ * 	{
+ * 		this.name = name;
+ * 	}
  * }
  * </pre>
  * 
@@ -70,19 +72,26 @@ public class Label extends WebComponent
 	private static final long serialVersionUID = -2180588252471379004L;
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * Convenience constructor. Same as Label(String, new Model(String))
+	 * 
+	 * @param name
+	 *            See Component
+	 * @param label
+	 *            The label text
+	 * 
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Label(String name, Serializable object)
+	public Label(String name, String label)
 	{
-		super(name, object);
+		this(name, new Model(label));
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Label(String name, Serializable object, String expression)
+	public Label(String name, IModel model)
 	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

@@ -17,12 +17,11 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 
 /**
  * A password text field component. As you type, characters show up as asterisks
@@ -58,19 +57,11 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public PasswordTextField(String name, Serializable object)
+	public PasswordTextField(String name, IModel model)
 	{
-		super(name, object);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public PasswordTextField(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
+		super(name, model);
 	}
 
 	/**

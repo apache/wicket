@@ -17,13 +17,13 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
+import wicket.model.IModel;
 
 /**
  * A choice subclass that shows choices in radio style.
@@ -52,38 +52,19 @@ public class RadioChoice extends AbstractSingleSelectChoice
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
-	public RadioChoice(String name, Serializable object, final Collection choices)
+	public RadioChoice(String name, IModel model, final Collection choices)
 	{
-		super(name, object, choices);
+		super(name, model, choices);
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, IChoiceList)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
-	public RadioChoice(String name, Serializable object, final IChoiceList choices)
+	public RadioChoice(String name, IModel model, final IChoiceList choices)
 	{
-		super(name, object, choices);
-	}
-
-	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
-	 *      Collection)
-	 */
-	public RadioChoice(String name, Serializable object, String expression, final Collection choices)
-	{
-		super(name, object, expression, choices);
-	}
-
-	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
-	 *      IChoiceList)
-	 */
-	public RadioChoice(String name, Serializable object, String expression,
-			final IChoiceList choices)
-	{
-		super(name, object, expression, choices);
+		super(name, model, choices);
 	}
 
 	/**

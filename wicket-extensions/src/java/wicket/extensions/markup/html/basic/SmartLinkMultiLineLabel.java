@@ -18,11 +18,11 @@
  */
 package wicket.extensions.markup.html.basic;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.MultiLineLabel;
+import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.util.string.Strings;
 
 /**
@@ -44,21 +44,21 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
     /** Serial Version ID */
 	private static final long serialVersionUID = 6614585065978596357L;
 
-    /**
-     * @see wicket.Component#Component(String, Serializable)
-     */
-    public SmartLinkMultiLineLabel(String name, Serializable object)
-    {
-        super(name, object);
-    }
+	/**
+	 * @see MultiLineLabel#MultiLineLabel(String, String)
+	 */
+	public SmartLinkMultiLineLabel(String name, String label)
+	{
+		this(name, new Model(label));
+	}
 
-    /**
-     * @see wicket.Component#Component(String, Serializable, String)
-     */
-    public SmartLinkMultiLineLabel(String name, Serializable object, String expression)
-    {
-        super(name, object, expression);
-    }
+	/**
+	 * @see MultiLineLabel#MultiLineLabel(String, IModel)
+	 */
+	public SmartLinkMultiLineLabel(String name, IModel model)
+	{
+		super(name, model);
+	}
 
     /**
      * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,

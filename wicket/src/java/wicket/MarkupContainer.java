@@ -18,7 +18,6 @@
 package wicket;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -123,24 +122,6 @@ public abstract class MarkupContainer extends Component
 	public MarkupContainer(String name, IModel model)
 	{
 		super(name, model);
-		optimize();
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable)
-	 */
-	public MarkupContainer(String name, Serializable object)
-	{
-		super(name, object);
-		optimize();
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public MarkupContainer(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
 		optimize();
 	}
 
