@@ -32,6 +32,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.image.resource.DynamicImageResource;
 import wicket.markup.html.image.resource.ImageResource;
 import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.time.Time;
 
 /**
  * Image resource that dynamically scales the given original resource to a thumbnail.
@@ -49,11 +50,15 @@ public class ThumbnailImageResource extends DynamicImageResource
 	/** the unscaled, original image resource. */
 	private final ImageResource unscaledImageResource;
 
+
 	/** maximum size (width or height) for resize operation. */
 	private final int maxSize;
 
 	/** hint(s) for the scale operation. */
 	private int scaleHints = Image.SCALE_SMOOTH;
+
+	/** the cached byte array of the thumbnail. */
+	private transient byte[] thumbnail;
 
 	/**
 	 * Construct.
@@ -76,8 +81,13 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 */
 	protected byte[] getImageData()
 	{
-		final BufferedImage image = getScaledImageInstance();
-		return toImageData(image);
+		if(thumbnail == null)
+		{
+			final BufferedImage image = getScaledImageInstance();
+			thumbnail = toImageData(image);
+			lastModifiedTime = Time.now();
+		} 
+		return thumbnail;
 	}
 
 	/**
@@ -150,5 +160,6 @@ public class ThumbnailImageResource extends DynamicImageResource
 	public final void setScaleHints(int scaleHints)
 	{
 		this.scaleHints = scaleHints;
+		thumbnail = null;
 	}
 }
