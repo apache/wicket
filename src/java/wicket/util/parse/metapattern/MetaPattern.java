@@ -32,7 +32,9 @@ public class MetaPattern
     // Regexps that are used multiple times in defining meta patterns
     private static final String _DOUBLE_QUOTED_STRING = "\"[^\"]*?\"";
 
-    private static final String _STRING = "(?:\\w+|" + _DOUBLE_QUOTED_STRING + ")";
+    private static final String _SINGLE_QUOTED_STRING = "'[^']*?\'";
+
+    private static final String _STRING = "(?:\\w+|" + _DOUBLE_QUOTED_STRING + "|" + _SINGLE_QUOTED_STRING + ")";
 
     private static final String _OPTIONAL_STRING = _STRING + "?";
 
