@@ -27,9 +27,6 @@ import java.io.Serializable;
  */
 public class FeebackMessage implements Serializable
 { // TODO finalize javadoc
-    /** constant for representing an empty message (same as null). */
-    public static final FeebackMessage NO_MESSAGE = null;
-
     /**
      * Constant for an undefined level; note that components might decide
      * not to render anything when this level is used.
