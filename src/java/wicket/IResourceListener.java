@@ -31,7 +31,7 @@ package wicket;
  * @see wicket.markup.html.image.DynamicImage
  * @author Jonathan Locke
  */
-public interface IResourceListener extends IListener
+public interface IResourceListener extends IRequestListener
 { // TODO finalize javadoc
     /**
      * Called when a resource is requested.

@@ -30,22 +30,21 @@ import java.util.Date;
  * 1970, 0:00 GMT. To represent a time duration, such as "6 seconds", use the Duration
  * class. To represent a time period with a start and end time, use the TimeFrame class.
  * To represent a time of day, use the TimeOfDay class.
+ * 
  * @author Jonathan Locke
  */
 public final class Time extends AbstractTime
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 4441606416914169210L;
 
-	/**
-     * The beginning of UNIX time: January 1, 1970, 0:00 GMT.
-     */
+	/** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
     public static final Time START_OF_UNIX_TIME = milliseconds(0);
 
-    /** parser in 'yyyy.MM.dd' format. */
+    /** Parser in 'yyyy.MM.dd' format. */
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
 
-    /** parser in 'yyyy.MM.dd-h.mma' format. */
+    /** Parser in 'yyyy.MM.dd-h.mma' format. */
     private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy.MM.dd-h.mma");
 
     /**

@@ -183,14 +183,14 @@ public abstract class RequestCycle
      * Adds an interface to the map of interfaces that can be invoked by outsiders.
      * The interface must have a single method with the signature methodName(RequestCycle).
      * NOTE: THIS METHOD IS NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
-     * @param c The interface class, which must extend IListener.
+     * @param c The interface class, which must extend IRequestListener.
      */
     public static void registerListenerInterface(final Class c)
     {
-        // Ensure that c extends IListener
-        if (!IListener.class.isAssignableFrom(c))
+        // Ensure that c extends IRequestListener
+        if (!IRequestListener.class.isAssignableFrom(c))
         {
-            throw new IllegalArgumentException("Class " + c + " must extend IListener");
+            throw new IllegalArgumentException("Class " + c + " must extend IRequestListener");
         }
 
         // Search methods in class

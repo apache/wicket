@@ -18,14 +18,14 @@
  */
 package wicket.markup.html.form;
 
-import wicket.IListener;
+import wicket.IRequestListener;
 import wicket.RequestCycle;
 
 /**
  * Listener interface for form submits
  * @author Jonathan Locke
  */
-public interface IFormSubmitListener extends IListener
+public interface IFormSubmitListener extends IRequestListener
 { // TODO finalize javadoc
     /**
      * Called when a form is submitted

@@ -19,19 +19,13 @@
 package wicket.util.listener;
 
 /**
- * Holds a set of IChangeListeners.
+ * Typesafe super-interface for listener subclasses which can be added 
+ * to a ListenerSet or are intended to be dealt with in other generic ways.
  * 
  * @author Jonathan Locke
  */
-public final class ChangeListenerSet extends ListenerSet
+public interface IListener
 {
-    /**
-     * @see wicket.util.listener.ListenerSet#notifyListener(wicket.util.listener.IListener)
-     */
-    protected void notifyListener(IListener listener)
-    {
-        ((IChangeListener)listener).changed();
-    }    
 }
 
 ///////////////////////////////// End of File /////////////////////////////////
