@@ -19,6 +19,7 @@
 
 package images;
 
+import com.voicetribe.util.time.Duration;
 import com.voicetribe.wicket.WebApplication;
 
 /**
@@ -30,6 +31,8 @@ public class ImagesApplication extends WebApplication
     public ImagesApplication()
     {
         getSettings().setHomePage(Home.class);
+        Duration pollFreq = Duration.ONE_SECOND;
+		getSettings().setResourcePollFrequency(pollFreq);
     }
 }
 

@@ -45,6 +45,8 @@ public final class Home extends HtmlPage
         final BufferedImage circle = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         circle.getGraphics().drawOval(0, 0, 100, 100);
         add(new DynamicImage("image3").setExtension("jpeg").setImage(circle));
+        
+        add(new Image("image4", "Image2.gif"));
     }
 }
 
