@@ -29,7 +29,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.model.StringResourceModel;
-import wicket.protocol.http.HttpRequestCycle;
+import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.MockPage;
 import wicket.resource.BundleStringResourceLoader;
@@ -191,7 +191,7 @@ public class StringResourceModelTest extends TestCase
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
 		application.setupRequestAndResponse();
-		RequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
+		RequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getLocalizer());
@@ -218,7 +218,7 @@ public class StringResourceModelTest extends TestCase
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		application.setupRequestAndResponse();
-		RequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
+		RequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getModel().getObject());

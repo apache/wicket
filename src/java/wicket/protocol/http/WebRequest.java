@@ -17,7 +17,6 @@
  */
 package wicket.protocol.http;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.Request;
@@ -30,30 +29,30 @@ import java.util.Map;
 /**
  * Subclass of Request for HTTP protocol requests which holds an underlying
  * HttpServletRequest object. A NULL request object implementing all methods as
- * NOPs is available via HttpRequest#NULL. A variety of convenience methods are
+ * NOPs is available via WebRequest#NULL. A variety of convenience methods are
  * available that operate on the HttpServletRequest object. These methods do
  * things such as providing access to parameters, cookies, URLs and path
  * information.
  * 
  * @author Jonathan Locke
  */
-public class HttpRequest extends Request
+public class WebRequest extends Request
 {
-    /** Null HttpRequest object that does nothing */
-    public static final HttpRequest NULL = new NullHttpRequest();
+    /** Null WebRequest object that does nothing */
+    public static final WebRequest NULL = new NullWebRequest();
 
     /** Servlet request information. */
-    private final HttpServletRequest servletRequest;
+    private final HttpServletRequest httpServletRequest;
 
     /**
      * Package private constructor.
      * 
-     * @param servletRequest
+     * @param httpServletRequest
      *            The servlet request information
      */
-    HttpRequest(final HttpServletRequest servletRequest)
+    WebRequest(final HttpServletRequest httpServletRequest)
     {
-        this.servletRequest = servletRequest;
+        this.httpServletRequest = httpServletRequest;
     }
 
     /**
@@ -63,26 +62,7 @@ public class HttpRequest extends Request
      */
     public String getContextPath()
     {
-        return servletRequest.getContextPath();
-    }
-
-    /**
-     * Gets any cookies for request.
-     * 
-     * @return Any cookies for this request
-     */
-    public Cookie[] getCookies()
-    {
-        try
-        {
-            return servletRequest.getCookies();
-        }
-        catch (NullPointerException ex)
-        {
-            // Ignore any app server problem here
-        }
-
-        return new Cookie[0];
+        return httpServletRequest.getContextPath();
     }
 
     /**
@@ -95,23 +75,7 @@ public class HttpRequest extends Request
      */
     public Locale getLocale()
     {
-        return servletRequest.getLocale();
-    }
-
-    /**
-     * Returns an <code>Enumeration</code> of <code>Locale</code> objects
-     * indicating, in decreasing order starting with the preferred locale, the
-     * locales that are acceptable to the client based on the Accept-Language
-     * header. If the client request doesn't provide an Accept-Language header,
-     * this method returns an <code>Enumeration</code> containing one
-     * <code>Locale</code>, the default locale for the server.
-     * 
-     * @return An <code>Enumeration</code> of preferred <code>Locale</code>
-     *         objects for the client
-     */
-    public Enumeration getLocales()
-    {
-        return servletRequest.getLocales();
+        return httpServletRequest.getLocale();
     }
 
     /**
@@ -123,7 +87,7 @@ public class HttpRequest extends Request
      */
     public String getParameter(final String key)
     {
-        return servletRequest.getParameter(key);
+        return httpServletRequest.getParameter(key);
     }
 
     /**
@@ -135,11 +99,11 @@ public class HttpRequest extends Request
     {
         final Map map = new HashMap();
 
-        for (final Enumeration enumeration = servletRequest.getParameterNames(); enumeration
+        for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
                 .hasMoreElements();)
         {
             final String name = (String)enumeration.nextElement();
-            map.put(name, servletRequest.getParameter(name));
+            map.put(name, httpServletRequest.getParameter(name));
         }
 
         return map;
@@ -154,7 +118,7 @@ public class HttpRequest extends Request
      */
     public String[] getParameters(final String key)
     {
-        return servletRequest.getParameterValues(key);
+        return httpServletRequest.getParameterValues(key);
     }
 
     /**
@@ -164,7 +128,7 @@ public class HttpRequest extends Request
      */
     public String getPathInfo()
     {
-        return servletRequest.getPathInfo();
+        return httpServletRequest.getPathInfo();
     }
 
     /**
@@ -174,7 +138,7 @@ public class HttpRequest extends Request
      */
     public String getServletPath()
     {
-        return servletRequest.getServletPath();
+        return httpServletRequest.getServletPath();
     }
 
     /**
@@ -182,9 +146,9 @@ public class HttpRequest extends Request
      * 
      * @return the wrapped http serlvet request object.
      */
-    public final HttpServletRequest getServletRequest()
+    public final HttpServletRequest getHttpServletRequest()
     {
-        return servletRequest;
+        return httpServletRequest;
     }
 
     /**
@@ -194,15 +158,15 @@ public class HttpRequest extends Request
      */
     public String getURL()
     {
-        String url = servletRequest.getContextPath() + servletRequest.getServletPath();
-        final String pathInfo = servletRequest.getPathInfo();
+        String url = httpServletRequest.getContextPath() + httpServletRequest.getServletPath();
+        final String pathInfo = httpServletRequest.getPathInfo();
 
         if (pathInfo != null)
         {
             url += pathInfo;
         }
 
-        final String queryString = servletRequest.getQueryString();
+        final String queryString = httpServletRequest.getQueryString();
 
         if (queryString != null)
         {
@@ -217,14 +181,14 @@ public class HttpRequest extends Request
      */
     public String toString()
     {
-        return "[method = " + servletRequest.getMethod() + ", protocol = "
-                + servletRequest.getProtocol() + ", requestURL = " + servletRequest.getRequestURL()
-                + ", contentType = " + servletRequest.getContentType() + ", contentLength = "
-                + servletRequest.getContentLength() + ", contextPath = "
-                + servletRequest.getContextPath() + ", pathInfo = " + servletRequest.getPathInfo()
-                + ", requestURI = " + servletRequest.getRequestURI() + ", servletPath = "
-                + servletRequest.getServletPath() + ", pathTranslated = "
-                + servletRequest.getPathTranslated() + "]";
+        return "[method = " + httpServletRequest.getMethod() + ", protocol = "
+                + httpServletRequest.getProtocol() + ", requestURL = " + httpServletRequest.getRequestURL()
+                + ", contentType = " + httpServletRequest.getContentType() + ", contentLength = "
+                + httpServletRequest.getContentLength() + ", contextPath = "
+                + httpServletRequest.getContextPath() + ", pathInfo = " + httpServletRequest.getPathInfo()
+                + ", requestURI = " + httpServletRequest.getRequestURI() + ", servletPath = "
+                + httpServletRequest.getServletPath() + ", pathTranslated = "
+                + httpServletRequest.getPathTranslated() + "]";
     }
 }
 

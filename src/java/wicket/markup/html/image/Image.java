@@ -27,7 +27,7 @@ import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
-import wicket.protocol.http.HttpResponse;
+import wicket.protocol.http.WebResponse;
 import wicket.util.io.Streams;
 import wicket.util.lang.Classes;
 import wicket.util.resource.IResource;
@@ -118,7 +118,7 @@ public class Image extends HtmlComponent implements IResourceListener
         cycle.setPage((Page)null);
 
         // Respond with image
-        final HttpServletResponse response = ((HttpResponse)cycle.getResponse()).getServletResponse();
+        final HttpServletResponse response = ((WebResponse)cycle.getResponse()).getHttpServletResponse();
         response.setContentType("image/" + image.getExtension());
 
         try

@@ -88,7 +88,7 @@ public abstract class WebApplication extends Application
 		{
 			public Session newSession()
 			{
-				return new HttpSession(WebApplication.this);
+				return new WebSession(WebApplication.this);
 			}
 		};
 	}

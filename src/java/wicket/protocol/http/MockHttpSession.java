@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSessionContext;
 import wicket.util.value.ValueMap;
 
 /**
- * Mock implementation of the <code>HttpSession</code> interface for use by
+ * Mock implementation of the <code>WebSession</code> interface for use by
  * the test harnesses.
  * 
  * @author Chris Turner
