@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 
 import java.util.Locale;
 
-import wicket.util.size.Bytes;
+import wicket.util.lang.Bytes;
 import wicket.util.string.StringValueConversionException;
 
 /**
