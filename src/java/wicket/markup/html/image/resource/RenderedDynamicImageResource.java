@@ -63,16 +63,6 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	}
 
 	/**
-	 * @return The image data for this dynamic image
-	 */
-	public byte[] getImageData()
-	{
-		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		render((Graphics2D)image.getGraphics());
-		return toImageData(image);
-	}
-
-	/**
 	 * @return Returns the width.
 	 */
 	public int getWidth()
@@ -96,6 +86,16 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	public void setWidth(int width)
 	{
 		this.width = width;
+	}
+
+	/**
+	 * @return The image data for this dynamic image
+	 */
+	protected byte[] getImageData()
+	{
+		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		render((Graphics2D)image.getGraphics());
+		return toImageData(image);
 	}
 
 	/**

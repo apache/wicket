@@ -340,6 +340,25 @@ public abstract class Component implements Serializable, IConverterSource
 		// Failed to find component
 		return null;
 	}
+	
+	/**
+	 * @return The nearest markup container with associated markup
+	 */
+	public final MarkupContainer findParentWithAssociatedMarkup()
+	{
+		MarkupContainer container = parent;
+		while (container != null)
+		{
+			if (container.hasAssociatedMarkup())
+			{
+				return container;
+			}
+			container = container.getParent();
+		}
+		
+		// This should never happen since Page always has associated markup
+		throw new WicketRuntimeException("Unable to find parent with associated markup");
+	}
 
 	/**
 	 * Gets interface to application that this component is a part of.
@@ -917,26 +936,6 @@ public abstract class Component implements Serializable, IConverterSource
 	protected MarkupStream findMarkupStream()
 	{
 		return parent.findMarkupStream();
-	}
-	
-	
-	/**
-	 * @return The nearest markup container with associated markup
-	 */
-	protected final MarkupContainer findParentWithAssociatedMarkup()
-	{
-		MarkupContainer container = parent;
-		while (container != null)
-		{
-			if (container.hasAssociatedMarkup())
-			{
-				return container;
-			}
-			container = container.getParent();
-		}
-		
-		// This should never happen since Page always has associated markup
-		throw new WicketRuntimeException("Unable to find parent with associated markup");
 	}
 
 	/**

@@ -8,6 +8,21 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1144885">
+		Added automatic image buttons (as demonstrated in FormInput example now)
+		as well as automatic images.  Each can generate an image using an image
+		factory based on the value of the component's tag's value attribute.
+		If the value is set to [factoryName].label, the given label will be drawn
+		with the given ImageResourceFactory.  The LocalizedImageResource class
+		handles all this as well as localization issues with images attached to
+		components.  By default, only DefaultButtonImageFactory() is registered
+		via LocalizedImageResource.add(ImageResourceFactory).  The default button
+		image factory has the name 'button', which means that any image or image 
+		button component that specifies a value of "button.[label]" will result in
+		a DefaultButtonImage with the given label drawn on it.  In addition to these
+		improvements, the ImageResourceFactory base class adds automatic caching
+		of images it creates via a WeakHashMap.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1150668">
 		Restructured form validation so that feedback is updated for the whole form
 		on success or failure.  Fixed additional bug where the form itself was not
