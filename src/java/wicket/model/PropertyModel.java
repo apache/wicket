@@ -50,34 +50,38 @@ import wicket.util.convert.IConverter;
  * }
  * </pre>
  * 
- * We could construct a label that dynamically fetches the name property of the given
- * person object like this:
+ * We could construct a label that dynamically fetches the name property of the
+ * given person object like this:
  * 
  * <pre>
  * 
  *  
  *   
- *         Person person = getSomePerson();
- *         ...
- *         add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *    
+ *          Person person = getSomePerson();
+ *          ...
+ *          add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *     
  *    
  *   
  *  
  * </pre>
  * 
- * Where 'myLabel' is the name of the component, and 'name' is the Ognl expression to get
- * the name property.
+ * Where 'myLabel' is the name of the component, and 'name' is the Ognl
+ * expression to get the name property.
  * </p>
  * <p>
- * In the same fashion, we can create form components that work dynamically on the given
- * model object. For instance, we could create a text field that updates the name property
- * of a person like this:
+ * In the same fashion, we can create form components that work dynamically on
+ * the given model object. For instance, we could create a text field that
+ * updates the name property of a person like this:
  * 
  * <pre>
  * 
  *  
  *   
- *         add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *    
+ *          add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *     
  *    
  *   
  *  
@@ -85,19 +89,20 @@ import wicket.util.convert.IConverter;
  * 
  * </p>
  * <p>
- * To force Ognl to convert to a specific type, you can provide constructor argument
- * 'propertyType'.if that is set, that type is used for conversion instead of the type
- * that is figured out by Ognl. This can be especially usefull for when you have a generic
- * property (like Serializable myProp) that you want to be converted to a narrower type
- * (e.g. an Integer). Ognl sees an incomming string being compatible with the target
- * property, and will then bypass the converter. Hence, to force myProp being converted to
- * and from and integer, propertyType should be set to Integer.
+ * To force Ognl to convert to a specific type, you can provide constructor
+ * argument 'propertyType'.if that is set, that type is used for conversion
+ * instead of the type that is figured out by Ognl. This can be especially
+ * usefull for when you have a generic property (like Serializable myProp) that
+ * you want to be converted to a narrower type (e.g. an Integer). Ognl sees an
+ * incomming string being compatible with the target property, and will then
+ * bypass the converter. Hence, to force myProp being converted to and from and
+ * integer, propertyType should be set to Integer.
  * </p>
- *
+ * 
  * @see wicket.model.IModel
  * @see wicket.model.Model
  * @see wicket.model.DetachableModel
- *
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
@@ -117,23 +122,23 @@ public class PropertyModel extends DetachableModel implements IConvertable
 
 	/**
 	 * if this is set, this type is used for conversion instead of the type that
-	 * is figured out by Ognl. This can be especially usefull for when you have a
-	 * generic property (like Serializable myProp) that you want to be converted
-	 * to a narrower type (e.g. an Integer). Ognl sees an incomming string being
-	 * compatible with the target property, and will then bypass the converter.
-	 * Hence, to force myProp being converted to and from and integer, propertyType
-	 * should be set to Integer.
+	 * is figured out by Ognl. This can be especially usefull for when you have
+	 * a generic property (like Serializable myProp) that you want to be
+	 * converted to a narrower type (e.g. an Integer). Ognl sees an incomming
+	 * string being compatible with the target property, and will then bypass
+	 * the converter. Hence, to force myProp being converted to and from and
+	 * integer, propertyType should be set to Integer.
 	 */
 	private final Class propertyType;
-	
+
 	/** The converter to be used by this model. */
 	private IConverter converter;
 
 	/**
-	 * This class is registered with the Ognl context before parsing in order to be able to
-	 * use our converters. It implements Ognl TypeConverter and uses the ConverterRegistry
-	 * to lookup converters. If no converter is found for a given type, the default
-	 * conversion of Ognl is used.
+	 * This class is registered with the Ognl context before parsing in order to
+	 * be able to use our converters. It implements Ognl TypeConverter and uses
+	 * the ConverterRegistry to lookup converters. If no converter is found for
+	 * a given type, the default conversion of Ognl is used.
 	 */
 	protected final class OgnlConverterWrapper extends DefaultTypeConverter
 	{
@@ -146,12 +151,16 @@ public class PropertyModel extends DetachableModel implements IConvertable
 
 		/**
 		 * Converts the provided value to provided type using provided context.
-		 * @param context Ognl context
-		 * @param value The current, unconverted value
-		 * @param toType The type that should be converted to
+		 * 
+		 * @param context
+		 *            Ognl context
+		 * @param value
+		 *            The current, unconverted value
+		 * @param toType
+		 *            The type that should be converted to
 		 * @return Object the converted value
-		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,
-		 *      java.lang.Class)
+		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
+		 *      java.lang.Object, java.lang.Class)
 		 */
 		public Object convertValue(Map context, Object value, Class toType)
 		{
@@ -173,19 +182,27 @@ public class PropertyModel extends DetachableModel implements IConvertable
 		}
 
 		/**
-		 * This method is only here to satisfy the interface. Method convertValue(Map,
-		 * Object, Class) is called, so parameters member and propertyName are ignored.
-		 * @param context The context
-		 * @param target The target
-		 * @param member The member
-		 * @param propertyName The name of the property
-		 * @param value The value
-		 * @param toType The type to convert to
+		 * This method is only here to satisfy the interface. Method
+		 * convertValue(Map, Object, Class) is called, so parameters member and
+		 * propertyName are ignored.
+		 * 
+		 * @param context
+		 *            The context
+		 * @param target
+		 *            The target
+		 * @param member
+		 *            The member
+		 * @param propertyName
+		 *            The name of the property
+		 * @param value
+		 *            The value
+		 * @param toType
+		 *            The type to convert to
 		 * @return the converted value
-		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,java.lang.Class)
+		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
+		 *      java.lang.Object,java.lang.Class)
 		 */
-		public Object convertValue(Map context, Object target,
-				Member member, String propertyName,
+		public Object convertValue(Map context, Object target, Member member, String propertyName,
 				Object value, Class toType)
 		{
 			return convertValue(context, value, toType);
@@ -193,10 +210,14 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Construct with an IModel object and a Ognl expression that works on the given model.
-	 * Additional formatting will be used depending on the configuration setting.
-	 * @param model the wrapper
-	 * @param expression Ognl expression for property access
+	 * Construct with an IModel object and a Ognl expression that works on the
+	 * given model. Additional formatting will be used depending on the
+	 * configuration setting.
+	 * 
+	 * @param model
+	 *            the wrapper
+	 * @param expression
+	 *            Ognl expression for property access
 	 */
 	public PropertyModel(final IModel model, final String expression)
 	{
@@ -204,26 +225,32 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Construct with an IModel object and a Ognl expression that works on the given model.
-	 * Additional formatting will be used depending on the configuration setting.
-	 * @param model the wrapper
-	 * @param expression Ognl expression for property access
-	 * @param propertyType the type to be used for conversion instead of the type that
-	 * 	is figured out by Ognl. This can be especially usefull for when you have a
-	 * 	generic property (like Serializable myProp) that you want to be converted
-	 * 	to a narrower type (e.g. an Integer). Ognl sees an incomming string being
-	 * 	compatible with the target property, and will then bypass the converter.
-	 * 	Hence, to force myProp being converted to and from and integer, propertyType
-	 * 	should be set to Integer.
+	 * Construct with an IModel object and a Ognl expression that works on the
+	 * given model. Additional formatting will be used depending on the
+	 * configuration setting.
+	 * 
+	 * @param model
+	 *            the wrapper
+	 * @param expression
+	 *            Ognl expression for property access
+	 * @param propertyType
+	 *            the type to be used for conversion instead of the type that is
+	 *            figured out by Ognl. This can be especially usefull for when
+	 *            you have a generic property (like Serializable myProp) that
+	 *            you want to be converted to a narrower type (e.g. an Integer).
+	 *            Ognl sees an incomming string being compatible with the target
+	 *            property, and will then bypass the converter. Hence, to force
+	 *            myProp being converted to and from and integer, propertyType
+	 *            should be set to Integer.
 	 */
 	public PropertyModel(final IModel model, final String expression, Class propertyType)
 	{
 		super(null);
 
-        if (model == null)
-        {
-            throw new IllegalArgumentException("Model parameter must not be null");
-        }
+		if (model == null)
+		{
+			throw new IllegalArgumentException("Model parameter must not be null");
+		}
 
 		this.model = model;
 		this.expression = expression;
@@ -232,23 +259,26 @@ public class PropertyModel extends DetachableModel implements IConvertable
 
 	/**
 	 * The converter to be used by this property model.
-	 * @param converter the converter converter
+	 * 
+	 * @param converter
+	 *            the converter converter
 	 * @see wicket.model.IConvertable#setConverter(wicket.util.convert.IConverter)
 	 */
 	public final void setConverter(IConverter converter)
 	{
-		if(converter == null)
+		if (converter == null)
 		{
 			throw new IllegalArgumentException("the converter must be not-null");
 		}
 		this.converter = converter;
 	}
-	
+
 	/**
-	 * Gets the value that results when the given Ognl expression is applied to the model
-	 * object (Ognl.getValue).
-	 * @return the value that results when the given Ognl expression is applied to the
-	 *         model object
+	 * Gets the value that results when the given Ognl expression is applied to
+	 * the model object (Ognl.getValue).
+	 * 
+	 * @return the value that results when the given Ognl expression is applied
+	 *         to the model object
 	 * @see wicket.model.IModel#getObject()
 	 */
 	public Object getObject()
@@ -286,10 +316,12 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Applies the Ognl expression on the model object using the given object argument
-	 * (Ognl.setValue).
-	 * @param object the object that will be used when applying Ognl.setValue on the model
-	 *           object
+	 * Applies the Ognl expression on the model object using the given object
+	 * argument (Ognl.setValue).
+	 * 
+	 * @param object
+	 *            the object that will be used when applying Ognl.setValue on
+	 *            the model object
 	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
 	public void setObject(Object object)
@@ -299,11 +331,13 @@ public class PropertyModel extends DetachableModel implements IConvertable
 			String expr = getExpression(); // get the ognl expression
 			Object target = getModel().getObject(); // get the real object
 			//	convert the incomming object to the target type when not null and
-			// the property type is set and the incomming object is a non-empty string
-			if(object != null && propertyType != null &&
-					(object instanceof String) && (!((String)object).trim().equals("")))
+			// the property type is set and the incomming object is a non-empty
+			// string
+			if (object != null && propertyType != null && (object instanceof String)
+					&& (!((String)object).trim().equals("")))
 			{
-				object = converter.convert(object, propertyType); // convert to set type
+				object = converter.convert(object, propertyType); // convert to
+																  // set type
 			}
 			OgnlContext ctx = getContext(); // get the ognl context instance
 			Ognl.setValue(expr, ctx, target, object); // let ognl set the value
@@ -315,8 +349,10 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Initializes the instance variables of this property model, and in case the
-	 * wrapped model is a {@link IDetachableModel}, calls attach on the wrapped model.
+	 * Initializes the instance variables of this property model, and in case
+	 * the wrapped model is a {@link IDetachableModel}, calls attach on the
+	 * wrapped model.
+	 * 
 	 * @see wicket.model.DetachableModel#doAttach()
 	 */
 	protected final void doAttach()
@@ -328,9 +364,9 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Unsets this property model's instance variables and, in case the
-	 * wrapped model is a {@link IDetachableModel}, calls dettach on the
-	 * wrapped model.
+	 * Unsets this property model's instance variables and, in case the wrapped
+	 * model is a {@link IDetachableModel}, calls dettach on the wrapped model.
+	 * 
 	 * @see wicket.model.DetachableModel#doDetach()
 	 */
 	protected final void doDetach()
@@ -345,8 +381,10 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Gets the Ognl context that is used for evaluating expressions. It contains the type
-	 * converter that is used to access the converter framework.
+	 * Gets the Ognl context that is used for evaluating expressions. It
+	 * contains the type converter that is used to access the converter
+	 * framework.
+	 * 
 	 * @return the Ognl context that is used for evaluating expressions.
 	 */
 	protected final OgnlContext getContext()
@@ -361,12 +399,14 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Gets the Ognl expression that works on the model. This expression is used with both
-	 * Ognl.getValue (used in getObject) and Ognl.setValue (used in setObject). Usually,
-	 * this expression accords with simple property acces (like if we have a Person object
-	 * with a name property, the expression would be 'name'), but it can in principle
-	 * contain any valid Ognl expression that has meaning with both the Ognl.getValue and
-	 * Ognl.setValue operations.
+	 * Gets the Ognl expression that works on the model. This expression is used
+	 * with both Ognl.getValue (used in getObject) and Ognl.setValue (used in
+	 * setObject). Usually, this expression accords with simple property acces
+	 * (like if we have a Person object with a name property, the expression
+	 * would be 'name'), but it can in principle contain any valid Ognl
+	 * expression that has meaning with both the Ognl.getValue and Ognl.setValue
+	 * operations.
+	 * 
 	 * @return expression the Ognl expression that works on the model.
 	 */
 	protected final String getExpression()
@@ -375,10 +415,11 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Gets the type to be used for conversion instead of the type that
-	 * 	is figured out by Ognl.
-	 * @return the type to be used for conversion instead of the type that
-	 * 	is figured out by Ognl
+	 * Gets the type to be used for conversion instead of the type that is
+	 * figured out by Ognl.
+	 * 
+	 * @return the type to be used for conversion instead of the type that is
+	 *         figured out by Ognl
 	 */
 	public final Class getPropertyType()
 	{
@@ -386,10 +427,11 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Gets the model on which the Ognl expressions are applied. The expression will
-	 * actually not be applied on the instance of IModel, but (naturally) on the wrapped
-	 * model object or more accurate, the object that results from calling getObject on the
-	 * instance of IModel.
+	 * Gets the model on which the Ognl expressions are applied. The expression
+	 * will actually not be applied on the instance of IModel, but (naturally)
+	 * on the wrapped model object or more accurate, the object that results
+	 * from calling getObject on the instance of IModel.
+	 * 
 	 * @return The model on which the Ognl expressions are applied.
 	 */
 	protected final IModel getModel()
@@ -398,9 +440,12 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * Sets the Ognl context that is used for evaluating expressions. It contains the type
-	 * converter that is used to access the converter framework.
-	 * @param context the Ognl context that is used for evaluating expressions
+	 * Sets the Ognl context that is used for evaluating expressions. It
+	 * contains the type converter that is used to access the converter
+	 * framework.
+	 * 
+	 * @param context
+	 *            the Ognl context that is used for evaluating expressions
 	 */
 	protected final void setContext(OgnlContext context)
 	{
