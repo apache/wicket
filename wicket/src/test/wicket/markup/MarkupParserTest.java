@@ -205,6 +205,12 @@ public final class MarkupParserTest extends TestCase
         //Assert.assertEquals(docText, tokens.get(0).toString());
     }
 
+    /**
+     * Test &lt;wicket: .
+     * @throws ParseException
+     * @throws ResourceNotFoundException
+     * @throws IOException
+     */
     public final void testWicketTag() throws ParseException,
     	ResourceNotFoundException, IOException
    	{

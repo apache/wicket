@@ -29,11 +29,19 @@ public class MyLabel extends HtmlComponent
 {
     private String text = "";
     
+    /**
+     * Construct.
+     * @param componentName
+     */
     public MyLabel(final String componentName)
     {
         super(componentName);
     }
 
+    /**
+     * Sets text.
+     * @param text
+     */
     public void setText(final String text)
     {
         this.text = text;
