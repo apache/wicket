@@ -18,7 +18,6 @@
  */
 package wicket.util.value;
 
-
 import java.io.Serializable;
 
 import java.util.Collection;
@@ -37,15 +36,33 @@ import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
 /**
- * A map of values with convenient getters.
+ * A Map implementation that holds values, parses strings and exposes 
+ * a variety of convenience methods.
+ * <p>
+ * In addition to a no-arg constructor and a copy constructor that 
+ * takes a Map argument, ValueMaps can be constructed using a parsing
+ * constructor.  ValueMap(String) will parse values from the string
+ * in comma separated key/value assignment pairs.  For example, new
+ * ValueMap("a=9,b=foo").
+ * <p>
+ * Values can be retrieved from the map in the usual way or with methods
+ * that do handy conversions to various types, including String, StringValue,
+ * int, long, double, Time and Duration. 
+ * <p>
+ * The makeImmutable method will make the underlying map immutable.
+ * Further attempts to change the map will result in a runtime exception.
+ * <p>
+ * The toString() method converts a ValueMap object to a readable key/value
+ * string for diagnostics.
+ * 
  * @author Jonathan Locke
  */
 public class ValueMap implements Map, Serializable
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID. */
 	private static final long serialVersionUID = -693116621545826988L;
 
-	/** empty map. */
+	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
 
     /** The underlying map. */
@@ -63,7 +80,7 @@ public class ValueMap implements Map, Serializable
     }
 
     /**
-     * Constructor.
+     * Copy constructor.
      * @param map The map to copy
      */
     public ValueMap(final Map map)
@@ -73,37 +90,45 @@ public class ValueMap implements Map, Serializable
 
     /**
      * Constructor.
-     * @param keyValuePairs List of key value pairs separated by commas. For example,
-     *            "param1=foo,param2=bar"
+     * @param keyValuePairs List of key value pairs separated by a given
+     * delimiter. For example, "param1=foo,param2=bar" where delimiter is ",".
      * @param delimiter Delimiter string used to separate key/value pairs
      */
     public ValueMap(final String keyValuePairs, final String delimiter)
     {
+        // Create empty map
         this.map = new HashMap();
 
+        // Get list of strings separated by the delimiter
         final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
 
+        // Go through each string in the list
         for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
         {
+            // Get the next key value pair
             final String pair = iterator.next();
+            
+            // Parse using metapattern parser for variable assignments
             final VariableAssignmentParser parser = new VariableAssignmentParser(pair);
 
+            // Does it parse?
             if (parser.matches())
             {
+                // Succeeded.  Put key and value into map
                 put(parser.getKey(), parser.getValue());
             }
             else
             {
-                throw new IllegalArgumentException("Invalid key value list: '"
-                        + keyValuePairs + "'");
+                throw new IllegalArgumentException
+                    ("Invalid key value list: '" + keyValuePairs + "'");
             }
         }
     }
 
     /**
      * Constructor.
-     * @param keyValuePairs List of key value pairs separated by commas. For example,
-     *            "param1=foo,param2=bar"
+     * @param keyValuePairs List of key value pairs separated by commas. 
+     * For example, "param1=foo,param2=bar"
      */
     public ValueMap(final String keyValuePairs)
     {
@@ -111,10 +136,10 @@ public class ValueMap implements Map, Serializable
     }
     
     /**
-     * Makes this value map immutable by changing the underlying map representation to a
-     * collections "unmodifiableMap". After calling this method, any attempt to modify
-     * this map will result in a runtime exception being thrown by the collections
-     * classes.
+     * Makes this value map immutable by changing the underlying map 
+     * representation to a collections "unmodifiableMap". After calling 
+     * this method, any attempt to modify this map will result in a 
+     * runtime exception being thrown by the collections classes.
      */
     public final void makeImmutable()
     {
@@ -126,7 +151,7 @@ public class ValueMap implements Map, Serializable
     }
 
     /**
-     * Sets a string.
+     * Gets a StringValue by key.
      * @param key The key
      * @return The string value object
      */
@@ -136,7 +161,7 @@ public class ValueMap implements Map, Serializable
     }
 
     /**
-     * Gets a string.
+     * Gets a string by key.
      * @param key The get
      * @return The string
      */
@@ -166,6 +191,20 @@ public class ValueMap implements Map, Serializable
     }
 
     /**
+     * Gets an int, using a default if not found.
+     * @param key The key
+     * @param defaultValue Value to use if no value in map
+     * @return The value
+     * @throws StringValueConversionException
+     */
+    public final int getInt(final String key, final int defaultValue)
+            throws StringValueConversionException
+    {
+        final StringValue value = getStringValue(key);
+        return (value != null) ? value.toInt() : defaultValue;
+    }
+
+    /**
      * Gets a long.
      * @param key The key
      * @return The value
@@ -187,19 +226,18 @@ public class ValueMap implements Map, Serializable
             throws StringValueConversionException
     {
         final StringValue value = getStringValue(key);
-
         return (value != null) ? value.toLong() : defaultValue;
     }
 
     /**
-     * Gets a double.
+     * Gets a double value by key.
      * @param key The key
      * @return The value
      * @throws StringValueConversionException
      */
     public final double getDouble(final String key) throws StringValueConversionException
     {
-        return getStringValue(key).toLong();
+        return getStringValue(key).toDouble();
     }
 
     /**
@@ -329,9 +367,9 @@ public class ValueMap implements Map, Serializable
     }
 
     /**
-     * Gets the string representation.
-     * @return String representation of map consistent with tag attribute style of markup
-     *         elements, for example: a="x" b="y" c="z"
+     * Gets a string representation of this object
+     * @return String representation of map consistent with tag attribute 
+     * style of markup elements, for example: a="x" b="y" c="z"
      */
     public String toString()
     {
