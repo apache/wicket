@@ -23,6 +23,10 @@ import java.text.ParseException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
@@ -39,6 +43,8 @@ import wicket.util.string.StringValueConversionException;
  */
 public final class MarkupParserTest extends TestCase
 {
+	private static Log log = LogFactory.getLog(MarkupParserTest.class);
+
     /**
      * 
      * @throws StringValueConversionException
@@ -55,7 +61,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag aOpen = (ComponentTag) markupStream.next();
 
-        System.out.println(aOpen);
+        log.info(aOpen);
         Assert.assertTrue(aOpen.getName().equals("a"));
         Assert.assertEquals("foo.html", aOpen.getAttributes().getString("href"));
 
@@ -63,7 +69,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag boldOpen = (ComponentTag) markupStream.next();
 
-        System.out.println(boldOpen);
+        log.info(boldOpen);
         Assert.assertTrue(boldOpen.getName().equals("b"));
         Assert.assertEquals(XmlTag.OPEN, boldOpen.getType());
 
@@ -71,7 +77,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag boldClose = (ComponentTag) markupStream.next();
 
-        System.out.println(boldClose);
+        log.info(boldClose);
         Assert.assertTrue(boldClose.getName().equals("b"));
         Assert.assertEquals(XmlTag.CLOSE, boldClose.getType());
 
@@ -79,7 +85,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag img = (ComponentTag) markupStream.next();
 
-        System.out.println(img);
+        log.info(img);
         Assert.assertTrue(img.getName().equals("img"));
         Assert.assertEquals(9, img.getAttributes().getInt("width"));
         Assert.assertEquals(10, img.getAttributes().getInt("height"));
@@ -89,7 +95,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag marker = (ComponentTag) markupStream.next();
 
-        System.out.println(marker);
+        log.info(marker);
         Assert.assertTrue(marker.getName().equals("marker"));
         Assert.assertEquals(XmlTag.OPEN_CLOSE, marker.getType());
 
@@ -97,7 +103,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag aClose = (ComponentTag) markupStream.next();
 
-        System.out.println(aClose);
+        log.info(aClose);
         Assert.assertTrue(aClose.getName().equals("a"));
 
         Assert.assertNull(markupStream.next());
@@ -113,12 +119,12 @@ public final class MarkupParserTest extends TestCase
         final Markup tokens = parser
                 .parse("This is a test <a componentName=9> <b>bold</b> <b componentName=10/></a> of the emergency broadcasting system");
 
-        System.out.println("tok(0)=" + tokens.get(0));
-        System.out.println("tok(1)=" + tokens.get(1));
-        System.out.println("tok(2)=" + tokens.get(2));
-        System.out.println("tok(3)=" + tokens.get(3));
-        System.out.println("tok(4)=" + tokens.get(4));
-        System.out.println("tok(5)=" + tokens.get(5));
+        log.info("tok(0)=" + tokens.get(0));
+        log.info("tok(1)=" + tokens.get(1));
+        log.info("tok(2)=" + tokens.get(2));
+        log.info("tok(3)=" + tokens.get(3));
+        log.info("tok(4)=" + tokens.get(4));
+        log.info("tok(5)=" + tokens.get(5));
 
         Assert.assertTrue(tokens.get(0).equals("This is a test "));
 
@@ -152,7 +158,7 @@ public final class MarkupParserTest extends TestCase
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
         final Markup tokens = parser.parse(docText);
 
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         Assert.assertEquals(docText.substring(44), tokens.get(0).toString());
     }
 
@@ -171,38 +177,38 @@ public final class MarkupParserTest extends TestCase
         
         IResource resource = locator.locate(this.getClass(), "1", null, "html");
         Markup tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = locator.locate(this.getClass(), "2", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = locator.locate(this.getClass(), "3", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = locator.locate(this.getClass(), "4", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         // File from jar (URL resource)
         resource = locator.locate(PageExpiredErrorPage.class, null, null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = locator.locate(this.getClass(), "5", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         resource = locator.locate(this.getClass(), "6", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
     }
 

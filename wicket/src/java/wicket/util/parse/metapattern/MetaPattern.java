@@ -352,7 +352,6 @@ public class MetaPattern
 	{
 		if (this instanceof Group)
 		{
-			// System.out.println("Binding " + this + " to group " + group);
 			((Group)this).bind(group++);
 		}
 

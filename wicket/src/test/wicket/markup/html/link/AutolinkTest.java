@@ -20,6 +20,10 @@ package wicket.markup.html.link;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
@@ -33,6 +37,8 @@ import wicket.protocol.http.documentvalidation.TextContent;
  */
 public class AutolinkTest extends TestCase 
 {
+	private static Log log = LogFactory.getLog(AutolinkTest.class);
+
     private MockWebApplication application;
 
     /**
@@ -58,7 +64,7 @@ public class AutolinkTest extends TestCase
 
         // Validate the document
         String document = application.getServletResponse().getDocument();
-        System.out.println(document);
+        log.info(document);
     	Assert.assertTrue(validateDocument(document));
     }
 
