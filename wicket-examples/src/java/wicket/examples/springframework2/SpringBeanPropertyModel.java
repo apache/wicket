@@ -56,27 +56,13 @@ public class SpringBeanPropertyModel extends PropertyModel
         super(new SpringBeanModel(beanClass), expression);
     }
 
-    public SpringBeanPropertyModel(SpringBeanModel model, String expression)
+    /**
+    * Construct.
+    * @param model
+    * @param expression
+    */
+   public SpringBeanPropertyModel(SpringBeanModel model, String expression)
     {
         super(model, expression);
     }
-
-    public SpringBeanPropertyModel(String beanName, String expression,
-            boolean applyFormatting)
-    {
-        super(new SpringBeanModel(beanName), expression, applyFormatting);
-    }
-
-    public SpringBeanPropertyModel(Class beanClass, String expression,
-            boolean applyFormatting)
-    {
-        super(new SpringBeanModel(beanClass), expression, applyFormatting);
-    }
-
-    public SpringBeanPropertyModel(SpringBeanModel model, String expression,
-            boolean applyFormatting)
-    {
-        super(model, expression, applyFormatting);
-    }
-
 }

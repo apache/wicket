@@ -93,10 +93,6 @@ import wicket.util.time.Duration;
  * <i>defaultPageFactory </i>- the factory class that is used for constructing
  * page instances.
  * <p>
- * <i>propertyModelDefaultApplyFormatting </i>- Whether the PropertyModel
- * instances apply formatting by default; default == false.
- * </ul>
- * <p>
  * More documentation is available about each setting in the setter method for
  * the property.
  * 
@@ -167,12 +163,6 @@ public final class ApplicationSettings
 
 	/** True if string resource loaders have been overridden */
 	private boolean overriddenStringResourceLoaders = false;
-
-	/**
-	 * Whether the {@link wicket.model.PropertyModel}instances apply formatting
-	 * by default; default == false.
-	 */
-	private boolean propertyModelDefaultApplyFormatting = false;
 
 	/** Frequency at which files should be polled */
 	private Duration resourcePollFrequency = null;
@@ -364,18 +354,6 @@ public final class ApplicationSettings
 	public final int getMaxSessionPages()
 	{
 		return maxSessionPages;
-	}
-
-	/**
-	 * Gets whether the {@link wicket.model.PropertyModel}instances apply
-	 * formatting by default.
-	 * 
-	 * @return whether the {@link wicket.model.PropertyModel}instances apply
-	 *         formatting by default
-	 */
-	public final boolean getPropertyModelDefaultApplyFormatting()
-	{
-		return propertyModelDefaultApplyFormatting;
 	}
 
 	/**
@@ -627,22 +605,6 @@ public final class ApplicationSettings
 	public final ApplicationSettings setMaxSessionPages(final int maxSessionPages)
 	{
 		this.maxSessionPages = maxSessionPages;
-		return this;
-	}
-
-	/**
-	 * Sets whether the {@link wicket.model.PropertyModel}instances apply
-	 * formatting by default.
-	 * 
-	 * @param propertyModelDefaultApplyFormatting
-	 *            whether the {@link wicket.model.PropertyModel}instances apply
-	 *            formatting by default
-	 * @return This
-	 */
-	public final ApplicationSettings setPropertyModelDefaultApplyFormatting(
-			boolean propertyModelDefaultApplyFormatting)
-	{
-		this.propertyModelDefaultApplyFormatting = propertyModelDefaultApplyFormatting;
 		return this;
 	}
 

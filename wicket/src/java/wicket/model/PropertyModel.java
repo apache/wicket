@@ -24,13 +24,11 @@ import ognl.DefaultTypeConverter;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
-import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.util.convert.IConverter;
-import wicket.util.convert.IStringConverter;
 
 /**
  * A PropertyModel is used to dynamically access a model using an <a
@@ -85,11 +83,7 @@ import wicket.util.convert.IStringConverter;
  * </pre>
  * 
  * </p>
- * <p>
- * For conversions and formatting, the converter sub-framework is used. This allows for
- * plugging in custom converters and formatters that are used for converting and
- * formatting objects of a given type.
- * </p>
+ *
  * @see wicket.model.IModel
  * @see wicket.model.Model
  * @see wicket.model.DetachableModel
@@ -100,13 +94,6 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
-
-	/**
-	 * When true, additionial formatting is done on the result object. It handles the part
-	 * of localization where you want model variables like numbers and dates formatted in a
-	 * localized way.
-	 */
-	private boolean applyFormatting;
 
 	/** Ognl context wrapper object. It contains the type converter. */
 	private transient OgnlContext context;
@@ -199,35 +186,6 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 
 		this.model = model;
 		this.expression = expression;
-		this.applyFormatting = false;
-
-		// PropertyModel might be used while RequestCycle.get() has not yet been
-		// initialized (e.g. may happen during junit tests)
-		if (RequestCycle.get() != null)
-		{
-			ApplicationSettings settings = RequestCycle.get().getApplication().getSettings();
-			this.applyFormatting = settings.getPropertyModelDefaultApplyFormatting();
-		}
-	}
-
-	/**
-	 * Construct with an IModel object and a Ognl expression that works on the given model.
-	 * @param model the model that is used to get and set the property values
-	 * @param expression Ognl expression for property access
-	 * @param applyFormatting When true, additionial formatting is done on the result
-	 *           object. It handles the part of localization where you want model variables
-	 *           like numbers and dates formatted in a localized way. See also properties
-	 *           formatterName and formatPattern.
-	 */
-	public PropertyModel(final IModel model, final String expression, boolean applyFormatting)
-	{
-		super(null);
-
-		checkModelNotNull(model);
-
-		this.model = model;
-		this.expression = expression;
-		this.applyFormatting = applyFormatting;
 	}
 
 	/**
@@ -271,25 +229,8 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 		try
 		{
 			OgnlContext ctx = getContext();
-			Object raw = Ognl.getValue(expr, ctx, modelObject);
-			if (applyFormatting)
-			{
-				final IStringConverter converter;
-				if(component != null) // could be null if used directly by clients
-				{
-					converter = component.getConverter();
-				}
-				else // safety option
-				{
-					Session session = Session.get();
-					converter = (IStringConverter)session.getConverter();
-				}
-				return converter.toString(raw);
-			}
-			else
-			{
-				return raw;
-			}
+			Object result = Ognl.getValue(expr, ctx, modelObject);
+			return result;
 		}
 		catch (OgnlException e)
 		{
@@ -350,15 +291,6 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 
 		// Reset OGNL context
 		this.context = null;
-	}
-
-	/**
-	 * Gets whether to apply formatting when getObject is invoked.
-	 * @return Whether to apply formatting when getObject is invoked.
-	 */
-	protected final boolean getApplyFormatting()
-	{
-		return applyFormatting;
 	}
 
 	/**

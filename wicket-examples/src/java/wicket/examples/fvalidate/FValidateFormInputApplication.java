@@ -40,6 +40,5 @@ public class FValidateFormInputApplication extends WebApplication
 
         // show ?? markers when a message resource is not found
         settings.setThrowExceptionOnMissingResource(false);
-        settings.setPropertyModelDefaultApplyFormatting(true);
     }
 }

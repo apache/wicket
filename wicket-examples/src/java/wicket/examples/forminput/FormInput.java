@@ -187,8 +187,7 @@ public class FormInput extends HtmlPage
 		public LocaleSelect(String name, Serializable object,
 				String expression, Collection values)
 		{
-			// Construct a property model WITHOUT formatting
-			super(name, new PropertyModel(new Model(object), expression, false), values);
+			super(name, new PropertyModel(new Model(object), expression), values);
 		}
 
 		/**

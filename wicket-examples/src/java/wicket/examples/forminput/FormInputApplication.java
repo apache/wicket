@@ -45,9 +45,6 @@ public class FormInputApplication extends WebApplication
 
         // show ?? markers when a message resource is not found
         settings.setThrowExceptionOnMissingResource(false);
-
-        // let PropertyModel format when the apply formatting parameter is not provided
-        settings.setPropertyModelDefaultApplyFormatting(true);
     }
 
 
