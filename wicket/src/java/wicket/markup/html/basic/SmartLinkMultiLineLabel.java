@@ -20,12 +20,9 @@ package wicket.markup.html.basic;
 
 import java.io.Serializable;
 
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
 import wicket.util.string.Strings;
 
 /**
@@ -43,16 +40,12 @@ import wicket.util.string.Strings;
  * @author Juergen Donnerstag
  */
 public final class SmartLinkMultiLineLabel extends MultiLineLabel
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 6614585065978596357L;
 
 	/**
-     * Constructor that uses the provided {@link IModel}as its model. All components have
-     * names. A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param model
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, IModel)
      */
     public SmartLinkMultiLineLabel(String name, IModel model)
     {
@@ -60,20 +53,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
     }
 
     /**
-     * Constructor that uses the provided instance of {@link IModel}as a dynamic model.
-     * This model will be wrapped in an instance of {@link PropertyModel}using the
-     * provided expression. Thus, using this constructor is a short-hand for:
-     * 
-     * <pre>
-     * new MyComponent(name, new PropertyModel(myIModel, expression));
-     * </pre>
-     * 
-     * All components have names. A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param model the instance of {@link IModel}from which the model object will be
-     *            used as the subject for the given expression
-     * @param expression the OGNL expression that works on the given object
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, IModel, String)
      */
     public SmartLinkMultiLineLabel(String name, IModel model, String expression)
     {
@@ -81,33 +61,15 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
     }
 
     /**
-     * Constructor that uses the provided object as a simple model. This object will be
-     * wrapped in an instance of {@link Model}. All components have names. A component's
-     * name cannot be null.
-     * @param name The non-null name of this component
-     * @param object the object that will be used as a simple model
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable)
      */
-    public SmartLinkMultiLineLabel(String name, String object)
+    public SmartLinkMultiLineLabel(String name, Serializable object)
     {
         super(name, object);
     }
 
     /**
-     * Constructor that uses the provided object as a dynamic model. This object will be
-     * wrapped in an instance of {@link Model}that will be wrapped in an instance of
-     * {@link PropertyModel}using the provided expression. Thus, using this constructor
-     * is a short-hand for:
-     * 
-     * <pre>
-     * new MyComponent(name, new PropertyModel(new Model(object), expression));
-     * </pre>
-     * 
-     * All components have names. A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param object the object that will be used as the subject for the given expression
-     * @param expression the OGNL expression that works on the given object
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable, String)
      */
     public SmartLinkMultiLineLabel(String name, Serializable object, String expression)
     {
@@ -121,9 +83,8 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
     protected void handleBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
-        String body = Strings.toMultilineMarkup(getModelObjectAsString());
-        body = SmartLinkLabel.smartLink(body);
-        replaceBody(markupStream, openTag, body);
+        final String body = Strings.toMultilineMarkup(getModelObjectAsString());
+        replaceBody(markupStream, openTag, SmartLinkLabel.smartLink(body));
     }
 }
 
