@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>Wicket - Form Input Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span id="wicket-mainNavigation"/>
+
+	<div>
+		use locale: 
+		<select id="wicket-localeSelect">
+			<option>locale1</option>
+			<option>locale2</option>
+		</select>
+		<a href="#" id="wicket-defaultLocaleLink">[default]</a>
+    </div>
+
+    <form id="wicket-inputForm">
+      <fieldset>
+        <legend>input</legend>
+          <label for="stringInput">String</label>
+          <input class="plain" id="wicket-stringInput" type="text" size="40"/>
+          <label for="integerInput">Integer</label>
+          <input class="plain" id="wicket-integerInput" type="text" size="40"/>
+          <label for="doubleInput">Double</label>
+          <input class="plain" id="wicket-doubleInput" type="text" size="40"/>
+          <label for="dateInput">Date</label>
+          <input class="plain" id="wicket-dateInput" type="text" size="40"/>
+          <label for="integerInRangeInput">value between 0 and 100</label>
+          <input class="plain" id="wicket-integerInRangeInput" type="text" size="40"/>
+      </fieldset>   
+      <fieldset>
+        <input type="submit" value="save"/>
+      </fieldset>
+     </form>
+
+	<div>
+		<span id="wicket-feedback"/>
+    </div>
+
+</body>
+</html>

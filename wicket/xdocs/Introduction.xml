@@ -35,9 +35,6 @@ Java web frameworks can you name? The answer they show looks like this:
 <tr><td>Japple</td><td>Helma</td><td>Dinamica</td><td>WebOnSwing</td></tr>
 <tr><td>Nacho</td><td>Cassandra</td><td>Baritus</td><td></td></tr>
 </table>
-<p>
-My own personal list of the more interesting and popular presentation layer frameworks is:
-</p>
 </subsection>
 </section>
 <section name='Why "Reinvent the Wheel"?'>
@@ -57,7 +54,7 @@ very shallow. Like Tapestry, Wicket uses a special HTML attribute to denote comp
 enabling easy editing with ordinary HTML editors. Like Echo, Wicket is Swing-like.
 But Wicket applications are not like applications written in either Tapestry or Echo,
 because in Wicket you get the best of both worlds. You get the benefits of a Swing-like 
-omponent model and a non-intrusive approach to HTML. In many situations, this combination
+component model and a non-intrusive approach to HTML. In many situations, this combination
 may prove to be a significant development advantage.
 </p>
 <p>

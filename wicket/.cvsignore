@@ -2,3 +2,6 @@ build
 .settings
 target
 *.log
+build.properties
+*.backup
+*.temp

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- used for springframework2 example -->
+  <bean id="message" class="java.lang.String" singleton="true">
+    <constructor-arg>
+      <value>This message is Spring managed!!! </value>
+    </constructor-arg>
+  </bean>
+
+  <bean id="user" class="wicket.examples.springframework2.SimpleUser" singleton="false">
+    <property name="forename"><value>Albert</value></property>
+    <property name="surname"><value>Schweitzer</value></property>
+  </bean>
+</beans>

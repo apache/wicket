@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <classpath>
-	<classpathentry kind="src" path="src/java"/>
-	<classpathentry kind="src" path="src/test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" sourcepath="JAVA_SRC_JARS/servletapi-2.3-src.jar" kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
-	<classpathentry exported="true" sourcepath="JAVA_SRC_JARS/junit-3.8.1-src.jar" kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar"/>
-	<classpathentry sourcepath="JAVA_SRC_JARS/log4j-1.2.8-src.jar" kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
-	<classpathentry sourcepath="JAVA_SRC_JARS/ognl-2.6.5-src.jar" kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.5.jar"/>
-	<classpathentry sourcepath="JAVA_SRC_JARS/commons-fileupload-1.0-src.jar" kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.0.jar"/>
-	<classpathentry kind="output" path="target/classes"/>
+  <classpathentry excluding="" kind="src" path="src\java">
+  </classpathentry>
+  <classpathentry output="build\test-classes" kind="src" path="src\test">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar">
+  </classpathentry>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.5.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/concurrent/jars/concurrent-1.3.3.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.0.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar">
+  </classpathentry>
+  <classpathentry kind="output" path="build\classes">
+  </classpathentry>
 </classpath>

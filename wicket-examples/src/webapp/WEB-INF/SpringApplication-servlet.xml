@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - DispatcherServlet application context for the SpringApplication web tier.
+	-->
+<beans>
+	
+	<!--
+		- We specify here that Locale and theme are stored in cookies.
+	  - They could be stored in a Session. Default resolvers don't allow changing them on the fly.
+		-->
+	<!-- bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
+
+	<bean id="themeResolver" class="org.springframework.web.servlet.theme.CookieThemeResolver"/ -->
+
+	<!--
+	 - Explicit URL handler mapping instead of default BeanNameUrlHandlerMapping.
+	 -->
+	<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<!-- property name="interceptors">
+			<list>
+				<ref local="localeChangeInterceptor"/>
+				<ref local="themeChangeInterceptor"/>
+				<ref local="copyInterceptor"/>
+			</list>
+		</property -->
+		<property name="mappings">
+			<props>
+				<prop key="/**">wicketController</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<!-- ========================= CONTROLLER DEFINITIONS ========================= -->
+
+	<!--
+		- Interceptors will pre-handle any request in this servlet, no matter which controller
+		- is mapped for a request.
+		-
+		- We use two built-in interceptors to detect user locale or theme change requests.
+		- The third interceptor is specific to this Demo. It allows views to easily be aware
+		- about the configuration detected. Precisely to know if a copy data to database can be
+		- proposed to the user.
+	-->
+	<!-- bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/ -->
+
+	<!-- bean id="themeChangeInterceptor" class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"/ -->
+
+	<!-- General use Multiaction controller for Errors -->
+	<!-- bean id="errorsController" class="org.springframework.samples.countries.web.ErrorsController">
+		<property name="methodNameResolver"><ref local="errorsMethodNameResolver"/></property>
+	</bean -->
+
+	<!-- bean id="errorsMethodNameResolver" class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+		<property name="mappings">
+			<props>
+				<prop key="/notfound.htm">handleHttp404</prop>
+			</props>
+		</property>
+	</bean -->
+
+	<bean id="wicketController" class="wicket.examples.springframework.SpringApplicationController">
+		<property name="application"><ref local="wicketApplication"/></property>
+	</bean>
+	
+	<bean id="wicketApplication" class="wicket.examples.springframework.SpringExampleApplication">
+		<property name="settings"><ref local="wicketSettings"/></property>
+	</bean>
+
+	<bean id="wicketSettings" class="wicket.ApplicationSettings">
+		<constructor-arg><ref local="wicketApplication"/></constructor-arg>
+		<!-- property name="ResourcePollFrequency">com.voicetribe.util.time.Duration.ONE_SECOND</property -->
+  </bean>
+</beans>
+

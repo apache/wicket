@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Root application context for the SpringApplication example
+  - Web-specific beans are defined in "SpringApplication-servlet.xml".
+  -->
+<beans>
+
+	<bean id="xxx" class="java.lang.String"/>
+
+</beans>
