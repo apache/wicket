@@ -93,9 +93,9 @@ public class StringResourceModelTest extends TestCase
 		try
 		{
 			new StringResourceModel(null, page, null);
-			Assert.fail("NullPointerException expected");
+			Assert.fail("IllegalArgumentException expected");
 		}
-		catch (NullPointerException e)
+		catch (IllegalArgumentException e)
 		{
 			// Expected result
 		}
