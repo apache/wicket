@@ -157,9 +157,9 @@ public class TextArea extends FormComponent
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
-	 * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String bodyContent;
 		if (invalidInput == null) 
@@ -172,6 +172,6 @@ public class TextArea extends FormComponent
             // Invalid input detected
 			bodyContent = invalidInput;
 		}
-		replaceBody(markupStream, openTag, getModelObjectAsString());
+		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
 	}
 }

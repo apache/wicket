@@ -74,7 +74,7 @@ public class SortableListViewHeaders extends HtmlContainer
 
 		// Must be <thead> tag
 		ComponentTag tag = markupStream.getTag();
-		checkTag(tag, "thead");
+		checkComponentTag(tag, "thead");
 
 		// find all <th id="wicket-..." childs
 		// Loop through the markup in this container

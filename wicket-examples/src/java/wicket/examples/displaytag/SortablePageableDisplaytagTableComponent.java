@@ -116,7 +116,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         // Add a headline
         add(new Label("headline", null)
         {
-            protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+            protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
             {
                 int firstCell = table.getCurrentPage() * table.getRowsPerPage();
                 
@@ -128,7 +128,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
                     + String.valueOf(firstCell + table.getRowsPerPage())
                     + ".";
                 
-                replaceBody(markupStream, openTag, text);
+                replaceComponentTagBody(markupStream, openTag, text);
             }
         });
 

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.42 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -375,6 +375,24 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Gets the converter that should be used by this component.
+	 * 
+	 * @return the converter that should be used by this component
+	 */
+	public IConverter getConverter()
+	{
+		return getSession().getConverter();
+	}
+
+	/**
+	 * @return Any feedback message for this component
+	 */
+	public final FeedbackMessage getFeedbackMessage()
+	{
+		return getPage().getFeedbackMessages().messageForComponent(this);
+	}
+
+	/**
 	 * Gets the locale for the session holding this component.
 	 * 
 	 * @return The locale for the session holding this component
@@ -394,24 +412,6 @@ public abstract class Component implements Serializable
 	public final Localizer getLocalizer()
 	{
 		return getApplication().getLocalizer();
-	}
-
-	/**
-	 * Gets the converter that should be used by this component.
-	 * 
-	 * @return the converter that should be used by this component
-	 */
-	public IConverter getConverter()
-	{
-		return getSession().getConverter();
-	}
-
-	/**
-	 * @return Any feedback message for this component
-	 */
-	public final FeedbackMessage getFeedbackMessage()
-	{
-		return getPage().getFeedbackMessages().messageForComponent(this);
 	}
 
 	/**
@@ -462,10 +462,10 @@ public abstract class Component implements Serializable
 			{
 				// Get converter
 				IConverter converter = getConverter();
-                
+
 				//	Model string from property
 				final String modelString = (String)converter.convert(modelObject, String.class);
-                
+
 				// If we should escape the markup
 				if (shouldEscapeModelStrings)
 				{
@@ -822,7 +822,7 @@ public abstract class Component implements Serializable
 	public final Component setModel(final IModel model)
 	{
 		final IModel currentModel = getModel(); // see if there is a current
-												// model
+		// model
 		if (currentModel != null && currentModel instanceof IDetachableModel)
 		{
 			// detach in case it is a IDetachableModel
@@ -901,6 +901,26 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Checks whether the given type has the expected name.
+	 * 
+	 * @param tag
+	 *            The tag to check
+	 * @param name
+	 *            The expected tag name
+	 * @throws MarkupException
+	 *             Thrown if the tag is not of the right name
+	 */
+	protected final void checkComponentTag(final ComponentTag tag, final String name)
+	{
+		if (!tag.getName().equalsIgnoreCase(name))
+		{
+			findMarkupStream().throwMarkupException(
+					"Component " + getName() + " must be applied to a tag of type '" + name
+							+ "', not " + tag.toUserDebugString());
+		}
+	}
+
+	/**
 	 * Checks that a given tag has a required attribute value.
 	 * 
 	 * @param tag
@@ -912,7 +932,8 @@ public abstract class Component implements Serializable
 	 * @throws MarkupException
 	 *             Thrown if the tag does not have the required attribute value
 	 */
-	protected final void checkAttribute(final ComponentTag tag, final String key, final String value)
+	protected final void checkComponentTagAttribute(final ComponentTag tag, final String key,
+			final String value)
 	{
 		if (key != null)
 		{
@@ -927,23 +948,11 @@ public abstract class Component implements Serializable
 		}
 	}
 
-	/**
-	 * Checks whether the given type has the expected name.
-	 * 
-	 * @param tag
-	 *            The tag to check
-	 * @param name
-	 *            The expected tag name
-	 * @throws MarkupException
-	 *             Thrown if the tag is not of the right name
-	 */
-	protected final void checkTag(final ComponentTag tag, final String name)
+	protected void detachModel()
 	{
-		if (!tag.getName().equalsIgnoreCase(name))
+		if (model instanceof IDetachableModel)
 		{
-			findMarkupStream().throwMarkupException(
-					"Component " + getName() + " must be applied to a tag of type '" + name
-							+ "', not " + tag.toUserDebugString());
+			((IDetachableModel)model).detach();
 		}
 	}
 
@@ -978,19 +987,6 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Processes the body.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 * @param openTag
-	 *            The open tag for the body
-	 */
-	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		markupStream.throwMarkupException("No handleBody implementation found");
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -998,8 +994,20 @@ public abstract class Component implements Serializable
 	 */
 	protected void handleComponentTag(final ComponentTag tag)
 	{
-		// Optionally strip componentName tag
-		stripComponentName(tag);
+	}
+
+	/**
+	 * Processes the body.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
+	 */
+	protected void handleComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
+	{
+		markupStream.throwMarkupException("Required handleComponentTagBody() was not provided");
 	}
 
 	/**
@@ -1061,8 +1069,8 @@ public abstract class Component implements Serializable
 	/**
 	 * Renders the component at the current position in the given markup stream.
 	 * The method handleComponentTag() is called to allow the component to
-	 * mutate the start tag. The method handleBody() is then called to permit
-	 * the component to render its body.
+	 * mutate the start tag. The method handleComponentTagBody() is then called
+	 * to permit the component to render its body.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -1095,16 +1103,16 @@ public abstract class Component implements Serializable
 		}
 
 		// Render open tag
-		renderTag(tag);
+		renderComponentTag(tag);
 		markupStream.next();
 
 		// Render body using original tag type so implementors
 		// of handleBody will know if the tag has a body or not
 		tag.setType(type);
-		handleBody(markupStream, tag);
+		handleComponentTagBody(markupStream, tag);
 
 		// Render close tag
-		renderCloseTag(markupStream, tag);
+		renderClosingComponentTag(markupStream, tag);
 	}
 
 	/**
@@ -1115,16 +1123,25 @@ public abstract class Component implements Serializable
 	 * @param tag
 	 *            The tag to write
 	 */
-	protected final void renderTag(ComponentTag tag)
+	protected final void renderComponentTag(ComponentTag tag)
 	{
-		// Apply attribute tag modifiers
-		if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE))
+		// Apply attribute modifiers
+		if (attributeModifiers != null && tag.getType() != XmlTag.CLOSE)
 		{
 			tag = tag.mutable();
 			for (Iterator it = attributeModifiers.iterator(); it.hasNext();)
 			{
 				((AttributeModifier)it.next()).replaceAttibuteValue(tag);
 			}
+		}
+
+		// Strip component name attribute if desired
+		final ApplicationSettings settings = getApplication().getSettings();
+		if (settings.getStripComponentNames())
+		{
+			// Get mutable copy of tag and remove component name
+			tag = tag.mutable();
+			tag.removeComponentName(settings.getComponentNameAttribute());
 		}
 
 		// Write the tag
@@ -1138,28 +1155,10 @@ public abstract class Component implements Serializable
 	 * @param markupStream
 	 *            The markup stream to advance (where the tag came from)
 	 */
-	protected final void renderTag(final MarkupStream markupStream)
+	protected final void renderComponentTag(final MarkupStream markupStream)
 	{
-		renderTag(markupStream, markupStream.getTag());
-	}
-
-	/**
-	 * Writes a simple tag out to the response stream. Any components that might
-	 * be referenced by the tag are ignored.
-	 * 
-	 * @param markupStream
-	 *            The markup stream to advance (where the tag came from)
-	 * @param tag
-	 *            The tag to write
-	 */
-	protected final void renderTag(final MarkupStream markupStream, final ComponentTag tag)
-	{
-		// Optionally strip componentName tag
-		stripComponentName(tag);
-
-		// Write to output
-		renderTag(tag);
-		markupStream.next();
+		renderComponentTag(markupStream.getTag());
+        markupStream.next();
 	}
 
 	/**
@@ -1172,8 +1171,8 @@ public abstract class Component implements Serializable
 	 * @param body
 	 *            The new markup
 	 */
-	protected final void replaceBody(final MarkupStream markupStream, final ComponentTag tag,
-			final String body)
+	protected final void replaceComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag tag, final String body)
 	{
 		// If tag has body
 		if (tag.isOpen())
@@ -1259,14 +1258,6 @@ public abstract class Component implements Serializable
 		});
 	}
 
-	protected void detachModel()
-	{
-		if (model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).detach();
-		}
-	}
-
 	/**
 	 * Detach all models that the components of this page have.
 	 * 
@@ -1322,7 +1313,7 @@ public abstract class Component implements Serializable
 	 * @param openTag
 	 *            the tag to render
 	 */
-	final void renderCloseTag(final MarkupStream markupStream, final ComponentTag openTag)
+	final void renderClosingComponentTag(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Tag should be open tag and not openclose tag
 		if (openTag.isOpen())
@@ -1342,7 +1333,8 @@ public abstract class Component implements Serializable
 				}
 
 				// Render the close tag
-				renderTag(markupStream, closeTag);
+				renderComponentTag(closeTag);
+                markupStream.next();
 			}
 			else
 			{
@@ -1381,22 +1373,5 @@ public abstract class Component implements Serializable
 	{
 		// Search for page
 		return (Page)(this instanceof Page ? this : findParent(Page.class));
-	}
-
-	/**
-	 * Strips the component name of stuff we do not need.
-	 * 
-	 * @param tag
-	 *            The tag to strip
-	 */
-	private final void stripComponentName(final ComponentTag tag)
-	{
-		// Strip component name attribute if desired
-		final ApplicationSettings settings = getApplication().getSettings();
-		if (settings.getStripComponentNames())
-		{
-			// Get mutable copy of tag and remove component name
-			tag.mutable().removeComponentName(settings.getComponentNameAttribute());
-		}
 	}
 }

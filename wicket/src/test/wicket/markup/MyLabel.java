@@ -52,16 +52,16 @@ public class MyLabel extends HtmlComponent
      */
     protected final void handleComponentTag(final ComponentTag tag)
     {
-        checkTag(tag, "component");
+        checkComponentTag(tag, "component");
         super.handleComponentTag(tag);
     }
 
     /**
-     * @see wicket.Component#handleBody(wicket.markup.MarkupStream,
+     * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
      *      wicket.markup.ComponentTag)
      */
-    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+    protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
-        replaceBody(markupStream, openTag, text);
+        replaceComponentTagBody(markupStream, openTag, text);
     }
 }

@@ -62,13 +62,14 @@ public final class ImageMap extends HtmlComponent
         final ComponentTag tag = markupStream.getTag().mutable();
 
         // Must be an img tag
-        checkTag(tag, "img");
+        checkComponentTag(tag, "img");
 
         // Set map name to path
         tag.put("usemap", "#" + getPath());
 
         // Write out the tag
-        renderTag(markupStream, tag);
+        renderComponentTag(tag);
+        markupStream.next();
 
         // Write out the image map
         final StringBuffer imageMap = new StringBuffer();

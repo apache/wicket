@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.33 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -529,16 +529,18 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Handle the container's body.
+	 * Handle the container's body. If your override of this method does not
+	 * advance the markup stream to the close tag for the openTag, a runtime
+	 * exception will be thrown by the framework.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
 	 */
-	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		renderBody(markupStream, openTag);
+		renderComponentTagBody(markupStream, openTag);
 	}
 
 	/**
@@ -550,7 +552,9 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Renders associated markup for a Border or Panel component.
+	 * Renders the entire associated markup stream for a container such as a
+	 * Border or Panel. Any leading or trailing raw markup in the associated
+	 * markup is skipped.
 	 * 
 	 * @param openTagName
 	 *            the tag to render the associated markup for
@@ -571,27 +575,30 @@ public abstract class Container extends Component
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!(associatedMarkupStream.atOpenTag(openTagName) 
-		        && (associatedMarkupOpenTag instanceof ComponentWicketTag)))
+		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof ComponentWicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
 
-		renderTag(associatedMarkupStream, associatedMarkupOpenTag);
-		renderBody(associatedMarkupStream, associatedMarkupOpenTag);
-		renderCloseTag(associatedMarkupStream, associatedMarkupOpenTag);
+		renderComponentTag(associatedMarkupOpenTag);
+        associatedMarkupStream.next();
+		renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
+		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag);
 		setMarkupStream(originalMarkupStream);
 	}
 
 	/**
-	 * Renders markup until the closing tag for openTag is reached.
+	 * Renders markup for the body of a ComponentTag from the current position
+	 * in the given markup stream. If the open tag passed in does not require a
+	 * close tag, nothing happens. Markup is rendered until the closing tag for
+	 * openTag is reached.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag
 	 */
-	protected final void renderBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void renderComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// If the open tag requires a close tag
 		if (openTag.requiresCloseTag())
@@ -602,9 +609,7 @@ public abstract class Container extends Component
 				// Render markup element. Doing so must advance the markup
 				// stream
 				final int index = markupStream.getCurrentIndex();
-
 				renderNext(markupStream);
-
 				if (index == markupStream.getCurrentIndex())
 				{
 					markupStream.throwMarkupException("Markup element at index " + index
@@ -719,9 +724,7 @@ public abstract class Container extends Component
 		{
 			// Element rendering is responsible for advancing markup stream!
 			final int index = markupStream.getCurrentIndex();
-
 			renderNext(markupStream);
-
 			if (index == markupStream.getCurrentIndex())
 			{
 				markupStream.throwMarkupException("Component at markup stream index " + index
@@ -853,7 +856,7 @@ public abstract class Container extends Component
 		final MarkupElement element = markupStream.get();
 
 		// If it a tag like <wicket..> or <span id="wicket-..." >
-		if ((element instanceof ComponentTag) && !markupStream.atCloseTag())
+		if (element instanceof ComponentTag && !markupStream.atCloseTag())
 		{
 			// Get element as tag
 			final ComponentTag tag = (ComponentTag)element;

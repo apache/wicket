@@ -104,9 +104,9 @@ public class RadioOptionSet extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Buffer to hold generated body
 		final StringBuffer options = new StringBuffer();
@@ -148,6 +148,6 @@ public class RadioOptionSet extends FormComponent
 		}
 
 		// Replace body
-		replaceBody(markupStream, openTag, options.toString());
+		replaceComponentTagBody(markupStream, openTag, options.toString());
 	}
 }

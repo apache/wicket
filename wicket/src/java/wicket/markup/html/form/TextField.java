@@ -155,8 +155,8 @@ public class TextField extends FormComponent
 	 */
 	protected final void handleComponentTag(final ComponentTag tag)
 	{
-		checkTag(tag, "input");
-		checkAttribute(tag, "type", "text");
+		checkComponentTag(tag, "input");
+		checkComponentTagAttribute(tag, "type", "text");
 		super.handleComponentTag(tag);
 		if (invalidInput == null)
 		{

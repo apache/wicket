@@ -54,10 +54,10 @@ public class PageableListViewNavigator extends Panel
 		add(new Label("headline", null)
 		{
 			// Dynamically - at runtime - create the text
-			protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+			protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 			{
 				String text = getHeadlineText(pageableListView);
-				replaceBody(markupStream, openTag, text);
+				replaceComponentTagBody(markupStream, openTag, text);
 			}
 		});
 

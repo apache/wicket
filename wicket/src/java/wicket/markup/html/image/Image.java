@@ -163,9 +163,9 @@ public class Image extends HtmlComponent implements IResourceListener
     }
 
     /**
-     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
+     * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
      */
-    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+    protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
     }
 
@@ -174,7 +174,7 @@ public class Image extends HtmlComponent implements IResourceListener
      */
     protected void handleComponentTag(final ComponentTag tag)
     {
-        checkTag(tag, "img");
+        checkComponentTag(tag, "img");
         super.handleComponentTag(tag);
 
         final String resourceToLoad;

@@ -66,9 +66,9 @@ public class AbsoluteHref extends HtmlComponent
 
     /**
      * 
-     * @see wicket.Component#handleBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected void handleBody(MarkupStream markupStream, ComponentTag openTag)
+    protected void handleComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
     {
     }
 }
