@@ -45,33 +45,33 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public AbstractSingleSelectChoice(String name, final Collection choices)
+	public AbstractSingleSelectChoice(final String id, final Collection choices)
 	{
-		super(name, choices);
+		super(id, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
-	public AbstractSingleSelectChoice(String name, final IChoiceList choices)
+	public AbstractSingleSelectChoice(final String id, final IChoiceList choices)
 	{
-		super(name, choices);
+		super(id, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
-	public AbstractSingleSelectChoice(String name, IModel model, final Collection choices)
+	public AbstractSingleSelectChoice(final String id, IModel model, final Collection choices)
 	{
-		super(name, model, choices);
+		super(id, model, choices);
 	}
 	
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
-	public AbstractSingleSelectChoice(String name, IModel model, final IChoiceList choices)
+	public AbstractSingleSelectChoice(final String id, IModel model, final IChoiceList choices)
 	{
-		super(name, model, choices);
+		super(id, model, choices);
 	}
 
 	/**
@@ -129,7 +129,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		if (nullValid)
 		{
 			// Null is valid, so look up the value for it
-			final String option = getLocalizer().getString(getName() + ".null", this, "");
+			final String option = getLocalizer().getString(getId() + ".null", this, "");
 
 			// Add option tag
 			buffer.append("\n<option");
@@ -149,7 +149,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			if (selected == null)
 			{
 				// Force the user to pick a non-null value
-				final String option = getLocalizer().getString(getName() + ".null", this,
+				final String option = getLocalizer().getString(getId() + ".null", this,
 						CHOOSE_ONE);
 				buffer.append("\n<option selected=\"selected\" value=\"\">").append(option)
 						.append("</option>");

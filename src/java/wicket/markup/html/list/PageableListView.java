@@ -39,16 +39,16 @@ public abstract class PageableListView extends ListView
 	/**
 	 * Constructor
 	 * 
-	 * @param name
+	 * @param id
 	 *            See Component
 	 * @param model
 	 *            See Component
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
 	 */
-	public PageableListView(final String name, final IModel model, int rowsPerPage)
+	public PageableListView(final String id, final IModel model, int rowsPerPage)
 	{
-		super(name, model);
+		super(id, model);
 		this.rowsPerPage = rowsPerPage;
 	}
 
@@ -56,7 +56,7 @@ public abstract class PageableListView extends ListView
 	 * Creates a pagable list view having the given number of rows per page that
 	 * uses the provided object as a simple model.
 	 * 
-	 * @param name
+	 * @param id
 	 *            See Component
 	 * @param list
 	 *            See Component
@@ -64,9 +64,9 @@ public abstract class PageableListView extends ListView
 	 *            Number of rows to show on a page
 	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(final String name, final List list, final int rowsPerPage)
+	public PageableListView(final String id, final List list, final int rowsPerPage)
 	{
-		super(name, list);
+		super(id, list);
 		this.rowsPerPage = rowsPerPage;
 	}
 

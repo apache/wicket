@@ -36,9 +36,9 @@ public class Button extends FormComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public Button(String name)
+	public Button(String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**

@@ -9,6 +9,9 @@
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
       <action type="update" dev="Jonathan Locke" issue="">
+      Changed Component.name property to Component.id to match upcoming changes.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Changed RequestCycle.setPage() -> RequestCycle.setResponsePage().
       </action>
       <action type="update" dev="Jonathan Locke" issue="">

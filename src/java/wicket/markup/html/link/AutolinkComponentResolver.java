@@ -75,7 +75,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 		if (tag.isAutolinkEnabled())
 		{
 			// Try to find the Page matching the href
-			final String componentName = tag.getComponentName();
+			final String componentName = tag.getComponentId();
 			final Component link = resolveAutomaticLink(container, componentName, tag);
 
 			// Add the link to the container
@@ -130,7 +130,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 		final String id = componentName + page.getAutoIndex();
 
 		// The component name on the tag changed
-		tag.setComponentName(id);
+		tag.setComponentId(id);
 
 		// Obviously a href like href="myPkg.MyLabel.html" will do as well.
 		// Wicket will not throw an exception. It accepts it.

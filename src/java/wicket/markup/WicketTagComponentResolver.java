@@ -109,7 +109,7 @@ public class WicketTagComponentResolver implements IComponentResolver
         }
         
         // Re-parent children of <wicket:component>. 
-        if ((tag.getComponentName() != null) && nestedComponents.containsKey(container))
+        if ((tag.getComponentId() != null) && nestedComponents.containsKey(container))
         {
             MarkupContainer parent = container.getParent();
             
@@ -121,7 +121,7 @@ public class WicketTagComponentResolver implements IComponentResolver
             
             if (parent != null)
             {
-                final Component component = parent.get(tag.getComponentName());
+                final Component component = parent.get(tag.getComponentId());
                 if (component != null)
                 {
                     component.render();

@@ -197,17 +197,17 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FormComponent(final String name)
+	public FormComponent(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FormComponent(String name, IModel model)
+	public FormComponent(final String id, IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**

@@ -149,7 +149,7 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 			tag = new ComponentWicketTag(xmlTag);
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
-			tag.setComponentName(tag.getName());
+			tag.setComponentId(tag.getName());
 		}
 		else
 		{
@@ -163,37 +163,37 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 		if ((id != null) && id.startsWith(componentNameAttribute + "-"))
 		{
 			// extract component name from value
-			tag.setComponentName(id.substring(componentNameAttribute.length() + 1).trim());
+			tag.setComponentId(id.substring(componentNameAttribute.length() + 1).trim());
 
 			// Depending on apps setting, "wicket-" will be removed or not
 			if (this.stripWicketFromComponentTag)
 			{
-				tag.put("id", tag.getComponentName());
+				tag.put("id", tag.getComponentId());
 			}
 		}
 		else if ((id != null) && applyDefaultComponentName
 				&& id.startsWith(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
 		{
 			// extract component name from value
-			tag.setComponentName(id.substring(
+			tag.setComponentId(id.substring(
 					ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.length() + 1).trim());
 
 			// Depending on apps setting, "wicket-" will be removed or not
 			if (this.stripWicketFromComponentTag)
 			{
-				tag.put("id", tag.getComponentName());
+				tag.put("id", tag.getComponentId());
 			}
 		}
 		else if (tag.getAttributes().containsKey(componentNameAttribute))
 		{
 			// Set componentName value on tag
-			tag.setComponentName(tag.getAttributes().getString(componentNameAttribute));
+			tag.setComponentId(tag.getAttributes().getString(componentNameAttribute));
 		}
 		else if (applyDefaultComponentName
 				&& tag.getAttributes().containsKey(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
 		{
 			// Set componentName value on tag
-			tag.setComponentName(tag.getAttributes().getString(
+			tag.setComponentId(tag.getAttributes().getString(
 					ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE));
 		}
 

@@ -42,33 +42,33 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public DropDownChoice(String name, final Collection choices)
+	public DropDownChoice(final String id, final Collection choices)
 	{
-		super(name, choices);
+		super(id, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
-	public DropDownChoice(String name, final IChoiceList choices)
+	public DropDownChoice(final String id, final IChoiceList choices)
 	{
-		super(name, choices);
+		super(id, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
-	public DropDownChoice(String name, IModel model, final Collection choices)
+	public DropDownChoice(final String id, IModel model, final Collection choices)
 	{
-		super(name, model, choices);
+		super(id, model, choices);
 	}
 	
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
-	public DropDownChoice(String name, IModel model, final IChoiceList choices)
+	public DropDownChoice(final String id, IModel model, final IChoiceList choices)
 	{
-		super(name, model, choices);
+		super(id, model, choices);
 	}
 
 	/**

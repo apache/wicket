@@ -38,33 +38,33 @@ public class RadioChoice extends AbstractSingleSelectChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public RadioChoice(String name, final Collection choices)
+	public RadioChoice(final String id, final Collection choices)
 	{
-		super(name, choices);
+		super(id, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
-	public RadioChoice(String name, final IChoiceList choices)
+	public RadioChoice(final String id, final IChoiceList choices)
 	{
-		super(name, choices);
+		super(id, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
-	public RadioChoice(String name, IModel model, final Collection choices)
+	public RadioChoice(final String id, IModel model, final Collection choices)
 	{
-		super(name, model, choices);
+		super(id, model, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
-	public RadioChoice(String name, IModel model, final IChoiceList choices)
+	public RadioChoice(final String id, IModel model, final IChoiceList choices)
 	{
-		super(name, model, choices);
+		super(id, model, choices);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class RadioChoice extends AbstractSingleSelectChoice
 						+ "\">");
 
 				// Add label for radio button
-				buffer.append(getLocalizer().getString(getName() + "." + label, this, label));
+				buffer.append(getLocalizer().getString(getId() + "." + label, this, label));
 
 				// Append option suffix
 				buffer.append(getSuffix());

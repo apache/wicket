@@ -74,24 +74,24 @@ public class Label extends WebComponent
 	/**
 	 * Convenience constructor. Same as Label(String, new Model(String))
 	 * 
-	 * @param name
+	 * @param id
 	 *            See Component
 	 * @param label
 	 *            The label text
 	 * 
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Label(String name, String label)
+	public Label(final String id, String label)
 	{
-		this(name, new Model(label));
+		this(id, new Model(label));
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Label(String name, IModel model)
+	public Label(final String id, IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**

@@ -132,41 +132,41 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	/**
 	 * Constructs a form with no validation.
 	 * 
-	 * @param name
-	 *            Name of this form
+	 * @param id
+	 *            See Component
 	 */
-	public Form(final String name)
+	public Form(final String id)
 	{
-		this(name, null);
+		this(id, null);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param feedback
 	 *            Interface to a component that can handle/display validation
 	 *            errors
 	 * @see wicket.Component#Component(String)
 	 */
-	public Form(final String name, final IFeedback feedback)
+	public Form(final String id, final IFeedback feedback)
 	{
-		super(name);
+		super(id);
 		this.feedback = feedback;
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param model
-	 *            See Component constructor
+	 *            See Component
 	 * @param feedback
 	 *            Interface to a component that can handle/display validation
 	 *            errors
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Form(String name, IModel model, final IFeedback feedback)
+	public Form(final String id, IModel model, final IFeedback feedback)
 	{
-		super(name, model);
+		super(id, model);
 		this.feedback = feedback;
 	}
 

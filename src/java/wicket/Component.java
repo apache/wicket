@@ -54,12 +54,12 @@ import wicket.util.string.Strings;
  * getApplicationPages() and getApplicationSettings().
  * <p>
  * The path from the Page at the root of the component hierarchy to a given
- * component is simply the concatenation with dot separators of each name along
+ * component is simply the concatenation with dot separators of each id along
  * the way. For example, the path "a.b.c" would refer to the component named "c"
  * inside the container named "b" inside the container named "a". The path to a
  * component can be retrieved by calling getPath(). This path is an absolute
- * path beginning with the name of the page at the root. Pages bear a
- * session-relative identifier as their name, so each absolute path will begin
+ * path beginning with the id of the page at the root. Pages bear a
+ * session-relative identifier as their id, so each absolute path will begin
  * with a number, such as "0.a.b.c". To get a component path relative to the
  * page that contains it, you can call getPageRelativePath().
  * <p>
@@ -110,8 +110,8 @@ public abstract class Component implements Serializable, IConverterSource
 	/** The model for this component. */
 	private IModel model;
 
-	/** Component name. */
-	private String name;
+	/** Component id. */
+	private String id;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -151,35 +151,35 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Constructor. All components have names. A component's name cannot be
+	 * Constructor. All components have names. A component's id cannot be
 	 * null. This is the minimal constructor of component. It does not register
 	 * a model.
 	 * 
-	 * @param name
-	 *            The non-null name of this component
+	 * @param id
+	 *            The non-null id of this component
 	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 *             Thrown if the component has been given a null id.
 	 */
-	public Component(final String name)
+	public Component(final String id)
 	{
-		setName(name);
+		setId(id);
 	}
 
 	/**
-	 * Constructor. All components have names. A component's name cannot be
+	 * Constructor. All components have names. A component's id cannot be
 	 * null. This is constructor includes a model.
 	 * 
-	 * @param name
-	 *            The non-null name of this component
+	 * @param id
+	 *            The non-null id of this component
 	 * @param model
 	 *            The component's model
 	 * 
 	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 *             Thrown if the component has been given a null id.
 	 */
-	public Component(final String name, final IModel model)
+	public Component(final String id, final IModel model)
 	{
-		setName(name);
+		setId(id);
 		setModel(model);
 	}
 
@@ -452,13 +452,13 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Gets the name of this component.
+	 * Gets the id of this component.
 	 * 
-	 * @return The name of this component
+	 * @return The id of this component
 	 */
-	public String getName()
+	public String getId()
 	{
-		return name;
+		return id;
 	}
 
 	/**
@@ -523,7 +523,7 @@ public abstract class Component implements Serializable, IConverterSource
 			{
 				buffer.insert(0, '.');
 			}
-			buffer.insert(0, c.getName());
+			buffer.insert(0, c.getId());
 		}
 		return buffer.toString();
 	}
@@ -735,7 +735,7 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	public void remove()
 	{
-		parent.remove(getName());
+		parent.remove(getId());
 	}
 
 	/**
@@ -967,7 +967,7 @@ public abstract class Component implements Serializable, IConverterSource
 		if (!tag.getName().equalsIgnoreCase(name))
 		{
 			findMarkupStream().throwMarkupException(
-					"Component " + getName() + " must be applied to a tag of type '" + name
+					"Component " + getId() + " must be applied to a tag of type '" + name
 							+ "', not " + tag.toUserDebugString());
 		}
 	}
@@ -993,7 +993,7 @@ public abstract class Component implements Serializable, IConverterSource
 			if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
 			{
 				findMarkupStream().throwMarkupException(
-						"Component " + getName() + " must be applied to a tag with '" + key
+						"Component " + getId() + " must be applied to a tag with '" + key
 								+ "' attribute matching '" + value + "', not '" + tagAttributeValue
 								+ "'");
 			}
@@ -1202,10 +1202,10 @@ public abstract class Component implements Serializable, IConverterSource
 				}
 			}
 
-			// Strip component name attribute if desired
+			// Strip component id attribute if desired
 			if (settings.getStripComponentNames())
 			{
-				// Get mutable copy of tag and remove component name
+				// Get mutable copy of tag and remove component id
 				tag = tag.mutable();
 				tag.removeComponentName(settings.getComponentNameAttribute(), settings
 						.getApplyDefaultComponentName());
@@ -1365,10 +1365,10 @@ public abstract class Component implements Serializable, IConverterSource
 				// Get the close tag from the stream
 				ComponentTag closeTag = markupStream.getTag();
 
-				// If the open tag had its name changed
+				// If the open tag had its id changed
 				if (openTag.getNameChanged())
 				{
-					// change the name of the close tag
+					// change the id of the close tag
 					closeTag = closeTag.mutable();
 					closeTag.setName(openTag.getName());
 				}
@@ -1450,18 +1450,18 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Sets the name of this component. This method is private because the only
-	 * time a component's name can be set is in its constructor.
+	 * Sets the id of this component. This method is private because the only
+	 * time a component's id can be set is in its constructor.
 	 * 
-	 * @param name
-	 *            The component's name
+	 * @param id
+	 *            The non-null id of this component
 	 */
-	private final void setName(final String name)
+	private final void setId(final String id)
 	{
-		if (name == null && !(this instanceof Page))
+		if (id == null && !(this instanceof Page))
 		{
-			throw new WicketRuntimeException("Null component name is not allowed.");
+			throw new WicketRuntimeException("Null component id is not allowed.");
 		}
-		this.name = name;
+		this.id = id;
 	}
 }

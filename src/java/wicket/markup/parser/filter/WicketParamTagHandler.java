@@ -144,7 +144,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 
 		// Wicket component tags will have a component name assigned.
 		// Ignore all none wicket components.
-		if (tag.getComponentName() == null)
+		if (tag.getComponentId() == null)
 		{
 			// Reset the last tag seen. Null meaning: the last tag was
 			// no wicket tag.

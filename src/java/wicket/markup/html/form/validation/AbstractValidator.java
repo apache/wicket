@@ -163,7 +163,7 @@ public abstract class AbstractValidator implements IValidator
 	{
 		final Map resourceModel = new HashMap(4);
 		resourceModel.put("input", getInput());
-		resourceModel.put("name", formComponent.getName());
+		resourceModel.put("name", formComponent.getId());
 		return resourceModel;
 	}
 
@@ -176,7 +176,7 @@ public abstract class AbstractValidator implements IValidator
 	protected String resourceKey()
 	{
 		// Resource key must be <form-name>.<component-name>.<validator-class>
-		return formComponent.getForm().getName() + "." + formComponent.getName() + "."
+		return formComponent.getForm().getId() + "." + formComponent.getId() + "."
 				+ Classes.name(getClass());
 	}
 }

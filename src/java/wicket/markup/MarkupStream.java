@@ -93,7 +93,7 @@ public final class MarkupStream
 	 */
 	public boolean atOpenCloseTag(final String componentName)
 	{
-		return atOpenCloseTag() && componentName.equals(getTag().getComponentName());
+		return atOpenCloseTag() && componentName.equals(getTag().getComponentId());
 	}
 
 	/**
@@ -112,7 +112,7 @@ public final class MarkupStream
 	 */
 	public boolean atOpenTag(final String componentName)
 	{
-		return atOpenTag() && componentName.equals(getTag().getComponentName());
+		return atOpenTag() && componentName.equals(getTag().getComponentId());
 	}
 
 	/**

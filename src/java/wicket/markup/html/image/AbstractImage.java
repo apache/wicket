@@ -36,17 +36,17 @@ public abstract class AbstractImage extends WebComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractImage(final String name)
+	public AbstractImage(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractImage(final String name, final IModel model)
+	public AbstractImage(final String id, final IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**

@@ -54,15 +54,15 @@ public final class WicketComponentTree extends Panel
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            Name of the component
+	 * @param id
+	 *            See Component
 	 * @param page
 	 *            The page to be analyzed
 	 * @see Component#Component(String)
 	 */
-	public WicketComponentTree(final String name, final Page page)
+	public WicketComponentTree(final String id, final Page page)
 	{
-		super(name);
+		super(id);
 
 		// Create an empty list. It'll be filled later
 		final List data = new ArrayList();

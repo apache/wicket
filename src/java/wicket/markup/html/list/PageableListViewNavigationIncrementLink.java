@@ -27,8 +27,8 @@ import wicket.markup.html.link.PageLink;
  * 
  * <pre>
  * 
- *   [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *  
+ *	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
+ *	
  * </pre>
  * 
  * <p>
@@ -48,17 +48,17 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            The name of this component
+	 * @param id
+	 *			  See Component
 	 * @param pageableListView
-	 *            The list view the page links are referring to
+	 *			  The list view the page links are referring to
 	 * @param increment
-	 *            increment by
+	 *			  increment by
 	 */
-	public PageableListViewNavigationIncrementLink(final String name,
+	public PageableListViewNavigationIncrementLink(final String id,
 			final PageableListView pageableListView, final int increment)
 	{
-		super(name, new IPageLink()
+		super(id, new IPageLink()
 		{
 			/**
 			 * @see wicket.markup.html.link.IPageLink#getPage()
@@ -107,7 +107,7 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	 */
 	public void onClick()
 	{
-	    // We do not need to redirect
+		// We do not need to redirect
 		getRequestCycle().setRedirect(false);
 		
 		super.onClick();
@@ -115,7 +115,7 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	
 	/**
 	 * @return True if it is referring to the first page of the underlying
-	 *         PageableListView.
+	 *		   PageableListView.
 	 */
 	public boolean isFirst()
 	{
@@ -124,7 +124,7 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 
 	/**
 	 * @return True if it is referring to the last page of the underlying
-	 *         PageableListView.
+	 *		   PageableListView.
 	 */
 	public boolean isLast()
 	{
@@ -135,7 +135,7 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	 * Returns true if the page link links to the given page.
 	 * 
 	 * @param page
-	 *            The page to test
+	 *			  The page to test
 	 * @return True if this link links to the given page
 	 * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
 	 */

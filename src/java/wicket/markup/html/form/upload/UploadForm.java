@@ -39,25 +39,25 @@ public abstract class UploadForm extends Form
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public UploadForm(String name)
+	public UploadForm(String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * @see Form#Form(String, IFeedback)
 	 */
-	public UploadForm(String name, IFeedback validationFeedback)
+	public UploadForm(final String id, IFeedback validationFeedback)
 	{
-		super(name, validationFeedback);
+		super(id, validationFeedback);
 	}
 
 	/**
 	 * @see Form#Form(String, IModel, IFeedback)
 	 */
-	public UploadForm(String name, IModel model, IFeedback feedback)
+	public UploadForm(final String id, IModel model, IFeedback feedback)
 	{
-		super(name, model, feedback);
+		super(id, model, feedback);
 	}
 
 	/**

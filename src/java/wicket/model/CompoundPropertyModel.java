@@ -50,7 +50,7 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	 */
 	protected String ognlExpression(final Component component)
 	{
-		return component.getName();
+		return component.getId();
 	}
 
 	/**
