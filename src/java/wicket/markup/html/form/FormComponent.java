@@ -42,6 +42,13 @@ import wicket.util.string.StringList;
  */
 public abstract class FormComponent extends WebMarkupContainer
 {
+
+	/**
+	 * When the user input does not validate, this is a temporary store for the
+	 * input he/she provided. We have to store it somewhere as we loose the
+	 * request parameter when redirecting.
+	 */
+	private String invalidInput;
 	/**
 	 * Whether this form component should save and restore state between
 	 * sessions. This is false by default.
@@ -50,6 +57,22 @@ public abstract class FormComponent extends WebMarkupContainer
 
 	/** The validator or validator list for this component. */
 	private IValidator validator = IValidator.NULL;
+
+	/**
+	 * Typesafe interface to code that is called when visiting a form component
+	 * 
+	 * @author Jonathan Locke
+	 */
+	public interface IVisitor
+	{
+		/**
+		 * Called when visiting a form component
+		 * 
+		 * @param formComponent
+		 *            The form component
+		 */
+		public void formComponent(FormComponent formComponent);
+	}
 
 	/**
 	 * A convenient and memory efficent representation for a list of validators.
@@ -222,8 +245,8 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return this;
 	}
-	
-	/** 
+
+	/**
 	 * @return The parent form for this form component
 	 */
 	public final Form getForm()
@@ -278,7 +301,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public String getValue()
 	{
-		return getModelObjectAsString();
+		return invalidInput == null ? getModelObjectAsString() : invalidInput;
 	}
 
 	/**
@@ -371,12 +394,14 @@ public abstract class FormComponent extends WebMarkupContainer
 			final IModel model = getForm().getModel();
 			if (model != null)
 			{
-				// Create PropertyModel using the Form's model and the name of the component
+				// Create PropertyModel using the Form's model and the name of
+				// the component
 				return new PropertyModel(model, getName());
 			}
 			else
 			{
-				throw new WicketRuntimeException("FormComponent " + this + " and parent Form " + getForm() + " cannot both have null models");
+				throw new WicketRuntimeException("FormComponent " + this + " and parent Form "
+						+ getForm() + " cannot both have null models");
 			}
 		}
 		return null;
@@ -475,19 +500,30 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Template method that can be implemented by form component subclass to
-	 * react on validation errors. This implementation is a noop.
+	 * Handle invalidation
 	 */
 	protected void onInvalid()
 	{
+		// Store the user input for form repopulation
+		invalidInput = getInput();
 	}
 
 	/**
-	 * Template method that can be implemented by form component subclass to
-	 * react when validation errors are cleared. This implementation is a noop.
+	 * @see wicket.Component#onModelChanged()
+	 */
+	protected void onModelChanged()
+	{
+		// If the model for this form component changed, we should make it
+		// valid again because there can't be any invalid input for it anymore.
+		valid();
+	}
+
+	/**
+	 * Handle validation
 	 */
 	protected void onValid()
 	{
+		invalidInput = null;
 	}
 
 	/**

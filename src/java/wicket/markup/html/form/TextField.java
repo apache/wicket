@@ -124,19 +124,11 @@ public class TextField extends AbstractTextComponent
 			checkComponentTagAttribute(tag, "type", "text");
 		}
 
+		// No validation errors
+		tag.put("value", getValue());
+		
 		// Default handling for component tag
 		super.onComponentTag(tag);
-
-		if (getInvalidInput() == null)
-		{
-			// No validation errors
-			tag.put("value", getModelObjectAsString());
-		}
-		else
-		{
-			// Invalid input detected
-			tag.put("value", getInvalidInput());
-		}
 	}
 
 	/**

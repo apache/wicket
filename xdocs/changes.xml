@@ -8,6 +8,12 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+	  <action type="fix" dev="Jonathan Locke" issue="1153047">
+	  	Moved invalid input state logic up into FormComponent and changed form validation
+	  	logic so that updates to the model only occur when validation of the whole form
+	  	is successful.  This works for textfields now, but we may need to tweak other 
+	  	components so they track invalid state during failed validations.
+	  </action>
 	  <action type="update" dev="Jonathan Locke" issue="">
 		Factored out AbstractDetachableModel so that attach/detach logic is encapsulated here and DetachableModel extends it for models with a transient Object property and PropertyModel extends it for models with an OGNL nature which might have nested detachable models.
 	  </action>
