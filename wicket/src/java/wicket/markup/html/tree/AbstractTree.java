@@ -63,7 +63,8 @@ public abstract class AbstractTree extends Panel implements ILinkListener
     private Map links = new HashMap();
 
     /**
-     * Constructor.
+     * Construct using the given model as the tree model to use. A new tree state will
+     * be constructed by calling newTreeState.
      * @param componentName The name of this container
      * @param model the underlying tree model
      */
@@ -73,7 +74,12 @@ public abstract class AbstractTree extends Panel implements ILinkListener
     }
 
     /**
-     * Constructor.
+     * Construct using the given model as the tree model to use. A new tree state will
+     * be constructed by calling newTreeState. If parameter makeTreeModelUnique is true,
+     * all tree nodes will also be wrapped in an instance of {@link IdWrappedUserObject}
+     * in order to attach a unique id to them. If makeTreeModelUnique is false, the model
+     * will be used as is, and the user is responsible for the userObjects of the tree
+     * nodes being unique within the tree model.
      * @param componentName The name of this container
      * @param model the underlying tree model
      * @param makeTreeModelUnique whether to make the user objects of the tree model
@@ -85,13 +91,26 @@ public abstract class AbstractTree extends Panel implements ILinkListener
     		final boolean makeTreeModelUnique)
     {
         super(componentName);
-        treeState = new TreeStateCache();
-        setTreeModel(model);
+        this.treeState = newTreeState(model);
         applySelectedPaths(treeState);
         if(makeTreeModelUnique)
         {
         	makeUnique(model);
         }
+    }
+
+    /**
+     * Constructor using the given tree state. This tree state holds the tree model and
+     * the currently visible paths.
+     * @param componentName The name of this container
+     * @param treeState the tree state that holds the tree model and the currently visible
+     * paths
+     */
+    public AbstractTree(final String componentName, TreeStateCache treeState)
+    {
+        super(componentName);
+        this.treeState = treeState;
+        applySelectedPaths(treeState);
     }
 
     /**
@@ -148,8 +167,8 @@ public abstract class AbstractTree extends Panel implements ILinkListener
 
     /**
      * Called when a link is clicked.
+     * @param cycle The current request cycle
      * @see ILinkListener
-     * @param cycle The cycle object
      */
     public final void linkClicked(final RequestCycle cycle)
     {
@@ -161,18 +180,6 @@ public abstract class AbstractTree extends Panel implements ILinkListener
             throw new IllegalStateException("link " + linkId + " not found");
         }
         link.linkClicked(cycle);
-    }
-
-    /**
-     * Sets the tree model and creates an empty tree selection model.
-     * @param model the tree model
-     */
-    protected final void setTreeModel(TreeModel model)
-    {
-        treeState.setModel(model);
-        TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
-        treeState.setSelectionModel(selectionModel);
-        treeState.setRootVisible(true);
     }
 
     /**
@@ -197,8 +204,8 @@ public abstract class AbstractTree extends Panel implements ILinkListener
     }
 
     /**
-     * Get tree state object.
-     * @return tree state object
+     * Gets the current tree state.
+     * @return the tree current tree state
      */
     public final TreeStateCache getTreeState()
     {
@@ -206,9 +213,35 @@ public abstract class AbstractTree extends Panel implements ILinkListener
     }
 
     /**
-     * Find tree node for given user object.
+     * Sets the current tree state to the given tree state.
+     * @param treeState the tree state to set as the current one
+     */
+    public final void setTreeState(final TreeStateCache treeState)
+    {
+    	this.treeState = treeState;
+    }
+
+	/**
+	 * Creates a new tree state by creating a new {@link TreeStateCache} object, which
+	 * is then set as the current tree state, creating a new {@link TreeSelectionModel}
+	 * and then calling setTreeModel with this
+	 * @param model the model that the new tree state applies to
+	 * @return the tree state
+	 */
+	public TreeStateCache newTreeState(final TreeModel model)
+	{
+		TreeStateCache treeStateCache = new TreeStateCache();
+		TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
+        treeStateCache.setModel(model);
+        treeStateCache.setSelectionModel(selectionModel);
+        treeStateCache.setRootVisible(true);
+        return treeStateCache;
+	}
+
+    /**
+     * Finds the tree node that holds the given user object.
      * @param userObject the user object to find the node for
-     * @return node of given user object
+     * @return the node that holds the user object
      */
     public final DefaultMutableTreeNode findNode(Serializable userObject)
     {

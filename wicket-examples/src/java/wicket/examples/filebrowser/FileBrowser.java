@@ -40,6 +40,7 @@ import wicket.markup.html.tree.FlatTree;
 import wicket.markup.html.tree.Tree;
 import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.TreeRowReplacementModel;
+import wicket.markup.html.tree.TreeStateCache;
 
 /**
  * Tree example that uses the user-home dirs to populate the tree.
@@ -57,6 +58,7 @@ public class FileBrowser extends HtmlPage
 	/** the flat tree. */
 	private static final String TYPE_FLAT = "flat tree";
 
+	/** the types of lists that are available for selection. */
 	private static final List types;
 	static {
 		types = new ArrayList(3);
@@ -71,8 +73,8 @@ public class FileBrowser extends HtmlPage
 	/** property that holds the current selection of tree types. */
 	private String currentType;
 
-	/** the tree model. */
-    private final TreeModel model;
+	/** the current tree component (holds the tree state we're interested in). */
+	private AbstractTree currentTree = null;
 
     /**
      * Constructor.
@@ -81,10 +83,10 @@ public class FileBrowser extends HtmlPage
     public FileBrowser(final PageParameters parameters)
     {
         addDefaultComponents();
-        model = new FileModelProvider().getFileModel();
+        TreeModel model = new FileModelProvider().getFileModel();
         HtmlContainer treeContainer = new HtmlContainer("tree");
-        Tree fileTree = new FileTree("fileTree", model);
-        add(fileTree);
+        currentTree = new FileTree("fileTree", model, true);
+        add(currentTree);
     }
 
 	/**
@@ -139,17 +141,18 @@ public class FileBrowser extends HtmlPage
             final AbstractTree tree;
             if(TYPE_NESTED.equals(type))
             {
-                tree = new Tree("fileTree", FileBrowser.this.model, true);
+                tree = new Tree("fileTree", currentTree.getTreeState());
             }
             else if(TYPE_FLAT.equals(type))
             {
-            	tree = new FlatFileTree("fileTree", FileBrowser.this.model);
+            	tree = new FlatFileTree("fileTree", currentTree.getTreeState());
             }
             else // TYPE_NESTED_CUSTOM
             {
-            	tree = new FileTree("fileTree", FileBrowser.this.model);
+            	tree = new FileTree("fileTree", currentTree.getTreeState());
             }
             FileBrowser.this.add(tree);
+            FileBrowser.this.currentTree = tree;
         }
     }
 
@@ -157,14 +160,31 @@ public class FileBrowser extends HtmlPage
     private static class FileTree extends Tree
     {
         /**
-		 * Construct.
-		 * @param componentName name of the component
-		 * @param model the tree model
-		 */
-		public FileTree(String componentName, TreeModel model)
-		{
-			super(componentName, model, true);
-		}
+         * Constructor.
+         * @param componentName The name of this container
+         * @param model the underlying tree model
+         * @param makeTreeModelUnique whether to make the user objects of the tree model
+         * unique. If true, the default implementation will wrapp all user objects in
+         * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
+         * user objects are unique within the tree in order to have the tree working properly
+         */
+        public FileTree(final String componentName, final TreeModel model,
+        		final boolean makeTreeModelUnique)
+        {
+            super(componentName, model, makeTreeModelUnique);
+        }
+
+        /**
+         * Constructor using the given tree state. This tree state holds the tree model and
+         * the currently visible paths.
+         * @param componentName The name of this container
+         * @param treeState the tree state that holds the tree model and the currently visible
+         * paths
+         */
+        public FileTree(final String componentName, TreeStateCache treeState)
+        {
+            super(componentName, treeState);
+        }
 
 		/**
          * Override to provide a custom row panel.
@@ -184,15 +204,18 @@ public class FileBrowser extends HtmlPage
     /** flat tree implementation. */
     private static class FlatFileTree extends FlatTree
     {
+
         /**
-		 * Construct.
-		 * @param componentName the name of the component
-		 * @param model the tree model
-		 */
-		public FlatFileTree(String componentName, TreeModel model)
-		{
-			super(componentName, model, true);
-		}
+         * Constructor using the given tree state. This tree state holds the tree model and
+         * the currently visible paths.
+         * @param componentName The name of this container
+         * @param treeState the tree state that holds the tree model and the currently visible
+         * paths
+         */
+        public FlatFileTree(final String componentName, TreeStateCache treeState)
+        {
+            super(componentName, treeState);
+        }
 
 		/**
          * Get image name for junction.

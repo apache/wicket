@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @author Eelco Hillenius
  */
-public final class TreeStateCache extends VariableHeightLayoutCache implements Serializable
+public class TreeStateCache extends VariableHeightLayoutCache implements Serializable
 {
     /** currently selected path. */
     private TreePath selectedPath;
@@ -173,7 +173,13 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
         return findNodeRecursively(root, null, userObject);
     }
 
-    /* recurse childs */
+    /**
+     * Find the node by recursing.
+     * @param currentNode the current node
+     * @param resultNode the resulting node
+     * @param userObject the user object to find
+     * @return the found node
+     */
     private DefaultMutableTreeNode findNodeRecursively(DefaultMutableTreeNode currentNode,
             DefaultMutableTreeNode resultNode, Object userObject)
     {
