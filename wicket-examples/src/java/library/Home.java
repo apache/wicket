@@ -19,7 +19,9 @@
 
 package library;
 
+import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
+import com.voicetribe.wicket.PropertyModel;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
@@ -37,7 +39,7 @@ public final class Home extends AuthenticatedHtmlPage
     public Home(final PageParameters parameters)
     {
         // Add table of books
-        add(new Table("books", getUser(), 10)
+        add(new Table("books", new PropertyModel(new Model(getUser()), "books"), 10)
         {
             public void populateCell(final Cell cell)
             {

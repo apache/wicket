@@ -25,6 +25,7 @@ import java.util.List;
 import com.voicetribe.util.lang.EnumeratedType;
 import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.Page;
+import com.voicetribe.wicket.PropertyModel;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.form.CheckBox;
 import com.voicetribe.wicket.markup.html.form.DropDownChoice;
@@ -79,23 +80,27 @@ public final class EditBook extends AuthenticatedHtmlPage
 
             // Set model
             this.book = book;
-            setModel(new Model(book));
+            Model bookModel = new Model(book);
+            setModel(new PropertyModel(bookModel, getName()));
 
             // Create a required text field that edits the book's author
-            final TextField author = new TextField("author", book);
+            final TextField author = new TextField("author",
+                    new PropertyModel(bookModel, "author"));
             author.add(new RequiredValidator());
             add(author);
 
             // Create a required text field with a max length of 30 characters that edits the book's title
-            final TextField title = new TextField("title", book);
+            final TextField title = new TextField("title",
+                    new PropertyModel(bookModel, "title"));
             title.add(new RequiredValidator());
             title.add(LengthValidator.max(30));
-            final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder("titleFeedback");
+            final FormComponentFeedbackBorder titleFeedback =
+                new FormComponentFeedbackBorder("titleFeedback");
             titleFeedback.add(title);
             add(titleFeedback);
 
             // Add fiction checkbox
-            add(new CheckBox("fiction", book));
+            add(new CheckBox("fiction", new PropertyModel(bookModel, "fiction")));
 
             // Books is everything but otherBook
             List books = new ArrayList();
@@ -103,16 +108,20 @@ public final class EditBook extends AuthenticatedHtmlPage
             books.remove(otherBook);
 
             // Add companion book choice
-            add(new DropDownChoice("companionBook", book, books));
+            add(new DropDownChoice("companionBook",
+                    new PropertyModel(bookModel, "companionBook"), books));
 
             // Add radio choice test
-            final RadioChoice relatedBook = new RadioChoice("relatedBook", book);
+            final RadioChoice relatedBook = new RadioChoice(
+                    "relatedBook", new PropertyModel(bookModel, "relatedBook"));
             relatedBook.add(new RadioOptionSet("relatedBooks", books));
             relatedBook.add(new RadioOption("otherBook", otherBook));
             add(relatedBook);
 
             // Multi-select among writing styles
-            add(new ListMultipleChoice("writingStyles", book, EnumeratedType.getValues(Book.WritingStyle.class)));
+            add(new ListMultipleChoice("writingStyles",
+                    new PropertyModel(bookModel, "writingStyles"),
+                    EnumeratedType.getValues(Book.WritingStyle.class)));
         }
 
         /**

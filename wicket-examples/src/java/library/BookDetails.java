@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import com.voicetribe.util.string.StringList;
 import com.voicetribe.util.string.StringValueConversionException;
+import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.basic.Label;
@@ -51,8 +52,9 @@ public final class BookDetails extends AuthenticatedHtmlPage
      */
     public BookDetails(final Book book)
     {
-        add(new Label("title", book));
-        add(new Label("author", book));
+        Model bookModel = new Model(book);
+        add(new Label("title", book.getTitle()));
+        add(new Label("author", book.getAuthor()));
         add(new Label("fiction", Boolean.toString(book.getFiction())));
         add(BookDetails.link("companion", book.getCompanionBook(), getLocalizedString("noBookTitle")));
         add(BookDetails.link("related", book.getRelatedBook(), getLocalizedString("noBookTitle")));
