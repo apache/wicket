@@ -42,7 +42,7 @@ public class Win extends WicketExamplePage {
      */
     public Win(final Guess guessPage) {
         Hangman hangman = (Hangman)guessPage.getModelObject();
-        add(new Label("guessesRemaining", hangman.getCurrentWord()));
+        add(new Label("guessesRemaining", new Integer(hangman.getGuessesRemaining())));
         add(new Label("currentWord", hangman.getCurrentWord()));
         add(new Link("playAgain") {
             /**
