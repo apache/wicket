@@ -48,7 +48,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     private static final String DEFAULT_NULL_OPTION_VALUE = "Choose One";
 
     /** Index value for null choice. */
-    public static final int NULL_VALUE = -1;
+    //public static final int NULL_VALUE = -1;
 
     /** The list of values. */
     private List values;
@@ -204,7 +204,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
                     getName() + ".null", this, DEFAULT_NULL_OPTION_VALUE);
 
             options.append("\n<option selected value=\"")
-                .append(NULL_VALUE).append("\">").append(chooseOne).append("</option>");
+                .append("\">").append(chooseOne).append("</option>");
         }
 
         for (int i = 0; i < list.size(); i++)
