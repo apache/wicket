@@ -26,8 +26,6 @@ import java.util.StringTokenizer;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
 import wicket.util.string.Strings;
 
 /**
@@ -44,61 +42,80 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public ListMultipleChoice(String name, final Collection values)
+	public ListMultipleChoice(String name, final Collection choices)
 	{
-		super(name, values);
+		super(name, choices);
+	}
+
+	/**
+	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
+	 */
+	public ListMultipleChoice(String name, final IChoiceList choices)
+	{
+		super(name, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
 	 */
-	public ListMultipleChoice(final String name, final Serializable model, final Collection values)
+	public ListMultipleChoice(String name, Serializable object, final Collection choices)
 	{
-		super(name, model, values);
+		super(name, object, choices);
+	}
+
+	/**
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, IChoiceList)
+	 */
+	public ListMultipleChoice(String name, Serializable object, final IChoiceList choices)
+	{
+		super(name, object, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
 	 *      Collection)
 	 */
-	public ListMultipleChoice(final String name, final Serializable model, final String expression,
-			final Collection values)
+	public ListMultipleChoice(String name, Serializable object, String expression,
+			final Collection choices)
 	{
-		super(name, new PropertyModel(new Model(model), expression), values);
+		super(name, object, expression, choices);
 	}
 
 	/**
-	 * @see FormComponent#getValue()
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
+	 *      IChoiceList)
 	 */
-	public final String getValue()
+	public ListMultipleChoice(String name, Serializable object, String expression,
+			final IChoiceList choices)
+	{
+		super(name, object, expression, choices);
+	}
+
+	/**
+	 * @see FormComponent#getModelValue()
+	 */
+	public final String getModelValue()
 	{
 		// Get the list of selected values
 		final Collection selectedValues = (Collection)getModelObject();
-		final StringBuffer value = new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		if (selectedValues != null)
 		{
 			final IChoiceList choices = getChoices();
-			for (final Iterator iterator = selectedValues.iterator(); iterator.hasNext() ;)
+			for (final Iterator iterator = selectedValues.iterator(); iterator.hasNext();)
 			{
 				final IChoice choice = choices.choiceForObject(iterator.next());
-				value.append(choice.getId());
-
-				// NOTE ids can't have semicolons (should we escape it or
-				// something?)
-				value.append(";");
+				buffer.append(choice.getId());
+				buffer.append(";");
 			}
 		}
-		return value.toString();
+		return buffer.toString();
 	}
 
 	/**
-	 * Sets the cookie value for this component.
-	 * 
-	 * @param value
-	 *            the cookie value for this component
-	 * @see FormComponent#setValue(java.lang.String)
+	 * @see FormComponent#setModelValue(java.lang.String)
 	 */
-	public final void setValue(final String value)
+	public final void setModelValue(final String value)
 	{
 		Collection selectedValues = (Collection)getModelObject();
 		if (selectedValues == null)
@@ -119,28 +136,32 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * Gets whether the given value represents the current selection.
-	 * 
-	 * @param currentValue
-	 *            the current list value
-	 * @return whether the given value represents the current selection
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(java.lang.Object)
+	 * @see AbstractChoice#isSelected(IChoice)
 	 */
-	protected final boolean isSelected(Object currentValue)
+	protected final boolean isSelected(IChoice choice)
 	{
-		final Collection collection = (Collection)getModelObject();
-		if (collection != null)
+		// Get value of the form "id1;id2;id3"
+		final String value = getValue();
+		
+		// Have a value at all?
+		if (value != null)
 		{
-			return collection.contains(currentValue);
+			// Loop through ids
+			for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
+					.hasMoreTokens();)
+			{
+				final String id = tokenizer.nextToken(); 
+				if (id.equals(choice.getId()))
+				{
+					return true;
+				}
+			}
+
 		}
 		return false;
 	}
 
 	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag
-	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
 	protected final void onComponentTag(final ComponentTag tag)
@@ -150,8 +171,6 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * Updates this forms model from the request.
-	 * 
 	 * @see FormComponent#updateModel()
 	 */
 	protected final void updateModel()

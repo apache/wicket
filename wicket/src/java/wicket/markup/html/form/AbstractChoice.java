@@ -35,17 +35,23 @@ import wicket.markup.html.form.model.IChoiceList;
  */
 abstract class AbstractChoice extends FormComponent
 {
-	/** String to display when the selected value is null and nullValid is false. */
-	private static final String CHOOSE_ONE = "Choose One";
-
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -8334966481181600604L;
 
-	/** Is the null value a valid value? */
-	private boolean nullValid = false;
-
 	/** The list of choices. */
 	private IChoiceList choices;
+
+	/**
+	 * @param name
+	 *            See Component constructor
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(String name, final Collection choices)
+	{
+		this(name, new ChoiceList(choices));
+	}
 
 	/**
 	 * @param name
@@ -58,18 +64,6 @@ abstract class AbstractChoice extends FormComponent
 	{
 		super(name);
 		this.choices = choices;
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param choices
-	 *            The collection of choices in the dropdown
-	 * @see wicket.Component#Component(String)
-	 */
-	public AbstractChoice(String name, final Collection choices)
-	{
-		this(name, new ChoiceList(choices));
 	}
 
 	/**
@@ -148,28 +142,6 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value?
-	 * 
-	 * @return <code>true</code> when the <code>null</code> value is
-	 *         allowed.
-	 */
-	public boolean isNullValid()
-	{
-		return nullValid;
-	}
-
-	/**
-	 * Is the <code>null</code> value a valid value?
-	 * 
-	 * @param emptyAllowed
-	 *            The emptyAllowed to set.
-	 */
-	public void setNullValid(boolean emptyAllowed)
-	{
-		this.nullValid = emptyAllowed;
-	}
-
-	/**
 	 * @see wicket.Component#detachModel()
 	 */
 	protected void detachModel()
@@ -179,29 +151,23 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Gets whether the given value represents the current selection.
-	 * 
-	 * @param currentValue
-	 *            The current list value
-	 * @return Whether the given value represents the current selection
+	 * @param selected The object that's currently selected
+	 * @return Any default choice, such as "Choose One", depending on the
+	 *         subclass
 	 */
-	protected boolean isSelected(final Object currentValue)
+	protected String getDefaultChoice(final Object selected)
 	{
-		return currentValue == getModelObject();
+		return "";
 	}
 
 	/**
-	 * Processes the component tag.
+	 * Gets whether the given value represents the current selection.
 	 * 
-	 * @param tag
-	 *            Tag to modify
-	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
+	 * @param choice
+	 *            The choice to check
+	 * @return Whether the given value represents the current selection
 	 */
-	protected void onComponentTag(final ComponentTag tag)
-	{
-		checkComponentTag(tag, "select");
-		super.onComponentTag(tag);
-	}
+	protected abstract boolean isSelected(final IChoice choice);
 
 	/**
 	 * Handle the container's body.
@@ -212,43 +178,15 @@ abstract class AbstractChoice extends FormComponent
 	 *            The open tag for the body
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream,
+	protected void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		final StringBuffer options = new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		final Object selected = getModelObject();
 		final IChoiceList choices = getChoices();
 
-		// Is null a valid selection value?
-		if (nullValid)
-		{
-			// Null is valid, so look up the value for it
-			final String option = getLocalizer().getString(getName() + ".null", this, "");
-
-			// Add option tag
-			options.append("\n<option");
-
-			// If null is selected, indicate that
-			if (selected == null)
-			{
-				options.append(" selected=\"selected\"");
-			}
-
-			// Add body of option tag
-			options.append(" value=\"\">").append(option).append("</option>");
-		}
-		else
-		{
-			// Null is not valid. Is it selected anyway?
-			if (selected == null)
-			{
-				// Force the user to pick a non-null value
-				final String option = getLocalizer().getString(getName() + ".null", this,
-						CHOOSE_ONE);
-				options.append("\n<option selected=\"selected\" value=\"\">").append(option)
-						.append("</option>");
-			}
-		}
+		// Append default option
+		buffer.append(getDefaultChoice(selected));
 
 		for (int i = 0; i < choices.size(); i++)
 		{
@@ -256,17 +194,17 @@ abstract class AbstractChoice extends FormComponent
 			if (choice != null)
 			{
 				final String displayValue = choice.getDisplayValue();
-				options.append("\n<option ");
-				if (isSelected(choice.getObject()))
+				buffer.append("\n<option ");
+				if (isSelected(choice))
 				{
-					options.append("selected=\"selected\"");
+					buffer.append("selected=\"selected\"");
 				}
-				options.append("value=\"");
-				options.append(choice.getId());
-				options.append("\">");
-				options.append(getLocalizer().getString(getName() + "." + displayValue, this,
+				buffer.append("value=\"");
+				buffer.append(choice.getId());
+				buffer.append("\">");
+				buffer.append(getLocalizer().getString(getName() + "." + displayValue, this,
 						displayValue));
-				options.append("</option>");
+				buffer.append("</option>");
 			}
 			else
 			{
@@ -274,8 +212,8 @@ abstract class AbstractChoice extends FormComponent
 			}
 		}
 
-		options.append("\n");
-		replaceComponentTagBody(markupStream, openTag, options.toString());
+		buffer.append("\n");
+		replaceComponentTagBody(markupStream, openTag, buffer.toString());
 	}
 
 	/**

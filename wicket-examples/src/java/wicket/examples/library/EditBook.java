@@ -29,8 +29,6 @@ import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RadioChoice;
-import wicket.markup.html.form.RadioOption;
-import wicket.markup.html.form.RadioOptionSet;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.FormComponentFeedbackBorder;
 import wicket.markup.html.form.validation.LengthValidator;
@@ -143,10 +141,7 @@ public final class EditBook extends AuthenticatedWebPage
 			add(new DropDownChoice("companionBook", books));
 
 			// Add radio choice test
-			final RadioChoice relatedBook = new RadioChoice("relatedBook");
-
-			relatedBook.add(new RadioOptionSet("relatedBooks", books));
-			relatedBook.add(new RadioOption("otherBook", otherBook));
+			final RadioChoice relatedBook = new RadioChoice("relatedBook", books);
 			add(relatedBook);
 
 			// Multi-select among writing styles

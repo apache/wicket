@@ -44,11 +44,17 @@ public abstract class FormComponent extends WebMarkupContainer
 {
 
 	/**
+	 * Special flag value to indicate when there is no invalid input, since null
+	 * is a valid value!
+	 */
+	protected static final String NO_INVALID_INPUT = "[No invalid input]";
+	/**
 	 * When the user input does not validate, this is a temporary store for the
 	 * input he/she provided. We have to store it somewhere as we loose the
 	 * request parameter when redirecting.
 	 */
-	private String invalidInput;
+	private String invalidInput = NO_INVALID_INPUT;
+
 	/**
 	 * Whether this form component should save and restore state between
 	 * sessions. This is false by default.
@@ -299,9 +305,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @return The value
 	 */
-	public String getValue()
+	public final String getValue()
 	{
-		return invalidInput == null ? getModelObjectAsString() : invalidInput;
+		return invalidInput == NO_INVALID_INPUT ? getModelValue() : invalidInput;
 	}
 
 	/**
@@ -346,6 +352,17 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * Sets the value for a form component.
+	 * 
+	 * @param value
+	 *            The value
+	 */
+	public void setModelValue(final String value)
+	{
+		setModelObject(value);
+	}
+
+	/**
 	 * Sets whether this component is to be persisted.
 	 * 
 	 * @param persistent
@@ -365,22 +382,19 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Sets the value for a form component.
-	 * 
-	 * @param value
-	 *            The value
-	 */
-	public void setValue(final String value)
-	{
-		setModelObject(value);
-	}
-
-	/**
 	 * Called to indicate that
 	 */
 	public final void valid()
 	{
 		onValid();
+	}
+	
+	/**
+	 * @return Value to return when model value is needed
+	 */
+	protected String getModelValue()
+	{
+		return getModelObjectAsString(); 
 	}
 
 	/**
@@ -495,17 +509,29 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		tag.put("name", getPath());		
+		tag.put("name", getPath());
 		super.onComponentTag(tag);
 	}
 
 	/**
-	 * Handle invalidation
+	 * Handle invalidation by storing the user input for form repopulation
 	 */
 	protected void onInvalid()
 	{
-		// Store the user input for form repopulation
-		invalidInput = getInput();
+		// Get input as String array
+		final String[] input = inputAsStringArray();
+		
+		// If there is any input
+		if (input != null)
+		{
+			// join the values together with ";", for example, "id1;id2;id3"
+			invalidInput = StringList.valueOf(input).join(";");		
+		}
+		else
+		{
+			// no input 
+			invalidInput = null;
+		}
 	}
 
 	/**
@@ -523,7 +549,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected void onValid()
 	{
-		invalidInput = null;
+		invalidInput = NO_INVALID_INPUT;
 	}
 
 	/**

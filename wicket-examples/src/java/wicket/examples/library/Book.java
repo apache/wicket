@@ -20,7 +20,7 @@ package wicket.examples.library;
 
 
 import java.io.Serializable;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +72,7 @@ public final class Book implements Serializable
     private Book companionBook;
     private Book relatedBook;
     private boolean isFiction;
-    private List writingStyles;
+    private List writingStyles = new ArrayList();
 
     /**
      * Constructor

@@ -18,105 +18,134 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.model.IChoiceList;
 
 /**
- * A radio choice allows the user to select between several options using radio
- * buttons. The options are descendant components of the RadioChoice and come in
- * two flavors. RadioOption, which is attached to an invidual radio input tag,
- * and RadioOptionSet, which automatically generates a list of options from a
- * collection.
+ * A choice subclass that shows choices in radio style.
  * 
  * @author Jonathan Locke
  */
-public class RadioChoice extends FormComponent
+public class RadioChoice extends AbstractSingleSelectChoice
 {
-	/** Index value for null choice */
-	private static final int NULL_VALUE = -1;
-
 	/** Serial Version ID */
 	private static final long serialVersionUID = -1560593550286375796L;
 
-	/** List of choices attached to this model */
-	private final List values = new ArrayList();
-
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public RadioChoice(String name)
+	public RadioChoice(String name, final Collection choices)
 	{
-		super(name);
+		super(name, choices);
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
-	public RadioChoice(String name, Serializable object)
+	public RadioChoice(String name, final IChoiceList choices)
 	{
-		super(name, object);
+		super(name, choices);
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
 	 */
-	public RadioChoice(String name, Serializable object, String expression)
+	public RadioChoice(String name, Serializable object, final Collection choices)
 	{
-		super(name, object, expression);
+		super(name, object, choices);
 	}
 
 	/**
-	 * @see FormComponent#getValue()
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, IChoiceList)
 	 */
-	public final String getValue()
+	public RadioChoice(String name, Serializable object, final IChoiceList choices)
 	{
-		final int index = values.indexOf(getModelObject());
-
-		return Integer.toString(index);
+		super(name, object, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#setValue(java.lang.String)
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
+	 *      Collection)
 	 */
-	public final void setValue(final String value)
+	public RadioChoice(String name, Serializable object, String expression, final Collection choices)
 	{
-		setModelObject(values.get(Integer.parseInt(value)));
+		super(name, object, expression, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, String,
+	 *      IChoiceList)
 	 */
-	protected final boolean supportsPersistence()
+	public RadioChoice(String name, Serializable object, String expression,
+			final IChoiceList choices)
 	{
-		return true;
+		super(name, object, expression, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @return Prefix to use before choice
 	 */
-	protected final void updateModel()
+	protected String getPrefix()
 	{
-		final int index = inputAsInt(NULL_VALUE);
+		return "";
+	}
 
-		if (index != NULL_VALUE)
+	/**
+	 * @return Separator to use between radio options
+	 */
+	protected String getSuffix()
+	{
+		return "<br>\n";
+	}
+
+	/**
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 */
+	protected final void onComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
+	{
+		// Buffer to hold generated body
+		final StringBuffer buffer = new StringBuffer();
+
+		// Iterate through choices
+		final IChoiceList choices = getChoices();
+
+		// Loop through choices
+		for (int i = 0; i < choices.size(); i++)
 		{
-			setModelObject(values.get(index));
+			// Get next choice
+			final IChoice choice = choices.get(i);
+
+			// Get label for choice
+			final String label = choice.getDisplayValue();
+
+			// If there is a display value for the choice, then we know that the
+			// choice is automatic in some way. If label is /null/ then we know
+			// that the choice is a manually created radio tag at some random
+			// location in the page markup!
+			if (label != null)
+			{
+				// Append option suffix
+				buffer.append(getPrefix());
+
+				// Add radio tag
+				buffer.append("<input name=\"" + getPath() + "\"" + " type=\"radio\""
+						+ (isSelected(choice) ? " checked" : "") + " value=\"" + choice.getId()
+						+ "\">");
+
+				// Add label for radio button
+				buffer.append(getLocalizer().getString(getName() + "." + label, this, label));
+
+				// Append option suffix
+				buffer.append(getSuffix());
+			}
 		}
-	}
 
-	/**
-	 * @param choice
-	 *            The choice to add to this radio choice
-	 * @return The index of the choice
-	 */
-	final int addRadioOption(final Object choice)
-	{
-		final int index = values.size();
-
-		values.add(choice);
-
-		return index;
+		// Replace body
+		replaceComponentTagBody(markupStream, openTag, buffer.toString());
 	}
 }
-
-

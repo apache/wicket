@@ -67,7 +67,7 @@ public class CookieValuePersister implements IValuePersister
 			if (value != null)
 			{
 				// Assign the retrieved/persisted value to the component
-				component.setValue(value);
+				component.setModelValue(value);
 			}
 		}
 	}
