@@ -106,7 +106,6 @@ import wicket.util.time.Duration;
  */
 public final class ApplicationSettings
 {
-
 	/**
 	 * Indicates that an exception page appropriate to development should be
 	 * shown when an unexpected exception is thrown.
@@ -387,7 +386,6 @@ public final class ApplicationSettings
 	{
 		return resourcePollFrequency;
 	}
-
 
 	/**
 	 * Gets any source code path to use when searching for resources.
