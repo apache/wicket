@@ -5,10 +5,7 @@
 		<author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
 	</properties>
 	<body>
-		<release version="1.0" date="t.b.d." description="First release">
-			<action type="add" dev="Martijn Dashorst">
-				Converted confluence documentation to xdocs.
-			</action>
+		<release version="0.9.14-alpha" date="in cvs" description="State of CVS">
 			<action type="add" dev="Juergen Donnerstag">
 				Model for PasswordTextField will now be encrypted for persistence (cookie)
 			</action>
@@ -45,5 +42,10 @@
                 Fixed bug that resulted in random session timeouts.
             </action>
 		</release>
+        <release version="0.9.13-alpha" date="25-10-2004" description="State of CVS">
+			<action type="add" dev="Martijn Dashorst">
+				Converted confluence documentation to xdocs.
+			</action>
+        </release>
 	</body>
 </document>
