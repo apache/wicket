@@ -80,7 +80,7 @@ public class CookieTest extends TestCase
 		this.panel.setPersistent(true);
 		this.form = (Form)panel.get("signInForm");
 
-        final String encryptedPassword = "test"; // application.getSettings().getCryptInstance().encryptStringToString("test");
+        final String encryptedPassword = application.getSettings().getCryptInstance().encryptStringToString("test");
         this.cookieUsername = new Cookie("panel.signInForm.username", "juergen");
         this.cookiePassword = new Cookie("panel.signInForm.password", encryptedPassword);
         this.cookies = new Cookie[] {cookieUsername, cookiePassword};
@@ -149,7 +149,7 @@ public class CookieTest extends TestCase
 		
 		// validate
         Collection cookies = application.getServletResponse().getCookies();
-        Assert.assertEquals(4, cookies.size());
+        Assert.assertEquals(2, cookies.size());
         Iterator iter = cookies.iterator();
         while (iter.hasNext()) 
         {
