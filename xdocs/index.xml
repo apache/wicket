@@ -46,6 +46,13 @@
         <section name="Latest News">
             <p>See <a href="News.html">the news archive</a> for more (older) 
                 news.</p>
+            <subsection name="December 26, 2004 - 0.9.16-beta released">
+				<p>The Wicket team is proud to present yet another release of the
+                   Wicket core framework and it's examples. This release contains
+                   among a number of bug fixes also new support for dynamic languages,
+                   (see the <a href="http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-examples/src/java/wicket/examples/groovy/">Wicket-examples</a> project
+				   for more information) and for <a href="http://www.springframework.org">Spring framework</a> <a href="http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-examples/src/java/wicket/examples/springframework/">integration</a>.
+			</subsection>
             <subsection name="December 19, 2004 - 0.9.15-beta released">
                 <p>The Wicket team is proud to present yet another release of 
                     the Wicket core framework. This release encompasses a <a 
