@@ -127,7 +127,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.0.0-rc1</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
