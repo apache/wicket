@@ -141,14 +141,6 @@ public class ListChoice extends DropDownChoice
 		return maxRows;
 	}
 
-    /**
-     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-     */
-    protected final boolean supportsPersistence()
-    {
-        return true;
-    }
-
 	/**
 	 * Sets the maximum number of rows to display.
 	 * 
@@ -170,4 +162,12 @@ public class ListChoice extends DropDownChoice
 		super.handleComponentTag(tag);
 		tag.put("size", Math.min(maxRows, getValues().size()));
 	}
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+     */
+    protected final boolean supportsPersistence()
+    {
+        return true;
+    }
 }
