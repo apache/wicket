@@ -272,15 +272,11 @@ public abstract class ListView extends WebMarkupContainer
 					add(listItem);
 				}
 
-				// Only render list item if visible
-				if (listItem.isVisible())
-				{
-					// Rewind to start of markup for kids
-					markupStream.setCurrentIndex(markupStart);
-	
-					// Render cell
-					renderItem(listItem, i == (size - 1));
-				}
+				// Rewind to start of markup for kids
+				markupStream.setCurrentIndex(markupStart);
+
+				// Render cell
+				renderItem(listItem, i == (size - 1));
 			}
 		}
 		else
