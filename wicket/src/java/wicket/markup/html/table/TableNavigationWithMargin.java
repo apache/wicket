@@ -77,35 +77,35 @@ public class TableNavigationWithMargin extends TableNavigation
 
     /**
      * Gets the first cell in the current page of this table. If the last page
-     * would only be partially listed, then recalculate firstCell to show
-     * pageSizeInCells cells up to the last one.
+     * would only be partially listed, then recalculate firstListItem to show
+     * pageSizeInListItems cells up to the last one.
      */
     protected void setStartIndex()
     {
-        int firstCell = this.getStartIndex();
+        int firstListItem = this.getStartIndex();
         int viewSize = this.getViewSize();
         int currentPage = table.getCurrentPage();
         
-        if (currentPage < (firstCell + this.margin))
+        if (currentPage < (firstListItem + this.margin))
         {
-            firstCell = currentPage - viewSize + margin;
+            firstListItem = currentPage - viewSize + margin;
         } 
-        else if (currentPage >= (firstCell + viewSize - this.margin))
+        else if (currentPage >= (firstListItem + viewSize - this.margin))
         {
-            firstCell = currentPage - margin;
+            firstListItem = currentPage - margin;
         }
         
-        if ((firstCell + viewSize) >= table.getPageCount())
+        if ((firstListItem + viewSize) >= table.getPageCount())
         {
-            firstCell = table.getPageCount() - viewSize; 
+            firstListItem = table.getPageCount() - viewSize; 
         }
         
-        if (firstCell < 0)
+        if (firstListItem < 0)
         {
-            firstCell = 0;
+            firstListItem = 0;
         }
         
-        this.setStartIndex(firstCell);
+        this.setStartIndex(firstListItem);
     }
 
     /**

@@ -335,7 +335,7 @@ public abstract class ListView extends HtmlContainer
     /**
      * Creates a new listItem  for the given listItem index of this listView.
      * 
-     * @param index Cell index
+     * @param index ListItem index
      * @return The new ListItem
      */
     protected ListItem newItem(final int index)
