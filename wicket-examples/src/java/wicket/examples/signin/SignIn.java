@@ -102,10 +102,13 @@ public final class SignIn extends WicketExamplePage
             else
             {
                 // Form method that will notify feedback panel
-                error("Couldn't sign you in");
+                // Try the component based localizer first. If not found try the 
+                // application localizer. Else use the default 
+                final String errmsg = getLocalizer().getString(
+                        "loginError", this, "Unable to sign you in");
+                
+            	error(errmsg);
             }
         }
     }
 }
-
-
