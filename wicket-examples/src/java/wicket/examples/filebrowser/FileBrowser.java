@@ -49,8 +49,11 @@ import wicket.markup.html.tree.TreeStateCache;
  */
 public class FileBrowser extends HtmlPage
 {
-	/** our override of the nested tree. */
-	private static final String TYPE_NESTED_CUSTOM = "custom nested tree";
+	/** our override of the nested tree with a custom row panel. */
+	private static final String TYPE_NESTED_CUSTOM_ROW = "nested tree custom row";
+
+	/** our override of the nested tree with a custom rows panel. */
+	private static final String TYPE_NESTED_CUSTOM_ROWS = "nested tree custom rows";
 
 	/** the normal, nested tree. */
 	private static final String TYPE_NESTED = "plain nested tree";
@@ -61,8 +64,9 @@ public class FileBrowser extends HtmlPage
 	/** the types of lists that are available for selection. */
 	private static final List types;
 	static {
-		types = new ArrayList(3);
-		types.add(TYPE_NESTED_CUSTOM);
+		types = new ArrayList(4);
+		types.add(TYPE_NESTED_CUSTOM_ROW);
+		types.add(TYPE_NESTED_CUSTOM_ROWS);
 		types.add(TYPE_NESTED);
 		types.add(TYPE_FLAT);
 	}
@@ -85,7 +89,7 @@ public class FileBrowser extends HtmlPage
         addDefaultComponents();
         TreeModel model = new FileModelProvider().getFileModel();
         HtmlContainer treeContainer = new HtmlContainer("tree");
-        currentTree = new FileTree("fileTree", model, true);
+        currentTree = new FileTreeCustomRow("fileTree", model, true);
         add(currentTree);
     }
 
@@ -145,11 +149,19 @@ public class FileBrowser extends HtmlPage
             }
             else if(TYPE_FLAT.equals(type))
             {
-            	tree = new FlatFileTree("fileTree", currentTree.getTreeState());
+            	tree = new FileTreeFlat("fileTree", currentTree.getTreeState());
             }
-            else // TYPE_NESTED_CUSTOM
+            else if(TYPE_NESTED_CUSTOM_ROW.equals(type))
             {
-            	tree = new FileTree("fileTree", currentTree.getTreeState());
+            	tree = new FileTreeCustomRow("fileTree", currentTree.getTreeState());
+            }
+            else if(TYPE_NESTED_CUSTOM_ROWS.equals(type))
+            {
+            	tree = new FileTreeCustomRows("fileTree", currentTree.getTreeState());
+            }
+            else
+            {
+            	throw new RuntimeException("invalid type selection");
             }
             FileBrowser.this.add(tree);
             FileBrowser.this.currentTree = tree;
@@ -157,7 +169,7 @@ public class FileBrowser extends HtmlPage
     }
 
     /** Custom tree that provides our own row panel. */
-    private static class FileTree extends Tree
+    private static class FileTreeCustomRow extends Tree
     {
         /**
          * Constructor.
@@ -168,7 +180,7 @@ public class FileBrowser extends HtmlPage
          * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
          * user objects are unique within the tree in order to have the tree working properly
          */
-        public FileTree(final String componentName, final TreeModel model,
+        public FileTreeCustomRow(final String componentName, final TreeModel model,
         		final boolean makeTreeModelUnique)
         {
             super(componentName, model, makeTreeModelUnique);
@@ -181,13 +193,13 @@ public class FileBrowser extends HtmlPage
          * @param treeState the tree state that holds the tree model and the currently visible
          * paths
          */
-        public FileTree(final String componentName, TreeStateCache treeState)
+        public FileTreeCustomRow(final String componentName, TreeStateCache treeState)
         {
             super(componentName, treeState);
         }
 
 		/**
-         * Override to provide a custom row panel.
+         * Provides a custom row panel.
          * @see wicket.markup.html.tree.Tree#getTreeRowPanel(java.lang.String, wicket.markup.html.tree.TreeNodeModel)
          */
         protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
@@ -201,8 +213,48 @@ public class FileBrowser extends HtmlPage
         } 
     }
 
+    /** Custom tree that provides our own rows panel. */
+    private static class FileTreeCustomRows extends Tree
+    {
+        /**
+         * Constructor.
+         * @param componentName The name of this container
+         * @param model the underlying tree model
+         * @param makeTreeModelUnique whether to make the user objects of the tree model
+         * unique. If true, the default implementation will wrapp all user objects in
+         * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
+         * user objects are unique within the tree in order to have the tree working properly
+         */
+        public FileTreeCustomRows(final String componentName, final TreeModel model,
+        		final boolean makeTreeModelUnique)
+        {
+            super(componentName, model, makeTreeModelUnique);
+        }
+
+        /**
+         * Constructor using the given tree state. This tree state holds the tree model and
+         * the currently visible paths.
+         * @param componentName The name of this container
+         * @param treeState the tree state that holds the tree model and the currently visible
+         * paths
+         */
+        public FileTreeCustomRows(final String componentName, TreeStateCache treeState)
+        {
+            super(componentName, treeState);
+        }
+
+        /**
+         * Provides a custom rows panel 
+         * @see wicket.markup.html.tree.Tree#getTreeRowsPanel(java.lang.String, java.util.List)
+         */
+        protected Panel getTreeRowsPanel(String componentName, List nestedList)
+        {
+            return new FileTreeRows(componentName, nestedList, this);
+        } 
+    }
+
     /** flat tree implementation. */
-    private static class FlatFileTree extends FlatTree
+    private static class FileTreeFlat extends FlatTree
     {
 
         /**
@@ -212,7 +264,7 @@ public class FileBrowser extends HtmlPage
          * @param treeState the tree state that holds the tree model and the currently visible
          * paths
          */
-        public FlatFileTree(final String componentName, TreeStateCache treeState)
+        public FileTreeFlat(final String componentName, TreeStateCache treeState)
         {
             super(componentName, treeState);
         }
