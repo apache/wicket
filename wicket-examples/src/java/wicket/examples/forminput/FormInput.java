@@ -144,9 +144,9 @@ public class FormInput extends HtmlPage
 			// for the convenience error messages
 			integerInRangeInput.add(new AbstractValidator(){
 
-				public ValidationErrorMessage validate(
-						String input, FormComponent component)
+				public ValidationErrorMessage validate(FormComponent component)
 				{
+                    final String input = component.getStringValue();
 					int value = Integer.parseInt(input.toString());
 					if((value < 0) || (value > 100))
 					{

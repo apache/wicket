@@ -171,11 +171,15 @@ public abstract class FormComponent extends HtmlContainer
      */
     public final ValidationErrorMessage validate()
     {
-        // Perform validation
-    	String input = getRequestString(RequestCycle.get());
-        final ValidationErrorMessage message = validator.validate(input, this);
-        // Return message
-        return message;
+        return validator.validate(this);
+    }
+    
+    /**
+     * @return String value for this component
+     */
+    public final String getStringValue()
+    {
+        return getRequestString(RequestCycle.get());
     }
 
     /**
@@ -290,21 +294,20 @@ public abstract class FormComponent extends HtmlContainer
 
         /**
          * Validates the given component.
-         * @param input the input
          * @param component The component to validate
          * @return The error returned by the first validator in the list which reported an
          *         error or null if no validator reported an error
          */
-        public ValidationErrorMessage validate(final String input, final FormComponent component)
+        public ValidationErrorMessage validate(final FormComponent component)
         {
-            final ValidationErrorMessage message = left.validate(input, component);
+            final ValidationErrorMessage message = left.validate(component);
 
             if (message != ValidationErrorMessage.NO_MESSAGE && message.isLevelError())
             {
                 return message;
             }
 
-            return right.validate(input, component);
+            return right.validate(component);
         }
 
         /**

@@ -34,7 +34,7 @@ public class Model implements IModel
     /** Serial Version ID. */
 	private static final long serialVersionUID = 3031804965001519439L;
 	
-	/** backing object. */
+	/** Backing object. */
     private Serializable object;
 
     /**

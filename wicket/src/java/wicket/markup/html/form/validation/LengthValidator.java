@@ -98,18 +98,19 @@ public final class LengthValidator extends AbstractValidator
      * Validates the given form component.
      * Validates that a form component's value is of a certain minimum 
      * and/or maximum length.
-     * @param input The input to validate
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(
-            final String input, final FormComponent component)
+    public ValidationErrorMessage validate(final FormComponent component)
     {
+        // Get component value
+        final String value = component.getStringValue();
+        
         // Check length
-        if ((checkMin && input.length() < min) || 
-            (checkMax && input.length() > max))
+        if ((checkMin && value.length() < min) || 
+            (checkMax && value.length() > max))
         {
-            return errorMessage(input, component);
+            return errorMessage(value, component);
         }
 
         return NO_ERROR;
