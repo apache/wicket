@@ -7,6 +7,9 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="update" dev="Jonathan Locke" issue="">
+      	Created AbstractImage base class and simplified code in Image.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1119725">
 		Changed DefaultPageFactory so that it always tries default constructor if 
 		PageParameters constructor cannot be found and one exists.

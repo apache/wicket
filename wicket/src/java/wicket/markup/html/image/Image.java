@@ -18,28 +18,18 @@
  */
 package wicket.markup.html.image;
 
-import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
+import java.util.Locale;
 
 import wicket.IResourceListener;
-import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebComponent;
-import wicket.protocol.http.WebResponse;
-import wicket.util.io.Streams;
 import wicket.util.lang.Classes;
 import wicket.util.resource.IResource;
 import wicket.util.resource.Resource;
-import wicket.util.resource.ResourceNotFoundException;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.Locale;
+import wicket.util.string.Strings;
 
 /**
  * An image component represents a localizable image resource. The image name
@@ -51,7 +41,7 @@ import java.util.Locale;
  *
  * @author Jonathan Locke
  */
-public class Image extends WebComponent implements IResourceListener
+public class Image extends AbstractImage implements IResourceListener
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
@@ -97,53 +87,6 @@ public class Image extends WebComponent implements IResourceListener
     }
 
     /**
-     * Implementation of IResourceListener.  Renders resource back to requester.
-     * @see wicket.IResourceListener#resourceRequested()
-     */
-    public void resourceRequested()
-    {
-	    // Obtain the resource
-	    final IResource image = getResource();
-	    if (image == null)
-	    {
-	        throw new WicketRuntimeException("Could not find image resource " + resourcePath);
-	    }
-
-        // Get request cycle
-        final RequestCycle cycle = getRequestCycle();
-
-        // The cycle's page is set to null so that it won't be rendered back to
-        // the client since the resource being requested has nothing to do with pages
-        cycle.setPage((Page)null);
-
-        // Respond with image
-        final HttpServletResponse response = ((WebResponse)cycle.getResponse()).getHttpServletResponse();
-        response.setContentType("image/" + image.getExtension());
-
-        try
-        {
-            final OutputStream out = new BufferedOutputStream(response.getOutputStream());
-            try
-            {
-                Streams.writeStream(new BufferedInputStream(image.getInputStream()), out);
-            }
-            finally
-            {
-                image.close();
-                out.flush();
-            }
-        }
-        catch (IOException e)
-        {
-            throw new WicketRuntimeException("Unable to render resource " + image, e);
-        }
-        catch (ResourceNotFoundException e)
-        {
-            throw new WicketRuntimeException("Unable to render resource " + image, e);
-        }
-    }
-
-    /**
      * @return Gets the image resource for the component.
      */
     protected IResource getResource()
@@ -177,23 +120,19 @@ public class Image extends WebComponent implements IResourceListener
      */
     protected void handleComponentTag(final ComponentTag tag)
     {
-        checkComponentTag(tag, "img");
-        super.handleComponentTag(tag);
-
-        final String imageResource = (String)getModelObject();
-        if (imageResource != null)
-        {
-            resourcePath = imageResource;
-        }
-        else
+        final String imageResource = getModelObjectAsString();
+        if (Strings.isEmpty(imageResource))
         {
             resourcePath = tag.getString("src");
         }
+        else
+        {
+            resourcePath = imageResource;
+        }
 	    style = getStyle();
 	    locale = getLocale();
-
-        final String url = getRequestCycle().urlFor(this, IResourceListener.class);
-		tag.put("src", url.replaceAll("&", "&amp;"));
+    	
+        super.handleComponentTag(tag);
     }
 
 	static
