@@ -150,5 +150,42 @@ public class ExamplePaging extends Displaytag
         };
         
         add(nav3);
+        
+        // Empty table
+        List data4 = new ArrayList();
+        final PagedTableWithAlternatingRowStyle table4 = new PagedTableWithAlternatingRowStyle("rows4", data4, 10)
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                super.populateItem(listItem);
+                
+                final ListObject value = (ListObject) listItem.getModelObject();
+
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
+            }
+        };
+        add(table4);
+        
+        PagedTableNavigator nav4 = new PagedTableNavigator("pageTableNav4", table4)
+        {
+            protected TableNavigation newTableNavigation(final Table table)
+            {
+                TableNavigationWithMargin nav = new TableNavigationWithMargin("navigation", table);
+                nav.setMargin(2);
+                if (nav.getViewSize() > 5)
+                {
+                    nav.setViewSize(5);
+                }
+                
+                nav.setSeparator(", ");
+                return nav;
+            }
+        };
+        
+        add(nav4);
     }
 }
