@@ -33,6 +33,17 @@
             <action type="add" dev="Eelco Hillenius" issue="1072080">
                 Implemented multi field validation.
             </action>
+            <action type="add" dev="Eelco Hillenius">
+                Implemented support for ui messaging (also used by validation).
+                FeedbackPanel uses this, and is more generic now as well.
+            </action>
+            <action type="add" dev="Juergen Donnerstag">
+                Introduced ListView for lists (former Tables) that do not use
+                paging. Table supports paging.
+            </action>
+            <action type="fix" dev="Eelco Hillenius">
+                Fixed bug that resulted in random session timeouts.
+            </action>
 		</release>
 	</body>
 </document>
