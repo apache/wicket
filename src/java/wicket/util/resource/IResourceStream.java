@@ -22,19 +22,34 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Interface to a resource
+ * Interface to a streamed resource.  The resource stream can be 
+ * retrieved by calling getInputStream(), but the resource is later
+ * closed by calling close() on the IResourceStream (as opposed to
+ * calling close on the InputStream returned by getInputStream()).
+ * <p>
+ * Once a resource has been closed with a call to close(), it is
+ * possible to call getInputStream() again to retrieve a new input
+ * stream on the same resource.
+ * <p>
+ * Implementations of this interface are typically unsafe for use 
+ * from multiple threads.
+ * 
  * @author Jonathan Locke
  */
 public interface IResourceStream
-{ // TODO finalize javadoc
+{
     /**
+     * Gets the resource stream.  You should not directly close this
+     * stream.  Instead call the close() method on IResourceStream.
+     * @see IResourceStream#close()
      * @return Returns the inputStream.
      * @throws ResourceNotFoundException
      */
     public InputStream getInputStream() throws ResourceNotFoundException;
 
     /**
-     * Closes input stream
+     * Closes the resource.  Normally, this includes closing any underlying
+     * input stream returned by getInputStream().
      * @throws IOException
      */
     public void close() throws IOException;
