@@ -17,6 +17,7 @@
  */
 package wicket.util.convert;
 
+import java.text.Format;
 import java.util.Locale;
 
 /**
@@ -33,7 +34,7 @@ public final class ConversionException extends RuntimeException
 	private IConverter converter;
 
 	/** Pattern that was used for conversion. */
-	private String pattern;
+	private Format format;
 
 	/** The value that was tried to convert. */
 	private Object sourceValue;
@@ -106,13 +107,13 @@ public final class ConversionException extends RuntimeException
     }
 
 	/**
-	 * Get the used pattern.
+	 * Get the used format.
 	 * 
-	 * @return the used pattern
+	 * @return the used format
 	 */
-	public final String getPattern()
+	public final Format getFormat()
 	{
-		return pattern;
+		return format;
 	}
 
 	/**
@@ -157,15 +158,15 @@ public final class ConversionException extends RuntimeException
 	}
 
 	/**
-	 * Sets the used pattern.
+	 * Sets the used format.
 	 * 
-	 * @param pattern
-	 *            the used pattern.
+	 * @param format
+	 *            the used format.
 	 * @return This
 	 */
-	public final ConversionException setPattern(String pattern)
+	public final ConversionException setFormat(Format format)
 	{
-		this.pattern = pattern;
+		this.format = format;
 		return this;
 	}
 

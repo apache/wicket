@@ -18,10 +18,7 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.ParseException;
 import java.util.Locale;
-
-import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Short.
@@ -52,24 +49,16 @@ public final class ShortConverter extends NumberConverter
      */
     public Object convert(final Object value)
     {
-        if (value instanceof Number)
-        {
-            return new Short(((Number)value).shortValue());
-        }
+        final Number number = value instanceof Number ? (Number)value : parse(value,
+                Short.MIN_VALUE, Short.MAX_VALUE);
+        return new Short(number.shortValue());
+    }
 
-        try
-        {
-            final Number number = getNumberFormat().parse(value.toString());
-            if (number.doubleValue() > Short.MAX_VALUE || 
-                number.doubleValue() < Short.MIN_VALUE)
-            {
-                throw new ConversionException("Short value out of range");
-            }
-            return new Short(number.shortValue());
-        }
-        catch (ParseException e)
-        {
-            throw new ConversionException("Cannot convert '" + value + "' to Short", e);
-        }
+    /**
+     * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+     */
+    protected Class getTargetType()
+    {
+        return Short.class;
     }
 }

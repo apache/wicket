@@ -18,10 +18,7 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.ParseException;
 import java.util.Locale;
-
-import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Float.
@@ -52,24 +49,16 @@ public final class FloatConverter extends DecimalConverter
      */
     public Object convert(final Object value)
     {
-        if (value instanceof Number)
-        {
-            return new Float(((Number)value).floatValue());
-        }
-
-        try
-        {
-            final Number number = getNumberFormat().parse(value.toString());
-            if (number.doubleValue() > Float.MAX_VALUE || 
-                number.doubleValue() < Float.MIN_VALUE)
-            {
-                throw new ConversionException("Float value out of range");
-            }
-            return new Float(number.floatValue());
-        }
-        catch (ParseException e)
-        {
-            throw new ConversionException("Cannot convert '" + value + "' to Float", e);
-        }
+        final Number number = value instanceof Number ? (Number)value : parse(value,
+                Float.MIN_VALUE, Float.MAX_VALUE);
+        return new Float(number.floatValue());
     }
+
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
+		return Float.class;
+	}
 }

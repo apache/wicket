@@ -1,27 +1,23 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.util.convert.converters;
 
-import java.text.ParseException;
 import java.util.Locale;
-
-import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Integer.
@@ -30,46 +26,40 @@ import wicket.util.convert.ConversionException;
  * @author Jonathan Locke
  */
 public final class IntegerConverter extends NumberConverter
-{    
-    /**
-     * Constructor
-     */
-    public IntegerConverter()
-    {
-    }
-    
-    /**
-     * Constructor
-     * @param locale The locale for this converter
-     */
-    public IntegerConverter(final Locale locale)
-    {
-        super(locale);
-    }
+{
+	/**
+	 * Constructor
+	 */
+	public IntegerConverter()
+	{
+	}
 
-    /**
-     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-     */
-    public Object convert(final Object value)
-    {
-        if (value instanceof Number)
-        {
-            return new Integer(((Number)value).intValue());
-        }
+	/**
+	 * Constructor
+	 * 
+	 * @param locale
+	 *            The locale for this converter
+	 */
+	public IntegerConverter(final Locale locale)
+	{
+		super(locale);
+	}
 
-        try
-        {
-            final Number number = getNumberFormat().parse(value.toString());
-            if (number.doubleValue() > Integer.MAX_VALUE || 
-                number.doubleValue() < Integer.MIN_VALUE)
-            {
-                throw new ConversionException("Integer value out of range");
-            }
-            return new Integer(number.intValue());
-        }
-        catch (ParseException e)
-        {
-            throw new ConversionException("Cannot convert '" + value + "' to Integer", e);
-        }
-    }
+	/**
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 */
+	public Object convert(final Object value)
+	{
+		final Number number = value instanceof Number ? (Number)value : parse(value,
+				Integer.MIN_VALUE, Integer.MAX_VALUE);
+		return new Integer(number.intValue());
+	}
+
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
+		return Integer.class;
+	}
 }

@@ -18,11 +18,8 @@
 package wicket.util.convert.converters;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
-
-import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Date.
@@ -57,43 +54,7 @@ public final class DateConverter extends AbstractConverter
 	 */
 	public Object convert(final Object value)
 	{
-		final String stringValue = value.toString();
-		try
-		{
-			return getDateFormat().parse(stringValue);
-		}
-		catch (ParseException e)
-		{
-			throw conversionException(stringValue, e);
-		}
-		catch (NumberFormatException e)
-		{
-			throw conversionException(stringValue, e);
-		}
-	}
-
-	/**
-	 * create and return a new conversion exception, with the pattern when
-	 * available
-	 * 
-	 * @param stringValue
-	 *            the tried value
-	 * @param e
-	 *            the exception
-	 * @return the new conversion exception
-	 */
-	private final ConversionException conversionException(final String stringValue, Exception e)
-	{
-		ConversionException conversionException = new ConversionException("Cannot convert '"
-				+ stringValue + "' to Date", e);
-
-        // Usually, this is
-        if (dateFormat instanceof SimpleDateFormat) 
-		{
-			String pattern = ((SimpleDateFormat)dateFormat).toLocalizedPattern();
-			conversionException.setPattern(pattern);
-		}
-		return conversionException;
+        return parse(getDateFormat(), value);
 	}
 
 	/**
@@ -124,5 +85,13 @@ public final class DateConverter extends AbstractConverter
 	{
 		super.setLocale(locale);
 		this.dateFormat = null;
+	}
+
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
+		return Date.class;
 	}
 }

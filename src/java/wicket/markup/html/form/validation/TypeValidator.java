@@ -154,7 +154,7 @@ public class TypeValidator extends AbstractValidator
 			model.put("locale", locale);
 		}
 		model.put("exception", e.getMessage());
-		model.put("pattern", e.getPattern());
+		model.put("format", e.getFormat());
 		return model;
 	}
 

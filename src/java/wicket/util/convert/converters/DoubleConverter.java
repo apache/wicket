@@ -17,12 +17,7 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Locale;
-
-import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Double.
@@ -55,26 +50,16 @@ public final class DoubleConverter extends DecimalConverter
 	 */
 	public Object convert(final Object value)
 	{
-		if (value instanceof Number)
-		{
-			return new Double(((Number)value).doubleValue());
-		}
+        final Number number = value instanceof Number ? (Number)value : parse(value,
+                Double.MIN_VALUE, Double.MAX_VALUE);
+        return new Double(number.doubleValue());
+	}
 
-		NumberFormat format = getNumberFormat();
-		try
-		{
-			return new Double(format.parse(value.toString()).doubleValue());
-		}
-		catch (ParseException e)
-		{
-			final ConversionException conversionException = new ConversionException(
-					"Cannot convert '" + value + "' to Double", e);
-			if (format instanceof DecimalFormat)
-			{
-				String pattern = ((DecimalFormat)format).toLocalizedPattern();
-				conversionException.setPattern(pattern);
-			}
-			throw conversionException;
-		}
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
+		return Double.class;
 	}
 }

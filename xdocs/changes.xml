@@ -7,6 +7,15 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1118466">
+      	Reworked conversion code to deal with the fact that the java.text Format 
+      	parsing parses /leading/ values and not complete values.  In other words,
+      	it sees 10foo and parses and Integer without throwing an Exception.  The
+      	resulting code is smaller, more efficient (since it doesn't rely on exceptions
+      	to signal bad parses) and better structured.  Also changed the ConversionException
+      	class so that it stores the Format used for the conversion instead of just
+      	a String 'pattern'.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1118784">
     	Fixed problem with autolink component resolver where it would continually 
     	resolve the same links on every render.  The solution is to set the component's
