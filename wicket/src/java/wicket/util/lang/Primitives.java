@@ -19,14 +19,16 @@
 package wicket.util.lang;
 
 /**
- * Utilities for working with primitive values
+ * Utilities for working with primitives types and values.
+ * 
  * @author Jonathan Locke
  */
 public final class Primitives
-{ // TODO finalize javadoc
+{
     /**
+     * Returns a basic integer hash code for a long value.
      * @param value The long value
-     * @return Hash code
+     * @return The hash code
      */
     public static int hashCode(final long value)
     {
