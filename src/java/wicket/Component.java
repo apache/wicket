@@ -732,6 +732,57 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * Invalidates the model attached to this component. Traverses all pages in
+	 * the session associated with this component. Within each page in the
+	 * session, traverses all components looking for a component attached to the
+	 * same model and having the same name as this component. For each such
+	 * model, the corresponding page is made stale. In addition, all previous
+	 * renderings of the page holding this component are made stale.
+	 */
+	public void modelChangedStructure()
+	{
+		// Find the page where this component lives. There is no need to
+		// check the return value for null here since getPage() will throw
+		// an IllegalState exception if its return value is null.
+		final Page page = getPage();
+	
+		// Make all previous renderings of the page stale
+		page.setStaleRendering(page.getRendering());
+	
+		// Visit all pages in the session
+		getSession().visitPages(new Session.IPageVisitor()
+		{
+			public void page(final Page currentPage)
+			{
+				// If page is not the component's own page
+				if (currentPage != page)
+				{
+					// Visit child components on page
+					currentPage.visitChildren(new IVisitor()
+					{
+						public Object component(final Component current)
+						{
+							// If the components have the same equals identity
+							// (which is assumed to be implemented in terms of
+							// database identity) and component is accessing
+							// the same property of the model
+							if (current.getModel() != null && getModel() != null
+									&& current.getModel().equals(getModel())
+									&& current.getName().equals(getName()))
+							{
+								// then make the page holding the component
+								// stale
+								currentPage.setStale(true);
+							}
+							return CONTINUE_TRAVERSAL;
+						}
+					});
+				}
+			}
+		});
+	}
+
+	/**
 	 * Performs a render of this component.
 	 */
 	public void render()
@@ -997,57 +1048,6 @@ public abstract class Component implements Serializable, IConverterSource
 	protected MarkupStream findMarkupStream()
 	{
 		return parent.findMarkupStream();
-	}
-
-	/**
-	 * Invalidates the model attached to this component. Traverses all pages in
-	 * the session associated with this component. Within each page in the
-	 * session, traverses all components looking for a component attached to the
-	 * same model and having the same name as this component. For each such
-	 * model, the corresponding page is made stale. In addition, all previous
-	 * renderings of the page holding this component are made stale.
-	 */
-	protected void invalidateModel()
-	{
-		// Find the page where this component lives. There is no need to
-		// check the return value for null here since getPage() will throw
-		// an IllegalState exception if its return value is null.
-		final Page page = getPage();
-
-		// Make all previous renderings of the page stale
-		page.setStaleRendering(page.getRendering());
-
-		// Visit all pages in the session
-		getSession().visitPages(new Session.IPageVisitor()
-		{
-			public void page(final Page currentPage)
-			{
-				// If page is not the component's own page
-				if (currentPage != page)
-				{
-					// Visit child components on page
-					currentPage.visitChildren(new IVisitor()
-					{
-						public Object component(final Component current)
-						{
-							// If the components have the same equals identity
-							// (which is assumed to be implemented in terms of
-							// database identity) and component is accessing
-							// the same property of the model
-							if (current.getModel() != null && getModel() != null
-									&& current.getModel().equals(getModel())
-									&& current.getName().equals(getName()))
-							{
-								// then make the page holding the component
-								// stale
-								currentPage.setStale(true);
-							}
-							return CONTINUE_TRAVERSAL;
-						}
-					});
-				}
-			}
-		});
 	}
 
 	/**
