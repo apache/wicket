@@ -48,7 +48,7 @@ public abstract class MarkupElement
      * @param open The open tag
      * @return True if this markup element closes the given open tag
      */
-    public boolean closes(final ComponentTag open)
+    public boolean closes(final MarkupElement open)
     {
         return false;
     }

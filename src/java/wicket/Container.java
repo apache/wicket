@@ -748,7 +748,7 @@ public abstract class Container extends Component
 			final Resource markupResource) throws ParseException, IOException,
 			ResourceNotFoundException
 	{
-		final Markup markup = application.getMarkupParser().read(markupResource, getPage());
+		final Markup markup = application.getMarkupParser().read(markupResource);
 		markupCache.put(key, markup);
 		return markup;
 	}
