@@ -44,7 +44,7 @@ import wicket.util.string.Strings;
  * And this to your markup:
  * 
  * <pre>
- *  &lt;span id=&quot;wicket-componentTree&quot;/&gt;
+ *  &lt;span wicket:id=&quot;componentTree&quot;/&gt;
  * </pre>
  * 
  * @author Juergen Donnerstag

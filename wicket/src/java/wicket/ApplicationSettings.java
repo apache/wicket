@@ -144,8 +144,8 @@ public final class ApplicationSettings
 	/** True if the response should be buffered */
 	private boolean bufferResponse = true;
 
-	/** Component id attribute */
-	private String componentIdAttribute = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
+	/** Wicket namespace to identify wicket components */
+	private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
 
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
@@ -312,16 +312,16 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Gets component id attribute in use in this application. Normally, this is
-	 * "wicket", but it can be changed in the unlikely event that tag attribute
-	 * naming conflicts arise.
+	 * Gets wicket namespace in use in this application. Normally, this is
+	 * "wicket", but it can be changed in the unlikely event of nameing 
+	 * conflicts or for use by of pre-processors e.g. 
 	 * 
-	 * @return The current component id attribute
-	 * @see ApplicationSettings#setComponentIdAttribute(String)
+	 * @return The current wicket namespace
+	 * @see ApplicationSettings#setWicketNamespace(String)
 	 */
-	public final String getComponentIdAttribute()
+	public final String getWicketNamespace()
 	{
-		return componentIdAttribute;
+		return wicketNamespace;
 	}
 
 	/**
@@ -530,23 +530,23 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Sets component id attribute in use in this application. Normally, this is
-	 * "wicket", but it can be changed in the unlikely event that tag attribute
-	 * naming conflicts arise.
+	 * Sets wicket namespace in use in this application. Normally, this is
+	 * "wicket", but it can be changed in the unlikely event of
+	 * nameing conflicts.
 	 * 
-	 * @param componentIdAttribute
-	 *            The componentIdAttribute to set.
+	 * @param namespace
+	 *            The wicket namespace to set.
 	 * @return This
 	 */
-	public final ApplicationSettings setComponentIdAttribute(final String componentIdAttribute)
+	public final ApplicationSettings setWicketNamespace(final String namespace)
 	{
-		if (!MetaPattern.VARIABLE_NAME.matcher(componentIdAttribute).matches())
+		if (!MetaPattern.VARIABLE_NAME.matcher(namespace).matches())
 		{
 			throw new IllegalArgumentException(
-					"Component id attribute must be a valid variable name ([a-z][a-z0-9_]*)");
+					"Wicket namespace must be a valid variable name ([a-z][a-z0-9_]*)");
 		}
 
-		this.componentIdAttribute = componentIdAttribute;
+		this.wicketNamespace = namespace;
 		return this;
 	}
 

@@ -37,8 +37,8 @@ import wicket.model.Model;
  * 
  * <pre>
  *      &lt;tbody&gt;
- *        &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
- *            &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *        &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *            &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
  *        ...    
  * </pre>
  * 

@@ -29,7 +29,7 @@ import wicket.markup.parser.XmlTag;
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
  * Note 2: The namespace name is configurable through ApplicationSettings.
- *   @see wicket.ApplicationSettings#setComponentIdAttribute(String)
+ *   @see wicket.ApplicationSettings#setWicketNamespace(String)
  * 
  * @author Juergen Donnerstag
  */

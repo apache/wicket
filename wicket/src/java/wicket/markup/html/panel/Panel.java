@@ -29,8 +29,8 @@ import wicket.model.IModel;
  * Whereas WebMarkupContainer is an inline container like
  * <pre>
  *  ...
- *  &lt;span id=&quot;wicket-xxx&quot;&gt;
- *    &lt;span id=&quot;wicket-mylabel&quot;&gt;My label&lt;/span&gt;
+ *  &lt;span wicket:id=&quot;xxx&quot;&gt;
+ *    &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
  *    ....
  *  &lt;/span&gt;
  *  ...
@@ -38,11 +38,11 @@ import wicket.model.IModel;
  * a Panel has its own associated markup file and the container content is
  * taken from that file, like:
  * <pre>
- *  &lt;span id=&quot;wicket-mypanel&quot;/&gt;
+ *  &lt;span wicket:id=&quot;mypanel&quot;/&gt;
  * 
  *  TestPanel.html
  *  &lt;wicket:panel&gt;
- *    &lt;span id=&quot;wicket-mylabel&quot;&gt;My label&lt;/span&gt;
+ *    &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
  *    ....
  *  &lt;/wicket:panel&gt;
  * </pre>

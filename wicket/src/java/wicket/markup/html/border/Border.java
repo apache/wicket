@@ -48,7 +48,7 @@ import wicket.model.IModel;
  * <pre>
  *            &lt;html&gt;
  *            &lt;body&gt;
- *              &lt;span id = &quot;wicket-myBorder&quot;&gt;
+ *              &lt;span wicket:id = &quot;myBorder&quot;&gt;
  *                  Middle
  *              &lt;/span&gt;
  *            &lt;/body&gt;
