@@ -175,6 +175,18 @@ public final class Duration extends AbstractTimeValue
 	}
 
 	/**
+	 * The amount of time elapsed since start time
+	 * 
+	 * @param start
+	 *            The start time
+	 * @return The elapsed period
+	 */
+	public static Duration elapsed(final Time start)
+	{
+		return Time.now().subtract(start);
+	}
+
+	/**
 	 * Gets the duration based on hours.
 	 * 
 	 * @param hours
