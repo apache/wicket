@@ -61,12 +61,14 @@ public interface IPageVersionManager
 	};
 
 	/**
-	 * Tells the version manager that changes are beginning to a given page
+	 * Called when changes are immediately impending to the Page being managed
+	 * by this version manager. In requests where the Page is not changed at
+	 * all, none of the methods in this interface will ever be called.
 	 */
 	public void beginVersion();
 
 	/**
-	 * Indicates to this version manager that the given component was added
+	 * Indicates that the given component was added.
 	 * 
 	 * @param component
 	 *            The component
@@ -74,8 +76,7 @@ public interface IPageVersionManager
 	public void componentAdded(Component component);
 
 	/**
-	 * Indicates to this version manager that the model for the given component
-	 * was changed
+	 * Indicates that the model for the given component was changed.
 	 * 
 	 * @param component
 	 *            The component
@@ -83,7 +84,7 @@ public interface IPageVersionManager
 	public void componentModelChanged(Component component);
 
 	/**
-	 * Indicates to this version manager that the given component was removed
+	 * Indicates that the given component was removed.
 	 * 
 	 * @param component
 	 *            The component
@@ -91,10 +92,10 @@ public interface IPageVersionManager
 	public void componentRemoved(Component component);
 
 	/**
-	 * Called when changes to the page have ended
+	 * Called when changes to the page have ended.
 	 */
 	public void endVersion();
-	
+
 	/**
 	 * Retrieves a page of the given version
 	 * 
@@ -103,9 +104,10 @@ public interface IPageVersionManager
 	 * @return The page
 	 */
 	public Page getVersion(int version);
-	
+
 	/**
-	 * @return Current version
+	 * @return Returns the current (most recent) version being managed by this
+	 *         version manager.
 	 */
 	public int getVersion();
 }
