@@ -18,6 +18,7 @@
  */
 package wicket.markup;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -44,23 +45,33 @@ import wicket.util.value.ValueMap;
 
 /**
  * A fairly shallow markup parser. Parses a markup string of a given type of markup (for
- * example, html, xml, vxml or wml) into Tag and RawMarkup tokens. The Tag tokens must
- * have the attributeName attribute that was passed to the scanner's constructor. Only
- * tags having an attribute with the same name as the attributeName with which this markup
- * scanner was constructed are returned. Text before, between and after such tags are
- * returned as String values. A check is done to ensure that tags returned balance
- * correctly.
+ * example, html, xml, vxml or wml) into ComponentTag and RawMarkup tokens. The ComponentTag 
+ * tokens must have either the componentNameAttribute attribute or the tag's name 
+ * must have the wicketTagName namespace. Tags matching these conditions are 
+ * returned as ComponentTag values. Text before, between and after such tags are returned as 
+ * RawMarkup values. A check is done to ensure that tags returned balance correctly.
+ * MarkupParser also applies some special treatment to specific ComponentTags like 
+ * &lt;wicket:region name=remove&gt; . MarkupParser will remove all text (RawMarkup)
+ * between the respective open and close tag. ComponentTags are not allowed within this region.
+ * The parameters specified through &lt;wicket:param ..&gt; tags are added to the
+ * immediately preceding ComponentTag. And all attributes named 'href' are flagged for later
+ * automatic linking of the URL. <p>
+ * Note: Why are we not using SAX or DOM parsers to read the markup? The reason is, we need only
+ * a few tags as described above. All the rest is treated as text only. 
+ *  
  * @author Jonathan Locke
  */
+/* TODO Class needs some refactoring */
 public final class MarkupParser implements IMarkupParser
-{ // TODO finalize javadoc
-    /** Code broadcaster for reporting. */
+{
+    /** Logging */
     private static final Log log = LogFactory.getLog(MarkupParser.class);
 
-    /** Name of desired componentName tag attribute. */
+    /** Name of desired componentName tag attribute. 
+     * E.g. &lt;tag id="wicket-..."&gt; or &lt;tag wicket=..&gt; */
     private String componentNameAttribute;
 
-    /** Name of the desired wicket tag: e.g. &lt;wicket&gt; */
+    /** The desired wicket tag's namespace: e.g. &lt;wicket:.. &gt; */
     private String wicketTagName;
     
     /** Position in parse. */
@@ -84,13 +95,13 @@ public final class MarkupParser implements IMarkupParser
     /** Last place we counted lines from. */
     private int lastLineCountIndex;
 
-    /** Null, if JVM default. Else from <?xml encoding=""> */
+    /** Null, if JVM default. Else taken from <?xml encoding=""> */
     private String encoding;
 
-    /** Regex to find <?xml encoding ... ?> */
+    /** Regex to find &lt;?xml encoding=... ?&gt; */
     private static final Pattern encodingPattern = Pattern.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
 
-    /** if true, <wicket:param ..> tags will be removed from markup */
+    /** if true, &lt;wicket:param ..&gt; tags will be removed from markup */
     private boolean removeWicketParamTags;
     
     /**
@@ -112,7 +123,8 @@ public final class MarkupParser implements IMarkupParser
     }
 
     /** 
-     * Name of desired componentName tag attribute.
+     * Name of desired componentName tag attribute. E.g. &lt;tag id="wicket-..."&gt;
+     * 
      * @param name component name 
      */
     public void setComponentNameAttribute(final String name)
@@ -121,12 +133,14 @@ public final class MarkupParser implements IMarkupParser
         
         if (!ComponentTag.WICKET_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
         {
-            log.info("You are using a non-standard component name: " + componentNameAttribute);
+            log.info("You are using a non-standard component name: " 
+                    + componentNameAttribute);
         }
     }
     
     /** 
-     * Name of the desired wicket tag: e.g. &lt;wicket&gt; 
+     * Name of the desired wicket tag napespace: e.g. &lt;wicket:..&gt; 
+     * 
      * @param name wicket xml namespace (xmlns:wicket) 
      */
     public void setWicketTagName(final String name)
@@ -135,7 +149,8 @@ public final class MarkupParser implements IMarkupParser
         
         if (!ComponentWicketTag.WICKET_TAG_NAME.equals(wicketTagName))
         {
-            log.info("You are using a non-standard wicket tag name: " + wicketTagName);
+            log.info("You are using a non-standard wicket tag name: " 
+                    + wicketTagName);
         }
     }
     
@@ -143,8 +158,10 @@ public final class MarkupParser implements IMarkupParser
      * &lt;wicket:param ...&gt; tags may be included with the output for 
      * markup debugging purposes.
      *   
-     * @param remove If true, markup elements will not be forwarded
+     * @param remove If true, &lt;wicket:param ...&gt; markup elements 
+     *    will be removed
      */
+    // TODO shall be renamed 
     public void setRemoveWicketTagsFromOutput(boolean remove)
     {
         this.removeWicketParamTags = remove;
@@ -152,7 +169,10 @@ public final class MarkupParser implements IMarkupParser
     
     /**
      * Return the encoding used while reading the markup file.
-     * @return if null, than JVM default
+     * You need to call @see #read(Resource) first to initialise
+     * the value.
+     * 
+     * @return if null, than JVM default is used.
      */
     public String getEncoding()
     {
@@ -178,7 +198,7 @@ public final class MarkupParser implements IMarkupParser
     }
 
     /**
-     * Reads and parses markup from a file.
+     * Reads and parses markup from a Resource such as a file.
      * @param resource The file
      * @return The markup
      * @throws ParseException
@@ -193,24 +213,35 @@ public final class MarkupParser implements IMarkupParser
         
         try
         {
+            final BufferedInputStream bin = new BufferedInputStream(resource.getInputStream(), 4000);
+            if (!bin.markSupported())
+            {
+                throw new IOException("BufferedInputStream does not support mark/reset");
+            }
+            
+            // read ahead buffer
+            final int readAheadSize = 80;
+            bin.mark(readAheadSize);
+            
             // read-ahead the input stream, if it starts with <?xml encoding=".." ?>.
             // If yes, set this.encoding and return the character which follow it.
             // If not, return the whole line. determineEncoding will read-ahead
             // at max. the very first line of the markup
-            final String pushBack = determineEncoding(resource.getInputStream());
+            this.encoding = determineEncoding(bin, readAheadSize);
 
             // Depending the encoding determine from the markup-file, read
             // the rest either with specific encoding or JVM default
             final String markup;
-            if (encoding == null)
+            if (this.encoding == null)
             {
-                // Use JVM default to read the markup
-                markup = pushBack + Streams.readString(resource.getInputStream());
+                bin.reset();
+                markup = Streams.readString(bin);
             }
             else
             {
-                // Use the encoding as specific in <?xml encoding=".." ?>
-                markup = Streams.readString(resource.getInputStream(), encoding);
+                // Use the encoding as specified in <?xml encoding=".." ?>
+                // Don't re-read <?xml ..> again
+                markup = Streams.readString(bin, encoding);
             }
 
             return new Markup(resource, parseMarkup(markup));
@@ -231,10 +262,10 @@ public final class MarkupParser implements IMarkupParser
      * @return null, if &lt;?xml ..?&gt; has been found; else all characters read ahead
      * @throws IOException
      */
-    final private String determineEncoding(final InputStream in) throws IOException
+    final private String determineEncoding(final InputStream in, final int readAheadSize) throws IOException
     {
         // max one line
-        StringBuffer pushBack = new StringBuffer(80);
+        StringBuffer pushBack = new StringBuffer(readAheadSize);
         
         int value;
         while ((value = in.read()) != -1)
@@ -246,7 +277,7 @@ public final class MarkupParser implements IMarkupParser
             if ((value == '>') 
                     || (value == '\n') 
                     || (value == '\r') 
-                    || (pushBack.length() > 75))
+                    || (pushBack.length() >= (readAheadSize - 1)))
             {
                 break;
             }
@@ -256,20 +287,18 @@ public final class MarkupParser implements IMarkupParser
         final Matcher matcher = encodingPattern.matcher(pushBack);
         if (!matcher.find())
         {
-            // No; return the whole string
-            return pushBack.toString();
+            // No
+            return null;
         }
         
         // Extract the encoding
-        encoding = matcher.group(3);
+        String encoding = matcher.group(3);
         if ((encoding == null) || (encoding.length() == 0))
         {
             encoding = matcher.group(4);
         }
         
-        // Because we are removing <?xml ..?> from markup and because
-        // there are no additional characters in pushBack, ...
-        return null;
+        return encoding;
     }
     
     /**
@@ -294,7 +323,7 @@ public final class MarkupParser implements IMarkupParser
         // List to return
         final List list = new ArrayList();
 
-        // Create tag parser
+        // keep a reference to the markup
         setInput(markup);
 
         // Tag stack to find balancing tags
@@ -302,10 +331,12 @@ public final class MarkupParser implements IMarkupParser
 
         // Position in parse
         int position = 0;
-       
+
+        // This is to avoid unnecessary list scans. If any <wicket:param ..>
+        // tag was found, this value will be true.
         boolean hasWicketParamTag = false;
         
-        // Loop through tags
+        // Loop through the tags
         for (ComponentTag tag; null != (tag = nextTag());)
         {
             if(log.isDebugEnabled())
@@ -313,6 +344,7 @@ public final class MarkupParser implements IMarkupParser
                 log.debug("tag: " + tag.toUserDebugString() + ", stack: " + stack);
             }
         
+            // Set the flag if <wicket:param ...> was found
             if ((tag instanceof ComponentWicketTag) && "param".equalsIgnoreCase(tag.getName()))
             {
                 hasWicketParamTag = true;
@@ -375,8 +407,8 @@ public final class MarkupParser implements IMarkupParser
                 else
                 {
                     throw new ParseException("Tag "
-                            + tag.toUserDebugString() + " does not have a matching open tag", tag
-                            .getPos());
+                            + tag.toUserDebugString() + " does not have a matching open tag", 
+                            tag.getPos());
                 }
             }
             else if (tag.type == ComponentTag.OPEN_CLOSE)
@@ -398,7 +430,7 @@ public final class MarkupParser implements IMarkupParser
 
                     if (stripComments)
                     {
-                        rawMarkup = rawMarkup.replaceAll("<!--(.|\n|\r)*?-->", "");
+                        rawMarkup = new String(rawMarkup.toString()).replaceAll("<!--(.|\n|\r)*?-->", "");
                     }
 
                     if (compressWhitespace)
@@ -441,21 +473,25 @@ public final class MarkupParser implements IMarkupParser
             list.add(new RawMarkup(markup.substring(position, markup.length())));
         }
 
-        // Return immutable list after removing preview components marked by
-        // "[remove]"
+        // remove <wicket:region name=remove> regions
         removePreviewComponents(list);
 
-        // Validate wicket-param tag are following component tags
+        // Validate wicket-param tag are following component tags, assign
+        // the params to the ComponentTag immediately preceding and remove
+        // the <wicket:param ..> from output.
         if (hasWicketParamTag == true)
         {
             validateWicketTag(list);
         }
 
+        // Return an umodifable list of MarkupElements
         return Collections.unmodifiableList(list);
     }
 
     /**
-     * Handle wicket parameter tags
+     * Validate wicket-param tag are following component tags, assign
+     * the params to the ComponentTag immediately preceding and remove
+     * the <wicket:param ..> from output.
      * 
      * @param markupElements
      * @throws ParseException
@@ -463,6 +499,7 @@ public final class MarkupParser implements IMarkupParser
     private final void validateWicketTag(final List markupElements)
     	throws ParseException
     {
+        // For each ComponentWicketTag found ...
         for (int i=0; i < markupElements.size(); i++)
         {
             final Object elem = markupElements.get(i);
@@ -473,7 +510,8 @@ public final class MarkupParser implements IMarkupParser
             }
             
             // There might be more than one wicket parameter tag. 
-            // Find the component tag (which is not a param tag).
+            // Find the component tag (which is not a param tag) preceding
+            // that element.
             MarkupElement parentTag = (MarkupElement) elem;
             int pos = i;
             while (parentTag instanceof ComponentWicketTag)
@@ -488,6 +526,8 @@ public final class MarkupParser implements IMarkupParser
                 
                 parentTag = (MarkupElement) markupElements.get(pos);
                 
+                // param tags may be in the next line with empty RawMarkup between 
+                // the ComponentTag and the param tag. 
                 if (parentTag instanceof RawMarkup)
                 {
                     String text = ((RawMarkup)parentTag).toString();
@@ -525,7 +565,6 @@ public final class MarkupParser implements IMarkupParser
 	        ValueMap params = new ValueMap(tag.attributes);
 	        params.putAll(((ComponentTag)elem).getAttributes());
 	        params.makeImmutable();
-	        
 	        tag.attributes = params;
 	        
 	        // Shall the wicket tag be removed from output?
@@ -542,13 +581,14 @@ public final class MarkupParser implements IMarkupParser
     }
     
     /**
-     * Removes components marked as "[remove]" from list. Nested components are not
-     * allowed, for obvious reasons.
+     * Removes region enclosed by <wicket:region name=remove> tags.
+     * ComponentTag are not allowed within this region for obvious reasons.
+     * 
      * @param list The list to process
      */
     private void removePreviewComponents(final List list)
     {
-        // Remove any [remove] components
+        // Remove any <wicket:region name=remove> components
         for (int i = 0; i < list.size(); i++)
         {
             // Get next element
@@ -557,9 +597,10 @@ public final class MarkupParser implements IMarkupParser
             // If element is a component tag
             if (element instanceof ComponentTag)
             {
-                // Check for open tag labelled "[remove]"
+                // Check for open tag 
                 final ComponentTag openTag = (ComponentTag) element;
                 
+                // TODO to be removed for Wicket 1.0
                 boolean remove = (openTag.isOpen() && openTag.componentName.equalsIgnoreCase("[remove]"));
                 if (remove == true)
                 {
@@ -613,14 +654,14 @@ public final class MarkupParser implements IMarkupParser
 
                     if (i < list.size())
                     {
-                        throw new MarkupException("[Remove] open tag "
+                        throw new MarkupException("<wicket:region name=remove> open tag "
                                 + openTag + " not closed by " + list.get(i) 
-                                + " It must nt contain a nested wicket component.");
+                                + ". It must not contain a nested wicket component.");
                     }
                     else
                     {
-                        throw new MarkupException("[Remove] open tag "
-                                + openTag + " not closed"
+                        throw new MarkupException("<wicket:region name=remove> open tag "
+                                + openTag + " not closed."
                         		+ " It must nt contain a nested wicket component.");
                     }
                 }
@@ -686,7 +727,7 @@ public final class MarkupParser implements IMarkupParser
                         + openBracketIndex, this.inputPosition);
             }
 
-            // Get the tagtext between open and close brackets
+            // Get the tag text between open and close brackets
             String tagText = input.substring(openBracketIndex + 1, closeBracketIndex);
 
             // Handle comments
@@ -785,12 +826,8 @@ public final class MarkupParser implements IMarkupParser
         if (tagnameParser.matcher().lookingAt())
         {
             // Extract the tag from the pattern matcher
-            final String tagName = tagnameParser.getName().toLowerCase();
+            final String tagName = tagnameParser.getName();
             String namespace = tagnameParser.getNamespace();
-            if (namespace != null)
-            {
-                namespace = namespace.toLowerCase();
-            }
             
             int pos;
             final ComponentTag tag;
