@@ -19,6 +19,7 @@
 package wicket.examples.signin2;
 
 import wicket.PageParameters;
+import wicket.RequestCycle;
 import wicket.markup.html.panel.SignInPanel;
 
 /**
@@ -63,9 +64,10 @@ public final class SignIn2 extends SignInPage
 	public void logout()
 	{
         // Invalidate session
-        getSession().invalidate();
+        RequestCycle.get().getSession().invalidate();
 		
-		// Remove persisted user data
+		// Remove persisted user data. Search for child component
+        // of type SignInForm and remove its related persistence values.
 		removePersistedFormData(SignInPanel.SignInForm.class, true);
 	}
 }

@@ -34,9 +34,16 @@ public class Logout extends AuthenticatedHtmlPage
     public Logout(final PageParameters parameters)
     {
         add(new NavigationPanel("mainNavigation", "Signin example"));
-        
-        getSession().invalidate();
-    }    
+    }
+    
+	/**
+	 * @see wicket.Page#checkAccess(wicket.RequestCycle)
+	 */
+	protected boolean checkAccess() 
+	{
+	    new SignIn2(null).logout();
+		return true;
+	}
 }
 
-
+///////////////////////////////// End of File /////////////////////////////////
