@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.image;
 
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
@@ -34,24 +33,31 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * An image subclass that allows easy rendering of dynamic images.  An
+ * image can be set with setImage(BufferedImage) and its extension can
+ * be specified with setExtension(String).  After this, the image will
+ * be cached as an input stream and will render as would any other Image 
+ * resource.
+ * 
  * @author Jonathan Locke
  */
 public class DynamicImage extends Image
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 
+    /** The image extension */
 	private String extension;
 
+    /** The dynamic, buffered image itself */
     private BufferedImage image;
 
+    /** A cached input stream of the image converted to the given extension type */
     private InputStream inputStream;
 
-    private ByteArrayOutputStream out;
-
     /**
-     * Constructor
-     * @param name
+     * Constructor.
+     * @param name Component name
      */
     public DynamicImage(String name)
     {
@@ -59,37 +65,13 @@ public class DynamicImage extends Image
     }
 
     /**
-     * @return Returns the extension.
-     */
-    public String getExtension()
-    {
-        return extension;
-    }
-
-    /**
-     * @return Returns the image.
-     */
-    public BufferedImage getImage()
-    {
-        return image;
-    }
-
-    /**
-     * @return Returns the inputStream.
-     */
-    public InputStream getInputStream()
-    {
-        return inputStream;
-    }
-
-    /**
+     * Sets the extension of this dynamic image
      * @param extension The extension to set.
-     * @return This
+     * @return This object, to enable invocation chaining
      */
     public DynamicImage setExtension(String extension)
     {
         this.extension = extension;
-
         return this;
     }
 
@@ -101,34 +83,24 @@ public class DynamicImage extends Image
     {
         try
         {
-            out = new ByteArrayOutputStream();
+            // Create output stream
+            final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
             // Get image writer for extension
-            final ImageWriter writer = (ImageWriter) ImageIO.getImageWritersByFormatName(extension)
-                    .next();
+            final ImageWriter writer = (ImageWriter)ImageIO
+                .getImageWritersByFormatName(extension).next();
 
             // Write out gif
             writer.setOutput(ImageIO.createImageOutputStream(out));
             writer.write(image);
 
             // Set input stream
-            setInputStream(new ByteArrayInputStream(out.toByteArray()));
+            this.inputStream = new ByteArrayInputStream(out.toByteArray());
         }
         catch (IOException e)
         {
-            throw new RenderException("Unable to convert image to stream", e);
+            throw new RenderException("Unable to convert dynamic image to stream", e);
         }
-
-        return this;
-    }
-
-    /**
-     * @param inputStream Image source input stream
-     * @return This
-     */
-    public DynamicImage setInputStream(final InputStream inputStream)
-    {
-        this.inputStream = inputStream;
 
         return this;
     }
@@ -137,7 +109,7 @@ public class DynamicImage extends Image
      * @param source The source attribute of the image tag
      * @return Gets the image resource to attach to the component.
      */
-    protected IResource getImageResource(final String source)
+    protected IResource getResource(final String source)
     {
         return new IResource()
         {
