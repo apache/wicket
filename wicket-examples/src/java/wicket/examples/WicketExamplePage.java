@@ -18,9 +18,8 @@
  */
 package wicket.examples;
 
-import wicket.examples.WicketExampleHeader;
 import wicket.markup.html.WebPage;
-import wicket.util.lang.Classes;
+import wicket.util.lang.Packages;
 import wicket.util.string.Strings;
 
 /**
@@ -35,7 +34,7 @@ public class WicketExamplePage extends WebPage
      */
     public WicketExamplePage()
     {
-        final String packageName = Classes.packageName(getClass());
+        final String packageName = Packages.name(getClass());
         add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.')));
     }
 }

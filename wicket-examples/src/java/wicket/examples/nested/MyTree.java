@@ -30,7 +30,7 @@ import wicket.contrib.markup.html.tree.IndentTree;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.AbstractImage;
 import wicket.markup.html.image.Image;
-import wicket.util.lang.Classes;
+import wicket.util.lang.Packages;
 import wicket.util.resource.IResource;
 
 /** indent tree implementation. */
@@ -136,7 +136,7 @@ public class MyTree extends IndentTree
 		protected IResource getResource()
 		{
 			final String imageResource = getModelObjectAsString();
-			final String path = Classes.packageName(MyTree.class) + "." + imageResource;
+			final String path = Packages.name(MyTree.class) + "." + imageResource;
 			return getApplication().getResourceLocator().locate(path, null, null, null);
 		}
 
