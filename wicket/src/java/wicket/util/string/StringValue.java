@@ -28,11 +28,25 @@ import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
 /**
- * Holds an immutable string value with methods to convert to and from various types.
+ * Holds an immutable String value and optionally a Locale, with 
+ * methods to convert to various types.  Also provides some handy 
+ * parsing methods and a variety of static factory methods.
+ * <p>
+ * Objects can be constructed directly from Strings or by using the
+ * valueOf() static factory methods.  The repeat() static factory
+ * methods provide a way of generating a String value that repeats
+ * a given char or String a number of times.
+ * <p>
+ * Conversions to a wide variety of types can be found in the to*()
+ * methods.  A generic conversion can be achieved with to(Class).
+ * <P>
+ * The beforeFirst(), afterFirst(), beforeLast() and afterLast() 
+ * methods are handy for parsing things like paths and filenames. 
+ * 
  * @author Jonathan Locke
  */
 public class StringValue
-{ // TODO finalize javadoc
+{
     /** The underlying string. */
     private final String text;
 
@@ -148,8 +162,9 @@ public class StringValue
         }
         else
         {
-            final DecimalFormat format = new DecimalFormat(
-                    "#." + repeat(places, '#'), new DecimalFormatSymbols(locale));
+            final DecimalFormat format = 
+                new DecimalFormat("#." + repeat(places, '#'), 
+                new DecimalFormatSymbols(locale));
             return valueOf(format.format(value));
         }
     }
@@ -209,27 +224,27 @@ public class StringValue
             return toString();
         }
 
-        if ((type == Integer.TYPE) || (type == Integer.class))
+        if (type == Integer.TYPE || type == Integer.class)
         {
             return toInteger();
         }
 
-        if ((type == Long.TYPE) || (type == Long.class))
+        if (type == Long.TYPE || type == Long.class)
         {
             return toLongObject();
         }
 
-        if ((type == Boolean.TYPE) || (type == Boolean.class))
+        if (type == Boolean.TYPE || type == Boolean.class)
         {
             return toBooleanObject();
         }
 
-        if ((type == Double.TYPE) || (type == Double.class))
+        if (type == Double.TYPE || type == Double.class)
         {
             return toDoubleObject();
         }
 
-        if ((type == Character.TYPE) || (type == Character.class))
+        if (type == Character.TYPE || type == Character.class)
         {
             return toCharacter();
         }
@@ -244,8 +259,8 @@ public class StringValue
             return toDuration();
         }
 
-        throw new StringValueConversionException("Cannot convert '"
-                + toString() + "'to type " + type);
+        throw new StringValueConversionException
+            ("Cannot convert '" + toString() + "'to type " + type);
     }
 
     /**
@@ -332,8 +347,8 @@ public class StringValue
         }
         catch (NumberFormatException e)
         {
-            throw new StringValueConversionException("Unable to convert '"
-                    + text + "' to an Integer value", e);
+            throw new StringValueConversionException
+               ("Unable to convert '" + text + "' to an Integer value", e);
         }
     }
 
@@ -350,8 +365,8 @@ public class StringValue
         }
         catch (NumberFormatException e)
         {
-            throw new StringValueConversionException("Unable to convert '"
-                    + text + "' to a Long value", e);
+            throw new StringValueConversionException
+                ("Unable to convert '" + text + "' to a Long value", e);
         }
     }
 
@@ -378,8 +393,8 @@ public class StringValue
         }
         catch (NumberFormatException e)
         {
-            throw new StringValueConversionException("Unable to convert '"
-                    + text + "' to an int value", e);
+            throw new StringValueConversionException
+                ("Unable to convert '" + text + "' to an int value", e);
         }
     }
 
@@ -396,8 +411,8 @@ public class StringValue
         }
         catch (NumberFormatException e)
         {
-            throw new StringValueConversionException("Unable to convert '"
-                    + text + "' to a long value", e);
+            throw new StringValueConversionException
+                ("Unable to convert '" + text + "' to a long value", e);
         }
     }
 
@@ -414,8 +429,8 @@ public class StringValue
         }
         catch (ParseException e)
         {
-            throw new StringValueConversionException("Unable to convert '"
-                    + text + "' to a double value", e);
+            throw new StringValueConversionException
+                ("Unable to convert '" + text + "' to a double value", e);
         }
     }
 
@@ -620,8 +635,7 @@ public class StringValue
      * @return the converted text as a primitive or the default if text is null
      * @throws StringValueConversionException
      */
-    public final boolean toBoolean(final boolean defaultValue)
-            throws StringValueConversionException
+    public final boolean toBoolean(final boolean defaultValue) throws StringValueConversionException
     {
         return (text == null) ? defaultValue : toBoolean();
     }
