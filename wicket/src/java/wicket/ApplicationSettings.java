@@ -74,16 +74,16 @@ import wicket.util.time.Duration;
  * <i>stripComponentNames </i> (defaults to false) - Set to true to strip
  * component name attributes during rendering
  * <p>
- * <i>throwExceptionOnMissingResource </i> (defaults to true) - Set to true to throw
- * a runtime exception if a required string resource is not found. Set to false
- * to return the requested resource key surrounded by pairs of question mark
- * characters (e.g. "??missingKey??")
+ * <i>throwExceptionOnMissingResource </i> (defaults to true) - Set to true to
+ * throw a runtime exception if a required string resource is not found. Set to
+ * false to return the requested resource key surrounded by pairs of question
+ * mark characters (e.g. "??missingKey??")
  * <p>
  * <i>useDefaultOnMissingResource </i> (defaults to true) - Set to true to
  * return a default value if available when a required string resource is not
- * found. If set to false then the throwExceptionOnMissingResource flag is used to
- * determine how to behave. If no default is available then this is the same as
- * if this flag were false
+ * found. If set to false then the throwExceptionOnMissingResource flag is used
+ * to determine how to behave. If no default is available then this is the same
+ * as if this flag were false
  * <p>
  * <i>defaultPageFactory </i>- the factory class that is used for constructing
  * page instances.
@@ -100,9 +100,13 @@ import wicket.util.time.Duration;
  * @author Eelco Hillenius
  */
 public final class ApplicationSettings
-{ // TODO finalize javadoc
+{
+    // TODO finalize javadoc
     /** Log */
     private static final Log log = LogFactory.getLog(ApplicationSettings.class);
+
+    /** Application default for automatically resolving hrefs */
+    private boolean automaticLinking = false;
 
     /** Component attribute name */
     private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
@@ -130,9 +134,6 @@ public final class ApplicationSettings
 
     /** Encryption key used to encode/decode passwords e.g. */
     private String encryptionKey = "WiCkEt-FRAMEwork";
-
-    /** Flags used to determine how to behave if resources are not found */
-    private boolean throwExceptionOnMissingResource = true;
 
     /** Default values for persistence of form data (by means of cookies) */
     private FormComponentPersistenceDefaults formComponentPersistenceDefaults = new FormComponentPersistenceDefaults();
@@ -170,6 +171,9 @@ public final class ApplicationSettings
     /** If true, wicket tags ( <wicket ..>) shall be removed from output */
     private boolean stripWicketTags = false;
 
+    /** Flags used to determine how to behave if resources are not found */
+    private boolean throwExceptionOnMissingResource = true;
+
     /** Type of handling for unexpected exceptions */
     private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
 
@@ -178,9 +182,6 @@ public final class ApplicationSettings
 
     /** Default xhtml wicket namespace: e.g. <wicket:> */
     private String wicketNamespace = ComponentWicketTag.WICKET_NAMESPACE;
-    
-    /** Application default for automatically resolving hrefs */
-    private boolean automaticLinking = false;
 
     /**
      * Indicates that an exception page appropriate to development should be
@@ -202,7 +203,7 @@ public final class ApplicationSettings
      */
     public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
             "SHOW_NO_EXCEPTION_PAGE");
-
+    
     /**
      * Enumerated type for different ways of displaying unexpected exceptions.
      */
@@ -248,6 +249,16 @@ public final class ApplicationSettings
     }
 
     /**
+     * If true, automatic link resolution is enabled.
+     * 
+     * @return Returns the automaticLinking.
+     */
+    public boolean getAutomaticLinking()
+    {
+        return automaticLinking;
+    }
+
+    /**
      * Gets component name attribute in use in this application. Normally, this
      * is "componentName", but it can be changed in the unlikely event that tag
      * attribute naming conflicts arise.
@@ -279,7 +290,7 @@ public final class ApplicationSettings
     {
         return compressWhitespace;
     }
-    
+
     /**
      * @return Returns the cryptClass.
      */
@@ -335,15 +346,6 @@ public final class ApplicationSettings
     }
 
     /**
-     * @return Whether to throw an exception when a missing resource is
-     *         requested
-     */
-    public final boolean getThrowExceptionOnMissingResource()
-    {
-        return throwExceptionOnMissingResource;
-    }
-
-    /**
      * Get the defaults to be used by persistence manager
      * 
      * @return FormComponentPersistenceDefaults
@@ -394,7 +396,6 @@ public final class ApplicationSettings
     }
 
 
-
     /**
      * Gets any source code path to use when searching for resources.
      * 
@@ -438,6 +439,15 @@ public final class ApplicationSettings
     }
 
     /**
+     * @return Whether to throw an exception when a missing resource is
+     *         requested
+     */
+    public final boolean getThrowExceptionOnMissingResource()
+    {
+        return throwExceptionOnMissingResource;
+    }
+
+    /**
      * @return Returns the unexpectedExceptionDisplay.
      * @see ApplicationSettings#setUnexpectedExceptionDisplay(ApplicationSettings.UnexpectedExceptionDisplay)
      */
@@ -463,6 +473,17 @@ public final class ApplicationSettings
     public final String getWicketNamespace()
     {
         return this.wicketNamespace;
+    }
+
+    /**
+     * Application default for automatic link resolution.
+     * 
+     * @param automaticLinking
+     *            The automaticLinking to set.
+     */
+    public void setAutomaticLinking(boolean automaticLinking)
+    {
+        this.automaticLinking = automaticLinking;
     }
 
     /**
@@ -559,7 +580,8 @@ public final class ApplicationSettings
      *            The default class resolver
      * @return This
      */
-    public final ApplicationSettings setDefaultClassResolver(final IClassResolver defaultClassResolver)
+    public final ApplicationSettings setDefaultClassResolver(
+            final IClassResolver defaultClassResolver)
     {
         this.defaultClassResolver = defaultClassResolver;
         return this;
@@ -587,19 +609,6 @@ public final class ApplicationSettings
     public final ApplicationSettings setEncryptionKey(String encryptionKey)
     {
         this.encryptionKey = encryptionKey;
-        return this;
-    }
-
-    /**
-     * @param throwExceptionOnMissingResource
-     *            Whether to throw an exception when a missing resource is
-     *            requested
-     * @return This
-     */
-    public final ApplicationSettings setThrowExceptionOnMissingResource(
-            final boolean throwExceptionOnMissingResource)
-    {
-        this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
         return this;
     }
 
@@ -723,6 +732,19 @@ public final class ApplicationSettings
     }
 
     /**
+     * @param throwExceptionOnMissingResource
+     *            Whether to throw an exception when a missing resource is
+     *            requested
+     * @return This
+     */
+    public final ApplicationSettings setThrowExceptionOnMissingResource(
+            final boolean throwExceptionOnMissingResource)
+    {
+        this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
+        return this;
+    }
+
+    /**
      * The exception display type determines how the framework displays
      * exceptions to you as a developer or user.
      * <p>
@@ -788,23 +810,4 @@ public final class ApplicationSettings
     {
         return Collections.unmodifiableList(stringResourceLoaders);
     }
-    
-	/**
-	 * If true, automatic link resolution is enabled.
-	 * @return Returns the automaticLinking.
-	 */
-	public boolean getAutomaticLinking()
-	{
-		return automaticLinking;
-	}
-	
-	/**
-	 * Application default for automatic link resolution.
-	 * 
-	 * @param automaticLinking The automaticLinking to set.
-	 */
-	public void setAutomaticLinking(boolean automaticLinking)
-	{
-		this.automaticLinking = automaticLinking;
-	}
 }
