@@ -94,15 +94,6 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * Sets any loaded resource to null, thus forcing a reload on the next
-	 * request.
-	 */
-	protected final void reset()
-	{
-		this.resource = null;
-	}
-
-	/**
 	 * @return The unique path to this resource
 	 */
 	public String getPath()
@@ -144,6 +135,15 @@ public abstract class Resource implements IResourceListener
 	 * @return Gets the resource to render to the requester
 	 */
 	protected abstract IResource getResource();
+
+	/**
+	 * Sets any loaded resource to null, thus forcing a reload on the next
+	 * request.
+	 */
+	protected final void reset()
+	{
+		this.resource = null;
+	}
 
 	/**
 	 * Respond with resource
