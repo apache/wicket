@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.26 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -267,9 +267,9 @@ public abstract class MarkupContainer extends Component
 	{
 		if (childForId == null)
 		{
-			childForId = Collections.EMPTY_MAP; 
+			childForId = Collections.EMPTY_MAP;
 		}
-		
+
 		final Iterator iterator = childForId.values().iterator();
 		return new Iterator()
 		{
@@ -328,7 +328,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void removeAll()
 	{
-		for (final Iterator iterator = iterator(); iterator.hasNext(); )
+		for (final Iterator iterator = iterator(); iterator.hasNext();)
 		{
 			iterator.next();
 			iterator.remove();
@@ -381,29 +381,36 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Get the string representation of this container.
-	 * 
-	 * @return String representation of this container
+	 * @see wicket.Component#toString()
 	 */
 	public String toString()
 	{
-		final StringBuffer buffer = new StringBuffer();
+		return toString(false);
+	}
 
+	/**
+	 * @param detailed
+	 *            True if a detailed string is desired
+	 * @return String representation of this container
+	 */
+	public String toString(final boolean detailed)
+	{
+		final StringBuffer buffer = new StringBuffer();
 		buffer.append("[MarkupContainer ");
 		buffer.append(super.toString());
-
-		if (markupStream != null)
+		if (detailed)
 		{
-			buffer.append(", markupStream = " + markupStream);
-		}
+			if (markupStream != null)
+			{
+				buffer.append(", markupStream = " + markupStream);
+			}
 
-		if (childForId != null && childForId.size() != 0)
-		{
-			buffer.append(", children = " + childForId.values());
+			if (childForId != null && childForId.size() != 0)
+			{
+				buffer.append(", children = " + childForId.values());
+			}
 		}
-
 		buffer.append(']');
-
 		return buffer.toString();
 	}
 

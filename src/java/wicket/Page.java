@@ -530,25 +530,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		final Response response = getResponse();
 
 		// In case the Page markup contained a <?xml ..?> to determine the
-		// markup's encoding, than forward that very same declaration to 
+		// markup's encoding, than forward that very same declaration to
 		// the browser. The xml declaration of all components on the page
 		// are swallowed. Note: this is a potential issue in cases where
-		// the page's encoding (e.g. ascii) does not allow for special 
-		// characters used in the contained components.  The user has to 
+		// the page's encoding (e.g. ascii) does not allow for special
+		// characters used in the contained components. The user has to
 		// make sure that the Page's encoding allow for all characters
 		// required.
-		
-		// Note: 
-		
+
+		// Note:
+
 		final MarkupStream markupStream = findMarkupStream();
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null))
-	    {
+		{
 			// Set content type based on markup type for page
-			response.setContentType("text/" + getMarkupType() + "; charset=" 
-			        + markupStream.getEncoding());
-			
-	        response.write(markupStream.getXmlDeclaration());
-	    }
+			response.setContentType("text/" + getMarkupType() + "; charset="
+					+ markupStream.getEncoding());
+
+			response.write(markupStream.getXmlDeclaration());
+		}
 		else
 		{
 			// Set content type based on markup type for page
@@ -672,7 +672,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// Set page's associated markup stream
 			final MarkupStream markupStream = getAssociatedMarkupStream();
 			setMarkupStream(markupStream);
-			
+
 			// Configure response object with locale and content type
 			configureResponse();
 
@@ -904,7 +904,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			{
 				// Start new version
 				newVersion();
-				
+
 				// Okay to record version information
 				return true;
 			}
