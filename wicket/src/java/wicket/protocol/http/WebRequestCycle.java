@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.5 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -539,8 +539,8 @@ public class WebRequestCycle extends RequestCycle
 			final String url = ((WebRequest)getRequest()).getRelativeURL();
 
 			// Get servlet context
-			final ServletContext context =
-				((WebApplication)application).getWicketServlet().getServletContext();
+			final ServletContext context = ((WebApplication)application).getWicketServlet()
+					.getServletContext();
 
 			// Set content type
 			response.setContentType(context.getMimeType(url));
