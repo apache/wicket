@@ -39,7 +39,6 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	/** Width of image */
 	private int width = 100;
 
-
 	/**
 	 * Constructor.
 	 * 

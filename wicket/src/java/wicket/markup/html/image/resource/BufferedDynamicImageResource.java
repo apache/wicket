@@ -19,6 +19,8 @@ package wicket.markup.html.image.resource;
 
 import java.awt.image.BufferedImage;
 
+import wicket.util.time.Time;
+
 
 /**
  * An image subclass that allows easy rendering of dynamic images. An image can
@@ -36,6 +38,9 @@ public class BufferedDynamicImageResource extends DynamicImageResource
 	/** The byte array holding the contents of the dynamic image */
 	private byte[] imageData;
 
+	/** The time this image resource was last modified */
+	private Time lastModifiedTime;
+
 	/**
 	 * @param image
 	 *            The image to set
@@ -43,6 +48,7 @@ public class BufferedDynamicImageResource extends DynamicImageResource
 	public void setImage(final BufferedImage image)
 	{
 		imageData = toImageData(image);
+		lastModifiedTime = Time.now();
 	}
 
 	/**
@@ -51,5 +57,13 @@ public class BufferedDynamicImageResource extends DynamicImageResource
 	protected byte[] getImageData()
 	{
 		return imageData;
+	}
+	
+	/**
+	 * @see wicket.markup.html.image.resource.DynamicImageResource#lastModifiedTime()
+	 */
+	public Time lastModifiedTime()
+	{
+		return lastModifiedTime;
 	}
 }

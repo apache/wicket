@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,10 +33,10 @@ import wicket.util.time.Time;
 
 /**
  * An image subclass that allows easy rendering of dynamic images. An image can
- * be set by calling toImageData(BufferedImage) or by implementing getImageData(),
- * and its format can be specified with setFormat(String).
- * After this, the image will be cached as an input stream
- * and will render as would any other Image resource.
+ * be set by calling toImageData(BufferedImage) or by implementing
+ * getImageData(), and its format can be specified with setFormat(String). After
+ * this, the image will be cached as an input stream and will render as would
+ * any other Image resource.
  * 
  * @author Jonathan Locke
  */
@@ -47,7 +47,10 @@ public abstract class DynamicImageResource extends ImageResource
 
 	/** The image type */
 	private String format = "png";
-	
+
+	/** The time this image resource was last modified */
+	private Time lastModifiedTime;
+
 	/**
 	 * @return Returns the image format.
 	 */
@@ -55,7 +58,68 @@ public abstract class DynamicImageResource extends ImageResource
 	{
 		return format;
 	}
-	
+
+	/**
+	 * @return Gets the image resource to attach to the component.
+	 */
+	public IResource getResource()
+	{
+		return new IResource()
+		{
+			/** Transient input stream to resource */
+			private transient InputStream inputStream = null;
+
+			/**
+			 * @see wicket.util.resource.IResourceStream#close()
+			 */
+			public void close() throws IOException
+			{
+				if (inputStream != null)
+				{
+					inputStream.close();
+					inputStream = null;
+				}
+			}
+
+			/**
+			 * @see wicket.util.resource.IResource#getContentType()
+			 */
+			public String getContentType()
+			{
+				return "image/" + format;
+			}
+
+			/**
+			 * @see wicket.util.resource.IResourceStream#getInputStream()
+			 */
+			public InputStream getInputStream() throws ResourceNotFoundException
+			{
+				if (inputStream == null)
+				{
+					inputStream = new ByteArrayInputStream(getImageData());
+					lastModifiedTime = Time.now();
+				}
+				return inputStream;
+			}
+
+			/**
+			 * @see wicket.util.watch.IModifiable#lastModifiedTime()
+			 */
+			public Time lastModifiedTime()
+			{
+				return DynamicImageResource.this.lastModifiedTime();
+			}
+		};
+	}
+
+	/**
+	 * @return The last time this image resource was modified
+	 */
+	public Time lastModifiedTime()
+	{
+		return lastModifiedTime;
+	}
+
 	/**
 	 * Sets the format of this dynamic image, such as "jpeg" or "gif"
 	 * 
@@ -71,9 +135,10 @@ public abstract class DynamicImageResource extends ImageResource
 	 * @return The image data for this dynamic image
 	 */
 	protected abstract byte[] getImageData();
-	
+
 	/**
-	 * @param image The image to turn into data
+	 * @param image
+	 *            The image to turn into data
 	 * @return The image data for this dynamic image
 	 */
 	protected byte[] toImageData(final BufferedImage image)
@@ -99,45 +164,4 @@ public abstract class DynamicImageResource extends ImageResource
 			throw new WicketRuntimeException("Unable to convert dynamic image to stream", e);
 		}
 	}
-	
-	/**
-	 * @return Gets the image resource to attach to the component.
-	 */
-	public IResource getResource()
-	{
-		return new IResource()
-		{
-			private InputStream inputStream = null;
-
-			public void close() throws IOException
-			{
-				if (inputStream != null)
-                {
-					inputStream.close();
-					inputStream = null;
-                }
-			}
-
-			public String getContentType()
-			{
-				return "image/" + format;
-			}
-
-			public InputStream getInputStream() throws ResourceNotFoundException
-			{
-				if (inputStream == null)
-				{
-					inputStream = new ByteArrayInputStream(getImageData());
-				}
-				return inputStream;
-			}
-
-			public Time lastModifiedTime()
-			{
-				return Time.now();
-			}
-		};
-	}
 }
-
-
