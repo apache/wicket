@@ -72,7 +72,7 @@ public class HelloWorld extends WebPage
 				<p>The HTML file that defines our Hello World functionality is as follows:</p>
 				<source><![CDATA[<html>
 <body>
-    <span id="wicket-message">Message goes here</span>
+    <span wicket:id="message">Message goes here</span>
 </body>
 </html>]]></source>
 				<p>
@@ -81,7 +81,7 @@ public class HelloWorld extends WebPage
 						<li>
 							the component declaration
 							<code>
-								<![CDATA[<span id="wicket-message">]]>
+								<![CDATA[<span wicket:id="message">]]>
 							</code>
 						</li>
 						<li>

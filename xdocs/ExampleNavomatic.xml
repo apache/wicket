@@ -66,7 +66,7 @@
 </html>]]></pre></td>
 <td><pre><![CDATA[<html>
 <body>
-  <span id = "wicket-myBorder">
+  <span wicket:id = "myBorder">
       Middle
   </span>
 </body>
@@ -128,7 +128,7 @@ public class Page1 extends WebPage
 			<subsection name="Page1.html">
 				<source><![CDATA[<html>
 <body> 
-    <span id = "wicket-navomaticBorder">
+    <span wicket:id = "navomaticBorder">
         You are viewing Page1
     </span>
 </body>
@@ -136,7 +136,7 @@ public class Page1 extends WebPage
 			<p>
 			Notice that the NavomaticBorder component is attached to the <![CDATA[<span>]]> 
 			tag because the name of the component in the Java code is "navomaticBorder"
-			and the <![CDATA[<span>]]> tag's id attribute is set to "wicket-navomaticBorder".
+			and the <![CDATA[<span>]]> tag's wicket:id attribute is set to "navomaticBorder".
 			Because the two names match, Wicket associates the NavomaticBorder Java 
 			component with the <![CDATA[<span>]]> tag.
 			</p>
@@ -162,7 +162,7 @@ public class Page2 extends WebPage
 					<![CDATA[
 <html>
 <body>
-    <span id = "wicket-navomaticBorder">
+    <span wicket:id = "navomaticBorder">
         You are viewing Page2
     </span>
 </body>
@@ -200,7 +200,7 @@ public class NavomaticBorder extends Border
         <table>
             <tr>
                 <td>
-                    <span id = "wicket-navigationBorder">
+                    <span wicket:id = "navigationBorder">
                       <b>Navigation Links</b>
                       <p>
                         <wicket:link>
@@ -212,7 +212,7 @@ public class NavomaticBorder extends Border
                     </span>
                 </td>
                 <td>
-                    <span id = "wicket-bodyBorder">
+                    <span wicket:id = "bodyBorder">
                         <wicket:body/>
                     </span>
                 </td>
@@ -234,7 +234,7 @@ public class NavomaticBorder extends Border
 				</p>
 				<p>
 				Next, notice that the navigation links and the border's <code><![CDATA[<wicket:body/>]]></code>
-				are both enclosed in <![CDATA[<span>]]> tags which have id attributes that
+				are both enclosed in <![CDATA[<span>]]> tags which have wicket:id attributes that
 				associate those tags with the BoxBorder components added in the NavomaticBorder
 				contstructor.  These nested border components will each draw a thin black line
 				around their contents.
