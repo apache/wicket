@@ -70,7 +70,7 @@ public class Image extends HtmlComponent implements IResourceListener
      * the image resource.
      * @param name The non-null name of this component
      */
-    public Image(String name)
+    public Image(final String name)
     {
         super(name);
     }
@@ -83,7 +83,7 @@ public class Image extends HtmlComponent implements IResourceListener
      * @param model the model
      * @throws RenderException Thrown if the component has been given a null name.
      */
-    public Image(String name, IModel model)
+    public Image(final String name, final IModel model)
     {
         super(name, model);
     }
@@ -106,7 +106,7 @@ public class Image extends HtmlComponent implements IResourceListener
      * @param expression the OGNL expression that works on the given object
      * @throws RenderException Thrown if the component has been given a null name.
      */
-    public Image(String name, IModel model, String expression)
+    public Image(final String name, final IModel model, final String expression)
     {
         super(name, model, expression);
     }
@@ -117,10 +117,10 @@ public class Image extends HtmlComponent implements IResourceListener
      * {@link wicket.model.Model}. All components have names.
      * A component's name cannot be null.
      * @param name The non-null name of this component
-     * @param object the object that will be used as a simple model
+     * @param object The object that will be used as a simple model
      * @throws RenderException Thrown if the component has been given a null name.
      */
-    public Image(String name, Serializable object)
+    public Image(final String name, final Serializable object)
     {
         super(name, object);
     }
@@ -142,7 +142,7 @@ public class Image extends HtmlComponent implements IResourceListener
      * @param expression the OGNL expression that works on the given object
      * @throws RenderException Thrown if the component has been given a null name.
      */
-    public Image(String name, Serializable object, String expression)
+    public Image(final String name, final Serializable object, final String expression)
     {
         super(name, object, expression);
     }
