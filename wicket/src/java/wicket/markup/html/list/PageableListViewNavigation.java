@@ -208,14 +208,14 @@ public class PageableListViewNavigation extends Loop
 	 */
 	protected void internalOnBeginRequest()
 	{
-		super.internalOnBeginRequest();
-		
 		// PageableListViewNavigation itself (as well as the PageableListView)
 		// may have pages.
 
 		// The index of the first page link depends on the PageableListView's
 		// page currently printed.
 		this.setStartIndex();
+		
+		super.internalOnBeginRequest();
 	}
 
 	/**
