@@ -18,7 +18,6 @@
  */
 package wicket.util.time;
 
-
 import java.text.ParseException;
 
 import java.util.Calendar;
@@ -26,15 +25,55 @@ import java.util.Calendar;
 import wicket.util.lang.EnumeratedType;
 
 /**
- * An immutable time of day value in milliseconds.
+ * An immutable time of day value represented as milliseconds since the most
+ * recent midnight.
+ * <p>
+ * Values can be constructed using various factory methods:
+ * <ul>
+ *   <li>valueOf(long) where long is milliseconds since midnight
+ *   <li>valueOf(String) where the string is in h.mma format
+ *   <li>valueOf(Calendar, String) where the string is in h.mma format
+ *   <li>valueOf(Duration) where duration is time since midnight
+ *   <li>valueOf(Time) where time is some point in time today
+ *   <li>valueOf(Calendar, Time) where time is some point in time today
+ *   <li>militaryTime(int hour, int minute, int second) for 24 hour time
+ *   <li>time(int hour, int minute, Meridian) where Meridian is AM or PM
+ *   <li>time(int hour, int minute, int second, Meridian) where Meridian is AM or PM
+ *   <li>now() to construct the current time of day
+ *   <li>now(Calendar) to construct the current time of day using a given calendar
+ * </ul>
+ * <p>
+ * If an attempt is made to construct an illegal time of day value (one that is
+ * greater than 24 hours worth of milliseconds), an IllegalArgumentException will
+ * be thrown. 
+ * <p>
+ * Military hours, minutes and seconds of the time of day can be retrieved by 
+ * calling hour(), minute() and second().
+ * <p>
+ * The next occurrence of a given time of day can be retrieved by calling next()
+ * or next(Calendar).
+ * 
  * @author Jonathan Locke
  */
 public final class TimeOfDay extends AbstractTime
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 981684175051766950L;
 
-	/** Constant for AM time. */
+    /** Typesafe AM/PM enumeration. */
+    public static final class Meridian extends EnumeratedType
+    {
+        /**
+         * Construct.
+         * @param name the meridian name (value)
+         */
+        Meridian(final String name)
+        {
+            super(name);
+        }
+    }
+
+    /** Constant for AM time. */
 	public static final Meridian AM = new Meridian("AM");
 
 	/** Constant for PM time. */
@@ -59,33 +98,6 @@ public final class TimeOfDay extends AbstractTime
         {
             throw new IllegalArgumentException("Time " + this + " is not a time of day value");
         }
-    }
-
-    /**
-     * Gets the hour of the day.
-     * @return The hour of the day (0-23)
-     */
-    public int getHour()
-    {
-        return toHours(getMilliseconds());
-    }
-
-    /**
-     * Gets the minute.
-     * @return The minute (0-59)
-     */
-    public int getMinute()
-    {
-        return toMinutes(getMilliseconds()) % 60;
-    }
-
-    /**
-     * Gets the second.
-     * @return The second (0-59)
-     */
-    public int getSecond()
-    {
-        return toSeconds(getMilliseconds()) % 60;
     }
 
     /**
@@ -124,7 +136,6 @@ public final class TimeOfDay extends AbstractTime
             synchronized (calendar)
             {
                 timeFormat.setCalendar(calendar);
-
                 return new TimeOfDay(timeFormat.parse(time).getTime());
             }
         }
@@ -158,8 +169,36 @@ public final class TimeOfDay extends AbstractTime
      */
     public static TimeOfDay valueOf(final Calendar calendar, final Time time)
     {
-        return militaryTime(time.getHour(calendar), time.getMinute(calendar), time
-                .getSecond(calendar));
+        return militaryTime(time.getHour(calendar), 
+                            time.getMinute(calendar), 
+                            time.getSecond(calendar));
+    }
+
+    /**
+     * Gets the hour of the day.
+     * @return The hour of the day (0-23)
+     */
+    public int hour()
+    {
+        return toHours(getMilliseconds());
+    }
+
+    /**
+     * Gets the minute.
+     * @return The minute (0-59)
+     */
+    public int minute()
+    {
+        return toMinutes(getMilliseconds()) % 60;
+    }
+
+    /**
+     * Gets the second.
+     * @return The second (0-59)
+     */
+    public int second()
+    {
+        return toSeconds(getMilliseconds()) % 60;
     }
 
     /**
@@ -186,8 +225,9 @@ public final class TimeOfDay extends AbstractTime
             throw new IllegalArgumentException("Second " + second + " is not valid");
         }
 
-        return valueOf(Duration.hours(hour).add(Duration.minutes(minute)).add(
-                Duration.seconds(second)));
+        return valueOf(Duration.hours(hour)
+                  .add(Duration.minutes(minute))
+                  .add(Duration.seconds(second)));
     }
 
     /**
@@ -317,18 +357,14 @@ public final class TimeOfDay extends AbstractTime
     {
         return toMinutes(milliseconds) / 60;
     }
-
-    /** Typesafe AM/PM enum. */
-    public static final class Meridian extends EnumeratedType
+    
+    /**
+     * @see Object#toString()
+     */
+    public String toString()
     {
-        /**
-         * Construct.
-         * @param name the meridian name (value)
-         */
-        Meridian(final String name)
-        {
-            super(name);
-        }
+        final int second = second();
+        return "" + hour() + ":" + minute() + (second != 0 ? ":" + second : "");
     }
 }
 
