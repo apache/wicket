@@ -18,15 +18,13 @@
  */
 package wicket.markup.html.tree;
 
+import java.io.Serializable;
+import java.util.Enumeration;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.VariableHeightLayoutCache;
-
-import java.io.Serializable;
-
-import java.util.Enumeration;
-import java.util.List;
 
 /**
  * Holder and handler for tree state.
@@ -34,15 +32,9 @@ import java.util.List;
  * @author Eelco Hillenius
  */
 public class TreeStateCache extends VariableHeightLayoutCache implements Serializable
-{ // TODO finalize javadoc
+{
     /** currently selected path. */
     private TreePath selectedPath;
-
-    /** query that was used to select the current selected path. */
-    private String selectedPathQuery;
-
-    /** the objects owned by the selected path. */
-    private List pathContent;
 
     /**
      * Expands the selected path and set selection to currently selected path.
@@ -52,33 +44,6 @@ public class TreeStateCache extends VariableHeightLayoutCache implements Seriali
     {
         setExpandedState(selection, true);
         this.selectedPath = selection;
-    }
-
-    /**
-     * Expands the selected path and sets the selection to currently selected path and set the
-     * content owned by the selected path.
-     * @param selection the new selection
-     * @param pathContent the path owned by the selection
-     */
-    public void setSelectedPath(TreePath selection, List pathContent)
-    {
-        setSelectedPath(selection);
-        this.pathContent = pathContent;
-    }
-
-    /**
-     * Expands the selected path and sets the selection to currently selected path,
-     * sets the content owned by the selected path and sets the query that was used
-     * to get the selection.
-     * @param selection new selection
-     * @param pathContent path owned by selection
-     * @param selectedPathQuery query that was used to get selection
-     */
-    public void setSelectedPath(TreePath selection, List pathContent,
-    		String selectedPathQuery)
-    {
-        setSelectedPath(selection, pathContent);
-        this.selectedPathQuery = selectedPathQuery;
     }
 
     /**
@@ -93,40 +58,6 @@ public class TreeStateCache extends VariableHeightLayoutCache implements Seriali
         }
 
         return selectedPath;
-    }
-
-    /**
-     * Gets the content that is owned by the current path.
-     * @return list of content
-     */
-    public List getPathContent()
-    {
-        return pathContent;
-    }
-
-    /**
-     * set the content that is owned by the current path.
-     * @param list list of content
-     */
-    public void setPathContent(List list)
-    {
-        pathContent = list;
-    }
-
-    /**
-     * @return String
-     */
-    public String getSelectedPathQuery()
-    {
-        return selectedPathQuery;
-    }
-
-    /**
-     * @param selectedPathQuery
-     */
-    public void setSelectedPathQuery(String selectedPathQuery)
-    {
-        this.selectedPathQuery = selectedPathQuery;
     }
 
     /**
