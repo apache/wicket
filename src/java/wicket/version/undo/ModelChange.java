@@ -18,6 +18,7 @@
 package wicket.version.undo;
 
 import wicket.Component;
+import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.util.lang.Objects;
 
@@ -29,20 +30,50 @@ import wicket.util.lang.Objects;
 class ModelChange extends Change
 {
 	private final Component component;
-	private final IModel originalModel;
-	
+	private IModel originalModel;
+
 	ModelChange(final Component component)
 	{
+		// Save component
 		this.component = component;
+
+		// Get component model
 		final IModel model = component.getModel();
+
+		// If the component has a model, it's about to change!
 		if (model != null)
 		{
-			model.detach();
-			originalModel = (IModel)Objects.clone(model); 
-		}
-		else
-		{
-			originalModel = null;
+			// Should we clone the model?
+			boolean cloneModel = true;
+
+			// If the component is a form component
+			if (component instanceof FormComponent)
+			{
+				// and it's using the same model as the form
+				if (((FormComponent)component).getForm().getModel() == model)
+				{
+					// we don't need to clone the model, because it will
+					// be re-initialized using initModel()
+					cloneModel = false;
+				}
+			}
+			else
+			{
+				// If the component is using the same model as the page
+				if (component.getPage().getModel() == model)
+				{
+					// we don't need to clone the model, because it will
+					// be re-initialized using initModel()
+					cloneModel = false;
+				}
+			}
+
+			// Clone model?
+			if (cloneModel)
+			{
+				model.detach();
+				originalModel = (IModel)Objects.clone(model);
+			}
 		}
 	}
 
