@@ -26,7 +26,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.PageParameters;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
+import wicket.markup.html.panel.Panel;
 import wicket.markup.html.tree.Tree;
+import wicket.markup.html.tree.TreeNodeModel;
 
 /**
  * Tree example that uses the user-home dirs to populate the tree.
@@ -47,7 +49,17 @@ public class FileBrowser extends HtmlPage
         add(new NavigationPanel("mainNavigation", "Filebrowser example"));
 
         TreeModel model = new FileModelProvider().getFileModel();
-        Tree fileTree = new Tree("fileTree", model);
+        Tree fileTree = new Tree("fileTree", model){
+
+            /**
+             * Override to provide a custom row panel.
+             * @see wicket.markup.html.tree.Tree#getTreeRowPanel(java.lang.String, wicket.markup.html.tree.TreeNodeModel)
+             */
+            protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
+            {
+                return new FileTreeRow(componentName, this, nodeModel);
+            }   
+        };
         add(fileTree);
     }
 }
