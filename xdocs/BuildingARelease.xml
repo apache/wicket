@@ -114,6 +114,96 @@
 				<li>prepare the release using maven</li>
 				<li>create the distributable using maven</li>
 			</ul>
+			<subsection name="Clean workspace">
+				<p>
+					Make sure all changes in your workspace are commited, or use a new, clean
+					workspace to perform the release.
+				</p>
+			</subsection>
+			<subsection name="Prepare the release using maven">
+				<h5>Running the tests</h5>
+				<p>
+					First check whether *all* unit tests work. It's no use to perform a release
+					when the unit tests <em>fail</em>. You have to pretty tricky stuff in order
+					to have maven actually build a release when the unittests fail. So just 
+					<strong>DON'T</strong> do it when not all the tests run.
+				</p>
+				<p>
+					Testing whether all tests run is rather straightforward:
+				</p>
+				<source><![CDATA[maven test]]></source>
+				<p>
+					When a test fails, maven will output the following:
+				</p>
+				<source><![CDATA[BUILD FAILED
+File...... c:\maven-1.0\cache\cache\maven-test-plugin-1.6.2\plugin.jelly
+Element... fail
+Line...... 181
+Column.... 54
+There were test failures.
+Total time: 54 seconds
+Finished at: Sun Feb 06 16:48:29 CET 2005]]></source>
+				<p>
+					You can find what went wrong in the directory <code>build/test-reports</code>.
+					Just look for the test that failed on the output of the <code>maven test</code>
+					call.
+				</p>
+				<h5>Tagging the release</h5>
+				<p>
+					It is necessary to tag the release so we can 'go back in time' when something is
+					wrong with code in a released version. This is normally done using a <em>CVS</em>
+					client like <a href="http://tortoisecvs.sf.net">Tortoise CVS</a>, but we also use
+					<a href="http://maven.apache.org">Maven</a> for this, to be more specific, we use
+					the <a href="http://maven.apache.org/reference/plugins/scm">SCM-plugin</a> for this
+					purpose.
+				</p>
+				<p>
+					The command to do this tagging is:
+				</p>
+				<source>maven scm:prepare-release</source>
+				<p>
+					This command will check whether you have uncommitted changes in your workspace and
+					ask you for the <em>tag</em> and <em>version</em>. The <em>tag</em> is the name of 
+					the CVS tag which is used to flag the files in the remote CVS repository. This tag is of the form: 
+					<code>WICKET_R_X_Y_Z</code>. Where <code>X</code> denotes the major release number,
+					<code>Y</code> the minor release number, and <code>Z</code> the fix number.
+				</p>
+				<p>
+					The <em>version</em> is the version number of Wicket which you are going to release.
+					This number is formatted as: <code>X.Y.Z</code>, having X, Y and Z equal to the values
+					in the TAG.
+				</p>
+				<p>
+					If you are going to release Wicket 1.2.9-beta, then the tag will be: <code>WICKET_R_1_2_9_BETA</code>,
+					and the version <code>1.2.9-beta</code>.
+				</p>
+				<source><code><![CDATA[TODO TODO TODO TODO TODO
+]]></code></source>
+				<p>
+					This SCM-plugin performs not only the tagging of the release, but also makes some
+					changes to the following files:
+					<table>
+						<tr>
+							<th>Filename</th>
+							<th>Changes</th>
+						</tr>
+						<tr>
+							<td>project.xml</td>
+							<td>
+								sets the <![CDATA[<currentVersion>]]> to the released version, adds the
+								released version to the <![CDATA[<versions>]]> element.
+							</td>
+						</tr>
+						<tr>
+							<td>xdocs/changes.xml</td>
+							<td>
+								sets the date of the release on the corresponding <![CDATA[<release>]]>
+								element.
+							</td>
+						</tr>
+					</table>
+				</p>
+			</subsection>
 		</section>
 		<section name="Distributing the release">
 			<p>
