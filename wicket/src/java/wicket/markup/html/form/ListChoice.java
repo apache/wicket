@@ -90,7 +90,6 @@ public class ListChoice extends DropDownChoice
 	public ListChoice(final String name, final Serializable object, final Collection values, final int maxRows)
 	{
 		super(name, object, values);
-		setRenderNullOption(false);
 		this.maxRows = maxRows;
 	}
 
@@ -127,7 +126,6 @@ public class ListChoice extends DropDownChoice
 			final int maxRows)
 	{
 		super(name, object, expression, values);
-		setRenderNullOption(false);
 		this.maxRows = maxRows;
 	}
 

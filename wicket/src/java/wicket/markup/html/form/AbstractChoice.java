@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.6 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -27,7 +27,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 
 /**
- * Abstract base class for all AbstractChoice (html select) options.
+ * Abstract base class for all choice (html select) options.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -35,23 +35,17 @@ import wicket.markup.MarkupStream;
  */
 abstract class AbstractChoice extends FormComponent
 {
-	// TODO This string needs to be localized
-	/**
-	 * Default value to display when a null option is rendered. Initially set to 'Choose One'.
-	 */
-	private static final String DEFAULT_NULL_OPTION_VALUE = "Choose One";
+	/** String to display when the selected value is null and nullValid is false. */
+	private static final String CHOOSE_ONE = "Choose One";
 
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -8334966481181600604L;
 
-	/** Whether the null option must be rendered if current selection == null. */
-	private boolean renderNullOption = true;
+	/** Is the null value a valid value? */
+	private boolean nullValid = false;
 
 	/** The list of values. */
 	private List values;
-
-	/** Is the null value a valid value? */
-	private boolean emptyAllowed = false;
 
 	/**
 	 * @param name
@@ -101,25 +95,25 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Gets whether the null option must be rendered if current selection == null. The default is
-	 * true.
+	 * Is the <code>null</code> value a valid value?
 	 * 
-	 * @return boolean
+	 * @return <code>true</code> when the <code>null</code> value is
+	 *         allowed.
 	 */
-	public boolean getRenderNullOption()
+	public boolean isNullValid()
 	{
-		return renderNullOption;
+		return nullValid;
 	}
 
 	/**
-	 * Sets whether the null option must be rendered if current selection == null.
+	 * Is the <code>null</code> value a valid value?
 	 * 
-	 * @param renderNullOption
-	 *            whether the null option must be rendered if current selection == null.
+	 * @param emptyAllowed
+	 *            The emptyAllowed to set.
 	 */
-	public void setRenderNullOption(boolean renderNullOption)
+	public void setNullValid(boolean emptyAllowed)
 	{
-		this.renderNullOption = renderNullOption;
+		this.nullValid = emptyAllowed;
 	}
 
 	/**
@@ -153,8 +147,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public abstract void updateModel();
 
-
-	/*
+	/**
 	 * @see wicket.Component#detachModel()
 	 */
 	protected void detachModel()
@@ -164,6 +157,27 @@ abstract class AbstractChoice extends FormComponent
 		{
 			((IDetachableChoiceList)values).detach();
 		}
+	}
+
+	/**
+	 * Gets whether the given value represents the current selection.
+	 * 
+	 * @param currentValue
+	 *            the current list value
+	 * @return whether the given value represents the current selection
+	 */
+	protected boolean isSelected(Object currentValue)
+	{
+		Object modelObject = getModelObject();
+		if (modelObject == null)
+		{
+			if (currentValue == null)
+				return true;
+			else
+				return false;
+		}
+		boolean equals = currentValue.equals(modelObject);
+		return equals;
 	}
 
 	/**
@@ -195,26 +209,35 @@ abstract class AbstractChoice extends FormComponent
 		final Object selected = getModelObject();
 		final List list = getValues();
 
-		if (emptyAllowed && selected == null)
+		// Is null a valid selection value?
+		if (nullValid)
 		{
-			final String emptyOne = getLocalizer().getString(getName() + ".emptyOne", this, "");
+			// Null is valid, so look up the value for it
+			final String option = getLocalizer().getString(getName() + ".null", this, "");
 
-			options.append("\n<option selected=\"selected\" value=\"").append("\">").append(
-					emptyOne).append("</option>");
+			// Add option tag
+			options.append("\n<option");
+			
+			// If null is selected, indicate that
+			if (selected == null)
+			{
+				options.append(" selected=\"selected\"");
+			}
+			
+			// Add body of option tag
+			options.append(" value=\"\">").append(option).append("</option>");
 		}
-		else if (emptyAllowed)
+		else
 		{
-			final String emptyOne = getLocalizer().getString(getName() + ".emptyOne", this, "");
-
-			options.append("\n<option value=\"").append("\">").append(emptyOne).append("</option>");
-		}
-		else if (selected == null && getRenderNullOption())
-		{
-			final String chooseOne = getLocalizer().getString(getName() + ".null", this,
-					DEFAULT_NULL_OPTION_VALUE);
-
-			options.append("\n<option selected=\"selected\" value=\"").append("\">").append(
-					chooseOne).append("</option>");
+			// Null is not valid.  Is it selected anyway?
+			if (selected == null)
+			{
+				// Force the user to pick a non-null value
+				final String option = getLocalizer().getString(getName() + ".null", this,
+						CHOOSE_ONE);
+				options.append("\n<option selected=\"selected\" value=\"\">").append(option)
+						.append("</option>");
+			}
 		}
 
 		for (int i = 0; i < list.size(); i++)
@@ -240,9 +263,9 @@ abstract class AbstractChoice extends FormComponent
 				final boolean currentOptionIsSelected = isSelected(value);
 				options.append("\n<option ");
 				if (currentOptionIsSelected)
-                {
+				{
 					options.append("selected=\"selected\"");
-                }
+				}
 				options.append("value=\"");
 				options.append(id);
 				options.append("\">");
@@ -262,51 +285,10 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Gets whether the given value represents the current selection.
-	 * 
-	 * @param currentValue
-	 *            the current list value
-	 * @return whether the given value represents the current selection
-	 */
-	protected boolean isSelected(Object currentValue)
-	{
-		Object modelObject = getModelObject();
-		if (modelObject == null)
-		{
-			if (currentValue == null)
-				return true;
-			else
-				return false;
-		}
-		boolean equals = currentValue.equals(modelObject);
-		return equals;
-	}
-
-	/**
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
 	protected boolean supportsPersistence()
 	{
 		return true;
-	}
-
-	/**
-	 * Is the <code>null</code> value a valid value?
-	 * 
-	 * @return <code>true</code> when the <code>null</code> value is allowed.
-	 */
-	public boolean isEmptyAllowed()
-	{
-		return emptyAllowed;
-	}
-
-	/**
-	 * Is the <code>null</code> value a valid value?
-	 * @param emptyAllowed
-	 *            The emptyAllowed to set.
-	 */
-	public void setEmptyAllowed(boolean emptyAllowed)
-	{
-		this.emptyAllowed = emptyAllowed;
 	}
 }

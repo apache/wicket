@@ -25,8 +25,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
-import wicket.model.PropertyModel;
 import wicket.model.Model;
+import wicket.model.PropertyModel;
+import wicket.util.string.Strings;
 
 /**
  * A multiple choice list component.
@@ -46,7 +47,6 @@ public class ListMultipleChoice extends AbstractChoice
 			final String expression, final Collection values)
 	{
 		super(componentName, new PropertyModel(new Model(model), expression), values);
-		setRenderNullOption(false);
 	}
 
 	/**
@@ -56,7 +56,6 @@ public class ListMultipleChoice extends AbstractChoice
 			final Collection values)
 	{
 		super(componentName, model, values);
-		setRenderNullOption(false);
 	}
 
 	/**
@@ -149,8 +148,10 @@ public class ListMultipleChoice extends AbstractChoice
 		// Get indices selected from request
 		final String[] indicesOrIds = getRequestStrings();
 
-		if (indicesOrIds != null)
+		// If one or more ids is selected
+		if (indicesOrIds != null && indicesOrIds.length > 0 && !Strings.isEmpty(indicesOrIds[0]))
 		{
+			// Get values that could be selected
 			final List list = getValues();
 
 			// Loop through selected indices
@@ -162,7 +163,9 @@ public class ListMultipleChoice extends AbstractChoice
 				}
 				else
 				{
+					// Get index
 					final int index = Integer.parseInt(indicesOrIds[i]);
+					
 					// Add the value at the given index to the collection of
 					// selected values
 					selectedValues.add(list.get(index));
