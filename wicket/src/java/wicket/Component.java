@@ -754,16 +754,11 @@ public abstract class Component implements Serializable
 	 */
 	public final void render()
 	{
-		// Rendering is beginning
-		internalOnBeginRender();
-		onBeginRender();
-		if (log.isDebugEnabled())
-		{
-			log.debug("Begin render " + this);
-		}
-
-		// Any runtime exception that was thrown during rendering
+		// Any runtime exception thrown during rendering
 		RuntimeException renderException = null;
+		
+		// Determine if component is visible
+		final boolean isVisible = isVisible();
 
 		try
 		{
@@ -771,11 +766,25 @@ public abstract class Component implements Serializable
 			final RequestCycle cycle = getRequestCycle();
 
 			// Save original Response
-			final Response originalResponse = cycle.getResponse();
+			final Response originalResponse;
 
 			// If component is not visible, set response to NullResponse
-			if (!isVisible())
+			if (isVisible)
 			{
+				// No response to restore
+				originalResponse = null;
+				
+				// Rendering is beginning
+				internalOnBeginRender();
+				onBeginRender();
+				if (log.isDebugEnabled())
+				{
+					log.debug("Begin render " + this);
+				}
+			}
+			else
+			{
+				originalResponse = cycle.getResponse();
 				cycle.setResponse(NullResponse.getInstance());
 			}
 
@@ -790,8 +799,11 @@ public abstract class Component implements Serializable
 				rendered();
 			}
 
-			// Restore original response
-			cycle.setResponse(originalResponse);
+			// Restore original response if any
+			if (!isVisible)
+			{
+				cycle.setResponse(originalResponse);
+			}
 		}
 		catch (RuntimeException e)
 		{
@@ -801,31 +813,34 @@ public abstract class Component implements Serializable
 		}
 		finally
 		{
-			if (log.isDebugEnabled())
+			if (isVisible)
 			{
-				log.debug("End render " + this);
-			}
-
-			try
-			{
-				// Rendering has completed
-				onEndRender();
-				internalOnEndRender();
-
-				// Detach models now that rendering is fully completed
-				detachModels();
-			}
-			catch (RuntimeException e)
-			{
-				if (renderException != null)
+				if (log.isDebugEnabled())
 				{
-					throw new WicketRuntimeException(
-							"Exception thrown while cleaning up from the following exception which was thrown during rendering: "
-									+ Strings.toString(renderException), e);
+					log.debug("End render " + this);
 				}
-				else
+	
+				try
 				{
-					throw e;
+					// Rendering has completed
+					onEndRender();
+					internalOnEndRender();
+	
+					// Detach models now that rendering is fully completed
+					detachModels();
+				}
+				catch (RuntimeException e)
+				{
+					if (renderException != null)
+					{
+						throw new WicketRuntimeException(
+								"Exception thrown while cleaning up from the following exception which was thrown during rendering: "
+										+ Strings.toString(renderException), e);
+					}
+					else
+					{
+						throw e;
+					}
 				}
 			}
 		}
