@@ -119,7 +119,7 @@ public abstract class HttpApplication extends HttpServlet implements IApplicatio
         final HttpResponse response = new HttpResponse(servletResponse);
         final HttpRequestCycle cycle = new HttpRequestCycle(this, session, request, response);
 
-        // Render wicket.response for request cycle
+        // Render response for request cycle
         cycle.render();
 
         // Clear down the session thread local so that the only reference to it
