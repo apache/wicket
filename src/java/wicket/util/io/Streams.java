@@ -26,11 +26,12 @@ import java.io.OutputStream;
 import java.io.Reader;
 
 /**
- * Stream utilities.
+ * Utilities methods for working with input and output streams.
+ * 
  * @author Jonathan Locke
  */
 public final class Streams
-{ // TODO finalize javadoc
+{
     /**
      * Private to prevent instantiation.
      */
@@ -39,8 +40,8 @@ public final class Streams
     }
 
     /**
-     * Reads a string
-     * @param in The input
+     * Reads a stream as a string.
+     * @param in The input stream
      * @return The string
      * @throws IOException
      */
@@ -50,10 +51,9 @@ public final class Streams
     }
 
     /**
-     * Reads a string and take the character encoding while reading into account.
-     * 
+     * Reads a string using a character encoding.
      * @param in The input
-     * @param encoding specify the character encoding of the input data
+     * @param encoding The character encoding of the input data
      * @return The string
      * @throws IOException
      */
@@ -63,8 +63,7 @@ public final class Streams
     }
 
     /**
-     * Reads a string
-     * 
+     * Reads all input from a reader into a string.
      * @param in The input
      * @return The string
      * @throws IOException
@@ -83,7 +82,7 @@ public final class Streams
     }
 
     /**
-     * Writes the input stream to the output stream
+     * Writes the input stream to the output stream.
      * @param in The input stream
      * @param out The output stream
      * @throws IOException
