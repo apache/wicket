@@ -21,17 +21,6 @@
 	  <param-name>contextConfigLocation</param-name> 
 	  <param-value>/WEB-INF/spring.xml</param-value> 
 	</context-param>
-
-	<!-- hibernate filter for cdapp example: see http://www.hibernate.org/43.html -->
-	<filter>
-		<filter-name>HibernateFilter</filter-name>
-		<filter-class>wicket.contrib.data.util.hibernate.HibernateFilter</filter-class>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>HibernateFilter</filter-name>
-		<url-pattern>/cdapp/*</url-pattern>
-	</filter-mapping>
 	
 	<!-- Prefer using the spring context listener instead of the loader servlet --> 
 	<listener>
@@ -85,16 +74,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.guestbook.GuestBookApplication</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet>
-		<servlet-name>GuestBook2Application</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.guestbook2.GuestBook2Application</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -259,7 +238,7 @@
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>wicket.examples.cdapp.CDApplication</param-value>
+			<param-value>wicket.examples.cdapp.CdApplication</param-value>
 		</init-param>
 	</servlet>
 
@@ -270,7 +249,7 @@
 
 	<servlet-mapping>
 		<servlet-name>SignInApplication</servlet-name>
-		<url-pattern>/signin</url-pattern>
+		<url-pattern>/signin/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -285,7 +264,7 @@
 
 	<servlet-mapping>
 		<servlet-name>SignIn2Application</servlet-name>
-		<url-pattern>/signin2</url-pattern>
+		<url-pattern>/signin2/*</url-pattern>
 	</servlet-mapping>
 	 
 	<servlet-mapping>
@@ -295,17 +274,17 @@
 
 	<servlet-mapping>
 		<servlet-name>NavomaticApplication</servlet-name>
-		<url-pattern>/navomatic</url-pattern>
+		<url-pattern>/navomatic/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>LinkomaticApplication</servlet-name>
-		<url-pattern>/linkomatic</url-pattern>
+		<url-pattern>/linkomatic/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>LibraryApplication</servlet-name>
-		<url-pattern>/library</url-pattern>
+		<url-pattern>/library/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -315,12 +294,7 @@
 
 	<servlet-mapping>
 		<servlet-name>HelloWorldApplication</servlet-name>
-		<url-pattern>/helloworld</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>GuestBook2Application</servlet-name>
-		<url-pattern>/guestbook2</url-pattern>
+		<url-pattern>/helloworld/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -330,52 +304,52 @@
 
 	<servlet-mapping>
 		<servlet-name>GuestBookApplication</servlet-name>
-		<url-pattern>/guestbook</url-pattern>
+		<url-pattern>/guestbook/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>UploadApplication</servlet-name>
-		<url-pattern>/upload</url-pattern>
+		<url-pattern>/upload/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>DisplaytagApplication</servlet-name>
-		<url-pattern>/displaytag</url-pattern>
+		<url-pattern>/displaytag/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>EncodingsApplication</servlet-name>
-		<url-pattern>/encodings</url-pattern>
+		<url-pattern>/encodings/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>HelloMozillaApplication</servlet-name>
-		<url-pattern>/hellomozilla</url-pattern>
+		<url-pattern>/hellomozilla/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>SpringApplication</servlet-name>
-		<url-pattern>/spring</url-pattern>
+		<url-pattern>/spring/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>SpringApplication2</servlet-name>
-		<url-pattern>/spring2</url-pattern>
+		<url-pattern>/spring2/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>GroovyApplication</servlet-name>
-		<url-pattern>/groovy</url-pattern>
+		<url-pattern>/groovy/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>SelectTagApplication</servlet-name>
-		<url-pattern>/selecttag</url-pattern>
+		<url-pattern>/selecttag/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>TabPanelApplication</servlet-name>
-		<url-pattern>/tabpanel</url-pattern>
+		<url-pattern>/tabpanel/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- servlet-mapping>

@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.IFeedback;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.examples.WicketExamplePage;
 import wicket.examples.cdapp.model.CD;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
@@ -34,6 +33,7 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.LoopItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListViewNavigationLink;
@@ -48,7 +48,7 @@ import wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class SearchPage extends WicketExamplePage
+public class SearchPage extends CdAppBasePage
 {
 	/** Logger. */
 	private static Log log = LogFactory.getLog(SearchPage.class);
@@ -68,9 +68,6 @@ public class SearchPage extends WicketExamplePage
 	 * queue and set this variable to null.
 	 */
 	private String infoMessageForNextRendering = null;
-
-	/** DAO for cd's. */
-	private final CDDao dao = new CDDao();
 
 	/**
 	 * Construct.
@@ -296,7 +293,7 @@ public class SearchPage extends WicketExamplePage
 		public void onClick()
 		{
 			final Long id = (Long)getModelObject();
-			dao.delete(id);
+			getCdDao().delete(id);
 			info(" cd deleted");
 			// SearchPage.this.modelChangedStructure();
 		}
@@ -349,13 +346,13 @@ public class SearchPage extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
+		 * @see wicket.markup.html.list.Loop#populateItem(wicket.markup.html.list.LoopItem)
 		 */
-		protected void populateItem(ListItem item)
+		protected void populateItem(final LoopItem item)
 		{
-			final int page = ((Integer)item.getModelObject()).intValue();
-			final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
-					pageableListView, page);
+			final int page = item.getIndex();
+			final PageableListViewNavigationLink link =
+				new PageableListViewNavigationLink("pageLink", pageableListView, page);
 
 			if (page > 0)
 			{

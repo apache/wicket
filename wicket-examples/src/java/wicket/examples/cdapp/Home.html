@@ -1,0 +1,34 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - cdapp</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+    <p>This software displays a more elaborated example of using wicket.
+    Featuring (in no particular order):
+    <ul>
+      <li>persistency using Hibernate</li>
+      <li>cooperation between search form, results label and results list view</li>
+      <li>pageable ListView with navigation</li>
+      <li>pageable list that only loads what is actually needed while acting as a real list</li>
+      <li>custom WebRequestCycle that sets up a Hibernate session for each request</li>
+      <li>
+      	base page that provides the business layer objects (CdDao) so that these objects
+      	can be constructed in an IoC like manner (CdDao doesn't have to know anything about
+      	the wicket/ the world and has its hibernate session provided).
+      </li>
+      <li>Links attached to non-anchor (&lt;a href...&gt;) elements</li>
+      <li>clickable headers that sort the current results alternately</li>
+      <li>navigation from search to details and back again</li>
+      <li>reuse of edit page for new and existing persistent objects</li>
+      <li>uploading of images</li>
+      <li>automated thumbnail creation for display using ThumbnailImageResource</li>
+      <li>sized-to-fit popup that shows actual image and that closes on click</li>
+      <li>display of packaged image (questionmark.gif) when no image is coupled</li>
+      <li>(not really wicket related) automatic database creation using Hibernate</li>
+    </ul>
+    </p>
+    <p><a wicket:id="start" href="#">Start cdapp</a></p>
+</body>
+</html>

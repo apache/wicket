@@ -34,7 +34,7 @@ public class TitleModel extends AbstractDetachableModel
 	}
 
 	/**
-	 * @see AbstractDetachableModel#onAttach()
+	 * @see wicket.model.AbstractDetachableModel#onAttach()
 	 */
 	protected void onAttach()
 	{

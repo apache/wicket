@@ -24,10 +24,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.IFeedback;
 import wicket.contrib.data.model.PersistentObjectModel;
 import wicket.contrib.data.model.hibernate.HibernateObjectModel;
-import wicket.contrib.data.util.hibernate.HibernateHelperSessionDelegate;
 import wicket.contrib.markup.html.image.resource.ThumbnailImageResource;
-import wicket.examples.WicketExamplePage;
 import wicket.examples.cdapp.model.CD;
+import wicket.examples.cdapp.util.HibernateSessionDelegate;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.RequiredTextField;
@@ -53,7 +52,7 @@ import wicket.util.resource.IResource;
  * 
  * @author Eelco Hillenius
  */
-public final class EditPage extends WicketExamplePage
+public final class EditPage extends CdAppBasePage
 {
 	/** Logger. */
 	private static Log log = LogFactory.getLog(SearchPage.class);
@@ -67,9 +66,6 @@ public final class EditPage extends WicketExamplePage
 
 	/** search page to navigate back to. */
 	private final SearchPage searchCDPage;
-
-	/** DAO for cd's. */
-	private final CDDao dao = new CDDao();
 
 	/**
 	 * form for detail editing.
@@ -117,17 +113,16 @@ public final class EditPage extends WicketExamplePage
 			boolean isNew = (cd.getId() == null);
 			// note that, as we used the Ognl property model, the fields are
 			// allready updated
-			dao.save(cd);
+			getCdDao().save(cd);
 			// set message for search page to display on next rendering
 			searchCDPage.setInfoMessageForNextRendering("cd " + cd.getTitle() + " saved");
-			
-			// TODO searchCDPage.; // force reload of data
+
 			if (isNew)
 			{
 				// if it was a new cd, set the search page to page 1
 				searchCDPage.setCurrentResultPageToFirst();
 			}
-			getRequestCycle().setResponsePage(searchCDPage); // navigate back to search page
+			setResponsePage(searchCDPage); // navigate back to search page
 		}
 	}
 
@@ -155,7 +150,7 @@ public final class EditPage extends WicketExamplePage
 			FileUpload upload = uploadField.getFileUpload();
 			CD cd = (CD)getModelObject();
 			cd.setImage(upload.getBytes());
-			dao.save(cd);
+			getCdDao().save(cd);
 		}
 	}
 
@@ -181,7 +176,7 @@ public final class EditPage extends WicketExamplePage
 		{
 			CD cd = (CD)getModelObject();
 			cd.setImage(null);
-			dao.save(cd);
+			getCdDao().save(cd);
 		}
 
 		/**
@@ -202,7 +197,7 @@ public final class EditPage extends WicketExamplePage
 	public EditPage(final SearchPage searchCDPage, Long id)
 	{
 		super();
-		cdModel = new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
+		cdModel = new HibernateObjectModel(id, CD.class, new HibernateSessionDelegate());
 		this.searchCDPage = searchCDPage;
 		add(new Label("cdTitle", new TitleModel(cdModel)));
 		FeedbackPanel feedback = new FeedbackPanel("feedback");

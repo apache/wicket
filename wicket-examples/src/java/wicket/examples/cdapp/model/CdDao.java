@@ -16,27 +16,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.cdapp;
+package wicket.examples.cdapp.model;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 import wicket.WicketRuntimeException;
-import wicket.contrib.data.util.hibernate.HibernateHelper;
-import wicket.examples.cdapp.model.CD;
 
 /**
  * Simple DAO for cd's.
  *
  * @author Eelco Hillenius
  */
-public final class CDDao
+public final class CdDao
 {
+	private Session hibernateSession = null;
+
 	/**
 	 * Construct.
+	 * @param hibernateSession 
 	 */
-	public CDDao()
+	public CdDao(Session hibernateSession)
 	{
+		this.hibernateSession = hibernateSession;
 	}
 
 	/**
@@ -52,7 +54,7 @@ public final class CDDao
 		}
 		try
 		{
-			return (CD)HibernateHelper.getSession().load(CD.class, id);
+			return (CD)hibernateSession.load(CD.class, id);
 		}
 		catch (HibernateException e)
 		{
@@ -70,13 +72,11 @@ public final class CDDao
 		{
 			throw new NullPointerException("cd must be not null");
 		}
-		Session session = null;
 		Transaction tx = null;
 		try
 		{
-			session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
-			session.saveOrUpdate(cd);
+			tx = hibernateSession.beginTransaction();
+			hibernateSession.saveOrUpdate(cd);
 			tx.commit();
 		}
 		catch (HibernateException e)
@@ -103,13 +103,11 @@ public final class CDDao
 		{
 			throw new NullPointerException("cd must be not null");
 		}
-		Session session = null;
 		Transaction tx = null;
 		try
 		{
-			session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
-			session.delete(cd);
+			tx = hibernateSession.beginTransaction();
+			hibernateSession.delete(cd);
 			tx.commit();
 		}
 		catch (HibernateException e)
@@ -136,13 +134,11 @@ public final class CDDao
 		{
 			throw new NullPointerException("id must be not null");
 		}
-		Session session = null;
 		Transaction tx = null;
 		try
 		{
-			session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
-			session.delete(load(id));
+			tx = hibernateSession.beginTransaction();
+			hibernateSession.delete(load(id));
 			tx.commit();
 		}
 		catch (HibernateException e)

@@ -25,7 +25,7 @@ import net.sf.hibernate.Query;
 import wicket.Component;
 import wicket.contrib.data.model.PageableList;
 import wicket.contrib.data.model.hibernate.HibernateCountAndListAction;
-import wicket.contrib.data.util.hibernate.HibernateHelperSessionDelegate;
+import wicket.examples.cdapp.util.HibernateSessionDelegate;
 import wicket.model.AbstractDetachableModel;
 import wicket.model.AbstractReadOnlyDetachableModel;
 
@@ -59,7 +59,7 @@ public final class SearchModel extends AbstractReadOnlyDetachableModel
 		{
 			super("wicket.examples.cdapp.model.SearchCD",
 					"wicket.examples.cdapp.model.SearchCD.count",
-					new HibernateHelperSessionDelegate());
+					new HibernateSessionDelegate());
 		}
 
 		/**
@@ -153,7 +153,7 @@ public final class SearchModel extends AbstractReadOnlyDetachableModel
 	}
 
 	/**
-	 * @see AbstractDetachableModel#onAttach()
+	 * @see wicket.model.AbstractDetachableModel#onAttach()
 	 */
 	protected void onAttach()
 	{

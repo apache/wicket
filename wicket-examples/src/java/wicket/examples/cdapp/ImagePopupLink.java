@@ -44,7 +44,7 @@ public final class ImagePopupLink extends Link
 		super(name, cdModel);
 		
 		// custom popup settings that uses our automatic resize script
-		PopupSettings popupSettings = new PopupSettings(PopupSettings.RESIZABLE);
+		PopupSettings popupSettings = new PopupSettings();
 		popupSettings.setHeight(20);
 		popupSettings.setWidth(20);
 		setPopupSettings(popupSettings);

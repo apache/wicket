@@ -16,10 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.cdapp;
+package wicket.examples.cdapp.util;
 
-import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,6 +29,7 @@ import java.util.Set;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
+import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.dialect.Dialect;
 import net.sf.hibernate.impl.SessionFactoryImpl;
@@ -38,8 +37,6 @@ import net.sf.hibernate.impl.SessionFactoryImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.contrib.data.util.hibernate.ConfigException;
-import wicket.contrib.data.util.hibernate.HibernateHelper;
 import wicket.examples.cdapp.model.CD;
 import wicket.examples.cdapp.model.Category;
 import wicket.examples.cdapp.model.Track;
@@ -48,50 +45,61 @@ import wicket.examples.cdapp.model.Track;
 /**
  * Utility that sets up the database.
  */
-public class DBUtil
+public final class DatabaseUtil
 {
-
 	/** Log. */
-	private static Log log = LogFactory.getLog(DBUtil.class);
+	private static Log log = LogFactory.getLog(DatabaseUtil.class);
 
-	/** construct. */
-	public DBUtil()
+	/** hibernate configuration. */
+	private final Configuration configuration;
+
+	/**
+	 * Construct.
+	 * @param configuration hibernate configuration
+	 */
+	public DatabaseUtil(Configuration configuration)
 	{
-		// no nada
+		this.configuration = configuration;
 	}
 
 	/**
-	 * Initialize and create the database.
-	 * @param configFile configuration file
-	 * @throws ConfigException configuration error
-	 * @throws HibernateException hibernate error
-	 * @throws SQLException
-	 * @throws IOException
+	 * (Re-)creates the database.
 	 */
-	public void initDB(String configFile) throws HibernateException, ConfigException, IOException,
-			SQLException
+	public void createDatabase()
 	{
-		URL configUrl = DBUtil.class.getResource(configFile);
-		HibernateHelper.setConfigURL(configUrl);
-		HibernateHelper.init();
-		Session session = HibernateHelper.getSession();
-		Connection conn = session.connection();
-		Statement stmt = conn.createStatement();
+		Session session = null;
 		try
 		{
-			SessionFactoryImpl sf = (SessionFactoryImpl)HibernateHelper.getSessionFactory();
-			Dialect dialect = sf.getDialect();
-			Configuration config = HibernateHelper.getConfiguration();
-			String[] drops = config.generateDropSchemaScript(dialect);
-			String[] creates = config.generateSchemaCreationScript(dialect);
+			SessionFactory sessionFactory = configuration.buildSessionFactory();
+			Dialect dialect = ((SessionFactoryImpl)sessionFactory).getDialect();
+			String[] drops = configuration.generateDropSchemaScript(dialect);
+			String[] creates = configuration.generateSchemaCreationScript(dialect);
+			session = sessionFactory.openSession();
+			Connection conn = session.connection();
+			Statement stmt = conn.createStatement();
 			execStmt(conn, stmt, splitAltTables(drops, true));
 			execStmt(conn, stmt, splitAltTables(drops, false));
 			execStmt(conn, stmt, creates);
 			insertTestData(session);
 		}
+		catch (HibernateException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
 		finally
 		{
-			HibernateHelper.closeSession();
+			try
+			{
+				session.close();
+			}
+			catch (HibernateException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -466,7 +474,7 @@ public class DBUtil
 	 * @param stmts statements
 	 * @throws SQLException sql error
 	 */
-	public void execStmt(Connection conn, Statement stmt, String[] stmts) throws SQLException
+	private void execStmt(Connection conn, Statement stmt, String[] stmts) throws SQLException
 	{
 		for (int i = 0; i < stmts.length; i++)
 		{
