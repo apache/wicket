@@ -27,7 +27,6 @@ package wicket.markup.html.form.encryption;
  */
 public interface ICrypt
 {
-
 	/**
 	 * Decrypts a string.
 	 * 
@@ -35,14 +34,14 @@ public interface ICrypt
 	 *            the text to decrypt
 	 * @return the decrypted string.
 	 */
-	public abstract String decryptString(final String text);
+	public String decryptString(final String text);
 	/**
 	 * Encrypts a string.
 	 * 
 	 * @param plainText
 	 * @return encrypted string
 	 */
-	public abstract String encryptString(final String plainText);
+	public String encryptString(final String plainText);
 
 	/**
 	 * Sets private encryption key. It depends on the implementation if a
@@ -52,5 +51,5 @@ public interface ICrypt
 	 * @param key
 	 *            private key
 	 */
-	public abstract void setKey(final String key);
+	public void setKey(final String key);
 }
