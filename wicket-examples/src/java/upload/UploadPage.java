@@ -27,11 +27,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.voicetribe.wicket.PageParameters;
+import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.form.TextField;
 import com.voicetribe.wicket.markup.html.form.upload.FileUploadForm;
 import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
+import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
 
@@ -51,6 +53,9 @@ public class UploadPage extends HtmlPage
     /** list of files, model for file table. */
     private final List files = new ArrayList();
 
+    /** reference to table for easy access. */
+    private FileTable fileTable;
+
     /**
      * Constructor.
      * @param parameters Page parameters
@@ -66,7 +71,19 @@ public class UploadPage extends HtmlPage
         add(new UploadForm("upload", null, tempDir));
         add(new Label("dir", tempDir.getAbsolutePath()));
         files.addAll(Arrays.asList(tempDir.list()));
-        add(new FileTable("fileList", files));
+        fileTable = new FileTable("fileList", files);
+        add(fileTable);
+    }
+
+    /**
+     * Refresh file list.
+     */
+    private void refreshFiles()
+    {
+        files.clear();
+        files.addAll(Arrays.asList(tempDir.list()));
+        fileTable.invalidateModel();
+        
     }
 
     /**
@@ -91,15 +108,14 @@ public class UploadPage extends HtmlPage
          */
         protected void finishUpload()
         {
-            files.clear();
-            files.addAll(Arrays.asList(tempDir.list()));
+            refreshFiles();
         }
     }
 
     /**
      * table for files.
      */
-    private static class FileTable extends Table
+    private class FileTable extends Table
     {
         /**
          * Construct.
@@ -116,9 +132,25 @@ public class UploadPage extends HtmlPage
          */
         protected void populateCell(Cell cell)
         {
-            String fileName = (String)cell.getModelObject();
+            final String fileName = (String)cell.getModelObject();
             cell.add(new Label("file", fileName));
+            cell.add(new Link("delete") {
+                
+                public void linkClicked(RequestCycle cycle)
+                {
+                    File toDelete = new File(tempDir, fileName);
+                    log.info("delete " + toDelete);
+                    toDelete.delete();
+                    try 
+                    {
+                        Thread.sleep(100); // wait for file lock (Win issue)
+                    }
+                    catch (InterruptedException e)
+                    {
+                    }
+                    refreshFiles();
+                } 
+            });
         }
-        
     }
 }
