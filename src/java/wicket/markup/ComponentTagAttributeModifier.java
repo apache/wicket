@@ -50,6 +50,7 @@ import wicket.util.value.ValueMap;
  * method after the componet has been constucted.
  *
  * @author Chris Turner
+ * @author Eelco Hillenius
  */
 public class ComponentTagAttributeModifier implements Serializable
 {
@@ -223,18 +224,22 @@ public class ComponentTagAttributeModifier implements Serializable
 			return;
 
 		ValueMap attributes = tag.getAttributes();
-		if (attributes.containsKey(attribute))
+		Object replacementValue = getReplaceModel().getObject();
+		if(replacementValue != null) // only do something when we have a replacement
 		{
-			String value = attributes.get(attribute).toString();
-			if (pattern == null || value.matches(pattern))
+			if (attributes.containsKey(attribute))
 			{
-				attributes.put(attribute, getReplaceModel().getObject());
+				String value = attributes.get(attribute).toString();
+				if (pattern == null || value.matches(pattern))
+				{
+					attributes.put(attribute, replacementValue);
+				}
 			}
-		}
-		else if (addAttributeIfNotPresent)
-		{
-			attributes.put(attribute, getReplaceModel().getObject());
-		}
+			else if (addAttributeIfNotPresent)
+			{
+				attributes.put(attribute, replacementValue);
+			}
+		} // else do nothing
 	}
 
 }
