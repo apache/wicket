@@ -1189,7 +1189,7 @@ public abstract class Component implements Serializable
 				tag = tag.mutable();
 				for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
 				{
-					current.replaceAttibuteValue(tag);
+					current.replaceAttibuteValue(this, tag);
 				}
 			}
 

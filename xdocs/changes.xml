@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="fix" dev="Jonathan Locke" issue="1138660">
+      It is now possible to create AttributeModifiers that do arbitrary things to the original and replacement values, such as appending one to the other.  See javadoc in AttributeModifier for details.
+	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
 		Now WebApplication reads the servlet init parameter "configuration". If the parameter has the value "development", settings appropriate for development are set. If it's "deployment", deployment settings are used. If development, configuration is specified and a "sourceFolder" init parameter is also set, then resources in that folder will be polled for changes.  Since this all occurs on initialization, the user can still override settings in the usual place.
 	  </action>
