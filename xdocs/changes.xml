@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+      <action type="fix" dev="Jonathan Locke" issue="1166597">
+      Added type setter to RenderedDynamicImageResource.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Changed the render cycle to make it better defined.  You can no longer change the component
       hierarchy during rendering.  If you attempt to do so, an exception will be thrown.  To allow

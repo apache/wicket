@@ -46,6 +46,9 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	/** Transient image data so that image only needs to be generated once per VM */
 	private transient byte[] imageData;
 
+	/** Type of image (one of BufferedImage.TYPE_*) */
+	private int type = BufferedImage.TYPE_INT_RGB;
+
 	/** Width of image */
 	private int width = 100;
 
@@ -72,6 +75,14 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	}
 
 	/**
+	 * @return Returns the type (one of BufferedImage.TYPE_*).
+	 */
+	public int getType()
+	{
+		return type;
+	}
+
+	/**
 	 * @return Returns the width.
 	 */
 	public int getWidth()
@@ -95,6 +106,15 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	public void setHeight(int height)
 	{
 		this.height = height;
+	}
+
+	/**
+	 * @param type
+	 *            The type to set (one of BufferedImage.TYPE_*).
+	 */
+	public void setType(int type)
+	{
+		this.type = type;
 	}
 
 	/**
@@ -125,7 +145,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 */
 	protected byte[] render()
 	{
-		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		final BufferedImage image = new BufferedImage(width, height, type);
 		if (render((Graphics2D)image.getGraphics()))
 		{
 			return toImageData(image);
