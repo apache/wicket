@@ -91,6 +91,7 @@
       </action>
   	</release>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="update" dev="Juergen Donnerstag" issue="">Introduced Loop component that can be used in cases where you just want to create a number of components without having the need for a real model.</action>
       <action type="update" dev="Martijn Dashorst" due-to="Cameron Braid">Updated all dependencies to be the same, and not to use proprietary Jars (JTA)</action>
       <action type="update" dev="Jonathan Locke" issue="">Changed IModel signature to allow models to be parameterized on the requesting Component.  Made minor enhancements to AbstractDetachableModel and invented AbstractReadOnlyDetachableModel.  Created an abstract base class, AbstractPropertyModel, for all property models dealing with OGNL expressions and type conversions.  Implemented the current PropertyModel functionality using this base class.  Implemented CompoundPropertyModel to take advantage of the Component parmeter in IModel.  Then implemented a fully bindable BoundCompoundPropertyModel class as a subclass of that.</action>
       <action type="update" dev="Jonathan Locke" issue="1153227">Generalized IValidationFeedback interface to IFeedback to deal with all kinds of feedback. Then added logic to Page, so that you can set a feedback for the page. If you do this, any messages added to the page using the usual error(), info() etc methods, will be displayed in this feedback.</action>
