@@ -36,12 +36,23 @@ public abstract class UploadForm extends Form
 	 * 
 	 * @param name
 	 *            component name
-	 * @param validationErrorHandler
+	 */
+	public UploadForm(String name)
+	{
+		super(name);
+	}
+	
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 *            component name
+	 * @param validationFeedback
 	 *            validation error handler
 	 */
-	public UploadForm(String name, IValidationFeedback validationErrorHandler)
+	public UploadForm(String name, IValidationFeedback validationFeedback)
 	{
-		super(name, validationErrorHandler);
+		super(name, validationFeedback);
 	}
 
 	/**
