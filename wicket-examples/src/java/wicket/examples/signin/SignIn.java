@@ -38,6 +38,14 @@ public final class SignIn extends HtmlPage
 {
     /**
      * Constructor
+     */
+    public SignIn()
+    {
+        this(null);
+    }
+    
+    /**
+     * Constructor
      * @param parameters The page parameters
      */
     public SignIn(final PageParameters parameters)

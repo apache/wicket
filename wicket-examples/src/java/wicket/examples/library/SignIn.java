@@ -59,6 +59,11 @@ public final class SignIn extends HtmlPage
             }
         });
     }
+    
+    public SignIn()
+    {
+        this(null);
+    }
 }
 
 // 
