@@ -206,7 +206,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	{
 		if ((replaceModel != null) && (replaceModel instanceof IDetachableModel))
 		{
-			((IDetachableModel) replaceModel).attach(RequestCycle.get());
+			((IDetachableModel) replaceModel).attach(RequestCycle.get().getSession());
 		}
 		return replaceModel;
 	}
@@ -220,26 +220,27 @@ public class ComponentTagAttributeModifier implements Serializable
 	 */
 	public void replaceAttibuteValue(final ComponentTag tag)
 	{
-		if (!enabled)
-			return;
-
-		ValueMap attributes = tag.getAttributes();
-		Object replacementValue = getReplaceModel().getObject();
-		if(replacementValue != null) // only do something when we have a replacement
-		{
-			if (attributes.containsKey(attribute))
-			{
-				String value = attributes.get(attribute).toString();
-				if (pattern == null || value.matches(pattern))
-				{
-					attributes.put(attribute, replacementValue);
-				}
-			}
-			else if (addAttributeIfNotPresent)
-			{
-				attributes.put(attribute, replacementValue);
-			}
-		} // else do nothing
+		if (enabled)
+        {
+    		ValueMap attributes = tag.getAttributes();
+    		Object replacementValue = getReplaceModel().getObject();
+            
+            // Only do something when we have a replacement
+    		if (replacementValue != null) 
+    		{
+    			if (attributes.containsKey(attribute))
+    			{
+    				String value = attributes.get(attribute).toString();
+    				if (pattern == null || value.matches(pattern))
+    				{
+    					attributes.put(attribute, replacementValue);
+    				}
+    			}
+    			else if (addAttributeIfNotPresent)
+    			{
+    				attributes.put(attribute, replacementValue);
+    			}
+    		} // else do nothing
+        }
 	}
-
 }

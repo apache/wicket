@@ -19,7 +19,6 @@
 package wicket;
 
 import wicket.PageParameters;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
@@ -59,13 +58,13 @@ public class AttributeModifierComponentPage extends HtmlPage
 		{
 			private String text = null;
 
-			public void detach(RequestCycle cycle)
+			public void detach(final Session session)
 			{
 				System.out.println("ComponentTagAttributeModifier model detached");
 				text = null;
 			}
 
-			public void attach(RequestCycle cycle)
+			public void attach(final Session session)
 			{
 				System.out.println("ComponentTagAttributeModifier model attached");
 				text = "insertLabel";

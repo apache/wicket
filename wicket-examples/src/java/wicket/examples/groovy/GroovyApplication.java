@@ -36,7 +36,7 @@ public class GroovyApplication extends WebApplication
         // of the groovy file does already use the value defined.
         getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
         
-        getSettings().getPageFactory().setChildFactory(new GroovyPageFactory(this));
+        getSettings().getDefaultPageFactory().setChildFactory(new GroovyPageFactory(this));
         getSettings().setHomePage("wicket.examples.groovy.Page1");
     }
 }

@@ -66,7 +66,7 @@ public class GroovyPageFactory extends PageFactory
      * 
      * @param classname The object's class name 
      */
-    public Class getClassInstance(final String classname)
+    public Class classForName(final String classname)
     {
         // If definition already loaded, ...
         Class clazz = (Class) classCache.get(classname);

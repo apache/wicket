@@ -147,7 +147,7 @@ public abstract class SignInPanel extends Panel
                 else 
                 {
                     cycle.setPage(
-                            getApplicationSettings().getPageFactory().newPage(
+                            getApplicationSettings().getDefaultPageFactory().newPage(
                                     getApplicationSettings().getHomePage()));
                 }
             }

@@ -37,7 +37,7 @@ public class Logout extends AuthenticatedHtmlPage
     }
     
 	/**
-	 * @see wicket.Page#checkAccess(wicket.RequestCycle)
+	 * @see wicket.Page#checkAccess()
 	 */
 	protected boolean checkAccess() 
 	{

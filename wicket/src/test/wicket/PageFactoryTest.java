@@ -61,7 +61,7 @@ public class PageFactoryTest extends TestCase
         Exception ex = null;
         try
         {
-            factory.getClassInstance("dummyPackage.dummyClass");
+            factory.classForName("dummyPackage.dummyClass");
         }
         catch (RenderException e)
         {
@@ -71,7 +71,7 @@ public class PageFactoryTest extends TestCase
         
         factory.setChildFactory(childFactory);
         assertEquals(childFactory, factory.getChildFactory());
-        assertEquals(Object.class, factory.getClassInstance("dummyPackage.dummyClass"));
+        assertEquals(Object.class, factory.classForName("dummyPackage.dummyClass"));
     }
 
     /**
@@ -89,9 +89,9 @@ public class PageFactoryTest extends TestCase
         }
 
         /**
-         * @see wicket.PageFactory#getClassInstance(java.lang.String)
+         * @see wicket.PageFactory#classForName(java.lang.String)
          */
-        public Class getClassInstance(final String classname)
+        public Class classForName(final String classname)
         {
             return Object.class;
         }

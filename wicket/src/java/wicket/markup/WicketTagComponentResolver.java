@@ -85,7 +85,7 @@ public class WicketTagComponentResolver implements IComponentResolver
         
         final String classname = tag.getAttributes().getString("class");
         final Class clazz = RequestCycle.get().getApplication().getSettings()
-        		.getPageFactory().getClassInstance(classname);
+        		.getDefaultPageFactory().classForName(classname);
         
         final Component component;
         try

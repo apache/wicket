@@ -41,7 +41,7 @@ public class MyTree extends IndentTree
     }
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#junctionLinkClicked(wicket.RequestCycle, wicket.markup.html.tree.TreeNodeModel)
+	 * @see wicket.markup.html.tree.IndentTree#junctionLinkClicked(wicket.markup.html.tree.TreeNodeModel)
 	 */
 	protected void junctionLinkClicked(TreeNodeModel node)
 	{
@@ -50,7 +50,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#nodeLinkClicked(wicket.RequestCycle, wicket.markup.html.tree.TreeNodeModel)
+	 * @see wicket.markup.html.tree.IndentTree#nodeLinkClicked(wicket.markup.html.tree.TreeNodeModel)
 	 */
 	protected void nodeLinkClicked(TreeNodeModel node)
 	{

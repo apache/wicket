@@ -91,8 +91,7 @@ public class SpringApplication extends HttpApplication implements InitializingBe
     }
 
     /**
-     * 
-     * @return
+     * @return The spring application context.
      */
     public final ApplicationContext getSpringApplicationContext()
     {

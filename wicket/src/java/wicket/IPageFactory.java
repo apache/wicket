@@ -123,10 +123,10 @@ public interface IPageFactory
      * Object Factory: Simply load the Class with name. Subclasses may overwrite
      * it to load Groovy classes e.g..
      * 
-     * @param classname fully qualified classname
+     * @param classname Fully qualified classname
      * @return Class
      */
-    public abstract Class getClassInstance(final String classname);
+    public abstract Class classForName(final String classname);
     
     /**
      * Get next (child-) factory from the chain of factories.
