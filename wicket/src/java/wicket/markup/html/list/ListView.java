@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.26 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,10 +38,10 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *         &lt;tbody&gt;
- *           &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
- *               &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *           ...    
+ *          &lt;tbody&gt;
+ *            &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
+ *                &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *            ...    
  * </pre>
  * 
  * <p>
@@ -77,9 +77,6 @@ public abstract class ListView extends WebMarkupContainer
 	 * doesn't get changed at all or if it gets scrolled (compared to paging).
 	 * But if you modify the listView model object, than you must manually call
 	 * listView.removeAll() in order to rebuild the ListItems.
-	 * 
-	 * TODO this could go away if we were able to automatically detect changes
-	 * to the underlying list. May be a delegate List could do?
 	 */
 	private boolean optimizeItemRemoval = false;
 
@@ -96,7 +93,7 @@ public abstract class ListView extends WebMarkupContainer
 		if (model == null)
 		{
 			throw new IllegalArgumentException(
-					"null models are not allowed. You may a Loop type instead");
+					"Null models are not allowed. If you have no model, you may prefer a Loop instead");
 		}
 
 		// A reasonable default for viewSize can not be determined right now,
@@ -208,27 +205,36 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public final Link moveDownLink(final String id, final ListItem item)
 	{
-		final Link link = new Link(id)
+		return new Link(id)
 		{
+			/**
+			 * @see wicket.Component#onBeginRequest()
+			 */
+			protected void onBeginRequest()
+			{
+				setAutoEnable(false);
+				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
+				{
+					setEnabled(false);
+				}
+			}
+
+			/**
+			 * @see wicket.markup.html.link.Link#onClick()
+			 */
 			public void onClick()
 			{
 				final int index = getList().indexOf(item.getModelObject());
-				if(index != -1)
+				if (index != -1)
 				{
 					// Swap list items and invalidate listView
 					Collections.swap(getList(), index, index + 1);
-	
+
 					// Make sure you re-render the list properly
 					ListView.this.removeAll();
 				}
 			}
 		};
-		if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
-		{
-			link.setEnabled(false);
-		}
-
-		return link;
 	}
 
 	/**
@@ -242,28 +248,36 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public final Link moveUpLink(final String id, final ListItem item)
 	{
-		final Link link = new Link(id)
+		return new Link(id)
 		{
+			/**
+			 * @see wicket.Component#onBeginRequest()
+			 */
+			protected void onBeginRequest()
+			{
+				setAutoEnable(false);
+				if (getList().indexOf(item.getModelObject()) == 0)
+				{
+					setEnabled(false);
+				}
+			}
+
+			/**
+			 * @see wicket.markup.html.link.Link#onClick()
+			 */
 			public void onClick()
 			{
 				final int index = getList().indexOf(item.getModelObject());
-				if(index != -1)
+				if (index != -1)
 				{
 					// Swap items and invalidate listView
 					Collections.swap(getList(), index, index - 1);
-	
+
 					// Make sure you re-render the list properly
 					ListView.this.removeAll();
 				}
 			}
 		};
-
-		if (getList().indexOf(item.getModelObject()) == 0)
-		{
-			link.setEnabled(false);
-		}
-
-		return link;
 	}
 
 	/**
@@ -279,6 +293,9 @@ public abstract class ListView extends WebMarkupContainer
 	{
 		return new Link(id)
 		{
+			/**
+			 * @see wicket.markup.html.link.Link#onClick()
+			 */
 			public void onClick()
 			{
 				// Remove item and invalidate listView

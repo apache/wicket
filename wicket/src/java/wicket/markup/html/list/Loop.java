@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.list;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -148,6 +149,11 @@ public abstract class Loop extends WebMarkupContainer
 			{
 				// Create container for the given loop iteration
 				final Iteration iteration = (Iteration)get(Integer.toString(i));
+				if (iteration == null)
+				{
+					throw new WicketRuntimeException(
+							"Loop iteration is null.  Probably the loop iterations were changed between onBeginRequest and render time.");
+				}
 
 				// Rewind to start of markup for kids
 				markupStream.setCurrentIndex(markupStart);

@@ -6,7 +6,7 @@
 <body>
 
   <span wicket:id = "border">
-  <table>
+  <table width = "100%">
 	<tr>
 	  <th>Title</th>
 	  <th>Author</th>
@@ -27,10 +27,10 @@
         </span>
       </td>
       <td>
-        <a wicket:id = "moveUp" href="#">Move Up</a>
+        <a wicket:id = "moveUp" href="#">Up</a>
       </td>
       <td>
-        <a wicket:id = "moveDown" href="#">Move Down</a>
+        <a wicket:id = "moveDown" href="#">Down</a>
       </td>
       <td>
         <a wicket:id = "remove" href="#">Remove</a>
@@ -40,6 +40,9 @@
       </td>
     </tr>
   </table>	
+  <p>
+  <span wicket:id = "navigator"/>
+  </p>
   </span>
 </body>
 </html>

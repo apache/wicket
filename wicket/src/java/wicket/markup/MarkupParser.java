@@ -80,7 +80,7 @@ public final class MarkupParser
     /**
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
-     * @param wicketNamespace The wicket namespace to identifiy wicket tags; e.g. wicket:id="XXX"
+     * @param wicketNamespace The wicket namespace to identifiy wicket tags; e.g. wicket:id="xxx"
      */
     public MarkupParser(final IXmlPullParser xmlParser, final String wicketNamespace)
     {

@@ -20,7 +20,6 @@ package wicket.examples.navomatic;
 
 import wicket.examples.WicketExamplePage;
 
-
 /**
  * Trivial page.
  * 

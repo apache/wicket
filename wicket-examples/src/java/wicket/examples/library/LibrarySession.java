@@ -68,6 +68,13 @@ public final class LibrarySession extends WebSession
                 books.add(new Book("The Illiad", "Homer Simpson", Book.FICTION));
                 books.add(new Book("Why Stock Markets Crash",
                         "Didier Sornette", Book.NON_FICTION));
+                books.add(new Book("The Netherlands", "Mike Jones", Book.NON_FICTION));
+                books.add(new Book("Windows, Windows, Windows!", "Steve Ballmer", Book.FICTION));
+                books.add(new Book("This is a test", "Vincent Rumsfield", Book.FICTION));
+                books.add(new Book("Movies", "Mark Marksfield", Book.NON_FICTION));
+                books.add(new Book("DOS Capitol", "Billy G", Book.FICTION));
+                books.add(new Book("Whatever", "Jonny Zoom", Book.FICTION));
+                books.add(new Book("Tooty Fruity", "Rudy O", Book.FICTION));
                 setUser(user);
             }
         }

@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+      <action type="fix" dev="Jonathan Locke" issue="1167377">
+      IMG tags are no longer split into open/close pair.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1166893">
       Changed resource urls and added shared resources to Application via new 
       add/getResource() methods.  The techniques are pretty well demonstrated in

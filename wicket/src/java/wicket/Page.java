@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
+import wicket.util.value.Count;
 import wicket.version.undo.UndoPageVersionManager;
 
 /**
@@ -425,8 +426,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		if (this.pageMap == null)
 		{
 			// TODO This could potentially enable denial of service attacks. We
-			// may
-			// want to limit pagemaps created via URLs (see Session.java)
+			// may want to limit pagemaps created via URLs (see Session.java)
 			this.pageMap = session.newPageMap(pageMapName);
 		}
 	}
@@ -533,7 +533,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * @see wicket.Component#internalOnBeginRequest()
 	 */
 	protected final void internalOnBeginRequest()
-	{	
+	{
 		// Adds any feedback messages on this page to the given component
 		if (feedback != null)
 		{
@@ -785,17 +785,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	private final void checkRendering()
 	{
+		final Count unrenderedComponents = new Count();
+		final StringBuffer buffer = new StringBuffer();
 		visitChildren(new IVisitor()
 		{
 			public Object component(final Component component)
 			{
 				// If component never rendered
-				if ((renderedComponents == null) || !renderedComponents.contains(component))
+				if (renderedComponents == null || !renderedComponents.contains(component))
 				{
-					// Throw exception
-					throw new WicketRuntimeException(component
-							.exceptionMessage("Component never rendered. You probably failed to "
-									+ "reference it in your markup"));
+					unrenderedComponents.increment();
+					buffer.append("" + unrenderedComponents.getCount() + ". " + component + "\n");
 				}
 				return CONTINUE_TRAVERSAL;
 			}
@@ -803,6 +803,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 		// Get rid of set
 		renderedComponents = null;
+
+		// Throw exception if any errors were found
+		if (unrenderedComponents.getCount() > 0)
+		{
+			// Throw exception
+			throw new WicketRuntimeException("The component(s) below failed to render:\n\n"
+					+ buffer.toString());
+		}
 	}
 
 	/**

@@ -26,9 +26,6 @@ import org.mortbay.jetty.Server;
 
 import wicket.markup.html.form.encryption.NoCrypt;
 import wicket.protocol.http.WebApplication;
-import wicket.util.file.Folder;
-import wicket.util.file.Path;
-import wicket.util.time.Duration;
 
 /**
  * WicketServlet class for hello world example.
@@ -56,15 +53,8 @@ public abstract class WicketExampleApplication extends WebApplication
         // box.
         getSettings().setCryptClass(NoCrypt.class);
 
-        try
-        {
-        	getSettings().setSourcePath(new Path(new Folder("c:\\Proects\\wicket-examples\\src\\java")));
-        }
-        catch (IllegalArgumentException e)
-        {  
-            // Ignore if folder cannot be found
-        }
-        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+        // Use development settings 
+        getSettings().configure("development", "src\\java");
     }
 	/**
 	 * Main function, starts the jetty server.

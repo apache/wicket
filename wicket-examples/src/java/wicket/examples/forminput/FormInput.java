@@ -44,8 +44,8 @@ import wicket.model.PropertyModel;
  */
 public class FormInput extends WicketExamplePage
 {
-	/** all available locales wrapped in a list. */
-	private static final List ALL_LOCALES = Arrays.asList(Locale.getAvailableLocales());
+	/** Relevant locales wrapped in a list. */
+	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.US, new Locale("nl") });
 
 	/**
 	 * Constructor
@@ -58,7 +58,7 @@ public class FormInput extends WicketExamplePage
 		add(new InputForm("inputForm", feedback));
 
 		// Dropdown for selecting locale
-		add(new DropDownChoice("localeSelect", new PropertyModel(this, "locale"), ALL_LOCALES) 
+		add(new DropDownChoice("localeSelect", new PropertyModel(this, "locale"), LOCALES) 
 		{
 			protected boolean wantOnSelectionChangedNotifications()
 			{

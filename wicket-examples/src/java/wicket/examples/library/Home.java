@@ -20,10 +20,10 @@ package wicket.examples.library;
 import wicket.PageParameters;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
+import wicket.markup.html.list.PageableListView;
+import wicket.markup.html.list.PageableListViewNavigator;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
-
 
 /**
  * Page that displays a list of books and lets the user re-order them.
@@ -43,7 +43,8 @@ public final class Home extends AuthenticatedWebPage
 		final User user = getLibrarySession().getUser();
 		if (user != null)
 		{
-			add(new ListView("books", new PropertyModel(user, "books"))
+			final PageableListView listView;
+			add(listView = new PageableListView("books", new PropertyModel(user, "books"), 4)
 			{
 				public void populateItem(final ListItem listItem)
 				{
@@ -57,6 +58,7 @@ public final class Home extends AuthenticatedWebPage
 					listItem.add(EditBook.link("edit", book.getId()));
 				}
 			});
+			add(new PageableListViewNavigator("navigator", listView));
 		}
 	}
 }

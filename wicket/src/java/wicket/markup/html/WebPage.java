@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -150,24 +150,22 @@ public class WebPage extends Page
 	 */
 	public String urlFor(final String path)
 	{
-	    if ((path == null) || (path.trim().length() == 0))
-	    {
-	        return urlPrefix(getWebRequestCycle()).toString();
-	    }
-	    else
-	    {
-	        return urlPrefix(getWebRequestCycle()) + "/" + path;
-	    }
+		if ((path == null) || (path.trim().length() == 0))
+		{
+			return urlPrefix(getWebRequestCycle()).toString();
+		}
+		else
+		{
+			return urlPrefix(getWebRequestCycle()) + "/" + path;
+		}
 	}
 
 	/**
-	 * Gets the markup type for a WebPage, which is always "html" (and thus the
-	 * method is final here). Support for pages in another markup language, such
-	 * as VXML, would require the creation of a different Page subclass in an
-	 * appropriate package under wicket.markup. To support VXML (voice markup),
-	 * one might create the package wicket.markup.vxml and a subclass of Page
-	 * called VoicePage.
-	 * TODO not sure. Subclassing and basically copying everything from WebPage doesn't seem right
+	 * Gets the markup type for a WebPage, which is "html" by default. Support
+	 * for pages in another markup language, such as VXML, would require the
+	 * creation of a different Page subclass in an appropriate package under
+	 * wicket.markup. To support VXML (voice markup), one might create the
+	 * package wicket.markup.vxml and a subclass of Page called VoicePage.
 	 * <p>
 	 * Note: The markup type must be equal to the extension of the markup file.
 	 * In the case of WebPages, it must always be "html".
