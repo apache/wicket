@@ -89,9 +89,9 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#getValue()
+	 * @see FormComponent#getModelValue()
 	 */
-	public final String getValue()
+	public final String getModelValue()
 	{
 		final String value = getModelObjectAsString();
 		try
@@ -125,9 +125,9 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#setValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#setModelValue(java.lang.String)
 	 */
-	public final void setValue(String value)
+	public final void setModelValue(String value)
 	{
 		String decryptedValue;
 		try

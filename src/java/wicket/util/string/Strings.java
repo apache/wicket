@@ -450,7 +450,7 @@ public final class Strings
 			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
 		}
 
-		throw new StringValueConversionException("Boolean value was null");
+		return false;
 	}
 
 	/**

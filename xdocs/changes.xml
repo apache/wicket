@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+	  <action type="update" dev="Jonathan Locke" issue="1153916">
+		Reworked RadioChoice as a much simpler subclass of AbstractChoice that is much more compatible with other choice components.  Also fixed remaining bugs in form repopulation / validation and tested using Library application.
+	  </action>
 	  <action type="update" dev="Jonathan Locke" issue="1153047">
 	  Finished working on invalid input problems and model problems in choices.  The result is a reworked choice model in a new model sub-package of form (which makes it a lot easier to read the form components in the form package).  In addition, this checkin includes significant fixes to the wicket.model package, the most important of which is the elimination of DetachableModel, in favor of typesafe and simple usage patterns in AbstractDetachableModel.	  
 	  </action>

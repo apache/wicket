@@ -22,9 +22,7 @@ import java.util.Collection;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
-import wicket.util.string.Strings;
 
 /**
  * A choice implemented as a dropdown menu/list. Framework users can extend this
@@ -36,7 +34,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public class DropDownChoice extends AbstractChoice implements IOnChangeListener
+public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
 	/** serial UID. */
 	private static final long serialVersionUID = 122777360064586107L;
@@ -92,33 +90,12 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	}
 
 	/**
-	 * @see FormComponent#getValue()
-	 */
-	public final String getValue()
-	{
-		final IChoice choice = getChoices().choiceForObject(getModelObject());
-		if (choice != null)
-		{
-			return choice.getId();
-		}
-		return "-1";
-	}
-
-	/**
 	 * Called when a selection changes.
 	 */
 	public final void onSelectionChanged()
 	{
 		updateModel();
 		onSelectionChanged(getModelObject());
-	}
-
-	/**
-	 * @see FormComponent#setValue(java.lang.String)
-	 */
-	public final void setValue(final String value)
-	{
-		setModelObject(getChoices().choiceForId(value).getObject());
 	}
 
 	/**
@@ -130,6 +107,8 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		checkComponentTag(tag, "select");
+		
 		// If a user subclasses this class and implements IOnChangeListener
 		// an onChange scriptlet is added
 		final String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
@@ -161,24 +140,6 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	 */
 	protected void onSelectionChanged(final Object newSelection)
 	{
-	}
-
-	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.AbstractChoice#updateModel()
-	 */
-	protected final void updateModel()
-	{
-		final String id = getInput();
-		if (Strings.isEmpty(id))
-		{
-			setModelObject(null);
-		}
-		else
-		{
-			setModelObject(getChoices().choiceForId(id).getObject());
-		}
 	}
 
 	/**

@@ -59,11 +59,18 @@ public class CheckBox extends FormComponent
 	}
 
 	/**
-	 * @see FormComponent#setValue(java.lang.String)
+	 * @see FormComponent#setModelValue(java.lang.String)
 	 */
-	public final void setValue(String value)
+	public final void setModelValue(String value)
 	{
-		setModelObject(Boolean.valueOf(value));
+		try
+		{
+			setModelObject(Strings.toBoolean(value));
+		}
+		catch (StringValueConversionException e)
+		{
+			throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"");
+		}
 	}
 
 	/**
@@ -117,6 +124,13 @@ public class CheckBox extends FormComponent
 	 */
 	protected void updateModel()
 	{
-		setModelObject(Boolean.valueOf(!Strings.isEmpty(getInput())));
+		try
+		{
+			setModelObject(Strings.toBoolean(getInput()));
+		}
+		catch (StringValueConversionException e)
+		{
+			throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
+		}
 	}
 }
