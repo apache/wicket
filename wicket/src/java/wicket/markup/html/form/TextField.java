@@ -106,9 +106,9 @@ public final class TextField extends FormComponent
     }
 
     /**
-     * @see FormComponent#getSupportsPersistence()
+     * @see FormComponent#supportsPersistence()
      */
-    public boolean getSupportsPersistence()
+    public boolean supportsPersistence()
     {
         return true;
     }

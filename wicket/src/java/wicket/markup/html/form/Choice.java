@@ -30,9 +30,6 @@ import wicket.model.IModel;
 /**
  * Abstract base class for all Choice (html select) options.
  * 
- * Registers {@link wicket.markup.html.form.IOnChangeListener}to implement
- * onChange behaviour of the HTML select element.
- * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -121,9 +118,9 @@ abstract class Choice extends FormComponent
 	}
 
     /**
-     * @see wicket.markup.html.form.FormComponent#getSupportsPersistence()
+     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
      */
-    public boolean getSupportsPersistence()
+    public boolean supportsPersistence()
     {
         return true;
     }

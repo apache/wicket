@@ -41,12 +41,12 @@ import wicket.util.string.StringList;
  */
 public abstract class FormComponent extends HtmlContainer
 {
-
 	/**
 	 * Whether this form component should save and restore state between
 	 * sessions. This is false by default.
 	 */
 	private boolean persistent = false;
+    
 	/** The validator or validator list for this component. */
 	private IValidator validator = IValidator.NULL;
 
@@ -178,10 +178,7 @@ public abstract class FormComponent extends HtmlContainer
 	// form component is invalid
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param componentName
-	 *            The name of this component
+     * @see wicket.Component#Component(String)
 	 */
 	public FormComponent(final String componentName)
 	{
@@ -189,15 +186,7 @@ public abstract class FormComponent extends HtmlContainer
 	}
 
 	/**
-	 * Constructor that uses the provided {@link IModel}as its model. All
-	 * components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the model
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, IModel)
 	 */
 	public FormComponent(String name, IModel model)
 	{
@@ -205,26 +194,7 @@ public abstract class FormComponent extends HtmlContainer
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a
-	 * dynamic model. This model will be wrapped in an instance of
-	 * {@link wicket.model.PropertyModel}using the provided expression. Thus,
-	 * using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(myIModel, expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the instance of {@link IModel}from which the model object
-	 *            will be used as the subject for the given expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, IModel, String)
 	 */
 	public FormComponent(String name, IModel model, String expression)
 	{
@@ -232,16 +202,7 @@ public abstract class FormComponent extends HtmlContainer
 	}
 
 	/**
-	 * Constructor that uses the provided object as a simple model. This object
-	 * will be wrapped in an instance of {@link wicket.model.Model}. All
-	 * components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as a simple model
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable)
 	 */
 	public FormComponent(String name, Serializable object)
 	{
@@ -249,26 +210,7 @@ public abstract class FormComponent extends HtmlContainer
 	}
 
 	/**
-	 * Constructor that uses the provided object as a dynamic model. This object
-	 * will be wrapped in an instance of {@link wicket.model.Model}that will be
-	 * wrapped i n an instance of {@link wicket.model.PropertyModel}using the
-	 * provided expression. Thus, using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(new Model(object), expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as the subject for the given
-	 *            expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public FormComponent(String name, Serializable object, String expression)
 	{
@@ -306,14 +248,6 @@ public abstract class FormComponent extends HtmlContainer
 		}
 
 		return this;
-	}
-
-	/**
-	 * @return True if this type of FormComponent can be persisted.
-	 */
-    public boolean getSupportsPersistence()
-	{
-		return false;
 	}
 
 	/**
@@ -356,7 +290,7 @@ public abstract class FormComponent extends HtmlContainer
 	 */
 	public final boolean isPersistent()
 	{
-		return getSupportsPersistence() && persistent;
+		return supportsPersistence() && persistent;
 	}
 
 	/**
@@ -377,7 +311,7 @@ public abstract class FormComponent extends HtmlContainer
 	 */
 	public final void setPersistent(final boolean persistent)
 	{
-		if (getSupportsPersistence())
+		if (supportsPersistence())
 		{
 			this.persistent = persistent;
 		}
@@ -397,6 +331,14 @@ public abstract class FormComponent extends HtmlContainer
 	public void setValue(final String value)
 	{
         setModelObject(value);        
+	}
+
+	/**
+	 * @return True if this type of FormComponent can be persisted.
+	 */
+    public boolean supportsPersistence()
+	{
+		return false;
 	}
 
 	/**
