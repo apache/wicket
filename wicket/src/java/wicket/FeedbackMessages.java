@@ -29,7 +29,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
 import wicket.model.IModel;
 import wicket.util.string.StringList;
 
@@ -281,33 +280,6 @@ public final class FeedbackMessages
 				log.debug("FeedbackMessages " + currentMessages + " released for thread "
 						+ Thread.currentThread());
 			}
-
-			// Only error level components have their models (possibly) replaced
-			final Set components = currentMessages.getErrorReporters();
-			for (final Iterator i = components.iterator(); i.hasNext();)
-			{
-				Component component = (Component)i.next();
-				IModel currentModel = component.getModel();
-
-				// If the model was wrapped (ie the error message was added by
-				// the validation mechanism of this framework
-				if (currentModel instanceof ValidationErrorModelDecorator)
-				{
-					ValidationErrorModelDecorator decorator = ((ValidationErrorModelDecorator)currentModel);
-					IModel originalModel = originalModel = decorator.getOriginalModel();
-
-					// Can happen if error page has happend.
-					while (originalModel instanceof ValidationErrorModelDecorator)
-					{
-						originalModel = ((ValidationErrorModelDecorator)originalModel)
-								.getOriginalModel();
-					}
-
-					// Replace the model with the initial one
-					component.setModel(originalModel);
-				}
-			}
-
 			// Clear thread local
 			current.set(null);
 		}
