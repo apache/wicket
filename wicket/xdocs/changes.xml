@@ -6,7 +6,7 @@
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
   </properties>
   <body>
-    <release version="0.9.18-beta (not yet released)" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+    <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="remove" dev="Jonathan Locke" issue="">
 		Removed IModel constructors throughout the project and added instanceof 
 		logic to Component to wrap model objects unless they are already IModel 
