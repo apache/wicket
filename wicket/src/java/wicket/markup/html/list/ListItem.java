@@ -17,13 +17,7 @@
  */
 package wicket.markup.html.list;
 
-import java.util.Collections;
-
-import wicket.Component;
-import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.link.Link;
-import wicket.model.AbstractModel;
 import wicket.model.IModel;
 
 /**
@@ -33,57 +27,19 @@ import wicket.model.IModel;
  */
 public class ListItem extends WebMarkupContainer
 {
-	// TODO change this 
-	
 	/** The index of the ListItem in the parent listView */
 	private final int index;
-
-	/** The parent ListView, the ListItem is part of. */
-	private ListView listView;
-	
-	/**
-	 * Model for list items.
-	 */
-	private class ListItemModel extends AbstractModel
-	{
-		/**
-		 * @see wicket.model.IModel#getNestedModel()
-		 */
-		public Object getNestedModel()
-		{
-			return listView.getListObject(index);
-		}
-		
-		/**
-		 * @see IModel#getObject(Component)
-		 */
-		public Object getObject(final Component component)
-		{
-			return listView.getListObject(index);
-		}
-
-		/**
-		 * @see IModel#setObject(Component, Object)
-		 */
-		public void setObject(final Component component, final Object object)
-		{
-			throw new WicketRuntimeException("Can't set an object through a ListItem");
-		}
-	}
 
 	/**
 	 * A constructor which uses the index and the list provided to create a
 	 * ListItem. This constructor is the default one.
 	 * 
-	 * @param listView
-	 *            The listView that holds this listItem
-	 * @param index
-	 *            The listItem number
+	 * @param index The index of the item
+	 * @param model The model object of the item
 	 */
-	protected ListItem(final ListView listView, final int index)
+	protected ListItem(final int index, final IModel model)
 	{
-		super(Integer.toString(index));
-		this.listView = listView;
+		super(Integer.toString(index), model);
 		this.index = index;
 	}
 
@@ -96,132 +52,5 @@ public class ListItem extends WebMarkupContainer
 	{
 		return index;
 	}
-
-	/**
-	 * Convenience method for ListViews with alternating style for colouring.
-	 * 
-	 * @return True, if index is even index % 2 == 0
-	 */
-	public final boolean isEvenIndex()
-	{
-		return getIndex() % 2 == 0;
-	}
-
-	/**
-	 * Gets if this listItem is the first listItem in the containing listView.
-	 * 
-	 * @return True if this listItem is the first listItem in the containing
-	 *         listView
-	 */
-	public final boolean isFirst()
-	{
-		return index == 0;
-	}
-
-	/**
-	 * Gets whether this listItem is the last listItem in the containing
-	 * listView.
-	 * 
-	 * @return True if this listItem is the last listItem in the containing
-	 *         listView.
-	 */
-	public final boolean isLast()
-	{
-		return index == listView.getList().size() - 1;
-	}
-
-	/**
-	 * Returns a link that will move the given listItem "down" (towards the end)
-	 * in the listView.
-	 * 
-	 * @param componentId
-	 *            Name of move-down link component to create
-	 * @return The link component
-	 */
-	public final Link moveDownLink(final String componentId)
-	{
-		final Link link = new Link(componentId)
-		{
-			public void onClick()
-			{
-				// Swap list items and invalidate listView
-				listView.modelChangeImpending();
-				Collections.swap(listView.getList(), index, index + 1);
-			}
-		};
-
-		if (index == (listView.getList().size() - 1))
-		{
-			link.setVisible(false);
-		}
-
-		return link;
-	}
-
-	/**
-	 * Returns a link that will move the given listItem "up" (towards the
-	 * beginning) in the listView.
-	 * 
-	 * @param componentId
-	 *            Name of move-up link component to create
-	 * @return The link component
-	 */
-	public final Link moveUpLink(final String componentId)
-	{
-		final Link link = new Link(componentId)
-		{
-			public void onClick()
-			{
-				// Swap listItems and invalidate listView
-				listView.modelChangeImpending();
-				Collections.swap(listView.getList(), index, index - 1);
-			}
-		};
-
-		if (index == 0)
-		{
-			link.setVisible(false);
-		}
-
-		return link;
-	}
-
-	/**
-	 * Returns a link that will remove this ListItem from the ListView that
-	 * holds it.
-	 * 
-	 * @param componentId
-	 *            Name of remove link component to create
-	 * @return The link component
-	 */
-	public final Link removeLink(final String componentId)
-	{
-		return new Link(componentId)
-		{
-			public void onClick()
-			{
-				// Remove listItem and invalidate listView
-				listView.modelChangeImpending();
-				listView.getList().remove(index);
-			}
-		};
-	}
-
-	/**
-	 * Get the listView that holds this cell.
-	 * 
-	 * @return Returns the list view.
-	 */
-	protected final ListView getListView()
-	{
-		return listView;
-	}
-	
-	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		return new ListItemModel();
-	}
 }
+

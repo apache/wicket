@@ -230,7 +230,8 @@ public class SearchPage extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
+		 * @see PageableListView#populateItem(ListItem)
+		 * @param item
 		 */
 		public void populateItem(final ListItem item)
 		{

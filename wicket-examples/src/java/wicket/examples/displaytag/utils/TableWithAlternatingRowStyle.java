@@ -18,7 +18,6 @@
  */
 package wicket.examples.displaytag.utils;
 
-import java.io.Serializable;
 import java.util.List;
 
 import wicket.markup.ComponentTag;
@@ -44,7 +43,7 @@ public abstract class TableWithAlternatingRowStyle extends ListView
     {
         super(componentName, data);
     }
-
+	
     /**
      * Subclass Table's newCell() and return a ListItem which will add/modify its
      * class attribute and thus provide ListItems with alternating row colours.
@@ -53,27 +52,18 @@ public abstract class TableWithAlternatingRowStyle extends ListView
      * @param index Index of item 
      * @return List item
      */
-    protected ListItem newItem(final int index)
+    protected ListItem getNewListItem(final int index)
     {
-        // Make sure the model object is serializable
-        Object listItem = getList().get(index);
-        if (!(listItem instanceof Serializable))
-        {
-            throw new IllegalArgumentException("Table and table cell model data must be serializable");
-        }
-
-        // Return an extended Cell, which will automatically change the CSS style with
-        // every other Cell.
-        return new ListItem(this, index)
-        {
-            protected void onComponentTag(final ComponentTag tag)
-            {
-                // add/modify the attribute controlling the CSS style
-                tag.put("class", this.isEvenIndex() ? "even" : "odd");
-                
-                // continue with default behaviour
-                super.onComponentTag(tag);
-            }
-        };
+		return new ListItem(index, getListItemModel(getModel(), index))
+	        {
+	            protected void onComponentTag(final ComponentTag tag)
+	            {
+	                // add/modify the attribute controlling the CSS style
+	                tag.put("class", (getIndex() % 2) == 0 ? "even" : "odd");
+	                
+	                // continue with default behaviour
+	                super.onComponentTag(tag);
+	            }
+	        };
     }
 }

@@ -113,10 +113,10 @@ public class ExampleSorting extends Displaytag
         // And this is with a little bit of magic
         add(new SortableListViewHeaders("header", table)
         {
-            /*
+            /**
              * If object does not support equals()
              */
-	        protected int compare(SortableListViewHeader header, Object o1, Object o2)
+        	protected int compareTo(final SortableListViewHeader header, final Object o1, final Object o2)
 	        {
 	            if (header.getId().equals("id"))
 	            {

@@ -40,7 +40,7 @@ public class Hangman implements Serializable
 	private boolean[] guessedLetters;
 	
 	/** Number of guesses allowed */
-	private int guessesAllowed;
+	private int guessesAllowed = 5;  // default
 	
 	/** Number of guesses remaining */
 	private int guessesRemaining;

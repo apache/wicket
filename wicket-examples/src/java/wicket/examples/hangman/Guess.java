@@ -60,14 +60,18 @@ public class Guess extends HangmanPage
 		for (char c = 'a'; c <= 'z'; c++)
 		{
 			letters.add(new Character(c));
-		}		
-		add(new ListView("letters", letters)
+		}	
+		
+		final ListView listView = new ListView("letters", letters)
 		{
 			protected void populateItem(ListItem listItem)
 			{
 				listItem.add(new SelectableLetterLink((Character)listItem.getModelObject()));
 			}
-		});
+		};
+
+		listView.setOptimizeRenderProcess(true);
+		add(listView);
 	}
 
 	/**

@@ -75,13 +75,13 @@ public final class GuestBook extends WicketExamplePage
 		/**
 		 * Constructor
 		 * 
-		 * @param componentName
+		 * @param id
 		 *            The name of this component
 		 */
-		public CommentForm(final String componentName)
+		public CommentForm(final String id)
 		{
 			// Construct form with no validation listener
-			super(componentName, new CompoundPropertyModel(new Comment()), null);
+			super(id, new CompoundPropertyModel(new Comment()), null);
 			
 			// Add text entry widget
 			add(new TextArea("text"));
@@ -105,6 +105,7 @@ public final class GuestBook extends WicketExamplePage
             {
     			commentList.add(0, newComment);
             }
+			commentListView.modelChanged();
 
 			// Clear out the text component
 			comment.setText("");

@@ -29,6 +29,14 @@ import wicket.examples.WicketExamplePage;
  */
 public final class SignIn2 extends WicketExamplePage
 {
+    /**
+     * Construct
+     */
+    public SignIn2()
+    {
+       this(null);
+       
+    }
 	/**
 	 * Constructor
 	 * 

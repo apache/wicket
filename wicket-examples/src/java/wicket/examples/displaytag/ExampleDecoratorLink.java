@@ -61,7 +61,7 @@ public class ExampleDecoratorLink extends Displaytag
 
                 // alternating row styles
                 listItem.add(new AttributeModifier("class",
-                                                          new Model(listItem.isEvenIndex() ? "even" : "odd")));
+                        	new Model((listItem.getIndex() % 2) == 0 ? "even" : "odd")));
                 
                 BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
@@ -88,7 +88,7 @@ public class ExampleDecoratorLink extends Displaytag
                 final ListObject value = (ListObject) listItem.getModelObject();
 
                 listItem.add(new AttributeModifier("class",
-                                                          new Model(listItem.isEvenIndex() ? "even" : "odd")));
+                        new Model((listItem.getIndex() % 2) == 0 ? "even" : "odd")));
                 
                 BookmarkablePageLink idLink = new BookmarkablePageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());

@@ -51,9 +51,9 @@ public final class Home extends AuthenticatedWebPage
 					listItem.add(BookDetails.link("details", book, getLocalizer().getString(
 							"noBookTitle", this)));
 					listItem.add(new Label("author", new Model(book)));
-					listItem.add(listItem.moveUpLink("moveUp"));
-					listItem.add(listItem.moveDownLink("moveDown"));
-					listItem.add(listItem.removeLink("remove"));
+					listItem.add(moveUpLink("moveUp", listItem));
+					listItem.add(moveDownLink("moveDown", listItem));
+					listItem.add(removeLink("remove", listItem));
 					listItem.add(EditBook.link("edit", book.getId()));
 				}
 			});
