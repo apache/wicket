@@ -95,7 +95,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 				public Object component(final Component component)
 				{
 					// Get form component
-					FormComponent formComponent = (FormComponent)component;
+					final FormComponent formComponent = (FormComponent)component;
 
 					// Validate form component
 					formComponent.validate();

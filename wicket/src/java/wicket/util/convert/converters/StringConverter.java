@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import wicket.util.convert.ConversionException;
 import wicket.util.convert.ITypeConverter;
 
 /**
@@ -125,20 +124,8 @@ public class StringConverter extends AbstractConverter
 			return defaultConverter.convert(value);
 		}
 
-		try
-		{
-			// Use type converter to convert to value
-			return converter.convert(value);
-		}
-		catch (ConversionException e)
-		{
-			throw e.setTypeConverter(this).setTargetType(c).setSourceValue(value);
-		}
-		catch (Exception e)
-		{
-			throw new ConversionException(e).setTypeConverter(this).setTargetType(c)
-					.setSourceValue(value);
-		}
+		// Use type converter to convert to value
+		return converter.convert(value);
 	}
 
 	/**
@@ -232,4 +219,12 @@ public class StringConverter extends AbstractConverter
 		// Set locale on default converter
 		defaultConverter.setLocale(locale);
 	}
+
+    /**
+     * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+     */
+    protected Class getTargetType()
+    {
+        return String.class;
+    }
 }

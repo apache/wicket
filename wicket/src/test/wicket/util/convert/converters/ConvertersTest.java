@@ -86,15 +86,24 @@ public final class ConvertersTest extends TestCase
 		assertEquals(new Byte((byte)10), converter.convert(Byte.valueOf("10")));
 		assertEquals(new Byte((byte)10), converter.convert("10"));
 		assertEquals("10", new StringConverter().convert(new Byte((byte)10)));
-		try
-		{
-			converter.convert("whatever");
-			fail("Conversion should have thrown an exception");
-		}
-		catch (ConversionException e)
-		{
-			// This is correct
-		}
+        try
+        {
+            converter.convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+        try
+        {
+            converter.convert("10whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
 		try
 		{
 			converter.convert("256");
@@ -116,15 +125,24 @@ public final class ConvertersTest extends TestCase
 		assertEquals(new Double(1.1), converter.convert(new Double(1.1)));
 		assertEquals(new Double(1.1), converter.convert("1.1"));
 		assertEquals("1.1", new StringConverter(Locale.US).convert(new Double(1.1)));
-		try
-		{
-			converter.convert("whatever");
-			fail("Conversion should have thrown an exception");
-		}
-		catch (ConversionException e)
-		{
-			// this is correct
-		}
+        try
+        {
+            converter.convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // this is correct
+        }
+        try
+        {
+            converter.convert("1.1whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // this is correct
+        }
 	}
 
 	/**
@@ -136,15 +154,24 @@ public final class ConvertersTest extends TestCase
 		assertEquals(new Float(1.1), converter.convert(new Float(1.1)));
 		assertEquals(new Float(1.1), converter.convert("1.1"));
 		assertEquals("1.1", new StringConverter(Locale.US).convert(new Float(1.1)));
-		try
-		{
-			converter.convert("whatever");
-			fail("Conversion should have thrown an exception");
-		}
-		catch (ConversionException e)
-		{
-			// this is correct
-		}
+        try
+        {
+            converter.convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // this is correct
+        }
+        try
+        {
+            converter.convert("1.1whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // this is correct
+        }
 	}
 
 	/**
@@ -157,15 +184,24 @@ public final class ConvertersTest extends TestCase
 		assertEquals(new Integer(10), converter.convert(Integer.valueOf("10")));
 		assertEquals(new Integer(10), converter.convert("10"));
 		assertEquals("10", new StringConverter(Locale.US).convert(new Integer(10)));
-		try
-		{
-			converter.convert("whatever");
-			fail("Conversion should have thrown an exception");
-		}
-		catch (ConversionException e)
-		{
-			// This is correct
-		}
+        try
+        {
+            converter.convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+        try
+        {
+            converter.convert("10whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
 		try
 		{
 			converter.convert("" + ((long)Integer.MAX_VALUE + 1));
@@ -187,15 +223,24 @@ public final class ConvertersTest extends TestCase
 		assertEquals(new Long(10), converter.convert(Long.valueOf("10")));
 		assertEquals(new Long(10), converter.convert("10"));
 		assertEquals("10", new StringConverter(Locale.US).convert(new Long(10)));
-		try
-		{
-			converter.convert("whatever");
-			fail("Conversion should have thrown an exception");
-		}
-		catch (ConversionException e)
-		{
-			// This is correct
-		}
+        try
+        {
+            converter.convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+        try
+        {
+            converter.convert("10whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
 		try
 		{
 			new LongConverter().convert("" + Long.MAX_VALUE + "0");
@@ -217,15 +262,24 @@ public final class ConvertersTest extends TestCase
 		assertEquals(new Short((short)10), converter.convert(Short.valueOf("10")));
 		assertEquals(new Short((short)10), converter.convert("10"));
 		assertEquals("10", new StringConverter(Locale.US).convert(new Short((short)10)));
-		try
-		{
-			converter.convert("whatever");
-			fail("Conversion should have thrown an exception");
-		}
-		catch (ConversionException e)
-		{
-			// This is correct
-		}
+        try
+        {
+            converter.convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+        try
+        {
+            converter.convert("10whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
 		try
 		{
 			converter.convert("" + (Short.MAX_VALUE + 1));
@@ -258,14 +312,23 @@ public final class ConvertersTest extends TestCase
 		assertEquals("10/24/02", stringConverter.convert(date));
 		assertEquals(date, converter.convert("10/24/02"));
 
-		try
-		{
-			converter.convert("whatever");
-			fail("Conversion should have thrown an exception");
-		}
-		catch (ConversionException e)
-		{
-			// this is correct
-		}
+        try
+        {
+            converter.convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // this is correct
+        }
+        try
+        {
+            converter.convert("10/24/02whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // this is correct
+        }
 	}
 }

@@ -88,4 +88,12 @@ public final class NumberToStringConverter extends AbstractConverter
 		}
 		return value.toString();
 	}
+
+    /**
+     * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+     */
+    protected Class getTargetType()
+    {
+        return String.class;
+    }
 }

@@ -50,6 +50,6 @@ public class RequiredValidator extends AbstractValidator
 	 */
 	public String toString()
 	{
-		return "[required]";
+		return "[RequiredValidator]";
 	}
 }

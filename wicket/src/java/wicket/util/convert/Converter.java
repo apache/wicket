@@ -216,13 +216,7 @@ public final class Converter implements IConverter
 		}
 		catch (ConversionException e)
 		{
-			throw e.setConverter(this).setTypeConverter(converter).setTargetType(c).setSourceValue(
-					value);
-		}
-		catch (Exception e)
-		{
-			throw new ConversionException(e).setConverter(this).setTargetType(c).setSourceValue(
-					value);
+			throw e.setConverter(this);
 		}
 	}
 

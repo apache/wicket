@@ -17,10 +17,7 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.ParseException;
 import java.util.Locale;
-
-import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Byte.
@@ -51,24 +48,16 @@ public final class ByteConverter extends NumberConverter
      */
     public Object convert(final Object value)
     {
-        if (value instanceof Number)
-        {
-            return new Byte(((Number)value).byteValue());
-        }
-
-        try
-        {
-            final Number number = getNumberFormat().parse(value.toString());
-            if (number.doubleValue() > Byte.MAX_VALUE || 
-                number.doubleValue() < Byte.MIN_VALUE)
-            {
-            	throw new ConversionException("Byte value out of range");
-            }
-            return new Byte(number.byteValue());
-        }
-        catch (ParseException e)
-        {
-            throw new ConversionException("Cannot convert '" + value + "' to Byte", e);
-        }
+        final Number number = value instanceof Number ? (Number)value : parse(value,
+                Byte.MIN_VALUE, Byte.MAX_VALUE);
+        return new Byte(number.byteValue());
     }
+
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
+		return Byte.class;
+	}
 }

@@ -18,10 +18,7 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.ParseException;
 import java.util.Locale;
-
-import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Long.
@@ -52,24 +49,16 @@ public final class LongConverter extends NumberConverter
      */
     public Object convert(final Object value)
     {
-        if (value instanceof Number)
-        {
-            return new Long(((Number)value).longValue());
-        }
+        final Number number = value instanceof Number ? (Number)value : parse(value,
+                Long.MIN_VALUE, Long.MAX_VALUE);
+        return new Long(number.longValue());
+    }
 
-        try
-        {
-            final Number number = getNumberFormat().parse(value.toString());
-            if (number.doubleValue() > Long.MAX_VALUE || 
-                number.doubleValue() < Long.MIN_VALUE)
-            {
-                throw new ConversionException("Long value out of range");
-            }
-            return new Long(number.longValue());
-        }
-        catch (ParseException e)
-        {
-            throw new ConversionException("Cannot convert '" + value + "' to Long", e);
-        }
+    /**
+     * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+     */
+    protected Class getTargetType()
+    {
+        return Long.class;
     }
 }

@@ -26,11 +26,8 @@ import java.util.Locale;
  * 
  * @author Jonathan Locke
  */
-public abstract class DecimalConverter extends AbstractConverter 
+public abstract class DecimalConverter extends NumberConverter 
 {
-    /** The number format */
-    private NumberFormat numberFormat;
-
     /**
      * Constructor
      */
@@ -57,13 +54,5 @@ public abstract class DecimalConverter extends AbstractConverter
             numberFormat = DecimalFormat.getInstance(getLocale());
         }
 		return numberFormat;
-	}
-       
-    /**
-     * @param numberFormat The numberFormat to set.
-     */
-    public final void setNumberFormat(final NumberFormat numberFormat)
-    {
-        this.numberFormat = numberFormat;
-    }
+	}       
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,8 +16,6 @@
  * the License.
  */
 package wicket.util.convert.converters;
-
-import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Boolean.
@@ -48,7 +46,15 @@ public final class BooleanConverter extends AbstractConverter
 		}
 		else
 		{
-			throw new ConversionException("Cannot convert '" + stringValue + "' to Boolean");
+			throw newConversionException("Cannot convert '" + value + "' to Boolean", value);
 		}
+	}
+
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
+		return Boolean.class;
 	}
 }

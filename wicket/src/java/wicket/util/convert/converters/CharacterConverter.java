@@ -17,8 +17,6 @@
  */
 package wicket.util.convert.converters;
 
-import wicket.util.convert.ConversionException;
-
 /**
  * Converts from Object to Character.
  * 
@@ -37,6 +35,14 @@ public final class CharacterConverter extends AbstractConverter
 		{
 			return new Character(value.toString().charAt(0));
 		}
-		throw new ConversionException("Cannot convert '" + stringValue + "' to Character");
+		throw newConversionException("Cannot convert '" + value + "' to Character", value);
+	}
+
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
+		return Character.class;
 	}
 }
