@@ -28,8 +28,6 @@ import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
-import wicket.model.IConverterSource;
-import wicket.model.IConvertible;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
 import wicket.util.convert.IConverter;
@@ -93,7 +91,7 @@ import wicket.util.string.Strings;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public abstract class Component implements Serializable, IConverterSource
+public abstract class Component implements Serializable
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
@@ -374,13 +372,6 @@ public abstract class Component implements Serializable, IConverterSource
 		{
 			// give subclass a chance to lazy-init model
 			this.model = initModel();
-
-			// Set self as source of converter in case the model needs to do
-			// conversions
-			if (model instanceof IConvertible)
-			{
-				((IConvertible)model).setConverterSource(this);
-			}
 		}
 
 		return model;
@@ -851,13 +842,6 @@ public abstract class Component implements Serializable, IConverterSource
 		if (this.model != null)
 		{
 			this.model.detach();
-		}
-
-		// Set self as source of converter in case the model needs to do
-		// conversions
-		if (model instanceof IConvertible)
-		{
-			((IConvertible)model).setConverterSource(this);
 		}
 
 		// Change model
