@@ -46,7 +46,7 @@ import wicket.util.listener.IChangeListener;
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.Strings;
-import wicket.util.watch.Watcher;
+import wicket.util.watch.ModificationWatcher;
 
 /**
  * A container holds a map of child components. Children can be added by calling
@@ -678,7 +678,7 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Load markup and add a {@link Watcher}to the markup resource.
+	 * Load markup and add a {@link ModificationWatcher}to the markup resource.
 	 * 
 	 * @param key
 	 *           The key for the resource
@@ -693,7 +693,7 @@ public abstract class Container extends Component
 		try
 		{
 			// Watch file in the future
-			final Watcher watcher = settings.getResourceWatcher();
+			final ModificationWatcher watcher = settings.getResourceWatcher();
 
 			if (watcher != null)
 			{

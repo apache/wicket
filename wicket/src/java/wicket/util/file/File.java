@@ -18,23 +18,27 @@
  */
 package wicket.util.file;
 
-
 import java.net.URI;
 
 import wicket.util.time.Time;
-import wicket.util.watch.IChangeable;
+import wicket.util.watch.IModifiable;
 
 /**
- * Simple extension of File that adds functionality.
+ * Simple extension of File that adds an implementation of IModifiable 
+ * for files.  This allows the ModificationWatcher class to watch files 
+ * for modification.  The IModifiable.lastModifiedTime() method also 
+ * returns a Time object with a more convenient API than either Date 
+ * or a value in milliseconds.
+ * 
  * @author Jonathan Locke
  */
-public class File extends java.io.File implements IChangeable
-{ // TODO finalize javadoc
+public class File extends java.io.File implements IModifiable
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = -1464216059997960924L;
 
 	/**
-     * Construct.
+     * Constructor.
      * @param pathname path name
      */
     public File(final String pathname)
@@ -43,7 +47,7 @@ public class File extends java.io.File implements IChangeable
     }
 
     /**
-     * Construct.
+     * Constructor.
      * @param parent parent
      * @param child child
      */
@@ -53,7 +57,7 @@ public class File extends java.io.File implements IChangeable
     }
 
     /**
-     * Construct.
+     * Constructor.
      * @param parent parent
      * @param child child
      */
@@ -63,7 +67,7 @@ public class File extends java.io.File implements IChangeable
     }
 
     /**
-     * Construct.
+     * Constructor.
      * @param uri file uri
      */
     public File(final URI uri)
@@ -72,6 +76,8 @@ public class File extends java.io.File implements IChangeable
     }
 
     /**
+     * Returns a Time object representing the most recent time this 
+     * file was modified.
      * @return This file's lastModified() value as a Time object
      */
     public final Time lastModifiedTime()
