@@ -125,6 +125,7 @@ public final class ListChoice extends DropDownChoice implements FormComponent.IC
      * @param name The non-null name of this component
      * @param model the model
      * @param values the list values
+     * @param maxRows The maximum number of rows to display
      * @throws wicket.RenderException Thrown if the component has been given a null name.
      */
     public ListChoice(String name, IModel model, final Collection values, final int maxRows)
@@ -149,6 +150,7 @@ public final class ListChoice extends DropDownChoice implements FormComponent.IC
      *            used as the subject for the given expression
      * @param values the list values
      * @param expression the OGNL expression that works on the given object
+     * @param maxRows The maximum number of rows to display
      * @throws wicket.RenderException Thrown if the component has been given a null name.
      */
     public ListChoice(String name, IModel model, String expression,
@@ -166,9 +168,11 @@ public final class ListChoice extends DropDownChoice implements FormComponent.IC
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
      * @param values the list values
+     * @param maxRows The maximum number of rows to display
      * @throws wicket.RenderException Thrown if the component has been given a null name.
      */
-    public ListChoice(String name, Serializable object, final Collection values, final int maxRows)
+    public ListChoice(String name, Serializable object,
+            final Collection values, final int maxRows)
     {
         super(name, object, values);
         setRenderNullOption(false);
@@ -190,6 +194,7 @@ public final class ListChoice extends DropDownChoice implements FormComponent.IC
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
      * @param values the list values
+     * @param maxRows The maximum number of rows to display
      * @throws wicket.RenderException Thrown if the component has been given a null name.
      */
     public ListChoice(String name, Serializable object, String expression,

@@ -47,6 +47,7 @@ public final class FormattingUtils
      * allows applications to customize Object->String conversions (the default
      * implementation simply uses toString()).
      * @param value Value to be converted (may be null)
+     * @return the value converted to a string
      */
     private String convertToString(Object value)
     {

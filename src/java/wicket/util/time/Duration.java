@@ -398,6 +398,7 @@ public final class Duration extends AbstractTimeValue
      * suffix.
      * @param value The value to format
      * @param units The units to apply singular or plural suffix to
+     * @param locale The locale
      * @return A string for the value
      */
     private String unitString(final double value, final String units, final Locale locale)

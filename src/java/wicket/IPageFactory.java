@@ -37,6 +37,14 @@ public interface IPageFactory
      */
     public abstract Page newPage(final Class pageClass);
 
+    /**
+     * Creates a new page. If Page with PageParameter argument constructor
+     * exists, PageParameter will be null.
+     * 
+     * @param className The name of the page class to instantiate
+     * @return The page
+     * @throws RenderException
+     */
     public abstract Page newPage(final String className);
 
     /**
@@ -50,6 +58,14 @@ public interface IPageFactory
     public abstract Page newPage(final Class pageClass, 
             final HttpRequest request);
 
+    /**
+     * Creates a new page. Take the PageParameters from the request.
+     * 
+     * @param pageClassName The name of the page class to instantiate
+     * @param request The HTTP request to get the page parameters from
+     * @return The page
+     * @throws RenderException
+     */
     public abstract Page newPage(final String pageClassName, 
             final HttpRequest request);
 
@@ -57,7 +73,7 @@ public interface IPageFactory
      * Creates a new Page and apply the PageParameters to the Page constructor
      * if a proper constructor exists. Else use the default constructor.
      * 
-     * @param pageClass The name of the page class to create
+     * @param pageClass The page class to create
      * @param parameters The page parameters
      * @return The new page
      * @throws RenderException
@@ -65,6 +81,15 @@ public interface IPageFactory
     public abstract Page newPage(final Class pageClass,
             final PageParameters parameters);
 
+    /**
+     * Creates a new Page and apply the PageParameters to the Page constructor
+     * if a proper constructor exists. Else use the default constructor.
+     * 
+     * @param pageClassName The name of the page class to create
+     * @param parameters The page parameters
+     * @return The new page
+     * @throws RenderException
+     */
     public abstract Page newPage(final String pageClassName,
             final PageParameters parameters);
 
@@ -81,6 +106,17 @@ public interface IPageFactory
      */
     public abstract Page newPage(final Class pageClass, final Page page);
 
+    /**
+     * Creates a new instance of a page using the given class name.
+     * If pageClass implements a constructor with Page argument, page
+     * will be forwarded to that constructor. Else, the default
+     * constructor will be used and page be neglected.
+     * 
+     * @param pageClassName The name of the class of page to create
+     * @param page Parameter to page constructor
+     * @return The new page
+     * @throws RenderException
+     */
     public abstract Page newPage(final String pageClassName, final Page page);
 
     /**

@@ -172,6 +172,7 @@ public class HttpRequestCycle extends RequestCycle
 
     /**
      * Sets values for form components based on cookie values in the request.
+     * @param page the current page
      */
     final void setFormComponentValuesFromCookies(final Page page)
     {
