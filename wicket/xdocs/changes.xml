@@ -8,6 +8,15 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Eelco Hillenius" issue="1120137">
+    	Changed selected attribute to selected = "selected" to be XHTML compliant.  
+    	Added ComponentTag.syntheticCloseTagString() method which returns a close 
+    	tag for the given component tag.  Changed Juergen's fix to Panel use this method 
+    	and then added another call to the same method to renderClosingComponentTag, 
+    	which had been ignoring generation of close tags on /all/ openclose tags.  
+    	This problem was actually a bug in HelloWorld, if you changed the <span> tag 
+    	to a <span/> tag!
+      </action>
       <action type="update" dev="Eelco Hillenius" issue="">
 		Moved tree to contrib until packaged CSS is supported.
 	  </action>
