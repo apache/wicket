@@ -150,7 +150,7 @@ public class CookieTest extends TestCase
         System.out.println("!!!!!!!!!!!!! cookieUsername.getValue() = " + cookieUsername.getValue());
         System.out.println("!!!!!!!!!!!!! username.getModelObjectAsString() = " + username.getModelObjectAsString());
         
-        // TODO I don't understand what these tests are supposed to do, so I don't know why they are failing...
+        // TODO I don't understand what these tests are supposed to do, so I don't know why they are failing. - JL
         
         // FIX THESE:
         
