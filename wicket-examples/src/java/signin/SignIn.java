@@ -21,6 +21,7 @@ package signin;
 
 import com.voicetribe.util.value.ValueMap;
 import com.voicetribe.wicket.PageParameters;
+import com.voicetribe.wicket.PropertyModel;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.form.Form;
@@ -64,8 +65,8 @@ public final class SignIn extends HtmlPage
             super(componentName, feedback);
 
             // Attach textfield components that edit properties map model
-            add(new TextField("username", properties));
-            add(new PasswordTextField("password", properties));
+            add(new TextField("username", new PropertyModel(properties, "username")));
+            add(new PasswordTextField("password", new PropertyModel(properties, "password")));
         }
 
         /**
