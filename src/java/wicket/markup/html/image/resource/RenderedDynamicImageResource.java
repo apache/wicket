@@ -84,6 +84,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 */
 	public void invalidate()
 	{
+		super.invalidate();
 		imageData = null;
 	}
 

@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.list;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 
 /**
@@ -169,7 +170,7 @@ public class PageableListViewNavigation extends Loop
 	 */
 	public int getViewSize()
 	{
-		return Math.min(pageableListView.getPageCount(), super.getSize());
+		return Math.min(pageableListView.getPageCount(), super.getIterations());
 	}
 
 	/**
@@ -225,19 +226,17 @@ public class PageableListViewNavigation extends Loop
 	 * pointing to. Subclasses may provide there own implementation adding more
 	 * sophisticated page links.
 	 * 
-	 * @param loopItem
-	 *            the loop item to populate
-	 * @see wicket.markup.html.list.Loop#populateItem(LoopItem)
+	 * @see wicket.markup.html.list.Loop#populateContainer(MarkupContainer, int)
 	 */
-	protected void populateItem(final LoopItem loopItem)
+	protected void populateContainer(final MarkupContainer container, final int iteration)
 	{
 		// Get the index of page this link shall point to
-		final int pageIndex = this.startIndex + loopItem.getIndex();
+		final int pageIndex = this.startIndex + iteration;
 
 		// Add a page link pointing to the page
 		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
 				pageableListView, pageIndex);
-		loopItem.add(link);
+		container.add(link);
 
 		// Add a label (the page number) to the list which is enclosed by the
 		// link
@@ -247,18 +246,15 @@ public class PageableListViewNavigation extends Loop
 	/**
 	 * Renders the page link. Add the separator if not the last page link
 	 * 
-	 * @param loopItem
-	 *            The current page link to render
-	 * @param lastItem
-	 *            True, if last page link to render
+	 * @see Loop#renderContainer(MarkupContainer, int)
 	 */
-	protected void renderItem(final LoopItem loopItem, final boolean lastItem)
+	protected void renderContainer(final MarkupContainer container, final int iteration)
 	{
-		// call default implementation
-		super.renderItem(loopItem, lastItem);
+		// Call default implementation
+		super.renderContainer(container, iteration);
 
-		// add separator if not last page
-		if ((separator != null) && !lastItem)
+		// Add separator if not last page
+		if (separator != null && (iteration != getIterations() - 1))
 		{
 			getResponse().write(separator);
 		}
@@ -302,7 +298,7 @@ public class PageableListViewNavigation extends Loop
 			firstListItem = 0;
 		}
 		
-		if ((viewSize != getSize()) || (this.startIndex != firstListItem))
+		if ((viewSize != getIterations()) || (this.startIndex != firstListItem))
 		{
 		    this.modelChangeImpending();
 
