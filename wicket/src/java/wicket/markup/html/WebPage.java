@@ -33,7 +33,7 @@ import wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Jonathan Locke
  */
-public class HtmlPage extends Page
+public class WebPage extends Page
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 3986701406378811908L;
@@ -41,7 +41,7 @@ public class HtmlPage extends Page
 	/**
 	 * Constructor.
 	 */
-	protected HtmlPage()
+	protected WebPage()
 	{
 		super();
 	}

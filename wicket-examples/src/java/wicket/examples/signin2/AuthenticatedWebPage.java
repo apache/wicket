@@ -27,7 +27,7 @@ import wicket.examples.WicketExamplePage;
  *  
  * @author Jonathan Locke
  */
-public class AuthenticatedHtmlPage extends WicketExamplePage
+public class AuthenticatedWebPage extends WicketExamplePage
 {
     /**
      * Get downcast session object

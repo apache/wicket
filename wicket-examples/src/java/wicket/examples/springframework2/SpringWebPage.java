@@ -26,11 +26,11 @@ import wicket.markup.html.basic.Label;
  * 
  * @author Martin Fey
  */
-public class SpringHtmlPage extends WicketExamplePage
+public class SpringWebPage extends WicketExamplePage
 {
 
-    /** Creates a new instance of SpringHtmlPage */
-    public SpringHtmlPage()
+    /** Creates a new instance of SpringWebPage */
+    public SpringWebPage()
     {
         // set the applicationcontext for further use
         add(new Label("message", new SpringBeanModel("message")));

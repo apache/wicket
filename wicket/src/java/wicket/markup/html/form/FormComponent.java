@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.WebContainer;
 import wicket.markup.html.form.validation.IValidator;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringList;
@@ -37,7 +37,7 @@ import wicket.util.string.StringList;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class FormComponent extends HtmlContainer
+public abstract class FormComponent extends WebContainer
 {
 	/**
 	 * Whether this form component should save and restore state between

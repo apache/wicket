@@ -19,7 +19,7 @@
 package wicket.examples;
 
 import wicket.examples.WicketExampleHeader;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
@@ -28,7 +28,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class WicketExamplePage extends HtmlPage
+public class WicketExamplePage extends WebPage
 {
     /**
      * Constructor

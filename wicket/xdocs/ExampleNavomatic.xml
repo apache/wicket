@@ -119,9 +119,9 @@ public class NavomaticApplication extends WebApplication
 				<source><![CDATA[package wicket.examples.navomatic;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 
-public class Page1 extends HtmlPage
+public class Page1 extends WebPage
 {
     public Page1(PageParameters parameters)
     {
@@ -132,7 +132,7 @@ public class Page1 extends HtmlPage
 			<subsection name="Page2.java">
 				<source>
 					<![CDATA[
-public class Page2 extends HtmlPage
+public class Page2 extends WebPage
 {
     public Page2(PageParameters parameters)
     {

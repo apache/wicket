@@ -47,7 +47,7 @@ import wicket.util.lang.EnumeratedType;
  * A page that contains a form that allows editing of books.
  * @author Jonathan Locke
  */
-public final class EditBook extends AuthenticatedHtmlPage
+public final class EditBook extends AuthenticatedWebPage
 {
     static final Book otherBook =
         new Book("Frisbee Techniques", "Marty van Hoff", Book.FICTION);

@@ -80,7 +80,7 @@
             corresponding HTML file. It will take a few pages to explain 
             everything that is going on, but take a look for a moment just to 
             see what you can figure out "by inspection".</para>
-        <programlisting><![CDATA[public class Home extends HtmlPage
+        <programlisting><![CDATA[public class Home extends WebPage
 {
     public Home(final PageParameters parameters)
     {
@@ -227,7 +227,7 @@ add(actionLink);
             <property>linkClickCount</property> is incremented. The 
             <property>linkClickCount</property> field is a beans property 
             because it has a getter and a setter:</para>
-        <programlisting lang="java"><![CDATA[public class Home extends HtmlPage
+        <programlisting lang="java"><![CDATA[public class Home extends WebPage
 {
     public int getLinkClickCount()
     {
@@ -312,7 +312,7 @@ add(actionLink);
         <para>The implementation of Page3 retrieves the id parameter from the 
             PageParameters passed to the page and shows the id in a Label 
             component:</para>
-        <programlisting><![CDATA[public class Page3 extends HtmlPage
+        <programlisting><![CDATA[public class Page3 extends WebPage
 {
     public Page3(PageParameters parameters)
     {

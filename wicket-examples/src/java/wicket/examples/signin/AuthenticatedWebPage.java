@@ -25,7 +25,7 @@ import wicket.examples.signin.SignInSession;
  *
  * @author Jonathan Locke
  */
-public class AuthenticatedHtmlPage extends WicketExamplePage
+public class AuthenticatedWebPage extends WicketExamplePage
 {
     /**
      * Get downcast session object

@@ -26,7 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
 import wicket.ApplicationSettings;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.encryption.ICrypt;
@@ -53,7 +53,7 @@ public class CookieTest extends TestCase
     private Cookie cookieUsername;
     private Cookie cookiePassword;
     private Cookie[] cookies;
-    private HtmlPage page;
+    private WebPage page;
     private WebRequestCycle cycle;
     
     /**

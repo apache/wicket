@@ -20,7 +20,7 @@ package wicket.examples.displaytag.utils;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 
@@ -30,7 +30,7 @@ import wicket.protocol.http.WebRequestCycle;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class AbsoluteHref extends HtmlComponent
+public class AbsoluteHref extends WebComponent
 {
     /**
      * 

@@ -26,14 +26,14 @@ import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
 
 /**
  * An image map holds links with different hot-area shapes.
  *
  * @author Jonathan Locke
  */
-public final class ImageMap extends HtmlComponent
+public final class ImageMap extends WebComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 209001445308790198L;

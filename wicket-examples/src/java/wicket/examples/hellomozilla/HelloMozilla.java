@@ -19,7 +19,7 @@
 package wicket.examples.hellomozilla;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.protocol.http.WebResponse;
@@ -29,7 +29,7 @@ import wicket.protocol.http.WebResponse;
  *
  * @author Eelco Hillenius
  */
-public class HelloMozilla extends HtmlPage
+public class HelloMozilla extends WebPage
 {
 	/** message. */
 	private String message = "Hello Mozilla!";

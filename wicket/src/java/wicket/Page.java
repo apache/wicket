@@ -30,7 +30,7 @@ import wicket.markup.html.form.Form;
  * component hierarchy and markup in some markup language such as HTML. Users of
  * the framework should not attempt to subclass Page directly. Instead they
  * should subclass a subclass of Page that is appropriate to the markup type
- * they are using, such as HtmlPage.
+ * they are using, such as WebPage.
  * <p>
  * When a page is constructed, it is automatically added to the user's session
  * and assigned the next page id available from the session. The session that a
@@ -46,7 +46,7 @@ import wicket.markup.html.form.Form;
  * implement your Page with a constructor that accepts a single PageParameters
  * argument.
  * 
- * @see wicket.markup.html.HtmlPage
+ * @see wicket.markup.html.WebPage
  * @see Container
  * @author Jonathan Locke
  * @author Chris Turner

@@ -33,7 +33,7 @@ import wicket.util.string.StringValueConversionException;
  * A book details page.  Shows information about a book.
  * @author Jonathan Locke
  */
-public final class BookDetails extends AuthenticatedHtmlPage
+public final class BookDetails extends AuthenticatedWebPage
 {
     /**
      * Constructor for calls from external page links

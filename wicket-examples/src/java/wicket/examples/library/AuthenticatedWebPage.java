@@ -35,7 +35,7 @@ import wicket.markup.html.border.Border;
  *
  * @author Jonathan Locke
  */
-public class AuthenticatedHtmlPage extends WicketExamplePage
+public class AuthenticatedWebPage extends WicketExamplePage
 {
     private Border border;
 

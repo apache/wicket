@@ -28,7 +28,7 @@ import wicket.markup.html.list.ListView;
  * Page that displays a list of books and lets the user re-order them.
  * @author Jonathan Locke
  */
-public final class Home extends AuthenticatedHtmlPage
+public final class Home extends AuthenticatedWebPage
 {
     /**
      * Constructor

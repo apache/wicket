@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
 import wicket.model.IModel;
 
 /**
@@ -30,7 +30,7 @@ import wicket.model.IModel;
  *
  * @author Eelco Hillenius
  */
-public class XulDescription extends HtmlComponent
+public class XulDescription extends WebComponent
 {
 	/**
      * Constructor that uses the provided {@link IModel} as its model. All components have

@@ -73,7 +73,7 @@ A: The best and safest way to set a property for a session is to create a
 </p>
 <p>
 <source><![CDATA[
-    public class MyPage extends HtmlPage
+    public class MyPage extends WebPage
     {
     	...
     	

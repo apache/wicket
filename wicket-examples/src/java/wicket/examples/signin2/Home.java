@@ -24,7 +24,7 @@ import wicket.PageParameters;
  * Simple home page.
  * @author Jonathan Locke
  */
-public class Home extends AuthenticatedHtmlPage
+public class Home extends AuthenticatedWebPage
 {
     /**
      * Constructor

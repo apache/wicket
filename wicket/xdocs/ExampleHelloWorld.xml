@@ -45,10 +45,10 @@ public class HelloWorldApplication extends WebApplication
 			<subsection name="HelloWorld.java">
 				<source><![CDATA[package wicket.examples.helloworld;
 
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 
-public class HelloWorld extends HtmlPage
+public class HelloWorld extends WebPage
 {
     public HelloWorld()
     {
@@ -92,7 +92,7 @@ public class HelloWorld extends HtmlPage
 					The component declaration consists of the <em>Wicket</em> identifier 
 					<code>wicket</code> and the component identifier <code>message</code>.
 					The component identifier should be the same as the name of the component you
-					defined in your <code>HtmlPage</code>. The message between the 
+					defined in your <code>WebPage</code>. The message between the 
 					<code><![CDATA[<span>]]></code> tags is removed when the component renders
 					its message. The final content of the component is determined by your Java
 					code.

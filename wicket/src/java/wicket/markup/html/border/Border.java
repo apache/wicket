@@ -21,7 +21,7 @@ import wicket.Container;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.WebContainer;
 
 /**
  * A border component has associated markup which is drawn and determines
@@ -67,7 +67,7 @@ import wicket.markup.html.HtmlContainer;
  *
  * @author Jonathan Locke
  */
-public abstract class Border extends HtmlContainer
+public abstract class Border extends WebContainer
 {
 	/** The open tag for this border component. */
 	private transient ComponentTag openTag;

@@ -19,7 +19,7 @@
 package wicket.markup;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 
 
@@ -28,7 +28,7 @@ import wicket.markup.html.basic.Label;
  *
  * @author Chris Turner
  */
-public class ComponentCreateTag_3 extends HtmlPage 
+public class ComponentCreateTag_3 extends WebPage 
 {
 	/**
 	 * Construct.

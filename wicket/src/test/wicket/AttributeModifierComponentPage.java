@@ -19,7 +19,7 @@
 package wicket;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.model.IDetachableModel;
 import wicket.model.Model;
@@ -29,7 +29,7 @@ import wicket.model.Model;
  * @see AttributeModifierComponentTest
  * @author Chris Turner
  */
-public class AttributeModifierComponentPage extends HtmlPage
+public class AttributeModifierComponentPage extends WebPage
 {
 
 	/** Serial Version ID */

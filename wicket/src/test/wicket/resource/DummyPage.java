@@ -18,13 +18,13 @@
  */
 package wicket.resource;
 
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 
 /**
  * Dummy page used for resource testing.
  * @author Chris Turner
  */
-public class DummyPage extends HtmlPage
+public class DummyPage extends WebPage
 {
 
 	/**

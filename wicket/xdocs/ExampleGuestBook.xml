@@ -20,7 +20,7 @@
 			</p>
 			<img src="images/image005.png" alt="Tables" />
 			<subsection name="GuestBook.java">
-				<source><![CDATA[public class GuestBook extends HtmlPage
+				<source><![CDATA[public class GuestBook extends WebPage
 {
     public GuestBook(final PageParameters parameters)
     {

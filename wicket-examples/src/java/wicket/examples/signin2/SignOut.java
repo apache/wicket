@@ -24,7 +24,7 @@ import wicket.PageParameters;
  * Simple logout page.
  * @author Jonathan Locke
  */
-public class SignOut extends AuthenticatedHtmlPage
+public class SignOut extends AuthenticatedWebPage
 {
     /**
      * Constructor

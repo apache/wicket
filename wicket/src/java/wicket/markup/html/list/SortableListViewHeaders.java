@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.WebContainer;
 
 /**
  * This is a convenient component to create sorted list view headers very easily. It first
@@ -36,7 +36,7 @@ import wicket.markup.html.HtmlContainer;
  * @see SortableListViewHeader
  * @author Juergen Donnerstag
  */
-public class SortableListViewHeaders extends HtmlContainer
+public class SortableListViewHeaders extends WebContainer
 {
 	/** Logging. */
 	final private Log log = LogFactory.getLog(SortableListViewHeaders.class);

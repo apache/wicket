@@ -18,12 +18,12 @@
  */
 package wicket.markup;
 
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
 
 /**
  * @author Juergen Donnerstag
  */
-public class MyLabel extends HtmlComponent
+public class MyLabel extends WebComponent
 {
     private String text = "";
     

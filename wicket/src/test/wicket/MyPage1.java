@@ -18,13 +18,13 @@
  */
 package wicket;
 
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 
 /**
  * Dummy Page with default constructor
  * Rememeber: Page must have at least a default constructor
  */
-public class MyPage1 extends HtmlPage
+public class MyPage1 extends WebPage
 {
     /**
      * Construct.

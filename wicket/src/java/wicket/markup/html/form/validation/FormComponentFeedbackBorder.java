@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.WebContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.FormComponent;
 
@@ -36,7 +36,7 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	private static final long serialVersionUID = -7070716217601930304L;
 
 	/** The error indicator child which should be shown if an error occurs. */
-	private final HtmlContainer errorIndicator;
+	private final WebContainer errorIndicator;
 
 	/** The child to border; is used to get whether there is an error for it. */
 	private final FormComponent child;
@@ -58,7 +58,7 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 
 		// Create invisible error indicator bordered that will be shown when a
 		// validation error occurs
-		errorIndicator = new HtmlContainer("errorIndicator");
+		errorIndicator = new WebContainer("errorIndicator");
 		errorIndicator.setVisible(false);
 		add(errorIndicator);
 	}

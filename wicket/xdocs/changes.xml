@@ -8,6 +8,10 @@
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">
+      	Changed HtmlPage to WebPage, HtmlContainer to WebContainer and HtmlComponent
+      	to WebComponent for friendliness and consistency with http protocol package.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
 		Added constructors to TextField that take a class as the last argument.
 		TextFields constructed with a type like this are considered typed and 
 		will automatically have a type validator attached to them.  In addition, 
