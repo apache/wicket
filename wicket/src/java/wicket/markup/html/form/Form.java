@@ -174,22 +174,21 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      */
     public final void handleErrors(final FeedbackMessages errors)
     {
-        // call the validation handlers of the child components of this form
-        // Traverse parents from this component up to the containing form
-        // component calling any IValidationErrorHandler.validationError methods found
-        // along the way.
+        // Traverse children of this form, calling validationError() on any
+        // components implementing IValidationErrorHandler.
         visitChildren(IValidationErrorHandler.class, new IVisitor()
         {
             public Object component(final Component component)
             {
-                // call validation error handler
-                ((IValidationErrorHandler) component).validationError(errors);
-                // Stop at Form
-                return (component instanceof Form) ? STOP_TRAVERSAL : CONTINUE_TRAVERSAL;
+                // Call validation error handler
+                ((IValidationErrorHandler)component).validationError(errors);
+
+                // Traverse all children
+                return CONTINUE_TRAVERSAL;
             }
         });
 
-        // call the validation handler that is registered with this form, if any
+        // Call the validation handler that is registered with this form, if any
         if (validationErrorHandler != null)
         {
             validationErrorHandler.validationError(errors);
