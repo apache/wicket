@@ -30,10 +30,12 @@ import javax.swing.tree.TreePath;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.ISharedResourceFactory;
+import wicket.Resource;
+import wicket.SharedResource;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.image.resource.ImageResource;
 import wicket.markup.html.image.resource.StaticImageResource;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -41,7 +43,6 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.html.list.Loop;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.resource.IResource;
 
 /**
  * An AbstractTree that renders as a flat (not-nested) list, using spacers for
@@ -63,18 +64,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 
 	/** name of the node image component; value = 'nodeImage'. */
 	public static final String NODE_IMAGE_NAME = "nodeImage";
-
-	/** static image resource from this package; references image 'blank.gif'. */
-	private static final StaticImageResource IMG_BLANK = StaticImageResource.get(
-			Tree.class.getPackage(), "blank.gif", null, null);
-
-	/** static image resource from this package; references image 'minus.gif'. */
-	private static final StaticImageResource IMG_MINUS = StaticImageResource.get(
-			Tree.class.getPackage(), "minus.gif", null, null);
-
-	/** static image resource from this package; references image 'plus.gif'. */
-	private static final StaticImageResource IMG_PLUS = StaticImageResource.get(
-			Tree.class.getPackage(), "plus.gif", null, null);
 
 	/** list with tree paths. */
 	private List treePathList;
@@ -370,27 +359,25 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	{
 		if (!node.isLeaf())
 		{
-			// we want the image to be dynamically, yet resolving to a
-			// application static image.
-			final ImageResource imgResource = new ImageResource()
+			// we want the image to be dynamically, yet resolving to a static image.
+			return new Image(JUNCTION_IMAGE_NAME, (SharedResource)null)
 			{
-				public IResource getResource()
+				protected Resource getImageResource()
 				{
 					if (isExpanded(node))
 					{
-						return IMG_MINUS.getResource();
+						return getImage("minus.gif");
 					}
 					else
 					{
-						return IMG_PLUS.getResource();
+						return getImage("plus.gif");
 					}
 				}
 			};
-			return new Image(JUNCTION_IMAGE_NAME, imgResource);
 		}
 		else
 		{
-			return new Image(JUNCTION_IMAGE_NAME, IMG_BLANK);
+			return new Image(JUNCTION_IMAGE_NAME, getImage("blank.gif"));
 		}
 	}
 
@@ -405,7 +392,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected Image getNodeImage(final DefaultMutableTreeNode node)
 	{
-		return new Image(JUNCTION_IMAGE_NAME, IMG_BLANK);
+		return new Image(JUNCTION_IMAGE_NAME, getImage("blank.gif"));
 	}
 
 	/**
@@ -446,6 +433,23 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	protected void nodeLinkClicked(final DefaultMutableTreeNode node)
 	{
 		setSelected(node);
+	}
+
+	/**
+	 * Gets the shared image resource with the given name from this package.
+	 * @param name the name of the image resource; must match the name of the image in the
+	 * package.
+	 * @return the shared image resource
+	 */
+	private SharedResource getImage(final String name)
+	{
+		return getApplication().getSharedResource(Tree.class, name, new ISharedResourceFactory()
+		{
+			public Resource newResource()
+			{
+				return StaticImageResource.get(Tree.class.getPackage(), name, null, null);
+			}
+		});
 	}
 
 	/**

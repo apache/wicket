@@ -25,7 +25,11 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ISharedResourceFactory;
+import wicket.Resource;
+import wicket.SharedResource;
 import wicket.markup.html.image.Image;
+import wicket.markup.html.image.resource.StaticImageResource;
 import wicket.markup.html.tree.Tree;
 
 /**
@@ -76,22 +80,44 @@ public class MyTree extends Tree
 	{
 		if (node.isLeaf())
 		{
-			Image img = new Image(NODE_IMAGE_NAME, "node.gif");
+			Image img = new Image(NODE_IMAGE_NAME, getImage("node.gif"));
 			return img;
 		}
 		else
 		{
-			if (isExpanded(node))
+			// we want the image to be dynamically, yet resolving to a static image.
+			return new Image(NODE_IMAGE_NAME, (SharedResource)null)
 			{
-				Image img = new Image(NODE_IMAGE_NAME, "folderopen.gif");
-				return img;
-			}
-			else
-			{
-				Image img = new Image(NODE_IMAGE_NAME, "folder.gif");
-				return img;
-			}
+				protected Resource getImageResource()
+				{
+					if (isExpanded(node))
+					{
+						return getImage("folderopen.gif");
+					}
+					else
+					{
+						return getImage("folder.gif");
+					}
+				}
+			};
 		}
+	}
+
+	/**
+	 * Gets the shared image resource with the given name from this package.
+	 * @param name the name of the image resource; must match the name of the image in the
+	 * package.
+	 * @return the shared image resource
+	 */
+	private SharedResource getImage(final String name)
+	{
+		return getApplication().getSharedResource(MyTree.class, name, new ISharedResourceFactory()
+		{
+			public Resource newResource()
+			{
+				return StaticImageResource.get(MyTree.class.getPackage(), name, null, null);
+			}
+		});
 	}
 
 	/**
