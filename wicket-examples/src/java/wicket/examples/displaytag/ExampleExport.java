@@ -32,8 +32,6 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.util.time.Time;
 
-
-
 /**
  * How to support exporting table data
  * 

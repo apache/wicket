@@ -35,9 +35,9 @@ import wicket.markup.html.link.Link;
  */
 public abstract class SortableListViewHeader extends Border
 {
-
 	/** Sort ascending or descending */
 	private boolean ascending;
+	
 	/** All sortable columns of a single list view are grouped */
 	private final SortableListViewHeaderGroup group;
 

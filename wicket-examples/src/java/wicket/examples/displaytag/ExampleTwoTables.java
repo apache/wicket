@@ -23,8 +23,6 @@ import java.util.List;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.TestList;
 
-
-
 /**
  * Two independent sortable + pageable tables on the same page
  * 

@@ -31,8 +31,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
 
-
-
 /**
  * Table with paging
  * 
@@ -70,33 +68,6 @@ public class ExamplePaging extends Displaytag
         add(table);
         add(new MyPageableListViewNavigator("pageTableNav", table));
 
-/*
-        final TableNavigation tableNavigation = new TableNavigation("navigation", table, 5, 2);
-        add(tableNavigation);
-            
-        add(new Label("headline", null)
-        {
-            protected void handleBody(final MarkupStream markupStream,
-                    final ComponentTag openTag)
-            {
-                String text = 
-                    String.valueOf(data.size()) 
-                    + " items found, displaying "
-                    + String.valueOf(table.getFirstCell() + 1)
-                    + " to "
-                    + String.valueOf(table.getFirstCell() + table.getWindowSize())
-                    + ".";
-                
-                replaceBody(markupStream, openTag, text);
-            }
-        });
-        
-        add(new TableNavigationLink("first", table, 0));
-        add(new TableNavigationIncrementLink("prev", table, -1));
-        add(new TableNavigationIncrementLink("next", table, 1));
-        add(new TableNavigationLink("last", table, table.pageCount() - 1));
-*/        
-        
         // Add pageable table with alternating row styles
         List data2 = new ArrayList();
         data2.addAll(data.subList(0, 10));

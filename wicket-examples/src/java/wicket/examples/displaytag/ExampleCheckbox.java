@@ -30,8 +30,6 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.list.ListItem;
 import wicket.model.Model;
 
-
-
 /**
  * A table with checkboxes and input fields. I'm not sure wicket.examples.wicket.examples.displaytag can do!
  * 

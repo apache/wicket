@@ -143,5 +143,3 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         add(new PageableListViewNavigationLink("last", table, table.getPageCount() - 1));
     }
 }
-
-

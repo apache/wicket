@@ -24,8 +24,6 @@ import java.util.List;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.TestList;
 
-
-
 /**
  * Show different means of displaying subsets of a table
  * 

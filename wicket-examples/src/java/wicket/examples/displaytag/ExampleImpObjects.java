@@ -27,8 +27,6 @@ import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 
-
-
 /**
  * Show how cell values are generated at runtime
  * 

@@ -31,8 +31,6 @@ import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.list.ListItem;
 import wicket.model.Model;
 
-
-
 /**
  * A single table with different styles
  *

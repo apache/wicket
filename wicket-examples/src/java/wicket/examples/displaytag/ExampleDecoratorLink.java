@@ -32,8 +32,6 @@ import wicket.markup.html.list.ListView;
 import wicket.model.Model;
 
 
-
-
 /**
  * Table may not only print value. This example show how to decorate
  * table values.

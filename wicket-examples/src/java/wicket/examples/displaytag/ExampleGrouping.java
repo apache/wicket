@@ -25,8 +25,6 @@ import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 
-
-
 /**
  * A table supporting grouping
  * 

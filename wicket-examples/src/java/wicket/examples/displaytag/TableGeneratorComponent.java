@@ -29,8 +29,6 @@ import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
 
-
-
 /**
  * This is a convinient component to dynamically create tables. It takes
  * the header and the tables data, and the rest is magic. 

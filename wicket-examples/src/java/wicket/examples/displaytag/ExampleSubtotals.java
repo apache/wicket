@@ -32,8 +32,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.PropertyModel;
 
-
-
 /**
  * Table with subtotals calculated and printed into the table on the fly
  * 

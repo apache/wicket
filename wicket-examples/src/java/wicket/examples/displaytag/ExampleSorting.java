@@ -30,8 +30,6 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 
-
-
 /**
  * A sorted table example
  * 
@@ -49,50 +47,6 @@ public class ExampleSorting extends Displaytag
         // Test data
         final List data = new TestList(6, false);
         
-/* This is without magic  
-        SortableTableHeaderGroup headerGroup = 
-            new SortableTableHeaderGroup(this, data, "rows");
-        
-        add(new SimpleHrefComponent("id", headerGroup)
-        {
-            protected int compareTo(Object o1, Object o2)
-            {
-                return ((ListObject)o1).getId() - ((ListObject)o2).getId();
-            }
-        });
-        
-        add(new SimpleHrefComponent("name", headerGroup)
-        {
-            protected int compareTo(Object o1, Object o2)
-            {
-                return ((ListObject)o1).getName().compareTo(((ListObject)o2).getName());
-            }
-        });
-
-        add(new SimpleHrefComponent("email", headerGroup)
-        {
-            protected int compareTo(Object o1, Object o2)
-            {
-                return ((ListObject)o1).getEmail().compareTo(((ListObject)o2).getEmail());
-            }
-        });
-        
-        add(new SimpleHrefComponent("status", headerGroup)
-        {
-            protected int compareTo(Object o1, Object o2)
-            {
-                return ((ListObject)o1).getStatus().compareTo(((ListObject)o2).getStatus());
-            }
-        });
-        
-        add(new SimpleHrefComponent("comment", headerGroup)
-        {
-            protected int compareTo(Object o1, Object o2)
-            {
-                return ((ListObject)o1).getDescription().compareTo(((ListObject)o2).getDescription());
-            }
-        });
-*/        
         // Add table 
         ListView table = new TableWithAlternatingRowStyle("rows", data)
         {
@@ -154,6 +108,5 @@ public class ExampleSorting extends Displaytag
 	            return "";
 	        }
         });
-        
     }
 }

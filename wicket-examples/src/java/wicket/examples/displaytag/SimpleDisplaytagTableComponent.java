@@ -27,8 +27,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 
-
-
 /**
  * Display a simple table
  * 
@@ -90,5 +88,3 @@ public class SimpleDisplaytagTableComponent extends Panel
         return table.setViewSize(size);
     }
 }
-
-

@@ -30,8 +30,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.model.PropertyModel;
 import wicket.util.time.Time;
 
-
-
 /**
  * Examples on how to format table data
  * 

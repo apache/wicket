@@ -32,8 +32,6 @@ import wicket.examples.displaytag.utils.ReportableListObject;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 
-
-
 /**
  * Pageable + sortable + exportable + grouping table
  * 
