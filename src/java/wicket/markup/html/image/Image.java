@@ -1,138 +1,127 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.27 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.image;
 
 import java.io.Serializable;
-import java.util.Locale;
 
-import wicket.MarkupContainer;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.util.lang.Classes;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceLocator;
+import wicket.markup.html.image.resource.DynamicImageResource;
+import wicket.markup.html.image.resource.ImageResource;
+import wicket.markup.html.image.resource.StaticImageResource;
 import wicket.util.string.Strings;
 
 /**
  * An image component represents a localizable image resource. The image name
  * comes from the src attribute of the image tag that the component is attached
- * to.  The image component responds to requests made via IResourceListener's
- * resourceRequested method.  The image or subclass responds by returning an
+ * to. The image component responds to requests made via IResourceListener's
+ * resourceRequested method. The image or subclass responds by returning an
  * IResource from getImageResource(String), where String is the source attribute
  * of the image tag.
- *
+ * 
  * @author Jonathan Locke
  */
 public class Image extends AbstractImage
 {
-    /** Serial Version ID */
+	/** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
 
-	/**
-	 * The string representation of the resource to be loaded. Actual
-	 * resource is not loaded until the image is actually requested.
-	 */
-	private String resourcePath;
+	/** The image resource this image component references */
+	private ImageResource imageResource;
 
 	/**
-	 * The style to use when locating the image resource.
+	 * @see wicket.Component#Component(String)
 	 */
-	private String style;
+	public Image(final String name)
+	{
+		super(name);
+	}
 
 	/**
-	 * The locale to use when locating the image resource
+	 * Constructs from a
+	 * 
+	 * @param name
+	 *            See Component#Component(String)
+	 * 
+	 * @param imageResource
+	 *            Dynamic image resource
 	 */
-	private Locale locale;
+	public Image(final String name, final DynamicImageResource imageResource)
+	{
+		super(name);
+		this.imageResource = imageResource;
+	}
 
-    /**
-     * @see wicket.Component#Component(String)
-     */
-    public Image(final String name)
-    {
-        super(name);
-    }
+	/**
+	 * @see wicket.Component#Component(String, Serializable)
+	 */
+	public Image(final String name, final Serializable object)
+	{
+		super(name, object);
+	}
 
-    /**
-     * @see wicket.Component#Component(String, Serializable)
-     */
-    public Image(final String name, final Serializable object)
-    {
-        super(name, object);
-    }
+	/**
+	 * @see wicket.Component#Component(String, Serializable, String)
+	 */
+	public Image(final String name, final Serializable object, final String expression)
+	{
+		super(name, object, expression);
+	}
 
-    /**
-     * @see wicket.Component#Component(String, Serializable, String)
-     */
-    public Image(final String name, final Serializable object, final String expression)
-    {
-        super(name, object, expression);
-    }
+	/**
+	 * @see AbstractImage#getResourcePath()
+	 */
+	public String getResourcePath()
+	{
+		return imageResource.getPath();
+	}
 
-    /**
-     * @return Gets the image resource for the component.
-     */
-    protected IResource getResource()
-    {
-    	// TODO we might want to consider relaxing this in the future so people can stash images in subfolders and the like
-        if (resourcePath.indexOf("..") != -1 || resourcePath.indexOf("/") != -1)
-        {
-            throw new WicketRuntimeException("Source for image resource cannot contain a path");
-        }
-        
-        final MarkupContainer markupContainer = findParentWithAssociatedMarkup();
-        final String path = Classes.packageName(markupContainer.getClass()) + "." + resourcePath;
-        return ResourceLocator.locate
-        (
-            getApplicationSettings().getSourcePath(),
-            getPage().getClass().getClassLoader(),
-            path,
-            style,
-            locale,
-            null
-        );
-    }
+	/**
+	 * @see wicket.Component#onComponentTag(ComponentTag)
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+		// Need to load image resource for this component?
+		if (imageResource == null)
+		{
+			final String modelString = getModelObjectAsString();
+			final String resourcePath;
+			if (Strings.isEmpty(modelString))
+			{
+				resourcePath = tag.getString("src");
+			}
+			else
+			{
+				resourcePath = modelString;
+			}
 
-    /**
-     * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
-     */
-    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-    {
-    }
+			final Package basePackage = findParentWithAssociatedMarkup().getClass().getPackage();
+			this.imageResource = StaticImageResource.get(getClass().getClassLoader(), basePackage,
+					resourcePath, getLocale(), getStyle());
+		}
 
-    /**
-     * @see wicket.Component#onComponentTag(ComponentTag)
-     */
-    protected void onComponentTag(final ComponentTag tag)
-    {
-        final String imageResource = getModelObjectAsString();
-        if (Strings.isEmpty(imageResource))
-        {
-            resourcePath = tag.getString("src");
-        }
-        else
-        {
-            resourcePath = imageResource;
-        }
-	    style = getStyle();
-	    locale = getLocale();
-    	
-        super.onComponentTag(tag);
-    }
+		super.onComponentTag(tag);
+	}
+
+	/**
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+	}
 }

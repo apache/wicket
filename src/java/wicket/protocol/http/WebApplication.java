@@ -17,18 +17,13 @@
  */
 package wicket.protocol.http;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import wicket.Application;
-import wicket.Component;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.markup.html.link.AutolinkComponentResolver;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.html.pages.StaleDataErrorPage;
-import wicket.protocol.http.WicketServlet;
 
 /**
  * A web application is a subclass of Application which associates with an
@@ -47,15 +42,13 @@ import wicket.protocol.http.WicketServlet;
  * init() method. For example:
  * 
  * <pre>
- * 
- *            public void init()
- *            {
- *              String webXMLParameter = getWicketServlet()
- *              			.getInitParameter(&quot;myWebXMLParameter&quot;);
- *              URL schedulersConfig = getWicketServlet().getServletContext()
- *              			.getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *              ...
- *  
+ *             public void init()
+ *             {
+ *               String webXMLParameter = getWicketServlet()
+ *               			.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *               URL schedulersConfig = getWicketServlet().getServletContext()
+ *               			.getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *               ...
  * </pre>
  * 
  * @see WicketServlet
@@ -68,12 +61,6 @@ public abstract class WebApplication extends Application
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 1152456333052646498L;
-
-	/** Reference prefix value */
-	private static final String referencePrefix = "a";
-
-	/** References to components that are shared in the session */
-	private List references = new ArrayList();
 
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
@@ -123,43 +110,6 @@ public abstract class WebApplication extends Application
 	public WicketServlet getWicketServlet()
 	{
 		return wicketServlet;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * @param component
-	 *            Component to create reference for
-	 * @return The reference
-	 */
-	public final String reference(final Component component)
-	{
-		if (references.contains(component))
-		{
-			return referencePrefix + references.indexOf(component);
-		}
-		else
-		{
-			references.add(component);
-			return referencePrefix + (references.size() - 1);
-		}
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * @param reference
-	 *            The reference to resolve
-	 * @return The component
-	 */
-	public final Component resolve(final String reference)
-	{
-		if (reference != null && reference.startsWith(referencePrefix))
-		{
-			// Return component at given index
-			return (Component)references.get(Integer.parseInt(reference.substring(1)));
-		}
-		return null;
 	}
 
 	/**

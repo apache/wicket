@@ -20,24 +20,21 @@ package wicket.markup.html.image;
 
 import java.io.Serializable;
 
-import wicket.IResourceListener;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebResourceComponent;
+import wicket.markup.html.WebComponent;
+import wicket.protocol.http.WebRequestCycle;
 
 /**
- * Abstract base class for all images.
+ * Abstract base class for image components.
  *
  * @author Jonathan Locke
  */
-public abstract class AbstractImage extends WebResourceComponent
+public abstract class AbstractImage extends WebComponent
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
 	
-	/** Type of sharing for this image */
-	private int sharing = UNSHARED;
-
     /**
      * @see wicket.Component#Component(String)
      */
@@ -61,24 +58,6 @@ public abstract class AbstractImage extends WebResourceComponent
     {
         super(name, object, expression);
     }
-    
-    /**
-	 * @see wicket.Component#getSharing()
-	 */
-	public int getSharing()
-	{
-		return sharing;
-	}
-	    
-	/**
-	 * @param sharing The sharing to set.
-	 * @see wicket.Component#getSharing()
-	 */
-	public void setSharing(int sharing)
-	{
-		this.sharing = sharing;
-	}	
-
 
     /**
      * @see wicket.Component#onComponentTag(ComponentTag)
@@ -87,9 +66,14 @@ public abstract class AbstractImage extends WebResourceComponent
     {
         checkComponentTag(tag, "img");
         super.onComponentTag(tag);
-        final String url = getRequestCycle().urlFor(this, IResourceListener.class);
-		tag.put("src", url.replaceAll("&", "&amp;"));
+        final String url = ((WebRequestCycle)getRequestCycle()).urlFor(getResourcePath());
+		tag.put("src", getResponse().encodeURL(url).replaceAll("&", "&amp;"));
     }
+    
+    /**
+     * @return The path to the image resource that this component references
+     */
+    protected abstract String getResourcePath();
     
     /**
      * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)

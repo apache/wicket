@@ -18,6 +18,7 @@
  */
 package wicket.response;
 
+import java.io.OutputStream;
 import java.io.StringWriter;
 
 import wicket.Response;
@@ -57,6 +58,12 @@ public final class StringResponse extends Response
     {
         return out.toString();
     }
+
+	/**
+	 * @see wicket.Response#getOutputStream()
+	 */
+	public OutputStream getOutputStream()
+	{
+		throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
+	}
 }
-
-

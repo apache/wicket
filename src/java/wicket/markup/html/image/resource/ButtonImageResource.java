@@ -15,17 +15,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.image;
+package wicket.markup.html.image.resource;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.io.Serializable;
 
-import wicket.model.Model;
-import wicket.model.PropertyModel;
 
 /**
  * Automatically generates a basic button image. The model for the component
@@ -33,20 +30,20 @@ import wicket.model.PropertyModel;
  * 
  * @author Jonathan Locke
  */
-public class ButtonImage extends DynamicImage
+public class ButtonImageResource extends RenderedDynamicImageResource
 {
 	/** The default height for button images */
 	private static int defaultHeight = 32;
 
 	/** The default width for button images */
 	private static int defaultWidth = 80;
-	
+
 	/** serialVersionUID */
 	private static final long serialVersionUID = 5934721258765771884L;
-	
+
 	/** The height of the arc in the corner */
 	private int arcHeight = 10;
-	
+
 	/** The width of the arc in the corner */
 	private int arcWidth = 10;
 
@@ -55,12 +52,15 @@ public class ButtonImage extends DynamicImage
 
 	/** The color of the button itself */
 	private Color color = new Color(0xE9, 0x60, 0x1A);
-	
+
 	/** The font to use */
 	private Font font = new Font("Helvetica", Font.BOLD, 16);
 
 	/** The color of the text */
 	private Color textColor = Color.WHITE;
+	
+	/** The button label */
+	private final String label;
 
 	/**
 	 * @param defaultHeight
@@ -68,7 +68,7 @@ public class ButtonImage extends DynamicImage
 	 */
 	public static void setDefaultHeight(int defaultHeight)
 	{
-		ButtonImage.defaultHeight = defaultHeight;
+		ButtonImageResource.defaultHeight = defaultHeight;
 	}
 
 	/**
@@ -77,33 +77,35 @@ public class ButtonImage extends DynamicImage
 	 */
 	public static void setDefaultWidth(int defaultWidth)
 	{
-		ButtonImage.defaultWidth = defaultWidth;
+		ButtonImageResource.defaultWidth = defaultWidth;
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @param label
+	 *            The label for this button image
+	 * @param width
+	 *            Width of image in pixels
+	 * @param height
+	 *            Height of image in pixels
 	 */
-	public ButtonImage(final String name, final Serializable object)
+	public ButtonImageResource(final String label, int width, int height)
 	{
-		super(name);
-		setModel(new Model(object));
+		super(width, height);
+		this.label = label;
 		setWidth(defaultWidth);
 		setHeight(defaultHeight);
 		setFormat("png");
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @param label
+	 *            The label for this button image
 	 */
-	public ButtonImage(final String name, final Serializable object, final String expression)
+	public ButtonImageResource(final String label)
 	{
-		super(name);
-		setModel(new PropertyModel(new Model(object), expression));
-		setWidth(defaultWidth);
-		setHeight(defaultHeight);
-		setFormat("png");
+		this(label, defaultWidth, defaultHeight);
 	}
-	
+
 	/**
 	 * @return Returns the arcHeight.
 	 */
@@ -135,6 +137,7 @@ public class ButtonImage extends DynamicImage
 	{
 		return color;
 	}
+
 	/**
 	 * @return Returns the font.
 	 */
@@ -142,6 +145,7 @@ public class ButtonImage extends DynamicImage
 	{
 		return font;
 	}
+
 	/**
 	 * @return Returns the textColor.
 	 */
@@ -149,43 +153,55 @@ public class ButtonImage extends DynamicImage
 	{
 		return textColor;
 	}
+
 	/**
-	 * @param arcHeight The arcHeight to set.
+	 * @param arcHeight
+	 *            The arcHeight to set.
 	 */
 	public void setArcHeight(int arcHeight)
 	{
 		this.arcHeight = arcHeight;
 	}
+
 	/**
-	 * @param arcWidth The arcWidth to set.
+	 * @param arcWidth
+	 *            The arcWidth to set.
 	 */
 	public void setArcWidth(int arcWidth)
 	{
 		this.arcWidth = arcWidth;
 	}
+
 	/**
-	 * @param backgroundColor The backgroundColor to set.
+	 * @param backgroundColor
+	 *            The backgroundColor to set.
 	 */
 	public void setBackgroundColor(Color backgroundColor)
 	{
 		this.backgroundColor = backgroundColor;
 	}
+
 	/**
-	 * @param color The color to set.
+	 * @param color
+	 *            The color to set.
 	 */
 	public void setColor(Color color)
 	{
 		this.color = color;
 	}
+
 	/**
-	 * @param font The font to set.
+	 * @param font
+	 *            The font to set.
 	 */
 	public void setFont(Font font)
 	{
 		this.font = font;
 	}
+
 	/**
-	 * @param textColor The textColor to set.
+	 * @param textColor
+	 *            The textColor to set.
 	 */
 	public void setTextColor(Color textColor)
 	{
@@ -195,34 +211,33 @@ public class ButtonImage extends DynamicImage
 	/**
 	 * Renders button image.
 	 * 
-	 * @see DynamicImage#render(Graphics2D)
+	 * @see RenderedDynamicImageResource#render(Graphics2D)
 	 */
 	protected void render(final Graphics2D graphics)
 	{
 		// Get width and height
 		final int width = getWidth();
 		final int height = getHeight();
-		
+
 		// Turn on anti-aliasing
 		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-		
+
 		// Draw background
 		graphics.setColor(backgroundColor);
 		graphics.fillRect(0, 0, width, height);
-		
+
 		// Draw round rectangle
 		graphics.setColor(color);
 		graphics.setBackground(backgroundColor);
 		graphics.fillRoundRect(0, 0, getWidth(), getHeight(), arcWidth, arcHeight);
-		
+
 		// Draw text
 		graphics.setColor(textColor);
 		graphics.setFont(font);
 		final FontMetrics fontMetrics = graphics.getFontMetrics();
-		final String text = getModelObjectAsString();
-		final int x = (getWidth() - fontMetrics.stringWidth(text)) / 2;
+		final int x = (getWidth() - fontMetrics.stringWidth(label)) / 2;
 		final int y = (getHeight() - fontMetrics.getHeight()) / 2;
-		graphics.drawString(text, x, y + fontMetrics.getAscent());
+		graphics.drawString(label, x, y + fontMetrics.getAscent());
 	}
 }

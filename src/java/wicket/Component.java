@@ -98,29 +98,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  */
 public abstract class Component implements Serializable, IConverterSource
-{
-	/**
-	 * Designates a component being shared across all sessions within an
-	 * application. The shared component will be given a URL that is stable
-	 * across all application sessions so that client browsers can cache the
-	 * component's output. A typical use for this is to share images which have
-	 * no security requirements that will be used on multiple pages within a
-	 * session.
-	 */
-	public static final int APPLICATION_SHARED = 2;
-
-	/**
-	 * Designates a component being shared among pages within a session. The
-	 * shared component will be given a stable URL relative to the session so
-	 * the client browser can cache the component's output. A typical use for
-	 * this is to share images which need to be secure (and therefore session
-	 * relative) but which will be used on multiple pages within a session.
-	 */
-	public static final int SESSION_SHARED = 1;
-
-	/** Designates a normal component that is not being shared */
-	public static final int UNSHARED = 0;
-	
+{	
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
@@ -759,29 +737,6 @@ public abstract class Component implements Serializable, IConverterSource
 		{
 			return Session.get();
 		}
-	}
-
-	/**
-	 * Gets the type of sharing this component desires, which must be one of:
-	 * UNSHARED, SESSION_SHARED or APPLICATION_SHARED. If a component is
-	 * unshared, it will have a normal unique URL with a session id and
-	 * component path. If it instead specifies SESSION_SHARED, the component
-	 * will be given a URL that is constant across the session regardless of
-	 * where the component is used. This means that a SESSION_SHARED Image or
-	 * DynamicImage component, for example, can be stored in a Session property
-	 * and used on multiple application Pages. The URL to the component will be
-	 * constant and thus the output of the component can be cached by browsers.
-	 * The APPLICATION_SHARED value specifies the same kind of sharing, but
-	 * without session scoping. A component which is APPLICATION_SHARED will
-	 * have a stable URL to enable browser caching and will be available to ANY
-	 * CLIENT requesting it, regardless of who they are. This has obvious
-	 * security implications if the component's data is sensitive.
-	 * 
-	 * @return The kind of sharing this component desires
-	 */
-	public int getSharing()
-	{
-		return UNSHARED;
 	}
 
 	/**

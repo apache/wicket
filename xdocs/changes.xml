@@ -9,6 +9,14 @@
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">
+		Major refactor of resource handling to separate resource referencing components
+		from the actual resources themselves.  Added new Resource base class in wicket
+		top level package.  WebResource extends this and AbstractImage extends that.
+		the Image subclass of AbstractImage is the only component for now.  It can be
+		either attached to an IMG tag with a src attribute or it can be given a 
+		DynamicImageResource and it will draw that.
+	  </action>
+      <action type="update" dev="Jonathan Locke" issue="">
 		Changed methods taking Resource as a parameter to IResource for increased generality.
 		Then added IModifiable interface to IResource to ensure all resources have a last
 		modified time.  This will be key in getting browser caching to work correctly.

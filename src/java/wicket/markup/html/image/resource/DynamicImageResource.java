@@ -15,7 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.image;
+package wicket.markup.html.image.resource;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
@@ -25,13 +31,6 @@ import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.time.Time;
 
-import java.awt.image.BufferedImage;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * An image subclass that allows easy rendering of dynamic images. An image can
  * be set with setImage(BufferedImage) and its format can be specified with
@@ -40,24 +39,13 @@ import java.io.InputStream;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractDynamicImage extends Image
+public abstract class DynamicImageResource extends ImageResource
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 
 	/** The image type */
-	private String format = "jpeg";
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param name
-	 *            Component name
-	 */
-	public AbstractDynamicImage(String name)
-	{
-		super(name);
-	}
+	private String format = "png";
 	
 	/**
 	 * @return Returns the image format.
