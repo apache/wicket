@@ -44,12 +44,12 @@ public class FeedbackMessage implements Serializable
 	 */
 	public static final int UNDEFINED = 0;
 
-	/** constant for warn level. */
-	public static final int WARN = 3;
+	/** Constant for warning level. */
+	public static final int WARNING = 3;
 
 	/** levels as strings for debugging/ toString method. */
 	private static final String[] LEVELS_AS_STRING = new String[] { "UNDEFINED", "DEBUG", "INFO",
-			"WARN", "ERROR", "FATAL" };
+			"WARNING", "ERROR", "FATAL" };
 
 	/**
 	 * The message level; can be used by rendering components. Note that what
@@ -109,14 +109,14 @@ public class FeedbackMessage implements Serializable
 	}
 
 	/**
-	 * Gets a new constructed message with level WARN.
+	 * Gets a new constructed message with level WARNING.
 	 * @param reporter the reporter of the message
 	 * @param message the actual message
-	 * @return a new message with level WARN
+	 * @return a new message with level WARNING
 	 */
 	public final static FeedbackMessage warn(Component reporter, String message)
 	{
-		return new FeedbackMessage(reporter, message, WARN);
+		return new FeedbackMessage(reporter, message, WARNING);
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class FeedbackMessage implements Serializable
 	 * Gets whether the current level is DEBUG or up.
 	 * @return whether the current level is DEBUG or up.
 	 */
-	public final boolean isLevelDebug()
+	public final boolean isDebug()
 	{
 		return isLevel(DEBUG);
 	}
@@ -193,7 +193,7 @@ public class FeedbackMessage implements Serializable
 	 * Gets whether the current level is ERROR or up.
 	 * @return whether the current level is ERROR or up.
 	 */
-	public final boolean isLevelError()
+	public final boolean isError()
 	{
 		return isLevel(ERROR);
 	}
@@ -202,7 +202,7 @@ public class FeedbackMessage implements Serializable
 	 * Gets whether the current level is FATAL or up.
 	 * @return whether the current level is FATAL or up.
 	 */
-	public final boolean isLevelFatal()
+	public final boolean isFatal()
 	{
 		return isLevel(FATAL);
 	}
@@ -211,7 +211,7 @@ public class FeedbackMessage implements Serializable
 	 * Gets whether the current level is INFO or up.
 	 * @return whether the current level is INFO or up.
 	 */
-	public final boolean isLevelInfo()
+	public final boolean isInfo()
 	{
 		return isLevel(INFO);
 	}
@@ -220,18 +220,18 @@ public class FeedbackMessage implements Serializable
 	 * Gets whether the current level is UNDEFINED.
 	 * @return whether the current level is UNDEFINED.
 	 */
-	public final boolean isLevelUndefined()
+	public final boolean isUndefined()
 	{
 		return (getLevel() == UNDEFINED);
 	}
 
 	/**
-	 * Gets whether the current level is WARN or up.
-	 * @return whether the current level is WARN or up.
+	 * Gets whether the current level is WARNING or up.
+	 * @return whether the current level is WARNING or up.
 	 */
-	public final boolean isLevelWarn()
+	public final boolean isWarning()
 	{
-		return isLevel(WARN);
+		return isLevel(WARNING);
 	}
 
 	/**
