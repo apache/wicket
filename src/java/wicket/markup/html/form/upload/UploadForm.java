@@ -20,7 +20,6 @@ package wicket.markup.html.form.upload;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.IFeedback;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
@@ -72,7 +71,7 @@ public abstract class UploadForm extends Form
 		// parsed out correctly
 		final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
 		final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(request);
-		RequestCycle.get().setRequest(multipartWebRequest);
+		getRequestCycle().setRequest(multipartWebRequest);
 
 		// Now do normal form submit validation processing
 		super.onFormSubmitted();
