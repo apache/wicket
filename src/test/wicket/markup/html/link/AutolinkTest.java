@@ -60,16 +60,6 @@ public class AutolinkTest extends TestCase
         String document = application.getServletResponse().getDocument();
         System.out.println(document);
     	Assert.assertTrue(validateDocument(document));
-    	
-    	/*
-        TODO
-        <img href="Page1.gif"> ...   if autolink == true then resolve Page relativ
-        <img href="/Page1.gif"> ...   if autolink == true then resolve servlet context absolut
-        <link href="*.css"> ...      if autolink == true then replace in <head> as well
-        <a href="subdir/Home.html">  if autolink == true then resolve Page relativ
-        <a href="/rootDir/Home.html"> if autolink == true then resolve servlet absolut
-        */
-
     }
 
 	/**
@@ -141,7 +131,36 @@ public class AutolinkTest extends TestCase
 		anchor6.addExpectedChild(new TextContent("Home"));
 		link5.addExpectedChild(anchor6);
 		link5.addExpectedChild(new TextContent(".*"));
-	
+
+		Tag link6 = new Tag("wicket:link");
+		body.addExpectedChild(link6);
+		Tag anchor7 = new Tag("a");
+		anchor7.addExpectedAttribute("href", "Page1.html");
+		anchor7.addExpectedChild(new TextContent("Home"));
+		body.addExpectedChild(anchor7);
+
+		Tag link7 = new Tag("wicket:link");
+		body.addExpectedChild(link7);
+		Tag anchor8 = new Tag("a");
+		anchor8.addExpectedAttribute("href", ".*MockWebApplication.*wicket.markup.html.link.subdir.Page1");
+		anchor8.addExpectedChild(new TextContent("Home"));
+		body.addExpectedChild(anchor8);
+
+		Tag link8 = new Tag("link");
+		link8.addExpectedAttribute("href", "test.css");
+		body.addExpectedChild(link8);
+
+		Tag anchor9 = new Tag("a");
+		anchor9.addExpectedAttribute("href", "/root/test.html");
+		anchor9.addExpectedChild(new TextContent("Home"));
+		body.addExpectedChild(anchor9);
+
+		Tag anchor10 = new Tag("a");
+		anchor10.addExpectedAttribute("href", "http://www.google.com");
+		anchor10.addExpectedChild(new TextContent("Google"));
+		body.addExpectedChild(anchor10);
+		
+		//body.addExpectedChild(new TextContent(".*"));
 		validator.addRootElement(html);
 		return validator.isDocumentValid(document);
 	}

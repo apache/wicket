@@ -21,12 +21,12 @@ package wicket.markup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
 import wicket.Container;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.html.link.BookmarkablePageLink;
-import wicket.markup.html.link.Link;
 import wicket.util.value.ValueMap;
 
 /**
@@ -47,7 +47,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 {
     /** Logging */
     private static Log log = LogFactory.getLog(AutolinkComponentResolver.class);
-
+    
     /**
      * Automatically creates a ExternalPageLink component.
      * 
@@ -64,16 +64,9 @@ public class AutolinkComponentResolver implements IComponentResolver
 	    // Must be marked as autolink tag
         if (tag.isAutolinkEnabled())
         {
-            // Autolinks are only supported with anchor tags
-            if (!tag.getName().equalsIgnoreCase("a"))
-            {
-                markupStream.throwMarkupException(
-                        "Automatic link can only be attached to an anchor tag");
-            }
-            
             // Try to find the Page matching the href
     	    final String componentName = tag.getComponentName();
-            final Link link = resolveAutomaticLink(container.getPage(), markupStream, componentName, tag);
+            final Component link = resolveAutomaticLink(container.getPage(), componentName, tag);
 
 	        // Add the link to the container
 			container.add(link);
@@ -84,7 +77,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 
 			// Render the Link
 			link.render();
-
+			
 			// Tell the container, we handled the componentName
 			return true;
 		}
@@ -99,22 +92,15 @@ public class AutolinkComponentResolver implements IComponentResolver
      * the relative URL specified by the href attribute of the tag. The href URL is
      * relative to the package containing the page where this component is contained.
      * @param page The page where the link is
-     * @param markupStream Markup stream to use when throwing any exceptions
      * @param componentName the name of the component
      * @param tag the component tag
      * @return A BookmarkablePageLink to handle the href
      */
-    private Link resolveAutomaticLink(final Page page, final MarkupStream markupStream,
+    private Component resolveAutomaticLink(final Page page, 
     		final String componentName, final ComponentTag tag)
     {
         final String originalHref = tag.getAttributes().getString("href");
-
         final int pos = originalHref.indexOf(".html");
-        if (pos <= 0)
-        {
-            markupStream.throwMarkupException(
-            	"Expected to find '*.html' in href: " + originalHref);
-        }
         
         String classPath = originalHref.substring(0, pos);
         PageParameters pageParameters = null;
