@@ -1,51 +1,25 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <document>
-	<properties>
-		<title>Wicket changes</title>
-		<author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
-	</properties>
-	<body>
-		<release version="0.9.14-alpha" date="in cvs" description="State of CVS">
-			<action type="add" dev="Juergen Donnerstag">
-				Model for PasswordTextField will now be encrypted for persistence (cookie)
-			</action>
-			<action type="add" dev="Juergen Donnerstag">
-				Fixed autoIndex bug. AutoIndex numbers are now unique across a whole page.
-			</action>
-			<action type="add" dev="Juergen Donnerstag">
-				Added lots of new and improved Table features. Examples contain
-				displaytag like demos.
-			</action>
-			<action type="add" dev="Juergen Donnerstag">
-				signin example now includes a rememberMe functionality
-			</action>
-            <action type="add" dev="Chris Turner">
-                Introduced new ComponentTagAttributeModifier class and associated methods
-                as a direct replacement for HtmlTagModifier and its subclasses.
-            </action>
-            <action type="fix" dev="Martijn Dashorst" issue="1072362">
-            	Added reset password flag for PasswordTextField in order to support input
-            	forms without emptying the contents.
-            </action>
-            <action type="add" dev="Eelco Hillenius" issue="1072080">
-                Implemented multi field validation.
-            </action>
-            <action type="add" dev="Eelco Hillenius">
-                Implemented support for ui messaging (also used by validation).
-                FeedbackPanel uses this, and is more generic now as well.
-            </action>
-            <action type="add" dev="Juergen Donnerstag">
-                Introduced ListView for lists (former Tables) that do not use
-                paging. Table supports paging.
-            </action>
-            <action type="fix" dev="Eelco Hillenius">
-                Fixed bug that resulted in random session timeouts.
-            </action>
-		</release>
-        <release version="0.9.13-alpha" date="25-10-2004" description="State of CVS">
-			<action type="add" dev="Martijn Dashorst">
-				Converted confluence documentation to xdocs.
-			</action>
-        </release>
-	</body>
+  <properties>
+    <title>Wicket changes</title>
+    <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
+  </properties>
+  <body>
+    <release version="0.9.14-alpha" date="2004-12-06" description="State of CVS">
+      <action type="add" dev="Juergen Donnerstag">Model for PasswordTextField will now be encrypted for persistence (cookie)</action>
+      <action type="add" dev="Juergen Donnerstag">Fixed autoIndex bug. AutoIndex numbers are now unique across a whole page.</action>
+      <action type="add" dev="Juergen Donnerstag">Added lots of new and improved Table features. Examples contain displaytag like demos.</action>
+      <action type="add" dev="Juergen Donnerstag">signin example now includes a rememberMe functionality</action>
+      <action type="add" dev="Chris Turner">Introduced new ComponentTagAttributeModifier class and associated methods as a direct replacement for HtmlTagModifier and its subclasses.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1072362">Added reset password flag for PasswordTextField in order to support input forms without emptying the contents.</action>
+      <action type="add" dev="Eelco Hillenius" issue="1072080">Implemented multi field validation.</action>
+      <action type="add" dev="Eelco Hillenius">Implemented support for ui messaging (also used by validation). FeedbackPanel uses this, and is more generic now as well.</action>
+      <action type="add" dev="Juergen Donnerstag">Introduced ListView for lists (former Tables) that do not use paging. Table supports paging.</action>
+      <action type="fix" dev="Eelco Hillenius">Fixed bug that resulted in random session timeouts.</action>
+    </release>
+    <release version="0.9.13-alpha" date="25-10-2004" description="State of CVS">
+      <action type="add" dev="Martijn Dashorst">Converted confluence documentation to xdocs.</action>
+    </release>
+  </body>
 </document>
