@@ -209,7 +209,10 @@ public class WebPage extends Page
 			buffer.append(pageMap.getName());
 			buffer.append('&');
 		}
-		buffer.append('?');
+		else
+		{
+		    buffer.append('?');
+		}
 	}
 
 	/**
