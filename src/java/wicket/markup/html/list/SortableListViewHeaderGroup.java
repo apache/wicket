@@ -20,7 +20,7 @@ package wicket.markup.html.list;
 
 import java.util.List;
 
-import wicket.Container;
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.util.collections.MicroMap;
 
@@ -41,14 +41,14 @@ public class SortableListViewHeaderGroup
 	private ListView listView;
 
 	/** The html container the header must be added to */
-	private Container container;
+	private MarkupContainer container;
 
 	/**
 	 * Maintain a group SortableTableHeader
 	 * @param container The html container the header will be added to
 	 * @param listView The underlying ListView
 	 */
-	public SortableListViewHeaderGroup(final Container container, final ListView listView)
+	public SortableListViewHeaderGroup(final MarkupContainer container, final ListView listView)
 	{
 		this.listView = listView;
 		this.container = container;

@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * A ListView holds ListItems of information. The listItem can be re-ordered and
@@ -72,7 +72,7 @@ import wicket.markup.html.WebContainer;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public abstract class ListView extends WebContainer
+public abstract class ListView extends WebMarkupContainer
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(ListView.class);

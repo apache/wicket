@@ -86,10 +86,10 @@ import wicket.util.watch.ModificationWatcher;
  * @see MarkupStream
  * @author Jonathan Locke
  */
-public abstract class Container extends Component
+public abstract class MarkupContainer extends Component
 {
 	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(Container.class);
+	private static final Log log = LogFactory.getLog(MarkupContainer.class);
 
 	/** Map of markup tags by class. */
 	private static final Map markupCache = new HashMap();
@@ -109,7 +109,7 @@ public abstract class Container extends Component
 	/**
      * @see wicket.Component#Component(String)
 	 */
-	public Container(final String name)
+	public MarkupContainer(final String name)
 	{
 		super(name);
 		optimize();
@@ -118,7 +118,7 @@ public abstract class Container extends Component
 	/**
      * @see wicket.Component#Component(String, Serializable)
 	 */
-	public Container(String name, Serializable object)
+	public MarkupContainer(String name, Serializable object)
 	{
 		super(name, object);
 		optimize();
@@ -127,7 +127,7 @@ public abstract class Container extends Component
 	/**
      * @see wicket.Component#Component(String, Serializable, String)
 	 */
-	public Container(String name, Serializable object, String expression)
+	public MarkupContainer(String name, Serializable object, String expression)
 	{
 		super(name, object, expression);
 		optimize();
@@ -143,7 +143,7 @@ public abstract class Container extends Component
 	 *             operation.
 	 * @return This
 	 */
-	public Container add(final Component child)
+	public MarkupContainer add(final Component child)
 	{
 		if (child == this)
 		{
@@ -247,7 +247,7 @@ public abstract class Container extends Component
 	 *             Thrown if there was no child with the same name.
 	 * @return This
 	 */
-	public Container replace(final Component child)
+	public MarkupContainer replace(final Component child)
 	{
 		// Get child name
 		final String childName = child.getName();
@@ -365,10 +365,10 @@ public abstract class Container extends Component
 			}
 
 			// If child is a container
-			if (child instanceof Container)
+			if (child instanceof MarkupContainer)
 			{
 				// visit the children in the container
-				final Object value = ((Container)child).visitChildren(c, visitor);
+				final Object value = ((MarkupContainer)child).visitChildren(c, visitor);
 
 				// If visitor returns a non-null value, it halts the traversal
 				if (value != IVisitor.CONTINUE_TRAVERSAL)
@@ -404,7 +404,7 @@ public abstract class Container extends Component
 	protected final MarkupStream findMarkupStream()
 	{
 		// Start here
-		Container c = this;
+		MarkupContainer c = this;
 
 		// Walk up hierarchy until markup found
 		while (c.markupStream == null)
@@ -446,7 +446,7 @@ public abstract class Container extends Component
 	protected String getMarkupType()
 	{
 		throw new IllegalStateException(
-				exceptionMessage("You cannot directly subclass Page or Container.  Instead, subclass a markup-specific class, such as WebPage or WebContainer"));
+				exceptionMessage("You cannot directly subclass Page or MarkupContainer.  Instead, subclass a markup-specific class, such as WebPage or WebMarkupContainer"));
 	}
 
 	/**
@@ -541,7 +541,7 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * The Container was not able to resolve the component name. Subclasses may
+	 * The MarkupContainer was not able to resolve the component name. Subclasses may
 	 * augment the default strategy by subclassing resolveComponent().
 	 * 
 	 * @see wicket.markup.html.border.Border for an example.
@@ -552,7 +552,7 @@ public abstract class Container extends Component
 	 *            The current markup stream
 	 * @param tag
 	 *            The current component tag
-	 * @return true, if Container was able to resolve the component name and to
+	 * @return true, if MarkupContainer was able to resolve the component name and to
 	 *         render the component
 	 */
 	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
@@ -595,7 +595,7 @@ public abstract class Container extends Component
 				Resource markupResource = null;
 				Class containerClass = getClass();
 
-				while ((markupResource == null) && (containerClass != Container.class))
+				while ((markupResource == null) && (containerClass != MarkupContainer.class))
 				{
 					// Look for markup resource for containerClass
 					markupResource = Resource.locate(getApplicationSettings().getSourcePath(),
@@ -818,7 +818,7 @@ public abstract class Container extends Component
 				}
 
 				// 3rd try: a subclass replacing resolveComponent()
-				Container container = this;
+				MarkupContainer container = this;
 				while (container != null)
 				{
 					if (container.resolveComponent(markupStream, tag))
@@ -826,7 +826,7 @@ public abstract class Container extends Component
 						return;
 					}
 
-					container = container.findParent(Container.class);
+					container = container.findParent(MarkupContainer.class);
 				}
 
 				// No one was able to handle the component name

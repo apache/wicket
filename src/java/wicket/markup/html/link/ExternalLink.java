@@ -20,7 +20,7 @@ package wicket.markup.html.link;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebMarkupContainer;
 
 
 /**
@@ -29,7 +29,7 @@ import wicket.markup.html.WebContainer;
  * 
  * @author Juergen Donnerstag
  */
-public class ExternalLink extends WebContainer
+public class ExternalLink extends WebMarkupContainer
 {
     /** the href attribute. */
     final private String href;

@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.Container;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
@@ -58,7 +58,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 	/**
 	 * Automatically creates a BookmarkablePageLink component.
 	 * 
-	 * @see wicket.markup.IComponentResolver#resolve(Container, MarkupStream,
+	 * @see wicket.markup.IComponentResolver#resolve(MarkupContainer, MarkupStream,
 	 *      ComponentTag)
 	 * @param markupStream
 	 *           The current markupStream
@@ -69,7 +69,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 	 * @return true, if componentName was handle by the resolver. False,
 	 *         otherwise
 	 */
-	public boolean resolve(final Container container, final MarkupStream markupStream,
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
 		// Must be marked as autolink tag
@@ -110,7 +110,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 	 *           the component tag
 	 * @return A BookmarkablePageLink to handle the href
 	 */
-	private Component resolveAutomaticLink(final Container container, final String componentName,
+	private Component resolveAutomaticLink(final MarkupContainer container, final String componentName,
 			final ComponentTag tag)
 	{
         final Page page = container.getPage();

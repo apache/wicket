@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.Container;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
@@ -118,7 +118,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
             searchStack.push(component);
             if (!(component instanceof Page))
             {
-                Container c = component.getParent();
+                MarkupContainer c = component.getParent();
                 while (true)
                 {
                     searchStack.push(c);

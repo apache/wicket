@@ -19,7 +19,7 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 
-import wicket.Container;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -218,12 +218,12 @@ public abstract class Link extends AbstractLink
 	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Get disabled component of the same name with "Disabled" appended
-		final Container disabledContainer = (Container)get("disabled");
+		final MarkupContainer disabledContainer = (MarkupContainer)get("disabled");
 
 		if (disabledContainer != null)
 		{
 			// Get enabled container
-			final Container enabledContainer = (Container)get("enabled");
+			final MarkupContainer enabledContainer = (MarkupContainer)get("enabled");
 
 			// Set visibility of enabled and disabled children
 			enabledContainer.setVisible(enabled);
