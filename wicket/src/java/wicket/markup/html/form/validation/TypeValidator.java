@@ -33,6 +33,7 @@ import wicket.util.string.Strings;
  * validation.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class TypeValidator extends AbstractValidator
 {
