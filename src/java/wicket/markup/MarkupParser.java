@@ -259,6 +259,7 @@ public final class MarkupParser implements IMarkupParser
      * will read-ahead at max. the very first line of the markup.
      * 
      * @param in The markup file
+     * @param readAheadSize look ahead
      * @return null, if &lt;?xml ..?&gt; has been found; else all characters read ahead
      * @throws IOException
      */
