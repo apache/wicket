@@ -1,0 +1,181 @@
+<project>
+    <pomVersion>3</pomVersion>
+    <id>wicket</id>
+    <name>Wicket Examples</name>
+    <groupId>wicket-examples</groupId>
+    <currentVersion>0.9.12-alpha</currentVersion>
+    <organization>
+        <name>SourceForge</name>
+        <url>http://sourceforge.net</url>
+        <logo>http://sourceforge.net/sflogo.php?group_id=${maven.sourceforge.project.groupId}&amp;type=5</logo>
+    </organization>
+    <inceptionYear>2004</inceptionYear>
+    <package></package>
+    <logo/> <!-- /images/logo.gif</logo> -->
+    <description>
+	    Wicket is a Java web application framework that takes simplicity, 
+	    separation of concerns and ease of development to a whole new level. Wicket 
+	    pages can be mocked up, previewed and later revised using standard WYSIWYG 
+	    HTML design tools. Dynamic content processing and form handling is all handled 
+	    in Java code using a Swing-like component model backed by POJO data beans that 
+	    can easily be persisted with Hibernate.
+    </description>
+    <shortDescription>Examples for the wicket framework.</shortDescription>
+    <url>http://wicket.sourceforge.net</url>
+    <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
+
+	<siteAddress>shell.sourceforge.net</siteAddress>
+	<siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
+
+    <mailingLists>
+        <mailingList>
+            <name>${pom.name} Dev List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
+        </mailingList>
+        <mailingList>
+            <name>${pom.name} User List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-user</archive>
+        </mailingList>
+        <mailingList>
+            <name>${pom.name} CVS commit List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-autocvs</archive>
+        </mailingList>
+    </mailingLists>
+    <developers>
+    	<developer>
+    		<name>Chris Turner</name>
+    		<id>?</id>
+    		<email>?</email>
+    	</developer>
+    	<developer>
+    		<name>Eelco Hillenius</name>
+    		<id>eelco12</id>
+    		<email>eelco12 at users.sourceforge.net</email>
+    	</developer>
+    	<developer>
+    		<name>Johan Compagner</name>
+    		<id>joco01</id>
+    		<email>joco01 at users.sourceforge.net</email>
+    	</developer>
+    	<developer>
+    		<name>Martijn Dashorst</name>
+    		<id>dashorst</id>
+    		<email>dashorst at users.sourceforge.net</email>
+    	</developer>
+    </developers>
+    <dependencies>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.4</version>
+            <jar>dom4j-1.4.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>2.1.6</version>
+            <jar>hibernate-2.1.6.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>cglib-full</groupId>
+            <artifactId>cglib-full</artifactId>
+            <version>2.0.2</version>
+            <jar>cglib-full-2.0.2.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+			<dependency>  
+            <groupId>jta</groupId>  
+            <artifactId>jta</artifactId>  
+            <version>1.0</version> 
+            <jar>jta-1.0.jar</jar> 
+            <type>jar</type> 
+            <properties/> 
+        </dependency>
+		  <dependency>  
+            <groupId>dom4j</groupId>  
+            <artifactId>dom4j</artifactId>  
+            <version>1.4</version> 
+            <jar>dom4j-1.4.jar</jar> 
+            <type>jar</type> 
+            <properties/> 
+        </dependency>
+			<dependency>  
+            <groupId>commons-collections</groupId>  
+            <artifactId>commons-collections</artifactId>  
+            <version>2.1</version> 
+            <jar>commons-collections-2.1.jar</jar> 
+            <type>jar</type> 
+            <properties/> 
+        </dependency>
+		  <dependency>  
+            <groupId>odmg</groupId>  
+            <artifactId>odmg</artifactId>  
+            <version>3.0</version> 
+            <jar>odmg-3.0.jar</jar> 
+            <type>jar</type> 
+            <properties/> 
+        </dependency>
+			<dependency>  
+            <groupId>hsqldb</groupId>  
+            <artifactId>hsqldb</artifactId>  
+            <version>1.7.2_4</version> 
+            <jar>hsqldb-1.7.2_4.jar</jar> 
+            <type>jar</type> 
+            <properties/> 
+        </dependency>		  
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <jar>junit-3.8.1.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.8</version>
+            <jar>log4j-1.2.8.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+            <version>2.6.5</version>
+            <jar>ognl-2.6.5.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>servletapi</groupId>
+            <artifactId>servletapi</artifactId>
+            <version>2.3</version>
+            <jar>servletapi-2.3.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>src/java</sourceDirectory>
+        <includes>
+        	<include>**/*.java</include>
+        </includes>
+    </build>
+    <reports>
+    	<report>maven-changes-plugin</report>
+    	<report>maven-tasklist-plugin</report>
+    	<report>maven-javadoc-plugin</report>
+    </reports>
+</project>

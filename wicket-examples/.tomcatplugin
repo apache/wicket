@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcatProjectProperties>
+    <rootDir>/src/web</rootDir>
+    <exportSource>false</exportSource>
+    <reloadable>true</reloadable>
+    <redirectLogger>true</redirectLogger>
+    <updateXml>true</updateXml>
+    <warLocation></warLocation>
+    <extraInfo></extraInfo>
+    <webPath>/wicket</webPath>
+    <webClassPathEntries>
+        <webClassPathEntry>/Wicket/target/classes</webClassPathEntry>
+        <webClassPathEntry>/wicket-examples/target/classes</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/cglib/jars/cglib-full-2.0.2.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/dom4j/jars/dom4j-1.4.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/hibernate/jars/hibernate-2.1.6.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/hsqldb/jars/hsqldb-1.7.2-RC6.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/jta/jars/jta-1.0.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/junit/jars/junit-3.8.1.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/log4j/jars/log4j-1.2.8.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/ognl/jars/ognl-2.6.5.jar</webClassPathEntry>
+    </webClassPathEntries>
+</tomcatProjectProperties>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/Wicket"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/hibernate-2.1.6-src.jar" kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-2.1.6.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/cglib/jars/cglib-full-2.0.2.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jta/jars/jta-1.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hsqldb/jars/hsqldb-1.7.2-RC6.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

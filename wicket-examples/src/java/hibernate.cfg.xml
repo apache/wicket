@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-configuration PUBLIC 
+	"-//Hibernate/Hibernate Configuration DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-2.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+
+		<property name="show_sql">false</property>
+		<property name="dialect">net.sf.hibernate.dialect.HSQLDialect</property>
+
+		<property name="connection.url">jdbc:hsqldb:gaps</property>
+		<property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+		<property name="connection.username">sa</property>
+		<property name="connection.password"></property>
+
+		<mapping resource="guestbook2/Comment.hbm.xml"/>
+
+	</session-factory>
+	
+</hibernate-configuration>
