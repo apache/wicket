@@ -432,8 +432,7 @@ public abstract class Component implements Serializable
 	 */
 	public final Object getModelLock()
 	{
-		final Object lock = getModelObject();
-		return lock == null ? this : lock;
+        return model != null ? model : new Object();
 	}
 
 	/**
