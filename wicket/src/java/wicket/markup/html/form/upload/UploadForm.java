@@ -19,10 +19,10 @@ package wicket.markup.html.form.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
+import wicket.IFeedback;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.protocol.http.WebRequest;
 
 /**
@@ -44,9 +44,9 @@ public abstract class UploadForm extends Form
 	}
 
 	/**
-	 * @see Form#Form(String, IValidationFeedback)
+	 * @see Form#Form(String, IFeedback)
 	 */
-	public UploadForm(String name, IValidationFeedback validationFeedback)
+	public UploadForm(String name, IFeedback validationFeedback)
 	{
 		super(name, validationFeedback);
 	}
