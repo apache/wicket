@@ -44,11 +44,8 @@ public class StringConverter extends AbstractConverter
 	private final Map classToConverter = new HashMap();
 	{
 		set(Date.class, new DateToStringConverter());
+		set(java.sql.Date.class, new DateToStringConverter());
 		set(Timestamp.class, new DateToStringConverter());
-		set(Byte.class, new NumberToStringConverter());
-		set(Short.class, new NumberToStringConverter());
-		set(Integer.class, new NumberToStringConverter());
-		set(Long.class, new NumberToStringConverter());
 		set(Float.class, new NumberToStringConverter());
 		set(Double.class, new NumberToStringConverter());
 	}
