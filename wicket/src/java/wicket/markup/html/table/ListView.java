@@ -260,11 +260,18 @@ public abstract class ListView extends HtmlContainer
                 size = modelSize - firstIndex;
             }
         }
+        else
+        {
+        	// the model is not a list and the size is not set
+        	throw new IllegalStateException("model object (" + modelObject.getClass()
+        			+ ") is not a List and the view size is not explicitly set");
+        }
         
         // firstIndex + size must be smaller than Integer.MAX_VALUE
         if ((Integer.MAX_VALUE - size) <= firstIndex)
         {
-            throw new IllegalArgumentException("firstIndex + size must be smaller than Integer.MAX_VALUE");
+            throw new IllegalStateException(
+            		"firstIndex + size must be smaller than Integer.MAX_VALUE");
         }
         
         return size;
