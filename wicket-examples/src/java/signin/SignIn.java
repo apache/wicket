@@ -25,6 +25,7 @@ import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.form.Form;
 import com.voicetribe.wicket.markup.html.form.PasswordTextField;
 import com.voicetribe.wicket.markup.html.form.TextField;
+import com.voicetribe.wicket.markup.html.form.validation.ValidationErrorMessage;
 import com.voicetribe.wicket.markup.html.panel.FeedbackPanel;
 
 /**
@@ -91,7 +92,7 @@ public final class SignIn extends HtmlPage
             else
             {
                 // Form method that will notify feedback panel
-                errorMessage("Couldn't sign you in");
+                handleError(new ValidationErrorMessage(null, this, "Couldn't sign you in"));
             }
         }
     }

@@ -47,8 +47,8 @@ import java.util.List;
  */
 public final class EditBook extends AuthenticatedHtmlPage
 {
-    static final Book otherBook = new Book("Frisbee Techniques",
-            "Marty van Hoff", Book.FICTION);
+    static final Book otherBook =
+        new Book("Frisbee Techniques", "Marty van Hoff", Book.FICTION);
 
     /**
      * Constructs a page that edits a book
@@ -114,25 +114,20 @@ public final class EditBook extends AuthenticatedHtmlPage
 
             setModel(new PropertyModel(bookModel, getName()));
 
-            // Create a required text field that edits the book's author
-            final TextField author = new TextField("author",
-                    new PropertyModel(bookModel, "author"));
-
-            author.add(new RequiredValidator());
-            add(author);
-
             // Create a required text field with a max length of 30 characters that edits the book's title
-            final TextField title = new TextField("title",
-                    new PropertyModel(bookModel, "title"));
-
+            final TextField title = new TextField("title", bookModel, "title");
             title.add(new RequiredValidator());
             title.add(LengthValidator.max(30));
-
-            final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(
-                    "titleFeedback");
-
-            titleFeedback.add(title);
+            final FormComponentFeedbackBorder titleFeedback =
+                new FormComponentFeedbackBorder("titleFeedback", title);
             add(titleFeedback);
+
+            // Create a required text field that edits the book's author
+            final TextField author = new TextField("author", bookModel, "author");
+            author.add(new RequiredValidator());
+            final FormComponentFeedbackBorder authorFeedback =
+                new FormComponentFeedbackBorder("authorFeedback", author);
+            add(authorFeedback);
 
             // Add fiction checkbox
             add(new CheckBox("fiction", bookModel, "fiction"));
@@ -144,12 +139,11 @@ public final class EditBook extends AuthenticatedHtmlPage
             books.remove(otherBook);
 
             // Add companion book choice
-            add(new DropDownChoice("companionBook",
-                    new PropertyModel(bookModel, "companionBook"), books));
+            add(new DropDownChoice("companionBook", bookModel, "companionBook", books));
 
             // Add radio choice test
-            final RadioChoice relatedBook = new RadioChoice("relatedBook",
-                    new PropertyModel(bookModel, "relatedBook"));
+            final RadioChoice relatedBook =
+                new RadioChoice("relatedBook", bookModel, "relatedBook");
 
             relatedBook.add(new RadioOptionSet("relatedBooks", books));
             relatedBook.add(new RadioOption("otherBook", otherBook));
