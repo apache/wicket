@@ -29,7 +29,7 @@ import wicket.model.IModel;
  *
  * @author Jonathan Locke
  */
-public final class CheckBox extends FormComponent implements FormComponent.ICookieValue
+public final class CheckBox extends FormComponent
 {
     /** Serial Version ID. */
 	private static final long serialVersionUID = 7559827519977114184L;
@@ -102,6 +102,31 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
     }
 
     /**
+     * @see FormComponent#getSupportsPersistence()
+     */
+    public boolean getSupportsPersistence()
+    {
+        return true;
+    }
+
+    /**
+     * @see FormComponent#setValue(java.lang.String)
+     */
+    public void setValue(String value)
+    {
+        setModelObject(Boolean.valueOf(value));
+    }
+
+    /**
+     * Updates this components' model from the request.
+     * @see wicket.markup.html.form.FormComponent#updateModel()
+     */
+    public void updateModel()
+    {
+        setModelObject(getRequestBoolean());
+    }
+
+    /**
 	 * Processes the component tag.
 	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(ComponentTag)
@@ -127,35 +152,6 @@ public final class CheckBox extends FormComponent implements FormComponent.ICook
                 tag.put("checked", "true");
             }
         }
-    }
-
-    /**
-     * Updates this components' model from the request.
-     * @see wicket.markup.html.form.FormComponent#updateModel()
-     */
-    public void updateModel()
-    {
-        setModelObject(getRequestBoolean());
-    }
-
-    /**
-     * Gets the cookie value for this component.
-     * @return the cookie value for this component
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
-     */
-    public String getCookieValue()
-    {
-        return getModelObjectAsString();
-    }
-
-    /**
-     * Sets the cookie value for this component.
-     * @param value the cookie value for this component
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
-     */
-    public void setCookieValue(String value)
-    {
-        setModelObject(Boolean.valueOf(value));
     }
 }
 

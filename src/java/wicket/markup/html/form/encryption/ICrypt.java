@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.form;
+package wicket.markup.html.form.encryption;
 
 /**
  * Encryption and decryption implementations are accessed through this 

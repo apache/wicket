@@ -35,7 +35,7 @@ import wicket.model.PropertyModel;
  *
  * @author Jonathan Locke
  */
-public final class PasswordTextField extends FormComponent implements FormComponent.ICookieValue
+public final class PasswordTextField extends FormComponent
 {
     /** log. */
     private static final Log log = LogFactory.getLog(PasswordTextField.class);
@@ -150,11 +150,17 @@ public final class PasswordTextField extends FormComponent implements FormCompon
     }
 
     /**
-	 * Gets the cookie value for this component.
-	 * @return the cookie value for this component
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
+     * @see wicket.markup.html.form.FormComponent#getSupportsPersistence()
      */
-    public String getCookieValue()
+    public boolean getSupportsPersistence()
+    {
+        return true;
+    }
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#getValue()
+     */
+    public String getValue()
     {
         final String value = getModelObjectAsString();
         try
@@ -170,11 +176,9 @@ public final class PasswordTextField extends FormComponent implements FormCompon
     }
 
     /**
-	 * Sets the cookie value for this component
-	 * @param value the cookie value for this component
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
+     * @see wicket.markup.html.form.FormComponent#setValue(java.lang.String)
      */
-    public void setCookieValue(String value)
+    public void setValue(String value)
     {
         String decryptedValue;
         try

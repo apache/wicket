@@ -33,13 +33,13 @@ import wicket.model.IModel;
  * which automatically generates a list of options from a collection.
  * @author Jonathan Locke
  */
-public final class RadioChoice extends FormComponent implements FormComponent.ICookieValue
-{ // TODO finalize javadoc
-    /** Serial Version ID */
-	private static final long serialVersionUID = -1560593550286375796L;
-
+public final class RadioChoice extends FormComponent
+{
 	// Index value for null choice
     private static final int NULL_VALUE = -1;
+ // TODO finalize javadoc
+    /** Serial Version ID */
+	private static final long serialVersionUID = -1560593550286375796L;
 
     // List of choices attached to this model
     private final List values = new ArrayList();
@@ -116,6 +116,32 @@ public final class RadioChoice extends FormComponent implements FormComponent.IC
     }
 
     /**
+     * @see wicket.markup.html.form.FormComponent#getSupportsPersistence()
+     */
+    public boolean getSupportsPersistence()
+    {
+        return true;
+    }
+
+    /**
+     * @see FormComponent#getValue()
+     */
+    public String getValue()
+    {
+        final int index = values.indexOf(getModelObject());
+
+        return Integer.toString(index);
+    }
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#setValue(java.lang.String)
+     */
+    public void setValue(final String value)
+    {
+        setModelObject(values.get(Integer.parseInt(value)));
+    }
+
+    /**
      * @see wicket.markup.html.form.FormComponent#updateModel()
      */
     public void updateModel()
@@ -139,24 +165,6 @@ public final class RadioChoice extends FormComponent implements FormComponent.IC
         values.add(choice);
 
         return index;
-    }
-
-    /**
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
-     */
-    public String getCookieValue()
-    {
-        final int index = values.indexOf(getModelObject());
-
-        return Integer.toString(index);
-    }
-
-    /**
-     * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
-     */
-    public void setCookieValue(final String value)
-    {
-        setModelObject(values.get(Integer.parseInt(value)));
     }
 }
 

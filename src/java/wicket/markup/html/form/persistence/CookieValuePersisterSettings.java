@@ -16,16 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.form;
+package wicket.markup.html.form.persistence;
 
 /**
  * This class is basically (excluding name, value and path) a copy of
  * Cookie (@see javax.servlet.http.Cookie). It provides default values 
- * for the persistence manager (@see wicket,markup.html.form.IFormComponentPersistenceManager).
+ * for the persistence manager (@see wicket,markup.html.form.IFormComponentValuePersister).
  * 
  * @author Juergen Donnerstag
  */
-public class FormComponentPersistenceDefaults
+public class CookieValuePersisterSettings
 {
     /** max age that the component will be persisted in seconds. */
     private int maxAge = 3600 * 24 * 30; // 30 days

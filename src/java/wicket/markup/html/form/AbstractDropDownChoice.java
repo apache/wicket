@@ -38,8 +38,6 @@ import wicket.model.IModel;
  * @author Johan Compagner
  */
 public abstract class AbstractDropDownChoice extends FormComponent
-		implements
-			FormComponent.ICookieValue
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -8334966481181600604L;
@@ -122,7 +120,15 @@ public abstract class AbstractDropDownChoice extends FormComponent
 		setValues(values);
 	}
 
-	/**
+    /**
+     * @see wicket.markup.html.form.FormComponent#getSupportsPersistence()
+     */
+    public boolean getSupportsPersistence()
+    {
+        return true;
+    }
+
+    /**
 	 * Gets the list of values.
 	 * 
 	 * @return the list of values
@@ -135,7 +141,7 @@ public abstract class AbstractDropDownChoice extends FormComponent
 		}
 		return this.values;
 	}
-
+    
 	/**
 	 * Gets whether the null option must be rendered if current selection ==
 	 * null. The default is true.

@@ -29,6 +29,8 @@ import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.form.persistence.CookieValuePersister;
+import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.form.validation.ValidationErrorMessage;
 import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
@@ -51,7 +53,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	private static Log log = LogFactory.getLog(Form.class);
 
 	/** Manager responsible to persist and retrieve FormComponent data. */
-	private IFormComponentPersistenceManager persister = null;
+	private IValuePersister persister = null;
 
 	/** The delegate to be used for execution of validation of this form. */
 	private IFormValidationDelegate validationDelegate = DefaultFormValidationDelegate
@@ -65,11 +67,11 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 */
 	private static final class DefaultFormValidationDelegate implements IFormValidationDelegate
 	{
-		/** Log. */
-		private static final Log log = LogFactory.getLog(DefaultFormValidationDelegate.class);
 
 		/** Single instance of default form validation delegate */
 		private static final DefaultFormValidationDelegate instance = new DefaultFormValidationDelegate();
+		/** Log. */
+		private static final Log log = LogFactory.getLog(DefaultFormValidationDelegate.class);
 
 		/**
 		 * @return Singleton instance of DefaultFormValidationDelegate
@@ -260,7 +262,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		// Persist FormComponents if requested
 		persistFormComponentData();
 
-        // If validation or update caused error messages to appear 
+		// If validation or update caused error messages to appear
 		if (messages.hasErrorMessages())
 		{
 			// handle those errors
@@ -268,7 +270,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		}
 		else
 		{
-            // Model was successfully updated with valid data
+			// Model was successfully updated with valid data
 			handleSubmit();
 		}
 	}
@@ -345,7 +347,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	{
 		// The persistence manager responsible to persist and retrieve
 		// FormComponent data
-		final IFormComponentPersistenceManager persister = getFormComponentPersistenceManager();
+		final IValuePersister persister = getValuePersister();
 
 		// Search for FormComponents like TextField etc.
 		visitChildren(FormComponent.class, new IVisitor()
@@ -353,14 +355,15 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 			public Object component(final Component component)
 			{
 				// remove the FormComponents persisted data
-				FormComponent formComponent = (FormComponent)component;
-				persister.remove(formComponent.getPageRelativePath());
+				final FormComponent formComponent = (FormComponent)component;
+				persister.clear(formComponent);
 
 				// Disable persistence if requested. Leave unchanged otherwise.
-				if (formComponent.isPersistenceEnabled() && disablePersistence)
+				if (formComponent.isPersistent() && disablePersistence)
 				{
-					formComponent.setPersistenceEnabled(false);
+					formComponent.setPersistent(false);
 				}
+
 				return CONTINUE_TRAVERSAL;
 			}
 		});
@@ -386,22 +389,14 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 				// once the user submits the Form containing that FormComponent.
 				// Note: if that is true, values may remain persisted longer
 				// than really necessary
-				if (component instanceof FormComponent.ICookieValue
-						&& ((FormComponent)component).isPersistenceEnabled())
+				final FormComponent formComponent = (FormComponent)component;
+				if (formComponent.isPersistent())
 				{
-					// The persistence manager responsible to persist and
-					// retrieve
-					// FormComponent data
-					final IFormComponentPersistenceManager persister = getFormComponentPersistenceManager();
+					// The persister
+					final IValuePersister persister = getValuePersister();
 
 					// Retrieve persisted value
-					final String persistedValue = persister.retrieveValue(component
-							.getPageRelativePath());
-					if (persistedValue != null)
-					{
-						// Assign the retrieved/persisted value to the component
-						((FormComponent.ICookieValue)component).setCookieValue(persistedValue);
-					}
+					persister.load((FormComponent)component);
 				}
 				return CONTINUE_TRAVERSAL;
 			}
@@ -434,12 +429,12 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Sets the FormComponentPersistenceManager.
+	 * Sets the value persister for this form.
 	 * 
 	 * @param persister
-	 *            the FormComponentPersistenceManager
+	 *            the CookieValuePersister
 	 */
-	protected void setFormComponentPersistenceManager(IFormComponentPersistenceManager persister)
+	protected void setFormComponentPersistenceManager(IValuePersister persister)
 	{
 		this.persister = persister;
 	}
@@ -447,13 +442,13 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	/**
 	 * Gets the form component persistence manager; it is lazy loaded.
 	 * 
-	 * @return the form component persistence manager
+	 * @return The form component value persister
 	 */
-	private IFormComponentPersistenceManager getFormComponentPersistenceManager()
+	private IValuePersister getValuePersister()
 	{
 		if (persister == null)
 		{
-			persister = new FormComponentPersistenceManager();
+			persister = new CookieValuePersister();
 		}
 		return persister;
 	}
@@ -473,10 +468,10 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		{
 			// The persistence manager responsible to persist and retrieve
 			// FormComponent data
-			final IFormComponentPersistenceManager persister = getFormComponentPersistenceManager();
+			final IValuePersister persister = getValuePersister();
 
 			// Search for FormComponent children. Ignore all other
-			visitChildren(FormComponent.ICookieValue.class, new IVisitor()
+			visitChildren(FormComponent.class, new IVisitor()
 			{
 				public Object component(final Component component)
 				{
@@ -484,18 +479,17 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 					final FormComponent formComponent = (FormComponent)component;
 
 					// If peristence is switched on for that FormComponent ...
-					if (formComponent.isPersistenceEnabled())
+					if (formComponent.isPersistent())
 					{
 						// Save component's data (e.g. in a cookie)
-						persister.save(formComponent.getPageRelativePath(),
-								((FormComponent.ICookieValue)formComponent).getCookieValue());
+						persister.save(formComponent);
 					}
 					else
 					{
 						// Remove component's data (e.g. cookie)
-						persister.remove(formComponent.getPageRelativePath());
-
+						persister.clear(formComponent);
 					}
+
 					return CONTINUE_TRAVERSAL;
 				}
 			});
@@ -515,8 +509,9 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 			{
 				// Update model of form component
 				final FormComponent formComponent = (FormComponent)component;
-				if (formComponent.isVisible()) // only update the component when
-											   // it is visible
+
+				// Only update the component when it is visible
+				if (formComponent.isVisible())
 				{
 					formComponent.updateModel();
 				}
