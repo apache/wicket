@@ -581,28 +581,7 @@ public abstract class RequestCycle
 		{
 			// Since we are explicitly redirecting to a page already, we do not
 			// want a second redirect to occur automatically
-			setRedirect(false);
-			if (page != null)
-			{
-				// Copy feedback messages into page
-				page.messages = FeedbackMessages.get();
-
-				// Remove thread local feedback messages
-				FeedbackMessages.remove();
-			}
-			else
-			{
-				// No page, which probably means we are rendering directly
-				// ourselves; as a fallthrough, we have to clear things up
-				FeedbackMessages.threadDetach();
-			}
-		}
-		else
-		{
-			// Clear the ui messages and reset the original component models
-			// the components have had the possibility of rendering the
-			// messages, and the messages are meant for 'one time use' only.
-			FeedbackMessages.threadDetach();
+			setRedirect(false);            
 		}
 
 		// Clear ThreadLocal reference

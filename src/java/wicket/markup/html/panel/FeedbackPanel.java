@@ -18,10 +18,10 @@
 package wicket.markup.html.panel;
 
 import wicket.FeedbackMessage;
-import wicket.FeedbackMessages;
+import wicket.Session;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.IModel;
@@ -32,11 +32,11 @@ import wicket.model.IModel;
  * 
  * @see wicket.FeedbackMessage
  * @see wicket.FeedbackMessages
- * @see wicket.markup.html.form.validation.IValidationErrorHandler
+ * @see wicket.markup.html.form.validation.IValidationFeedback
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class FeedbackPanel extends Panel implements IValidationErrorHandler
+public final class FeedbackPanel extends Panel implements IValidationFeedback
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3385823935971399988L;
@@ -54,7 +54,7 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
 		 */
 		public MessageListView(String name)
 		{
-			super(name, FeedbackMessages.model());
+			super(name, Session.get().getFeedbackMessages().model());
 		}
 
 		/**
@@ -137,11 +137,9 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
 	/**
 	 * Sets an error message to be displayed by this feedback panel.
 	 * 
-	 * @param errors
-	 *            The errors structure
-	 * @see wicket.markup.html.form.validation.IValidationErrorHandler#validationError(wicket.FeedbackMessages)
+	 * @see wicket.markup.html.form.validation.IValidationFeedback#update()
 	 */
-	public void validationError(final FeedbackMessages errors)
+	public void update()
 	{
 		// Force re-rendering of the list
 		removeAll();

@@ -22,7 +22,7 @@ import java.io.File;
 import org.apache.commons.fileupload.FileItem;
 
 import wicket.WicketRuntimeException;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.form.validation.IValidationFeedback;
 
 /**
  * Form that uploads files and writes them to the file system. It uses a
@@ -160,7 +160,7 @@ public class FileUploadForm extends AbstractUploadForm
 	 * @param targetDirectory
 	 *            the directory where the uploaded files should be put
 	 */
-	public FileUploadForm(String name, IValidationErrorHandler validationErrorHandler,
+	public FileUploadForm(String name, IValidationFeedback validationErrorHandler,
 			File targetDirectory)
 	{
 		this(name, validationErrorHandler, targetDirectory, NUMBER_FILE_CONFLICT_HANDLER);
@@ -180,7 +180,7 @@ public class FileUploadForm extends AbstractUploadForm
 	 *            name already exists in the same directory when trying to save
 	 *            an uploaded file
 	 */
-	public FileUploadForm(String name, IValidationErrorHandler validationErrorHandler,
+	public FileUploadForm(String name, IValidationFeedback validationErrorHandler,
 			File targetDirectory, FileExistsConflictHandler fileExistsConflictHandler)
 	{
 		super(name, validationErrorHandler);

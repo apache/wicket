@@ -17,19 +17,21 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.FeedbackMessages;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * A border that can be placed around a form bordered to indicate when the bordered has a
- * validation error.
+ * A border that can be placed around a form bordered to indicate when the
+ * bordered child has a validation error. A child of the border named
+ * "errorIndicator" will be shown and hidden depending on whether the child has
+ * an error. A typical error indicator might be a little red asterisk.
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class FormComponentFeedbackBorder extends Border implements IValidationErrorHandler
-{ // TODO finalize javadoc
+public final class FormComponentFeedbackBorder extends Border implements IValidationFeedback
+{
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -7070716217601930304L;
 
@@ -41,8 +43,11 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 
 	/**
 	 * Constructor.
-	 * @param componentName This component's name
-	 * @param child The child to border
+	 * 
+	 * @param componentName
+	 *            This component's name
+	 * @param child
+	 *            The child to border
 	 */
 	public FormComponentFeedbackBorder(final String componentName, FormComponent child)
 	{
@@ -59,16 +64,13 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	}
 
 	/**
-	 * Handles validation errors. If any errors were registered, the decorated error
-	 * indicator will be set to invisible.
-	 * @param errors Collection of
-	 *           {@link wicket.markup.html.form.validation.ValidationErrorMessage}s
-	 * @see wicket.markup.html.form.validation.IValidationErrorHandler#validationError(wicket.FeedbackMessages)
+	 * Handles validation errors. If any errors were registered, the decorated
+	 * error indicator will be set to invisible.
+	 * 
+	 * @see wicket.markup.html.form.validation.IValidationFeedback#update()
 	 */
-	public void validationError(final FeedbackMessages errors)
+	public void update()
 	{
-        // TODO is this right?  was:
-        // errorIndicator.setVisible(errors.hasErrorMessageFor(child));
 		errorIndicator.setVisible(child.hasErrorMessage());
 	}
 }
