@@ -29,7 +29,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import wicket.markup.ComponentTagAttributeModifier;
+import wicket.AttributeModifier;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
@@ -149,7 +149,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 			}
 		};
 		HtmlContainer junctionImg = new HtmlContainer("junctionImg");
-		junctionImg.add(new ComponentTagAttributeModifier(
+		junctionImg.add(new AttributeModifier(
 				"src", true, new Model()
 		{
 			public Object getObject()
@@ -194,7 +194,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 			}
 		};
 		HtmlContainer nodeImg = new HtmlContainer("nodeImg");
-		nodeImg.add(new ComponentTagAttributeModifier(
+		nodeImg.add(new AttributeModifier(
 				"src", true, new Model()
 		{
 			public Object getObject()
@@ -236,7 +236,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 
 	/**
 	 * Returns whether the path and the selected path are equal. This method is used by the
-	 * {@link ComponentTagAttributeModifier}that is used for setting the CSS class for the
+	 * {@link AttributeModifier}that is used for setting the CSS class for the
 	 * selected row.
 	 * @param path the path
 	 * @param selectedPath the selected path
@@ -360,7 +360,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 			nodeContainer.add(selectLink);
 			listItem.add(nodeContainer);
 
-			listItem.add(new ComponentTagAttributeModifier("class", true,
+			listItem.add(new AttributeModifier("class", true,
 					new SelectedPathReplacementModel(node)));
 		}
 	}

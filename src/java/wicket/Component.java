@@ -27,7 +27,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
@@ -266,7 +265,7 @@ public abstract class Component implements Serializable
 	 *            The attribute modifier to be added
 	 * @return this (to allow method call chaining)
 	 */
-	public final Component add(final ComponentTagAttributeModifier modifier)
+	public final Component add(final AttributeModifier modifier)
 	{
 		if (attributeModifiers == null)
 		{
@@ -1095,7 +1094,7 @@ public abstract class Component implements Serializable
 			tag = tag.mutable();
 			for (Iterator it = attributeModifiers.iterator(); it.hasNext();)
 			{
-				((ComponentTagAttributeModifier)it.next()).replaceAttibuteValue(tag);
+				((AttributeModifier)it.next()).replaceAttibuteValue(tag);
 			}
 		}
 
@@ -1259,7 +1258,7 @@ public abstract class Component implements Serializable
 					for (Iterator iterator = component.attributeModifiers.iterator(); iterator
 							.hasNext();)
 					{
-						((ComponentTagAttributeModifier)iterator.next()).detachModel();
+						((AttributeModifier)iterator.next()).detachModel();
 					}
 				}
 				return CONTINUE_TRAVERSAL;

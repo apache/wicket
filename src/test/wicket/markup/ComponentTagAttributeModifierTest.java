@@ -20,11 +20,8 @@ package wicket.markup;
 
 import java.io.Serializable;
 
-import wicket.markup.ComponentTag;
-import wicket.markup.ComponentTagAttributeModifier;
-import wicket.markup.parser.XmlTag;
+import wicket.AttributeModifier;
 import wicket.model.Model;
-import wicket.util.value.ValueMap;
 import junit.framework.TestCase;
 import junit.framework.Assert;
 
@@ -49,7 +46,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 	 */
 	public void testSerializable()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				new Model("model"));
 		Assert.assertTrue(modifier instanceof Serializable);
 	}
@@ -61,7 +58,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 	{
 		try
 		{
-			new ComponentTagAttributeModifier(null, new Model("model"));
+			new AttributeModifier(null, new Model("model"));
 			Assert.fail("IllegalArgumentException should be thrown on null attribute name");
 		}
 		catch (IllegalArgumentException e)
@@ -71,7 +68,7 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 		try
 		{
-			new ComponentTagAttributeModifier("test", null);
+			new AttributeModifier("test", null);
 			Assert.fail("IllegalArgumentException should be thrown on null replace model");
 		}
 		catch (IllegalArgumentException e)
@@ -80,12 +77,14 @@ public class ComponentTagAttributeModifierTest extends TestCase
 		}
 	}
 
+    // TODO We need to either rewrite these tests so that they test the public API (the commented-out methods below use methods that are now package private) or we need to move these tests into the wicket package (which i am loathe to do) - JWL
+    
 	/**
 	 *
-	 */
+	 *
 	public void testConstructorNoPattern()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				new Model("model"));
 		Assert.assertEquals("Attribute shoud be set correctly", "test", modifier.getAttribute());
 		Assert.assertNull("Pattern should not be set", modifier.getPattern());
@@ -97,10 +96,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testConstructorWithPattern()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				".*[0-9]", new Model("model"));
 		Assert.assertEquals("Attribute shoud be set correctly", "test", modifier.getAttribute());
 		Assert.assertEquals("Pattern should be set correctly", ".*[0-9]", modifier.getPattern());
@@ -112,10 +111,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testConstructorNoPatternAndAddAttribute()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test", true,
+		AttributeModifier modifier = new AttributeModifier("test", true,
 				new Model("model"));
 		Assert.assertEquals("Attribute shoud be set correctly", "test", modifier.getAttribute());
 		Assert.assertNull("Pattern should not be set", modifier.getPattern());
@@ -126,10 +125,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testConstructorWithPatternAndAddAttribute()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				".*[0-9]", true, new Model("model"));
 		Assert.assertEquals("Attribute shoud be set correctly", "test", modifier.getAttribute());
 		Assert.assertEquals("Pattern should be set correctly", ".*[0-9]", modifier.getPattern());
@@ -140,10 +139,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testSetAndGetEnabled()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test", true,
+		AttributeModifier modifier = new AttributeModifier("test", true,
 				new Model("model"));
 		Assert.assertTrue("Should be enabled by default", modifier.isEnabled());
 		modifier.setEnabled(false);
@@ -152,10 +151,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testModifyAttributeSuccessfully()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				new Model("model"));
 		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
@@ -168,10 +167,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testModifyAttributeSuccessfullyMatchingPattern()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				"old[A-Z].*", new Model("model"));
 		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
@@ -185,10 +184,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testModifyAttributeUnsuccessfullyMatchingPattern()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				"old[0-9].*", new Model("model"));
 		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
@@ -202,10 +201,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testModifyAttributeUnknownAttribute()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				new Model("model"));
 		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
@@ -219,10 +218,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testModifyAttributeAddMissingAttribute()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test", true,
+		AttributeModifier modifier = new AttributeModifier("test", true,
 				new Model("model"));
 		ComponentTag tag = new ComponentTag(new XmlTag());
 		ValueMap attributes = tag.getAttributes();
@@ -236,10 +235,10 @@ public class ComponentTagAttributeModifierTest extends TestCase
 
 	/**
 	 *
-	 */
+	 *
 	public void testDisabledModification()
 	{
-		ComponentTagAttributeModifier modifier = new ComponentTagAttributeModifier("test",
+		AttributeModifier modifier = new AttributeModifier("test",
 				new Model("model"));
 		modifier.setEnabled(false);
 		ComponentTag tag = new ComponentTag(new XmlTag());
@@ -250,5 +249,5 @@ public class ComponentTagAttributeModifierTest extends TestCase
 		Assert.assertEquals("Tag attribute should not have been modified", "oldValue", attributes
 				.getString("test"));
 	}
-
+    */
 }

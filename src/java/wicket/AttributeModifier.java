@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentTagAttributeModifier.java,v 1.11 2005/01/18 23:44:32
+ * $Id: AttributeModifier.java,v 1.11 2005/01/18 23:44:32
  * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==================================================================== Licensed
@@ -15,10 +15,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup;
+package wicket;
 
 import java.io.Serializable;
 
+import wicket.markup.ComponentTag;
 import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
@@ -44,13 +45,13 @@ import wicket.util.value.ValueMap;
  * </p>
  * <p>
  * Instances of this class should be added to components via the
- * {@link wicket.Component#add(ComponentTagAttributeModifier)}method after the
+ * {@link wicket.Component#add(AttributeModifier)}method after the
  * componet has been constucted.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class ComponentTagAttributeModifier implements Serializable
+public class AttributeModifier implements Serializable
 {
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private boolean addAttributeIfNotPresent;
@@ -79,7 +80,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public ComponentTagAttributeModifier(final String attribute,
+	public AttributeModifier(final String attribute,
 			final boolean addAttributeIfNotPresent, final IModel replaceModel)
 	{
 		this(attribute, null, addAttributeIfNotPresent, replaceModel);
@@ -94,7 +95,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public ComponentTagAttributeModifier(final String attribute, final IModel replaceModel)
+	public AttributeModifier(final String attribute, final IModel replaceModel)
 	{
 		this(attribute, null, false, replaceModel);
 	}
@@ -115,7 +116,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public ComponentTagAttributeModifier(final String attribute, final String pattern,
+	public AttributeModifier(final String attribute, final String pattern,
 			final boolean addAttributeIfNotPresent, final IModel replaceModel)
 	{
 		if (attribute == null)
@@ -147,10 +148,43 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public ComponentTagAttributeModifier(final String attribute, final String pattern,
+	public AttributeModifier(final String attribute, final String pattern,
 			final IModel replaceModel)
 	{
 		this(attribute, pattern, false, replaceModel);
+	}
+
+	/**
+	 * Checks whether this attribute modifier is enabled or not.
+	 * 
+	 * @return Whether enabled or not
+	 */
+	public final boolean isEnabled()
+	{
+		return enabled;
+	}
+
+	/**
+	 * Sets whether this attribute modifier is enabled or not.
+	 * 
+	 * @param enabled
+	 *            Whether enabled or not
+	 */
+	public final void setEnabled(final boolean enabled)
+	{
+		this.enabled = enabled;
+	}
+	
+	/**
+	 * Detach the model if it was a IDetachableModel
+	 * Internal method. shouldn't be called from the outside
+	 */
+	final void detachModel()
+	{
+		if (replaceModel instanceof IDetachableModel)
+		{
+			((IDetachableModel)replaceModel).detach();
+		}
 	}
 
 	/**
@@ -158,7 +192,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * 
 	 * @return The name of the attribute
 	 */
-	public final String getAttribute()
+	final String getAttribute()
 	{
 		return attribute;
 	}
@@ -169,21 +203,9 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * 
 	 * @return The pattern
 	 */
-	public final String getPattern()
+	final String getPattern()
 	{
 		return pattern;
-	}
-	
-	/**
-	 * Detach the model if it was a IDetachableModel
-	 * Internal method. shouldn't be called from the outside
-	 */
-	public final void detachModel()
-	{
-		if (replaceModel instanceof IDetachableModel)
-		{
-			((IDetachableModel)replaceModel).detach();
-		}
 	}
 
 	/**
@@ -191,7 +213,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * 
 	 * @return The model used for replacement
 	 */
-	public final IModel getReplaceModel()
+	final IModel getReplaceModel()
 	{
 		if (replaceModel instanceof IDetachableModel)
 		{
@@ -206,19 +228,9 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * 
 	 * @return Whether the attribute will be added if not present or not
 	 */
-	public final boolean isAddAttributeIfNotPresent()
+	final boolean isAddAttributeIfNotPresent()
 	{
 		return addAttributeIfNotPresent;
-	}
-
-	/**
-	 * Checks whether this attribute modifier is enabled or not.
-	 * 
-	 * @return Whether enabled or not
-	 */
-	public final boolean isEnabled()
-	{
-		return enabled;
 	}
 
 	/**
@@ -229,7 +241,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * @param tag
 	 *            The tag to replace the attribute value for
 	 */
-	public void replaceAttibuteValue(final ComponentTag tag)
+	void replaceAttibuteValue(final ComponentTag tag)
 	{
 		if (enabled)
 		{
@@ -253,16 +265,5 @@ public class ComponentTagAttributeModifier implements Serializable
 				}
 			}
 		}
-	}
-
-	/**
-	 * Sets whether this attribute modifier is enabled or not.
-	 * 
-	 * @param enabled
-	 *            Whether enabled or not
-	 */
-	public final void setEnabled(final boolean enabled)
-	{
-		this.enabled = enabled;
 	}
 }
