@@ -22,7 +22,7 @@ package wicket.markup;
 
 /**
  * ComponentWicketTag extends ComponentTag and will be createtd by a
- * MarkupParser whenever it parses a <wicket ...> tag. <p>
+ * MarkupParser whenever it parses a tag with namespace 'wicket'.<p>
  * 
  * Note 1: you need to add a XHTML doctype to your markup and use
  * &lt;html xmlns:wicket&gt; to create a XHTML conformant namespace
@@ -40,7 +40,7 @@ public final class ComponentWicketTag extends ComponentTag
      */
     public static final String WICKET_TAG_NAME = "wicket";
 
-    /** Used to create anonymous component names */
+    /** Used to create unique anonymous component names */
     public static int autoIndex = 0;
     
     /**
@@ -62,11 +62,11 @@ public final class ComponentWicketTag extends ComponentTag
 
     /**
      * 
-     * @return true, if tag name equals wicket:region
+     * @return true, if &lt;wicket:remove&gt;
      */
-    public final boolean isRegionTag()
+    public final boolean isRemoveTag()
     {
-        return "region".equalsIgnoreCase(getName());
+        return "remove".equalsIgnoreCase(getName());
     }
 
     /**
@@ -86,14 +86,5 @@ public final class ComponentWicketTag extends ComponentTag
     public final String getNameAttribute()
     {
         return this.getAttributes().getString("name");
-    }
-
-    /**
-     * 
-     * @return true, if &lt;wicket:region name=remove&gt;
-     */
-    public final boolean isRemoveTag()
-    {
-        return (isRegionTag() && "remove".equalsIgnoreCase(getNameAttribute()));
     }
 }

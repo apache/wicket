@@ -252,15 +252,15 @@ public final class MarkupParserTest extends TestCase
 	    
 	    //parser.parse("<span id=\"wicket-test\"/><wicket:param name=myParam>value</wicket>");
 	    
-	    parser.parse("<wicket:marker name=body/>");
+	    parser.parse("<wicket:body/>");
 	    
-	    parser.parse("<wicket:region name=border/>");
+	    parser.parse("<wicket:border/>");
 	    
-	    parser.parse("<wicket:region name=panel/>");
+	    parser.parse("<wicket:panel/>");
 
 	    try
 	    {
-	        parser.parse("<wicket:region name=remove/>");
+	        parser.parse("<wicket:remove/>");
 	        assertTrue("Should have thrown an exception", false);
 	    }
 	    catch (MarkupException ex)
@@ -274,7 +274,7 @@ public final class MarkupParserTest extends TestCase
 
 	    try
 	    {
-	        parser.parse("<wicket:region name=remove> <wicket:region name=remove> </wicket:region> </wicket:region>");
+	        parser.parse("<wicket:remove> <wicket:remove> </wicket:remove> </wicket:remove>");
 	        assertTrue("Should have thrown an exception: remove regions must not contain wicket-components", false);
 	    }
 	    catch (MarkupException ex)
@@ -285,7 +285,7 @@ public final class MarkupParserTest extends TestCase
 
 	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
 	    
-	    parser.parse("<wicket:region name=\"panel\"><div id=\"definitionsContentBox\"><span id=\"wicket-contentPanel\"/></div></wicket:region>");
+	    parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span id=\"wicket-contentPanel\"/></div></wicket:panel>");
    	}
 }
 

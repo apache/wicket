@@ -55,8 +55,8 @@ public abstract class ExceptionTestBase extends TestCase {
      */
     public final void testEmptyConstructor() throws Exception {
         Class c = Class.forName(getExceptionClassName());
-        Constructor constructor = c.getConstructor(null);
-        Exception e = (Exception)constructor.newInstance(null);
+        Constructor constructor = c.getConstructor((Class[])null);
+        Exception e = (Exception)constructor.newInstance((Object[])null);
         Assert.assertNotNull("Exception should be created", e);
         Assert.assertNull(e.getMessage());
         Assert.assertNull(e.getCause());

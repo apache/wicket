@@ -219,8 +219,8 @@ public class ApplicationSettings
     /** Factory to create new Page objects */
     private IPageFactory pageFactory;
     
-    // If true, wicket tags (<wicket ..>) will be removed from output
-    private boolean removeWicketTagsFromOutput = false;
+    // If true, wicket tags (<wicket ..>) shall be removed from output
+    private boolean stripWicketParamTag = false;
 
     /** Pluggable markup parser */
     private String markupParserClassName = MarkupParser.class.getName();
@@ -872,9 +872,9 @@ public class ApplicationSettings
      * Gets whether to remove wicket tags from the output.
      * @return whether to remove wicket tags from the output
      */
-    public final boolean getRemoveWicketTagsFromOutput()
+    public final boolean getStripWicketParamTag()
     {
-        return removeWicketTagsFromOutput;
+        return this.stripWicketParamTag;
     }
     
     /**
@@ -883,7 +883,7 @@ public class ApplicationSettings
      */
     public final void setRemoveWicketTagsFromOutput(boolean remove)
     {
-        this.removeWicketTagsFromOutput = remove;
+        this.stripWicketParamTag = remove;
     }
     
     /**

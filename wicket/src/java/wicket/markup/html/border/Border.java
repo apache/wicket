@@ -126,7 +126,7 @@ public abstract class Border extends HtmlContainer
 
         // Render the associated markup
         renderAssociatedMarkup(cycle, "border",
-                "Markup for a border component must begin a component named '[border]'");
+                "Markup for a border component must begin a tag like '<wicket:border>'");
     }
 
     /**
@@ -154,8 +154,7 @@ public abstract class Border extends HtmlContainer
 	{
 		// If it's a [body] tag
 		if (!tag.getComponentName().equals("[body]") &&
-		        !(markupStream.atOpenCloseTag("region") 
-		                && "body".equalsIgnoreCase(((ComponentWicketTag)tag).getNameAttribute())))
+		        !(markupStream.atOpenCloseTag("body") && (tag instanceof ComponentWicketTag)))
 		{
 		    return false;
 		}
