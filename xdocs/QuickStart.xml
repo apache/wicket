@@ -13,9 +13,10 @@
 				<a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">Wicket
 				Examples</a>. You can choose to
 				<ul>
-					<li><a href="QuickStartBinary.html">install and deploy the 
-						binary distribition</a>, or</li>
-					<li><a href="QuickStartSource.html">use the source distribution</a> in your IDE.</li>
+					<li>See them in <a href="http://www.wicket-library.com/wicket-examples">live action</a> without having to do anything</li>
+					<li>Install and deploy the 
+						<a href="QuickStartBinary.html">binary distribition</a>, or</li>
+					<li>Use the <a href="QuickStartSource.html">source distribution</a> in your IDE.</li>
 				</ul>
 			</p>
 		</section>

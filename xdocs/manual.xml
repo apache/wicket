@@ -25,6 +25,12 @@
 					.
 				</li>
 				<li>
+					<a href="/wiki/doku.php?id=models">Working with Wicket Models</a>
+				</li>
+				<li>
+					<a href="/wiki/doku.php?id=lifecycle">The Lifecycle of a Wicket Application</a>
+				</li>
+				<li>
 					<a href="/wiki/doku.php?id=newuserguide">The new User's Guide</a>
 					Please consult the
 					<a href="/wiki/doku.php?id=newuserguide">Wiki</a>

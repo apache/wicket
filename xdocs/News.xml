@@ -11,6 +11,36 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="April 3, 2005 - Live Examples">
+				<p>
+					Juergen Donnerstag has created a
+					<a href="http://www.wicket-library.com/wicket-examples">live examples</a>
+					website for everyone to see what can be done with Wicket without having to
+					deploy the examples yourself!
+				</p>
+				<p>
+					The
+					<a href="http://www.wicket-library.com/wicket-examples">live examples</a>
+					are hosted on the
+					<a href="http://www.wicket-library.com/">Wicket Library</a>
+					, which will be
+					<strong>the</strong>
+					marketplace for (third party) Wicket components.
+				</p>
+			</subsection>
+			<subsection name="March 30, 2005 - Two articles on the wiki">
+				<p>Jonathan Locke has written two articles on using Wicket:</p>
+				<ul>
+					<li>
+						<a href="/wiki/doku.php?id=models">Working with Wicket Models</a>
+					</li>
+					<li>
+						<a href="/wiki/doku.php?id=lifecycle">
+							The Lifecycle of a Wicket Application
+						</a>
+					</li>
+				</ul>
+			</subsection>
 			<subsection name="March 19, 2005 - A new Wicket project is born: Wicket Stuff">
 				<p>
 					We have registered a
@@ -28,25 +58,14 @@
 				<p>The initial list of components hosted there is:</p>
 				<ul>
 					<li>
-						<a href="http://jakarta.apache.org/velocity">Velocity</a>
-						Panel
+						<a href="http://wicket-stuff.sourceforge.net/wicket-velocity-panel">
+							Velocity Panel
+						</a>
 					</li>
-					<li>
-						<a href="http://www.hibernate.org">Hibernate</a>
-						components and helpers
-					</li>
-					<li>
-						<a href="http://groovy.codehaus.org">Groovy</a>
-						integration
-					</li>
-					<li>
-						<a href="http://www.springframework.org">Spring Framework</a>
-						integration
-					</li>
-					<li>
-						<a href="http://www.peterbailey.net/fValidate/">fValidate</a>
-						integration
-					</li>
+					<li>Hibernate components and helpers</li>
+					<li>Groovy integration</li>
+					<li>Spring Framework integration</li>
+					<li>fValidate integration</li>
 				</ul>
 				<p>Releases of these projects will come available as Wicket 1.0 RC1 ships.</p>
 			</subsection>
