@@ -34,7 +34,7 @@ import wicket.markup.parser.XmlTag;
 
 /**
  * This is a markup inline filter. It identifies HTML specific issues which
- * make HTML not 100% xml compliant. E.g. tags like <p> often are missing
+ * make HTML not 100% xml compliant. E.g. tags like &lt;p&gt; often are missing
  * the corresponding close tag.
  * 
  * @author Juergen Donnerstag

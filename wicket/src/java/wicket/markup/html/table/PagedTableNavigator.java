@@ -24,13 +24,14 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 
 /**
- * A Wicket component, including markup, to draw and maintain a complete
+ * A Wicket panel component to draw and maintain a complete
  * page navigator, meant to be easily added to any table.
  *  
  * @author Juergen Donnerstag
  */
 public class PagedTableNavigator extends Panel 
-{ // TODO finalize javadoc
+{
+    /** */
     private final TableNavigation tableNavigation;
     
     /**
