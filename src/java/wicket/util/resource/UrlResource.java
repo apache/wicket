@@ -59,28 +59,36 @@ public final class UrlResource extends AbstractResource
 	 */
 	public UrlResource(final URL url)
 	{
-		try
-		{
-			// Get file from URL (see
-			// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4701321)
-			final File file = new File(new URI(url.toExternalForm()));
+		// Save URL
+		this.url = url;
 
-			// If file exists
-			if (file != null && file.exists())
+		// Get path from URL (for an explanation, see
+		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4701321)
+		final String path = url.toExternalForm();
+		if (path.startsWith("file:"))
+		{
+			try
 			{
-				// save that file for future modification time queries
-				this.file = file;
-			}
+				// Convert to file
+				final File file = new File(new URI(path));
 
-			// Save URL
-			this.url = url;
-		}
-		catch (URISyntaxException e)
-		{
-			final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(
-					"Invalid URL parameter " + url);
-			illegalArgumentException.initCause(e);
-			throw illegalArgumentException;
+				// If file exists
+				if (file != null && file.exists())
+				{
+					// save that file for future modification time queries
+					this.file = file;
+				}
+			}
+			catch (URISyntaxException e)
+			{
+				// It should be impossible to get here or the original URL
+				// couldn't have been constructed. But we re-throw with details
+				// anyway.
+				final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(
+						"Invalid URL parameter " + url);
+				illegalArgumentException.initCause(e);
+				throw illegalArgumentException;
+			}
 		}
 	}
 
