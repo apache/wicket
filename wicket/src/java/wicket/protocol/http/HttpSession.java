@@ -23,14 +23,14 @@ import wicket.Application;
 import wicket.Session;
 
 /**
- * Session subclass for HTTP protocol.
+ * Session subclass for HTTP protocol which holds an underlying HttpSession
+ * object and provides access to that object via getHttpServletSession. A method
+ * which abstracts session invalidation is also provided via invalidate().
  * 
  * @author Jonathan Locke
  */
 public class HttpSession extends Session
-{ 
-    // TODO finalize javadoc
-    
+{
     /** Serial Version ID */
     private static final long serialVersionUID = -7738551549126761943L;
 

@@ -30,14 +30,17 @@ import wicket.WicketRuntimeException;
 import wicket.Response;
 
 /**
- * Implements responses over HTTP.
+ * Implements responses over the HTTP protocol by holding an underlying
+ * HttpServletResponse object and providing convenience methods for using that
+ * object. Convenience methods include methods which: add a cookie, close the
+ * stream, encode a URL, redirect a request to another resource, determine if a
+ * redirect has been issued, set the content type, set the locale and, most
+ * importantly, write a String to the response output.
  * 
  * @author Jonathan Locke
  */
 public class HttpResponse extends Response
-{ 
-    // TODO finalize javadoc
-    
+{
     /** Log. */
     private static final Log log = LogFactory.getLog(HttpResponse.class);
 
@@ -83,8 +86,8 @@ public class HttpResponse extends Response
      */
     public void close()
     {
-        // Servlet container will do!!
-        // out.close();
+        // NOTE: Servlet container will close the response output stream
+        // automatically, so we do nothing here.
     }
 
     /**
@@ -190,13 +193,11 @@ public class HttpResponse extends Response
      * 
      * @param encoding
      *            e.b. ISO-8859-1 or UTF-8
-     *
-     * public final void setCharacterEncoding(final String encoding) 
-     * {
-     *     httpServletResponse.setCharacterEncoding(encoding); 
-     * }
+     * 
+     * public final void setCharacterEncoding(final String encoding) {
+     * httpServletResponse.setCharacterEncoding(encoding); }
      */
-    
+
     /**
      * Writes string to response output.
      * 
