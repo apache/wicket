@@ -69,7 +69,7 @@ public interface IPageLink extends Serializable
 	 * 
 	 * public boolean linksTo(final Page page)
 	 * {
-	 * 	return page.getClass() == pageLink.getPageIdentity();
+	 * 	   return page.getClass() == pageLink.getPageIdentity();
 	 * }
 	 * </pre>
 	 * 
