@@ -42,6 +42,7 @@ public class MenuApplication extends WebApplication
         ApplicationSettings settings = getSettings();
 		Duration pollFreq = Duration.ONE_SECOND;
 		settings.setResourcePollFrequency(pollFreq);
+		settings.setStripWicketTags(true);
     }
 
     /**
@@ -60,9 +61,21 @@ public class MenuApplication extends WebApplication
 		root.add(a1);
 		DefaultMutableTreeNode a2 = new DefaultMutableTreeNode(
 				new MenuItem("Templates", Page2.class, null));
+		DefaultMutableTreeNode a2a = new DefaultMutableTreeNode(
+				new MenuItem("Ognl", Page2a.class, null));
+		a2.add(a2a);
+		DefaultMutableTreeNode a2b = new DefaultMutableTreeNode(
+				new MenuItem("Velocity", Page2b.class, null));
+		a2.add(a2b);
 		root.add(a2);
 		DefaultMutableTreeNode a3 = new DefaultMutableTreeNode(
 				new MenuItem("Users", Page3.class, null));
+		DefaultMutableTreeNode a3a = new DefaultMutableTreeNode(
+				new MenuItem("Truus", Page2a.class, null));
+		a3.add(a3a);
+		DefaultMutableTreeNode a3b = new DefaultMutableTreeNode(
+				new MenuItem("Mien", Page2b.class, null));
+		a3.add(a3b);
 		root.add(a3);
 		DefaultMutableTreeNode a4 = new DefaultMutableTreeNode(
 				new MenuItem("Preferences", Page4.class, null));
