@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html;
+package wicket.markup.html.link;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,8 +29,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.IComponentResolver;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.link.BookmarkablePageLink;
-import wicket.markup.html.link.ExternalLink;
 import wicket.util.value.ValueMap;
 
 /**

@@ -22,8 +22,8 @@ import java.util.List;
 
 import wicket.markup.MarkupParser;
 import wicket.markup.WicketTagComponentResolver;
-import wicket.markup.html.AutolinkComponentResolver;
 import wicket.markup.html.form.encryption.ICrypt;
+import wicket.markup.html.link.AutolinkComponentResolver;
 import wicket.markup.parser.XmlPullParser;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
