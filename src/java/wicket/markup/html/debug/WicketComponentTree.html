@@ -1,27 +1,30 @@
 <html xmlns:wicket>
+<style type="text/css">
+body {margin-left : 2em;font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';font-size: 9pt;line-height: 1.8em;}
+h1,h2,h3,h4,h5,h6,h7,h8 {color: #E9601A;font-size : -1;}
+pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
+</style>
 <body>
   <wicket:panel>
-    Component tree for <span wicket:id="page"/>:<p/>
-    <ul>
-	    <table>
-	      <thead>
-	        <tr>
-	          <th align="left">#</th>
-	          <th align="left">Path</th>
-	          <th align="left">Type</th>
-	          <th align="left">Model Object</th>
-	        </tr>
-		    </thead>
-	      <tbody>
-	        <tr wicket:id="components">
-            <td valign="top" align="left"><span wicket:id="row">99</span></td>
-            <td valign="top" align="left"><span wicket:id="path">0.test.murx</span></td>
-            <td valign="top" align="left"><span wicket:id="type">PropertyModel</span></td>
-	          <td valign="top" align="left"><span wicket:id="model">1234</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </ul>
+    <p>Component tree for <span wicket:id="page" />:</p>
+    <table>
+      <thead>
+        <tr>
+          <th align="left">#</th>
+          <th align="left">Path</th>
+          <th align="left">Type</th>
+          <th align="left">Model Object</th>
+        </tr>
+	  </thead>
+      <tbody>
+		<tr wicket:id="components">
+		  <td valign="top" align="left"><span wicket:id="row">99</span></td>
+		  <td valign="top" align="left"><span wicket:id="path">0.test.murx</span></td>
+		  <td valign="top" align="left"><span wicket:id="type">PropertyModel</span></td>
+		  <td valign="top" align="left"><span wicket:id="model">1234</span></td>
+		</tr>
+      </tbody>
+	</table>
   </wicket:panel>
 </body>
 </html>
