@@ -63,6 +63,7 @@ public class HtmlHandler implements IMarkupFilter
 		doesNotRequireCloseTag.put("br", Boolean.TRUE);
 		doesNotRequireCloseTag.put("img", Boolean.TRUE);
 		doesNotRequireCloseTag.put("input", Boolean.TRUE);
+		doesNotRequireCloseTag.put("hr", Boolean.TRUE);
 	}
 
 	/**
