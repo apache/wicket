@@ -836,16 +836,18 @@ public abstract class Component implements Serializable
 	 */
 	public final Component setModel(final IModel model)
 	{
-		final IModel currentModel = getModel(); // see if there is a current
-		// model
+        // See if there is a current model
+		final IModel currentModel = getModel();
+
+        // Detach if IDetachableModel
 		if (currentModel != null && currentModel instanceof IDetachableModel)
 		{
-			// detach in case it is a IDetachableModel
 			((IDetachableModel)currentModel).detach();
 		}
+        
+        // Set self in case the model is component aware
 		if (model instanceof IComponentAware)
 		{
-			// set self in case the model is component aware
 			((IComponentAware)model).setComponent(this);
 		}
 		this.model = (IModel)model;

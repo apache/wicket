@@ -6,6 +6,103 @@
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
   </properties>
   <body>
+    <release version="0.9.18-beta (not yet released)" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="">
+      	Implemented getModelLock() method on Component so that client code can 
+      	synchronize updates to the model for a component.  Updated core code
+      	so that it synchronizes on the returned lock object (which is currently
+      	the model's object as returned by IModel.getObject()) during rendering
+      	and form model updating.  This lack of synchronization was a bug in the
+      	guestbook application which never showed symptoms simply because it had 
+      	never been used by many users at once.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+      	Reworked examples navigation.  Worked on code for GuestBook and GuestBook2.
+      	Provided base classes for future examples to extend (WicketExampleApplication,
+      	WicketExamplePage).
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+      	Reworked feedback messages code significantly including the FeedbackMessages 
+      	container class.  Removed all the thread-local code and put feedback messages into
+      	Page instead.  Added info(), debug(), warning(), error() and fatal() convenience 
+      	methods to Component which report messages via the Page's FeedbackMessages container
+      	object.      	
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+      	Wrote a new persistence abstraction that is more abstract and free of Cookieness
+      	(IValuePersister).  Implemented this interface using browser cookies in the new
+      	class CookieValuePersister.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+      	Got rid of ValidationErrorDecorator and other code by doing a major refactor
+      	of the form validation package.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+      	Split up ApplicationSettings and ApplicationPages and moved many of the non-settings
+      	getters to Application.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="">
+      	Fixed guestbook test and other problems with example tests.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="">
+      	Made examples work from http://localhost:8080 via redirecting.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1113613">
+      	Created FAQ page and added an explanation of why so many classes and methods are final
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1091897">
+      	Added comments and refactored renderBody to the more illustrative name 
+      	renderComponentTagBody.  Also changed names throughout the project to 
+      	match this pattern.  Simplified renderComponentTag() by folding in
+		stripComponentName() logic and removed the overload of that method which 
+		advances the markup stream in addition to rendering the tag.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1092016">
+		Closed request to make RawMarkup class public since we do not want to
+		expose this implementation detail.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1091288">
+		Changed parser to allow single quotes as well as double quotes around 
+		attribute values in XML tags.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1106563">
+		Fixed bug where popups expire due to removeNewerThan call in HttpRequestCycle.
+		Also removed the method itself since it is not used for any other purpose.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1100078">
+		Closed RFE to allow custom object properties on ApplicationSettings since
+		ApplicationSettings is really only for Wicket configuration.
+
+		To store "global" objects for your application, just put
+		regular old Java properties on your Application subclass. 
+		If I'm somehow missing your point, please reopen the bug and
+		explain why subclassing Application won't provide the
+		functionality you need.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1032465">
+		Closed old RFE for license aggregation since we already have the licenses
+		available in the licenses folder in the core.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+		Major reworking of converter code.  Folded localized converters into a 
+		single set of converters, removing casts to ILocalizable in the process.  
+		Implemented converters for all Java primitive types plus Date, Timestamp 
+		and String.  Added javadoc documentation for converter API.  Refactored 
+		Component, TypeValidator and Session code to use the new converter code 
+		and to enable customization through overrides of getConverter(). Wrote
+		new tests for converters.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+		Refactored ComponentTagAttributeModifier and changed name to AttributeModifier.
+		Made more of this class private and removed inappropriate tests of private API.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+        Renamed IIdList -> IDetachableChoiceList and IdListAdaptor -> DetachableChoiceList 
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
+        Renamed IPageLink.getPageClass() -> IPageLink.getPageIdentity()
+      </action>
+    </release>
     <release version="0.9.17-beta" date="2005-01-26" description="Major refactorings">
       <action type="update" dev="Martijn Dashorst" issue="1107845">Moved wicket-examples-hangman into the wicket-examples project.</action>
       <action type="fix" dev="Martijn Dashorst" issue="1107802">Hangman gives NPE at startup</action>

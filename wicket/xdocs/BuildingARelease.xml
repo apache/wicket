@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>Building a release</title>
+		<title>Building a Release</title>
 	</properties>
 	<meta name="keyword" content="wicket, web, j2ee, java" />
 	<body>
-		<section name="Building a release for Wicket">
+		<section name="Building a Release for Wicket">
 			<p>
 				<em>NB. This is a work in progress, the document is not finished yet!</em>
 			</p>
@@ -33,7 +33,7 @@
 				</p>
 			</subsection>
 		</section>
-		<section name="Preparing the release">
+		<section name="Preparing the Release">
 			<p>
 				This section describes the preparation step to perform a release of the Wicket
 				project.
@@ -50,7 +50,7 @@
 				<li>run the unit tests and generate the website locally using maven</li>
 				<li>check the website</li>
 			</ul>
-			<subsection name="Checkout latest and greatest">
+			<subsection name="Checkout Latest and Greatest">
 				<p>
 					A release normally consists of just one project. However, we use the examples
 					projects as (integration) testcases for Wicket. This makes sense, as the
@@ -76,7 +76,7 @@
 					or toss them.
 				</p>
 			</subsection>
-			<subsection name="Check issue trackers">
+			<subsection name="Check Issue Trackers">
 				<p>
 					It is the best when no
 					<a href="">bugs</a>
@@ -100,7 +100,7 @@
 				</p>
 			</subsection>
 		</section>
-		<section name="Building the release">
+		<section name="Building the Release">
 			<p>
 				This section describes the building stage to perform a release of the Wicket
 				project.
@@ -114,13 +114,13 @@
 				<li>prepare the release using maven</li>
 				<li>create the distributable using maven</li>
 			</ul>
-			<subsection name="Clean workspace">
+			<subsection name="Clean Workspace">
 				<p>
 					Make sure all changes in your workspace are commited, or use a new, clean
 					workspace to perform the release.
 				</p>
 			</subsection>
-			<subsection name="Prepare the release using maven">
+			<subsection name="Prepare the Release Using Maven">
 				<h5>Running the tests</h5>
 				<p>
 					First check whether *all* unit tests work. It's no use to perform a release
@@ -148,7 +148,7 @@ Finished at: Sun Feb 06 16:48:29 CET 2005]]></source>
 					Just look for the test that failed on the output of the <code>maven test</code>
 					call.
 				</p>
-				<h5>Tagging the release</h5>
+				<h5>Tagging the Release</h5>
 				<p>
 					It is necessary to tag the release so we can 'go back in time' when something is
 					wrong with code in a released version. This is normally done using a <em>CVS</em>
@@ -205,7 +205,7 @@ Finished at: Sun Feb 06 16:48:29 CET 2005]]></source>
 				</p>
 			</subsection>
 		</section>
-		<section name="Distributing the release">
+		<section name="Distributing the Release">
 			<p>
 				This section describes the distribution step to perform a release of the Wicket
 				project. Wicket is downloadable from SourceForge, but also available from the Maven
@@ -224,7 +224,7 @@ Finished at: Sun Feb 06 16:48:29 CET 2005]]></source>
 				<li>create an upload request in JIRA for the maven maintainers</li>
 			</ul>
 		</section>
-		<section name="Publicizing the release">
+		<section name="Publicizing the Release">
 			<p>
 				This section describes the publication step after a release of the Wicket project is
 				built. No project can survive without users, and the users need to be informed of

@@ -5,7 +5,7 @@
     </properties>
     <meta name="keyword" content="wicket, web, j2ee, java"/>
     <body>
-        <section name="User's guide">
+        <section name="User's Guide">
             <p>This is not the actual user's guide, but a place holder for the 
                 integration of Jonathan Locke's (legacy) <a class="pdf" 
                 href="Wicket%20User's%20Guide.pdf">document</a>.</p>
