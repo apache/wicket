@@ -19,6 +19,7 @@
 
 package com.voicetribe.util.time.test;
 
+import java.text.NumberFormat;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -56,7 +57,8 @@ public final class DurationTest extends TestCase
         Assert.assertEquals(0, Duration.milliseconds(3000).compareTo(Duration.seconds(3)));
         Assert.assertEquals(Duration.minutes(10), Duration.minutes(4).add(Duration.minutes(6)));
         Assert.assertEquals(Duration.ONE_HOUR, Duration.minutes(90).subtract(Duration.minutes(30)));
-        Assert.assertEquals("1.5 minutes", Duration.seconds(90).toString());
+        String value = NumberFormat.getNumberInstance().format(1.5);
+        Assert.assertEquals(value + " minutes", Duration.seconds(90).toString());
         Assert.assertEquals("12 hours", Duration.days(0.5).toString());
     }
 
