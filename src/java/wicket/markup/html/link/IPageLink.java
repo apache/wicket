@@ -25,16 +25,16 @@ import wicket.Page;
  * Interface that is used to implement delayed page linking. The getPage()
  * method returns an instance of Page when a link is actually clicked (thus
  * avoiding the need to create a destination Page object for every link on a
- * given Page in advance). The getDestinationIdentity() method returns the
- * subclass of Page that getPage() will return if and when it is called.
+ * given Page in advance). The getIdentity() method returns the subclass of Page
+ * that getPage() will return if and when it is called.
  * <p>
  * This way of arranging things is useful in determining whether a link links to
  * a given page, which is in turn useful for deciding how to display the link
  * (because links in a navigation which link to a page itself are not useful and
  * generally should instead indicate where the user is in the navigation).
  * <p>
- * To understand how getDestinationIdentity() is used in this way, take a look
- * at the Link.linksTo() method and its override in PageLink.
+ * To understand how getIdentity() is used in this way, take a look at the
+ * Link.linksTo() method and its override in PageLink.
  * 
  * @see Link#linksTo(Page)
  * @see PageLink#linksTo(Page)
@@ -60,19 +60,20 @@ public interface IPageLink extends Serializable
 	 * indicate that they are 'disabled' and don't go anywhere. Links can be
 	 * manually disabled by calling Link.setDisabled(). Links which have
 	 * setAutoEnable(true) will automatically enable or disable themselves
-	 * depending on whether or not Link.linksTo() returns true.  The default 
-     * implementation of PageLink.linksTo() therefore looks like this:
-     * <pre>
-     *     private final IPageLink pageLink;
-     *
-     *     public boolean linksTo(final Page page)
-     *     {
-     *         return page.getClass() == pageLink.getDestinationIdentity();
-     *     }
-     * </pre>
+	 * depending on whether or not Link.linksTo() returns true. The default
+	 * implementation of PageLink.linksTo() therefore looks like this:
+	 * 
+	 * <pre>
+	 * private final IPageLink pageLink;
+	 * 
+	 * public boolean linksTo(final Page page)
+	 * {
+	 * 	return page.getClass() == pageLink.getDestinationIdentity();
+	 * }
+	 * </pre>
 	 * 
 	 * @return The class of page linked to, as a form of identity
-     * @see Link#linksTo(Page)
+	 * @see Link#linksTo(Page)
 	 */
-	public Class getDestinationIdentity();
+	public Class getIdentity();
 }

@@ -50,7 +50,7 @@ public class StaleDataErrorPage extends HtmlPage
 				return page;
 			}
 
-			public Class getDestinationIdentity()
+			public Class getIdentity()
 			{
 				return page.getClass();
 			}

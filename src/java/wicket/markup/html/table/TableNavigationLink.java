@@ -60,7 +60,7 @@ public final class TableNavigationLink extends PageLink
                 return table.getPage();
             }
 
-            public Class getDestinationIdentity()
+            public Class getIdentity()
             {
                 return table.getPage().getClass();
             }
