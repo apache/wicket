@@ -9,7 +9,9 @@
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">
-      	Added form buttons support.
+      	Added Button class and Form buttons support.  When a class has one button, it
+      	works pretty much as before.  But when it has two or more buttons, the onSubmit()
+      	handler is called on the button which submitted the Form.
       </action>
       <action type="add" dev="Jonathan Locke" issue="">
 		Added getSharing() method to Component with values UNSHARED, APPLICATION_SHARED 
