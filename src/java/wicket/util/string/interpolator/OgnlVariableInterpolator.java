@@ -83,7 +83,8 @@ public final class OgnlVariableInterpolator extends VariableInterpolator
     {
         try
         {
-            return Ognl.getValue(variableName, model).toString();
+        	Object value = Ognl.getValue(variableName, model);
+			return (value != null) ? value.toString() : null;
         }
         catch (OgnlException e)
         {
