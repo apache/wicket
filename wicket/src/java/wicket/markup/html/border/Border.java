@@ -154,7 +154,7 @@ public abstract class Border extends HtmlContainer
 	{
 		// If it's a [body] tag
 		if (!tag.getComponentName().equals("[body]") &&
-		        !(markupStream.atOpenTag("region") 
+		        !(markupStream.atOpenCloseTag("region") 
 		                && "body".equalsIgnoreCase(((ComponentWicketTag)tag).getNameAttribute())))
 		{
 		    return false;
