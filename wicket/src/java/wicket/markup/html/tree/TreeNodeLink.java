@@ -66,6 +66,7 @@ public class TreeNodeLink extends AbstractTreeNodeLink
 
         // Set href to link to this link's linkClicked method
         String url = getURL(cycle);
+        url = url.replaceAll("&", "&amp;");
 		tag.put("href", url);
     }
 }

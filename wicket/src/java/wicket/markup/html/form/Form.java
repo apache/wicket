@@ -427,7 +427,9 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
         checkTag(tag, "form");
         super.handleComponentTag(cycle, tag);
         tag.put("method", "POST");
-        tag.put("action", cycle.urlFor(Form.this, IFormSubmitListener.class));
+        String url = cycle.urlFor(Form.this, IFormSubmitListener.class);
+        url = url.replaceAll("&", "&amp;");
+		tag.put("action", url);
     }
 
 	/**

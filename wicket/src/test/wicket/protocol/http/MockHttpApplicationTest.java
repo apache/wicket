@@ -119,7 +119,7 @@ public class MockHttpApplicationTest extends TestCase {
         Tag body = new Tag("body");
         html.addExpectedChild(body);
         Tag a = new Tag("a");
-        a.addExpectedAttribute("href", "/MockHttpApplication/MockHttpApplication\\?component=[0-9]*.actionLink&rendering=[0-9]*&interface=ILinkListener");
+        a.addExpectedAttribute("href", "/MockHttpApplication/MockHttpApplication\\?component=[0-9]*.actionLink&amp;rendering=[0-9]*&amp;interface=ILinkListener");
         a.addExpectedAttribute("id", "actionLink");
         body.addExpectedChild(a);
         a.addExpectedChild(new TextContent("Action link clicked "));

@@ -337,14 +337,16 @@ public abstract class Link extends AbstractLink
         else
         {
             // Set href to link to this link's linkClicked method
-            tag.put("href", getURL(cycle));
+            String url = getURL(cycle);
+            url = url.replaceAll("&", "&amp;");
+			tag.put("href", url);
         }
 
         // Add any popup script
         if (popupSpecification != null)
         {
-            final String popupScript = popupSpecification.getPopupJavaScript();
-
+            String popupScript = popupSpecification.getPopupJavaScript();
+            popupScript = popupScript.replaceAll("&", "&amp;");
             tag.put("onClick", popupScript);
         }
     }
