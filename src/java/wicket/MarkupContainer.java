@@ -677,22 +677,22 @@ public abstract class MarkupContainer extends Component
 			if (markup == null)
 			{
 				// Locate markup resource, searching up class hierarchy
-				IResourceStream markupResource = null;
+				IResourceStream markupResourceStream = null;
 				Class containerClass = getClass();
 
-				while ((markupResource == null) && (containerClass != MarkupContainer.class))
+				while ((markupResourceStream == null) && (containerClass != MarkupContainer.class))
 				{
 					// Look for markup resource for containerClass
-					markupResource = getApplication().getResourceLocator().locate(containerClass,
+					markupResourceStream = getApplication().getResourceStreamLocator().locate(containerClass,
 							getStyle(), getLocale(), getMarkupType());
 					containerClass = containerClass.getSuperclass();
 				}
 
 				// Found markup?
-				if (markupResource != null)
+				if (markupResourceStream != null)
 				{
 					// load the markup and watch for changes
-					markup = loadMarkupAndWatchForChanges(key, markupResource);
+					markup = loadMarkupAndWatchForChanges(key, markupResourceStream);
 				}
 				else
 				{

@@ -180,7 +180,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// Do the resource load
 		final Properties properties = new Properties();
-		final IResourceStream resource = component.getApplication().getResourceLocator().locate(
+		final IResourceStream resource = component.getApplication().getResourceStreamLocator().locate(
 				component.getClass(), style, locale, "properties");
 		if (resource != null)
 		{
