@@ -28,7 +28,8 @@ import java.util.StringTokenizer;
 /**
  * A typesafe, mutable list of strings supporting a variety of convenient 
  * operations as well as expected operations from List such as add(), size(),
- * remove(), iterator(), get(int index) and toArray(). 
+ * remove(), iterator(), get(int index) and toArray().  Instances of the
+ * class are not threadsafe.
  * <p>
  * StringList objects can be constructed empty or they can be created using 
  * any of several static factory methods:
@@ -53,7 +54,6 @@ import java.util.StringTokenizer;
  * methods ala Perl and a toString() method which joins the list of strings
  * with comma separators for easy viewing.
  * 
- * @note This class is not thread safe.
  * @author Jonathan Locke
  */
 public final class StringList extends AbstractStringList
