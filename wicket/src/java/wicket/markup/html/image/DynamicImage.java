@@ -1,14 +1,14 @@
 /*
- * $Id$
- * $Revision$ $Date$
- *
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
+ * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,7 @@ import java.io.InputStream;
  * be set with setImage(BufferedImage) and its extension can be specified with
  * setExtension(String). After this, the image will be cached as an input stream
  * and will render as would any other Image resource.
- *
+ * 
  * @author Jonathan Locke
  */
 public class DynamicImage extends Image
@@ -52,7 +52,7 @@ public class DynamicImage extends Image
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param name
 	 *            Component name
 	 */
@@ -63,7 +63,7 @@ public class DynamicImage extends Image
 
 	/**
 	 * Sets the extension of this dynamic image
-	 *
+	 * 
 	 * @param extension
 	 *            The extension to set.
 	 * @return This object, to enable invocation chaining
@@ -118,7 +118,10 @@ public class DynamicImage extends Image
 
 			public void close() throws IOException
 			{
-				if ( inputStream != null ) inputStream.close();
+				if (inputStream != null)
+                {
+					inputStream.close();
+                }
 			}
 
 			public String getExtension()
@@ -128,7 +131,8 @@ public class DynamicImage extends Image
 
 			public InputStream getInputStream() throws ResourceNotFoundException
 			{
-				if ( inputStream == null) {
+				if (inputStream == null)
+				{
 					inputStream = new ByteArrayInputStream(imageData);
 				}
 				return inputStream;

@@ -436,7 +436,9 @@ public abstract class RequestCycle
 			{
 				// Reset page for re-rendering after exception
 				Page currentPage = getPage();
-				if(currentPage != null) // could be null when it expired
+                                
+                // Could be null when it expired
+				if (currentPage != null) 
 				{
 					currentPage.reset();
 				}
