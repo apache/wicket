@@ -30,6 +30,7 @@ import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.encryption.ICrypt;
+import wicket.markup.html.form.encryption.NoCrypt;
 import wicket.markup.html.panel.SignInPanel;
 import wicket.protocol.http.HttpRequestCycle;
 import wicket.protocol.http.MockWebApplication;
@@ -70,9 +71,11 @@ public class CookieTest extends TestCase
         super.setUp();
         
         application = new MockWebApplication(null);
-        final ApplicationSettings settings = application.getSettings();
         application.getPages().setHomePage(MockPage.class);
         application.setupRequestAndResponse();
+
+        final ApplicationSettings settings = application.getSettings();
+        settings.setCryptClass(NoCrypt.class);
 
         this.panel = new SignInPanel("panel")
 		{
