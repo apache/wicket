@@ -3,7 +3,7 @@
     <id>wicket</id>
     <name>Wicket</name>
     <groupId>wicket</groupId>
-    <currentVersion>0.9.14-SNAPSHOT</currentVersion>
+    <currentVersion>0.9.14-ALPHA</currentVersion>
     <organization>
         <name>Wicket developers</name>
         <url>http://sourceforge.net</url>
@@ -39,6 +39,16 @@
             <id>0.9.11-alpha</id>
             <name>0.9.11-alpha</name>
             <tag/>
+        </version>
+        <version>
+            <id>0.9.13-alpha</id>
+            <name>0.9.13-alpha</name>
+            <tag>WICKET_R_0_9_13_ALPHA</tag>
+        </version>
+        <version>
+            <id>0.9.14-alpha</id>
+            <name>0.9.14-alpha</name>
+            <tag>WICKET_R_0_9_14_ALPHA</tag>
         </version>
     </versions>
     <mailingLists>
