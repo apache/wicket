@@ -35,7 +35,9 @@ import wicket.markup.parser.IMarkupFilter;
  * An application settings is used as default value, which might be modified
  * for specific regions. These regions are identified by &lt;wicket:link&gt; 
  * tags with an optional 'autolink' attribute. The default value for the 
- * attribute is true, thus enabling autolinking. <p>
+ * attribute is true, thus enabling autolinking. An open-close &lt;wicket:link/&gt
+ * tag will change the autolink status until the end of the markup document
+ * or the next &lt;wicket:link&gt; tag respectively.
  * &lt;wicket:link&gt; regions may be nested as well.
  * 
  * @author Juergen Donnerstag
