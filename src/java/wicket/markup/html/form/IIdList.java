@@ -30,6 +30,7 @@ import java.util.List;
  */
 public interface IIdList extends List, Serializable
 {
+    // TODO should not extend List interface
     /**
      * Detach from a request.
      */
