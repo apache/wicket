@@ -132,7 +132,8 @@ public final class RandomSampleUtil
     }
 
     /**
-     * returns a random date.
+     * Returns a random date.
+     * 
      * @return random date
      */
     public static Date getRandomDate()
@@ -143,8 +144,9 @@ public final class RandomSampleUtil
     }
     
     /**
+     * Returns a random truth value.
      * 
-     * @return
+     * @return Random boolean
      */
     public static boolean getRandomBoolean()
     {

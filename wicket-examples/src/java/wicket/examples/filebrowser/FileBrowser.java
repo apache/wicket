@@ -159,8 +159,8 @@ public class FileBrowser extends HtmlPage
     {
         /**
          * Construct.
-         * @param name name of component
-         * @param the types to select from
+         * @param name Name of component
+         * @param types The types to select from
          */
         public TypesDropDown(String name, List types)
         {

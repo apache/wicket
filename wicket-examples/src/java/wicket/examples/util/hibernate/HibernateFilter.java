@@ -107,7 +107,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl
      *
      * @param request
      *            http request
-     * @param wicket.response
+     * @param response
      *            http wicket.response
      * @param chain
      *            filter chain

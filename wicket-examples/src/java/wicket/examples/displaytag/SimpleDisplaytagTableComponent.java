@@ -41,14 +41,15 @@ public class SimpleDisplaytagTableComponent extends Panel
     /**
      * Constructor.
      * 
-     * @param parameters Page parameters
+     * @param componentName Name of component
+     * @param list List of data to display
      */
-    public SimpleDisplaytagTableComponent(final String componentName, final List data)
+    public SimpleDisplaytagTableComponent(final String componentName, final List list)
     {
         super(componentName);
         
         // Add table with alternating row styles
-        table = new TableWithAlternatingRowStyle("rows", data)
+        table = new TableWithAlternatingRowStyle("rows", list)
         {
             public void populateItem(final ListItem listItem)
             {
@@ -78,3 +79,5 @@ public class SimpleDisplaytagTableComponent extends Panel
         return table.setViewSize(size);
     }
 }
+
+///////////////////////////////// End of File /////////////////////////////////

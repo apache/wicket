@@ -43,7 +43,6 @@ public class CharSetUtil
 	
     /**
      * Constructor
-     * @param parameters Page parameters
      */
     public CharSetUtil()
     {
@@ -53,6 +52,7 @@ public class CharSetUtil
      * Because only servlet 2.4 supports web.xml locale-encoding-mapping-list
      * deployment descriptors, this is a workaround for 
      * servlet 2.3 
+     * @param cycle
      */
     private synchronized static final void initialize(final RequestCycle cycle)
     {
@@ -85,6 +85,8 @@ public class CharSetUtil
      * Because only servlet 2.4 supports web.xml locale-encoding-mapping-list
      * deployment descriptors, this is a workaround for 
      * servlet 2.3 
+     * @param cycle
+     * @return Char set to use for response.
      */
     public final static String configureResponse(final RequestCycle cycle)
     {

@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 public class CsvView extends BaseExportView
 {
     /**
-     * @see wicket.examples.displaytag.export.BaseExportView#BaseExportView(TableModel, boolean, boolean, boolean)
+     * @see wicket.examples.displaytag.export.BaseExportView#BaseExportView(List, boolean, boolean, boolean)
      */
     public CsvView(final List tableModel, final boolean exportFullList, final boolean includeHeader, final boolean decorateValues)
     {

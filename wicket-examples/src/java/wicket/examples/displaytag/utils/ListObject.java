@@ -93,7 +93,7 @@ public class ListObject implements Serializable
     /**
      * Checkbox example
      */
-    private boolean activ;
+    private boolean active;
 
     /**
      * Constructor for ListObject.
@@ -126,7 +126,7 @@ public class ListObject implements Serializable
 
         this.url = "http://www." + lastName + ".org/";
         
-        this.activ = RandomSampleUtil.getRandomBoolean();
+        this.active = RandomSampleUtil.getRandomBoolean();
     }
 
     /**
@@ -277,7 +277,7 @@ public class ListObject implements Serializable
             + this.url
             + "\n"
             + "Activ:         "
-            + String.valueOf(this.activ)
+            + String.valueOf(this.active)
             + "\n";
     }
 
@@ -345,19 +345,19 @@ public class ListObject implements Serializable
 
     /**
      * 
-     * @return
+     * @return True if active
      */
-    public boolean isActiv()
+    public boolean isActive()
     {
-        return activ;
+        return active;
     }
 
     /**
      * 
-     * @param activ
+     * @param active
      */
-    public void setActiv(boolean activ)
+    public void setActive(boolean active)
     {
-        this.activ = activ;
+        this.active = active;
     }
 }

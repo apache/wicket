@@ -60,6 +60,7 @@ public class DBUtil
 
     /**
      * Initialize and create the database.
+     * @param configFile
      * @throws ConfigException configuration error
      * @throws HibernateException hibernate error
      * @throws SQLException

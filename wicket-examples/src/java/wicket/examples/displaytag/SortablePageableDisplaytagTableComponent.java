@@ -50,18 +50,19 @@ public class SortablePageableDisplaytagTableComponent extends Panel
     /**
      * Constructor.
      * 
-     * @param parameters Page parameters
+     * @param componentName Name of component
+     * @param list List of data to display
      */
-    public SortablePageableDisplaytagTableComponent(final String componentName, final List data)
+    public SortablePageableDisplaytagTableComponent(final String componentName, final List list)
     {
         super(componentName);
         
         // Get an internal copy of the model data
         this.data = new ArrayList();
-        this.data.addAll(data);
+        this.data.addAll(list);
 
         // Add a table 
-        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
+        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", list, 10)
         {
             public void populateItem(final ListItem listItem)
             {
@@ -124,7 +125,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
                 int firstCell = table.getCurrentPage() * table.getRowsPerPage();
                 
                 String text = 
-                    String.valueOf(data.size()) 
+                    String.valueOf(list.size()) 
                     + " items found, displaying "
                     + String.valueOf(firstCell + 1)
                     + " to "
@@ -145,3 +146,5 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         add(new TableNavigationLink("last", table, table.getPageCount() - 1));
     }
 }
+
+///////////////////////////////// End of File /////////////////////////////////

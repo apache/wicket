@@ -58,7 +58,7 @@ public class ExamplePse extends Displaytag
             private ReportableListObject previousValue = null;
             
             /**
-             * @see wicket.examples.wicket.examples.wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle#populateCell(wicket.markup.html.table.Cell, wicket.Container)
+             * @see wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle#populateItem(ListItem)
              */
             public void populateItem(final ListItem listItem)
             {

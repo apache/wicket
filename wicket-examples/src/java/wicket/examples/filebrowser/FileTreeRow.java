@@ -40,7 +40,8 @@ public final class FileTreeRow extends Panel
     /**
      * Construct.
      * @param componentName name of the component
-     * @param node the tree node for this row
+     * @param tree
+     * @param nodeModel the tree node for this row
      */
     public FileTreeRow(String componentName, Tree tree, TreeNodeModel nodeModel)
     {

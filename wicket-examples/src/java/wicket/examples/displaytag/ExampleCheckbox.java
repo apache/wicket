@@ -57,7 +57,7 @@ public class ExampleCheckbox extends Displaytag
 
                 listItem.add(new Label("id", new Integer(value.getId())));
                 listItem.add(new Label("name", value.getName()));
-                listItem.add(new CheckBox("activ", new Boolean(value.isActiv())));
+                listItem.add(new CheckBox("activ", new Boolean(value.isActive())));
                 listItem.add(new TextField("comment", value.getStatus()));
             }
         });

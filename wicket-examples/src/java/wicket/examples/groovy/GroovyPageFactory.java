@@ -105,7 +105,7 @@ public class GroovyPageFactory extends PageFactory
      * Load a Groovy file, create a Class object and put it into the cache
      * 
      * @param classname The class name to be created by the Groovy filename
-     * @param groovyResource The Groovy resource
+     * @param resource The Groovy resource
      * @return the Class object created by the groovy resouce
      */
     private final Class loadGroovyFile(String classname, final Resource resource)
@@ -183,8 +183,8 @@ public class GroovyPageFactory extends PageFactory
      * than reload the file.
      * 
      * @param classname
-     * @param groovyResource
-     * @return
+     * @param resource
+     * @return Loaded class
      */
     private Class loadGroovyFileAndWatchForChanges(final String classname, final Resource resource)
     {

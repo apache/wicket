@@ -186,7 +186,6 @@ public abstract class BaseExportView
     /**
      * Write the rendered table.
      * @return String rendered table body
-     * @throws JspException for errors during cell value lookup
      */
     public String doExport() 
     {

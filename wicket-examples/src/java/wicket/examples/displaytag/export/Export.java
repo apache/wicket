@@ -38,8 +38,10 @@ public class Export
 
     /**
      * called when data are not displayed in a html page but should be exported.
+     * @param cycle
+     * @param exportView
+     * @param data
      * @return int EVAL_PAGE or SKIP_PAGE
-     * @throws JspException generic exception
      */
     public int doExport(final RequestCycle cycle, final BaseExportView exportView, final List data) 
     {
@@ -57,11 +59,11 @@ public class Export
     /**
      * Will write the export. The default behavior is to write directly to the wicket.response. If the ResponseOverrideFilter
      * is configured for this request, will instead write the export content to a StringBuffer in the Request object.
+     * @param cycle
      * @param mimeType mime type to set in the wicket.response
      * @param exportString String
      * @param filename name of the file to be saved. Can be null, if set the content-disposition header will be added.
      * @return int
-     * @throws JspException for errors in resetting the wicket.response or in writing to out
      */
     protected int writeExport(final RequestCycle cycle, final String mimeType, final String exportString, final String filename)
     {

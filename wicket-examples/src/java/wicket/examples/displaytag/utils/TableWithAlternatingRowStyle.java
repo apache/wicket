@@ -47,10 +47,10 @@ public abstract class TableWithAlternatingRowStyle extends ListView
     }
 
     /**
-     * Subclass Table's newCell() and return a Cell which will add/modify its
-     * class attribute and thus provide Cells with alternating row colours.
+     * Subclass Table's newCell() and return a ListItem which will add/modify its
+     * class attribute and thus provide ListItems with alternating row colours.
      * 
-     * @see wicket.markup.html.table.Table#newCell(int)
+     * See wicket.markup.html.table.Table#newItem(int)
      */
     protected ListItem newItem(final int index)
     {

@@ -74,7 +74,8 @@ public class TableGeneratorComponent extends Panel
      * 
      * @param componentName The component name; must not be null
      * @param data The tables underlying model object list
-     * @param tableComponentName The component name of the Table
+     * @param headers The table headers
+     * @param columns The table columns
      */
     public TableGeneratorComponent(final String componentName, final List data, final List headers, final List columns)
     {
@@ -130,9 +131,9 @@ public class TableGeneratorComponent extends Panel
     /**
      * To be subclassed
      * 
-     * @param cell
+     * @param listItem
      * @param header
-     * @return
+     * @return True if header was populated
      */
     protected boolean populateHeader(final ListItem listItem, final Object header)
     {
@@ -142,9 +143,9 @@ public class TableGeneratorComponent extends Panel
     /**
      * To be subclassed
      * 
-     * @param cell
+     * @param listItem
      * @param column
-     * @return
+     * @return True if column was populated
      */
     protected boolean populateColumn(final ListItem listItem, final Object column)
     {

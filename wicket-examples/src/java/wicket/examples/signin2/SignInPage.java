@@ -38,7 +38,7 @@ public abstract class SignInPage extends HtmlPage
     /**
      * 
      * Constructor
-     * @param parameters The page parameters
+     * @param signInPanel Sign in panel to use
      */
     protected SignInPage(SignInPanel signInPanel)
     {

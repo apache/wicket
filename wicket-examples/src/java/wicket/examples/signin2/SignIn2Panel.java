@@ -53,7 +53,7 @@ public abstract class SignIn2Panel extends SignInPanel
 
     /**
      * Get model object of the rememberMe checkbox
-     * @return
+     * @return True if user should be remembered in the future
      */
     public boolean getRememberMe() 
     {

@@ -115,7 +115,7 @@ public final class Book implements Serializable
     }
 
     /**
-     * @return
+     * @return The author
      */
     public final String getAuthor()
     {
@@ -123,7 +123,7 @@ public final class Book implements Serializable
     }
 
     /**
-     * @return
+     * @return The title
      */
     public final String getTitle()
     {

@@ -106,7 +106,7 @@ public class UploadPage extends HtmlPage
         }
 
         /**
-         * @see wicket.markup.html.form.wicket.examples.upload.AbstractUploadForm#finishUpload()
+         * @see wicket.markup.html.form.upload.AbstractUploadForm#finishUpload()
          */
         protected void finishUpload()
         {
@@ -130,7 +130,7 @@ public class UploadPage extends HtmlPage
         }
 
         /**
-         * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
+         * See wicket.markup.html.table.Table#populateItem(wicket.markup.html.table.ListItem)
          */
         protected void populateItem(ListItem listItem)
         {

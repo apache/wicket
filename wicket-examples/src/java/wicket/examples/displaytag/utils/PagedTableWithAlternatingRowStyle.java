@@ -49,7 +49,7 @@ public abstract class PagedTableWithAlternatingRowStyle extends Table
     /**
      * Change the style with every other row
      * 
-     * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
+     * @see wicket.markup.html.table.Table#populateItem(wicket.markup.html.table.ListItem)
      */
     protected void populateItem(final ListItem listItem)
     {
