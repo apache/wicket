@@ -31,7 +31,6 @@ import wicket.markup.html.form.Form;
  */
 public interface IFormValidationDelegate extends Serializable
 {
-   
 	/**
 	 * Validates the form and return the collected feeback messages.
 	 * 

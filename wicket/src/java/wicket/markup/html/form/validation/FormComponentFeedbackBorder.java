@@ -15,12 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form;
+package wicket.markup.html.form.validation;
 
 import wicket.FeedbackMessages;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.border.Border;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.form.FormComponent;
 
 /**
  * A border that can be placed around a form bordered to indicate when the
