@@ -32,42 +32,42 @@ import java.util.Map;
  */
 public abstract class Request
 {
-    /**
-     * @return The locale for this request
-     */
-    public abstract Locale getLocale();
+	/**
+	 * @return The locale for this request
+	 */
+	public abstract Locale getLocale();
 
-    /**
-     * Gets a given (query) parameter by name.
-     * 
-     * @param key
-     *            Parameter name
-     * @return Parameter value
-     */
-    public abstract String getParameter(final String key);
+	/**
+	 * Gets a given (query) parameter by name.
+	 * 
+	 * @param key
+	 *           Parameter name
+	 * @return Parameter value
+	 */
+	public abstract String getParameter(final String key);
 
-    /**
-     * Gets a map of (query) parameters sent with the request.
-     * 
-     * @return Map of parameters
-     */
-    public abstract Map getParameterMap();
+	/**
+	 * Gets a map of (query) parameters sent with the request.
+	 * 
+	 * @return Map of parameters
+	 */
+	public abstract Map getParameterMap();
 
-    /**
-     * Gets an array of multiple parameters by name.
-     * 
-     * @param key
-     *            Parameter name
-     * @return Parameter values
-     */
-    public abstract String[] getParameters(final String key);
+	/**
+	 * Gets an array of multiple parameters by name.
+	 * 
+	 * @param key
+	 *           Parameter name
+	 * @return Parameter values
+	 */
+	public abstract String[] getParameters(final String key);
 
-    /**
-     * Retrieves the URL of this request.
-     * 
-     * @return The full original request URL
-     */
-    public abstract String getURL();
+	/**
+	 * Retrieves the URL of this request.
+	 * 
+	 * @return The full original request URL
+	 */
+	public abstract String getURL();
 }
 
 
