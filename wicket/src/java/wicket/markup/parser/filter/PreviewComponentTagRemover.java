@@ -106,8 +106,8 @@ public class PreviewComponentTagRemover implements IMarkupFilter
             // tag, must be it's corresponding close tag.
             if (closeTag.closes(openTag))
             {
-                // Return the tag following the preview region close tag
-                return parent.nextTag();
+                openTag.setComponentName("_ignore_");
+                return openTag;
             }
             
             throw new MarkupException(

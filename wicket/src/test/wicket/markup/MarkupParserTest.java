@@ -265,9 +265,16 @@ public final class MarkupParserTest extends TestCase
 	        ; // ignore
 	    }
 
-	    parser.parse("<wicket:remove>  </wicket:remove>");
+	    Markup markup = parser.parse("<wicket:remove>  </wicket:remove>");
+	    assertEquals(0, markup.size());
 
-	    parser.parse("<wicket:remove> <span id=\"test\"/> </wicket:remove>");
+	    markup = parser.parse("<wicket:remove> <span id=\"test\"/> </wicket:remove>");
+	    assertEquals(0, markup.size());
+
+	    markup = parser.parse("<div><wicket:remove> <span id=\"test\"/> </wicket:remove></div>");
+	    assertEquals(2, markup.size());
+	    assertEquals("<div>", ((RawMarkup)markup.get(0)).toString());
+	    assertEquals("</div>", ((RawMarkup)markup.get(1)).toString());
 
 	    try
 	    {
