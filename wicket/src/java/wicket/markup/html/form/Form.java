@@ -268,6 +268,23 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 			}
 		});
 	}
+	
+	/**
+	 * @see wicket.Component#setVersioned(boolean)
+	 */
+	public void setVersioned(final boolean isVersioned)
+	{
+		super.setVersioned(isVersioned);
+		
+		// Search for FormComponents like TextField etc.
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				formComponent.setVersioned(isVersioned);
+			}
+		});		
+	}
 
 	/**
 	 * Gets the form component persistence manager; it is lazy loaded.

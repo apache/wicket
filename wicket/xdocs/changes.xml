@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="update" dev="Jonathan Locke" issue="">
+      Made FormComponents non-versioned by default.  Added override of setVersioned(boolean) to Form which sets the versioning of all its children.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1162633">
       Added setImageResource() to Image.  Changed image factory syntax from . separator to : separator for eelco.
 	  </action>
