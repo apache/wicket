@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.AttributeModifier;
+import wicket.Component;
 import wicket.FeedbackMessage;
+import wicket.IFeedback;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.AbstractModel;
@@ -36,11 +36,11 @@ import wicket.model.IModel;
  * 
  * @see wicket.FeedbackMessage
  * @see wicket.FeedbackMessages
- * @see wicket.markup.html.form.validation.IValidationFeedback
+ * @see wicket.IFeedback
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class FeedbackPanel extends Panel implements IValidationFeedback
+public final class FeedbackPanel extends Panel implements IFeedback
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3385823935971399988L;
@@ -111,12 +111,12 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	 * Sets the model for the list view of feedback messages based on the
 	 * messages set on components in a given form.
 	 * 
-	 * @see IValidationFeedback#addValidationFeedback(Form)
+	 * @see IFeedback#addFeedbackMessages(Component, boolean)
 	 */
-	public void addValidationFeedback(final Form form)
+	public void addFeedbackMessages(final Component component, final boolean recurse)
 	{
 		// Force re-rendering of the list
-		messageListView.getList().addAll(getPage().getFeedbackMessages().messages(form));
+		messageListView.getList().addAll(getPage().getFeedbackMessages().messages(component, recurse));
 		messageListView.modelChangedStructure();
 	}
 

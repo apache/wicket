@@ -222,10 +222,14 @@ public abstract class Component implements Serializable, IConverterSource
 	 * instance using the OGNL expression. This is the equivalent of:
 	 * 
 	 * <pre>
-	 *                             IModel model;
-	 *                             String expression;
-	 *                             ...
-	 *                             new MyComponent(name, new PropertyModel(model, expression));
+	 * 
+	 *  
+	 *                               IModel model;
+	 *                               String expression;
+	 *                               ...
+	 *                               new MyComponent(name, new PropertyModel(model, expression));
+	 *   
+	 *  
 	 * </pre>
 	 * 
 	 * If the object is not an instance of PropertyModel or IModel, the object
@@ -234,10 +238,14 @@ public abstract class Component implements Serializable, IConverterSource
 	 * expression. Thus, this is the equivalent of:
 	 * 
 	 * <pre>
-	 *                             Serializable model;
-	 *                             String expression;
-	 *                             ...
-	 *                             new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 * 
+	 *  
+	 *                               Serializable model;
+	 *                               String expression;
+	 *                               ...
+	 *                               new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 *   
+	 *  
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
@@ -726,6 +734,30 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * Returns true if this component is an ancestor of the given component
+	 * 
+	 * @param component
+	 *            The component to check
+	 * @return True if the given component has this component as an ancestor
+	 */
+	public boolean isAncestorOf(final Component component)
+	{
+		// Walk up containment hierarchy
+		for (MarkupContainer current = component.parent; current != null; current = current
+				.getParent())
+		{
+			// Is this an ancestor?
+			if (current == this)
+			{
+				return true;
+			}
+		}
+
+		// This component is not an ancestor of the given component
+		return false;
+	}
+
+	/**
 	 * Gets whether this component and any children are visible.
 	 * 
 	 * @return True if component and any children are visible
@@ -878,7 +910,8 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Sets the backing model object; shorthand for getModel().setObject(object).
+	 * Sets the backing model object; shorthand for
+	 * getModel().setObject(object).
 	 * 
 	 * @param object
 	 *            The object to set
@@ -1100,7 +1133,7 @@ public abstract class Component implements Serializable, IConverterSource
 	 * Called when this component is finished rendering.
 	 */
 	protected void onRendered()
-	{	
+	{
 		// Increase render count for component
 		rendering++;
 
@@ -1421,7 +1454,7 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	private final void setModel(final IModel model)
 	{
-		// Detach current model 
+		// Detach current model
 		if (this.model != null)
 		{
 			this.model.detach();

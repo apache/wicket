@@ -68,6 +68,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
+	
+	/** Any feedback display for this page */
+	private IFeedback feedback;
 
 	/** This page's identifier. */
 	private int id = -1;
@@ -259,6 +262,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public void render()
 	{
+		// Adds any feedback messages on this page to the given component
+		if (feedback != null)
+		{
+			feedback.addFeedbackMessages(this, false);
+		}
+		
 		// Render markup in page
 		super.render();
 
@@ -269,9 +278,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// Visit components on page
 			checkRendering(this);
 		}
-		
+
 		// Reset page for future use
 		reset();
+	}
+
+	/**
+	 * Sets the feedback display for this page
+	 * 
+	 * @param feedback
+	 *            The feedback
+	 */
+	public void setFeedback(final IFeedback feedback)
+	{
+		this.feedback = feedback;
 	}
 
 	/**

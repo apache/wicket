@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.IFeedback;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
@@ -31,7 +32,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationDelegate;
-import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.Strings;
 
@@ -66,7 +66,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	private static Log log = LogFactory.getLog(Form.class);
 
 	/** The validation error handling delegate. */
-	private final IValidationFeedback validationFeedback;
+	private final IFeedback feedback;
 
 	/**
 	 * Trivial class for holding button count while counting buttons
@@ -145,14 +145,14 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 * @see wicket.Component#Component(String, Serializable)
 	 * @param name
 	 *            See Component constructor
-	 * @param validationFeedback
+	 * @param feedback
 	 *            Interface to a component that can handle/display validation
 	 *            errors
 	 */
-	public Form(final String name, final IValidationFeedback validationFeedback)
+	public Form(final String name, final IFeedback feedback)
 	{
 		super(name);
-		this.validationFeedback = validationFeedback;
+		this.feedback = feedback;
 	}
 
 	/**
@@ -161,14 +161,14 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 *            See Component constructor
 	 * @param object
 	 *            See Component constructor
-	 * @param validationFeedback
+	 * @param feedback
 	 *            Interface to a component that can handle/display validation
 	 *            errors
 	 */
-	public Form(String name, Serializable object, final IValidationFeedback validationFeedback)
+	public Form(String name, Serializable object, final IFeedback feedback)
 	{
 		super(name, object);
-		this.validationFeedback = validationFeedback;
+		this.feedback = feedback;
 	}
 
 	/**
@@ -179,15 +179,14 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 *            See Component constructor
 	 * @param expression
 	 *            See Component constructor
-	 * @param validationFeedback
+	 * @param feedback
 	 *            Interface to a component that can handle/display validation
 	 *            errors
 	 */
-	public Form(String name, Serializable object, String expression,
-			final IValidationFeedback validationFeedback)
+	public Form(String name, Serializable object, String expression, final IFeedback feedback)
 	{
 		super(name, object, expression);
-		this.validationFeedback = validationFeedback;
+		this.feedback = feedback;
 	}
 
 	/**
@@ -246,7 +245,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		onValidate();
 
 		// Update validation feedback no matter how the form was validated
-		addValidationFeedback();
+		addFeedback();
 	}
 
 	/**
@@ -385,7 +384,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		{
 			// mark all children as invalid
 			invalid();
-			
+
 			// let subclass handle error
 			onError();
 		}
@@ -393,10 +392,10 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		{
 			// Persist FormComponents if requested
 			persistFormComponentData();
-			
+
 			// Update model using form data
 			updateFormComponentModels();
-			
+
 			// Model was successfully updated with valid data
 			onSubmit();
 		}
@@ -423,26 +422,27 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	/**
 	 * Updates feedback on each feedback component on or attached to the form.
 	 */
-	private void addValidationFeedback()
+	private void addFeedback()
 	{
 		// Traverse children of this form, calling validationError() on any
-		// components implementing IValidationFeedback.
-		visitChildren(IValidationFeedback.class, new IVisitor()
+		// components implementing IFeedback.
+		visitChildren(IFeedback.class, new IVisitor()
 		{
 			public Object component(final Component component)
 			{
 				// Call validation error handler
-				((IValidationFeedback)component).addValidationFeedback(Form.this);
+				((IFeedback)component).addFeedbackMessages(Form.this, true);
 
 				// Traverse all children
 				return CONTINUE_TRAVERSAL;
 			}
 		});
 
-		// Call the validation handler that is registered with this form, if any
-		if (validationFeedback != null)
+		// Add feedback messages to the feedback display that is registered with
+		// this form, if any
+		if (feedback != null)
 		{
-			validationFeedback.addValidationFeedback(this);
+			feedback.addFeedbackMessages(this, true);
 		}
 	}
 

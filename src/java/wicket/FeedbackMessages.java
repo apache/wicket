@@ -26,7 +26,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.html.form.Form;
 import wicket.util.string.StringList;
 
 /**
@@ -66,13 +65,17 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
-	 * Gets the list of messages relevant to this model's form.
+	 * Gets the list of messages relevant to a given component. If the component
+	 * is a container, the list returned will be a list of all messages reported
+	 * by children of the container.
 	 * 
-	 * @param form
-	 *            The form to get messages for
+	 * @param component
+	 *            The component to get messages for
+	 * @param recurse
+	 *            True if children of the component should be considered
 	 * @return The messages
 	 */
-	public List messages(final Form form)
+	public List messages(final Component component, boolean recurse)
 	{
 		if (messages != null)
 		{
@@ -85,9 +88,10 @@ public final class FeedbackMessages implements Serializable
 				// Get next message
 				final FeedbackMessage message = (FeedbackMessage)iterator.next();
 
-				// If the reporter is the form itself of the report is contained
-				// by the form
-				if (form == message.getReporter() || form.contains(message.getReporter(), true))
+				// If the component itself reported the message or if it
+				// is an ancestor of whatever component reported the message
+				final Component reporter = message.getReporter();
+				if (component == reporter || (recurse && component.isAncestorOf(reporter)))
 				{
 					// add the message to the list
 					list.add(message);

@@ -17,10 +17,10 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.Component;
+import wicket.IFeedback;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
 
 /**
  * A border that can be placed around a form bordered to indicate when the
@@ -31,13 +31,10 @@ import wicket.markup.html.form.FormComponent;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class FormComponentFeedbackBorder extends Border implements IValidationFeedback
+public final class FormComponentFeedbackBorder extends Border implements IFeedback
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -7070716217601930304L;
-
-	/** The child to border; is used to get whether there is an error for it. */
-	private final FormComponent child;
 
 	/** The error indicator child which should be shown if an error occurs. */
 	private final WebMarkupContainer errorIndicator;
@@ -47,15 +44,10 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	 * 
 	 * @param name
 	 *            This component's name
-	 * @param child
-	 *            The child to border
 	 */
-	public FormComponentFeedbackBorder(final String name, FormComponent child)
+	public FormComponentFeedbackBorder(final String name)
 	{
 		super(name);
-
-		this.child = child;
-		add(child);
 
 		// Create invisible error indicator bordered that will be shown when a
 		// validation error occurs
@@ -65,16 +57,17 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	}
 
 	/**
-	 * Handles validation errors. If any errors were registered, the decorated
-	 * error indicator will be set to invisible.
+	 * Handles feedback. If any errors were registered on child components of
+	 * this feedback border, the decorated error indicator will be set to
+	 * visible.
 	 * 
-	 * @see IValidationFeedback#addValidationFeedback(Form)
+	 * @see IFeedback#addFeedbackMessages(Component, boolean)
 	 */
-	public void addValidationFeedback(final Form form)
+	public void addFeedbackMessages(final Component component, final boolean recurse)
 	{
-		errorIndicator.setVisible(child.hasErrorMessage());
+		errorIndicator.setVisible(getPage().getFeedbackMessages().messages(this, true).size() > 0);
 	}
-	
+
 	/**
 	 * @see wicket.MarkupContainer#onReset()
 	 */
@@ -82,7 +75,7 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	{
 		// Reset container
 		super.onReset();
-		
+
 		// Clear feedback
 		errorIndicator.setVisible(false);
 	}
