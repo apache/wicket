@@ -34,6 +34,7 @@ public class CD extends Entity
 	private String label;
 	private String description;
 	private Integer rating;
+	private byte[] image;
 
 	private Integer year;
 	private List tracks;
@@ -278,6 +279,24 @@ public class CD extends Entity
 	{
 		// ugly code, but works for this example
 		return new int[] { 1, 2, 3, 4, 5 };
+	}
+
+	/**
+	 * Gets the image.
+	 * @return image
+	 */
+	public final byte[] getImage()
+	{
+		return image;
+	}
+
+	/**
+	 * Sets the image.
+	 * @param image image
+	 */
+	public final void setImage(byte[] image)
+	{
+		this.image = image;
 	}
 
 	/**

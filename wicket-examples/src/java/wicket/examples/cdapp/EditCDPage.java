@@ -22,6 +22,7 @@ import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,15 +37,23 @@ import wicket.examples.WicketExamplePage;
 import wicket.examples.cdapp.model.CD;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.upload.FileUploadField;
+import wicket.markup.html.form.upload.UploadForm;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.form.validation.LengthValidator;
-import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.image.Image;
+import wicket.markup.html.image.resource.DynamicImageResource;
+import wicket.markup.html.image.resource.ImageResource;
+import wicket.markup.html.image.resource.StaticImageResource;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.AbstractDetachableModel;
 import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.model.PropertyModel;
+import wicket.util.resource.IResource;
 
 
 /**
@@ -56,6 +65,10 @@ public final class EditCDPage extends WicketExamplePage
 {
 	/** Logger. */
 	private static Log log = LogFactory.getLog(SearchCDPage.class);
+
+	/** static image resource from this package; references image 'questionmark.gif'. */
+	private static final StaticImageResource IMG_UNKNOWN = StaticImageResource.get(
+			EditCDPage.class.getPackage(), "questionmark.gif", null, null);
 
 	/** model for one cd. */
 	private final PersistentObjectModel cdModel;
@@ -79,19 +92,16 @@ public final class EditCDPage extends WicketExamplePage
 				PersistentObjectModel cdModel)
 		{
 			super(name, cdModel, validationErrorHandler);
-			TextField titleField = new TextField("title", new PropertyModel(cdModel, "title"));
-			titleField.add(RequiredValidator.getInstance());
+			RequiredTextField titleField = new RequiredTextField("title", new PropertyModel(cdModel, "title"));
 			titleField.add(LengthValidator.max(50));
 			add(titleField);
-			TextField performersField = new TextField("performers", new PropertyModel(cdModel, "performers"));
-			performersField.add(RequiredValidator.getInstance());
+			RequiredTextField performersField = new RequiredTextField("performers", new PropertyModel(cdModel, "performers"));
 			performersField.add(LengthValidator.max(50));
 			add(performersField);
 			TextField labelField = new TextField("label", new PropertyModel(cdModel, "label"));
 			labelField.add(LengthValidator.max(50));
 			add(labelField);
-			TextField yearField = new TextField("year", new PropertyModel(cdModel, "year"));
-			yearField.add(RequiredValidator.getInstance());
+			RequiredTextField yearField = new RequiredTextField("year", new PropertyModel(cdModel, "year"));
 			yearField.add(IntegerValidator.POSITIVE_INT);
 			add(yearField);
 			add(new Link("cancelButton")
@@ -215,18 +225,98 @@ public final class EditCDPage extends WicketExamplePage
 	}
 
 	/**
+	 * Form for uploading an image and attaching that image to the cd.
+	 */
+	private final class ImageUploadForm extends UploadForm
+	{
+		/** model to put the reference to the uploaded file in. */
+		private final Model fileModel = new Model();
+
+		/**
+		 * Construct.
+		 * @param name
+		 * @param cdModel 
+		 */
+		public ImageUploadForm(String name, PersistentObjectModel cdModel)
+		{
+			super(name, cdModel, null);
+			add(new FileUploadField("file", fileModel));
+		}
+
+		protected void onSubmit()
+		{
+			// get the uploaded file
+			FileItem item = (FileItem)fileModel.getObject(this);
+			CD cd = (CD)getModelObject();
+			cd.setImage(item.get());
+			Session session = null;
+			Transaction tx = null;
+			try
+			{
+				session = HibernateHelper.getSession();
+				tx = session.beginTransaction();
+				session.saveOrUpdate(cd);
+				tx.commit();
+			}
+			catch (HibernateException e)
+			{
+				try
+				{
+					tx.rollback();
+				}
+				catch (HibernateException ex)
+				{
+					ex.printStackTrace();
+				}
+				throw new WicketRuntimeException(e);
+			}
+		}
+	}
+
+	/**
 	 * Constructor.
 	 * @param searchCDPage the search page to navigate back to
 	 * @param id the id of the cd to edit
 	 */
 	public EditCDPage(final SearchCDPage searchCDPage, Long id)
 	{
-		this.searchCDPage = searchCDPage;
+		super();
 		cdModel = new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
+		this.searchCDPage = searchCDPage;
 		add(new Label("cdTitle", new TitleModel(cdModel)));
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
 		add(new DetailForm("detailForm", feedback, cdModel));
+		add(new ImageUploadForm("imageUpload", cdModel));
+		ImageResource imgResource = new ImageResource()
+		{
+			protected IResource getResource()
+			{
+				final CD cd = (CD)cdModel.getObject(null);
+				if(cd.getImage() == null)
+				{
+					return IMG_UNKNOWN.getResource();
+				}
+				else
+				{
+					DynamicImageResource img = new DynamicImageResource()
+					{
+						protected byte[] getImageData()
+						{
+							return cd.getImage();
+						}
+					};
+					return img.getResource();
+				}
+			}
+
+			public String getPath()
+			{
+				reset(); // force getting the resource on each request;
+				return super.getPath();
+			}
+		};
+		add(new Image("cdimage", imgResource));
 	}
 	
 	/**

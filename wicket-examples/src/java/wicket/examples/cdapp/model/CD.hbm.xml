@@ -26,6 +26,8 @@
 
 		<property name="rating" type="integer" column="rating" not-null="false" />
 
+		<property name="image" type="binary" column="image" not-null="false" />
+
 		<list name="tracks" lazy="false" inverse="true" cascade="all">
 
 			<key column="cd_id" />

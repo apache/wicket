@@ -102,3 +102,23 @@ input, select, label  {
 #wicket-detailForm label.non {
  display: inline !important;
 }
+
+#detailBox {
+	width: 1%;
+	float: left;
+	margin: 5px;
+}
+
+#imageBox {
+	float: left;
+	margin: 5px;
+}
+
+#imageDisplayBox {
+	border-color: navy;
+	border-style: dotted;
+	border-width: 1px;
+	width: 100px;
+	height: 100px;
+	padding: 5px;
+}

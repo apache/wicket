@@ -10,7 +10,8 @@
 
 <fieldset><legend>Edit <span id="wicket-cdTitle">(cd title)</span></legend>
 
-<table>
+<div id="detailBox">
+  <table>
 	<tbody>
 		<form id="wicket-detailForm">
 		<tr>
@@ -39,7 +40,20 @@
 		</tr>
 		</form>
 	</tbody>
-</table>
+  </table>
+</div>
+
+<div id="imageBox">
+  <div id="imageDisplayBox">
+	<img id="wicket-cdimage"/>
+  </div>
+  <div>
+  	<form id="wicket-imageUpload">
+  		<input id="wicket-file" type="file"/>
+  		<input type="submit" value="upload"/>
+  	</form>
+  </div>
+</div>
 
 </fieldset>
 
