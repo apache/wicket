@@ -3,7 +3,7 @@
 <project>
   <id>wicket-quickstart</id>
   <name>Wicket QuickStart</name>
-  <currentVersion>0.9.16-beta</currentVersion>
+  <currentVersion>0.9.17-beta</currentVersion>
   <package>wicket</package>
   <description><![CDATA[
 	    Quickstart project for the Wicket framework. This project will get you up and running using Jetty as a]]><![CDATA[
@@ -16,14 +16,31 @@
     <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket-quickstart</developerConnection>
     <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-quickstart</url>
   </repository>
+  <versions>
+    <version>
+      <id>0.9.15-beta</id>
+      <name>0.9.15-beta</name>
+      <tag>WICKET_R_0_9_15_BETA</tag>
+    </version>
+    <version>
+      <id>0.9.16-beta</id>
+      <name>0.9.16-beta</name>
+      <tag>WICKET_R_0_9_16_BETA</tag>
+    </version>
+    <version>
+      <id>0.9.17-beta</id>
+      <name>0.9.17-beta</name>
+      <tag>WICKET_R_0_9_17_BETA</tag>
+    </version>
+  </versions>
   <dependencies>
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>0.9.16-beta</version>
+      <version>0.9.17-beta</version>
       <type>jar</type>
       <properties>
-    	<eclipse.dependency>true</eclipse.dependency>
+        <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
         <wicket.group>required</wicket.group>
         <wicket.description>The Wicket jar</wicket.description>
@@ -210,16 +227,4 @@
     <report>maven-license-plugin</report>
   </reports>
   <properties/>
-  <versions>
-    <version>
-      <id>0.9.15-beta</id>
-      <name>0.9.15-beta</name>
-      <tag>WICKET_R_0_9_15_BETA</tag>
-    </version>
-    <version>
-      <id>0.9.16-beta</id>
-      <name>0.9.16-beta</name>
-      <tag>WICKET_R_0_9_16_BETA</tag>
-    </version>
-  </versions>
 </project>
