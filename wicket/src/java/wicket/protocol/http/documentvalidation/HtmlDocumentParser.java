@@ -20,6 +20,9 @@ package wicket.protocol.http.documentvalidation;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Lightweight document parser for HTML. This parser is only intended to process
  * well formed and simple HTML of the kind that would generally be utilised
@@ -29,6 +32,8 @@ import java.util.Map;
  */
 public class HtmlDocumentParser
 {
+	private static Log log = LogFactory.getLog(HtmlDocumentParser.class);
+
     /** Constant for close tag token. */
     public static final int CLOSE_TAG = 4;
 
@@ -243,7 +248,7 @@ public class HtmlDocumentParser
         else
         {
             int size = (part.length() > 30) ? 30 : part.length();
-            System.err.println("Unexpected markup found: " + part.substring(0, size) + "...");
+            log.error("Unexpected markup found: " + part.substring(0, size) + "...");
             return UNKNOWN;
         }
     }

@@ -18,6 +18,9 @@
  */
 package wicket.examples.guestbook;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.sourceforge.jwebunit.WebTestCase;
@@ -28,6 +31,8 @@ import nl.openedge.util.jetty.JettyDecorator;
  */
 public class GuestbookTest extends WebTestCase
 {
+	private static Log log = LogFactory.getLog(GuestbookTest.class);
+
     /**
      * Construct.
      * @param name name of test
@@ -56,7 +61,7 @@ public class GuestbookTest extends WebTestCase
         } 
         catch (Throwable ex)
         {
-            System.err.println(ex.getMessage());
+            log.error(ex.getMessage());
         }
         
         this.dumpResponse(System.out);

@@ -17,6 +17,9 @@
  */
 package wicket.examples.hangman;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.RequestCycle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -29,12 +32,14 @@ import wicket.markup.html.link.Link;
  */
 public class Guess extends HangmanPage
 {
+	private static Log log = LogFactory.getLog(Guess.class);
+
 	/**
 	 * Create the guess page.
 	 */
 	public Guess()
 	{
-		System.err.println("Created the guess page");
+		log.error("Created the guess page");
 
 		// Components for displaying the guesses remaining & the hangman
 		add(new Label("guessesRemaining", getHangman(), "guessesRemaining"));
@@ -94,7 +99,7 @@ public class Guess extends HangmanPage
 		public void onClick()
 		{
 			final RequestCycle requestCycle = getRequestCycle();
-			System.err.println("Linked clicked for letter: " + letter);
+			log.error("Linked clicked for letter: " + letter);
 			setEnabled(false);
 			getHangman().guessLetter(letter);
 			if (getHangman().isGuessed())
