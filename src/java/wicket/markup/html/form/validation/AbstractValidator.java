@@ -175,7 +175,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	protected String resourceKey()
 	{
-		// Resource key must be <form-name>.<component-name>.<validator-class>
+		// Resource key must be <form-id>.<component-name>.<validator-class>
 		return formComponent.getForm().getId() + "." + formComponent.getId() + "."
 				+ Classes.name(getClass());
 	}
