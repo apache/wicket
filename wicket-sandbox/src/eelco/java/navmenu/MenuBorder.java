@@ -26,6 +26,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 
 import wicket.AttributeModifier;
+import wicket.Component;
 import wicket.contrib.markup.html.tree.Tree;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
