@@ -22,20 +22,20 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.util.file.File;
 import wicket.util.file.Path;
-import wicket.util.resource.FileResource;
-import wicket.util.resource.IResource;
+import wicket.util.resource.FileResourceStream;
+import wicket.util.resource.IResourceStream;
 
 /**
- * IResourceLocator implementation that locates resources along a filesystem
+ * IResourceStreamLocator implementation that locates resources along a filesystem
  * search path.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public final class PathResourceLocator extends AbstractResourceLocator
+public final class PathResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(ResourceLocator.class);
+	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
 
 	/** The path to search along */
 	private Path searchPath;
@@ -46,15 +46,15 @@ public final class PathResourceLocator extends AbstractResourceLocator
 	 * @param searchPath
 	 *            The path to search
 	 */
-	public PathResourceLocator(final Path searchPath)
+	public PathResourceStreamLocator(final Path searchPath)
 	{
 		this.searchPath = searchPath;
 	}
 
 	/**
-	 * @see wicket.util.resource.locator.AbstractResourceLocator#locate(java.lang.String)
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.String)
 	 */
-	protected IResource locate(final String path)
+	protected IResourceStream locate(final String path)
 	{
 		// Log attempt
 		log.debug("Attempting to locate resource '" + path + "' on path " + searchPath);
@@ -66,7 +66,7 @@ public final class PathResourceLocator extends AbstractResourceLocator
 		if (file != null)
 		{
 			// Return file resource
-			return new FileResource(file);
+			return new FileResourceStream(file);
 		}
 		return null;
 	}

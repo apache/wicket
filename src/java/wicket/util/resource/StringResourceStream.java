@@ -21,17 +21,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A StringResource is an IResource implementation for strings. 
+ * A StringResourceStream is an IResource implementation for strings. 
  * 
- * @see wicket.util.resource.IResource
  * @see wicket.util.resource.IResourceStream
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public final class StringResource extends AbstractStringResource
+public final class StringResourceStream extends AbstractStringResourceStream
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(StringResource.class);
+	private static Log log = LogFactory.getLog(StringResourceStream.class);
 
 	/** The string resource */
 	private final CharSequence string;
@@ -42,7 +41,7 @@ public final class StringResource extends AbstractStringResource
 	 * @param string
 	 *            The resource string
 	 */
-	public StringResource(final CharSequence string)
+	public StringResourceStream(final CharSequence string)
 	{
 		this.string = string;
 	}
@@ -55,7 +54,7 @@ public final class StringResource extends AbstractStringResource
 	 * @param contentType The mime type of this resource, such as "image/jpeg" or
 	 *         "text/html"
 	 */
-	public StringResource(final CharSequence string, final String contentType)
+	public StringResourceStream(final CharSequence string, final String contentType)
 	{
 		super(contentType);
 		this.string = string;
@@ -70,7 +69,7 @@ public final class StringResource extends AbstractStringResource
 	}
 
 	/**
-	 * @see wicket.util.resource.AbstractStringResource#getString()
+	 * @see wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
 	protected String getString()
 	{
@@ -78,7 +77,7 @@ public final class StringResource extends AbstractStringResource
 	}
 	
 	/**
-	 * @see wicket.util.resource.AbstractResource#asString()
+	 * @see wicket.util.resource.AbstractResourceStream#asString()
 	 */
 	public String asString()
 	{

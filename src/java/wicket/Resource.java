@@ -22,7 +22,7 @@ import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 
 import wicket.util.io.Streams;
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * A Resource is something that implements IResourceListener and provides a
@@ -53,7 +53,7 @@ import wicket.util.resource.IResource;
 public abstract class Resource implements IResourceListener
 {
 	/** The actual raw resource this class is rendering */
-	private IResource resource;
+	private IResourceStream resource;
 
 	/**
 	 * Constructor
@@ -93,7 +93,7 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * @return Gets the resource to render to the requester
 	 */
-	protected abstract IResource getResource();
+	protected abstract IResourceStream getResource();
 
 	/**
 	 * Sets any loaded resource to null, thus forcing a reload on the next

@@ -30,17 +30,16 @@ import wicket.util.file.File;
 import wicket.util.time.Time;
 
 /**
- * A FileResource is an IResource implementation for files. 
+ * A FileResourceStream is an IResource implementation for files. 
  * 
- * @see wicket.util.resource.IResource
  * @see wicket.util.resource.IResourceStream
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public final class FileResource extends AbstractResource
+public final class FileResourceStream extends AbstractResourceStream
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(FileResource.class);
+	private static Log log = LogFactory.getLog(FileResourceStream.class);
 
 	/** Any associated file */
 	private File file;
@@ -54,7 +53,7 @@ public final class FileResource extends AbstractResource
 	 * @param file
 	 *            File containing resource
 	 */
-	public FileResource(final File file)
+	public FileResourceStream(final File file)
 	{
 		this.file = file;
 	}
@@ -91,9 +90,9 @@ public final class FileResource extends AbstractResource
 
 	/**
 	 * @return A readable input stream for this resource.
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 */
-	public InputStream getInputStream() throws ResourceNotFoundException
+	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		if (inputStream == null)
 		{
@@ -103,7 +102,7 @@ public final class FileResource extends AbstractResource
 			}
 			catch (FileNotFoundException e)
 			{
-				throw new ResourceNotFoundException("Resource " + file + " could not be found", e);
+				throw new ResourceStreamNotFoundException("Resource " + file + " could not be found", e);
 			}
 		}
 

@@ -31,16 +31,16 @@ import wicket.util.file.File;
 import wicket.util.time.Time;
 
 /**
- * UrlResource implements IResource for URLs.
+ * UrlResourceStream implements IResource for URLs.
  * 
- * @see wicket.util.resource.IResource
+ * @see wicket.util.resource.IResourceStream
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public final class UrlResource extends AbstractResource
+public final class UrlResourceStream extends AbstractResourceStream
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(UrlResource.class);
+	private static Log log = LogFactory.getLog(UrlResourceStream.class);
 
 	/** The underlying file if this URL points to a file */
 	private File file;
@@ -57,7 +57,7 @@ public final class UrlResource extends AbstractResource
 	 * @param url
 	 *            URL of resource
 	 */
-	public UrlResource(final URL url)
+	public UrlResourceStream(final URL url)
 	{
 		// Save URL
 		this.url = url;
@@ -125,9 +125,9 @@ public final class UrlResource extends AbstractResource
 
 	/**
 	 * @return A readable input stream for this resource.
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 */
-	public InputStream getInputStream() throws ResourceNotFoundException
+	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		if (inputStream == null)
 		{
@@ -137,7 +137,7 @@ public final class UrlResource extends AbstractResource
 			}
 			catch (IOException e)
 			{
-				throw new ResourceNotFoundException("Resource " + url + " could not be opened", e);
+				throw new ResourceStreamNotFoundException("Resource " + url + " could not be opened", e);
 			}
 		}
 

@@ -19,14 +19,14 @@ package wicket.util.resource.locator;
 
 import java.util.Locale;
 
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Interface for code that locates resources.
  * 
  * @author Jonathan Locke
  */
-public interface IResourceLocator
+public interface IResourceStreamLocator
 {
 	/**
 	 * Loads a resource, given a path, style, locale and extension.
@@ -41,5 +41,5 @@ public interface IResourceLocator
 	 *            The extension of the resource
 	 * @return The resource
 	 */
-	public IResource locate(String path, String style, Locale locale, String extension);
+	public IResourceStream locate(String path, String style, Locale locale, String extension);
 }

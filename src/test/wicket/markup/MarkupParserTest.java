@@ -32,10 +32,10 @@ import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
 import wicket.protocol.http.MockWebApplication;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
-import wicket.util.resource.locator.ClassLoaderResourceLocator;
-import wicket.util.resource.locator.ResourceLocator;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.string.StringValueConversionException;
 
 
@@ -167,17 +167,17 @@ public final class MarkupParserTest extends TestCase
     /**
      * 
      * @throws ParseException
-     * @throws ResourceNotFoundException
+     * @throws ResourceStreamNotFoundException
      * @throws IOException
      */
     public final void testFileDocument() throws ParseException,
-            ResourceNotFoundException, IOException
+            ResourceStreamNotFoundException, IOException
     {
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
         
-        ResourceLocator locator = new ResourceLocator(new ClassLoaderResourceLocator());
+        ResourceStreamLocator locator = new ResourceStreamLocator(new ClassLoaderResourceStreamLocator());
         
-        IResource resource = locator.locate(this.getClass(), "1", null, "html");
+        IResourceStream resource = locator.locate(this.getClass(), "1", null, "html");
         Markup tokens = parser.readAndParse(resource);
         log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
@@ -217,11 +217,11 @@ public final class MarkupParserTest extends TestCase
     /**
      * Test &lt;wicket: .
      * @throws ParseException
-     * @throws ResourceNotFoundException
+     * @throws ResourceStreamNotFoundException
      * @throws IOException
      */
     public final void testWicketTag() throws ParseException,
-    	ResourceNotFoundException, IOException
+    	ResourceStreamNotFoundException, IOException
    	{
 	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wicket");
 	    
@@ -304,11 +304,11 @@ public final class MarkupParserTest extends TestCase
     /**
      * Test &lt;wicket: .
      * @throws ParseException
-     * @throws ResourceNotFoundException
+     * @throws ResourceStreamNotFoundException
      * @throws IOException
      */
     public final void testDefaultWicketTag() throws ParseException,
-    	ResourceNotFoundException, IOException
+    	ResourceStreamNotFoundException, IOException
    	{
 	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
 	    

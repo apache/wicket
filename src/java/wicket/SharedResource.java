@@ -19,7 +19,7 @@ package wicket;
 
 import java.util.Locale;
 
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 
 /**
  * SharedResource is essentially a reference to an actual resource which is
@@ -202,7 +202,7 @@ public class SharedResource extends Resource
 	/**
 	 * @see wicket.SharedResource#getResource()
 	 */
-	protected final IResource getResource()
+	protected final IResourceStream getResource()
 	{
 		return resource.getResource();
 	}

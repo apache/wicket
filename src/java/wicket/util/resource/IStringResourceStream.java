@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
  * 
  * @author Jonathan Locke
  */
-public interface IStringResource extends IResource
+public interface IStringResourceStream extends IResourceStream
 {
 	/**
 	 * Sets the character set used for converting this resource to a String.

@@ -33,8 +33,8 @@ import wicket.model.IModel;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
 import wicket.util.lang.Classes;
-import wicket.util.resource.locator.DefaultResourceLocator;
-import wicket.util.resource.locator.ResourceLocator;
+import wicket.util.resource.locator.DefaultResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
@@ -72,9 +72,9 @@ import wicket.util.watch.ModificationWatcher;
  * <li><b>A Converter Factory</b> - By overriding getConverterFactory(), you can
  * provide your own factory which creates locale sensitive Converter instances.
  * 
- * <li><b>A ResourceLocator</b> - An Application's ResourceLocator is used to find
+ * <li><b>A ResourceStreamLocator</b> - An Application's ResourceStreamLocator is used to find
  * resources such as images or markup files. You can supply your own
- * ResourceLocator if your prefer to store your applicaiton's resources in a
+ * ResourceStreamLocator if your prefer to store your applicaiton's resources in a
  * non-standard location (such as a different filesystem location, a particular
  * JAR file or even a database) by overriding the getResourceLocator() method.
  * 
@@ -130,7 +130,7 @@ public abstract class Application
 	private final ApplicationPages pages = new ApplicationPages();
 
 	/** The default resource locator for this application */
-	private ResourceLocator resourceLocator;
+	private ResourceStreamLocator resourceLocator;
 
 	/** Map of shared resources */
 	private final Map resourceMap = new HashMap();
@@ -416,13 +416,13 @@ public abstract class Application
 	/**
 	 * @return Resource locator for this application
 	 */
-	public ResourceLocator getResourceLocator()
+	public ResourceStreamLocator getResourceLocator()
 	{
 		if (resourceLocator == null)
 		{
 			// Create compound resource locator using source path from
 			// application settings
-			resourceLocator = new DefaultResourceLocator(getSettings().getSourcePath());
+			resourceLocator = new DefaultResourceStreamLocator(getSettings().getSourcePath());
 		}
 		return resourceLocator;
 	}
@@ -484,7 +484,7 @@ public abstract class Application
 	 * 
 	 * @param locator
 	 */
-	protected void setResourceLocator(final ResourceLocator locator)
+	protected void setResourceLocator(final ResourceStreamLocator locator)
 	{
 		this.resourceLocator = locator;
 	}

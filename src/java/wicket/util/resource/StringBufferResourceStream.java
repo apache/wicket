@@ -24,7 +24,7 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class StringBufferResource extends AbstractStringResource
+public class StringBufferResourceStream extends AbstractStringResourceStream
 {
 	/** Stylesheet information */
 	private StringBuffer buffer = new StringBuffer();
@@ -32,7 +32,7 @@ public class StringBufferResource extends AbstractStringResource
 	/**
 	 * Constructor.
 	 */
-	public StringBufferResource()
+	public StringBufferResourceStream()
 	{
 	}
 
@@ -43,7 +43,7 @@ public class StringBufferResource extends AbstractStringResource
 	 *            The mime type of this resource, such as "image/jpeg" or
 	 *            "text/html"
 	 */
-	public StringBufferResource(final String contentType)
+	public StringBufferResourceStream(final String contentType)
 	{
 		super(contentType);
 	}
@@ -81,7 +81,7 @@ public class StringBufferResource extends AbstractStringResource
 	}
 
 	/**
-	 * @see wicket.util.resource.AbstractStringResource#getString()
+	 * @see wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
 	protected String getString()
 	{
@@ -89,7 +89,7 @@ public class StringBufferResource extends AbstractStringResource
 	}
 	
 	/**
-	 * @see wicket.util.resource.AbstractResource#asString()
+	 * @see wicket.util.resource.AbstractResourceStream#asString()
 	 */
 	public String asString()
 	{

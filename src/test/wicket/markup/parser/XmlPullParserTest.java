@@ -23,7 +23,7 @@ import java.text.ParseException;
 
 import junit.framework.TestCase;
 import wicket.markup.MarkupElement;
-import wicket.util.resource.StringResource;
+import wicket.util.resource.StringResourceStream;
 
 /**
  * Quite some tests are already with MarkupParser. 
@@ -130,18 +130,18 @@ public class XmlPullParserTest extends TestCase
     public final void testEncoding() throws Exception
     {
         final XmlPullParser parser = new XmlPullParser();
-        parser.parse(new StringResource("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"));
+        parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"));
         assertEquals("iso-8859-1", parser.getEncoding());
         XmlTag tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
-        parser.parse(new StringResource("<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test"));
+        parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test"));
         assertEquals("iso-8859-1", parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
         // re-order and move close (remove whitespaces
-        parser.parse(new StringResource("   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test"));
+        parser.parse(new StringResourceStream("   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test"));
         assertEquals("iso-8859-1", parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
@@ -150,7 +150,7 @@ public class XmlPullParserTest extends TestCase
         Exception ex = null;
         try
         {
-            parser.parse(new StringResource("<?xml encoding=iso-8859-1 ?> test test"));
+            parser.parse(new StringResourceStream("<?xml encoding=iso-8859-1 ?> test test"));
         }
         catch (UnsupportedEncodingException e)
         {
@@ -162,7 +162,7 @@ public class XmlPullParserTest extends TestCase
         ex = null;
         try
         {
-            parser.parse(new StringResource("<?xml encoding='XXX' ?>"));
+            parser.parse(new StringResourceStream("<?xml encoding='XXX' ?>"));
         }
         catch (UnsupportedEncodingException e)
         {
@@ -172,20 +172,20 @@ public class XmlPullParserTest extends TestCase
 
         // no extra characters allowed before <?xml>
         // TODO I'd certainly prefer an exception
-        parser.parse(new StringResource("xxxx <?xml encoding='iso-8859-1' ?>"));
+        parser.parse(new StringResourceStream("xxxx <?xml encoding='iso-8859-1' ?>"));
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
         // no extra characters allowed before <?xml>
         // Are comments allowed preceding the encoding string?
-        parser.parse(new StringResource("<!-- Comment --!> <?xml encoding='iso-8859-1' ?>"));
+        parser.parse(new StringResourceStream("<!-- Comment --!> <?xml encoding='iso-8859-1' ?>"));
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
         // 'test' is not a valid attribut. But we currently don't test it.
-        parser.parse(new StringResource("<?xml test='123' >"));
+        parser.parse(new StringResourceStream("<?xml test='123' >"));
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);

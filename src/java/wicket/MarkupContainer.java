@@ -29,17 +29,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.WicketTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.markup.WicketTag;
 import wicket.model.IModel;
 import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
 import wicket.util.listener.IChangeListener;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.Strings;
 import wicket.util.watch.ModificationWatcher;
 
@@ -677,7 +677,7 @@ public abstract class MarkupContainer extends Component
 			if (markup == null)
 			{
 				// Locate markup resource, searching up class hierarchy
-				IResource markupResource = null;
+				IResourceStream markupResource = null;
 				Class containerClass = getClass();
 
 				while ((markupResource == null) && (containerClass != MarkupContainer.class))
@@ -782,11 +782,11 @@ public abstract class MarkupContainer extends Component
 	 * @return The markup
 	 * @throws ParseException
 	 * @throws IOException
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 */
 	private Markup loadMarkup(final Application application, final String key,
-			final IResource markupResource) throws ParseException, IOException,
-			ResourceNotFoundException
+IResourceStream markupResource) throws ParseException, IOException,
+			ResourceStreamNotFoundException
 	{
 		final Markup markup = application.getMarkupParser().readAndParse(markupResource);
 		markupCache.put(key, markup);
@@ -802,7 +802,7 @@ public abstract class MarkupContainer extends Component
 	 *			  The markup file to load and begin to watch
 	 * @return The markup in the file
 	 */
-	private Markup loadMarkupAndWatchForChanges(final String key, final IResource markupResource)
+	private Markup loadMarkupAndWatchForChanges(final String key, final IResourceStream markupResource)
 	{
 		final Application application = getApplication();
 
@@ -828,7 +828,7 @@ public abstract class MarkupContainer extends Component
 							{
 								log.error("Unable to parse markup from " + markupResource, e);
 							}
-							catch (ResourceNotFoundException e)
+							catch (ResourceStreamNotFoundException e)
 							{
 								log.error("Unable to find markup from " + markupResource, e);
 							}
@@ -854,7 +854,7 @@ public abstract class MarkupContainer extends Component
 		{
 			throw new MarkupException(markupResource, exceptionMessage(e.getMessage()));
 		}
-		catch (ResourceNotFoundException e)
+		catch (ResourceStreamNotFoundException e)
 		{
 			throw new MarkupException(markupResource,
 					exceptionMessage("Unable to find markup from " + markupResource), e);

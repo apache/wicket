@@ -22,22 +22,22 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
- * Helper class that adds convenience methods to any IResourceLocator.
+ * Helper class that adds convenience methods to any IResourceStreamLocator.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class ResourceLocator
+public class ResourceStreamLocator
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(ResourceLocator.class);
+	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
 
 	/** The resource locator */
-	private IResourceLocator locator;
+	private IResourceStreamLocator locator;
 
 	/**
 	 * Constructor
@@ -45,7 +45,7 @@ public class ResourceLocator
 	 * @param locator
 	 *            The resource locator
 	 */
-	public ResourceLocator(IResourceLocator locator)
+	public ResourceStreamLocator(IResourceStreamLocator locator)
 	{
 		this.locator = locator;
 	}
@@ -59,7 +59,7 @@ public class ResourceLocator
 	 *            Resource extension
 	 * @return The resource
 	 */
-	public IResource locate(final Class c, final String extension)
+	public IResourceStream locate(final Class c, final String extension)
 	{
 		return locate(c, null, Locale.getDefault(), extension);
 	}
@@ -77,7 +77,7 @@ public class ResourceLocator
 	 *            Resource extension
 	 * @return The resource
 	 */
-	public IResource locate(final Class c, final String style, final Locale locale,
+	public IResourceStream locate(final Class c, final String style, final Locale locale,
 			final String extension)
 	{
 		return locate(c.getName(), style, locale, extension);
@@ -98,7 +98,7 @@ public class ResourceLocator
 	 *            The extension of the resource
 	 * @return The resource
 	 */
-	public IResource locate(String path, final String style, final Locale locale,
+	public IResourceStream locate(String path, final String style, final Locale locale,
 			final String extension)
 	{
 		// If no extension specified, extract extension

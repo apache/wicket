@@ -19,7 +19,7 @@ package wicket.util.resource.locator;
 
 import java.util.Locale;
 
-import wicket.util.resource.IResource;
+import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
@@ -48,12 +48,12 @@ import wicket.util.string.Strings;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public abstract class AbstractResourceLocator implements IResourceLocator
+public abstract class AbstractResourceStreamLocator implements IResourceStreamLocator
 {
 	/**
 	 * Constructor
 	 */
-	protected AbstractResourceLocator()
+	protected AbstractResourceStreamLocator()
 	{
 	}
 
@@ -70,13 +70,13 @@ public abstract class AbstractResourceLocator implements IResourceLocator
 	 *            the filname's extensions
 	 * @return The Resource, or null if not found.
 	 */
-	public IResource locate(final String path, final String style, final Locale locale,
+	public IResourceStream locate(final String path, final String style, final Locale locale,
 			final String extension)
 	{
 		// 1. Try style, locale and extension
 		if (style != null && locale != null)
 		{
-			final IResource resource = locate(path + "_" + style, locale, extension);
+			final IResourceStream resource = locate(path + "_" + style, locale, extension);
 			if (resource != null)
 			{
 				return resource;
@@ -86,7 +86,7 @@ public abstract class AbstractResourceLocator implements IResourceLocator
 		// 2. Try locale and extension
 		if (locale != null)
 		{
-			final IResource resource = locate(path, locale, extension);
+			final IResourceStream resource = locate(path, locale, extension);
 			if (resource != null)
 			{
 				return resource;
@@ -96,7 +96,7 @@ public abstract class AbstractResourceLocator implements IResourceLocator
 		// 3. Try style and extension
 		if (style != null)
 		{
-			final IResource resource = locate(path + "_" + style + extension);
+			final IResourceStream resource = locate(path + "_" + style + extension);
 			if (resource != null)
 			{
 				return resource;
@@ -116,7 +116,7 @@ public abstract class AbstractResourceLocator implements IResourceLocator
 	 *            be forward slashes.
 	 * @return The Resource, or null if not found.
 	 */
-	protected abstract IResource locate(final String path);
+	protected abstract IResourceStream locate(final String path);
 
 	/**
 	 * Locate a file based on its path (potentially with a style), a locale and
@@ -132,11 +132,11 @@ public abstract class AbstractResourceLocator implements IResourceLocator
 	 *            The resource's extension
 	 * @return The resource, or null if not found.
 	 */
-	private IResource locate(final String path, final Locale locale, final String extension)
+	private IResourceStream locate(final String path, final Locale locale, final String extension)
 	{
 		// 1. Apply Locale default toString() implementation. See Locale.
 		{
-			final IResource resource = locate(path + "_" + locale.toString() + extension);
+			final IResourceStream resource = locate(path + "_" + locale.toString() + extension);
 			if (resource != null)
 			{
 				return resource;
@@ -150,7 +150,7 @@ public abstract class AbstractResourceLocator implements IResourceLocator
 		// 2. If country and language are available
 		if (!Strings.isEmpty(language) && !Strings.isEmpty(country))
 		{
-			final IResource resource = locate(path + "_" + language + "_" + country + extension);
+			final IResourceStream resource = locate(path + "_" + language + "_" + country + extension);
 			if (resource != null)
 			{
 				return resource;
@@ -160,7 +160,7 @@ public abstract class AbstractResourceLocator implements IResourceLocator
 		// 3. If language is available
 		if (!Strings.isEmpty(language))
 		{
-			final IResource resource = locate(path + "_" + language + extension);
+			final IResourceStream resource = locate(path + "_" + language + extension);
 			if (resource != null)
 			{
 				return resource;
