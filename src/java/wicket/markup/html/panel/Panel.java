@@ -21,27 +21,21 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 
 /**
- * A panel holds markup and other components.
- * <p>
+ * A panel is a reusable componet that holds markup and other components.
  * <p>
  * Whereas HTMLContainer is an inline container like
- * 
  * <pre>
- * 
  *  ...
  *  &lt;span id=&quot;wicket-xxx&quot;&gt;
  *    &lt;span id=&quot;wicket-mylabel&quot;&gt;My label&lt;/span&gt;
  *    ....
  *  &lt;/span&gt;
  *  ...
- *  
  * </pre>
  * 
- * a Panel does have its own associated markup file and the container content is
+ * a Panel has its own associated markup file and the container content is
  * taken from that file, like:
- * 
  * <pre>
- * 
  *  &lt;span id=&quot;wicket-mypanel&quot;/&gt;
  * 
  *  TestPanel.html
@@ -49,21 +43,17 @@ import wicket.markup.html.HtmlContainer;
  *    &lt;span id=&quot;wicket-mylabel&quot;&gt;My label&lt;/span&gt;
  *    ....
  *  &lt;/wicket:panel&gt;
- *  
  * </pre>
  * 
  * @author Jonathan Locke
  */
 public class Panel extends HtmlContainer
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
     private static final long serialVersionUID = -5449444447932560536L;
 
     /**
-     * Constructor.
-     * 
-     * @param componentName
-     *            The name of this container
+     * @see wicket.Component#Component(String)
      */
     public Panel(final String componentName)
     {
