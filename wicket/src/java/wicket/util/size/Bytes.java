@@ -320,6 +320,7 @@ public final class Bytes extends LongValue
      * Convert value to formatted floating point number and units.
      * @param value The value
      * @param units The units
+     * @param locale The locale
      * @return The formatted string
      */
     private String unitString(final double value, final String units, final Locale locale)

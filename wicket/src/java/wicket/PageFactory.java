@@ -108,6 +108,14 @@ public class PageFactory implements IPageFactory
         return newPage(pageClass, (PageParameters)null);
     }
 
+    /**
+     * Creates a new page. If Page with PageParameter argument constructor
+     * exists, PageParameter will be null.
+     * 
+     * @param pageClassName The name of the page class to instantiate
+     * @return The page
+     * @throws RenderException
+     */
     public final Page newPage(final String pageClassName)
     {
         return newPage(this.getClassInstance(pageClassName), (PageParameters)null);
@@ -126,6 +134,14 @@ public class PageFactory implements IPageFactory
         return newPage(pageClass, new PageParameters(request.getParameterMap()));
     }
 
+    /**
+     * Creates a new page. Take the PageParameters from the request.
+     * 
+     * @param pageClassName The name of the page class to instantiate
+     * @param request The HTTP request to get the page parameters from
+     * @return The page
+     * @throws RenderException
+     */
     public final Page newPage(final String pageClassName, final HttpRequest request)
     {
         return newPage(
@@ -170,6 +186,15 @@ public class PageFactory implements IPageFactory
         return newPage(constructor, parameters);
     }
 
+    /**
+     * Creates a new Page and apply the PageParameters to the Page constructor
+     * if a proper constructor exists. Else use the default constructor.
+     * 
+     * @param pageClassName The name of the page class to create
+     * @param parameters The page parameters
+     * @return The new page
+     * @throws RenderException
+     */
     public Page newPage(final String pageClassName, final PageParameters parameters)
     {
         return newPage(this.getClassInstance(pageClassName), parameters);
@@ -204,6 +229,17 @@ public class PageFactory implements IPageFactory
                     + "' with Page argument constructor or default constructor");
     }
 
+    /**
+     * Creates a new instance of a page using the given class name.
+     * If pageClass implements a constructor with Page argument, page
+     * will be forwarded to that constructor. Else, the default
+     * constructor will be used and page be neglected.
+     * 
+     * @param pageClassName The name of the class of page to create
+     * @param page Parameter to page constructor
+     * @return The new page
+     * @throws RenderException
+     */
     public final Page newPage(final String pageClassName, final Page page)
     {
         return newPage(this.getClassInstance(pageClassName), page);

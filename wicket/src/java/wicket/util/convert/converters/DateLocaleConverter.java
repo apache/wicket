@@ -172,7 +172,10 @@ public class DateLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * Get date format
+     * Get date format.
+     * @param pattern the pattern to use for formatting
+     * @param locale the locale
+     * @return the date format object for the given pattern and locale
      */
     private DateFormat getFormat(String pattern, Locale locale)
     {

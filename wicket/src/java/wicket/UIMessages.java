@@ -439,7 +439,8 @@ public final class UIMessages
 
     /**
      * Gets the messages sorted.
-     * @return asc whether to sort ascending (true) or descending (false)
+     * @param asc whether to sort ascending (true) or descending (false)
+     * @return sorted list
      */
     private List getMessagesSorted(boolean asc)
     {
