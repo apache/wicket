@@ -18,7 +18,6 @@
  */
 package wicket.examples.helloworld;
 
-import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 
@@ -31,9 +30,8 @@ public class HelloWorld extends WicketExamplePage
 {
     /**
      * Constructor
-     * @param parameters Page parameters
      */
-    public HelloWorld(final PageParameters parameters)
+    public HelloWorld()
     {
         add(new Label("message", "Hello World!"));
     }
