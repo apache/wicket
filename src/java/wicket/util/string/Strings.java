@@ -334,7 +334,7 @@ public final class Strings
 	 * Replace all occurrences of one string replaceWith another string
 	 * 
 	 * @param s
-	 *            The string
+	 *            The string to process
 	 * @param searchFor
 	 *            The value to search for
 	 * @param replaceWith
@@ -343,43 +343,64 @@ public final class Strings
 	 */
 	public static String replaceAll(final String s, final String searchFor, final String replaceWith)
 	{
-		if (s != null)
+		// Check arguments
+		if (s == null)
 		{
-			// Go through the string
-			final StringBuffer buf = new StringBuffer();
-			int pos = 0;
-
-			while (true)
-			{
-				// Get the next index of the string to searchFor
-				// starting from the position pos
-				final int matchIndex = s.indexOf(searchFor, pos);
-
-				// If there's no match
-				if (matchIndex == -1)
-				{
-					// Append rest
-					buf.append(s.substring(pos));
-
-					break;
-				}
-				else
-				{
-					// Found a match. Append up to the match
-					buf.append(s.substring(pos, matchIndex));
-
-					// Move the forward past the searchFor string
-					pos = matchIndex + searchFor.length();
-
-					// Add replaceWith
-					buf.append(replaceWith);
-				}
-			}
-
-			return buf.toString();
+			throw new IllegalArgumentException("Cannot pass null target string to replaceAll");
 		}
 
-		return null;
+		if (searchFor == null)
+		{
+			throw new IllegalArgumentException("Cannot pass null searchFor string to replaceAll");
+		}
+
+		if (replaceWith == null)
+		{
+			throw new IllegalArgumentException("Cannot pass null replaceWith string to replaceAll");
+		}
+
+		// Go through the string
+		StringBuffer buffer = null;
+		final int searchForLength = searchFor.length();
+		int pos = 0;
+		for (int matchIndex; -1 != (matchIndex = s.indexOf(searchFor, pos)); pos = matchIndex
+				+ searchForLength)
+		{
+			// Start a replace operation?
+			if (buffer == null)
+			{
+				// Determine a buffer size so we don't need to
+				// reallocate if there's just one replacement.
+				int size = s.length();
+				final int replaceWithLength = replaceWith.length();
+				if (replaceWithLength > searchForLength)
+				{
+					size += (replaceWithLength - searchForLength);
+				}
+				buffer = new StringBuffer(size + 16);
+			}
+
+			// Found a match. Append up to the match
+			buffer.append(s.substring(pos, matchIndex));
+
+			// Add replaceWith
+			buffer.append(replaceWith);
+		}
+
+		// If no replace was required
+		if (buffer == null)
+		{
+			// return original string
+			return s;
+		}
+		else
+		{
+			// add tail of s
+			buffer.append(s.substring(pos));
+			
+			// return processed buffer
+			return buffer.toString();
+		}
 	}
 
 	/**
@@ -402,7 +423,7 @@ public final class Strings
 
 		return s;
 	}
-	
+
 
 	/**
 	 * @param s
@@ -446,13 +467,14 @@ public final class Strings
 			{
 				return false;
 			}
-			
+
 			if (isEmpty(s))
 			{
 				return false;
 			}
-			
-			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");		}
+
+			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
+		}
 
 		return false;
 	}
