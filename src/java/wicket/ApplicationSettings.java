@@ -921,3 +921,5 @@ public class ApplicationSettings
 		this.propertyModelDefaultApplyFormatting = propertyModelDefaultApplyFormatting;
 	}
 }
+
+///////////////////////////////// End of File /////////////////////////////////

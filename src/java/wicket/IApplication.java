@@ -24,14 +24,15 @@ package wicket;
  * application, and that is HttpApplication, which is a servlet and therefore subclasses
  * javax.servlet.http.HttpServlet. HttpApplication's name and settings are available
  * through its IApplication interface.
+ * 
  * @see wicket.protocol.http.HttpApplication
  * @author Jonathan Locke
  */
 public interface IApplication
-{ // TODO finalize javadoc
+{
     /**
      * Gets the name of this application.
-     * @return Returns the name.
+     * @return The application name.
      */
     public String getName();
 
