@@ -18,7 +18,6 @@
  */
 package wicket.util.file;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,11 +26,12 @@ import wicket.util.string.StringList;
 
 /**
  * Mantains a list of folders as a path.
+ * 
  * @author Jonathan Locke
  */
 public final class Path
-{ // TODO finalize javadoc
-    // The list of folders
+{
+    /** The list of folders in the path */
     private final List folders = new ArrayList();
 
     /**

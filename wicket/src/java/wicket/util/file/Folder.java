@@ -21,16 +21,18 @@ package wicket.util.file;
 import java.net.URI;
 
 /**
- * This folder subclass provides some type safety and extensibility.
+ * This folder subclass provides some type safety and extensibility for 
+ * "files" that hold other files.
+ * 
  * @author Jonathan Locke
  */
 public final class Folder extends File
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = -2393525031297453147L;
 
 	/**
-     * Construct.
+     * Constructor.
      * @param pathname path name
      */
     public Folder(final String pathname)
@@ -39,7 +41,7 @@ public final class Folder extends File
     }
 
     /**
-     * Construct.
+     * Constructor.
      * @param parent parent
      * @param child child
      */
@@ -49,7 +51,7 @@ public final class Folder extends File
     }
 
     /**
-     * Construct.
+     * Constructor.
      * @param parent parent
      * @param child child
      */
@@ -59,7 +61,7 @@ public final class Folder extends File
     }
 
     /**
-     * Construct.
+     * Constructor.
      * @param uri folder uri
      */
     public Folder(final URI uri)
