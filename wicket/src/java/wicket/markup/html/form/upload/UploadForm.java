@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$
+ * $Id$
+ * $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -16,6 +17,8 @@
  * the License.
  */
 package wicket.markup.html.form.upload;
+
+import javax.servlet.http.HttpServletRequest;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
@@ -34,8 +37,7 @@ public abstract class UploadForm extends Form
 	/**
 	 * Construct.
 	 * 
-	 * @param name
-	 *            component name
+	 * @param name component name
 	 */
 	public UploadForm(String name)
 	{
@@ -45,10 +47,8 @@ public abstract class UploadForm extends Form
 	/**
 	 * Construct.
 	 * 
-	 * @param name
-	 *            component name
-	 * @param validationFeedback
-	 *            validation error handler
+	 * @param name component name
+	 * @param validationFeedback validation error handler
 	 */
 	public UploadForm(String name, IValidationFeedback validationFeedback)
 	{
@@ -56,14 +56,18 @@ public abstract class UploadForm extends Form
 	}
 
 	/**
+	 * Wraps the servlet request in a multipart request and sets it as
+	 * the current request.
+	 *
 	 * @see wicket.markup.html.form.Form#onFormSubmitted()
 	 */
 	public void onFormSubmitted()
 	{
 		// Change the request to a multipart web request so parameters are
 		// parsed out correctly
-		RequestCycle.get().setRequest(
-				new MultipartWebRequest(((WebRequest)getRequest()).getHttpServletRequest()));
+		HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
+		MultipartWebRequest multipartWebRequest = new MultipartWebRequest(request);
+		RequestCycle.get().setRequest(multipartWebRequest);
 
 		// Now do normal form submit validation processing
 		super.onFormSubmitted();
@@ -72,8 +76,7 @@ public abstract class UploadForm extends Form
 	/**
 	 * Processes the component tag.
 	 * 
-	 * @param tag
-	 *            the component tag
+	 * @param tag the component tag
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
 	protected final void onComponentTag(final ComponentTag tag)

@@ -29,14 +29,13 @@ import org.apache.commons.logging.LogFactory;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.upload.FileUploadForm;
-import wicket.markup.html.form.upload.UploadModel;
-import wicket.markup.html.form.upload.UploadTextField;
-import wicket.markup.html.form.validation.IValidationFeedback;
+import wicket.markup.html.form.upload.FileInput;
+import wicket.markup.html.form.upload.UploadForm;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.Model;
 import wicket.util.file.Files;
 import wicket.util.file.Folder;
 
@@ -67,6 +66,10 @@ public class UploadPage extends WicketExamplePage
 	 */
 	public UploadPage(final PageParameters parameters)
 	{
+		// set upload folder to tempdir + 'wicket-uploads'.
+		this.uploadFolder = uploadFolder = new Folder(
+				System.getProperty("java.io.tmpdir"), "wicket-uploads");
+
 		// Create feedback panels
 		final FeedbackPanel simpleUploadFeedback = new FeedbackPanel("simpleUploadFeedback");
 		final FeedbackPanel uploadFeedback = new FeedbackPanel("uploadFeedback");
@@ -79,13 +82,12 @@ public class UploadPage extends WicketExamplePage
 		final SimpleUploadForm simpleUploadForm = new SimpleUploadForm("simpleUpload");
 		simpleUploadForm.add(simpleUploadFeedback);
 		add(simpleUploadForm);
-
-		// Add multiple upload form, which is hooked up explicitly to its
-		// feedback panel by passing the feedback panel to the form constructor.
-		final MultipleFilesUploadForm uploadForm = new MultipleFilesUploadForm("upload",
-				uploadFeedback);
-		this.uploadFolder = uploadForm.getUploadFolder();
-		add(uploadForm);
+//
+//		// Add multiple upload form, which is hooked up explicitly to its
+//		// feedback panel by passing the feedback panel to the form constructor.
+//		final MultipleFilesUploadForm uploadForm = new MultipleFilesUploadForm("upload",
+//				uploadFeedback);
+//		add(uploadForm);
 
 		// Add folder view
 		add(new Label("dir", uploadFolder.getAbsolutePath()));
@@ -105,58 +107,40 @@ public class UploadPage extends WicketExamplePage
 	}
 
 	/**
-	 * Form for uploads that just uses the original file name for the uploaded
-	 * file.
+	 * Check whether the file allready exists, and if so, try to delete it.
+	 * @param newFile the file to check
 	 */
-	private class SimpleUploadForm extends FileUploadForm
+	private void checkFileExists(File newFile)
 	{
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *            Component name
-		 */
-		public SimpleUploadForm(String name)
+		if(newFile.exists())
 		{
-			super(name);
-		}
-
-		/**
-		 * @see wicket.markup.html.form.upload.UploadForm#onSubmit()
-		 */
-		protected void onSubmit()
-		{
-			saveFiles();
-			refreshFiles();
+			// Try to delete the file
+			if (!Files.delete(newFile))
+			{
+				throw new IllegalStateException("Unable to overwrite " + newFile.getAbsolutePath());
+			}
 		}
 	}
 
 	/**
-	 * Form for uploads that uploads multiple files and uses textfield for
-	 * getting the names of uploads.
+	 * Form for uploads that just uses the original file name for the uploaded
+	 * file.
 	 */
-	private class MultipleFilesUploadForm extends FileUploadForm
+	private class SimpleUploadForm extends UploadForm
 	{
-		private UploadModel model1;
-		private UploadModel model2;
+		/** model to put the reference to the uploaded file in. */
+		private final Model fileModel = new Model();
 
 		/**
 		 * Construct.
-		 * 
-		 * @param name
-		 *            Component name
-		 * @param feedback
-		 *            The feedback component
+		 * @param name Component name
 		 */
-		public MultipleFilesUploadForm(String name, IValidationFeedback feedback)
+		public SimpleUploadForm(String name)
 		{
-			super(name, feedback);
-			model1 = new UploadModel();
-			model2 = new UploadModel();
-			// first upload must be given
-			add(new UploadTextField("name1", "upload1", model1, true));
-			// second is optional
-			add(new UploadTextField("name2", "upload2", model2, false));
+			super(name);
+
+			// add one file input field
+			add(new FileInput("fileInput", fileModel));
 		}
 
 		/**
@@ -164,18 +148,55 @@ public class UploadPage extends WicketExamplePage
 		 */
 		protected void onSubmit()
 		{
-			// do not call super.submit() as that will save the uploads using
-			// their file names
+			// get the uploaded file
+			FileItem item = (FileItem)fileModel.getObject();
 
-			// first will allways be set if we come here
-			saveFile(model1.getFile(), new File(getUploadFolder(), model1.getName()));
-			FileItem file2 = model2.getFile();
-			if (file2 != null && (file2.getSize() > 0)) // second might be set
+			if(item != null)
 			{
-				// but if set, the name will allways be given
-				saveFile(file2, new File(getUploadFolder(), model2.getName()));
+				// the original file name
+				String fileName = item.getName();
+	
+				// hack a bit to get at least an acceptable file name
+				fileName = afterLast(fileName, ':');
+				fileName = afterLast(fileName, '\\');
+				fileName = afterLast(fileName, '/');
+				log.info("uploaded item: " + fileName);
+	
+				// create a new file
+				File newFile = new File(uploadFolder, fileName);
+	
+				// check new file, delete if it allready existed
+				checkFileExists(newFile);
+				try
+				{
+					newFile.createNewFile(); // create it
+					item.write(newFile); // write the uploaded file to our new file
+				}
+				catch (Exception e)
+				{
+					throw new IllegalStateException(e);
+				}
+	
+				// refresh the file list view
+				refreshFiles();
 			}
-			refreshFiles();
+		}
+
+		/**
+		 * Gets the last part of the string after c or the string itself when c is
+		 * not found.
+		 * @param s the string
+		 * @param c the char
+		 * @return part of string
+		 */
+		private String afterLast(final String s, final char c)
+		{
+			final int index = s.lastIndexOf(c);
+			if (index == -1)
+			{
+				return s;
+			}
+			return s.substring(index + 1);
 		}
 	}
 
