@@ -534,12 +534,13 @@ public class WebRequestCycle extends RequestCycle
 	{
 		try
 		{
-			// Get URL
-			final String url = ((WebRequest)getRequest()).getURL();
+			// Get the relative URL we need for loading the resource from
+			// the servlet context
+			final String url = ((WebRequest)getRequest()).getRelativeURL();
 
 			// Get servlet context
-			final ServletContext context = ((WebApplication)application).getWicketServlet()
-					.getServletContext();
+			final ServletContext context =
+				((WebApplication)application).getWicketServlet().getServletContext();
 
 			// Set content type
 			response.setContentType(context.getMimeType(url));

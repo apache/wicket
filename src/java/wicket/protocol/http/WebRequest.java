@@ -158,7 +158,41 @@ public class WebRequest extends Request
      */
     public String getURL()
     {
-        String url = httpServletRequest.getContextPath() + httpServletRequest.getServletPath();
+    	/*
+    	 * Servlet 2.3 specification :
+		 * Context Path: The path prefix associated with the ServletContext that this
+		 * servlet is a part of. If this context is the default context rooted at the base
+		 * of the web server's URL namespace, this path will be an empty string.
+		 * Otherwise, this path starts with a "/" character but does not end with
+		 * a "/" character.
+		 */
+        String contextPath = httpServletRequest.getContextPath();
+		String url = contextPath + '/' + getRelativeURL();
+
+        return url;
+    }
+
+    /**
+     * Gets the relative url (url without the context path and without a leading '/').
+     * Use this method to load resources using the servlet context.
+     * 
+     * @return Request URL
+     */
+    public String getRelativeURL()
+    {
+    	/*
+		 * Servlet 2.3 specification :
+		 *
+		 * Servlet Path: The path section that directly
+		 * corresponds to the mapping which activated this request. This path starts
+		 * with a "/" character except in the case where the request is matched with
+		 * the "/*" pattern, in which case it is the empty string.
+		 * 
+		 * PathInfo: The part of the request path that is not part of the
+		 * Context Path or the Servlet Path. It is either null if there is no extra
+		 * path, or is a string with a leading "/".
+		 */
+        String url = httpServletRequest.getServletPath();
         final String pathInfo = httpServletRequest.getPathInfo();
 
         if (pathInfo != null)
@@ -172,7 +206,10 @@ public class WebRequest extends Request
         {
             url += ("?" + queryString);
         }
-
+        if(!url.equals("")) // then it has to start with '/', which we should loose
+        {
+        	url = url.substring(1); // skip leading '/'
+        }
         return url;
     }
 
