@@ -18,8 +18,6 @@
  */
 package upload;
 
-import com.voicetribe.util.code.Code;
-import com.voicetribe.util.code.Log4JCodeListenerFactory;
 import com.voicetribe.util.time.Duration;
 import com.voicetribe.wicket.WebApplication;
 
@@ -34,7 +32,6 @@ public class UploadApplication extends WebApplication
      */
     public UploadApplication()
     {
-        Code.addListenerFactory(new Log4JCodeListenerFactory());
         getSettings().setHomePage(UploadPage.class);
         Duration pollFreq = Duration.ONE_SECOND;
         getSettings().setResourcePollFrequency(pollFreq);

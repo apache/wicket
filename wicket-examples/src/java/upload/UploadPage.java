@@ -130,7 +130,7 @@ public class UploadPage extends HtmlPage
         /**
          * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
          */
-        protected void populateCell(Cell cell)
+        protected boolean populateCell(Cell cell)
         {
             final String fileName = (String)cell.getModelObject();
             cell.add(new Label("file", fileName));
@@ -151,6 +151,8 @@ public class UploadPage extends HtmlPage
                     refreshFiles();
                 } 
             });
+            
+            return true;
         }
     }
 }

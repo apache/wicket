@@ -36,9 +36,9 @@ public final class Home extends AuthenticatedHtmlPage
     public Home(final PageParameters parameters)
     {
         // Add table of books
-        add(new Table("books", getUser(), "books", 10)
+        add(new Table("books", getUser(), "books")
             {
-                public void populateCell(final Cell cell)
+                public boolean populateCell(final Cell cell)
                 {
                     final Book book = (Book) cell.getModelObject();
 
@@ -49,6 +49,8 @@ public final class Home extends AuthenticatedHtmlPage
                     cell.add(cell.moveDownLink("moveDown"));
                     cell.add(cell.removeLink("remove"));
                     cell.add(EditBook.link("edit", book.getId()));
+                    
+                    return true;
                 }
             });
     }
