@@ -1,5 +1,4 @@
 build
-.settings
 target
 *.log
 build.properties
