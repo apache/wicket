@@ -17,13 +17,15 @@
  */
 package wicket;
 
+import java.io.Serializable;
+
 /**
  * An interface to code which finds classes.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public interface IClassResolver
+public interface IClassResolver extends Serializable
 {
     /**
      * Resolves a class by name (which may or may not involve loading it; thus
