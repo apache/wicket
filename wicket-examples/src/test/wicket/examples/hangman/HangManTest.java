@@ -18,6 +18,8 @@
  */
 package wicket.examples.hangman;
 
+import java.util.Iterator;
+
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -25,7 +27,7 @@ import net.sourceforge.jwebunit.WebTestCase;
 import nl.openedge.util.jetty.JettyDecorator;
 
 /**
- * Testcase for the <code>Hangman</code> class.
+ * Testcase for the <code>Game</code> class.
  * 
  * @author Chris Turner
  * @version 1.0
@@ -51,8 +53,8 @@ public class HangManTest extends WebTestCase
 	 */
 	public void testHangmanWinGame() throws Exception
 	{
-		Hangman hangman = new Hangman();
-		hangman.newGame(5, "testing");
+		Game hangman = new Game();
+		hangman.newGame(5, new WordGenerator(new String[] { "testing" }));
 		
 		Assert.assertEquals(5, hangman.getGuessesRemaining());
 		Assert.assertFalse(hangman.isWon());
@@ -63,7 +65,7 @@ public class HangManTest extends WebTestCase
 		Assert.assertFalse(hangman.isWon());
 		Assert.assertFalse(hangman.isLost());
 
-		hangman.guess('a');
+		guess(hangman, 'a');
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
 		Assert.assertFalse(hangman.isWon());
 		Assert.assertFalse(hangman.isLost());
@@ -98,7 +100,25 @@ public class HangManTest extends WebTestCase
 		Assert.assertTrue(hangman.isWon());
 		Assert.assertFalse(hangman.isLost());
 	}
+	
+	private Letter letter(Game hangman, char c)
+	{
+		for (Iterator iter = hangman.getLetters().iterator(); iter.hasNext();)
+		{
+			Letter letter = (Letter)iter.next();
+			if (letter.asString().equalsIgnoreCase(Character.toString(c)))
+			{
+				return letter;
+			}
+		}		
+		return null;
+	}
 
+	private boolean guess(Game hangman, char c)
+	{
+		return hangman.guess(letter(hangman, c));
+	}
+	
 	/**
 	 * Tests the hangman class directly for a lost game.
 	 * 
@@ -106,8 +126,8 @@ public class HangManTest extends WebTestCase
 	 */
 	public void testHangmanLooseGame() throws Exception
 	{
-		Hangman hangman = new Hangman();
-		hangman.newGame(2, "foo");
+		Game hangman = new Game();
+		hangman.newGame(2, new WordGenerator(new String[] { "foo" }));
 		
 		Assert.assertEquals(2, hangman.getGuessesRemaining());
 		Assert.assertFalse(hangman.isWon());
@@ -130,7 +150,7 @@ public class HangManTest extends WebTestCase
 	public void testHangmanSuccessWebGame()
 	{
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
-		beginAt("/hangman?setWord=hangman");
+		beginAt("/hangman?word=hangman");
 
 		assertTitleEquals("Wicket Examples - hangman");
 		assertLinkPresent("start");
@@ -163,7 +183,7 @@ public class HangManTest extends WebTestCase
 	public void testHangmanFailureWebGame()
 	{
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
-		beginAt("/hangman?setWord=hangman");
+		beginAt("/hangman?word=hangman");
 
 		assertTitleEquals("Wicket Examples - hangman");
 		assertLinkPresent("start");
@@ -199,11 +219,11 @@ public class HangManTest extends WebTestCase
 	 * @param c
 	 * @param expected
 	 */
-	private void doGuessTest(Hangman hangman, char c, boolean expected)
+	private void doGuessTest(Game hangman, char c, boolean expected)
 	{
-		Assert.assertFalse(hangman.isGuessed(c));
-		Assert.assertEquals(expected, hangman.guess(c));
-		Assert.assertTrue(hangman.isGuessed(c));
+		Assert.assertFalse(letter(hangman, c).isGuessed());
+		Assert.assertEquals(expected, guess(hangman, c));
+		Assert.assertTrue(letter(hangman, c).isGuessed());
 	}
 
 	/**

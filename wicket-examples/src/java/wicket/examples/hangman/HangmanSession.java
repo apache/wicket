@@ -28,7 +28,7 @@ import wicket.protocol.http.WebSession;
 public class HangmanSession extends WebSession
 {
 	/** The game */
-	private final Hangman hangman = new Hangman();
+	private final Game game = new Game();
 
 	/**
 	 * Constructor
@@ -40,10 +40,10 @@ public class HangmanSession extends WebSession
 	}
 	
 	/**
-	 * @return Returns the hangman.
+	 * @return Returns the game.
 	 */
-	public Hangman getHangman()
+	public Game getGame()
 	{
-		return hangman;
+		return game;
 	}
 }

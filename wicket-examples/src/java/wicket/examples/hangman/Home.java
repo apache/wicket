@@ -40,11 +40,11 @@ public class Home extends HangmanPage
 		final String word = parameters.getString("setWord");
 		if (word == null)
 		{
-			getHangman().newGame();
+			getGame().newGame(5, new WordGenerator());
 		}
 		else
-		{
-			getHangman().newGame(5, word);
+		{			
+			getGame().newGame(5, new WordGenerator(new String[] { word }));
 		}
 		add(new PageLink("start", Guess.class));
 	}

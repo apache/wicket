@@ -18,6 +18,9 @@
 package wicket.examples.hangman;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Implementation of the actual hangman game model. The model holds the word
@@ -28,39 +31,26 @@ import java.io.Serializable;
  * @author Chris Turner
  * @author Jonathan Locke
  */
-public class Hangman implements Serializable
+public class Game implements Serializable
 {
 	/** Serial version UID */
 	private static final long serialVersionUID = 1L;
 
-	/** Correct correctLetters */
-	private char[] correctLetters;
-	
-	/** Letters guessed by the user */
-	private boolean[] guessedLetters;
-	
 	/** Number of guesses allowed */
-	private int guessesAllowed = 5;  // default
+	private int guessesAllowed;
 	
 	/** Number of guesses remaining */
 	private int guessesRemaining;
+
+	/** The letters */
+	private List letters;
 	
 	/** The word being guessed by the user */
-	private String word;
+	private Word word;
 	
 	/** Word generator */
 	private WordGenerator wordGenerator;
-
-	/**
-	 * Get the state of the guessed correctLetters for the word.
-	 * 
-	 * @return The guessed correctLetters
-	 */
-	public String getCorrectLetters()
-	{
-		return new String(correctLetters);
-	}
-
+	
 	/**
 	 * Return the number of guesses remaining.
 	 * 
@@ -70,13 +60,21 @@ public class Hangman implements Serializable
 	{
 		return guessesRemaining;
 	}
+	
+	/**
+	 * @return The letters in the game
+	 */
+	public List getLetters()
+	{
+		return letters;
+	}
 
 	/**
 	 * Get the current word that is being guessed or has been guessed.
 	 * 
 	 * @return The current word
 	 */
-	public String getWord()
+	public Word getWord()
 	{
 		return word;
 	}
@@ -88,39 +86,16 @@ public class Hangman implements Serializable
 	 * 
 	 * @param letter
 	 *            The letter being guessed
-	 * @return Whether the letter was in the word or not
+	 * @return True if guess was correct
 	 */
-	public boolean guess(char letter)
+	public boolean guess(final Letter letter)
 	{
-		letter = Character.toLowerCase(letter);
-		boolean correctGuess = false;
-		for (int i = 0; i < word.length(); i++)
+		final boolean correct = word.guess(letter);
+		if (!correct)
 		{
-			if (word.charAt(i) == letter)
-			{
-				correctGuess = true;
-				correctLetters[i] = letter;
-			}
+			guessesRemaining--;		
 		}
-		if (!correctGuess && guessedLetters[letter - 'a'] == false)
-		{
-			guessesRemaining--;
-		}
-		guessedLetters[letter - 'a'] = true;
-		return correctGuess;
-	}
-
-	/**
-	 * Return whether the user has guessed the given letter or not.
-	 * 
-	 * @param letter
-	 *            The letter to check
-	 * @return Whether this letter has been guessed or not
-	 */
-	public boolean isGuessed(char letter)
-	{
-		letter = Character.toLowerCase(letter);
-		return guessedLetters[letter - 'a'];
+		return correct;
 	}
 
 	/**
@@ -141,37 +116,16 @@ public class Hangman implements Serializable
 	 */
 	public boolean isWon()
 	{
-		for (int i = 0; i < correctLetters.length; i++)
-		{
-			if (correctLetters[i] == '_')
-			{
-				return false;
-			}
-		}
-		return true;
+		return word.isGuessed();
 	}
 
 	/**
-	 * Play again with same settings
+	 * Play another game with same settings
 	 */
 	public void newGame()
 	{
-		newGame(guessesAllowed, new WordGenerator());
+		newGame(guessesAllowed, wordGenerator);
 	}
-
-	/**
-	 * Initialise the hangman read for a new game.
-	 * 
-	 * @param guessesAllowed
-	 *            Number of guesses allowed
-	 * @param word
-	 *            The word to use or null to pick randomly
-	 */
-	public void newGame(final int guessesAllowed, final String word)
-	{
-		newGame(guessesAllowed, new WordGenerator(new String[] { word }));
-	}
-	
 
 	/**
 	 * Initialise the hangman read for a new game.
@@ -184,13 +138,27 @@ public class Hangman implements Serializable
 	public void newGame(final int guessesAllowed, final WordGenerator wordGenerator)
 	{
 		this.guessesAllowed = guessesAllowed;
-		this.word = wordGenerator.nextWord().toLowerCase();
-		correctLetters = new char[this.word.length()];
-		for (int i = 0; i < correctLetters.length; i++)
-		{
-			correctLetters[i] = '_';
-		}
-		guessedLetters = new boolean[26];
+		this.word = wordGenerator.next();
+		this.wordGenerator = wordGenerator;
 		guessesRemaining = guessesAllowed;
+		
+		// Add letters
+		if (letters == null)
+		{
+			letters = new ArrayList();
+			for (char c = 'a'; c <= 'z'; c++)
+			{
+				letters.add(new Letter(c));
+			}		
+		}
+		else
+		{
+			// Reset guesses
+			for (Iterator iterator = letters.iterator(); iterator.hasNext();)
+			{
+				Letter letter = (Letter)iterator.next();
+				letter.reset();
+			}
+		}
 	}
 }

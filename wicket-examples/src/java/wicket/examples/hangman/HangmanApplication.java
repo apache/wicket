@@ -23,7 +23,7 @@ import wicket.Session;
 import wicket.examples.WicketExampleApplication;
 
 /**
- * Class defining the main Hangman application.
+ * Class defining the main Game application.
  * 
  * @author Chris Turner
  * @author Jonathan Locke
@@ -36,7 +36,6 @@ public class HangmanApplication extends WicketExampleApplication
     public HangmanApplication()
     {
         getPages().setHomePage(Home.class);
-        getSettings().setStripWicketTags(true);
     }
     
     /**

@@ -55,12 +55,12 @@ public class WordGeneratorTest extends TestCase
 	public void testWordGenerator() throws Exception
 	{
 		WordGenerator wg = new WordGenerator();
-		int wordCount = wg.getWordCount();
+		int wordCount = wg.size();
 		Set words = new HashSet();
 		log.info("First iteration...");
 		for (int i = 0; i < wordCount; i++)
 		{
-			String word = wg.nextWord();
+			Word word = wg.next();
 			log.info("Word found: " + word);
 			Assert.assertFalse("Word should not be returned twice", words.contains(word));
 			words.add(word);
@@ -68,7 +68,7 @@ public class WordGeneratorTest extends TestCase
 		log.info("Second iteration...");
 		for (int i = 0; i < wordCount; i++)
 		{
-			String word = wg.nextWord();
+			Word word = wg.next();
 			log.info("Word found: " + word);
 			Assert.assertTrue("Word should have been returned only once", words.remove(word));
 		}
@@ -82,6 +82,6 @@ public class WordGeneratorTest extends TestCase
 	public void testSuppliedWordConstructor() throws Exception
 	{
 		WordGenerator wg = new WordGenerator(new String[] { "Testing" });
-		Assert.assertEquals("Word should be as expected", "testing", wg.nextWord());
+		Assert.assertEquals("Word should be as expected", "testing", wg.next());
 	}
 }

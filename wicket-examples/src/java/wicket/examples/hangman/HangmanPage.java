@@ -29,8 +29,8 @@ public class HangmanPage extends WicketExamplePage
 	/**
 	 * @return Returns the hangman.
 	 */
-	public Hangman getHangman()
+	public Game getGame()
 	{
-		return ((HangmanSession)getSession()).getHangman();
+		return ((HangmanSession)getSession()).getGame();
 	}
 }

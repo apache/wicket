@@ -30,20 +30,16 @@ public class Lose extends HangmanPage
 {
 	/**
 	 * Create the lose page and its associated components.
-	 * 
-	 * @param guessPage
-	 *            The guess page that we came from and return back to
 	 */
-	public Lose(final Guess guessPage)
+	public Lose()
 	{
-		add(new Label("currentWord", getHangman().getWord()));
+		add(new Label("currentWord", getGame().getWord().asString(false)));
 		add(new Link("playAgain")
 		{
 			public void onClick()
 			{
-				getHangman().newGame();
-				guessPage.resetLetters();
-				getRequestCycle().setResponsePage(guessPage);
+				getGame().newGame();
+				setResponsePage(new Guess());
 			}
 		});
 	}

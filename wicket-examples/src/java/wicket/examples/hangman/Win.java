@@ -30,21 +30,17 @@ public class Win extends HangmanPage
 {
 	/**
 	 * Create the win page and its associated components.
-	 * 
-	 * @param guessPage
-	 *            The guess page that we came from and return back to
 	 */
-	public Win(final Guess guessPage)
+	public Win()
 	{
-		add(new Label("guessesRemaining", Integer.toString(getHangman().getGuessesRemaining())));
-		add(new Label("currentWord", getHangman().getWord()));
+		add(new Label("guessesRemaining", Integer.toString(getGame().getGuessesRemaining())));
+		add(new Label("currentWord", getGame().getWord().asString(false)));
 		add(new Link("playAgain")
 		{
 			public void onClick()
 			{
-				getHangman().newGame();
-				guessPage.resetLetters();
-				getRequestCycle().setResponsePage(guessPage);
+				getGame().newGame();
+				setResponsePage(new Guess());
 			}
 		});
 	}
