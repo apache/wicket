@@ -37,9 +37,9 @@ Java web frameworks can you name? The answer they show looks like this:
 </table>
 </subsection>
 </section>
-<section name='Why "Reinvent the Wheel"?'>
+<subsection name='Why "Reinvent the Wheel"?'>
 <p>
-Even given this shorter list, you may be wondering "What good is another web application framework?"
+In light of this, you may be wondering "What good is another web application framework?"
 Indeed. Why "re-invent the wheel?" One snappy comeback to that old saw is: because this time we
 could make it rounder!
 </p>
@@ -51,7 +51,7 @@ that Wicket fills. In fact, Wicket is quite unlike each of the frameworks above.
 <p>
 Wicket's closest cousins are probably Tapestry and Echo, but even there the likeness is
 very shallow. Like Tapestry, Wicket uses a special HTML attribute to denote components,
-enabling easy editing with ordinary HTML editors. Like Echo, Wicket is Swing-like.
+enabling easy editing with ordinary HTML editors. Like Echo, Wicket has a Swing-like component model.
 But Wicket applications are not like applications written in either Tapestry or Echo,
 because in Wicket you get the best of both worlds. You get the benefits of a Swing-like 
 component model and a non-intrusive approach to HTML. In many situations, this combination
@@ -60,7 +60,7 @@ may prove to be a significant development advantage.
 <p>
 To understand why Wicket is so different, it may help to understand the motivations that created it.
 </p>
-</section>
+</subsection>
 
 <section name="Motivations">
 <subsection name="Most existing web frameworks provide weak to non-existent support in managing server-side state.">
