@@ -18,25 +18,31 @@
  */
 package signin2;
 
-import com.voicetribe.util.time.Duration;
-import com.voicetribe.wicket.WebApplication;
+import com.voicetribe.wicket.PageParameters;
+import com.voicetribe.wicket.RequestCycle;
 
 /**
- * Forms example.
+ * Simple home page.
  * @author Jonathan Locke
  */
-public final class SignIn2Application extends WebApplication
+public class Logout extends AuthenticatedHtmlPage
 {
     /**
-     * Constructor.
+     * Constructor
+     * @param parameters Page parameters (ignored since this is the home page)
      */
-    public SignIn2Application()
+    public Logout(final PageParameters parameters)
     {
-        getSettings().setHomePage(Home.class);
-
-        Duration pollFreq = Duration.ONE_SECOND;
-        getSettings().setResourcePollFrequency(pollFreq);
     }
+    
+	/**
+	 * @see com.voicetribe.wicket.Page#checkAccess(com.voicetribe.wicket.RequestCycle)
+	 */
+	protected boolean checkAccess(RequestCycle cycle) 
+	{
+	    SignIn2.logout(cycle);
+		return true;
+	}
 }
 
 ///////////////////////////////// End of File /////////////////////////////////
