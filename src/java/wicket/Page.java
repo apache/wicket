@@ -71,7 +71,7 @@ public abstract class Page extends Container implements IRedirectListener
     static
     {
         // Allow calls through the IRedirectListener interface
-        RequestCycle.registerListenerInterface(IRedirectListener.class);
+        RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
     }
 
     /**

@@ -58,7 +58,7 @@ public class Image extends HtmlComponent implements IResourceListener
 
 	static
     {
-        RequestCycle.registerListenerInterface(IResourceListener.class);
+        RequestCycle.registerRequestListenerInterface(IResourceListener.class);
     }
 
     /** The image resource. */

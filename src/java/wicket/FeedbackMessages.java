@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
 import wicket.model.IModel;
+import wicket.util.string.StringList;
 
 
 /**
@@ -45,7 +46,7 @@ public final class FeedbackMessages
     /** Log. */
     private static Log log = LogFactory.getLog(FeedbackMessages.class);
 
-    /** holder for the current FeedbackMessages. */
+    /** Thread local holder for the current FeedbackMessages. */
     private static ThreadLocal current = new ThreadLocal();
 
     /**
@@ -59,7 +60,10 @@ public final class FeedbackMessages
      */
     public static final class LevelComparator implements Comparator
     {
-        /** asc/ desc sign. */
+        private static final int ASCENDING = 1;
+        private static final int DESCENDING = -1;
+        
+        /** Ascending / descending sign value. */
         private final int sign;
 
         /**
@@ -68,7 +72,7 @@ public final class FeedbackMessages
          */
         public LevelComparator(boolean ascending)
         {
-            sign = (ascending) ? 1 : -1;
+            sign = ascending ? ASCENDING : DESCENDING;
         }
 
         /**
@@ -79,15 +83,15 @@ public final class FeedbackMessages
          */
         public int compare(Object o1, Object o2)
         {
-            int l1 = ((FeedbackMessage)o1).getLevel();
-            int l2 = ((FeedbackMessage)o2).getLevel();
-            if(l1 < l2)
+            int level1 = ((FeedbackMessage)o1).getLevel();
+            int level2 = ((FeedbackMessage)o2).getLevel();
+            if (level1 < level2)
             {
                 return sign * -1;
             }
-            else if(l1 > l2)
+            else if (level1 > level2)
             {
-                return sign * 1;
+                return sign;
             }
             else
             {
@@ -116,7 +120,7 @@ public final class FeedbackMessages
          * Construct and narrow to the given level.
          * @param level the level to narrow to
          */
-        public UIMessagesModel(int level)
+        public UIMessagesModel(final int level)
         {
             this.level = level;
         }
@@ -127,14 +131,14 @@ public final class FeedbackMessages
          */
         public Object getObject()
         {
-            FeedbackMessages uim = get();
-            if(level == FeedbackMessage.UNDEFINED)
+            final FeedbackMessages messages = get();
+            if (level == FeedbackMessage.UNDEFINED)
             {
-                return uim.getMessages();
+                return messages.getMessages();
             }
             else
             {
-                return uim.getMessages(level);
+                return messages.getMessages(level);
             }
         }
 
@@ -145,25 +149,25 @@ public final class FeedbackMessages
          */
         public void setObject(Object object)
         {
-            FeedbackMessages uim = get();
-            if(object instanceof List)
+            FeedbackMessages messages = get();
+            if (object instanceof List)
             {
-                uim.setMessages((List)object);
+                messages.setMessages((List)object);
             }
-            else if(object instanceof FeedbackMessage[])
+            else if (object instanceof FeedbackMessage[])
             {
-                if(object != null)
+                if (object != null)
                 {
-                    uim.setMessages(Arrays.asList((FeedbackMessage[])object));
+                    messages.setMessages(Arrays.asList((FeedbackMessage[])object));
                 }
                 else
                 {
-                    uim.setMessages(null);
+                    messages.setMessages(null);
                 }
             }
             else
             {
-                throw new RuntimeException("invalid model type for FeedbackMessages");
+                throw new RuntimeException("Invalid model type for FeedbackMessages");
             }
         }
     }
@@ -186,11 +190,11 @@ public final class FeedbackMessages
     public static FeedbackMessages get()
     {
         FeedbackMessages currentMessages = (FeedbackMessages)current.get();
-        if(currentMessages == null)
+        if (currentMessages == null)
         {
             currentMessages = new FeedbackMessages();
             current.set(currentMessages);
-            if(log.isDebugEnabled())
+            if (log.isDebugEnabled())
             {
                 log.debug("FeedbackMessages created for thread " + Thread.currentThread());
             }
@@ -204,7 +208,7 @@ public final class FeedbackMessages
      */
     static void set(FeedbackMessages messages)
     {
-        if(current.get() != null) // that would be wrong
+        if (current.get() != null) // that would be wrong
         {
             log.error("messages were allready set for this thread!" +
             		" Either a former cleanup failed, or the current thread has illegal" +
@@ -214,7 +218,7 @@ public final class FeedbackMessages
         }
         else
         {
-            if(log.isDebugEnabled())
+            if (log.isDebugEnabled())
             {
                 log.debug(messages + " set for thread " + Thread.currentThread());
             }
@@ -223,45 +227,49 @@ public final class FeedbackMessages
     }
 
     /**
-     * Clears the current messages instance from the thread local and
+     * Clears the current message's instance from the thread local and
      * reset the original models of the components that had theirs replaced
      * with decorator models. To be used by the framework only (package local).
      */
     static void release()
     {
-        FeedbackMessages currentMessages = (FeedbackMessages)current.get();
-        if(currentMessages != null)
+        final FeedbackMessages currentMessages = (FeedbackMessages)current.get();
+        if (currentMessages != null)
         {
-            if(log.isDebugEnabled())
+            if (log.isDebugEnabled())
             {
                 log.debug("FeedbackMessages " + currentMessages + " released for thread "
                         + Thread.currentThread());
             }
-            // only error level components have their models (possibly) replaced
-            Set components = currentMessages.getErrorReporters();
-            for(Iterator i = components.iterator(); i.hasNext();)
+            
+            // Only error level components have their models (possibly) replaced
+            final Set components = currentMessages.getErrorReporters();
+            for (final Iterator i = components.iterator(); i.hasNext();)
             {
                 Component component = (Component)i.next();
                 IModel currentModel = component.getModel();
-                // if the model was wrapped (ie the error message was added by the
+                
+                // If the model was wrapped (ie the error message was added by the
                 // validation mechanism of this framework
-                if(currentModel instanceof ValidationErrorModelDecorator)
+                if (currentModel instanceof ValidationErrorModelDecorator)
                 {
-                    ValidationErrorModelDecorator deco =
+                    ValidationErrorModelDecorator decorator =
                         ((ValidationErrorModelDecorator)currentModel);
-                    IModel originalModel = deco.getOriginalModel();
-                    // replace the model with the initial one
+                    IModel originalModel = decorator.getOriginalModel();
+                    
+                    // Replace the model with the initial one
                     component.setModel(originalModel);
                 }
             }
-            // clear thread local
+            
+            // Clear thread local
             current.set(null);
         }
         else
         {
-            if(log.isDebugEnabled())
+            if (log.isDebugEnabled())
             {
-                log.debug("no FeedbackMessages to release for thread " + Thread.currentThread());
+                log.debug("No FeedbackMessages to release for thread " + Thread.currentThread());
             }
         }
     }
@@ -271,9 +279,9 @@ public final class FeedbackMessages
      */
     static void remove()
     {
-        if(log.isDebugEnabled())
+        if (log.isDebugEnabled())
         {
-            log.debug("FeedbackMessages cleared without releasing for thread "+ Thread.currentThread());
+            log.debug("FeedbackMessages cleared without releasing for thread " + Thread.currentThread());
         }
         current.set(null);
     }
@@ -354,11 +362,14 @@ public final class FeedbackMessages
      */
     public FeedbackMessages add(FeedbackMessage message)
     {
-        if(log.isDebugEnabled())
+        if (log.isDebugEnabled())
         {
             log.debug("adding message " + message + " for thread " + Thread.currentThread());
         }
-        if(messages == null) messages = new ArrayList();
+        if (messages == null) 
+        {
+            messages = new ArrayList();
+        }
         messages.add(message);
         return this;
     }
@@ -369,7 +380,7 @@ public final class FeedbackMessages
      */
     public boolean hasMessages()
     {
-        return (messages != null && (!messages.isEmpty()));
+        return messages != null && !messages.isEmpty();
     }
 
     /**
@@ -389,15 +400,15 @@ public final class FeedbackMessages
      * @param level the level
      * @return whether this list contains any messages with the given level or up
      */
-    public boolean hasMessages(int level)
+    public boolean hasMessages(final int level)
     {
         boolean errors = false;
-        if(hasMessages())
+        if (hasMessages())
         {
-            for(Iterator i = messages.iterator(); i.hasNext();)
+            for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
             {
-                FeedbackMessage message = (FeedbackMessage)i.next();
-                if(message.isLevel(level))
+                final FeedbackMessage message = (FeedbackMessage)iterator.next();
+                if (message.isLevel(level))
                 {
                     errors = true;
                     break;
@@ -413,9 +424,8 @@ public final class FeedbackMessages
      */
     public List getMessages()
     {
-        List msgs = null;
-        msgs = (this.messages != null) ? this.messages :  Collections.EMPTY_LIST;
-        return Collections.unmodifiableList(msgs);
+        return (this.messages != null) ? Collections.unmodifiableList(this.messages) : 
+            Collections.EMPTY_LIST;
     }
 
     /**
@@ -440,16 +450,16 @@ public final class FeedbackMessages
 
     /**
      * Gets the messages sorted.
-     * @param asc whether to sort ascending (true) or descending (false)
+     * @param ascending Whether to sort ascending (true) or descending (false)
      * @return sorted list
      */
-    private List getMessagesSorted(boolean asc)
+    private List getMessagesSorted(boolean ascending)
     {
-        if(messages != null)
+        if (messages != null)
         {
-	        List toSort = new ArrayList(messages);
-	        Collections.sort(toSort, new LevelComparator(asc));
-	        return toSort;
+	        final List sorted = new ArrayList(messages);
+	        Collections.sort(sorted, new LevelComparator(ascending));
+	        return sorted;
         }
         else
         {
@@ -474,13 +484,13 @@ public final class FeedbackMessages
      */
     public FeedbackMessage getMessageFor(Component component)
     {
-        if(messages != null)
+        if (messages != null)
         {
             FeedbackMessage message = null;
-            for(Iterator i = messages.iterator(); i.hasNext();)
+            for (Iterator i = messages.iterator(); i.hasNext();)
             {
                 FeedbackMessage toTest = (FeedbackMessage)i.next();
-                if((toTest.getReporter() != null) && (toTest.getReporter().equals(component)))
+                if ((toTest.getReporter() != null) && (toTest.getReporter().equals(component)))
                 {
                     message = toTest;
                     break;
@@ -501,7 +511,7 @@ public final class FeedbackMessages
      */
     public boolean hasMessageFor(Component component)
     {
-        return (getMessageFor(component) != null);
+        return getMessageFor(component) != null;
     }
 
     /**
@@ -527,7 +537,7 @@ public final class FeedbackMessages
     public boolean hasMessageFor(Component component, int level)
     {
         FeedbackMessage message = getMessageFor(component);
-        if(message != null)
+        if (message != null)
         {
             return (message.isLevel(level));
         }
@@ -557,13 +567,13 @@ public final class FeedbackMessages
      */
     public FeedbackMessages getMessages(int level)
     {
-        if(messages != null)
+        if (messages != null)
         {
             List sublist = new ArrayList();
-            for(Iterator i = messages.iterator(); i.hasNext();)
+            for (Iterator i = messages.iterator(); i.hasNext();)
             {
                 FeedbackMessage message = (FeedbackMessage)i.next();
-                if(message.isLevel(level))
+                if (message.isLevel(level))
                 {
                     sublist.add(message);
                 }
@@ -594,13 +604,13 @@ public final class FeedbackMessages
      */
     public Set getErrorReporters()
     {
-        if(messages != null)
+        if (messages != null)
         {
-            Set subset = new HashSet();
-            for(Iterator i = messages.iterator(); i.hasNext();)
+            final Set subset = new HashSet();
+            for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
             {
-                FeedbackMessage message = (FeedbackMessage)i.next();
-                if(message.isLevel(FeedbackMessage.ERROR))
+                final FeedbackMessage message = (FeedbackMessage)iterator.next();
+                if (message.isLevel(FeedbackMessage.ERROR))
                 {
                     subset.add(message.getReporter());
                 }
@@ -618,15 +628,15 @@ public final class FeedbackMessages
      * @param level the level to get the messages for
      * @return the set of reporters of messages that are of the given level or above
      */
-    public Set getReporters(int level)
+    public Set getReporters(final int level)
     {
-        if(messages != null)
+        if (messages != null)
         {
-            Set subset = new HashSet();
-            for(Iterator i = messages.iterator(); i.hasNext();)
+            final Set subset = new HashSet();
+            for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
             {
-                FeedbackMessage message = (FeedbackMessage)i.next();
-                if(message.isLevel(level))
+                final FeedbackMessage message = (FeedbackMessage)iterator.next();
+                if (message.isLevel(level))
                 {
                     subset.add(message.getReporter());
                 }
@@ -644,22 +654,8 @@ public final class FeedbackMessages
      */
     public String toString()
     {
-        StringBuffer b = new StringBuffer("FeedbackMessages{");
-        List msgs = getMessages();
-        if(!msgs.isEmpty())
-        {
-	        for(Iterator i = msgs.iterator(); i.hasNext();)
-	        {
-	            b.append(i.next());
-	            if(i.hasNext()) b.append(",");
-	        }
-        }
-        else
-        {
-            b.append("<empty>");
-        }
-        b.append("}");
-        return b.toString();
+        return "[feedbackMessages = " + StringList.valueOf(getMessages()) + "]";
     }
 }
 
+///////////////////////////////// End of File /////////////////////////////////

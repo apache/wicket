@@ -32,7 +32,9 @@ import wicket.markup.html.ExceptionErrorPage;
 import wicket.util.lang.Classes;
 
 /**
- * Represents the request cycle.
+ * Represents the request cycle, including the applicable application, page, 
+ * request, response and session.
+ * <p>
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT INTENDED
  * TO BE SUBCLASSED BY FRAMEWORK CLIENTS.
  * <p>
@@ -139,23 +141,26 @@ import wicket.util.lang.Classes;
  */
 public abstract class RequestCycle
 { // TODO finalize javadoc
-    /** the application object. */
+    /** Log */
+    private static final Log log = LogFactory.getLog(RequestCycle.class);
+
+    /** The application object. */
     protected final IApplication application;
 
-    /** the session object. */
+    /** The session object. */
     protected final Session session;
 
-    /** the current request. */
+    /** The current request. */
     protected final Request request;
 
-    /** the current response. */
+    /** The current response. */
     protected Response response;
 
     /** The page to render to the user. */
     private Page page;
 
     /**
-     * IF the page is set to null, we'll first set the current page to this
+     * If the page is set to null, we'll first set the current page to this
      * variable. We use this in order to be able to release resources on the
      * page and its components.
      */
@@ -173,9 +178,6 @@ public abstract class RequestCycle
     /** Map from interface Class to Method. */
     private static final Map listenerInterfaceMethods = new HashMap();
 
-    /** Log. */
-    private static final Log log = LogFactory.getLog(RequestCycle.class);
-
     /** Thread-local that holds the current request cycle. */
     private static final ThreadLocal current = new ThreadLocal();
 
@@ -185,7 +187,7 @@ public abstract class RequestCycle
      * NOTE: THIS METHOD IS NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
      * @param c The interface class, which must extend IRequestListener.
      */
-    public static void registerListenerInterface(final Class c)
+    public static void registerRequestListenerInterface(final Class c)
     {
         // Ensure that c extends IRequestListener
         if (!IRequestListener.class.isAssignableFrom(c))
@@ -241,7 +243,9 @@ public abstract class RequestCycle
         this.response    = response;
 
         session.setApplication(application);
-        current.set(this); // set request cycle for ThreadLocal access
+        
+        // Set this RequestCycle into ThreadLocal variable
+        current.set(this); 
     }
 
     /**
@@ -253,7 +257,7 @@ public abstract class RequestCycle
      */
     public final boolean continueToOriginalDestination()
     {
-        String url = session.getInterceptContinuationURL();
+        final String url = session.getInterceptContinuationURL();
         if (url != null)
         {
             response.redirect(url);
@@ -344,44 +348,10 @@ public abstract class RequestCycle
         finally
         {
             release();
-            response.close(); //close the response
+            
+            // Close the response
+            response.close();
         }
-    }
-
-    /**
-     * Releases the current thread local related resources.
-     * The threadlocal of this request cycle is reset.
-     * If we are in a 'redirect' state, we do not want to loose our messages
-     * as - e.g. when handling a form - there's a fat change we are comming back
-     * for the rendering of it.
-     */
-    private void release()
-    {
-        if (getRedirect())
-        {
-            // Since we are explicitly redirecting to a page already, we do not
-            // want a second redirect to occur automatically
-            setRedirect(false);
-            if (page != null)
-            {
-                page.messages = FeedbackMessages.get();
-                FeedbackMessages.remove(); // only clean thread local; in fact we moved the
-                	// reference from the thread local to the page temporarily
-            }
-            else // hmmm, no page, which probably means we are rendering directely
-                // ourselves; as a fallthrough, we have to clear things up
-            {
-                FeedbackMessages.release(); 
-            }
-        }
-        else
-        {
-            // clear the ui messages and reset the original component models
-            // the components have had the possibility of rendering the messages,
-            // and the messages are meant for 'one time use' only.
-            FeedbackMessages.release();
-        }
-        current.set(null); // reset ThreadLocal reference
     }
 
     /**
@@ -606,4 +576,46 @@ public abstract class RequestCycle
      */
     protected abstract void redirectToPage(final Page page);
 
+    /**
+     * Releases the current thread local related resources.
+     * The threadlocal of this request cycle is reset.
+     * If we are in a 'redirect' state, we do not want to loose our messages
+     * as - e.g. when handling a form - there's a fat change we are comming back
+     * for the rendering of it.
+     */
+    private void release()
+    {
+        if (getRedirect())
+        {
+            // Since we are explicitly redirecting to a page already, we do not
+            // want a second redirect to occur automatically
+            setRedirect(false);
+            if (page != null)
+            {
+                // Copy feedback messages into page
+                page.messages = FeedbackMessages.get();
+                
+                // Remove thread local feedback messages
+                FeedbackMessages.remove(); 
+            }
+            else 
+            {
+                // Hmmm, no page, which probably means we are rendering directely
+                // ourselves; as a fallthrough, we have to clear things up
+                FeedbackMessages.release(); 
+            }
+        }
+        else
+        {
+            // Clear the ui messages and reset the original component models
+            // the components have had the possibility of rendering the messages,
+            // and the messages are meant for 'one time use' only.
+            FeedbackMessages.release();
+        }
+        
+        // Clear ThreadLocal reference
+        current.set(null); 
+    }
 }
+
+///////////////////////////////// End of File /////////////////////////////////
