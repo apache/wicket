@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>Image</title>
+<script type="text/javascript">
+function resizeWinTo()
+{
+	if( !document.images.length ) { document.images[0] = document.layers[0].images[0]; }
+	var oH = document.images[0].height
+	var oW = document.images[0].width;
+	if( !oH || window.doneAlready ) { return; }
+	window.doneAlready = true;
+	var x = window; x.resizeTo( oW + 200, oH + 200 );
+	var myW = 0
+	var myH = 0
+	var d = x.document.documentElement
+	var b = x.document.body;
+	if( x.innerWidth ) { myW = x.innerWidth; myH = x.innerHeight; }
+	else if( d && d.clientWidth ) { myW = d.clientWidth; myH = d.clientHeight; }
+	else if( b && b.clientWidth ) { myW = b.clientWidth; myH = b.clientHeight; }
+	if( window.opera && !document.childNodes ) { myW += 16; }
+	x.resizeTo( oW = oW + ( ( oW + 200 ) - myW ), oH = oH + ( (oH + 200 ) - myH ) );
+	var scW = screen.availWidth ? screen.availWidth : screen.width;
+	var scH = screen.availHeight ? screen.availHeight : screen.height;
+	if( !window.opera ) { x.moveTo(Math.round((scW-oW)/2),Math.round((scH-oH)/2)); }
+}
+</script>
+</head>
+<body>
+<div style="position:absolute;left:0px;top:0px;">
+ <a href="#" onclick="self.close();"><img id="wicket-image" onload="resizeWinTo();" border="0"/></a>
+</div>
+</body>
+</html>

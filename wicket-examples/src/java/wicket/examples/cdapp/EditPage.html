@@ -1,10 +1,10 @@
 <html>
-<head>
-<title>Wicket Examples - cdapp</title>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<link rel="stylesheet" type="text/css" href="cdapp/style.css" />
-</head>
-<body>
+ <head>
+  <title>Wicket Examples - cdapp</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" type="text/css" href="cdapp/style.css" />
+ </head>
+ <body>
 
 <span id="wicket-mainNavigation" />
 
@@ -43,20 +43,26 @@
   </table>
 </div>
 
-<div id="imageBox">
-  <div id="imageDisplayBox">
-	<img id="wicket-cdimage"/>
-  </div>
-  <div>
-  	<form id="wicket-imageUpload">
-  		<input id="wicket-file" type="file"/>
-  		<input type="submit" value="upload"/>
-  	</form>
-  </div>
-</div>
+<fieldset id="imageFieldset">
+  <legend>image</legend>
+	<div id="imageBox">
+	  <div id="imageDisplayBox">
+	   <a href="#" id="wicket-popupImageLink"><img id="wicket-cdimage"/></a>
+	  <span id="removeImage">
+	    <a href="#" id="wicket-deleteImageLink"><img src="cdapp/delete.gif"></a>
+	  </span>
+	  </div>
+	  <div>
+	  	<form id="wicket-imageUpload">
+	  		<input id="wicket-file" type="file"/>
+	  		<input type="submit" value="upload"/>
+	  	</form>
+	  </div>
+	</div>
+</fieldset>
 
 </fieldset>
 
 <div><span id="wicket-feedback" /></div>
-</body>
+ </body>
 </html>

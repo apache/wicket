@@ -20,18 +20,12 @@ package wicket.examples.cdapp;
 
 import java.util.List;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.IFeedback;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.WicketRuntimeException;
-import wicket.contrib.data.util.hibernate.HibernateHelper;
 import wicket.examples.WicketExamplePage;
 import wicket.examples.cdapp.model.CD;
 import wicket.markup.html.WebMarkupContainer;
@@ -54,10 +48,10 @@ import wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class SearchCDPage extends WicketExamplePage
+public class SearchPage extends WicketExamplePage
 {
 	/** Logger. */
-	private static Log log = LogFactory.getLog(SearchCDPage.class);
+	private static Log log = LogFactory.getLog(SearchPage.class);
 
 	/** list view for search results. */
 	private SearchCDResultsListView resultsListView;
@@ -66,7 +60,7 @@ public class SearchCDPage extends WicketExamplePage
 	private final SearchForm searchForm;
 
 	/** model for searching. */
-	private final CDSearchModel searchModel;
+	private final SearchModel searchModel;
 
 	/**
 	 * Refers to a possible message set from the outside (details page).
@@ -75,10 +69,13 @@ public class SearchCDPage extends WicketExamplePage
 	 */
 	private String infoMessageForNextRendering = null;
 
+	/** DAO for cd's. */
+	private final CDDao dao = new CDDao();
+
 	/**
 	 * Construct.
 	 */
-	public SearchCDPage()
+	public SearchPage()
 	{
 		this(null);
 	}
@@ -87,11 +84,11 @@ public class SearchCDPage extends WicketExamplePage
 	 * Construct.
 	 * @param pageParameters parameters for this page
 	 */
-	public SearchCDPage(PageParameters pageParameters)
+	public SearchPage(PageParameters pageParameters)
 	{
 		super();
 		final int rowsPerPage = 8;
-		searchModel = new CDSearchModel(rowsPerPage);
+		searchModel = new SearchModel(rowsPerPage);
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		searchForm = new SearchForm("searchForm", feedback);
 		add(searchForm);
@@ -191,7 +188,7 @@ public class SearchCDPage extends WicketExamplePage
 		{
 			searchModel.setSearchString(search); // set search query on model
 			setCurrentResultPageToFirst(); // start with first page
-			SearchCDPage.this.modelChangedStructure();
+			SearchPage.this.modelChangedStructure();
 
 			if(search != null && (!search.trim().equals("")))
 			{
@@ -294,7 +291,7 @@ public class SearchCDPage extends WicketExamplePage
 		{
 			final RequestCycle requestCycle = getRequestCycle();
 			final Long id = (Long)getModelObject();
-			requestCycle.setPage(new EditCDPage(SearchCDPage.this, id));
+			requestCycle.setPage(new EditPage(SearchPage.this, id));
 		}	
 	}
 
@@ -317,29 +314,9 @@ public class SearchCDPage extends WicketExamplePage
 		public void onClick()
 		{
 			final Long id = (Long)getModelObject();
-			Session session = null;
-			Transaction tx = null;
-			try
-			{
-				session = HibernateHelper.getSession();
-				tx = session.beginTransaction();
-				CD toDelete = (CD)session.load(CD.class, id);
-				session.delete(toDelete);
-				tx.commit();
-				info(" cd " + toDelete.getTitle() + " deleted");
-				SearchCDPage.this.modelChangedStructure();
-			}
-			catch (HibernateException e)
-			{
-				try
-				{
-					tx.rollback();
-				}
-				catch (HibernateException ex)
-				{
-				}
-				throw new WicketRuntimeException(e);
-			}
+			dao.delete(id);
+			info(" cd deleted");
+			SearchPage.this.modelChangedStructure();
 		}
 	}
 
@@ -369,7 +346,7 @@ public class SearchCDPage extends WicketExamplePage
 		public void onClick()
 		{
 			searchModel.addOrdering(field);
-			SearchCDPage.this.modelChangedStructure();
+			SearchPage.this.modelChangedStructure();
 		}
 	}
 

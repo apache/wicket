@@ -109,6 +109,10 @@ input, select, label  {
 	margin: 5px;
 }
 
+#imageFieldset {
+	
+}
+
 #imageBox {
 	float: left;
 	margin: 5px;
@@ -120,5 +124,9 @@ input, select, label  {
 	border-width: 1px;
 	width: 100px;
 	height: 100px;
-	padding: 5px;
+	padding: 1px;
+}
+
+#removeImage {
+	float: right;
 }

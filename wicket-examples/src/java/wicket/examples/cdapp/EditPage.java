@@ -18,21 +18,15 @@
  */
 package wicket.examples.cdapp;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Component;
 import wicket.IFeedback;
-import wicket.WicketRuntimeException;
 import wicket.contrib.data.model.PersistentObjectModel;
 import wicket.contrib.data.model.hibernate.HibernateObjectModel;
-import wicket.contrib.data.util.hibernate.HibernateHelper;
 import wicket.contrib.data.util.hibernate.HibernateHelperSessionDelegate;
+import wicket.contrib.markup.html.image.resource.ThumbnailImageResource;
 import wicket.examples.WicketExamplePage;
 import wicket.examples.cdapp.model.CD;
 import wicket.markup.html.basic.Label;
@@ -49,7 +43,6 @@ import wicket.markup.html.image.resource.ImageResource;
 import wicket.markup.html.image.resource.StaticImageResource;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.AbstractDetachableModel;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
@@ -61,20 +54,23 @@ import wicket.util.resource.IResource;
  * 
  * @author Eelco Hillenius
  */
-public final class EditCDPage extends WicketExamplePage
+public final class EditPage extends WicketExamplePage
 {
 	/** Logger. */
-	private static Log log = LogFactory.getLog(SearchCDPage.class);
+	private static Log log = LogFactory.getLog(SearchPage.class);
 
 	/** static image resource from this package; references image 'questionmark.gif'. */
 	private static final StaticImageResource IMG_UNKNOWN = StaticImageResource.get(
-			EditCDPage.class.getPackage(), "questionmark.gif", null, null);
+			EditPage.class.getPackage(), "questionmark.gif", null, null);
 
 	/** model for one cd. */
 	private final PersistentObjectModel cdModel;
 
 	/** search page to navigate back to. */
-	private final SearchCDPage searchCDPage;
+	private final SearchPage searchCDPage;
+
+	/** DAO for cd's. */
+	private final CDDao dao = new CDDao();
 
 	/**
 	 * form for detail editing.
@@ -122,105 +118,16 @@ public final class EditCDPage extends WicketExamplePage
 			boolean isNew = (cd.getId() == null);
 			// note that, as we used the Ognl property model, the fields are
 			// allready updated
-			Session session = null;
-			Transaction tx = null;
-			try
+			dao.save(cd);
+			// set message for search page to display on next rendering
+			searchCDPage.setInfoMessageForNextRendering("cd " + cd.getTitle() + " saved");
+			searchCDPage.modelChangedStructure(); // force reload of data
+			if (isNew)
 			{
-				session = HibernateHelper.getSession();
-				tx = session.beginTransaction();
-				session.saveOrUpdate(cd);
-				tx.commit();
-				// set message for search page to display on next rendering
-				searchCDPage.setInfoMessageForNextRendering("cd " + cd.getTitle() + " saved");
-				searchCDPage.modelChangedStructure(); // force reload of data
-				if (isNew)
-				{
-					// if it was a new cd, set the search page to page 1
-					searchCDPage.setCurrentResultPageToFirst();
-				}
-				getRequestCycle().setPage(searchCDPage); // navigate back to search page
+				// if it was a new cd, set the search page to page 1
+				searchCDPage.setCurrentResultPageToFirst();
 			}
-			catch (HibernateException e)
-			{
-				try
-				{
-					tx.rollback();
-				}
-				catch (HibernateException ex)
-				{
-					ex.printStackTrace();
-				}
-				throw new WicketRuntimeException(e);
-			}
-		}
-	}
-
-	/**
-	 * Special model for the title header. It returns the CD title if there's a
-	 * loaded object (when the id != null) or it returns a special string in case
-	 * there is no loaded object (if id == null).
-	 */
-	private static class TitleModel extends AbstractDetachableModel
-	{
-		/** decorated model; provides the current id. */
-		private final PersistentObjectModel cdModel;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param cdModel the model to decorate
-		 */
-		public TitleModel(PersistentObjectModel cdModel)
-		{
-			this.cdModel = cdModel;
-		}
-
-		/**
-		 * @see AbstractDetachableModel#onSetObject(Component, Object)
-		 */
-		public void onSetObject(final Component component, final Object object)
-		{
-			cdModel.setObject(component, object);
-		}
-
-		/**
-		 * @see AbstractDetachableModel#onAttach()
-		 */
-		protected void onAttach()
-		{
-			cdModel.attach();
-		}
-
-		/**
-		 * @see AbstractDetachableModel#onDetach()
-		 */
-		protected void onDetach()
-		{
-			cdModel.detach();
-		}
-
-		/**
-		 * @see AbstractDetachableModel#onGetObject(Component)
-		 */
-		protected Object onGetObject(final Component component)
-		{
-			if (cdModel.getId() != null) // it is allready persistent
-			{
-				CD cd = (CD)cdModel.getObject(component);
-				return cd.getTitle();
-			}
-			else // it is a new cd
-			{
-				return "<NEW CD>";
-			}
-		}
-
-		/**
-		 * @see wicket.model.IModel#getNestedModel()
-		 */
-		public Object getNestedModel()
-		{
-			return cdModel;
+			getRequestCycle().setPage(searchCDPage); // navigate back to search page
 		}
 	}
 
@@ -249,27 +156,42 @@ public final class EditCDPage extends WicketExamplePage
 			FileItem item = (FileItem)fileModel.getObject(this);
 			CD cd = (CD)getModelObject();
 			cd.setImage(item.get());
-			Session session = null;
-			Transaction tx = null;
-			try
-			{
-				session = HibernateHelper.getSession();
-				tx = session.beginTransaction();
-				session.saveOrUpdate(cd);
-				tx.commit();
-			}
-			catch (HibernateException e)
-			{
-				try
-				{
-					tx.rollback();
-				}
-				catch (HibernateException ex)
-				{
-					ex.printStackTrace();
-				}
-				throw new WicketRuntimeException(e);
-			}
+			dao.save(cd);
+		}
+	}
+
+	/**
+	 * Deletes the cd image.
+	 */
+	private final class DeleteImageLink extends Link
+	{
+		/**
+		 * Construct.
+		 * @param name
+		 * @param cdModel
+		 */
+		public DeleteImageLink(String name, IModel cdModel)
+		{
+			super(name, cdModel);
+		}
+
+		/**
+		 * @see wicket.markup.html.link.Link#onClick()
+		 */
+		public void onClick()
+		{
+			CD cd = (CD)getModelObject();
+			cd.setImage(null);
+			dao.save(cd);
+		}
+
+		/**
+		 * @see wicket.Component#isVisible()
+		 */
+		public boolean isVisible()
+		{
+			// only set visible when there is an image set
+			return ((CD)getModelObject()).getImage() != null;
 		}
 	}
 
@@ -278,7 +200,7 @@ public final class EditCDPage extends WicketExamplePage
 	 * @param searchCDPage the search page to navigate back to
 	 * @param id the id of the cd to edit
 	 */
-	public EditCDPage(final SearchCDPage searchCDPage, Long id)
+	public EditPage(final SearchPage searchCDPage, Long id)
 	{
 		super();
 		cdModel = new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
@@ -288,12 +210,15 @@ public final class EditCDPage extends WicketExamplePage
 		add(feedback);
 		add(new DetailForm("detailForm", feedback, cdModel));
 		add(new ImageUploadForm("imageUpload", cdModel));
-		ImageResource imgResource = new ImageResource()
+
+		// create an image resource that displays a question mark when no image is
+		// set on the cd, or displays a thumbnail of the cd's image when there is one
+		ImageResource thumbImgResource = new ImageResource()
 		{
-			protected IResource getResource()
+			public IResource getResource()
 			{
 				final CD cd = (CD)cdModel.getObject(null);
-				if(cd.getImage() == null)
+				if (cd.getImage() == null)
 				{
 					return IMG_UNKNOWN.getResource();
 				}
@@ -306,7 +231,9 @@ public final class EditCDPage extends WicketExamplePage
 							return cd.getImage();
 						}
 					};
-					return img.getResource();
+					ThumbnailImageResource res =
+						new ThumbnailImageResource(img, 100);
+					return res.getResource();
 				}
 			}
 
@@ -316,9 +243,20 @@ public final class EditCDPage extends WicketExamplePage
 				return super.getPath();
 			}
 		};
-		add(new Image("cdimage", imgResource));
+
+		// create a link that displays the full image in a popup page
+		ImagePopupLink popupImageLink = new ImagePopupLink("popupImageLink", cdModel);
+
+		// create an image using the image resource
+		popupImageLink.add(new Image("cdimage", thumbImgResource));
+
+		// add the link to the original image
+		add(popupImageLink);
+
+		// add link for deleting the image
+		add(new DeleteImageLink("deleteImageLink", cdModel));
 	}
-	
+
 	/**
 	 * @see wicket.Component#initModel()
 	 */

@@ -35,7 +35,7 @@ import wicket.model.AbstractReadOnlyDetachableModel;
  * 
  * @author Eelco Hillenius
  */
-public final class CDSearchModel extends AbstractReadOnlyDetachableModel
+public final class SearchModel extends AbstractReadOnlyDetachableModel
 {
 	/** action used by the pageable list (has our order columns). */
 	private CountAndListAction countAndListAction = new CountAndListAction();	
@@ -77,7 +77,7 @@ public final class CDSearchModel extends AbstractReadOnlyDetachableModel
 	/**
 	 * Construct.
 	 */
-	public CDSearchModel()
+	public SearchModel()
 	{
 	}
 
@@ -85,7 +85,7 @@ public final class CDSearchModel extends AbstractReadOnlyDetachableModel
 	 * Construct.
 	 * @param rowsPerPage number of rows on each page
 	 */
-	public CDSearchModel(int rowsPerPage)
+	public SearchModel(int rowsPerPage)
 	{
 		this.rowsPerPage = rowsPerPage;
 	}
