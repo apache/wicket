@@ -29,7 +29,7 @@ import wicket.markup.html.HtmlContainer;
 
 
 /**
- * This is a convinient component to create sorted table headers very easily.
+ * This is a convenient component to create sorted table headers very easily.
  * It first scans the markup for &lt;th id="wicket-.*" ..&gt> tags and 
  * automatically creates a SortableTableHeader for each.
  * <p>
