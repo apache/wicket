@@ -421,7 +421,8 @@ public abstract class Component implements Serializable
 				}
 
 				/**
-				 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
+				 * Convert using the default converter.
+				 * @see wicket.util.convert.IStringConverter#valueOf(java.lang.String)
 				 */
 				public Object valueOf(String string)
 				{
