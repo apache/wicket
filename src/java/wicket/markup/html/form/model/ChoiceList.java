@@ -123,6 +123,7 @@ public class ChoiceList implements IChoiceList
 	 */
 	public void add(final Object object)
 	{
+		attach();
 		list.add(object);
 	}
 
@@ -169,6 +170,7 @@ public class ChoiceList implements IChoiceList
 	 */
 	public IChoice get(final int index)
 	{
+		attach();
 		if (index != -1)
 		{
 			return newChoice(list.get(index), index);
@@ -181,6 +183,7 @@ public class ChoiceList implements IChoiceList
 	 */
 	public List getList()
 	{
+		attach();
 		return list;
 	}
 
@@ -189,6 +192,7 @@ public class ChoiceList implements IChoiceList
 	 */
 	public int size()
 	{
+		attach();
 		return list.size();
 	}
 
