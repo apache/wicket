@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+	  <action type="update" dev="Jonathan Locke" issue="">
+		Factored out AbstractDetachableModel so that attach/detach logic is encapsulated here and DetachableModel extends it for models with a transient Object property and PropertyModel extends it for models with an OGNL nature which might have nested detachable models.
+	  </action>
 	  <action type="fix" dev="Eelco Hillenius" issue="1149610">
 		Removed all the convenience stuff in order to get a better
 		focus. Added FileInput that correspons to the HTML file input tag

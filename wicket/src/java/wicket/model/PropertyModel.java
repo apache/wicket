@@ -367,22 +367,6 @@ public class PropertyModel extends AbstractDetachableModel implements IConvertib
 	}
 
 	/**
-	 * Initializes the instance variables of this property model, and in case
-	 * the wrapped model is a {@link IDetachableModel}, calls attach on the
-	 * wrapped model.
-	 * 
-	 * @see AbstractDetachableModel#onAttach()
-	 */
-	protected final void onAttach()
-	{
-		// TODO do we need this method at all if getObject() always attaches in AbstractDetachableModel subclasses?
-		if (model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).attach();
-		}
-	}
-
-	/**
 	 * Unsets this property model's instance variables and, in case the wrapped
 	 * model is a {@link IDetachableModel}, calls dettach on the wrapped model.
 	 * 
