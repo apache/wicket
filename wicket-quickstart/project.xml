@@ -23,6 +23,7 @@
       <version>0.9.16-beta</version>
       <type>jar</type>
       <properties>
+    	<eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
         <wicket.group>required</wicket.group>
         <wicket.description>The Wicket jar</wicket.description>

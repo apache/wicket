@@ -12,9 +12,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 
+import wicket.protocol.http.WebApplication;
 import wicket.util.time.Duration;
 import wicket.ApplicationSettings;
-import wicket.WebApplication;
 
 /**
  */
@@ -68,7 +68,7 @@ public class QuickStart extends WebApplication
 	public QuickStart()
 	{
 		ApplicationSettings settings = getSettings();
-		settings.setHomePage(Index.class);
+		getPages().setHomePage(Index.class);
 		if (!Boolean.getBoolean("cache-templates"))
 		{
 			Duration pollFreq = Duration.ONE_SECOND;

@@ -8,7 +8,11 @@
 
     <servlet>
         <servlet-name>quickstart</servlet-name>
-        <servlet-class>wicket.quickstart.QuickStart</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.quickstart.QuickStart</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
