@@ -19,7 +19,6 @@
 package wicket.examples.encodings;
 
 import wicket.examples.WicketExampleApplication;
-import wicket.util.time.Duration;
 
 /**
  * WicketServlet class for hello world example.
@@ -33,10 +32,6 @@ public class EncodingsApplication extends WicketExampleApplication
     public EncodingsApplication()
     {
         getPages().setHomePage(Home.class);
-
-        Duration pollFreq = Duration.ONE_SECOND;
-
-        getSettings().setResourcePollFrequency(pollFreq);
     }
 }
 
