@@ -29,10 +29,11 @@ import wicket.markup.html.HtmlComponent;
 
 /**
  * An image map holds links with different hot-area shapes.
+ *
  * @author Jonathan Locke
  */
 public final class ImageMap extends HtmlComponent
-{ // TODO finalize javadoc
+{
     /** Serial Version ID. */
 	private static final long serialVersionUID = 209001445308790198L;
 
@@ -49,6 +50,7 @@ public final class ImageMap extends HtmlComponent
     }
 
     /**
+     * Renders this component.
      * @see wicket.Component#handleRender()
      */
     protected void handleRender()
@@ -329,5 +331,3 @@ public final class ImageMap extends HtmlComponent
         }
     }
 }
-
-
