@@ -169,7 +169,7 @@ public abstract class DynamicImageResource extends ImageResource
 			final ImageWriter writer = (ImageWriter)ImageIO.getImageWritersByFormatName(format)
 					.next();
 
-			// Write out gif
+			// Write out image
 			writer.setOutput(ImageIO.createImageOutputStream(out));
 			writer.write(image);
 
