@@ -18,12 +18,16 @@
  */
 package com.voicetribe.wicket.markup;
 
-import com.voicetribe.util.string.StringValueConversionException;
+import java.io.IOException;
+import java.text.ParseException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import java.text.ParseException;
+import com.voicetribe.util.resource.Resource;
+import com.voicetribe.util.resource.ResourceNotFoundException;
+import com.voicetribe.util.string.StringValueConversionException;
+import com.voicetribe.wicket.markup.html.PageExpiredErrorPage;
 
 /**
  * Test cases for markup parser.
@@ -133,6 +137,35 @@ public final class MarkupParserTest extends TestCase
 
         System.out.println("tok(0)=" + tokens.get(0));
         Assert.assertEquals(docText, tokens.get(0).toString());
+    }
+
+    public final void testFileDocument() throws ParseException, ResourceNotFoundException, IOException {
+        final MarkupParser parser = new MarkupParser("componentName", 0);
+        Resource resource = Resource.locate(null, this.getClass(), "1", null, "html");
+        Markup tokens = parser.read(resource);
+        System.out.println("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        resource = Resource.locate(null, this.getClass(), "2", null, "html");
+        tokens = parser.read(resource);
+        System.out.println("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        resource = Resource.locate(null, this.getClass(), "3", null, "html");
+        tokens = parser.read(resource);
+        System.out.println("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        resource = Resource.locate(null, this.getClass(), "4", null, "html");
+        tokens = parser.read(resource);
+        System.out.println("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        // File from jar (URL resource)
+        resource = Resource.locate(null, PageExpiredErrorPage.class, null, null, "html");
+        tokens = parser.read(resource);
+        System.out.println("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
     }
 }
 
