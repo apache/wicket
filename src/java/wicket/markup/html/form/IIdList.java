@@ -27,6 +27,7 @@ import wicket.RequestCycle;
  * ID/Value list that can also be detach/attached.
  *
  * @author Johan Compagner
+ * @author Eelco Hillenius
  */
 public interface IIdList extends List
 {
@@ -55,6 +56,13 @@ public interface IIdList extends List
      * @return the id value
      */
     public String getIdValue(int row);
+
+    /**
+     * Gets the id value by object.
+     * @param object the object
+     * @return the id from this object
+     */
+    public String getIdValue(Object object);
 
     /**
      * Gets an object using the given id.

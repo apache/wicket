@@ -218,13 +218,14 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
                     IIdList idList = (IIdList)list;
                     idValue = idList.getIdValue(i);
                     displayValue = idList.getDisplayValue(i);
+                    currentOptionIsSelected = isSelected(idValue);
                 }
                 else
                 {
                     idValue = Integer.toString(i);
                     displayValue = value.toString();
+                    currentOptionIsSelected = isSelected(value);
                 }
-                currentOptionIsSelected = isSelected(value);
                 options.append("\n<option ");
                 if(currentOptionIsSelected) options.append("selected ");
                 options.append("value=\"");
@@ -258,7 +259,21 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
      */
     protected boolean isSelected(Object currentValue)
     {
-        return currentValue.equals(getModelObject());
+        Object modelObject = getModelObject();
+        if(modelObject == null) return false;
+
+        final boolean equals;
+        if(values instanceof IIdList)
+        {
+            IIdList idList = (IIdList)values;
+            String idValue = idList.getIdValue(modelObject);
+            equals = currentValue.equals(idValue);
+        }
+        else
+        {
+            equals = currentValue.equals(modelObject);
+        }
+        return equals;
     }
 
     /**
