@@ -17,6 +17,12 @@
  */
 package wicket.util.file;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import wicket.util.io.Streams;
+
 /**
  * File utility methods.
  * 
@@ -35,13 +41,27 @@ public class Files
 	}
 
 	/**
+	 * Writes the given input stream to the given file
+	 * 
+	 * @param file
+	 *            The file to write to
+	 * @param input
+	 *            The input
+	 * @throws IOException
+	 */
+	public static final void writeTo(final java.io.File file, final InputStream input) throws IOException
+	{
+		Streams.writeStream(input, new FileOutputStream(file));
+	}
+
+	/**
 	 * Deletes a file, dealing with a particularly nasty bug on Windows.
 	 * 
 	 * @param file
 	 *            File to delete
 	 * @return True if file was deleted
 	 */
-	public static boolean delete(final java.io.File file)
+	public static boolean remove(final java.io.File file)
 	{
 		// Delete current file
 		if (!file.delete())
