@@ -40,16 +40,29 @@ public class ComponentCreateTagTest extends TestCase {
         super(name);
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
+    /**
+     * @throws Exception
+     */
+    public void testRenderHomePage() throws Exception {
         application = new MockHttpApplication(null);
         application.getSettings().setHomePage(ComponentCreateTag.class);
+        
+        // Do the processing
+        application.setupRequestAndResponse();
+        application.processRequestCycle();
+
+        // Validate the document
+        String document = application.getServletResponse().getDocument();
+        System.out.println(document);
     }
 
     /**
      * @throws Exception
      */
-    public void testRenderHomePage() throws Exception {
+    public void testRenderHomePage_2() throws Exception {
+        application = new MockHttpApplication(null);
+        application.getSettings().setHomePage(ComponentCreateTag_2.class);
+        
         // Do the processing
         application.setupRequestAndResponse();
         application.processRequestCycle();
