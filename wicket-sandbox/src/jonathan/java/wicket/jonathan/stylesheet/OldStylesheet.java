@@ -17,7 +17,7 @@
  */
 package wicket.jonathan.stylesheet;
 
-import wicket.protocol.http.WebResource;
+import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.StringBufferResourceStream;
 
