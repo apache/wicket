@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.table;
+package wicket.markup.html.list;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -29,23 +29,25 @@ import wicket.markup.html.HtmlContainer;
 import wicket.model.IModel;
 
 /**
- * A ListView holds ListItems of information. The listItem can be re-ordered and
- * deleted, either one at a time or many at a time.
+ * A ListView holds ListItems of information. The listItem can be re-ordered and deleted,
+ * either one at a time or many at a time.
  * <p>
  * Example:
  * 
  * <pre>
  * 
- *    &lt;tbody&gt;
- *      &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
- *          &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *      ...    
+ *  
+ *     &lt;tbody&gt;
+ *       &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
+ *           &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *       ...    
+ *   
  *  
  * </pre>
  * 
  * <p>
- * Though this example is about a HTML table, ListView is not at all limited to
- * HTML tables. Any kind of list can be rendered using ListView.
+ * Though this example is about a HTML table, ListView is not at all limited to HTML
+ * tables. Any kind of list can be rendered using ListView.
  * <p>
  * And the related Java code:
  * 
@@ -61,11 +63,10 @@ import wicket.model.IModel;
  * </pre>
  * 
  * <p>
- * Note: Because Wicket model object must be Serializable,
- * java.util.List.subList() can not be used for model object, as the List
- * implementation return by subList() is protected and can not be subclassed.
- * Which is why Wicket implements subList functionality with ListView.
- * 
+ * Note: Because Wicket model object must be Serializable, java.util.List.subList() can
+ * not be used for model object, as the List implementation return by subList() is
+ * protected and can not be subclassed. Which is why Wicket implements subList
+ * functionality with ListView.
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -97,10 +98,8 @@ public abstract class ListView extends HtmlContainer
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param list
-	 *            List to cast to Serializable
+	 * @param name See Component constructor
+	 * @param list List to cast to Serializable
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public ListView(String name, List list)
@@ -126,7 +125,6 @@ public abstract class ListView extends HtmlContainer
 
 	/**
 	 * Gets the list of items in the listView.
-	 * 
 	 * @return The list of items in this list view.
 	 */
 	public List getList()
@@ -137,7 +135,6 @@ public abstract class ListView extends HtmlContainer
 
 	/**
 	 * Get index of first cell in page. Default is: 0.
-	 * 
 	 * @return Index of first cell in page. Default is: 0
 	 */
 	public int getStartIndex()
@@ -146,19 +143,17 @@ public abstract class ListView extends HtmlContainer
 	}
 
 	/**
-	 * Based on the model object's list size, firstIndex and view size,
-	 * determine what the view size really will be. E.g. default for viewSize is
-	 * Integer.MAX_VALUE, if not set via setViewSize(). If the underlying list
-	 * has 10 elements, the value returned by getViewSize() will be 10 if
-	 * startIndex = 0.
-	 * 
+	 * Based on the model object's list size, firstIndex and view size, determine what the
+	 * view size really will be. E.g. default for viewSize is Integer.MAX_VALUE, if not set
+	 * via setViewSize(). If the underlying list has 10 elements, the value returned by
+	 * getViewSize() will be 10 if startIndex = 0.
 	 * @return The number of listItems to be populated and rendered.
 	 */
 	public int getViewSize()
 	{
 		int size = this.viewSize;
 
-		// If model object (table) == null and viewSize has not been
+		// If model object (list view) == null and viewSize has not been
 		// deliberately changed, than size = 0.
 		Object modelObject = getModelObject();
 		if ((modelObject == null) && (viewSize == Integer.MAX_VALUE))
@@ -189,8 +184,7 @@ public abstract class ListView extends HtmlContainer
 		// firstIndex + size must be smaller than Integer.MAX_VALUE
 		if ((Integer.MAX_VALUE - size) <= firstIndex)
 		{
-			throw new IllegalStateException(
-					"firstIndex + size must be smaller than Integer.MAX_VALUE");
+			throw new IllegalStateException("firstIndex + size must be smaller than Integer.MAX_VALUE");
 		}
 
 		return size;
@@ -212,9 +206,7 @@ public abstract class ListView extends HtmlContainer
 
 	/**
 	 * Set the index of the first listItem to render
-	 * 
-	 * @param startIndex
-	 *            First index of model object's list to display
+	 * @param startIndex First index of model object's list to display
 	 * @return This
 	 */
 	public ListView setStartIndex(final int startIndex)
@@ -231,9 +223,7 @@ public abstract class ListView extends HtmlContainer
 
 	/**
 	 * Define the maximum number of listItems to render. Default: render all.
-	 * 
-	 * @param size
-	 *            Number of listItems to display
+	 * @param size Number of listItems to display
 	 * @return This
 	 */
 	public ListView setViewSize(final int size)
@@ -249,11 +239,9 @@ public abstract class ListView extends HtmlContainer
 	}
 
 	/**
-	 * Provide list object at index. May be subclassed for virtual list, which
-	 * don't implement List.
-	 * 
-	 * @param index
-	 *            The list object's index
+	 * Provide list object at index. May be subclassed for virtual list, which don't
+	 * implement List.
+	 * @param index The list object's index
 	 * @return the model list's object
 	 */
 	protected Serializable getListObject(final int index)
@@ -300,7 +288,7 @@ public abstract class ListView extends HtmlContainer
 					listItem = newItem(lastIndex);
 					populateItem(listItem);
 
-					// Add cell to table
+					// Add cell to list view
 					add(listItem);
 				}
 
@@ -319,9 +307,7 @@ public abstract class ListView extends HtmlContainer
 
 	/**
 	 * Creates a new listItem for the given listItem index of this listView.
-	 * 
-	 * @param index
-	 *            ListItem index
+	 * @param index ListItem index
 	 * @return The new ListItem
 	 */
 	protected ListItem newItem(final int index)
@@ -331,24 +317,17 @@ public abstract class ListView extends HtmlContainer
 
 	/**
 	 * Populate a given listItem.
-	 * 
-	 * @param listItem
-	 *            The listItem to populate
+	 * @param listItem The listItem to populate
 	 */
 	protected abstract void populateItem(final ListItem listItem);
 
 	/**
 	 * Render a single listItem.
-	 * 
-	 * @param listItem
-	 *            the listItem to be rendered
-	 * @param lastItem
-	 *            True, if item is last listItem in listView
+	 * @param listItem the listItem to be rendered
+	 * @param lastItem True, if item is last listItem in listView
 	 */
 	protected void renderItem(final ListItem listItem, final boolean lastItem)
 	{
 		listItem.render();
 	}
 }
-
-
