@@ -4,6 +4,7 @@
 	<body>
 	    <menu name="Wicket">
 	        <item name="Home" href="/index.html"/>
+	        <item name="Features" href="/Features.html"/>
         	<item name="Buzz" href="/Buzz.html"/>
 	        <item name="Introduction" href="/Introduction.html" collapse="true">
 	        	<item name="Why Wicket?" href="#Why_Wicket"/>

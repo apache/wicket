@@ -11,10 +11,14 @@
 				concerns and ease of development to a whole new level. Wicket pages can be mocked
 				up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic
 				content processing and form handling is all handled in Java code using a first-class
-				component model backed by POJO data beans that can easily be persisted with
-				Hibernate.
+				component model backed by POJO data beans that can easily be persisted using your
+				favourite technology.
 			</p>
 			<ul>
+				<li>
+					Check the
+					<a href="Features.html">feature list</a>
+				</li>
 				<li>
 					Read
 					<a href="Buzz.html">some Wicket buzz</a>
@@ -37,36 +41,92 @@
 				</li>
 				<li>
 					Download
-					<a href="http://sourceforge.net/projects/wicket/files">wicket release files</a>
+					<a href="http://sourceforge.net/projects/wicket/files">Wicket</a>
 				</li>
 			</ul>
 		</section>
 		<section name="Latest News">
-			<subsection name="March, 4, 2005 - 0.9.19-beta released">
+			<subsection name="March 19, 2005 - A new Wicket project is born: Wicket Stuff">
 				<p>
-					The releases are getting smaller, so it is nearly that special time for RC1.
-					The current release marks the work done between 0.9.18-beta and now. An issue
-					regarding dependencies of Wicket has been resolved. Wicket doesn't depend any more
-					on difficult to distribute libraries.
+					We have registered a
+					<a href="http://www.sf.net/projects/wicket-stuff">seperate project</a>
+					for hosting non-core components:
+					<a href="http://www.sf.net/projects/wicket-stuff">Wicket Stuff</a>
+					. If your component has a dependency other than the
+					<a href="Dependencies.html">Wicket dependencies</a>
+					, for example a
+					<a href="http://www.hibernate.org">Hibernate</a>
+					component, then
+					<a href="http://wicket-stuff.sf.net">Wicket Stuff</a>
+					is the place to find it.
+				</p>
+				<p>The initial list of components hosted there is:</p>
+				<ul>
+					<li>
+						<a href="http://jakarta.apache.org/velocity">Velocity</a>
+						Panel
+					</li>
+					<li>
+						<a href="http://www.hibernate.org">Hibernate</a>
+						components and helpers
+					</li>
+					<li>
+						<a href="http://groovy.codehaus.org">Groovy</a>
+						integration
+					</li>
+					<li>
+						<a href="http://www.springframework.org">Spring Framework</a>
+						integration
+					</li>
+					<li>
+						<a href="http://www.peterbailey.net/fValidate/">fValidate</a>
+						integration
+					</li>
+				</ul>
+				<p>Releases of these projects will come available as Wicket 1.0 RC1 ships.</p>
+			</subsection>
+			<subsection name="March 4, 2005 - 0.9.19-beta released">
+				<p>
+					The releases are getting smaller, so it is nearly that special time for RC1. The
+					current release marks the work done between 0.9.18-beta and now. An issue
+					regarding dependencies of Wicket has been resolved. Wicket doesn't depend any
+					more on difficult to distribute libraries.
 				</p>
 			</subsection>
 			<subsection name="Februari 20, 2005 - 0.9.18-beta released">
 				<p>
-					The Wicket team has worked really hard to make this beta release possible.
-					The march to the big 1.0 is on, and the first release candidate will surface 
-					in the next few weeks.
+					The Wicket team has worked really hard to make this beta release possible. The
+					march to the big 1.0 is on, and the first release candidate will surface in the
+					next few weeks.
 				</p>
 				<p>
-					A lot has changed in this release, so you will receive some compile time errors if you are
-					coming from a previous release. Among the changes are the following:
+					A lot has changed in this release, so you will receive some compile time errors
+					if you are coming from a previous release. Among the changes are the following:
 					<ul>
-						<li>Added a <a href="faqs.html" title="Frequently Asked Questions">FAQ</a> section to our site</li>
-						<li>Renamed handleX() methods and other events to conform to the onX() pattern.</li>
-						<li>Added Button class and Form buttons support. When it has two or more buttons, the onSubmit() handler is called on the button which submitted the Form.</li>
-						<li>Changed HtmlPage to WebPage, HtmlContainer to WebContainer and HtmlComponent to WebComponent</li>
+						<li>
+							Added a
+							<a href="faqs.html" title="Frequently Asked Questions">FAQ</a>
+							section to our site
+						</li>
+						<li>
+							Renamed handleX() methods and other events to conform to the onX()
+							pattern.
+						</li>
+						<li>
+							Added Button class and Form buttons support. When it has two or more
+							buttons, the onSubmit() handler is called on the button which submitted
+							the Form.
+						</li>
+						<li>
+							Changed HtmlPage to WebPage, HtmlContainer to WebContainer and
+							HtmlComponent to WebComponent
+						</li>
 						<li>Reorganized components and examples for final 1.0 structure.</li>
 					</ul>
-					<a href="changes-report.html">Check out</a> all modifications on our <a href="changes-report.html">release history page</a>.
+					<a href="changes-report.html">Check out</a>
+					all modifications on our
+					<a href="changes-report.html">release history page</a>
+					.
 				</p>
 			</subsection>
 			<p>
@@ -78,7 +138,7 @@
 		<section name="Special Thanks">
 			<p>
 				The Wicket development team would like to thank the following partners for
-				supporting Open Source in general and Wicket in particular. 
+				supporting Open Source in general and Wicket in particular.
 			</p>
 			<a href="http://www.yourkit.com" target="_blank" class="logoLink">
 				<img alt="YourKit" src="images/yip_logo.gif" />

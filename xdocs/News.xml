@@ -11,6 +11,45 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="March 19, 2005 - A new Wicket project is born: Wicket Stuff">
+				<p>
+					We have registered a
+					<a href="http://www.sf.net/projects/wicket-stuff">seperate project</a>
+					for hosting non-core components:
+					<a href="http://www.sf.net/projects/wicket-stuff">Wicket Stuff</a>
+					. If your component has a dependency other than the
+					<a href="Dependencies.html">Wicket dependencies</a>
+					, for example a
+					<a href="http://www.hibernate.org">Hibernate</a>
+					component, then
+					<a href="http://wicket-stuff.sf.net">Wicket Stuff</a>
+					is the place to find it.
+				</p>
+				<p>The initial list of components hosted there is:</p>
+				<ul>
+					<li>
+						<a href="http://jakarta.apache.org/velocity">Velocity</a>
+						Panel
+					</li>
+					<li>
+						<a href="http://www.hibernate.org">Hibernate</a>
+						components and helpers
+					</li>
+					<li>
+						<a href="http://groovy.codehaus.org">Groovy</a>
+						integration
+					</li>
+					<li>
+						<a href="http://www.springframework.org">Spring Framework</a>
+						integration
+					</li>
+					<li>
+						<a href="http://www.peterbailey.net/fValidate/">fValidate</a>
+						integration
+					</li>
+				</ul>
+				<p>Releases of these projects will come available as Wicket 1.0 RC1 ships.</p>
+			</subsection>
 			<subsection name="March, 4, 2005 - 0.9.19-beta released">
 				<p>
 					The releases are getting smaller, so it is nearly that special time for RC1.
