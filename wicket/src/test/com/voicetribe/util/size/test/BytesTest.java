@@ -19,11 +19,12 @@
 
 package com.voicetribe.util.size.test;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
+import java.text.NumberFormat;
+import java.util.Locale;
 import com.voicetribe.util.size.Bytes;
 import com.voicetribe.util.string.StringValueConversionException;
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 
 /**
@@ -32,16 +33,33 @@ import com.voicetribe.util.string.StringValueConversionException;
  */
 public final class BytesTest extends TestCase
 {
-    public void test() throws StringValueConversionException
+    public void testAllOperationsCurrentLocale() throws StringValueConversionException
     {
         Assert.assertTrue(Bytes.bytes(1024).equals(Bytes.kilobytes(1)));
         Assert.assertTrue(Bytes.bytes(1024 * 1024).equals(Bytes.megabytes(1)));
         Assert.assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
-        Assert.assertTrue(Bytes.valueOf("15.5K").bytes() == (15 * 1024 + 512));
         final Bytes b = Bytes.kilobytes(7.3);
         Assert.assertTrue(b.equals(Bytes.kilobytes(7.3)));
         Assert.assertTrue(b.greaterThan(Bytes.kilobytes(7.25)));
         Assert.assertTrue(b.lessThan(Bytes.kilobytes(7.9)));
+        Assert.assertTrue(Bytes.valueOf(b.toString()).equals(b));
+    }
+
+    public void testStringOperationsDotLocale() throws StringValueConversionException
+    {
+        Locale.setDefault(Locale.UK);
+        Assert.assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
+        Assert.assertTrue(Bytes.valueOf("15.5K").bytes() == (15 * 1024 + 512));
+        final Bytes b = Bytes.kilobytes(7.3);
+        Assert.assertTrue(Bytes.valueOf(b.toString()).equals(b));
+    }
+
+    public void testStringOperationsCommaLocale() throws StringValueConversionException
+    {
+        Locale.setDefault(Locale.GERMANY);
+        Assert.assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
+        Assert.assertTrue(Bytes.valueOf("15,5K").bytes() == (15 * 1024 + 512));
+        final Bytes b = Bytes.kilobytes(7.3);
         Assert.assertTrue(Bytes.valueOf(b.toString()).equals(b));
     }
 }
