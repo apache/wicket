@@ -1,38 +1,52 @@
 <?xml version="1.0"?>
 <document>
-  <properties>
-    <title>Home</title>
-  </properties>
-
-  <meta name="keyword" content="wicket, web, j2ee, java"/>
-
-<body>
-
-<section name="News">
-    <subsection name="December 9, 2004 - New style for the website">
-        <p>Our new layout, design and logo were kindly provided by <a 
-            href="http://www.topicus.nl" target="_blank">Topicus</a> by 
-            providing precious time of their designer Wouter de Jong.</p>
-    </subsection>
-    <subsection name="December 5, 2004 - 0.9.14-alpha released">
-        <p>The current status of CVS was released under version 
-            0.9.14-alpha.</p>
-    </subsection>
-    <subsection name="November 7, 2004 - Clover license obtained">
-        <p>We have obtained a <a 
-            href="http://www.cenqua.com/clover/">Clover</a> license for use in 
-            our project. This allows us to obtain even higher quality code than 
-            before. Thanks to Cenqua for providing us with the open source 
-            license.</p>
-    </subsection>
-    <subsection name="October 25, 2004 - 0.9.13-alpha released">
-        <p>The current status of CVS was released under version 
-            0.9.13-alpha.</p>
-    </subsection>
-    <subsection name="September 22, 2004 - Moved to sourceforge.net">
-        <p>Wicket moved from <a href="http://wicket.codehaus.org">codehaus</a> 
-            to <a href="http://wicket.sourceforge.net">SourceForge</a>. </p>
-    </subsection>
-</section>
-</body>
+    <properties>
+        <title>Home</title>
+    </properties>
+    <meta name="keyword" content="wicket, web, j2ee, java"/>
+    <body>
+        <section name="News">
+            <subsection name="December 19, 2004 - 0.9.15-beta released">
+                <p>The Wicket team is proud to present yet another release of 
+                    the Wicket core framework. This release encompasses a <a 
+                    href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1087152&amp;group_id=119783&amp;atid=684978">big 
+                    restructuring</a> of the package structure: the 
+                    <code>com.voicetribe</code> package prefix has been 
+                    dropped. All Wicket classes are now in the top level 
+                    package name <code>wicket</code>.</p>
+            </subsection>
+            <subsection name="December 19, 2004 - Going into beta">
+                <p>Finally the Wicket development team is starting the march to 
+                    the big 1.0 release. This sunday the last release of 2004 
+                    is done. After this the release candidate circus will be 
+                    part of our daily Wicket development.</p>
+            </subsection>
+            <subsection name="December 9, 2004 - New style for the website">
+                <p>Our new layout, design and logo were kindly provided by <a 
+                    href="http://www.topicus.nl" target="_blank">Topicus</a> by 
+                    providing precious time of their designer Wouter de 
+                    Jong.</p>
+            </subsection>
+            <subsection name="December 5, 2004 - 0.9.14-alpha released">
+                <p>The current status of CVS was released under version 
+                    0.9.14-alpha.</p>
+            </subsection>
+            <subsection name="November 7, 2004 - Clover license obtained">
+                <p>We have obtained a <a 
+                    href="http://www.cenqua.com/clover/">Clover</a> license for 
+                    use in our project. This allows us to obtain even higher 
+                    quality code than before. Thanks to Cenqua for providing us 
+                    with the open source license.</p>
+            </subsection>
+            <subsection name="October 25, 2004 - 0.9.13-alpha released">
+                <p>The current status of CVS was released under version 
+                    0.9.13-alpha.</p>
+            </subsection>
+            <subsection name="September 22, 2004 - Moved to sourceforge.net">
+                <p>Wicket moved from <a 
+                    href="http://wicket.codehaus.org">codehaus</a> to <a 
+                    href="http://wicket.sourceforge.net">SourceForge</a>. </p>
+            </subsection>
+        </section>
+    </body>
 </document>

@@ -22,7 +22,7 @@
                     <em>Read</em>
                     <a 
                         href="http://www.theserverside.com/news/thread.tss?thread_id=28162">
-                        comments on TheServerSide.com</a>
+                         comments on TheServerSide.com</a>
                 </li>
                 <li>
                     <em>View</em>
@@ -46,6 +46,21 @@
         <section name="Latest News">
             <p>See <a href="News.html">the news archive</a> for more (older) 
                 news.</p>
+            <subsection name="December 19, 2004 - 0.9.15-beta released">
+                <p>The Wicket team is proud to present yet another release of 
+                    the Wicket core framework. This release encompasses a <a 
+                    href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1087152&amp;group_id=119783&amp;atid=684978">big 
+                    restructuring</a> of the package structure: the 
+                    <code>com.voicetribe</code> package prefix has been 
+                    dropped. All Wicket classes are now in the top level 
+                    package name <code>wicket</code>.</p>
+            </subsection>
+            <subsection name="December 19, 2004 - Going into beta">
+                <p>Finally the Wicket development team is starting the march to 
+                    the big 1.0 release. This sunday the last release of 2004 
+                    is done. After this the release candidate circus will be 
+                    part of our daily Wicket development.</p>
+            </subsection>
             <subsection name="December 9, 2004 - New style for the website">
                 <p>Our new layout, design and logo were kindly provided by <a 
                     href="http://www.topicus.nl" target="_blank">Topicus</a> by 
@@ -55,14 +70,6 @@
             <subsection name="December 5, 2004 - 0.9.14-alpha released">
                 <p>The current status of CVS was released under version 
                     0.9.14-alpha.</p>
-            </subsection>
-            <subsection name="November 7, 2004 - Clover license obtained">
-                <p>We have obtained a <a 
-                    href="http://www.cenqua.com/clover/"><img 
-                    style="height:1.2em;" src="http://www.cenqua.com/clover/doc/skin/images/clover_logo.gif"/></a> 
-                    license for use in our project. This allows us to obtain 
-                    even higher quality code than before. Thanks to Cenqua for 
-                    providing us with the open source license.</p>
             </subsection>
         </section>
         <section name="Special thanks">
@@ -77,7 +84,8 @@
                 </tr>
                 <tr class="none">
                     <td>
-                        <a href="http://www.sourceforge.net" target="_blank" class="none">
+                        <a href="http://www.sourceforge.net" target="_blank" 
+                            class="none">
                             <img alt="SourceForge.net" 
                                 src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1"/>
                         </a>
@@ -98,8 +106,7 @@
                     <td>
                         <a href="http://www.yourkit.com" target="_blank" 
                             class="none">
-                            <img alt="YourKit" 
-                                src="images/yip_logo.gif"/>
+                            <img alt="YourKit" src="images/yip_logo.gif"/>
                         </a>
                     </td>
                     <td>Licensing the CPU and memory profiler YourKit.</td>
