@@ -31,31 +31,20 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import wicket.IModel;
-import wicket.Model;
 import wicket.RequestCycle;
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
-import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.link.ILinkListener;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
+import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.HttpRequest;
-
 
 /**
  * A component that represents a tree.
  *
  * @author Eelco Hillenius
  */
-public abstract class Tree extends HtmlContainer implements ILinkListener
+public class Tree extends Panel implements ILinkListener
 {
     /** tree state for this component. */
     private TreeStateCache treeState;
-
-    /** table for the current visible tree paths. */
-    private VisibleTreePathTable visibleTreePathTable;
 
     /** hold references to links on 'generated' id to be able to chain events. */
     private Map links = new HashMap();
@@ -79,15 +68,14 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
      */
     void addLink(TreeNodeLink link)
     {
-        Node node = link.getNode();
+        NodeModel node = link.getNode();
         Serializable userObject = node.getUserObject();
 
         // links can change, but the target user object should be the same, so
         // if a new link is added that actually points to the same userObject, it will
         // replace the old one thus allowing the old link to be GC-ed. We need the creator hash
         // to be able to have more trees in the same page with the same link names
-        String linkId = link.getName() + "."
-            + userObject.hashCode() + "." + link.creatorHash;
+        String linkId = link.getName() + "." + userObject.hashCode();
 
         link.setId(linkId);
         links.put(linkId, link);
@@ -102,7 +90,6 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
     {
         String linkId = ((HttpRequest) cycle.getRequest()).getParameter("linkId");
         TreeNodeLink link = (TreeNodeLink) links.get(linkId);
-
         if (link == null)
         {
             throw new IllegalStateException("link " + linkId + " not found");
@@ -118,9 +105,7 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
     private void setTreeModel(TreeModel model)
     {
         treeState.setModel(model);
-
         TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
-
         treeState.setSelectionModel(selectionModel);
         treeState.setRootVisible(true);
     }
@@ -166,115 +151,56 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
     }
 
     /**
-     * Add components.
+     * Builds the structures needed to display the currently visible tree paths.
      */
     private void setSelectedPaths()
     {
-        TreePath selectedPath = treeState.getSelectedPath(); // get current
-
-        // selection
-        Enumeration e = treeState.getVisiblePathsFromRoot(); // get all visible
-
-        // paths
+        removeAll();
         List visiblePathsList = new ArrayList();
-
-        while (e.hasMoreElements())
+        TreePath selectedPath = treeState.getSelectedPath(); // get current
+        Enumeration e = treeState.getVisiblePathsFromRoot(); // get all visible
+        while (e.hasMoreElements()) // put enumeration in a list
         {
             visiblePathsList.add(e.nextElement());
         }
-
-        Model model = new Model((Serializable) visiblePathsList);
-
-        if (visibleTreePathTable == null)
-        {
-            visibleTreePathTable = new VisibleTreePathTable("tree", model);
-            add(visibleTreePathTable);
-        }
-        else
-        {
-            visibleTreePathTable.reset();
-            visibleTreePathTable.setModel(model);
-        }
+        List topList = new ArrayList(); // reference to the first level list
+        buildList(visiblePathsList, 0, 0, topList); // build the nested lists
+        add(new TreeRows("tree", topList, this)); // add the tree panel
     }
 
     /**
-     * Called to allow a subclass to populate a given node of the tree with components.
-     * @param node The node
+     * Builds nested lists that represent the current visible tree paths.
+     * @param visiblePathsList the whole - flat - list of visible paths
+     * @param index the current index in the list of visible paths
+     * @param level the current nesting level
+     * @param rows a list that holds the current level of rows
+     * @return the index in the list of visible paths
      */
-    protected abstract void populateNode(Node node);
-
-    /**
-     * Table for visible tree paths.
-     */
-    private class VisibleTreePathTable extends ListView
+    private int buildList(final List visiblePathsList, int index, int level, final List rows)
     {
-        /**
-         * Construct.
-         * @param name
-         * @param model
-         */
-        public VisibleTreePathTable(String name, IModel model)
+        int len = visiblePathsList.size();
+        while (index < len)
         {
-            super(name, model);
+            TreePath path = (TreePath) visiblePathsList.get(index);
+            DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)path.getLastPathComponent();
+            int thisLevel = treeNode.getLevel();
+            if (thisLevel > level) // go deeper
+            {
+                List nestedRows = new ArrayList();
+                rows.add(nestedRows);
+                index = buildList(visiblePathsList, index, thisLevel, nestedRows);
+            }
+            else if (thisLevel < level) // end of nested
+            {
+                return index;
+            }
+            else // node
+            {
+                NodeModel nodeModel = new NodeModel(treeNode, treeState, path);
+                rows.add(nodeModel);
+                index++;
+            }
         }
-
-        /**
-         * @see wicket.markup.html.table.ListView#populateItem(wicket.markup.html.table.ListItem)
-         */
-        protected void populateItem(ListItem listItem)
-        {
-            TreePath path = (TreePath) listItem.getModelObject();
-            DefaultMutableTreeNode mutableTreeNode = (DefaultMutableTreeNode) path
-                    .getLastPathComponent();
-            int level = mutableTreeNode.getLevel();
-            int row = getList().indexOf(path);
-            NodeModel nodeModel = new NodeModel(mutableTreeNode, treeState, path);
-
-            // Create node
-            Node node = new Node("node", nodeModel);
-            populateNode(node);
-
-            // add node component
-            listItem.add(node);
-        }
-
-        /**
-         * Remove all components without invalidating the model.
-         */
-        protected final void reset()
-        {
-            this.removeAll();
-        }
-    }
-
-    private static class UL extends HtmlComponent
-    {
-        /**
-         * Construct.
-         * @param name component name
-         * @param src body
-         */
-        public UL(String name, String src)
-        {
-            super(name, src);
-        }
-
-        /**
-         * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
-         */
-        protected void handleComponentTag(RequestCycle cycle, ComponentTag tag)
-        {
-            checkTag(tag, "img");
-            super.handleComponentTag(cycle, tag);
-            tag.put("src", (String) getModelObject());
-        }
-
-        /**
-         * @see wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
-         */
-        protected void handleBody(RequestCycle cycle,
-            MarkupStream markupStream, ComponentTag openTag)
-        {
-        }
+        return index;
     }
 }
