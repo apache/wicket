@@ -25,17 +25,17 @@ import wicket.Page;
  * Interface that is used to implement delayed page linking. The getPage()
  * method returns an instance of Page when a link is actually clicked (thus
  * avoiding the need to create a destination Page object for every link on a
- * given Page in advance). The getIdentity() method returns the subclass of Page
- * that getPage() will return if and when it is called.
+ * given Page in advance). The getPageIdentity() method returns the subclass of
+ * Page that getPage() will return if and when it is called.
  * <p>
  * This way of arranging things is useful in determining whether a link links to
  * a given page, which is in turn useful for deciding how to display the link
  * (because links in a navigation which link to a page itself are not useful and
  * generally should instead indicate where the user is in the navigation).
  * <p>
- * To understand how getIdentity() is used in this way, take a look at the
+ * To understand how getPageIdentity() is used in this way, take a look at the
  * Link.linksTo() method and its override in PageLink. Also, see the
- * documentation for getIdentity() below.
+ * documentation for getPageIdentity() below.
  * 
  * @see Link#linksTo(Page)
  * @see PageLink#linksTo(Page)
@@ -56,8 +56,8 @@ public interface IPageLink extends Serializable
 	 * the same Page that it links to (except when pages are parameterized. in
 	 * that case, see Link.linksTo() for details).
 	 * <p>
-	 * A page's identity is important because links which are on the same
-	 * page that they link to often need to be displayed in a different way to
+	 * A page's identity is important because links which are on the same page
+	 * that they link to often need to be displayed in a different way to
 	 * indicate that they are 'disabled' and don't go anywhere. Links can be
 	 * manually disabled by calling Link.setDisabled(). Links which have
 	 * setAutoEnable(true) will automatically enable or disable themselves
@@ -69,7 +69,7 @@ public interface IPageLink extends Serializable
 	 * 
 	 * public boolean linksTo(final Page page)
 	 * {
-	 * 	return page.getClass() == pageLink.getDestinationIdentity();
+	 * 	return page.getClass() == pageLink.getPageIdentity();
 	 * }
 	 * </pre>
 	 * 
