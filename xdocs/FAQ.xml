@@ -9,7 +9,6 @@
 <body>
 <section name="Frequently Asked Questions">
 <p><author>Jonathan Locke</author></p>
-<p>
 <subsection name="Q: What design decisions were made regarding state management?">
 <p>
 A: One of the primary objectives was to make state management a Java thing 
