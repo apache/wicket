@@ -18,7 +18,6 @@
 package wicket.markup.html;
 
 import wicket.Resource;
-import wicket.util.resource.IResourceStream;
 
 /**
  * Base class for web resources. See the base class {@link wicket.Resource}for
@@ -29,8 +28,4 @@ import wicket.util.resource.IResourceStream;
  */
 public abstract class WebResource extends Resource
 {
-	/**
-	 * @see Resource#getResourceStream()
-	 */
-	protected abstract IResourceStream getResourceStream();
 }
