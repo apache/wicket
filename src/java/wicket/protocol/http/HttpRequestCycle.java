@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -260,8 +262,8 @@ public class HttpRequestCycle extends RequestCycle
                     }
                     else
                     {
-                        setPage(newPage(application.getSettings().getHomePage()));
-                    }
+                        setHomePage();
+                     }
 
                     return true;
                 }
@@ -357,7 +359,7 @@ public class HttpRequestCycle extends RequestCycle
         {
             try
             {
-                setPage(newPage(application.getSettings().getHomePage()));
+            	setHomePage();
             }
             catch (RenderException e)
             {
@@ -369,6 +371,25 @@ public class HttpRequestCycle extends RequestCycle
 
         return false;
     }
+
+	/**
+	 * Set's the next page to the homepage. The homepage paramtermap is checked for the initial parameters
+	 */
+	private void setHomePage()
+	{
+		Map parameters = application.getSettings().getHomePageParameters();
+		if(parameters == null)
+		{
+			setPage(newPage(application.getSettings().getHomePage()));
+		}
+		else
+		{
+			Map map = new HashMap(parameters);
+			map.putAll(request.getParameterMap());
+			Page toPage = getPageFactory().newPage(application.getSettings().getHomePage(),new PageParameters(map));
+			setPage(toPage);
+		}
+	}
 
     /**
      * @return True if static content was returned
