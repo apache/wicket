@@ -287,7 +287,15 @@ public final class ApplicationSettings
 		{
 			if (sourceFolder != null)
 			{
-				setSourcePath(new Path(new Folder(sourceFolder)));
+				final Folder folder = new Folder(sourceFolder);
+				if (folder.exists())
+				{
+					setSourcePath(new Path(folder));
+				}
+				else
+				{
+					log.warn("Source folder " + sourceFolder + " does not exist.");
+				}
 				setResourcePollFrequency(Duration.ONE_SECOND);
 			}
 			setComponentUseCheck(true);
