@@ -23,6 +23,7 @@ import java.util.Locale;
 import wicket.Application;
 import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
+import wicket.ISessionFactory;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
 import junit.framework.Assert;
@@ -73,6 +74,11 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
             {
                 return pages;
             }
+            
+			public ISessionFactory getSessionFactory()
+			{
+				return null;
+			}
 
             private ApplicationPages pages = new ApplicationPages();
 			private ApplicationSettings settings = new ApplicationSettings(this);

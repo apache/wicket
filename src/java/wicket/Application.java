@@ -57,6 +57,12 @@ public abstract class Application
 	/** List of (static) ComponentResolvers */
 	private List componentResolvers;
 
+	/**
+	 * Factory for the converter instance; default to the non localized
+	 * factory {@link ConverterFactory}.
+	 */
+	private IConverterFactory converterFactory = new ConverterFactory();
+    
 	/** The single application-wide localization class */
 	private final Localizer localizer;
 
@@ -71,12 +77,6 @@ public abstract class Application
 
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
-
-	/**
-	 * Factory for the converter instance; default to the non localized
-	 * factory {@link ConverterFactory}.
-	 */
-	private IConverterFactory converterFactory = new ConverterFactory();
 
 	/**
 	 * Constructor
@@ -104,6 +104,15 @@ public abstract class Application
 	public final List getComponentResolvers()
 	{
 		return componentResolvers;
+	}
+
+	/**
+	 * Gets the converter factory.
+	 * @return the converter factory
+	 */
+	public IConverterFactory getConverterFactory()
+	{
+		return converterFactory;
 	}
 
 	/**
@@ -193,13 +202,9 @@ public abstract class Application
 	{
 		return settings;
 	}
-
-	/**
-	 * Gets the converter factory.
-	 * @return the converter factory
-	 */
-	public IConverterFactory getConverterFactory()
-	{
-		return converterFactory;
-	}
+    
+    /**
+     * @return Factory for creating sessions
+     */
+    public abstract ISessionFactory getSessionFactory();
 }
