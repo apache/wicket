@@ -153,72 +153,59 @@
             </document>
         </j:file>
     </goal>
-    <postGoal name="dist:prepare-bin-filesystem" >
-        <!--	<attainGoal name="announcement"/> -->
-        <ant:mkdir dir="${maven.dist.bin.assembly.dir}/lib" />
-<!--
-        <ant:mkdir dir="${maven.dist.bin.assembly.dir}/licenses" />
-        <ant:mkdir dir="${maven.dist.bin.assembly.dir}/sample" />
--->
+	<goal name="dist:build-bin">
+        <attainGoal name="war:war"/>
+	</goal>
+	<postGoal name="dist:prepare-bin-filesystem">
+		<ant:delete file="${maven.dist.bin.assembly.dir}/${maven.jar.final.name}"/>
+		<ant:copy todir="${maven.dist.bin.assembly.dir}">
+			<fileset dir="${maven.build.dir}">
+				<includes name="*.war"/>
+			</fileset>
+		</ant:copy>
+	</postGoal>
+    <postGoal name="dist:prepare-src-filesystem" >
+        <ant:mkdir dir="${maven.dist.src.assembly.dir}/lib" />
         <j:forEach var="lib" items="${pom.artifacts}">
             <j:set var="dep" value="${lib.dependency}" />
             <j:if test="${dep.type=='jar'}">
                 <j:choose>
                     <j:when test="${dep.getProperty('endorsed')}">
                         <ant:copy 
-                            todir="${maven.dist.bin.assembly.dir}/lib/endorsed" 
+                            todir="${maven.dist.src.assembly.dir}/lib/endorsed" 
                             file="${lib.path}" />
                     </j:when>
                     <j:otherwise>
-                        <ant:copy todir="${maven.dist.bin.assembly.dir}/lib" 
+                        <ant:copy todir="${maven.dist.src.assembly.dir}/lib" 
                             file="${lib.path}" />
                     </j:otherwise>
                 </j:choose>
             </j:if>
         </j:forEach>
-<!--
-	<ant:copy todir="${maven.dist.bin.assembly.dir}/sample">
-		<fileset dir="sample">
-			<include name="**/*"/>
-		</fileset>
-	</ant:copy>
-
-	<ant:copy todir="${maven.dist.bin.assembly.dir}/licenses">
-		<fileset dir="licenses">
-			<include name="**/*"/>
-		</fileset>
-	</ant:copy>
--->
-        <ant:copy todir="${maven.dist.bin.assembly.dir}/src/java">
+        <ant:copy todir="${maven.dist.src.assembly.dir}/src/java">
             <fileset dir="src/java">
                 <include name="**/*"/>
             </fileset>
         </ant:copy>
-        <ant:copy todir="${maven.dist.bin.assembly.dir}/src/test">
+        <ant:copy todir="${maven.dist.src.assembly.dir}/src/test">
             <fileset dir="src/test">
                 <include name="**/*"/>
             </fileset>
         </ant:copy>
-        <ant:copy todir="${maven.dist.bin.assembly.dir}/xdocs">
+        <ant:copy todir="${maven.dist.src.assembly.dir}/xdocs">
             <fileset dir="xdocs">
                 <include name="**/*"/>
             </fileset>
         </ant:copy>
-        <ant:copy todir="${maven.dist.bin.assembly.dir}/src/webapp">
+        <ant:copy todir="${maven.dist.src.assembly.dir}/src/webapp">
             <fileset dir="src/webapp">
                 <include name="**/*"/>
             </fileset>
         </ant:copy>
-        <ant:copy todir="${maven.dist.bin.assembly.dir}" file="project.xml" />
-        <ant:copy todir="${maven.dist.bin.assembly.dir}" 
-            file="project.properties" />
-        <ant:copy todir="${maven.dist.bin.assembly.dir}" file="maven.xml" />
-        <ant:copy todir="${maven.dist.bin.assembly.dir}" file="build.xml" />
-        <ant:copy todir="${maven.dist.bin.assembly.dir}" 
-            file="LICENSE.txt" />
-        <!--	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="wicket-checkstyle.xml" /> -->
-        <!--
-		<ant:copy tofile="${maven.dist.bin.assembly.dir}/release-${pom.currentVersion}.txt" file="${maven.announcement.file}"/>
--->
+        <ant:copy todir="${maven.dist.src.assembly.dir}" file="project.xml" />
+        <ant:copy todir="${maven.dist.src.assembly.dir}" file="project.properties" />
+        <ant:copy todir="${maven.dist.src.assembly.dir}" file="maven.xml" />
+        <ant:copy todir="${maven.dist.src.assembly.dir}" file="build.xml" />
+        <ant:copy todir="${maven.dist.src.assembly.dir}" file="LICENSE.txt" />
     </postGoal>
 </project>
