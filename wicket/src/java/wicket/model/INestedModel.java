@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,13 +18,15 @@
 package wicket.model;
 
 /**
- * Interface to get any nested model within a given model.  This allows
- * code in the core to compare two models to see if they are both models
- * of the same root model.  For example, a Form might have a Person model
- * and then a TextField might have a PropertyModel which is the "name"
- * property of the Person model.  In this case, PropertyModel will implement
- * INestedModel, returning the Person model from getNestedModel().
+ * Interface to get any nested model within a given model. This allows
+ * Component.sameRootModel() to compare two models to see if they both have the
+ * same root model. For example, a Form might have a Person model and then a
+ * TextField might have a PropertyModel which is the "name" property of the
+ * Person model. In this case, PropertyModel will implement INestedModel,
+ * returning the Person model from getNestedModel().
  * 
+ * @see wicket.Component#sameRootModel(wicket.Component)
+ * @see wicket.Component#sameRootModel(IModel)
  * @author Jonathan Locke
  */
 public interface INestedModel
