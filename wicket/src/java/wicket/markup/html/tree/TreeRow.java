@@ -33,7 +33,8 @@ public final class TreeRow extends Panel
     /**
      * Construct.
      * @param componentName name of the component
-     * @param node the tree node for this row
+     * @param tree reference to the holding tree component
+     * @param nodeModel model for the current node
      */
     public TreeRow(String componentName, Tree tree, TreeNodeModel nodeModel)
     {
