@@ -26,31 +26,74 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
-import wicket.version.undo.UndoPageRevisionManager;
+import wicket.version.undo.UndoPageVersionManager;
 
 /**
  * Abstract base class for pages. As a MarkupContainer subclass, a Page can
  * contain a component hierarchy and markup in some markup language such as
  * HTML. Users of the framework should not attempt to subclass Page directly.
- * Instead they should subclass a subcilass of Page that is appropriate to the
+ * Instead they should subclass a subclass of Page that is appropriate to the
  * markup type they are using, such as WebPage.
  * <p>
  * When a page is constructed, it is automatically added to the user's session
  * and assigned the next page id available from the session. The session that a
- * page is contained in can be retrieved by calling getPageSession(). Page
+ * page is contained in can be retrieved by calling getSession(). Page
  * identifiers start at 0 for each session and increment as new pages are added
  * to the session. The session-unique identifier assigned to a page can be
- * retrieved by calling getId(). This id serves as the Page's component name. So
- * the first page added to a new user session will always be named "0".
+ * retrieved by calling getId(). This id also serves as the Page's component
+ * name. So, the first page added to a new user session will always be named
+ * "0".
  * <p>
  * Pages can be constructed with any constructor when they are being used in a
  * Wicket session, but if you wish to link to a Page using a URL that is
- * bookmarkable (doesn't have session information encoded into it), you need to
- * implement your Page with a constructor that accepts a single PageParameters
- * argument.
+ * "bookmarkable" (which implies that the URL will not have any session
+ * information encoded in it), you need to implement your Page with a no-arg
+ * constructor or with a constructor that accepts a PageParameters argument.
+ * <p>
+ * Subclasses of Page which are interested in lifecycle events can override
+ * onBeginRequest(), onEndRequest(), onBeginRender(), onEndRender() and
+ * onModelChanged(), each of which are called at the obvious time.
+ * <p>
+ * Pages, like other components, can have models. A page can be assigned a model
+ * by passing one to a page's constructor, by overriding initModel() or with an
+ * explicit invocation of setModel(). If the model is a CompoundPropertyModel,
+ * components on the page can use the page's model implicitly. If they are not
+ * assigned a model, the initModel() override in Component will cause the
+ * component to use the page's model. In this case, the name of the component
+ * determines which property of the implicit page model the component is bound
+ * to. A similar implicit model scheme exists for Form models and FormComponent
+ * children of forms. If more control is desired over binding of components to
+ * the page model, BoundCompoundPropertyModel can be used.
+ * <p>
+ * Pages can support the back button by enabling versioning with a call to
+ * setVersioned(boolean). If a Page is versioned and changes occur to it which
+ * need to be tracked, a verison manager will be installed using the overridable
+ * factory method newVersionManager(). The default version manager returned by
+ * the base implementation of this method is an instance of
+ * UndoPageVersionManager, which manages versions of a page by keeping change
+ * records that can be reversed at a later time.
+ * <p>
+ * A page can have one or more feedback messages and it can specify a feedback
+ * component implementing IFeedback for displaying these messages. An easy and
+ * useful implementation of IFeedback is the FeedbackPanel component which
+ * displays feedback messages in a list view.
+ * <p>
+ * Pages can be secured by overriding checkAccess(). If checkAccess() returns
+ * ACCESS_ALLOWED (true), then onRender() will render the page. If it returns
+ * false (ACCESS_DENIED), then onRender() will not render the page. Besides
+ * returning true or false, an implementation of checkAccess() may also choose
+ * to send the user to another page with getRequestCycle().setPage() or
+ * getRequestCycle().redirectToInterceptPage(). This can be used to allow a user
+ * to authenticate themselves if they were denied access.
  * 
  * @see wicket.markup.html.WebPage
- * @see MarkupContainer
+ * @see wicket.MarkupContainer
+ * @see wicket.model.CompoundPropertyModel
+ * @see wicket.model.BoundCompoundPropertyModel
+ * @see wicket.Component
+ * @see wicket.IPageVersionManager
+ * @see wicket.version.undo.UndoPageVersionManager
+ * 
  * @author Jonathan Locke
  * @author Chris Turner
  */
@@ -69,7 +112,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	private int autoIndex;
 
 	/** Number of changes that have occurred since the request began */
-	private int changeCount;
+	private transient int changeCount;
 
 	/** Any feedback display for this page */
 	private IFeedback feedback;
@@ -80,17 +123,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** This page's identifier. */
 	private int id = -1;
 
+	/** True if a version manager should be installed */
+	private boolean isVersioned;
+
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
 
 	/** The session that this page is in. */
 	private transient Session session = null;
 
-	/** True when changes to the Page should be tracked by revision management */
+	/** True when changes to the Page should be tracked by version management */
 	private boolean trackChanges = false;
 
-	/** Revision manager for this page */
-	private transient IPageRevisionManager revisionManager;
+	/** Version manager for this page */
+	private IPageVersionManager versionManager;
 
 	/**
 	 * Constructor.
@@ -100,7 +146,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// A page's componentName is its id, which is not determined until
 		// setId is called when the page is added to the session
 		super(null);
-		addToSession();
+		init();
 	}
 
 	/**
@@ -111,7 +157,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	protected Page(final IModel model)
 	{
 		super(null, model);
-		addToSession();
+		init();
 	}
 
 	/**
@@ -124,6 +170,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public int getAutoIndex()
 	{
 		return this.autoIndex++;
+	}
+
+	/**
+	 * @return The current version number of this page. If the page has been
+	 *         changed once, the return value will be 1. If the page has not yet
+	 *         been revised, the version returned will be 0, indicating that the
+	 *         page is still in its original state.
+	 */
+	public final int getCurrentVersionNumber()
+	{
+		return versionManager == null ? 0 : versionManager.getCurrentVersionNumber();
 	}
 
 	/**
@@ -174,46 +231,45 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @return The the revision of this page. If the page has been changed once,
-	 *         the return value will be 0. If the page has not yet been revised,
-	 *         the revision returned will be -1, indicating that the Page is in
-	 *         its original state.
-	 */
-	public final int getRevisionNumber()
-	{
-		return getRevisionManager().getNewestRevisionNumber();
-	}
-
-	/**
-	 * Override this method to implement a custom way of producing a revision of
+	 * Override this method to implement a custom way of producing a version of
 	 * a Page when it cannot be found in the Session.
 	 * 
-	 * @param revisionNumber
-	 *            The revision desired or -1 to get the original Page.
-	 * @return A Page object with the given component/model hierarchy that was
+	 * @param versionNumber
+	 *            The version desired
+	 * @return A Page object with the component/model hierarchy that was
 	 *         attached to this page at the time represented by the requested
-	 *         revision.
+	 *         version.
 	 */
-	public Page getRevision(final int revisionNumber)
+	public Page getVersion(final int versionNumber)
 	{
-		// If we're still the original Page
-		if (revisionManager == IPageRevisionManager.NULL)
+		// If we're still the original Page and that's what's desired
+		if (versionManager == null)
 		{
-			// return self
-			return this;
+			if (versionNumber == 0)
+			{
+				return this;
+			}
+			else
+			{
+				throw new IllegalStateException(
+						"No version manager available to retrieve requested versionNumber "
+								+ versionNumber);
+			}
 		}
-
-		// Get page of desired revision
-		final Page page = getRevisionManager().getRevision(revisionNumber);
-
-		// If we went all the way back to the original page, remove revision
-		// info
-		if (page.getRevisionNumber() == -1)
+		else
 		{
-			page.revisionManager = IPageRevisionManager.NULL;
-		}
+			// Get page of desired version
+			final Page page = versionManager.getVersion(versionNumber);
 
-		return page;
+			// If we went all the way back to the original page
+			if (page != null && page.getCurrentVersionNumber() == 0)
+			{
+				// remove version info
+				page.versionManager = null;
+			}
+
+			return page;
+		}
 	}
 
 	/**
@@ -292,6 +348,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * @param isVersioned
+	 *            True if a version manager should be used for this page to
+	 *            allow easy back-button support
+	 */
+	public void setVersioned(boolean isVersioned)
+	{
+		this.isVersioned = isVersioned;
+	}
+
+	/**
 	 * Get the string representation of this container.
 	 * 
 	 * @return String representation of this container
@@ -327,18 +393,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @return Gets any revision manager for this Page
-	 */
-	protected IPageRevisionManager getRevisionManager()
-	{
-		if (revisionManager == null)
-		{
-			revisionManager = IPageRevisionManager.NULL;
-		}
-		return revisionManager;
-	}
-
-	/**
 	 * @see wicket.Component#initModel()
 	 */
 	protected IModel initModel()
@@ -348,12 +402,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @return Factory method that creates a revision manager for this Page
+	 * @return Factory method that creates a version manager for this Page
 	 */
-	protected IPageRevisionManager newRevisionManager()
+	protected IPageVersionManager newVersionManager()
 	{
-		return new UndoPageRevisionManager(this, getSession().getApplication().getSettings()
-				.getMaxPageRevisions());
+		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		return new UndoPageVersionManager(this, settings.getMaxPageVersions());
 	}
 
 	/**
@@ -371,16 +425,36 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * @see wicket.Component#onInternalModelChanged()
+	 */
+	protected void onInternalModelChanged()
+	{
+		// Visit all the form components and validate each
+		visitChildren(new Component.IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// If form component is using form model
+				if (component.sameRootModel(Page.this))
+				{
+					component.modelChanged();
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+
+	/**
 	 * Renders this container to the given response object.
 	 */
 	protected final void onRender()
 	{
-		// Configure response object with locale and content type
-		configureResponse();
-
 		// Check access to page
 		if (checkAccess())
 		{
+			// Configure response object with locale and content type
+			configureResponse();
+
 			// Set page's associated markup stream
 			final MarkupStream markupStream = getAssociatedMarkupStream();
 			setMarkupStream(markupStream);
@@ -396,8 +470,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentAdded(Component component)
 	{
-		changed();
-		getRevisionManager().componentAdded(component);
+		onChanged();
+		if (versionManager != null)
+		{
+			componentAdded(component);
+		}
 	}
 
 	/**
@@ -406,8 +483,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentModelChangeImpending(Component component)
 	{
-		changed();
-		getRevisionManager().componentModelChangeImpending(component);
+		onChanged();
+		if (versionManager != null)
+		{
+			versionManager.componentModelChangeImpending(component);
+		}
 	}
 
 	/**
@@ -416,8 +496,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentRemoved(Component component)
 	{
-		changed();
-		getRevisionManager().componentRemoved(component);
+		onChanged();
+		if (versionManager != null)
+		{
+			versionManager.componentRemoved(component);
+		}
 	}
 
 	/**
@@ -466,8 +549,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		if (getSession().getApplication().getSettings().getComponentUseCheck()
-				&& !getResponse().isRedirect())
+		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			// Visit components on page
 			checkRendering();
@@ -482,36 +565,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void onInternalEndRequest()
 	{
-		// Any changes to the page after this point will be tracked by the
-		// Page's revision manager
-		trackChanges = true;
-
-		// If there have been changes to the page in this revision
-		if (changeCount > 0)
+		if (isVersioned)
 		{
-			// We're done with this revision
-			getRevisionManager().endRevision();
-		}
-	}
+			// Any changes to the page after this point will be tracked by the
+			// page's version manager. Since trackChanges is never set to false,
+			// this effectively means that change tracking begins after the
+			// first
+			// request to a page completes.
+			trackChanges = true;
 
-	/**
-	 * @see wicket.Component#onInternalModelChanged()
-	 */
-	protected void onInternalModelChanged()
-	{
-		// Visit all the form components and validate each
-		visitChildren(new Component.IVisitor()
-		{
-			public Object component(final Component component)
+			// If there have been changes to the page
+			if (changeCount > 0)
 			{
-				// If form component is using form model
-				if (component.sameRootModel(Page.this))
+				// We're done with this version
+				if (versionManager != null)
 				{
-					component.modelChanged();
+					versionManager.endVersion();
 				}
-				return IVisitor.CONTINUE_TRAVERSAL;
 			}
-		});
+		}
 	}
 
 	/**
@@ -546,43 +618,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Adds this page to the current session
-	 */
-	private final void addToSession()
-	{
-		// Add page to session. This ensures that all the nice attributes
-		// of a page, such as its session and application are accessible in
-		// the page constructor.
-		getSession().addPage(this);
-	}
-
-	/**
-	 * Install revision manager if need be
-	 */
-	private final void changed()
-	{
-		// If we are creating a revision of the original Page
-		if (trackChanges)
-		{
-			// Install a real revision manager now if we don't already have one
-			if (revisionManager == IPageRevisionManager.NULL)
-			{
-				revisionManager = newRevisionManager();
-			}
-
-			// If there have not been any changes yet
-			if (changeCount == 0)
-			{
-				// start a new revision
-				getRevisionManager().beginRevision();
-			}
-
-			// Increase number of changes
-			changeCount++;
-		}
-	}
-
-	/**
 	 * Throw an exception if not all components rendered.
 	 */
 	private final void checkRendering()
@@ -603,7 +638,49 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			}
 		});
 
+		// Get rid of set
 		renderedComponents = null;
+	}
+
+	/**
+	 * Adds page to session and sets default state.
+	 */
+	private void init()
+	{
+		final Session session = getSession();
+		session.addPage(this);
+		this.isVersioned = session.getApplication().getSettings().getVersionPagesByDefault();
+	}
+
+	/**
+	 * Install version manager if need be
+	 */
+	private final void onChanged()
+	{
+		// If version management is enabled
+		if (isVersioned)
+		{
+			// and we are creating a new version of the original page
+			if (trackChanges)
+			{
+				// and we have no version manager
+				if (versionManager == null)
+				{
+					// then install a new version manager
+					versionManager = newVersionManager();
+				}
+
+				// If there have not been any changes yet
+				if (changeCount == 0)
+				{
+					// start a new version
+					versionManager.beginVersion();
+				}
+
+				// Increase number of changes
+				changeCount++;
+			}
+		}
 	}
 
 	static

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,20 +17,21 @@
  */
 package wicket.version.undo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import wicket.Component;
 
 /**
- * A revision is a sequence of changes to a Page that can be undone.
+ * A ChangeList is a sequence of changes that can be undone.
  * 
  * @author Jonathan Locke
  */
-class Revision
-{	
+class ChangeList implements Serializable
+{
 	private List changes = new ArrayList();
-		
+
 	void componentAdded(Component component)
 	{
 		changes.add(new Add(component));
@@ -43,12 +44,12 @@ class Revision
 
 	void componentRemoved(Component component)
 	{
-		changes.add(new Remove(component));		
+		changes.add(new Remove(component));
 	}
-	
+
 	void undo()
 	{
-		// Go through changes in reverse time order to undo the revisions.
+		// Go through changes in reverse time order to undo
 		for (int i = changes.size() - 1; i >= 0; i--)
 		{
 			((Change)changes.get(i)).undo();

@@ -174,18 +174,6 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * Indicates a structural change to the ListView model.
-	 */
-	public void modelChangedStructure()
-	{
-		// TODO this method should go away before 1.0!
-		
-		// Remove child listItems from listView since they came
-		// from the old and now invalid model
-		removeAll();
-	}
-
-	/**
 	 * Set the index of the first listItem to render
 	 * 
 	 * @param startIndex

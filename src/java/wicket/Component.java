@@ -553,7 +553,7 @@ public abstract class Component implements Serializable, IConverterSource
 	/**
 	 * @return The root model (innermost nested model) for this component
 	 */
-	public final Object getRootModel()
+	public final Object getRootModelObject()
 	{
 		return getRootModel(getModel());
 	}
@@ -865,14 +865,13 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Gets the string representation of this component, which in this case is
-	 * its path.
+	 * Gets the string representation of this component.
 	 * 
 	 * @return The path to this component
 	 */
 	public String toString()
 	{
-		return getPath();
+		return "[Component page = " + findPage() + ", path = " + getPath() + "]";
 	}
 
 	/**
@@ -955,22 +954,7 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	protected final String exceptionMessage(final String message)
 	{
-		String s;
-		try
-		{
-			s = "Page " + getPage();
-		}
-		catch (IllegalStateException e)
-		{
-			// happens when we're still in a constructor; just ignore that
-			// message part
-			s = "";
-		}
-		if (!(this instanceof Page))
-		{
-			s += ", component " + this;
-		}
-		return s + ": " + message;
+		return toString() + " : " + message;
 	}
 
 	/**

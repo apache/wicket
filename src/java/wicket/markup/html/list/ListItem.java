@@ -145,8 +145,8 @@ public class ListItem extends WebMarkupContainer
 			public void onClick()
 			{
 				// Swap list items and invalidate listView
+				listView.modelChangeImpending();
 				Collections.swap(listView.getList(), index, index + 1);
-				listView.modelChangedStructure();
 			}
 		};
 
@@ -173,8 +173,8 @@ public class ListItem extends WebMarkupContainer
 			public void onClick()
 			{
 				// Swap listItems and invalidate listView
+				listView.modelChangeImpending();
 				Collections.swap(listView.getList(), index, index - 1);
-				listView.modelChangedStructure();
 			}
 		};
 
@@ -201,8 +201,8 @@ public class ListItem extends WebMarkupContainer
 			public void onClick()
 			{
 				// Remove listItem and invalidate listView
+				listView.modelChangeImpending();
 				listView.getList().remove(index);
-				listView.modelChangedStructure();
 			}
 		};
 	}
