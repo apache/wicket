@@ -36,6 +36,8 @@ public class HangmanApplication extends WebApplication
      */
     public HangmanApplication()
     {
+        this.getSettings().setStripComponentNames(true);
+
         // Initialise Wicket settings
         getPages().setHomePage(Home.class);
 

@@ -32,6 +32,7 @@ public class HelloWorldApplication extends WebApplication
      */
     public HelloWorldApplication()
     {
+        this.getSettings().setStripComponentNames(true);
         getPages().setHomePage(HelloWorld.class);
     }
 }

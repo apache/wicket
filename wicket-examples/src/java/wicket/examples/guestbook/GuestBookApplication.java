@@ -31,6 +31,7 @@ public class GuestBookApplication extends WebApplication
      */
     public GuestBookApplication()
     {
+        this.getSettings().setStripComponentNames(true);
         getPages().setHomePage(Home.class);
     }
 }
