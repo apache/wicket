@@ -21,6 +21,10 @@
 	        	<item name="Using Tomcat" href="#How_to_build_and_run_the_examples_under_Tomcat"/>
 	        </item>
 	        <item name="Examples" href="/Examples.html" collapse="true">
+	        	<item name="HelloWorld" href="#HelloWorld"/>
+	        	<item name="Images" href="#Images"/>
+	        	<item name="Navomatic" href="#Navomatic"/>
+	        	<item name="Tables" href="#Tables"/>
 	        </item>
 	    </menu>
 	    <menu name="Quick links">
