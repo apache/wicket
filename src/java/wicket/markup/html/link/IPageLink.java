@@ -34,7 +34,8 @@ import wicket.Page;
  * generally should instead indicate where the user is in the navigation).
  * <p>
  * To understand how getIdentity() is used in this way, take a look at the
- * Link.linksTo() method and its override in PageLink.
+ * Link.linksTo() method and its override in PageLink. Also, see the
+ * documentation for getIdentity() below.
  * 
  * @see Link#linksTo(Page)
  * @see PageLink#linksTo(Page)
