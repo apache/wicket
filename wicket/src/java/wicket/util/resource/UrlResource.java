@@ -92,7 +92,7 @@ public final class UrlResource extends AbstractResource
 	}
 
 	/**
-	 * @return The extension of this resource, such as "jpeg" or "html"
+	 * @return The content type of this resource, such as "image/jpeg" or "text/html"
 	 */
 	public String getContentType()
 	{
