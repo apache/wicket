@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.protocol.http;
 
@@ -30,204 +29,227 @@ import javax.servlet.http.HttpSessionContext;
 import wicket.util.value.ValueMap;
 
 /**
- * Mock implementation of the <code>HttpSession</code> interface for use by the test
- * harnesses.
+ * Mock implementation of the <code>HttpSession</code> interface for use by
+ * the test harnesses.
+ * 
  * @author Chris Turner
  */
 public class MockHttpSession implements HttpSession, Serializable
-{ // TODO finalize javadoc
+{
+    /** Serial Version ID */
+    private static final long serialVersionUID = 7638042159794505659L;
 
-	/** Serial Version ID */
-	private static final long serialVersionUID = 7638042159794505659L;
+    private final ValueMap attributes = new ValueMap();
 
-	// Time related information
-	private final long creationTime = System.currentTimeMillis();
+    private final ServletContext context;
 
-	private long lastAccessedTime = 0;
+    private final long creationTime = System.currentTimeMillis();
 
-	// Session details
-	private final String id = (new UID()).toString();
+    private final String id = (new UID()).toString();
 
-	private final ServletContext context;
+    private long lastAccessedTime = 0;
 
-	private final ValueMap attributes = new ValueMap();
+    /**
+     * Create the session.
+     * 
+     * @param context
+     */
+    public MockHttpSession(final ServletContext context)
+    {
+        this.context = context;
+    }
 
-	/**
-	 * Create the session.
-	 * @param context
-	 */
-	public MockHttpSession(final ServletContext context)
-	{
-		this.context = context;
-	}
+    /**
+     * Get the attribute with the given name.
+     * 
+     * @param name
+     *            The attribute name
+     * @return The value or null
+     */
+    public Object getAttribute(final String name)
+    {
+        return attributes.get(name);
+    }
 
-	/**
-	 * Set the last accessed time for the session.
-	 */
-	public void timestamp()
-	{
-		lastAccessedTime = System.currentTimeMillis();
-	}
+    /**
+     * Get the names of the attributes in the session.
+     * 
+     * @return The attribute names
+     */
+    public Enumeration getAttributeNames()
+    {
+        return Collections.enumeration(attributes.keySet());
 
-	/**
-	 * Get the creation time of the session.
-	 * @return The creation time
-	 */
-	public long getCreationTime()
-	{
-		return creationTime;
-	}
+    }
 
-	/**
-	 * Return the id of this session.
-	 * @return The id
-	 */
-	public String getId()
-	{
-		return id;
-	}
+    /**
+     * Get the creation time of the session.
+     * 
+     * @return The creation time
+     */
+    public long getCreationTime()
+    {
+        return creationTime;
+    }
 
-	/**
-	 * Get the time the session was last accessed.
-	 * @return The last accessed time
-	 */
-	public long getLastAccessedTime()
-	{
-		return lastAccessedTime;
-	}
+    /**
+     * Return the id of this session.
+     * 
+     * @return The id
+     */
+    public String getId()
+    {
+        return id;
+    }
 
-	/**
-	 * Return the servlet context for the session.
-	 * @return The servlet context
-	 */
-	public ServletContext getServletContext()
-	{
-		return context;
-	}
+    /**
+     * Get the time the session was last accessed.
+     * 
+     * @return The last accessed time
+     */
+    public long getLastAccessedTime()
+    {
+        return lastAccessedTime;
+    }
 
-	/**
-	 * NOT USED. Sessions never expire in the test harness.
-	 * @param i The value
-	 */
-	public void setMaxInactiveInterval(final int i)
-	{
-	}
+    /**
+     * NOT USED. Sessions never expire in the test harness.
+     * 
+     * @return Always returns 0
+     */
+    public int getMaxInactiveInterval()
+    {
+        return 0;
+    }
 
-	/**
-	 * NOT USED. Sessions never expire in the test harness.
-	 * @return Always returns 0
-	 */
-	public int getMaxInactiveInterval()
-	{
-		return 0;
-	}
+    /**
+     * Return the servlet context for the session.
+     * 
+     * @return The servlet context
+     */
+    public ServletContext getServletContext()
+    {
+        return context;
+    }
 
-	/**
-	 * NOT USED.
-	 * @return Always null
-	 */
-	public HttpSessionContext getSessionContext()
-	{
-		return null;
-	}
+    /**
+     * NOT USED.
+     * 
+     * @return Always null
+     */
+    public HttpSessionContext getSessionContext()
+    {
+        return null;
+    }
 
-	/**
-	 * Get the attribute with the given name.
-	 * @param name The attribute name
-	 * @return The value or null
-	 */
-	public Object getAttribute(final String name)
-	{
-		return attributes.get(name);
-	}
+    /**
+     * Get the value for the given name.
+     * 
+     * @param name
+     *            The name
+     * @return The value or null
+     * @deprecated use getAttribute(String) instead
+     */
+    public Object getValue(final String name)
+    {
+        return getAttribute(name);
+    }
 
-	/**
-	 * Get the value for the given name.
-	 * @param name The name
-	 * @return The value or null
-	 * @deprecated use getAttribute(String) instead
-	 */
-	public Object getValue(final String name)
-	{
-		return getAttribute(name);
-	}
+    /**
+     * Get the names of the values in the session.
+     * 
+     * @return The names of the attributes
+     * @deprecated use getAttributeNames() instead
+     */
+    public String[] getValueNames()
+    {
+        String[] result = new String[attributes.size()];
+        return (String[])attributes.keySet().toArray(result);
+    }
 
-	/**
-	 * Get the names of the attributes in the session.
-	 * @return The attribute names
-	 */
-	public Enumeration getAttributeNames()
-	{
-		return Collections.enumeration(attributes.keySet());
+    /**
+     * Invalidate the session.
+     */
+    public void invalidate()
+    {
+        attributes.clear();
+    }
 
-	}
+    /**
+     * Check if the session is new.
+     * 
+     * @return Always false
+     */
+    public boolean isNew()
+    {
+        return false;
+    }
 
-	/**
-	 * Get the names of the values in the session.
-	 * @return The names of the attributes
-	 * @deprecated use getAttributeNames() instead
-	 */
-	public String[] getValueNames()
-	{
-		String[] result = new String[attributes.size()];
-		return (String[]) attributes.keySet().toArray(result);
-	}
+    /**
+     * Set a value.
+     * 
+     * @param name
+     *            The name of the value
+     * @param o
+     *            The value
+     * @deprecated Use setAttribute(String, Object) instead
+     */
+    public void putValue(final String name, final Object o)
+    {
+        setAttribute(name, o);
+    }
 
-	/**
-	 * Set an attribute.
-	 * @param name The name of the attribute to set
-	 * @param o The value to set
-	 */
-	public void setAttribute(final String name, final Object o)
-	{
-		attributes.put(name, o);
-	}
+    /**
+     * Remove an attribute.
+     * 
+     * @param name
+     *            The name of the attribute
+     */
+    public void removeAttribute(final String name)
+    {
+        attributes.remove(name);
+    }
 
-	/**
-	 * Set a value.
-	 * @param name The name of the value
-	 * @param o The value
-	 * @deprecated Use setAttribute(String, Object) instead
-	 */
-	public void putValue(final String name, final Object o)
-	{
-		setAttribute(name, o);
-	}
+    /**
+     * Remove a value.
+     * 
+     * @param name
+     *            The name of the value
+     * @deprecated Use removeAttribute(String) instead
+     */
+    public void removeValue(String name)
+    {
+        removeAttribute(name);
+    }
 
-	/**
-	 * Remove an attribute.
-	 * @param name The name of the attribute
-	 */
-	public void removeAttribute(final String name)
-	{
-		attributes.remove(name);
-	}
+    /**
+     * Set an attribute.
+     * 
+     * @param name
+     *            The name of the attribute to set
+     * @param o
+     *            The value to set
+     */
+    public void setAttribute(final String name, final Object o)
+    {
+        attributes.put(name, o);
+    }
 
-	/**
-	 * Remove a value.
-	 * @param name The name of the value
-	 * @deprecated Use removeAttribute(String) instead
-	 */
-	public void removeValue(String name)
-	{
-		removeAttribute(name);
-	}
+    /**
+     * NOT USED. Sessions never expire in the test harness.
+     * 
+     * @param i
+     *            The value
+     */
+    public void setMaxInactiveInterval(final int i)
+    {
+    }
 
-	/**
-	 * Invalidate the session.
-	 */
-	public void invalidate()
-	{
-		attributes.clear();
-	}
-
-	/**
-	 * Check if the session is new.
-	 * @return Always false
-	 */
-	public boolean isNew()
-	{
-		return false;
-	}
-
+    /**
+     * Set the last accessed time for the session.
+     */
+    public void timestamp()
+    {
+        lastAccessedTime = System.currentTimeMillis();
+    }
 }

@@ -117,24 +117,6 @@ public abstract class WicketServlet extends HttpServlet
     }
 
     /**
-     * Calls doGet with arguments.
-     * 
-     * @param servletRequest
-     *            Servlet request object
-     * @param servletResponse
-     *            Servlet response object
-     * @see WicketServlet#doGet(HttpServletRequest, HttpServletResponse)
-     * @throws ServletException
-     *             Thrown if something goes wrong during request handling
-     * @throws IOException
-     */
-    public final void doPost(final HttpServletRequest servletRequest,
-            final HttpServletResponse servletResponse) throws ServletException, IOException
-    {
-        doGet(servletRequest, servletResponse);
-    }
-
-    /**
      * Handles servlet page requests.
      * 
      * @param servletRequest
@@ -161,5 +143,23 @@ public abstract class WicketServlet extends HttpServlet
         // Clear down the session thread local so that the only reference to it
         // is as a Servlet HttpSession
         HttpSession.set(null);
+    }
+
+    /**
+     * Calls doGet with arguments.
+     * 
+     * @param servletRequest
+     *            Servlet request object
+     * @param servletResponse
+     *            Servlet response object
+     * @see WicketServlet#doGet(HttpServletRequest, HttpServletResponse)
+     * @throws ServletException
+     *             Thrown if something goes wrong during request handling
+     * @throws IOException
+     */
+    public final void doPost(final HttpServletRequest servletRequest,
+            final HttpServletResponse servletResponse) throws ServletException, IOException
+    {
+        doGet(servletRequest, servletResponse);
     }
 }

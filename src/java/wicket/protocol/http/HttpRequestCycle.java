@@ -47,10 +47,12 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public class HttpRequestCycle extends RequestCycle
-{ // TODO finalize javadoc
+{ 
+    // TODO finalize javadoc
+    
     /** Logging object */
     private static final Log log = LogFactory.getLog(HttpRequestCycle.class);
-    
+
     /**
      * Constructor
      * 

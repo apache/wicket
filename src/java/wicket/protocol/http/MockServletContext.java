@@ -49,22 +49,21 @@ import wicket.util.value.ValueMap;
  * located. Setting this value allows all of the resource location functionality to work
  * as in a fully functioning web application. This value is not set then not resource
  * location functionality will work and instead null will always be returned.
+ * 
  * @author Chris Turner
  */
 public class MockServletContext implements ServletContext
-{ // TODO finalize javadoc
-
-	// Map of mime types
-	private final ValueMap mimeTypes = new ValueMap();
-
-	// Context information
+{
 	private Application application;
 
-	private File webappRoot;
+	private ValueMap attributes = new ValueMap();
 
 	private ValueMap initParameters = new ValueMap();
 
-	private ValueMap attributes = new ValueMap();
+	/** Map of mime types */
+	private final ValueMap mimeTypes = new ValueMap();
+
+	private File webappRoot;
 
 	/**
 	 * Create the mock object. As part of the creation, the context ets the root directory
@@ -100,6 +99,16 @@ public class MockServletContext implements ServletContext
 		mimeTypes.put("png", "image/png");
 	}
 
+	/**
+	 * Add an init parameter.
+	 * @param name The parameter name
+	 * @param value The parameter value
+	 */
+	public void addInitParameter(final String name, final String value)
+	{
+		initParameters.put(name, value);
+	}
+
 	// Configuration methods
 
 	/**
@@ -113,13 +122,22 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Add an init parameter.
-	 * @param name The parameter name
-	 * @param value The parameter value
+	 * Get an attribute with the given name.
+	 * @param name The attribute name
+	 * @return The value, or null
 	 */
-	public void addInitParameter(final String name, final String value)
+	public Object getAttribute(final String name)
 	{
-		initParameters.put(name, value);
+		return attributes.get(name);
+	}
+
+	/**
+	 * Get all of the attribute names.
+	 * @return The attribute names
+	 */
+	public Enumeration getAttributeNames()
+	{
+		return Collections.enumeration(attributes.keySet());
 	}
 
 	// ServletContext interface methods
@@ -135,19 +153,30 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
+	 * Get the init parameter with the given name.
+	 * @param name The name
+	 * @return The parameter, or null if no such parameter
+	 */
+	public String getInitParameter(final String name)
+	{
+		return initParameters.getString(name);
+	}
+
+	/**
+	 * Get the name of all of the init parameters.
+	 * @return The init parameter names
+	 */
+	public Enumeration getInitParameterNames()
+	{
+		return Collections.enumeration(initParameters.keySet());
+	}
+
+	/**
 	 * @return Always 2
 	 */
 	public int getMajorVersion()
 	{
 		return 2;
-	}
-
-	/**
-	 * @return Always 3
-	 */
-	public int getMinorVersion()
-	{
-		return 3;
 	}
 
 	/**
@@ -163,6 +192,119 @@ public class MockServletContext implements ServletContext
 			return null;
 		else
 			return mimeTypes.getString(name.substring(index + 1));
+	}
+
+	/**
+	 * @return Always 3
+	 */
+	public int getMinorVersion()
+	{
+		return 3;
+	}
+
+	/**
+	 * Wicket does not use the RequestDispatcher, so this implementation just returns a
+	 * dummy value.
+	 * @param name The name of the servlet or JSP
+	 * @return The dispatcher
+	 */
+	public RequestDispatcher getNamedDispatcher(final String name)
+	{
+		return getRequestDispatcher(name);
+	}
+
+	/**
+	 * Get the real file path of the given resource name.
+	 * @param name The name
+	 * @return The real path or null
+	 */
+	public String getRealPath(String name)
+	{
+		if (webappRoot == null)
+			return null;
+
+		if (name.startsWith("/"))
+			name = name.substring(1);
+		File f = new File(webappRoot, name);
+		if (!f.exists())
+			return null;
+		else
+			return f.getPath();
+	}
+
+	/**
+	 * Wicket does not use the RequestDispatcher, so this implementation just returns a
+	 * dummy value.
+	 * @param name The name of the resource to get the dispatcher for
+	 * @return The dispatcher
+	 */
+	public RequestDispatcher getRequestDispatcher(final String name)
+	{
+		return new RequestDispatcher()
+		{
+			public void forward(ServletRequest servletRequest, ServletResponse servletResponse)
+					throws IOException
+			{
+				servletResponse.getWriter().write("FORWARD TO RESOURCE: " + name);
+			}
+
+			public void include(ServletRequest servletRequest, ServletResponse servletResponse)
+					throws IOException
+			{
+				servletResponse.getWriter().write("INCLUDE OF RESOURCE: " + name);
+			}
+		};
+	}
+
+	/**
+	 * Get the URL for a particular resource that is relative to the web app root
+	 * directory.
+	 * @param name The name of the resource to get
+	 * @return The resource, or null if resource not found
+	 * @throws MalformedURLException If the URL is invalid
+	 */
+	public URL getResource(String name) throws MalformedURLException
+	{
+		if (webappRoot == null)
+			return null;
+
+		if (name.startsWith("/"))
+			name = name.substring(1);
+		File f = new File(webappRoot, name);
+		if (!f.exists())
+			return null;
+		else
+			return f.toURL();
+	}
+
+	/**
+	 * Get an input stream for a particular resource that is relative to the web app root
+	 * directory.
+	 * @param name The name of the resource to get
+	 * @return The input stream for the resource, or null of resource is not found
+	 */
+	public InputStream getResourceAsStream(String name)
+	{
+		if (webappRoot == null)
+			return null;
+
+		if (name.startsWith("/"))
+			name = name.substring(1);
+		File f = new File(webappRoot, name);
+		if (!f.exists())
+			return null;
+		else
+		{
+			try
+			{
+				return new FileInputStream(f);
+			}
+			catch (FileNotFoundException e)
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
 	}
 
 	/**
@@ -218,89 +360,12 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Get the URL for a particular resource that is relative to the web app root
-	 * directory.
-	 * @param name The name of the resource to get
-	 * @return The resource, or null if resource not found
-	 * @throws MalformedURLException If the URL is invalid
+	 * Get the server info.
+	 * @return The server info
 	 */
-	public URL getResource(String name) throws MalformedURLException
+	public String getServerInfo()
 	{
-		if (webappRoot == null)
-			return null;
-
-		if (name.startsWith("/"))
-			name = name.substring(1);
-		File f = new File(webappRoot, name);
-		if (!f.exists())
-			return null;
-		else
-			return f.toURL();
-	}
-
-	/**
-	 * Get an input stream for a particular resource that is relative to the web app root
-	 * directory.
-	 * @param name The name of the resource to get
-	 * @return The input stream for the resource, or null of resource is not found
-	 */
-	public InputStream getResourceAsStream(String name)
-	{
-		if (webappRoot == null)
-			return null;
-
-		if (name.startsWith("/"))
-			name = name.substring(1);
-		File f = new File(webappRoot, name);
-		if (!f.exists())
-			return null;
-		else
-		{
-			try
-			{
-				return new FileInputStream(f);
-			}
-			catch (FileNotFoundException e)
-			{
-				e.printStackTrace();
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * Wicket does not use the RequestDispatcher, so this implementation just returns a
-	 * dummy value.
-	 * @param name The name of the resource to get the dispatcher for
-	 * @return The dispatcher
-	 */
-	public RequestDispatcher getRequestDispatcher(final String name)
-	{
-		return new RequestDispatcher()
-		{
-			public void forward(ServletRequest servletRequest, ServletResponse servletResponse)
-					throws IOException
-			{
-				servletResponse.getWriter().write("FORWARD TO RESOURCE: " + name);
-			}
-
-			public void include(ServletRequest servletRequest, ServletResponse servletResponse)
-					throws IOException
-			{
-				servletResponse.getWriter().write("INCLUDE OF RESOURCE: " + name);
-			}
-		};
-	}
-
-	/**
-	 * Wicket does not use the RequestDispatcher, so this implementation just returns a
-	 * dummy value.
-	 * @param name The name of the servlet or JSP
-	 * @return The dispatcher
-	 */
-	public RequestDispatcher getNamedDispatcher(final String name)
-	{
-		return getRequestDispatcher(name);
+		return "Wicket Mock Test Environment v1.0";
 	}
 
 	/**
@@ -315,12 +380,12 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * NOT USED - Servlet spec requires that this always returns null.
-	 * @return null
+	 * Return the name of the servlet context.
+	 * @return The name
 	 */
-	public Enumeration getServlets()
+	public String getServletContextName()
 	{
-		return null;
+		return application.getName();
 	}
 
 	/**
@@ -333,12 +398,12 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * As part of testing we always log to the console.
-	 * @param msg The message to log
+	 * NOT USED - Servlet spec requires that this always returns null.
+	 * @return null
 	 */
-	public void log(String msg)
+	public Enumeration getServlets()
 	{
-		System.err.println(msg);
+		return null;
 	}
 
 	/**
@@ -355,88 +420,21 @@ public class MockServletContext implements ServletContext
 	/**
 	 * As part of testing we always log to the console.
 	 * @param msg The message to log
+	 */
+	public void log(String msg)
+	{
+		System.err.println(msg);
+	}
+
+	/**
+	 * As part of testing we always log to the console.
+	 * @param msg The message to log
 	 * @param cause The cause exception
 	 */
 	public void log(String msg, Throwable cause)
 	{
 		System.err.println(msg);
 		cause.printStackTrace();
-	}
-
-	/**
-	 * Get the real file path of the given resource name.
-	 * @param name The name
-	 * @return The real path or null
-	 */
-	public String getRealPath(String name)
-	{
-		if (webappRoot == null)
-			return null;
-
-		if (name.startsWith("/"))
-			name = name.substring(1);
-		File f = new File(webappRoot, name);
-		if (!f.exists())
-			return null;
-		else
-			return f.getPath();
-	}
-
-	/**
-	 * Get the server info.
-	 * @return The server info
-	 */
-	public String getServerInfo()
-	{
-		return "Wicket Mock Test Environment v1.0";
-	}
-
-	/**
-	 * Get the init parameter with the given name.
-	 * @param name The name
-	 * @return The parameter, or null if no such parameter
-	 */
-	public String getInitParameter(final String name)
-	{
-		return initParameters.getString(name);
-	}
-
-	/**
-	 * Get the name of all of the init parameters.
-	 * @return The init parameter names
-	 */
-	public Enumeration getInitParameterNames()
-	{
-		return Collections.enumeration(initParameters.keySet());
-	}
-
-	/**
-	 * Get an attribute with the given name.
-	 * @param name The attribute name
-	 * @return The value, or null
-	 */
-	public Object getAttribute(final String name)
-	{
-		return attributes.get(name);
-	}
-
-	/**
-	 * Get all of the attribute names.
-	 * @return The attribute names
-	 */
-	public Enumeration getAttributeNames()
-	{
-		return Collections.enumeration(attributes.keySet());
-	}
-
-	/**
-	 * Set an attribute.
-	 * @param name The name of the attribute
-	 * @param o The value
-	 */
-	public void setAttribute(final String name, final Object o)
-	{
-		attributes.put(name, o);
 	}
 
 	/**
@@ -449,12 +447,12 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Return the name of the servlet context.
-	 * @return The name
+	 * Set an attribute.
+	 * @param name The name of the attribute
+	 * @param o The value
 	 */
-	public String getServletContextName()
+	public void setAttribute(final String name, final Object o)
 	{
-		return application.getName();
+		attributes.put(name, o);
 	}
-
 }

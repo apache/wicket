@@ -43,6 +43,22 @@ class NullHttpRequest extends HttpRequest
     }
 
     /**
+     * @see wicket.protocol.http.HttpRequest#getContextPath()
+     */
+    public String getContextPath()
+    {
+        return "[No context path]";
+    }
+
+    /**
+     * @see wicket.protocol.http.HttpRequest#getCookies()
+     */
+    public Cookie[] getCookies()
+    {
+        return null;
+    }
+
+    /**
      * @see wicket.Request#getParameter(java.lang.String)
      */
     public String getParameter(String key)
@@ -67,30 +83,6 @@ class NullHttpRequest extends HttpRequest
     }
 
     /**
-     * @see wicket.Request#getURL()
-     */
-    public String getURL()
-    {
-        return "[No request URL]";
-    }
-
-    /**
-     * @see wicket.protocol.http.HttpRequest#getContextPath()
-     */
-    public String getContextPath()
-    {
-        return "[No context path]";
-    }
-
-    /**
-     * @see wicket.protocol.http.HttpRequest#getCookies()
-     */
-    public Cookie[] getCookies()
-    {
-        return null;
-    }
-
-    /**
      * @see wicket.protocol.http.HttpRequest#getPathInfo()
      */
     public String getPathInfo()
@@ -104,6 +96,14 @@ class NullHttpRequest extends HttpRequest
     public String getServletPath()
     {
         return "[No servlet path]";
+    }
+
+    /**
+     * @see wicket.Request#getURL()
+     */
+    public String getURL()
+    {
+        return "[No request URL]";
     }
 
     /**
