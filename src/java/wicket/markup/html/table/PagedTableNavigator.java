@@ -86,13 +86,13 @@ public class PagedTableNavigator extends Panel
      */
     protected String getHeadlineText(final Table table)
     {
-        int firstCell = table.getCurrentPage() * table.getRowsPerPage();
+        int firstListItem = table.getCurrentPage() * table.getRowsPerPage();
         StringBuffer buf = new StringBuffer(80);
         buf.append(String.valueOf(table.getList().size()))
            .append(" items found, displaying ")
-           .append(String.valueOf(firstCell + 1))
+           .append(String.valueOf(firstListItem + 1))
            .append(" to ")
-           .append(String.valueOf(firstCell + table.getRowsPerPage()))
+           .append(String.valueOf(firstListItem + table.getRowsPerPage()))
            .append(".");
         
         return buf.toString();
