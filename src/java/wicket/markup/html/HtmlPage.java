@@ -19,7 +19,7 @@
 package wicket.markup.html;
 
 import wicket.Page;
-import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.BookmarkablePageLink;
 
 
 /**
@@ -52,9 +52,9 @@ public class HtmlPage extends Page
      * @param componentName Name of link
      * @return Link to home page for this application
      */
-    protected final ExternalPageLink homePageLink(final String componentName)
+    protected final BookmarkablePageLink homePageLink(final String componentName)
     {
-        return new ExternalPageLink(componentName, getApplicationSettings().getHomePage());
+        return new BookmarkablePageLink(componentName, getApplicationSettings().getHomePage());
     }
 }
 

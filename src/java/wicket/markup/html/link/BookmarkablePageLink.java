@@ -26,7 +26,7 @@ import wicket.RequestCycle;
  * Renders a stable link which can be cached in a web browser and used at a later time.
  * @author Jonathan Locke
  */
-public final class ExternalPageLink extends Link
+public final class BookmarkablePageLink extends Link
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 2396751463296314926L;
@@ -42,7 +42,7 @@ public final class ExternalPageLink extends Link
      * @param componentName The name of this component
      * @param pageClass The class of page to link to
      */
-    public ExternalPageLink(final String componentName, final Class pageClass)
+    public BookmarkablePageLink(final String componentName, final Class pageClass)
     {
         this(componentName, pageClass, new PageParameters());
     }
@@ -53,7 +53,7 @@ public final class ExternalPageLink extends Link
      * @param pageClass The class of page to link to
      * @param parameters The parameters to pass to the new page when the link is clicked
      */
-    public ExternalPageLink(final String componentName, final Class pageClass,
+    public BookmarkablePageLink(final String componentName, final Class pageClass,
             final PageParameters parameters)
     {
         super(componentName);
@@ -93,7 +93,7 @@ public final class ExternalPageLink extends Link
      * @param value The value
      * @return This
      */
-    public ExternalPageLink setParameter(final String property, final String value)
+    public BookmarkablePageLink setParameter(final String property, final String value)
     {
         parameters.put(property, value);
 
@@ -106,7 +106,7 @@ public final class ExternalPageLink extends Link
      * @param value The value
      * @return This
      */
-    public ExternalPageLink setParameter(final String property, final long value)
+    public BookmarkablePageLink setParameter(final String property, final long value)
     {
         parameters.put(property, Long.toString(value));
 
@@ -119,7 +119,7 @@ public final class ExternalPageLink extends Link
      * @param value The value
      * @return This
      */
-    public ExternalPageLink setParameter(final String property, final int value)
+    public BookmarkablePageLink setParameter(final String property, final int value)
     {
         parameters.put(property, Integer.toString(value));
 
