@@ -36,9 +36,29 @@ public class TextField extends AbstractTextComponent
 	private Class type;
 
 	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public TextField(final String name)
+	{
+		super(name);
+	}
+
+	/**
+	 * @param name
+	 *            See Component(String)
+	 * @param type
+	 *            Type for field validation
+	 */
+	public TextField(final String name, final Class type)
+	{
+		super(name);
+		add(new TypeValidator(type));
+	}
+
+	/**
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
-	public TextField(String name, Serializable object)
+	public TextField(final String name, final Serializable object)
 	{
 		super(name, object);
 	}

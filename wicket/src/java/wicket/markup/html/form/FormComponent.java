@@ -22,9 +22,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
+import wicket.model.IModel;
+import wicket.model.PropertyModel;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringList;
 
@@ -219,6 +222,20 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return this;
 	}
+	
+	/** 
+	 * @return The parent form for this form component
+	 */
+	public final Form getForm()
+	{
+		// Look for parent form
+		final Form form = (Form)findParent(Form.class);
+		if (form == null)
+		{
+			throw new WicketRuntimeException("Could not find Form parent for " + this);
+		}
+		return form;
+	}
 
 	/**
 	 * Gets the request parameter for this component as a string.
@@ -228,6 +245,27 @@ public abstract class FormComponent extends WebMarkupContainer
 	public final String getInput()
 	{
 		return getRequest().getParameter(getPath());
+	}
+
+	/**
+	 * @see wicket.Component#onNullModel()
+	 */
+	public void onNullModel()
+	{
+		if (getParent() != null)
+		{
+			// Get form model
+			final IModel model = getForm().getModel();
+			if (model != null)
+			{
+				// Create PropertyModel using the Form's model and the name of the component
+				setModel(new PropertyModel(model, getName()));		
+			}
+			else
+			{
+				throw new WicketRuntimeException("FormComponent " + this + " and parent Form " + getForm() + " cannot both have null models");
+			}
+		}
 	}
 
 	/**
@@ -263,9 +301,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		return getModelObjectAsString();
 	}
-	
-	/** 
-	 * Called to indicate that 
+
+	/**
+	 * Called to indicate that
 	 */
 	public final void invalid()
 	{
@@ -334,9 +372,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		setModelObject(value);
 	}
-	
-	/** 
-	 * Called to indicate that 
+
+	/**
+	 * Called to indicate that
 	 */
 	public final void valid()
 	{
@@ -411,7 +449,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the request parameters for this component as strings.
 	 * 

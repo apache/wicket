@@ -20,10 +20,7 @@ package wicket.markup.html.form.validation;
 import java.util.HashMap;
 import java.util.Map;
 
-import wicket.Component;
 import wicket.Localizer;
-import wicket.WicketRuntimeException;
-import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.model.MapModel;
@@ -61,7 +58,7 @@ import wicket.util.lang.Classes;
 public abstract class AbstractValidator implements IValidator
 {
 	/** The form component being validated */
-	private FormComponent component;
+	private FormComponent formComponent;
 
 	/**
 	 * Sets an error on the component being validated using the map returned by
@@ -89,9 +86,9 @@ public abstract class AbstractValidator implements IValidator
 	public void error(final String resourceKey, final IModel resourceModel)
 	{
 		// Return formatted error message
-		Localizer localizer = component.getLocalizer();
-		String message = localizer.getString(resourceKey, component, resourceModel);
-		component.error(message);
+		Localizer localizer = formComponent.getLocalizer();
+		String message = localizer.getString(resourceKey, formComponent, resourceModel);
+		formComponent.error(message);
 	}
 
 	/**
@@ -123,9 +120,9 @@ public abstract class AbstractValidator implements IValidator
 	/**
 	 * @return Returns the component.
 	 */
-	public FormComponent getComponent()
+	public FormComponent getFormComponent()
 	{
-		return component;
+		return formComponent;
 	}
 
 	/**
@@ -133,7 +130,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public String getInput()
 	{
-		return component.getInput();
+		return formComponent.getInput();
 	}
 
 	/**
@@ -144,10 +141,10 @@ public abstract class AbstractValidator implements IValidator
 	/**
 	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
-	public synchronized final void validate(final FormComponent component)
+	public synchronized final void validate(final FormComponent formComponent)
 	{
 		// Save component
-		this.component = component;
+		this.formComponent = formComponent;
 
 		// Cause validation to happen
 		onValidate();
@@ -166,7 +163,7 @@ public abstract class AbstractValidator implements IValidator
 	{
 		final Map resourceModel = new HashMap(4);
 		resourceModel.put("input", getInput());
-		resourceModel.put("name", component.getName());
+		resourceModel.put("name", formComponent.getName());
 		return resourceModel;
 	}
 
@@ -179,16 +176,7 @@ public abstract class AbstractValidator implements IValidator
 	protected String resourceKey()
 	{
 		// Resource key must be <form-name>.<component-name>.<validator-class>
-		final Component parentForm = component.findParent(Form.class);
-		if (parentForm != null)
-		{
-			return parentForm.getName() + "." + component.getName() + "."
-					+ Classes.name(getClass());
-		}
-		else
-		{
-			throw new WicketRuntimeException("Unable to find Form parent for FormComponent "
-					+ component);
-		}
+		return formComponent.getForm().getName() + "." + formComponent.getName() + "."
+				+ Classes.name(getClass());
 	}
 }

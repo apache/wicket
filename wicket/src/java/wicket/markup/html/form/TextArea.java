@@ -33,6 +33,14 @@ public class TextArea extends AbstractTextComponent
 	private static final long serialVersionUID = -1323747673401786242L;
 
 	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public TextArea(final String name)
+	{
+		super(name);
+	}
+
+	/**
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public TextArea(final String name, final Serializable object)

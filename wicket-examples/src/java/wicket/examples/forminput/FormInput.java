@@ -100,11 +100,11 @@ public class FormInput extends WicketExamplePage
 		{
 			super(name, new FormInputModel(), validationFeedback);
 
-			add(new RequiredTextField("stringInput", getModel(), "stringProperty"));
-			add(new RequiredTextField("integerInput", getModel(), "integerProperty", Integer.class));
-			add(new RequiredTextField("doubleInput", getModel(), "doubleProperty", Double.class));
-			add(new RequiredTextField("dateInput", getModel(), "dateProperty", Date.class));
-			add(new RequiredTextField("integerInRangeInput", getModel(), "integerInRangeProperty")
+			add(new RequiredTextField("stringProperty"));
+			add(new RequiredTextField("integerProperty", Integer.class));
+			add(new RequiredTextField("doubleProperty", Double.class));
+			add(new RequiredTextField("dateProperty", Date.class));
+			add(new RequiredTextField("integerInRangeProperty", Integer.class)
 					.add(IntegerValidator.range(0, 100)));
 
 			add(new ImageButton("saveButton"));
@@ -124,7 +124,7 @@ public class FormInput extends WicketExamplePage
 		public void onSubmit()
 		{
 			// Form validation successful. Display message showing edited model.
-			info("Saved model " + getModel());
+			info("Saved model " + getModelObject());
 		}
 	}
 }

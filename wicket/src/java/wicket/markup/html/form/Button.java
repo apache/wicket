@@ -37,7 +37,10 @@ public class Button extends FormComponent
 	 */
 	public Button(String name)
 	{
-		super(name);
+		// We pass null as the model explicitly because we don't want the
+		// Component constructor attempting to auto-assign a property model
+		// to the FormComponent via onNullModel().
+		super(name, null);
 	}
 
 	/**
@@ -72,7 +75,7 @@ public class Button extends FormComponent
 					"Button tag must have a type of 'button', 'image' or 'submit'");
 		}
 
-		// Check for non-empty value 
+		// Check for non-empty value
 		final String value = tag.getAttributes().getString("value");
 		if (Strings.isEmpty(value))
 		{
@@ -82,9 +85,10 @@ public class Button extends FormComponent
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
-	
+
 	/**
-	 * Override this method to provide special submit handling in a multi-button form
+	 * Override this method to provide special submit handling in a multi-button
+	 * form
 	 */
 	protected void onSubmit()
 	{
