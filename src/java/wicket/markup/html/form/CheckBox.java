@@ -23,8 +23,6 @@ import java.io.Serializable;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
 
 /**
  * HTML checkbox input component.
@@ -66,9 +64,7 @@ public class CheckBox extends FormComponent
 	 */
 	public CheckBox(String name, IModel model, String expression)
 	{
-		super(name);
-		// construct model without formatting as we want the model object as-is
-		setModel(new PropertyModel(model, expression, false));
+		super(name, model, expression);
 	}
 
 	/**
@@ -103,8 +99,6 @@ public class CheckBox extends FormComponent
 	public CheckBox(String name, Serializable object, String expression)
 	{
 		super(name, object, expression);
-		// construct model without formatting as we want the model object as-is
-		setModel(new PropertyModel(new Model(object), expression, false));
 	}
 
 	/**

@@ -445,22 +445,22 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Gets a model property as a string.
+	 * Gets a model object as a string.
 	 * 
-	 * @return Model property for this component as a string
+	 * @return Model object for this component as a string
 	 */
 	public final String getModelObjectAsString()
 	{
 		IModel model = getModel();
 		if (model != null)
 		{
-			final Object property = model.getObject();
-			if (property != null)
+			final Object modelObject = model.getObject();
+			if (modelObject != null)
 			{
-				// Model string from property
-				final String modelString = (property instanceof String) ? (String)property : String
-						.valueOf(property);
-
+				// get converter
+				IStringConverter stringConverter = getConverter();
+				//	Model string from property
+				final String modelString = stringConverter.toString(modelObject);
 				// If we should escape the markup
 				if (shouldEscapeModelStrings)
 				{
