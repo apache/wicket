@@ -87,9 +87,14 @@ import wicket.util.string.Strings;
  */
 public abstract class Component implements Serializable
 { // TODO finalize javadoc
-
     /** Log. */
     private static Log log = LogFactory.getLog(Component.class);
+
+    /**
+     * Collections to hold instances of modifiers to be applied for this
+     * component.
+     */
+    private Set attributeModifiers = null;
 
     /** The model for this component. */
     private IModel model;
@@ -108,12 +113,6 @@ public abstract class Component implements Serializable
 
     /** True if this component is visible. */
     private boolean visible = true;
-
-    /**
-     * Collections to hold instances of modifiers to be applied for this
-     * component.
-     */
-    Set attributeModifiers = null;
 
     /**
      * Generic component visitor interface for component traversals.
@@ -163,6 +162,50 @@ public abstract class Component implements Serializable
     }
 
     /**
+     * Constructor that uses the provided {@link IModel}as its model. All
+     * components have names. A component's name cannot be null.
+     * 
+     * @param name
+     *            The non-null name of this component
+     * @param model
+     * @throws WicketRuntimeException
+     *             Thrown if the component has been given a null name.
+     */
+    public Component(String name, IModel model)
+    {
+        this(name);
+        setModel(model);
+    }
+
+    /**
+     * Constructor that uses the provided instance of {@link IModel}as a
+     * dynamic model. This model will be wrapped in an instance of
+     * {@link PropertyModel}using the provided expression. Thus, using this
+     * constructor is a short-hand for:
+     * 
+     * <pre>
+     * new MyComponent(name, new PropertyModel(myIModel, expression));
+     * </pre>
+     * 
+     * All components have names. A component's name cannot be null.
+     * 
+     * @param name
+     *            The non-null name of this component
+     * @param model
+     *            the instance of {@link IModel}from which the model object
+     *            will be used as the subject for the given expression
+     * @param expression
+     *            the OGNL expression that works on the given object
+     * @throws WicketRuntimeException
+     *             Thrown if the component has been given a null name.
+     */
+    public Component(String name, IModel model, String expression)
+    {
+        this(name);
+        setModel(new PropertyModel(model, expression));
+    }
+
+    /**
      * Constructor that uses the provided object as a simple model. This object
      * will be wrapped in an instance of {@link Model}. All components have
      * names. A component's name cannot be null.
@@ -177,22 +220,6 @@ public abstract class Component implements Serializable
     public Component(String name, Serializable object)
     {
         this(name, new Model(object));
-    }
-
-    /**
-     * Constructor that uses the provided {@link IModel}as its model. All
-     * components have names. A component's name cannot be null.
-     * 
-     * @param name
-     *            The non-null name of this component
-     * @param model
-     * @throws WicketRuntimeException
-     *             Thrown if the component has been given a null name.
-     */
-    public Component(String name, IModel model)
-    {
-        this(name);
-        setModel(model);
     }
 
     /**
@@ -223,31 +250,20 @@ public abstract class Component implements Serializable
     }
 
     /**
-     * Constructor that uses the provided instance of {@link IModel}as a
-     * dynamic model. This model will be wrapped in an instance of
-     * {@link PropertyModel}using the provided expression. Thus, using this
-     * constructor is a short-hand for:
+     * Adds an attribute modifier to the component.
      * 
-     * <pre>
-     * new MyComponent(name, new PropertyModel(myIModel, expression));
-     * </pre>
-     * 
-     * All components have names. A component's name cannot be null.
-     * 
-     * @param name
-     *            The non-null name of this component
-     * @param model
-     *            the instance of {@link IModel}from which the model object
-     *            will be used as the subject for the given expression
-     * @param expression
-     *            the OGNL expression that works on the given object
-     * @throws WicketRuntimeException
-     *             Thrown if the component has been given a null name.
+     * @param modifier
+     *            The attribute modifier to be added
+     * @return this (to allow method call chaining)
      */
-    public Component(String name, IModel model, String expression)
+    public final Component add(final ComponentTagAttributeModifier modifier)
     {
-        this(name);
-        setModel(new PropertyModel(model, expression));
+        if (attributeModifiers == null)
+        {
+            attributeModifiers = new HashSet();
+        }
+        attributeModifiers.add(modifier);
+        return this;
     }
 
     /**
@@ -293,6 +309,18 @@ public abstract class Component implements Serializable
     }
 
     /**
+     * Gets the application pages from the application that this component
+     * belongs to.
+     * 
+     * @return The application pages
+     * @see ApplicationPages
+     */
+    public final ApplicationPages getApplicationPages()
+    {
+        return getApplication().getPages();
+    }
+
+    /**
      * Gets the application settings from the application that this component
      * belongs to.
      * 
@@ -306,15 +334,14 @@ public abstract class Component implements Serializable
     }
 
     /**
-     * Gets the application pages from the application that this component
-     * belongs to.
+     * Gets the locale for the session holding this component.
      * 
-     * @return The application pages
-     * @see ApplicationPages
+     * @return The locale for the session holding this component
+     * @see Component#getSession()
      */
-    public final ApplicationPages getApplicationPages()
+    public final Locale getLocale()
     {
-        return getApplication().getPages();
+        return getSession().getLocale();
     }
 
     /**
@@ -326,17 +353,6 @@ public abstract class Component implements Serializable
     public final Localizer getLocalizer()
     {
         return getApplication().getLocalizer();
-    }
-
-    /**
-     * Gets the locale for the session holding this component.
-     * 
-     * @return The locale for the session holding this component
-     * @see Component#getSession()
-     */
-    public final Locale getLocale()
-    {
-        return getSession().getLocale();
     }
 
     /**
@@ -399,39 +415,6 @@ public abstract class Component implements Serializable
             }
         }
         return "";
-    }
-
-    /**
-     * Sets the given model.
-     * 
-     * @param model
-     *            the model
-     * @return This
-     */
-    public final Component setModel(final IModel model)
-    {
-        final IModel currentModel = getModel();
-        if (currentModel != null && currentModel instanceof IDetachableModel)
-        {
-            ((IDetachableModel)currentModel).detach();
-        }
-        this.model = (IModel)model;
-        return this;
-    }
-
-    /**
-     * Sets the backing model object; shorthand for getModel().setObject(value).
-     * 
-     * @param value
-     *            The value to set
-     */
-    public final void setModelObject(final Object value)
-    {
-        final IModel model = getModel();
-        if (model != null)
-        {
-            model.setObject(value);
-        }
     }
 
     /**
@@ -523,39 +506,11 @@ public abstract class Component implements Serializable
     }
 
     /**
-     * Gets the active request cycle for this component
-     * 
-     * @return The request cycle
-     */
-    public final RequestCycle getRequestCycle()
-    {
-        return getSession().getRequestCycle();
-    }
-
-    /**
      * @return The request for this component's active request cycle
      */
     public final Request getRequest()
     {
         return getRequestCycle().getRequest();
-    }
-
-    /**
-     * @return The response for this component's active request cycle
-     */
-    public final Response getResponse()
-    {
-        return getRequestCycle().getResponse();
-    }
-
-    /**
-     * Gets the request parameter for this component as a string.
-     * 
-     * @return The value in the request for this component
-     */
-    public final String getRequestString()
-    {
-        return getRequest().getParameter(getPath());
     }
 
     /**
@@ -566,6 +521,16 @@ public abstract class Component implements Serializable
     public final Boolean getRequestBoolean()
     {
         return Boolean.valueOf(!Strings.isEmpty(getRequestString()));
+    }
+
+    /**
+     * Gets the active request cycle for this component
+     * 
+     * @return The request cycle
+     */
+    public final RequestCycle getRequestCycle()
+    {
+        return getSession().getRequestCycle();
     }
 
     /**
@@ -638,6 +603,16 @@ public abstract class Component implements Serializable
     }
 
     /**
+     * Gets the request parameter for this component as a string.
+     * 
+     * @return The value in the request for this component
+     */
+    public final String getRequestString()
+    {
+        return getRequest().getParameter(getPath());
+    }
+
+    /**
      * Gets the request parameters for this component as strings.
      * 
      * @return The valuess in the request for this component
@@ -645,6 +620,14 @@ public abstract class Component implements Serializable
     public final String[] getRequestStrings()
     {
         return getRequest().getParameters(getPath());
+    }
+
+    /**
+     * @return The response for this component's active request cycle
+     */
+    public final Response getResponse()
+    {
+        return getRequestCycle().getResponse();
     }
 
     /**
@@ -694,19 +677,6 @@ public abstract class Component implements Serializable
     }
 
     /**
-     * Sets whether model strings should be escaped.
-     * 
-     * @param escapeMarkup
-     *            True is model strings should be escaped
-     * @return This
-     */
-    public final Component setShouldEscapeModelStrings(final boolean escapeMarkup)
-    {
-        this.shouldEscapeModelStrings = escapeMarkup;
-        return this;
-    }
-
-    /**
      * Gets the (skin) style of this component.
      * 
      * @return The (skin) style of this component
@@ -725,36 +695,6 @@ public abstract class Component implements Serializable
     public final boolean isVisible()
     {
         return visible;
-    }
-
-    /**
-     * Sets whether this component and any children are visible.
-     * 
-     * @param visible
-     *            True if this component and any children should be visible
-     * @return This
-     */
-    public final Component setVisible(final boolean visible)
-    {
-        this.visible = visible;
-        return this;
-    }
-
-    /**
-     * Adds an attribute modifier to the component.
-     * 
-     * @param modifier
-     *            The attribute modifier to be added
-     * @return this (to allow method call chaining)
-     */
-    public final Component add(final ComponentTagAttributeModifier modifier)
-    {
-        if (attributeModifiers == null)
-        {
-            attributeModifiers = new HashSet();
-        }
-        attributeModifiers.add(modifier);
-        return this;
     }
 
     /**
@@ -785,66 +725,73 @@ public abstract class Component implements Serializable
     }
 
     /**
-     * Check if all components rendered and throw an exception when this is not
-     * the case.
+     * Sets the given model.
      * 
-     * @param page
-     *            the page
+     * @param model
+     *            the model
+     * @return This
      */
-    final void checkRendering(final Page page)
+    public final Component setModel(final IModel model)
     {
-        page.visitChildren(new IVisitor()
+        final IModel currentModel = getModel();
+        if (currentModel != null && currentModel instanceof IDetachableModel)
         {
-            public Object component(final Component component)
-            {
-                // If component never rendered
-                if (component.rendering == 0)
-                {
-                    // Throw exception
-                    throw new WicketRuntimeException(component
-                            .exceptionMessage("Component never rendered. You probably failed to "
-                                    + "reference it in your markup."));
-                }
-                return CONTINUE_TRAVERSAL;
-            }
-        });
+            ((IDetachableModel)currentModel).detach();
+        }
+        this.model = (IModel)model;
+        return this;
     }
 
     /**
-     * Detach all models that the components of this page have.
+     * Sets the backing model object; shorthand for getModel().setObject(value).
      * 
-     * @param page
-     *            the page
+     * @param value
+     *            The value to set
      */
-    final void detachModels(final Page page)
+    public final void setModelObject(final Object value)
     {
-        page.visitChildren(new IVisitor()
+        final IModel model = getModel();
+        if (model != null)
         {
-            public Object component(final Component component)
-            {
-                IModel componentModel = component.getModel();
-                if ((componentModel != null) && (componentModel instanceof IDetachableModel))
-                {
-                    ((IDetachableModel)componentModel).detach();
-                }
+            model.setObject(value);
+        }
+    }
 
-                // Also detach models from any contained attribute modifiers
-                if (component.attributeModifiers != null)
-                {
-                    for (Iterator iterator = component.attributeModifiers.iterator(); iterator
-                            .hasNext();)
-                    {
-                        IModel modifierModel = (IModel)((ComponentTagAttributeModifier)iterator
-                                .next()).getReplaceModel();
-                        if ((modifierModel != null) && (modifierModel instanceof IDetachableModel))
-                        {
-                            ((IDetachableModel)modifierModel).detach();
-                        }
-                    }
-                }
-                return CONTINUE_TRAVERSAL;
-            }
-        });
+    /**
+     * Sets whether model strings should be escaped.
+     * 
+     * @param escapeMarkup
+     *            True is model strings should be escaped
+     * @return This
+     */
+    public final Component setShouldEscapeModelStrings(final boolean escapeMarkup)
+    {
+        this.shouldEscapeModelStrings = escapeMarkup;
+        return this;
+    }
+
+    /**
+     * Sets whether this component and any children are visible.
+     * 
+     * @param visible
+     *            True if this component and any children should be visible
+     * @return This
+     */
+    public final Component setVisible(final boolean visible)
+    {
+        this.visible = visible;
+        return this;
+    }
+
+    /**
+     * Gets the string representation of this component, which in this case is
+     * its path.
+     * 
+     * @return The path to this component
+     */
+    public String toString()
+    {
+        return getPath();
     }
 
     /**
@@ -1186,6 +1133,69 @@ public abstract class Component implements Serializable
     }
 
     /**
+     * Check if all components rendered and throw an exception when this is not
+     * the case.
+     * 
+     * @param page
+     *            the page
+     */
+    final void checkRendering(final Page page)
+    {
+        page.visitChildren(new IVisitor()
+        {
+            public Object component(final Component component)
+            {
+                // If component never rendered
+                if (component.rendering == 0)
+                {
+                    // Throw exception
+                    throw new WicketRuntimeException(component
+                            .exceptionMessage("Component never rendered. You probably failed to "
+                                    + "reference it in your markup."));
+                }
+                return CONTINUE_TRAVERSAL;
+            }
+        });
+    }
+
+    /**
+     * Detach all models that the components of this page have.
+     * 
+     * @param page
+     *            the page
+     */
+    final void detachModels(final Page page)
+    {
+        page.visitChildren(new IVisitor()
+        {
+            public Object component(final Component component)
+            {
+                IModel componentModel = component.getModel();
+                if ((componentModel != null) && (componentModel instanceof IDetachableModel))
+                {
+                    ((IDetachableModel)componentModel).detach();
+                }
+
+                // Also detach models from any contained attribute modifiers
+                if (component.attributeModifiers != null)
+                {
+                    for (Iterator iterator = component.attributeModifiers.iterator(); iterator
+                            .hasNext();)
+                    {
+                        IModel modifierModel = (IModel)((ComponentTagAttributeModifier)iterator
+                                .next()).getReplaceModel();
+                        if ((modifierModel != null) && (modifierModel instanceof IDetachableModel))
+                        {
+                            ((IDetachableModel)modifierModel).detach();
+                        }
+                    }
+                }
+                return CONTINUE_TRAVERSAL;
+            }
+        });
+    }
+
+    /**
      * Gets the component at the given path.
      * 
      * @param path
@@ -1261,6 +1271,19 @@ public abstract class Component implements Serializable
     }
 
     /**
+     * If this Component is a Page, returns self. Otherwise, searches for the
+     * nearest Page parent in the component hierarchy. If no Page parent can be
+     * found, null is returned
+     * 
+     * @return The Page or null if none can be found
+     */
+    private final Page findPage()
+    {
+        // Search for page
+        return (Page)(this instanceof Page ? this : findParent(Page.class));
+    }
+
+    /**
      * Strips the component name of stuff we do not need.
      * 
      * @param tag
@@ -1275,30 +1298,6 @@ public abstract class Component implements Serializable
             // Get mutable copy of tag and remove component name
             tag.mutable().removeComponentName(settings.getComponentNameAttribute());
         }
-    }
-
-    /**
-     * If this Component is a Page, returns self. Otherwise, searches for the
-     * nearest Page parent in the component hierarchy. If no Page parent can be
-     * found, null is returned
-     * 
-     * @return The Page or null if none can be found
-     */
-    private final Page findPage()
-    {
-        // Search for page
-        return (Page)(this instanceof Page ? this : findParent(Page.class));
-    }
-
-    /**
-     * Gets the string representation of this component, which in this case is
-     * its path.
-     * 
-     * @return The path to this component
-     */
-    public String toString()
-    {
-        return getPath();
     }
 }
 

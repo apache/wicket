@@ -420,7 +420,6 @@ public abstract class Session implements Serializable
     final void addPage(final Page page)
     {
         // Set session and identifier
-        page.setSession(this);
         page.setId(pageId++);
 
         // Add to page map
