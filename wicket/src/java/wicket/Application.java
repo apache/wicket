@@ -216,6 +216,10 @@ public abstract class Application
 	 */
 	public ApplicationSettings getSettings()
 	{
+		if (settings == null)
+		{
+			throw new IllegalStateException("Application settings not found");
+		}
 		return settings;
 	}
 
