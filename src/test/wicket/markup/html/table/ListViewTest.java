@@ -32,15 +32,14 @@ import wicket.protocol.http.MockPage;
 import junit.framework.TestCase;
 
 /**
+ * Test for ListView
+ * 
  * @author Juergen Donnerstag
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class ListViewTest extends TestCase
 {
     /** Use a mock application to handle Link-clicked event */
-    private static MockWebApplication application; // = new MockWebApplication(null);
+    private static MockWebApplication application;
 
     protected void setUp() throws Exception
     {
@@ -53,8 +52,9 @@ public class ListViewTest extends TestCase
     }
 
     /**
+     * Create a predefined ListView
      * 
-     * @param modelListSize
+     * @param modelListSize # of elements to go into the list
      * @return list view
      */
     private ListView createListView(final int modelListSize)
@@ -75,7 +75,7 @@ public class ListViewTest extends TestCase
     }
 
     /**
-     * 
+     * Helper: Create a request cycle and set the next page to render
      * @return request cycle
      * @throws IOException
      */

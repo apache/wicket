@@ -1,5 +1,8 @@
 /*
  * $Log$
+ * Revision 1.4  2005/01/23 17:15:53  jdonnerstag
+ * javadoc
+ *
  * Revision 1.3  2005/01/16 20:21:25  jonathanlocke
  * *** empty log message ***
  *
@@ -32,6 +35,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
@@ -69,7 +73,6 @@ interface UnaryPredicate
 
 public class DiffPrint
 {
-    // TODO This class seems like it belongs in the test tree, along with PagedTableNavigatorTest 
     /**
      * A Base class for printing edit scripts produced by Diff. This class
      * divides the change list into "hunks", and calls <code>print_hunk</code>
@@ -430,9 +433,9 @@ public class DiffPrint
             if (label != null)
                 outfile.println(mark + ' ' + label);
             else if (inf.lastModified() > 0)
-                // FIXME: use DateFormat to get precise format needed.
                 outfile.println(mark + ' ' + inf.getPath() + '\t'
-                        + new Date(inf.lastModified()));
+                        + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss")
+                        		.format(new Date(inf.lastModified())));
             else
                 /* Don't pretend that standard input is ancient. */
                 outfile.println(mark + ' ' + inf.getPath());
