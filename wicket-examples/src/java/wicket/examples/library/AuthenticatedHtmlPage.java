@@ -60,8 +60,27 @@ public class AuthenticatedHtmlPage extends HtmlPage
     {
         // Add children of the page to the page's border component
         border.add(child);
-
         return this;
+    }
+
+    /**
+     * Removing children from instances of this class causes those children to
+     * be removed from the border child instead.
+     * @see wicket.Container#removeAll()
+     */
+    public void removeAll()
+    {
+        border.removeAll();
+    }
+
+    /**
+     * Replacing children on instances of this class causes those children
+     * to be replaced on the border child instead.
+     * @see wicket.Container#replace(wicket.Component)
+     */
+    public Container replace(Component child)
+    {
+        return border.replace(child);
     }
 
     /**
