@@ -27,64 +27,71 @@ import wicket.resource.IStringResourceLoader;
 import junit.framework.Assert;
 
 /**
- * Tests for the <code>ApplicationStringResourceLoader</code>
- * class.
- *
+ * Tests for the <code>ApplicationStringResourceLoader</code> class.
  * @author Chris Turner
  */
-public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTestBase {
+public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTestBase
+{
 
-    /**
-     * Create the test case.
-     *
-     * @param message The test name
-     */
-    public ApplicationStringResourceLoaderTest(String message) {
-        super(message);
-    }
+	/**
+	 * Create the test case.
+	 * @param message The test name
+	 */
+	public ApplicationStringResourceLoaderTest(String message)
+	{
+		super(message);
+	}
 
-    /**
-     * Return the loader instance
-     *
-     * @return The loader instance to test
-     */
-    protected IStringResourceLoader createLoader() {
-        return new ApplicationStringResourceLoader(application);
-    }
+	/**
+	 * Return the loader instance
+	 * @return The loader instance to test
+	 */
+	protected IStringResourceLoader createLoader()
+	{
+		return new ApplicationStringResourceLoader(application);
+	}
 
-    /**
-     * @see wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
-     */
-    public void testLoaderUnknownResources() {
-        IApplication app = new IApplication() {
-            public String getName() {
-                return "MissingResourceApp";
-            }
+	/**
+	 * @see wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
+	 */
+	public void testLoaderUnknownResources()
+	{
+		IApplication app = new IApplication()
+		{
+			public String getName()
+			{
+				return "MissingResourceApp";
+			}
 
-            public ApplicationSettings getSettings() {
-                return settings;
-            }
+			public ApplicationSettings getSettings()
+			{
+				return settings;
+			}
 
-            private ApplicationSettings settings = new ApplicationSettings(this);
-        };
+			private ApplicationSettings settings = new ApplicationSettings(this);
+		};
 
-        IStringResourceLoader loader = new ApplicationStringResourceLoader(app);
-        Assert.assertNull("Unknown resource should return null",
-                          loader.get(component, "test.string", Locale.getDefault(), null));
-    }
+		IStringResourceLoader loader = new ApplicationStringResourceLoader(app);
+		Assert.assertNull("Unknown resource should return null", loader.get(component,
+				"test.string", Locale.getDefault(), null));
+	}
 
-    /**
-     * 
-     */
-    public void testNullApplication() {
-        try {
-            new ApplicationStringResourceLoader(null);
-            Assert.fail("NullPointerException expected");
-        } catch (NullPointerException e) {
-            // Extected result
-        }
-    }
+	/**
+	 * 
+	 */
+	public void testNullApplication()
+	{
+		try
+		{
+			new ApplicationStringResourceLoader(null);
+			Assert.fail("NullPointerException expected");
+		}
+		catch (NullPointerException e)
+		{
+			// Extected result
+		}
+	}
 
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+// /////////////////////////////// End of File /////////////////////////////////

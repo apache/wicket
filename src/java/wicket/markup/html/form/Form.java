@@ -429,7 +429,8 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
            		persister.remove(formComponent.getPageRelativePath());
            		
            		// Disable persistence if requested. Leave unchanged otherwise.
-            	if (formComponent.isPersistenceEnabled() && disablePersistence) {
+            	if (formComponent.isPersistenceEnabled() && disablePersistence)
+            	{
             		formComponent.setPersistenceEnabled(false);
             	}
                 return CONTINUE_TRAVERSAL;

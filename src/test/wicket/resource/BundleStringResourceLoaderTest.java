@@ -25,48 +25,49 @@ import wicket.resource.IStringResourceLoader;
 import junit.framework.Assert;
 
 /**
- * Test case for the <code>BundleStringResourceLoader</code>
- * class.
- *
+ * Test case for the <code>BundleStringResourceLoader</code> class.
  * @author Chris Turner
  */
-public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase {
+public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
+{
 
-    /**
-     * Create the test case.
-     *
-     * @param message The test name
-     */
-    public BundleStringResourceLoaderTest(String message) {
-        super(message);
-    }
+	/**
+	 * Create the test case.
+	 * @param message The test name
+	 */
+	public BundleStringResourceLoaderTest(String message)
+	{
+		super(message);
+	}
 
-    /**
-     * Create and return the loader instance.
-     *
-     * @return The loader instance to test
-     */
-    protected IStringResourceLoader createLoader() {
-        return new BundleStringResourceLoader("wicket.resource.DummyResources");
-    }
+	/**
+	 * Create and return the loader instance.
+	 * @return The loader instance to test
+	 */
+	protected IStringResourceLoader createLoader()
+	{
+		return new BundleStringResourceLoader("wicket.resource.DummyResources");
+	}
 
-    /**
-     * @see wicket.resource.StringResourceLoaderTestBase#testLoaderValidKeyStyleNoLocale()
-     */
-    public void testLoaderValidKeyStyleNoLocale() {
-        String s = loader.get(component, "test.string", null, "alt");
-        Assert.assertEquals("Resource should be loaded", "This is a test", s);
-    }
+	/**
+	 * @see wicket.resource.StringResourceLoaderTestBase#testLoaderValidKeyStyleNoLocale()
+	 */
+	public void testLoaderValidKeyStyleNoLocale()
+	{
+		String s = loader.get(component, "test.string", null, "alt");
+		Assert.assertEquals("Resource should be loaded", "This is a test", s);
+	}
 
-    /**
-     * @see wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
-     */
-    public void testLoaderUnknownResources() {
-        IStringResourceLoader loader = new BundleStringResourceLoader("unknown.resource");
-        Assert.assertNull("Unknown resource should return null",
-                          loader.get(component, "test.string", Locale.getDefault(), null));
-    }
+	/**
+	 * @see wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
+	 */
+	public void testLoaderUnknownResources()
+	{
+		IStringResourceLoader loader = new BundleStringResourceLoader("unknown.resource");
+		Assert.assertNull("Unknown resource should return null", loader.get(component,
+				"test.string", Locale.getDefault(), null));
+	}
 
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+// /////////////////////////////// End of File /////////////////////////////////

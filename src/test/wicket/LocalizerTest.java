@@ -35,125 +35,130 @@ import junit.framework.TestCase;
 
 /**
  * Test cases for the <code>Localizer</code> class.
- *
  * @author Chris Turner
  */
-public class LocalizerTest extends TestCase {
+public class LocalizerTest extends TestCase
+{
 
-    private IApplication application;
-    private ApplicationSettings settings;
-    private Localizer localizer;
+	private IApplication application;
 
-    /**
-     * Create the test case.
-     *
-     * @param message The test name
-     */
-    public LocalizerTest(String message) {
-        super(message);
-    }
+	private ApplicationSettings settings;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        application = new DummyApplication();
-        settings = application.getSettings();
-        settings.addStringResourceLoader(new ApplicationStringResourceLoader(application));
-        localizer = settings.getLocalizer();
-    }
+	private Localizer localizer;
 
-    /**
-     * 
-     *
-     */
-    public void testGetStringValidString() {
-        Assert.assertEquals("Expected string should be returned",
-                            "This is a test",
-                            localizer.getString("test.string", null, null, null, null, "DEFAULT"));
-    }
+	/**
+	 * Create the test case.
+	 * @param message The test name
+	 */
+	public LocalizerTest(String message)
+	{
+		super(message);
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testGetStringMissingStringReturnDefault() {
-        settings.setUseDefaultOnMissingResource(true);
-        Assert.assertEquals("Default string should be returned",
-                            "DEFAULT",
-                            localizer.getString("unknown.string", null, null, null, null, "DEFAULT"));
-    }
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		application = new DummyApplication();
+		settings = application.getSettings();
+		settings.addStringResourceLoader(new ApplicationStringResourceLoader(application));
+		localizer = settings.getLocalizer();
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testGetStringMissingStringNoDefault() {
-        settings.setUseDefaultOnMissingResource(true);
-        settings.setExceptionOnMissingResource(false);
-        Assert.assertEquals("Wrapped key should be returned on no default",
-                            "??unknown.string??",
-                            localizer.getString("unknown.string", null, null, null, null, null));
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testGetStringValidString()
+	{
+		Assert.assertEquals("Expected string should be returned", "This is a test", localizer
+				.getString("test.string", null, null, null, null, "DEFAULT"));
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testGetStringMissingStringDoNotUseDefault() {
-        settings.setUseDefaultOnMissingResource(false);
-        settings.setExceptionOnMissingResource(false);
-        Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
-                            "??unknown.string??",
-                            localizer.getString("unknown.string", null, null, null, null, "DEFAULT"));
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testGetStringMissingStringReturnDefault()
+	{
+		settings.setUseDefaultOnMissingResource(true);
+		Assert.assertEquals("Default string should be returned", "DEFAULT", localizer.getString(
+				"unknown.string", null, null, null, null, "DEFAULT"));
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testGetStringMissingStringExceptionThrown() {
-        settings.setUseDefaultOnMissingResource(false);
-        settings.setExceptionOnMissingResource(true);
-        try {
-            localizer.getString("unknown.string", null, null, null, null, "DEFAULT");
-            Assert.fail("MissingResourceException expected");
-        } catch (MissingResourceException e) {
-            // Expected result
-        }
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testGetStringMissingStringNoDefault()
+	{
+		settings.setUseDefaultOnMissingResource(true);
+		settings.setExceptionOnMissingResource(false);
+		Assert.assertEquals("Wrapped key should be returned on no default", "??unknown.string??",
+				localizer.getString("unknown.string", null, null, null, null, null));
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testGetStringOGNLSubstitution() {
-        ValueMap vm = new ValueMap();
-        vm.put("user", "John Doe");
-        Model model = new Model(vm);
-        Assert.assertEquals("OGNL substitution should occur",
-                "Welcome, John Doe",
-                localizer.getString("test.substitute", null, model, null, null, null));
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testGetStringMissingStringDoNotUseDefault()
+	{
+		settings.setUseDefaultOnMissingResource(false);
+		settings.setExceptionOnMissingResource(false);
+		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
+				"??unknown.string??", localizer.getString("unknown.string", null, null, null, null,
+						"DEFAULT"));
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testAllOtherMethodsDelegateCorrectly() {
-        Assert.assertEquals("This is a test",
-                            localizer.getString("test.string", (Component)null, "DEFAULT"));
-        Assert.assertEquals("This is a test",
-                            localizer.getString("test.string", (Component)null));
-        Assert.assertEquals("This is a test",
-                            localizer.getString("test.string", null, null, "DEFAULT"));
-        Assert.assertEquals("This is a test",
-                            localizer.getString("test.string", (Component)null, (IModel)null));
-        Assert.assertEquals("This is a test",
-                            localizer.getString("test.string", "DEFAULT"));
-        Assert.assertEquals("This is a test",
-                            localizer.getString("test.string"));
-        Assert.assertEquals("This is a test",
-                            localizer.getString("test.string", (IModel)null, "DEFAULT"));
-        Assert.assertEquals("This is a test",
-                            localizer.getString("test.string", (IModel)null));
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testGetStringMissingStringExceptionThrown()
+	{
+		settings.setUseDefaultOnMissingResource(false);
+		settings.setExceptionOnMissingResource(true);
+		try
+		{
+			localizer.getString("unknown.string", null, null, null, null, "DEFAULT");
+			Assert.fail("MissingResourceException expected");
+		}
+		catch (MissingResourceException e)
+		{
+			// Expected result
+		}
+	}
+
+	/**
+	 * 
+	 *
+	 */
+	public void testGetStringOGNLSubstitution()
+	{
+		ValueMap vm = new ValueMap();
+		vm.put("user", "John Doe");
+		Model model = new Model(vm);
+		Assert.assertEquals("OGNL substitution should occur", "Welcome, John Doe", localizer
+				.getString("test.substitute", null, model, null, null, null));
+	}
+
+	/**
+	 * 
+	 *
+	 */
+	public void testAllOtherMethodsDelegateCorrectly()
+	{
+		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component) null,
+				"DEFAULT"));
+		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component) null));
+		Assert.assertEquals("This is a test", localizer.getString("test.string", null, null,
+				"DEFAULT"));
+		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component) null,
+				(IModel) null));
+		Assert.assertEquals("This is a test", localizer.getString("test.string", "DEFAULT"));
+		Assert.assertEquals("This is a test", localizer.getString("test.string"));
+		Assert.assertEquals("This is a test", localizer.getString("test.string", (IModel) null,
+				"DEFAULT"));
+		Assert.assertEquals("This is a test", localizer.getString("test.string", (IModel) null));
+	}
 }

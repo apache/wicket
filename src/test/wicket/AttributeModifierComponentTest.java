@@ -26,83 +26,82 @@ import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
 
 /**
- * This set of tests builds a sample application for testing the
- * dynamic modicication of attributes in both component tags and
- * also in raw markup. The tests contained here represent testing
- * on one specific area of functionality of the Component class.
- * It is expected that separate test cases will be added to test
- * other facets of Components.
- *
+ * This set of tests builds a sample application for testing the dynamic modicication of
+ * attributes in both component tags and also in raw markup. The tests contained here
+ * represent testing on one specific area of functionality of the Component class. It is
+ * expected that separate test cases will be added to test other facets of Components.
  * @author Chris Turner
  */
-public class AttributeModifierComponentTest extends TestCase {
+public class AttributeModifierComponentTest extends TestCase
+{
 
-    private MockHttpApplication application;
+	private MockHttpApplication application;
 
-    /**
-     * Create a test case instance.
-     *
-     * @param name The name of the test being run
-     */
-    public AttributeModifierComponentTest(final String name) {
-        super(name);
-    }
+	/**
+	 * Create a test case instance.
+	 * @param name The name of the test being run
+	 */
+	public AttributeModifierComponentTest(final String name)
+	{
+		super(name);
+	}
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        application = new MockHttpApplication(null);
-        application.getSettings().setHomePage(AttributeModifierComponentPage.class);
-    }
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		application = new MockHttpApplication(null);
+		application.getSettings().setHomePage(AttributeModifierComponentPage.class);
+	}
 
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testComponentTagAttributeModification() throws Exception {
-        // Do the processing
-        application.setupRequestAndResponse();
-        application.processRequestCycle();
+	/**
+	 * @throws Exception
+	 */
+	public void testComponentTagAttributeModification() throws Exception
+	{
+		// Do the processing
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
 
-        // Validate the document
-        String document = application.getServletResponse().getDocument();
-        System.out.println(document);
-        Assert.assertTrue(validateDocument(document));
-    }
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		System.out.println(document);
+		Assert.assertTrue(validateDocument(document));
+	}
 
-    /**
-     * Helper method to validate the returned XML document.
-     *
-     * @param document The document
-     * @return The validation result
-     */
-    private boolean validateDocument(String document) {
-        HtmlDocumentValidator validator = new HtmlDocumentValidator();
-        Tag html = new Tag("html");
-        Tag head = new Tag("head");
-        html.addExpectedChild(head);
-        Tag title = new Tag("title");
-        head.addExpectedChild(title);
-        title.addExpectedChild(new TextContent("Attribute Modifier Test Page"));
-        Tag body = new Tag("body");
-        html.addExpectedChild(body);
+	/**
+	 * Helper method to validate the returned XML document.
+	 * @param document The document
+	 * @return The validation result
+	 */
+	private boolean validateDocument(String document)
+	{
+		HtmlDocumentValidator validator = new HtmlDocumentValidator();
+		Tag html = new Tag("html");
+		Tag head = new Tag("head");
+		html.addExpectedChild(head);
+		Tag title = new Tag("title");
+		head.addExpectedChild(title);
+		title.addExpectedChild(new TextContent("Attribute Modifier Test Page"));
+		Tag body = new Tag("body");
+		html.addExpectedChild(body);
 
-        Tag label1 = new Tag("span");
-        label1.addExpectedAttribute("class", "label");
-        label1.addExpectedChild(new TextContent("Label 1"));
-        body.addExpectedChild(label1);
+		Tag label1 = new Tag("span");
+		label1.addExpectedAttribute("class", "label");
+		label1.addExpectedChild(new TextContent("Label 1"));
+		body.addExpectedChild(label1);
 
-        Tag label2 = new Tag("span");
-        label2.addExpectedAttribute("class", "overrideLabel");
-        label2.addExpectedChild(new TextContent("Label 2"));
-        body.addExpectedChild(label2);
+		Tag label2 = new Tag("span");
+		label2.addExpectedAttribute("class", "overrideLabel");
+		label2.addExpectedChild(new TextContent("Label 2"));
+		body.addExpectedChild(label2);
 
-        Tag label3 = new Tag("span");
-        label3.addExpectedAttribute("class", "insertLabel");
-        label3.addExpectedChild(new TextContent("Label 3"));
-        body.addExpectedChild(label3);
+		Tag label3 = new Tag("span");
+		label3.addExpectedAttribute("class", "insertLabel");
+		label3.addExpectedChild(new TextContent("Label 3"));
+		body.addExpectedChild(label3);
 
-        validator.addRootElement(html);
-        return validator.isDocumentValid(document);
-    }
+		validator.addRootElement(html);
+		return validator.isDocumentValid(document);
+	}
 
 }

@@ -176,7 +176,8 @@ public class HttpRequestCycle extends RequestCycle
      */
     final void setFormComponentValuesFromCookies(final Page page)
     {
-    	if (page == null) {
+    	if (page == null)
+    	{
     		throw new IllegalArgumentException("'page' must not be null");
     	}
 

@@ -29,105 +29,112 @@ import wicket.resource.InvalidResourceSpecificationException;
 import junit.framework.Assert;
 
 /**
- * Test case for the <code>ComponentStringResourceLoader</code>
- * class.
- *
+ * Test case for the <code>ComponentStringResourceLoader</code> class.
  * @author Chris Turner
  */
-public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestBase {
+public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestBase
+{
 
-    /**
-     * Create the test case.
-     *
-     * @param message The test name
-     */
-    public ComponentStringResourceLoaderTest(String message) {
-        super(message);
-    }
+	/**
+	 * Create the test case.
+	 * @param message The test name
+	 */
+	public ComponentStringResourceLoaderTest(String message)
+	{
+		super(message);
+	}
 
-    /**
-     * Create and return the loader instance
-     *
-     * @return The loader instance to test
-     */
-    protected IStringResourceLoader createLoader() {
-        return new ComponentStringResourceLoader();
-    }
+	/**
+	 * Create and return the loader instance
+	 * @return The loader instance to test
+	 */
+	protected IStringResourceLoader createLoader()
+	{
+		return new ComponentStringResourceLoader();
+	}
 
-    /**
-     * @see wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
-     */
-    public void testLoaderUnknownResources() {
-        Component c = new DummyComponent("hello", application) {
-        };
-        DummyPage page = new DummyPage();
-        page.add(c);
-        IStringResourceLoader loader = new ComponentStringResourceLoader();
-        Assert.assertNull("Missing resource should return null",
-                          loader.get(c, "test.string", Locale.getDefault(), null));
-    }
+	/**
+	 * @see wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
+	 */
+	public void testLoaderUnknownResources()
+	{
+		Component c = new DummyComponent("hello", application)
+		{
+		};
+		DummyPage page = new DummyPage();
+		page.add(c);
+		IStringResourceLoader loader = new ComponentStringResourceLoader();
+		Assert.assertNull("Missing resource should return null", loader.get(c, "test.string",
+				Locale.getDefault(), null));
+	}
 
-    /**
-     * 
-     */
-    public void testNullComponent() {
-        Assert.assertNull("Null component should skip resource load",
-                          loader.get(null, "test.string", Locale.getDefault(), null));
-    }
+	/**
+	 * 
+	 */
+	public void testNullComponent()
+	{
+		Assert.assertNull("Null component should skip resource load", loader.get(null,
+				"test.string", Locale.getDefault(), null));
+	}
 
-    /**
-     * 
-     */
-    public void testNonPageComponent() {
-        Component c = new DummyComponent("hello", application) {
-        };
-        IStringResourceLoader loader = new ComponentStringResourceLoader();
-        try {
-            loader.get(c, "test.string", Locale.getDefault(), null);
-            Assert.fail("InvalidResourceSpecificationException should be thrown");
-        } catch (InvalidResourceSpecificationException e) {
-            // Expected result
-        }
-    }
+	/**
+	 * 
+	 */
+	public void testNonPageComponent()
+	{
+		Component c = new DummyComponent("hello", application)
+		{
+		};
+		IStringResourceLoader loader = new ComponentStringResourceLoader();
+		try
+		{
+			loader.get(c, "test.string", Locale.getDefault(), null);
+			Assert.fail("InvalidResourceSpecificationException should be thrown");
+		}
+		catch (InvalidResourceSpecificationException e)
+		{
+			// Expected result
+		}
+	}
 
-    /**
-     * 
-     */
-    public void testPageEmbeddedComponentLoadFromPage() {
-        DummyPage p = new DummyPage();
-        DummyComponent c = new DummyComponent("hello", application);
-        p.add(c);
-        IStringResourceLoader loader = new ComponentStringResourceLoader();
-        Assert.assertEquals("Valid resourse string should be found",
-                "Another string",
-                loader.get(c, "another.test.string", Locale.getDefault(), null));
-    }
+	/**
+	 * 
+	 */
+	public void testPageEmbeddedComponentLoadFromPage()
+	{
+		DummyPage p = new DummyPage();
+		DummyComponent c = new DummyComponent("hello", application);
+		p.add(c);
+		IStringResourceLoader loader = new ComponentStringResourceLoader();
+		Assert.assertEquals("Valid resourse string should be found", "Another string", loader.get(
+				c, "another.test.string", Locale.getDefault(), null));
+	}
 
-    /**
-     * 
-     */
-    public void testMultiLevelEmbeddedComponentLoadFromComponent() {
-        DummyPage p = new DummyPage();
-        Panel panel = new Panel("panel");
-        p.add(panel);
-        DummyComponent c = new DummyComponent("hello", application);
-        panel.add(c);
-        IStringResourceLoader loader = new ComponentStringResourceLoader();
-        Assert.assertEquals("Valid resourse string should be found",
-                "Component string",
-                loader.get(c, "component.string", Locale.getDefault(), null));
-    }
+	/**
+	 * 
+	 */
+	public void testMultiLevelEmbeddedComponentLoadFromComponent()
+	{
+		DummyPage p = new DummyPage();
+		Panel panel = new Panel("panel");
+		p.add(panel);
+		DummyComponent c = new DummyComponent("hello", application);
+		panel.add(c);
+		IStringResourceLoader loader = new ComponentStringResourceLoader();
+		Assert.assertEquals("Valid resourse string should be found", "Component string", loader
+				.get(c, "component.string", Locale.getDefault(), null));
+	}
 
-    /**
-     * 
-     */
-    public void testLoadDirectFromPage() {
-        DummyPage p = new DummyPage();
-        IStringResourceLoader loader = new ComponentStringResourceLoader();
-        Assert.assertEquals("Valid resourse string should be found",
-                "Another string",
-                loader.get(p, "another.test.string", Locale.getDefault(), null));
-    }
+	/**
+	 * 
+	 */
+	public void testLoadDirectFromPage()
+	{
+		DummyPage p = new DummyPage();
+		IStringResourceLoader loader = new ComponentStringResourceLoader();
+		Assert.assertEquals("Valid resourse string should be found", "Another string", loader.get(
+				p, "another.test.string", Locale.getDefault(), null));
+	}
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+// /////////////////////////////// End of File /////////////////////////////////

@@ -74,5 +74,3 @@ public interface IStringResourceLoader {
     throws InvalidResourceSpecificationException;
 
 }
-
-///////////////////////////////// End of File /////////////////////////////////

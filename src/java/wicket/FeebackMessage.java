@@ -52,7 +52,8 @@ public class FeebackMessage implements Serializable
     public static final int FATAL = 5;
 
     /** levels as strings for debugging/ toString method. */
-    private static final String[] LEVELS_AS_STRING = new String[]{
+    private static final String[] LEVELS_AS_STRING = new String[]
+    {
         "UNDEFINED", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
     };
 

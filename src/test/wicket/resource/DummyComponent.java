@@ -24,44 +24,45 @@ import wicket.RequestCycle;
 import wicket.Session;
 
 /**
- * Dummy component used for testing or resource loading
- * funationality.
- *
+ * Dummy component used for testing or resource loading funationality.
  * @author Chris Turner
  */
-public class DummyComponent extends Component {
+public class DummyComponent extends Component
+{
 
-    // Customised session for testing
-    private Session testSession;
+	// Customised session for testing
+	private Session testSession;
 
-    /**
-     * Create the component with the given name.
-     *
-     * @param name The name of the component
-     * @param application The application for this component
-     */
-    public DummyComponent(final String name, final IApplication application) {
-        super(name);
-        testSession = new Session(application) {
-        };
-    }
+	/**
+	 * Create the component with the given name.
+	 * @param name The name of the component
+	 * @param application The application for this component
+	 */
+	public DummyComponent(final String name, final IApplication application)
+	{
+		super(name);
+		testSession = new Session(application)
+		{
+		};
+	}
 
-    /**
-     * Implementation which renders this component.
-     * @param cycle The wicket.response to write to
-     */
-    protected void handleRender(RequestCycle cycle) {
-    }
+	/**
+	 * Implementation which renders this component.
+	 * @param cycle The wicket.response to write to
+	 */
+	protected void handleRender(RequestCycle cycle)
+	{
+	}
 
-    /**
-     * Override the session provider for testing purposes.
-     *
-     * @return The test session
-     */
-    public Session getSession() {
-        return testSession;
-    }
+	/**
+	 * Override the session provider for testing purposes.
+	 * @return The test session
+	 */
+	public Session getSession()
+	{
+		return testSession;
+	}
 
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+// /////////////////////////////// End of File /////////////////////////////////
