@@ -178,7 +178,7 @@
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>**/*Test.java</include>
+        <include>wicket/examples/AllTests.java</include>
       </includes>
       <resources>
         <resource>
@@ -202,17 +202,6 @@
         <excludes>
           <exclude>**/*.java</exclude>
         </excludes>
-        <filtering>false</filtering>
-      </resource>
-      <resource>
-        <directory>src/test</directory>
-        <includes>
-          <include>**</include>
-        </includes>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-        <filtering>false</filtering>
       </resource>
     </resources>
   </build>
