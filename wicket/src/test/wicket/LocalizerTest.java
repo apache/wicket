@@ -20,18 +20,12 @@ package wicket;
 
 import java.util.MissingResourceException;
 
-import wicket.ApplicationSettings;
-import wicket.Component;
-import wicket.Application;
-import wicket.Localizer;
-import wicket.model.IModel;
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import wicket.model.Model;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.DummyApplication;
 import wicket.util.value.ValueMap;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Test cases for the <code>Localizer</code> class.
@@ -149,6 +143,8 @@ public class LocalizerTest extends TestCase
 	 */
 	public void testAllOtherMethodsDelegateCorrectly()
 	{
+	    // Null components are not longer allowed
+/*	    
 		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null,
 				"DEFAULT"));
 		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null));
@@ -156,5 +152,6 @@ public class LocalizerTest extends TestCase
 				"DEFAULT"));
 		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null,
 				(IModel)null));
+*/				
 	}
 }
