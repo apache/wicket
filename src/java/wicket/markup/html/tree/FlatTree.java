@@ -36,7 +36,29 @@ import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
 
 /**
- * Tree that renders as a flat list, using spacers and nodes.
+ * A Tree that renders as a flat list, using spacers and nodes.
+ * <p>
+ * The visible tree rows are put in one flat list. For each row, a list is constructed
+ * with fillers, that can be used to create indentation. After the fillers, the actual
+ * node content is put.
+ * </p>
+ * <p>
+ * For example:
+ * <pre>
+ * &lt;span id="spacers"&gt;&lt;/span&gt;&lt;span id=" spacers"&gt;&lt;/span&gt;
+ * &lt;span id ="node"&gt;&lt;span id="label"&gt;foo&lt;/span&gt;&lt;/span&gt;
+ * </pre>
+ * Could be one row, where the node is on level two (hence the two spacer elements).
+ * </p>
+ * <p>
+ * If you combine this with CSS like:
+ * <pre>
+ *	#spacers {
+ *		padding-left: 16px;
+ *	}
+ * </pre>
+ * you have an indented tree.
+ * </p>
  *
  * @author Eelco Hillenius
  */
