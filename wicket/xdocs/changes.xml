@@ -6,6 +6,8 @@
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
   </properties>
   <body>
+    <release version="0.9.15-alpha" date="in CVS" description="State of CVS">
+    </release>
     <release version="0.9.14-alpha" date="2004-12-06" description="State of CVS">
       <action type="add" dev="Juergen Donnerstag">Model for PasswordTextField will now be encrypted for persistence (cookie)</action>
       <action type="add" dev="Juergen Donnerstag">Fixed autoIndex bug. AutoIndex numbers are now unique across a whole page.</action>
