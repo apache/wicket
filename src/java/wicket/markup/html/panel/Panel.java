@@ -41,10 +41,10 @@ import wicket.markup.html.HtmlContainer;
  * &lt;span id="wicket-mypanel"/&gt;
  *
  * TestPanel.html
- * &lt;wicket:region name="panel"&gt;
+ * &lt;wicket:panel&gt;
  *   &lt;span id="wicket-mylabel"&gt;My label&lt;/span&gt;
  *   ....
- * &lt;/wicket:region&gt;
+ * &lt;/wicket:panel&gt;
  * </pre>
  * 
  * @author Jonathan Locke
@@ -82,7 +82,7 @@ public class Panel extends HtmlContainer
 
         // Render the associated markup
         renderAssociatedMarkup(cycle, "panel",
-                "Markup for a panel component must begin with a component '<wicket:region name=panel>'");
+                "Markup for a panel component must begin with a component '<wicket:panel>'");
     }
 }
 

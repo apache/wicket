@@ -120,7 +120,7 @@ public abstract class FormComponentsPanel extends FormComponent
         // Render the associated markup
         renderAssociatedMarkup(cycle, "panel",
                 "Markup for a panel component must begin with a component" +
-                "'<wicket:region name=panel>'");
+                "'<wicket:panel>'");
     }
 
     /**

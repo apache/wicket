@@ -161,7 +161,7 @@ public abstract class Border extends HtmlContainer
 		
 		if (!markupStream.atOpenCloseTag())
 		{
-			markupStream.throwMarkupException("A <wicket:region name=body> tag must be an open-close tag.");
+			markupStream.throwMarkupException("A <wicket:body> tag must be an open-close tag.");
 		}
 		
 		// Render the children tag
