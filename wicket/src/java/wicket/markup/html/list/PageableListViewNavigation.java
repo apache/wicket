@@ -224,9 +224,9 @@ public class PageableListViewNavigation extends Loop
 	 * pointing to. Subclasses may provide there own implementation adding more
 	 * sophisticated page links.
 	 * 
-	 * @see wicket.markup.html.list.Loop#populateIteration(LoopItem)
+	 * @see wicket.markup.html.list.Loop#populateItem(LoopItem)
 	 */
-	protected void populateIteration(Loop.LoopItem loopItem)
+	protected void populateItem(Loop.LoopItem loopItem)
 	{
 		// Get the index of page this link shall point to
 		final int pageIndex = this.startIndex + loopItem.getIteration();
@@ -244,12 +244,12 @@ public class PageableListViewNavigation extends Loop
 	/**
 	 * Renders the page link. Add the separator if not the last page link
 	 * 
-	 * @see Loop#renderIteration(LoopItem)
+	 * @see Loop#renderItem(LoopItem)
 	 */
-	protected void renderIteration(final Loop.LoopItem loopItem)
+	protected void renderItem(final Loop.LoopItem loopItem)
 	{
 		// Call default implementation
-		super.renderIteration(loopItem);
+		super.renderItem(loopItem);
 
 		// Add separator if not last page
 		if (separator != null && (loopItem.getIteration() != getIterations() - 1))

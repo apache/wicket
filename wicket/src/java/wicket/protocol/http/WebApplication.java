@@ -101,7 +101,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * @param sessionFactory The session factory to use
 	 */
-	public void setSessionFactory(final ISessionFactory sessionFactory)
+	public final void setSessionFactory(final ISessionFactory sessionFactory)
 	{
 		this.sessionFactory = sessionFactory;
 	}
@@ -115,7 +115,7 @@ public abstract class WebApplication extends Application
 	 *             If an attempt is made to call this method once the wicket
 	 *             servlet has been set for the application.
 	 */
-	public final void setWicketServlet(WicketServlet wicketServlet)
+	public final void setWicketServlet(final WicketServlet wicketServlet)
 	{
 		if (this.wicketServlet == null)
 		{

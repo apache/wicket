@@ -28,8 +28,8 @@ import wicket.model.Model;
  * iterations the loop should render. During rendering, Loop iterates from 0 to
  * getIterations() - 1, creating a new MarkupContainer for each iteration. The
  * MarkupContainer is populated by the Loop subclass by implementing the
- * abstract method populate(MarkupContainer container, int iteration). The
- * populate() method is called just before the container is rendered.
+ * abstract method populate(LoopItem). The populate() method is called just
+ * before the LoopItem container is rendered.
  * 
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
@@ -38,11 +38,11 @@ import wicket.model.Model;
 public abstract class Loop extends WebMarkupContainer
 {
 	/**
-	 * Container for a Loop iteration.
+	 * Item container for a Loop iteration.
 	 * 
 	 * @author Jonathan Locke
 	 */
-	static public class LoopItem extends WebMarkupContainer
+	static public final class LoopItem extends WebMarkupContainer
 	{
 		/** The iteration number */
 		private final int iteration;
@@ -116,15 +116,15 @@ public abstract class Loop extends WebMarkupContainer
 		final int iterations = getIterations();
 		if (iterations > 0)
 		{
-			// Loop through the markup in this container for each iteration
-			for (int i = 0; i < iterations; i++)
+			// Create LoopItems for each iteration
+			for (int iteration = 0; iteration < iterations; iteration++)
 			{
-				// Create container for the given loop iteration
-				final LoopItem iteration = new LoopItem(i);
+				// Create item for loop iteration
+				final LoopItem item = new LoopItem(iteration);
 
-				// Add iteration and populate it
-				add(iteration);
-				populateIteration(iteration);
+				// Add and populate item
+				add(item);
+				populateItem(item);
 			}
 		}
 	}
@@ -144,22 +144,24 @@ public abstract class Loop extends WebMarkupContainer
 		final int iterations = getIterations();
 		if (iterations > 0)
 		{
-			// Loop through the markup in this container for each iteration
-			for (int i = 0; i < iterations; i++)
+			// Loop through the markup in this container for each item
+			for (int iteration = 0; iteration < iterations; iteration++)
 			{
-				// Create container for the given loop iteration
-				final LoopItem iteration = (LoopItem)get(Integer.toString(i));
-				if (iteration == null)
+				// Get item for iteration
+				final LoopItem item = (LoopItem)get(Integer.toString(iteration));
+
+				// Item should have been constructed in internalOnBeginRequest
+				if (item == null)
 				{
 					throw new WicketRuntimeException(
-							"Loop iteration is null.  Probably the loop iterations were changed between onBeginRequest and render time.");
+							"Loop item is null.  Probably the number of loop iterations were changed between onBeginRequest and render time.");
 				}
 
 				// Rewind to start of markup for kids
 				markupStream.setCurrentIndex(markupStart);
 
 				// Render iteration
-				renderIteration(iteration);
+				renderItem(item);
 			}
 		}
 		else
@@ -169,21 +171,21 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * Populates this loop iteration.
+	 * Populates this loop item.
 	 * 
-	 * @param iteration
+	 * @param item
 	 *            The iteration of the loop
 	 */
-	protected abstract void populateIteration(LoopItem iteration);
+	protected abstract void populateItem(LoopItem item);
 
 	/**
 	 * Renders this loop iteration.
 	 * 
-	 * @param iteration
+	 * @param item
 	 *            The loop iteration
 	 */
-	protected void renderIteration(final LoopItem iteration)
+	protected void renderItem(final LoopItem item)
 	{
-		iteration.render();
+		item.render();
 	}
 }
