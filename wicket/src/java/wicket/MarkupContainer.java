@@ -916,6 +916,22 @@ public abstract class MarkupContainer extends Component
 					}
 				}
 
+				// 3rd try: Components like Border and Panel might implement
+				// the ComponentResolver interface as well.
+				MarkupContainer container = this;
+				while (container != null)
+				{
+					if (container instanceof IComponentResolver)
+					{
+					    if (((IComponentResolver)container).resolve(this, markupStream, tag))
+					    {
+					        return;
+					    }
+					}
+
+					container = container.findParent(MarkupContainer.class);
+				}
+
 				// No one was able to handle the component id
 				markupStream.throwMarkupException("Unable to find component with id '" + id
 						+ "' in " + this);

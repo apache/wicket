@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.border;
 
+import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.WicketTag;
@@ -76,7 +77,7 @@ import wicket.model.IModel;
  *
  * @author Jonathan Locke
  */
-public abstract class Border extends WebMarkupContainer
+public abstract class Border extends WebMarkupContainer implements IComponentResolver
 {
 	/** The open tag for this border component. */
 	private transient ComponentTag openTag;
@@ -123,14 +124,18 @@ public abstract class Border extends WebMarkupContainer
      * markup. The preview region (everything in between the open and close tag)
      * will automatically be removed.
 	 *
+	 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream, ComponentTag)
+	 * 
+	 * @param container
+	 *            The container parsing its markup
 	 * @param markupStream
-	 *            The current markup stream
+	 *            The current markupStream
 	 * @param tag
-	 *            The current component tag
-	 * @return True, if MarkupContainer was able to resolve the component name and to
-	 *         render the component
+	 *            The current component tag while parsing the markup
+	 * @return True if componentId was handled by the resolver, false otherwise.
 	 */
-	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
+	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+			final ComponentTag tag)
 	{
 		// Determine if tag is a <wicket:body> tag
 		// If we're being asked to resolve a component for a <wicket:body> tag
