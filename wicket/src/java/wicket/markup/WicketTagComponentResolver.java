@@ -87,11 +87,18 @@ public class WicketTagComponentResolver implements IComponentResolver
                 if (component != null)
                 {
                     nestedComponents.put(component, null);
-                    // Add it to the hierarchy and render it
-                    container.add(component);
-                    component.render();
                     
-                    nestedComponents.remove(component);
+                    try
+                    {
+	                    // Add it to the hierarchy and render it
+	                    container.add(component);
+	                    component.render();
+                    }
+                    finally
+                    {
+                        nestedComponents.remove(component);
+                    }
+                    
                     return true;
                 }
             }
