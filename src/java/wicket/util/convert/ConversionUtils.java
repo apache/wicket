@@ -26,13 +26,13 @@ import java.util.Locale;
  * Utiltiy for conversions that works with the given instance of converter registry.
  */
 public final class ConversionUtils
-{ // TODO finalize javadoc
+{
     /** converter registry to use. */
     private final ConverterRegistry converterRegistry;
 
     /**
      * Construct.
-     * @param registry
+     * @param registry the converter registry
      */
     ConversionUtils(ConverterRegistry registry)
     {
@@ -52,22 +52,20 @@ public final class ConversionUtils
     }
 
     /**
-     * Convert the given object to an object of the given type using the given locale.
+     * Converts the given object to an object of the given type using the given locale.
      * @param value the object to convert
      * @param toType the type to convert to
      * @param locale the optional locale to use for conversion
-     * @return converted object
+     * @return the converted object
      * @throws ConversionException on unexpected errors
      */
     public Object convert(Object value, Class toType, Locale locale)
     {
         Converter converter = null;
         Object converted = null;
-
         try
         {
             converter = converterRegistry.lookup(toType, locale);
-
             if (converter != null) // we found a converter
             {
                 if (!toType.isArray()) // a common case for request parameters// is that//
@@ -79,7 +77,6 @@ public final class ConversionUtils
                         value = ((String[]) value)[0];
                     }
                 }
-
                 converted = converter.convert(toType, value);
             }
             else
@@ -90,15 +87,14 @@ public final class ConversionUtils
         }
         catch (ConversionException e)
         {
-            throw e.setConverter(converter).setLocale(locale).setTargetType(toType).setTriedValue(
-                    value);
+            throw e.setConverter(converter).setLocale(locale)
+            	.setTargetType(toType).setTriedValue(value);
         }
         catch (Exception e)
         {
             throw new ConversionException(e).setConverter(converter).setLocale(locale)
                     .setTargetType(toType).setTriedValue(value);
         }
-
         return converted;
     }
 }
