@@ -230,6 +230,47 @@ public abstract class MarkupContainer extends Component
 		return childForName.values().iterator();
 	}
 
+
+	/**
+	 * @param component
+	 *            The component to check
+	 * @param recurse
+	 *            True if all descendents should be considered
+	 * @return True if the component is contained in this container
+	 */
+	public final boolean contains(final Component component, final boolean recurse)
+	{
+		if (recurse)
+		{
+			// Start at component and continue while we're not out of parents
+			for (Component current = component; current != null;)
+			{
+				// Get parent
+				MarkupContainer parent = component.getParent();
+
+				// If this container is the parent, then the component is
+				// recursively contained by this container
+				if (parent == this)
+				{
+					// Found it!
+					return true;
+				}
+
+				// Move up the chain to the next parent
+				current = parent;
+			}
+
+			// Failed to find this container in component's ancestry
+			return false;
+		}
+		else
+		{
+			// Is the component contained in this container?
+			return component.getParent() == this;
+		}
+	}
+
+
 	/**
 	 * Removes all children from this container.
 	 */
