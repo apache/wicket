@@ -1,241 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project>
-    <pomVersion>3</pomVersion>
-    <id>wicket</id>
-    <name>Wicket</name>
-    <groupId>wicket</groupId>
-    <currentVersion>0.9.14-alpha</currentVersion>
-    <organization>
-        <name>Wicket developers</name>
-        <url>http://wicket.sourceforge.net</url>
-        <logo>http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1</logo>
-    </organization>
-    <inceptionYear>2004</inceptionYear>
-    <package>wicket</package>
-    <description>
-        Wicket is a Java web application framework that takes simplicity,
-        separation of concerns and ease of development to a whole new level. Wicket
-        pages can be mocked up, previewed and later revised using standard WYSIWYG
-        HTML design tools. Dynamic content processing and form handling is all handled
-        in Java code using a Swing-like component model backed by POJO data beans that
-        can easily be persisted with frameworks like Hibernate.
-    </description>
-    <shortDescription>a Java web application framework.</shortDescription>
+  <pomVersion>3</pomVersion>
+  <id>wicket</id>
+  <name>Wicket</name>
+  <groupId>wicket</groupId>
+  <currentVersion>0.9.15-beta</currentVersion>
+  <organization>
+    <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
-    <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
-    <siteAddress>shell.sourceforge.net</siteAddress>
-    <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
-    <repository>
-        <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:Wicket</connection>
-        <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
-        <url>http://cvs.sourceforge.net/viewcvs.py/wicket/Wicket</url>
-    </repository>
-    <versions>
-        <version>
-            <id>0.9.6-alpha</id>
-            <name>0.9.6-alpha</name>
-            <tag/>
-        </version>
-        <version>
-            <id>0.9.11-alpha</id>
-            <name>0.9.11-alpha</name>
-            <tag/>
-        </version>
-        <version>
-            <id>0.9.13-alpha</id>
-            <name>0.9.13-alpha</name>
-            <tag>WICKET_R_0_9_13_ALPHA</tag>
-        </version>
-        <version>
-            <id>0.9.14-alpha</id>
-            <name>0.9.14-alpha</name>
-            <tag>WICKET_R_0_9_14_ALPHA</tag>
-        </version>
-    </versions>
-    <mailingLists>
-        <mailingList>
-            <name>${pom.name} Dev List</name>
-            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
-            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
-            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
-        </mailingList>
-        <mailingList>
-            <name>${pom.name} User List</name>
-            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</subscribe>
-            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</unsubscribe>
-            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-user</archive>
-        </mailingList>
-        <mailingList>
-            <name>${pom.name} CVS commit List</name>
-            <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</subscribe>
-            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</unsubscribe>
-            <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-autocvs</archive>
-        </mailingList>
-    </mailingLists>
-    <developers>
-        <developer>
-            <name>Jonathan Locke</name>
-            <id>jonathanlocke</id>
-            <email>jonathanlocke at users.sourceforge.net</email>
-        </developer>
-        <developer>
-            <name>Christopher Turner</name>
-            <id>skipoles</id>
-            <email>skipoles at users.sourceforge.net</email>
-        </developer>
-        <developer>
-            <name>Eelco Hillenius</name>
-            <id>eelco12</id>
-            <email>eelco12 at users.sourceforge.net</email>
-        </developer>
-        <developer>
-            <name>Johan Compagner</name>
-            <id>joco01</id>
-            <email>joco01 at users.sourceforge.net</email>
-        </developer>
-        <developer>
-            <name>Martijn Dashorst</name>
-            <id>dashorst</id>
-            <email>dashorst at users.sourceforge.net</email>
-        </developer>
-        <developer>
-            <name>Juergen Donnerstag</name>
-            <id>jdonnerstag</id>
-            <email>jdonnerstag at users.sourceforge.net</email>
-            <roles/>
-        </developer>
-    </developers>
-    <contributors>
-        <contributor>
-            <name>Wouter de Jong</name>
-            <email>-</email>
-        </contributor>
-        <contributor>
-            <name>Peter Veenendaal</name>
-            <email>-</email>
-        </contributor>
-    </contributors>
-    <dependencies>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.4</version>
-            <url>http://www.dom4j.org</url>
-            <properties>
-                <wicket.group>required</wicket.group>
-                <wicket.description></wicket.description>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <url>http://www.junit.org</url>
-            <properties>
-                <wicket.group>test</wicket.group>
-                <wicket.description>Used for testing Wicket</wicket.description>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.8</version>
-            <url>http://logging.apache.org/log4j</url>
-            <properties>
-                <wicket.group>optional</wicket.group>
-                <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>ognl</groupId>
-            <artifactId>ognl</artifactId>
-            <version>2.6.5</version>
-            <url>http://www.ognl.org</url>
-            <properties>
-                <wicket.group>required</wicket.group>
-                <wicket.description>Used for introspection.</wicket.description>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>servletapi</groupId>
-            <artifactId>servletapi</artifactId>
-            <version>2.3</version>
-            <jar>servletapi-2.3.jar</jar>
-            <properties>
-                <wicket.group>compile</wicket.group>
-                <wicket.description>Compile time only, is supplied by your application server.</wicket.description>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>concurrent</groupId>
-            <artifactId>concurrent</artifactId>
-            <version>1.3.3</version>
-            <properties>
-                <wicket.group>required</wicket.group>
-                <wicket.description></wicket.description>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.0</version>
-            <url>http://jakarta.apache.org/commons/fileupload/</url>
-            <properties>
-                <wicket.group>optional</wicket.group>
-                <wicket.description>This library is required when you want to use the file upload component.</wicket.description>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.0.4</version>
-            <url>http://jakarta.apache.org/commons/logging/</url>
-            <properties>
-                <wicket.group>required</wicket.group>
-                <wicket.description>This library enables us to give you the choice of logging toolkit (JDK, Log4j, etc.)</wicket.description>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-    </dependencies>
-    <build>
-        <sourceDirectory>src/java</sourceDirectory>
-        <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
-        <unitTest>
-            <includes>
-                <include>**/*Test.java</include>
-            </includes>
-            <resources>
-                <resource>
-                    <directory>src/test</directory>
-                    <includes>
-                        <include>**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/*.java</exclude>
-                    </excludes>
-                    <filtering>false</filtering>
-                </resource>
-            </resources>
-        </unitTest>
-        <resources>
-            <resource>
-                <directory>src/java</directory>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-    </build>
-    <reports>
-        <report>maven-changes-plugin</report>
-        <report>maven-tasklist-plugin</report>
-        <report>maven-javadoc-plugin</report>
-        <report>maven-junit-report-plugin</report>
-        <report>maven-clover-plugin</report>
-    </reports>
-    <properties/>
+    <logo>http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1</logo>
+  </organization>
+  <inceptionYear>2004</inceptionYear>
+  <package>wicket</package>
+  <description>Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a Swing-like component model backed by POJO data beans that can easily be persisted with frameworks like Hibernate.</description>
+  <shortDescription>a Java web application framework.</shortDescription>
+  <url>http://wicket.sourceforge.net</url>
+  <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
+  <siteAddress>shell.sourceforge.net</siteAddress>
+  <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
+  <repository>
+    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:Wicket</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
+    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/Wicket</url>
+  </repository>
+  <versions>
+    <version>
+      <id>0.9.6-alpha</id>
+      <name>0.9.6-alpha</name>
+      <tag/>
+    </version>
+    <version>
+      <id>0.9.11-alpha</id>
+      <name>0.9.11-alpha</name>
+      <tag/>
+    </version>
+    <version>
+      <id>0.9.13-alpha</id>
+      <name>0.9.13-alpha</name>
+      <tag>WICKET_R_0_9_13_ALPHA</tag>
+    </version>
+    <version>
+      <id>0.9.14-alpha</id>
+      <name>0.9.14-alpha</name>
+      <tag>WICKET_R_0_9_14_ALPHA</tag>
+    </version>
+    <version>
+      <id>0.9.15-beta</id>
+      <name>0.9.15-beta</name>
+      <tag>WICKET_R_0_9_15_BETA</tag>
+    </version>
+  </versions>
+  <mailingLists>
+    <mailingList>
+      <name>${pom.name} Dev List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} User List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-user</archive>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} CVS commit List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-autocvs</archive>
+    </mailingList>
+  </mailingLists>
+  <developers>
+    <developer>
+      <name>Jonathan Locke</name>
+      <id>jonathanlocke</id>
+      <email>jonathanlocke at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Christopher Turner</name>
+      <id>skipoles</id>
+      <email>skipoles at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Eelco Hillenius</name>
+      <id>eelco12</id>
+      <email>eelco12 at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Johan Compagner</name>
+      <id>joco01</id>
+      <email>joco01 at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Martijn Dashorst</name>
+      <id>dashorst</id>
+      <email>dashorst at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Juergen Donnerstag</name>
+      <id>jdonnerstag</id>
+      <email>jdonnerstag at users.sourceforge.net</email>
+      <roles/>
+    </developer>
+  </developers>
+  <contributors>
+    <contributor>
+      <name>Wouter de Jong</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Peter Veenendaal</name>
+      <email>-</email>
+    </contributor>
+  </contributors>
+  <dependencies>
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>1.4</version>
+      <url>http://www.dom4j.org</url>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description/>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <url>http://www.junit.org</url>
+      <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Used for testing Wicket</wicket.description>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.8</version>
+      <url>http://logging.apache.org/log4j</url>
+      <properties>
+        <wicket.group>optional</wicket.group>
+        <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>ognl</groupId>
+      <artifactId>ognl</artifactId>
+      <version>2.6.5</version>
+      <url>http://www.ognl.org</url>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>Used for introspection.</wicket.description>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>servletapi</groupId>
+      <artifactId>servletapi</artifactId>
+      <version>2.3</version>
+      <jar>servletapi-2.3.jar</jar>
+      <properties>
+        <wicket.group>compile</wicket.group>
+        <wicket.description>Compile time only, is supplied by your application server.</wicket.description>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+      <version>1.3.3</version>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description/>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.0</version>
+      <url>http://jakarta.apache.org/commons/fileupload/</url>
+      <properties>
+        <wicket.group>optional</wicket.group>
+        <wicket.description>This library is required when you want to use the file upload component.</wicket.description>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+      <url>http://jakarta.apache.org/commons/logging/</url>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>This library enables us to give you the choice of logging toolkit (JDK, Log4j, etc.)</wicket.description>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+      <resources>
+        <resource>
+          <directory>src/test</directory>
+          <includes>
+            <include>**</include>
+          </includes>
+          <excludes>
+            <exclude>**/*.java</exclude>
+          </excludes>
+          <filtering>false</filtering>
+        </resource>
+      </resources>
+    </unitTest>
+    <resources>
+      <resource>
+        <directory>src/java</directory>
+        <includes>
+          <include>**</include>
+        </includes>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+  </build>
+  <reports>
+    <report>maven-changes-plugin</report>
+    <report>maven-tasklist-plugin</report>
+    <report>maven-javadoc-plugin</report>
+    <report>maven-junit-report-plugin</report>
+    <report>maven-clover-plugin</report>
+  </reports>
+  <properties/>
 </project>
