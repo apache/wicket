@@ -31,6 +31,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
+import wicket.markup.html.form.validation.IFormValidationDelegate;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.form.validation.ValidationErrorMessage;
 import wicket.markup.html.form.validation.ValidationErrorModelDecorator;

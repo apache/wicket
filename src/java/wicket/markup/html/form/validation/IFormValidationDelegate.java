@@ -15,11 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form;
+package wicket.markup.html.form.validation;
 
 import java.io.Serializable;
 
 import wicket.FeedbackMessages;
+import wicket.markup.html.form.Form;
 
 /**
  * Delegate for form validation. Implementors of this interface provide the
