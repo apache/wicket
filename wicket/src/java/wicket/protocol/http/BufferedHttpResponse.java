@@ -67,23 +67,19 @@ public class BufferedHttpResponse extends HttpResponse
 	 */
 	public void close()
 	{
-        try
+        // If a redirection was specified
+        if (redirectUrl != null)
         {
-            // If a redirection was specified
-            if (redirectUrl != null)
-            {
-                // actually redirect
-                super.redirect(redirectUrl);
-            }
-            else
-            {
-                // Write the buffer to the response stream
-                getServletResponse().getWriter().write(buffer.toString());
-            }
+            // actually redirect
+            super.redirect(redirectUrl);
         }
-        catch (IOException e)
+        else
         {
-            throw new WicketRuntimeException("Failed to flush response output", e);
+            // Write the buffer to the response stream
+            if (buffer.length() != 0)
+            {
+                super.write(buffer.toString());
+            }
         }
 	}
 
