@@ -106,6 +106,15 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
     }
 
     /**
+     * Looks up the object with the given row, and call getIdValue with that object.
+     * @see wicket.markup.html.form.IIdList#getIdValue(int)
+     */
+    public String getIdValue(int row)
+    {
+        return getIdValue(get(row));
+    }
+
+    /**
      * Attach to the current request.
      * @see wicket.markup.html.form.IIdList#attach(wicket.RequestCycle)
      */
@@ -140,12 +149,16 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
      * as loading the list of object you need for this list.
      * @param cycle the current request cycle
      */
-    protected abstract void doAttach(final RequestCycle cycle);
+    protected void doAttach(final RequestCycle cycle)
+    {
+    }
 
     /**
      * Detach from the current request. Implement this method with custom behaviour, such as
      * clearing the list.
      * @param cycle the current request cycle
      */
-    protected abstract void doDetach(final RequestCycle cycle);
+    protected void doDetach(final RequestCycle cycle)
+    {
+    }
 }
