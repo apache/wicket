@@ -94,6 +94,7 @@ public class ComponentCreateTagTest extends TestCase {
     public void testRenderHomePage_4() throws Exception {
         application = new MockWebApplication(null);
         application.getPages().setHomePage(ComponentCreateTag_4.class);
+        application.getSettings().setStripWicketTags(true);
         
         // Do the processing
         application.setupRequestAndResponse();

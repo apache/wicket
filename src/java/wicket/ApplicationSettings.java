@@ -417,7 +417,7 @@ public final class ApplicationSettings
 	 * 
 	 * @return whether to remove wicket tags from the output
 	 */
-	public final boolean getStripWicketParamTag()
+	public final boolean getStripWicketTag()
 	{
 		return this.stripWicketTags;
 	}

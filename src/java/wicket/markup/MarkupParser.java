@@ -66,7 +66,7 @@ public final class MarkupParser
     private boolean compressWhitespace;
 
     /** if true, <wicket:param ..> tags will be removed from markup */
-    private boolean stripWicketParamTag;
+    private boolean stripWicketTag;
 
     /** if true, "wicket-" will be removed from id="wicket-xxx" */
     private boolean stripWicketFromComponentTag = false;
@@ -106,7 +106,7 @@ public final class MarkupParser
 	public void configure(ApplicationSettings settings)
 	{
         this.componentNameAttribute = settings.getComponentNameAttribute();
-        this.stripWicketParamTag = settings.getStripWicketParamTag();
+        this.stripWicketTag = settings.getStripWicketTag();
         this.stripComments = settings.getStripComments();
         this.compressWhitespace = settings.getCompressWhitespace();
         this.automaticLinking = settings.getAutomaticLinking();
@@ -168,7 +168,7 @@ public final class MarkupParser
 
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
                 new HtmlHandler(detectWicketComponents));
-        wicketParamTagHandler.setStripWicketParamTag(this.stripWicketParamTag);
+        wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
 
         final PreviewComponentTagRemover previewComponentTagRemover = new PreviewComponentTagRemover(wicketParamTagHandler);
         

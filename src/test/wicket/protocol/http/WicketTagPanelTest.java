@@ -18,43 +18,112 @@
  */
 package wicket.protocol.http;
 
+import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
+import wicket.protocol.http.documentvalidation.Tag;
+import wicket.protocol.http.documentvalidation.TextContent;
 import junit.framework.TestCase;
 
 /**
- * Simple application that demonstrates the mock http application
- * code (and checks that it is working)
- *
+ * Simple application that demonstrates the mock http application code (and
+ * checks that it is working)
+ * 
  * @author Chris Turner
  */
-public class WicketTagPanelTest extends TestCase {
+public class WicketTagPanelTest extends TestCase
+{
 
-    private MockWebApplication application;
+	private MockWebApplication application;
 
-    /**
-     * Create the test.
-     *
-     * @param name The test name
-     */
-    public WicketTagPanelTest(String name) {
-        super(name);
-    }
+	/**
+	 * Create the test.
+	 * 
+	 * @param name
+	 *            The test name
+	 */
+	public WicketTagPanelTest(String name)
+	{
+		super(name);
+	}
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        application = new MockWebApplication(null);
-        application.getPages().setHomePage(WicketPanelPage.class);
-    }
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		application = new MockWebApplication(null);
+		application.getPages().setHomePage(WicketPanelPage.class);
+	}
 
-    /**
-     * @throws Exception
-     */
-    public void testRenderHomePage() throws Exception {
-        // Do the processing
-        application.setupRequestAndResponse();
-        application.processRequestCycle();
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage() throws Exception
+	{
+		// Do the processing
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
 
-        // Validate the document
-        String document = application.getServletResponse().getDocument();
-        System.out.println(document);
-    }
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		System.out.println(document);
+		assertTrue(validatePage1(document));
+	}
+
+	/**
+	 * Validate page 2 of the paged table.
+	 * @param document The document
+	 * @return The validation result
+	 */
+	private boolean validatePage1(String document)
+	{
+		HtmlDocumentValidator validator = new HtmlDocumentValidator();
+		Tag html = new Tag("html");
+		Tag body = new Tag("body");
+		html.addExpectedChild(body);
+		body.addExpectedChild(new TextContent("\\s+"));
+		Tag span = new Tag("span");
+		body.addExpectedChild(span);
+		Tag wicket = new Tag("wicket:panel");
+		span.addExpectedChild(wicket);
+
+		wicket.addExpectedChild(new TextContent("\\s*Panel Content"));
+
+		validator.addRootElement(html);
+		return validator.isDocumentValid(document);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePageWicketTagRemoved() throws Exception
+	{
+		// Remove wicket tags from output
+		application.getSettings().setStripWicketTags(true);
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
+
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		System.out.println(document);
+		assertTrue(validatePage2(document));
+	}
+
+	/**
+	 * Validate page 2 of the paged table.
+	 * @param document The document
+	 * @return The validation result
+	 */
+	private boolean validatePage2(String document)
+	{
+		HtmlDocumentValidator validator = new HtmlDocumentValidator();
+		Tag html = new Tag("html");
+		Tag body = new Tag("body");
+		body.addExpectedChild(new TextContent("\\s+"));
+		html.addExpectedChild(body);
+		Tag span = new Tag("span");
+		body.addExpectedChild(span);
+
+		span.addExpectedChild(new TextContent("\\s*Panel Content"));
+
+		validator.addRootElement(html);
+		return validator.isDocumentValid(document);
+	}
 }
