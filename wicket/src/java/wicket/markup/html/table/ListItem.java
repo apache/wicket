@@ -191,14 +191,15 @@ public class ListItem extends HtmlContainer
     
     private class ListItemModel extends Model
     {
-    	/*
+    	/**
 		 * @see wicket.model.Model#setObject(java.lang.Object)
 		 */
 		public void setObject(Object object)
 		{
 			throw new RuntimeException("Can't set an object through a listitem");
 		}
-    	/*
+
+    	/**
 		 * @see wicket.model.Model#getObject()
 		 */
 		public Object getObject()
