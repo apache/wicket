@@ -52,7 +52,7 @@ public class WicketComponentTagIdentifier implements IMarkupFilter
     private String wicketNamespace = ComponentWicketTag.DEFAULT_WICKET_NAMESPACE;
 
     /** if true, "wicket-" will be removed from id="wicket-xxx" */
-    private boolean removeWicketComponentTag = true;
+    private boolean stripWicketFromComponentTag = false;
 
     /** The next Markupfilter in the chain */
     private IMarkupFilter parent;
@@ -104,6 +104,18 @@ public class WicketComponentTagIdentifier implements IMarkupFilter
     }
     
     /**
+     * If true, "wicket-" will be removed from component tag's id
+     * attributes. E.g. id="wicket-myLabel" will be id="myLabel"
+     * on the output.
+     *  
+     * @param enable if true, remove "wicket-" 
+     */
+    public void setStripWicketFromComponentTag(final boolean enable)
+    {
+        this.stripWicketFromComponentTag = enable;
+    }
+    
+    /**
      * Get the next tag from the next MarkupFilter in the chain and search for
      * Wicket specific tags. <p>
      * Note: The xml parser - the next MarkupFilter in the chain - returns 
@@ -151,7 +163,7 @@ public class WicketComponentTagIdentifier implements IMarkupFilter
             tag.setComponentName(id.substring(componentNameAttribute.length() + 1).trim());
 
             // Depending on apps setting, "wicket-" will be removed or not
-            if (this.removeWicketComponentTag)
+            if (this.stripWicketFromComponentTag)
             {
                 tag.put("id", tag.getComponentName());
             }

@@ -18,16 +18,17 @@
  */
 package wicket.markup.html.list;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 
+import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockWebApplication;
 import wicket.util.io.Streams;
 import wicket.util.string.StringList;
-
-import junit.framework.TestCase;
 
 
 /**
@@ -217,6 +218,24 @@ public class PagedTableNavigatorTest extends TestCase
 		boolean equals = document.equals(reference);
 		if (equals == false)
 		{
+		    // Change the condition to true, if you want to make the new output
+		    // the reference output for future tests. That is, it is regarded as 
+		    // correct. It'll replace the current reference files. Thus change
+		    // it only for one test-run.
+		    if (false)
+		    {
+		        in.close();
+		        in = null;
+
+		        final URL url = this.getClass().getClassLoader().getResource(filename);
+		        filename = url.getFile();
+		        filename = filename.replaceAll("/build/test-classes/", "/src/test/");
+		        PrintWriter out = new PrintWriter(new FileOutputStream(filename));
+		        out.print(document);
+		        out.close();
+		        return true;
+		    }
+		    
 			System.err.println("File name: " + file);
 			/*  */
 			System.err.println("===================");
