@@ -1,8 +1,9 @@
 <project>
     <pomVersion>3</pomVersion>
     <name>Wicket</name>
-    <groupId>wicket</groupId>
-    <currentVersion>SNAPSHOT</currentVersion>
+	<groupId>wicket</groupId>
+	<id>wicket</id>
+    <currentVersion>0.9.13-alpha</currentVersion>
     <organization>
         <name>SourceForge</name>
         <url>http://sourceforge.net</url>
@@ -16,7 +17,7 @@
 	    pages can be mocked up, previewed and later revised using standard WYSIWYG 
 	    HTML design tools. Dynamic content processing and form handling is all handled 
 	    in Java code using a Swing-like component model backed by POJO data beans that 
-	    can easily be persisted with Hibernate.
+	    can easily be persisted with frameworks like Hibernate.
     </description>
     <shortDescription>a Java web application framework.</shortDescription>
     <url>http://wicket.sourceforge.net</url>
@@ -45,7 +46,7 @@
     </mailingLists>
     <developers>
         <developer>
-            <name>Chris Turner</name>
+            <name>Christopher Turner</name>
             <id>skipoles</id>
             <email>skipoles at users.sourceforge.net</email>
             <roles/>
@@ -113,11 +114,34 @@
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
         <unitTest>
             <includes>
                 <include>**/*Test.java</include>
             </includes>
+            <resources>
+                <resource>
+                    <directory>src/test</directory>
+                    <includes>
+                        <include>**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*.java</exclude>
+                    </excludes>
+                    <filtering>false</filtering>
+                </resource>
+            </resources>
         </unitTest>
     </build>
     <reports>

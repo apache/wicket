@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project default="jar" name="wicket" basedir=".">
-  <property name="defaulttargetdir" value="./target">
+<project default="jar" name="wicket:null" basedir=".">
+  <property name="defaulttargetdir" value="target">
   </property>
-  <property name="libdir" value="./lib">
+  <property name="libdir" value="lib">
   </property>
-  <property name="classesdir" value="./target/classes">
+  <property name="classesdir" value="target/classes">
   </property>
-  <property name="testclassesdir" value="./target/test-classes">
+  <property name="testclassesdir" value="target/test-classes">
   </property>
-  <property name="testclassesdir" value="./target/test-classes">
+  <property name="testclassesdir" value="target/test-classes">
   </property>
-  <property name="testreportdir" value="./target/test-reports">
+  <property name="testreportdir" value="target/test-reports">
   </property>
   <property name="distdir" value="dist">
   </property>
-  <property name="javadocdir" value="./dist/docs/api">
+  <property name="javadocdir" value="dist/docs/api">
   </property>
   <property name="final.name" value="wicket-SNAPSHOT">
   </property>
+  <path id="build.classpath">
+    <fileset dir="${libdir}">
+      <include name="**/*.jar">
+      </include>
+    </fileset>
+  </path>
   <target name="init" description="o Initializes some properties">
     <mkdir dir="${libdir}">
     </mkdir>
@@ -26,8 +32,12 @@
       <equals arg2="only" arg1="${build.sysclasspath}">
       </equals>
     </condition>
+    <!--Test if JUNIT is present in ANT classpath-->
+
+    <available property="Junit.present" classname="junit.framework.Test">
+    </available>
   </target>
-  <target name="compile" description="o Compile the code" depends="get-deps">
+  <target name="compile" description="o Compile the code">
     <mkdir dir="${classesdir}">
     </mkdir>
     <javac destdir="${classesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
@@ -35,15 +45,11 @@
         <pathelement location="src/java">
         </pathelement>
       </src>
-      <classpath>
-        <fileset dir="${libdir}">
-          <include name="*.jar">
-          </include>
-        </fileset>
+      <classpath refid="build.classpath">
       </classpath>
     </javac>
   </target>
-  <target name="jar" description="o Create the jar" depends="compile">
+  <target name="jar" description="o Create the jar" depends="compile,test">
     <jar jarfile="${defaulttargetdir}/${final.name}.jar" excludes="**/package.html" basedir="${classesdir}">
     </jar>
   </target>
@@ -63,7 +69,11 @@
       </fileset>
     </copy>
   </target>
-  <target name="internal-test" depends="compile-tests">
+  <target name="test" description="o Run the test cases" if="test.failure" depends="internal-test">
+    <fail message="There were test failures.">
+    </fail>
+  </target>
+  <target name="internal-test" if="Junit.present" depends="junit-present,compile-tests">
     <mkdir dir="${testreportdir}">
     </mkdir>
     <junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
@@ -74,10 +84,8 @@
       <formatter usefile="false" type="plain">
       </formatter>
       <classpath>
-        <fileset dir="${libdir}">
-          <include name="*.jar">
-          </include>
-        </fileset>
+        <path refid="build.classpath">
+        </path>
         <pathelement path="${testclassesdir}">
         </pathelement>
         <pathelement path="${classesdir}">
@@ -91,7 +99,12 @@
       </batchtest>
     </junit>
   </target>
-  <target name="compile-tests" depends="compile">
+  <target name="junit-present" unless="Junit.present" depends="init">
+    <echo>================================= WARNING ================================</echo>
+    <echo>Junit isn't present in your ${ANT_HOME}/lib directory. Tests not executed.</echo>
+    <echo>==========================================================================</echo>
+  </target>
+  <target name="compile-tests" if="Junit.present" depends="junit-present,compile">
     <mkdir dir="${testclassesdir}">
     </mkdir>
     <javac destdir="${testclassesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
@@ -100,10 +113,8 @@
         </pathelement>
       </src>
       <classpath>
-        <fileset dir="${libdir}">
-          <include name="*.jar">
-          </include>
-        </fileset>
+        <path refid="build.classpath">
+        </path>
         <pathelement path="${classesdir}">
         </pathelement>
       </classpath>
@@ -118,36 +129,14 @@
     </tstamp>
     <property name="copyright" value="Copyright &amp;copy;  SourceForge. All Rights Reserved.">
     </property>
-    <property name="title" value="Wicket SNAPSHOT">
+    <property name="title" value="Wicket SNAPSHOT API">
     </property>
     <javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/java" packagenames="com.voicetribe.*">
       <classpath>
-        <fileset dir="${libdir}">
-          <include name="*.jar">
-          </include>
-        </fileset>
-        <pathelement location="${defaulttargetdir}/${final.name}.jar">
-        </pathelement>
+        <path refid="build.classpath">
+        </path>
       </classpath>
     </javadoc>
-  </target>
-  <target name="get-deps" unless="noget" depends="init">
-    <get dest="${libdir}/dom4j-1.4.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/dom4j/jars/dom4j-1.4.jar">
-    </get>
-    <get dest="${libdir}/junit-3.8.1.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/junit/jars/junit-3.8.1.jar">
-    </get>
-    <get dest="${libdir}/log4j-1.2.8.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/log4j/jars/log4j-1.2.8.jar">
-    </get>
-    <get dest="${libdir}/ognl-2.6.5.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/ognl/jars/ognl-2.6.5.jar">
-    </get>
-    <get dest="${libdir}/servletapi-2.3.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/servletapi/jars/servletapi-2.3.jar">
-    </get>
-    <get dest="${libdir}/junit-3.8.1.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/junit/jars/junit-3.8.1.jar">
-    </get>
-    <get dest="${libdir}/ant-1.5.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/ant/jars/ant-1.5.jar">
-    </get>
-    <get dest="${libdir}/ant-optional-1.5.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/ant/jars/ant-optional-1.5.jar">
-    </get>
   </target>
   <target name="install-maven">
     <get dest="${user.home}/maven-install-latest.jar" usetimestamp="true" src="${repo}/maven/maven-install-latest.jar">
