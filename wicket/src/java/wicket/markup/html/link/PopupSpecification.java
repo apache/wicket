@@ -43,6 +43,13 @@ public class PopupSpecification implements Serializable
     private int top = -1;
 
     /**
+     * The target to put in JavaScript.
+     * This implementation simply refers to the href element, but clients
+     * may want to override this (e.g. when the HTML element is not an anchor).
+     */
+    private String target = "href";
+
+    /**
      * The logical name of the window. This can be anything you want, although you
      * should use alphanumeric characters only (no spaces or punctuation).
      * If you have a window already open and call window.open a second time using
@@ -80,25 +87,6 @@ public class PopupSpecification implements Serializable
      */
     public PopupSpecification()
     {
-    }
-
-    /**
-     * Copy constructor.
-     * @param popupSpecification spec to copy
-     */
-    public PopupSpecification(PopupSpecification popupSpecification)
-    {
-    	this.width = popupSpecification.width;
-    	this.height = popupSpecification.height;
-    	this.left = popupSpecification.left;
-    	this.top = popupSpecification.top;
-    	this.windowName = popupSpecification.windowName;
-    	this.scrollBars = popupSpecification.scrollBars;
-    	this.locationbar = popupSpecification.locationbar;
-    	this.menubar = popupSpecification.menubar;
-    	this.resizable = popupSpecification.resizable;
-    	this.statusBar = popupSpecification.statusBar;
-    	this.toolbar = popupSpecification.toolbar;
     }
 
     /**
@@ -175,13 +163,27 @@ public class PopupSpecification implements Serializable
     }
 
 	/**
-	 * Gets the target of the link. This implementation refers to the href element. 
+	 * Gets the target of the link.
+	 * The default implementation simply refers to the href element, but clients
+     * may want to override this (e.g. when the HTML element is not an anchor)
+     * by setting the target explicitly.
 	 * @return the target of the link
 	 */
 	protected String getTarget()
 	{
-		String target = "href";
 		return target;
+	}
+
+	/**
+	 * Sets the target of the link.
+	 * The default implementation simply refers to the href element, but clients
+     * may want to override this (e.g. when the HTML element is not an anchor)
+     * by setting the target explicitly.
+	 * @param target the target of the link
+	 */
+	public void setTarget(String target)
+	{
+		this.target = target;
 	}
 
     /**

@@ -132,13 +132,8 @@ public abstract class OnClickLink extends AbstractLink
         PopupSpecification popupSpecification = getPopupSpecification();
         if (popupSpecification != null)
         {
-        	PopupSpecification spec = new PopupSpecification(popupSpecification){
-        		public String getTarget()
-        		{
-        			return "'" + url + "'"; // return the complete url
-        		}
-        	};
-            String popupScript = spec.getPopupJavaScript();
+        	popupSpecification.setTarget("'" + url + "'");
+            String popupScript = popupSpecification.getPopupJavaScript();
             popupScript = popupScript.replaceAll("&", "&amp;");
             tag.put("onclick", popupScript);
         }
