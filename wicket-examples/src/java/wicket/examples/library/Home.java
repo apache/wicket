@@ -37,7 +37,7 @@ public final class Home extends AuthenticatedHtmlPage
     public Home(final PageParameters parameters)
     {
         // Add table of books
-        add(new ListView("books", getUser(), "books")
+        add(new ListView("books", getLibrarySession().getUser(), "books")
             {
                 public void populateItem(final ListItem listItem)
                 {

@@ -18,6 +18,8 @@
  */
 package wicket.examples.library;
 
+import wicket.ISessionFactory;
+import wicket.Session;
 import wicket.examples.WicketExampleApplication;
 
 /**
@@ -34,6 +36,18 @@ public final class LibraryApplication extends WicketExampleApplication
         getPages().setHomePage(Home.class);
         getSettings().setThrowExceptionOnMissingResource(false);
     }
+    
+    /**
+	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
+	 */
+	public ISessionFactory getSessionFactory()
+	{
+        return new ISessionFactory()
+        {
+            public Session newSession()
+            {
+                return new LibrarySession(LibraryApplication.this);
+            }
+        };
+	}
 }
-
-

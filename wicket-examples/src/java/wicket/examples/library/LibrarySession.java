@@ -18,45 +18,27 @@
  */
 package wicket.examples.library;
 
-
 import java.util.List;
 
-import wicket.Session;
+import wicket.Application;
+import wicket.protocol.http.HttpSession;
 
 /**
- * Simple authenticator class is associated with sessions and holds a User
- * object for any signed in user.
- *
+ * Session class for library example.  Holds User object and authenticates users.
+ * 
  * @author Jonathan Locke
  */
-public class Authenticator
+public final class LibrarySession extends HttpSession
 {
     private User user;
-
+    
     /**
-     * Force use of static getter method
+     * Constructor
+     * @param application The application 
      */
-    private Authenticator()
-    {
-    }
-
-    /**
-     * Gets Authenticator for session.  If no authenticator exists for the session,
-     * one is created and attached to the session.
-     * @param session
-     * @return Authenticator for session
-     */
-    public static Authenticator forSession(final Session session)
-    {
-        final String key = "authenticator";
-        Authenticator authenticator = (Authenticator) session.getProperty(key);
-
-        if (authenticator == null)
-        {
-            session.setProperty(key, authenticator = new Authenticator());
-        }
-
-        return authenticator;
+    protected LibrarySession(Application application) 
+    { 
+        super(application); 
     }
 
     /**

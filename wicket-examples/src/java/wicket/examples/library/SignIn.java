@@ -37,21 +37,20 @@ public final class SignIn extends WicketExamplePage
     {
         add(new SignInPanel("signInPanel")
         {
-            public String signIn(final String username, final String password)
+            public boolean signIn(final String username, final String password)
             {
                 // Sign the user in
-                final User user = Authenticator.forSession(
-                        getSession()).authenticate(username, password);
+                final User user = ((LibrarySession)getSession()).authenticate(username, password);
 
                 // If the user was signed in
                 if (user != null)
                 {
-                    return null;
+                    return true;
                 }
                 else
                 {
-                    // Form method that will notify feedback panel
-                    return getLocalizer().getString("couldNotAuthenticate", this);
+                    error(getLocalizer().getString("couldNotAuthenticate", this));
+                    return false;
                 }
             }
         });

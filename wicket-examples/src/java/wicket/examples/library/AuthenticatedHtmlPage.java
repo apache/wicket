@@ -76,13 +76,15 @@ public class AuthenticatedHtmlPage extends WicketExamplePage
     {
         return border.replace(child);
     }
-
+    
     /**
-     * @return Any authenticated user
+     * Get downcast session object
+     * 
+     * @return The session
      */
-    protected User getUser()
+    public LibrarySession getLibrarySession()
     {
-        return Authenticator.forSession(getSession()).getUser();
+        return (LibrarySession)getSession();
     }
 
     /**
@@ -91,7 +93,7 @@ public class AuthenticatedHtmlPage extends WicketExamplePage
     protected boolean checkAccess()
     {
         // Is user signed in?
-        if (Authenticator.forSession(getSession()).isSignedIn())
+        if (getLibrarySession().isSignedIn())
         {
             // okay to proceed
             return true;
@@ -100,7 +102,6 @@ public class AuthenticatedHtmlPage extends WicketExamplePage
         {
             // Force sign in
             getRequestCycle().redirectToInterceptPage(SignIn.class);
-
             return false;
         }
     }
