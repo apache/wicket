@@ -290,7 +290,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public boolean isOpen(final String componentName)
 	{
-		return isOpen() && componentName.equals(componentName);
+		return isOpen() && name.equals(componentName);
 	}
 
 	/**
