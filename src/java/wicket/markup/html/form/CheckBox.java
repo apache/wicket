@@ -49,29 +49,11 @@ public class CheckBox extends FormComponent
 	}
 
 	/**
-	 * @see FormComponent#supportsPersistence()
-	 */
-	protected final boolean supportsPersistence()
-	{
-		return true;
-	}
-
-	/**
 	 * @see FormComponent#setValue(java.lang.String)
 	 */
 	public final void setValue(String value)
 	{
 		setModelObject(Boolean.valueOf(value));
-	}
-
-	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	protected void updateModel()
-	{
-		setModelObject(getRequestBoolean());
 	}
 
 	/**
@@ -117,5 +99,23 @@ public class CheckBox extends FormComponent
 				tag.remove("checked");
 			}
 		}
+	}
+
+	/**
+	 * @see FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
+	{
+		return true;
+	}
+
+	/**
+	 * Updates this components' model from the request.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	protected void updateModel()
+	{
+		setModelObject(getRequestBoolean());
 	}
 }
