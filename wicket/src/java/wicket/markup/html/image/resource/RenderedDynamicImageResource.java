@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RenderedDynamicImageResource.java,v 1.4 2005/03/08 21:12:40
+ * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,11 +21,18 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
- * An image subclass that allows easy rendering of dynamic images. An image can
- * be set with setImage(BufferedImage) and its extension can be specified with
- * setExtension(String). After this, the image will be cached as an input stream
- * and will render as would any other Image resource.
+ * A DynamicImageResource subclass that allows easy rendering of regenenerable
+ * (unbuffered) dynamic images. A RenderedDynamicImageResource implements the
+ * abstract method render(Graphics2D) to create/re-create a given image
+ * on-the-fly. When a RenderedDynamicImageResource is serialized, the image
+ * state is transient, which means it will disappear when the resource is sent
+ * over the wire and then will be recreated when required.
+ * <p>
+ * The extension/format of the image resource can be specified with
+ * setFormat(String). 
  * 
+ * @see wicket.markup.html.image.resource.DefaultButtonImageResource
+ * @see wicket.markup.html.image.resource.DefaultButtonImageResourceFactory
  * @author Jonathan Locke
  */
 public abstract class RenderedDynamicImageResource extends DynamicImageResource
@@ -38,6 +45,9 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/** Width of image */
 	private int width = 100;
+
+	/** Transient image data so that image only needs to be generated once per VM */
+	private transient byte[] imageData;
 
 	/**
 	 * Constructor.
@@ -92,9 +102,13 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	 */
 	protected byte[] getImageData()
 	{
-		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		render((Graphics2D)image.getGraphics());
-		return toImageData(image);
+		if (imageData == null)
+		{
+			final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+			render((Graphics2D)image.getGraphics());
+			imageData = toImageData(image);
+		}
+		return imageData;
 	}
 
 	/**

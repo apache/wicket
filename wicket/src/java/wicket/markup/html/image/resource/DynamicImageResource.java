@@ -32,11 +32,28 @@ import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.time.Time;
 
 /**
- * An image subclass that allows easy rendering of dynamic images. An image can
- * be set by calling toImageData(BufferedImage) or by implementing
- * getImageData(), and its format can be specified with setFormat(String). After
- * this, the image will be cached as an input stream and will render as would
- * any other Image resource.
+ * An ImageResource subclass for dynamic images (images created
+ * programmatically). Subclasses override getImageData() to provide the image
+ * data to send back to the user. A given subclass may decide how to produce
+ * this data and whether/how to buffer it.
+ * <p>
+ * The RenderedDynamicImageResource subclass is designed for images that can be
+ * regenerated when the component is deserialized (the image data is transient).
+ * A good example of a RenderedDynamicImageResource is the
+ * DefaultButtonImageResource class, which can regenerate a given button image
+ * at any time. This makes it very lightweight when clustered. The
+ * BufferedDynamicImageResource class, on the other hand, is designed for images
+ * that cannot be regenerated on demand. It buffers its image data in a
+ * non-transient way, which means that the entire image will be serialized and
+ * copied when the resource is replicated in a cluster!
+ * <p>
+ * The helper method toImageData(BufferedImage) is provided so that subclasses
+ * can easily turn a BufferedImage into a suitable return value when
+ * implementing getImageData().
+ * <p>
+ * The format of the image (and therefore the resource's extension) can be
+ * specified with setFormat(String). The default format is "PNG" because JPEG is
+ * lossy and makes generated images look bad and GIF has patent issues.
  * 
  * @author Jonathan Locke
  */

@@ -23,7 +23,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-
 /**
  * Automatically generates a basic button image. The model for the component
  * determines the label displayed on the button.
