@@ -34,7 +34,7 @@ import wicket.model.Model;
  * @author Jonathan Locke
  * @author Johan Compagner
  */
-public final class ListMultipleChoice extends AbstractChoice
+public final class ListMultipleChoice extends Choice
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1000324612688307682L;
@@ -202,7 +202,7 @@ public final class ListMultipleChoice extends AbstractChoice
 	 * @param currentValue
 	 *            the current list value
 	 * @return whether the given value represents the current selection
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(java.lang.Object)
+	 * @see wicket.markup.html.form.Choice#isSelected(java.lang.Object)
 	 */
 	protected boolean isSelected(Object currentValue)
 	{
