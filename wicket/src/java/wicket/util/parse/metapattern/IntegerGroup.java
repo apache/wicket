@@ -67,6 +67,16 @@ public final class IntegerGroup extends Group
 		super(pattern);
 		this.radix = radix;
 	}
+	
+	/**
+	 * @param matcher The matcher
+	 * @return The value
+	 * @see IntegerGroup#getInt(Matcher, int)
+	 */
+	public int getInt(final Matcher matcher)
+	{
+		return getInt(matcher, -1);
+	}
 
 	/**
 	 * Gets an int by parsing the String matched by this capturing group. The
@@ -74,23 +84,41 @@ public final class IntegerGroup extends Group
 	 * 
 	 * @param matcher
 	 *            The matcher
+	 * @param defaultValue
+	 *            The default value to use if this group is omitted because it
+	 *            is optional
 	 * @return The parsed int value
 	 */
-	public int getInt(final Matcher matcher)
+	public int getInt(final Matcher matcher, final int defaultValue)
 	{
-		return Integer.parseInt(get(matcher), radix);
+		final String value = get(matcher);
+		return value == null ? defaultValue : Integer.parseInt(value, radix);
+	}
+	
+	/**
+	 * @param matcher The matcher
+	 * @return The value
+	 * @see IntegerGroup#getLong(Matcher, int)
+	 */
+	public long getLong(final Matcher matcher)
+	{
+		return getLong(matcher, -1L);
 	}
 
 	/**
 	 * Gets a long by parsing the String matched by this capturing group. The
 	 * IntegerGroup's radix is used in the conversion. parsing radix.
 	 * 
+	 * @param defaultValue
+	 *            The default value to use if this group is omitted because it
+	 *            is optional
 	 * @param matcher
 	 *            The matcher
 	 * @return The parsed long value
 	 */
-	public long getLong(final Matcher matcher)
+	public long getLong(final Matcher matcher, final long defaultValue)
 	{
-		return Long.parseLong(get(matcher), radix);
+		final String value = get(matcher);
+		return value == null ? defaultValue : Long.parseLong(value, radix);
 	}
 }

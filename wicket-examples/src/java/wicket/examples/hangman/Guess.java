@@ -17,11 +17,14 @@
  */
 package wicket.examples.hangman;
 
+import java.awt.Color;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestCycle;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.image.Image;
+import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
 
@@ -49,10 +52,9 @@ public class Guess extends HangmanPage
 		add(new Label("letters", new PropertyModel(getHangman(), "letters")));
 
 		// Components for displaying the letters that can be selected
-		for (int i = 0; i < 26; i++)
+		for (char c = 'a'; c <= 'z'; c++)
 		{
-			final char ch = (char)('a' + i);
-			add(new SelectableLetterLink("letter_" + ch, ch));
+			add(new SelectableLetterLink(c));
 		}
 	}
 
@@ -61,10 +63,9 @@ public class Guess extends HangmanPage
 	 */
 	public void resetLetters()
 	{
-		for (int i = 0; i < 26; i++)
+		for (char c = 'a'; c <= 'z'; c++)
 		{
-			final char ch = (char)('a' + i);
-			SelectableLetterLink link = (SelectableLetterLink)get("letter_" + ch);
+			SelectableLetterLink link = (SelectableLetterLink)get("letter_" + c);
 			link.setEnabled(true);
 		}
 	}
@@ -74,23 +75,35 @@ public class Guess extends HangmanPage
 	 */
 	private class SelectableLetterLink extends Link
 	{
+		/** The letter for this link */
 		private char letter;
 
 		/**
 		 * Create a new selectable letter link given the supplied parameters.
 		 * 
-		 * @param componentName
-		 *            The component name
 		 * @param letter
 		 *            The letter that this link represents
 		 */
-		public SelectableLetterLink(final String componentName, final char letter)
+		public SelectableLetterLink(final char letter)
 		{
-			super(componentName);
+			// Name component after letter
+			super("letter_" + letter);
+			
+			// Save letter
 			this.letter = letter;
+			
+			// We want this link to be manually enabled
 			setEnabled(true);
 			setAutoEnable(false);
-			setAfterDisabledLink("<i>" + Character.toUpperCase(letter) + "</i>");
+			
+			// Install enabled button image
+			DefaultButtonImageResource enabled = new DefaultButtonImageResource(30, 30, Character.toString(letter));
+			add(new Image("enabled", enabled));
+			
+			// Add disabled image
+			DefaultButtonImageResource disabled = new DefaultButtonImageResource(30, 30, Character.toString(letter));
+			disabled.setColor(Color.GRAY);
+			add(new Image("disabled", disabled));
 		}
 
 		/**
@@ -99,21 +112,23 @@ public class Guess extends HangmanPage
 		 */
 		public void onClick()
 		{
-			final RequestCycle requestCycle = getRequestCycle();
 			log.error("Linked clicked for letter: " + letter);
 			setEnabled(false);
 			getHangman().guessLetter(letter);
-			if (getHangman().isGuessed())
+			if (getHangman().isWon())
 			{
 				// Redirect to win page
-				requestCycle.setResponsePage(new Win(Guess.this));
+				setResponsePage(new Win(Guess.this));
 			}
-			else if (getHangman().isAllGuessesUsed())
+			else if (getHangman().isLost())
 			{
 				// Redirect to loose page
-				requestCycle.setResponsePage(new Lose(Guess.this));
+				setResponsePage(new Lose(Guess.this));
 			}
-			// else return to guess page with new state to display
+			else
+			{
+				// Return to guess page with new state to display
+			}
 		}
 	}
 }

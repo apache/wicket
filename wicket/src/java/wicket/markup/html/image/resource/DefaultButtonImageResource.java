@@ -87,12 +87,12 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 * @param height
 	 *            Height of image in pixels
 	 */
-	public DefaultButtonImageResource(final String label, int width, int height)
+	public DefaultButtonImageResource(int width, int height, final String label)
 	{
 		super(width, height);
 		this.label = label;
-		setWidth(defaultWidth);
-		setHeight(defaultHeight);
+		setWidth(width == -1 ? defaultWidth : width);
+		setHeight(height == -1 ? defaultHeight : height);
 		setFormat("png");
 	}
 
@@ -102,7 +102,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public DefaultButtonImageResource(final String label)
 	{
-		this(label, defaultWidth, defaultHeight);
+		this(defaultWidth, defaultHeight, label);
 	}
 
 	/**

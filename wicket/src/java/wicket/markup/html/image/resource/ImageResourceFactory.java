@@ -32,7 +32,7 @@ public abstract class ImageResourceFactory
 
 	/** The name of this factory */
 	private String name;
-	
+
 	/** Map from labels to image resources */
 	private static final Map labelToImageResource = new WeakHashMap();
 
@@ -56,25 +56,34 @@ public abstract class ImageResourceFactory
 	}
 
 	/**
+	 * @param width
+	 *            Width of image
+	 * @param height
+	 *            Height of image
 	 * @param label
 	 *            Any label to put on the image that's created
 	 * @return Image resource
 	 */
-	public ImageResource imageResource(final String label)
+	public ImageResource imageResource(final int width, final int height, final String label)
 	{
 		ImageResource image = (ImageResource)labelToImageResource.get(label);
 		if (image == null)
 		{
-			image = newImageResource(label);
+			image = newImageResource(width, height, label);
 			labelToImageResource.put(label, image);
 		}
 		return image;
 	}
 
 	/**
+	 * @param width
+	 *            Width of image
+	 * @param height
+	 *            Height of image
 	 * @param label
 	 *            Any label to put on the image that's created
 	 * @return Image resource
 	 */
-	protected abstract ImageResource newImageResource(final String label);
+	protected abstract ImageResource newImageResource(final int width, final int height,
+			final String label);
 }

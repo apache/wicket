@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.link;
 
-import wicket.MarkupContainer;
+import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
@@ -401,16 +401,16 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			final ComponentTag openTag)
 	{
 		// Get disabled component of the same name with "Disabled" appended
-		final MarkupContainer disabledContainer = (MarkupContainer)get("disabled");
+		final Component disabledComponent = (Component)get("disabled");
 
-		if (disabledContainer != null)
+		if (disabledComponent != null)
 		{
 			// Get enabled container
-			final MarkupContainer enabledContainer = (MarkupContainer)get("enabled");
+			final Component enabledComponent = (Component)get("enabled");
 
 			// Set visibility of enabled and disabled children
-			enabledContainer.setVisible(enabled);
-			disabledContainer.setVisible(!enabled);
+			enabledComponent.setVisible(enabled);
+			disabledComponent.setVisible(!enabled);
 		}
 
 		// Set default for before/after link text

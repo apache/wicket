@@ -55,48 +55,48 @@ public class HangManTest extends WebTestCase
 		hangman.newGame(5, "testing");
 		
 		Assert.assertEquals(5, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 'a', false);
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		hangman.guessLetter('a');
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 't', true);
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 'e', true);
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 's', true);
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 'i', true);
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 'n', true);
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 'g', true);
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
-		Assert.assertTrue(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertTrue(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 	}
 
 	/**
@@ -110,18 +110,18 @@ public class HangManTest extends WebTestCase
 		hangman.newGame(2, "foo");
 		
 		Assert.assertEquals(2, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 'z', false);
 		Assert.assertEquals(1, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertFalse(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertFalse(hangman.isLost());
 
 		doGuessTest(hangman, 'v', false);
 		Assert.assertEquals(0, hangman.getGuessesRemaining());
-		Assert.assertFalse(hangman.isGuessed());
-		Assert.assertTrue(hangman.isAllGuessesUsed());
+		Assert.assertFalse(hangman.isWon());
+		Assert.assertTrue(hangman.isLost());
 	}
 
 	/**

@@ -39,10 +39,10 @@ public class DefaultButtonImageResourceFactory extends ImageResourceFactory
 	}
 
 	/**
-	 * @see wicket.markup.html.image.resource.ImageResourceFactory#newImageResource(java.lang.String)
+	 * @see ImageResourceFactory#newImageResource(int, int, String)
 	 */
-	public ImageResource newImageResource(String label)
+	public ImageResource newImageResource(final int width, final int height, String label)
 	{
-		return new DefaultButtonImageResource(label);
+		return new DefaultButtonImageResource(width, height, label);
 	}
 }

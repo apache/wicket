@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.3 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -69,7 +69,7 @@ public class Hangman implements Serializable
 		this.guessesAllowed = guessesAllowed;
 		guessesRemaining = guessesAllowed;
 	}
-	
+
 	/**
 	 * Play again with same settings
 	 */
@@ -100,7 +100,9 @@ public class Hangman implements Serializable
 			}
 		}
 		if (!correctGuess && guessedLetters[letter - 'a'] == false)
+		{
 			guessesRemaining--;
+		}
 		guessedLetters[letter - 'a'] = true;
 		return correctGuess;
 	}
@@ -111,12 +113,14 @@ public class Hangman implements Serializable
 	 * 
 	 * @return Whether all of the letters have been guessed or not
 	 */
-	public boolean isGuessed()
+	public boolean isWon()
 	{
 		for (int i = 0; i < letters.length; i++)
 		{
 			if (letters[i] == '_')
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -126,9 +130,9 @@ public class Hangman implements Serializable
 	 * 
 	 * @return Whether all of the user's guesses have been used
 	 */
-	public boolean isAllGuessesUsed()
+	public boolean isLost()
 	{
-		return (guessesRemaining == 0);
+		return guessesRemaining == 0;
 	}
 
 	/**
