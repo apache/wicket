@@ -170,6 +170,6 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	protected void onSessionAttach()
 	{
-		localizedImageResource.sessionAttach();
+		localizedImageResource.bind();
 	}
 }

@@ -76,4 +76,12 @@ public final class StringResource extends AbstractStringResource
 	{
 		return toString();
 	}
+	
+	/**
+	 * @see wicket.util.resource.AbstractResource#asString()
+	 */
+	public String asString()
+	{
+		return getString();
+	}
 }

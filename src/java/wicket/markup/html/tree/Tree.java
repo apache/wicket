@@ -30,7 +30,6 @@ import javax.swing.tree.TreePath;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.ISharedResourceFactory;
 import wicket.Resource;
 import wicket.SharedResource;
 import wicket.markup.html.WebMarkupContainer;
@@ -443,13 +442,13 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private SharedResource getImage(final String name)
 	{
-		return getApplication().getSharedResource(Tree.class, name, new ISharedResourceFactory()
+		return new SharedResource(Tree.class, name)
 		{
 			public Resource newResource()
 			{
 				return StaticImageResource.get(Tree.class.getPackage(), name, null, null);
 			}
-		});
+		};
 	}
 
 	/**

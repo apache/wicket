@@ -87,4 +87,12 @@ public class StringBufferResource extends AbstractStringResource
 	{
 		return buffer.toString();
 	}
+	
+	/**
+	 * @see wicket.util.resource.AbstractResource#asString()
+	 */
+	public String asString()
+	{
+		return getString();
+	}
 }

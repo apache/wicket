@@ -22,14 +22,25 @@ import java.util.Locale;
 import wicket.util.resource.IResource;
 
 /**
- * A named resource, with optional scoping, that wraps any Resource for shared
- * access. It has a transient Resource member which can be refreshed when needed
- * from the Application by calling Application.getResource(Class scope, String
- * name).
+ * SharedResource is essentially a reference to an actual resource which is
+ * shared through Application. A SharedResource has a name and a scope (within
+ * which the name must be unique). It may also have a locale or style.
+ * <p>
+ * SharedResources may be added to the Application when the Application is
+ * constructed using
+ * {@link Application#addResource(Class, String, Locale, String, Resource)},
+ * {@link Application#addResource(String, Locale, Resource)}or
+ * {@link Application#addResource(String, Resource)}.
+ * <p>
+ * If a component has its own shared resource which should not be added to the
+ * application construction logic in this way, it can lazy-initialize the
+ * resource by overriding the {@link SharedResource#newResource()}method. In
+ * this method, the component should supply logic that creates the shared
+ * resource.
  * 
  * @author Jonathan Locke
  */
-public final class SharedResource extends Resource
+public class SharedResource extends Resource
 {
 	/** The locale of the resource */
 	private Locale locale;
@@ -83,6 +94,14 @@ public final class SharedResource extends Resource
 	}
 
 	/**
+	 * @return Returns the locale.
+	 */
+	public final Locale getLocale()
+	{
+		return locale;
+	}
+
+	/**
 	 * @return Path to this shared resource
 	 */
 	public final String getPath()
@@ -105,10 +124,18 @@ public final class SharedResource extends Resource
 	}
 
 	/**
+	 * @return Returns the style.
+	 */
+	public final String getStyle()
+	{
+		return style;
+	}
+
+	/**
 	 * Sets any loaded resource to null, thus forcing a reload on the next
 	 * request.
 	 */
-	public void invalidate()
+	public final void invalidate()
 	{
 		this.resource = null;
 	}
@@ -117,7 +144,7 @@ public final class SharedResource extends Resource
 	 * @param locale
 	 *            The locale to set.
 	 */
-	public void setLocale(Locale locale)
+	public final void setLocale(Locale locale)
 	{
 		this.locale = locale;
 		invalidate();
@@ -127,21 +154,66 @@ public final class SharedResource extends Resource
 	 * @param style
 	 *            The style to set.
 	 */
-	public void setStyle(String style)
+	public final void setStyle(String style)
 	{
 		this.style = style;
 		invalidate();
 	}
 
 	/**
-	 * @return Gets the resource to render to the requester
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[SharedResource name = " + name + ", scope = " + scope + ", locale = " + locale
+				+ ", style = " + style + "]";
+	}
+
+	/**
+	 * Binds this shared resource to the given application
+	 * 
+	 * @param application
+	 *            The application which holds the shared resource
+	 */
+	public final void bind(final Application application)
+	{
+		// Try to resolve resource
+		if (resource == null)
+		{
+			// Try to get resource from Application repository
+			resource = application.getResource(scope, name, locale, style);
+
+			// Not available yet?
+			if (resource == null)
+			{
+				// Create resource using lazy-init factory method
+				resource = newResource();
+				if (resource == null)
+				{
+					throw new WicketRuntimeException("Unable to resolve shared resource " + this);
+				}
+
+				// Share through application
+				application.addResource(scope, name, locale, style, resource);
+			}
+		}
+	}
+
+	/**
+	 * @see wicket.SharedResource#getResource()
 	 */
 	protected final IResource getResource()
 	{
-		if (resource == null)
-		{
-			this.resource = Session.get().getApplication().getResource(scope, name, locale, style);
-		}
 		return resource.getResource();
+	}
+
+	/**
+	 * Factory method for lazy initialization of shared resources.
+	 * 
+	 * @return The resource
+	 */
+	protected Resource newResource()
+	{
+		return null;
 	}
 }

@@ -637,7 +637,7 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * @return The resource for this component
+	 * @return The shared resource for this component
 	 */
 	public Resource getResource()
 	{
