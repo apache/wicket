@@ -705,7 +705,7 @@ public abstract class Container extends Component
         final MarkupElement element = markupStream.get();
 
         // Is it a component?
-        if (element instanceof ComponentTag)
+        if (element instanceof ComponentTag && (!markupStream.atCloseTag()))
         {
             // Get element as tag
             final ComponentTag tag = (ComponentTag) element;
