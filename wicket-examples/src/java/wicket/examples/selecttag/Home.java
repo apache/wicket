@@ -26,7 +26,7 @@ public class Home extends HtmlPage
 	 */
 	public Home(final PageParameters parameters)
 	{
-        add(new NavigationPanel("mainNavigation", "Helloworld example"));
+        add(new NavigationPanel("mainNavigation", "Select tag example"));
 		add(new SelectForm("selectform"));
 	}
 	
