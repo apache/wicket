@@ -72,8 +72,13 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * 
 	 * @param string
 	 *            The markup to be parsed
+	 * @throws IOException
+	 *             Error while reading the resource
+	 * @throws ResourceNotFoundException
+	 *             Resource not found
 	 */
-	public abstract void parse(final CharSequence string);
+	public abstract void parse(final CharSequence string) throws IOException,
+		ResourceNotFoundException;
 
 	/**
 	 * Reads and parses markup from a resource like file. Use nextTag() to
@@ -88,14 +93,6 @@ public interface IXmlPullParser extends IMarkupFilter
 	 */
 	public abstract void parse(final IResource resource) throws IOException,
 			ResourceNotFoundException;
-
-	/**
-	 * Set whether whitespace should be compressed.
-	 * 
-	 * @param compressWhitespace
-	 *            if true, whitespaces will be compressed
-	 */
-	public abstract void setCompressWhitespace(boolean compressWhitespace);
 
 	/**
 	 * Set the position marker of the markup at the current position.
