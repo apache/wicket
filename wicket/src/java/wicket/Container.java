@@ -786,7 +786,7 @@ public abstract class Container extends Component
 			final String componentName = tag.getComponentName();
 
 			// Get the component for the component name from the given container
-			Component component = get(componentName);
+			final Component component = get(componentName);
 
 			// Failed to find it?
 			if (component != null)
@@ -811,7 +811,7 @@ public abstract class Container extends Component
 				while (iter.hasNext())
 				{
 					final IComponentResolver resolver = (IComponentResolver)iter.next();
-					if (resolver.resolve(this, markupStream, tag) == true)
+					if (resolver.resolve(this, markupStream, tag))
 					{
 						return;
 					}
@@ -821,7 +821,7 @@ public abstract class Container extends Component
 				Container container = this;
 				while (container != null)
 				{
-					if (container.resolveComponent(markupStream, tag) == true)
+					if (container.resolveComponent(markupStream, tag))
 					{
 						return;
 					}
