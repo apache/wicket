@@ -107,6 +107,12 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>GroovyApplication</servlet-name>
+        <servlet-class>wicket.examples.groovy.GroovyApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
     <!-- servlet>
         <servlet-name>Wicket-Appfuse</servlet-name>
         <servlet-class>wicket.examples.appfuse.AppfuseApplication</servlet-class>
@@ -186,6 +192,11 @@
     <servlet-mapping>
         <servlet-name>SpringApplication</servlet-name>
         <url-pattern>/spring</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GroovyApplication</servlet-name>
+        <url-pattern>/groovy</url-pattern>
     </servlet-mapping>
 
     <!-- servlet-mapping>
