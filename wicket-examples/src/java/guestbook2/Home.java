@@ -19,7 +19,11 @@
 
 package guestbook2;
 
+import guestbook.Comment;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.MappingException;
@@ -28,6 +32,7 @@ import net.sf.hibernate.Transaction;
 import nl.openedge.util.hibernate.HibernateHelper;
 
 import com.voicetribe.wicket.PageParameters;
+import com.voicetribe.wicket.PropertyModel;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
@@ -58,9 +63,10 @@ public class Home extends HtmlPage
         {
             public void populateCell(final Cell cell)
             {
-                final Comment comment = (Comment)cell.getModel();
-                cell.add(new Label("date", comment));
-                cell.add(new MultiLineLabel("text", comment));
+                final Comment comment = (Comment)cell.getModelObject();
+                cell.add(new Label("date", comment.getDate()));
+                cell.add(new MultiLineLabel("text", 
+                        new PropertyModel(comment, "text")));
             }   
         });
     }
@@ -81,7 +87,7 @@ public class Home extends HtmlPage
             super(componentName, null);
 
             // Add text entry widget
-            add(new TextArea("text", comment));
+            add(new TextArea("text", new PropertyModel(comment, "text")));
         }
 
         /**
@@ -135,7 +141,7 @@ public class Home extends HtmlPage
     private final Table table;
     
     // A global list of all comments from all users
-    private static final CommentList commentList = new CommentList();
+    private static final List commentList = new ArrayList();
     static
     {
         try
@@ -153,7 +159,10 @@ public class Home extends HtmlPage
             try
             {
                 // Save comment to db
-                commentList.setComments(session.find("from comment in class guestbook2.Comment order by comment.date desc"));
+                commentList.clear();
+                commentList.addAll(session.find(
+                        "from comment in class guestbook2.Comment " +
+                        "order by comment.date desc"));
             }
             finally
             {

@@ -57,7 +57,6 @@ public class Home extends HtmlPage
             {
                 final Comment comment = (Comment)cell.getModelObject();
                 cell.add(new Label("date", comment.getDate()));
-                //cell.add(new MultiLineLabel("text", comment.getText()));
                 cell.add(new MultiLineLabel("text", 
                         new PropertyModel(comment, "text")));
             }   

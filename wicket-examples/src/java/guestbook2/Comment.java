@@ -19,6 +19,7 @@
 
 package guestbook2;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Date;
  * @hibernate.class
  * @author Jonathan Locke
  */
-public class Comment
+public class Comment implements Serializable
 {
     /**
      * Constructor

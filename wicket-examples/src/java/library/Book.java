@@ -19,6 +19,7 @@
 
 package library;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ import com.voicetribe.util.lang.EnumeratedType;
  * An example POJO model.
  * @author Jonathan Locke
  */
-public final class Book
+public final class Book implements Serializable
 {
     /**
      * Value for fiction books.

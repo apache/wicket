@@ -19,11 +19,13 @@
 
 package linkomatic;
 
+import java.io.Serializable;
+
 /**
  * Simple book model.
  * @author Jonathan Locke
  */
-public class Book
+public class Book implements Serializable
 {
     /**
      * Constructor

@@ -19,6 +19,7 @@
 
 package library;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * Trivial user model for example application
  * @author Jonathan Locke
  */
-public final class User
+public final class User implements Serializable
 {
     /**
      * @return User name
