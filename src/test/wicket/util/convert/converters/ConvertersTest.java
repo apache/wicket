@@ -46,8 +46,7 @@ public final class ConvertersTest extends TestCase
 
 	public void testConversion()
 	{
-        final IConverter converter = new ConverterFactory().newConverter();
-        converter.setLocale(Locale.US);   
+        final IConverter converter = new ConverterFactory().newConverter(Locale.US);
         assertEquals(new Long(7), converter.convert(new Integer(7), Long.class));
         assertEquals("7", converter.convert(new Integer(7), String.class));
         assertEquals("7.1", converter.convert(new Double(7.1), String.class));

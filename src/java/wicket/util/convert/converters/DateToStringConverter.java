@@ -29,7 +29,7 @@ import java.util.Locale;
 public final class DateToStringConverter extends AbstractConverter
 {
 	/** The date format to use */
-	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+	private DateFormat dateFormat;
 
     /**
      * Constructor
