@@ -371,7 +371,7 @@ public abstract class Component implements Serializable
 	 */
 	public final IModel getModel()
 	{
-		if ((model != null) && (model instanceof IDetachableModel))
+		if (model != null && model instanceof IDetachableModel)
 		{
 			((IDetachableModel)model).attach();
 		}
@@ -386,10 +386,10 @@ public abstract class Component implements Serializable
 	 */
 	public final Object getModelObject()
 	{
-		IModel mod = getModel();
-		if (mod != null)
+		final IModel model = getModel();
+		if (model != null)
 		{
-			return getModel().getObject();
+			return model.getObject();
 		}
 		else
 		{
