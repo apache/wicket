@@ -30,7 +30,7 @@ public abstract class StringValidator extends AbstractValidator
 	 */
 	public void onValidate()
 	{
-		onValidate(getStringValue());		
+		onValidate(getInput());		
 	}
 
 	/**

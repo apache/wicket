@@ -108,7 +108,7 @@ public class UploadTextField extends TextField
 		public void onValidate()
 		{
 			final FileItem item = getFile(); // get upload
-			final String name = getStringValue(); // get field value
+			final String name = getInput(); // get field value
 
 			if (item == null || item.getSize() == 0) // any upload at all?
 			{
