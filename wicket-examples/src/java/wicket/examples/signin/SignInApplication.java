@@ -18,7 +18,7 @@
  */
 package wicket.examples.signin;
 
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 
 /**
  * Forms example.

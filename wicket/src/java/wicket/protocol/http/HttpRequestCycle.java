@@ -32,7 +32,6 @@ import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.WebApplication;
 import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
 import wicket.Response;
@@ -359,7 +358,7 @@ public class HttpRequestCycle extends RequestCycle
                         // given page since
                         // they will no longer be accessible.
                         setPage(page);
-                        session.expireNewerThan(page);
+                        session.removeNewerThan(page);
 
                         // Look up interface to call
                         final String interfaceName = request.getParameter("interface");

@@ -27,9 +27,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.RequestCycle;
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 import wicket.WicketRuntimeException;
-
 
 /**
  * Everybody's favorite example.

@@ -19,7 +19,7 @@
 package wicket.examples.navomatic;
 
 import wicket.ApplicationSettings;
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 
 /**
  * WicketServlet class for hello world example.

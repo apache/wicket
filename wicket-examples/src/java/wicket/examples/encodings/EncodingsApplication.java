@@ -18,9 +18,8 @@
  */
 package wicket.examples.encodings;
 
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 import wicket.util.time.Duration;
-
 
 /**
  * WicketServlet class for hello world example.

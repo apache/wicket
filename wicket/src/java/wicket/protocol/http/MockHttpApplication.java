@@ -24,7 +24,6 @@ import javax.servlet.ServletException;
 import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.Page;
-import wicket.WebApplication;
 import wicket.protocol.http.HttpRequest;
 import wicket.protocol.http.HttpRequestCycle;
 import wicket.protocol.http.HttpResponse;

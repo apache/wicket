@@ -19,7 +19,7 @@
 package wicket.examples.forminput;
 
 import wicket.ApplicationSettings;
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 import wicket.util.convert.ConverterRegistry;
 import wicket.util.time.Duration;
 

@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WicketServlet;
 
 /**

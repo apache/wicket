@@ -1,8 +1,8 @@
 /*
  * Created on Dec 2, 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated file go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 package wicket.quickstart;
 
@@ -18,7 +18,8 @@ import wicket.WebApplication;
 
 /**
  */
-public class QuickStart extends WebApplication {
+public class QuickStart extends WebApplication
+{
 	/**
 	 * Used for logging.
 	 */
@@ -34,37 +35,48 @@ public class QuickStart extends WebApplication {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		try {
-			URL jettyConfig = new URL(
-					"file:src/main/resources/jetty-config.xml");
-			if (jettyConfig == null) {
-				log
-						.fatal("Unable to locate jetty-test-config.xml on the classpath");
+	public static void main(String[] args)
+	{
+		try
+		{
+			URL jettyConfig = new URL("file:src/main/resources/jetty-config.xml");
+			if (jettyConfig == null)
+			{
+				log.fatal("Unable to locate jetty-test-config.xml on the classpath");
 			}
 			jettyServer = new Server(jettyConfig);
 
 			jettyServer.start();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			log.fatal("Could not start the Jetty server: " + e);
-			if (jettyServer != null) {
-				try {
+			if (jettyServer != null)
+			{
+				try
+				{
 					jettyServer.stop();
-				} catch (InterruptedException e1) {
+				}
+				catch (InterruptedException e1)
+				{
 					log.fatal("Unable to stop the jetty server: " + e1);
 				}
 			}
 		}
 	}
 
-	public QuickStart() {
+	public QuickStart()
+	{
 		ApplicationSettings settings = getSettings();
 		settings.setHomePage(Index.class);
-		if (!Boolean.getBoolean("cache-templates")) {
+		if (!Boolean.getBoolean("cache-templates"))
+		{
 			Duration pollFreq = Duration.ONE_SECOND;
 			settings.setResourcePollFrequency(pollFreq);
 			log.info("template caching is INACTIVE");
-		} else {
+		}
+		else
+		{
 			log.info("template caching is ACTIVE");
 		}
 	}

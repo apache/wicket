@@ -24,7 +24,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 import wicket.markup.html.InternalErrorPage;
 import wicket.markup.html.PageExpiredErrorPage;
 import wicket.markup.html.StaleDataErrorPage;

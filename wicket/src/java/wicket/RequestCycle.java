@@ -15,7 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package wicket;
 
 import java.lang.reflect.Method;
@@ -159,460 +158,456 @@ import wicket.util.lang.Classes;
  */
 public abstract class RequestCycle
 {
-    // TODO finalize javadoc
+	/** Map from class name to Constructor. */
+	private static final Map constructors = new HashMap();
 
-    /** Map from class name to Constructor. */
-    private static final Map constructors = new HashMap();
+	/** Thread-local that holds the current request cycle. */
+	private static final ThreadLocal current = new ThreadLocal();
 
-    /** Thread-local that holds the current request cycle. */
-    private static final ThreadLocal current = new ThreadLocal();
+	/** Map from interface Class to Method. */
+	private static final Map listenerInterfaceMethods = new HashMap();
 
-    /** Map from interface Class to Method. */
-    private static final Map listenerInterfaceMethods = new HashMap();
+	/** Log */
+	private static final Log log = LogFactory.getLog(RequestCycle.class);
 
-    /** Log */
-    private static final Log log = LogFactory.getLog(RequestCycle.class);
+	/** The application object. */
+	protected final Application application;
 
-    /** The application object. */
-    protected final Application application;
+	/** The current request. */
+	protected final Request request;
 
-    /** The current request. */
-    protected final Request request;
+	/** The current response. */
+	protected Response response;
 
-    /** The current response. */
-    protected Response response;
+	/** The session object. */
+	protected final Session session;
 
-    /** The session object. */
-    protected final Session session;
+	/** The page to render to the user. */
+	private Page page;
 
-    /** The page to render to the user. */
-    private Page page;
+	/**
+	 * If the page is set to null, we'll first set the current page to this
+	 * variable. We use this in order to be able to release resources on the
+	 * page and its components.
+	 */
+	private Page pageBackup;
 
-    /**
-     * If the page is set to null, we'll first set the current page to this
-     * variable. We use this in order to be able to release resources on the
-     * page and its components.
-     */
-    private Page pageBackup;
+	/**
+	 * True if request should be redirected to the resulting page instead of
+	 * just rendering it back to the user.
+	 */
+	private boolean redirect;
 
-    /**
-     * True if request should be redirected to the resulting page instead of
-     * just rendering it back to the user.
-     */
-    private boolean redirect;
+	/**
+	 * Gets request cycle for calling thread.
+	 * 
+	 * @return Request cycle for calling thread
+	 */
+	public final static RequestCycle get()
+	{
+		return (RequestCycle)current.get();
+	}
 
-    /**
-     * Gets request cycle for calling thread.
-     * 
-     * @return Request cycle for calling thread
-     */
-    public final static RequestCycle get()
-    {
-        return (RequestCycle)current.get();
-    }
+	/**
+	 * Adds an interface to the map of interfaces that can be invoked by
+	 * outsiders. The interface must have a single method with the signature
+	 * methodName(RequestCycle). NOTE: THIS METHOD IS NOT INTENDED FOR USE BY
+	 * FRAMEWORK CLIENTS.
+	 * 
+	 * @param i
+	 *            The interface class, which must extend IRequestListener.
+	 */
+	public static void registerRequestListenerInterface(final Class i)
+	{
+		// Ensure that i extends IRequestListener
+		if (!IRequestListener.class.isAssignableFrom(i))
+		{
+			throw new IllegalArgumentException("Class " + i + " must extend IRequestListener");
+		}
 
-    /**
-     * Adds an interface to the map of interfaces that can be invoked by
-     * outsiders. The interface must have a single method with the signature
-     * methodName(RequestCycle). NOTE: THIS METHOD IS NOT INTENDED FOR USE BY
-     * FRAMEWORK CLIENTS.
-     * 
-     * @param i
-     *            The interface class, which must extend IRequestListener.
-     */
-    public static void registerRequestListenerInterface(final Class i)
-    {
-        // Ensure that i extends IRequestListener
-        if (!IRequestListener.class.isAssignableFrom(i))
-        {
-            throw new IllegalArgumentException("Class " + i + " must extend IRequestListener");
-        }
+		// Get interface methods
+		final Method[] methods = i.getMethods();
 
-        // Get interface methods
-        final Method[] methods = i.getMethods();
+		// If there is only one method
+		if (methods.length == 1)
+		{
+			// and that method takes no parameters
+			if (methods[0].getParameterTypes().length == 0)
+			{
+				// Save this interface method by the non-qualified class name
+				listenerInterfaceMethods.put(Classes.name(i), methods[0]);
+			}
+			else
+			{
+				throw new IllegalArgumentException("Method in interface " + i
+						+ " cannot have parameters");
+			}
+		}
+		else
+		{
+			throw new IllegalArgumentException("Interface " + i + " can have only one method");
+		}
+	}
 
-        // If there is only one method
-        if (methods.length == 1)
-        {
-            // and that method takes no parameters
-            if (methods[0].getParameterTypes().length == 0)
-            {
-                // Save this interface method by the non-qualified class name
-                listenerInterfaceMethods.put(Classes.name(i), methods[0]);
-            }
-            else
-            {
-                throw new IllegalArgumentException("Method in interface " + i
-                        + " cannot have parameters");
-            }
-        }
-        else
-        {
-            throw new IllegalArgumentException("Interface " + i + " can have only one method");
-        }
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param application
+	 *            The application
+	 * @param session
+	 *            The session
+	 * @param request
+	 *            The request
+	 * @param response
+	 *            The response
+	 */
+	protected RequestCycle(final Application application, final Session session,
+			final Request request, final Response response)
+	{
+		this.application = application;
+		this.session = session;
+		this.request = request;
+		this.response = response;
 
-    /**
-     * Constructor.
-     * 
-     * @param application
-     *            The application
-     * @param session
-     *            The session
-     * @param request
-     *            The request
-     * @param response
-     *            The response
-     */
-    protected RequestCycle(final Application application, final Session session,
-            final Request request, final Response response)
-    {
-        this.application = application;
-        this.session = session;
-        this.request = request;
-        this.response = response;
+		// Set this RequestCycle into ThreadLocal variable
+		current.set(this);
+	}
 
-        // Set this RequestCycle into ThreadLocal variable
-        current.set(this);
-    }
+	/**
+	 * Redirects to any intercept page previously specified by a call to
+	 * redirectToInterceptPage.
+	 * 
+	 * @return True if an original destination was redirected to
+	 * @see RequestCycle#redirectToInterceptPage(Class)
+	 * @see RequestCycle#redirectToInterceptPage(Page)
+	 */
+	public final boolean continueToOriginalDestination()
+	{
+		final String url = session.getInterceptContinuationURL();
+		if (url != null)
+		{
+			response.redirect(url);
 
-    /**
-     * Redirects to any intercept page previously specified by a call to
-     * redirectToInterceptPage.
-     * 
-     * @return True if an original destination was redirected to
-     * @see RequestCycle#redirectToInterceptPage(Class)
-     * @see RequestCycle#redirectToInterceptPage(Page)
-     */
-    public final boolean continueToOriginalDestination()
-    {
-        final String url = session.getInterceptContinuationURL();
-        if (url != null)
-        {
-            response.redirect(url);
+			// Since we are explicitly redirecting to a page already, we do not
+			// want a second redirect to occur automatically
+			setRedirect(false);
 
-            // Since we are explicitly redirecting to a page already, we do not
-            // want a second redirect to occur automatically
-            setRedirect(false);
+			// Reset interception URL
+			session.setInterceptContinuationURL(null);
+			return true;
+		}
+		return false;
+	}
 
-            // Reset interception URL
-            session.setInterceptContinuationURL(null);
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * Gets the application object.
+	 * 
+	 * @return Application interface
+	 */
+	public final Application getApplication()
+	{
+		return application;
+	}
 
-    /**
-     * Gets the application object.
-     * 
-     * @return Application interface
-     */
-    public final Application getApplication()
-    {
-        return application;
-    }
+	/**
+	 * Gets the current page.
+	 * 
+	 * @return The page
+	 */
+	public final Page getPage()
+	{
+		return page;
+	}
 
-    /**
-     * Gets the current page.
-     * 
-     * @return The page
-     */
-    public final Page getPage()
-    {
-        return page;
-    }
+	/**
+	 * Convinience method to get the Page factory
+	 * 
+	 * @return DefaultPageFactory from application settings
+	 */
+	public final IPageFactory getPageFactory()
+	{
+		return getSession().getPageFactory();
+	}
 
-    /**
-     * Convinience method to get the Page factory
-     * 
-     * @return DefaultPageFactory from application settings
-     */
-    public final IPageFactory getPageFactory()
-    {
-        return getSession().getPageFactory();
-    }
+	/**
+	 * Gets whether the page for this request should be redirected.
+	 * 
+	 * @return whether the page for this request should be redirected
+	 */
+	public final boolean getRedirect()
+	{
+		return redirect;
+	}
 
-    /**
-     * Gets whether the page for this request should be redirected.
-     * 
-     * @return whether the page for this request should be redirected
-     */
-    public final boolean getRedirect()
-    {
-        return redirect;
-    }
+	/**
+	 * Gets the request.
+	 * 
+	 * @return Request object
+	 */
+	public final Request getRequest()
+	{
+		return request;
+	}
 
-    /**
-     * Gets the request.
-     * 
-     * @return Request object
-     */
-    public final Request getRequest()
-    {
-        return request;
-    }
+	/**
+	 * Gets the response.
+	 * 
+	 * @return Response object
+	 */
+	public final Response getResponse()
+	{
+		return response;
+	}
 
-    /**
-     * Gets the response.
-     * 
-     * @return Response object
-     */
-    public final Response getResponse()
-    {
-        return response;
-    }
+	/**
+	 * Gets the session.
+	 * 
+	 * @return Session object
+	 */
+	public final Session getSession()
+	{
+		return session;
+	}
 
-    /**
-     * Gets the session.
-     * 
-     * @return Session object
-     */
-    public final Session getSession()
-    {
-        return session;
-    }
+	/**
+	 * Redirects browser to an intermediate page such as a sign-in page.
+	 * 
+	 * @param c
+	 *            The sign in page class
+	 */
+	public final void redirectToInterceptPage(final Class c)
+	{
+		redirectToInterceptPage(getPageFactory().newPage(c));
+	}
 
-    /**
-     * Redirects browser to an intermediate page such as a sign-in page.
-     * 
-     * @param c
-     *            The sign in page class
-     */
-    public final void redirectToInterceptPage(final Class c)
-    {
-        redirectToInterceptPage(getPageFactory().newPage(c));
-    }
+	/**
+	 * Redirects browser to an intermediate page such as a sign-in page.
+	 * 
+	 * @param page
+	 *            The sign in page
+	 */
+	public final void redirectToInterceptPage(final Page page)
+	{
+		// Access was denied. Construct sign in page with
+		session.setInterceptContinuationURL(response.encodeURL(request.getURL()));
+		redirectToPage(page);
+	}
 
-    /**
-     * Redirects browser to an intermediate page such as a sign-in page.
-     * 
-     * @param page
-     *            The sign in page
-     */
-    public final void redirectToInterceptPage(final Page page)
-    {
-        // Access was denied. Construct sign in page with
-        session.setInterceptContinuationURL(response.encodeURL(request.getURL()));
-        redirectToPage(page);
-    }
+	/**
+	 * Renders response for request. NOTE: THIS METHOD IS INTENDED FOR INTERNAL
+	 * USE ONLY AND MAY NOT BE SUPPORTED IN THE FUTURE.
+	 * 
+	 * @throws ServletException
+	 */
+	public final void render() throws ServletException
+	{
+		// Serialize renderings on the session object so that only one page
+		// can be rendered at a time for a given session.
+		synchronized (session)
+		{
+			// Set this request cycle as the active request cycle for the
+			// session for easy access by the page being rendered and any
+			// components on that page
+			session.setRequestCycle(this);
 
-    /**
-     * Renders response for request. NOTE: THIS METHOD IS INTENDED FOR INTERNAL
-     * USE ONLY AND MAY NOT BE SUPPORTED IN THE FUTURE.
-     * 
-     * @throws ServletException
-     */
-    public final void render() throws ServletException
-    {
-        // Serialize renderings on the session object so that only one page
-        // can be rendered at a time for a given session.
-        synchronized (session)
-        {
-            // Set this request cycle as the active request cycle for the
-            // session for easy access by the page being rendered and any
-            // components on that page
-            session.setRequestCycle(this);
+			try
+			{
+				// Render response for request cycle
+				handleRender();
+			}
+			catch (RuntimeException e)
+			{
+				handleRenderingException(e);
+			}
+			finally
+			{
+				// Close the response
+				response.close();
 
-            try
-            {
-                // Render response for request cycle
-                handleRender();
-            }
-            catch (RuntimeException e)
-            {
-                handleRenderingException(e);
-            }
-            finally
-            {
-                // Close the response
-                response.close();
+				// Set the active request cycle back to null since we are
+				// done rendering the requested page
+				session.setRequestCycle(null);
 
-                // Set the active request cycle back to null since we are
-                // done rendering the requested page
-                session.setRequestCycle(null);
+				// Thread is done and should release thread local resources
+				threadDetach();
+			}
+		}
+	}
 
-                // Thread is done and should release thread local resources
-                threadDetach();
-            }
-        }
-    }
+	/**
+	 * Convenience method that sets page on response object.
+	 * 
+	 * @param page
+	 *            The page to render as a response
+	 */
+	public final void setPage(final Page page)
+	{
+		this.page = page;
+	}
 
-    /**
-     * Convenience method that sets page on response object.
-     * 
-     * @param page
-     *            The page to render as a response
-     */
-    public final void setPage(final Page page)
-    {
-        this.page = page;
-    }
+	/**
+	 * Sets whether the page for this request should be redirected.
+	 * 
+	 * @param redirect
+	 *            True if the page for this request cycle should be redirected
+	 *            to rather than directly rendered.
+	 */
+	public final void setRedirect(final boolean redirect)
+	{
+		this.redirect = redirect;
+	}
 
-    /**
-     * Sets whether the page for this request should be redirected.
-     * 
-     * @param redirect
-     *            True if the page for this request cycle should be redirected
-     *            to rather than directly rendered.
-     */
-    public final void setRedirect(final boolean redirect)
-    {
-        this.redirect = redirect;
-    }
+	/**
+	 * Sets response.
+	 * 
+	 * @param response
+	 *            The response
+	 */
+	public void setResponse(final Response response)
+	{
+		this.response = response;
+	}
 
-    /**
-     * Sets response.
-     * 
-     * @param response
-     *            The response
-     */
-    public void setResponse(final Response response)
-    {
-        this.response = response;
-    }
+	/**
+	 * Gets the url for the given page class using the given parameters. THIS
+	 * METHOD IS NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
+	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public abstract String urlFor(final Class pageClass, final PageParameters parameters);
 
-    /**
-     * Gets the url for the given page class using the given parameters. THIS
-     * METHOD IS NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
-     * 
-     * @param pageClass
-     *            Class of page
-     * @param parameters
-     *            Parameters to page
-     * @return Bookmarkable URL to page
-     */
-    public abstract String urlFor(final Class pageClass, final PageParameters parameters);
+	/**
+	 * Gets the url for the given component/ listener interface. THIS METHOD IS
+	 * NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
+	 * 
+	 * @param component
+	 *            Component that has listener interface
+	 * @param listenerInterface
+	 *            The listener interface
+	 * @return A URL that encodes a page, component and interface to call
+	 */
+	public abstract String urlFor(final Component component, final Class listenerInterface);
 
-    /**
-     * Gets the url for the given component/ listener interface. THIS METHOD IS
-     * NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
-     * 
-     * @param component
-     *            Component that has listener interface
-     * @param listenerInterface
-     *            The listener interface
-     * @return A URL that encodes a page, component and interface to call
-     */
-    public abstract String urlFor(final Component component, final Class listenerInterface);
+	/**
+	 * Looks up an interface method by name.
+	 * 
+	 * @param name
+	 *            The interface
+	 * @return The method
+	 * @throws WicketRuntimeException
+	 */
+	protected final Method getInterfaceMethod(final String name)
+	{
+		final Method method = (Method)listenerInterfaceMethods.get(name);
+		if (method == null)
+		{
+			throw new WicketRuntimeException("Attempt to access unknown interface " + name);
+		}
+		return method;
+	}
 
-    /**
-     * Looks up an interface method by name.
-     * 
-     * @param name
-     *            The interface
-     * @return The method
-     * @throws WicketRuntimeException
-     */
-    protected final Method getInterfaceMethod(final String name)
-    {
-        final Method method = (Method)listenerInterfaceMethods.get(name);
-        if (method == null)
-        {
-            throw new WicketRuntimeException("Attempt to access unknown interface " + name);
-        }
-        return method;
-    }
+	/**
+	 * Renders response for request.
+	 */
+	protected abstract void handleRender();
 
-    /**
-     * Renders response for request.
-     */
-    protected abstract void handleRender();
+	/**
+	 * Redirects browser to the given page.
+	 * 
+	 * @param page
+	 *            The page to redirect to
+	 */
+	protected abstract void redirectToPage(final Page page);
 
-    /**
-     * Redirects browser to the given page.
-     * 
-     * @param page
-     *            The page to redirect to
-     */
-    protected abstract void redirectToPage(final Page page);
+	/**
+	 * Sets up to handle a runtime exception thrown during rendering
+	 * 
+	 * @param e
+	 *            The exception
+	 */
+	private void handleRenderingException(RuntimeException e)
+	{
+		// Render a page for the user
+		try
+		{
+			// If application doesn't want debug info showing up for users
+			ApplicationSettings settings = application.getSettings();
+			if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
+			{
+				if (settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
+				{
+					// use internal error page
+					setPage(getPageFactory().newPage(application.getPages().getInternalErrorPage()));
+				}
+				else
+				{
+					// otherwise show full details
+					setPage(new ExceptionErrorPage(e));
+				}
+				// We generally want to redirect the response because we were
+				// in the middle of rendering and the page may end up looking
+				// like spaghetti otherwise
+				redirectToPage(getPage());
+			}
+		}
+		catch (RuntimeException ignored)
+		{
+			// We ignore any problems trying to render the exception display
+			// page because we are just going to rethrow the exception anyway
+			// and the original problem will be displayed on the console by
+			// the container. It's better this way because users of the
+			// framework
+			// will not want to be distracted by any internal problems rendering
+			// a runtime exception error display page.
+		}
 
-    /**
-     * Sets up to handle a runtime exception thrown during rendering
-     * 
-     * @param e
-     *            The exception
-     */
-    private void handleRenderingException(RuntimeException e)
-    {
-        // Render a page for the user
-        try
-        {
-            // If application doesn't want debug info showing up for users
-            ApplicationSettings settings = application.getSettings();
-            if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
-            {
-                if (settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
-                {
-                    // use internal error page
-                    setPage(getPageFactory().newPage(application.getPages().getInternalErrorPage()));
-                }
-                else
-                {
-                    // otherwise show full details
-                    setPage(new ExceptionErrorPage(e));
-                }
-                // We generally want to redirect the response because we were
-                // in the middle of rendering and the page may end up looking
-                // like spaghetti otherwise
-                redirectToPage(getPage());
-            }
-        }
-        catch (RuntimeException ignored)
-        {
-            // We ignore any problems trying to render the exception display
-            // page because we are just going to rethrow the exception anyway
-            // and the original problem will be displayed on the console by
-            // the container. It's better this way because users of the
-            // framework
-            // will not want to be distracted by any internal problems rendering
-            // a runtime exception error display page.
-        }
+		// Rethrow error for console / container
+		throw e;
+	}
 
-        // Rethrow error for console / container
-        throw e;
-    }
+	/**
+	 * Releases the current thread local related resources. The threadlocal of
+	 * this request cycle is reset. If we are in a 'redirect' state, we do not
+	 * want to loose our messages as - e.g. when handling a form - there's a fat
+	 * change we are comming back for the rendering of it.
+	 */
+	private void threadDetach()
+	{
+		if (getRedirect())
+		{
+			// Since we are explicitly redirecting to a page already, we do not
+			// want a second redirect to occur automatically
+			setRedirect(false);
+			if (page != null)
+			{
+				// Copy feedback messages into page
+				page.messages = FeedbackMessages.get();
 
-    /**
-     * Releases the current thread local related resources. The threadlocal of
-     * this request cycle is reset. If we are in a 'redirect' state, we do not
-     * want to loose our messages as - e.g. when handling a form - there's a fat
-     * change we are comming back for the rendering of it.
-     */
-    private void threadDetach()
-    {
-        if (getRedirect())
-        {
-            // Since we are explicitly redirecting to a page already, we do not
-            // want a second redirect to occur automatically
-            setRedirect(false);
-            if (page != null)
-            {
-                // Copy feedback messages into page
-                page.messages = FeedbackMessages.get();
+				// Remove thread local feedback messages
+				FeedbackMessages.remove();
+			}
+			else
+			{
+				// No page, which probably means we are rendering directly
+				// ourselves; as a fallthrough, we have to clear things up
+				FeedbackMessages.threadDetach();
+			}
+		}
+		else
+		{
+			// Clear the ui messages and reset the original component models
+			// the components have had the possibility of rendering the
+			// messages, and the messages are meant for 'one time use' only.
+			FeedbackMessages.threadDetach();
+		}
 
-                // Remove thread local feedback messages
-                FeedbackMessages.remove();
-            }
-            else
-            {
-                // Hmmm, no page, which probably means we are rendering
-                // directely
-                // ourselves; as a fallthrough, we have to clear things up
-                FeedbackMessages.threadDetach();
-            }
-        }
-        else
-        {
-            // Clear the ui messages and reset the original component models
-            // the components have had the possibility of rendering the
-            // messages,
-            // and the messages are meant for 'one time use' only.
-            FeedbackMessages.threadDetach();
-        }
-
-        // Clear ThreadLocal reference
-        current.set(null);
-    }
+		// Clear ThreadLocal reference
+		current.set(null);
+	}
 }
 
 

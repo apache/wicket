@@ -18,7 +18,7 @@
  */
 package wicket.examples.guestbook2;
 
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 
 /**
  * Guest book application.

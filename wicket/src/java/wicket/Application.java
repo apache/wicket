@@ -53,168 +53,182 @@ import wicket.util.watch.ModificationWatcher;
  * Also, there are convenience method in converterRegistry to switch to a
  * localized/ non-localized set of type converters.
  * 
- * @see WebApplication
+ * @see wicket.protocol.http.WebApplication
  * @author Jonathan Locke
  */
 public abstract class Application
 {
-    /** List of (static) ComponentResolvers */
-    private List componentResolvers;
+	/** List of (static) ComponentResolvers */
+	private List componentResolvers;
 
-    /** Registry with type converters */
-    private ConverterRegistry converterRegistry = new ConverterRegistry();
+	/** Registry with type converters */
+	private ConverterRegistry converterRegistry = new ConverterRegistry();
 
-    /** The single application-wide localization class */
-    private final Localizer localizer;
-    
-    /** Name of application subclass. */
-    private final String name;
+	/** The single application-wide localization class */
+	private final Localizer localizer;
 
-    /** ModificationWatcher to watch for changes in markup files */
-    private ModificationWatcher resourceWatcher;
-    
-    /**
-     * Constructor
-     */
-    public Application()
-    {
-        this.name = Classes.name(getClass());
+	/** Name of application subclass. */
+	private final String name;
 
-        // Construct localizer for this application
-        this.localizer = new Localizer(this);
+	/** Pages for application */
+	private final ApplicationPages pages;
 
-        // Install default component resolvers
-        componentResolvers = new ArrayList();
-        componentResolvers.add(new AutolinkComponentResolver());
-        componentResolvers.add(new WicketTagComponentResolver());
-    }
+	/** ModificationWatcher to watch for changes in markup files */
+	private ModificationWatcher resourceWatcher;
 
-    /**
-     * Get the (modifiable) List of ComponentResolvers.
-     * 
-     * @see WicketTagComponentResolver for an example
-     * @return List of ComponentResolvers
-     */
-    public final List getComponentResolvers()
-    {
-        return componentResolvers;
-    }
+	/** Settings for application. */
+	private final ApplicationSettings settings;
 
-    /**
-     * Get converterRegistry.
-     * 
-     * @return converterRegistry.
-     */
-    public final ConverterRegistry getConverterRegistry()
-    {
-        return converterRegistry;
-    }
+	/**
+	 * Constructor
+	 */
+	public Application()
+	{
+		// Create name from subclass
+		this.name = Classes.name(getClass());
 
-    /**
-     * Get instance of de-/encryption class.
-     * 
-     * @return instance of de-/encryption class
-     */
-    public ICrypt getCrypt()
-    {
-        try
-        {
-            final ICrypt crypt = (ICrypt)getSettings().getCryptClass().newInstance();
-            crypt.setKey(getSettings().getEncryptionKey());
-            return crypt;
-        }
-        catch (InstantiationException e)
-        {
-            throw new WicketRuntimeException(
-                    "Encryption/decryption object can not be instantiated", e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new WicketRuntimeException(
-                    "Encryption/decryption object can not be instantiated", e);
-        }
-    }
+		// Consttruct aggregated settings and pages objects
+		this.settings = new ApplicationSettings(this);
+		this.pages = new ApplicationPages();
 
-    /**
-     * @return The application wide localizer instance
-     */
-    public Localizer getLocalizer()
-    {
-        return localizer;
-    }
+		// Construct localizer for this application
+		this.localizer = new Localizer(this);
 
-    /**
-     * Get and initialize a markup parser.
-     *  
-     * @param page Autolinks are resolved relative to a Page.
-     * @return A new MarkupParser
-     */
-    public IMarkupParser getMarkupParser(final Page page)
-    {
-        final ApplicationSettings settings = getSettings();
-        try
-        {
-            final IMarkupParser parser = (IMarkupParser)settings.getMarkupParserClass()
-                    .newInstance();
-            parser.setComponentNameAttribute(settings.getComponentNameAttribute());
-            parser.setWicketNamespace(settings.getWicketNamespace());
-            parser.setStripComments(settings.getStripComments());
-            parser.setCompressWhitespace(settings.getCompressWhitespace());
-            parser.setStripWicketParamTag(settings.getStripWicketParamTag());
-            parser.setAutolinking(settings.getAutomaticLinking());
-            parser.setAutolinkBasePage(page);
-            return parser;
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new WicketRuntimeException("Failed to get markup parser", e);
-        }
-        catch (InstantiationException e)
-        {
-            throw new WicketRuntimeException("Failed to get markup parser", e);
-        }
-    }
+		// Install default component resolvers
+		componentResolvers = new ArrayList();
+		componentResolvers.add(new AutolinkComponentResolver());
+		componentResolvers.add(new WicketTagComponentResolver());
+	}
 
-    /**
-     * Gets the name of this application.
-     * 
-     * @return The application name.
-     */
-    public String getName()
-    {
-        return name;
-    }
+	/**
+	 * Get the (modifiable) List of ComponentResolvers.
+	 * 
+	 * @see WicketTagComponentResolver for an example
+	 * @return List of ComponentResolvers
+	 */
+	public final List getComponentResolvers()
+	{
+		return componentResolvers;
+	}
 
-    /**
-     * Gets special pages for this application
-     * 
-     * @return The pages
-     */
-    public abstract ApplicationPages getPages();
+	/**
+	 * Get converterRegistry.
+	 * 
+	 * @return converterRegistry.
+	 */
+	public final ConverterRegistry getConverterRegistry()
+	{
+		return converterRegistry;
+	}
 
-    /**
-     * @return Resource watcher with polling frequency determined by setting, or
-     *         null if no polling frequency has been set.
-     */
-    public ModificationWatcher getResourceWatcher()
-    {
-        if (resourceWatcher == null)
-        {
-            final Duration pollFrequency = getSettings().getResourcePollFrequency();
-            if (pollFrequency != null)
-            {
-                resourceWatcher = new ModificationWatcher(pollFrequency);
-            }
-        }
-        return resourceWatcher;
-    }
+	/**
+	 * Get instance of de-/encryption class.
+	 * 
+	 * @return instance of de-/encryption class
+	 */
+	public ICrypt getCrypt()
+	{
+		try
+		{
+			final ICrypt crypt = (ICrypt)getSettings().getCryptClass().newInstance();
+			crypt.setKey(getSettings().getEncryptionKey());
+			return crypt;
+		}
+		catch (InstantiationException e)
+		{
+			throw new WicketRuntimeException(
+					"Encryption/decryption object can not be instantiated", e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new WicketRuntimeException(
+					"Encryption/decryption object can not be instantiated", e);
+		}
+	}
 
-    /**
-     * Gets settings for this application.
-     * 
-     * @return The applications settings
-     */
-    public abstract ApplicationSettings getSettings();
+	/**
+	 * @return The application wide localizer instance
+	 */
+	public Localizer getLocalizer()
+	{
+		return localizer;
+	}
+
+	/**
+	 * Get and initialize a markup parser.
+	 * 
+	 * @param page
+	 *            Autolinks are resolved relative to a Page.
+	 * @return A new MarkupParser
+	 */
+	public IMarkupParser getMarkupParser(final Page page)
+	{
+		final ApplicationSettings settings = getSettings();
+		try
+		{
+			final IMarkupParser parser = (IMarkupParser)settings.getMarkupParserClass()
+					.newInstance();
+			parser.setComponentNameAttribute(settings.getComponentNameAttribute());
+			parser.setWicketNamespace(settings.getWicketNamespace());
+			parser.setStripComments(settings.getStripComments());
+			parser.setCompressWhitespace(settings.getCompressWhitespace());
+			parser.setStripWicketParamTag(settings.getStripWicketParamTag());
+			parser.setAutolinking(settings.getAutomaticLinking());
+			parser.setAutolinkBasePage(page);
+			return parser;
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new WicketRuntimeException("Failed to get markup parser", e);
+		}
+		catch (InstantiationException e)
+		{
+			throw new WicketRuntimeException("Failed to get markup parser", e);
+		}
+	}
+
+	/**
+	 * Gets the name of this application.
+	 * 
+	 * @return The application name.
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * @return Application's common pages
+	 */
+	public ApplicationPages getPages()
+	{
+		return pages;
+	}
+
+	/**
+	 * @return Resource watcher with polling frequency determined by setting, or
+	 *         null if no polling frequency has been set.
+	 */
+	public ModificationWatcher getResourceWatcher()
+	{
+		if (resourceWatcher == null)
+		{
+			final Duration pollFrequency = getSettings().getResourcePollFrequency();
+			if (pollFrequency != null)
+			{
+				resourceWatcher = new ModificationWatcher(pollFrequency);
+			}
+		}
+		return resourceWatcher;
+	}
+
+	/**
+	 * @return Application settings
+	 */
+	public ApplicationSettings getSettings()
+	{
+		return settings;
+	}
 }
 
 

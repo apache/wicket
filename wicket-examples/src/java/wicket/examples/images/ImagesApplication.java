@@ -18,7 +18,7 @@
  */
 package wicket.examples.images;
 
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 import wicket.util.time.Duration;
 
 

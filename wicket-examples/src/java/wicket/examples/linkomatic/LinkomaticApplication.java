@@ -18,7 +18,7 @@
  */
 package wicket.examples.linkomatic;
 
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.

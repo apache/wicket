@@ -18,7 +18,7 @@
  */
 package wicket.examples.hellomozilla;
 
-import wicket.WebApplication;
+import wicket.protocol.http.WebApplication;
 
 
 /**
