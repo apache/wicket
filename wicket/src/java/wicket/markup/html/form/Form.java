@@ -329,7 +329,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 			public Object component(final Component component)
 			{
 				// Call validation error handler
-				((IValidationFeedback)component).updateValidationFeedback();
+				((IValidationFeedback)component).updateValidationFeedback(Form.this);
 
 				// Traverse all children
 				return CONTINUE_TRAVERSAL;
@@ -339,7 +339,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		// Call the validation handler that is registered with this form, if any
 		if (validationFeedback != null)
 		{
-			validationFeedback.updateValidationFeedback();
+			validationFeedback.updateValidationFeedback(this);
 		}
 	}
 

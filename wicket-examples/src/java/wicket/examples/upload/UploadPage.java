@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,11 +32,13 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.upload.FileUploadForm;
 import wicket.markup.html.form.upload.UploadModel;
 import wicket.markup.html.form.upload.UploadTextField;
+import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.util.file.Files;
+import wicket.util.file.Folder;
 
 /**
  * Upload example.
@@ -49,13 +51,13 @@ public class UploadPage extends WicketExamplePage
 	private static Log log = LogFactory.getLog(UploadPage.class);
 
 	/** List of files, model for file table. */
-	private final List files = new ArrayList();
+	private List files = new ArrayList();
 
 	/** Reference to listview for easy access. */
 	private FileListView fileListView;
 
-	/** Upload form */
-	private MultipleFilesUploadForm uploadForm;
+	/** Upload folder */
+	private Folder uploadFolder;
 
 	/**
 	 * Constructor.
@@ -65,11 +67,29 @@ public class UploadPage extends WicketExamplePage
 	 */
 	public UploadPage(final PageParameters parameters)
 	{
-		add(new FeedbackPanel("feedback"));
-		add(uploadForm = new MultipleFilesUploadForm("upload"));
-		add(new SimpleUploadForm("simpleUpload"));
-		add(new Label("dir", uploadForm.getUploadFolder().getAbsolutePath()));
-		files.addAll(Arrays.asList(uploadForm.getUploadFolder().list()));
+		// Create feedback panels
+		final FeedbackPanel simpleUploadFeedback = new FeedbackPanel("simpleUploadFeedback");
+		final FeedbackPanel uploadFeedback = new FeedbackPanel("uploadFeedback");
+
+		// Add uploadFeedback to the page itself
+		add(uploadFeedback);
+
+		// Add simple upload form, which is hooked up to its feedback panel by
+		// virtue of that panel being nested in the form.
+		final SimpleUploadForm simpleUploadForm = new SimpleUploadForm("simpleUpload");
+		simpleUploadForm.add(simpleUploadFeedback);
+		add(simpleUploadForm);
+
+		// Add multiple upload form, which is hooked up explicitly to its
+		// feedback panel by passing the feedback panel to the form constructor.
+		final MultipleFilesUploadForm uploadForm = new MultipleFilesUploadForm("upload",
+				uploadFeedback);
+		this.uploadFolder = uploadForm.getUploadFolder();
+		add(uploadForm);
+
+		// Add folder view
+		add(new Label("dir", uploadFolder.getAbsolutePath()));
+		files.addAll(Arrays.asList(uploadFolder.listFiles()));
 		fileListView = new FileListView("fileList", files);
 		add(fileListView);
 	}
@@ -80,7 +100,7 @@ public class UploadPage extends WicketExamplePage
 	private void refreshFiles()
 	{
 		files.clear();
-		files.addAll(Arrays.asList(uploadForm.getUploadFolder().list()));
+		files.addAll(Arrays.asList(uploadFolder.listFiles()));
 		fileListView.invalidateModel();
 	}
 
@@ -125,10 +145,12 @@ public class UploadPage extends WicketExamplePage
 		 * 
 		 * @param name
 		 *            Component name
+		 * @param feedback
+		 *            The feedback component
 		 */
-		public MultipleFilesUploadForm(String name)
+		public MultipleFilesUploadForm(String name, IValidationFeedback feedback)
 		{
-			super(name);
+			super(name, feedback);
 			model1 = new UploadModel();
 			model2 = new UploadModel();
 			// first upload must be given
@@ -158,7 +180,7 @@ public class UploadPage extends WicketExamplePage
 	}
 
 	/**
-	 * table for files.
+	 * List view for files in upload folder.
 	 */
 	private class FileListView extends ListView
 	{
@@ -166,13 +188,13 @@ public class UploadPage extends WicketExamplePage
 		 * Construct.
 		 * 
 		 * @param name
-		 *            component name
-		 * @param object
-		 *            file list
+		 *            Component name
+		 * @param files
+		 *            The file list model
 		 */
-		public FileListView(String name, List object)
+		public FileListView(String name, final List files)
 		{
-			super(name, object);
+			super(name, files);
 		}
 
 		/**
@@ -180,13 +202,12 @@ public class UploadPage extends WicketExamplePage
 		 */
 		protected void populateItem(ListItem listItem)
 		{
-			final String filename = (String)listItem.getModelObject();
-			listItem.add(new Label("file", filename));
+			final File file = (File)listItem.getModelObject();
+			listItem.add(new Label("file", file.getName()));
 			listItem.add(new Link("delete")
 			{
 				public void onClick()
 				{
-					final File file = new File(uploadForm.getUploadFolder(), filename);
 					log.info("Deleting " + file);
 					Files.delete(file);
 					refreshFiles();

@@ -22,6 +22,7 @@ import java.util.Collections;
 import wicket.AttributeModifier;
 import wicket.FeedbackMessage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Form;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -42,8 +43,8 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3385823935971399988L;
 
-	/** The maximum number of messages to show at a time */
-	private int maxMessages = Integer.MAX_VALUE;
+	/** Message view */
+	private final MessageListView messageListView;
 
 	/**
 	 * List for messages.
@@ -58,19 +59,6 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 			super(name, Collections.EMPTY_LIST);
 		}
 
-		/**
-		 * Removes all subcomponents on each render pass, to ensure that the
-		 * dynamic model is always read again.
-		 * 
-		 * @see wicket.Component#onRender()
-		 */
-		protected void onRender()
-		{
-            setModel(getPage().getFeedbackMessages().model());
-			super.onRender();
-			removeAll();
-		}
-        
 		/**
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
@@ -100,8 +88,7 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 			};
 
 			final Label label = new Label("message", message, "message");
-			final AttributeModifier levelModifier = new AttributeModifier(
-					"class", replacementModel);
+			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
 			listItem.add(label);
@@ -114,15 +101,8 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	public FeedbackPanel(final String componentName)
 	{
 		super(componentName);
-		addComponents();
-	}
-
-	/**
-	 * @return Returns the maxMessages.
-	 */
-	public int getMaxMessages()
-	{
-		return maxMessages;
+		this.messageListView = new MessageListView("messages");
+		add(messageListView);
 	}
 
 	/**
@@ -132,28 +112,18 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	 */
 	public void setMaxMessages(int maxMessages)
 	{
-		this.maxMessages = maxMessages;
+		this.messageListView.setViewSize(maxMessages);
 	}
 
 	/**
 	 * Sets an error message to be displayed by this feedback panel.
 	 * 
-	 * @see wicket.markup.html.form.validation.IValidationFeedback#updateValidationFeedback()
+	 * @see IValidationFeedback#updateValidationFeedback(Form)
 	 */
-	public void updateValidationFeedback()
+	public void updateValidationFeedback(final Form form)
 	{
 		// Force re-rendering of the list
-		removeAll();
-		addComponents();
-	}
-
-	/**
-	 * Adds the components to the panel.
-	 */
-	private void addComponents()
-	{
-        final MessageListView view = new MessageListView("messages");
-        view.setViewSize(getMaxMessages());
-		add(view);
+		messageListView.setModel(getPage().getFeedbackMessages().model(form));
+		messageListView.invalidateModel();
 	}
 }

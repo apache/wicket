@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.markup.html.form.Form;
+
 /**
  * Interface to code which gives validation feedback. FeedbackPanel and
  * FormComponentFeedbackBorder both implement this method so they can give the
@@ -37,6 +39,9 @@ public interface IValidationFeedback
 {
 	/**
 	 * Called to update validation feedback
+	 * 
+	 * @param form
+	 *            The form attached to this validation feedback component
 	 */
-	public void updateValidationFeedback();
+	public void updateValidationFeedback(Form form);
 }

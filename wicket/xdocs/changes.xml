@@ -8,6 +8,12 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1149566">
+		Refactored feedback messages code and added a Form parameter to 
+		IValidationFeedback which is used by FeedbackPanel to restrict its 
+		output to just the Form being validated.  This effectively gives us 
+		per-form feedback panels again.  
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1138665">
       	Created MultipartWebRequest class and used that to rework AbstractUploadForm 
       	and FileUploadForm so that validation will work on upload forms.
