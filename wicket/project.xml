@@ -232,6 +232,7 @@
   </build>
   <reports>
     <report>maven-changes-plugin</report>
+    <report>maven-license-plugin</report>
     <report>maven-tasklist-plugin</report>
     <report>maven-javadoc-plugin</report>
     <report>maven-junit-report-plugin</report>
