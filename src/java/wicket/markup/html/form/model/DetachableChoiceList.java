@@ -71,8 +71,8 @@ public abstract class DetachableChoiceList extends ChoiceList
 	{
 		if (!attached)
 		{
-			onAttach();
 			attached = true;
+			onAttach();
 		}
 	}
 
@@ -83,8 +83,8 @@ public abstract class DetachableChoiceList extends ChoiceList
 	{
 		if (attached)
 		{
-			onDetach();
 			attached = false;
+			onDetach();
 		}
 	}
 
