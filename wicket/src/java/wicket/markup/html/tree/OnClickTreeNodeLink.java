@@ -20,7 +20,6 @@ package wicket.markup.html.tree;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
 
 
 /**
@@ -29,7 +28,7 @@ import wicket.markup.MarkupStream;
  *
  * @author Eelco Hillenius
  */
-public class TreeNodeLink extends AbstractTreeNodeLink
+public class OnClickTreeNodeLink extends AbstractTreeNodeLink
 {
     /**
      * Construct.
@@ -37,20 +36,10 @@ public class TreeNodeLink extends AbstractTreeNodeLink
      * @param tree tree component
      * @param node current node (subject)
      */
-    public TreeNodeLink(final String componentName,
+    public OnClickTreeNodeLink(final String componentName,
             final AbstractTree tree, final TreeNodeModel node)
     {
-        super(componentName, tree, node);
-    }
-
-    /**
-     * @see wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
-     */
-    protected final void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-            final ComponentTag openTag)
-    {
-        // Render the body of the link
-        renderBody(cycle, markupStream, openTag);
+    	super(componentName, tree, node);
     }
 
     /**
@@ -58,14 +47,8 @@ public class TreeNodeLink extends AbstractTreeNodeLink
      */
     protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
     {
-        // Can only attach links to anchor tags
-        checkTag(tag, "a");
-
-        // Default handling for tag
-        super.handleComponentTag(cycle, tag);
-
-        // Set href to link to this link's linkClicked method
-        String url = getURL(cycle);
-		tag.put("href", url);
+        // Add simple javascript on click handler that links to this
+        // link's linkClicked method
+        tag.put("onclick", "location.href='"+ getURL(cycle) + "';");
     }
 }

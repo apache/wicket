@@ -160,7 +160,7 @@ public abstract class AbstractTree extends Panel implements ILinkListener
      * Registers a link with this tree.
      * @param link the link to register
      */
-    final void addLink(TreeNodeLink link)
+    final void addLink(AbstractTreeNodeLink link)
     {
         links.put(link.getId(), link);
     }
