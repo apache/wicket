@@ -17,41 +17,29 @@
  */
 package wicket.jonathan.stylesheet;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-
 import wicket.protocol.http.WebResource;
 import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
-import wicket.util.time.Time;
+import wicket.util.resource.StringBufferResource;
 
 /**
  * A stylesheet resource.
  * 
  * @author Jonathan Locke
  */
-public class Stylesheet extends WebResource
+public class OldStylesheet extends WebResource
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 209001445308790198L;
 
 	/** Stylesheet information */
-	private StringBuffer buffer = new StringBuffer();
+	private StringBufferResource resource = new StringBufferResource();
 	
-	/** The last time this stylesheet was modified */
-	private Time lastModified;
-
 	/**
-	 * Adds to this stylesheet
-	 * 
-	 * @param s
-	 *            The string to add
+	 * @param s String to append to stylesheet
 	 */
-	void append(final String s)
+	public void append(final String s)
 	{
-		buffer.append(s);
-		lastModified = Time.now();
+		resource.append(s);
 	}
 	
 	/**
@@ -59,33 +47,6 @@ public class Stylesheet extends WebResource
 	 */
 	protected IResource getResource()
 	{
-		return new IResource()
-		{
-			public String getContentType()
-			{
-				return "text/css";
-			}
-
-			public InputStream getInputStream() throws ResourceNotFoundException
-			{
-				final StringReader reader = new StringReader(buffer.toString());
-				return new InputStream()
-				{
-					public int read() throws IOException
-					{
-						return reader.read();
-					}
-				};
-			}
-
-			public void close() throws IOException
-			{
-			}
-
-			public Time lastModifiedTime()
-			{
-				return lastModified;
-			}			
-		};
+		return resource;
 	}
 }

@@ -17,9 +17,14 @@
  */
 package wicket.jonathan.stylesheet;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+
 import wicket.protocol.http.WebResource;
 import wicket.util.resource.IResource;
-import wicket.util.resource.StringBufferResource;
+import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.time.Time;
 
 /**
  * A stylesheet resource.
@@ -32,14 +37,21 @@ public class Stylesheet extends WebResource
 	private static final long serialVersionUID = 209001445308790198L;
 
 	/** Stylesheet information */
-	private StringBufferResource resource = new StringBufferResource();
+	private StringBuffer buffer = new StringBuffer();
 	
+	/** The last time this stylesheet was modified */
+	private Time lastModified;
+
 	/**
-	 * @param s String to append to stylesheet
+	 * Adds to this stylesheet
+	 * 
+	 * @param s
+	 *            The string to add
 	 */
-	public void append(final String s)
+	void append(final String s)
 	{
-		resource.append(s);
+		buffer.append(s);
+		lastModified = Time.now();
 	}
 	
 	/**
@@ -47,6 +59,33 @@ public class Stylesheet extends WebResource
 	 */
 	protected IResource getResource()
 	{
-		return resource;
+		return new IResource()
+		{
+			public String getContentType()
+			{
+				return "text/css";
+			}
+
+			public InputStream getInputStream() throws ResourceNotFoundException
+			{
+				final StringReader reader = new StringReader(buffer.toString());
+				return new InputStream()
+				{
+					public int read() throws IOException
+					{
+						return reader.read();
+					}
+				};
+			}
+
+			public void close() throws IOException
+			{
+			}
+
+			public Time lastModifiedTime()
+			{
+				return lastModified;
+			}			
+		};
 	}
 }
