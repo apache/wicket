@@ -19,16 +19,23 @@
 package wicket.util.string.interpolator;
 
 /**
- * Interpolates variables from a map into strings. Variables are denoted in the source
- * string by the syntax ${variableName}. When constructed with no String to interpolate,
- * interpolate can be called with a String argument. When constructed with a String or
- * File argument, interpolates into that String or into the contents of the given template
- * file.
+ * Base class for variable interpolators.  An interpolator substitutes 
+ * values into a string.  So a variable interpolator substitutes the 
+ * values of one or more variables into a string.
+ * <p>
+ * The String to interpolate (substitute in) is passed to the 
+ * VariableInterpolator constructor.  Variables are denoted in this 
+ * string by the syntax ${variableName}.  A subclass provides an 
+ * implementation for the abstract method getValue(String variableName).  
+ * The toString() method then performs an interpolation by replacing 
+ * each variable of the form ${variableName} with the value returned 
+ * by getValue("variableName").
+ * 
  * @author Jonathan Locke
  */
 public abstract class VariableInterpolator
-{ // TODO finalize javadoc
-    // The string to interpolate within
+{
+    /** The string to interpolate within */
     protected final String string;
 
     /**

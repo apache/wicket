@@ -21,12 +21,13 @@ package wicket.util.string.interpolator;
 import java.util.Map;
 
 /**
- * Interpolates variables into a string from a map
+ * Interpolates variables into a string from a Map.
+ * 
  * @author Jonathan Locke
  */
 public class MapVariableInterpolator extends VariableInterpolator
-{ // TODO finalize javadoc
-    // Map of variables
+{
+    /** Map of variables */
     private Map variables;
 
     /**

@@ -19,11 +19,12 @@
 package wicket.util.string.interpolator;
 
 /**
- * Convenient way of interpolating system variable values
+ * Convenient way of interpolating system properties.
+ * 
  * @author Jonathan Locke
  */
 public final class SystemVariableInterpolator extends MapVariableInterpolator
-{ // TODO finalize javadoc
+{
     /**
      * Constructor
      * @param string The string to interpolate with system properties
