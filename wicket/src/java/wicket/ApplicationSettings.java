@@ -798,7 +798,7 @@ public class ApplicationSettings
 
     /**
      * Sets the factory class to be used when creating pages.
-     * @param the factory class to be used when creating pages.
+     * @param pageFactory the factory class to be used when creating pages.
      */
     public void setPageFactory(final IPageFactory pageFactory)
     {
