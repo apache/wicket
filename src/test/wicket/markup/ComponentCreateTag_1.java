@@ -27,13 +27,13 @@ import wicket.markup.html.WebPage;
  *
  * @author Chris Turner
  */
-public class ComponentCreateTag extends WebPage 
+public class ComponentCreateTag_1 extends WebPage 
 {
 	/**
 	 * Construct.
 	 * @param parameters
 	 */
-	public ComponentCreateTag(final PageParameters parameters) 
+	public ComponentCreateTag_1(final PageParameters parameters) 
 	{
     }
 }
