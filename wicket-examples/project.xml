@@ -63,14 +63,18 @@
             <email>dashorst at users.sourceforge.net</email>
             <roles/>
         </developer>
+        <developer>
+            <name>Juergen Donnerstag</name>
+            <id>jdonnerstag</id>
+            <email>jdonnerstag at users.sourceforge.net</email>
+            <roles/>
+        </developer>
     </developers>
     <dependencies>
         <dependency>
             <groupId>wicket</groupId>
             <artifactId>wicket</artifactId>
             <version>SNAPSHOT</version>
-            <jar>wicket-SNAPSHOT.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -79,8 +83,6 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.4</version>
-            <jar>dom4j-1.4.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -89,8 +91,6 @@
             <groupId>hibernate</groupId>
             <artifactId>hibernate</artifactId>
             <version>2.1.6</version>
-            <jar>hibernate-2.1.6.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -99,8 +99,6 @@
             <groupId>geronimo-spec</groupId><!-- it's the only jta jar available at Ibiblio! -->
             <artifactId>geronimo-spec-jta</artifactId>
             <version>1.0-M1</version>
-            <jar>geronimo-spec-jta-1.0-M1.jar</jar>
-            <type>jar</type>
  			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -109,8 +107,6 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.4</version>
-            <jar>dom4j-1.4.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -119,8 +115,6 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>2.1</version>
-            <jar>commons-collections-2.1.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -129,8 +123,6 @@
             <groupId>odmg</groupId>
             <artifactId>odmg</artifactId>
             <version>3.0</version>
-            <jar>odmg-3.0.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -139,8 +131,6 @@
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>1.7.2.2</version>
-            <jar>hsqldb-1.7.2.2.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -149,8 +139,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
-            <jar>junit-3.8.1.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>false</war.bundle>
 			</properties>
@@ -159,8 +147,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.8</version>
-            <jar>log4j-1.2.8.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -169,8 +155,6 @@
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
             <version>2.6.5</version>
-            <jar>ognl-2.6.5.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -179,8 +163,6 @@
             <groupId>servletapi</groupId>
             <artifactId>servletapi</artifactId>
             <version>2.3</version>
-            <jar>servletapi-2.3.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>false</war.bundle>
 			</properties>
@@ -189,8 +171,6 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.0.4</version>
-            <jar>commons-logging-1.0.4.jar</jar>
-            <type>jar</type>
 			<properties> <!-- might want to turn this of for Tomcat? -->
 				<war.bundle>true</war.bundle>
 			</properties>
@@ -199,12 +179,18 @@
             <groupId>cglib</groupId>
             <artifactId>cglib-full</artifactId>
             <version>2.0.2</version>
-            <jar>cglib-full-2.0.1.jar</jar>
-            <type>jar</type>
 			<properties>
 				<war.bundle>true</war.bundle>
 			</properties>
         </dependency>
+		<dependency>
+			<id>commons-fileupload</id>
+			<version>1.0</version>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+			<url>http://jakarta.apache.org/commons/beanutils/</url>
+		</dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>

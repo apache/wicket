@@ -70,13 +70,14 @@
             <id>dashorst</id>
             <email>dashorst at users.sourceforge.net</email>
         </developer>
+        <developer>
+            <name>Juergen Donnerstag</name>
+            <id>jdonnerstag</id>
+            <email>jdonnerstag at users.sourceforge.net</email>
+            <roles/>
+        </developer>
     </developers>
     <contributors>
-        <contributor>
-            <name>Juergen Donnerstag</name>
-            <id>-</id>
-            <email>-</email>
-        </contributor>
         <contributor>
             <name>Peter Veenendaal</name>
             <id>-</id>
@@ -88,32 +89,24 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.4</version>
-            <jar>dom4j-1.4.jar</jar>
-            <type>jar</type>
             <properties/>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
-            <jar>junit-3.8.1.jar</jar>
-            <type>jar</type>
             <properties/>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.8</version>
-            <jar>log4j-1.2.8.jar</jar>
-            <type>jar</type>
             <properties/>
         </dependency>
         <dependency>
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
             <version>2.6.5</version>
-            <jar>ognl-2.6.5.jar</jar>
-            <type>jar</type>
             <properties/>
         </dependency>
         <dependency>
@@ -121,9 +114,15 @@
             <artifactId>servletapi</artifactId>
             <version>2.3</version>
             <jar>servletapi-2.3.jar</jar>
-            <type>jar</type>
-            <properties/>
         </dependency>
+		<dependency>
+			<id>commons-fileupload</id>
+			<version>1.0</version>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+			<url>http://jakarta.apache.org/commons/beanutils/</url>
+		</dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
