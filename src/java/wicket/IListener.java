@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @author Jonathan Locke
  */
 public interface IListener extends Serializable
-{
+{ // TODO finalize javadoc
 }
 
 ///////////////////////////////// End of File /////////////////////////////////

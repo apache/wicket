@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Jonathan Locke
  */
 public class MostRecentlyUsedMap extends LinkedHashMap
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID */
 	private static final long serialVersionUID = 895458107686513000L;
 

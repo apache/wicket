@@ -67,7 +67,7 @@ import wicket.markup.html.panel.Panel;
  * @author Eelco Hillenius
  */
 public class Tree extends AbstractTree
-{
+{ // TODO finalize javadoc
     /**
      * Constructor.
      * @param componentName The name of this container

@@ -100,7 +100,7 @@ import wicket.markup.html.HtmlContainer;
  * @author Jonathan Locke
  */
 public abstract class Border extends HtmlContainer
-{
+{ // TODO finalize javadoc
     /** The open tag for this border component. */
     private ComponentTag openTag;
 

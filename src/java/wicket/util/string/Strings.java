@@ -28,7 +28,7 @@ import java.io.StringWriter;
  * @author Jonathan Locke
  */
 public final class Strings
-{
+{ // TODO finalize javadoc
     /**
      * Private constructor prevents construction
      */

@@ -35,7 +35,7 @@ import wicket.Component;
  * @author Chris Turner
  */
 public class BundleStringResourceLoader implements IStringResourceLoader
-{
+{ // TODO finalize javadoc
 	/** The name of the underlying resource bundle. */
 	private String bundleName;
 

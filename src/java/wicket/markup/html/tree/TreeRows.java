@@ -32,7 +32,7 @@ import wicket.markup.html.table.ListView;
  * @author Eelco Hillenius
  */
 public final class TreeRows extends Panel
-{
+{ // TODO finalize javadoc
     /** the holding tree component. */
     private final Tree tree;
 

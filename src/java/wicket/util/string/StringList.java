@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  * @author Jonathan Locke
  */
 public final class StringList extends AbstractStringList
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID */
 	private static final long serialVersionUID = 3913242296604884174L;
 

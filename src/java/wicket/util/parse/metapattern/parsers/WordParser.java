@@ -26,7 +26,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * @author Jonathan Locke
  */
 public final class WordParser extends MetaPatternParser
-{
+{ // TODO finalize javadoc
     // Parse word surrounded by whitespace
     private static final Group word = new Group(MetaPattern.WORD);
 

@@ -26,7 +26,7 @@ import wicket.RequestCycle;
  * @author Jonathan Locke
  */
 public interface ILinkListener extends IListener
-{
+{ // TODO finalize javadoc
     /**
      * Called when a link is clicked
      * @param cycle The request cycle

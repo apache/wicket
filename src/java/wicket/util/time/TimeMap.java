@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Jonathan Locke
  */
 public final class TimeMap
-{
+{ // TODO finalize javadoc
     /** Map from ITimeFrameSource implementing objects to Object values. */
     private final Map sources = new HashMap();
 

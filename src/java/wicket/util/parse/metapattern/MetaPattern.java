@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * @author Jonathan Locke W. Locke
  */
 public class MetaPattern
-{
+{ // TODO finalize javadoc
     // Regexps that are used multiple times in defining meta patterns
     private static final String _DOUBLE_QUOTED_STRING = "\"[^\"]*?\"";
 

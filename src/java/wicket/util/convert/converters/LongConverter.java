@@ -29,7 +29,7 @@ import wicket.util.convert.Converter;
  * </p>
  */
 public final class LongConverter implements Converter
-{
+{ // TODO finalize javadoc
     /**
      * Create a {@link Converter}that will throw a {@link ConversionException}if a
      * conversion error occurs.

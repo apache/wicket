@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
  * @author Jonathan Locke W. Locke
  */
 public class Group extends MetaPattern
-{
+{ // TODO finalize javadoc
     /** The group that this Group is bound to. */
     private int group = -1;
 

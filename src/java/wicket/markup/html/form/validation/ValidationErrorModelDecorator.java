@@ -21,7 +21,7 @@ import wicket.model.Model;
  * </p>
  */
 public final class ValidationErrorModelDecorator extends Model
-{
+{ // TODO finalize javadoc
     /** the decorated model. */
     private IModel originalModel;
 

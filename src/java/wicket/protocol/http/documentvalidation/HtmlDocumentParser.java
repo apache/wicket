@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Chris Turner
  */
 public class HtmlDocumentParser
-{
+{ // TODO finalize javadoc
 
     /** constant for unknown token. */
     public static final int UNKNOWN = -1;

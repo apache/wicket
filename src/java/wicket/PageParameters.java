@@ -28,7 +28,7 @@ import wicket.util.value.ValueMap;
  * @author Jonathan Locke
  */
 public final class PageParameters extends ValueMap
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 1616180011213025532L;
 	

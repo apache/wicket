@@ -32,7 +32,7 @@ import wicket.model.Model;
  * @author Jonathan Locke
  */
 public class ListItem extends HtmlContainer
-{
+{ // TODO finalize javadoc
 	/** The index of the ListItem in the parent listView*/
     private final int index;
 

@@ -36,7 +36,7 @@ import wicket.util.value.ValueMap;
  * @author Eelco Hillenius
  */
 public abstract class SignInPanel extends Panel
-{
+{ // TODO finalize javadoc
     /** field for user name. */
     private TextField username;
 

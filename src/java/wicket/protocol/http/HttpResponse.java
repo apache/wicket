@@ -37,7 +37,7 @@ import wicket.Response;
  * @author Jonathan Locke
  */
 public class HttpResponse extends Response
-{
+{ // TODO finalize javadoc
     /** Log. */
     private static final Log log = LogFactory.getLog(HttpResponse.class);
 	

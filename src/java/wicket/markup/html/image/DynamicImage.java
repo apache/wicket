@@ -37,7 +37,7 @@ import java.io.InputStream;
  * @author Jonathan Locke
  */
 public class DynamicImage extends Image
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 

@@ -23,7 +23,7 @@ package wicket.util.parse.metapattern;
  * @author Jonathan Locke W. Locke
  */
 public final class GroupNotBoundException extends RuntimeException
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 681033790368249415L;
 

@@ -26,7 +26,7 @@ import wicket.protocol.http.HttpRequest;
  * @author Juergen Donnerstag
  */
 public interface IPageFactory
-{
+{ // TODO finalize javadoc
     /**
      * Creates a new page. If Page with PageParameter argument constructor
      * exists, PageParameter will be null.

@@ -24,7 +24,7 @@ package wicket.markup.html.form;
  * @author Juergen Donnerstag
  */
 public interface ICrypt
-{
+{ // TODO finalize javadoc
     /**
      * Encrypts a string.
      * @param plainText

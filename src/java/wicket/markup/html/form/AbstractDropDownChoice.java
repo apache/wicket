@@ -42,7 +42,7 @@ import wicket.model.IModel;
  */
 public abstract class AbstractDropDownChoice extends FormComponent implements
         FormComponent.ICookieValue
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
     private static final long serialVersionUID = -8334966481181600604L;
 

@@ -25,7 +25,7 @@ import wicket.PageParameters;
  * @author Jonathan Locke
  */
 public class PageExpiredErrorPage extends HtmlPage
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = -4566588225634687534L;
 

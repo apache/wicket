@@ -50,7 +50,7 @@ import wicket.markup.html.HtmlContainer;
  * @author Jonathan Locke
  */
 public class Panel extends HtmlContainer
-{
+{ // TODO finalize javadoc
 	/** Serial Version ID */
 	private static final long serialVersionUID = -5449444447932560536L;
 

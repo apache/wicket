@@ -27,7 +27,7 @@ import java.util.Locale;
  * Utiltiy for formatting that works with the given instance of converter registry.
  */
 public final class FormattingUtils
-{
+{ // TODO finalize javadoc
     /** converter registry to use. */
     private final ConverterRegistry converterRegistry;
 

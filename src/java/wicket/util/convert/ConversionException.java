@@ -24,7 +24,7 @@ import java.util.Locale;
  * Thrown for conversion exceptions.
  */
 public final class ConversionException extends RuntimeException
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID */
 	private static final long serialVersionUID = 3751845072374225603L;
 

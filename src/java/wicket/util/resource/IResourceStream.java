@@ -26,7 +26,7 @@ import java.io.InputStream;
  * @author Jonathan Locke
  */
 public interface IResourceStream
-{
+{ // TODO finalize javadoc
     /**
      * @return Returns the inputStream.
      * @throws ResourceNotFoundException

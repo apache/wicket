@@ -22,7 +22,7 @@ package wicket.markup.html.form.validation;
  * Exception class for unexcepted exceptions during validation.
  */
 public final class ValidationException extends RuntimeException
-{
+{ // TODO finalize javadoc
 
     /**
      * Construct.

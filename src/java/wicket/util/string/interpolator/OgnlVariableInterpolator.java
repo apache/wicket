@@ -26,7 +26,7 @@ import ognl.OgnlException;
  * @author Jonathan Locke
  */
 public final class OgnlVariableInterpolator extends VariableInterpolator
-{
+{ // TODO finalize javadoc
     // Map of variables
     private final Object model;
 

@@ -28,7 +28,7 @@ import wicket.Session;
  * @author Jonathan Locke
  */
 public class HttpSession extends Session
-{
+{ // TODO finalize javadoc
 	/** Serial Version ID */
 	private static final long serialVersionUID = -7738551549126761943L;
 	

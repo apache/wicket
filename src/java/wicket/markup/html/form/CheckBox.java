@@ -30,7 +30,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  */
 public final class CheckBox extends FormComponent implements FormComponent.ICookieValue
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 7559827519977114184L;
 

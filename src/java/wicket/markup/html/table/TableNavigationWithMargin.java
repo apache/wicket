@@ -25,7 +25,7 @@ import wicket.RequestCycle;
  * @author Juergen Donnerstag
  */
 public class TableNavigationWithMargin extends TableNavigation
-{
+{ // TODO finalize javadoc
     /** Number of navigation cells left and/or right to keep the current
       * cell somewhere near the middle.
       */

@@ -24,7 +24,7 @@ import java.util.Locale;
  * locale aware converter for doubles.
  */
 public class DoubleLocaleConverter extends DecimalLocaleConverter
-{
+{ // TODO finalize javadoc
     // ----------------------------------------------------------- Constructors
 
     /**

@@ -34,7 +34,7 @@ import java.util.List;
  * @author Eelco Hillenius
  */
 public class TreeStateCache extends VariableHeightLayoutCache implements Serializable
-{
+{ // TODO finalize javadoc
     /** currently selected path. */
     private TreePath selectedPath;
 

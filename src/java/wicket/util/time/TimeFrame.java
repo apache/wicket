@@ -26,7 +26,7 @@ package wicket.util.time;
  * @author Jonathan Locke
  */
 public final class TimeFrame implements ITimeFrameSource
-{
+{ // TODO finalize javadoc
     // Start and end points of this time frame
     private final Time start;
 

@@ -24,7 +24,7 @@ import java.util.Locale;
  * localized long converter.
  */
 public class LongLocaleConverter extends DecimalLocaleConverter
-{
+{ // TODO finalize javadoc
     // ----------------------------------------------------------- Constructors
 
     /**

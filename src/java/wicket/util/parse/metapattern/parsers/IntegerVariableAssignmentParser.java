@@ -27,7 +27,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * @author Jonathan Locke W. Locke
  */
 public final class IntegerVariableAssignmentParser extends MetaPatternParser
-{
+{ // TODO finalize javadoc
     /** Parse "variable = <number>". */
     private static final Group variable = new Group(MetaPattern.VARIABLE_NAME);
 

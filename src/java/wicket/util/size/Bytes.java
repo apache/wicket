@@ -35,7 +35,7 @@ import wicket.util.value.LongValue;
  * @author Jonathan Locke
  */
 public final class Bytes extends LongValue
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID. */
 	private static final long serialVersionUID = -2131507164691475126L;
 	

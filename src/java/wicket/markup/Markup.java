@@ -28,7 +28,7 @@ import wicket.util.resource.Resource;
  * @author Jonathan Locke
  */
 public final class Markup
-{
+{ // TODO finalize javadoc
     // The file where the markup was found for diagnostic purposes
     private final Resource resource;
 

@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Jonathan Locke
  */
 public class MapVariableInterpolator extends VariableInterpolator
-{
+{ // TODO finalize javadoc
     // Map of variables
     private Map variables;
 

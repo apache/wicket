@@ -78,7 +78,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public abstract class Session implements Serializable
-{
+{ // TODO finalize javadoc
     /** Thread-local current session. */
     private static final ThreadLocal current = new ThreadLocal();
 

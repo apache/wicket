@@ -23,7 +23,7 @@ package wicket.markup;
  * @author Jonathan Locke
  */
 final class RawMarkup extends MarkupElement
-{
+{ // TODO finalize javadoc
     // The raw markup string
     private final String string;
 

@@ -33,7 +33,7 @@ import wicket.util.time.Time;
  * @author Jonathan Locke
  */
 public class StringValue
-{
+{ // TODO finalize javadoc
     /** The underlying string. */
     private final String text;
 

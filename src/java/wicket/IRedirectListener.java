@@ -23,7 +23,7 @@ package wicket;
  * @author Jonathan Locke
  */
 public interface IRedirectListener extends IListener
-{
+{ // TODO finalize javadoc
     /**
      * Called when a page redirect happens.
      * @param cycle The request cycle

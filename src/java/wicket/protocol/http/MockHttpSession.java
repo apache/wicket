@@ -35,7 +35,7 @@ import wicket.util.value.ValueMap;
  * @author Chris Turner
  */
 public class MockHttpSession implements HttpSession, Serializable
-{
+{ // TODO finalize javadoc
 
 	/** Serial Version ID */
 	private static final long serialVersionUID = 7638042159794505659L;

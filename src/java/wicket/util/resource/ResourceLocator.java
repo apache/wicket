@@ -44,7 +44,7 @@ import java.util.Locale;
  * @author Juergen Donnerstag
  */
 abstract class ResourceLocator 
-{
+{ // TODO finalize javadoc
 	/**
 	 * Locate a resource. See above for more details.
 	 * 

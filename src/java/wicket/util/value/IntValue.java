@@ -29,7 +29,7 @@ import wicket.util.lang.Primitives;
  * @author Jonathan Locke
  */
 public class IntValue implements Comparable, Serializable
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1458111047822645764L;
 	

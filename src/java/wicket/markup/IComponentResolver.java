@@ -29,7 +29,7 @@ import wicket.RequestCycle;
  * @author Juergen Donnerstag
  */
 public interface IComponentResolver
-{
+{ // TODO finalize javadoc
     /**
      * Try to resolve the component name, than create a component,
      * add it to the container and render the compoent.

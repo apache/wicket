@@ -32,7 +32,7 @@ import wicket.util.string.StringValue;
  * @author Jonathan Locke
  */
 public final class TagParser
-{
+{ // TODO finalize javadoc
     private static final Pattern TAG_NAME_PATTERN =
         Pattern.compile("\\s*(\\w+)\\s*");
 

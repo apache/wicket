@@ -34,7 +34,7 @@ import wicket.markup.html.link.Link;
  * @author Eelco Hillenius
  */
 public abstract class AbstractTreeNodeLink extends AbstractLink
-{
+{ // TODO finalize javadoc
 	/** the request parameter for the link id; value == 'lid'. */
 	public static final String REQUEST_PARAMETER_LINK_ID = "lid";
 

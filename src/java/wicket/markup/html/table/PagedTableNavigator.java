@@ -33,7 +33,7 @@ import wicket.markup.html.panel.Panel;
  * @author Juergen Donnerstag
  */
 public class PagedTableNavigator extends Panel 
-{
+{ // TODO finalize javadoc
     private final TableNavigation tableNavigation;
     
     /**

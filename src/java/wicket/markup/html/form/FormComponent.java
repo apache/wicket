@@ -40,7 +40,7 @@ import wicket.util.string.StringList;
  * @author Eelco Hillenius
  */
 public abstract class FormComponent extends HtmlContainer
-{
+{ // TODO finalize javadoc
     /** The validator or validator list for this component. */
     private IValidator validator = IValidator.NULL;
 

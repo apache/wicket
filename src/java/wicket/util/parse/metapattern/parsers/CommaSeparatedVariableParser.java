@@ -25,7 +25,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * @author Jonathan Locke W. Locke
  */
 public final class CommaSeparatedVariableParser extends ListParser
-{
+{ // TODO finalize javadoc
     /** pattern to use. */
     private static final MetaPattern patternEntry = new MetaPattern(new MetaPattern[] {
             MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.STRING, MetaPattern.OPTIONAL_WHITESPACE});

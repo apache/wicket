@@ -27,7 +27,7 @@ package wicket.util.string.interpolator;
  * @author Jonathan Locke
  */
 public abstract class VariableInterpolator
-{
+{ // TODO finalize javadoc
     // The string to interpolate within
     protected final String string;
 

@@ -27,7 +27,7 @@ import java.rmi.server.UID;
  * @author Eelco Hillenius
  */
 public final class IdWrappedUserObject implements Serializable
-{
+{ // TODO finalize javadoc
 	/** the wrapped tree node's user object. */
 	private final Serializable userObject;
 

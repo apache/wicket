@@ -36,7 +36,7 @@ import wicket.util.lang.EnumeratedType;
  * @author Jonathan Locke
  */
 public final class RadioOptionSet extends FormComponent
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 2552126944567296644L;
 

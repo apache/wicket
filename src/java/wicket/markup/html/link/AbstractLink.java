@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  */
 public abstract class AbstractLink extends HtmlContainer implements ILinkListener
-{
+{ // TODO finalize javadoc
     static
     {
         // Allow calls through the ILinkListener interface

@@ -32,7 +32,7 @@ import wicket.util.file.File;
  * @author Jonathan Locke
  */
 public final class FileResponse extends Response
-{
+{ // TODO finalize javadoc
     // Writer to write to
     private final PrintWriter out;
 

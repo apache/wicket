@@ -28,7 +28,7 @@ import wicket.Response;
  * @author Jonathan Locke
  */
 public final class StringResponse extends Response
-{
+{ // TODO finalize javadoc
     // Writer to write to
     private final StringWriter out;
 

@@ -27,7 +27,7 @@ import wicket.util.parse.metapattern.OptionalMetaPattern;
  * @author Jonathan Locke
  */
 public final class VariableAssignmentParser extends MetaPatternParser
-{
+{ // TODO finalize javadoc
     // Parse variable = 9 and variable = "string" syntaxes 
     // and variable (without =... like e.g. <html xmlns:wicket>)
     private static final MetaPattern namespace = new OptionalMetaPattern(

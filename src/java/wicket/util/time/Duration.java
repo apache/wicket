@@ -35,7 +35,7 @@ import wicket.util.thread.ICode;
  * @author Jonathan Locke
  */
 public final class Duration extends AbstractTimeValue
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1212559549133827631L;
 

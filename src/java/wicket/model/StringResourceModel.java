@@ -169,7 +169,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * @author Chris Turner
  */
 public class StringResourceModel extends DetachableModel
-{
+{ // TODO finalize javadoc
 	/** Serial Version ID */
 	private static final long serialVersionUID = 6659487382203513733L;
 

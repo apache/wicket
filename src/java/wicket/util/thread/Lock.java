@@ -23,7 +23,7 @@ package wicket.util.thread;
  * @author Jonathan Locke
  */
 public final class Lock
-{
+{ // TODO finalize javadoc
 }
 
 ///////////////////////////////// End of File /////////////////////////////////

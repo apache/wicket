@@ -27,7 +27,7 @@ import wicket.util.resource.Resource;
  * @author Jonathan Locke
  */
 public final class MarkupException extends RenderException
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 8431706931407810523L;
 	

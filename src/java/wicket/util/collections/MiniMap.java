@@ -32,7 +32,7 @@ import java.util.Set;
  * @author Jonathan Locke
  */
 public final class MiniMap implements Map, Serializable
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID */
 	private static final long serialVersionUID = 5304939100732595513L;
 

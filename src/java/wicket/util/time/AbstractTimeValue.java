@@ -26,7 +26,7 @@ import wicket.util.value.LongValue;
  * @author Jonathan Locke
  */
 abstract class AbstractTimeValue extends LongValue
-{
+{ // TODO finalize javadoc
     /**
      * Package local constructor for package subclasses only
      * @param milliseconds The number of milliseconds in this time value

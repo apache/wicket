@@ -35,7 +35,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  */
 public final class RadioChoice extends FormComponent implements FormComponent.ICookieValue
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = -1560593550286375796L;
 

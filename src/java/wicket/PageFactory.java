@@ -43,7 +43,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
  * @author Juergen Donnerstag
  */
 public class PageFactory implements IPageFactory
-{
+{ // TODO finalize javadoc
     /** Logging */
     private final Log log = LogFactory.getLog(PageFactory.class);
 

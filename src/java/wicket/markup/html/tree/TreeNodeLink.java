@@ -30,7 +30,7 @@ import wicket.markup.MarkupStream;
  * @author Eelco Hillenius
  */
 public class TreeNodeLink extends AbstractTreeNodeLink
-{
+{ // TODO finalize javadoc
     /**
      * Construct.
      * @param componentName name of component

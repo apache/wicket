@@ -34,7 +34,7 @@ import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
  * @author Eelco Hillenius
  */
 public interface IFormValidationDelegate
-{
+{ // TODO finalize javadoc
 	/**
 	 * Validates the form and return the collected feeback messages.
 	 * @param form the form that the validation is applied to

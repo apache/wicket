@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Chris Turner
  */
 public class HtmlDocumentValidator
-{
+{ // TODO finalize javadoc
 
     private final List elements = new ArrayList();
 

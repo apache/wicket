@@ -27,7 +27,7 @@ import wicket.util.convert.Formatter;
  * Formatter that uses a locale.
  */
 public interface LocaleFormatter extends Formatter
-{
+{ // TODO finalize javadoc
     /**
      * Set the locale for this instance.
      * @param locale the locale for this instance

@@ -35,7 +35,7 @@ import wicket.util.resource.ResourceNotFoundException;
  * @author Jonathan Locke
  */
 public interface IMarkupParser
-{
+{ // TODO finalize javadoc
     /** 
      * Name of desired componentName tag attribute.
      * @param name component name 

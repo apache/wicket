@@ -27,7 +27,7 @@ import wicket.RequestCycle;
  * of implementing this interface directely.
  */
 public interface IDetachableModel extends IModel
-{
+{ // TODO finalize javadoc
     /**
      * Detach from a request.
      * @param cycle the request cycle

@@ -52,7 +52,7 @@ import wicket.util.value.ValueMap;
  * @author Juergen Donnerstag
  */
 public class AutolinkComponentResolver implements IComponentResolver
-{
+{ // TODO finalize javadoc
     /** Logging */
     private static Log log = LogFactory.getLog(AutolinkComponentResolver.class);
 

@@ -52,7 +52,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  */
 public abstract class Link extends AbstractLink
-{
+{ // TODO finalize javadoc
 
     /** True if link should automatically enable/disable based on current page. */
     private boolean autoEnable = true;

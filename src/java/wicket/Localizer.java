@@ -35,7 +35,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * @see ApplicationSettings#getLocalizer()
  */
 public class Localizer
-{
+{ // TODO finalize javadoc
 	/** The settings to use to control the utils. */
 	private ApplicationSettings settings;
 

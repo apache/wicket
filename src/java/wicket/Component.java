@@ -81,7 +81,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  */
 public abstract class Component implements Serializable
-{
+{ // TODO finalize javadoc
     /** The model for this component. */
     private IModel model;
 

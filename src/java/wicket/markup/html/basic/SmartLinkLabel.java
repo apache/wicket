@@ -46,7 +46,7 @@ import wicket.model.PropertyModel;
  * @author Juergen Donnerstag
  */
 public final class SmartLinkLabel extends Label
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = -7233978520420675223L;
 

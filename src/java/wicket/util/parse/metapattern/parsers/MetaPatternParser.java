@@ -28,7 +28,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * @author Jonathan Locke W. Locke
  */
 public abstract class MetaPatternParser
-{
+{ // TODO finalize javadoc
     protected final CharSequence input;
 
     protected final int length;

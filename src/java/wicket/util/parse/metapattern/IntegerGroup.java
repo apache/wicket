@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
  * @author Jonathan Locke W. Locke
  */
 public final class IntegerGroup extends Group
-{
+{ // TODO finalize javadoc
     /** the radix. */
     private final int radix;
 

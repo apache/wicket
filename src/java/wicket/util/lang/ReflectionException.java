@@ -22,7 +22,7 @@ package wicket.util.lang;
  * @author Jonathan Locke
  */
 public final class ReflectionException extends RuntimeException
-{
+{ // TODO finalize javadoc
 	/** serialVersionUID */
 	private static final long serialVersionUID = 5357786064574742122L;
 

@@ -36,7 +36,7 @@ import java.util.Map;
  * @author Jonathan Locke
  */
 public class HttpRequest extends Request
-{
+{ // TODO finalize javadoc
     /** Servlet request information. */
     private final HttpServletRequest servletRequest;
 

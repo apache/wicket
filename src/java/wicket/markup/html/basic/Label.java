@@ -77,7 +77,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  */
 public class Label extends HtmlComponent
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = -2180588252471379004L;
 

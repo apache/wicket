@@ -23,7 +23,7 @@ package wicket;
  * @author Jonathan Locke
  */
 public class RenderException extends RuntimeException
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 3796104527069637919L;
 

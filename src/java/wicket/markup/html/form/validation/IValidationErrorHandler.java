@@ -27,7 +27,7 @@ import wicket.FeedbackMessages;
  * @author Eelco Hillenius
  */
 public interface IValidationErrorHandler
-{
+{ // TODO finalize javadoc
     /**
      * Called when any validation errors were encountered.
      * @param errors the structure where navigation errors are recorded in.

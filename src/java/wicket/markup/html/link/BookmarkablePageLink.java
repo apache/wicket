@@ -27,7 +27,7 @@ import wicket.RequestCycle;
  * @author Jonathan Locke
  */
 public final class BookmarkablePageLink extends Link
-{
+{ // TODO finalize javadoc
     /** Serial Version ID */
 	private static final long serialVersionUID = 2396751463296314926L;
 

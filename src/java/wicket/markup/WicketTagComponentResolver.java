@@ -38,7 +38,7 @@ import wicket.util.string.StringValueConversionException;
  * @author Juergen Donnerstag
  */
 public class WicketTagComponentResolver implements IComponentResolver
-{
+{ // TODO finalize javadoc
     /** Logging */
     private static Log log = LogFactory.getLog(WicketTagComponentResolver.class);
 
