@@ -42,33 +42,46 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SunJceCrypt extends AbstractCrypt implements ICrypt
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(SunJceCrypt.class);
-
-	/** Name of encryption method */
-	private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
-
-	/** Salt */
-	private final static byte[] salt = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
-			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc };
-
 	/**
 	 * Iteration count used in combination with the salt to create the
 	 * encryption key.
 	 */
 	private final static int count = 17;
 
-	static
-	{
-		// Initialize and add a security provider required for encryption
-		Security.addProvider(new com.sun.crypto.provider.SunJCE());
-	}
+	/** Name of encryption method */
+	private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
+	
+	/** Log. */
+	private static Log log = LogFactory.getLog(SunJceCrypt.class);
+
+	/** Salt */
+	private final static byte[] salt = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
+			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc };
 
 	/**
 	 * Constructor
 	 */
 	public SunJceCrypt()
 	{
+	}
+
+	/**
+	 * Crypts the given byte array
+	 * 
+	 * @param input
+	 *            byte array to be crypted
+	 * @param mode
+	 *            crypt mode
+	 * @return the input crypted. Null in case of an error
+	 * @throws GeneralSecurityException
+	 */
+	protected final byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException
+	{
+		SecretKey key = generateSecretKey();
+		PBEParameterSpec spec = new PBEParameterSpec(salt, count);
+		Cipher ciph = Cipher.getInstance(CRYPT_METHOD);
+		ciph.init(mode, key, spec);
+		return ciph.doFinal(input);
 	}
 
 	/**
@@ -90,22 +103,9 @@ public class SunJceCrypt extends AbstractCrypt implements ICrypt
 		return SecretKeyFactory.getInstance(CRYPT_METHOD).generateSecret(spec);
 	}
 
-	/**
-	 * Crypts the given byte array
-	 * 
-	 * @param input
-	 *            byte array to be crypted
-	 * @param mode
-	 *            crypt mode
-	 * @return the input crypted. Null in case of an error
-	 * @throws GeneralSecurityException
-	 */
-	protected final byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException
+	static
 	{
-		SecretKey key = generateSecretKey();
-		PBEParameterSpec spec = new PBEParameterSpec(salt, count);
-		Cipher ciph = Cipher.getInstance(CRYPT_METHOD);
-		ciph.init(mode, key, spec);
-		return ciph.doFinal(input);
+		// Initialize and add a security provider required for encryption
+		Security.addProvider(new com.sun.crypto.provider.SunJCE());
 	}
 }

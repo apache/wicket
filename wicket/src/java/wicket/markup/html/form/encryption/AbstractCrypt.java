@@ -36,11 +36,11 @@ import wicket.WicketRuntimeException;
  */
 public abstract class AbstractCrypt implements ICrypt
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(AbstractCrypt.class);
-
 	/** Default encryption key */
 	private static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-CrYpT";
+	
+	/** Log. */
+	private static Log log = LogFactory.getLog(AbstractCrypt.class);
 	
 	/** Key used to de-/encrypt the data */
 	private String encryptionKey = DEFAULT_ENCRYPTION_KEY;
@@ -53,50 +53,15 @@ public abstract class AbstractCrypt implements ICrypt
 	}
 
 	/**
-	 * Set encryption private key
+	 * Decrypts a string into a string.
 	 * 
-	 * @param key
-	 *            private key to make de-/encryption unique
+	 * @param text
+	 *            text to decript
+	 * @return the decrypted text
 	 */
-	public void setKey(final String key)
+	public final String decryptString(final String text)
 	{
-		this.encryptionKey = key;
-	}
-
-	/**
-	 * Get encryption private key
-	 * 
-	 * @return encryption private key
-	 */
-	public String getKey()
-	{
-	    return this.encryptionKey;
-	}
-
-	/**
-	 * Crypts the given byte array
-	 * 
-	 * @param input
-	 *            byte array to be crypted
-	 * @param mode
-	 *            crypt mode
-	 * @return the input crypted. Null in case of an error
-	 * @throws GeneralSecurityException
-	 */
-	protected abstract byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException;
-
-	/**
-	 * Encrypts the given text into a byte array.
-	 * 
-	 * @param plainText
-	 *            text to encrypt
-	 * @return the string encrypted
-	 * @throws GeneralSecurityException
-	 */
-	private final byte[] encryptStringToByteArray(final String plainText)
-			throws GeneralSecurityException
-	{
-		return crypt(plainText.getBytes(), Cipher.ENCRYPT_MODE);
+		return new String(decryptStringToByteArray(text));
 	}
 
 	/**
@@ -119,6 +84,39 @@ public abstract class AbstractCrypt implements ICrypt
 			return null;
 		}
 	}
+
+	/**
+	 * Get encryption private key
+	 * 
+	 * @return encryption private key
+	 */
+	public String getKey()
+	{
+	    return this.encryptionKey;
+	}
+
+	/**
+	 * Set encryption private key
+	 * 
+	 * @param key
+	 *            private key to make de-/encryption unique
+	 */
+	public void setKey(final String key)
+	{
+		this.encryptionKey = key;
+	}
+
+	/**
+	 * Crypts the given byte array
+	 * 
+	 * @param input
+	 *            byte array to be crypted
+	 * @param mode
+	 *            crypt mode
+	 * @return the input crypted. Null in case of an error
+	 * @throws GeneralSecurityException
+	 */
+	protected abstract byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException;
 
 	/**
 	 * Decrypts a String into a byte array.
@@ -147,14 +145,16 @@ public abstract class AbstractCrypt implements ICrypt
 	}
 
 	/**
-	 * Decrypts a string into a string.
+	 * Encrypts the given text into a byte array.
 	 * 
-	 * @param text
-	 *            text to decript
-	 * @return the decrypted text
+	 * @param plainText
+	 *            text to encrypt
+	 * @return the string encrypted
+	 * @throws GeneralSecurityException
 	 */
-	public final String decryptString(final String text)
+	private final byte[] encryptStringToByteArray(final String plainText)
+			throws GeneralSecurityException
 	{
-		return new String(decryptStringToByteArray(text));
+		return crypt(plainText.getBytes(), Cipher.ENCRYPT_MODE);
 	}
 }
