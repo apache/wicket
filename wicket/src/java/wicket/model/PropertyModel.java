@@ -29,7 +29,6 @@ import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.util.convert.ConversionUtils;
 import wicket.util.convert.ConverterRegistry;
 import wicket.util.convert.FormattingUtils;
 
@@ -129,7 +128,7 @@ public class PropertyModel extends DetachableModel
 
     /**
      * This class is registered with the Ognl context before parsing in order to
-     * be abel to use our converters. It implements Ognl TypeConverter and uses
+     * be able to use our converters. It implements Ognl TypeConverter and uses
      * the ConverterRegistry to lookup converters. If no converter is found for
      * a given type, the default conversion of Ognl is used.
      */
@@ -162,19 +161,17 @@ public class PropertyModel extends DetachableModel
                 return null;
             }
 
-            if ((!toType.isArray()) && value instanceof String[] && (((String[])value).length == 1))
+            if (!toType.isArray() && value instanceof String[] && ((String[])value).length == 1)
             {
                 value = ((String[])value)[0];
             }
 
-            if ((value instanceof String) && ((String)value).trim().equals(""))
+            if (value instanceof String && ((String)value).trim().equals(""))
             {
                 return null;
             }
 
-            ConversionUtils conversionUtils = converterRegistry.getConversionUtils();
-
-            return conversionUtils.convert(value, toType, getLocale());
+            return converterRegistry.getConversionUtils().convert(value, toType, getLocale());
         }
 
         /**
@@ -282,7 +279,7 @@ public class PropertyModel extends DetachableModel
      */
     public Object getObject()
     {
-        if ((getExpression() == null) || (getExpression().trim().length() == 0))
+        if (getExpression() == null || getExpression().trim().length() == 0)
         {
             // No expression will cause OGNL to throw an exception. The OGNL
             // expression to return the current object is "#this". Instead
@@ -451,7 +448,7 @@ public class PropertyModel extends DetachableModel
     {
         if (context == null)
         {
-            // setup ognl context for this request
+            // Setup ognl context for this request
             this.context = new OgnlContext();
             context.setTypeConverter(new OgnlConverterWrapper());
         }
