@@ -17,9 +17,6 @@
  */
 package wicket.markup.html.list;
 
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
-import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -53,44 +50,12 @@ public class PageableListViewNavigator extends Panel
 		this.pageableListViewNavigation = newNavigation(pageableListView);
 		add(pageableListViewNavigation);
 
-		// model = null; the headline test will be auto-generated during
-		// handleBody.
-		add(new Label("headline", null)
-		{
-			// Dynamically - at runtime - create the text
-			protected void onComponentTagBody(final MarkupStream markupStream,
-					final ComponentTag openTag)
-			{
-				String text = getHeadlineText(pageableListView);
-				replaceComponentTagBody(markupStream, openTag, text);
-			}
-		});
-
 		// Add additional page links
 		add(new PageableListViewNavigationLink("first", pageableListView, 0));
 		add(new PageableListViewNavigationIncrementLink("prev", pageableListView, -1));
 		add(new PageableListViewNavigationIncrementLink("next", pageableListView, 1));
 		add(new PageableListViewNavigationLink("last", pageableListView, pageableListView
 				.getPageCount() - 1));
-	}
-
-	/**
-	 * Subclasses may override it to provide their own text.
-	 * 
-	 * @param pageableListView
-	 *            the pageable list view
-	 * @return head line text
-	 */
-	protected String getHeadlineText(final PageableListView pageableListView)
-	{
-		int firstListItem = pageableListView.getCurrentPage() * pageableListView.getRowsPerPage();
-		StringBuffer buf = new StringBuffer(80);
-		buf.append(String.valueOf(pageableListView.getList().size())).append(
-				" items found, displaying ").append(String.valueOf(firstListItem + 1)).append(
-				" to ").append(String.valueOf(firstListItem + pageableListView.getRowsPerPage()))
-				.append(".");
-
-		return buf.toString();
 	}
 
 	/**
