@@ -146,15 +146,15 @@ public class FormInput extends HtmlPage
 
 				public ValidationErrorMessage validate(FormComponent component)
 				{
-                    final String input = component.getStringValue();
-					int value = Integer.parseInt(input.toString());
+					String componentInput = component.getStringValue();
+					int value = Integer.parseInt(componentInput);
 					if((value < 0) || (value > 100))
 					{
 						Map vars = new HashMap();
-						vars.put("input", input);
+						vars.put("input", componentInput);
 						vars.put("lower", "0");
 						vars.put("upper", "100");
-						return errorMessage("error.outOfRange", vars, input, component);
+						return errorMessage("error.outOfRange", vars, componentInput, component);
 					}
 					return ValidationErrorMessage.NO_MESSAGE; // same as null
 				}

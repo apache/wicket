@@ -96,7 +96,7 @@ public final class SignIn extends HtmlPage
             else
             {
                 // Form method that will notify feedback panel
-                handleError(new ValidationErrorMessage(null, this, "Couldn't sign you in"));
+                handleError(new ValidationErrorMessage(this, "Couldn't sign you in"));
             }
         }
     }
