@@ -7,6 +7,13 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="update" dev="Jonathan Locke" issue="">
+		Restructed image component hierarchy to deal with clustering issues that
+		Chris brought up.  Changed example to demonstrate both BufferedDynamicImages
+		(which will have a potentially large size when replicated across a cluster)
+		and DynamicImages which draw themselves when they are requested.  Caching
+		issues are not addressed by this change, but I will be working on that soon.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1119560">
       	Restructured class hierarchy for converters a little so that all integral
       	converters such as IntegerConverter extend AbstractIntegerConverter. 

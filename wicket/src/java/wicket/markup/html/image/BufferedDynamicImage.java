@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.image;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -28,63 +27,39 @@ import java.awt.image.BufferedImage;
  * 
  * @author Jonathan Locke
  */
-public abstract class DynamicImage extends AbstractDynamicImage
+public class BufferedDynamicImage extends AbstractDynamicImage
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 
-	/** Height of image */
-	private final int height;
-
-	/** Width of image */
-	private final int width;
+	/** The byte array holding the contents of the dynamic image */
+	private byte[] imageData;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param name
 	 *            Component name
-	 * @param width
-	 *            Width of image
-	 * @param height
-	 *            Height of image
 	 */
-	public DynamicImage(String name, int width, int height)
+	public BufferedDynamicImage(final String name)
 	{
 		super(name);
-		this.width = width;
-		this.height = height;
 	}
 
 	/**
-	 * @return Returns the width.
+	 * @param image
+	 *            The image to set
 	 */
-	public int getWidth()
+	public void setImage(final BufferedImage image)
 	{
-		return width;
+		imageData = toImageData(image);
 	}
 
 	/**
-	 * @return Returns the height.
+	 * @see wicket.markup.html.image.AbstractDynamicImage#getImageData()
 	 */
-	public int getHeight()
+	protected byte[] getImageData()
 	{
-		return height;
+		return imageData;
 	}
-
-	/**
-	 * @return The image data for this dynamic image
-	 */
-	public byte[] getImageData()
-	{		
-		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		render((Graphics2D)image.getGraphics());
-		return toImageData(image);
-	}
-
-	/**
-	 * Override this method to provide your rendering code
-	 * @param graphics The graphics context to render on
-	 */
-	protected abstract void render(Graphics2D graphics);
 }

@@ -58,10 +58,9 @@ public class Image extends WebComponent implements IResourceListener
 
 	/**
 	 * The string representation of the resource to be loaded. Actual
-	 * resource objects are not allocated until the image is
-	 * actually requested.
+	 * resource is not loaded until the image is actually requested.
 	 */
-	private String resourceToLoad;
+	private String resourcePath;
 
 	/**
 	 * The style to use when locating the image resource.
@@ -104,10 +103,10 @@ public class Image extends WebComponent implements IResourceListener
     public void resourceRequested()
     {
 	    // Obtain the resource
-	    final IResource image = getResource(resourceToLoad);
+	    final IResource image = getResource();
 	    if (image == null)
 	    {
-	        throw new WicketRuntimeException("Could not find image resource " + resourceToLoad);
+	        throw new WicketRuntimeException("Could not find image resource " + resourcePath);
 	    }
 
         // Get request cycle
@@ -145,17 +144,16 @@ public class Image extends WebComponent implements IResourceListener
     }
 
     /**
-     * @param source The source attribute of the image tag
      * @return Gets the image resource for the component.
      */
-    protected IResource getResource(final String source)
+    protected IResource getResource()
     {
-        if (source.indexOf("..") != -1 || source.indexOf("/") != -1)
+        if (resourcePath.indexOf("..") != -1 || resourcePath.indexOf("/") != -1)
         {
             throw new WicketRuntimeException("Source for image resource cannot contain a path");
         }
 
-        final String path = Classes.packageName(getPage().getClass()) + "." + source;
+        final String path = Classes.packageName(getPage().getClass()) + "." + resourcePath;
         return Resource.locate
         (
             getApplicationSettings().getSourcePath(),
@@ -183,14 +181,13 @@ public class Image extends WebComponent implements IResourceListener
         super.handleComponentTag(tag);
 
         final String imageResource = (String)getModelObject();
-
         if (imageResource != null)
         {
-            resourceToLoad = imageResource;
+            resourcePath = imageResource;
         }
         else
         {
-            resourceToLoad = tag.getString("src");
+            resourcePath = tag.getString("src");
         }
 	    style = getStyle();
 	    locale = getLocale();
