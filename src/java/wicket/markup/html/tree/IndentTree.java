@@ -92,21 +92,20 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
 	/** a blank image for junctions. */
-	private static final StaticLocalImage JUNCTION_IMG_BLANK =
-		new StaticLocalImage(JUNCTION_IMAGE_NAME, "blank.gif");
+	private static final LocalImage JUNCTION_IMG_BLANK =
+		new LocalImage(JUNCTION_IMAGE_NAME, "blank.gif");
 
 	/** an image that draws a '+'. */
-	private static final StaticLocalImage JUNCTION_IMG_PLUS =
-		new StaticLocalImage(JUNCTION_IMAGE_NAME, "plus.gif");
+	private static final LocalImage JUNCTION_IMG_PLUS =
+		new LocalImage(JUNCTION_IMAGE_NAME, "plus.gif");
 
 	/** an image that draws a '-'. */
-	private static final StaticLocalImage JUNCTION_IMG_MINUS =
-		new StaticLocalImage(JUNCTION_IMAGE_NAME, "minus.gif");
-
+	private static final LocalImage JUNCTION_IMG_MINUS =
+		new LocalImage(JUNCTION_IMAGE_NAME, "minus.gif");
 
 	/** a blank image for nodes. */
-	private static final StaticLocalImage NODE_IMG_BLANK =
-		new StaticLocalImage(NODE_IMAGE_NAME, "blank.gif");
+	private static final LocalImage NODE_IMG_BLANK =
+		new LocalImage(NODE_IMAGE_NAME, "blank.gif");
 
 	// set scope of images
 	static
@@ -225,12 +224,14 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 					return url;
 				}
 			};
-			DynamicLocalImage img = new DynamicLocalImage(JUNCTION_IMAGE_NAME, imgModel);
+			LocalImage img = new LocalImage(JUNCTION_IMAGE_NAME, imgModel);
 			return img;
 		}
 		else
 		{
-			return JUNCTION_IMG_BLANK;
+			String url = getRequestCycle().urlFor(JUNCTION_IMG_BLANK, IResourceListener.class);
+			LocalImage img = new LocalImage(JUNCTION_IMAGE_NAME, url);
+			return img;
 		}
 	}
 
@@ -286,7 +287,9 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 */
 	protected AbstractImage getNodeImage(final DefaultMutableTreeNode node)
 	{
-		return NODE_IMG_BLANK;
+		String url = getRequestCycle().urlFor(NODE_IMG_BLANK, IResourceListener.class);
+		LocalImage img = new LocalImage(JUNCTION_IMAGE_NAME, url);
+		return img;
 	}
 
 	/**
@@ -568,7 +571,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 * Image that loads from this package (instead of Image's page)
 	 * without locale, style etc.
 	 */
-	private static class LocalImage extends Image
+	private static final class LocalImage extends Image
 	{
 		/**
 		 * Construct.
@@ -597,39 +600,6 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	            null
 	        );
 	    }
-	}
-
-	/**
-	 * Image that loads a static image from this package.
-	 */
-	private static final class StaticLocalImage extends LocalImage
-	{
-		/**
-		 * Construct.
-		 * @param name component name
-		 * @param object model
-		 */
-		public StaticLocalImage(String name, Serializable object)
-		{
-			super(name, object);
-		}
-	}
-
-	/**
-	 * Image that loads a static image from this package, but that is determined
-	 * dynamically.
-	 */
-	private static final class DynamicLocalImage extends LocalImage
-	{
-		/**
-		 * Construct.
-		 * @param name component name
-		 * @param object model
-		 */
-		public DynamicLocalImage(String name, Serializable object)
-		{
-			super(name, object);
-		}
 
 	    /**
 	     * @see wicket.Component#onComponentTag(ComponentTag)
@@ -637,7 +607,6 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	    protected void onComponentTag(final ComponentTag tag)
 	    {
 	        checkComponentTag(tag, "img");
-	        super.onComponentTag(tag);
 	        final String url = getModelObjectAsString();
 			tag.put("src", url.replaceAll("&", "&amp;"));
 	    }
