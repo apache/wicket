@@ -44,6 +44,14 @@
 	        <item name="Dependencies" href="/dependencies.html"/>
         </menu>
 	    <menu name="Wicket development">
+            <item name="Releasing Wicket" href="/BuildingARelease.html" 
+                collapse="true">
+                <item name="Introduction" href="#Introduction"/>
+                <item name="Preparing" href="#Preparing_the_release"/>
+                <item name="Building" href="#Building_the_release"/>
+                <item name="Distributing" href="#Distributing_the_release"/>
+                <item name="Publicizing" href="#Publicizing_the_release"/>
+            </item>
 	        <item name="Developers" href="/team-list.html"/>
 	        <item name="CVS access" href="/cvs-usage.html"/>
 	        <item name="Build reports" href="/maven-reports.html" collapse="true">
