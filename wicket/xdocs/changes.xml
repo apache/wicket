@@ -9,6 +9,7 @@
     <release version="0.9.15-alpha" date="in CVS" description="State of CVS">
       <action type="add" dev="Martijn Dashorst" issue="1081709">Replaced the default design of a maven generated website with a more pleasing, non standard look and feel.</action>
       <action type="add" dev="Martijn Dashorst" issue="1061782">Added Clover logo to front page of our website.</action>
+      <action type="add" dev="Juergen Donnerstag">Added support for a configurable character encoding (i18n) for markup files and HTTP response. And added a new example to show how it works.</action>
     </release>
     <release version="0.9.14-alpha" date="2004-12-06" description="State of CVS">
       <action type="add" dev="Juergen Donnerstag">Model for PasswordTextField will now be encrypted for persistence (cookie)</action>
