@@ -101,10 +101,16 @@ import wicket.version.undo.UndoPageVersionManager;
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener
 {
-	/** static for access allowed flag (value == true). */
+	/** True if a new version was created for this request */
+	private static final byte FLAG_NEW_VERSION = 0x10;
+
+	/** True if a new version was created for this request */
+	private static final byte FLAG_TRACK_CHANGES = 0x20;
+
+	/** Access allowed flag (value == true). */
 	protected static final boolean ACCESS_ALLOWED = true;
 
-	/** static for access denied flag (value == false). */
+	/** Access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
 
 	/** Log. */
@@ -112,9 +118,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** Used to create page-unique numbers */
 	private int autoIndex;
-
-	/** Number of changes that have occurred since the request began */
-	private transient int changeCount;
 
 	/** Any feedback display for this page */
 	private IFeedback feedback;
@@ -136,9 +139,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** The session that this page is in. */
 	private transient Session session = null;
-
-	/** True when changes to the Page should be tracked by version management */
-	private boolean trackChanges = false;
 
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
@@ -271,13 +271,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		else
 		{
 			// Save original change tracking state
-			final boolean originalTrackChanges = trackChanges;
+			final boolean originalTrackChanges = getFlag(FLAG_TRACK_CHANGES);
 			try
 			{
 				// While the version manager is potentially playing around with
 				// the Page, it may change the page in order to undo changes and
 				// we don't want change tracking going on while its doing this.
-				trackChanges = false;
+				setFlag(FLAG_TRACK_CHANGES, false);
 
 				// Get page of desired version
 				final Page page = versionManager.getVersion(versionNumber);
@@ -294,7 +294,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			finally
 			{
 				// Restore change tracking state
-				trackChanges = originalTrackChanges;
+				setFlag(FLAG_TRACK_CHANGES, originalTrackChanges);
 			}
 		}
 	}
@@ -565,13 +565,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentAdded(final Component component)
 	{
-		if (trackChanges && component.isVersioned())
+		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
 		{
-			onChanged();
-			if (versionManager != null)
-			{
-				versionManager.componentAdded(component);
-			}
+			newVersion();
+			versionManager.componentAdded(component);
 		}
 	}
 
@@ -581,13 +578,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentModelChangeImpending(final Component component)
 	{
-		if (trackChanges && component.isVersioned())
+		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
 		{
-			onChanged();
-			if (versionManager != null)
-			{
-				versionManager.componentModelChangeImpending(component);
-			}
+			newVersion();
+			versionManager.componentModelChangeImpending(component);
 		}
 	}
 
@@ -597,13 +591,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentRemoved(final Component component)
 	{
-		if (trackChanges && component.isVersioned())
+		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
 		{
-			onChanged();
-			if (versionManager != null)
-			{
-				versionManager.componentRemoved(component);
-			}
+			newVersion();
+			versionManager.componentRemoved(component);
 		}
 	}
 
@@ -671,10 +662,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// page's version manager. Since trackChanges is never set to false,
 			// this effectively means that change tracking begins after the
 			// first request to a page completes.
-			trackChanges = true;
+			setFlag(FLAG_TRACK_CHANGES, true);
 
-			// If there have been changes to the page
-			if (changeCount > 0)
+			// If a new version was created
+			if (getFlag(FLAG_NEW_VERSION))
 			{
 				// We're done with this version
 				if (versionManager != null)
@@ -682,8 +673,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					versionManager.endVersion();
 				}
 
-				// Reset change count for next time
-				changeCount = 0;
+				// Reset boolean for next request
+				setFlag(FLAG_NEW_VERSION, false);
 			}
 		}
 	}
@@ -768,11 +759,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			pageSet.init(this);
 		}
 	}
-
+	
 	/**
-	 * Install version manager if need be
+	 * Starts a new version of this page
 	 */
-	private final void onChanged()
+	private final void newVersion()
 	{
 		// If we have no version manager
 		if (versionManager == null)
@@ -781,15 +772,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			versionManager = newVersionManager();
 		}
 
-		// If there have not been any changes yet
-		if (changeCount == 0)
+		// If a new version has not yet been started
+		if (!getFlag(FLAG_NEW_VERSION))
 		{
 			// start a new version
 			versionManager.beginVersion();
+			setFlag(FLAG_NEW_VERSION, true);
 		}
-
-		// Increase number of changes
-		changeCount++;
 	}
 
 	static

@@ -75,7 +75,6 @@ public class ListViewTest extends TestCase
 		assertEquals(4, lv.getList().size());
 		assertEquals(4, lv.getViewSize());
 		assertEquals(0, lv.getStartIndex());
-		assertEquals(new Integer(0), lv.getListObject(0));
 
 		// This is the number of ListViews child-components
 		assertEquals(0, lv.size());

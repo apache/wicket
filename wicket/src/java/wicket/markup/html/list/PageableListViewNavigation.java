@@ -137,8 +137,7 @@ public class PageableListViewNavigation extends Loop
 	 */
 	public PageableListViewNavigation(final String id, final PageableListView pageableListView)
 	{
-		super(id, Integer.MAX_VALUE);
-
+		super(id, pageableListView.getViewSize());
 		this.pageableListView = pageableListView;
 		startIndex = 0;
 	}

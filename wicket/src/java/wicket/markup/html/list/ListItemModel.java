@@ -32,23 +32,23 @@ public class ListItemModel extends AbstractDetachableModel
 	// Avoid synchronising it in a cluster
 	private transient Object object;
 
-	/** The ListView's model */
-	private IModel listViewModel;
+	/** The ListView's list model */
+	private final IModel listModel;
 
 	/* The list item's index */
-	private int index;
+	private final int index;
 
 	/**
 	 * Construct
 	 * 
-	 * @param listViewModel
+	 * @param listModel
 	 *            The ListView's model
 	 * @param index
 	 *            The index of this model
 	 */
-	public ListItemModel(final IModel listViewModel, final int index)
+	public ListItemModel(final IModel listModel, final int index)
 	{
-		this.listViewModel = listViewModel;
+		this.listModel = listModel;
 		this.index = index;
 		attach();
 	}
@@ -67,7 +67,7 @@ public class ListItemModel extends AbstractDetachableModel
 	protected void onAttach()
 	{
 		// Re-attach the model object based on index and ListView model object
-		this.object = ((List)listViewModel.getObject(null)).get(index);
+		this.object = ((List)listModel.getObject(null)).get(index);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class ListItemModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
-	protected Object onGetObject(Component component)
+	protected Object onGetObject(final Component component)
 	{
 		return object;
 	}
@@ -90,7 +90,7 @@ public class ListItemModel extends AbstractDetachableModel
 	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component,
 	 *      java.lang.Object)
 	 */
-	protected void onSetObject(Component component, Object object)
+	protected void onSetObject(final Component component, final Object object)
 	{
 		this.object = object;
 	}

@@ -93,29 +93,32 @@ import wicket.util.string.Strings;
  */
 public abstract class Component implements Serializable
 {
+	/** Flag for escaping HTML in model strings */
+	private static final byte FLAG_ESCAPE_MODEL_STRINGS = 0x04;
+
+	/** Versioning boolean */
+	private static final byte FLAG_VERSIONED = 0x02;
+
+	/** Visibility boolean */
+	private static final byte FLAG_VISIBLE = 0x01;
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
 	/** List of AttributeModifiers to be applied for this Component */
 	private AttributeModifier attributeModifiers = null;
 
+	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
+	private byte flags;
+
 	/** Component id. */
 	private String id;
-
-	/** True if this component desires versioning */
-	private boolean isVersioned = true;
 
 	/** The model for this component. */
 	private IModel model;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
-
-	/** True if the component allows unescaped HTML. */
-	private boolean shouldEscapeModelStrings = true;
-
-	/** True if this component is visible. */
-	private boolean visible = true;
 
 	/**
 	 * Generic component visitor interface for component traversals.
@@ -331,6 +334,16 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Gets whether model strings should be escaped.
+	 * 
+	 * @return Returns whether model strings should be escaped
+	 */
+	public final boolean getEscapeModelStrings()
+	{
+		return getFlag(FLAG_ESCAPE_MODEL_STRINGS);
+	}
+
+	/**
 	 * @return Any feedback message for this component
 	 */
 	public final FeedbackMessage getFeedbackMessage()
@@ -435,7 +448,7 @@ public abstract class Component implements Serializable
 				final String modelString = (String)converter.convert(modelObject, String.class);
 
 				// If we should escape the markup
-				if (shouldEscapeModelStrings)
+				if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
 				{
 					// Escape it
 					return Strings.escapeMarkup(modelString);
@@ -584,16 +597,6 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Gets whether model strings should be escaped.
-	 * 
-	 * @return Returns whether model strings should be escaped
-	 */
-	public final boolean getShouldEscapeModelStrings()
-	{
-		return shouldEscapeModelStrings;
-	}
-
-	/**
 	 * Gets the (skin) style of this component.
 	 * 
 	 * @return The (skin) style of this component
@@ -661,7 +664,7 @@ public abstract class Component implements Serializable
 	public boolean isVersioned()
 	{
 		// Is the component itself versioned?
-		if (!isVersioned)
+		if (!getFlag(FLAG_VERSIONED))
 		{
 			return false;
 		}
@@ -688,7 +691,7 @@ public abstract class Component implements Serializable
 	 */
 	public boolean isVisible()
 	{
-		return visible;
+		return getFlag(FLAG_VISIBLE);
 	}
 
 	/**
@@ -756,7 +759,7 @@ public abstract class Component implements Serializable
 	{
 		// Any runtime exception thrown during rendering
 		RuntimeException renderException = null;
-		
+
 		// Determine if component is visible
 		final boolean isVisible = isVisible();
 
@@ -773,7 +776,7 @@ public abstract class Component implements Serializable
 			{
 				// No response to restore
 				originalResponse = null;
-				
+
 				// Rendering is beginning
 				internalOnBeginRender();
 				onBeginRender();
@@ -819,13 +822,13 @@ public abstract class Component implements Serializable
 				{
 					log.debug("End render " + this);
 				}
-	
+
 				try
 				{
 					// Rendering has completed
 					onEndRender();
 					internalOnEndRender();
-	
+
 					// Detach models now that rendering is fully completed
 					detachModels();
 				}
@@ -972,17 +975,18 @@ public abstract class Component implements Serializable
 	 */
 	public final Component setShouldEscapeModelStrings(final boolean escapeMarkup)
 	{
-		this.shouldEscapeModelStrings = escapeMarkup;
+		setFlag(FLAG_ESCAPE_MODEL_STRINGS, escapeMarkup);
 		return this;
 	}
 
 	/**
-	 * @param isVersioned
-	 *            The isVersioned to set.
+	 * @param versioned
+	 *            True to turn on versioning for this component, false to turn
+	 *            it off for this component and any children.
 	 */
-	public void setVersioned(boolean isVersioned)
+	public void setVersioned(boolean versioned)
 	{
-		this.isVersioned = isVersioned;
+		setFlag(FLAG_VERSIONED, versioned);
 	}
 
 	/**
@@ -994,7 +998,7 @@ public abstract class Component implements Serializable
 	 */
 	public final Component setVisible(final boolean visible)
 	{
-		this.visible = visible;
+		setFlag(FLAG_VISIBLE, visible);
 		return this;
 	}
 
@@ -1005,18 +1009,20 @@ public abstract class Component implements Serializable
 	 */
 	public String toString()
 	{
-		return Classes.name(getClass()) + " " + getPath();
+		return "[" + Classes.name(getClass()) + " " + getPath() + " isVisible = " + isVisible()
+				+ ", isVersioned = " + isVersioned() + "]";
 	}
 
 	/**
-	 * @param listenerInterface The listener interface that the URL should call
+	 * @param listenerInterface
+	 *            The listener interface that the URL should call
 	 * @return The URL
 	 */
 	public final String urlFor(final Class listenerInterface)
 	{
 		return getPage().urlFor(this, listenerInterface);
 	}
-	
+
 	/**
 	 * Registers a warning message for this component
 	 * 
@@ -1410,6 +1416,16 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * @param flag
+	 *            The flag to test
+	 * @return True if the flag is set
+	 */
+	final boolean getFlag(final int flag)
+	{
+		return (this.flags & flag) != 0;
+	}
+
+	/**
 	 * This method is called immediately before a component is rendered
 	 */
 	void internalOnBeginRender()
@@ -1467,6 +1483,24 @@ public abstract class Component implements Serializable
 		{
 			// Write synthetic close tag
 			getResponse().write(openTag.syntheticCloseTagString());
+		}
+	}
+
+	/**
+	 * @param flag
+	 *            The flag to set
+	 * @param set
+	 *            True to turn the flag on, false to turn it off
+	 */
+	final void setFlag(final byte flag, final boolean set)
+	{
+		if (set)
+		{
+			this.flags |= flag;
+		}
+		else
+		{
+			this.flags &= ~flag;
 		}
 	}
 

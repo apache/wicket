@@ -283,7 +283,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 			{
 				formComponent.setVersioned(isVersioned);
 			}
-		});		
+		});
 	}
 
 	/**
