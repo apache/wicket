@@ -18,9 +18,6 @@
 package wicket;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.logging.Log;
@@ -101,8 +98,8 @@ public abstract class Component implements Serializable, IConverterSource
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
-	/** Collection of AttributeModifiers to be applied for this Component */
-	private List attributeModifiers = null;
+	/** List of AttributeModifiers to be applied for this Component */
+	private AttributeModifier attributeModifiers = null;
 
 	/** True if this component desires versioning */
 	private boolean isVersioned = true;
@@ -151,9 +148,9 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Constructor. All components have names. A component's id cannot be
-	 * null. This is the minimal constructor of component. It does not register
-	 * a model.
+	 * Constructor. All components have names. A component's id cannot be null.
+	 * This is the minimal constructor of component. It does not register a
+	 * model.
 	 * 
 	 * @param id
 	 *            The non-null id of this component
@@ -166,8 +163,8 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Constructor. All components have names. A component's id cannot be
-	 * null. This is constructor includes a model.
+	 * Constructor. All components have names. A component's id cannot be null.
+	 * This is constructor includes a model.
 	 * 
 	 * @param id
 	 *            The non-null id of this component
@@ -192,11 +189,8 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	public final Component add(final AttributeModifier modifier)
 	{
-		if (attributeModifiers == null)
-		{
-			attributeModifiers = new ArrayList();
-		}
-		attributeModifiers.add(modifier);
+		modifier.next = attributeModifiers;
+		attributeModifiers = modifier;
 		return this;
 	}
 
@@ -1193,12 +1187,12 @@ public abstract class Component implements Serializable, IConverterSource
 		if (!(tag instanceof ComponentWicketTag) || !settings.getStripWicketTags())
 		{
 			// Apply attribute modifiers
-			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE))
+			if (attributeModifiers != null && tag.getType() != XmlTag.CLOSE)
 			{
 				tag = tag.mutable();
-				for (Iterator it = attributeModifiers.iterator(); it.hasNext();)
+				for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
 				{
-					((AttributeModifier)it.next()).replaceAttibuteValue(tag);
+					current.replaceAttibuteValue(tag);
 				}
 			}
 
@@ -1419,9 +1413,9 @@ public abstract class Component implements Serializable, IConverterSource
 		// Also detach models from any contained attribute modifiers
 		if (attributeModifiers != null)
 		{
-			for (Iterator iterator = attributeModifiers.iterator(); iterator.hasNext();)
+			for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
 			{
-				((AttributeModifier)iterator.next()).detachModel();
+				current.detachModel();
 			}
 		}
 	}

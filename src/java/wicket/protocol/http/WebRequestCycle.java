@@ -434,6 +434,9 @@ public class WebRequestCycle extends RequestCycle
 		return getPageFactory().newPage(pageClass, page);
 	}
 
+	/**
+	 * Called when the requested page is not available.
+	 */
 	private void onExpiredPage()
 	{
 		// Page was expired from session, probably because backtracking
