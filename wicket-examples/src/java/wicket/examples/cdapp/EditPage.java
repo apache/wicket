@@ -230,12 +230,6 @@ public final class EditPage extends CdAppBasePage
 					return res.getResource();
 				}
 			}
-
-			public String getPath()
-			{
-				invalidate(); // force getting the resource on each request;
-				return super.getPath();
-			}
 		};
 
 		// create a link that displays the full image in a popup page

@@ -530,6 +530,14 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * @return The resource for this component
+	 */
+	public Resource getResource()
+	{
+		return getApplication().getResource(Application.class, getId(), getLocale(), getStyle());
+	}
+
+	/**
 	 * @return The request for this component's active request cycle
 	 */
 	public final Request getRequest()
@@ -1019,9 +1027,10 @@ public abstract class Component implements Serializable
 	 */
 	public String toString()
 	{
-		return "[" + getPage().getClass().getName() + " path = " + getPath() + "."
-				+ Classes.name(getClass()) + ", isVisible = " + isVisible() + ", isVersioned = "
-				+ isVersioned() + "]";
+		final Page page = findPage();
+		return "[" + (page == null ? "<No Page>" : getPage().getClass().getName()) + " path = "
+				+ getPath() + "." + Classes.name(getClass()) + ", isVisible = " + isVisible()
+				+ ", isVersioned = " + isVersioned() + "]";
 	}
 
 	/**
@@ -1169,8 +1178,8 @@ public abstract class Component implements Serializable
 	 */
 	protected void internalBeginRequest()
 	{
-		internalOnBeginRequest();
 		onBeginRequest();
+		internalOnBeginRequest();
 	}
 
 	/**

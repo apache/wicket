@@ -106,14 +106,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
 
-	/** True if this page is currently rendering */
-	private static final byte FLAG_IS_RENDERING = 0x40;
+	/** True if this page is currently rendering. */
+	private static final byte FLAG_IS_RENDERING = 0x10;
 
-	/** True if a new version was created for this request */
-	private static final byte FLAG_NEW_VERSION = 0x10;
+	/** True if a new version was created for this request. */
+	private static final byte FLAG_NEW_VERSION = 0x20;
 
-	/** True if a new version was created for this request */
-	private static final byte FLAG_TRACK_CHANGES = 0x20;
+	/** True if component changes are being tracked. */
+	private static final byte FLAG_TRACK_CHANGES = 0x40;
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);

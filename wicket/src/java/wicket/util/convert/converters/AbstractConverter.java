@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.9 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,7 +50,7 @@ public abstract class AbstractConverter implements ITypeConverter
 		if (position.getIndex() != stringValue.length())
 		{
 			throw newConversionException("Cannot parse '" + value + "' using format " + format,
-					value,null).setFormat(format);
+					value, null).setFormat(format);
 		}
 		return result;
 	}
@@ -62,9 +62,12 @@ public abstract class AbstractConverter implements ITypeConverter
 	 *            The message
 	 * @param value
 	 *            The value that didn't convert
+	 * @param locale
+	 *            The locale
 	 * @return The ConversionException
 	 */
-	protected ConversionException newConversionException(final String message, Object value, Locale locale)
+	protected ConversionException newConversionException(final String message, final Object value,
+			final Locale locale)
 	{
 		return new ConversionException(message).setSourceValue(value)
 				.setTargetType(getTargetType()).setTypeConverter(this).setLocale(locale);

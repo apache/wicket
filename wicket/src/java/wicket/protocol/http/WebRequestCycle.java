@@ -32,7 +32,6 @@ import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.Resource;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
@@ -59,8 +58,6 @@ public class WebRequestCycle extends RequestCycle
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there.
 	 * 
-	 * @param application
-	 *            The application
 	 * @param session
 	 *            The session
 	 * @param request
@@ -68,10 +65,10 @@ public class WebRequestCycle extends RequestCycle
 	 * @param response
 	 *            The response
 	 */
-	public WebRequestCycle(final WebApplication application, final WebSession session,
-			final WebRequest request, final Response response)
+	public WebRequestCycle(final WebSession session, final WebRequest request,
+			final Response response)
 	{
-		super(application, session, request, response);
+		super(session, request, response);
 	}
 
 	/**
@@ -220,22 +217,6 @@ public class WebRequestCycle extends RequestCycle
 				return true;
 			}
 		}
-		else
-		{
-			// Get path info
-			final String pathInfo = getWebRequest().getHttpServletRequest().getPathInfo();
-			if (pathInfo != null)
-			{
-				// Get resource for path
-				final Resource resource = Resource.forPath(pathInfo.substring(1));
-				if (resource != null)
-				{
-					// Request resource
-					resource.onResourceRequested();
-					return true;
-				}
-			}
-		}
 		return false;
 	}
 
@@ -285,6 +266,16 @@ public class WebRequestCycle extends RequestCycle
 		}
 	}
 
+	/**
+	 * Invokes a given interface on a component on a given page
+	 * 
+	 * @param page
+	 *            The page where the component is
+	 * @param path
+	 *            The path to the component
+	 * @param interfaceName
+	 *            The name of the interface to call
+	 */
 	private void invokeInterface(final Page page, final String path, final String interfaceName)
 	{
 		// Set the page for the component as the response page

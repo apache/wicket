@@ -28,10 +28,8 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.contrib.markup.html.tree.IndentTree;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.image.AbstractImage;
 import wicket.markup.html.image.Image;
 import wicket.model.Model;
-import wicket.util.resource.IResource;
 
 /** indent tree implementation. */
 public class MyTree extends IndentTree
@@ -73,7 +71,7 @@ public class MyTree extends IndentTree
 	/**
 	 * @see wicket.contrib.markup.html.tree.IndentTree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected AbstractImage getNodeImage(final DefaultMutableTreeNode node)
+	protected Image getNodeImage(final DefaultMutableTreeNode node)
 	{
 		if (node.isLeaf())
 		{
@@ -130,15 +128,17 @@ public class MyTree extends IndentTree
 			super(name, new Model(object));
 		}
 
+		// TODO EELCO: this is busted now.  talk to me about new resource model...
+		
 		/**
 		 * @return Gets the image resource for the component.
-		 */
+		 *
 		protected IResource getResource()
 		{
 			final String imageResource = getModelObjectAsString();
 			final String path = MyTree.class.getPackage().getName() + "." + imageResource;
 			return getApplication().getResourceLocator().locate(path, null, null, null);
-		}
+		}*/
 
 		/**
 		 * @see wicket.Component#onComponentTag(ComponentTag)

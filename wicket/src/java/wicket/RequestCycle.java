@@ -28,7 +28,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
-import wicket.util.string.Strings;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -254,8 +253,6 @@ public abstract class RequestCycle
 	/**
 	 * Constructor.
 	 * 
-	 * @param application
-	 *            The application
 	 * @param session
 	 *            The session
 	 * @param request
@@ -263,10 +260,9 @@ public abstract class RequestCycle
 	 * @param response
 	 *            The response
 	 */
-	protected RequestCycle(final Application application, final Session session,
-			final Request request, final Response response)
+	protected RequestCycle(final Session session, final Request request, final Response response)
 	{
-		this.application = application;
+		this.application = session.getApplication();
 		this.session = session;
 		this.request = request;
 		this.response = response;
@@ -350,10 +346,10 @@ public abstract class RequestCycle
 		{
 			// Attach thread local resources for request
 			threadAttach();
-			
+
 			// Any page used to respond to the request
 			Page page = null;
-			
+
 			// Response is beginning
 			internalOnBeginRequest();
 			onBeginRequest();

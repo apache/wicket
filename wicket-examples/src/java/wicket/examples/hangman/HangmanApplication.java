@@ -17,15 +17,9 @@
  */
 package wicket.examples.hangman;
 
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
-
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.examples.WicketExampleApplication;
-import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.markup.html.image.resource.ImageResource;
 
 /**
  * Class defining the main Game application.
@@ -35,35 +29,12 @@ import wicket.markup.html.image.resource.ImageResource;
  */
 public class HangmanApplication extends WicketExampleApplication
 {
-	/** Map from letter to image */
-	private final Map letterToImage = new HashMap();
-
 	/**
 	 * Create the hangman application.
 	 */
 	public HangmanApplication()
 	{
 		getPages().setHomePage(Home.class);
-	}
-
-	/**
-	 * @param letter
-	 *            The letter
-	 * @return The image resource for the letter
-	 */
-	public ImageResource imageForLetter(final Letter letter)
-	{
-		DefaultButtonImageResource image = (DefaultButtonImageResource)letterToImage.get(letter);
-		if (image == null)
-		{
-			image = new DefaultButtonImageResource(30, 30, letter.asString());
-			if (letter.isGuessed())
-			{
-				image.setColor(Color.GRAY);
-			}
-			letterToImage.put(letter, image);
-		}
-		return image;
 	}
 
 	/**

@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import wicket.markup.MarkupInheritanceResolver;
 import wicket.markup.MarkupParser;
 import wicket.markup.html.form.encryption.ICrypt;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
-import wicket.markup.html.image.resource.ImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
@@ -60,7 +60,6 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Application
 {
-
 	/** List of (static) ComponentResolvers */
 	private List componentResolvers = new ArrayList();
 
@@ -75,8 +74,9 @@ public abstract class Application
 
 	/** Name of application subclass. */
 	private final String name;
-	/** Map from image factory names to image factories */
-	private final Map nameToImageFactory = new HashMap();
+
+	/** Map to look up resource factories by name */
+	private final Map nameToResourceFactory = new HashMap();
 
 	/** Pages for application */
 	private final ApplicationPages pages = new ApplicationPages();
@@ -84,11 +84,64 @@ public abstract class Application
 	/** The default resource locator for this application */
 	private ResourceLocator resourceLocator;
 
+	/** Map of shared resources */
+	private final Map resourceMap = new HashMap();
+
 	/** ModificationWatcher to watch for changes in markup files */
-	private transient ModificationWatcher resourceWatcher;
+	private ModificationWatcher resourceWatcher;
 
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
+
+	/**
+	 * Key for looking up a resource.
+	 * 
+	 * @author Jonathan Locke
+	 */
+	private static final class ResourceKey
+	{
+		/** Name of resource */
+		private final String name;
+
+		/** Scope of resource */
+		private final Class scope;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param scope
+		 *            The resource's scoping
+		 * @param name
+		 *            The name of the resource
+		 */
+		private ResourceKey(final Class scope, final String name)
+		{
+			this.scope = scope;
+			this.name = name;
+		}
+
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		public boolean equals(Object obj)
+		{
+			if (obj instanceof ResourceKey)
+			{
+				final ResourceKey that = (ResourceKey)obj;
+				return this.scope == that.scope && this.name.equals(that.name);
+			}
+			return false;
+		}
+
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
+		public int hashCode()
+		{
+			// TODO a better hash code would be nice
+			return scope.hashCode() + name.hashCode();
+		}
+	}
 
 	/**
 	 * Constructor
@@ -106,19 +159,65 @@ public abstract class Application
 		componentResolvers.add(new MarkupInheritanceResolver());
 
 		// Install button image resource factory
-		addImageResourceFactory(new DefaultButtonImageResourceFactory("buttonFactory"));
+		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
 	}
 
 	/**
-	 * Adds an image resource factory to the list of factories to consult when
-	 * generating images
-	 * 
-	 * @param imageFactory
-	 *            The image factory to add
+	 * @param scope
+	 *            Scope of resource
+	 * @param name
+	 *            Logical name of resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The resource style
+	 * @param resource
+	 *            Resource to store
 	 */
-	public void addImageResourceFactory(final ImageResourceFactory imageFactory)
+	public void addResource(final Class scope, final String name, final Locale locale,
+			final String style, final Resource resource)
 	{
-		nameToImageFactory.put(imageFactory.getName(), imageFactory);
+		final String key = name + (locale == null ? "" : "_" + locale.toString())
+				+ (style == null ? "" : "_" + style);
+		resourceMap.put(new ResourceKey(scope, key), resource);
+	}
+
+	/**
+	 * @param name
+	 *            Logical name of resource
+	 * @param resource
+	 *            Resource to store
+	 */
+	public void addResource(final String name, final Resource resource)
+	{
+		addResource(Application.class, name, null, null, resource);
+	}
+
+	/**
+	 * @param name
+	 *            Logical name of resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param resource
+	 *            Resource to store
+	 */
+	public void addResource(final String name, final Locale locale, final Resource resource)
+	{
+		addResource(Application.class, name, locale, null, resource);
+	}
+
+	/**
+	 * Adds a resource factory to the list of factories to consult when
+	 * generating resources automatically
+	 * 
+	 * @param name
+	 *            The name to give to the factory
+	 * @param resourceFactory
+	 *            The resource factory to add
+	 */
+	public void addResourceFactory(final String name, final IResourceFactory resourceFactory)
+	{
+		nameToResourceFactory.put(name, resourceFactory);
 	}
 
 	/**
@@ -165,16 +264,6 @@ public abstract class Application
 			throw new WicketRuntimeException(
 					"Encryption/decryption object can not be instantiated", e);
 		}
-	}
-
-	/**
-	 * @param name
-	 *            Name of image factory
-	 * @return The ImageResourceFactory with the given name.
-	 */
-	public ImageResourceFactory getImageResourceFactory(final String name)
-	{
-		return (ImageResourceFactory)nameToImageFactory.get(name);
 	}
 
 	/**
@@ -234,10 +323,67 @@ public abstract class Application
 			{
 				return null;
 			}
+
 			public void remove()
 			{
 			}
 		};
+	}
+	
+	/**
+	 * @param scope
+	 *            The resource's scope
+	 * @param name
+	 *            Name of resource to get
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The resource style
+	 * @return The logical resource
+	 */
+	public Resource getResource(final Class scope, final String name, final Locale locale,
+			final String style)
+	{
+		// Resource
+		Resource resource = null;
+
+		// 1. Look for fully qualified entry with locale and style
+		String key = name + (locale == null ? "" : "_" + locale.toString())
+				+ (style == null ? "" : "_" + style);
+		resource = (Resource)resourceMap.get(new ResourceKey(scope, key));
+		if (resource != null)
+		{
+			return resource;
+		}
+
+		// 2. Look for entry without style
+		key = name + (locale == null ? "" : "_" + locale.toString());
+		resource = (Resource)resourceMap.get(new ResourceKey(scope, key));
+		if (resource != null)
+		{
+			return resource;
+		}
+
+		// 3. Look for entry without locale
+		key = name + (style == null ? "" : "_" + style);
+		resource = (Resource)resourceMap.get(new ResourceKey(scope, key));
+		if (resource != null)
+		{
+			return resource;
+		}
+		
+		// 4. Look for base name
+		return (Resource)resourceMap.get(new ResourceKey(scope, name));
+	}
+
+	/**
+	 * @param name
+	 *            Name of the factory to get
+	 * @return The IResourceFactory with the given name.
+	 */
+	public IResourceFactory getResourceFactory(final String name)
+	{
+		return (IResourceFactory)nameToResourceFactory.get(name);
 	}
 
 	/**
@@ -296,8 +442,8 @@ public abstract class Application
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR CALL
-	 * THIS METHOD.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
+	 * CALL.
 	 * 
 	 * Internal intialization.
 	 */

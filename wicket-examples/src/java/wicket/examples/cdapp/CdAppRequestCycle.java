@@ -22,7 +22,6 @@ import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import wicket.Response;
-import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebSession;
@@ -41,16 +40,15 @@ public final class CdAppRequestCycle extends WebRequestCycle
 
 	/**
 	 * Construct.
-	 * @param application application object
 	 * @param session session object
 	 * @param request request object
 	 * @param response response object
 	 * @param sessionFactory hibernate session factory
 	 */
-	public CdAppRequestCycle(WebApplication application, WebSession session,
+	public CdAppRequestCycle(WebSession session,
 			WebRequest request, Response response, SessionFactory sessionFactory)
 	{
-		super(application, session, request, response);
+		super(session, request, response);
 		this.sessionFactory = sessionFactory;
 	}
 

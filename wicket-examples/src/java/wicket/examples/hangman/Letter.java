@@ -17,8 +17,13 @@
  */
 package wicket.examples.hangman;
 
+import java.awt.Color;
 import java.io.Serializable;
 
+import wicket.Application;
+import wicket.Resource;
+import wicket.SharedResource;
+import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.util.lang.Primitives;
 
 /**
@@ -43,6 +48,33 @@ public class Letter implements Serializable
 	public Letter(final char letter)
 	{
 		this.letter = letter;
+	}
+
+	/**
+	 * @param application
+	 *            Application where shared resources are stored
+	 * @param enabled
+	 *            True to get the enabled resource, false to get the disabled
+	 *            resource
+	 * @return Shared image resource
+	 */
+	public SharedResource getImage(final Application application, final boolean enabled)
+	{
+		// Lazy loading of shared resource
+		final String sharedResourceName = asString() + (enabled ? "_enabled" : "_disabled");
+		Resource resource = application.getResource(Application.class, sharedResourceName, null, null);
+		if (resource == null)
+		{
+			DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(30, 30,
+					asString());
+			if (!enabled)
+			{
+				buttonResource.setColor(Color.GRAY);
+			}
+			application.addResource(sharedResourceName, buttonResource);
+			resource = buttonResource;
+		}
+		return new SharedResource(sharedResourceName);
 	}
 
 	/**
@@ -73,7 +105,7 @@ public class Letter implements Serializable
 	{
 		this.isGuessed = true;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */

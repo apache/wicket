@@ -218,7 +218,7 @@ public class MockWebApplication extends WebApplication
      */
     public void processRequestCycle() throws ServletException
     {
-        WebRequestCycle cycle = new WebRequestCycle(this, wicketSession, wicketRequest,
+        WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest,
                 wicketResponse);
         cycle.request();
         lastRenderedPage = cycle.getResponsePage();
@@ -232,7 +232,7 @@ public class MockWebApplication extends WebApplication
      */
     public WebRequestCycle createRequestCycle()
     {
-        return new WebRequestCycle(this, wicketSession, wicketRequest, wicketResponse);
+        return new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
     }
 
     /**

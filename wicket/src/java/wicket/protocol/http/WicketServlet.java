@@ -162,7 +162,7 @@ public class WicketServlet extends HttpServlet
 		try
 		{
 			// Process request
-			webApplication.newRequestCycle(session, request, response).request();
+			session.newRequestCycle(request, response).request();
 		}
 		finally
 		{

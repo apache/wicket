@@ -20,98 +20,46 @@ package wicket;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 import wicket.util.io.Streams;
 import wicket.util.resource.IResource;
-import wicket.util.string.Strings;
 
 /**
  * A Resource is something that implements IResourceListener and provides a
- * getOutputStream(Response) implementation to get an output stream from the
- * Response and getResource() which returns the IResource to be rendered back to
+ * getResource() method which returns the raw IResource to be rendered back to
  * the client browser.
  * <p>
- * Resources generally have stable URLs, which means that they can be shared
- * throughout an application. However, the components that access the resources
- * <i>cannot </i> be shared in this way. For example, you can create a button
- * image resource with new DefaultButtonImageResource("Hello") and assign that
- * resource to multiple ImageButton components via the ImageButton constructor,
- * which takes an ImageResource as an argument. Each ImageButton component then
- * would reference the same ImageResource at the same URL. While the "Hello"
- * button image resource can be shared between components like this, the
- * ImageButton components in this example are like all other components in
- * Wicket and cannot be shared.
+ * Resources themselves do not currently have URLs. Instead, they are referred
+ * to by components that have URLs.
+ * <p>
+ * Resources can be shared throughout an application by adding them to
+ * Application with addResource(Class scope, String name) or addResource(String
+ * name). A resource added in such a way is a named resource and is accessible
+ * throughout the application via Application.getResource(Class scope, String
+ * name) or Application.getResource(String name). The SharedResource class
+ * enables easy access to such resources in a way that is light on clusters.
+ * <p>
+ * While resources can be shared between components, it is important to
+ * emphasize that components <i>cannot </i> be shared among containers. For
+ * example, you can create a button image resource with new
+ * DefaultButtonImageResource(...) and store that in the Application with
+ * addResource(). You can then assign that logical resource via SharedResource to
+ * several ImageButton components. While the button image resource can be shared
+ * between components like this, the ImageButton components in this example are
+ * like all other components in Wicket and cannot be shared.
  * 
  * @author Jonathan Locke
  */
 public abstract class Resource implements IResourceListener
 {
-	/** Random number generator */
-	private static Random random = new Random();
-
-	/** Map from id to resource */
-	private static Map resourceForId = Collections.synchronizedMap(new HashMap());
-
-	/** Resource URL prefix value */
-	private static final String urlPrefix = "r";
-
-	/** The id of this resource */
-	private final long id;
-
-	/** The resource this class is rendering */
+	/** The actual raw resource this class is rendering */
 	private IResource resource;
-
-	/**
-	 * @param path
-	 *            The path to parse
-	 * @return The resource at the given path
-	 */
-	public static Resource forPath(final String path)
-	{
-		// If path is of the right form
-		if (path != null && path.startsWith(urlPrefix))
-		{
-			// Parse out id from <prefix><number>.<extension>
-			final String suffix = path.substring(urlPrefix.length());
-			final long id = Long.parseLong(Strings.beforeFirst(suffix, '.'));
-
-			// Return resource for id
-			return (Resource)resourceForId.get(new Long(id));
-		}
-		return null;
-	}
 
 	/**
 	 * Constructor
 	 */
 	protected Resource()
 	{
-		this.id = Math.abs(random.nextLong());
-		resourceForId.put(new Long(id), this);
-	}
-
-	/**
-	 * Call this when you are done with this resource to remove its entry from
-	 * the resource id map.
-	 */
-	public void dispose()
-	{
-		resourceForId.remove(new Long(id));
-		invalidate();
-	}
-
-	/**
-	 * @return The unique path to this resource
-	 */
-	public String getPath()
-	{
-		setResource();
-		final String extension = Strings.afterFirst(resource.getContentType(), '/');
-		return urlPrefix + id + "." + extension;
 	}
 
 	/**
@@ -130,7 +78,7 @@ public abstract class Resource implements IResourceListener
 		cycle.setResponsePage((Page)null);
 
 		// Fetch resource from subclass if necessary
-		setResource();
+		init();
 
 		// Get servlet response to use when responding with resource
 		final Response response = cycle.getResponse();
@@ -157,6 +105,21 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
+	 * Set resource field by calling subclass
+	 */
+	private void init()
+	{
+		if (this.resource == null)
+		{
+			this.resource = getResource();
+			if (this.resource == null)
+			{
+				throw new WicketRuntimeException("Could not get resource");
+			}
+		}
+	}
+
+	/**
 	 * Respond with resource
 	 * 
 	 * @param response
@@ -180,21 +143,6 @@ public abstract class Resource implements IResourceListener
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("Unable to render resource " + resource, e);
-		}
-	}
-
-	/**
-	 * Set resource field by calling subclass
-	 */
-	private void setResource()
-	{
-		if (this.resource == null)
-		{
-			this.resource = getResource();
-			if (this.resource == null)
-			{
-				throw new WicketRuntimeException("Could not get resource");
-			}
 		}
 	}
 

@@ -63,9 +63,6 @@ public class Guess extends HangmanPage
 						// Guess the letter
 						getGame().guess(letter);
 
-						// This letter can no longer be guessed
-						setEnabled(false);
-
 						// Is the game over?
 						if (getGame().isWon())
 						{
@@ -83,10 +80,8 @@ public class Guess extends HangmanPage
 						}
 					}
 				};
-				final HangmanApplication application = (HangmanApplication)getSession()
-						.getApplication();
-				link.add(new Image("enabled", application.imageForLetter(letter)));
-				link.add(new Image("disabled", application.imageForLetter(letter)));
+				link.add(new Image("enabled", letter.getImage(getApplication(), true)));
+				link.add(new Image("disabled", letter.getImage(getApplication(), false)));
 				listItem.add(link);
 			}
 		});
