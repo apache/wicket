@@ -13,14 +13,14 @@
             <item name="License" href="/license.html"/>
 	    </menu>
         <menu name="Getting Started">
-	        <item name="Examples" href="/Examples.html" collapse="true">
+	        <item name="A Quick Tour" href="/QuickTour.html" collapse="true">
 	        	<item name="Hello World!" href="/ExampleHelloWorld.html"/>
 	        	<item name="Navomatic" href="/ExampleNavomatic.html"/>
 	        	<item name="Images" href="/ExampleImages.html"/>
 	        	<item name="GuestBook" href="/ExampleGuestBook.html"/>
 			</item>
-            <item name="Download" 
-                href="http://sourceforge.net/projects/wicket/files"/>
+            <item name="Examples" href="/Examples.html"/>
+            <item name="Download" href="/Download.html"/>
             <item name="QuickStart" href="/QuickStart.html" collapse="true">
                 <item name="Summary" />
                 <item name="Setting Up" href="#Setting_up"/>
