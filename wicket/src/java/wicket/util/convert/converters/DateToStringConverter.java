@@ -23,54 +23,58 @@ import java.util.Locale;
 
 /**
  * Converts from Date to String.
- *
+ * 
  * @author Eelco Hillenius
  */
 public final class DateToStringConverter extends AbstractConverter
 {
 	/** The date format to use */
-    private DateFormat dateFormat;
-    
-    /**
+	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+
+	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#setLocale(java.util.Locale)
 	 */
 	public void setLocale(Locale locale)
 	{
 		super.setLocale(locale);
-        dateFormat = null;
+		dateFormat = null;
 	}
-    
-    /**
-     * @return Returns the dateFormat.
-     */
-    public final DateFormat getDateFormat()
-    {
-        if (dateFormat == null && locale != null)
-        {
-            dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-            dateFormat.setLenient(true);
-        }
-        return dateFormat;
-    }
-    
-    /**
-     * @param dateFormat The numberFormat to set.
-     */
-    public final void setDateFormat(final DateFormat dateFormat)
-    {
-        this.dateFormat = dateFormat;
-    }
+
+	/**
+	 * @return Returns the dateFormat.
+	 */
+	public final DateFormat getDateFormat()
+	{
+		if (dateFormat == null && locale != null)
+		{
+			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+			dateFormat.setLenient(true);
+		}
+		return dateFormat;
+	}
+
+	/**
+	 * @param dateFormat The numberFormat to set.
+	 */
+	public final void setDateFormat(final DateFormat dateFormat)
+	{
+		if (dateFormat == null)
+		{
+			throw new IllegalArgumentException("a non null date format must be provided");
+		}
+		this.dateFormat = dateFormat;
+	}
 
 	/**
 	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
 	 */
 	public Object convert(final Object value)
 	{
-        final DateFormat dateFormat = getDateFormat();
-        if (dateFormat != null)
-        {
-            return dateFormat.format(value);
-        }
-        return value.toString();
+		final DateFormat dateFormat = getDateFormat();
+		if (dateFormat != null)
+		{
+			return dateFormat.format(value);
+		}
+		return value.toString();
 	}
 }
