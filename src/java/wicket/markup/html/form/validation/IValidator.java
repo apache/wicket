@@ -28,7 +28,7 @@ import wicket.markup.html.form.FormComponent;
  *
  * @author Jonathan Locke
  */
-public interface IValidator
+public interface IValidator extends Serializable
 {
     /**
      * Special value to indicate no validation error/ message.
