@@ -21,6 +21,7 @@ package linkomatic;
 
 import com.voicetribe.wicket.Page;
 import com.voicetribe.wicket.PageParameters;
+import com.voicetribe.wicket.PropertyModel;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
@@ -53,7 +54,8 @@ public class Home extends HtmlPage
                 cycle.setRedirect(true);
             }
         };
-        actionLink.add(new Label("linkClickCount", this));
+        actionLink.add(new Label("linkClickCount",
+                new PropertyModel(this, "linkClickCount")));
         add(actionLink);
 
         // Link to Page1 is a simple external page link 
