@@ -1188,7 +1188,7 @@ public abstract class Component implements Serializable
 				return model;
 			}
 		}
-		
+
 		// No model for this component!
 		return null;
 	}
@@ -1311,6 +1311,13 @@ public abstract class Component implements Serializable
 	 * Implementation that renders this component.
 	 */
 	protected abstract void onRender();
+
+	/**
+	 * Called when this component is deserialized as part of session replication
+	 */
+	protected void onSessionAttach()
+	{
+	}
 
 	/**
 	 * Redirects browser to the given page

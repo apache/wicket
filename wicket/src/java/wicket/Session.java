@@ -30,6 +30,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component.IVisitor;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
@@ -647,12 +648,29 @@ public abstract class Session implements Serializable
 						+ ", which produced page " + page);
 
 				// Add to page map specified in page state info
+				attach(page);
 				getPageMap(pageState.pageMapName).put(page);
 
 				// Page has been added to session now
 				pageState.addedToSession = true;
 			}
 		}
+	}
+
+	/**
+	 * @param page
+	 *            The page to traverse
+	 */
+	private void attach(Page page)
+	{
+		page.visitChildren(new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				component.onSessionAttach();
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**

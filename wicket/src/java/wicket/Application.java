@@ -111,7 +111,7 @@ public abstract class Application
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
 	}
-
+	
 	/**
 	 * @param scope
 	 *            Scope of resource
