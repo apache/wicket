@@ -45,6 +45,9 @@ public abstract class AbstractImage extends WebComponent implements IResourceLis
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
+	
+	/** Type of sharing for this image */
+	private int sharing = UNSHARED;
 
     /**
      * @see wicket.Component#Component(String)
@@ -69,6 +72,14 @@ public abstract class AbstractImage extends WebComponent implements IResourceLis
     {
         super(name, object, expression);
     }
+    
+    /**
+	 * @see wicket.Component#getSharing()
+	 */
+	public int getSharing()
+	{
+		return sharing;
+	}
 
     /**
      * Implementation of IResourceListener.  Renders resource back to requester.
@@ -112,18 +123,20 @@ public abstract class AbstractImage extends WebComponent implements IResourceLis
             throw new WicketRuntimeException("Unable to render resource " + imageResource, e);
         }
     }
+    
+	/**
+	 * @param sharing The sharing to set.
+	 * @see wicket.Component#getSharing()
+	 */
+	public void setSharing(int sharing)
+	{
+		this.sharing = sharing;
+	}	
 
     /**
      * @return Gets the image resource to render
      */
     protected abstract IResource getResource();
-    
-    /**
-     * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
-     */
-    protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-    {
-    }
 
     /**
      * @see wicket.Component#handleComponentTag(ComponentTag)
@@ -134,6 +147,13 @@ public abstract class AbstractImage extends WebComponent implements IResourceLis
         super.handleComponentTag(tag);
         final String url = getRequestCycle().urlFor(this, IResourceListener.class);
 		tag.put("src", url.replaceAll("&", "&amp;"));
+    }
+    
+    /**
+     * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+     */
+    protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+    {
     }
 
 	static

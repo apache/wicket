@@ -131,18 +131,42 @@ public class WebRequestCycle extends RequestCycle
 					+ component.getClass() + " does not implement " + listenerInterface);
 		}
 
-		// Compose the URL
+		// Buffer for composing URL
 		final StringBuffer buffer = urlPrefix();
+		
+		// Compose URL differently depending on component sharing
+		switch (component.getSharing())
+		{
+			case Component.UNSHARED : 
+			{
+				buffer.append("?component=");
+				buffer.append(component.getPath());
+				buffer.append("&rendering=");
+				buffer.append(component.getPage().getRendering());
+				buffer.append("&interface=");
+				buffer.append(Classes.name(listenerInterface));
+				return response.encodeURL(buffer.toString());
+			}
 
-		buffer.append("?component=");
-		buffer.append(component.getPath());
-		buffer.append("&rendering=");
-		buffer.append(component.getPage().getRendering());
-		buffer.append("&interface=");
-		buffer.append(Classes.name(listenerInterface));
+			case Component.SESSION_SHARED : 
+			{
+				buffer.append('/');
+				buffer.append(((WebSession)session).reference(component));
+				return response.encodeURL(buffer.toString());
+			}
 
-		// Return the encoded URL
-		return response.encodeURL(buffer.toString());
+			case Component.APPLICATION_SHARED : 
+			{
+				buffer.append('/');
+				buffer.append(((WebApplication)application).reference(component));
+				return buffer.toString();
+			}
+			
+			default:
+			{
+				throw new WicketRuntimeException("Illegal component sharing type");
+			}
+		}
 	}
 
 	/**
@@ -302,17 +326,11 @@ public class WebRequestCycle extends RequestCycle
 	{
 		// Get any component parameter
 		final String path = request.getParameter("component");
-
 		if (path != null)
 		{
-			// Get page where component resides
-			log.debug("Getting page " + path);
-
 			// Get page from path
+			log.debug("Getting page for path " + path);
 			final Page page = session.getPage(path);
-
-			// Get the rendering of the page
-			final int rendering = Integer.parseInt(request.getParameter("rendering"));
 
 			// Does page exist?
 			if (page != null)
@@ -320,99 +338,142 @@ public class WebRequestCycle extends RequestCycle
 				// Is page stale?
 				if (page.isStale())
 				{
-					// Page was marked stale because the data model for some
-					// component on the page is stale.  Find the most recent 
-                    // fresh page and send the user there.
-					final Page freshestPage = session.getFreshestPage();
-
-					if (freshestPage != null)
-					{
-						setPage(newPage(application.getPages().getStaleDataErrorPage(),
-								freshestPage));
-					}
-					else
-					{
-						setPage(newPage(application.getPages().getHomePage()));
-					}
-
+					handleStalePage();
 					return true;
 				}
-				else if (page.isRenderingStale(rendering))
+				else if (page.isRenderingStale(Integer.parseInt(request
+						.getParameter("rendering"))))
 				{
-					// Just a particular rendering of the page is stale, so send
-					// the user back to the page
-					setPage(newPage(application.getPages().getStaleDataErrorPage(), page));
+					handleStaleRendering(page);
 					return true;
 				}
 				else
 				{
-					// Get the component at the given path on the page
-					final Component component = page
-							.get(Strings.afterFirstPathComponent(path, '.'));
-
-					// Got component?
-					if (component != null)
-					{
-						// Set the page for the component as the response page
-						// and expire any pages in the session cache that are
-						// newer than the given page since they will no longer
-						// be accessible.
-						setPage(page);
-
-						// Look up interface to call
-						final String interfaceName = request.getParameter("interface");
-						final Method method = getInterfaceMethod(interfaceName);
-
-						try
-						{
-							// Invoke the interface method on the component
-							method.invoke(component, new Object[] { });
-						}
-						catch (IllegalAccessException e)
-						{
-							throw new WicketRuntimeException("Cannot access method " + method
-									+ " of interface " + interfaceName, e);
-						}
-						catch (InvocationTargetException e)
-						{
-							throw new WicketRuntimeException("Method " + method + " of interface "
-									+ interfaceName + " threw an exception", e);
-						}
-
-						// Set form component values from cookies
-						setFormComponentValuesFromCookies(page);
-
-						// If the current page is also the next page or we're redirecting
-						if (getPage() != page || getRedirect())
-						{
-							// detach any models loaded by the component listener
-							page.detachModels();
-						}
-						return true;
-					}
-					else
-					{
-						// If the page is in the session and is not stale, then
-						// the component in question should exist. Therefore, we
-						// should not get here. So it must be an internal error
-						// of some kind or someone is hacking around with URLs 
-                        // in their browser.
-						log.error("No component found for " + path);
-						setPage(newPage(application.getPages().getInternalErrorPage()));
-						return true;
-					}
+					invokeInterface(page, path, request.getParameter("interface"));
+					return true;
 				}
 			}
 			else
 			{
-				// Page was expired from session, probably because backtracking
-				// limit was reached
-				setPage(newPage(application.getPages().getPageExpiredErrorPage()));
+				handleExpiredPage();
 				return true;
 			}
 		}
-
+		else
+		{
+			// Get path info
+			final String pathInfo = ((WebRequest)request).getHttpServletRequest().getPathInfo();
+			if (pathInfo != null)
+			{
+				//  Ask application to resolve shared component
+				Component component = ((WebApplication)application).resolve(pathInfo.substring(1));
+				if (component != null)
+				{
+					// Found shared component, so invoke interface on it
+					invokeInterface(component, "IResourceListener");
+					return true;
+				}
+				else
+				{
+					// Ask session to resolve the path next
+					component = ((WebSession)session).resolve(pathInfo);
+					if (component != null)
+					{
+						// Found it!
+						invokeInterface(component, "IResourceListener");
+						return true;
+					}
+				}
+			}
+		}
 		return false;
+	}
+
+	private void invokeInterface(final Page page, final String path, final String interfaceName)
+	{
+		// Set the page for the component as the response page
+		// and expire any pages in the session cache that are
+		// newer than the given page since they will no longer
+		// be accessible.
+		setPage(page);
+
+		// Invoke interface on the component at the given path on the page
+		final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
+		if (component != null)
+		{
+			// Invoke interface on component
+			invokeInterface(component, interfaceName);
+
+			// Set form component values from cookies
+			setFormComponentValuesFromCookies(page);
+
+			// If the current page is also the next page or we're redirecting
+			if (getPage() != page || getRedirect())
+			{
+				// detach any models loaded by the component listener
+				page.detachModels();
+			}
+		}
+		else
+		{
+			// Must be an internal error of some kind or someone is hacking
+			// around with URLs in their browser.
+			log.error("No component found for " + path);
+			setPage(newPage(application.getPages().getInternalErrorPage()));
+		}
+	}
+
+	private void invokeInterface(final Component component, final String interfaceName)
+	{
+		// Look up interface to call
+		final Method method = getInterfaceMethod(interfaceName);
+
+		try
+		{
+			// Invoke the interface method on the component
+			method.invoke(component, new Object[] { });
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new WicketRuntimeException("Cannot access method " + method + " of interface "
+					+ interfaceName, e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new WicketRuntimeException("Method " + method + " of interface " + interfaceName
+					+ " threw an exception", e);
+		}
+	}
+
+	private void handleExpiredPage()
+	{
+		// Page was expired from session, probably because backtracking
+		// limit was reached
+		setPage(newPage(application.getPages().getPageExpiredErrorPage()));
+	}
+
+	private void handleStalePage()
+	{
+		// Page was marked stale because the data model for some
+		// component on the page is stale. Find the most recent
+		// fresh page and send the user there.
+		final Page freshestPage = session.getFreshestPage();
+
+		if (freshestPage != null)
+		{
+			setPage(newPage(application.getPages().getStaleDataErrorPage(), freshestPage));
+		}
+		else
+		{
+			setPage(newPage(application.getPages().getHomePage()));
+		}
+	}
+
+	private void handleStaleRendering(final Page page)
+	{
+		// Just a particular rendering of the page is stale, so send
+		// the user back to the page
+		setPage(newPage(application.getPages().getStaleDataErrorPage(), page));
 	}
 
 	/**

@@ -1,14 +1,14 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
+ * $Id$ $Revision:
+ * 1.54 $ $Date$
+ * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -91,7 +91,7 @@ import wicket.util.string.Strings;
  * including getRequestString(), getRequestStrings(), getRequestInt(),
  * getRequestInts() and getRequestBoolean(). Each of these methods uses the path
  * to the component to retrieve a value from the request.
- *
+ * 
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -100,6 +100,28 @@ public abstract class Component implements Serializable
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
+
+	/** Designates a normal component that is not being shared */
+	public static final int UNSHARED = 0;
+
+	/**
+	 * Designates a component being shared among pages within a session. The
+	 * shared component will be given a stable URL relative to the session so
+	 * the client browser can cache the component's output. A typical use for
+	 * this is to share images which need to be secure (and therefore session
+	 * relative) but which will be used on multiple pages within a session.
+	 */
+	public static final int SESSION_SHARED = 1;
+
+	/**
+	 * Designates a component being shared across all sessions within an
+	 * application. The shared component will be given a URL that is stable
+	 * across all application sessions so that client browsers can cache the
+	 * component's output. A typical use for this is to share images which have
+	 * no security requirements that will be used on multiple pages within a
+	 * session.
+	 */
+	public static final int APPLICATION_SHARED = 2;
 
 	/** Collection of AttributeModifiers to be applied for this Component */
 	List attributeModifiers = null;
@@ -139,7 +161,7 @@ public abstract class Component implements Serializable
 
 		/**
 		 * Called at each component in a traversal.
-		 *
+		 * 
 		 * @param component
 		 *            The component
 		 * @return CONTINUE_TRAVERSAL (null) if the traversal should continue,
@@ -154,7 +176,7 @@ public abstract class Component implements Serializable
 	 * Constructor. All components have names. A component's name cannot be
 	 * null. This is the minimal constructor of component. It does not register
 	 * a model.
-	 *
+	 * 
 	 * @param name
 	 *            The non-null name of this component
 	 * @throws WicketRuntimeException
@@ -170,7 +192,7 @@ public abstract class Component implements Serializable
 	 * is an instance of IModel, the object will be used directly. Otherwise,
 	 * the object will be wrapped in an instance of {@link Model}. All
 	 * components have names. A component's name cannot be null.
-	 *
+	 * 
 	 * @param name
 	 *            The non-null name of this component
 	 * @param object
@@ -182,51 +204,111 @@ public abstract class Component implements Serializable
 	{
 		setName(name);
 
-        // If the object is already an IModel
+		// If the object is already an IModel
 		if (object instanceof IModel)
 		{
-            // just cast and store it
+			// just cast and store it
 			setModel((IModel)object);
 		}
 		else
 		{
-            // otherwise, create a Model wrapper for the object
+			// otherwise, create a Model wrapper for the object
 			setModel(new Model(object));
 		}
 	}
 
 	/**
-     * Constructor that uses the provided object as a model. If the object given
-     * is an instance of PropertyModel, the object will be used directly.  If
-     * the object is an instance of IModel, it will be wrapped in a PropertyModel
-     * instance using the OGNL expression.  This is the equivalent of:
-     *
-     * <pre>
-     * IModel model;
-     * String expression;
-     * ...
-     * new MyComponent(name, new PropertyModel(model, expression));
-     * </pre>
-     *
-     * If the object is not an instance of PropertyModel or IModel, the object
-	 * will be wrapped in an instance of {@link Model} that will in turn be
-     * wrapped in an instance of {@link PropertyModel}using the provided expression.
-     * Thus, this is the equivalent of:
-	 *
+	 * Constructor that uses the provided object as a model. If the object given
+	 * is an instance of PropertyModel, the object will be used directly. If the
+	 * object is an instance of IModel, it will be wrapped in a PropertyModel
+	 * instance using the OGNL expression. This is the equivalent of:
+	 * 
 	 * <pre>
-     * Serializable model;
-     * String expression;
-     * ...
-     * new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 * 
+	 *  
+	 *   
+	 *    
+	 *     
+	 *      
+	 *       
+	 *        
+	 *         
+	 *          
+	 *           
+	 *            
+	 *             
+	 *              
+	 *               
+	 *                IModel model;
+	 *                String expression;
+	 *                ...
+	 *                new MyComponent(name, new PropertyModel(model, expression));
+	 *                
+	 *               
+	 *              
+	 *             
+	 *            
+	 *           
+	 *          
+	 *         
+	 *        
+	 *       
+	 *      
+	 *     
+	 *    
+	 *   
+	 *  
 	 * </pre>
-	 *
+	 * 
+	 * If the object is not an instance of PropertyModel or IModel, the object
+	 * will be wrapped in an instance of {@link Model}that will in turn be
+	 * wrapped in an instance of {@link PropertyModel}using the provided
+	 * expression. Thus, this is the equivalent of:
+	 * 
+	 * <pre>
+	 * 
+	 *  
+	 *   
+	 *    
+	 *     
+	 *      
+	 *       
+	 *        
+	 *         
+	 *          
+	 *           
+	 *            
+	 *             
+	 *              
+	 *               
+	 *                Serializable model;
+	 *                String expression;
+	 *                ...
+	 *                new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 *                
+	 *               
+	 *              
+	 *             
+	 *            
+	 *           
+	 *          
+	 *         
+	 *        
+	 *       
+	 *      
+	 *     
+	 *    
+	 *   
+	 *  
+	 * </pre>
+	 * 
 	 * All components have names. A component's name cannot be null.
-	 *
+	 * 
 	 * @param name
 	 *            The non-null name of this component
 	 * @param object
-	 *            The object that will be used as the subject for the given
-	 *            OGNL expression
+	 *            The object that will be used as the subject for the given OGNL
+	 *            expression
 	 * @param expression
 	 *            The OGNL expression that works on the given model object
 	 * @throws WicketRuntimeException
@@ -234,30 +316,30 @@ public abstract class Component implements Serializable
 	 */
 	public Component(String name, Serializable object, String expression)
 	{
-        setName(name);
+		setName(name);
 
-        // If object is already a property model, set that
-        if (object instanceof PropertyModel)
-        {
-        	setModel((PropertyModel)object);
-        }
-        else
-        // If object is already an IModel
-        if (object instanceof IModel)
-        {
-            // wrap in a PropertyModel
-        	setModel(new PropertyModel((IModel)object, expression));
-        }
-        else
-        {
-            // wrap object in a Model and then in a PropertyModel
-        	setModel(new PropertyModel(new Model(object), expression));
-        }
+		// If object is already a property model, set that
+		if (object instanceof PropertyModel)
+		{
+			setModel((PropertyModel)object);
+		}
+		else
+		// If object is already an IModel
+		if (object instanceof IModel)
+		{
+			// wrap in a PropertyModel
+			setModel(new PropertyModel((IModel)object, expression));
+		}
+		else
+		{
+			// wrap object in a Model and then in a PropertyModel
+			setModel(new PropertyModel(new Model(object), expression));
+		}
 	}
 
 	/**
 	 * Adds an attribute modifier to the component.
-	 *
+	 * 
 	 * @param modifier
 	 *            The attribute modifier to be added
 	 * @return this (to allow method call chaining)
@@ -274,7 +356,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Registers a debug message for this component
-	 *
+	 * 
 	 * @param message
 	 *            The message
 	 */
@@ -285,7 +367,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Registers an error message for this component
-	 *
+	 * 
 	 * @param message
 	 *            The message
 	 */
@@ -296,7 +378,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Registers an fatal error message for this component
-	 *
+	 * 
 	 * @param message
 	 *            The message
 	 */
@@ -307,7 +389,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Finds the first container parent of this component of the given class.
-	 *
+	 * 
 	 * @param c
 	 *            Container class to search for
 	 * @return First container parent that is an instance of the given class, or
@@ -337,7 +419,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets interface to application that this component is a part of.
-	 *
+	 * 
 	 * @return The application associated with the session that this component
 	 *         is in.
 	 * @see Application
@@ -350,7 +432,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Gets the application pages from the application that this component
 	 * belongs to.
-	 *
+	 * 
 	 * @return The application pages
 	 * @see ApplicationPages
 	 */
@@ -362,7 +444,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Gets the application settings from the application that this component
 	 * belongs to.
-	 *
+	 * 
 	 * @return The application settings from the application that this component
 	 *         belongs to
 	 * @see ApplicationSettings
@@ -373,8 +455,31 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Gets the type of sharing this component desires, which must be one of:
+	 * UNSHARED, SESSION_SHARED or APPLICATION_SHARED. If a component is
+	 * unshared, it will have a normal unique URL with a session id and
+	 * component path. If it instead specifies SESSION_SHARED, the component
+	 * will be given a URL that is constant across the session regardless of
+	 * where the component is used. This means that a SESSION_SHARED Image or
+	 * DynamicImage component, for example, can be stored in a Session property
+	 * and used on multiple application Pages. The URL to the component will be
+	 * constant and thus the output of the component can be cached by browsers.
+	 * The APPLICATION_SHARED value specifies the same kind of sharing, but
+	 * without session scoping. A component which is APPLICATION_SHARED will
+	 * have a stable URL to enable browser caching and will be available to ANY
+	 * CLIENT requesting it, regardless of who they are. This has obvious
+	 * security implications if the image data is sensitive.
+	 * 
+	 * @return The kind of sharing this component desires
+	 */
+	public int getSharing()
+	{
+		return UNSHARED;
+	}
+
+	/**
 	 * Gets the converter that should be used by this component.
-	 *
+	 * 
 	 * @return The converter that should be used by this component
 	 */
 	public IConverter getConverter()
@@ -392,7 +497,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the locale for the session holding this component.
-	 *
+	 * 
 	 * @return The locale for the session holding this component
 	 * @see Component#getSession()
 	 */
@@ -404,7 +509,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Convenience method to provide easy access to the localizer object within
 	 * any component.
-	 *
+	 * 
 	 * @return The localizer object
 	 */
 	public final Localizer getLocalizer()
@@ -414,7 +519,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the model. It returns the object that wraps the backing model.
-	 *
+	 * 
 	 * @return The model
 	 */
 	public final IModel getModel()
@@ -432,13 +537,13 @@ public abstract class Component implements Serializable
 	 */
 	public final Object getModelLock()
 	{
-        return model != null ? model : new Object();
+		return model != null ? model : new Object();
 	}
 
 	/**
 	 * Gets the backing model object; this is shorthand for
 	 * getModel().getObject().
-	 *
+	 * 
 	 * @return the backing model object
 	 */
 	public final Object getModelObject()
@@ -456,7 +561,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets a model object as a string.
-	 *
+	 * 
 	 * @return Model object for this component as a string
 	 */
 	public final String getModelObjectAsString()
@@ -470,7 +575,7 @@ public abstract class Component implements Serializable
 				// Get converter
 				final IConverter converter = getConverter();
 
-				//	Model string from property
+				// Model string from property
 				final String modelString = (String)converter.convert(modelObject, String.class);
 
 				// If we should escape the markup
@@ -487,7 +592,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the name of this component.
-	 *
+	 * 
 	 * @return The name of this component
 	 */
 	public String getName()
@@ -497,7 +602,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the page holding this component.
-	 *
+	 * 
 	 * @return The page holding this component
 	 */
 	public final Page getPage()
@@ -525,7 +630,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the path to this component relative to the page it is in.
-	 *
+	 * 
 	 * @return The path to this component relative to the page it is in
 	 */
 	public final String getPageRelativePath()
@@ -535,7 +640,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets any parent container, or null if there is none.
-	 *
+	 * 
 	 * @return Any parent container, or null if there is none
 	 */
 	public final Container getParent()
@@ -545,7 +650,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the components' path.
-	 *
+	 * 
 	 * @return Dotted path to this component in the component hierarchy
 	 */
 	public final String getPath()
@@ -564,7 +669,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the number of times this component has been rendered.
-	 *
+	 * 
 	 * @return The number of times this component has been rendered. This can be
 	 *         useful in debugging.
 	 */
@@ -583,7 +688,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the request parameter for this component as a boolean.
-	 *
+	 * 
 	 * @return The value in the request for this component
 	 */
 	public final Boolean getRequestBoolean()
@@ -593,7 +698,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the active request cycle for this component
-	 *
+	 * 
 	 * @return The request cycle
 	 */
 	public final RequestCycle getRequestCycle()
@@ -603,7 +708,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the request parameter for this component as an int.
-	 *
+	 * 
 	 * @return The value in the request for this component
 	 */
 	public final int getRequestInt()
@@ -623,7 +728,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Gets the request parameter for this component as an int, using the given
 	 * default in case no corresponding request parameter was found.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            Default value to return if request does not have an integer
 	 *            for this component
@@ -652,7 +757,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the request parameters for this component as ints.
-	 *
+	 * 
 	 * @return The values in the request for this component
 	 */
 	public final int[] getRequestInts()
@@ -672,7 +777,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the request parameter for this component as a string.
-	 *
+	 * 
 	 * @return The value in the request for this component
 	 */
 	public final String getRequestString()
@@ -682,7 +787,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the request parameters for this component as strings.
-	 *
+	 * 
 	 * @return The valuess in the request for this component
 	 */
 	public final String[] getRequestStrings()
@@ -702,7 +807,7 @@ public abstract class Component implements Serializable
 	 * Gets the current session object. Although this method is not final
 	 * (because Page overrides it), it is not intended to be overridden by
 	 * clients and clients of the framework should not do so!
-	 *
+	 * 
 	 * @return The session that this component is in
 	 */
 	public Session getSession()
@@ -736,7 +841,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets whether model strings should be escaped.
-	 *
+	 * 
 	 * @return Returns whether model strings should be escaped
 	 */
 	public final boolean getShouldEscapeModelStrings()
@@ -746,7 +851,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the (skin) style of this component.
-	 *
+	 * 
 	 * @return The (skin) style of this component
 	 * @see wicket.Session#getStyle()
 	 */
@@ -773,7 +878,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Registers a info message for this component
-	 *
+	 * 
 	 * @param message
 	 *            The message
 	 */
@@ -784,7 +889,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets whether this component and any children are visible.
-	 *
+	 * 
 	 * @return True if component and any children are visible
 	 */
 	public final boolean isVisible()
@@ -826,7 +931,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Sets the given model.
-	 *
+	 * 
 	 * @param model
 	 *            the model
 	 * @return This
@@ -853,7 +958,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Sets the backing model object; shorthand for getModel().setObject(value).
-	 *
+	 * 
 	 * @param value
 	 *            The value to set
 	 */
@@ -868,7 +973,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Sets whether model strings should be escaped.
-	 *
+	 * 
 	 * @param escapeMarkup
 	 *            True is model strings should be escaped
 	 * @return This
@@ -881,7 +986,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Sets whether this component and any children are visible.
-	 *
+	 * 
 	 * @param visible
 	 *            True if this component and any children should be visible
 	 * @return This
@@ -895,7 +1000,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Gets the string representation of this component, which in this case is
 	 * its path.
-	 *
+	 * 
 	 * @return The path to this component
 	 */
 	public String toString()
@@ -905,7 +1010,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Registers a warning message for this component
-	 *
+	 * 
 	 * @param message
 	 *            The message
 	 */
@@ -916,7 +1021,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Checks whether the given type has the expected name.
-	 *
+	 * 
 	 * @param tag
 	 *            The tag to check
 	 * @param name
@@ -936,7 +1041,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Checks that a given tag has a required attribute value.
-	 *
+	 * 
 	 * @param tag
 	 *            The tag
 	 * @param key
@@ -962,9 +1067,9 @@ public abstract class Component implements Serializable
 		}
 	}
 
-    /**
-     * Detaches the model for this component if it is detachable
-     */
+	/**
+	 * Detaches the model for this component if it is detachable
+	 */
 	protected void detachModel()
 	{
 		if (model instanceof IDetachableModel)
@@ -976,7 +1081,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Prefixes an exception message with useful information about this
 	 * component.
-	 *
+	 * 
 	 * @param message
 	 *            The message
 	 * @return The modified message
@@ -993,7 +1098,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Finds the markup stream for this component.
-	 *
+	 * 
 	 * @return The markup stream for this component. Since a Component cannot
 	 *         have a markup stream, we ask this component's parent to search
 	 *         for it.
@@ -1005,7 +1110,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Processes the component tag.
-	 *
+	 * 
 	 * @param tag
 	 *            Tag to modify
 	 */
@@ -1015,7 +1120,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Processes the body.
-	 *
+	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -1088,7 +1193,7 @@ public abstract class Component implements Serializable
 	 * The method handleComponentTag() is called to allow the component to
 	 * mutate the start tag. The method handleComponentTagBody() is then called
 	 * to permit the component to render its body.
-	 *
+	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 */
@@ -1136,7 +1241,7 @@ public abstract class Component implements Serializable
 	 * Writes a simple tag out to the response stream. Any components that might
 	 * be referenced by the tag are ignored. Also undertakes any tag attribute
 	 * modifications if they have been added to the component.
-	 *
+	 * 
 	 * @param tag
 	 *            The tag to write
 	 */
@@ -1168,7 +1273,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Writes a simple tag out to the response stream. Any components that might
 	 * be referenced by the tag are ignored.
-	 *
+	 * 
 	 * @param markupStream
 	 *            The markup stream to advance (where the tag came from)
 	 */
@@ -1180,7 +1285,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Replaces the body with the given one.
-	 *
+	 * 
 	 * @param markupStream
 	 *            The markup stream to replace the tag body in
 	 * @param tag
@@ -1218,7 +1323,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Visits the parents of this component.
-	 *
+	 * 
 	 * @param c
 	 *            Class
 	 * @param visitor
@@ -1252,7 +1357,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Check if all components rendered and throw an exception when this is not
 	 * the case.
-	 *
+	 * 
 	 * @param page
 	 *            the page
 	 */
@@ -1277,7 +1382,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the component at the given path.
-	 *
+	 * 
 	 * @param path
 	 *            Path to component
 	 * @return The component at the path
@@ -1296,7 +1401,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Renders the close tag at the current position in the markup stream.
-	 *
+	 * 
 	 * @param markupStream
 	 *            the markup stream
 	 * @param openTag
@@ -1338,7 +1443,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Sets the parent of a component.
-	 *
+	 * 
 	 * @param parent
 	 *            The parent container
 	 */
@@ -1355,7 +1460,7 @@ public abstract class Component implements Serializable
 	 * If this Component is a Page, returns self. Otherwise, searches for the
 	 * nearest Page parent in the component hierarchy. If no Page parent can be
 	 * found, null is returned
-	 *
+	 * 
 	 * @return The Page or null if none can be found
 	 */
 	private final Page findPage()
@@ -1367,7 +1472,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Sets the name of this component. This method is private because the only
 	 * time a component's name can be set is in its constructor.
-	 *
+	 * 
 	 * @param name
 	 *            The component's name
 	 */

@@ -7,6 +7,22 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="add" dev="Jonathan Locke" issue="">
+		Added getSharing() method to Component with values UNSHARED, APPLICATION_SHARED 
+		and SESSION_SHARED (see javadoc for details).  Changed the AbstractImage class 
+		so that it allows a component user to set the sharing mode for an image to one 
+		of these values.  When an image is SESSION_SHARED, it will have a stable URL 
+		within a given session.  When an image is APPLICATION_SHARED, it will have a 
+		stable URL across all sessions in an application.  So, to implement a really 
+		efficient dynamic image, simply store the image component in a static variable 
+		and set its sharing to APPLICATION_SHARED.  Now you will have one object that 
+		is shared everywhere that has a stable URL.  None of this requires access to 
+		temporary storage.  One catch that might come up is that shared components will 
+		have a URL like /applicationName/a0 for application shared components or 
+		/applicationName/s0 for session shared components.  In order for an application 
+		to handle such URLs it must have a servlet url mapping pattern that includes /* 
+		on the end, such as /images/*.  Also updated image example to demonstrate all this.
+	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
       	Created AbstractImage base class and simplified code in Image.
       </action>
