@@ -31,12 +31,13 @@ import javax.swing.tree.TreePath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.RequestCycle;
+import com.voicetribe.wicket.markup.ComponentTag;
+import com.voicetribe.wicket.markup.MarkupStream;
+import com.voicetribe.wicket.markup.html.HtmlComponent;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.image.Image;
 import com.voicetribe.wicket.markup.html.tree.Filler;
 import com.voicetribe.wicket.markup.html.tree.Node;
 import com.voicetribe.wicket.markup.html.tree.Tree;
@@ -187,20 +188,8 @@ public class FileBrowser extends HtmlPage
                     fileTree.setExpandedState(selection, (!node.isExpanded())); // inverse
                 }
             };
-           expandCollapsLink.add(new Image("junctionImg", new Model(node)
-            {
-                public Object getObject()
-                {
-                    return getJunctionImageName((Node) super.getObject());
-                }
-            }));
-           expandCollapsLink.add(new Image("nodeImg", new Model(node)
-            {
-                public Object getObject()
-                {
-                    return getNodeImageName((Node) super.getObject());
-                }
-            }));
+           expandCollapsLink.add(new SimpleImage("junctionImg", getJunctionImageName(node)));
+           expandCollapsLink.add(new SimpleImage("nodeImg", getNodeImageName(node)));
            node.add(expandCollapsLink);
            TreeNodeLink selectLink = new TreeNodeLink("selectLink", fileTree, node, this)
            {
@@ -220,7 +209,7 @@ public class FileBrowser extends HtmlPage
 	     */
 	    protected void populateFiller(Filler filler)
 	    {
-	        filler.add(new Image("fillImg", "vert.gif"));
+	        filler.add(new SimpleImage("fillImg", "vert.gif"));
 	    }
 
 	    /**
@@ -305,5 +294,42 @@ public class FileBrowser extends HtmlPage
 	        return img;
 	    }
 	}
+
+    /**
+     * Component that writes the given content as-is. This is a *hack*, as getting a load
+     * of images as resources is just too inefficient, but we still want to set them dynamicaly.
+     * Another option would be to have components for all possible images, and just set the
+     * needed images visible. Not nice either.
+     * TODO we should really have an optimized resource strategy for this kind of things.
+     */
+    private static class SimpleImage extends HtmlComponent
+    {
+        /**
+         * Construct.
+         * @param name component name
+         * @param src body
+         */
+        public SimpleImage(String name, String src)
+        {
+            super(name, src);
+        }
+
+        /**
+         * @see com.voicetribe.wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+         */
+        protected void handleComponentTag(RequestCycle cycle, ComponentTag tag)
+        {
+            checkTag(tag, "img");
+            super.handleComponentTag(cycle, tag);
+            tag.put("src", (String)getModelObject());
+        }
+
+        /**
+         * @see com.voicetribe.wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
+         */
+        protected void handleBody(RequestCycle cycle, MarkupStream markupStream, ComponentTag openTag)
+        {
+        }
+    }
 }
 
