@@ -39,6 +39,28 @@ public class ListItem extends WebMarkupContainer
 	private ListView listView;
 
 	/**
+	 * Model for list items.
+	 */
+	private class ListItemModel extends Model
+	{
+
+		/**
+		 * @see wicket.model.Model#getObject()
+		 */
+		public Object getObject()
+		{
+			return listView.getListObject(index);
+		}
+		/**
+		 * @see wicket.model.Model#setObject(java.lang.Object)
+		 */
+		public void setObject(Object object)
+		{
+			throw new WicketRuntimeException("Can't set an object through a listitem");
+		}
+	}
+
+	/**
 	 * A constructor which uses the index and the list provided to create a ListItem. This
 	 * constructor is the default one.
 	 * @param listView The listView that holds this listItem
@@ -67,29 +89,40 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns a link that will move the given listItem "up" (towards the beginning) in the
-	 * listView.
-	 * @param componentName Name of move-up link component to create
-	 * @return The link component
+	 * Gets the index of the listItem in the parent listView.
+	 * @return The index of this listItem in the parent listView
 	 */
-	public final Link moveUpLink(final String componentName)
+	public final int getIndex()
 	{
-		final Link link = new Link(componentName)
-		{
-			public void onLinkClicked()
-			{
-				// Swap listItems and invalidate listView
-				Collections.swap(listView.getList(), index, index - 1);
-				listView.invalidateModel();
-			}
-		};
+		return index;
+	}
 
-		if (index == 0)
-		{
-			link.setVisible(false);
-		}
+	/**
+	 * Convinience method for ListViews with alternating style for colouring.
+	 * @return True, if index is even ((index % 2) == 0)
+	 */
+	public final boolean isEvenIndex()
+	{
+		return (getIndex() % 2) == 0;
+	}
 
-		return link;
+	/**
+	 * Gets if this listItem is the first listItem in the containing listView.S
+	 * @return True if this listItem is the first listItem in the containing listView
+	 */
+	public final boolean isFirst()
+	{
+		return index == 0;
+	}
+
+	/**
+	 * Gets whether this listItem is the last listItem in the containing listView.
+	 * @return True if this listItem is the last listItem in the containing listView.
+	 */
+	public final boolean isLast()
+	{
+		int size = listView.getList().size();
+		return ((size == 0) || (index == (size - 1)));
 	}
 
 	/**
@@ -111,6 +144,32 @@ public class ListItem extends WebMarkupContainer
 		};
 
 		if (index == (listView.getList().size() - 1))
+		{
+			link.setVisible(false);
+		}
+
+		return link;
+	}
+
+	/**
+	 * Returns a link that will move the given listItem "up" (towards the beginning) in the
+	 * listView.
+	 * @param componentName Name of move-up link component to create
+	 * @return The link component
+	 */
+	public final Link moveUpLink(final String componentName)
+	{
+		final Link link = new Link(componentName)
+		{
+			public void onLinkClicked()
+			{
+				// Swap listItems and invalidate listView
+				Collections.swap(listView.getList(), index, index - 1);
+				listView.invalidateModel();
+			}
+		};
+
+		if (index == 0)
 		{
 			link.setVisible(false);
 		}
@@ -143,64 +202,5 @@ public class ListItem extends WebMarkupContainer
 	protected final ListView getListView()
 	{
 		return listView;
-	}
-
-	/**
-	 * Gets the index of the listItem in the parent listView.
-	 * @return The index of this listItem in the parent listView
-	 */
-	public final int getIndex()
-	{
-		return index;
-	}
-
-	/**
-	 * Gets if this listItem is the first listItem in the containing listView.S
-	 * @return True if this listItem is the first listItem in the containing listView
-	 */
-	public final boolean isFirst()
-	{
-		return index == 0;
-	}
-
-	/**
-	 * Gets whether this listItem is the last listItem in the containing listView.
-	 * @return True if this listItem is the last listItem in the containing listView.
-	 */
-	public final boolean isLast()
-	{
-		int size = listView.getList().size();
-		return ((size == 0) || (index == (size - 1)));
-	}
-
-	/**
-	 * Convinience method for ListViews with alternating style for colouring.
-	 * @return True, if index is even ((index % 2) == 0)
-	 */
-	public final boolean isEvenIndex()
-	{
-		return (getIndex() % 2) == 0;
-	}
-
-	/**
-	 * Model for list items.
-	 */
-	private class ListItemModel extends Model
-	{
-		/**
-		 * @see wicket.model.Model#setObject(java.lang.Object)
-		 */
-		public void setObject(Object object)
-		{
-			throw new WicketRuntimeException("Can't set an object through a listitem");
-		}
-
-		/**
-		 * @see wicket.model.Model#getObject()
-		 */
-		public Object getObject()
-		{
-			return listView.getListObject(index);
-		}
 	}
 }
