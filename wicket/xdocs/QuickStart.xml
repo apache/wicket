@@ -1,36 +1,24 @@
 <?xml version="1.0"?>
 <document>
-  <properties>
-    <title>QuickStart</title>
-  </properties>
+	<properties>
+		<title>Running the Examples</title>
+	</properties>
 
-  <meta name="keyword" content="wicket, web, j2ee, java"/>
+	<meta name="keyword" content="wicket, web, j2ee, java, examples, running" />
 
-<body>
-
-<section name="QuickStart">
-<subsection name="How to build and run the examples under Jetty">
-<ol>
-<li>Install Java 1.4.x or up, Ant 1.6 or Maven 1.x and
-<a href="http://jetty.mortbay.org/jetty/index.html">Jetty</a></li>
-<li>Go to WICKET_HOME and type "ant" or - if you use Maven </li>
-<li>Copy WICKET_HOME/build/examples/*.war to JETTY_HOME/webapps</li>
-<li>Go to JETTY_HOME and type "java -jar start.jar"</li>
-<li>Next, try the <a href="http://localhost:8080/wicket-examples/">example applications</a></li>
-
-</ol>
-</subsection>
-
-<subsection name="How to build and run the examples under Tomcat">
-<ol>
-<li>Install Java 1.4.x or up, Ant 1.6 or Maven and <a href="http://jakarta.apache.org/tomcat/">Tomcat 5.0</a></li>
-<li>Go to WICKET_HOME and type "ant"</li>
-<li>Start Tomcat 5.0</li>
-<li>Copy WICKET_HOME/build/examples/*.war to TOMCAT_HOME/webapps</li>
-<li>Next, try the <a href="http://localhost:8080/wicket-examples/">example applications</a></li>
-</ol>
-</subsection>
-</section>
-
- </body>
+	<body>
+		<section name="Running the Examples">
+			<p>
+				These documents show you how to install and run the 
+				<a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">Wicket
+				Examples</a>. You can choose to
+				<ul>
+					<li>See them in <a href="http://www.wicket-library.com/wicket-examples">live action</a> without having to do anything</li>
+					<li>Install and deploy the 
+						<a href="QuickStartBinary.html">binary distribition</a>, or</li>
+					<li>Use the <a href="QuickStartSource.html">source distribution</a> in your IDE.</li>
+				</ul>
+			</p>
+		</section>
+	</body>
 </document>

@@ -1,19 +1,196 @@
 <?xml version="1.0"?>
 <document>
-  <properties>
-    <title>Home</title>
-  </properties>
-
-  <meta name="keyword" content="wicket, web, j2ee, java"/>
-
-<body>
-
-<section name="News">
-	<subsection name="September 22, 2004 - Moved to sourceforge.net">
-		<p>Wicket moved from <a href="http://wicket.codehaus.org">codehaus</a>
-		    to <a href="http://wicket.sourceforge.net">SourceForge</a>.
-        </p>
-	</subsection>
-</section>
-</body>
+	<properties>
+		<title>News archive</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+	<body>
+		<section name="News Archive">
+			<p>
+				Here is an overview of all Wicket related news items posted on our
+				<a href="http://wicket.sourceforge.net">front page</a>
+				.
+			</p>
+			<subsection name="April 3, 2005 - Live Examples">
+				<p>
+					Juergen Donnerstag has created a
+					<a href="http://www.wicket-library.com/wicket-examples">live examples</a>
+					website for everyone to see what can be done with Wicket without having to
+					deploy the examples yourself!
+				</p>
+				<p>
+					The
+					<a href="http://www.wicket-library.com/wicket-examples">live examples</a>
+					are hosted on the
+					<a href="http://www.wicket-library.com/">Wicket Library</a>
+					, which will be
+					<strong>the</strong>
+					marketplace for (third party) Wicket components.
+				</p>
+			</subsection>
+			<subsection name="March 30, 2005 - Two articles on the wiki">
+				<p>Jonathan Locke has written two articles on using Wicket:</p>
+				<ul>
+					<li>
+						<a href="/wiki/doku.php?id=models">Working with Wicket Models</a>
+					</li>
+					<li>
+						<a href="/wiki/doku.php?id=lifecycle">
+							The Lifecycle of a Wicket Application
+						</a>
+					</li>
+				</ul>
+			</subsection>
+			<subsection name="March 19, 2005 - A new Wicket project is born: Wicket Stuff">
+				<p>
+					We have registered a
+					<a href="http://www.sf.net/projects/wicket-stuff">seperate project</a>
+					for hosting non-core components:
+					<a href="http://www.sf.net/projects/wicket-stuff">Wicket Stuff</a>
+					. If your component has a dependency other than the
+					<a href="Dependencies.html">Wicket dependencies</a>
+					, for example a
+					<a href="http://www.hibernate.org">Hibernate</a>
+					component, then
+					<a href="http://wicket-stuff.sf.net">Wicket Stuff</a>
+					is the place to find it.
+				</p>
+				<p>The initial list of components hosted there is:</p>
+				<ul>
+					<li>
+						<a href="http://wicket-stuff.sourceforge.net/wicket-velocity-panel">
+							Velocity Panel
+						</a>
+					</li>
+					<li>Hibernate components and helpers</li>
+					<li>Groovy integration</li>
+					<li>Spring Framework integration</li>
+					<li>fValidate integration</li>
+				</ul>
+				<p>Releases of these projects will come available as Wicket 1.0 RC1 ships.</p>
+			</subsection>
+			<subsection name="March, 4, 2005 - 0.9.19-beta released">
+				<p>
+					The releases are getting smaller, so it is nearly that special time for RC1.
+					The current release marks the work done between 0.9.18-beta and now. An issue
+					regarding dependencies of Wicket has been resolved. Wicket doesn't depend any more
+					on difficult to distribute libraries.
+				</p>
+			</subsection>
+			<subsection name="Februari 20, 2005 - 0.9.18-beta released">
+				<p>
+					The Wicket team has worked really hard to make this beta release possible.
+					The march to the big 1.0 is on, and the first release candidate will surface 
+					in the next few weeks.
+				</p>
+				<p>
+					A lot has changed in this release, so you will receive some compile time errors if you are
+					coming from a previous release. Among the changes are the following:
+					<ul>
+						<li>Added a <a href="faqs.html" title="Frequently Asked Questions">FAQ</a> section to our site</li>
+						<li>Renamed handleX() methods and other events to conform to the onX() pattern.</li>
+						<li>Added Button class and Form buttons support. When it has two or more buttons, the onSubmit() handler is called on the button which submitted the Form.</li>
+						<li>Changed HtmlPage to WebPage, HtmlContainer to WebContainer and HtmlComponent to WebComponent</li>
+						<li>Reorganized components and examples for final 1.0 structure.</li>
+					</ul>
+					<a href="changes-report.html">Check out</a> all modifications on our <a href="changes-report.html">release history page</a>.
+				</p>
+			</subsection>
+			<subsection name="January 25, 2005 - 0.9.17-beta released">
+				<p>
+					The Wicket team is proud to present yet another release of the Wicket core
+					framework and its examples. This release contains major refactoring work
+					and interface changes, including:
+					<ul>
+						<li>The Java API</li>
+						<li>
+							Wicket component markup:
+							<![CDATA[<wicket:xxxxx>]]>
+						</li>
+						<li>Changes to web.xml configuration</li>
+						<li>Major updates of the javadoc</li>
+					</ul>
+					Please see the
+					<a href="ExampleHelloWorld.html">Hello World</a>
+					example for an update on the web.xml configuration. Also please check the
+					examples project for more information regarding the Wicket component markup
+					change.
+				</p>
+			</subsection>
+		</section>
+		<section name="Archive 2004">
+			<subsection name="December 26, 2004 - 0.9.16-beta released">
+				<p>
+					The Wicket team is proud to present yet another release of the Wicket core
+					framework and it's examples. This release contains among a number of bug fixes
+					also new support for dynamic languages, (see the
+					<a
+						href="http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-examples/src/java/wicket/examples/groovy/">
+						wicket-examples
+					</a>
+					project for more information) and for
+					<a href="http://www.springframework.org">Spring framework</a>
+					<a
+						href="http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-examples/src/java/wicket/examples/springframework/">
+						integration
+					</a>
+					.
+				</p>
+			</subsection>
+			<subsection name="December 19, 2004 - 0.9.15-beta released">
+				<p>
+					The Wicket team is proud to present yet another release of the Wicket core
+					framework. This release encompasses a
+					<a
+						href="http://sourceforge.net/tracker/index.php?func=detail&amp;aid=1087152&amp;group_id=119783&amp;atid=684978">
+						big restructuring
+					</a>
+					of the package structure: the
+					<code>com.voicetribe</code>
+					package prefix has been dropped. All Wicket classes are now in the top level
+					package named
+					<code>wicket</code>
+					.
+				</p>
+			</subsection>
+			<subsection name="December 19, 2004 - Going into beta">
+				<p>
+					Finally the Wicket development team is starting the march to the big 1.0
+					release. This sunday the last release of 2004 is done. After this the release
+					candidate circus will be part of our daily Wicket development.
+				</p>
+			</subsection>
+			<subsection name="December 9, 2004 - New style for the website">
+				<p>
+					Our new layout, design and logo were kindly provided by
+					<a href="http://www.topicus.nl" target="_blank">Topicus</a>
+					by providing precious time of their designer Wouter de Jong.
+				</p>
+			</subsection>
+			<subsection name="December 5, 2004 - 0.9.14-alpha released">
+				<p>The current status of CVS was released under version 0.9.14-alpha.</p>
+			</subsection>
+			<subsection name="November 7, 2004 - Clover license obtained">
+				<p>
+					We have obtained a
+					<a href="http://www.cenqua.com/clover/">Clover</a>
+					license for use in our project. This allows us to obtain even higher quality
+					code than before. Thanks to Cenqua for providing us with the open source
+					license.
+				</p>
+			</subsection>
+			<subsection name="October 25, 2004 - 0.9.13-alpha released">
+				<p>The current status of CVS was released under version 0.9.13-alpha.</p>
+			</subsection>
+			<subsection name="September 22, 2004 - Moved to sourceforge.net">
+				<p>
+					Wicket moved from
+					<a href="http://wicket.codehaus.org">codehaus</a>
+					to
+					<a href="http://wicket.sourceforge.net">SourceForge</a>
+					.
+				</p>
+			</subsection>
+		</section>
+	</body>
 </document>

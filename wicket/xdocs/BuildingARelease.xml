@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Building a Release</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+	<body>
+		<section name="Building a Release for Wicket">
+			<p>
+				<em>NB. This is a work in progress, the document is not finished yet!</em>
+			</p>
+			<p>
+				This document outlines the steps needed to perform a succesful release of Wicket on
+				SourceForge. No intimate knowledge of Wicket or maven is required to perform the
+				release if you use this guide, but should be very handy.
+			</p>
+			<subsection name="Introduction">
+				<p>
+					The steps will use maven as a build tool, as it helps resolving our
+					dependencies, creating a new website and ultimately upload and perform a
+					SourceForge release for us (not implemented yet).
+				</p>
+				<p>This document will fall into four parts:</p>
+				<ol>
+					<li>preparing the release</li>
+					<li>building the release</li>
+					<li>distributing the release</li>
+					<li>publicizing the release</li>
+				</ol>
+				<p>
+					The following part of this document describes in detail how to perform each part
+					of building a Wicket release.
+				</p>
+			</subsection>
+		</section>
+		<section name="Preparing the Release">
+			<p>
+				This section describes the preparation step to perform a release of the Wicket
+				project.
+			</p>
+			<p>
+				In short the following steps are performed, each step will be described in more
+				detail in the rest of this section:
+			</p>
+			<ul>
+				<li>checkout the latest and greatest from CVS</li>
+				<li>check the issue trackers on SourceForge</li>
+				<li>update the changes.xml document</li>
+				<li>add a news item to the front page and news archive</li>
+				<li>run the unit tests and generate the website locally using maven</li>
+				<li>check the website</li>
+			</ul>
+			<subsection name="Checkout Latest and Greatest">
+				<p>
+					A release normally consists of just one project. However, we use the examples
+					projects as (integration) testcases for Wicket. This makes sense, as the
+					examples are showcases of what can be done with Wicket. As such, they represent
+					normal usecases of the Wicket core components and provide the first feedback on
+					whether the core is still functional.
+				</p>
+				<p>
+					Normally one will checkout all (Java) projects in CVS. At the moment of writing
+					these projects are:
+				</p>
+				<ul>
+					<li>wicket</li>
+					<li>wicket-contrib</li>
+					<li>wicket-quickstart</li>
+					<li>wicket-examples</li>
+					<li>wicket-cdapp-example</li>
+					<li>wicket-hangman-example</li>
+				</ul>
+				<p>
+					Make sure you don't have any outstanding changes in your workspace. If you don't
+					want to release those changes, create a new workspace for building the release,
+					or toss them.
+				</p>
+			</subsection>
+			<subsection name="Check Issue Trackers">
+				<p>
+					It is the best when no
+					<a href="">bugs</a>
+					and
+					<a href="">support requests</a>
+					are left open.
+				</p>
+				<p>
+					Also, check which bugs, support request and new features have been solved since
+					the last release, and check if they have been added to the
+					<code>xdocs/changes.xml</code>
+					file. Make sure they are added to the correct release. This file is used by the
+					release process, the
+					<a href="http://maven.apache.org/reference/plugins/changes/">
+						Maven changes plugin
+					</a>
+					and the
+					<a href="http://maven.apache.org/reference/plugins/announcement">
+						Maven announcement plugin.
+					</a>
+				</p>
+			</subsection>
+		</section>
+		<section name="Building the Release">
+			<p>
+				This section describes the building stage to perform a release of the Wicket
+				project.
+			</p>
+			<p>
+				In short the following steps are performed, each step will be described in more
+				detail in the rest of this section:
+			</p>
+			<ul>
+				<li>commit all outstanding changes (news items spring to mind)</li>
+				<li>prepare the release using maven</li>
+				<li>create the distributable using maven</li>
+			</ul>
+			<subsection name="Clean Workspace">
+				<p>
+					Make sure all changes in your workspace are commited, or use a new, clean
+					workspace to perform the release.
+				</p>
+			</subsection>
+			<subsection name="Prepare the Release Using Maven">
+				<h5>Running the tests</h5>
+				<p>
+					First check whether *all* unit tests work. It's no use to perform a release
+					when the unit tests <em>fail</em>. You have to pretty tricky stuff in order
+					to have maven actually build a release when the unittests fail. So just 
+					<strong>DON'T</strong> do it when not all the tests run.
+				</p>
+				<p>
+					Testing whether all tests run is rather straightforward:
+				</p>
+				<source><![CDATA[maven test]]></source>
+				<p>
+					When a test fails, maven will output the following:
+				</p>
+				<source><![CDATA[BUILD FAILED
+File...... c:\maven-1.0\cache\cache\maven-test-plugin-1.6.2\plugin.jelly
+Element... fail
+Line...... 181
+Column.... 54
+There were test failures.
+Total time: 54 seconds
+Finished at: Sun Feb 06 16:48:29 CET 2005]]></source>
+				<p>
+					You can find what went wrong in the directory <code>build/test-reports</code>.
+					Just look for the test that failed on the output of the <code>maven test</code>
+					call.
+				</p>
+				<h5>Tagging the Release</h5>
+				<p>
+					It is necessary to tag the release so we can 'go back in time' when something is
+					wrong with code in a released version. This is normally done using a <em>CVS</em>
+					client like <a href="http://tortoisecvs.sf.net">Tortoise CVS</a>, but we also use
+					<a href="http://maven.apache.org">Maven</a> for this, to be more specific, we use
+					the <a href="http://maven.apache.org/reference/plugins/scm">SCM-plugin</a> for this
+					purpose.
+				</p>
+				<p>
+					The command to do this tagging is:
+				</p>
+				<source>maven scm:prepare-release</source>
+				<p>
+					This command will check whether you have uncommitted changes in your workspace and
+					ask you for the <em>tag</em> and <em>version</em>. The <em>tag</em> is the name of 
+					the CVS tag which is used to flag the files in the remote CVS repository. This tag is of the form: 
+					<code>WICKET_R_X_Y_Z</code>. Where <code>X</code> denotes the major release number,
+					<code>Y</code> the minor release number, and <code>Z</code> the fix number.
+				</p>
+				<p>
+					The <em>version</em> is the version number of Wicket which you are going to release.
+					This number is formatted as: <code>X.Y.Z</code>, having X, Y and Z equal to the values
+					in the TAG.
+				</p>
+				<p>
+					If you are going to release Wicket 1.2.9-beta, then the tag will be: <code>WICKET_R_1_2_9_BETA</code>,
+					and the version <code>1.2.9-beta</code>.
+				</p>
+				<source><code><![CDATA[TODO TODO TODO TODO TODO
+]]></code></source>
+				<p>
+					This SCM-plugin performs not only the tagging of the release, but also makes some
+					changes to the following files:
+					<table>
+						<tr>
+							<th>Filename</th>
+							<th>Changes</th>
+						</tr>
+						<tr>
+							<td>project.xml</td>
+							<td>
+								sets the <![CDATA[<currentVersion>]]> to the released version, adds the
+								released version to the <![CDATA[<versions>]]> element.
+							</td>
+						</tr>
+						<tr>
+							<td>xdocs/changes.xml</td>
+							<td>
+								sets the date of the release on the corresponding <![CDATA[<release>]]>
+								element.
+							</td>
+						</tr>
+					</table>
+				</p>
+			</subsection>
+		</section>
+		<section name="Distributing the Release">
+			<p>
+				This section describes the distribution step to perform a release of the Wicket
+				project. Wicket is downloadable from SourceForge, but also available from the Maven
+				remote repositories. This section describes how to get the Wicket binaries to our
+				users.
+			</p>
+			<p>
+				In short the following steps are performed, each step will be described in more
+				detail in the rest of this section:
+			</p>
+			<ul>
+				<li>upload the distributable to sourceforge</li>
+				<li>upload the generated website using maven</li>
+				<li>create an upload bundle for ibiblio using maven</li>
+				<li>upload the upload bundle to the website</li>
+				<li>create an upload request in JIRA for the maven maintainers</li>
+			</ul>
+		</section>
+		<section name="Publicizing the Release">
+			<p>
+				This section describes the publication step after a release of the Wicket project is
+				built. No project can survive without users, and the users need to be informed of
+				the release. Various channels are available to publicize our project on, and this
+				section describes how to do this without much effort.
+			</p>
+			<p>
+				In short the following steps are performed, each step will be described in more
+				detail in the rest of this section:
+			</p>
+			<ul>
+				<li>send announcement text to mailinglists</li>
+				<li>make noise on theserverside.com</li>
+			</ul>
+		</section>
+	</body>
+</document>

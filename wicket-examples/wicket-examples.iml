@@ -138,6 +138,15 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Tomcat" level="application_server_libraries" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPO$/commons-lang/jars/commons-lang-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
   <component name="WebModuleBuildComponent">
@@ -164,6 +173,11 @@
       <url>jar://$MAVEN_REPO$/commons-fileupload/jars/commons-fileupload-1.0.jar!/</url>
       <attribute name="method" value="1" />
       <attribute name="URI" value="/WEB-INF/lib/commons-fileupload-1.0.jar" />
+    </containerElement>
+    <containerElement type="library" level="module">
+      <url>jar://$MAVEN_REPO$/commons-lang/jars/commons-lang-2.0.jar!/</url>
+      <attribute name="method" value="1" />
+      <attribute name="URI" value="/WEB-INF/lib/commons-lang-2.0.jar" />
     </containerElement>
     <containerElement type="library" level="module">
       <url>jar://$MAVEN_REPO$/commons-logging/jars/commons-logging-1.0.4.jar!/</url>

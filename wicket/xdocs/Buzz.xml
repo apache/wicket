@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Buzz</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+
+	<body>
+		<section name="Buzz">
+			<p>
+				"I am totally hooked on Wicket. I am doing my second project with it now (though it
+				is still beta), but I am already having a ten-times productivity gain compared to
+				using Struts or one of the other MVC-like frameworks. And for the first time in
+				years, I am actually having fun writing web applications! IMO, it should be the next
+				big player in the Java webapp space."
+			</p>
+			<p class="quoteAttribution">- Post on RaibleDesigns.com</p>
+			<p>
+				"I think its an awesome way to deal with this whole web UI framework mess. I am
+				happy to see someone take a simple and clean approach to the whole problem, and come
+				up with a transparent POJO solution. I like the direction the framework is going...
+				Wicket is clean, simple and elegant."
+			</p>
+			<p class="quoteAttribution">- Post on TheServerSide.com</p>
+			<p>
+				"...after using web MVC frameworks for a couple of years, building ever more complex
+				web applications, I moved to component based frameworks. Of these, I think Wicket is
+				by far the best..."
+			</p>
+			<p class="quoteAttribution">- Post on Manageability.org</p>
+		</section>
+	</body>
+</document>

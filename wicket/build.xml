@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <project default="jar" name="wicket:null" basedir=".">
-  <property name="defaulttargetdir" value="target">
+  <property name="defaulttargetdir" value="build">
   </property>
   <property name="libdir" value="lib">
   </property>
-  <property name="classesdir" value="target/classes">
+  <property name="classesdir" value="${defaulttargetdir}/classes">
   </property>
-  <property name="testclassesdir" value="target/test-classes">
+  <property name="testclassesdir" value="${defaulttargetdir}/test-classes">
   </property>
-  <property name="testclassesdir" value="target/test-classes">
+  <property name="testclassesdir" value="${defaulttargetdir}/test-classes">
   </property>
-  <property name="testreportdir" value="target/test-reports">
+  <property name="testreportdir" value="${defaulttargetdir}/test-reports">
   </property>
-  <property name="distdir" value="dist">
+  <property name="distdir" value="${defaulttargetdir}/dist">
   </property>
-  <property name="javadocdir" value="dist/docs/api">
+  <property name="javadocdir" value="${defaulttargetdir}dist/docs/api">
   </property>
   <property name="final.name" value="wicket-SNAPSHOT">
   </property>
@@ -48,6 +48,13 @@
       <classpath refid="build.classpath">
       </classpath>
     </javac>
+    <copy todir="${classesdir}">
+        <fileset dir="src/java">
+            <include name="**/*.*" />
+            <exclude name="**/*.java" />
+            <exclude name="**/package.html"/>
+        </fileset>
+    </copy>
   </target>
   <target name="jar" description="o Create the jar" depends="compile,test">
     <jar jarfile="${defaulttargetdir}/${final.name}.jar" excludes="**/package.html" basedir="${classesdir}">
@@ -119,6 +126,12 @@
         </pathelement>
       </classpath>
     </javac>
+    <copy todir="${testclassesdir}">
+        <fileset dir="src/test">
+            <include name="**/*.*" />
+            <exclude name="**/*.java" />
+        </fileset>
+    </copy>
   </target>
   <target name="javadoc" description="o Generate javadoc">
     <mkdir dir="${javadocdir}">

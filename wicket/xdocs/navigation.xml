@@ -2,54 +2,67 @@
 <project name="Wicket">
 	<title>Wicket</title>
 	<body>
-		<links>
-		    <item name="News" href="/News.html"/>
-		    <item name="Quickstart" href="/QuickStart.html"/>
-		    <item name="SF.net page" href="http://sourceforge.net/projects/wicket"/>
-		</links>				    
 	    <menu name="Wicket">
 	        <item name="Home" href="/index.html"/>
-	        <item name="News" href="/News.html"/>
+	        <item name="Features" href="/Features.html"/>
+        	<item name="Buzz" href="/Buzz.html"/>
 	        <item name="Introduction" href="/Introduction.html" collapse="true">
-	        	<item name="Why Wicket" href="#Why_Wicket"/>
-	        	<item name='Why "Reinvent the Wheel"?' href='#Why_&quot;Reinvent_the_Wheel&quot;_'/>
+	        	<item name="Why Wicket?" href="#Why_Wicket"/>
 	        	<item name="Motivations" href="#Motivations"/>
 	        	<item name="Goals" href="#Goals"/>
 	        </item>
-	        <item name="Quick start" href="/QuickStart.html" collapse="true">
-	        	<item name="Using Jetty" href="#How_to_build_and_run_the_examples_under_Jetty"/>
-	        	<item name="Using Tomcat" href="#How_to_build_and_run_the_examples_under_Tomcat"/>
-	        </item>
-	        <item name="Examples" href="/Examples.html" collapse="true">
-	        	<item name="HelloWorld" href="#HelloWorld"/>
-	        	<item name="Images" href="#Images"/>
-	        	<item name="Navomatic" href="#Navomatic"/>
-	        	<item name="Tables" href="#Tables"/>
-	        </item>
+            <item name="License" href="/license.html"/>
 	    </menu>
-	    <menu name="Quick links">
-	        <item name="Javadoc" href="/apidocs/index.html" />
-	        <item name="Dependencies" href="/dependencies.html"/>
-	        <item name="Changes" href="/changes-report.html"/>
-	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
-<!--
-	        <item name="FAQ" href="/faq.html"/>
--->
-	        <item name="CVS access" href="/cvs-usage.html"/>
+        <menu name="Getting Started">
+	        <item name="Examples" href="/QuickTour.html" collapse="true">
+	        	<item name="Hello World!" href="/ExampleHelloWorld.html"/>
+	        	<item name="Navomatic" href="/ExampleNavomatic.html"/>
+	        	<item name="GuestBook" href="/ExampleGuestBook.html"/>
+			</item>
+            <item name="QuickStart" href="/QuickStart.html" collapse="true">
+                <item name="Binary" href="/QuickStartBinary.html"/>
+                <item name="Source" href="/QuickStartSource.html"/>
+            </item>
+            <item name="Download" href="/Download.html"/>
         </menu>
-        <menu name="Developers">
-	        <item name="The Wicket Vision" href="/Vision.html" collapse="true">
-				<item name="The Overall Wicket Vision" href="#The_Overall_Wicket_Vision" />
-				<item name="Design Decision Q&amp;A" href="#Design_Decision_Q_and_A" />
-				<item name="Future Directions" href="#Future_Directions" />
-				<item name="Open Issues" href="#Open_Issues" />
+	    <menu name="Project Info">
+	        <item name="News" href="/News.html"/>
+	        <item name="Mailing Lists" href="/mail-lists.html" />
+	        <item name="SourceForge" href="/SourceForge.html"/>
+            <item name="Issue Tracker" href="http://sourceforge.net/tracker/?group_id=119783"/>
+	        <item name="Release History" href="/changes-report.html"/>
+        </menu>
+        <menu name="Documentation">
+	        <item name="Vision" href="/Vision.html"/>
+	        <item name="FAQ" href="/faqs.html"/>
+	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
+	        <item name="User's Guide" href="/manual.html" collapse="true">
+	        	<item name="Working with Wicket Models" href="/wiki/doku.php?id=models" />
+	        	<item name="The Lifecycle of a Wicket Application" href="/wiki/doku.php?id=lifecycle" />
 	        </item>
+            <item name="Wiki" href="/wiki" />
+	        <item name="Dependencies" href="/dependencies.html"/>
         </menu>
-	    <menu name="Sourceforge">
-	        <item name="Project page" href="http://sourceforge.net/projects/wicket"/>
-	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
-	        <item name="Lists" href="http://sourceforge.net/projects/wicket/lists" />
-	        <item name="Issue tracking" href="http://sourceforge.net/tracker/?group_id=119783"/>
+        <menu name="Related projects">
+        	<item name="Wicket Stuff" href="http://wicket-stuff.sourceforge.net" />
+        	<item name="Wicket Library" href="http://www.wicket-library.com" />
+        </menu>
+	    <menu name="Development">
+            <item name="Releasing Wicket" href="/BuildingARelease.html" 
+                collapse="true">
+                <item name="Introduction" href="#Introduction"/>
+                <item name="Preparing" href="#Preparing_the_release"/>
+                <item name="Building" href="#Building_the_release"/>
+                <item name="Distributing" href="#Distributing_the_release"/>
+                <item name="Publicizing" href="#Publicizing_the_release"/>
+            </item>
+	        <item name="Developers" href="/team-list.html"/>
+	        <item name="CVS Access" href="/cvs-usage.html"/>
+	        <item name="Build Reports" href="/maven-reports.html" collapse="true">
+    	        <item name="Unit Tests" href="/junit-report.html"/>
+    	        <item name="Clover Tests" href="/clover/index.html" target="_blank" class="newwindow"/>
+    	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
+	        </item>
 	    </menu>
 <!--	    <search /> -->
 	</body>

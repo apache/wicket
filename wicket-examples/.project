@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>wicket-examples</name>
-	<comment></comment>
+	<comment>Example for web framework Wicket.</comment>
 	<projects>
 	</projects>
 	<buildSpec>

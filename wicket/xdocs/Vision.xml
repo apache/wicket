@@ -10,43 +10,22 @@
 <section name="The Wicket Vision">
 <p><author>Jonathan Locke</author></p>
 <p>
-    <b>This document was contributed by the original developer
-       halfway september 2004. It does *not* necesarily display the current state
-       of the project!
-    </b>
-</p>
-<p>
-Even though Wicket has just barely been born and is nowhere near maturity 
-(or even stability), I am moving on from the Wicket project to pursue other 
-opportunities, and so I will not be available to work or comment on Wicket 
-in the future.  So this document then serves to:
-</p>
-<ul>
-<li>Explain the overall Wicket vision</li>
-<li>Record the motivations behind various design decisions</li>
-<li>Set down any ideas I have about future directions</li>
-<li>Detail existing issues that need to be resolved</li>
-</ul>
-<p>
-This document assumes that you have familiarity with Wicket and have read
-the Wicket User's Guide.
-</p>
-</section>
-
-<section name="The Overall Wicket Vision">
-<p>
-What I like about Wicket is that it shows restraint in providing a powerful 
-solution to a very specific problem:
+Designing and implementing any framework for use in the real world inevitably 
+involves compromises and some degree of complexity, and Wicket is no exception.  
+However, I believe you will find that Wicket is quite compact, focused and 
+powerful as a framework. If Wicket has these characteristics, it is because 
+it was designed to solve one very specific problem well:
 </p>
 <blockquote>
-  enabling abstract, fully component-oriented, programmatic manipulation of markup
+  enabling component-oriented, programmatic manipulation of markup
 </blockquote>
+<p>
+Wicket does this and very little else, and that is a good thing.
+</p>
 <p>
 I once heard Josh Bloch talk about the <em>power to weight ratio</em> of an API.  
 The highest compliment anyone could make of Wicket would be to suggest that 
-Wicket has a lot of power and not much conceptual surface area.  That is 
-the primary guiding principle of Wicket's design and the ideal I would like
-to see it approach.
+Wicket has a lot of power and not much conceptual surface area.
 </p>
 <p>
 In art, negative space is the part that's not the subject.  In music, negative 
@@ -56,14 +35,15 @@ excellent from what is merely good.
 </p>
 <p>
 Following this metaphor, if Wicket is our foreground object, it is defined 
-<em>in a negative sense</em> by all the things that it <em>is not</em> (by the background).  
+<em>in a negative sense</em> by all the things that it <em>is not</em> 
+(by the background).  
 </p>
 <p>
 In other words, ideally, Wicket is a web UI framework that delegates as many 
 areas of responsibility as possible to other, more focused tools and techniques.  
-It recognizes that hibernate is good at persistence; that OGNL is good at string 
-formatting; that Java properties files are good for localization; that sub-
-classing is good for creating component types; that dreamweaver is good at 
+It recognizes that Hibernate is good at persistence; that OGNL is good at string 
+formatting; that Java properties files are good for localization; that 
+sub-classing is good for creating component types; that Dreamweaver is good at 
 doing HTML layout; that Beans are good for structuring properties; and so on.  
 </p>
 <p>
@@ -71,144 +51,32 @@ The more ways that Wicket can find to offload responsibilities (both now and
 in the future), the less it will be.  And thus, the more it will be.
 </p>
 <p>
-The trick for the lead(s) moving forward with Wicket will be balancing all the 
+The difficulty moving forward with Wicket will be balancing all the 
 day-to-day needs people are going to be bringing up with this overall vision 
-of minimalism.  There ultimately will be compromises.  The "trick" to making 
+of minimalism.  There ultimately will be compromises, and the "trick" to making 
 the right compromises is simply to agonize over all the options for a long time 
 and then to only make the compromises that everyone agrees are really essential 
 to what wicket needs to be and do.  
 </p>
 <p>
 A big part of this process of agonizing is to act like doctors and "first, do 
-no harm".  If localization issues, for example, aren't sitting well with everyone 
+no harm".  If some issue isn't sitting well with everyone 
 yet, there's probably a reason for that.  So, maybe the near-term solution is 
-to simply do nothing and let people use the existing the Label component in 
-tandem with the existing string resource loading features until any limits to 
-that approach (as well as competing ideas) are better understood.  
+to simply do nothing and let people use the existing functionality until the 
+limits to that approach (as well as competing ideas) are better understood.  
 </p>
 <p>
 It's easy to add features.  It's often impossible to change or remove them. 
 </p>
 <p>
-Given this, one really good approach to the overall problem of how to evolve 
-Wicket while keeping its power to weight ratio as high as possible would be to 
-partition off controversial new ideas in a "contrib" package until they are 
-broadly accepted.  This way people can experiment and code away and check in 
-lots of stuff without affecting the main codebase with untested ideas.  Then, 
-when ideas in contrib pan out to everyone's satisfaction, the lead(s) of the 
-project could move them into the main wicket packages.
+Given this, the Wicket approach to the overall problem of evolving while keeping 
+a high power to weight ratio will be partitioning off all controversial new 
+ideas in a "contrib" package until they are broadly accepted.  This way people 
+can experiment and code away and check in lots of stuff without affecting the 
+main codebase with untested ideas.  Then, when ideas in contrib pan out to 
+everyone's satisfaction, the lead(s) of the project will move them into the 
+core.
 </p>
 </section>
-
-<section name="Design Decision Q&amp;A">
-
-<subsection name="Q: What design decisions were made regarding state management?">
-<p>
-A: One of the primary objectives was to make state management a Java thing 
-   that is abstracted away from implementation details like HttpSession.
-   In Wicket, state is stored in components that are nested in Pages which
-   are all contained in a map in the user's session.  All of this is very 
-   well defined and occurs "behind the scenes".  Such a style of coding
-   may be unfamiliar to people with experience using existing frameworks.
-   Typically Wicket code involves good OO design, use of nested and anonymous
-   classes and an overall awareness of components and their models as being 
-   the repositories of all state.  It will take time to adapt to this and
-   for people to set aside old functional models of programming where they
-   accomplish everything with query parameters, session state or their 
-   equivalent.
-</p>
-</subsection>
-
-<subsection name="Q: How does Wicket handle stale data and the back button?">
-<p>
-A: Because Wicket has a first class component object model where the state
-   for every page and nested component is available in the user's session,
-   it can trace through all that state when model information changes looking
-   for pages containing components with models that have changed in ways that
-   invalidate earlier renderings of those components and pages.  
-</p>
-<p>
-   This provides automatic handling for the back button, which has to do with 
-   stale <em>markup</em>, and can generally be divorced from the typical problems of 
-   stale data in a multi-user environment, which should be handled with the
-   usual (optimistic) locking techniques in the persistence layer.
-</p>
-<p>   
-   A good example of stale markup is this: If a table on a page is rendered 
-   when there are 20 rows in the table's model, a subsequent deletion of a 
-   row will invalidate the rendering of the table that is still cached in 
-   the user's browser.  When the user accesses the 20th row in the cached 
-   page by using their back button, the link will not be backed correctly.
-   What's more, a deletion of the first row means that all 19 rows are off 
-   by one in terms of the model they reference.
-</p>
-<p>   
-   In Wicket, stale markup caused by deleting a row in a table is automatically
-   handled by using the well-controlled server side state which exists in the
-   user's session.  If you look at the Cell class you will see this implementation
-   (roughly) of the removeLink method (which returns a Link that will remove
-   any given cell from its containing table).
-</p>
-<source><![CDATA[  
-    /**
-     * Returns a link that will remove this cell from the table that holds it.
-     * @param componentName Name of remove link component to create
-     * @return The link component
-     */
-    public Link removeLink(final String componentName)
-    {
-        return new Link(componentName)
-        {
-            public void linkClicked(final RequestCycle cycle)
-            {
-                // Remove cell and invalidate table
-                table.getList().remove(index);
-                table.invalidateModel();
-            }
-        };
-    }]]>
-</source>
-<p>
-   Notice that once the remove link changes its table's model by removing the
-   cell's model from the table list, it calls <tt>table.invalidateModel()</tt>.  This
-   method is implemented by Table, which inherits most of the functionality 
-   from Component.  If you look at the implementation of invalidateModel in 
-   Component, you will find that it looks through every component on every page
-   in the user's session.  Any page containing a component using the same model
-   is a stale markup rendering and is made stale with a call to setStale.  When
-   a user uses their back button to access the stale page at a later time, they
-   will receive an appropriate warning.
-</p>
-</subsection>
-
-<subsection name='Q: Why Wicket?  And what does "voicetribe" mean?'>
-<p>
-A: VoiceTribe was the name of the company I was founding with a friend when I
-   got so distracted by the ugly state of web frameworks that I decided to write 
-   Wicket over the course of about 2 months of intensive effort.  
-</p>
-<p>   
-   The name "wicket" was at first selected simply because it was unique, memorable 
-   and easy to say... and yet not used by a serious software project (the owner 
-   of the "dodgy IRC bot" called "wicket" which shows up in a Google search was 
-   kind enough to give his blessings to me via email to use the name).  It is 
-   surprisingly hard to find <em>any</em> short word that is not already used as the 
-   name of some software project or other!
-</p>
-<p>   
-   Although the name was selected for no particular reason, there are a couple
-   of interesting coincidences.  For one thing, web frameworks have been somewhat 
-   of a "sticky wicket".  For another, "wicket" sounds a bit like "wiki" which 
-   is Hawaiian for "quick" (you could even think of the name as "wik" "it" ;-)).  
-   And finally, the original meaning of wicket was that of a small door.  But,
-   especially a small door within a larger door.  I like this image quite a lot.  
-   It's modular ;-) and doors represent freedom (from the big J2EE door?).  A 
-   picture of a small door within another door might make a nice cover for the 
-   User's Guide when it's done.  Either that or a cute little squirrel staring 
-   back at the reader through a croquet wicket!
-</p>
-</subsection>
-</section>
-
 </body>
 </document>    

@@ -1,0 +1,43 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - forminput</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+	<div>
+		Use locale: 
+		<select wicket:id="localeSelect">
+			<option>locale1</option>
+			<option>locale2</option>
+		</select>
+		<a href="#" wicket:id="defaultLocaleLink">[default]</a>
+    </div>
+	<p>
+    <form wicket:id="inputForm" id="inputForm">
+      <fieldset>
+        <legend>Input Form</legend>
+		  <label for="stringProperty">String</label>
+		  <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
+		  <label for="integerProperty">Integer</label>
+		  <input wicket:id="integerProperty" id="integerProperty" type="text" size="40"/>
+		  <label for="doubleProperty">Double</label>
+		  <input wicket:id="doubleProperty" id="doubleProperty" type="text" size="40"/>
+		  <label for="dateProperty">Date</label>
+		  <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
+		  <label for="booleanProperty">Boolean</label>
+		  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
+		  <label for="integerInRangeProperty">Value between 0 and 100</label>
+		  <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
+		  <p>
+		  <input wicket:id="saveButton" type="image" value="buttonFactory:save:Save"/>
+		  <a wicket:id="resetButtonLink" src="">
+		      <img wicket:id="resetButtonImage" value="buttonFactory:reset:Reset"/> 
+		  </a>
+      </fieldset>
+    </form>
+	<div>
+		<span wicket:id="feedback"/>
+    </div>
+</body>
+</html>

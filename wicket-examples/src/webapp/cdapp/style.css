@@ -1,0 +1,131 @@
+.feedbackPanelERROR {
+  color: red;
+  list-style: circle;
+  font-weight:bold;
+}
+
+.feedbackPanelINFO {
+  color: green;
+  list-style: circle;
+  font-weight:bold;
+}
+
+.titleERROR {
+  color: white;
+  background-color: red;
+}
+
+.performersERROR {
+  color: white;
+  background-color: red;
+}
+
+.labelERROR {
+  color: white;
+  background-color: red;
+}
+
+.yearERROR {
+  color: white;
+  background-color: red;
+}
+
+.required {
+	background-color: #FFFFCC;
+}
+
+.mediumButton {
+ width: 80px;
+}
+
+.buttons {
+	margin: 5px;
+}
+
+.litupRow {
+}
+
+.litupRowOver  {
+	background-color: #FFFF66;
+	cursor: pointer;
+}
+
+.litupColumn {
+}
+
+.litupColumnOver  {
+	background-color: #FFFF66;
+	cursor: pointer;
+}
+
+.updownImg {
+	border: 0px;
+	float: right;
+}
+
+input, select, label  { 	
+  font-size:12px;
+  margin-right:10px 
+}
+
+#resultstable {
+ caption-side:bottom;
+ width:100%;
+}
+#resultstable .number {
+ width: 60px;
+}
+
+#resultstable thead th {
+ text-align: center;
+ width:140px;
+}
+#resultstable thead th.delete {
+ text-align: center;
+ width:1px;
+}
+#resultstable tbody td.delete {
+ text-align: center;
+}
+#resultsNavigation ul {
+	list-style: none;
+}
+#resultsNavigation li {
+	display: inline;	
+}
+#detailForm {
+ width: 300px; }
+#detailForm label {
+ display: block;
+ padding: 3px 0 0;
+}
+#detailForm label.non {
+ display: inline !important;
+}
+
+#detailBox {
+	width: 1%;
+	float: left;
+	margin: 5px;
+}
+
+#imageFieldset {
+	margin-left: 300px;
+}
+
+#imageBox {
+	margin: 5px;
+}
+
+#imageDisplayBox {
+	border-color: navy;
+	border-style: dotted;
+	border-width: 1px;
+	width: 100px;
+	height: 100px;
+	padding: 1px;
+}
+
+#removeImage {
+	float: right;
+}

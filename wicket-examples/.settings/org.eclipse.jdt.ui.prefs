@@ -1,0 +1,15 @@
+#Wed Feb 09 15:00:25 PST 2005
+comment_format_source_code=true
+org.eclipse.jdt.ui.exception.name=e
+comment_new_line_for_parameter=true
+comment_format_html=true
+comment_line_length=80
+org.eclipse.jdt.ui.gettersetter.use.is=true
+comment_format_header=true
+eclipse.preferences.version=1
+comment_indent_parameter_description=true
+comment_format_comments=true
+org.eclipse.jdt.ui.keywordthis=false
+comment_clear_blank_lines=false
+comment_separate_root_tags=true
+comment_indent_root_tags=true

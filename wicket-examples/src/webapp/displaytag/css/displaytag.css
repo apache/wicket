@@ -6,8 +6,6 @@ body, input, select, td, textarea{
 	font-size: 11px;
 }
 h1, h2, h3, h4, h5, h6, p, strong, div, form, acronym, label, table, td, th, span, a, hr, code, pre, hr {
-	margin:0;
-	padding:0;
 	font-size: 1em;
 	background-repeat:no-repeat;
 	list-style-type:none;
@@ -158,13 +156,13 @@ th.sorted a, th.sortable a {
 	display: block;
 }
 th.sortable a {
-	background-image: url(displaytag/img/arrow_off.png);
+	background-image: url(../img/arrow_off.png);
 }
 th.order1 a {
-	background-image: url(displaytag/img/arrow_down.png);
+	background-image: url(../img/arrow_down.png);
 }
 th.order2 a {
-	background-image: url(displaytag/img/arrow_up.png);
+	background-image: url(../img/arrow_up.png);
 }
 tr.odd {
   background-color: #fff
@@ -288,13 +286,13 @@ span.export {
 }
 
 span.excel {
-	background-image: url(displaytag/img/ico_file_excel.png);
+	background-image: url(../img/ico_file_excel.png);
 }
 span.csv {
-	background-image: url(displaytag/img/ico_file_csv.png);
+	background-image: url(../img/ico_file_csv.png);
 }
 span.xml {
-	background-image: url(displaytag/img/ico_file_xml.png);
+	background-image: url(../img/ico_file_xml.png);
 }
 
 span.pagebanner {
