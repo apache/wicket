@@ -42,8 +42,8 @@ Following this metaphor, if Wicket is our foreground object, it is defined
 In other words, ideally, Wicket is a web UI framework that delegates as many 
 areas of responsibility as possible to other, more focused tools and techniques.  
 It recognizes that Hibernate is good at persistence; that OGNL is good at string 
-formatting; that Java properties files are good for localization; that sub-
-classing is good for creating component types; that Dreamweaver is good at 
+formatting; that Java properties files are good for localization; that 
+sub-classing is good for creating component types; that Dreamweaver is good at 
 doing HTML layout; that Beans are good for structuring properties; and so on.  
 </p>
 <p>
