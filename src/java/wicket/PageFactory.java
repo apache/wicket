@@ -258,7 +258,7 @@ public class PageFactory implements IPageFactory
     /**
      * Remove the constructor for pageClass from cache.
      * 
-     * @param pageClass
+     * @param pageClassName
      */
     protected final void removeConstructor(final String pageClassName)
     {

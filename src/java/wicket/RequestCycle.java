@@ -483,7 +483,7 @@ public abstract class RequestCycle
     /**
      * Convenience method that sets page on response object.
      * @param c The page class to render as a response
-     * @param parameters Parameters to page
+     * @param page A "referer" page
      * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(Class, Page)) instead
      */
     public final void setPage(final Class c, final Page page)
