@@ -139,6 +139,19 @@ abstract class Choice extends FormComponent
 		return this.values;
 	}
     
+	
+	/*
+	 * @see wicket.Component#detachModel()
+	 */
+	protected void detachModel()
+	{
+		super.detachModel();
+		if (values instanceof IDetachableChoiceList)
+		{
+			((IDetachableChoiceList)values).detach();
+		}
+	}
+	
 	/**
 	 * Gets whether the null option must be rendered if current selection ==
 	 * null. The default is true.
@@ -260,12 +273,6 @@ abstract class Choice extends FormComponent
 
 		options.append("\n");
 		replaceBody(markupStream, openTag, options.toString());
-
-		// Deattach the list after this. Check if this is the right place!
-		if (list instanceof IDetachableChoiceList)
-		{
-			((IDetachableChoiceList)list).detach();
-		}
 	}
 
 	/**
