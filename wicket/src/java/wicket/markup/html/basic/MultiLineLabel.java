@@ -32,12 +32,12 @@ import wicket.util.string.Strings;
  * A MultiLineLabel component must be attached to a SPAN tag, and replaces its body with
  * the model object.
  * <p>
- * Exactly what is displayed as the body, depends on the model. The simples case is
- * <p>
  * Unlike Label, MultiLineLablel shows text that spans multiple lines by inserting line
  * breaks (BR tags) for newlines and paragraph markers (P tags) for sequences of more than
  * one newline.
+ *
  * @see wicket.markup.html.link.Link
+ *
  * @author Jonathan Locke
  */
 public class MultiLineLabel extends HtmlComponent
