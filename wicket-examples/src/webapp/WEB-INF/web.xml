@@ -16,6 +16,18 @@
 	</locale-encoding-mapping-list>
     -->	
 
+  <!-- Used for Springframwork2 example -->    
+    <context-param>
+      <param-name>contextConfigLocation</param-name> 
+      <param-value>/WEB-INF/spring.xml</param-value> 
+    </context-param>
+    
+    <!-- Prefer using the spring context listener instead of the loader servlet --> 
+    <listener>
+      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> 
+    </listener>
+  <!-- End-of: Used for Springframwork2 example -->    
+
     <servlet>
         <servlet-name>HelloWorldApplication</servlet-name>
         <servlet-class>wicket.examples.helloworld.HelloWorldApplication</servlet-class>
@@ -126,6 +138,13 @@
     </servlet>
 
     <servlet>
+        <servlet-name>SpringApplication2</servlet-name>
+        <!-- DO NOT USE YOUR WICKET APPLICATION. USE SPRING'S DISPATCHER SERVLET -->
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
         <servlet-name>GroovyApplication</servlet-name>
         <servlet-class>wicket.examples.groovy.GroovyApplication</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -225,6 +244,11 @@
     <servlet-mapping>
         <servlet-name>SpringApplication</servlet-name>
         <url-pattern>/spring</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SpringApplication2</servlet-name>
+        <url-pattern>/spring2</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

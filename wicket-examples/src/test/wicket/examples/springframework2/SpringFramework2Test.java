@@ -16,77 +16,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples;
+package wicket.examples.springframework2;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import net.sourceforge.jwebunit.WebTestCase;
 import nl.openedge.util.jetty.JettyDecorator;
-import wicket.examples.displaytag.DisplaytagTest;
-import wicket.examples.groovy.GroovyTest;
-import wicket.examples.guestbook.GuestbookTest;
-import wicket.examples.helloworld.HelloWorldTest;
-import wicket.examples.springframework.SpringFrameworkTest;
-import wicket.examples.springframework2.SpringFramework2Test;
 
 /**
- * All tests in the project; used by Maven.
+ * jWebUnit test for Hello World.
  */
-public final class AllTests extends TestSuite
+public class SpringFramework2Test extends WebTestCase
 {
-
     /**
      * Construct.
+     * @param name name of test
      */
-    public AllTests()
+    public SpringFramework2Test(String name)
     {
-        super();
+        super(name);
     }
 
     /**
-     * Construct.
-     * @param arg0
-     * @param arg1
+     * @see junit.framework.TestCase#setUp()
      */
-    public AllTests(Class arg0, String arg1)
+    public void setUp() throws Exception
     {
-        super(arg0, arg1);
+        getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
     }
 
     /**
-     * Construct.
-     * @param arg0
+     * Simply test that all pages get loaded 
      */
-    public AllTests(Class arg0)
-    {
-        super(arg0);
+    public void testHomePage() 
+    { 
+        beginAt("/spring2");
+        assertTitleEquals("2nd Spring example");
     }
 
     /**
-     * Construct.
-     * @param arg0
-     */
-    public AllTests(String arg0)
-    {
-        super(arg0);
-    }
-
-    /**
-     * Suite method.
-     * @return test suite
-     */
+	 * Suite method.
+	 * 
+	 * @return Test suite
+	 */
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite();
-		suite.addTest(new HelloWorldTest("testHelloWorld"));
-		suite.addTest(new GuestbookTest("testHomePage"));
-		suite.addTest(new DisplaytagTest("testHomePage"));
-		suite.addTest(new SpringFrameworkTest("testHomePage"));
 		suite.addTest(new SpringFramework2Test("testHomePage"));
-		suite.addTest(new GroovyTest("testHomePage"));
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
 		deco.setContextPath("/wicket-examples");
 		return deco;
-	}
+	}    
 }
