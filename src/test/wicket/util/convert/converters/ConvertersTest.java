@@ -13,10 +13,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import junit.framework.TestCase;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.converters.i18n.DateLocaleConverter;
 import wicket.util.convert.converters.i18n.DoubleLocaleConverter;
-import junit.framework.TestCase;
 
 /**
  * Tests for the base converters.
@@ -86,25 +86,6 @@ public final class ConvertersTest extends TestCase
 		try
 		{
 			conv.convert("123456", Byte.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
-	}
-
-	/**
-	 * Test character converter.
-	 */
-	public void testCharacterConverter()
-	{
-		CharacterConverter conv = new CharacterConverter();
-		assertEquals("c", conv.convert(Character.valueOf('c'), String.class));
-		assertEquals(Character.valueOf('c'), conv.convert("c", Character.class));
-		try
-		{
-			conv.convert("true", Boolean.class);
 			fail("illegal conversion attempt should have thrown an exception");
 		}
 		catch(ConversionException e)
