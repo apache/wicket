@@ -4,7 +4,7 @@
   <extend>../Wicket/project.xml</extend>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>SNAPSHOT</currentVersion>
+  <currentVersion>0.9.19-beta</currentVersion>
   <package>wicket.examples</package>
   <inceptionYear>2004</inceptionYear>
   <description>Example for web framework Wicket.</description>
@@ -24,6 +24,11 @@
       <id>0.9.18-beta</id>
       <name>0.9.18-beta</name>
       <tag>WICKET_R_0_9_18_BETA</tag>
+    </version>
+    <version>
+      <id>0.9.19-beta</id>
+      <name>0.9.19-beta</name>
+      <tag>WICKET_R_0_9_19_BETA</tag>
     </version>
   </versions>
   <dependencies>
@@ -244,6 +249,7 @@
       	don't use 1.0-beta-8 or 9. It is uses an incompatible asm version.
       	Incompatible with cglib that is used by Hibernate
       -->
+
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
