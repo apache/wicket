@@ -9,6 +9,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.clover" />
+      <excludeFolder url="file://$MODULE_DIR$/target/docs" />
+      <excludeFolder url="file://$MODULE_DIR$/target/generated-xdocs" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
