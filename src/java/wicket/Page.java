@@ -51,8 +51,10 @@ import wicket.version.undo.UndoPageVersionManager;
  * constructor or with a constructor that accepts a PageParameters argument.
  * <p>
  * Subclasses of Page which are interested in lifecycle events can override
- * onBeginRequest(), onEndRequest(), onBeginRender(), onEndRender() and
- * onModelChanged(), each of which are called at the obvious time.
+ * onEndRequest(), onBeginRender(), onEndRender() and onModelChanged(), each of
+ * which are called at the obvious time. Note that there is no onBeginRequest
+ * for pages because there is no way to know when a request has begun working
+ * with a page, since it might change the page it uses to respond at any time.
  * <p>
  * Pages, like other components, can have models. A page can be assigned a model
  * by passing one to a page's constructor, by overriding initModel() or with an
@@ -122,9 +124,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** This page's identifier. */
 	private int id = -1;
-
-	/** True if a version manager should be installed */
-	private boolean isVersioned;
 
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
@@ -258,17 +257,32 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		}
 		else
 		{
-			// Get page of desired version
-			final Page page = versionManager.getVersion(versionNumber);
-
-			// If we went all the way back to the original page
-			if (page != null && page.getCurrentVersionNumber() == 0)
+			// Save original change tracking state
+			final boolean originalTrackChanges = trackChanges;
+			try
 			{
-				// remove version info
-				page.versionManager = null;
-			}
+				// While the version manager is potentially playing around with
+				// the Page, it may change the page in order to undo changes and
+				// we don't want change tracking going on while its doing this.
+				trackChanges = false;
 
-			return page;
+				// Get page of desired version
+				final Page page = versionManager.getVersion(versionNumber);
+
+				// If we went all the way back to the original page
+				if (page != null && page.getCurrentVersionNumber() == 0)
+				{
+					// remove version info
+					page.versionManager = null;
+				}
+
+				return page;
+			}
+			finally
+			{
+				// Restore change tracking state
+				trackChanges = originalTrackChanges;
+			}
 		}
 	}
 
@@ -348,16 +362,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @param isVersioned
-	 *            True if a version manager should be used for this page to
-	 *            allow easy back-button support
-	 */
-	public void setVersioned(boolean isVersioned)
-	{
-		this.isVersioned = isVersioned;
-	}
-
-	/**
 	 * Get the string representation of this container.
 	 * 
 	 * @return String representation of this container
@@ -402,32 +406,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @return Factory method that creates a version manager for this Page
+	 * @see wicket.Component#internalOnModelChanged()
 	 */
-	protected IPageVersionManager newVersionManager()
-	{
-		final ApplicationSettings settings = getSession().getApplication().getSettings();
-		return new UndoPageVersionManager(this, settings.getMaxPageVersions());
-	}
-
-	/**
-	 * Called when a request begins working with this page
-	 */
-	protected void onBeginRequest()
-	{
-	}
-
-	/**
-	 * Called when this page is no longer being used in a request
-	 */
-	protected void onEndRequest()
-	{
-	}
-
-	/**
-	 * @see wicket.Component#onInternalModelChanged()
-	 */
-	protected void onInternalModelChanged()
+	protected void internalOnModelChanged()
 	{
 		// Visit all the form components and validate each
 		visitChildren(new Component.IVisitor()
@@ -442,6 +423,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
+	}
+
+	/**
+	 * @return Factory method that creates a version manager for this Page
+	 */
+	protected IPageVersionManager newVersionManager()
+	{
+		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		return new UndoPageVersionManager(this, settings.getMaxPageVersions());
+	}
+
+	/**
+	 * Called when this page is no longer being used in a request
+	 */
+	protected void onEndRequest()
+	{
 	}
 
 	/**
@@ -470,10 +467,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentAdded(final Component component)
 	{
-		onChanged();
-		if (versionManager != null)
+		if (trackChanges && component.isVersioned())
 		{
-		    versionManager.componentAdded(component);
+			onChanged();
+			if (versionManager != null)
+			{
+				versionManager.componentAdded(component);
+			}
 		}
 	}
 
@@ -483,10 +483,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentModelChangeImpending(final Component component)
 	{
-		onChanged();
-		if (versionManager != null)
+		if (trackChanges && component.isVersioned())
 		{
-			versionManager.componentModelChangeImpending(component);
+			onChanged();
+			if (versionManager != null)
+			{
+				versionManager.componentModelChangeImpending(component);
+			}
 		}
 	}
 
@@ -496,10 +499,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentRemoved(final Component component)
 	{
-		onChanged();
-		if (versionManager != null)
+		if (trackChanges && component.isVersioned())
 		{
-			versionManager.componentRemoved(component);
+			onChanged();
+			if (versionManager != null)
+			{
+				versionManager.componentRemoved(component);
+			}
 		}
 	}
 
@@ -519,13 +525,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				renderedComponents = new HashSet();
 			}
 			renderedComponents.add(component);
+			if (log.isDebugEnabled())
+			{
+				log.debug("Rendered " + component);
+			}
 		}
 	}
 
 	/**
-	 * @see wicket.Component#onInternalBeginRender()
+	 * @see wicket.Component#internalOnBeginRender()
 	 */
-	final void onInternalBeginRender()
+	final void internalOnBeginRender()
 	{
 		// Adds any feedback messages on this page to the given component
 		if (feedback != null)
@@ -535,17 +545,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Called when a request begins working with this page
+	 * @see wicket.Component#internalOnEndRender()
 	 */
-	final void onInternalBeginRequest()
-	{
-		changeCount = 0;
-	}
-
-	/**
-	 * @see wicket.Component#onInternalEndRender()
-	 */
-	final void onInternalEndRender()
+	final void internalOnEndRender()
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
@@ -563,15 +565,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * Called when this page is no longer being used in a request
 	 */
-	final void onInternalEndRequest()
+	final void internalOnEndRequest()
 	{
-		if (isVersioned)
+		if (isVersioned())
 		{
 			// Any changes to the page after this point will be tracked by the
 			// page's version manager. Since trackChanges is never set to false,
 			// this effectively means that change tracking begins after the
-			// first
-			// request to a page completes.
+			// first request to a page completes.
 			trackChanges = true;
 
 			// If there have been changes to the page
@@ -582,6 +583,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				{
 					versionManager.endVersion();
 				}
+
+				// Reset change count for next time
+				changeCount = 0;
 			}
 		}
 	}
@@ -649,7 +653,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		final Session session = getSession();
 		session.addPage(this);
-		this.isVersioned = session.getApplication().getSettings().getVersionPagesByDefault();
+		setVersioned(session.getApplication().getSettings().getVersionPagesByDefault());
 	}
 
 	/**
@@ -657,30 +661,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	private final void onChanged()
 	{
-		// If version management is enabled
-		if (isVersioned)
+		// If we have no version manager
+		if (versionManager == null)
 		{
-			// and we are creating a new version of the original page
-			if (trackChanges)
-			{
-				// and we have no version manager
-				if (versionManager == null)
-				{
-					// then install a new version manager
-					versionManager = newVersionManager();
-				}
-
-				// If there have not been any changes yet
-				if (changeCount == 0)
-				{
-					// start a new version
-					versionManager.beginVersion();
-				}
-
-				// Increase number of changes
-				changeCount++;
-			}
+			// then install a new version manager
+			versionManager = newVersionManager();
 		}
+
+		// If there have not been any changes yet
+		if (changeCount == 0)
+		{
+			// start a new version
+			versionManager.beginVersion();
+		}
+
+		// Increase number of changes
+		changeCount++;
 	}
 
 	static

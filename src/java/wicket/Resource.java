@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.4 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,6 +34,17 @@ import wicket.util.string.Strings;
  * getOutputStream(Response) implementation to get an output stream from the
  * Response and getResource() which returns the IResource to be rendered back to
  * the client browser.
+ * <p>
+ * Resources generally have stable URLs, which means that they can be shared
+ * throughout an application. However, the components that access the resources
+ * <i>cannot </i> be shared in this way. For example, you can create a button
+ * image resource with new DefaultButtonImageResource("Hello") and assign that
+ * resource to multiple ImageButton components via the ImageButton constructor,
+ * which takes an ImageResource as an argument. Each ImageButton component then
+ * would reference the same ImageResource at the same URL. While the "Hello"
+ * button image resource can be shared between components like this, the
+ * ImageButton components in this example are like all other components in
+ * Wicket and cannot be shared.
  * 
  * @author Jonathan Locke
  */
@@ -65,9 +76,9 @@ public abstract class Resource implements IResourceListener
 		if (path != null && path.startsWith(urlPrefix))
 		{
 			// Parse out id from <prefix><number>.<extension>
-			final String suffix = path.substring(urlPrefix.length());			
+			final String suffix = path.substring(urlPrefix.length());
 			final long id = Long.parseLong(Strings.beforeFirst(suffix, '.'));
-			
+
 			// Return resource for id
 			return (Resource)resourceForId.get(new Long(id));
 		}
@@ -173,7 +184,7 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * Set resource field by calling subclass 
+	 * Set resource field by calling subclass
 	 */
 	private void setResource()
 	{

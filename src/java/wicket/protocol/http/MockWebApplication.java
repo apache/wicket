@@ -113,7 +113,7 @@ public class MockWebApplication extends WebApplication
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
         servletResponse = new MockHttpServletResponse();
-        wicketSession = WebSession.getSession(this, servletRequest);
+        wicketSession = getSession(servletRequest);
     }
 
     /**
@@ -220,7 +220,7 @@ public class MockWebApplication extends WebApplication
     {
         WebRequestCycle cycle = new WebRequestCycle(this, wicketSession, wicketRequest,
                 wicketResponse);
-        cycle.respond();
+        cycle.request();
         lastRenderedPage = cycle.getPage();
     }
 
@@ -246,7 +246,7 @@ public class MockWebApplication extends WebApplication
     {
         servletRequest.initialize();
         servletResponse.initialize();
-        wicketSession = WebSession.getSession(this, servletRequest);
+        wicketSession = getSession(servletRequest);
         wicketRequest = new WebRequest(servletRequest);
         wicketResponse = new WebResponse(servletResponse);
     }

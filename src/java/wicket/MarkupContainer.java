@@ -382,7 +382,7 @@ public abstract class MarkupContainer extends Component
 			}
 			
 			replaced.setParent(null);
-			
+
 			// Notify the page that the replace happened
 			final Page page = findPage();
 			if (page != null)
@@ -391,7 +391,7 @@ public abstract class MarkupContainer extends Component
 				page.componentAdded(child);
 			}
 		}
-		
+
 		return this;
 	}
 
@@ -414,7 +414,7 @@ public abstract class MarkupContainer extends Component
 	{
 		final StringBuffer buffer = new StringBuffer();
 
-		buffer.append("[path = ");
+		buffer.append("[");
 		buffer.append(super.toString());
 
 		if (markupStream != null)
@@ -424,7 +424,7 @@ public abstract class MarkupContainer extends Component
 
 		if (childForName != null && childForName.size() != 0)
 		{
-			buffer.append(", children = " + childForName);
+			buffer.append(", children = " + childForName.values());
 		}
 
 		buffer.append(']');
@@ -929,17 +929,7 @@ public abstract class MarkupContainer extends Component
 			// Failed to find it?
 			if (component != null)
 			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("Begin render of sub-component " + component);
-				}
-
 				component.render();
-
-				if (log.isDebugEnabled())
-				{
-					log.debug("End render of sub-component " + component);
-				}
 			}
 			else
 			{

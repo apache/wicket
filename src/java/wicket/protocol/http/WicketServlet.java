@@ -37,12 +37,6 @@ import wicket.WicketRuntimeException;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- * 
- *  
- *   
- *    
- *     
- *      
  *               &lt;servlet&gt;
  *                   &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
  *                   &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
@@ -52,12 +46,6 @@ import wicket.WicketRuntimeException;
  *                   &lt;/init-param&gt;
  *                   &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
  *                &lt;/servlet&gt;
- *       
- *      
- *     
- *    
- *   
- *  
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -75,23 +63,11 @@ import wicket.WicketRuntimeException;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- * 
- *  
- *   
- *    
- *     
- *      
  *                  public void init() throws ServletException
  *                  {
  *                      ServletConfig config = getServletConfig();
  *                      String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
  *                      ...
- *       
- *      
- *     
- *    
- *   
- *  
  * </pre>
  * 
  * </p>
@@ -176,7 +152,7 @@ public class WicketServlet extends HttpServlet
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
 		// Get session for request
-		final WebSession session = WebSession.getSession(webApplication, servletRequest);
+		final WebSession session = webApplication.getSession(servletRequest);
 		final WebRequest request = new WebRequest(servletRequest);
 		final WebResponse response = webApplication.getSettings().getBufferResponse()
 				? new BufferedWebResponse(servletResponse)
@@ -184,8 +160,8 @@ public class WicketServlet extends HttpServlet
 
 		try
 		{
-			// Respond to request
-			new WebRequestCycle(webApplication, session, request, response).respond();
+			// Process request
+			webApplication.newRequestCycle(session, request, response).request();
 		}
 		finally
 		{

@@ -183,6 +183,8 @@ public abstract class RequestCycle
 	/** The session object. */
 	protected final Session session;
 
+	// TODO CHANGE to responsePage
+
 	/** The page to render to the user. */
 	private Page page;
 
@@ -415,10 +417,11 @@ public abstract class RequestCycle
 	 * 
 	 * @throws ServletException
 	 */
-	public final void respond() throws ServletException
+	public final void request() throws ServletException
 	{
 		// Response is beginning
-		beginResponse();
+		internalOnBeginRequest();
+		onBeginRequest();
 
 		// Serialize renderings on the session object so that only one page
 		// can be rendered at a time for a given session.
@@ -453,10 +456,11 @@ public abstract class RequestCycle
 						finally
 						{
 							// Response is ending
-							endResponse();
+							internalOnEndRequest();
+							onEndRequest();
 
 							// The request is over
-							page.onInternalEndRequest();
+							page.internalOnEndRequest();
 							page.onEndRequest();
 						}
 					}
@@ -464,7 +468,8 @@ public abstract class RequestCycle
 				else
 				{
 					// Response is ending
-					endResponse();
+					internalOnEndRequest();
+					onEndRequest();
 				}
 			}
 			catch (RuntimeException e)
@@ -550,27 +555,6 @@ public abstract class RequestCycle
 	public abstract String urlFor(final Component component, final Class listenerInterface);
 
 	/**
-	 * Called when the request cycle object is beginning its response
-	 */
-	protected void beginResponse()
-	{
-		// Before the beginning of the response, we need to update
-		// our session based on any information that might be in
-		// session attributes
-		session.updateSession();
-	}
-
-	/**
-	 * Called when the request cycle object has finished its response
-	 */
-	protected void endResponse()
-	{
-		// At the end of our response, we need to set any session
-		// attributes that might be required to update the cluster
-		session.updateCluster();
-	}
-
-	/**
 	 * Looks up an interface method by name.
 	 * 
 	 * @param name
@@ -586,6 +570,47 @@ public abstract class RequestCycle
 			throw new WicketRuntimeException("Attempt to access unknown interface " + name);
 		}
 		return method;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE THIS METHOD.
+	 * 
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected void internalOnBeginRequest()
+	{
+		// Before the beginning of the response, we need to update
+		// our session based on any information that might be in
+		// session attributes
+		session.updateSession();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE THIS METHOD.
+	 * 
+	 * Called when the request cycle object has finished its response
+	 */
+	protected void internalOnEndRequest()
+	{
+		// At the end of our response, we need to set any session
+		// attributes that might be required to update the cluster
+		session.updateCluster();
+	}
+
+	/**
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected void onBeginRequest()
+	{
+	}
+
+	/**
+	 * Called when the request cycle object has finished its response
+	 */
+	protected void onEndRequest()
+	{
 	}
 
 	/**

@@ -60,6 +60,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public UndoPageVersionManager(final Page page, final int maxVersions)
 	{
+		// Save page that this version manager is working on
 		this.page = page;
 
 		// Create an insertion-ordered MRU map

@@ -21,17 +21,15 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
 import wicket.Session;
-import wicket.WicketRuntimeException;
 
 /**
- * Session subclass for HTTP protocol which holds an underlying WebSession
- * object and provides access to that object via getHttpServletSession. A method
- * which abstracts session invalidation is also provided via invalidate().
+ * Session subclass for HTTP protocol which holds an HttpSession object and
+ * provides access to that object via getHttpSession(). A method which abstracts
+ * session invalidation is also provided via invalidate().
  * 
  * @author Jonathan Locke
  */
@@ -40,64 +38,11 @@ public class WebSession extends Session
 	/** Serial Version ID */
 	private static final long serialVersionUID = -7738551549126761943L;
 
-	/** The underlying WebSession object */
-	private transient javax.servlet.http.HttpSession httpSession;
+	/** The underlying HttpSession object */
+	transient javax.servlet.http.HttpSession httpSession;
 
 	/** The attribute in the HttpSession where this WebSession object is stored */
-	private transient String sessionAttributeName;
-
-	/**
-	 * Gets session from request, creating a new one if it doesn't already exist
-	 * 
-	 * @param application
-	 *            The application object
-	 * @param request
-	 *            The http request object
-	 * @return The session object
-	 */
-	static WebSession getSession(final Application application, final HttpServletRequest request)
-	{
-		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = request.getSession(true);
-
-		// The request session object is unique per web application, but wicket
-		// requires it to be unique per servlet. That is, there must be a 1..n
-		// relationship between HTTP sessions (JSESSIONID) and Wicket
-		// applications.
-		final String sessionAttributeName = "session-" + request.getServletPath();
-
-		// Get Session abstraction from httpSession attribute
-		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttributeName);
-		if (webSession == null)
-		{
-			// Create session using session factory
-			final Session session = application.getSessionFactory().newSession();
-			if (session instanceof WebSession)
-			{
-				webSession = (WebSession)session;
-				webSession.sessionAttributeName = sessionAttributeName;
-			}
-			else
-			{
-				throw new WicketRuntimeException(
-						"Session created by a WebApplication session factory must be a subclass of WebSession");
-			}
-
-			// Set the client Locale for this session
-			webSession.setLocale(request.getLocale());
-
-			// Save this session in the HttpSession using the attribute name
-			httpSession.setAttribute(sessionAttributeName, webSession);
-		}
-
-		// Attach / reattach http servlet session
-		webSession.httpSession = httpSession;
-
-		// Set the current session to the session we just retrieved
-		Session.set(webSession);
-
-		return webSession;
-	}
+	transient String sessionAttributeName;
 
 	/**
 	 * Constructor
@@ -111,7 +56,7 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * @return The underlying WebSession object
+	 * @return The underlying HttpSession object
 	 */
 	public HttpSession getHttpSession()
 	{
@@ -140,7 +85,7 @@ public class WebSession extends Session
 	{
 		return httpSession.getAttribute(sessionAttributeName + "-" + name);
 	}
-	
+
 	/**
 	 * @see Session#getAttributeNames()
 	 */
@@ -159,7 +104,7 @@ public class WebSession extends Session
 		}
 		return list;
 	}
-	
+
 	/**
 	 * @see wicket.Session#removeAttribute(java.lang.String)
 	 */

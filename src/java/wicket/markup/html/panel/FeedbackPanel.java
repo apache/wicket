@@ -109,6 +109,7 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	{
 		super(name);
 		this.messageListView = new MessageListView("messages");
+		messageListView.setVersioned(false);
 		add(messageListView);
 	}
 

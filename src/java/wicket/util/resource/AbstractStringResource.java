@@ -34,9 +34,6 @@ public abstract class AbstractStringResource extends AbstractResource
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 209001445308790198L;
 
-	/** Name of char set for encoding */
-	private String charset = null;
-
 	/** MIME content type */
 	private final String contentType;
 	
@@ -83,11 +80,11 @@ public abstract class AbstractStringResource extends AbstractResource
 	public InputStream getInputStream() throws ResourceNotFoundException
 	{
 		final byte[] bytes;
-		if (charset != null)
+		if (getCharset() != null)
 		{
 			try
 			{
-				bytes = getString().getBytes(charset);
+				bytes = getString().getBytes(getCharset().name());
 			}
 			catch (UnsupportedEncodingException e)
 			{
@@ -108,14 +105,6 @@ public abstract class AbstractStringResource extends AbstractResource
 	{
 		return lastModified;
 	}	
-	
-	/**
-	 * @param charset The charset to set.
-	 */
-	public void setCharset(String charset)
-	{
-		this.charset = charset;
-	}
 	
 	/**
 	 * @param lastModified The lastModified to set.
