@@ -34,6 +34,10 @@ public class MyTable extends ListView
 {
     private int rows = 10;
     
+    /**
+     * Construct.
+     * @param componentName
+     */
     public MyTable(final String componentName)
     {
         super(componentName, new Model(null));
@@ -45,6 +49,10 @@ public class MyTable extends ListView
         listItem.add(new Label("txt", txt));
     }
 
+    /**
+     * Sets the number of rows per page.
+     * @param rows
+     */
     public void setRowsPerPage(final int rows)
     {
         this.rows = rows;
