@@ -274,7 +274,16 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 			Object raw = Ognl.getValue(expr, ctx, modelObject);
 			if (applyFormatting)
 			{
-				IStringConverter converter = component.getConverter();
+				final IStringConverter converter;
+				if(component != null) // could be null if used directly by clients
+				{
+					converter = component.getConverter();
+				}
+				else // safety option
+				{
+					Session session = Session.get();
+					converter = (IStringConverter)session.getConverter();
+				}
 				return converter.toString(raw);
 			}
 			else
