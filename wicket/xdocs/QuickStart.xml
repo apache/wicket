@@ -16,7 +16,7 @@
 <li>Go to WICKET_HOME and type "ant" or - if you use Maven </li>
 <li>Copy WICKET_HOME/build/examples/*.war to JETTY_HOME/webapps</li>
 <li>Go to JETTY_HOME and type "java -jar start.jar"</li>
-<li>Next, try the <a href="http://localhost:8080/wicket-examples/">example applications</a>
+<li>Next, try the <a href="http://localhost:8080/wicket-examples/">example applications</a></li>
 
 </ol>
 </subsection>
@@ -27,7 +27,7 @@
 <li>Go to WICKET_HOME and type "ant"</li>
 <li>Start Tomcat 5.0</li>
 <li>Copy WICKET_HOME/build/examples/*.war to TOMCAT_HOME/webapps</li>
-<li>Next, try the <a href="http://localhost:8080/wicket-examples/">example applications</a>
+<li>Next, try the <a href="http://localhost:8080/wicket-examples/">example applications</a></li>
 </ol>
 </subsection>
 </section>
