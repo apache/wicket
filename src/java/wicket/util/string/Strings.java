@@ -258,10 +258,6 @@ public final class Strings
 						buffer.append("&gt;");
 						break;
 
-					case '&' :
-						buffer.append("&amp;");
-						break;
-
 					default :
 						buffer.append(c);
 						break;
