@@ -51,7 +51,8 @@ public final class DoubleConverter extends AbstractDecimalConverter
 	public Object convert(final Object value)
 	{
         final Number number = value instanceof Number ? (Number)value : parse(value,
-                Double.MIN_VALUE, Double.MAX_VALUE);
+                Double.MAX_VALUE*-1, Double.MAX_VALUE);
+        //Double.MIN is the smallest nonzero positive number, not the largest negative number
         return new Double(number.doubleValue());
 	}
 
