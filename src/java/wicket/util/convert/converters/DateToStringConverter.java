@@ -31,6 +31,22 @@ public final class DateToStringConverter extends AbstractConverter
 	/** The date format to use */
 	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
+    /**
+     * Constructor
+     */
+    public DateToStringConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public DateToStringConverter(final Locale locale)
+    {
+        super(locale);
+    }
+
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#setLocale(java.util.Locale)
 	 */
@@ -45,11 +61,10 @@ public final class DateToStringConverter extends AbstractConverter
 	 */
 	public final DateFormat getDateFormat()
 	{
-        final Locale locale = getLocale();
-		if (dateFormat == null && locale != null)
+		if (dateFormat == null)
 		{
-			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-			dateFormat.setLenient(true);
+			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
+            dateFormat.setLenient(true);
 		}
 		return dateFormat;
 	}

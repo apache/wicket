@@ -21,7 +21,7 @@ import wicket.util.convert.ConversionException;
  */
 public final class ConvertersTest extends TestCase
 {
-	/** dutch locale for localized testing. */
+	/** Dutch locale for localized testing. */
 	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	/**
@@ -69,12 +69,14 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testByteConversions()
 	{
-        assertEquals(new Byte((byte)10), new ByteConverter().convert(Byte.valueOf("10")));
-        assertEquals(new Byte((byte)10), new ByteConverter().convert("10"));
+        ByteConverter converter = new ByteConverter(Locale.US);
+        assertEquals(Locale.US, converter.getLocale());
+        assertEquals(new Byte((byte)10), converter.convert(Byte.valueOf("10")));
+        assertEquals(new Byte((byte)10), converter.convert("10"));
         assertEquals("10", new StringConverter().convert(new Byte((byte)10)));                
         try
         {
-            new ByteConverter().convert("whatever");
+            converter.convert("whatever");
             fail("Conversion should have thrown an exception");
         }
         catch (ConversionException e)
@@ -83,7 +85,7 @@ public final class ConvertersTest extends TestCase
         }
         try
         {
-            new ByteConverter().convert("256");
+            converter.convert("256");
             fail("Conversion should have thrown an exception");
         }
         catch (ConversionException e)
@@ -97,12 +99,14 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testDoubleConversions()
 	{
-        assertEquals(new Double(1.1), new DoubleConverter().convert(new Double(1.1)));
-        assertEquals(new Double(1.1), new DoubleConverter().convert("1.1"));
-		assertEquals("1.1", new StringConverter().convert(new Double(1.1)));
+        DoubleConverter converter = new DoubleConverter(Locale.US);
+        assertEquals(Locale.US, converter.getLocale());
+        assertEquals(new Double(1.1), converter.convert(new Double(1.1)));
+        assertEquals(new Double(1.1), converter.convert("1.1"));
+		assertEquals("1.1", new StringConverter(Locale.US).convert(new Double(1.1)));
 		try
 		{
-			new DoubleConverter().convert("whatever");
+			converter.convert("whatever");
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)
@@ -116,12 +120,13 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testFloatConversions()
 	{
-        assertEquals(new Float(1.1), new FloatConverter().convert(new Float(1.1)));
-        assertEquals(new Float(1.1), new FloatConverter().convert("1.1"));
-        assertEquals("1.1", new StringConverter().convert(new Float(1.1)));
+        FloatConverter converter = new FloatConverter(Locale.US);
+        assertEquals(new Float(1.1), converter.convert(new Float(1.1)));
+        assertEquals(new Float(1.1), converter.convert("1.1"));
+        assertEquals("1.1", new StringConverter(Locale.US).convert(new Float(1.1)));
         try
         {
-            new FloatConverter().convert("whatever");
+            converter.convert("whatever");
             fail("Conversion should have thrown an exception");
         }
         catch (ConversionException e)
@@ -135,12 +140,14 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testIntegerConversions()
 	{
-        assertEquals(new Integer(10), new IntegerConverter().convert(Integer.valueOf("10")));
-        assertEquals(new Integer(10), new IntegerConverter().convert("10"));
-        assertEquals("10", new StringConverter().convert(new Integer(10)));                
+        IntegerConverter converter = new IntegerConverter(Locale.US);
+        assertEquals(Locale.US, converter.getLocale());
+        assertEquals(new Integer(10), converter.convert(Integer.valueOf("10")));
+        assertEquals(new Integer(10), converter.convert("10"));
+        assertEquals("10", new StringConverter(Locale.US).convert(new Integer(10)));                
         try
         {
-            new IntegerConverter().convert("whatever");
+            converter.convert("whatever");
             fail("Conversion should have thrown an exception");
         }
         catch (ConversionException e)
@@ -149,7 +156,7 @@ public final class ConvertersTest extends TestCase
         }
         try
         {
-            new IntegerConverter().convert("" + ((long)Integer.MAX_VALUE + 1));
+            converter.convert("" + ((long)Integer.MAX_VALUE + 1));
             fail("Conversion should have thrown an exception");
         }
         catch (ConversionException e)
@@ -163,12 +170,14 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testLongConversions()
 	{
-        assertEquals(new Integer(10), new IntegerConverter().convert(Integer.valueOf("10")));
-        assertEquals(new Integer(10), new IntegerConverter().convert("10"));
-        assertEquals("10", new StringConverter().convert(new Integer(10)));                
+        LongConverter converter = new LongConverter(Locale.US);
+        assertEquals(Locale.US, converter.getLocale());
+        assertEquals(new Long(10), converter.convert(Long.valueOf("10")));
+        assertEquals(new Long(10), converter.convert("10"));
+        assertEquals("10", new StringConverter(Locale.US).convert(new Long(10)));                
         try
         {
-            new IntegerConverter().convert("whatever");
+            converter.convert("whatever");
             fail("Conversion should have thrown an exception");
         }
         catch (ConversionException e)
@@ -191,12 +200,14 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testShortConversions()
 	{
-        assertEquals(new Short((short)10), new ShortConverter().convert(Short.valueOf("10")));
-        assertEquals(new Short((short)10), new ShortConverter().convert("10"));
-        assertEquals("10", new StringConverter().convert(new Short((short)10)));                
+        ShortConverter converter = new ShortConverter(Locale.US);
+        assertEquals(Locale.US, converter.getLocale());
+        assertEquals(new Short((short)10), converter.convert(Short.valueOf("10")));
+        assertEquals(new Short((short)10), converter.convert("10"));
+        assertEquals("10", new StringConverter(Locale.US).convert(new Short((short)10)));                
         try
         {
-            new ShortConverter().convert("whatever");
+            converter.convert("whatever");
             fail("Conversion should have thrown an exception");
         }
         catch (ConversionException e)
@@ -205,7 +216,7 @@ public final class ConvertersTest extends TestCase
         }
         try
         {
-            new ShortConverter().convert("" + (Short.MAX_VALUE + 1));
+            converter.convert("" + (Short.MAX_VALUE + 1));
             fail("Conversion should have thrown an exception");
         }
         catch (ConversionException e)
@@ -219,24 +230,22 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testDateConverter()
 	{
-		DateConverter converter = new DateConverter();
-        StringConverter stringConverter = new StringConverter();
+		DateConverter converter = new DateConverter(DUTCH_LOCALE);
+        StringConverter stringConverter = new StringConverter(DUTCH_LOCALE);
         
-        converter.setLocale(DUTCH_LOCALE);
-        stringConverter.setLocale(DUTCH_LOCALE);
-
         Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
 		cal.clear();
 		cal.set(2002, Calendar.OCTOBER, 24);
 		Date date = cal.getTime();
         
-		assertEquals("24-okt-2002", stringConverter.convert(date));
-		assertEquals(date, converter.convert("24-okt-2002"));
+		assertEquals("24-10-02", stringConverter.convert(date));
+		assertEquals(date, converter.convert("24-10-02"));
 
 		converter.setLocale(Locale.US);
         stringConverter.setLocale(Locale.US);
-		assertEquals("Oct 24, 2002", stringConverter.convert(date));
-		assertEquals(date, converter.convert("Oct 24, 2002"));
+		assertEquals("10/24/02", stringConverter.convert(date));
+		assertEquals(date, converter.convert("10/24/02"));
+        
 		try
 		{
 			converter.convert("whatever");

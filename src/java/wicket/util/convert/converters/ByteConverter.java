@@ -17,8 +17,8 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
 
@@ -31,33 +31,44 @@ import wicket.util.convert.ConversionException;
 public final class ByteConverter extends NumberConverter
 {
     /**
+     * Constructor
+     */
+    public ByteConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public ByteConverter(final Locale locale)
+    {
+        super(locale);
+    }
+
+    /**
      * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
      */
     public Object convert(final Object value)
     {
         if (value instanceof Number)
         {
-            Number number = (Number)value;
-            return new Byte(number.byteValue());
+            return new Byte(((Number)value).byteValue());
         }
 
-        final String stringValue = value.toString();
         try
         {
-            final NumberFormat numberFormat = getNumberFormat();
-            if (numberFormat != null)
+            final Number number = getNumberFormat().parse(value.toString());
+            if (number.doubleValue() > Byte.MAX_VALUE || 
+                number.doubleValue() < Byte.MIN_VALUE)
             {
-                return new Byte(numberFormat.parse(stringValue).byteValue());
+            	throw new ConversionException("Byte value out of range");
             }
-            return new Byte(stringValue);
+            return new Byte(number.byteValue());
         }
         catch (ParseException e)
         {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Byte", e);
-        }
-        catch (NumberFormatException e)
-        {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Byte", e);
+            throw new ConversionException("Cannot convert '" + value + "' to Byte", e);
         }
     }
 }

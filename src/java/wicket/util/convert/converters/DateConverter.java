@@ -32,7 +32,23 @@ import wicket.util.convert.ConversionException;
 public final class DateConverter extends AbstractConverter
 {
 	/** The date format to use. */
-	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+	private DateFormat dateFormat;
+    
+    /**
+	 * Constructor
+	 */
+	public DateConverter()
+	{
+	}
+    
+    /**
+	 * Constructor
+     * @param locale The locale for this converter
+	 */
+	public DateConverter(final Locale locale)
+	{
+        super(locale);
+	}
 
 	/**
 	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
@@ -42,7 +58,7 @@ public final class DateConverter extends AbstractConverter
 		final String stringValue = value.toString();
 		try
 		{
-			return dateFormat.parse(stringValue);
+			return getDateFormat().parse(stringValue);
 		}
 		catch (ParseException e)
 		{
@@ -54,13 +70,17 @@ public final class DateConverter extends AbstractConverter
 		}
 	}
 
-	/**
-	 * @return Returns the dateFormat.
-	 */
-	public DateFormat getDateFormat()
-	{
-		return dateFormat;
-	}
+    /**
+     * @return Returns the date format.
+     */
+    public final DateFormat getDateFormat()
+    {
+        if (dateFormat == null)
+        {
+            dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
+        }
+        return dateFormat;
+    }
 
 	/**
 	 * @param dateFormat The dateFormat to set.
@@ -80,6 +100,6 @@ public final class DateConverter extends AbstractConverter
 	public void setLocale(final Locale locale)
 	{
 		super.setLocale(locale);
-		this.dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+		this.dateFormat = null;
 	}
 }

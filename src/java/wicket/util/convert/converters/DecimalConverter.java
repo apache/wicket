@@ -17,6 +17,7 @@
  */
 package wicket.util.convert.converters;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -25,15 +26,15 @@ import java.util.Locale;
  * 
  * @author Jonathan Locke
  */
-public abstract class NumberConverter extends AbstractConverter 
+public abstract class DecimalConverter extends AbstractConverter 
 {
     /** The number format */
     private NumberFormat numberFormat;
-    
+
     /**
      * Constructor
      */
-    public NumberConverter()
+    public DecimalConverter()
     {
     }
     
@@ -41,28 +42,28 @@ public abstract class NumberConverter extends AbstractConverter
      * Constructor
      * @param locale The locale for this converter
      */
-    public NumberConverter(final Locale locale)
+    public DecimalConverter(final Locale locale)
     {
         super(locale);
     }
-
+    
     /**
 	 * @return Returns the numberFormat.
 	 */
-	public NumberFormat getNumberFormat()
+	public final NumberFormat getNumberFormat()
 	{
         if (numberFormat == null)
         {
-            numberFormat = NumberFormat.getInstance(getLocale());
+            numberFormat = DecimalFormat.getInstance(getLocale());
         }
 		return numberFormat;
 	}
-   
+       
     /**
-	 * @param numberFormat The numberFormat to set.
-	 */
-	public final void setNumberFormat(final NumberFormat numberFormat)
-	{
-		this.numberFormat = numberFormat;
-	}
+     * @param numberFormat The numberFormat to set.
+     */
+    public final void setNumberFormat(final NumberFormat numberFormat)
+    {
+        this.numberFormat = numberFormat;
+    }
 }

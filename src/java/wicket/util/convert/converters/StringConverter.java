@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,6 +19,7 @@ package wicket.util.convert.converters;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import wicket.util.convert.ConversionException;
@@ -40,6 +41,15 @@ public class StringConverter extends AbstractConverter
 {
 	/** Maps value Classes to specific StringConverters. */
 	private final Map classToConverter = new HashMap();
+	{
+		set(Date.class, new DateToStringConverter());
+		set(Byte.class, new NumberToStringConverter());
+		set(Short.class, new NumberToStringConverter());
+		set(Integer.class, new NumberToStringConverter());
+		set(Long.class, new NumberToStringConverter());
+		set(Float.class, new NumberToStringConverter());
+		set(Double.class, new NumberToStringConverter());
+	}
 
 	/**
 	 * Constructor
@@ -47,13 +57,17 @@ public class StringConverter extends AbstractConverter
 	 */
 	public StringConverter()
 	{
-        set(Date.class, new DateToStringConverter());
-        set(Byte.class, new NumberToStringConverter());
-        set(Short.class, new NumberToStringConverter());
-        set(Integer.class, new NumberToStringConverter());
-        set(Long.class, new NumberToStringConverter());
-        set(Float.class, new NumberToStringConverter());
-        set(Double.class, new NumberToStringConverter());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param locale
+	 *            The locale for this converter
+	 */
+	public StringConverter(final Locale locale)
+	{
+		super(locale);
 	}
 
 	/**
@@ -120,7 +134,8 @@ public class StringConverter extends AbstractConverter
 		}
 		catch (ConversionException e)
 		{
-			throw e.setTypeConverter(this).setLocale(getLocale()).setTargetType(c).setSourceValue(value);
+			throw e.setTypeConverter(this).setLocale(getLocale()).setTargetType(c).setSourceValue(
+					value);
 		}
 		catch (Exception e)
 		{

@@ -31,9 +31,25 @@ import wicket.util.convert.converters.AbstractConverter;
 public abstract class AbstractConverter implements ITypeConverter, ILocalizable 
 {
 	/** The current locale. */
-	private Locale locale;
+	private Locale locale = Locale.getDefault();
 
-	/**
+    /**
+     * Constructor
+     */
+    public AbstractConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public AbstractConverter(final Locale locale)
+    {
+        setLocale(locale);
+    }
+
+    /**
 	 * gets the locale.
 	 * 
 	 * @return the locale
