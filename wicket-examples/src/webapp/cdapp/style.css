@@ -110,11 +110,10 @@ input, select, label  {
 }
 
 #imageFieldset {
-	
+	margin-left: 300px;
 }
 
 #imageBox {
-	float: left;
 	margin: 5px;
 }
 
