@@ -67,18 +67,18 @@ public class FValidateFormInput extends WicketExamplePage
 
 			FValidateTextField stringInput =
 				new FValidateTextField("stringInput", input, "stringProperty");
-			stringInput.add(new RequiredValidator());
+			stringInput.add(RequiredValidator.getInstance());
 			FValidateTextField integerInput =
 				new FValidateTextField("integerInput", input, "integerProperty");
-			integerInput.add(new RequiredValidator());
+			integerInput.add(RequiredValidator.getInstance());
 			integerInput.add(new TypeValidator(Integer.class));
 			FValidateTextField doubleInput =
 				new FValidateTextField("doubleInput", input, "doubleProperty");
-			doubleInput.add(new RequiredValidator());
+			doubleInput.add(RequiredValidator.getInstance());
 			doubleInput.add(new TypeValidator(Double.class));
 			FValidateTextField dateInput =
 				new FValidateTextField("dateInput", input, "dateProperty");
-			dateInput.add(new RequiredValidator());
+			dateInput.add(RequiredValidator.getInstance());
 			dateInput.add(new TypeValidator(Date.class));
 			add(stringInput);
 			add(integerInput);
@@ -87,7 +87,7 @@ public class FValidateFormInput extends WicketExamplePage
 
 			TextField integerInRangeInput = new
 				TextField("integerInRangeInput", input, "integerInRangeProperty");
-			integerInRangeInput.add(new RequiredValidator());
+			integerInRangeInput.add(RequiredValidator.getInstance());
 			add(integerInRangeInput);
 		}
 

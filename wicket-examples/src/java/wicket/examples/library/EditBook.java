@@ -118,7 +118,7 @@ public final class EditBook extends AuthenticatedWebPage
 
             // Create a required text field with a max length of 30 characters that edits the book's title
             final TextField title = new TextField("title", bookModel, "title");
-            title.add(new RequiredValidator());
+            title.add(RequiredValidator.getInstance());
             title.add(LengthValidator.max(30));
             final FormComponentFeedbackBorder titleFeedback =
                 new FormComponentFeedbackBorder("titleFeedback", title);
@@ -126,7 +126,7 @@ public final class EditBook extends AuthenticatedWebPage
 
             // Create a required text field that edits the book's author
             final TextField author = new TextField("author", bookModel, "author");
-            author.add(new RequiredValidator());
+            author.add(RequiredValidator.getInstance());
             final FormComponentFeedbackBorder authorFeedback =
                 new FormComponentFeedbackBorder("authorFeedback", author);
             add(authorFeedback);
