@@ -29,6 +29,8 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.PagedTableNavigator;
+import com.voicetribe.wicket.markup.html.table.SortableTableHeader;
+import com.voicetribe.wicket.markup.html.table.SortableTableHeaders;
 
 import displaytag.export.Export;
 import displaytag.export.XmlView;
@@ -51,6 +53,25 @@ public class ExamplePse extends HtmlPage
     public ExamplePse(final PageParameters parameters)
     {
         final ReportList data = new ReportList();
+        
+        // And this is with a little bit of magic
+        add(new SortableTableHeaders("header", data, "rows", true)
+        {
+	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
+	        {
+	            final String name = header.getName();
+	            if (name.equals("city"))
+	            {
+	                return ((ReportableListObject)object).getCity();
+	            }
+	            if (name.equals("project"))
+	            {
+	                return ((ReportableListObject)object).getProject();
+	            }
+	            
+	            return "";
+	        }
+        });
 
         // Add table of existing comments
         final MyPagedTable table = new MyPagedTable("rows", data, 10)
