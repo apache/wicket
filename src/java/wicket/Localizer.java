@@ -86,7 +86,7 @@ public class Localizer
         for (Iterator it = settings.getStringResourceLoaders().iterator(); it.hasNext();)
         {
             IStringResourceLoader loader = (IStringResourceLoader)it.next();
-            string = loader.get(component, key, locale, style);
+            string = loader.loadStringResource(component, key, locale, style);
             if (string != null)
             {
                 return substituteOgnl(string, model);

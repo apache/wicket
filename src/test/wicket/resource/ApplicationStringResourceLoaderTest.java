@@ -79,7 +79,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 		};
 
 		IStringResourceLoader loader = new ApplicationStringResourceLoader(app);
-		Assert.assertNull("Unknown resource should return null", loader.get(component,
+		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component,
 				"test.string", Locale.getDefault(), null));
 	}
 

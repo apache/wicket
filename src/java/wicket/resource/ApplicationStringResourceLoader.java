@@ -85,7 +85,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
 	 *              set to select the strings from
 	 * @return The string resource value or null if resource not loaded
 	 */
-	public final String get(final Component component, final String key, final Locale locale,
+	public final String loadStringResource(final Component component, final String key, final Locale locale,
 			final String style)
 	{
 		// Locate previously loaded resources from the cache
