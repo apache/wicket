@@ -52,19 +52,22 @@ public abstract class WicketExampleApplication extends WebApplication
         // and we want them to be able to run the examples out of the
         // box.
         getSettings().setCryptClass(NoCrypt.class);
-
-        // Use development settings 
-        getSettings().configure("development", "src/java");
     }
     
     /**
-     * Determine operations mode: deploymnent or development
+     * Determine operations mode: deployment or development
      */
 	protected void init()
 	{
 	    if (this.getWicketServlet().getServletContext().getInitParameter("deployment") != null)
 	    {
+	    	// Use deployment settings
 	        getSettings().configure("deployment");
+	    }
+	    else
+	    {
+	        // Use development settings 
+	        getSettings().configure("development", "src/java");
 	    }
 	}
     
