@@ -1,0 +1,258 @@
+<chapter id="wug.linkomatic">
+    <title>Linkomatic</title>
+    <subtitle>All about hyperlinks</subtitle>
+    <sect1>
+        <title>Building and Running Linkomatic</title>
+        <para>The Linkomatic application (found in 
+            <filename>WICKET_HOME/examples/Linkomatic</filename>) can be built 
+            and run in the same way as HelloWorld. It demonstrates the various 
+            flavors of hyperlinks available in Wicket. Each link type has its 
+            own well-defined purpose and to write a serious web application, 
+            you will need to be familiar with each. When you build and run the 
+            Linkomatic application, you should see something like this:</para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/image004-linkomatic.png" 
+                    format="PNG"></imagedata>
+            </imageobject>
+        </mediaobject>
+        <para>Each link on the page demonstrates one of the link types and will 
+            be discussed below. Before reading on, take a moment to see what 
+            clicking on each link does.</para>
+    </sect1>
+    <sect1>
+        <title>The Linkomatic Source Code</title>
+        <para>One slight difference from the HelloWorld application we 
+            introduced in the last chapter is the <filename>web.xml</filename> 
+            descriptor for Linkomatic:</para>
+        <programlisting><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+    <display-name>Linkomatic</display-name>
+    <servlet>
+        <servlet-name>Linkomatic</servlet-name>
+        <servlet-class>linkomatic.LinkomaticApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Linkomatic</servlet-name>
+        <url-pattern>/LinkomaticApplication/*</url-pattern>
+    </servlet-mapping>
+</web-app>]]></programlisting>
+        <para>Instead of mapping all URLs to the LinkomaticApplication servlet, 
+            the descriptor maps only URLs beginning with LinkomaticApplication. 
+            The reason for this is that Linkomatic contains a static image 
+            (ImageMap.gif) which it wants the web application container to 
+            serve, and the web server cannot serve the image if the URL to the 
+            image is mapped to the LinkomaticApplication servlet. By 
+            restricting the dynamic part of the site to URLs beginning with 
+            LinkomaticApplication, the web server can serve static content from 
+            other URLs.</para>
+        <para>But doing this creates a problem. Since the LinkomaticApplication 
+            does not handle the default resource path of "/", users will now 
+            have to go to: <ulink 
+            url="http://localhost:8080/Linkomatic/LinkomaticApplication"></ulink> 
+            (or on a production website with Linkomatic running on the root web 
+            application context: <ulink 
+            url="http://server/LinkomaticApplication"></ulink>). We can solve 
+            this problem by redirecting them from the default "welcome" page 
+            for the web server, <filename>index.html</filename>. The 
+            <filename>index.html</filename> page for Linkomatic looks like 
+            this:</para>
+        <programlisting><![CDATA[<html>
+<head>
+    <meta http-equiv="Refresh" content="0; url=LinkomaticApplication">
+</head>
+</html>]]></programlisting>
+        <para>The <token>META</token> tag in the header of 
+            <filename>index.html</filename> causes a redirect to the URL 
+            LinkomaticApplication after 0 seconds.</para>
+        <para>Once again, our application class sets its home page, in this 
+            case to <classname>linkomatic.Home</classname>:</para>
+        <programlisting><![CDATA[public class LinkomaticApplication extends 
+            WebApplication { public LinkomaticApplication() { 
+            getSettings().setHomePage(Home.class); } }]]></programlisting>
+        <para>For Linkomatic, our Home page is considerably more complex and 
+            demonstrates all the possible ways to employ hyperlinks in a Wicket 
+            application. Below is the source to Home, followed by the 
+            corresponding HTML file. It will take a few pages to explain 
+            everything that is going on, but take a look for a moment just to 
+            see what you can figure out "by inspection".</para>
+        <programlisting><![CDATA[public class Home extends HtmlPage
+{
+    public Home(final PageParameters parameters)
+    {
+        // Action link counts link clicks
+        Link actionLink = new Link("actionLink")
+            {
+                public void linkClicked(RequestCycle cycle)
+                {
+                    linkClickCount++;
+                    // Redirect back to result to avoid refresh updating the link count
+                    cycle.setRedirect(true);
+                }
+            };
+        actionLink.add(new Label("linkClickCount", this));
+        add(actionLink);
+        // Link to Page1 is a simple external page link
+        add(new ExternalPageLink("page1Link", Page1.class));
+        // Link to Page2 is automaticLink, so no code
+        // Link to Page3 is an external link which takes a parameter
+        add(new ExternalPageLink("page3Link", Page3.class).setParameter("id", 3));
+        // Link to BookDetails page
+        add(new PageLink("bookDetailsLink", new BookDetails(new Book("The Hobbit"))));
+        // Delayed link to BookDetails page
+        add(new PageLink("bookDetailsLink2", new IPageLink()
+            {
+                public Page getPage()
+                {
+                    return new BookDetails(new Book("Inside The Matrix"));
+                }
+                public Class getPageClass()
+                {
+                    return BookDetails.class;
+                }
+            }));
+        // Image map link example
+        add(new ImageMap("imageMap")
+            .addRectangleLink(0, 0, 100, 100, new ExternalPageLink("page1", Page1.class))
+            .addCircleLink(160, 50, 35, new ExternalPageLink("page2", Page2.class))
+            .addPolygonLink(new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
+                new ExternalPageLink("page3", Page3.class)));
+        // Popup example
+        add(new ExternalPageLink("popupLink", Page1.class).setPopupDimensions(100, 100));
+    }
+    public int getLinkClickCount()
+    {
+        return linkClickCount;
+    }
+    public void setLinkClickCount(int linkClickCount)
+    {
+        this.linkClickCount = linkClickCount;
+    }
+    private int linkClickCount = 0;
+}]]></programlisting>
+        <programlisting><![CDATA[<html>
+<body>
+<a id = "wcn-actionLink">Action link clicked <span id = "wcn-linkClickCount">0</span>
+times</a><p>
+<a id = "wcn-page1Link">Click this ExternalPageLink to go to Page1</a><p>
+<a id = "wcn-[autolink]" href = "Page2.html">Click this [autolinkautolink] to go to
+Page2</a><p>
+<a id = "wcn-page3Link">Click this ExternalPageLink to go to Page3</a><p>
+<a id = "wcn-[autolink]" href = "Page4.html">Click here to go to Page4</a><p>
+<a id = "wcn-bookDetailsLink">Click this PageLink for BookDetails</a><p>
+<a id = "wcn-bookDetailsLink2">Click this PageLink for BookDetails</a>
+</body>
+</html>]]></programlisting>
+    </sect1>
+    <sect1>
+        <title>Action Links</title>
+        <para>The first type of link demonstrated in Home is the “action” link, 
+            which is of type Link. The actionLink is a link which displays a 
+            counter in its own hyperlink text. When the link is clicked, the 
+            counter increments:</para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/image005-actionlink1.png" 
+                    format="PNG"></imagedata>
+            </imageobject>
+        </mediaobject>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/image006-actionlink2.png" 
+                    format="PNG"></imagedata>
+            </imageobject>
+        </mediaobject>
+        <para>Even though action links are a little more complex than the other 
+            link types, they are a more fundamental concept, and so we will 
+            cover them first. Since it’s fairly involved, let’s take this 
+            example in small bites. In the overall flow, three things 
+            happen:</para>
+        <programlistingco>
+            <areaspec>
+                <area id="linkomatic.createlink" coords="1"></area>
+                <area id="linkomatic.addlabel" coords="10"></area>
+                <area id="linkomatic.addlink" coords="11"></area>
+            </areaspec>
+            <programlisting><![CDATA[Link actionLink = new Link("actionLink")
+{
+    public void linkClicked(RequestCycle cycle)
+    {
+        linkClickCount++;
+        // Redirect back to result to avoid refresh updating the link count
+        cycle.setRedirect(true);
+    }
+};
+actionLink.add(new Label("linkClickCount", this));
+add(actionLink);
+]]></programlisting>
+            <calloutlist>
+                <callout arearefs="linkomatic.createlink">
+                    <para>A Link named actionLink is constructed</para>
+                </callout>
+                <callout arearefs="linkomatic.addlabel">
+                    <para>A Label component is added to actionLink.</para>
+                </callout>
+                <callout arearefs="linkomatic.addlink">
+                    <para>The actionLink is added to the page.</para>
+                </callout>
+            </calloutlist>
+        </programlistingco>
+        <para>The construction of <varname>actionLink</varname> involves 
+            something known as an <firstterm>anonymous class</firstterm>. What 
+            is really going on in the first 10 lines or so is the creation and 
+            instantiation of an anonymous subclass of 
+            <classname>Link</classname>. Since the <classname>Link</classname> 
+            class declares <methodname>linkClicked</methodname> as 
+            <token>abstract</token>, we must implement 
+            <methodname>linkClicked</methodname> in the anonymous subclass we 
+            are declaring. The result of:</para>
+        <programlisting><![CDATA[Link actionLink = new Link("actionLink")
+    {
+        public void linkClicked(RequestCycle cycle)
+        {
+            ...
+        }
+    };
+]]></programlisting>
+        <para>is a new instance of <classname>Link</classname> named 
+            "<property>actionLink</property>" whose 
+            <methodname>linkClicked()</methodname> method will be called when 
+            the link is clicked.</para>
+        <para>The first thing that happens when 
+            <methodname>linkClicked</methodname> is called is that the 
+            <property>linkClickCount</property> is incremented. The 
+            <property>linkClickCount</property> field is a beans property 
+            because it has a getter and a setter:</para>
+        <programlisting lang="java"><![CDATA[public class Home extends HtmlPage
+{
+    public int getLinkClickCount()
+    {
+        return linkClickCount;
+    }
+    public void setLinkClickCount(int linkClickCount)
+    {
+        this.linkClickCount = linkClickCount;
+    }
+    private int linkClickCount = 0;
+}]]></programlisting>
+        <para>Having this <property>linkClickCount</property> bean property, 
+            the Home page itself can serve as a model for the label, which is 
+            what is happening in this line:</para>
+        <programlisting><![CDATA[actionLink.add(new Label("linkClickCount", this));]]>
+            </programlisting>
+        <para>The value <structfield>this</structfield> can be passed to the 
+            <classname>Label</classname> constructor because the Home page 
+            itself is a bean component model with the property linkClickCount. 
+            When the label inside the link component renders, it will get its 
+            value from the linkClickCount bean property of the Home page 
+            model.</para>
+            <para>One last question you might have about the action link example is what this line does:</para>
+            <programlisting><![CDATA[cycle.setRedirect(true);]]></programlisting>
+            <para>Since the action link is handled by the page object that constructed the link, the URL that invokes
+the link will be in the user’s browser:</para>
+    </sect1>
+</chapter>
