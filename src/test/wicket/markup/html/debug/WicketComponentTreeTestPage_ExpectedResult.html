@@ -1,0 +1,52 @@
+<!--
+    $Id$
+    $Revision$
+    $Date$
+
+    ====================================================================
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<html>
+<body>
+<span wicket = "label1">test1</span>
+<span wicket = "label2">test2</span>
+<span wicket = "componentList"><wicket:panel>
+    Component tree for <span id = "wicket-page">[Page class = wicket.markup.html.debug.WicketComponentTreeTestPage, id = 0]</span>:<p/>
+    <ul>
+	    <table>
+	      <thead>
+	        <tr>
+	          <th align="left">#</th>
+	          <th align="left">Path</th>
+	          <th align="left">Type</th>
+	          <th align="left">Model Object</th>
+	        </tr>
+		    </thead>
+	      <tbody>
+	        <tr id = "wicket-components">
+            <td valign="top" align="left"><span id = "wicket-row">1</span></td>
+            <td valign="top" align="left"><span id = "wicket-path">label1</span></td>
+            <td valign="top" align="left"><span id = "wicket-type">Label</span></td>
+	          <td valign="top" align="left"><span id = "wicket-model">test1</span></td>
+          </tr><tr id = "wicket-components">
+            <td valign="top" align="left"><span id = "wicket-row">2</span></td>
+            <td valign="top" align="left"><span id = "wicket-path">label2</span></td>
+            <td valign="top" align="left"><span id = "wicket-type">Label</span></td>
+	          <td valign="top" align="left"><span id = "wicket-model">test2</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </ul>
+  </wicket:panel></span>
+</body>
+</html>
