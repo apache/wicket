@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry output="build/Wicket-SDK/classes" kind="src" path="src/java"/>
+	<classpathentry output="build/examples/Pub/WEB-INF/classes" kind="src" path="examples/Pub/src"/>
+	<classpathentry output="build/examples/SignIn2/WEB-INF/classes" kind="src" path="examples/SignIn2/src"/>
+	<classpathentry output="build/examples/SignIn/WEB-INF/classes" kind="src" path="examples/SignIn/src"/>
+	<classpathentry output="build/examples/Navomatic/WEB-INF/classes" kind="src" path="examples/Navomatic/src"/>
+	<classpathentry output="build/examples/Library/WEB-INF/classes" kind="src" path="examples/Library/src"/>
+	<classpathentry output="build/examples/Linkomatic/WEB-INF/classes" kind="src" path="examples/Linkomatic/src"/>
+	<classpathentry output="build/examples/GuestBook/WEB-INF/classes" kind="src" path="examples/GuestBook/src"/>
+	<classpathentry output="build/examples/GuestBook2/WEB-INF/classes" kind="src" path="examples/GuestBook2/src"/>
+	<classpathentry output="build/examples/HelloWorld/WEB-INF/classes" kind="src" path="examples/HelloWorld/src"/>
+	<classpathentry output="build/examples/Images/WEB-INF/classes" kind="src" path="examples/Images/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/dom4j-full.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate2.jar"/>
+	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="lib/objectprofiler.jar"/>
+	<classpathentry kind="lib" path="lib/ognl-2.6.5.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

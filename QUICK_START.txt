@@ -1,0 +1,31 @@
+
+How to Build and Run the Demos in 5 Minutes**
+
+1. Download Jetty from http://sourceforge.net/project/showfiles.php?group_id=7322
+
+2. Unzip Jetty to any folder.  We'll call this folder JETTY_HOME.
+
+3. Go to WICKET_HOME (where this QUICK_START.txt file lives) and type "ant".
+
+   NOTE: Ant 1.6 is REQUIRED.  Any 1.4.x version of Java should work,
+         but testing has mainly been on 1.4.2.
+
+4. Copy WICKET_HOME/build/examples/*.war to JETTY_HOME/webapps
+
+5. Go to JETTY_HOME and type "java -jar start.jar"
+
+VOILA!
+
+You have built and are now running all 9 Wicket example applications.
+
+To see each app, go to http://localhost:8080/<exampleName>/
+For starters, try http://localhost:8080/HelloWorld/
+
+Enjoy!
+
+      Jonathan Locke
+
+---
+
+** Assuming your Internet connection doesn't suck
+
