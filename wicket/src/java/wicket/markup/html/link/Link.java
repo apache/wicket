@@ -174,6 +174,7 @@ public abstract class Link extends AbstractLink
     }
 
     /**
+     * Whether this link refers to the given page.
      * @param page A page
      * @return True if this link goes to the given page
      */

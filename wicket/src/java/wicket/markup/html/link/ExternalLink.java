@@ -30,13 +30,15 @@ import wicket.markup.html.HtmlContainer;
  * @author Juergen Donnerstag
  */
 public class ExternalLink extends HtmlContainer
-{ // TODO finalize javadoc
+{
+    /** the href attribute. */
     final private String href;
+
+    /** this links' label. */
     final private String label;
     
     /**
      * Constructor.
-     * 
      * @param componentName The name of this component
      * @param href the href attribute to set
      * @param label the label (body)
@@ -50,6 +52,8 @@ public class ExternalLink extends HtmlContainer
     }
 
     /**
+     * Processes the component tag.
+     * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
     protected void handleComponentTag(ComponentTag tag)
@@ -61,6 +65,9 @@ public class ExternalLink extends HtmlContainer
     }
 
     /**
+     * Handle the container's body.
+     * @param markupStream The markup stream
+     * @param openTag The open tag for the body
      * @see wicket.Component#handleBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
     protected void handleBody(MarkupStream markupStream,
@@ -70,5 +77,3 @@ public class ExternalLink extends HtmlContainer
         replaceBody(markupStream, openTag, label);
     }
 }
-
-

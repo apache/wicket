@@ -41,11 +41,13 @@ import wicket.Page;
 public interface IPageLink extends Serializable
 {
     /**
-     * @return The page to go to
+     * Gets the page to go to.
+     * @return The page to go to.
      */
     public Page getPage();
 
     /**
+     * Gets the class of the page linked to
      * @return The class of page linked to
      */
     public Class getPageClass();

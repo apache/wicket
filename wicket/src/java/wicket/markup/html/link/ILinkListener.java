@@ -28,7 +28,7 @@ import wicket.IRequestListener;
 public interface ILinkListener extends IRequestListener
 {
     /**
-     * Called when a link is clicked
+     * Called when a link is clicked.
      */
     public void linkClicked();
 }

@@ -22,18 +22,20 @@ import wicket.Page;
 import wicket.PageParameters;
 
 /**
- * Renders a stable link which can be cached in a web browser and used at a later time.
+ * Renders a stable link which can be cached in a web browser and used
+ * at a later time.
+ *
  * @author Jonathan Locke
  */
 public final class BookmarkablePageLink extends Link
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 2396751463296314926L;
 
-	// The page class that this link links to
+	/** The page class that this link links to. */
     private final Class pageClass;
 
-    // The parameters to pass to the class constructor when instantiated
+    /** The parameters to pass to the class constructor when instantiated. */
     private final PageParameters parameters;
 
     /**
@@ -61,6 +63,8 @@ public final class BookmarkablePageLink extends Link
     }
 
     /**
+     * Whether this link refers to the given page.
+     * @param page the page
      * @see wicket.markup.html.link.Link#linksTo(wicket.Page)
      */
     public boolean linksTo(final Page page)
@@ -69,6 +73,8 @@ public final class BookmarkablePageLink extends Link
     }
 
     /**
+     * Called when a link is clicked; this is here to satisfy the interface,
+     * as bookmarkable links will be dispatched by the handling servlet.
      * @see wicket.markup.html.link.Link#linkClicked()
      */
     public void linkClicked()
@@ -78,6 +84,8 @@ public final class BookmarkablePageLink extends Link
     }
 
     /**
+     * Gets the url to use for this link.
+     * @return The URL that this link links to
      * @see wicket.markup.html.link.Link#getURL()
      */
     protected String getURL()
@@ -87,7 +95,7 @@ public final class BookmarkablePageLink extends Link
     }
 
     /**
-     * Adds a given page property value to this link
+     * Adds a given page property value to this link.
      * @param property The property
      * @param value The value
      * @return This
@@ -95,12 +103,11 @@ public final class BookmarkablePageLink extends Link
     public BookmarkablePageLink setParameter(final String property, final String value)
     {
         parameters.put(property, value);
-
         return this;
     }
 
     /**
-     * Adds a given page property value to this link
+     * Adds a given page property value to this link.
      * @param property The property
      * @param value The value
      * @return This
@@ -108,12 +115,11 @@ public final class BookmarkablePageLink extends Link
     public BookmarkablePageLink setParameter(final String property, final long value)
     {
         parameters.put(property, Long.toString(value));
-
         return this;
     }
 
     /**
-     * Adds a given page property value to this link
+     * Adds a given page property value to this link.
      * @param property The property
      * @param value The value
      * @return This
@@ -121,7 +127,6 @@ public final class BookmarkablePageLink extends Link
     public BookmarkablePageLink setParameter(final String property, final int value)
     {
         parameters.put(property, Integer.toString(value));
-
         return this;
     }
 }
