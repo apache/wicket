@@ -34,6 +34,54 @@ A: Classes and methods in Wicket are generally declared as final until the
    you and rebuild the project.</p>
 </subsection>
 
+<subsection name="Q: How can I get Wicket to automatically reload changed markup files?">
+<p>
+A: By default, Wicket will not reload changed markup files.  This default is a
+   conscious decision because performance can be affected by Wicket's change 
+   detection code, which has to poll the modification dates of all your markup 
+   files at a regular interval.</p>
+<p>If you call the ApplicationSettings method setResourcePollFrequency(Duration),
+   you can specify how frequently Wicket should poll for file changes.  A Duration
+   value of null will turn the feature back off again.  For example:
+</p>
+<p>
+<source><![CDATA[
+    settings.setResourcePollFrequency(Duration.ONE_SECOND)
+]]></source>
+   </p>
+   <p>
+   will cause Wicket to scan your source files for changes as often as every second.
+   </p>
+   <p>
+   Note that this does NOT affect <i>where</i> Wicket finds resources.  If you 
+   want Wicket to find markup files directly in your source tree while you are 
+   developing, you can call setSourcePath(Path) like this:
+   </p>
+<p>
+<source><![CDATA[
+    settings.setSourcePath(new Path(new Folder("c:\\MyWicketProject\\src\\java"))); 
+]]></source>
+</p>
+    <p>
+    This is a highly productive way to work if your resource poll frequency is
+    fairly quick.  After you change a markup source file, you can simply hit
+    refresh in your brower and immediately see the effect.  With your source path
+    set like this, it is not necessary to restart the application server or 
+    redeploy any files.
+    </p>
+    <p>
+    Finally, it is interesting to note that since ApplicationSettings methods 
+    return their this pointer for invocation chaining, you can put this all 
+    together into one statement:
+    </p>
+<p>
+<source><![CDATA[
+    settings.setResourcePollFrequency(Duration.ONE_SECOND)
+            .setSourcePath(new Path(new Folder("c:\\MyWicketProject\\src\\java"))); 
+]]></source>
+</p>
+</subsection>
+
 <subsection name="Q: What design decisions were made regarding state management?">
 <p>
 A: One of the primary objectives was to make state management a Java thing 
@@ -113,7 +161,7 @@ A: Because Wicket has a first class component object model where the state
 </p>
 </subsection>
 
-<subsection name='Q: Why Wicket?'>
+<subsection name='Q: Why "Wicket"?'>
 <p>
 A: The name "wicket" was at first selected simply because it was unique, memorable 
    and easy to say... and yet not used by a serious software project (the owner 
