@@ -38,7 +38,7 @@ public final class TimeOfDayTest extends TestCase
      */
     public void test() throws ParseException
     {
-        Assert.assertTrue(TimeOfDay.MIDNIGHT.getHour() == 0);
+        Assert.assertTrue(TimeOfDay.MIDNIGHT.hour() == 0);
         Assert.assertTrue(TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()).equals(TimeOfDay.MIDNIGHT));
 
         final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
