@@ -156,10 +156,5 @@ public class LocalizerTest extends TestCase
 				"DEFAULT"));
 		Assert.assertEquals("This is a test", localizer.getString("test.string", (Component)null,
 				(IModel)null));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", "DEFAULT"));
-		Assert.assertEquals("This is a test", localizer.getString("test.string"));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", (IModel)null,
-				"DEFAULT"));
-		Assert.assertEquals("This is a test", localizer.getString("test.string", (IModel)null));
 	}
 }

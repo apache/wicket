@@ -31,7 +31,7 @@ import wicket.Component;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractDetachableModel extends AbstractModel
+public abstract class AbstractDetachableModel implements IModel
 {
 	/**
 	 * Transient flag to prevent multiple detach/attach scenario. We need to
@@ -40,7 +40,7 @@ public abstract class AbstractDetachableModel extends AbstractModel
 	private transient boolean attached = false;
 
 	/**
-	 * Attaches to the current session
+	 * Attaches this model object
 	 */
 	public final void attach()
 	{
@@ -52,8 +52,6 @@ public abstract class AbstractDetachableModel extends AbstractModel
 	}
 
 	/**
-	 * Detaches from the current session.
-	 * 
 	 * @see IModel#detach()
 	 */
 	public final void detach()
@@ -64,6 +62,11 @@ public abstract class AbstractDetachableModel extends AbstractModel
 			onDetach();
 		}
 	}
+	
+	/**
+	 * @see wicket.model.IModel#getNestedModel()
+	 */
+	public abstract Object getNestedModel();
 
 	/**
 	 * @see wicket.model.IModel#getObject(Component)
@@ -72,15 +75,6 @@ public abstract class AbstractDetachableModel extends AbstractModel
 	{
 		attach();
 		return onGetObject(component);
-	}
-
-	/**
-	 * @see wicket.model.IModel#setObject(Component, Object)
-	 */
-	public final void setObject(final Component component, final Object object)
-	{
-		attach();
-		onSetObject(component, object);
 	}
 
 	/**
@@ -93,6 +87,15 @@ public abstract class AbstractDetachableModel extends AbstractModel
 		return attached;
 	}
 
+	/**
+	 * @see wicket.model.IModel#setObject(Component, Object)
+	 */
+	public final void setObject(final Component component, final Object object)
+	{
+		attach();
+		onSetObject(component, object);
+	}
+	
 	/**
 	 * Attaches to the given session. Implement this method with custom
 	 * behaviour, such as loading the model object.

@@ -47,17 +47,16 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * &quot;product.${product.id}&quot; which prior to rendering will call
  * model.getObject().getProduct().getId() and substitute this value into the
  * resource key before is is passed to the loader.
- * <li><b>component </b>- This parameter should be a component that the
- * string resource is relative to. In a simple application this will usually be
- * the Page on which the component resides. For reusable components/containers
- * that are packaged with their own string resource bundles it should be the
- * actual component/container rather than the page. For more information on this
- * please see {@link wicket.resource.ComponentStringResourceLoader}. The
- * relative component may actually be <code>null</code> when all resource
- * loading is to be done from a global resource loader. However, we recommend
- * that a relative component is still supplied even in these cases in order to
- * 'future proof' your application with regards to changing resource loading
- * strategies.
+ * <li><b>component </b>- This parameter should be a component that the string
+ * resource is relative to. In a simple application this will usually be the
+ * Page on which the component resides. For reusable components/containers that
+ * are packaged with their own string resource bundles it should be the actual
+ * component/container rather than the page. For more information on this please
+ * see {@link wicket.resource.ComponentStringResourceLoader}. The relative
+ * component may actually be <code>null</code> when all resource loading is to
+ * be done from a global resource loader. However, we recommend that a relative
+ * component is still supplied even in these cases in order to 'future proof'
+ * your application with regards to changing resource loading strategies.
  * <li><b>model </b>- This parameter is mandatory if either the resourceKey,
  * the found string resource (see below) or any of the substitution parameters
  * (see below) contain OGNL expressions. Where OGNL expressions are present they
@@ -87,13 +86,15 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * In its simplest form, the model can be used as follows:
  * 
  * <pre>
- *       public MyPage extends WebPage 
- *       {
- *           public MyPage(final PageParameters parameters) 
- *           {
- *               add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
- *           }
- *       }
+ * 
+ *        public MyPage extends WebPage 
+ *        {
+ *            public MyPage(final PageParameters parameters) 
+ *            {
+ *                add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
+ *            }
+ *        }
+ *  
  * </pre>
  * 
  * Where the resource bundle for the page contains the entry
@@ -105,15 +106,17 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * OGNL expression:
  * 
  * <pre>
- *       public MyPage extends WebPage 
- *       {
- *           public MyPage(final PageParameters parameters) 
- *           {
- *               WeatherStation ws = new WeatherStation();
- *               add(new Label(&quot;weatherMessage&quot;,
- *                             new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
- *           }
- *       }
+ * 
+ *        public MyPage extends WebPage 
+ *        {
+ *            public MyPage(final PageParameters parameters) 
+ *            {
+ *                WeatherStation ws = new WeatherStation();
+ *                add(new Label(&quot;weatherMessage&quot;,
+ *                              new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
+ *            }
+ *        }
+ *  
  * </pre>
  * 
  * Which will call the WeatherStation.getCurrentStatus() method each time the
@@ -121,10 +124,12 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * contains the entries:
  * 
  * <pre>
- *       weather.sunny=Don't forget sunscreen!
- *       weather.raining=You might need an umberella
- *       weather.snowing=Got your skis?
- *       weather.overcast=Best take a coat to be safe
+ * 
+ *        weather.sunny=Don't forget sunscreen!
+ *        weather.raining=You might need an umberella
+ *        weather.snowing=Got your skis?
+ *        weather.overcast=Best take a coat to be safe
+ *  
  * </pre>
  * 
  * <p>
@@ -134,15 +139,17 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * substituted via the model:
  * 
  * <pre>
- *       public MyPage extends WebPage 
- *       {
- *           public MyPage(final PageParameters parameters) 
- *           {
- *               WeatherStation ws = new WeatherStation();
- *               add(new Label(&quot;weatherMessage&quot;,
- *                             new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
- *           }
- *       }
+ * 
+ *        public MyPage extends WebPage 
+ *        {
+ *            public MyPage(final PageParameters parameters) 
+ *            {
+ *                WeatherStation ws = new WeatherStation();
+ *                add(new Label(&quot;weatherMessage&quot;,
+ *                              new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
+ *            }
+ *        }
+ *  
  * </pre>
  * 
  * Where the resource bundle contains the entry
@@ -156,31 +163,35 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * powerful use of the string resource model:
  * 
  * <pre>
- *       public MyPage extends WebPage 
- *       {
- *           public MyPage(final PageParameters parameters) 
- *           {
- *               WeatherStation ws = new WeatherStation();
- *               Model model = new Model(ws);
- *               add(new Label(&quot;weatherMessage&quot;,
- *                         new StringResourceModel(
- *                             &quot;weather.detail&quot;, this, model,
- *                             new Object[] 
- *                             {
- *                                 new Date(),
- *                                 new PropertyModel(model, &quot;currentStatus&quot;),
- *                                 new PropertyModel(model, &quot;currentTemperature&quot;),
- *                                 new PropertyModel(model, &quot;units&quot;)
- *                             }));
- *           }
- *       }
+ * 
+ *        public MyPage extends WebPage 
+ *        {
+ *            public MyPage(final PageParameters parameters) 
+ *            {
+ *                WeatherStation ws = new WeatherStation();
+ *                Model model = new Model(ws);
+ *                add(new Label(&quot;weatherMessage&quot;,
+ *                          new StringResourceModel(
+ *                              &quot;weather.detail&quot;, this, model,
+ *                              new Object[] 
+ *                              {
+ *                                  new Date(),
+ *                                  new PropertyModel(model, &quot;currentStatus&quot;),
+ *                                  new PropertyModel(model, &quot;currentTemperature&quot;),
+ *                                  new PropertyModel(model, &quot;units&quot;)
+ *                              }));
+ *            }
+ *        }
+ *  
  * </pre>
  * 
  * And where the resource bundle entry is:
  * 
  * <pre>
- *       weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
- *                      and the weather to be {1}
+ * 
+ *        weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
+ *                       and the weather to be {1}
+ *  
  * </pre>
  * 
  * @author Chris Turner
@@ -188,13 +199,13 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
 public class StringResourceModel extends AbstractReadOnlyDetachableModel
 {
 	/** The locale to use. */
-	private Locale locale = null;
+	private transient Locale locale;
 
 	/**
 	 * The localizer to be used to access localized resources and the associated
 	 * locale for formatting.
 	 */
-	private Localizer localizer = null;
+	private transient Localizer localizer;
 
 	/** The wrapped model. */
 	private IModel model;
@@ -332,13 +343,8 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 			}
 
 			// Apply the parameters
-			Locale workingLocale = locale;
-			if (component != null)
-			{
-				// Use component locale out of preference
-				workingLocale = component.getLocale();
-			}
-			final MessageFormat format = new MessageFormat(s, workingLocale);
+			final MessageFormat format = new MessageFormat(s, component != null ? component
+					.getLocale() : locale);
 			s = format.format(realParams);
 		}
 
@@ -409,8 +415,8 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 		final Session session = Session.get();
 		if (session != null)
 		{
-			localizer = session.getApplication().getLocalizer();
-			locale = session.getLocale();
+			this.localizer = session.getApplication().getLocalizer();
+			this.locale = session.getLocale();
 		}
 		else
 		{
@@ -429,10 +435,6 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 		{
 			model.detach();
 		}
-
-		// Clear down any information we don't want held in the session
-		localizer = null;
-		locale = null;
 	}
 
 	/**
