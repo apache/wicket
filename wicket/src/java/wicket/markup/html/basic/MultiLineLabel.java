@@ -115,17 +115,6 @@ public class MultiLineLabel extends HtmlComponent
     }
 
     /**
-     * Allows modification of component tag.
-     * @param tag The tag to modify
-     * @see wicket.Component#handleComponentTag(ComponentTag)
-     */
-    protected final void handleComponentTag(final ComponentTag tag)
-    {
-        checkTag(tag, "span");
-        super.handleComponentTag(tag);
-    }
-
-    /**
      * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
     protected void handleBody(final MarkupStream markupStream,

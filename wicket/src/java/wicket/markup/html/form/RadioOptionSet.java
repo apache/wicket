@@ -73,15 +73,6 @@ public final class RadioOptionSet extends FormComponent
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(ComponentTag)
-     */
-    protected void handleComponentTag(final ComponentTag tag)
-    {
-        checkTag(tag, "span");
-        super.handleComponentTag(tag);
-    }
-
-    /**
      * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
     protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
