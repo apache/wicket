@@ -50,5 +50,9 @@
 	        </item>
 	    </menu>
 <!--	    <search /> -->
+        <menu name="" type="footer">
+            <item name="Code Coverage by Clover" href="http://www.thecortex.net/clover" img="http://www.thecortex.net/clover/images/clovered1.gif"/>
+            <item name="CPU and memory profiler" href="http://www.yourkit.com" img="images/yip_logo.gif"/>
+        </menu>
 	</body>
 </project>
