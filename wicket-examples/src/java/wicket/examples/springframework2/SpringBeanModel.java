@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.springframework.context.ApplicationContext;
 
+import wicket.RequestCycle;
 import wicket.model.DetachableModel;
 import wicket.model.IModel;
 
@@ -164,13 +165,12 @@ public class SpringBeanModel extends DetachableModel
      * want to force the separation of the overall Wicket application
      * configuration from the configuration of the middle tier beans.
      */
-    protected void doAttach(final wicket.Session session)
+    protected void doAttach()
     {
-        this.applicationContext = SpringContextLocator
-                .getApplicationContext(session);
+        this.applicationContext = SpringContextLocator.getApplicationContext(RequestCycle.get());
     }
 
-    protected void doDetach(final wicket.Session cycle)
+    protected void doDetach()
     {
         this.applicationContext = null;
     }

@@ -194,9 +194,9 @@ public class StringResourceModelTest extends TestCase
 		application.setupRequestAndResponse();
 		RequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
-		model.attach(cycle.getSession());
+		model.attach();
 		Assert.assertNotNull(model.getLocalizer());
-		model.detach(cycle.getSession());
+		model.detach();
 		Assert.assertNull(model.getLocalizer());
 	}
 
@@ -207,12 +207,12 @@ public class StringResourceModelTest extends TestCase
 	{
 		IModel wsDetachModel = new DetachableModel(wsModel)
 		{
-			protected void doAttach(final Session session)
+			protected void doAttach()
 			{
 				setObject(new WeatherStation());
 			}
 
-			protected void doDetach(final Session session)
+			protected void doDetach()
 			{
 				setObject(null);
 			}
@@ -221,10 +221,10 @@ public class StringResourceModelTest extends TestCase
 		application.setupRequestAndResponse();
 		RequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
-		model.attach(cycle.getSession());
+		model.attach();
 		Assert.assertNotNull(model.getModel().getObject());
 		Assert.assertNotNull(model.getLocalizer());
-		model.detach(cycle.getSession());
+		model.detach();
 		Assert.assertNull(model.getModel().getObject());
 		Assert.assertNull(model.getLocalizer());
 	}
