@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
@@ -36,7 +37,6 @@ import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
-
 
 /**
  * Upload example.
@@ -64,12 +64,13 @@ public class UploadPage extends HtmlPage
     public UploadPage(final PageParameters parameters)
     {
         super();
-        tempDir = new File(System.getProperty("java.io.tmpdir"), "wicket-wicket.examples.upload-test");
+        add(new NavigationPanel("mainNavigation", "Helloworld example"));
+        tempDir = new File(System.getProperty("java.io.tmpdir"), "wicketuploadtest");
         if(!tempDir.isDirectory())
         {
             tempDir.mkdir();
         }
-        add(new UploadForm("wicket.examples.upload", null, tempDir));
+        add(new UploadForm("upload", null, tempDir));
         add(new Label("dir", tempDir.getAbsolutePath()));
         files.addAll(Arrays.asList(tempDir.list()));
         fileTable = new FileTable("fileList", files);
@@ -94,9 +95,9 @@ public class UploadPage extends HtmlPage
     {
         /**
          * Construct.
-         * @param name
-         * @param validationErrorHandler
-         * @param targetDirectory
+         * @param name component name
+         * @param validationErrorHandler error handler
+         * @param targetDirectory directory to save uploads
          */
         public UploadForm(String name, IValidationErrorHandler validationErrorHandler, File targetDirectory)
         {
@@ -120,8 +121,8 @@ public class UploadPage extends HtmlPage
     {
         /**
          * Construct.
-         * @param name
-         * @param object
+         * @param name component name
+         * @param object file list
          */
         public FileTable(String name, List object)
         {

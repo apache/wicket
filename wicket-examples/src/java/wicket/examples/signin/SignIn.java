@@ -20,6 +20,7 @@ package wicket.examples.signin;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
@@ -41,6 +42,8 @@ public final class SignIn extends HtmlPage
      */
     public SignIn(final PageParameters parameters)
     {
+        add(new NavigationPanel("mainNavigation", "Signin example"));
+
         // Create feedback panel and add to page
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
 

@@ -19,7 +19,6 @@
 package wicket.examples.helloworld;
 
 import wicket.WebApplication;
-import wicket.util.time.Duration;
 
 
 /**
@@ -34,10 +33,6 @@ public class HelloWorldApplication extends WebApplication
     public HelloWorldApplication()
     {
         getSettings().setHomePage(HelloWorld.class);
-
-        Duration pollFreq = Duration.ONE_SECOND;
-
-        getSettings().setResourcePollFrequency(pollFreq);
     }
 }
 

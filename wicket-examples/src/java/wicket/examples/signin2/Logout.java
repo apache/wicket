@@ -20,9 +20,10 @@ package wicket.examples.signin2;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 
 /**
- * Simple home page.
+ * Simple logout page.
  * @author Jonathan Locke
  */
 public class Logout extends AuthenticatedHtmlPage
@@ -33,6 +34,7 @@ public class Logout extends AuthenticatedHtmlPage
      */
     public Logout(final PageParameters parameters)
     {
+        add(new NavigationPanel("mainNavigation", "Signin example"));
     }
     
 	/**

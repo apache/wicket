@@ -21,6 +21,7 @@ package wicket.examples.linkomatic;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.ExternalPageLink;
@@ -46,6 +47,8 @@ public class Home extends HtmlPage
      */
     public Home(final PageParameters parameters)
     {
+        add(new NavigationPanel("mainNavigation", "LinkOMatic example"));
+
         // Action link counts link clicks
         final Link actionLink = new Link("actionLink")
             {
@@ -114,7 +117,8 @@ public class Home extends HtmlPage
         add(new ExternalPageLink("popupLink", Page1.class)
             .setPopupSpecification(popupSpec));
         
-        add(new SimpleHref("google", "http://www.google.de", "Google"));
+        add(new SimpleHref("google", "http://www.google.com",
+                "Click this link to go to Google"));
     }
 
     /**

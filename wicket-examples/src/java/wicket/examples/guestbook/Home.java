@@ -24,6 +24,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -52,6 +53,7 @@ public class Home extends HtmlPage
      */
     public Home(final PageParameters parameters)
     {
+        add(new NavigationPanel("mainNavigation", "Guestbook example"));
         // Add comment form
         add(new CommentForm("commentForm"));
 

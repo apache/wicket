@@ -21,7 +21,8 @@ package wicket.examples.pub;
 import wicket.WebApplication;
 
 /**
- * HttpApplication class for wicket.examples.linkomatic example.
+ * HttpApplication class for the linkomatic example.
+ *
  * @author Jonathan Locke
  */
 public class PubApplication extends WebApplication
@@ -31,5 +32,3 @@ public class PubApplication extends WebApplication
         getSettings().setHomePage(Home.class);
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

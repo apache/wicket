@@ -24,31 +24,71 @@ import wicket.Model;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Session;
+import wicket.StringResourceModel;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
+import wicket.markup.html.link.Link;
 import wicket.util.value.ValueMap;
-
 
 /**
  * Demonstrates localization.
+ *
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public final class Home extends HtmlPage
 {
+    /** current locale. */
+    private Locale currentLocale = Locale.US;
+
     /**
      * Constructor
      * @param parameters Page parameters (ignored since this is the home page)
      */
     public Home(final PageParameters parameters)
     {
+        add(new NavigationPanel("mainNavigation", "Helloworld example"));
+
         add(new Image("beer"));
 
+        // create a dummy object to serve as our Ognl substitution model
         ValueMap map = new ValueMap();
-
         map.put("user", "Jonathan");
-        add(new Label("salutation",
-                getLocalizer().getString("salutation", this, new Model(map))));
+        
+        // Here, we create a model that knows how to get localized strings.
+        // It uses the page's resource (Home_cc_LC.properties) and gets the
+        // text with resource key 'salution'. For the US, this is:
+        // salutation=${user}, dude!
+        // variable ${user} will be regconized as an Ognl variable, and will
+        // be substituted with the given model (the wrapped map). Hence,
+        // ${user} will be replaced by map.get('user'), which is 'Jonathan'.
+        StringResourceModel labelModel = new StringResourceModel(
+                "salutation", this, new Model(map));
+
+        // add the label with the dynamic model
+        add(new Label("salutation", labelModel));
+
+        // add a couple of links to be able to play around with the Locales
+        add(new Link("goCanadian"){
+            public void linkClicked(RequestCycle cycle)
+            {
+                currentLocale = Locale.CANADA;
+            }
+        });
+        add(new Link("goUS"){
+            public void linkClicked(RequestCycle cycle)
+            {
+                currentLocale = Locale.US;
+            }
+        });
+        add(new Link("goDutch"){
+            public void linkClicked(RequestCycle cycle)
+            {
+                currentLocale = new Locale("nl", "NL");
+            }
+        });
     }
 
     /**
@@ -56,19 +96,20 @@ public final class Home extends HtmlPage
      */
     protected void handleRender(final RequestCycle cycle)
     {
-        super.handleRender(cycle);
-
         final Session session = cycle.getSession();
-
-        if (session.getLocale() != Locale.CANADA)
+        // keep the current locale
+        Locale userLocale = session.getLocale();
+        // replace the locale for rendering
+        session.setLocale(currentLocale);
+        try
         {
-            session.setLocale(Locale.CANADA);
+            super.handleRender(cycle);
         }
-        else
+        finally
         {
-            session.setLocale(Locale.US);
+            // set the user's locale back again
+            session.setLocale(userLocale);
         }
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////

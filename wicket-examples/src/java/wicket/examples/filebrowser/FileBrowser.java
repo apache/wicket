@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
@@ -63,8 +64,8 @@ public class FileBrowser extends HtmlPage
      */
     public FileBrowser(final PageParameters parameters)
     {
+        add(new NavigationPanel("mainNavigation", "Filebrowser example"));
         TreeModel model = buildTree();
-
         fileTree = new FileTree("fileTree", model);
         add(fileTree);
     }
@@ -76,7 +77,6 @@ public class FileBrowser extends HtmlPage
     protected TreeModel buildTree()
     {
         TreeModel model = buildTreeModel();
-
         //debugTree((DefaultTreeModel)model);
         return model;
     }

@@ -18,6 +18,7 @@
  */
 package wicket.examples.navomatic;
 
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.border.BoxBorder;
 
@@ -34,6 +35,7 @@ public class NavomaticBorder extends Border
     public NavomaticBorder(final String componentName)
     {
         super(componentName);
+        add(new NavigationPanel("mainNavigation", "NavOMatic example"));
         add(new BoxBorder("boxBorder"));
         add(new BoxBorder("boxBorder2"));
     }

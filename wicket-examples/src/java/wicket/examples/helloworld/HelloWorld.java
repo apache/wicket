@@ -19,6 +19,7 @@
 package wicket.examples.helloworld;
 
 import wicket.PageParameters;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 
@@ -35,8 +36,7 @@ public class HelloWorld extends HtmlPage
      */
     public HelloWorld(final PageParameters parameters)
     {
+        add(new NavigationPanel("mainNavigation", "Helloworld example"));
         add(new Label("hellomessage", "Hello world!"));
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

@@ -16,25 +16,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.navomatic;
+package wicket.examples.util;
 
-import wicket.PageParameters;
-import wicket.protocol.http.HttpPageTester;
-
-
-import junit.framework.TestCase;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.panel.Panel;
 
 /**
+ * Navigation panel for the examples project.
  *
- * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
-public class BorderTest extends TestCase
+public final class NavigationPanel extends Panel
 {
-    public final void test()
+    /**
+     * Construct.
+     * @param componentName name of the component
+     * @param exampleTitle title of the example
+     */
+    public NavigationPanel(String componentName, String exampleTitle)
     {
-        new HttpPageTester(new NavomaticApplication()).test(new Page1(
-                PageParameters.NULL));
+        super(componentName);
+        add(new Label("extitle", exampleTitle));
     }
-}
 
-///////////////////////////////// End of File /////////////////////////////////
+}

@@ -19,6 +19,7 @@
 package wicket.examples.signin2;
 
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.panel.SignInPanel;
 import wicket.protocol.http.HttpSession;
@@ -42,6 +43,7 @@ public abstract class SignInPage extends HtmlPage
     protected SignInPage(SignInPanel signInPanel)
     {
     	super();
+    	add(new NavigationPanel("mainNavigation", "Signin example"));
     	this.signInPanel = signInPanel;
         add(signInPanel);
     }

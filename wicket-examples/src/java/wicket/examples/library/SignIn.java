@@ -20,6 +20,7 @@ package wicket.examples.library;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.panel.SignInPanel;
 
@@ -36,29 +37,30 @@ public final class SignIn extends HtmlPage
      */
     public SignIn(final PageParameters parameters)
     {
-        add(new SignInPanel("signInPanel")
-            {
-                public String signIn(final RequestCycle cycle,
-                    final String username, final String password)
-                {
-                    // Sign the user in
-                    final User user = Authenticator.forSession(cycle.getSession())
-                                                   .authenticate(username,
-                            password);
+        add(new NavigationPanel("mainNavigation", "Library example"));
 
-                    // If the user was signed in
-                    if (user != null)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        // Form method that will notify feedback panel
-                        return getLocalizer().getString("couldNotAuthenticate", this);
-                    }
+        add(new SignInPanel("signInPanel")
+        {
+            public String signIn(final RequestCycle cycle, final String username,
+                    final String password)
+            {
+                // Sign the user in
+                final User user = Authenticator.forSession(
+                        cycle.getSession()).authenticate(username, password);
+
+                // If the user was signed in
+                if (user != null)
+                {
+                    return null;
                 }
-            });
+                else
+                {
+                    // Form method that will notify feedback panel
+                    return getLocalizer().getString("couldNotAuthenticate", this);
+                }
+            }
+        });
     }
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+// /////////////////////////////// End of File /////////////////////////////////

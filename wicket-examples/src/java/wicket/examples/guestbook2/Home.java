@@ -24,6 +24,7 @@ import java.util.List;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.util.NavigationPanel;
 import wicket.examples.util.hibernate.HibernateHelper;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
@@ -97,6 +98,7 @@ public class Home extends HtmlPage
      */
     public Home(final PageParameters parameters)
     {
+        add(new NavigationPanel("mainNavigation", "Guestbook example (with Hibernate)"));
         // Add comment form
         add(new CommentForm("commentForm"));
 

@@ -18,6 +18,7 @@
  */
 package wicket.examples.library;
 
+import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.border.BoxBorder;
 
@@ -34,6 +35,7 @@ public class LibraryApplicationBorder extends Border
     public LibraryApplicationBorder(final String componentName)
     {
         super(componentName);
+        add(new NavigationPanel("mainNavigation", "Library example"));
         add(new BoxBorder("boxBorder"));
     }
 }

@@ -35,11 +35,6 @@ public class NavomaticApplication extends WebApplication
         ApplicationSettings settings = getSettings();
 
         settings.setHomePage(Page1.class);
-
-        // settings.getSourcePath().add(new Folder("w:/src/java"))
-        //                         .add(new Folder("w:/examples/Navomatic/src"));
         settings.setUnexpectedExceptionDisplay(ApplicationSettings.SHOW_NO_EXCEPTION_PAGE);
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////
