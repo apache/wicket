@@ -58,10 +58,12 @@ public class GuestBook2Application extends WicketExampleApplication
                 
                 // Create date to string converter
                 final DateToStringConverter dateToStringConverter = new DateToStringConverter();
+                dateToStringConverter.setLocale(locale);
                 dateToStringConverter.setDateFormat(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT));
                 
                 // Set string conversion for Date and Timestamp classes
                 final StringConverter stringConverter = new StringConverter();
+                stringConverter.setLocale(locale);
                 stringConverter.set(Date.class, dateToStringConverter);
                 stringConverter.set(Timestamp.class, dateToStringConverter);
                            
