@@ -208,22 +208,24 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public final Link moveDownLink(final String id, final ListItem item)
 	{
-		final int index = getList().indexOf(item.getModelObject());
 		final Link link = new Link(id)
 		{
 			public void onClick()
 			{
-				// Swap list items and invalidate listView
-				Collections.swap(getList(), index, index + 1);
-
-				// Make sure you re-render the list properly
-				ListView.this.removeAll();
+				final int index = getList().indexOf(item.getModelObject());
+				if(index != -1)
+				{
+					// Swap list items and invalidate listView
+					Collections.swap(getList(), index, index + 1);
+	
+					// Make sure you re-render the list properly
+					ListView.this.removeAll();
+				}
 			}
 		};
-
-		if (index == (getList().size() - 1))
+		if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
 		{
-			link.setVisible(false);
+			link.setEnabled(false);
 		}
 
 		return link;
@@ -240,22 +242,25 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public final Link moveUpLink(final String id, final ListItem item)
 	{
-		final int index = getList().indexOf(item.getModelObject());
 		final Link link = new Link(id)
 		{
 			public void onClick()
 			{
-				// Swap items and invalidate listView
-				Collections.swap(getList(), index, index - 1);
-
-				// Make sure you re-render the list properly
-				ListView.this.removeAll();
+				final int index = getList().indexOf(item.getModelObject());
+				if(index != -1)
+				{
+					// Swap items and invalidate listView
+					Collections.swap(getList(), index, index - 1);
+	
+					// Make sure you re-render the list properly
+					ListView.this.removeAll();
+				}
 			}
 		};
 
-		if (index == 0)
+		if (getList().indexOf(item.getModelObject()) == 0)
 		{
-			link.setVisible(false);
+			link.setEnabled(false);
 		}
 
 		return link;
