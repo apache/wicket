@@ -20,6 +20,7 @@ package wicket.util.convert.converters;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
@@ -62,12 +63,31 @@ public final class DateConverter extends AbstractConverter
 		}
 		catch (ParseException e)
 		{
-			throw new ConversionException("Cannot convert '" + stringValue + "' to Date", e);
+			throw conversionException(stringValue, e);
 		}
 		catch (NumberFormatException e)
 		{
-			throw new ConversionException("Cannot convert '" + stringValue + "' to Date", e);
+			throw conversionException(stringValue, e);
 		}
+	}
+
+	/**
+	 * create and return a new conversion exception, with the pattern when available
+	 * @param stringValue the tried value
+	 * @param e the exception
+	 * @return the new conversion exception
+	 */
+	private final ConversionException conversionException(
+			final String stringValue, Exception e)
+	{
+		ConversionException conversionException =
+			new ConversionException("Cannot convert '" + stringValue + "' to Date", e);
+		if(dateFormat instanceof SimpleDateFormat) // usually, this is
+		{
+			String pattern = ((SimpleDateFormat)dateFormat).toLocalizedPattern();
+			conversionException.setPattern(pattern);
+		}
+		return conversionException;
 	}
 
     /**
