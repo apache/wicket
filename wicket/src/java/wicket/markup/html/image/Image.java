@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.image;
 
-
 import javax.servlet.http.HttpServletResponse;
 
 import wicket.IResourceListener;
