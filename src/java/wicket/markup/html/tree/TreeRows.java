@@ -25,8 +25,9 @@ import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
 
 /**
- * This example list knows how to display sublists. It expects a list where
- * each element is either a string or another list.
+ * This panel knows how to display sublists. It expects a list where
+ * each element is either a List or an instance of
+ * {@link wicket.markup.html.tree.TreeNodeModel}.
  *
  * @author Eelco Hillenius
  */
