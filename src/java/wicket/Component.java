@@ -169,6 +169,24 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * Constructor. All components have names. A component's name cannot be
+	 * null. This is constructor includes a model.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param model
+	 *            The component's model
+	 * 
+	 * @throws WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
+	 */
+	public Component(final String name, final IModel model)
+	{
+		setName(name);
+		setModel(model);
+	}
+
+	/**
 	 * Constructor that uses the provided object as a model. If the object given
 	 * is an instance of IModel, the object will be used directly. Otherwise,
 	 * the object will be wrapped in an instance of {@link Model}. All
@@ -205,16 +223,10 @@ public abstract class Component implements Serializable, IConverterSource
 	 * instance using the OGNL expression. This is the equivalent of:
 	 * 
 	 * <pre>
-	 * 
-	 *  
-	 *   
-	 *                       IModel model;
-	 *                       String expression;
-	 *                       ...
-	 *                       new MyComponent(name, new PropertyModel(model, expression));
-	 *    
-	 *   
-	 *  
+	 *                           IModel model;
+	 *                           String expression;
+	 *                           ...
+	 *                           new MyComponent(name, new PropertyModel(model, expression));
 	 * </pre>
 	 * 
 	 * If the object is not an instance of PropertyModel or IModel, the object
@@ -223,16 +235,10 @@ public abstract class Component implements Serializable, IConverterSource
 	 * expression. Thus, this is the equivalent of:
 	 * 
 	 * <pre>
-	 * 
-	 *  
-	 *   
-	 *                       Serializable model;
-	 *                       String expression;
-	 *                       ...
-	 *                       new MyComponent(name, new PropertyModel(new Model(model), expression));
-	 *    
-	 *   
-	 *  
+	 *                           Serializable model;
+	 *                           String expression;
+	 *                           ...
+	 *                           new MyComponent(name, new PropertyModel(new Model(model), expression));
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
@@ -457,15 +463,15 @@ public abstract class Component implements Serializable, IConverterSource
 		if (model == null)
 		{
 			// give subclass a chance to lazy-init model
-			onNullModel();
+			setModel(initModel());
 		}
-		
+
 		// Attach model if need be
 		if (model instanceof IDetachableModel)
 		{
 			((IDetachableModel)model).attach();
 		}
-		
+
 		return model;
 	}
 
@@ -871,33 +877,6 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Sets the given model.
-	 * 
-	 * @param model
-	 *            the model
-	 * @return This
-	 */
-	public final Component setModel(final IModel model)
-	{
-		// Detach current model if it's an IDetachableModel
-		if (this.model != null && this.model instanceof IDetachableModel)
-		{
-			((IDetachableModel)this.model).detach();
-		}
-
-		// Set self in case the model is component aware
-		if (model instanceof IConvertible)
-		{
-			((IConvertible)model).setConverterSource(this);
-		}
-
-		// Change model
-		this.model = (IModel)model;
-		modelChanged();
-		return this;
-	}
-
-	/**
 	 * Sets the backing model object; shorthand for getModel().setObject(value).
 	 * 
 	 * @param value
@@ -1061,6 +1040,19 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * Called when a null model is about to be retrieved in order to allow a
+	 * subclass to provide an initial model. This gives FormComponent, for
+	 * example, an opportunity to instantiate a model on the fly using the
+	 * containing Form's model.
+	 * 
+	 * @return The model
+	 */
+	protected IModel initModel()
+	{
+		return null;
+	}
+
+	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -1087,15 +1079,6 @@ public abstract class Component implements Serializable, IConverterSource
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 */
 	protected void onModelChanged()
-	{
-	}
-
-	/**
-	 * Called anytime a null model is about to be retrieved. This gives the
-	 * FormComponent subclass an opportunity to instantiate a model on the fly
-	 * using the containing Form's model.
-	 */
-	protected void onNullModel()
 	{
 	}
 
@@ -1391,6 +1374,33 @@ public abstract class Component implements Serializable, IConverterSource
 	{
 		// Search for page
 		return (Page)(this instanceof Page ? this : findParent(Page.class));
+	}
+
+	/**
+	 * Sets the given model.
+	 * 
+	 * @param model
+	 *            the model
+	 * @return This
+	 */
+	private final Component setModel(final IModel model)
+	{
+		// Detach current model if it's an IDetachableModel
+		if (this.model != null && this.model instanceof IDetachableModel)
+		{
+			((IDetachableModel)this.model).detach();
+		}
+
+		// Set self in case the model is component aware
+		if (model instanceof IConvertible)
+		{
+			((IConvertible)model).setConverterSource(this);
+		}
+
+		// Change model
+		this.model = (IModel)model;
+		modelChanged();
+		return this;
 	}
 
 	/**

@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.model.IModel;
 
 /**
  * A ListView holds ListItems of information. The listItem can be re-ordered and
@@ -72,10 +73,18 @@ public abstract class ListView extends WebMarkupContainer
 	private static Log log = LogFactory.getLog(ListView.class);
 
 	/** Max number (not index) of listItems to show */
-	protected int viewSize = Integer.MAX_VALUE;
+	private int viewSize = Integer.MAX_VALUE;
 
 	/** Index of the first listItem to show */
 	private int firstIndex = 0;
+	
+	/**
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public ListView(String name, IModel model)
+	{
+		super(name, model);
+	}
 
 	/**
 	 * @param name
@@ -309,7 +318,7 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected ListItem newItem(final int index)
 	{
-		return new ListItem(index, this);
+		return new ListItem(this, index);
 	}
 
 	/**

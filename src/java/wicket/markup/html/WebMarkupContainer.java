@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.model.IModel;
 
 /**
  * A container of HTML markup and components. It is very similar to the base
@@ -40,8 +41,15 @@ public class WebMarkupContainer extends MarkupContainer
 	{
 		super(name);
 	}
-
-
+	
+	/**
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public WebMarkupContainer(String name, IModel model)
+	{
+		super(name, model);
+	}
+	
 	/**
 	 * @see Component#Component(String, Serializable)
 	 */

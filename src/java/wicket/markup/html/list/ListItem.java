@@ -22,7 +22,7 @@ import java.util.Collections;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
-import wicket.model.Model;
+import wicket.model.IModel;
 
 /**
  * Items of the ListView.
@@ -36,14 +36,14 @@ public class ListItem extends WebMarkupContainer
 
 	/** The parent ListView, the ListItem is part of. */
 	private ListView listView;
-
+	
 	/**
 	 * Model for list items.
 	 */
-	private class ListItemModel extends Model
+	private class ListItemModel implements IModel
 	{
 		/**
-		 * @see wicket.model.Model#getObject()
+		 * @see IModel#getObject()
 		 */
 		public Object getObject()
 		{
@@ -51,7 +51,7 @@ public class ListItem extends WebMarkupContainer
 		}
 
 		/**
-		 * @see wicket.model.Model#setObject(java.lang.Object)
+		 * @see IModel#setObject(Object)
 		 */
 		public void setObject(Object object)
 		{
@@ -68,28 +68,10 @@ public class ListItem extends WebMarkupContainer
 	 * @param index
 	 *            The listItem number
 	 */
-	protected ListItem(final int index, final ListView listView)
+	protected ListItem(final ListView listView, final int index)
 	{
 		super(Integer.toString(index));
-		this.index = index;
 		this.listView = listView;
-		setModel(new ListItemModel());
-	}
-
-	/**
-	 * This is a special constructor, which allows to create listItems without
-	 * an underlying listView. PageableListView navigation bar is good example.
-	 * Be aware that some methods e.g. isLast() will throw an exception, because
-	 * no underlying List is available.
-	 * 
-	 * @param index
-	 *            The listItem number
-	 * @param model
-	 *            The model object for the listItem
-	 */
-	protected ListItem(final int index, final Model model)
-	{
-		super(Integer.toString(index), model);
 		this.index = index;
 	}
 
@@ -106,11 +88,11 @@ public class ListItem extends WebMarkupContainer
 	/**
 	 * Convinience method for ListViews with alternating style for colouring.
 	 * 
-	 * @return True, if index is even ((index % 2) == 0)
+	 * @return True, if index is even index % 2 == 0
 	 */
 	public final boolean isEvenIndex()
 	{
-		return (getIndex() % 2) == 0;
+		return getIndex() % 2 == 0;
 	}
 
 	/**
@@ -133,8 +115,7 @@ public class ListItem extends WebMarkupContainer
 	 */
 	public final boolean isLast()
 	{
-		int size = listView.getList().size();
-		return ((size == 0) || (index == (size - 1)));
+		return index == listView.getList().size() - 1;
 	}
 
 	/**
@@ -222,5 +203,13 @@ public class ListItem extends WebMarkupContainer
 	protected final ListView getListView()
 	{
 		return listView;
+	}
+	
+	/**
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		return new ListItemModel();
 	}
 }

@@ -248,9 +248,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.Component#onNullModel()
+	 * @see wicket.Component#initModel()
 	 */
-	public void onNullModel()
+	public IModel initModel()
 	{
 		if (getParent() != null)
 		{
@@ -259,13 +259,14 @@ public abstract class FormComponent extends WebMarkupContainer
 			if (model != null)
 			{
 				// Create PropertyModel using the Form's model and the name of the component
-				setModel(new PropertyModel(model, getName()));		
+				return new PropertyModel(model, getName());
 			}
 			else
 			{
 				throw new WicketRuntimeException("FormComponent " + this + " and parent Form " + getForm() + " cannot both have null models");
 			}
 		}
+		return null;
 	}
 
 	/**
