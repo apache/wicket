@@ -998,7 +998,7 @@ public abstract class Component implements Serializable
 		{
 			// Change visibility
 			setFlag(FLAG_VISIBLE, visible);
-			
+
 			// Tell the page that this component's visibility was changed
 			final Page page = findPage();
 			if (page != null)
@@ -1016,7 +1016,7 @@ public abstract class Component implements Serializable
 	 */
 	public String toString()
 	{
-		return "[" + Classes.name(getClass()) + " " + getPath() + " isVisible = " + isVisible()
+		return "[" + getPath() + "." + Classes.name(getClass()) + " isVisible = " + isVisible()
 				+ ", isVersioned = " + isVersioned() + "]";
 	}
 
@@ -1137,7 +1137,7 @@ public abstract class Component implements Serializable
 		// Search for page
 		return (Page)(this instanceof Page ? this : findParent(Page.class));
 	}
-	
+
 
 	/**
 	 * Called when a null model is about to be retrieved in order to allow a
@@ -1220,7 +1220,7 @@ public abstract class Component implements Serializable
 	protected void internalOnModelChanging()
 	{
 	}
-	
+
 	/**
 	 * Called when a request begins.
 	 */

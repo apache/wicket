@@ -19,6 +19,8 @@ package wicket.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -57,24 +59,25 @@ public final class UrlResource extends AbstractResource
 	 */
 	public UrlResource(final URL url)
 	{
-		// Get filename from URL
-		String filename = url.getFile();
-
-		// If there is a filename
-		if (filename != null)
+		try
 		{
-			// If a file with the given name exists
-			final File file = new File(filename);
+			// Get file from URL (see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4701321)
+			final File file = new File(new URI(url.toExternalForm()));
 
-			if (file.exists())
+			// If file exists
+			if (file != null && file.exists())
 			{
 				// save that file for future modification time queries
 				this.file = file;
 			}
-		}
 
-		// Save URL
-		this.url = url;
+			// Save URL
+			this.url = url;
+		}
+		catch (URISyntaxException e)
+		{
+			throw new IllegalArgumentException("Invalid URL parameter " + url);
+		}
 	}
 
 	/**
