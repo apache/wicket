@@ -94,8 +94,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 		// Should a roundtrip be made (have onSelectionChanged called) when the selection changed?
 		if (wantOnSelectionChangedNotifications())
 		{
-			// If a user subclasses this class and implements IOnChangeListener
-			// an onChange scriptlet is added
+			// url that points to this components IOnChangeListener method
 			final String url = urlFor(IOnChangeListener.class);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
