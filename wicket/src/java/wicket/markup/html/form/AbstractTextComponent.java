@@ -24,7 +24,7 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractTextComponent extends FormComponent
+abstract class AbstractTextComponent extends FormComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1323747673401786242L;
