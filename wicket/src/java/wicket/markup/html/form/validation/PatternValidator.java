@@ -24,12 +24,27 @@ import wicket.markup.html.form.FormComponent;
 import wicket.util.parse.metapattern.MetaPattern;
 
 /**
- * Validates component with Java regexp.
- *
+ * Validates component by matching the component's value against a regular expression
+ * pattern.  A PatternValidator can be constructed with either a Java regular expression 
+ * (compiled or not) or a MetaPattern.  If the pattern matches against the value of the 
+ * component it is attached to when validate() is called by the framework, then that 
+ * input value is considered valid.  If the pattern does not match, the errorMessage() 
+ * method will be called.
+ * <p>
+ * For example, to restrict a field to only digits, you might add a PatternValidator
+ * constructed with the pattern "\d+".  Another way to do the same thing would 
+ * be to construct the PatternValidator passing in MetaPattern.DIGITS.  The advantages
+ * of using MetaPattern over straight Java regular expressions are that the patterns
+ * are easier to construct and easier to combine into complex patterns.  They are 
+ * also more readable and more reusable.  See {@link wicket.util.parse.metapattern.MetaPattern}
+ * for details.
+ * 
+ * @see java.util.regex.Pattern
+ * @see wicket.util.parse.metapattern.MetaPattern
  * @author Jonathan Locke
  */
 public final class PatternValidator extends AbstractValidator
-{ // TODO finalize javadoc
+{
     /** The regexp pattern. */
     private final Pattern pattern;
 
@@ -63,7 +78,7 @@ public final class PatternValidator extends AbstractValidator
 
     /**
      * Constructor.
-     * @param pattern Meta regex pattern
+     * @param pattern MetaPattern pattern
      */
     public PatternValidator(final MetaPattern pattern)
     {
@@ -72,16 +87,14 @@ public final class PatternValidator extends AbstractValidator
 
     /**
      * Validates the given form component.
-     * @param input the input to validate
+     * @param input The input to validate
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(
-            final String input, final FormComponent component)
+    public ValidationErrorMessage validate(final String input, 
+            final FormComponent component)
     {
-        final String value = (String)input;
-
-        if (!pattern.matcher(value).matches())
+        if (!pattern.matcher(input).matches())
         {
             return errorMessage(input, component);
         }
