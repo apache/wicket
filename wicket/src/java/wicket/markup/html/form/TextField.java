@@ -81,7 +81,7 @@ public class TextField extends AbstractTextComponent
     /**
 	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
 	 */
-	public void updateModel()
+	protected void updateModel()
 	{
         if (type != null)
         {

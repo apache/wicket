@@ -81,9 +81,9 @@ public final class SignIn extends WicketExamplePage
         }
 
         /**
-         * @see wicket.markup.html.form.Form#handleSubmit()
+         * @see wicket.markup.html.form.Form#handleValidSubmit()
          */
-        public final void handleSubmit()
+        public final void handleValidSubmit()
         {
             // Get session info
             SignInSession session = (SignInSession)getSession();

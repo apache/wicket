@@ -160,7 +160,7 @@ public final class EditBook extends AuthenticatedWebPage
         /**
          * Show the resulting valid edit
          */
-        public final void handleSubmit()
+        public final void handleValidSubmit()
         {
             final RequestCycle cycle = getRequestCycle();
             PageParameters parameters = new PageParameters();

@@ -156,9 +156,9 @@ public class FormInput extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleSubmit()
+		 * @see wicket.markup.html.form.Form#handleValidSubmit()
 		 */
-		public void handleSubmit()
+		public void handleValidSubmit()
 		{
 			// Everything went well; just display a message
 			info("Saved model " + testInputObject);

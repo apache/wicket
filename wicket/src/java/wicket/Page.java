@@ -204,7 +204,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * Convenience method. Search for children of type fromClass and invoke
 	 * their respective removePersistedFormData() methods.
 	 * 
-	 * @see Form#removePersistedFormComponentData(boolean)
+	 * @see Form#removePersistentFormComponentValues(boolean)
 	 * 
 	 * @param formClass
 	 *            Form to be selected. Pages may have more than one Form.
@@ -231,7 +231,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				{
 					// Delete persistet FormComponent data and disable
 					// persistence
-					((Form)component).removePersistedFormComponentData(disablePersistence);
+					((Form)component).removePersistentFormComponentValues(disablePersistence);
 				}
 				return CONTINUE_TRAVERSAL;
 			}

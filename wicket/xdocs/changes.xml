@@ -7,6 +7,9 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="update" dev="Jonathan Locke" issue="">
+      	Added form buttons support.
+      </action>
       <action type="add" dev="Jonathan Locke" issue="">
 		Added getSharing() method to Component with values UNSHARED, APPLICATION_SHARED 
 		and SESSION_SHARED (see javadoc for details).  Changed the AbstractImage class 

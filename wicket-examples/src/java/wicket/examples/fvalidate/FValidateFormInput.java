@@ -92,9 +92,9 @@ public class FValidateFormInput extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleSubmit()
+		 * @see wicket.markup.html.form.Form#handleValidSubmit()
 		 */
-		public void handleSubmit()
+		public void handleValidSubmit()
 		{
 		}
 	}

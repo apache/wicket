@@ -35,14 +35,14 @@ import wicket.markup.MarkupStream;
  */
 abstract class Choice extends FormComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -8334966481181600604L;
-
 	/**
 	 * Default value to display when a null option is rendered. Initially set to
 	 * 'Choose One'.
 	 */
 	private static final String DEFAULT_NULL_OPTION_VALUE = "Choose One";
+	
+	/** Serial Version ID. */
+	private static final long serialVersionUID = -8334966481181600604L;
 
 	/** Whether the null option must be rendered if current selection == null. */
 	private boolean renderNullOption = true;
@@ -84,14 +84,6 @@ abstract class Choice extends FormComponent
 	}
 
     /**
-     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-     */
-    public boolean supportsPersistence()
-    {
-        return true;
-    }
-
-    /**
 	 * Gets the list of values.
 	 * 
 	 * @return the list of values
@@ -103,19 +95,6 @@ abstract class Choice extends FormComponent
 			((IDetachableChoiceList)values).attach();
 		}
 		return this.values;
-	}
-    
-	
-	/*
-	 * @see wicket.Component#detachModel()
-	 */
-	protected void detachModel()
-	{
-		super.detachModel();
-		if (values instanceof IDetachableChoiceList)
-		{
-			((IDetachableChoiceList)values).detach();
-		}
 	}
 	
 	/**
@@ -172,6 +151,32 @@ abstract class Choice extends FormComponent
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	public abstract void updateModel();
+    
+	
+	/*
+	 * @see wicket.Component#detachModel()
+	 */
+	protected void detachModel()
+	{
+		super.detachModel();
+		if (values instanceof IDetachableChoiceList)
+		{
+			((IDetachableChoiceList)values).detach();
+		}
+	}
+
+	/**
+	 * Processes the component tag.
+	 * 
+	 * @param tag
+	 *            Tag to modify
+	 * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+	 */
+	protected void handleComponentTag(final ComponentTag tag)
+	{
+		checkComponentTag(tag, "select");
+		super.handleComponentTag(tag);
+	}
 
 	/**
 	 * Handle the container's body.
@@ -242,19 +247,6 @@ abstract class Choice extends FormComponent
 	}
 
 	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag
-	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
-	 */
-	protected void handleComponentTag(final ComponentTag tag)
-	{
-		checkComponentTag(tag, "select");
-		super.handleComponentTag(tag);
-	}
-
-	/**
 	 * Gets whether the given value represents the current selection.
 	 * 
 	 * @param currentValue
@@ -274,4 +266,12 @@ abstract class Choice extends FormComponent
 		boolean equals = currentValue.equals(modelObject);
 		return equals;
 	}
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+     */
+    protected boolean supportsPersistence()
+    {
+        return true;
+    }
 }
