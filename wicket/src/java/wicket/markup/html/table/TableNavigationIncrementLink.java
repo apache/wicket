@@ -78,9 +78,9 @@ public class TableNavigationIncrementLink extends PageLink
             }
 
             /**
-             * @see wicket.markup.html.link.IPageLink#getDestinationIdentity()
+             * @see wicket.markup.html.link.IPageLink#getIdentity()
              */
-            public Class getDestinationIdentity()
+            public Class getIdentity()
             {
                 return table.getPage().getClass();
             }
