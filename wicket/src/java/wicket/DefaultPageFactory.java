@@ -81,26 +81,6 @@ public final class DefaultPageFactory implements IPageFactory
 	}
 
 	/**
-	 * @see IPageFactory#newPage(Class, Page)
-	 */
-	public final Page newPage(final Class pageClass, final Page page)
-	{
-		// Try to get constructor that takes PageParameters
-		Constructor constructor = constructor(pageClass, Page.class);
-
-		// If we got a PageParameters constructor
-		if (constructor != null)
-		{
-			// return new Page(parameters)
-			return newPage(constructor, page);
-		}
-
-		// Couldn't find constructor accepting page argument
-		throw new WicketRuntimeException("Could not find a constructor in " + pageClass
-				+ " that would accept Page argument " + page);
-	}
-
-	/**
 	 * Looks up a one-arg Page constructor by class and argument type.
 	 *
 	 * @param pageClass

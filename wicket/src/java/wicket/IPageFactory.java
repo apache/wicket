@@ -55,18 +55,4 @@ public interface IPageFactory
      *             Thrown if the page cannot be constructed
      */
     public Page newPage(final Class pageClass, final PageParameters parameters);
-
-    /**
-     * Creates a new Page, passing the given Page to the Page constructor if
-     * such a constructor exists. This method is intended for internal use only.
-     *
-     * @param pageClass
-     *            The page class to create
-     * @param page
-     *            The page
-     * @return The new page
-     * @throws WicketRuntimeException
-     *             Thrown if the page cannot be constructed
-     */
-    public Page newPage(final Class pageClass, final Page page);
 }

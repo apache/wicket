@@ -22,7 +22,6 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 import wicket.protocol.http.MockWebApplication;
-import wicket.protocol.http.MockPage;
 import wicket.resource.DummyApplication;
 
 /**
@@ -171,95 +170,6 @@ public class PageFactoryTest extends TestCase
 		    e = ex; 
 		} 
 		
-		assertNotNull("String does not extend Page. Should habe thrown an exception", e);
-	}
-
-	/**
-	 * Test creating a new page using a class and a page.
-	 * 
-	 * @throws IOException
-	 */
-	public void testNewPageClassPage() throws IOException
-	{
-		final Page page = new MockPage(null);
-
-		// MyPage0: no constructor at all
-		Exception e = null;
-		try
-		{
-			factory.newPage(MyPage0.class, page).getClass();
-		}
-		catch (WicketRuntimeException ex)
-		{
-			e = ex;
-		}
-		assertNotNull("MyPage0 should have thrown an exception", e);
-
-		// MyPage1 has only a default constructor
-		e = null;
-		try
-		{
-			factory.newPage(MyPage1.class, page).getClass();
-		}
-		catch (WicketRuntimeException ex)
-		{
-			e = ex;
-		}
-		assertNotNull("MyPage1 should have thrown an exception", e);
-
-		// MyPage2: PageParameter parameter constructor only
-		e = null;
-		try
-		{
-			factory.newPage(MyPage2.class, page).getClass();
-		}
-		catch (WicketRuntimeException ex)
-		{
-			e = ex;
-		}
-		assertNotNull(
-				"MyPage2 should have thrown an exception as it does not have a default or no constructor",
-				e);
-
-		// MyPage3: Page parameter constructor only
-		assertEquals(MyPage3.class, factory.newPage(MyPage3.class, page).getClass());
-
-		// MyPage4: Illegal String parameter constructor only
-		e = null;
-		try
-		{
-			factory.newPage(MyPage4.class, page).getClass();
-		}
-		catch (WicketRuntimeException ex)
-		{
-			e = ex;
-		}
-		assertNotNull(
-				"MyPage4 should have thrown an exception as it does not have a default or no constructor",
-				e);
-
-		// MyPage5: PageParameter and default constructor
-		e = null;
-		try
-		{
-			factory.newPage(MyPage5.class, page).getClass();
-		}
-		catch (WicketRuntimeException ex)
-		{
-			e = ex;
-		}
-		assertNotNull("MyPage5 should have thrown an exception", e);
-
-		// String: Illegal String parameter constructor only
-		e = null;
-		try
-		{
-			factory.newPage(String.class, page).getClass();
-		}
-		catch (WicketRuntimeException ex)
-		{
-			e = ex;
-		}
 		assertNotNull("String does not extend Page. Should habe thrown an exception", e);
 	}
 }

@@ -8,7 +8,10 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
-      <action type="update" dev="Jonathan Locke" issue="">
+      <action type="fix" dev="Jonathan Locke" issue="1165955">
+      Changed popup settings to use flags instead of booleans.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="1157844">
       Major changes!  Added PageMap abstraction to Session to make it possible for multiple browser windows,
       popups and frames to have their own page maps, avoiding the problem of pages going stale in one window
       when the other window is used.  In the future, this will also allow us to implement a page stack for the

@@ -383,6 +383,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
 	 * @param pageMapName
 	 *            Sets this page into the page map with the given name. If the
 	 *            page map does not yet exist, it is automatically created.
@@ -390,12 +392,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final void setPageMap(final String pageMapName)
 	{
 		final Session session = getSession();
-		PageMap pageMap = session.getPageMap(pageMapName);
-		if (pageMap == null)
+		this.pageMap = session.getPageMap(pageMapName);
+		if (this.pageMap == null)
 		{
-			pageMap = session.newPageMap(pageMapName);
+			this.pageMap = session.newPageMap(pageMapName);
 		}
-		setPageMap(pageMap);
 	}
 
 	/**
@@ -413,13 +414,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * <p>
 	 * Gets the url for the given page class using the given parameters.
 	 * 
+	 * @param pageMapName
+	 *            Name of pagemap to use
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public abstract String urlFor(final Class pageClass, final PageParameters parameters);
+	public abstract String urlFor(final String pageMapName, final Class pageClass,
+			final PageParameters parameters);
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -700,15 +704,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void setId(final int id)
 	{
 		this.id = id;
-	}
-
-	/**
-	 * @param pageMap
-	 *            PageMap where this page resides
-	 */
-	final void setPageMap(final PageMap pageMap)
-	{
-		this.pageMap = pageMap;
 	}
 
 	/**

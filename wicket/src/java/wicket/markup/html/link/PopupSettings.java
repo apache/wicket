@@ -29,29 +29,32 @@ import java.io.Serializable;
  */
 public class PopupSettings implements Serializable
 {
+	/** Flag to include location bar */
+	public static final int LOCATION_BAR = 1;
+
+	/** Flag to include menu bar */
+	public static final int MENU_BAR = 2;
+
+	/** Flag to make popup resizable */
+	public static final int RESIZABLE = 4;
+
+	/** Flag to include scrollbars */
+	public static final int SCROLLBARS = 8;
+
+	/** Flag to include status bar */
+	public static final int STATUS_BAR = 16;
+
+	/** Flag to include location bar */
+	public static final int TOOL_BAR = 32;
+
+	/** Display flags */
+	private int displayFlags;
+
 	/** Height of popup window. */
 	private int height = -1;
 
 	/** Left position of popup window. */
 	private int left = -1;
-
-	/** Whether the browser should display the browser location toolbar. */
-	private boolean locationBar = false;
-
-	/** Whether the browser should display the menu bar. */
-	private boolean menuBar = false;
-
-	/** Whether the popup window is resizable. */
-	private boolean resizable = false;
-
-	/** Whether the popup window should have scrollbars. */
-	private boolean scrollBars = false;
-
-	/**
-	 * Whether the popup window should have a status bar (the area at the bottom
-	 * of the browser).
-	 */
-	private boolean statusBar = false;
 
 	/**
 	 * The target to put in JavaScript. This implementation simply refers to the
@@ -59,12 +62,6 @@ public class PopupSettings implements Serializable
 	 * element is not an anchor).
 	 */
 	private String target = "href";
-
-	/**
-	 * Whether the browser should display the toolbar that contains the
-	 * back/forward/etc buttons.
-	 */
-	private boolean toolbar = false;
 
 	/** Top position of popup window. */
 	private int top = -1;
@@ -91,65 +88,12 @@ public class PopupSettings implements Serializable
 	/**
 	 * Construct.
 	 * 
-	 * @param hasScrollBars
-	 *            whether the popup window has scroll bars
-	 * @param hasLocationbar
-	 *            whether the popup window has a location bar
-	 * @param isResizable
-	 *            whether the popup window is resizable
-	 * @param hasStatusBar
-	 *            whether the popup window has a status bar
-	 * @param hasToolbar
-	 *            whether the popup window has a tool bar
+	 * @param displayFlags
+	 *            Display flags
 	 */
-	public PopupSettings(boolean hasScrollBars, boolean hasLocationbar, boolean isResizable,
-			boolean hasStatusBar, boolean hasToolbar)
+	public PopupSettings(final int displayFlags)
 	{
-		setScrollBars(hasScrollBars);
-		setLocationBar(hasLocationbar);
-		setResizable(isResizable);
-		setStatusBar(hasStatusBar);
-		setToolbar(hasToolbar);
-	}
-
-	/**
-	 * Gets the popup window height.
-	 * 
-	 * @return the popup window height.
-	 */
-	public int getHeight()
-	{
-		return height;
-	}
-
-	/**
-	 * Gets the left position of the popup window.
-	 * 
-	 * @return the left position of the popup window.
-	 */
-	public int getLeft()
-	{
-		return left;
-	}
-
-	/**
-	 * Gets whether the browser should display the browser location toolbar.
-	 * 
-	 * @return Whether the browser should display the browser location toolbar.
-	 */
-	public boolean getLocationBar()
-	{
-		return locationBar;
-	}
-
-	/**
-	 * Gets whether the browser should display the menu bar.
-	 * 
-	 * @return Whether the browser should display the menu bar.
-	 */
-	public boolean getMenuBar()
-	{
-		return menuBar;
+		this.displayFlags = displayFlags;
 	}
 
 	/**
@@ -159,7 +103,7 @@ public class PopupSettings implements Serializable
 	 */
 	public String getPopupJavaScript()
 	{
-		String windowTitle = getWindowName();
+		String windowTitle = windowName;
 
 		if (windowTitle == null)
 		{
@@ -167,122 +111,44 @@ public class PopupSettings implements Serializable
 		}
 		else
 		{
-			windowTitle = windowTitle.replace('.', '_'); // Fix for IE bug.
+			// Fix for IE bug.
+			windowTitle = windowTitle.replace('.', '_'); 
 		}
 
-		String target = getTarget();
 		StringBuffer script = new StringBuffer("if (!window.focus) return true; window.open("
 				+ target + ", '").append(windowTitle).append("', '");
 
-		script.append("scrollbars=").append(getScrollBars() ? "yes" : "no");
-		script.append(", location=").append(getLocationBar() ? "yes" : "no");
-		script.append(", menuBar=").append(getMenuBar() ? "yes" : "no");
-		script.append(", resizable=").append(isResizable() ? "yes" : "no");
-		script.append(", scrollbars=").append(getScrollBars() ? "yes" : "no");
-		script.append(", status=").append(getStatusBar() ? "yes" : "no");
-		script.append(", toolbar=").append(getToolbar() ? "yes" : "no");
+		script.append("scrollbars=").append(flagToString(SCROLLBARS));
+		script.append(", location=").append(flagToString(LOCATION_BAR));
+		script.append(", menuBar=").append(flagToString(MENU_BAR));
+		script.append(", resizable=").append(flagToString(RESIZABLE));
+		script.append(", scrollbars=").append(flagToString(SCROLLBARS));
+		script.append(", status=").append(flagToString(STATUS_BAR));
+		script.append(", toolbar=").append(flagToString(TOOL_BAR));
 
-		if (getWidth() != -1)
+		if (width != -1)
 		{
-			script.append(", width=").append(getWidth());
+			script.append(", width=").append(width);
 		}
 
-		if (getHeight() != -1)
+		if (height != -1)
 		{
-			script.append(", height=").append(getHeight());
+			script.append(", height=").append(height);
 		}
 
-		if (getLeft() != -1)
+		if (left != -1)
 		{
-			script.append(", left=").append(getLeft());
+			script.append(", left=").append(left);
 		}
 
-		if (getTop() != -1)
+		if (top != -1)
 		{
-			script.append(", top=").append(getTop());
+			script.append(", top=").append(top);
 		}
 
 		script.append("'); ").append(" return false;");
 
 		return script.toString();
-	}
-
-	/**
-	 * Gets whether the popup window should have scrollbars.
-	 * 
-	 * @return whether the popup window should have scrollbars.
-	 */
-	public boolean getScrollBars()
-	{
-		return scrollBars;
-	}
-
-	/**
-	 * Gets whether the popup window should have a status bar (the area at the
-	 * bottom of the browser).
-	 * 
-	 * @return Whether the popup window should have a status bar (the area at
-	 *         the bottom of the browser).
-	 */
-	public boolean getStatusBar()
-	{
-		return statusBar;
-	}
-
-	/**
-	 * Gets whether the browser should display the toolbar that contains the
-	 * back/forward/etc buttons.
-	 * 
-	 * @return Whether the browser should display the toolbar that contains the
-	 *         back/forward/etc buttons.
-	 */
-	public boolean getToolbar()
-	{
-		return toolbar;
-	}
-
-	/**
-	 * Gets the top position of the popup window.
-	 * 
-	 * @return the top position of the popup window.
-	 */
-	public int getTop()
-	{
-		return top;
-	}
-
-	/**
-	 * Gets the popup window width.
-	 * 
-	 * @return the popup window width.
-	 */
-	public int getWidth()
-	{
-		return width;
-	}
-
-	/**
-	 * Gets the name of the window. This can be anything you want, although you
-	 * should use alphanumeric characters only (no spaces or punctuation). If
-	 * you have a window already open and call window.open a second time using
-	 * the same windowName, the first window will be reused rather than opening
-	 * a second window..
-	 * 
-	 * @return window name.
-	 */
-	public String getWindowName()
-	{
-		return windowName;
-	}
-
-	/**
-	 * Gets whether the popup window is resizable.
-	 * 
-	 * @return Whether the popup window is resizable.
-	 */
-	public boolean isResizable()
-	{
-		return resizable;
 	}
 
 	/**
@@ -312,106 +178,6 @@ public class PopupSettings implements Serializable
 	}
 
 	/**
-	 * Sets the location of the popup window.
-	 * 
-	 * @param popupLeft
-	 *            The left position of the popup.
-	 * @param popupTop
-	 *            The top position of the popup.
-	 * @return This
-	 */
-	public PopupSettings setLocation(int popupLeft, int popupTop)
-	{
-		setLeft(popupLeft);
-		setTop(popupTop);
-		return this;
-	}
-
-	/**
-	 * Sets whether the browser should display the browser location toolbar.
-	 * 
-	 * @param popupLocation
-	 *            Whether the browser should display the browser location
-	 *            toolbar.
-	 * @return This
-	 */
-	public PopupSettings setLocationBar(boolean popupLocation)
-	{
-		this.locationBar = popupLocation;
-		return this;
-	}
-
-	/**
-	 * Sets whether the browser should display the menu bar.
-	 * 
-	 * @param popupMenubar
-	 *            Whether the browser should display the menu bar.
-	 * @return This
-	 */
-	public PopupSettings setMenuBar(boolean popupMenubar)
-	{
-		this.menuBar = popupMenubar;
-		return this;
-	}
-
-	/**
-	 * Sets the with and height of the popup window.
-	 * 
-	 * @param popupWidth
-	 *            The popup width.
-	 * @param popupHeight
-	 *            The popup height.
-	 * @return This
-	 */
-	public PopupSettings setPopupDimensions(int popupWidth, int popupHeight)
-	{
-		setWidth(popupWidth);
-		setHeight(popupHeight);
-		return this;
-	}
-
-	/**
-	 * Sets whether the popup window is resizable.
-	 * 
-	 * @param popupResizable
-	 *            Whether the popup window is resizable.
-	 * @return This
-	 */
-	public PopupSettings setResizable(boolean popupResizable)
-	{
-		this.resizable = popupResizable;
-		return this;
-	}
-
-	/**
-	 * Sets whether the popup window should have scrollbars.
-	 * 
-	 * @param popupScrollBars
-	 *            Whether the popup window should have scrollbars.
-	 * @return This
-	 */
-	public PopupSettings setScrollBars(boolean popupScrollBars)
-	{
-		this.scrollBars = popupScrollBars;
-		return this;
-	}
-
-	/**
-	 * Sets whether the popup window should have a status bar (the area at the
-	 * bottom of the browser).
-	 * 
-	 * @param popupStatus
-	 *            Whether the popup window should have a status bar (the area at
-	 *            the bottom of the browser).
-	 * @return This
-	 */
-	public PopupSettings setStatusBar(boolean popupStatus)
-	{
-		this.statusBar = popupStatus;
-		return this;
-	}
-
-	/**
 	 * Sets the target of the link. The default implementation simply refers to
 	 * the href element, but clients may want to override this (e.g. when the
 	 * HTML element is not an anchor) by setting the target explicitly.
@@ -422,21 +188,6 @@ public class PopupSettings implements Serializable
 	public void setTarget(String target)
 	{
 		this.target = target;
-	}
-
-	/**
-	 * Sets whether the browser should display the toolbar that contains the
-	 * back/forward/etc buttons.
-	 * 
-	 * @param toolbar
-	 *            Whether the browser should display the toolbar that contains
-	 *            the back/forward/etc buttons.
-	 * @return This
-	 */
-	public PopupSettings setToolbar(boolean toolbar)
-	{
-		this.toolbar = toolbar;
-		return this;
 	}
 
 	/**
@@ -483,14 +234,12 @@ public class PopupSettings implements Serializable
 	}
 
 	/**
-	 * Gets the target of the link. The default implementation simply refers to
-	 * the href element, but clients may want to override this (e.g. when the
-	 * HTML element is not an anchor) by setting the target explicitly.
-	 * 
-	 * @return the target of the link
+	 * @param flag
+	 *            The flag to test
+	 * @return Yes or no depending on whether the flag is set
 	 */
-	protected String getTarget()
+	private String flagToString(final int flag)
 	{
-		return target;
+		return (this.displayFlags & flag) != 0 ? "yes" : "no";
 	}
 }

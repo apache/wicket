@@ -36,6 +36,9 @@ public final class BookmarkablePageLink extends Link
 
 	/** The parameters to pass to the class constructor when instantiated. */
 	private final PageParameters parameters;
+	
+	/** Just a unique identifier for popup windows within a session. */
+	private static int popupNumber = 0;
 
 	/**
 	 * Constructor.
@@ -150,7 +153,12 @@ public final class BookmarkablePageLink extends Link
 	 */
 	protected String getURL()
 	{
-		// gets url to the dispatcher
-		return getPage().urlFor(pageClass, parameters);
+		String pageMapName = null;
+		if (getPopupSettings() != null)
+		{
+			pageMapName = "popup" + popupNumber;
+			popupNumber++;
+		}
+		return getPage().urlFor(pageMapName, pageClass, parameters);
 	}
 }

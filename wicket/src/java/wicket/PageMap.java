@@ -154,7 +154,7 @@ public final class PageMap implements Serializable
 	public final void redirectToInterceptPage(final Page page)
 	{
 		interceptContinuationURL = page.getResponse().encodeURL(page.getRequest().getURL());
-		page.getRequestCycle().redirectToPage(page);
+		page.redirectTo(page);
 		session.dirty();
 	}
 

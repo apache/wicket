@@ -134,7 +134,7 @@ public class WebRequestCycle extends RequestCycle
 	 * @param page
 	 *            The page to redirect to
 	 */
-	protected void redirectToPage(final Page page)
+	protected void redirectTo(final Page page)
 	{
 		// Redirect to the url for the page
 		response.redirect(page.urlFor(page, IRedirectListener.class));
@@ -173,7 +173,6 @@ public class WebRequestCycle extends RequestCycle
 		final String pageClassName = request.getParameter("bookmarkablePage");
 		if (pageClassName != null)
 		{
-			final String pageMapName = request.getParameter("pageMap");
 			final Class pageClass = session.getClassResolver().resolveClass(pageClassName);
 			setResponsePage(session.getPageFactory().newPage(pageClass,
 					new PageParameters(getRequest().getParameterMap())));
@@ -197,7 +196,7 @@ public class WebRequestCycle extends RequestCycle
 	{
 		// Get any component parameter
 		final String path = request.getParameter("component");
-		final String pageMapName = request.getParameter("pageMap");
+		final String pageMapName = request.getParameter("pagemap");
 		if (path != null)
 		{
 			// Get version number
@@ -325,21 +324,6 @@ public class WebRequestCycle extends RequestCycle
 	{
 		final PageParameters parameters = new PageParameters(getRequest().getParameterMap());
 		return session.getPageFactory().newPage(pageClass, parameters);
-	}
-
-	/**
-	 * Creates a new instance of a page using the given class name.
-	 * 
-	 * @param pageClass
-	 *            The class of page to create
-	 * @param page
-	 *            Parameter to page constructor
-	 * @return The new page
-	 * @throws WicketRuntimeException
-	 */
-	private final Page newPage(final Class pageClass, final Page page)
-	{
-		return session.getPageFactory().newPage(pageClass, page);
 	}
 
 	/**
