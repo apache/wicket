@@ -44,32 +44,32 @@ public final class ImageMap extends WebComponent
 	 */
 	private static final class CircleLink extends ShapeLink
 	{
-
-		/** the circles' radius. */
+		/** The circle's radius. */
 		private final int radius;
-		/** left upper x. */
-		private final int x1;
+		
+		/** Upper left x */
+		private final int x;
 
-		/** left upper y. */
-		private final int y1;
+		/** Upper left y */
+		private final int y;
 
 		/**
 		 * Construct.
 		 * 
-		 * @param x1
+		 * @param x
 		 *            left upper x
-		 * @param y1
+		 * @param y
 		 *            left upper y
 		 * @param radius
 		 *            the circles' radius
 		 * @param link
 		 *            the link
 		 */
-		public CircleLink(final int x1, final int y1, final int radius, final Link link)
+		public CircleLink(final int x, final int y, final int radius, final Link link)
 		{
 			super(link);
-			this.x1 = x1;
-			this.y1 = y1;
+			this.x = x;
+			this.y = y;
 			this.radius = radius;
 		}
 
@@ -78,7 +78,7 @@ public final class ImageMap extends WebComponent
 		 */
 		String getCoordinates()
 		{
-			return x1 + "," + y1 + "," + radius;
+			return x + "," + y + "," + radius;
 		}
 
 		/**
@@ -201,14 +201,14 @@ public final class ImageMap extends WebComponent
 	 */
 	private static abstract class ShapeLink implements Serializable
 	{
-		/** the link. */
+		/** The link. */
 		private final Link link;
 
 		/**
 		 * Constructor.
 		 * 
 		 * @param link
-		 *            the link
+		 *            The link
 		 */
 		public ShapeLink(final Link link)
 		{
@@ -244,7 +244,7 @@ public final class ImageMap extends WebComponent
 		/**
 		 * Gets the coordinates of the shape.
 		 * 
-		 * @return the coordinates of the shape
+		 * @return The coordinates of the shape
 		 */
 		abstract String getCoordinates();
 
@@ -260,7 +260,7 @@ public final class ImageMap extends WebComponent
 	 * Constructor.
 	 * 
 	 * @param name
-	 *            component name
+	 *            Component name
 	 */
 	public ImageMap(final String name)
 	{
