@@ -18,17 +18,25 @@
  */
 package wicket;
 
-
 import java.util.Map;
 
 import wicket.util.value.ValueMap;
 
 /**
- * A typesafe container for page parameters.
+ * A typesafe abstraction and container for parameters to a requested page.
+ * Page parameters in HTTP are query string values in the request URL.  
+ * In other protocols, the parameters to a page might come from some other 
+ * source.
+ * <p>
+ * Pages which take a PageParameters object as an argument to their constructor
+ * can be accessed directly from a URL and are known as "bookmarkable" pages
+ * since the URL is stable across sessions and can be stored in a browser's 
+ * bookmark database.   
+ * 
  * @author Jonathan Locke
  */
 public final class PageParameters extends ValueMap
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 1616180011213025532L;
 	

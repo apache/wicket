@@ -23,8 +23,8 @@ import java.util.List;
 import wicket.util.resource.Resource;
 
 /**
- * Holds markup as a list of MarkupElements.  Subclasses
- * of MarkupElement include RawMarkup and ComponentTag.
+ * Holds markup as a resource (the stream that the markup came from) and 
+ * a list of MarkupElements (the markup itself). 
  * 
  * @see MarkupElement
  * @see ComponentTag
