@@ -178,7 +178,7 @@ public class FileBrowser extends HtmlPage
 	       }
 	       File file = (File)userObject;
            TreeNodeLink expandCollapsLink = new TreeNodeLink(
-                    "expandCollapsLink", fileTree, node)
+                    "expandCollapsLink", fileTree, node, this)
             {
                 public void linkClicked(RequestCycle cycle, Node node)
                 {
@@ -202,7 +202,7 @@ public class FileBrowser extends HtmlPage
                 }
             }));
            node.add(expandCollapsLink);
-           TreeNodeLink selectLink = new TreeNodeLink("selectLink", fileTree, node)
+           TreeNodeLink selectLink = new TreeNodeLink("selectLink", fileTree, node, this)
            {
             public void linkClicked(RequestCycle cycle, Node node)
             {
