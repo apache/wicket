@@ -1,6 +1,6 @@
 /*
  * $Id$ $Revision:
- * 1.8 $ $Date$
+ * 1.11 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,23 +18,27 @@
 package wicket.model;
 
 /**
- * A IDetachableModel wraps the actual model objects of components and provides
- * a call back mechanism for reacting to the start/end of a request. Please use
- * the abstract class {@link wicket.model.DetachableModel}for implementations
- * instead of implementing this interface directely.
+ * AbstractModel is an adapter base class for implementing models which have no
+ * attach/detach logic.
  * 
- * @author Chris Turner
- * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public interface IDetachableModel extends IModel
+public abstract class AbstractModel implements IModel
 {
-	/**
-	 * Attaches to a session
-	 */
-	public void attach();
+	/** Serial Version ID. */
+	private static final long serialVersionUID = 3031804965001519439L;
 
 	/**
-	 * Detaches from a session
+	 * @see wicket.model.IModel#attach()
 	 */
-	public void detach();
+	public void attach()
+	{
+	}
+
+	/**
+	 * @see wicket.model.IModel#detach()
+	 */
+	public void detach()
+	{
+	}
 }

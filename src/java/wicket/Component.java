@@ -33,7 +33,6 @@ import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IConverterSource;
 import wicket.model.IConvertible;
-import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.model.INestedModel;
 import wicket.model.Model;
@@ -464,12 +463,6 @@ public abstract class Component implements Serializable, IConverterSource
 		{
 			// give subclass a chance to lazy-init model
 			setModel(initModel());
-		}
-
-		// Attach model if need be
-		if (model instanceof IDetachableModel)
-		{
-			((IDetachableModel)model).attach();
 		}
 
 		return model;
@@ -1001,9 +994,9 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	protected void detachModel()
 	{
-		if (model instanceof IDetachableModel)
+		if (model != null)
 		{
-			((IDetachableModel)model).detach();
+			model.detach();
 		}
 	}
 
@@ -1425,10 +1418,10 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	private final void setModel(final IModel model)
 	{
-		// Detach current model if it's an IDetachableModel
-		if (this.model != null && this.model instanceof IDetachableModel)
+		// Detach current model 
+		if (this.model != null)
 		{
-			((IDetachableModel)this.model).detach();
+			this.model.detach();
 		}
 
 		// Set self in case the model is component aware

@@ -18,18 +18,18 @@
 package wicket.model;
 
 /**
- * This provide a base class to work with {@link wicket.model.IDetachableModel}.
- * It encapsulates the logic for attaching and detaching models. The onAttach()
- * abstract method will be called at the first access to the model within a
- * request and - if the model was attached earlier, onDetach() will be called at
- * the end of the request. In effect, attachment and detachment is only done
- * when it is actually needed.
+ * This provide a base class to work with detachable {@link wicket.model.IModel}
+ * 's. It encapsulates the logic for attaching and detaching models. The
+ * onAttach() abstract method will be called at the first access to the model
+ * within a request and - if the model was attached earlier, onDetach() will be
+ * called at the end of the request. In effect, attachment and detachment is
+ * only done when it is actually needed.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractDetachableModel implements IDetachableModel
+public abstract class AbstractDetachableModel implements IModel
 {
 	/**
 	 * Transient flag to prevent multiple detach/attach scenario. We need to
@@ -40,7 +40,7 @@ public abstract class AbstractDetachableModel implements IDetachableModel
 	/**
 	 * Attaches to the current session
 	 * 
-	 * @see wicket.model.IDetachableModel#attach()
+	 * @see IModel#attach()
 	 */
 	public final void attach()
 	{
@@ -54,7 +54,7 @@ public abstract class AbstractDetachableModel implements IDetachableModel
 	/**
 	 * Detaches from the current session.
 	 * 
-	 * @see wicket.model.IDetachableModel#detach()
+	 * @see IModel#detach()
 	 */
 	public final void detach()
 	{
@@ -80,7 +80,7 @@ public abstract class AbstractDetachableModel implements IDetachableModel
 	 * behaviour, such as loading the model object.
 	 */
 	protected void onAttach()
-	{		
+	{
 	}
 
 	/**
@@ -88,6 +88,6 @@ public abstract class AbstractDetachableModel implements IDetachableModel
 	 * behaviour, such as setting the model object to null.
 	 */
 	protected void onDetach()
-	{	
+	{
 	}
 }

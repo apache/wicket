@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.10 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,8 +25,11 @@ import java.io.Serializable;
  * actual persistence strategy. Note that instances of implementations of this
  * class will be stored in the session. Hence, you should use (non-transient)
  * instance variables sparingly.
+ * <p>
+ * IModel also provides a call back mechanism for reacting to the start/end of a
+ * request. Please use the abstract class {@link wicket.model.DetachableModel}
+ * for implementations instead of implementing this interface directely.
  * 
- * @see wicket.model.IDetachableModel
  * @author Chris Turner
  * @author Eelco Hillenius
  */
@@ -46,4 +49,16 @@ public interface IModel extends Serializable
 	 *            The model object
 	 */
 	public void setObject(Object object);
+
+	/**
+	 * Attaches model for use. This is generally used to fill in transient
+	 * fields in a model which has been serialized during session replication.
+	 */
+	public void attach();
+
+	/**
+	 * Detaches model after use. This is generally used to null out transient
+	 * references that can be re-attached via attach().
+	 */
+	public void detach();
 }
