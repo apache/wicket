@@ -17,6 +17,10 @@
  */
 package wicket.util.convert.converters;
 
+import java.util.Locale;
+
+import wicket.util.convert.ITypeConverter;
+
 /**
  * Converts from Object to Character.
  * 
@@ -26,16 +30,21 @@ package wicket.util.convert.converters;
 public final class CharacterConverter extends AbstractConverter
 {
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * The singleton instance for a character converter
 	 */
-	public Object convert(final Object value)
+	public static final ITypeConverter INSTANCE = new CharacterConverter();
+	
+	/**
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
+	 */
+	public Object convert(final Object value, Locale locale)
 	{
 		final String stringValue = value.toString();
 		if (stringValue.length() == 1)
 		{
 			return new Character(value.toString().charAt(0));
 		}
-		throw newConversionException("Cannot convert '" + value + "' to Character", value);
+		throw newConversionException("Cannot convert '" + value + "' to Character", value,locale);
 	}
 
 	/**

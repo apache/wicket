@@ -18,7 +18,9 @@
 package wicket.util.convert.converters;
 
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Converts from Date to String.
@@ -28,62 +30,40 @@ import java.util.Locale;
 public final class NumberToStringConverter extends AbstractConverter
 {
 	/** The date format to use */
-	private NumberFormat numberFormat;
+	private Map numberFormats = new HashMap();
 
 	/**
-	 * Constructor
-	 */
-	public NumberToStringConverter()
-	{
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
-	 */
-	public NumberToStringConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
-	 * @see wicket.util.convert.converters.AbstractConverter#setLocale(java.util.Locale)
-	 */
-	public void setLocale(Locale locale)
-	{
-		super.setLocale(locale);
-		numberFormat = null;
-	}
-
-	/**
+	 * @param locale 
 	 * @return Returns the numberFormat.
 	 */
-	public final NumberFormat getNumberFormat()
+	public final NumberFormat getNumberFormat(Locale locale)
 	{
+		NumberFormat numberFormat = (NumberFormat)numberFormats.get(locale);
 		if (numberFormat == null)
 		{
-			numberFormat = NumberFormat.getInstance(getLocale());
+			numberFormat = NumberFormat.getInstance(locale);
+			numberFormats.put(locale, numberFormat);
 		}
 		return numberFormat;
 	}
 
 	/**
+	 * @param locale 
+	 * 			  The Locale that was used for this NumberFormat
 	 * @param numberFormat
 	 *            The numberFormat to set.
 	 */
-	public final void setNumberFormat(final NumberFormat numberFormat)
+	public final void setNumberFormat(final Locale locale, final NumberFormat numberFormat)
 	{
-		this.numberFormat = numberFormat;
+		numberFormats.put(locale,numberFormat);
 	}
 
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
-		NumberFormat fmt = getNumberFormat();
+		NumberFormat fmt = getNumberFormat(locale);
 		if (fmt != null)
 		{
 			return fmt.format(value);

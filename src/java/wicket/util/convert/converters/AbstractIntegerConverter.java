@@ -27,38 +27,17 @@ import java.util.Locale;
  */
 public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 {
-	/** Current format */
-	private NumberFormat numberFormat;
-
 	/**
-	 * Constructor
-	 */
-	public AbstractIntegerConverter()
-	{
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
-	 */
-	public AbstractIntegerConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
+	 * @param locale 
 	 * @return Returns the numberFormat.
 	 */
-	public final NumberFormat getNumberFormat()
+	public final NumberFormat getNumberFormat(Locale locale)
 	{
-		if (numberFormat == null)
-		{
-			numberFormat = NumberFormat.getIntegerInstance(getLocale());
-			numberFormat.setParseIntegerOnly(true);
-			numberFormat.setGroupingUsed(false);
-		}
+		//TODO cache this number format based on locale??
+		// But then it can be used by more then one session!!
+		NumberFormat numberFormat = NumberFormat.getIntegerInstance(locale);
+		numberFormat.setParseIntegerOnly(true);
+		numberFormat.setGroupingUsed(false);
 		return numberFormat;
 	}
 }

@@ -107,22 +107,22 @@ public final class Converter implements IConverter
 	 */
 	public Converter()
 	{
-		set(Boolean.TYPE, new BooleanConverter());
-		set(Boolean.class, new BooleanConverter());
-		set(Byte.TYPE, new ByteConverter());
-		set(Byte.class, new ByteConverter());
-		set(Character.TYPE, new CharacterConverter());
-		set(Character.class, new CharacterConverter());
-		set(Double.TYPE, new DoubleConverter());
-		set(Double.class, new DoubleConverter());
-		set(Float.TYPE, new FloatConverter());
-		set(Float.class, new FloatConverter());
-		set(Integer.TYPE, new IntegerConverter());
-		set(Integer.class, new IntegerConverter());
-		set(Long.TYPE, new LongConverter());
-		set(Long.class, new LongConverter());
-		set(Short.TYPE, new ShortConverter());
-		set(Short.class, new ShortConverter());
+		set(Boolean.TYPE, BooleanConverter.INSTANCE);
+		set(Boolean.class, BooleanConverter.INSTANCE);
+		set(Byte.TYPE, ByteConverter.INSTANCE);
+		set(Byte.class, ByteConverter.INSTANCE);
+		set(Character.TYPE, CharacterConverter.INSTANCE);
+		set(Character.class, CharacterConverter.INSTANCE);
+		set(Double.TYPE, DoubleConverter.INSTANCE);
+		set(Double.class, DoubleConverter.INSTANCE);
+		set(Float.TYPE, FloatConverter.INSTANCE);
+		set(Float.class, FloatConverter.INSTANCE);
+		set(Integer.TYPE, IntegerConverter.INSTANCE);
+		set(Integer.class, IntegerConverter.INSTANCE);
+		set(Long.TYPE, LongConverter.INSTANCE);
+		set(Long.class, LongConverter.INSTANCE);
+		set(Short.TYPE, ShortConverter.INSTANCE);
+		set(Short.class, ShortConverter.INSTANCE);
 		set(String.class, new StringConverter());
 		set(Date.class, new DateConverter());
 	}
@@ -189,7 +189,7 @@ public final class Converter implements IConverter
 		try
 		{
 			// Use type converter to convert to value
-			return converter.convert(value);
+			return converter.convert(value,locale);
 		}
 		catch (ConversionException e)
 		{
@@ -287,11 +287,11 @@ public final class Converter implements IConverter
 	{
 		this.locale = locale;
 
-		// Set locale on each string type converter
-		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
-		{
-			((ITypeConverter)iterator.next()).setLocale(locale);
-		}
+//		// Set locale on each string type converter
+//		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
+//		{
+//			((ITypeConverter)iterator.next()).setLocale(locale);
+//		}
 
 		// Set locale on default converter
 		defaultConverter.setLocale(locale);

@@ -18,7 +18,9 @@
 package wicket.util.convert.converters;
 
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Converts from Date to String.
@@ -28,62 +30,25 @@ import java.util.Locale;
 public final class DateToStringConverter extends AbstractConverter
 {
 	/** The date format to use */
-	private DateFormat dateFormat;
+	private Map dateFormats = new HashMap();
 
 	/**
-	 * Constructor
-	 */
-	public DateToStringConverter()
-	{
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
-	 */
-	public DateToStringConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
-	 * @see wicket.util.convert.converters.AbstractConverter#setLocale(java.util.Locale)
-	 */
-	public void setLocale(Locale locale)
-	{
-		super.setLocale(locale);
-		dateFormat = null;
-	}
-
-	/**
-	 * @return Returns the dateFormat.
-	 */
-	public final DateFormat getDateFormat()
-	{
-		if (dateFormat == null)
-		{
-			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
-		}
-		return dateFormat;
-	}
-
-	/**
+	 * @param locale 
+	 * 			  The locale for this dateformat
 	 * @param dateFormat
 	 *            The numberFormat to set.
 	 */
-	public final void setDateFormat(final DateFormat dateFormat)
+	public final void setDateFormat(final Locale locale, final DateFormat dateFormat)
 	{
-		this.dateFormat = dateFormat;
+		dateFormats.put(locale,dateFormat);
 	}
 
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value,Locale locale)
 	{
-		final DateFormat dateFormat = getDateFormat();
+		final DateFormat dateFormat = getDateFormat(locale);
 		if (dateFormat != null)
 		{
 			return dateFormat.format(value);
@@ -94,8 +59,24 @@ public final class DateToStringConverter extends AbstractConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
+	/**
+	 * @param locale 
+	 * @return Returns the dateFormat.
+	 */
+	public final DateFormat getDateFormat(Locale locale)
+	{
+		DateFormat dateFormat = (DateFormat)dateFormats.get(locale);
+		if (dateFormat == null)
+		{
+			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+			dateFormats.put(locale, dateFormat);
+		}
+		return dateFormat;
+	}
+	
 	protected Class getTargetType()
 	{
 		return String.class;
 	}
+
 }

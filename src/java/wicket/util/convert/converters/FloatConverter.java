@@ -19,6 +19,8 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
+import wicket.util.convert.ITypeConverter;
+
 /**
  * Converts from Object to Float.
  * 
@@ -28,30 +30,17 @@ import java.util.Locale;
 public final class FloatConverter extends AbstractDecimalConverter
 {
 	/**
-	 * Constructor
+	 * The singleton instance for a float converter
 	 */
-	public FloatConverter()
-	{
-	}
-
+	public static final ITypeConverter INSTANCE = new FloatConverter();
+	
 	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public FloatConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
-				Float.MIN_VALUE, Float.MAX_VALUE);
+				Float.MIN_VALUE, Float.MAX_VALUE,locale);
 		return new Float(number.floatValue());
 	}
 

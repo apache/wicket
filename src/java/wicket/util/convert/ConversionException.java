@@ -36,6 +36,9 @@ public final class ConversionException extends RuntimeException
 	/** Pattern that was used for conversion. */
 	private Format format;
 
+	/** Locale that was used for conversion. */
+	private Locale locale;
+
 	/** The value that was tried to convert. */
 	private Object sourceValue;
 
@@ -95,13 +98,13 @@ public final class ConversionException extends RuntimeException
      */
     public final Locale getLocale()
     {
+		if (locale != null)
+		{
+			return locale;
+		}
     	if (converter != null)
         {
     		return converter.getLocale();
-        }
-        if (typeConverter != null)
-        {
-        	return typeConverter.getLocale();
         }
         return null;
     }
@@ -170,6 +173,19 @@ public final class ConversionException extends RuntimeException
 		return this;
 	}
 
+	/**
+	 * Sets the used locale.
+	 * 
+	 * @param locale
+	 *            the used locale.
+	 * @return This
+	 */
+	public final ConversionException setLocale(Locale locale)
+	{
+		this.locale = locale;
+		return this;
+	}
+	
 	/**
 	 * Sets the tried value.
 	 * 

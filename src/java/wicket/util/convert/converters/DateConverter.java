@@ -19,7 +19,9 @@ package wicket.util.convert.converters;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Converts from Object to Date.
@@ -28,63 +30,40 @@ import java.util.Locale;
  */
 public final class DateConverter extends AbstractConverter
 {
-	/** The date format to use. */
-	private DateFormat dateFormat;
+	/** The date format to use for the specific locales (used as the key)*/
+	private Map dateFormats = new HashMap();
 
 	/**
-	 * Constructor
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public DateConverter()
+	public Object convert(final Object value, Locale locale)
 	{
+        return parse(getDateFormat(locale), value);
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
-	 */
-	public DateConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-	 */
-	public Object convert(final Object value)
-	{
-        return parse(getDateFormat(), value);
-	}
-
-	/**
+	 * @param locale 
 	 * @return Returns the date format.
 	 */
-	public final DateFormat getDateFormat()
+	public final DateFormat getDateFormat(Locale locale)
 	{
+		DateFormat dateFormat = (DateFormat)dateFormats.get(locale);
 		if (dateFormat == null)
 		{
-			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
+			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+			dateFormats.put(locale, dateFormat);
 		}
 		return dateFormat;
 	}
 
 	/**
+	 * @param locale 
 	 * @param dateFormat
 	 *            The dateFormat to set.
 	 */
-	public void setDateFormat(final DateFormat dateFormat)
+	public void setDateFormat(final Locale locale, final DateFormat dateFormat)
 	{
-		this.dateFormat = dateFormat;
-	}
-
-	/**
-	 * @see wicket.util.convert.ILocalizable#setLocale(java.util.Locale)
-	 */
-	public void setLocale(final Locale locale)
-	{
-		super.setLocale(locale);
-		this.dateFormat = null;
+		this.dateFormats.put(locale,dateFormat);
 	}
 
 	/**

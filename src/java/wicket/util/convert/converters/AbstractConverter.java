@@ -23,7 +23,6 @@ import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.ITypeConverter;
-import wicket.util.convert.converters.AbstractConverter;
 
 /**
  * Base class for locale aware type converters.
@@ -32,48 +31,6 @@ import wicket.util.convert.converters.AbstractConverter;
  */
 public abstract class AbstractConverter implements ITypeConverter
 {
-	/** The current locale. */
-	private Locale locale = Locale.getDefault();
-
-	/**
-	 * Constructor
-	 */
-	public AbstractConverter()
-	{
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
-	 */
-	public AbstractConverter(final Locale locale)
-	{
-		setLocale(locale);
-	}
-
-	/**
-	 * gets the locale.
-	 * 
-	 * @return the locale
-	 */
-	public final Locale getLocale()
-	{
-		return locale;
-	}
-
-	/**
-	 * sets the locale.
-	 * 
-	 * @param locale
-	 *            the locale
-	 */
-	public void setLocale(Locale locale)
-	{
-		this.locale = locale;
-	}
-
 	/**
 	 * Parses a value using one of the java.util.text format classes.
 	 * 
@@ -93,7 +50,7 @@ public abstract class AbstractConverter implements ITypeConverter
 		if (position.getIndex() != stringValue.length())
 		{
 			throw newConversionException("Cannot parse '" + value + "' using format " + format,
-					value).setFormat(format);
+					value,null).setFormat(format);
 		}
 		return result;
 	}
@@ -107,10 +64,10 @@ public abstract class AbstractConverter implements ITypeConverter
 	 *            The value that didn't convert
 	 * @return The ConversionException
 	 */
-	protected ConversionException newConversionException(final String message, Object value)
+	protected ConversionException newConversionException(final String message, Object value, Locale locale)
 	{
 		return new ConversionException(message).setSourceValue(value)
-				.setTargetType(getTargetType()).setTypeConverter(this);
+				.setTargetType(getTargetType()).setTypeConverter(this).setLocale(locale);
 	}
 
 	/**

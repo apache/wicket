@@ -19,6 +19,8 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
+import wicket.util.convert.ITypeConverter;
+
 /**
  * Converts from Object to Short.
  * 
@@ -28,30 +30,17 @@ import java.util.Locale;
 public final class ShortConverter extends AbstractIntegerConverter
 {
 	/**
-	 * Constructor
+	 * The singleton instance for a short converter
 	 */
-	public ShortConverter()
-	{
-	}
-
+	public static final ITypeConverter INSTANCE = new ShortConverter();
+	
 	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public ShortConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
-				Short.MIN_VALUE, Short.MAX_VALUE);
+				Short.MIN_VALUE, Short.MAX_VALUE,locale);
 		return new Short(number.shortValue());
 	}
 

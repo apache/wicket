@@ -28,36 +28,14 @@ import java.util.Locale;
  */
 public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 {
-	/** Current format */
-	private NumberFormat numberFormat;
-
 	/**
-	 * Constructor
-	 */
-	public AbstractDecimalConverter()
-	{
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
-	 */
-	public AbstractDecimalConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
+	 * @param locale 
 	 * @return Returns the numberFormat.
 	 */
-	public final NumberFormat getNumberFormat()
+	public final NumberFormat getNumberFormat(Locale locale)
 	{
-		if (numberFormat == null)
-		{
-			numberFormat = DecimalFormat.getInstance(getLocale());
-		}
-		return numberFormat;
+		// TODO should we cache this on locale (some caching already happens in getInstance itself!
+		// Then we do know for sure that one instance of decimal format is thread safe
+		return  DecimalFormat.getInstance(locale);
 	}
 }
