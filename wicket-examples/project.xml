@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
-  <extend>../Wicket/project.xml</extend>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
   <currentVersion>1.0.0-rc1</currentVersion>
+  <organization>
+    <name>Wicket developers</name>
+    <url>http://wicket.sourceforge.net</url>
+    <logo>http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1</logo>
+  </organization>
   <package>wicket.examples</package>
   <inceptionYear>2004</inceptionYear>
   <description>Example for web framework Wicket.</description>
   <shortDescription>Examples for web framework Wicket.</shortDescription>
+  <url>http://wicket.sourceforge.net</url>
+  <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
+  <siteAddress>shell.sourceforge.net</siteAddress>
+  <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
+  <repository>
+    <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
+    <url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket</url>
+  </repository>
   <versions>
     <version>
       <id>0.9.15-beta</id>
@@ -36,6 +49,65 @@
       <tag>WICKET_R_1_0_0_RC1</tag>
     </version>
   </versions>
+  <mailingLists>
+    <mailingList>
+      <name>${pom.name} Dev List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} User List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-user</archive>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} CVS commit List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-autocvs</archive>
+    </mailingList>
+  </mailingLists>
+  <developers>
+    <developer>
+      <name>Jonathan Locke</name>
+      <id>jonathanlocke</id>
+      <email>jonathanlocke at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Christopher Turner</name>
+      <id>skipoles</id>
+      <email>skipoles at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Eelco Hillenius</name>
+      <id>eelco12</id>
+      <email>eelco12 at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Johan Compagner</name>
+      <id>joco01</id>
+      <email>joco01 at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Martijn Dashorst</name>
+      <id>dashorst</id>
+      <email>dashorst at users.sourceforge.net</email>
+    </developer>
+    <developer>
+      <name>Juergen Donnerstag</name>
+      <id>jdonnerstag</id>
+      <email>jdonnerstag at users.sourceforge.net</email>
+      <roles/>
+    </developer>
+    <developer>
+      <name>Gwyn Evans</name>
+      <id>gwynevans</id>
+      <email>gwynevans at users.sourceforge.net</email>
+      <roles/>
+    </developer>
+  </developers>
   <dependencies>
     <dependency>
       <groupId>wicket</groupId>
@@ -52,6 +124,93 @@
       <version>1.0.0-rc1</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>1.4</version>
+      <url>http://www.dom4j.org</url>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description/>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <url>http://www.junit.org</url>
+      <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Used for testing Wicket</wicket.description>
+        <war.bundle>false</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.8</version>
+      <url>http://logging.apache.org/log4j</url>
+      <properties>
+        <wicket.group>optional</wicket.group>
+        <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>ognl</groupId>
+      <artifactId>ognl</artifactId>
+      <version>2.6.7</version>
+      <url>http://www.ognl.org</url>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>Used for introspection.</wicket.description>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>servletapi</groupId>
+      <artifactId>servletapi</artifactId>
+      <version>2.3</version>
+      <jar>servletapi-2.3.jar</jar>
+      <properties>
+        <wicket.group>compile</wicket.group>
+        <wicket.description>Compile time only, is supplied by your application server.</wicket.description>
+        <war.bundle>false</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+      <version>1.3.3</version>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description/>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.0</version>
+      <url>http://jakarta.apache.org/commons/fileupload/</url>
+      <properties>
+        <wicket.group>optional</wicket.group>
+        <wicket.description>This library is required when you want to use the file upload component.</wicket.description>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+      <url>http://jakarta.apache.org/commons/logging/</url>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>This library enables us to give you the choice of logging toolkit (JDK, Log4j, etc.)</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
