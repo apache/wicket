@@ -76,7 +76,7 @@ public abstract class Loop extends WebMarkupContainer
 	/**
 	 * Renders this Loop (container).
 	 */
-	protected void onRender()
+	protected final void onRender()
 	{
 		// Ask parents for markup stream to use
 		final MarkupStream markupStream = findMarkupStream();
@@ -100,9 +100,7 @@ public abstract class Loop extends WebMarkupContainer
 				if (loopItem == null)
 				{
 					// Create loopItem for index i of the list
-					loopItem = newItem(i);
-
-				    onBeginPopulateItem(loopItem);
+					loopItem = new LoopItem(i);
 					populateItem(loopItem);
 
 					// Add item to loop
@@ -124,34 +122,12 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * Create a new LoopItem for loop item at index.
-	 * 
-	 * @param index
-	 * @return LoopItem
-	 */
-	protected LoopItem newItem(final int index)
-	{
-		return new LoopItem(index);
-	}
-
-	/**
 	 * Populate a given loopItem.
 	 * 
 	 * @param loopItem
 	 *            The listItem to populate
 	 */
 	protected abstract void populateItem(final LoopItem loopItem);
-
-	/**
-	 * Comes handy for ready made Loop based components which must implement
-	 * populateItem() but you don't want to loose compile time error checking 
-	 * reminding the user to implement abstract populateItem().
-	 * 
-	 * @param loopItem
-	 */
-	protected void onBeginPopulateItem(final LoopItem loopItem)
-	{
-	}
 
 	/**
 	 * Render a single loopItem.
