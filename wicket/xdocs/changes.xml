@@ -8,6 +8,18 @@
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">
+		Added constructors to TextField that take a class as the last argument.
+		TextFields constructed with a type like this are considered typed and 
+		will automatically have a type validator attached to them.  In addition, 
+		even if the field is not attached to a PropertyModel, conversions will 
+		be performed to/from the given type.  Also, changed invalid to 
+		handleInvalid() and added handleValid().  This allows updateModel() to 
+		simply focus on doing that.  Finally, worked on forminput to ensure 
+		validation works completely.  Renamed the horribly named 
+		DecimalValidator to IntegerValidator and used all of this to simplify 
+		the forminput example.
+	  </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       	Changed inheritance hierarchy of text form components and added an abstract base
       	class AbstractTextComponent.  Now PasswordTextField inherits from TextField and 
       	TextField inherits from AbstractTextComponent.  TextArea also inherits from 

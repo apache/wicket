@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.16 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -354,9 +354,17 @@ public abstract class FormComponent extends HtmlContainer
 
 	/**
 	 * Template method that can be implemented by form component subclass to
+	 * react when validation errors are cleared. This implementation is a noop.
+	 */
+	protected void handleValid()
+	{
+	}
+
+	/**
+	 * Template method that can be implemented by form component subclass to
 	 * react on validation errors. This implementation is a noop.
 	 */
-	protected void invalid()
+	protected void handleInvalid()
 	{
 	}
 }

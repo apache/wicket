@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Map;
 
@@ -111,7 +113,7 @@ public class TypeValidator extends AbstractValidator
 			}
 			catch (ConversionException e)
 			{
-				conversionError(value, component, e);
+				conversionError(component, value, e);
 			}
 		}
 	}
@@ -126,10 +128,10 @@ public class TypeValidator extends AbstractValidator
 	 * @param e
 	 *            the conversion exception
 	 */
-	protected void conversionError(final String input, final FormComponent component,
+	protected void conversionError(final FormComponent component, final String input,
 			final ConversionException e)
 	{
-		error(getResourceKey(component), messageModel(component, input, e), input, component);
+		error(component, resourceKey(component), messageModel(component, input, e), input);
 	}
 
 	/**
@@ -154,7 +156,11 @@ public class TypeValidator extends AbstractValidator
 			model.put("locale", locale);
 		}
 		model.put("exception", e.getMessage());
-		model.put("format", e.getFormat());
+        Format format = e.getFormat();
+        if (format instanceof SimpleDateFormat)
+        {
+    		model.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
+        }
 		return model;
 	}
 

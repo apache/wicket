@@ -93,7 +93,8 @@ public class LocalizerTest extends TestCase
 	{
 		settings.setUseDefaultOnMissingResource(true);
 		settings.setThrowExceptionOnMissingResource(false);
-		Assert.assertEquals("Wrapped key should be returned on no default", "??unknown.string??",
+
+        Assert.assertEquals("Wrapped key should be returned on no default", "[Warning: String resource for 'unknown.string' not found]",
 				localizer.getString("unknown.string", null, null, null, null, null));
 	}
 
@@ -106,7 +107,7 @@ public class LocalizerTest extends TestCase
 		settings.setUseDefaultOnMissingResource(false);
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
-				"??unknown.string??", localizer.getString("unknown.string", null, null, null, null,
+				"[Warning: String resource for 'unknown.string' not found]", localizer.getString("unknown.string", null, null, null, null,
 						"DEFAULT"));
 	}
 

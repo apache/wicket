@@ -31,7 +31,7 @@ import wicket.markup.ComponentTag;
  *
  * @author Jonathan Locke
  */
-public class PasswordTextField extends TextField
+public class PasswordTextField extends RequiredTextField
 {
     /** Log. */
     private static final Log log = LogFactory.getLog(PasswordTextField.class);

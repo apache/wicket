@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.2 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.forminput;
 
@@ -27,17 +26,14 @@ import java.util.Date;
 public final class TestInputObject implements Serializable
 {
 	private String stringProperty = "test";
-
 	private Integer integerProperty = new Integer(100);
-
 	private Double doubleProperty = new Double(20.5);
-
 	private Date dateProperty = new Date();
-
 	private Integer integerInRangeProperty = new Integer(50);
 
 	/**
 	 * Gets dateProperty.
+	 * 
 	 * @return dateProperty
 	 */
 	public Date getDateProperty()
@@ -47,7 +43,9 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Sets dateProperty.
-	 * @param dateProperty dateProperty
+	 * 
+	 * @param dateProperty
+	 *            dateProperty
 	 */
 	public void setDateProperty(Date dateProperty)
 	{
@@ -56,6 +54,7 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Gets doubleProperty.
+	 * 
 	 * @return doubleProperty
 	 */
 	public Double getDoubleProperty()
@@ -65,7 +64,9 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Sets doubleProperty.
-	 * @param doubleProperty doubleProperty
+	 * 
+	 * @param doubleProperty
+	 *            doubleProperty
 	 */
 	public void setDoubleProperty(Double doubleProperty)
 	{
@@ -74,6 +75,7 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Gets integerProperty.
+	 * 
 	 * @return integerProperty
 	 */
 	public Integer getIntegerProperty()
@@ -83,7 +85,9 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Sets integerProperty.
-	 * @param integerProperty integerProperty
+	 * 
+	 * @param integerProperty
+	 *            integerProperty
 	 */
 	public void setIntegerProperty(Integer integerProperty)
 	{
@@ -92,6 +96,7 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Gets stringProperty.
+	 * 
 	 * @return stringProperty
 	 */
 	public String getStringProperty()
@@ -101,7 +106,9 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Sets stringProperty.
-	 * @param stringProperty stringProperty
+	 * 
+	 * @param stringProperty
+	 *            stringProperty
 	 */
 	public void setStringProperty(String stringProperty)
 	{
@@ -110,6 +117,7 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Gets integerInRangeProperty.
+	 * 
 	 * @return integerInRangeProperty
 	 */
 	public Integer getIntegerInRangeProperty()
@@ -119,10 +127,22 @@ public final class TestInputObject implements Serializable
 
 	/**
 	 * Sets integerInRangeProperty.
-	 * @param integerInRangeProperty integerInRangeProperty
+	 * 
+	 * @param integerInRangeProperty
+	 *            integerInRangeProperty
 	 */
 	public void setIntegerInRangeProperty(Integer integerInRangeProperty)
 	{
 		this.integerInRangeProperty = integerInRangeProperty;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[TestInputObject stringProperty = '" + stringProperty + "', integerProperty = "
+				+ integerProperty + ", doubleProperty = " + doubleProperty + ", dateProperty = "
+				+ dateProperty + ", integerInRangeProperty = " + integerInRangeProperty + "]";
 	}
 }

@@ -67,8 +67,6 @@ public abstract class AbstractTextComponent extends FormComponent
 	 */
 	public void updateModel()
 	{
-        // Component validated, so clear the input
-		invalidInput = null; 
 		setModelObject(getRequestString());
 	}
     
@@ -81,13 +79,19 @@ public abstract class AbstractTextComponent extends FormComponent
     }
 
 	/**
-	 * Handle a validation error.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#invalid()
+	 * @see wicket.markup.html.form.FormComponent#handleInvalid()
 	 */
-	protected void invalid()
+	protected void handleInvalid()
 	{
 		// Store the user input for form repopulation
 		invalidInput = getRequestString();
 	}
+ 
+    /**
+     * @see wicket.markup.html.form.FormComponent#handleValid()
+     */
+    protected void handleValid()
+    {
+        invalidInput = null;     	
+    }
 }

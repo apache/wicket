@@ -107,7 +107,7 @@ public class LengthValidator extends AbstractValidator
 		// Check length
 		if ((checkMin && value.length() < min) || (checkMax && value.length() > max))
 		{
-			error(value, component);
+            error(component, value);
 		}
 	}
 
@@ -164,6 +164,6 @@ public class LengthValidator extends AbstractValidator
 			list.add("max = " + max);
 		}
 
-		return list.toString();
+		return "[LengthValidator " + list.toString() + "]";
 	}
 }
