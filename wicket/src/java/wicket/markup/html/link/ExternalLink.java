@@ -88,5 +88,9 @@ public class ExternalLink extends HtmlContainer
         {
             replaceComponentTagBody(markupStream, openTag, label);
         }
+        else
+        {
+            super.handleComponentTagBody(markupStream, openTag);
+        }
     }
 }

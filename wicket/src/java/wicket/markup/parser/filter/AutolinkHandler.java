@@ -38,7 +38,7 @@ import wicket.markup.parser.IMarkupFilter;
  * true, thus enabling autolinking. An open-close &lt;wicket:link/&gt tag will
  * change the autolink status until the end of the markup document or the next
  * &lt;wicket:link&gt; tag respectively. &lt;wicket:link&gt; regions may be
- * nested as well.
+ * nested.
  * 
  * @author Juergen Donnerstag
  */
@@ -102,13 +102,12 @@ public class AutolinkHandler implements IMarkupFilter
 		}
 
 		// Only xml tags not already identified as Wicket components will be
-		// considered
-		// for autolinking. This is because it is assumed that Wicket components
-		// like images, or all other kind of Wicket Links will handle it
+		// considered for autolinking. This is because it is assumed that Wicket 
+		// components like images or all other kind of Wicket Links will handle it
 		// themselves.
 		final String href = tag.getAttributes().getString("href");
 		if ((autolinking == true) && (tag.getComponentName() == null) && (href != null)
-				&& (href.endsWith(".html") || (href.indexOf(".html?") != -1)) && !href.startsWith("/")
+				&& (href.endsWith(".html") || (href.indexOf(".html?") != -1)) 
 				&& (href.indexOf(":") == -1))
 		{
 			// Mark it as autolink enabled
