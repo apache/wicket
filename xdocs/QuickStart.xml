@@ -14,7 +14,7 @@
 			<p>
 				This document and project assume you have no special plugins or application servers
 				installed on your machine. In the
-				<a href="#Further_development">final section</a>
+				<a href="#Next_Steps">final section</a>
 				of this document some hints are given to speed up your development even further.
 			</p>
 			<p>
@@ -49,12 +49,12 @@
 				</ul>
 				<p>
 					At the
-					<a href="#Further_development">end of this document</a>
-					we give some options for further development.
+					<a href="#Next_Steps">end of this document</a>
+					we suggest some next steps to take.
 				</p>
 			</subsection>
 		</section>
-		<section name="Setting up">
+		<section name="Setting Up">
 			<subsection name="Prerequisites">
 				<p>We assume you have the following already installed:</p>
 				<ul>
@@ -82,7 +82,7 @@
 					assumptions.
 				</p>
 			</subsection>
-			<subsection name="The quickstart project">
+			<subsection name="The QuickStart Project">
 				<p>
 					Next you need to download the quickstart distribution project from our
 					sourceforge site.
@@ -137,7 +137,7 @@
 					<li>Leave all other options on their default values and click 'Finish'.</li>
 				</ul>
 			</subsection>
-			<subsection name="Running the application">
+			<subsection name="Running the Application">
 				<p>
 					The application has an internal webserver (
 					<a href="http://jetty.mortbay.org">Jetty</a>
@@ -164,7 +164,7 @@
 				</ul>
 			</subsection>
 		</section>
-		<section name="Further development">
+		<section name="Next Steps">
 			<p>This section gives some pointers on where to go now.</p>
 			<ul>
 				<li>
@@ -185,7 +185,7 @@
 					plugin to ease your development
 				</li>
 			</ul>
-			<subsection name="Jetty configuration">
+			<subsection name="Jetty Configuration">
 				<p>The Jetty configuration file is located in the project directory:</p>
 				<blockquote>src/main/resources/jetty-config.xml</blockquote>
 				<p>
@@ -208,7 +208,7 @@
 					class.
 				</p>
 			</subsection>
-			<subsection name="Customizing the application">
+			<subsection name="Customizing the Application">
 				<p>
 					The main page definitions can be found in the
 					<code>src/main/java/Index.html</code>
@@ -217,7 +217,7 @@
 					class.
 				</p>
 			</subsection>
-			<subsection name="Other application servers">
+			<subsection name="Other Application Servers">
 				<p>
 					Even though this project is aimed at Jetty, it is not prohibited to develop
 					using other application servers. If you have another setup, please leave a

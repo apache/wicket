@@ -159,8 +159,16 @@ div .source,blockquote {
 
 blockquote {
 	font-family: 'Lucida Sans', 'Helvetica', 'Sans serif', 'sans';
-	font-style: italic;
 	line-height: 1.8em;
+}
+
+div.dottedbox {
+	border: 1px dotted #bbb;
+	background: #F5F5F5;
+	padding-left: 16px;
+	padding-right: 8px;
+	font-family: 'Lucida Sans', 'Helvetica', 'Sans serif', 'sans';
+	line-height: 1.4em;
 }
 
 blockquote code {
@@ -197,6 +205,11 @@ tr.none {
 a.none {
 	background: transparent;
 	padding-right: 0px;
+}
+
+a.logoLink {
+	background: transparent;
+	padding-right: 20px;
 }
 
 a.externalLink,a.externalLink:link,a.externalLink:visited,a.externalLink:active,a.externalLink:hover
