@@ -351,10 +351,14 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @param value
 	 *            The value
+	 * @return previous value associated with specified key, or null if there
+	 *         was no mapping for key. A null return can also indicate that the
+	 *         map previously associated null with the specified key, if the
+	 *         implementation supports null values.
 	 */
-	public void put(final String key, final boolean value)
+	public Object put(final String key, final boolean value)
 	{
-		put(key, Boolean.toString(value));
+		return put(key, Boolean.toString(value));
 	}
 
 	/**
@@ -364,10 +368,14 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @param value
 	 *            The value
+	 * @return previous value associated with specified key, or null if there
+	 *         was no mapping for key. A null return can also indicate that the
+	 *         map previously associated null with the specified key, if the
+	 *         implementation supports null values.
 	 */
-	public void put(final String key, final int value)
+	public Object put(final String key, final int value)
 	{
-		put(key, Integer.toString(value));
+		return put(key, Integer.toString(value));
 	}
 
 	/**
@@ -377,10 +385,14 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @param value
 	 *            The value
+	 * @return previous value associated with specified key, or null if there
+	 *         was no mapping for key. A null return can also indicate that the
+	 *         map previously associated null with the specified key, if the
+	 *         implementation supports null values.
 	 */
-	public void put(final String key, final String value)
+	public Object put(final String key, final String value)
 	{
-		attributes.put(key, value);
+		return attributes.put(key, value);
 	}
 
 	/**
@@ -390,10 +402,14 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @param value
 	 *            The value
+	 * @return previous value associated with specified key, or null if there
+	 *         was no mapping for key. A null return can also indicate that the
+	 *         map previously associated null with the specified key, if the
+	 *         implementation supports null values.
 	 */
-	public void put(final String key, final StringValue value)
+	public Object put(final String key, final StringValue value)
 	{
-		attributes.put(key, value);
+		return attributes.put(key, value);
 	}
 
 	/**
