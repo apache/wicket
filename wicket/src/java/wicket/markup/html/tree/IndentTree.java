@@ -30,23 +30,19 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import wicket.AttributeModifier;
-import wicket.Component;
-import wicket.IResourceListener;
-import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.AbstractImage;
 import wicket.markup.html.image.Image;
+import wicket.markup.html.image.resource.ImageResource;
+import wicket.markup.html.image.resource.StaticImageResource;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.file.Path;
-import wicket.util.lang.Classes;
 import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceLocator;
 
 /**
  * A Tree that renders as a flat (not-nested) list, using spacers for indentation and
@@ -91,31 +87,21 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	/** name of the node image component; value = 'nodeImage'. */
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
-	/** a blank image for junctions. */
-	private static final LocalImage JUNCTION_IMG_BLANK =
-		new LocalImage(JUNCTION_IMAGE_NAME, "blank.gif");
+	/** static image resource from this package; references image 'blank.gif'. */
+	private static final StaticImageResource IMG_BLANK = StaticImageResource.get(
+			IndentTree.class.getClassLoader(), IndentTree.class.getPackage(),
+			"blank.gif", null, null);
 
-	/** an image that draws a '+'. */
-	private static final LocalImage JUNCTION_IMG_PLUS =
-		new LocalImage(JUNCTION_IMAGE_NAME, "plus.gif");
+	/** static image resource from this package; references image 'minus.gif'. */
+	private static final StaticImageResource IMG_MINUS = StaticImageResource.get(
+			IndentTree.class.getClassLoader(), IndentTree.class.getPackage(),
+			"minus.gif", null, null);
 
-	/** an image that draws a '-'. */
-	private static final LocalImage JUNCTION_IMG_MINUS =
-		new LocalImage(JUNCTION_IMAGE_NAME, "minus.gif");
-
-	/** a blank image for nodes. */
-	private static final LocalImage NODE_IMG_BLANK =
-		new LocalImage(NODE_IMAGE_NAME, "blank.gif");
-
-	// set scope of images
-	static
-	{
-		JUNCTION_IMG_BLANK.setSharing(Component.APPLICATION_SHARED);
-		JUNCTION_IMG_PLUS.setSharing(Component.APPLICATION_SHARED);
-		JUNCTION_IMG_MINUS.setSharing(Component.APPLICATION_SHARED);
-		NODE_IMG_BLANK.setSharing(Component.APPLICATION_SHARED);
-	}
-
+	/** static image resource from this package; references image 'plus.gif'. */
+	private static final StaticImageResource IMG_PLUS = StaticImageResource.get(
+			IndentTree.class.getClassLoader(), IndentTree.class.getPackage(),
+			"plus.gif", null, null);
+	
 	/** list with tree paths. */
 	private List treePathList;
 
@@ -206,31 +192,36 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 		{
 			// we want the image to be dynamically, yet resolving to a application
 			// static image.
-			IModel imgModel = new Model()
+			ImageResource imgResource = new ImageResource()
 			{
-				public Object getObject()
+				protected IResource getResource()
 				{
-					final String url;
 					if(isExpanded(node))
 					{
-						url = getRequestCycle().urlFor(
-								JUNCTION_IMG_MINUS, IResourceListener.class);
+						return IMG_MINUS.getResource();
 					}
 					else
 					{
-						url = getRequestCycle().urlFor(
-								JUNCTION_IMG_PLUS, IResourceListener.class);
+						return IMG_PLUS.getResource();
 					}
-					return url;
+				}
+
+				/**
+				 * @see wicket.Component#getPath()
+				 */
+				public String getPath()
+				{
+					reset(); // force getting the resource on each request; as we
+					// are using static image resources, this is efficient
+					return super.getPath();
 				}
 			};
-			LocalImage img = new LocalImage(JUNCTION_IMAGE_NAME, imgModel);
+			Image img = new Image(JUNCTION_IMAGE_NAME, imgResource);
 			return img;
 		}
 		else
 		{
-			String url = getRequestCycle().urlFor(JUNCTION_IMG_BLANK, IResourceListener.class);
-			LocalImage img = new LocalImage(JUNCTION_IMAGE_NAME, url);
+			Image img = new Image(JUNCTION_IMAGE_NAME, IMG_BLANK);
 			return img;
 		}
 	}
@@ -287,8 +278,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 */
 	protected AbstractImage getNodeImage(final DefaultMutableTreeNode node)
 	{
-		String url = getRequestCycle().urlFor(NODE_IMG_BLANK, IResourceListener.class);
-		LocalImage img = new LocalImage(JUNCTION_IMAGE_NAME, url);
+		Image img = new Image(JUNCTION_IMAGE_NAME, IMG_BLANK);
 		return img;
 	}
 
@@ -565,50 +555,5 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 		// just totally rebuild the tree paths structure
 		this.treePathList.clear();
 		addNodesToTreePathList();
-	}
-
-	/**
-	 * Image that loads from this package (instead of Image's page)
-	 * without locale, style etc.
-	 */
-	private static final class LocalImage extends Image
-	{
-		/**
-		 * Construct.
-		 * @param name component name
-		 * @param object model
-		 */
-		public LocalImage(String name, Serializable object)
-		{
-			super(name, object);
-		}
-
-	    /**
-	     * @return Gets the image resource for the component.
-	     */
-	    protected IResource getResource()
-	    {
-	    	final String imageResource = getModelObjectAsString();
-			final String path = Classes.packageName(IndentTree.class) + "." + imageResource;
-	        return ResourceLocator.locate
-	        (
-	            new Path(),
-	            IndentTree.class.getClassLoader(),
-	            path,
-	            null,
-	            null,
-	            null
-	        );
-	    }
-
-	    /**
-	     * @see wicket.Component#onComponentTag(ComponentTag)
-	     */
-	    protected void onComponentTag(final ComponentTag tag)
-	    {
-	        checkComponentTag(tag, "img");
-	        final String url = getModelObjectAsString();
-			tag.put("src", url.replaceAll("&", "&amp;"));
-	    }
 	}
 }

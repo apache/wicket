@@ -27,8 +27,6 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Component;
-import wicket.IResourceListener;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.AbstractImage;
 import wicket.markup.html.image.Image;
@@ -43,23 +41,6 @@ public class MyTree extends IndentTree
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
-
-	/** node image. */
-	private static final LocalImage IMG_NODE = new LocalImage(NODE_IMAGE_NAME, "node.gif");
-
-	/** folder image. */
-	private static final LocalImage IMG_FOLDER = new LocalImage(NODE_IMAGE_NAME, "folder.gif");
-
-	/** open folder image. */
-	private static final LocalImage IMG_FOLDER_OPEN = new LocalImage(NODE_IMAGE_NAME, "folderopen.gif");
-
-	// set scope of images
-	static
-	{
-		IMG_NODE.setSharing(Component.APPLICATION_SHARED);
-		IMG_FOLDER.setSharing(Component.APPLICATION_SHARED);
-		IMG_FOLDER_OPEN.setSharing(Component.APPLICATION_SHARED);
-	}
 
 	/**
 	 * Construct.
@@ -96,22 +77,19 @@ public class MyTree extends IndentTree
 	{
 		if (node.isLeaf())
 		{
-			String url = getRequestCycle().urlFor(IMG_NODE, IResourceListener.class);
-			LocalImage img = new LocalImage(NODE_IMAGE_NAME, url);
+			Image img = new Image(NODE_IMAGE_NAME, "node.gif");
 			return img;
 		}
 		else
 		{
 			if (isExpanded(node))
 			{
-				String url= getRequestCycle().urlFor(IMG_FOLDER_OPEN, IResourceListener.class);
-				LocalImage img = new LocalImage(NODE_IMAGE_NAME, url);
+				Image img = new Image(NODE_IMAGE_NAME, "folderopen.gif");
 				return img;
 			}
 			else
 			{
-				String url = getRequestCycle().urlFor(IMG_FOLDER, IResourceListener.class);
-				LocalImage img = new LocalImage(NODE_IMAGE_NAME, url);
+				Image img = new Image(NODE_IMAGE_NAME, "folder.gif");
 				return img;
 			}
 		}
