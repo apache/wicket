@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="MAVEN_REPO/wicket/jars/wicket-0.9.15-beta.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.5.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/concurrent/jars/concurrent-1.3.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/org.mortbay.jetty-4.2.20.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/tomcat/jars/jasper-runtime-4.1.30.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/tomcat/jars/jasper-compiler-4.1.30.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
