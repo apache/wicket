@@ -8,6 +8,20 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1"> 
+      <action type="update" dev="Jonathan Locke" issue="">
+      Final checkin for RC1.  Changed initModel in Component to search the whole parent
+      hierarchy for CompoundModels.  Added logic that allows Components to know if they
+      are the root model or a child sharing the parent's compound model.  This allowed
+      me to remove getRootModelObject() and incorporate the logic necessary to get the
+      right model directly into getModelObject(), which now always works.  It also made
+      it possible to make replication of objects using compound models vastly more 
+      efficient since Components that inherit models are now detected and nulled out in
+      detachModel().  When the Component is deserialized, the model will be null and it
+      will be initialied via initModel() when needed as it originally was.  Made changes
+      to Images and ImageButtons so that they search for models differently (as a last
+      resort, actually).  This means they can be used with CompoundModels like any other
+      Component, although that use-case should be rare.
+      </action>
       <action type="fix" dev="Eelco Hillenius" issue="1160518">
         Support CheckBox / RadioChoice server-side actions.
       </action>

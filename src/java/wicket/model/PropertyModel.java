@@ -124,11 +124,11 @@ public class PropertyModel extends AbstractPropertyModel
 	 * @param expression
 	 *            Ognl expression for property access
 	 * @param propertyType
-	 *            the type to be used for conversion instead of the type that is
+	 *            The type to be used for conversion instead of the type that is
 	 *            figured out by Ognl. This can be especially usefull for when
 	 *            you have a generic property (like Serializable myProp) that
 	 *            you want to be converted to a narrower type (e.g. an Integer).
-	 *            Ognl sees an incomming string being compatible with the target
+	 *            Ognl sees an incoming string being compatible with the target
 	 *            property, and will then bypass the converter. Hence, to force
 	 *            myProp being converted to and from and integer, propertyType
 	 *            should be set to Integer.

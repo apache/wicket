@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,6 +26,9 @@ import wicket.markup.html.image.resource.LocalizedImageResource;
 
 /**
  * A button which renders itself as an image button resource.
+ * <p>
+ * For details of how ImageButtons load, generate and manage images, see
+ * {@link LocalizedImageResource}.
  * 
  * @author Jonathan Locke
  */

@@ -24,10 +24,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.WicketTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.markup.WicketTag;
 import wicket.markup.parser.XmlTag;
+import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
 import wicket.util.convert.IConverter;
@@ -104,6 +105,9 @@ public abstract class Component implements Serializable
 
 	/** Visibility boolean */
 	private static final byte FLAG_VISIBLE = 0x01;
+
+	/** Flag for Component holding root compound model */
+	private static final byte FLAG_HAS_ROOT_MODEL = 0x08;
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
@@ -409,7 +413,14 @@ public abstract class Component implements Serializable
 	 */
 	public final Object getModelLock()
 	{
-		return model != null ? model : new Object();
+		// Use model object as lock
+		final IModel model = getModel();
+		if (model == null)
+		{
+			// If no model object, then provide no synchronization
+			return new Object();
+		}
+		return model;
 	}
 
 	/**
@@ -423,6 +434,15 @@ public abstract class Component implements Serializable
 		final IModel model = getModel();
 		if (model != null)
 		{
+			// If this component has the root model for a compound model
+			if (getFlag(FLAG_HAS_ROOT_MODEL))
+			{
+				// we need to return the root model and not a property of the
+				// model
+				return getRootModel(model);
+			}
+
+			// Get model value for this component
 			return model.getObject(this);
 		}
 		else
@@ -561,14 +581,6 @@ public abstract class Component implements Serializable
 	public final Response getResponse()
 	{
 		return getRequestCycle().getResponse();
-	}
-
-	/**
-	 * @return The root model (innermost nested model) for this component
-	 */
-	public final Object getRootModelObject()
-	{
-		return getRootModel(getModel());
 	}
 
 	/**
@@ -879,6 +891,13 @@ public abstract class Component implements Serializable
 	 */
 	public final void setModel(final IModel model)
 	{
+		// If a compound model is explicitly set on this component
+		if (model instanceof CompoundPropertyModel)
+		{
+			// we need to remember this for getModelObject()
+			setFlag(FLAG_HAS_ROOT_MODEL, true);
+		}
+
 		// Detach current model
 		if (this.model != null)
 		{
@@ -1094,9 +1113,19 @@ public abstract class Component implements Serializable
 	 */
 	protected void detachModel()
 	{
-		if (model != null)
+		// If the model is compound and it's not the root model, then it can
+		// be reconstituted via initModel() after replication
+		if (model instanceof CompoundPropertyModel && !getFlag(FLAG_HAS_ROOT_MODEL))
 		{
-			model.detach();
+			// Get rid of model which can be lazy-initialized again
+			this.model = null;
+		}
+		else
+		{
+			if (model != null)
+			{
+				model.detach();
+			}
 		}
 	}
 
@@ -1149,11 +1178,18 @@ public abstract class Component implements Serializable
 	 */
 	protected IModel initModel()
 	{
-		final IModel model = getPage().getModel();
-		if (model != null)
+		// Search parents for CompoundPropertyModel
+		for (Component current = getParent(); current != null; current = current.getParent())
 		{
-			return model;
+			// Get model
+			final IModel model = current.getModel();
+			if (model instanceof CompoundPropertyModel)
+			{
+				return model;
+			}
 		}
+		
+		// No model for this component!
 		return null;
 	}
 
