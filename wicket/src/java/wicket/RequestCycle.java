@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
+import wicket.util.string.Strings;
 
 /**
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
@@ -507,54 +508,64 @@ public abstract class RequestCycle
 	private final void onRuntimeException(final Page page, final RuntimeException e)
 			throws ServletException
 	{
-		try
-		{
-			// If application doesn't want debug info showing up for users
-			ApplicationSettings settings = application.getSettings();
-			if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
-			{
-				if (settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
-				{
-					// use internal error page
-					setResponsePage(session.getPageFactory(page).newPage(
-							application.getPages().getInternalErrorPage()));
-				}
-				else
-				{
-					// otherwise show full details
-					setResponsePage(new ExceptionErrorPage(e, getResponsePage()));
-				}
-
-				// We generally want to redirect the response because we were
-				// in the middle of rendering and the page may end up looking
-				// like spaghetti otherwise
-				redirectTo(getResponsePage());
-			}
-		}
-		catch (RuntimeException ignored)
-		{
-			// We ignore any problems trying to render the exception display
-			// page because we are just going to rethrow the exception anyway
-			// and the original problem will be displayed on the console by
-			// the container. It's better this way because users of the
-			// framework will not want to be distracted by any internal problems
-			// rendering a runtime exception error display page.
-		}
+		log.error("Unexpected runtime exception [page = " + page + "]", e);
 
 		// Reset page for re-rendering after exception
-		final Page currentPage = getResponsePage();
-
-		// Could be null when it expired
-		if (currentPage != null)
+		if (page != null)
 		{
-			currentPage.resetMarkupStreams();
+			page.resetMarkupStreams();
 		}
 
-		// DON'T Rethrow error for console / container because then we see the
-		// standard error page and we should see the wicket error page
-		// throw new ServletException("Wicket could not render page: " +
-		// Strings.toString(e), e);
-		log.error("Rendering exception", e);
+		// If the page we failed to render is an error page
+		if (page != null && page.isErrorPage())
+		{
+			// give up while we're ahead!
+			throw new ServletException("Internal Error: Could not render error page " + page, e);
+		}
+		else
+		{
+			try
+			{
+				redirectToExceptionErrorPage(page, e);
+			}
+			catch (RuntimeException e2)
+			{
+				throw new ServletException(
+						"Internal Error: Could not redirect to exception error page.  Was trying to display exception for page "
+								+ page + ":\n" + Strings.toString(e), e2);
+			}
+		}
+	}
+
+	/**
+	 * @param page
+	 *            The page that went wrong
+	 * @param e
+	 *            The exception that was thrown
+	 */
+	private void redirectToExceptionErrorPage(final Page page, final RuntimeException e)
+	{
+		// If application doesn't want debug info showing up for users
+		final ApplicationSettings settings = application.getSettings();
+		if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
+		{
+			if (settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
+			{
+				// Show internal error page
+				setResponsePage(session.getPageFactory(page).newPage(
+						application.getPages().getInternalErrorPage()));
+			}
+			else
+			{
+				// Show full details
+				setResponsePage(new ExceptionErrorPage(e, getResponsePage()));
+			}
+
+			// We generally want to redirect the response because we
+			// were in the middle of rendering and the page may end up
+			// looking like spaghetti otherwise
+			redirectTo(getResponsePage());
+		}
 	}
 
 	/**

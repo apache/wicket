@@ -88,4 +88,12 @@ public class ExceptionErrorPage extends WebPage
 		    add(new Label("componentTree", ""));
 		}
 	}
+	
+	/**
+	 * @see wicket.Page#isErrorPage()
+	 */
+	public boolean isErrorPage()
+	{
+		return true;
+	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,18 +15,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.protocol.http;
+package wicket.markup.html;
 
 import wicket.Resource;
 import wicket.util.resource.IResourceStream;
 
 /**
- * A resource is something that implements IResourceListener.
+ * Base class for web resources. See the base class {@link wicket.Resource}for
+ * details on resources in general, including how they can be shared in an
+ * application.
  * 
  * @author Jonathan Locke
  */
 public abstract class WebResource extends Resource
-{	
+{
 	/**
 	 * @see Resource#getResourceStream()
 	 */

@@ -8,6 +8,17 @@
   </properties>
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	
+      <action type="update" dev="Jonathan Locke" issue="">
+      Fixed problem where error pages failing could cause recursive redirection.
+      In doing this, added Page.isErrorPage() method that returns false by default.
+      Error pages override this to let RequestCycle know when a recursive failure
+      is happening.
+	  </action>
+      <action type="update" dev="Jonathan Locke" issue="">      
+      Moved WebResource from http protocol package to markup.html package, which
+      seems more appropriate since it's used in web markup by ImageResource which
+      is in markup.html.image.resource.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1175835">
       Fixed shared resource localization problem manifested in forminput example.
       Image resources are now correctly shared under a URL that includes locale
