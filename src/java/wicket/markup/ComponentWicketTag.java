@@ -57,9 +57,7 @@ public final class ComponentWicketTag extends ComponentTag
 	}
 
 	/**
-	 * True, if tag name equals 'wicket:component'
-	 * 
-	 * @return true, if tag name equals wicket:component
+	 * @return True, if tag name equals 'wicket:component'
 	 */
 	public final boolean isComponentTag()
 	{
@@ -67,9 +65,7 @@ public final class ComponentWicketTag extends ComponentTag
 	}
 
 	/**
-	 * True, if tag name equals 'wicket:link'
-	 * 
-	 * @return true, if tag name equals wicket:link
+	 * @return True, if tag name equals 'wicket:link'
 	 */
 	public final boolean isLinkTag()
 	{
@@ -77,9 +73,7 @@ public final class ComponentWicketTag extends ComponentTag
 	}
 
 	/**
-	 * True, if tag name equals 'wicket:param'.
-	 * 
-	 * @return true, if tag name equals wicket:param
+	 * @return True, if tag name equals 'wicket:param'
 	 */
 	public final boolean isParamTag()
 	{
@@ -87,13 +81,27 @@ public final class ComponentWicketTag extends ComponentTag
 	}
 
 	/**
-	 * True, if tag name equals 'wicket:remove'
-	 * 
-	 * @return true, if &lt;wicket:region name=remove&gt;
+	 * @return True, if tag name equals 'wicket:remove'
 	 */
 	public final boolean isRemoveTag()
 	{
 		return "remove".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True, if tag name equals 'wicket:child'
+	 */
+	public final boolean isChildTag()
+	{
+		return "child".equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True, if tag name equals 'wicket:extend'
+	 */
+	public final boolean isExtendTag()
+	{
+		return "extend".equalsIgnoreCase(getName());
 	}
 
 	/**

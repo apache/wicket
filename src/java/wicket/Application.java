@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.markup.MarkupInheritanceResolver;
 import wicket.markup.MarkupParser;
 import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.encryption.ICrypt;
@@ -96,6 +97,7 @@ public abstract class Application
 
 		// Install default component resolvers
 		componentResolvers.add(new WicketTagComponentResolver());
+		componentResolvers.add(new MarkupInheritanceResolver());	
 	}
 
 	/**

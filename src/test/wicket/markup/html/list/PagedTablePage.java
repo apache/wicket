@@ -56,7 +56,7 @@ public class PagedTablePage extends WebPage
 		};
 
 		add(table);
-		PageableListViewNavigation navigation = new PageableListViewNavigation("navigation", table);
+ 		PageableListViewNavigation navigation = new PageableListViewNavigation("navigation", table);
 		add(navigation);
 	}
 }
