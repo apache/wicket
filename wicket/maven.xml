@@ -1,0 +1,66 @@
+<project default="jar:jar"
+  xmlns:j="jelly:core"
+  xmlns:u="jelly:util"
+  xmlns:ant="jelly:ant"
+  xmlns:maven="jelly:maven">
+  
+<postGoal name="dist:prepare-bin-filesystem" >
+	<attainGoal name="announcement"/>
+    <ant:mkdir dir="${maven.dist.bin.assembly.dir}/lib" />
+	<ant:mkdir dir="${maven.dist.bin.assembly.dir}/licenses" />
+	<ant:mkdir dir="${maven.dist.bin.assembly.dir}/sample" />
+    
+    <j:forEach var="lib" items="${pom.artifacts}">
+		<j:set var="dep" value="${lib.dependency}" />
+		<j:if test="${dep.type=='jar'}">
+			<j:choose>
+				<j:when test="${dep.getProperty('endorsed')}">
+					<ant:copy todir="${maven.dist.bin.assembly.dir}/lib/endorsed" file="${lib.path}" />
+				</j:when>
+				<j:otherwise>
+					<ant:copy todir="${maven.dist.bin.assembly.dir}/lib" file="${lib.path}" />
+				</j:otherwise>
+			</j:choose>
+		</j:if>
+	</j:forEach>
+
+	<ant:copy todir="${maven.dist.bin.assembly.dir}/sample">
+		<fileset dir="sample">
+			<include name="**/*"/>
+		</fileset>
+	</ant:copy>
+
+	<ant:copy todir="${maven.dist.bin.assembly.dir}/licenses">
+		<fileset dir="licenses">
+			<include name="**/*"/>
+		</fileset>
+	</ant:copy>
+
+	<ant:copy todir="${maven.dist.bin.assembly.dir}/src">
+		<fileset dir="src">
+			<include name="**/*"/>
+		</fileset>
+	</ant:copy>
+
+	<ant:copy todir="${maven.dist.bin.assembly.dir}/test">
+		<fileset dir="test">
+			<include name="**/*"/>
+		</fileset>
+	</ant:copy>
+
+	<ant:copy todir="${maven.dist.bin.assembly.dir}/xdocs">
+		<fileset dir="xdocs">
+			<include name="**/*"/>
+		</fileset>
+	</ant:copy>
+
+	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="project.xml" />
+	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="project.properties" />
+	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="maven.xml" />
+	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="build.xml" />
+	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="LICENSE_AGREEMENT.txt" />
+<!--	<ant:copy todir="${maven.dist.bin.assembly.dir}" file="wicket-checkstyle.xml" /> -->
+	<ant:copy tofile="${maven.dist.bin.assembly.dir}/release-${pom.currentVersion}.txt" file="${maven.announcement.file}"/>
+</postGoal>
+
+</project>
