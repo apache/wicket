@@ -20,10 +20,11 @@ package wicket.util.parse.metapattern;
 
 /**
  * Thrown if a group is not bound.
- * @author Jonathan Locke W. Locke
+ * 
+ * @author Jonathan Locke
  */
 public final class GroupNotBoundException extends RuntimeException
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 681033790368249415L;
 

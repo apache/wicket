@@ -21,16 +21,20 @@ package wicket.util.parse.metapattern;
 import java.util.regex.Matcher;
 
 /**
- * A Group that captures integers (positive and negative whole numbers).
- * @author Jonathan Locke W. Locke
+ * A Group that captures integer values (positive and negative whole 
+ * numbers, not Java ints).
+ * 
+ * @author Jonathan Locke
  */
 public final class IntegerGroup extends Group
-{ // TODO finalize javadoc
-    /** the radix. */
+{
+    /** The radix to use when converting Strings captured by this group. */
     private final int radix;
 
     /**
-     * Construct.
+     * Constructs an IntegerGroup that parses Strings that match the 
+     * INTEGER pattern in base 10.
+     * @see MetaPattern#INTEGER
      */
     public IntegerGroup()
     {
@@ -38,8 +42,9 @@ public final class IntegerGroup extends Group
     }
 
     /**
-     * Construct.
-     * @param pattern
+     * Constructs an IntegerGroup that parses Strings that match the 
+     * given pattern in base 10.
+     * @param pattern The capturing pattern
      */
     public IntegerGroup(final MetaPattern pattern)
     {
@@ -47,9 +52,10 @@ public final class IntegerGroup extends Group
     }
 
     /**
-     * Construct.
-     * @param pattern
-     * @param radix
+     * Constructs an IntegerGroup that parses Strings that match the 
+     * given pattern in the given radix.
+     * @param pattern The capturing pattern
+     * @param radix The radix to use when parsing captured Strings
      */
     public IntegerGroup(final MetaPattern pattern, final int radix)
     {
@@ -58,9 +64,10 @@ public final class IntegerGroup extends Group
     }
 
     /**
-     * Gets an int.
-     * @param matcher the matcher
-     * @return the int
+     * Gets an int by parsing the String matched by this capturing group.
+     * The IntegerGroup's radix is used in the conversion.
+     * @param matcher The matcher
+     * @return The parsed int value
      */
     public int getInt(final Matcher matcher)
     {
@@ -68,9 +75,11 @@ public final class IntegerGroup extends Group
     }
 
     /**
-     * Gets a long.
-     * @param matcher the matcher
-     * @return the long
+     * Gets a long by parsing the String matched by this capturing group.
+     * The IntegerGroup's radix is used in the conversion.
+     * parsing radix.
+     * @param matcher The matcher
+     * @return The parsed long value
      */
     public long getLong(final Matcher matcher)
     {

@@ -25,11 +25,12 @@ import java.util.regex.Matcher;
  * variable) that forms a "capturing group" within the larger regular expression. A Group
  * is bound to a regular expression MetaPattern when a matcher is retrieved for the
  * pattern by calling one of the matcher() methods. Once bound, a Group cannot be rebound.
- * @author Jonathan Locke W. Locke
+ * 
+ * @author Jonathan Locke
  */
 public class Group extends MetaPattern
-{ // TODO finalize javadoc
-    /** The group that this Group is bound to. */
+{
+    /** The capturing group that this Group is bound to. */
     private int group = -1;
 
     /**
