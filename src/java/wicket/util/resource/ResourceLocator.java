@@ -21,51 +21,47 @@ package wicket.util.resource;
 import java.util.Locale;
 
 /**
- * A very simple ResourceLocator to  
- * locate a resource based on a path, a style, locale and an 
- * extension string. The full filename will be build like:
- * "resourcePath"_"style"_"locale in different combination"."extension".
- * While trying to find the resource it apply the following order:
+ * A very simple ResourceLocator to locate a resource based on a path, 
+ * a style, a locale and an extension string. The full filename will 
+ * be built like: &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * <p>
+ * Resource matches will be attempted in the following order:
  * <ol>
- * <li>"resourcePath"_"style"_"locale in different combination"."extension"</li>
- * <li>"resourcePath"_"locale in different combination"."extension"</li>
- * <li>"resourcePath"_"style"."extension"</li>
- * <li>"resourcePath"."extension"</li>
+ * <li>1. &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>2. &lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>3. &lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
+ * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
  * </ol>
- * 
- * Locale may contain a language, a country and a region or variant.
- * The following order is used to find the resource.
+ * <p>
+ * Locales may contain a language, a country and a region or variant.
+ * Combinations of these components will be attempted in the following
+ * order:
  * <ol>
  * <li>locale.toString() see javadoc for Locale for more details</li>
- * <li>"language"_"country"</li>
- * <li>"language"</li>
+ * <li>&lt;language&gt;_&lt;country&gt;</li>
+ * <li>&lt;language&gt;</li>
  * </ol>
  * 
  * @author Juergen Donnerstag
+ * @author Jonathan Locke
  */
 abstract class ResourceLocator 
-{ // TODO finalize javadoc
+{
 	/**
-	 * Locate a resource. See above for more details.
-	 * 
-	 * @param resourcePath The path of the resource including its filename,
-	 *      but with extension.
+	 * Locate a resource. See class comments for more details.
+	 * @param path The path of the resource without extension
 	 * @param style A theme or style
 	 * @param locale The Locale to apply
-	 * @param extensionString the filname's extensions
-	 * @return null, if resource not found
+	 * @param extension the filname's extensions
+     * @return The Resource, or null if not found.
 	 */
-    public Resource locate(final String resourcePath, final String style, 
-    		final Locale locale, final String extensionString)
+    public Resource locate(final String path, final String style, 
+    		final Locale locale, final String extension)
     {
-        Resource resource = null;
-        
         // 1. Try style and locale on classpath
-        if ((style != null) && (locale != null))
+        if (style != null && locale != null)
         {
-            resource = locate(resourcePath
-                    + "_" + style + "_", locale, extensionString);
-
+            final Resource resource = locate(path + "_" + style + "_", locale, extension);
             if (resource != null)
             {
                 return resource;
@@ -75,9 +71,7 @@ abstract class ResourceLocator
         // 2. Try locale only
         if (locale != null)
         {
-            resource = locate(resourcePath 
-                    + "_", locale, extensionString);
-
+            final Resource resource = locate(path + "_", locale, extension);
             if (resource != null)
             {
                 return resource;
@@ -87,8 +81,7 @@ abstract class ResourceLocator
         // 3. Try style only        
         if (style != null)
         {
-            resource = locate(resourcePath + "_" + style + extensionString);
-
+            final Resource resource = locate(path + "_" + style + extension);
             if (resource != null)
             {
                 return resource;
@@ -96,46 +89,45 @@ abstract class ResourceLocator
         }
 
         // 4. Try without style and without locale
-        resource = locate(resourcePath + extensionString);
-        return resource;
+        return locate(path + extension);
     }
 
     /**
-     * Locate a file based on its name (potentially with a style), a 
-     * locale and an extension. See above for more details on how
-     * the locale is used and the order applied to find the resource.
-     * 
-     * @param path filename including path and style, but without locale and extension
-     * @param locale the locale to apply
-     * @param extension the filename's extension
-     * @return null, if resource not found
+     * Locate a file based on its path (potentially with a style), a locale and 
+     * an extension. See class comments for more details on how the locale is used 
+     * and the order applied to find the resource.
+     * @param path Full path to resource including style, but not locale or extension
+     * @param locale The locale to apply
+     * @param extension The resource's extension
+     * @return The Resource, or null if not found.
      */
     private Resource locate(final String path, final Locale locale, final String extension)
     {
-    	// 1. apply Locale default toString() implementation. See Locale 
-    	//    javadoc for more details on that.
-        Resource resource = locate(path + locale.toString() + extension);
-        if (resource != null)
+    	// 1. Apply Locale default toString() implementation. See Locale.
         {
-        	return resource;
+            final Resource resource = locate(path + locale.toString() + extension);
+            if (resource != null)
+            {
+            	return resource;
+            }
         }
         
-        // 2. if country is avaible
-        if ((locale.getCountry() != null) && (locale.getCountry().length() > 0))
+        // 2. If country is available
+        if (locale.getCountry() != null && locale.getCountry().length() > 0)
         {
-            String localeString = locale.getLanguage() + "_" + locale.getCountry();
-            resource = locate(path + localeString + extension);
+            final String localeString = locale.getLanguage() + "_" + locale.getCountry();
+            final Resource resource = locate(path + localeString + extension);
             if (resource != null)
             {
                 return resource;
             }
         }
 
-        // 3. if (at least the) language is available 
-        if ((locale.getLanguage() != null) && (locale.getLanguage().length() > 0))
+        // 3. If (at least the) language is available 
+        if (locale.getLanguage() != null && locale.getLanguage().length() > 0)
         {
-            String localeString = locale.getLanguage();
-            resource = locate(path + localeString + extension);
+            final String localeString = locale.getLanguage();
+            final Resource resource = locate(path + localeString + extension);
             if (resource != null)
             {
                 return resource;
@@ -147,12 +139,12 @@ abstract class ResourceLocator
     }
 
     /**
-     * Subclass specific implementation on how to locate the file.
-     * Subclasses may implement classloader or sourcePath depending
-     * locators, or ...
-     *  
-     * @param filename the complete filename, including path, style, locale and extension
-     * @return null, if resource not found.
+     * Subclass implementation locates the resource at the given path.
+     * Different subclasses may take different approaches to the search.
+     * @param path The complete path of the resource to locate
+     * @return The Resource, or null if not found.
      */
-    protected abstract Resource locate(final String filename);
+    protected abstract Resource locate(final String path);
 }
+
+///////////////////////////////// End of File /////////////////////////////////

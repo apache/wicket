@@ -34,17 +34,22 @@ import wicket.util.string.Strings;
 import wicket.util.time.Time;
 import wicket.util.watch.IModifiable;
 
-
 /**
- * Resource abstraction. Resources can be loaded from the source tree or from the
- * classpath. When loaded from the source tree, they have a File nature which can be
- * watched for changes. When loaded from the classpath, they have a stream nature and are
- * not watched for changes.
+ * A Resource is a File or URL that has a stream and type (determined by the file
+ * or URL's extension) and a last modification date.  Thus a Resource is some kind 
+ * of typed stream that can change over time.
+ * <p> 
+ * Resources can be loaded from a file search path or with a ClassLoader.  When 
+ * loaded from a search path, they have a File nature which can be watched for changes. 
+ * When loaded with a ClassLoader, they have a stream nature and cannot be watched 
+ * for changes.
  * 
+ * @see wicket.util.resource.IResource
+ * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
 public final class Resource implements IResource, IModifiable
-{ // TODO finalize javadoc
+{
     /** Logging  */
     private static Log log = LogFactory.getLog(Resource.class);
     
@@ -58,15 +63,15 @@ public final class Resource implements IResource, IModifiable
     private InputStream inputStream;
 
     /**
-     * Constructor
+     * Private constructor to force use of static factory methods.
      */
     private Resource()
     {
     }
 
     /**
-     * Constructor
-     * @param file A resource file
+     * Private constructor to force use of static factory methods.
+     * @param file File containing resource
      */
     private Resource(final File file)
     {
@@ -74,8 +79,8 @@ public final class Resource implements IResource, IModifiable
     }
 
     /**
-     * Constructor
-     * @param url A resource URL
+     * Private constructor to force use of static factory methods.
+     * @param url URL of resource
      */
     private Resource(final URL url)
     {
@@ -100,25 +105,36 @@ public final class Resource implements IResource, IModifiable
     }
 
     /**
-     * Locate a resource based on its class name and the extension provided.
-     * 
-     * @param c Class next to which resource file is
-     * @param extension The extension of the file with the same name as the class
+     * Finds a Resource with a given class name and extension
+     * @param classname A fully qualified class name with dotted separators, 
+     * such as "com.whatever.MyPage"
+     * @param extension The resource extension including '.', such as ".html"
+     * @return The Resource, or null if it does not exist
+     */
+    public static Resource locate(final String classname, final String extension)
+    {
+        String filename = Strings.replaceAll(classname, ".", "/") + extension;
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
+        return url != null ? new Resource(url) : null;
+    }
+
+    /**
+     * Locate a resource based on a class and an extension.
+     * @param c Class next to which the resource should be found
+     * @param extension Resource extension
      * @return The resource
      * @see Resource#locate(Path, Class, String, Locale, String)
      */
     public static Resource locate(final Class c, final String extension)
     {
-        return locate(c, extension);
+        return locate(new Path(), c, extension);
     }
 
     /**
-     * Locate a resource based on a rootPath (sourcePath), a class name and
-     * an extension.
-     * 
-     * @param path Source path to look along for resource
-     * @param c Class next to which resource file is
-     * @param extension The extension of the file with the same name as the class
+     * Locate a resource based on a path, a class and an extension.
+     * @param path Path to search for resource
+     * @param c Class next to which the resource should be found
+     * @param extension Resource extension
      * @return The resource
      * @see Resource#locate(Path, Class, String, Locale, String)
      */
@@ -128,16 +144,15 @@ public final class Resource implements IResource, IModifiable
     }
 
     /**
-     * Loads a resource from the file system from next to a given class. This method
-     * prefers to load from the source tree first in the default locale. If a source tree
-     * cannot be found, the classpath is used.
-     * 
-     * @param path Source path to look along for resource
-     * @param c Class next to which resource file is
+     * Locate a resource based on a path, a class, a style, a locale 
+     * and an extension.
+     * @param path Path to search for resource
+     * @param c Class next to which the resource should be found
      * @param style Any resource style, such as a skin style
      * @param locale The locale of the resource to load
-     * @param extension The extension of the file with the same name as the class
+     * @param extension Resource extension
      * @return The resource
+     * @see Resource#locate(Path, Class, String, Locale, String)
      */
     public static Resource locate(final Path path, final Class c, final String style,
             final Locale locale, final String extension)
@@ -146,25 +161,24 @@ public final class Resource implements IResource, IModifiable
     }
 
     /**
-     * Loads a resource from the file system from next to a given class. This method
-     * prefers to load from the source tree first in the default locale. If a source tree
-     * cannot be found, the classpath is used.
-     * 
-     * @param sourcePath Source path to look along for resource
-     * @param classloader The classloader to look on if the resource is not on the source
-     *            path
-     * @param resourcePath The path to the resource
+     * Loads a resource. This method prefers to load from the path argument first.
+     * If the resource cannot be found on the path, the classloader provided is
+     * searched.  Resources are located using the style, locale and extension provided
+     * and the naming logic encapsulated in ResourceLocator.
+     * @param path Path to search for resource
+     * @param classloader ClassLoader to search if not found on path
+     * @param resourcePath The path of the resource
      * @param style Any resource style, such as a skin style
      * @param locale The locale of the resource to load
      * @param extension The extension of the resource
      * @return The resource
+     * @see ResourceLocator
      */
-    public static Resource locate(final Path sourcePath, final ClassLoader classloader,
+    public static Resource locate(final Path path, final ClassLoader classloader,
             String resourcePath, final String style, final Locale locale, final String extension)
     {
         // If no extension specified, extract extension
         final String extensionString;
-
         if (extension == null)
         {
             extensionString = "." + Strings.lastPathComponent(resourcePath, '.');
@@ -178,30 +192,30 @@ public final class Resource implements IResource, IModifiable
         // Compute string components
         resourcePath = resourcePath.replace('.', '/');
 
-        // The resource
-        Resource resource = null;
-
-        // Search the sourcePath provided first and classpath second
-        if ((sourcePath != null) && (sourcePath.size() > 0))
+        // 1. Search the path provided
+        if (path != null && path.size() > 0)
         {
-            resource = new ResourceLocator()
+            final Resource resource = new ResourceLocator()
 			{
 	            /**
 	             * Check if file exists.
-	             * 
-	             * @param filename name of the file
-	             * @return null, if file not found
+	             * @param name Name of the resource to find
+	             * @return Resource, or null if file not found
 	             */
-	            protected Resource locate(final String filename)
+	            protected Resource locate(final String name)
 	            {
-	                log.debug("locate Resource from source path: " + filename);
-	                final File file = sourcePath.find(filename);
-
+                    // Log attempt
+	                log.debug("Attempting to locate resource '" + name + "' on path");
+                    
+                    // Try to find file resource on the path supplied
+	                final File file = path.find(name);
+                    
+                    // Found resource?
 	                if (file != null)
 	                {
+                        // Return file resource
 	                    return new Resource(file);
 	                }
-
 	                return null;
 	            }
 	    	}.locate(resourcePath, style, locale, extensionString);
@@ -212,48 +226,32 @@ public final class Resource implements IResource, IModifiable
 	    	}
         }
 
-        // Try classpath second
-        resource = new ResourceLocator()
+        // 2. Search the ClassLoader provided
+        return new ResourceLocator()
 		{
             /**
-             * Check if file exists.
-             * @param filename the resource's filename
-             * @return null, if file not found
+             * Locate resource using classloader
+             * @param name Name of resource
+             * @return The resource 
              */
-            protected Resource locate(final String filename)
+            protected Resource locate(final String name)
             {
-                log.debug("locate Resource from class path: " + filename);
+                // Log attempt
+                log.debug("Attempting to locate resource '" + name + "' on classpath");
+                
                 // Try loading filename on classpath
-                final URL url = classloader.getResource(filename);
-
+                final URL url = classloader.getResource(name);
                 if (url != null)
                 {
                     return new Resource(url);
                 }
-
                 return null;
             }
     	}.locate(resourcePath, style, locale, extensionString);
-
-    	return resource;
     }
 
     /**
-     * Create a Resource based on a Class's name and an extension
-     * @param classname A 'path' with dotted separators
-     * @param extension The file's extension incl. '.'
-     * @return null, if file does not exist
-     */
-    public static Resource locate(final String classname, final String extension)
-    {
-        String filename = Strings.replaceAll(classname, ".", "/") + extension;
-        final URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
-        
-        return (url != null ? new Resource(url) : null);
-    }
-
-    /**
-     * Closes input stream
+     * Closes this resource.
      * @throws IOException
      */
     public void close() throws IOException
@@ -266,7 +264,7 @@ public final class Resource implements IResource, IModifiable
     }
 
     /**
-     * @return Returns the file.
+     * @return The file this resource resides in, if any.
      */
     public File getFile()
     {
@@ -289,7 +287,7 @@ public final class Resource implements IResource, IModifiable
     }
 
     /**
-     * @return Returns the inputStream.
+     * @return A readable input stream for this resource.
      * @throws ResourceNotFoundException
      */
     public InputStream getInputStream() throws ResourceNotFoundException
@@ -304,8 +302,8 @@ public final class Resource implements IResource, IModifiable
                 }
                 catch (FileNotFoundException e)
                 {
-                    throw new ResourceNotFoundException("Resource " + file 
-                            + " could not be found", e);
+                    throw new ResourceNotFoundException
+                        ("Resource " + file + " could not be found", e);
                 }
             }
             else if (url != null)
@@ -316,8 +314,8 @@ public final class Resource implements IResource, IModifiable
                 }
                 catch (IOException e)
                 {
-                    throw new ResourceNotFoundException("Resource " + url 
-                            + " could not be opened", e);
+                    throw new ResourceNotFoundException
+                        ("Resource " + url + " could not be opened", e);
                 }
             }
         }
@@ -326,7 +324,7 @@ public final class Resource implements IResource, IModifiable
     }
 
     /**
-     * @return Returns the url.
+     * @return The URL to this resource (if any)
      */
     public URL getUrl()
     {
@@ -335,6 +333,7 @@ public final class Resource implements IResource, IModifiable
 
     /**
      * @see wicket.util.watch.IModifiable#lastModifiedTime()
+     * @return The last time this resource was modified
      */
     public Time lastModifiedTime()
     {
@@ -342,7 +341,6 @@ public final class Resource implements IResource, IModifiable
         {
             return file.lastModifiedTime();
         }
-
         return null;
     }
 
@@ -351,7 +349,7 @@ public final class Resource implements IResource, IModifiable
      */
     public String toString()
     {
-        return (file != null) ? file.toString() : url.toString();
+        return file != null ? file.toString() : url.toString();
     }
 }
 
