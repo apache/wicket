@@ -18,44 +18,34 @@
  */
 package wicket.protocol.http;
 
-import javax.servlet.http.Cookie;
-
 import java.util.Collections;
 import java.util.Map;
 
 /**
- * A placeholder HttpRequest where all methods do nothing.  This
+ * A placeholder WebRequest where all methods do nothing.  This
  * class is not accessible outside this package because it is intended
- * to be used as a singleton.  To gain access to a NullHttpRequest
- * instance, just access the static final field HttpRequest.NULL.
+ * to be used as a singleton.  To gain access to a NullWebRequest
+ * instance, just access the static final field WebRequest.NULL.
  * 
- * @see HttpRequest#NULL
+ * @see WebRequest#NULL
  * @author Jonathan Locke
  */
-class NullHttpRequest extends HttpRequest
+class NullWebRequest extends WebRequest
 {
     /**
      * Private constructor to force use of static factory method.
      */
-    NullHttpRequest()
+    NullWebRequest()
     {
         super(null);
     }
 
     /**
-     * @see wicket.protocol.http.HttpRequest#getContextPath()
+     * @see wicket.protocol.http.WebRequest#getContextPath()
      */
     public String getContextPath()
     {
         return "[No context path]";
-    }
-
-    /**
-     * @see wicket.protocol.http.HttpRequest#getCookies()
-     */
-    public Cookie[] getCookies()
-    {
-        return null;
     }
 
     /**
@@ -83,7 +73,7 @@ class NullHttpRequest extends HttpRequest
     }
 
     /**
-     * @see wicket.protocol.http.HttpRequest#getPathInfo()
+     * @see wicket.protocol.http.WebRequest#getPathInfo()
      */
     public String getPathInfo()
     {
@@ -91,7 +81,7 @@ class NullHttpRequest extends HttpRequest
     }
 
     /**
-     * @see wicket.protocol.http.HttpRequest#getServletPath()
+     * @see wicket.protocol.http.WebRequest#getServletPath()
      */
     public String getServletPath()
     {
@@ -111,6 +101,6 @@ class NullHttpRequest extends HttpRequest
      */
     public String toString()
     {
-        return "[NullHttpRequest]";
+        return "[NullWebRequest]";
     }
 }

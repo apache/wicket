@@ -22,7 +22,7 @@ import wicket.PageParameters;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.protocol.http.HttpResponse;
+import wicket.protocol.http.WebResponse;
 
 /**
  * Simple example of how XUL could be used while still depending on the HTML components.
@@ -49,7 +49,7 @@ public class HelloMozilla extends HtmlPage
      */
     protected void configureResponse()
     {
-    	((HttpResponse)getResponse()).setLocale(getSession().getLocale());
+    	((WebResponse)getResponse()).setLocale(getSession().getLocale());
     	getResponse().setContentType("application/vnd.mozilla.xul+xml");    	
     }
 

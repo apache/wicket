@@ -21,14 +21,14 @@ package wicket.examples.library;
 import java.util.List;
 
 import wicket.Application;
-import wicket.protocol.http.HttpSession;
+import wicket.protocol.http.WebSession;
 
 /**
  * Session class for library example.  Holds User object and authenticates users.
  * 
  * @author Jonathan Locke
  */
-public final class LibrarySession extends HttpSession
+public final class LibrarySession extends WebSession
 {
     private User user;
     

@@ -25,7 +25,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.Model;
-import wicket.protocol.http.HttpRequestCycle;
+import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.MockPage;
 
@@ -126,11 +126,11 @@ public class ListItemTest extends TestCase
 	 * @return request cycle
 	 * @throws IOException
 	 */
-	private HttpRequestCycle createRequestCycle() throws IOException
+	private WebRequestCycle createRequestCycle() throws IOException
 	{
 		// Prepare the mock application to test the Link
 		application.setupRequestAndResponse();
-		HttpRequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
+		WebRequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 
 		MockPage page = new MockPage(null);
@@ -145,7 +145,7 @@ public class ListItemTest extends TestCase
 	public void testMoveUpLink() throws IOException
 	{
 		// Prepare the mock application to test the Link
-		HttpRequestCycle cycle = createRequestCycle();
+		WebRequestCycle cycle = createRequestCycle();
 
 		// Create a ListView with a model object which contains 4 items
 		ListView lv = createListView(4);
@@ -201,7 +201,7 @@ public class ListItemTest extends TestCase
 	public void testMoveDownLink() throws IOException
 	{
 		// Prepare the mock application to test the Link
-		HttpRequestCycle cycle = createRequestCycle();
+		WebRequestCycle cycle = createRequestCycle();
 
 		// Create a ListView with a model object which contains 4 items
 		ListView lv = createListView(4);
@@ -257,7 +257,7 @@ public class ListItemTest extends TestCase
 	public void testRemoveLink() throws IOException
 	{
 		// Prepare the mock application to test the Link
-		HttpRequestCycle cycle = createRequestCycle();
+		WebRequestCycle cycle = createRequestCycle();
 
 		// Create a ListView with a model object which contains 4 items
 		ListView lv = createListView(4);

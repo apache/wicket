@@ -51,10 +51,10 @@ import wicket.util.string.Strings;
  * @see RequestCycle
  * @author Jonathan Locke
  */
-public class HttpRequestCycle extends RequestCycle
+public class WebRequestCycle extends RequestCycle
 {
 	/** Logging object */
-	private static final Log log = LogFactory.getLog(HttpRequestCycle.class);
+	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
@@ -69,8 +69,8 @@ public class HttpRequestCycle extends RequestCycle
 	 * @param response
 	 *            The response
 	 */
-	public HttpRequestCycle(final WebApplication application, final HttpSession session,
-			final HttpRequest request, final Response response)
+	public WebRequestCycle(final WebApplication application, final WebSession session,
+			final WebRequest request, final Response response)
 	{
 		super(application, session, request, response);
 	}
@@ -155,9 +155,9 @@ public class HttpRequestCycle extends RequestCycle
 
 		if (request != null)
 		{
-			buffer.append(((HttpRequest)request).getContextPath());
+			buffer.append(((WebRequest)request).getContextPath());
 
-			final String servletPath = ((HttpRequest)request).getServletPath();
+			final String servletPath = ((WebRequest)request).getServletPath();
 			if (servletPath.equals(""))
 			{
 				buffer.append('/');
@@ -423,7 +423,7 @@ public class HttpRequestCycle extends RequestCycle
 	 */
 	private boolean homePage()
 	{
-		final String pathInfo = ((HttpRequest)request).getPathInfo();
+		final String pathInfo = ((WebRequest)request).getPathInfo();
 
 		if (pathInfo == null || "/".equals(pathInfo) || "".equals(pathInfo))
 		{
@@ -479,7 +479,7 @@ public class HttpRequestCycle extends RequestCycle
 		try
 		{
 			// Get URL
-			final String url = ((HttpRequest)getRequest()).getURL();
+			final String url = ((WebRequest)getRequest()).getURL();
 
 			// Get servlet context
 			final ServletContext context = ((WebApplication)application).getWicketServlet()
@@ -495,7 +495,7 @@ public class HttpRequestCycle extends RequestCycle
 				try
 				{
 					// Copy resource input stream to servlet output stream
-					Streams.writeStream(in, ((HttpResponse)response).getServletResponse()
+					Streams.writeStream(in, ((WebResponse)response).getHttpServletResponse()
 							.getOutputStream());
 				}
 				finally

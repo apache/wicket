@@ -21,8 +21,8 @@ package wicket.examples.displaytag.utils;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
-import wicket.protocol.http.HttpRequest;
-import wicket.protocol.http.HttpRequestCycle;
+import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.WebRequestCycle;
 
 /**
  * @author Juergen Donnerstag
@@ -49,8 +49,8 @@ public class AbsoluteHref extends HtmlComponent
         String href = tag.getString("href");
         if (href.charAt(0) != '/')
         {
-            HttpRequestCycle hcycle = (HttpRequestCycle)getRequestCycle();
-            String requestUrl = ((HttpRequest)hcycle.getRequest()).getServletRequest().getRequestURL().toString();
+            WebRequestCycle hcycle = (WebRequestCycle)getRequestCycle();
+            String requestUrl = ((WebRequest)hcycle.getRequest()).getHttpServletRequest().getRequestURL().toString();
             String urlPrefix = hcycle.urlPrefix().toString();
             int idx = requestUrl.indexOf(urlPrefix);
             if (idx > 0)

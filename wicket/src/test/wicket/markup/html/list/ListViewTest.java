@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.Model;
-import wicket.protocol.http.HttpRequestCycle;
+import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.MockPage;
 
@@ -77,11 +77,11 @@ public class ListViewTest extends TestCase
 	 * @return request cycle
 	 * @throws IOException
 	 */
-	private HttpRequestCycle createRequestCycle() throws IOException
+	private WebRequestCycle createRequestCycle() throws IOException
 	{
 		// Prepare the mock application to test the Link
 		application.setupRequestAndResponse();
-		HttpRequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
+		WebRequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 
 		MockPage page = new MockPage(null);

@@ -24,19 +24,19 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 
 /**
- * Session subclass for HTTP protocol which holds an underlying HttpSession
+ * Session subclass for HTTP protocol which holds an underlying WebSession
  * object and provides access to that object via getHttpServletSession. A method
  * which abstracts session invalidation is also provided via invalidate().
  *
  * @author Jonathan Locke
  */
-public class HttpSession extends Session
+public class WebSession extends Session
 {
     /** Serial Version ID */
     private static final long serialVersionUID = -7738551549126761943L;
 
-    /** The underlying HttpSession object */
-    private transient javax.servlet.http.HttpSession httpServletSession;
+    /** The underlying WebSession object */
+    private transient javax.servlet.http.HttpSession httpSession;
 
     /**
      * Gets session from request, creating a new one if it doesn't already exist
@@ -47,7 +47,7 @@ public class HttpSession extends Session
      *            The http request object
      * @return The session object
      */
-    static HttpSession getSession(final Application application, final HttpServletRequest request)
+    static WebSession getSession(final Application application, final HttpServletRequest request)
     {
         // Get session, creating if it doesn't exist
         final javax.servlet.http.HttpSession httpServletSession = request.getSession(true);
@@ -58,23 +58,23 @@ public class HttpSession extends Session
         final String sessionAttributeName = "session" + request.getServletPath();
 
         // Get Session abstraction from httpSession attribute
-        HttpSession httpSession = (HttpSession)httpServletSession.getAttribute(sessionAttributeName);
+        WebSession httpSession = (WebSession)httpServletSession.getAttribute(sessionAttributeName);
 
         if (httpSession == null)
         {
             // Create session using session factory
             final Session session = application.getSessionFactory().newSession();
-            if (session instanceof HttpSession)
+            if (session instanceof WebSession)
             {
-                httpSession = (HttpSession)session;
+                httpSession = (WebSession)session;
             }
             else
             {
-                throw new WicketRuntimeException("Session created by a WebApplication session factory must be a subclass of HttpSession");
+                throw new WicketRuntimeException("Session created by a WebApplication session factory must be a subclass of WebSession");
             }
 
             // Save servlet session in there
-            httpSession.httpServletSession = httpServletSession;
+            httpSession.httpSession = httpServletSession;
 
             // Set the client Locale for this session
             httpSession.setLocale(request.getLocale());
@@ -85,7 +85,7 @@ public class HttpSession extends Session
         else
         {
             // Reattach http servlet session
-            httpSession.httpServletSession = httpServletSession;
+            httpSession.httpSession = httpServletSession;
 
 	        // In a clustered environment the session is not replicated
 	        // if it is not dirty. If we just read the http session object
@@ -108,17 +108,17 @@ public class HttpSession extends Session
      * @param application
      *            The application
      */
-    protected HttpSession(final Application application)
+    protected WebSession(final Application application)
     {
         super(application);
     }
 
     /**
-     * @return The underlying HttpSession object
+     * @return The underlying WebSession object
      */
-    public javax.servlet.http.HttpSession getHttpServletSession()
+    public javax.servlet.http.HttpSession getHttpSession()
     {
-        return httpServletSession;
+        return httpSession;
     }
 
     /**
@@ -128,7 +128,7 @@ public class HttpSession extends Session
     {
         try
         {
-            httpServletSession.invalidate();
+            httpSession.invalidate();
         }
         catch (IllegalStateException e)
         {

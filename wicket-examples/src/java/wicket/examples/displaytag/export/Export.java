@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.HttpResponse;
+import wicket.protocol.http.WebResponse;
 
 
 /**
@@ -67,8 +67,8 @@ public class Export
      */
     protected int writeExport(final RequestCycle cycle, final String mimeType, final String exportString, final String filename)
     {
-        HttpResponse response = (HttpResponse)cycle.getResponse();
-        HttpServletResponse servletResponse = response.getServletResponse();
+        WebResponse response = (WebResponse)cycle.getResponse();
+        HttpServletResponse servletResponse = response.getHttpServletResponse();
 
         // response can't be already committed at this time
         if (servletResponse.isCommitted())

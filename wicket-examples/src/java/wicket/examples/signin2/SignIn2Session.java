@@ -18,14 +18,14 @@
 package wicket.examples.signin2;
 
 import wicket.Application;
-import wicket.protocol.http.HttpSession;
+import wicket.protocol.http.WebSession;
 
 /**
  * Session class for signin example. Holds and authenticates users.
  * 
  * @author Jonathan Locke
  */
-public final class SignIn2Session extends HttpSession
+public final class SignIn2Session extends WebSession
 {
     /** Trivial user representation */
 	private String user;

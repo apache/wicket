@@ -23,16 +23,16 @@ import javax.servlet.ServletException;
 
 import wicket.ApplicationSettings;
 import wicket.Page;
-import wicket.protocol.http.HttpRequest;
-import wicket.protocol.http.HttpRequestCycle;
-import wicket.protocol.http.HttpResponse;
-import wicket.protocol.http.HttpSession;
+import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.WebSession;
 
 /**
  * This class provides a mock implementation of a Wicket HTTP based application
  * that can be used for testing. It emulates all of the functionality of an
  * HttpServlet in a controlled, single-threaded environment. It is supported
- * with mock objects for HttpSession, HttpServletRequest, HttpServletResponse
+ * with mock objects for WebSession, HttpServletRequest, HttpServletResponse
  * and ServletContext.
  * <p>
  * In its most basic usage you can just create a new MockWebApplication. This
@@ -90,13 +90,13 @@ public class MockWebApplication extends WebApplication
     private final ApplicationSettings settings;
 
     /** Request. */
-    private HttpRequest wicketRequest;
+    private WebRequest wicketRequest;
 
     /** Response. */
-    private HttpResponse wicketResponse;
+    private WebResponse wicketResponse;
 
     /** Session. */
-    private HttpSession wicketSession;
+    private WebSession wicketSession;
 
     /**
      * Create the mock http application that can be used for testing.
@@ -113,7 +113,7 @@ public class MockWebApplication extends WebApplication
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
         servletResponse = new MockHttpServletResponse();
-        wicketSession = HttpSession.getSession(this, servletRequest);
+        wicketSession = WebSession.getSession(this, servletRequest);
     }
 
     /**
@@ -184,7 +184,7 @@ public class MockWebApplication extends WebApplication
      * 
      * @return The wicket request object
      */
-    public HttpRequest getWicketRequest()
+    public WebRequest getWicketRequest()
     {
         return wicketRequest;
     }
@@ -194,7 +194,7 @@ public class MockWebApplication extends WebApplication
      * 
      * @return The wicket response object
      */
-    public HttpResponse getWicketResponse()
+    public WebResponse getWicketResponse()
     {
         return wicketResponse;
     }
@@ -204,7 +204,7 @@ public class MockWebApplication extends WebApplication
      * 
      * @return The wicket session object
      */
-    public HttpSession getWicketSession()
+    public WebSession getWicketSession()
     {
         return wicketSession;
     }
@@ -218,7 +218,7 @@ public class MockWebApplication extends WebApplication
      */
     public void processRequestCycle() throws ServletException
     {
-        HttpRequestCycle cycle = new HttpRequestCycle(this, wicketSession, wicketRequest,
+        WebRequestCycle cycle = new WebRequestCycle(this, wicketSession, wicketRequest,
                 wicketResponse);
         cycle.render();
         lastRenderedPage = cycle.getPage();
@@ -235,9 +235,9 @@ public class MockWebApplication extends WebApplication
     {
         servletRequest.initialize();
         servletResponse.initialize();
-        wicketSession = HttpSession.getSession(this, servletRequest);
-        wicketRequest = new HttpRequest(servletRequest);
-        wicketResponse = new HttpResponse(servletResponse);
+        wicketSession = WebSession.getSession(this, servletRequest);
+        wicketRequest = new WebRequest(servletRequest);
+        wicketResponse = new WebResponse(servletResponse);
     }
 
 }

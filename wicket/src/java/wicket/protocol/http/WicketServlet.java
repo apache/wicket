@@ -53,7 +53,7 @@ import wicket.WicketRuntimeException;
  * be found, does not extend WebApplication or cannot be instantiated, a runtime
  * exception of type WicketRuntimeException will be thrown.
  * <p>
- * When GET/POST requests are made via HTTP, an HttpRequestCycle object is
+ * When GET/POST requests are made via HTTP, an WebRequestCycle object is
  * created from the request, response and session objects (after wrapping them
  * in the appropriate wicket wrappers). The RequestCycle's render() method is
  * then called to produce a response to the HTTP request.
@@ -152,19 +152,19 @@ public class WicketServlet extends HttpServlet
             final HttpServletResponse servletResponse) throws ServletException, IOException
     {
         // Get session for request
-        final HttpSession session = HttpSession.getSession(webApplication, servletRequest);
-        final HttpRequest request = new HttpRequest(servletRequest);
-        final HttpResponse response = webApplication.getSettings().getBufferResponse() ? 
-                new BufferedHttpResponse(servletResponse) : new HttpResponse(servletResponse);
-        final HttpRequestCycle cycle = new HttpRequestCycle(webApplication, session, request,
+        final WebSession session = WebSession.getSession(webApplication, servletRequest);
+        final WebRequest request = new WebRequest(servletRequest);
+        final WebResponse response = webApplication.getSettings().getBufferResponse() ? 
+                new BufferedWebResponse(servletResponse) : new WebResponse(servletResponse);
+        final WebRequestCycle cycle = new WebRequestCycle(webApplication, session, request,
                 response);
 
         // Render response for request cycle
         cycle.render();
 
         // Clear down the session thread local so that the only reference to it
-        // is as a Servlet HttpSession
-        HttpSession.set(null);
+        // is as a Servlet WebSession
+        WebSession.set(null);
     }
 
     /**

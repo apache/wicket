@@ -24,8 +24,8 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.RequestCycle;
 import wicket.markup.html.form.FormComponent;
-import wicket.protocol.http.HttpRequest;
-import wicket.protocol.http.HttpResponse;
+import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.WebResponse;
 import wicket.util.time.Time;
 
 /**
@@ -88,6 +88,25 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
+	 * Convenience method for deleting a cookie by name. Delete the cookie by
+	 * setting its maximum age to zero.
+	 * 
+	 * @param cookie
+	 *            The cookie to delete
+	 */
+	private void clear(Cookie cookie)
+	{
+		if (cookie != null)
+		{
+			// Delete the cookie by setting its maximum age to zero
+			cookie.setMaxAge(0);
+			cookie.setValue(null);
+			cookie.setPath(getWebRequest().getContextPath());
+			save(cookie);
+		}
+	}
+
+	/**
 	 * Gets debug info as a string for the given cookie.
 	 * 
 	 * @param cookie
@@ -119,7 +138,7 @@ public class CookieValuePersister implements IValuePersister
 		final String name = component.getPageRelativePath();
 
 		// Get all cookies attached to the Request by the client browser
-		Cookie[] cookies = getHttpRequest().getCookies();
+		Cookie[] cookies = getCookies();
 		if (cookies != null)
 		{
 			for (int i = 0; i < cookies.length; i++)
@@ -152,26 +171,25 @@ public class CookieValuePersister implements IValuePersister
 
 		return null;
 	}
+    
+    /**
+     * Gets any cookies for request.
+     * 
+     * @return Any cookies for this request
+     */
+    private Cookie[] getCookies()
+    {
+        try
+        {
+            return getWebRequest().getHttpServletRequest().getCookies();
+        }
+        catch (NullPointerException ex)
+        {
+            // Ignore any app server problem here
+        }
 
-	/**
-	 * Convenience method to get the http request.
-	 * 
-	 * @return HttpRequest related to the RequestCycle
-	 */
-	private HttpRequest getHttpRequest()
-	{
-		return (HttpRequest)RequestCycle.get().getRequest();
-	}
-
-	/**
-	 * Convinience method to get the http response.
-	 * 
-	 * @return HttpResponse related to the RequestCycle
-	 */
-	private HttpResponse getHttpResponse()
-	{
-		return (HttpResponse)RequestCycle.get().getResponse();
-	}
+        return new Cookie[0];
+    }
 
 	/**
 	 * Persister defaults are maintained centrally by the Application.
@@ -183,23 +201,25 @@ public class CookieValuePersister implements IValuePersister
 		return RequestCycle.get().getApplication().getSettings().getCookieValuePersisterSettings();
 	}
 
+
 	/**
-	 * Convenience method for deleting a cookie by name. Delete the cookie by
-	 * setting its maximum age to zero.
+	 * Convenience method to get the http request.
 	 * 
-	 * @param cookie
-	 *            The cookie to delete
+	 * @return WebRequest related to the RequestCycle
 	 */
-	private void clear(Cookie cookie)
+	private WebRequest getWebRequest()
 	{
-		if (cookie != null)
-		{
-			// Delete the cookie by setting its maximum age to zero
-			cookie.setMaxAge(0);
-			cookie.setValue(null);
-			cookie.setPath(getHttpRequest().getContextPath());
-			save(cookie);
-		}
+		return (WebRequest)RequestCycle.get().getRequest();
+	}
+
+	/**
+	 * Convinience method to get the http response.
+	 * 
+	 * @return WebResponse related to the RequestCycle
+	 */
+	private WebResponse getWebResponse()
+	{
+		return (WebResponse)RequestCycle.get().getResponse();
 	}
 
 	/**
@@ -232,7 +252,7 @@ public class CookieValuePersister implements IValuePersister
     		cookie.setVersion(getSettings().getVersion());
     		cookie.setSecure(getSettings().isSecure());
     
-    		getHttpResponse().addCookie(cookie);
+    		getWebResponse().addCookie(cookie);
     
     		if (log.isDebugEnabled())
     		{

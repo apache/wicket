@@ -32,7 +32,7 @@ import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.encryption.ICrypt;
 import wicket.markup.html.form.encryption.NoCrypt;
 import wicket.markup.html.panel.SignInPanel;
-import wicket.protocol.http.HttpRequestCycle;
+import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.MockPage;
 
@@ -54,7 +54,7 @@ public class CookieTest extends TestCase
     private Cookie cookiePassword;
     private Cookie[] cookies;
     private HtmlPage page;
-    private HttpRequestCycle cycle;
+    private WebRequestCycle cycle;
     
     /**
      * Create the test case.
@@ -97,7 +97,7 @@ public class CookieTest extends TestCase
         
         application.getServletRequest().setCookies(cookies);
 
-        cycle = new HttpRequestCycle(
+        cycle = new WebRequestCycle(
         		application, 
 				application.getWicketSession(),
 				application.getWicketRequest(),
@@ -106,7 +106,7 @@ public class CookieTest extends TestCase
         this.page = new MockPage(null);
 		page.add(this.panel);
 		
-		HttpRequestCycle cycle = new HttpRequestCycle(
+		WebRequestCycle cycle = new WebRequestCycle(
 		        application, 
 		        application.getWicketSession(), 
 		        application.getWicketRequest(),

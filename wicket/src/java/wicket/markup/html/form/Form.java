@@ -32,7 +32,7 @@ import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationDelegate;
 import wicket.markup.html.form.validation.IValidationFeedback;
-import wicket.protocol.http.HttpRequestCycle;
+import wicket.protocol.http.WebRequestCycle;
 
 /**
  * Base class for HTML forms.
@@ -403,7 +403,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	{
 		// Cannot add cookies to request cycle unless it accepts them
 		// We could conceivably be HTML over some other protocol!
-		if (getRequestCycle() instanceof HttpRequestCycle)
+		if (getRequestCycle() instanceof WebRequestCycle)
 		{
 			// The persistence manager responsible to persist and retrieve
 			// FormComponent data

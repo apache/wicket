@@ -34,7 +34,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.validation.IValidationFeedback;
-import wicket.protocol.http.HttpRequest;
+import wicket.protocol.http.WebRequest;
 
 
 /**
@@ -69,16 +69,16 @@ public abstract class AbstractUploadForm extends Form
 	{
 		try
 		{
-			HttpRequest httpRequest = (HttpRequest)getRequest();
-			HttpServletRequest request = (httpRequest).getServletRequest();
-			boolean isMultipart = FileUpload.isMultipartContent(request);
+			final WebRequest httpRequest = (WebRequest)getRequest();
+			final HttpServletRequest request = httpRequest.getHttpServletRequest();
+			final boolean isMultipart = FileUpload.isMultipartContent(request);
 			if (!isMultipart)
 			{
 				throw new IllegalStateException("Request is not a multipart request");
 			}
 			prepareUpload();
-			FileUploadBase upload = createUpload();
-			List items = parseRequest(request, upload);
+			final FileUploadBase upload = createUpload();
+			final List items = parseRequest(request, upload);
 			processFileItems(items);
 			finishUpload();
 		}

@@ -27,14 +27,14 @@ import org.apache.commons.logging.LogFactory;
 import wicket.WicketRuntimeException;
 
 /**
- * Subclass of HttpResponse which buffers output and any redirection.
+ * Subclass of WebResponse which buffers output and any redirection.
  * 
  * @author Jonathan Locke
  */
-public class BufferedHttpResponse extends HttpResponse
+public class BufferedWebResponse extends WebResponse
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(BufferedHttpResponse.class);
+	private static final Log log = LogFactory.getLog(BufferedWebResponse.class);
 
 	/** URL to redirect to when response is flushed, if any */
 	private String redirectUrl;
@@ -45,7 +45,7 @@ public class BufferedHttpResponse extends HttpResponse
 	/**
 	 * Constructor for testing harness.
 	 */
-	BufferedHttpResponse()
+	BufferedWebResponse()
 	{
 	}
 
@@ -56,7 +56,7 @@ public class BufferedHttpResponse extends HttpResponse
 	 *            The servlet response object
 	 * @throws IOException
 	 */
-	BufferedHttpResponse(final HttpServletResponse httpServletResponse) throws IOException
+	BufferedWebResponse(final HttpServletResponse httpServletResponse) throws IOException
 	{
 		super(httpServletResponse);
 	}

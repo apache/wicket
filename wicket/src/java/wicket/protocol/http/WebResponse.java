@@ -39,10 +39,10 @@ import wicket.Response;
  * 
  * @author Jonathan Locke
  */
-public class HttpResponse extends Response
+public class WebResponse extends Response
 {
     /** Log. */
-    private static final Log log = LogFactory.getLog(HttpResponse.class);
+    private static final Log log = LogFactory.getLog(WebResponse.class);
 
     /** The underlying response object. */
     private final HttpServletResponse httpServletResponse;
@@ -53,7 +53,7 @@ public class HttpResponse extends Response
     /**
      * Constructor for testing harness.
      */
-    HttpResponse()
+    WebResponse()
     {
         this.httpServletResponse = null;
     }
@@ -65,7 +65,7 @@ public class HttpResponse extends Response
      *            The servlet response object
      * @throws IOException
      */
-    HttpResponse(final HttpServletResponse httpServletResponse) throws IOException
+    WebResponse(final HttpServletResponse httpServletResponse) throws IOException
     {
         this.httpServletResponse = httpServletResponse;
     }
@@ -112,7 +112,7 @@ public class HttpResponse extends Response
      * 
      * @return The wrapped http servlet response object
      */
-    public final HttpServletResponse getServletResponse()
+    public final HttpServletResponse getHttpServletResponse()
     {
         return httpServletResponse;
     }

@@ -24,9 +24,9 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import wicket.RequestCycle;
 import wicket.Session;
-import wicket.protocol.http.HttpRequest;
-import wicket.protocol.http.HttpRequestCycle;
-import wicket.protocol.http.HttpSession;
+import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.WebSession;
 
 /**
  * 
@@ -47,16 +47,16 @@ public class SpringContextLocator
      * Creates a new SpringContextLocator 
      * @param session
      */
-    protected SpringContextLocator(HttpSession session)
+    protected SpringContextLocator(WebSession session)
     {
         super();
         
-        httpSession = session.getHttpServletSession();
+        httpSession = session.getHttpSession();
         this.applicationContext = SpringContextLocator
                 .getApplicationContext(session);
     }
 
-    public SpringContextLocator(HttpRequestCycle cycle)
+    public SpringContextLocator(WebRequestCycle cycle)
     {
         super();
         
@@ -72,8 +72,8 @@ public class SpringContextLocator
     {
         super();
         
-        httpSession = ((HttpSession) cycle.getSession())
-                .getHttpServletSession();
+        httpSession = ((WebSession) cycle.getSession())
+                .getHttpSession();
         
         this.applicationContext = SpringContextLocator
                 .getApplicationContext(cycle);
@@ -92,13 +92,13 @@ public class SpringContextLocator
 
     public static SpringContextLocator getInstance(Session session)
     {
-        HttpSession httpSession = (HttpSession) session;
+        WebSession httpSession = (WebSession) session;
         return new SpringContextLocator(httpSession);
     }
 
     public static SpringContextLocator getInstance(RequestCycle cycle)
     {
-        HttpRequestCycle httpCycle = (HttpRequestCycle) cycle;
+        WebRequestCycle httpCycle = (WebRequestCycle) cycle;
         return new SpringContextLocator(httpCycle);
     }
 
@@ -112,8 +112,8 @@ public class SpringContextLocator
      */
     public static ApplicationContext getApplicationContext(Session session)
     {
-        javax.servlet.http.HttpSession httpSession = ((HttpSession) session)
-                .getHttpServletSession();
+        javax.servlet.http.HttpSession httpSession = ((WebSession) session)
+                .getHttpSession();
         
         return WebApplicationContextUtils
                 .getRequiredWebApplicationContext(httpSession
@@ -132,8 +132,8 @@ public class SpringContextLocator
      */
     public static ApplicationContext getApplicationContext(RequestCycle cycle)
     {
-        javax.servlet.http.HttpServletRequest httpRequest = ((HttpRequest) cycle
-                .getRequest()).getServletRequest();
+        javax.servlet.http.HttpServletRequest httpRequest = ((WebRequest) cycle
+                .getRequest()).getHttpServletRequest();
         
         javax.servlet.ServletContext servletContext = httpRequest.getSession()
                 .getServletContext();
