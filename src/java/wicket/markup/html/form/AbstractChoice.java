@@ -27,13 +27,13 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 
 /**
- * Abstract base class for all Choice (html select) options.
+ * Abstract base class for all AbstractChoice (html select) options.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-abstract class Choice extends FormComponent
+abstract class AbstractChoice extends FormComponent
 {
 	/**
 	 * Default value to display when a null option is rendered. Initially set to
@@ -59,7 +59,7 @@ abstract class Choice extends FormComponent
 	 *            The collection of values in the dropdown
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
-	public Choice(String name, Serializable object, final Collection values)
+	public AbstractChoice(String name, Serializable object, final Collection values)
 	{
 		super(name, object);
 		setValues(values);
@@ -76,7 +76,7 @@ abstract class Choice extends FormComponent
 	 *            The collection of values in the dropdown
 	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
-	public Choice(String name, Serializable object, String expression,
+	public AbstractChoice(String name, Serializable object, String expression,
 			final Collection values)
 	{
 		super(name, object, expression);
@@ -128,7 +128,7 @@ abstract class Choice extends FormComponent
 	 *            values to set
 	 * @return dropdown choice
 	 */
-	public Choice setValues(final Collection values)
+	public AbstractChoice setValues(final Collection values)
 	{
 		if (values == null)
 		{

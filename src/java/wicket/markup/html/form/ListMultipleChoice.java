@@ -32,13 +32,13 @@ import wicket.markup.ComponentTag;
  * @author Jonathan Locke
  * @author Johan Compagner
  */
-public class ListMultipleChoice extends Choice
+public class ListMultipleChoice extends AbstractChoice
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1000324612688307682L;
 
 	/**
-	 * @see Choice#Choice(String, Serializable, String, Collection)
+	 * @see AbstractChoice#Choice(String, Serializable, String, Collection)
 	 */
 	public ListMultipleChoice(final String componentName, final Serializable model,
 			final String expression, final Collection values)
@@ -48,7 +48,7 @@ public class ListMultipleChoice extends Choice
 	}
 
 	/**
-	 * @see Choice#Choice(String, Serializable, Collection)
+	 * @see AbstractChoice#Choice(String, Serializable, Collection)
 	 */
 	public ListMultipleChoice(final String componentName, final Serializable model,
 			final Collection values)
@@ -188,7 +188,7 @@ public class ListMultipleChoice extends Choice
 	 * @param currentValue
 	 *            the current list value
 	 * @return whether the given value represents the current selection
-	 * @see wicket.markup.html.form.Choice#isSelected(java.lang.Object)
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(java.lang.Object)
 	 */
 	protected final boolean isSelected(Object currentValue)
 	{
