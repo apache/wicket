@@ -73,6 +73,14 @@ public class StringBufferResource extends AbstractStringResource
 	}
 
 	/**
+	 * Clears the string buffer resource.
+	 */
+	public void clear()
+	{
+		buffer.delete(0, buffer.length());
+	}
+
+	/**
 	 * @see wicket.util.resource.AbstractStringResource#getString()
 	 */
 	protected String getString()
