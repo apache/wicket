@@ -95,15 +95,15 @@ a.none {
 	padding-right: 0px;
 }
 
-#inputForm {
+#wicket-inputForm {
 	width: 300px;
 }
 
-#inputForm label {
+#wicket-inputForm label {
 	display: block;
 	padding: 3px 0 0;
 }
 
-#inputForm label.non {
+#wicket-inputForm label.non {
 	display: inline !important;
 }
