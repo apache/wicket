@@ -61,7 +61,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Eelco Hillenius
  */
-public class JettyExternalVMTestCase extends AbstractJettyTestCase
+public abstract class JettyExternalVMTestCase extends AbstractJettyTestCase
 {
 	/** logger. */
 	private static Log log = LogFactory.getLog(JettyExternalVMTestCase.class);
