@@ -30,10 +30,13 @@ import wicket.util.collections.MicroMap;
  * sorted. It also provides support for the table to change the
  * style of the header depending on its status. 
  *
+ * @see SortableTableHeaderGroup
+ * @see SortableTableHeaders
+ * 
  * @author Juergen Donnerstag
  */
 public class SortableTableHeaderGroup
-{ // TODO finalize javadoc
+{
     /** contains the name of SortableTableHeader to be sorted */
     final private MicroMap sorted = new MicroMap();
 
@@ -42,9 +45,6 @@ public class SortableTableHeaderGroup
 
     /** The html container the header must be added to */
     private Container container;
-
-    /** Automatically add the markup for each Link required */
-    private boolean addActionLinkMarkup = false;
 
     /**
      * Maintain a group SortableTableHeader
@@ -119,23 +119,5 @@ public class SortableTableHeaderGroup
         {
             tag.put("class", style);
         }
-    }
-
-    /**
-     *
-     * @return If true, actionLink markup will be added automatically
-     */
-    protected boolean isAddActionLinkMarkup()
-    {
-        return addActionLinkMarkup;
-    }
-
-    /**
-     * If true, actionLink markup will be added automatically
-     * @param addActionLinkMarkup
-     */
-    protected void setAddActionLinkMarkup(boolean addActionLinkMarkup)
-    {
-        this.addActionLinkMarkup = addActionLinkMarkup;
     }
 }

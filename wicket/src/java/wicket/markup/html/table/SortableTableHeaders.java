@@ -33,30 +33,30 @@ import wicket.markup.html.HtmlContainer;
  * <p>
  * The component can only be used with &lt;thead&gt; tags. 
  * 
- * @author Juergen Donnerstag
+ * @see SortableTableHeaderGroup
+ * @see SortableTableHeader
+ * 
+* @author Juergen Donnerstag
  */
 public class SortableTableHeaders extends HtmlContainer
-{ // TODO finalize javadoc
+{
     /** Logging */
     final private Log log = LogFactory.getLog(SortableTableHeaders.class);
     
-    /** Each SortableTableHeader (without 's)  must be related to a group */
+    /** Each SortableTableHeader (without 's)  must be attached to a group */
     final private SortableTableHeaderGroup group;
 
     /**
-     * Constructor
+     * Construct.
      * 
      * @param componentName The component name; must not be null
-     * @param listView the list view
-     * @param addActionLinkMarkup
+     * @param listView the underlying ListView (the table)
      */
-    public SortableTableHeaders(final String componentName,
-            final ListView listView, final boolean addActionLinkMarkup)
+    public SortableTableHeaders(final String componentName, final ListView listView)
     {
         super(componentName);
         
         this.group = new SortableTableHeaderGroup(this, listView);
-        this.group.setAddActionLinkMarkup(addActionLinkMarkup);
     }
 
     /**
