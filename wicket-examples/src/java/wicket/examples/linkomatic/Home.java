@@ -28,6 +28,7 @@ import wicket.markup.html.link.ExternalPageLink;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.ImageMap;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.link.PopupSpecification;
 import wicket.markup.html.link.SimpleHref;
@@ -39,7 +40,11 @@ import wicket.markup.html.link.SimpleHref;
  */
 public class Home extends HtmlPage
 {
+    /** click count for Link. */
     private int linkClickCount = 0;
+
+    /** click count for OnClickLink. */
+    private int onClickLinkClickCount = 0;
 
     /**
      * Constructor
@@ -51,18 +56,30 @@ public class Home extends HtmlPage
 
         // Action link counts link clicks
         final Link actionLink = new Link("actionLink")
+        {
+            public void linkClicked(final RequestCycle cycle)
             {
-                public void linkClicked(final RequestCycle cycle)
-                {
-                    linkClickCount++;
-
-                    // Redirect back to result to avoid refresh updating the link count
-                    cycle.setRedirect(true);
-                }
-            };
-
+                linkClickCount++;
+                // Redirect back to result to avoid refresh updating the link count
+                cycle.setRedirect(true);
+            }
+        };
         actionLink.add(new Label("linkClickCount", this, "linkClickCount"));
         add(actionLink);
+
+        // Action link counts link clicks on works with onclick handler
+        final OnClickLink actionOnClickLink = new OnClickLink("actionOnClickLink")
+        {
+            public void linkClicked(final RequestCycle cycle)
+            {
+                onClickLinkClickCount++;
+                // Redirect back to result to avoid refresh updating the link count
+                cycle.setRedirect(true);
+            }
+        };
+
+        add(actionOnClickLink);
+        add(new Label("onClickLinkClickCount", this, "onClickLinkClickCount"));
 
         // Link to Page1 is a simple external page link 
         add(new ExternalPageLink("page1Link", Page1.class));
@@ -135,6 +152,24 @@ public class Home extends HtmlPage
     public void setLinkClickCount(final int linkClickCount)
     {
         this.linkClickCount = linkClickCount;
+    }
+
+    /**
+     * Gets onClickLinkClickCount.
+     * @return onClickLinkClickCount
+     */
+    public int getOnClickLinkClickCount()
+    {
+        return onClickLinkClickCount;
+    }
+
+    /**
+     * Sets onClickLinkClickCount.
+     * @param onClickLinkClickCount onClickLinkClickCount
+     */
+    public void setOnClickLinkClickCount(int onClickLinkClickCount)
+    {
+        this.onClickLinkClickCount = onClickLinkClickCount;
     }
 }
 
