@@ -27,7 +27,7 @@ import wicket.markup.ComponentTag;
  * @author Eelco Hillenius
  */
 public class OnClickTreeNodeLink extends AbstractTreeNodeLink
-{ // TODO finalize javadoc
+{
     /**
      * Construct.
      * @param componentName name of component

@@ -7,7 +7,6 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestCycle;
 import wicket.markup.html.tree.IndentTree;
 import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.TreeStateCache;
@@ -44,18 +43,18 @@ public class MyTree extends IndentTree
 	/**
 	 * @see wicket.markup.html.tree.IndentTree#junctionLinkClicked(wicket.RequestCycle, wicket.markup.html.tree.TreeNodeModel)
 	 */
-	protected void junctionLinkClicked(RequestCycle cycle, TreeNodeModel node)
+	protected void junctionLinkClicked(TreeNodeModel node)
 	{
-		super.junctionLinkClicked(cycle, node);
+		super.junctionLinkClicked(node);
 		log.info("tree junction link was clicked, user object: " + node.getUserObject());
 	}
 
 	/**
 	 * @see wicket.markup.html.tree.IndentTree#nodeLinkClicked(wicket.RequestCycle, wicket.markup.html.tree.TreeNodeModel)
 	 */
-	protected void nodeLinkClicked(RequestCycle cycle, TreeNodeModel node)
+	protected void nodeLinkClicked(TreeNodeModel node)
 	{
-		super.nodeLinkClicked(cycle, node);
+		super.nodeLinkClicked(node);
 		log.info("tree node link was clicked, user object: " + node.getUserObject());
 	}
 

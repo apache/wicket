@@ -27,7 +27,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
@@ -65,7 +64,7 @@ import wicket.model.Model;
  * @author Eelco Hillenius
  */
 public abstract class IndentTree extends Tree
-{ // TODO finalize javadoc
+{
     /** table for the current visible tree paths. */
     private ListView visibleTreePathTable;
 
@@ -163,9 +162,9 @@ public abstract class IndentTree extends Tree
         TreeNodeLink junctionLink = new TreeNodeLink(
         		"junctionLink", this, node){
 
-            public void linkClicked(RequestCycle cycle, TreeNodeModel node)
+            public void linkClicked(TreeNodeModel node)
             {
-            	junctionLinkClicked(cycle, node);
+            	junctionLinkClicked(node);
             }   
         };
 		HtmlContainer junctionImg = new HtmlContainer("junctionImg");
@@ -185,10 +184,9 @@ public abstract class IndentTree extends Tree
 	/**
 	 * Handler that is called when a junction link is clicked; this implementation
 	 * sets the expanded state to one that corresponds with the node selection.
-	 * @param cycle the current request cycle
 	 * @param node the tree node model
 	 */
-	protected void junctionLinkClicked(RequestCycle cycle, TreeNodeModel node)
+	protected void junctionLinkClicked(TreeNodeModel node)
 	{
         setExpandedState(node);
 	}
@@ -203,9 +201,9 @@ public abstract class IndentTree extends Tree
 		Object userObject = node.getTreeNode().getUserObject();
         TreeNodeLink nodeLink = new TreeNodeLink("nodeLink", this, node){
 
-            public void linkClicked(RequestCycle cycle, TreeNodeModel node)
+            public void linkClicked(TreeNodeModel node)
             {
-            	nodeLinkClicked(cycle, node);
+            	nodeLinkClicked(node);
             }   
         };
 		HtmlContainer nodeImg = new HtmlContainer("nodeImg");
@@ -237,10 +235,9 @@ public abstract class IndentTree extends Tree
 	 * Handler that is called when a node link is clicked; this implementation
 	 * sets the expanded state just as a click on a junction would do.
 	 * Override this for custom behaviour.
-	 * @param cycle the current request cycle
 	 * @param node the tree node model
 	 */
-	protected void nodeLinkClicked(RequestCycle cycle, TreeNodeModel node)
+	protected void nodeLinkClicked(TreeNodeModel node)
 	{
 		setSelected(node);
 	}
