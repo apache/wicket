@@ -18,13 +18,10 @@
  */
 package wicket.markup.html.table;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
-
-
 
 /**
  * A Wicket component, including markup, to draw and maintain a complete
@@ -52,11 +49,11 @@ public class PagedTableNavigator extends Panel
         add(new Label("headline", null)
         {
             // Dynamically - at runtime - create the text
-            protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
+            protected void handleBody(final MarkupStream markupStream,
                     final ComponentTag openTag)
             {
                 String text = getHeadlineText(table); 
-                replaceBody(cycle, markupStream, openTag, text);
+                replaceBody(markupStream, openTag, text);
             }
         });
         

@@ -18,11 +18,9 @@
  */
 package wicket.markup.html;
 
-
 import java.io.Serializable;
 
 import wicket.Container;
-import wicket.RequestCycle;
 import wicket.model.IModel;
 
 /**
@@ -124,11 +122,10 @@ public class HtmlContainer extends Container
     /**
      * Renders this component.
      * This implementation just calls renderComponent.
-     * @param cycle The response to write to
      */
-    protected void handleRender(final RequestCycle cycle)
+    protected void handleRender()
     {
-        renderComponent(cycle, findMarkupStream());
+        renderComponent(findMarkupStream());
     }
 }
 

@@ -18,10 +18,8 @@
  */
 package wicket.markup.html.basic;
 
-
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
@@ -118,28 +116,23 @@ public class MultiLineLabel extends HtmlComponent
 
     /**
      * Allows modification of component tag.
-     * @param cycle The request cycle
      * @param tag The tag to modify
-     * @see wicket.Component#handleComponentTag(RequestCycle,
-     *      wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "span");
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
     }
 
     /**
-     * @see wicket.Component#handleBody(wicket.RequestCycle,
-     *      wicket.markup.MarkupStream,
-     *      wicket.markup.ComponentTag)
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
+    protected void handleBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
         final String body = Strings.toMultilineMarkup(getModelObjectAsString());
-
-        replaceBody(cycle, markupStream, openTag, body);
+        replaceBody(markupStream, openTag, body);
     }
 }
 

@@ -20,7 +20,6 @@ package wicket.markup.html.link;
 
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.RequestCycle;
 
 /**
  * Renders a stable link which can be cached in a web browser and used at a later time.
@@ -79,12 +78,12 @@ public final class BookmarkablePageLink extends Link
     }
 
     /**
-     * @see wicket.markup.html.link.Link#getURL(wicket.RequestCycle)
+     * @see wicket.markup.html.link.Link#getURL()
      */
-    protected String getURL(final RequestCycle cycle)
+    protected String getURL()
     {
         // add href using url to the dispatcher
-        return cycle.urlFor(pageClass, parameters);
+        return getRequestCycle().urlFor(pageClass, parameters);
     }
 
     /**

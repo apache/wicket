@@ -18,13 +18,11 @@
  */
 package wicket.markup.html.form;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.util.lang.EnumeratedType;
@@ -75,20 +73,18 @@ public final class RadioOptionSet extends FormComponent
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "span");
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
     }
 
     /**
-     * @see wicket.Component#handleBody(RequestCycle, MarkupStream,
-     *      ComponentTag)
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-            final ComponentTag openTag)
+    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
         // Buffer to hold generated body
         final StringBuffer options = new StringBuffer();
@@ -132,7 +128,7 @@ public final class RadioOptionSet extends FormComponent
         }
 
         // Replace body
-        replaceBody(cycle, markupStream, openTag, options.toString());
+        replaceBody(markupStream, openTag, options.toString());
     }
 
     /**

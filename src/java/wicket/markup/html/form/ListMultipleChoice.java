@@ -25,11 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.model.Model;
-
 
 /**
  * A multiple choice list component.
@@ -73,12 +71,11 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTag(RequestCycle,
-	 *      ComponentTag)
+	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
-	protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+	protected void handleComponentTag(final ComponentTag tag)
 	{
-		super.handleComponentTag(cycle, tag);
+		super.handleComponentTag(tag);
 		tag.put("multiple", true);
 	}
 

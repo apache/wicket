@@ -121,22 +121,22 @@ public class DropDownChoice extends AbstractDropDownChoice
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
         if (this instanceof IOnChangeListener)
         {
             // if a user subclasses this class and implements IOnChangeListener
             // an onChange scriptlet is added
-            String url = cycle.urlFor(this, IOnChangeListener.class);
+            String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
             url = url.replaceAll("&", "&amp;");
             tag.put("onChange", "location.href='"
                     + url + "&amp;" + getPath() +
                     "=' + this.options[this.selectedIndex].value;");
         }
 
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
     }
 
 	/**

@@ -177,7 +177,7 @@ public abstract class Tree extends Panel implements ILinkListener
     {
     	String param = AbstractTreeNodeLink.REQUEST_PARAMETER_LINK_ID;
         // TODO Shouldn't this be getRequestString() now?
-        String linkId = ((HttpRequest)getRequestCycle().getRequest()).getParameter(param);
+        String linkId = ((HttpRequest)getRequest()).getParameter(param);
         AbstractTreeNodeLink link = (AbstractTreeNodeLink) links.get(linkId);
         if (link == null)
         {

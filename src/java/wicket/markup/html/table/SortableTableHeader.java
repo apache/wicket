@@ -105,14 +105,11 @@ public abstract class SortableTableHeader extends Border
     }
 
     /**
-     * Handle the component's tag
-     *
-     * @see wicket.Component#handleComponentTag(wicket.RequestCycle,
-     *      wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
-    protected void handleComponentTag(RequestCycle cycle, ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
-        group.handleComponentTag(cycle, tag, getCssClass());
+        group.handleComponentTag(tag, getCssClass());
     }
     
     /**

@@ -18,6 +18,8 @@
  */
 package wicket;
 
+import java.util.Locale;
+
 import wicket.markup.ComponentTag;
 
 /**
@@ -68,6 +70,13 @@ public abstract class Response
      * @param mimeType The mime type
      */
     public void setContentType(final String mimeType)
+    {        
+    }
+    
+    /**
+     * @param locale Locale to use for this response
+     */
+    public void setLocale(final Locale locale)
     {
     }
 

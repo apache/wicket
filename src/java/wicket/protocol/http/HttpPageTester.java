@@ -98,8 +98,8 @@ public final class HttpPageTester
             }
         }
 
-        // Render page using request cycle
-        page.render(getRequestCycle());
+        // Render page
+        page.render();
     }
 
     /**

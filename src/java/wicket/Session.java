@@ -179,18 +179,7 @@ public abstract class Session implements Serializable
     {
         return cycle;
     }
-    
-    /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
-     * SUPPORTED IN THE FUTURE.
-     * @return The currently active request cycle for this session
-     * with a null response set so that output is discarded
-     */
-    public final RequestCycle getNullResponseRequestCycle()
-    {
-        return cycle.nullResponse();
-    }
-    
+        
     /**
      * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE 
      * SUPPORTED IN THE FUTURE.

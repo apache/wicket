@@ -20,7 +20,6 @@ package wicket.resource;
 
 import wicket.Component;
 import wicket.IApplication;
-import wicket.RequestCycle;
 import wicket.Session;
 
 /**
@@ -51,9 +50,8 @@ public class DummyComponent extends Component
 
 	/**
 	 * Implementation which renders this component.
-	 * @param cycle The response to write to
 	 */
-	protected void handleRender(RequestCycle cycle)
+	protected void handleRender()
 	{
 	}
 

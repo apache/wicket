@@ -18,6 +18,7 @@
  */
 package wicket;
 
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -32,6 +33,11 @@ import java.util.Map;
  */
 public abstract class Request
 {
+    /**
+     * @return The locale for this request
+     */
+    public abstract Locale getLocale();
+    
     /**
      * Retrieves the URL of this request.
      * @return The full original request URL

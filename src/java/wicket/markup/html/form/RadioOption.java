@@ -18,10 +18,8 @@
  */
 package wicket.markup.html.form;
 
-
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -207,16 +205,16 @@ public final class RadioOption extends FormComponent
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected void handleComponentTag(final ComponentTag tag)
     {
         // Check that this option is attached to a radio input
         checkTag(tag, "input");
         checkAttribute(tag, "type", "radio");
 
         // Let superclass do whatever
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
 
         // Find parent RadioChoice
         final RadioChoice parent = (RadioChoice) findParent(RadioChoice.class);
@@ -237,11 +235,10 @@ public final class RadioOption extends FormComponent
     }
 
     /**
-     * @see wicket.Container#handleBody(wicket.RequestCycle,
-     *      wicket.markup.MarkupStream,
+     * @see wicket.Container#handleBody(wicket.markup.MarkupStream,
      *      wicket.markup.ComponentTag)
      */
-    protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
+    protected void handleBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
         Object value = getModelObject();
@@ -259,7 +256,7 @@ public final class RadioOption extends FormComponent
         String s = getLocalizer().getString(
                 getName() + "." + displayLabel, this, displayLabel);
 
-        replaceBody(cycle, markupStream, openTag, s);
+        replaceBody(markupStream, openTag, s);
     }
 
     /**

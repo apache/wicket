@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
-import wicket.protocol.http.HttpResponse;
 
 
 /**
@@ -168,19 +167,18 @@ public abstract class Page extends Container implements IRedirectListener
 
     /**
      * Performs a render of this component.
-     * @param cycle The response to render to
      */
-    public void render(final RequestCycle cycle)
+    public void render()
     {
         try
         {
             initUIMessages();
-            super.render(cycle);
+            super.render();
 
             // If the application wants component uses checked and 
             // the response is not a redirect
-            if (getApplicationSettings().getComponentUseCheck()
-                    && !cycle.getResponse().isRedirect())
+            if (getApplicationSettings().getComponentUseCheck() &&
+                !getResponse().isRedirect())
             {
                 // Visit components on page
                 checkRendering(this);
@@ -214,11 +212,11 @@ public abstract class Page extends Container implements IRedirectListener
 
     /**
      * Renders this container to the given response object.
-     * @param cycle The response to write to
      */
-    protected void handleRender(final RequestCycle cycle)
+    protected void handleRender()
     {
-    	configureResponse(cycle);
+        // Configure response object with locale and content type
+    	configureResponse();
     	
         // Check access to page
         if (checkAccess())
@@ -228,22 +226,23 @@ public abstract class Page extends Container implements IRedirectListener
             setMarkupStream(markupStream);
 
             // Render all the page's markup
-            renderAll(cycle, markupStream);
+            renderAll(markupStream);
         }
     }
 
     /**
-     * Set-up response header
-     * 
-     * @param cycle
+     * Set-up response with appropriate content type and locale.
      */
-    protected void configureResponse(final RequestCycle cycle)
+    protected void configureResponse()
     {
+        // Get response
+        final Response response = getResponse();
+        
         // Set content type based on markup type for page
-    	cycle.response.setContentType("text/" + getMarkupType());
+    	response.setContentType("text/" + getMarkupType());
         
         // Set response locale from session locale
-    	((HttpResponse)cycle.response).setLocale(cycle.getSession().getLocale());
+    	response.setLocale(getSession().getLocale());
     }
 
     /**

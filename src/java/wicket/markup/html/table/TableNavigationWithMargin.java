@@ -18,8 +18,6 @@
  */
 package wicket.markup.html.table;
 
-import wicket.RequestCycle;
-
 /**
  *
  * @author Juergen Donnerstag
@@ -46,32 +44,30 @@ public class TableNavigationWithMargin extends TableNavigation
 
     /**
      * TableNavigation itself (not table) may have pages.
-     * @param cycle request cycle
      */
-    protected void handleRender(final RequestCycle cycle)
+    protected void handleRender()
     {
         // Set window based on table's current page
         this.setStartIndex(); 
         
         // default 
-        super.handleRender(cycle);
+        super.handleRender();
     }
 
     /**
      * Render the cell. Add the separator if not last cell
      * @param listItem
-     * @param cycle
      * @param lastItem
      */
-    protected void renderItem(final ListItem listItem, final RequestCycle cycle, final boolean lastItem)
+    protected void renderItem(final ListItem listItem, final boolean lastItem)
     {
         // default
-        super.renderItem(listItem, cycle, lastItem);
+        super.renderItem(listItem, lastItem);
         
         // add separator if not last page
         if ((separator != null) && !lastItem)
         {
-            cycle.getResponse().write(separator);
+            getResponse().write(separator);
         }
     }
 

@@ -18,9 +18,7 @@
  */
 package wicket.markup.html.tree;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
-
 
 /**
  * Special link for working with trees. Using these links enables working with server-side
@@ -43,13 +41,13 @@ public class OnClickTreeNodeLink extends AbstractTreeNodeLink
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
         // Add simple javascript on click handler that links to this
         // link's linkClicked method
-        String url = getURL(cycle);
+        String url = getURL();
         url = url.replaceAll("&", "&amp;");
 		tag.put("onclick", "location.href='"+ url + "';");
     }

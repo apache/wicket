@@ -18,9 +18,7 @@
  */
 package wicket.markup;
 
-import wicket.RequestCycle;
 import wicket.markup.html.HtmlComponent;
-
 
 /**
  * @author Juergen Donnerstag
@@ -49,25 +47,21 @@ public class MyLabel extends HtmlComponent
     
     /**
      * Allows modification of component tag.
-     * @param cycle The request cycle
      * @param tag The tag to modify
-     * @see wicket.Component#handleComponentTag(RequestCycle,
-     *      wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
-    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "component");
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
     }
 
     /**
-     * @see wicket.Component#handleBody(wicket.RequestCycle,
-     *      wicket.markup.MarkupStream,
+     * @see wicket.Component#handleBody(wicket.markup.MarkupStream,
      *      wicket.markup.ComponentTag)
      */
-    protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
-            final ComponentTag openTag)
+    protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
-        replaceBody(cycle, markupStream, openTag, text);
+        replaceBody(markupStream, openTag, text);
     }
 }

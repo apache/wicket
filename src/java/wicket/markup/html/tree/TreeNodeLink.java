@@ -18,10 +18,8 @@
  */
 package wicket.markup.html.tree;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-
 
 /**
  * Special link for working with trees. Using these links enables working with server-side
@@ -44,28 +42,28 @@ public class TreeNodeLink extends AbstractTreeNodeLink
     }
 
     /**
-     * @see wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
+     * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
-    protected final void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
+    protected final void handleBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
         // Render the body of the link
-        renderBody(cycle, markupStream, openTag);
+        renderBody(markupStream, openTag);
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
         // Can only attach links to anchor tags
         checkTag(tag, "a");
 
         // Default handling for tag
-        super.handleComponentTag(cycle, tag);
+        super.handleComponentTag(tag);
 
         // Set href to link to this link's linkClicked method
-        String url = getURL(cycle);
+        String url = getURL();
         url = url.replaceAll("&", "&amp;");
 		tag.put("href", url);
     }
