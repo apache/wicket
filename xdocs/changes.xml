@@ -18,8 +18,8 @@
     	tag for the given component tag.  Changed Juergen's fix to Panel use this method 
     	and then added another call to the same method to renderClosingComponentTag, 
     	which had been ignoring generation of close tags on /all/ openclose tags.  
-    	This problem was actually a bug in HelloWorld, if you changed the <span> tag 
-    	to a <span/> tag!
+    	This problem was actually a bug in HelloWorld, if you changed the &lt;span&gt; tag 
+    	to a &lt;span/&gt; tag!
       </action>
       <action type="update" dev="Eelco Hillenius" issue="">
 		Moved tree to contrib until packaged CSS is supported.
