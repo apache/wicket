@@ -41,6 +41,15 @@
         </properties>
     </dependency>
     <dependency>
+        <groupId>wicket</groupId>
+        <artifactId>wicket-extensions</artifactId>
+        <version>SNAPSHOT</version>
+        <properties>
+        	<eclipse.dependency>true</eclipse.dependency>
+            <war.bundle>true</war.bundle>
+        </properties>
+    </dependency>
+    <dependency>
       <groupId>hibernate</groupId>
       <artifactId>hibernate</artifactId>
       <version>2.1.6</version>
