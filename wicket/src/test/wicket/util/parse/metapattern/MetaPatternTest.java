@@ -19,19 +19,13 @@
 package wicket.util.parse.metapattern;
 
 
-import junit.framework.TestCase;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
-import wicket.util.parse.metapattern.Group;
-import wicket.util.parse.metapattern.IntegerGroup;
-import wicket.util.parse.metapattern.MetaPattern;
+import junit.framework.TestCase;
 import wicket.util.parse.metapattern.parsers.CommaSeparatedVariableParser;
 import wicket.util.parse.metapattern.parsers.IntegerVariableAssignmentParser;
+import wicket.util.parse.metapattern.parsers.TagNameParser;
+import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 
 /**
  * Test cases for this object
@@ -42,56 +36,119 @@ public final class MetaPatternTest extends TestCase
     /**
      *
      */
-    public void test()
+    public void testSimple()
     {
-        {
-            // Parse "variable = <number>"
-            final Group variable = new Group(MetaPattern.VARIABLE_NAME);
-            final IntegerGroup value = new IntegerGroup(MetaPattern.INTEGER);
-            final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {variable,
-                    MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
-                    MetaPattern.OPTIONAL_WHITESPACE, value});
+        // Parse "variable = <number>"
+        final Group variable = new Group(MetaPattern.VARIABLE_NAME);
+        final IntegerGroup value = new IntegerGroup(MetaPattern.INTEGER);
+        final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {variable,
+                MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
+                MetaPattern.OPTIONAL_WHITESPACE, value});
 
-            System.out.println("variableAssignment MetaPattern = " + variableAssignment);
+        final Matcher matcher = variableAssignment.matcher("foo = 9");
+        assertTrue(matcher.matches());
+        assertEquals("foo", matcher.group(1));
+        assertEquals("9", matcher.group(2));
+    }
 
-            final Matcher matcher = variableAssignment.matcher("foo = 9");
-            final Map variables = new HashMap();
+    public void testVariableAssignmentParser()
+    {
+        VariableAssignmentParser parser = new VariableAssignmentParser("foo = 9");
+        assertTrue(parser.matches());
+        assertEquals("foo", parser.getKey());
+        assertEquals("9", parser.getValue());
 
-            if (matcher.matches())
-            {
-                variables.put(variable.get(matcher), new Integer(value.getInt(matcher)));
-            }
+        parser = new VariableAssignmentParser("foo=9");
+        assertTrue(parser.matches());
+        assertEquals("foo", parser.getKey());
+        assertEquals("9", parser.getValue());
+    }
+    
+    public void testIntegerVariableAssignmentParser()
+    {
+        IntegerVariableAssignmentParser parser = 
+            	new IntegerVariableAssignmentParser("foo = 9");
+        assertTrue(parser.matches());
+        assertEquals("foo", parser.getVariable());
+        assertEquals(9, parser.getIntValue());
+        assertEquals(9, parser.getLongValue());
 
-            System.out.println("variables = " + variables);
-        }
+        parser = new IntegerVariableAssignmentParser("foo=9");
+	    assertTrue(parser.matches());
+	    assertEquals("foo", parser.getVariable());
+	    assertEquals(9, parser.getIntValue());
+	    assertEquals(9, parser.getLongValue());
 
-        {
-            final IntegerVariableAssignmentParser parser = new IntegerVariableAssignmentParser(
-                    "foo = 9");
-            final Map variables = new HashMap();
+        parser = new IntegerVariableAssignmentParser("foo=a");
+	    assertFalse(parser.matches());
+    }
 
-            if (parser.matches())
-            {
-                variables.put(parser.getVariable(), new Integer(parser.getIntValue()));
-            }
+    public void testCommaSeparatedVariableParser()
+    {
+        CommaSeparatedVariableParser parser = new CommaSeparatedVariableParser("a,b,c");
+	    assertTrue(parser.matches());
+	    assertEquals(3, parser.getValues().size());
+	    assertEquals("a", parser.getValues().get(0));
+	    assertEquals("b", parser.getValues().get(1));
+	    assertEquals("c", parser.getValues().get(2));
+	    
+	    // no whitespaces will be removed
+	    parser = new CommaSeparatedVariableParser(" a ,b, c , d ");
+	    assertTrue(parser.matches());
+	    assertEquals(4, parser.getValues().size());
+	    assertEquals(" a ", parser.getValues().get(0));
+	    assertEquals("b", parser.getValues().get(1));
+	    assertEquals(" c ", parser.getValues().get(2));
+	    assertEquals(" d ", parser.getValues().get(3));
 
-            System.out.println("variables = " + variables);
-        }
+	    // It'll care for "" and '' but it'll not remove them
+	    parser = new CommaSeparatedVariableParser("'a ',\" b\",'c,d'");
+	    assertTrue(parser.matches());
+	    assertEquals(3, parser.getValues().size());
+	    assertEquals("'a '", parser.getValues().get(0));
+	    assertEquals("\" b\"", parser.getValues().get(1));
+	    assertEquals("'c,d'", parser.getValues().get(2));
 
-        {
-            final String csv = "a,b,c";
-            final CommaSeparatedVariableParser parser = new CommaSeparatedVariableParser(csv);
+	    // But no escapes. Because no separator is following the 2nd "'",
+	    // it'll stop parsing the string.
+	    parser = new CommaSeparatedVariableParser("'a\'b, c");
+	    assertTrue(parser.matches());
+	    assertEquals(1, parser.getValues().size());
+	    assertEquals("'a'", parser.getValues().get(0));
+	    
+	    parser = new CommaSeparatedVariableParser("a");
+	    assertTrue(parser.matches());
+	    assertEquals(1, parser.getValues().size());
+	    assertEquals("a", parser.getValues().get(0));
 
-            if (parser.matches())
-            {
-                final List list = parser.getValues();
+	    // Empty elements are not supported
+	    parser = new CommaSeparatedVariableParser("a,,");
+	    assertTrue(parser.matches());
+	    assertEquals(1, parser.getValues().size());
+	    assertEquals("a", parser.getValues().get(0));
+    }
 
-                for (Iterator iterator = list.iterator(); iterator.hasNext();)
-                {
-                    System.out.println("value = " + iterator.next());
-                }
-            }
-        }
+    public void testTagParser()
+    {
+        String tag = "name";
+        TagNameParser parser = new TagNameParser(tag);
+        assertEquals(true, parser.matcher().matches());
+        assertEquals("name", parser.getName());
+        assertNull(parser.getNamespace());
+
+        tag = "namespace:name";
+        parser = new TagNameParser(tag);
+        assertEquals(true, parser.matcher().matches());
+        assertEquals("name", parser.getName());
+        assertEquals("namespace", parser.getNamespace());
+
+        tag = "namespace:";
+        parser = new TagNameParser(tag);
+        assertEquals(false, parser.matcher().matches());
+
+        tag = ":names";
+        parser = new TagNameParser(tag);
+        assertEquals(false, parser.matcher().matches());
     }
 }
 
