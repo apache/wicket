@@ -37,6 +37,9 @@ import wicket.util.string.Strings;
  * The Session for a RequestCycle can be retrieved by calling
  * RequestCycle.getSession(). If a RequestCycle object is not available, the
  * Session can be retrieved for a Component by calling Component.getSession().
+ * If neither is available, the currently active Session for the calling thread
+ * can be retrieved by calling the static method Session.get(). This last form
+ * should only be used if the first two forms cannot be used.
  * <p>
  * As currently implemented, each Component does not itself have a reference to
  * the session that contains it. However, the Page component at the root of the
@@ -71,410 +74,435 @@ import wicket.util.string.Strings;
  * retrieved again via getProperty(). Session properties no longer in use can be
  * removed via removeProperty().
  * <p>
- * Although public, the expireNewerThan and getFreshestPage methods are intended
- * for internal use only and may not be supported in the future. Framework
- * clients should not call these methods.
+ * Sessions have a class resolver and page factory property which implement
+ * IClassResolver and IPageFactory in order to find classes and instantiate
+ * pages.
+ * <p>
+ * Pages can be removed from the Session forcibly by calling remove(Page) or
+ * removeAll(), although such an action should rarely be necessary.
+ * <p>
+ * Although public, the removeNewerThan(Page) and getFreshestPage() methods are
+ * intended for internal use only and may not be supported in the future.
+ * Framework clients should not call these methods.
  * 
  * @author Jonathan Locke
  */
 public abstract class Session implements Serializable
-{ // TODO finalize javadoc
-    /** Thread-local current session. */
-    private static final ThreadLocal current = new ThreadLocal();
+{
+	/** Separator for component paths. */
+	private static final char componentPathSeparator = '.';
+    
+	/** Thread-local current session. */
+	private static final ThreadLocal current = new ThreadLocal();
 
-    /** Application that this is a session of. */
-    private transient Application application;
+	/** Application that this is a session of. */
+	private transient Application application;
 
-    /** Factory for constructing Pages for this Session */
-    private IPageFactory pageFactory;
+	/** Resolver for finding classes for this Session */
+	private IClassResolver classResolver;
 
-    /** Resolver for finding classes for this Session */
-    private IClassResolver classResolver;
+	/** Active request cycle */
+	private transient RequestCycle cycle;
 
-    /** Active request cycle */
-    private transient RequestCycle cycle;
+	/** URL to continue to after a given page. */
+	private String interceptContinuationURL;
 
-    /** Separator for component paths. */
-    private static final char componentPathSeparator = '.';
+	/** The locale to use when loading resources for this session. */
+	private Locale locale = Locale.getDefault();
 
-    /** The locale to use when loading resources for this session. */
-    private Locale locale = Locale.getDefault();
+	/** Factory for constructing Pages for this Session */
+	private IPageFactory pageFactory;
 
-    /** Next available page identifier. */
-    private int pageId = 0;
+	/** Next available page identifier. */
+	private int pageId = 0;
 
-    /** The still-live pages for this user session. */
-    private final Map pages;
+	/** The still-live pages for this user session. */
+	private final Map pages;
 
-    /** Session properties. */
-    private Map properties;
+	/** Session properties. */
+	private Map properties;
 
-    /** Any special "skin" style to use when loading resources. */
-    private String style;
+	/** Any special "skin" style to use when loading resources. */
+	private String style;
 
-    /** URL to continue to after a given page. */
-    private String interceptContinuationURL;
+	/**
+	 * Interface called when visiting session pages.
+	 * 
+	 * @author Jonathan Locke
+	 */
+	static interface IPageVisitor
+	{
+		/**
+		 * Visit method.
+		 * 
+		 * @param page
+		 *            the page
+		 */
+		public void page(final Page page);
+	}
 
-    /**
-     * Interface called when visiting session pages.
-     * 
-     * @author Jonathan Locke
-     */
-    static interface IPageVisitor
-    {
-        /**
-         * Visit method.
-         * 
-         * @param page
-         *            the page
-         */
-        public void page(final Page page);
-    }
+	/**
+	 * Get the session for the calling thread.
+	 * 
+	 * @return Session for calling thread
+	 */
+	public static Session get()
+	{
+		return (Session)current.get();
+	}
 
-    /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-     * THE FUTURE. Sets session for calling thread.
-     * 
-     * @param session
-     *            The session
-     */
-    public static void set(final Session session)
-    {
-        current.set(session);
-    }
+	/**
+	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+	 * THE FUTURE. Sets session for calling thread.
+	 * 
+	 * @param session
+	 *            The session
+	 */
+	public static void set(final Session session)
+	{
+		current.set(session);
+	}
 
-    /**
-     * Get the session for the calling thread.
-     * 
-     * @return Session for calling thread
-     */
-    public static Session get()
-    {
-        return (Session) current.get();
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param application
+	 *            The application that this is a session of
+	 */
+	protected Session(final Application application)
+	{
+		this.application = application;
+		setPageFactory(application.getSettings().getDefaultPageFactory());
+		setClassResolver(application.getSettings().getDefaultClassResolver());
+		this.pages = MostRecentlyUsedMap
+				.newInstance(application.getSettings().getMaxSessionPages());
+	}
 
-    /**
-     * Constructor.
-     * 
-     * @param application
-     *            The application that this is a session of
-     */
-    protected Session(final Application application)
-    {
-        this.application = application;
-        setPageFactory(application.getSettings().getDefaultPageFactory());
-        setClassResolver(application.getSettings().getDefaultClassResolver());
-        this.pages = MostRecentlyUsedMap.newInstance(application.getSettings()
-                .getMaxSessionPages());
-    }
+	/**
+	 * Get the application that is currently working with this session.
+	 * 
+	 * @return Returns the application.
+	 */
+	public final Application getApplication()
+	{
+		return application;
+	}
 
-    /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-     * THE FUTURE. Expires any pages in the session page map that are newer than
-     * the given page. It is called by implementors of RequestCycle to expire
-     * pages from the session page map which are no longer accessible in the
-     * user's browser by using the back button.
-     * 
-     * @param page
-     *            The page
-     */
-    public final void expireNewerThan(final Page page)
-    {
-        // Loop through pages in page map
-        for (final Iterator iterator = pages.values().iterator(); iterator
-                .hasNext();)
-        {
-            // Get next page
-            final Page current = (Page) iterator.next();
+	/**
+	 * @return The class resolver for this Session
+	 */
+	public final IClassResolver getClassResolver()
+	{
+		return classResolver;
+	}
 
-            // If the page has a higher id than the given page
-            if (current.getId() > page.getId())
-            {
-                // remove it from the cache
-                iterator.remove();
-            }
-        }
-    }
+	/**
+	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+	 * THE FUTURE. Get the freshest page in the session.
+	 * 
+	 * @return The freshest page in the session
+	 */
+	public final Page getFreshestPage()
+	{
+		// No fresh page found at first
+		Page freshest = null;
 
-    /**
-     * Get the application that is currently working with this session.
-     * 
-     * @return Returns the application.
-     */
-    public final Application getApplication()
-    {
-        return application;
-    }
+		// Loop through session pages
+		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+		{
+			// Get next page
+			final Page current = (Page)iterator.next();
 
-    /**
-     * @return The class resolver for this Session
-     */
-    public final IClassResolver getClassResolver()
-    {
-        return classResolver;
-    }
+			// If the page isn't stale
+			if (!current.isStale())
+			{
+				// and we don't yet have a freshest page OR the current page is
+				// fresher
+				if ((freshest == null) || (current.getId() < freshest.getId()))
+				{
+					// then we found a fresher page
+					freshest = current;
+				}
+			}
+		}
 
-    /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-     * THE FUTURE. Get the freshest page in the session.
-     * 
-     * @return The freshest page in the session
-     */
-    public final Page getFreshestPage()
-    {
-        // No fresh page found at first
-        Page freshest = null;
+		return freshest;
+	}
 
-        // Loop through session pages
-        for (final Iterator iterator = pages.values().iterator(); iterator
-                .hasNext();)
-        {
-            // Get next page
-            final Page current = (Page) iterator.next();
+	/**
+	 * Get this session's locale.
+	 * 
+	 * @return This session's locale
+	 */
+	public final Locale getLocale()
+	{
+		return this.locale;
+	}
 
-            // If the page isn't stale
-            if (!current.isStale())
-            {
-                // and we don't yet have a freshest page OR the current page is
-                // fresher
-                if ((freshest == null) || (current.getId() < freshest.getId()))
-                {
-                    // then we found a fresher page
-                    freshest = current;
-                }
-            }
-        }
+	/**
+	 * Get the page for the given path.
+	 * 
+	 * @param path
+	 *            Component path
+	 * @return The page based on the first path component (the page id)
+	 */
+	public final Page getPage(final String path)
+	{
+		// Retrieve the page for the first path component from this session
+		return getPage(Integer.parseInt(Strings.firstPathComponent(path, componentPathSeparator)));
+	}
 
-        return freshest;
-    }
+	/**
+	 * @return The page factory for this session
+	 */
+	public final IPageFactory getPageFactory()
+	{
+		return pageFactory;
+	}
 
-    /**
-     * Get this session's locale.
-     * 
-     * @return This session's locale
-     */
-    public final Locale getLocale()
-    {
-        return this.locale;
-    }
+	/**
+	 * Get the page property with the given key.
+	 * 
+	 * @param key
+	 *            The key
+	 * @return The value for the key
+	 */
+	public final Object getProperty(final String key)
+	{
+		if (properties != null)
+		{
+			return properties.get(key);
+		}
 
-    /**
-     * Get the page for the given path.
-     * 
-     * @param path
-     *            Component path
-     * @return The page based on the first path component (the page id)
-     */
-    public final Page getPage(final String path)
-    {
-        // Retrieve the page for the first path component from this session
-        return getPage(Integer.parseInt(Strings.firstPathComponent(path,
-                componentPathSeparator)));
-    }
+		return null;
+	}
 
-    /**
-     * @return The page factory for this session
-     */
-    public final IPageFactory getPageFactory()
-    {
-        return pageFactory;
-    }
+	/**
+	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+	 * THE FUTURE.
+	 * 
+	 * @return The currently active request cycle for this session
+	 */
+	public final RequestCycle getRequestCycle()
+	{
+		return cycle;
+	}
 
-    /**
-     * Get the page property with the given key.
-     * 
-     * @param key
-     *            The key
-     * @return The value for the key
-     */
-    public final Object getProperty(final String key)
-    {
-        if (properties != null)
-        {
-            return properties.get(key);
-        }
+	/**
+	 * Get the style.
+	 * 
+	 * @return Returns the style.
+	 */
+	public final String getStyle()
+	{
+		return style;
+	}
 
-        return null;
-    }
+	/**
+	 * Invalidates this session
+	 */
+	public abstract void invalidate();
 
-    /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-     * THE FUTURE.
-     * 
-     * @return The currently active request cycle for this session
-     */
-    public final RequestCycle getRequestCycle()
-    {
-        return cycle;
-    }
+	/**
+	 * Removes the given page from the cache. This method may be useful if you
+	 * have special knowledge that a given page cannot be accessed again. For
+	 * example, the user may have closed a popup window.
+	 * 
+	 * @param page
+	 *            The page to remove
+	 */
+	public final void remove(final Page page)
+	{
+		pages.remove(new Integer(page.getId()));
+	}
 
-    /**
-     * Get the style.
-     * 
-     * @return Returns the style.
-     */
-    public final String getStyle()
-    {
-        return style;
-    }
+	/**
+	 * Removes all pages from the session. Although this method should rarely be
+	 * needed, it is available (possibly for security reasons).
+	 */
+	public final void removeAll()
+	{
+		pages.clear();
+	}
 
-    /**
-     * Invalidates this session
-     */
-    public abstract void invalidate();
+	/**
+	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+	 * THE FUTURE. Expires any pages in the session page map that are newer than
+	 * the given page. It is called by implementors of RequestCycle to expire
+	 * pages from the session page map which are no longer accessible in the
+	 * user's browser by using the back button.
+	 * 
+	 * @param page
+	 *            The page
+	 */
+	public final void removeNewerThan(final Page page)
+	{
+		// Loop through pages in page map
+		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+		{
+			// Get next page
+			final Page current = (Page)iterator.next();
 
-    /**
-     * Removes a property on this session by key.
-     * 
-     * @param key
-     *            The key
-     */
-    public final void removeProperty(final String key)
-    {
-        if (properties != null)
-        {
-            properties.remove(key);
-        }
-    }
+			// If the page has a higher id than the given page
+			if (current.getId() > page.getId())
+			{
+				// remove it from the cache
+				iterator.remove();
+			}
+		}
+	}
 
-    /**
-     * Set class resolver for this session
-     * 
-     * @param classResolver
-     *            The class resolver
-     */
-    public final void setClassResolver(final IClassResolver classResolver)
-    {
-        this.classResolver = classResolver;
-    }
+	/**
+	 * Removes a property on this session by key.
+	 * 
+	 * @param key
+	 *            The key
+	 */
+	public final void removeProperty(final String key)
+	{
+		if (properties != null)
+		{
+			properties.remove(key);
+		}
+	}
 
-    /**
-     * Set the locale.
-     * 
-     * @param locale
-     *            New locale
-     */
-    public final void setLocale(final Locale locale)
-    {
-        this.locale = locale;
-    }
+	/**
+	 * Set class resolver for this session
+	 * 
+	 * @param classResolver
+	 *            The class resolver
+	 */
+	public final void setClassResolver(final IClassResolver classResolver)
+	{
+		this.classResolver = classResolver;
+	}
 
-    /**
-     * Set page factory for this session
-     * 
-     * @param pageFactory
-     *            The page factory
-     */
-    public final void setPageFactory(final IPageFactory pageFactory)
-    {
-        this.pageFactory = pageFactory;
-    }
+	/**
+	 * Set the locale.
+	 * 
+	 * @param locale
+	 *            New locale
+	 */
+	public final void setLocale(final Locale locale)
+	{
+		this.locale = locale;
+	}
 
-    /**
-     * Sets a property on this session.
-     * 
-     * @param key
-     *            The key
-     * @param value
-     *            The value
-     */
-    public final void setProperty(final String key, final Object value)
-    {
-        if (properties == null)
-        {
-            properties = new HashMap();
-        }
+	/**
+	 * Set page factory for this session
+	 * 
+	 * @param pageFactory
+	 *            The page factory
+	 */
+	public final void setPageFactory(final IPageFactory pageFactory)
+	{
+		this.pageFactory = pageFactory;
+	}
 
-        properties.put(key, value);
-    }
+	/**
+	 * Sets a property on this session.
+	 * 
+	 * @param key
+	 *            The key
+	 * @param value
+	 *            The value
+	 */
+	public final void setProperty(final String key, final Object value)
+	{
+		if (properties == null)
+		{
+			properties = new HashMap();
+		}
 
-    /**
-     * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-     * THE FUTURE. Sets the currently active request cycle for this session.
-     * 
-     * @param cycle
-     *            The request cycle
-     */
-    public final void setRequestCycle(final RequestCycle cycle)
-    {
-        this.cycle = cycle;
-    }
+		properties.put(key, value);
+	}
 
-    /**
-     * Set the style.
-     * 
-     * @param style
-     *            The style to set.
-     */
-    public final void setStyle(final String style)
-    {
-        this.style = style;
-    }
+	/**
+	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+	 * THE FUTURE. Sets the currently active request cycle for this session.
+	 * 
+	 * @param cycle
+	 *            The request cycle
+	 */
+	public final void setRequestCycle(final RequestCycle cycle)
+	{
+		this.cycle = cycle;
+	}
 
-    /**
-     * Adds page to session if not already added.
-     * 
-     * @param page
-     *            Page to add to this session
-     */
-    final void addPage(final Page page)
-    {
-        // Set session and identifier
-        page.setId(pageId++);
+	/**
+	 * Set the style.
+	 * 
+	 * @param style
+	 *            The style to set.
+	 */
+	public final void setStyle(final String style)
+	{
+		this.style = style;
+	}
 
-        // Add to page map
-        pages.put(new Integer(page.getId()), page);
-    }
+	/**
+	 * Adds page to session if not already added.
+	 * 
+	 * @param page
+	 *            Page to add to this session
+	 */
+	final void addPage(final Page page)
+	{
+		// Set session and identifier
+		page.setId(pageId++);
 
-    /**
-     * Get the interceptContinuationURL.
-     * 
-     * @return Returns the interceptContinuationURL.
-     */
-    final String getInterceptContinuationURL()
-    {
-        return interceptContinuationURL;
-    }
+		// Add to page map
+		pages.put(new Integer(page.getId()), page);
+	}
 
-    /**
-     * Get the page with the given id.
-     * 
-     * @param id
-     *            Page id
-     * @return Page with the given id
-     */
-    final Page getPage(final int id)
-    {
-        return (Page) pages.get(new Integer(id));
-    }
+	/**
+	 * Get the interceptContinuationURL.
+	 * 
+	 * @return Returns the interceptContinuationURL.
+	 */
+	final String getInterceptContinuationURL()
+	{
+		return interceptContinuationURL;
+	}
 
-    /**
-     * Set the interceptContinuationURL.
-     * 
-     * @param interceptContinuationURL
-     *            The interceptContinuationURL to set.
-     */
-    final void setInterceptContinuationURL(final String interceptContinuationURL)
-    {
-        this.interceptContinuationURL = interceptContinuationURL;
-    }
+	/**
+	 * Get the page with the given id.
+	 * 
+	 * @param id
+	 *            Page id
+	 * @return Page with the given id
+	 */
+	final Page getPage(final int id)
+	{
+		return (Page)pages.get(new Integer(id));
+	}
 
-    /**
-     * Visits the pages in this session.
-     * 
-     * @param visitor
-     *            The visitor to call
-     */
-    final void visitPages(final IPageVisitor visitor)
-    {
-        // Loop through pages in page map
-        for (final Iterator iterator = pages.values().iterator(); iterator
-                .hasNext();)
-        {
-            // Visit next page
-            visitor.page((Page) iterator.next());
-        }
-    }
+	/**
+	 * Set the interceptContinuationURL.
+	 * 
+	 * @param interceptContinuationURL
+	 *            The interceptContinuationURL to set.
+	 */
+	final void setInterceptContinuationURL(final String interceptContinuationURL)
+	{
+		this.interceptContinuationURL = interceptContinuationURL;
+	}
+
+	/**
+	 * Visits the pages in this session.
+	 * 
+	 * @param visitor
+	 *            The visitor to call
+	 */
+	final void visitPages(final IPageVisitor visitor)
+	{
+		// Loop through pages in page map
+		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+		{
+			// Visit next page
+			visitor.page((Page)iterator.next());
+		}
+	}
 }
 
 
