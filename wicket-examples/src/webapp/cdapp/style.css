@@ -1,0 +1,66 @@
+.feedbackPanelERROR {
+  color: red;
+  list-style: circle;
+  font-weight:bold;
+}
+
+.feedbackPanelINFO {
+  color: green;
+  list-style: circle;
+  font-weight:bold;
+}
+
+.titleERROR {
+  color: white;
+  background-color: red;
+}
+
+.performersERROR {
+  color: white;
+  background-color: red;
+}
+
+.labelERROR {
+  color: white;
+  background-color: red;
+}
+
+.yearERROR {
+  color: white;
+  background-color: red;
+}
+
+.required {
+	background-color: #FFFFCC;	
+}
+
+input, select, label  { 	
+  font-size:12px;
+  margin-right:10px 
+}
+
+#resultstable {
+ caption-side:bottom;
+ width:100%;
+}
+#resultstable thead th {
+ text-align: center;
+ width:140px;
+}
+#resultstable thead th.delete {
+ text-align: center;
+ width:40px;
+}
+#resultstable tbody td.delete {
+
+ text-align: center;
+}
+#wicket-detailForm {
+ width: 300px; }
+#wicket-detailForm label {
+ display: block;
+ padding: 3px 0 0;
+}
+#wicket-detailForm label.non {
+ display: inline !important;
+}

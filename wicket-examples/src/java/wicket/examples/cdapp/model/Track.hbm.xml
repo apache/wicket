@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+	PUBLIC "-//Hibernate/Hibernate Mapping DTD 1.1//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd"
+>
+
+
+<hibernate-mapping>
+
+	<class name="wicket.examples.cdapp.model.Track" table="track">
+
+		<id name="id" column="id" type="java.lang.Long" unsaved-value="any">
+
+			<generator class="native" />
+		</id>
+
+		<property name="number" type="integer" column="number" not-null="true" />
+
+		<property name="title" type="string" column="title" not-null="true" />
+		
+		<property name="performer" type="string" column="performer" not-null="false" />
+
+		<property name="length" type="double" column="track_length" not-null="false" />
+
+		<many-to-one name="cd" class="wicket.examples.cdapp.model.CD" column="cd_id" />
+
+	</class>
+
+</hibernate-mapping>

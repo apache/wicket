@@ -1,0 +1,35 @@
+<html>
+  <head>
+      <title>Wicket CDAPP</title>
+      <link rel="stylesheet" type="text/css"
+          href="style.css"/> 
+  </head>
+  <body>
+
+     <span id = "wicket-border">
+        <h1>Edit <span id="wicket-cdTitle">(cd title)</span></h1>
+
+        <form id="wicket-detailForm">
+          <fieldset>
+            <legend>Details</legend>
+              <label for="title">Title</label>
+              <input class="plain" id="wicket-title" type="text" size="40"/>
+              <label for="performers">Performers</label>
+              <input class="plain" id="wicket-performers" type="text" size="40"/>
+              <label for="label">Label</label>
+              <input class="plain" id="wicket-label" type="text" size="40"/>
+              <label for="year">Year</label>
+              <input class="plain" id="wicket-year" type="text" size="6"/>
+          </fieldset>   
+          <fieldset>
+            <input type="button" id="wicket-cancelButton" value="cancel"/>
+            <input type="submit" value="save"/>
+          </fieldset>
+         </form>
+
+        <span id="wicket-feedback"/>
+
+     </span>
+
+  </body>
+</html>

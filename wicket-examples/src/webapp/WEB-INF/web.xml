@@ -21,6 +21,17 @@
       <param-name>contextConfigLocation</param-name> 
       <param-value>/WEB-INF/spring.xml</param-value> 
     </context-param>
+
+	<!-- hibernate filter for cdapp example: see http://www.hibernate.org/43.html -->
+    <filter>
+        <filter-name>HibernateFilter</filter-name>
+        <filter-class>wicket.contrib.data.util.hibernate.HibernateFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>HibernateFilter</filter-name>
+        <url-pattern>/cdapp/*</url-pattern>
+    </filter-mapping>
     
     <!-- Prefer using the spring context listener instead of the loader servlet --> 
     <listener>
@@ -257,6 +268,21 @@
         <servlet-class>wicket.examples.appfuse.AppfuseApplication</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet -->
+
+    <servlet>
+        <servlet-name>cdapp</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>wicket.examples.cdapp.CDApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>cdapp</servlet-name>
+        <url-pattern>/cdapp/*</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>SignInApplication</servlet-name>

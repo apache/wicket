@@ -1,0 +1,87 @@
+<html>
+  <head>
+      <title>Wicket Examples - cdapp</title>
+      <link rel="stylesheet" type="text/css" href="style.css"/>
+      <link rel="stylesheet" type="text/css" href="cdapp/style.css"/>
+  </head>
+  <body>
+
+	<span id="wicket-mainNavigation"/>
+
+    <form id="wicket-searchForm">
+      <fieldset>
+        <legend>Search</legend>
+          <input id="wicket-search" type="text" size="20"/>
+          <input type="submit" value="search"/>
+      </fieldset>
+     </form>
+
+     <div>
+      <table id="resultstable">
+        <thead id="wicket-resultsHeader">
+          <tr>
+            <th>
+                <a id="wicket-sortOnArtist" href="#">Artist</a>
+            </th>
+            <th>
+                <a id="wicket-sortOnTitle" href="#">Title</a>
+            </th>
+            <th>
+                <a id="wicket-sortOnLabel" href="#">Label</a>
+            </th>
+            <th>
+                <a id="wicket-sortOnYear" href="#">Year</a>
+            </th>
+            <th class="delete">Delete</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <td colspan="2">
+                <span id="wicket-navigation">
+                    <span id="wicket-separator"/>
+                    <a id="wicket-pageLink" href="#">
+                      <span id="wicket-pageLabel"/><span id="wicket-pageNumber"/>
+                    </a>
+                </span>
+            </td>
+          </tr>
+        </tfoot>
+        <tbody>
+          <tr id="wicket-results">
+            <td>
+                <a href="#" id="wicket-performers">
+                  <span id="wicket-performers">(performers)</span>
+                </a>
+            </td>
+            <td>
+                <a href="#" id="wicket-title">
+                  <span id="wicket-title">(title)</span>
+                </a>
+            </td>
+            <td>
+                <a href="#" id="wicket-label">
+                  <span id="wicket-label">(label)</span>
+                </a>
+            </td>
+            <td>
+                <a href="#" id="wicket-year">
+                  <span id="wicket-year">(year)</span>
+                </a>
+            </td>
+            <td>
+                <a href="#" class="delete" id="wicket-delete">
+                    <img src="cdapp/delete.gif" border="0"/>
+                </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+     </div>
+
+	<div>
+		<span id="wicket-feedback"/>
+    </div>
+
+  </body>
+</html>
