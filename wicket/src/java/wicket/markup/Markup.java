@@ -18,21 +18,25 @@
  */
 package wicket.markup;
 
-
 import java.util.List;
 
 import wicket.util.resource.Resource;
 
 /**
- * Holds a list of MarkupElements
+ * Holds markup as a list of MarkupElements.  Subclasses
+ * of MarkupElement include RawMarkup and ComponentTag.
+ * 
+ * @see MarkupElement
+ * @see ComponentTag
+ * @see RawMarkup
  * @author Jonathan Locke
  */
 public final class Markup
-{ // TODO finalize javadoc
-    // The file where the markup was found for diagnostic purposes
+{
+    /** The markup's resource stream for diagnostic purposes */
     private final Resource resource;
 
-    // The list of markup elements
+    /** The list of markup elements */
     private final List markup;
 
     /**
@@ -64,7 +68,7 @@ public final class Markup
     }
 
     /**
-     * Gets the file that this markup came from
+     * Gets the resource that contains this markup
      * @return The resource where this markup came from
      */
     Resource getResource()
@@ -73,7 +77,7 @@ public final class Markup
     }
 
     /**
-     * @return String representaion of markup list
+     * @return String representation of markup list
      */
     public String toString()
     {
