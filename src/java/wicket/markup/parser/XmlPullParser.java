@@ -48,7 +48,7 @@ public final class XmlPullParser implements IXmlPullParser
 	/** Regex to find <?xml encoding ... ?> */
 	private static final Pattern encodingPattern = Pattern
 			.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
-    
+
 	/** Logging */
 	private static final Log log = LogFactory.getLog(XmlPullParser.class);
 
@@ -290,7 +290,7 @@ public final class XmlPullParser implements IXmlPullParser
 			// If yes, set this.encoding and return the character which follows
 			// it.
 			// If no, return the whole line. determineEncoding will read-ahead
-			//        at max. the very first line of the markup
+			// at max. the very first line of the markup
 			this.encoding = determineEncoding(bin, readAheadSize);
 
 			// Depending on the encoding determined from the markup-file, read
@@ -392,14 +392,14 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @param readAheadSize
 	 *            The read ahead buffer available to read the xml encoding
 	 *            information
-	 * @return null, if &lt;?xml ..?&gt; has been found; else all characters
+	 * @return Null, if &lt;?xml ..?&gt; has been found; else all characters
 	 *         read ahead
 	 * @throws IOException
 	 */
 	private final String determineEncoding(final InputStream in, final int readAheadSize)
 			throws IOException
 	{
-		// max one line
+		// Max one line
 		StringBuffer pushBack = new StringBuffer(readAheadSize);
 
 		// TODO could be improved if <?xml would be checked as well.
@@ -409,9 +409,8 @@ public final class XmlPullParser implements IXmlPullParser
 		{
 			pushBack.append((char)value);
 
-			// stop at end of the first tag or end of line. If it is html
-			// without
-			// newlines, stop after X bytes (= characters)
+			// Stop at end of the first tag or end of line. If it is HTML
+			// without newlines, stop after X bytes (= characters)
 			if ((value == '>') || (value == '\n') || (value == '\r')
 					|| (pushBack.length() >= (readAheadSize - 1)))
 			{
