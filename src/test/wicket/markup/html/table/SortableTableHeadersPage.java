@@ -66,7 +66,7 @@ public class SortableTableHeadersPage extends HtmlPage {
         };
 
         add(table);
-        add(new SortableTableHeaders("header", table, true)
+        add(new SortableTableHeaders("header", table)
         {
             /*
              * If object does not support equals()
