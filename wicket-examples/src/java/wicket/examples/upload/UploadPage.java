@@ -19,6 +19,7 @@
 package wicket.examples.upload;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,9 +33,11 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.upload.FileUploadForm;
 import wicket.markup.html.form.validation.IValidationFeedback;
+import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.markup.html.panel.FeedbackPanel;
 
 /**
  * Upload example.
@@ -52,8 +55,8 @@ public class UploadPage extends WicketExamplePage
     /** list of files, model for file table. */
     private final List files = new ArrayList();
 
-    /** reference to table for easy access. */
-    private FileTable fileTable;
+    /** reference to listview for easy access. */
+    private FileListView fileListView;
 
     /**
      * Constructor.
@@ -69,8 +72,10 @@ public class UploadPage extends WicketExamplePage
         add(new UploadForm("upload", null, tempDir));
         add(new Label("dir", tempDir.getAbsolutePath()));
         files.addAll(Arrays.asList(tempDir.list()));
-        fileTable = new FileTable("fileList", files);
-        add(fileTable);
+        fileListView = new FileListView("fileList", files);
+        add(fileListView);
+        add(new FeedbackPanel("feedback"));
+        
     }
 
     /**
@@ -80,7 +85,7 @@ public class UploadPage extends WicketExamplePage
     {
         files.clear();
         files.addAll(Arrays.asList(tempDir.list()));
-        fileTable.invalidateModel();
+        fileListView.invalidateModel();
         
     }
 
@@ -89,6 +94,12 @@ public class UploadPage extends WicketExamplePage
      */
     private class UploadForm extends FileUploadForm
     {
+    	/** simple holder of file name. */
+    	private Serializable data = new Serializable()
+    	{
+    		public String fileName;
+    	};
+
         /**
          * Construct.
          * @param name component name
@@ -98,7 +109,9 @@ public class UploadPage extends WicketExamplePage
         public UploadForm(String name, IValidationFeedback validationErrorHandler, File targetDirectory)
         {
             super(name, validationErrorHandler, targetDirectory);
-            add(new TextField("fileName", ""));
+            TextField textField = new TextField("fileName", data, "fileName");
+            textField.add(new RequiredValidator());
+			add(textField);
         }
 
         /**
@@ -113,14 +126,14 @@ public class UploadPage extends WicketExamplePage
     /**
      * table for files.
      */
-    private class FileTable extends ListView
+    private class FileListView extends ListView
     {
         /**
          * Construct.
          * @param name component name
          * @param object file list
          */
-        public FileTable(String name, List object)
+        public FileListView(String name, List object)
         {
             super(name, object);
         }
