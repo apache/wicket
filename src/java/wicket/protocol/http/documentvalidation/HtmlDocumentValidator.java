@@ -84,9 +84,8 @@ public class HtmlDocumentValidator
             switch (token)
             {
                 case HtmlDocumentParser.UNKNOWN :
-                    // Just ignore this and carry on processing!
                     // Error is already recorded by the parser
-                    break;
+                    return false;
                 case HtmlDocumentParser.END :
                     end = true;
                     break;

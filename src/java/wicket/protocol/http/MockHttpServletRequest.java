@@ -607,7 +607,11 @@ public class MockHttpServletRequest implements HttpServletRequest
         final StringBuffer buf = new StringBuffer();
         buf.append("http://localhost");
         buf.append(getContextPath());
-        buf.append(getPathInfo());
+        if (getPathInfo() != null)
+        {
+            buf.append(getPathInfo());
+        }
+        
         final String query = getQueryString();
         if (query != null)
         {

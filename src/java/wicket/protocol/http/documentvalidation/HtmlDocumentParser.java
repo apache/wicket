@@ -195,7 +195,33 @@ public class HtmlDocumentParser
             pos += part.indexOf("-->") + 3;
             return COMMENT;
         }
-        else if (part.matches("<[^/].*>.*"))
+        else if (part.matches("</.*>.*"))
+        {
+            // This is a closing tag
+            tag = part.substring(2, part.indexOf('>')).trim().toLowerCase();
+            pos += part.indexOf(">") + 1;
+            return CLOSE_TAG;
+        }
+        else if (part.matches("<[^/]+[^>]*/>.*"))
+        {
+            // This is an openclose tag
+            if (part.matches("<([a-zA-Z]+:)?[a-zA-Z]+/>.*"))
+            {
+                // No attributes
+                tag = part.substring(1, part.indexOf("/>")).toLowerCase();
+                attributes = new HashMap();
+            }
+            else
+            {
+                // Attributes
+                tag = part.substring(1, part.indexOf(' ')).toLowerCase();
+                String attributeString = part.substring(part.indexOf(' '), part.indexOf("/>"));
+                attributes = extractAttributes(attributeString);
+            }
+            pos += part.indexOf("/>") + 2;
+            return OPENCLOSE_TAG;
+        }
+        else if (part.matches("<[^/>]+.*>.*"))
         {
             // This is an opening tag
             if (part.matches("<([a-zA-Z]+:)?[a-zA-Z]*>.*"))
@@ -213,32 +239,6 @@ public class HtmlDocumentParser
             }
             pos += part.indexOf(">") + 1;
             return OPEN_TAG;
-        }
-        else if (part.matches("<.*/>.*"))
-        {
-            // This is an openclose tag
-            if (part.matches("<[a-zA-Z]*/>.*"))
-            {
-                // No attributes
-                tag = part.substring(1, part.indexOf("/>")).toLowerCase();
-                attributes = new HashMap();
-            }
-            else
-            {
-                // Attributes
-                tag = part.substring(1, part.indexOf(' ')).toLowerCase();
-                String attributeString = part.substring(part.indexOf(' '), part.indexOf("/>"));
-                attributes = extractAttributes(attributeString);
-            }
-            pos += part.indexOf("/>") + 2;
-            return OPENCLOSE_TAG;
-        }
-        else if (part.matches("</.*>.*"))
-        {
-            // This is a closing tag
-            tag = part.substring(2, part.indexOf('>')).trim().toLowerCase();
-            pos += part.indexOf(">") + 1;
-            return CLOSE_TAG;
         }
         else
         {
