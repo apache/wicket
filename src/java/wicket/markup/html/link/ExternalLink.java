@@ -52,6 +52,16 @@ public class ExternalLink extends HtmlContainer
     }
 
     /**
+     * Constructor.
+     * @param componentName The name of this component
+     * @param href the href attribute to set
+     */
+    public ExternalLink(final String componentName, final String href)
+    {
+        this(componentName, href, null);
+    }
+    
+    /**
      * Processes the component tag.
      * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
@@ -74,6 +84,9 @@ public class ExternalLink extends HtmlContainer
             ComponentTag openTag)
     {
         this.checkTag(openTag, "a");
-        replaceBody(markupStream, openTag, label);
+        if (label != null)
+        {
+            replaceBody(markupStream, openTag, label);
+        }
     }
 }
