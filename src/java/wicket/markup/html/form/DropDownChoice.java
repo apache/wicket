@@ -25,7 +25,6 @@ import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
-
 /**
  * A choice implemented as a dropdown menu/list. Framework users can extend this
  * class and optionally implement interface
