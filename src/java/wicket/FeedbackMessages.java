@@ -288,17 +288,21 @@ public final class FeedbackMessages
             {
                 Component component = (Component)i.next();
                 IModel currentModel = component.getModel();
-                
+               
                 // If the model was wrapped (ie the error message was added by the
                 // validation mechanism of this framework
                 if (currentModel instanceof ValidationErrorModelDecorator)
                 {
-                    ValidationErrorModelDecorator decorator =
-                        ((ValidationErrorModelDecorator)currentModel);
-                    IModel originalModel = decorator.getOriginalModel();
+                    ValidationErrorModelDecorator decorator = ((ValidationErrorModelDecorator)currentModel);
+                    IModel originalModel = originalModel = decorator.getOriginalModel();
+                    // Can happen if error page has happend.
+                    while(originalModel instanceof ValidationErrorModelDecorator)
+                    {
+                    	originalModel = ((ValidationErrorModelDecorator)originalModel).getOriginalModel();
+                    }
+	                 // Replace the model with the initial one
+	                	component.setModel(originalModel);
                     
-                    // Replace the model with the initial one
-                    component.setModel(originalModel);
                 }
             }
             
