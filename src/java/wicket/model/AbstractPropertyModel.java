@@ -39,9 +39,6 @@ import wicket.util.string.Strings;
  */
 public abstract class AbstractPropertyModel extends AbstractDetachableModel
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -3136339624173288385L;
-
 	/** Ognl context wrapper object. It contains the type converter. */
 	private transient OgnlContext context;
 

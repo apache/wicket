@@ -30,9 +30,6 @@ import wicket.util.lang.Primitives;
  */
 public class LongValue implements Comparable, Serializable
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = -8566127098655644274L;
-
 	/** The long value */
 	protected final long value;
 

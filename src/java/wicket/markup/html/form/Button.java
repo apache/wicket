@@ -30,9 +30,6 @@ import wicket.util.value.ValueMap;
  */
 public class Button extends FormComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -2913294206388017417L;
-
 	/**
 	 * @see wicket.Component#Component(String)
 	 */

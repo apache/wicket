@@ -30,9 +30,6 @@ import wicket.util.string.Strings;
  */
 public class CheckBox extends FormComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 7559827519977114184L;
-
 	/**
 	 * @see wicket.Component#Component(String)
 	 */

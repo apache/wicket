@@ -36,9 +36,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
 
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -8334966481181600604L;
-
 	/** Is the null value a valid value? */
 	private boolean nullValid = false;
 

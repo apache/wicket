@@ -27,9 +27,6 @@ import java.net.URI;
  */
 public final class Folder extends File
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = -2393525031297453147L;
-
 	/**
 	 * Constructor.
 	 * 

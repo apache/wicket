@@ -42,9 +42,6 @@ import wicket.model.IModel;
  */
 public final class FeedbackPanel extends Panel implements IFeedback
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -3385823935971399988L;
-
 	/** Message view */
 	private final MessageListView messageListView;
 

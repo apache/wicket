@@ -32,9 +32,6 @@ import wicket.model.IModel;
  */
 public class RadioChoice extends AbstractSingleSelectChoice
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = -1560593550286375796L;
-
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */

@@ -37,9 +37,6 @@ import java.awt.image.BufferedImage;
  */
 public abstract class RenderedDynamicImageResource extends DynamicImageResource
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 5934721258765771884L;
-
 	/** Height of image */
 	private int height = 100;
 

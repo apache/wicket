@@ -43,9 +43,6 @@ public final class Time extends AbstractTime
 
 	/** Parser in 'yyyy.MM.dd-h.mma' format. */
 	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy.MM.dd-h.mma");
-	
-	/** serialVersionUID. */
-	private static final long serialVersionUID = 4441606416914169210L;
 
 	/**
 	 * Gets a Time instance based on the given miliseconds.

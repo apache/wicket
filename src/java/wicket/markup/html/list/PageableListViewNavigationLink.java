@@ -29,9 +29,6 @@ import wicket.markup.html.link.PageLink;
  */
 public final class PageableListViewNavigationLink extends PageLink
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 9064718260408332988L;
-
 	/** The pageable list view. */
 	private final PageableListView pageableListView;
 
@@ -54,9 +51,6 @@ public final class PageableListViewNavigationLink extends PageLink
 	{
 		super(id, new IPageLink()
 		{
-			/** Serial Version ID. */
-			private static final long serialVersionUID = 7836120196635892372L;
-
 			public Page getPage()
 			{
 			    int idx = pageNumber;

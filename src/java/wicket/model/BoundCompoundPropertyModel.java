@@ -29,9 +29,6 @@ import wicket.Component;
  */
 public class BoundCompoundPropertyModel extends CompoundPropertyModel
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -3136339624173288385L;
-
 	/**
 	 * List of Bindings. Although a Map would be a more natural implementation
 	 * here, a List is much more compact in terms of space. Although it may take

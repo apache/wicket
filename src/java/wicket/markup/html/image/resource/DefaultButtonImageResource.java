@@ -37,9 +37,6 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/** The default width for button images */
 	private static int defaultWidth = 74;
 
-	/** serialVersionUID */
-	private static final long serialVersionUID = 5934721258765771884L;
-
 	/** The height of the arc in the corner */
 	private int arcHeight = 10;
 

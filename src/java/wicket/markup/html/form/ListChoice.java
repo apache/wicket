@@ -35,9 +35,6 @@ public class ListChoice extends DropDownChoice
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
     
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 1227773600645861006L;
-
 	/** The maximum number of rows to display. */
 	private int maxRows;
 

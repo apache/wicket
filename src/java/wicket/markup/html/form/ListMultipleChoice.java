@@ -36,9 +36,6 @@ import wicket.util.string.Strings;
  */
 public class ListMultipleChoice extends AbstractChoice
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -1000324612688307682L;
-
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */

@@ -35,9 +35,6 @@ import wicket.model.IModel;
  */
 abstract class AbstractChoice extends FormComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -8334966481181600604L;
-
 	/** The list of choices. */
 	private IChoiceList choices;
 

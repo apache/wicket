@@ -33,9 +33,6 @@ import wicket.markup.html.WebMarkupContainer;
  */
 public final class ImageMap extends WebMarkupContainer
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 209001445308790198L;
-
 	/** list of shape links. */
 	private final List shapeLinks = new ArrayList();
 

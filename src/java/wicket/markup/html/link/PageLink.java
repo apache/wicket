@@ -33,9 +33,6 @@ import wicket.Page;
  */
 public class PageLink extends Link
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 8530958543148278216L;
-
 	/** The delayed linking Page source. */
 	private final IPageLink pageLink;
 

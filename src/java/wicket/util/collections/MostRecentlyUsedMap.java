@@ -28,9 +28,6 @@ import java.util.Map;
  */
 public class MostRecentlyUsedMap extends LinkedHashMap
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = 895458107686513000L;
-	
 	/** Value most recently removed from map */
 	Object removedValue;
 	

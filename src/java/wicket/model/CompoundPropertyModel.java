@@ -31,9 +31,6 @@ import wicket.Component;
  */
 public class CompoundPropertyModel extends AbstractPropertyModel
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -3136339624173288385L;
-
 	/**
 	 * Constructor
 	 * 

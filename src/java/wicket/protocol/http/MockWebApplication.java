@@ -68,9 +68,6 @@ import wicket.protocol.http.WebSession;
  */
 public class MockWebApplication extends WebApplication
 {
-    /** Serial Version ID */
-    private static final long serialVersionUID = 8409647488957949834L;
-
     /** Mock http servlet context. */
     private final MockServletContext context;
 

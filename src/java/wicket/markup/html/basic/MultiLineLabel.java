@@ -36,9 +36,6 @@ import wicket.util.string.Strings;
  */
 public class MultiLineLabel extends WebComponent
 { 
-	/** Serial Version ID */
-	private static final long serialVersionUID = 7949493094618802759L;
-
 	/**
 	 * Convenience constructor. Same as Label(String, new Model(String))
 	 * 

@@ -51,9 +51,6 @@ import wicket.model.IModel;
  */
 public class Panel extends WebMarkupContainer
 {
-    /** Serial Version ID */
-    private static final long serialVersionUID = -5449444447932560536L;
-
     /**
      * @see wicket.Component#Component(String)
      */

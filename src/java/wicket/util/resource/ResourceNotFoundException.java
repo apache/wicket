@@ -24,9 +24,6 @@ package wicket.util.resource;
  */
 public final class ResourceNotFoundException extends Exception
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = -2885564637243403116L;
-
 	/**
 	 * Constructor
 	 */

@@ -31,9 +31,6 @@ import wicket.util.time.Time;
  */
 public abstract class AbstractStringResource extends AbstractResource
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 209001445308790198L;
-
 	/** MIME content type */
 	private final String contentType;
 	

@@ -35,9 +35,6 @@ import wicket.util.watch.IModifiable;
  */
 public class File extends java.io.File implements IModifiable
 {
-	/** serialVersionUID */
-	private static final long serialVersionUID = -1464216059997960924L;
-
 	/**
 	 * Constructor.
 	 * 

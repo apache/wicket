@@ -35,9 +35,6 @@ import wicket.util.parse.metapattern.parsers.MetaPatternParser;
  */
 public class DefaultButtonImageResourceFactory implements IResourceFactory
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 5934721258765771884L;
-
 	/**
 	 * @see wicket.IResourceFactory#newResource(java.lang.String, java.util.Locale, java.lang.String)
 	 */

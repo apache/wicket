@@ -31,9 +31,6 @@ import wicket.model.Model;
  */
 public class AttributeModifierComponentPage extends WebPage
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Construct.
 	 * 

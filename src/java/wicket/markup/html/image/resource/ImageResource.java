@@ -30,9 +30,6 @@ import wicket.util.resource.IResource;
  */
 public abstract class ImageResource extends WebResource
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 5934721258765771884L;
-
 	/**
 	 * @return Gets the image resource to attach to the component.
 	 */
