@@ -20,6 +20,7 @@ package com.voicetribe.wicket.markup.html.table;
 
 import junit.framework.TestCase;
 
+import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.protocol.http.MockHttpApplication;
 import com.voicetribe.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import com.voicetribe.wicket.protocol.http.documentvalidation.Tag;
@@ -33,7 +34,6 @@ public class PagedTableTest extends TestCase
 
     /**
      * Construct.
-     * 
      */
     public PagedTableTest()
     {
@@ -42,11 +42,11 @@ public class PagedTableTest extends TestCase
 
     /**
      * Construct.
-     * @param arg0
+     * @param name name of test
      */
-    public PagedTableTest(String arg0)
+    public PagedTableTest(String name)
     {
-        super(arg0);
+        super(name);
     }
 
     /**
@@ -62,15 +62,24 @@ public class PagedTableTest extends TestCase
         PagedTablePage page = (PagedTablePage)application.getLastRenderedPage();
         String document = application.getServletResponse().getDocument();
         assertTrue(validatePage1(document));
+
+        Link link = (Link)page.get("navigation.1.pageLink");
+        application.setupRequestAndResponse();
+        application.getServletRequest().setRequestToComponent(link);
+        application.processRequestCycle();
+
+        document = application.getServletResponse().getDocument();
+        assertTrue(validatePage2(document));
     }
 
     /**
-     * Helper method to validate the returned XML document.
+     * Validates page 1 of paged table.
      *
      * @param document The document
      * @return The validation result
      */
-    private boolean validatePage1(String document) {
+    private boolean validatePage1(String document)
+    {
         HtmlDocumentValidator validator = new HtmlDocumentValidator();
         Tag html = new Tag("html");
         Tag head = new Tag("head");
@@ -103,6 +112,51 @@ public class PagedTableTest extends TestCase
                  .addExpectedChild(new Tag("span")
                   .addExpectedChild(new TextContent("2")
          ))));
+
+        body.addExpectedChild(ulNav);
+
+        validator.addRootElement(html);
+
+        return validator.isDocumentValid(document);
+    }
+
+    /**
+     * Validate page 2 of the paged table.
+     *
+     * @param document The document
+     * @return The validation result
+     */
+    private boolean validatePage2(String document)
+    {
+        HtmlDocumentValidator validator = new HtmlDocumentValidator();
+        Tag html = new Tag("html");
+        Tag head = new Tag("head");
+        html.addExpectedChild(head);
+        Tag title = new Tag("title");
+        head.addExpectedChild(title);
+        title.addExpectedChild(new TextContent("Paged Table Page"));
+        Tag body = new Tag("body");
+        html.addExpectedChild(body);
+
+        Tag ulTable = new Tag("ul");
+        ulTable.addExpectedChild(new Tag("li")
+                .addExpectedChild(new Tag("span")
+                .addExpectedChild(new TextContent("three"))));
+        // note that we expect only the third element
+        body.addExpectedChild(ulTable);
+
+        Tag ulNav = new Tag("ul");
+        ulNav.addExpectedChild(new Tag("li")
+                .addExpectedChild(new Tag("a")
+                 .addExpectedChild(new Tag("span")
+                  .addExpectedChild(new TextContent("1")
+         ))));
+        ulNav.addExpectedChild(new Tag("li")
+               .addExpectedChild(new Tag("span")
+                .addExpectedChild(new Tag("i")
+                 .addExpectedChild(new Tag("span")
+                  .addExpectedChild(new TextContent("2")
+        )))));
 
         body.addExpectedChild(ulNav);
 
