@@ -42,12 +42,12 @@ import wicket.util.string.StringList;
  * @author Eelco Hillenius
  */
 public final class FeedbackMessages
-{ // TODO finalize javadoc
+{
     /** Log. */
     private static Log log = LogFactory.getLog(FeedbackMessages.class);
 
     /** Thread local holder for the current FeedbackMessages. */
-    private static ThreadLocal current = new ThreadLocal();
+    private static final ThreadLocal current = new ThreadLocal();
 
     /**
      * Holds a list of
@@ -105,15 +105,17 @@ public final class FeedbackMessages
      */
     private static class UIMessagesModel implements IModel
     {
-        /** level to narrow the model to. If undefined (the default), it is not used. */
+        /**
+         * level to narrow the model to. If undefined (the default),
+         * it is not used.
+         */
         private int level = FeedbackMessage.UNDEFINED;
 
         /**
          * Construct.
          */
         public UIMessagesModel()
-        {
-            
+        { 
         }
 
         /**
@@ -143,8 +145,8 @@ public final class FeedbackMessages
         }
 
         /**
-         * Sets the messages; the object should either be of type {@link java.util.List}
-         * or an array of {@link FeedbackMessage}s.
+         * Sets the messages; the object should either be of type
+         * {@link java.util.List} or an array of {@link FeedbackMessage}s.
          * @see wicket.model.IModel#setObject(java.lang.Object)
          */
         public void setObject(Object object)
@@ -178,7 +180,6 @@ public final class FeedbackMessages
      */
     private FeedbackMessages()
     {
-
     }
 
     /** 
@@ -203,7 +204,7 @@ public final class FeedbackMessages
     }
 
     /**
-     * Sets the messages for the current thread. Is used for handling redirects. 
+     * Sets the messages for the current thread.
      * @param messages the messages to use with the current thread
      */
     static void set(FeedbackMessages messages)
@@ -296,9 +297,11 @@ public final class FeedbackMessages
     }
 
     /**
-     * Gets the FeedbackMessages as an instance of {@link IModel}, narrowed down to the given level.
+     * Gets the FeedbackMessages as an instance of {@link IModel},
+     * narrowed down to the given level.
      * @param level the level to narrow down to
-     * @return tthe FeedbackMessages as an instance of {@link IModel}, narrowed down to the given level
+     * @return tthe FeedbackMessages as an instance of {@link IModel},
+     * narrowed down to the given level
      */
     public static IModel model(int level)
     {
@@ -657,5 +660,3 @@ public final class FeedbackMessages
         return "[feedbackMessages = " + StringList.valueOf(getMessages()) + "]";
     }
 }
-
-
