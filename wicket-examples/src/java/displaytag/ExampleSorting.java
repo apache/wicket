@@ -23,6 +23,7 @@ import java.util.List;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeader;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeaders;
 
@@ -91,8 +92,25 @@ public class ExampleSorting extends Displaytag
             }
         });
 */        
+        // Add table 
+        ListView table = new TableWithAlternatingRowStyle("rows", data)
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                final ListObject value = (ListObject) listItem.getModelObject();
+
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comment", value.getDescription()));
+            }
+        };
+
+        add(table);
+        
         // And this is with a little bit of magic
-        add(new SortableTableHeaders("header", data, "rows", true)
+        add(new SortableTableHeaders("header", table, true)
         {
             /*
              * If object does not support equals()
@@ -136,19 +154,5 @@ public class ExampleSorting extends Displaytag
 	        }
         });
         
-        // Add table 
-        add(new TableWithAlternatingRowStyle("rows", data)
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                final ListObject value = (ListObject) listItem.getModelObject();
-
-                listItem.add(new Label("id", new Integer(value.getId())));
-                listItem.add(new Label("name", value.getName()));
-                listItem.add(new Label("email", value.getEmail()));
-                listItem.add(new Label("status", value.getStatus()));
-                listItem.add(new Label("comment", value.getDescription()));
-            }
-        });
     }
 }

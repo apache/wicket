@@ -49,25 +49,6 @@ public class ExamplePse extends Displaytag
     {
         // Test data
         final ReportList data = new ReportList();
-        
-        // Add the sortable header and define how to sort the different columns
-        add(new SortableTableHeaders("header", data, "rows", true)
-        {
-	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
-	        {
-	            final String name = header.getName();
-	            if (name.equals("city"))
-	            {
-	                return ((ReportableListObject)object).getCity();
-	            }
-	            if (name.equals("project"))
-	            {
-	                return ((ReportableListObject)object).getProject();
-	            }
-	            
-	            return "";
-	        }
-        });
 
         // Add the table
         final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
@@ -109,6 +90,25 @@ public class ExamplePse extends Displaytag
         };
 
         add(table);
+        
+        // Add the sortable header and define how to sort the different columns
+        add(new SortableTableHeaders("header", table, true)
+        {
+	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
+	        {
+	            final String name = header.getName();
+	            if (name.equals("city"))
+	            {
+	                return ((ReportableListObject)object).getCity();
+	            }
+	            if (name.equals("project"))
+	            {
+	                return ((ReportableListObject)object).getProject();
+	            }
+	            
+	            return "";
+	        }
+        });
 
         // Add a table navigator
         add(new PagedTableNavigator("pageTableNav", table));

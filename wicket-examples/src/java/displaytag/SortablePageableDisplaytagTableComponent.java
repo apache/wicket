@@ -59,8 +59,26 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         this.data = new ArrayList();
         this.data.addAll(data);
 
+        // Add a table 
+        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                super.populateItem(listItem);
+                
+                final ListObject value = (ListObject) listItem.getModelObject();
+
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
+            }
+        };
+        add(table);
+
         // Add a sortable header to the table
-        add(new SortableTableHeaders("header", data, "rows", true)
+        add(new SortableTableHeaders("header", table, true)
         {
 	        protected int compareTo(SortableTableHeader header, Object o1, Object o2)
 	        {
@@ -95,24 +113,6 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 	            return "";
 	        }
         });
-
-        // Add a table 
-        final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                super.populateItem(listItem);
-                
-                final ListObject value = (ListObject) listItem.getModelObject();
-
-                listItem.add(new Label("id", new Integer(value.getId())));
-                listItem.add(new Label("name", value.getName()));
-                listItem.add(new Label("email", value.getEmail()));
-                listItem.add(new Label("status", value.getStatus()));
-                listItem.add(new Label("comments", value.getDescription()));
-            }
-        };
-        add(table);
 
         // Add a headline
         add(new Label("headline", null)
