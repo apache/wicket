@@ -149,16 +149,6 @@ public class TypeValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets the locale to use. if null and useLocaled == true, the session's locale will be
-	 * used..
-	 * @return the locale to use
-	 */
-	protected final Locale getLocale()
-	{
-		return locale;
-	}
-
-	/**
 	 * Gets the message context.
 	 * @param input The input
 	 * @param component the component
@@ -178,28 +168,10 @@ public class TypeValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets the type to use for checking.
-	 * @return the type to use for checking
-	 */
-	protected final Class getType()
-	{
-		return type;
-	}
-
-	/**
-	 * Gets whether to use either the set locale or the session's locale.
-	 * @return whether to use either the set locale or the session's locale.
-	 */
-	protected final boolean isUseLocalized()
-	{
-		return useLocalized;
-	}
-
-	/**
 	 * Gets the locale that should be used for the current validation.
 	 * @return the locale that should be used for the current validation
 	 */
-	private final Locale getLocaleForValidation()
+	public final Locale getLocaleForValidation()
 	{
 		Locale localeForValidation = null;
 		if (isUseLocalized())
@@ -211,5 +183,56 @@ public class TypeValidator extends AbstractValidator
 			}
 		}
 		return localeForValidation;
+	}
+
+	/**
+	 * Gets the type to use for checking.
+	 * @return the type to use for checking
+	 */
+	public final Class getType()
+	{
+		return type;
+	}
+
+	/**
+	 * Gets whether to use either the set locale or the session's locale.
+	 * @return whether to use either the set locale or the session's locale.
+	 */
+	public final boolean isUseLocalized()
+	{
+		return useLocalized;
+	}
+
+	/**
+	 * Gets the locale to use. if null and useLocaled == true, the session's locale will be
+	 * used..
+	 * @return the locale to use
+	 */
+	public final Locale getLocale()
+	{
+		return locale;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer b = new StringBuffer("TypeValidator{type=")
+			.append(getType());
+		if(isUseLocalized())
+		{
+			Locale loc = getLocale();
+			if(loc != null)
+			{
+				b.append(",locale=").append(getLocale());
+			}
+			else
+			{
+				b.append(",(use client locale)");
+			}
+		}
+		b.append("}");
+		return b.toString();
 	}
 }

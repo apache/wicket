@@ -111,4 +111,30 @@ public class DecimalValidator extends AbstractValidator
 		}
 		return NO_ERROR;
 	}
+
+	/**
+	 * Gets the upper bound on valid length.
+	 * @return the upper bound on valid length
+	 */
+	public final long getMax()
+	{
+		return max;
+	}
+
+	/**
+	 * Gets the lower bound on valid length.
+	 * @return the lower bound on valid length
+	 */
+	public final long getMin()
+	{
+		return min;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "min = " + min + "max = " + max;
+	}
 }
