@@ -29,13 +29,13 @@ import com.voicetribe.wicket.protocol.http.documentvalidation.TextContent;
 /**
  * Test for simple table behaviour.
  */
-public class PagedTableTest extends TestCase
+public class IncrementalTableNavigationTest extends TestCase
 {
 
     /**
      * Construct.
      */
-    public PagedTableTest()
+    public IncrementalTableNavigationTest()
     {
         super();
     }
@@ -44,7 +44,7 @@ public class PagedTableTest extends TestCase
      * Construct.
      * @param name name of test
      */
-    public PagedTableTest(String name)
+    public IncrementalTableNavigationTest(String name)
     {
         super(name);
     }
@@ -56,19 +56,26 @@ public class PagedTableTest extends TestCase
     public void testPagedTable() throws Exception
     {
         MockHttpApplication application = new MockHttpApplication(null);
-        application.getSettings().setHomePage(PagedTablePage.class);
+        application.getSettings().setHomePage(IncrementalTableNavigationPage.class);
         application.setupRequestAndResponse();
         application.processRequestCycle();
-        PagedTablePage page = (PagedTablePage)application.getLastRenderedPage();
+        IncrementalTableNavigationPage page = (IncrementalTableNavigationPage)application.getLastRenderedPage();
         String document = application.getServletResponse().getDocument();
         assertTrue(validatePage1(document));
 
-        Link link = (Link)page.get("navigation.1.pageLink");
+        Link link = (Link)page.get("nextNext");
         application.setupRequestAndResponse();
         application.getServletRequest().setRequestToComponent(link);
         application.processRequestCycle();
         document = application.getServletResponse().getDocument();
         assertTrue(validatePage2(document));
+
+        link = (Link)page.get("prev");
+        application.setupRequestAndResponse();
+        application.getServletRequest().setRequestToComponent(link);
+        application.processRequestCycle();
+        document = application.getServletResponse().getDocument();
+        assertTrue(validatePage3(document));
     }
 
     /**
@@ -79,6 +86,8 @@ public class PagedTableTest extends TestCase
      */
     private boolean validatePage1(String document)
     {
+        //System.err.println(document);
+        
         HtmlDocumentValidator validator = new HtmlDocumentValidator();
         Tag html = new Tag("html");
         Tag head = new Tag("head");
@@ -99,20 +108,12 @@ public class PagedTableTest extends TestCase
         // note that we DO NOT expect the third element as this is not on the current page
         body.addExpectedChild(ulTable);
 
-        Tag ulNav = new Tag("ul");
-        ulNav.addExpectedChild(new Tag("li")
-               .addExpectedChild(new Tag("span")
+        body.addExpectedChild(new Tag("span")
                 .addExpectedChild(new Tag("i")
-                 .addExpectedChild(new Tag("span")
-                  .addExpectedChild(new TextContent("1")
-        )))));
-        ulNav.addExpectedChild(new Tag("li")
-                .addExpectedChild(new Tag("a")
-                 .addExpectedChild(new Tag("span")
-                  .addExpectedChild(new TextContent("2")
-         ))));
-
-        body.addExpectedChild(ulNav);
+                    .addExpectedChild(new TextContent("Prev"))));
+        
+        body.addExpectedChild(new Tag("a")
+        	.addExpectedChild(new TextContent("NextNext")));
 
         validator.addRootElement(html);
 
@@ -127,6 +128,49 @@ public class PagedTableTest extends TestCase
      */
     private boolean validatePage2(String document)
     {
+        //System.err.println(document);
+        
+        HtmlDocumentValidator validator = new HtmlDocumentValidator();
+        Tag html = new Tag("html");
+        Tag head = new Tag("head");
+        html.addExpectedChild(head);
+        Tag title = new Tag("title");
+        head.addExpectedChild(title);
+        title.addExpectedChild(new TextContent("Paged Table Page"));
+        Tag body = new Tag("body");
+        html.addExpectedChild(body);
+
+        Tag ulTable = new Tag("ul");
+        ulTable.addExpectedChild(new Tag("li")
+                .addExpectedChild(new Tag("span")
+                .addExpectedChild(new TextContent("five"))));
+        ulTable.addExpectedChild(new Tag("li")
+                .addExpectedChild(new Tag("span")
+                .addExpectedChild(new TextContent("six"))));
+        // note that we DO NOT expect the third element as this is not on the current page
+        body.addExpectedChild(ulTable);
+
+        body.addExpectedChild(new Tag("a")
+                .addExpectedChild(new TextContent("Prev")));
+        
+        body.addExpectedChild(new Tag("a")
+        	.addExpectedChild(new TextContent("NextNext")));
+
+        validator.addRootElement(html);
+
+        return validator.isDocumentValid(document);
+    }
+
+    /**
+     * Validate page 3 of the paged table.
+     *
+     * @param document The document
+     * @return The validation result
+     */
+    private boolean validatePage3(String document)
+    {
+        //System.err.println(document);
+        
         HtmlDocumentValidator validator = new HtmlDocumentValidator();
         Tag html = new Tag("html");
         Tag head = new Tag("head");
@@ -141,23 +185,17 @@ public class PagedTableTest extends TestCase
         ulTable.addExpectedChild(new Tag("li")
                 .addExpectedChild(new Tag("span")
                 .addExpectedChild(new TextContent("three"))));
-        // note that we expect only the third element
+        ulTable.addExpectedChild(new Tag("li")
+                .addExpectedChild(new Tag("span")
+                .addExpectedChild(new TextContent("four"))));
+        // note that we DO NOT expect the third element as this is not on the current page
         body.addExpectedChild(ulTable);
 
-        Tag ulNav = new Tag("ul");
-        ulNav.addExpectedChild(new Tag("li")
-                .addExpectedChild(new Tag("a")
-                 .addExpectedChild(new Tag("span")
-                  .addExpectedChild(new TextContent("1")
-         ))));
-        ulNav.addExpectedChild(new Tag("li")
-               .addExpectedChild(new Tag("span")
-                .addExpectedChild(new Tag("i")
-                 .addExpectedChild(new Tag("span")
-                  .addExpectedChild(new TextContent("2")
-        )))));
-
-        body.addExpectedChild(ulNav);
+        body.addExpectedChild(new Tag("a")
+                .addExpectedChild(new TextContent("Prev")));
+        
+        body.addExpectedChild(new Tag("a")
+        	.addExpectedChild(new TextContent("NextNext")));
 
         validator.addRootElement(html);
 
