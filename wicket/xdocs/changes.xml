@@ -9,6 +9,9 @@
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
       <action type="update" dev="Jonathan Locke" issue="">
+      Changed clustering code so that PageState records are saved as independent attributes.  This should permit correct failover.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Added onBeginRender() and onEndRender() methods to Page as appropriate places to put code instead of overriding render() and calling super.render(), which is unadvisable.  Refactored WicketServlet, RequestCycle, Session, WebRequestCycle and WebSession all somewhat to support clustering.  These changes should affect nobody at the moment except that they may break clustering (I have no way to test it right now).
       </action>
       <action type="update" dev="Jonathan Locke" issue="">
