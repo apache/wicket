@@ -49,7 +49,7 @@ public class ComponentCreateTagTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void testRenderHomePage() throws Exception
+	public void testRenderHomePage_1() throws Exception
 	{
 	    executeTest(ComponentCreateTag_1.class, "ComponentCreateTagExpectedResult_1.html");
 	}
@@ -85,6 +85,16 @@ public class ComponentCreateTagTest extends TestCase
 	}
 
 	/**
+	 * <wicket:param> attached
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_5() throws Exception
+	{
+	    executeTest(ComponentCreateTag_5.class, "ComponentCreateTagExpectedResult_5.html");
+	}
+
+	/**
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception
@@ -103,6 +113,6 @@ public class ComponentCreateTagTest extends TestCase
 		String document = application.getServletResponse().getDocument();
 		System.out.println(document);
 
-		DiffUtil.validatePage(document, this.getClass(), filename);
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
 }
