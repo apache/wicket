@@ -175,7 +175,8 @@ public abstract class FormComponent extends HtmlContainer
     }
     
     /**
-     * @return String value for this component
+     * Gets the input value from the request for this component as a String.
+     * @return Gets the input value from the request for this component as a String
      */
     public final String getStringValue()
     {
