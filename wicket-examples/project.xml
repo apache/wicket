@@ -4,7 +4,7 @@
   <extend>../Wicket/project.xml</extend>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>0.9.17-beta</currentVersion>
+  <currentVersion>0.9.18-beta</currentVersion>
   <package>wicket.examples</package>
   <inceptionYear>2004</inceptionYear>
   <description>Example for web framework Wicket.</description>
@@ -20,34 +20,39 @@
       <name>0.9.17-beta</name>
       <tag>WICKET_R_0_9_17_BETA</tag>
     </version>
+    <version>
+      <id>0.9.18-beta</id>
+      <name>0.9.18-beta</name>
+      <tag>WICKET_R_0_9_18_BETA</tag>
+    </version>
   </versions>
   <dependencies>
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>SNAPSHOT</version>
+      <version>0.9.18-beta</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
-        <groupId>wicket</groupId>
-        <artifactId>wicket-contrib</artifactId>
-        <version>SNAPSHOT</version>
-        <properties>
-        	<eclipse.dependency>true</eclipse.dependency>
-            <war.bundle>true</war.bundle>
-        </properties>
+      <groupId>wicket</groupId>
+      <artifactId>wicket-contrib</artifactId>
+      <version>0.9.18-beta</version>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+        <war.bundle>true</war.bundle>
+      </properties>
     </dependency>
     <dependency>
-        <groupId>wicket</groupId>
-        <artifactId>wicket-extensions</artifactId>
-        <version>SNAPSHOT</version>
-        <properties>
-        	<eclipse.dependency>true</eclipse.dependency>
-            <war.bundle>true</war.bundle>
-        </properties>
+      <groupId>wicket</groupId>
+      <artifactId>wicket-extensions</artifactId>
+      <version>0.9.18-beta</version>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+        <war.bundle>true</war.bundle>
+      </properties>
     </dependency>
     <dependency>
       <groupId>hibernate</groupId>

@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <groupId>wicket</groupId>
   <id>wicket-extensions</id>
-  <currentVersion>0.9.17-beta</currentVersion>
+  <currentVersion>0.9.18-beta</currentVersion>
   <inceptionYear>2004</inceptionYear>
   <package>wicket</package>
   <logo>/images/logo.gif</logo>
@@ -23,6 +23,11 @@
       <id>0.9.17-beta</id>
       <name>0.9.17-beta</name>
       <tag>WICKET_R_0_9_17_BETA</tag>
+    </version>
+    <version>
+      <id>0.9.18-beta</id>
+      <name>0.9.18-beta</name>
+      <tag>WICKET_R_0_9_18_BETA</tag>
     </version>
   </versions>
   <dependencies>
@@ -117,7 +122,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>SNAPSHOT</version>
+      <version>0.9.18-beta</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -160,6 +165,24 @@
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>wicket/examples/AllTests.java</include>
+      </includes>
+      <resources>
+        <resource>
+          <directory>src/test</directory>
+          <includes>
+            <include>**</include>
+          </includes>
+          <excludes>
+            <exclude>**/*.java</exclude>
+          </excludes>
+          <filtering>false</filtering>
+        </resource>
+      </resources>
+    </unitTest>
     <resources>
       <resource>
         <directory>src/java</directory>

@@ -200,6 +200,14 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * @return Returns the underlying xml tag.
+	 */
+	public XmlTag getXmlTag()
+	{
+		return xmlTag;
+	}
+
+	/**
 	 * True if autolink is enabled and the tag contains a href attribute.
 	 * 
 	 * @return True, if the href contained should automatically be converted
@@ -464,14 +472,6 @@ public class ComponentTag extends MarkupElement
 	public String toUserDebugString()
 	{
 		return xmlTag.toUserDebugString();
-	}
-
-	/**
-	 * @return Returns the underlying xml tag.
-	 */
-	XmlTag getXmlTag()
-	{
-		return xmlTag;
 	}
 }
 
