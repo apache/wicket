@@ -1,6 +1,11 @@
 /*
+<<<<<<< TextField.java
+ * $Id$ $Revision$
+ * $Date$
+=======
  * $Id$ $Revision:
  * 1.10 $ $Date$
+>>>>>>> 1.12
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,7 +21,6 @@
  * the License.
  */
 package wicket.markup.html.form;
-
 
 import java.io.Serializable;
 
@@ -34,19 +38,22 @@ public class TextField extends FormComponent
 	private static final long serialVersionUID = -2913294206388017417L;
 
 	/**
-	 * when the user input does not validate, this is a temporary store
-	 * for the input he/she provided. We have to store it somewhere as we
-	 * loose the request parameter when redirecting.
+	 * when the user input does not validate, this is a temporary store for the
+	 * input he/she provided. We have to store it somewhere as we loose the
+	 * request parameter when redirecting.
 	 */
 	private String invalidInput;
 
 	/**
 	 * Constructor that uses the provided {@link IModel}as its model. All
 	 * components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param model the model
-	 * @throws wicket.WicketRuntimeException Thrown if the component has been
-	 *            given a null name.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param model
+	 *            the model
+	 * @throws wicket.WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
 	 */
 	public TextField(String name, IModel model)
 	{
@@ -54,8 +61,8 @@ public class TextField extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a dynamic
-	 * model. This model will be wrapped in an instance of
+	 * Constructor that uses the provided instance of {@link IModel}as a
+	 * dynamic model. This model will be wrapped in an instance of
 	 * {@link wicket.model.PropertyModel}using the provided expression. Thus,
 	 * using this constructor is a short-hand for:
 	 * 
@@ -64,12 +71,16 @@ public class TextField extends FormComponent
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param model the instance of {@link IModel}from which the model object
-	 *           will be used as the subject for the given expression
-	 * @param expression the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException Thrown if the component has been
-	 *            given a null name.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param model
+	 *            the instance of {@link IModel}from which the model object
+	 *            will be used as the subject for the given expression
+	 * @param expression
+	 *            the OGNL expression that works on the given object
+	 * @throws wicket.WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
 	 */
 	public TextField(String name, IModel model, String expression)
 	{
@@ -80,10 +91,13 @@ public class TextField extends FormComponent
 	 * Constructor that uses the provided object as a simple model. This object
 	 * will be wrapped in an instance of {@link wicket.model.Model}. All
 	 * components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param object the object that will be used as a simple model
-	 * @throws wicket.WicketRuntimeException Thrown if the component has been
-	 *            given a null name.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param object
+	 *            the object that will be used as a simple model
+	 * @throws wicket.WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
 	 */
 	public TextField(String name, Serializable object)
 	{
@@ -101,12 +115,16 @@ public class TextField extends FormComponent
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param object the object that will be used as the subject for the given
-	 *           expression
-	 * @param expression the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException Thrown if the component has been
-	 *            given a null name.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param object
+	 *            the object that will be used as the subject for the given
+	 *            expression
+	 * @param expression
+	 *            the OGNL expression that works on the given object
+	 * @throws wicket.WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
 	 */
 	public TextField(String name, Serializable object, String expression)
 	{
@@ -122,18 +140,22 @@ public class TextField extends FormComponent
 	}
 
 	/**
-	 * Handle a validation error.
-	 * @see wicket.markup.html.form.FormComponent#invalid()
+	 * Updates this components' model from the request.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	protected void invalid()
+	public void updateModel()
 	{
-		// store the user input
-		invalidInput = getRequestString();
+        // Component validated, so clear the input
+		invalidInput = null; 
+		setModelObject(getRequestString());
 	}
 
 	/**
 	 * Processes the component tag.
-	 * @param tag Tag to modify
+	 * 
+	 * @param tag
+	 *            Tag to modify
 	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
 	protected final void handleComponentTag(final ComponentTag tag)
@@ -141,23 +163,26 @@ public class TextField extends FormComponent
 		checkTag(tag, "input");
 		checkAttribute(tag, "type", "text");
 		super.handleComponentTag(tag);
-		if(invalidInput == null) // no validation errors
+		if (invalidInput == null)
 		{
+			// No validation errors
 			tag.put("value", getModelObjectAsString());
 		}
-		else // invalid input detected
+		else
 		{
+			// Invalid input detected
 			tag.put("value", invalidInput);
 		}
 	}
 
 	/**
-	 * Updates this components' model from the request.
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * Handle a validation error.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#invalid()
 	 */
-	public void updateModel()
+	protected void invalid()
 	{
-		invalidInput = null; // component validated, so clear the input
-		setModelObject(getRequestString());
+		// Store the user input
+		invalidInput = getRequestString();
 	}
 }

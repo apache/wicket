@@ -31,11 +31,6 @@ import wicket.markup.html.form.FormComponent;
 public interface IValidator extends Serializable
 {
 	/**
-	 * Special value to indicate no validation error/ message.
-	 */
-	public static final ValidationErrorMessage NO_ERROR = null;
-
-	/**
 	 * An implementation of IValidator that does nothing at all.
 	 */
 	public static final IValidator NULL = new NullValidator();
@@ -44,9 +39,8 @@ public interface IValidator extends Serializable
 	 * Validates the given input. The input corresponds to the input from the request for a
 	 * component.
 	 * @param component Component to validate
-	 * @return the validation message or NO_ERROR
 	 */
-	public ValidationErrorMessage validate(final FormComponent component);
+	public void validate(final FormComponent component);
 
 	/**
 	 * Validator that does nothing.
@@ -57,9 +51,8 @@ public interface IValidator extends Serializable
 		 * Returns null.
 		 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 		 */
-		public ValidationErrorMessage validate(final FormComponent component)
+		public void validate(final FormComponent component)
 		{
-			return null;
 		}
 
 		/**
@@ -68,7 +61,7 @@ public interface IValidator extends Serializable
 		 */
 		public String toString()
 		{
-			return "[null]";
+			return "[NullValidator]";
 		}
 	}
 }

@@ -32,8 +32,7 @@ import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationDelegate;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
-import wicket.markup.html.form.validation.ValidationErrorMessage;
+import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
@@ -59,14 +58,13 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	private IFormValidationDelegate validationDelegate = DefaultFormValidationDelegate.getInstance();
 
 	/** The validation error handling delegate. */
-	private final IValidationErrorHandler validationErrorHandler;
+	private final IValidationFeedback validationFeedback;
 
 	/**
 	 * The default form validation delegate.
 	 */
 	private static final class DefaultFormValidationDelegate implements IFormValidationDelegate
 	{
-
 		/** Single instance of default form validation delegate */
 		private static final DefaultFormValidationDelegate instance = new DefaultFormValidationDelegate();
 
@@ -86,40 +84,34 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		 * returned by the validators.
 		 * 
 		 * @param form the form that the validation is applied to
-		 * @return the list of validation messages that were recorded during
-		 *         validation
 		 */
-		public FeedbackMessages validate(Form form)
+		public void validate(final Form form)
 		{
-			final FeedbackMessages messages = FeedbackMessages.get();
+            // Remove any old feedback messages
+            final FeedbackMessages messages = form.getSession().getFeedbackMessages();
+            
+            // Visit all the form components and validate each
 			form.visitChildren(FormComponent.class, new IVisitor()
 			{
 				public Object component(final Component component)
 				{
-					FormComponent formComponent = (FormComponent)component;
-					final ValidationErrorMessage message = (formComponent).validate();
-
-					if (message != ValidationErrorMessage.NO_MESSAGE)
-					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("validation error: " + message);
-						}
-						messages.add(message);
-						formComponent.setValid(false);
+                    // Get form component
+                    FormComponent formComponent = (FormComponent)component;
+                    
+                    // Validate form component
+                    formComponent.validate();
+                    
+                    // If component is not valid (has an error)
+                    if (!formComponent.isValid())
+                    {
+                        // tell component to deal with invalidity
 						formComponent.invalid();
-					}
-					else
-					{
-						formComponent.setValid(true);
-						// set explicitly to reset any old value
 					}
 
 					// Continue until the end
 					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 			});
-			return messages;
 		}
 	}
 
@@ -129,15 +121,15 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * 
 	 * @param name The non-null name of this component
 	 * @param model the model
-	 * @param validationErrorHandler Interface to a component that can
+	 * @param validationFeedback Interface to a component that can
 	 *           handle/display validation errors
 	 * @throws WicketRuntimeException Thrown if the component has been given a
 	 *            null name.
 	 */
-	public Form(String name, IModel model, final IValidationErrorHandler validationErrorHandler)
+	public Form(String name, IModel model, final IValidationFeedback validationFeedback)
 	{
 		super(name, model);
-		this.validationErrorHandler = validationErrorHandler;
+		this.validationFeedback = validationFeedback;
 	}
 
 	/**
@@ -156,29 +148,29 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * @param model the instance of {@link IModel}from which the model object
 	 *           will be used as the subject for the given expression
 	 * @param expression the OGNL expression that works on the given object
-	 * @param validationErrorHandler Interface to a component that can
+	 * @param validationFeedback Interface to a component that can
 	 *           handle/display validation errors
 	 * @throws WicketRuntimeException Thrown if the component has been given a
 	 *            null name.
 	 */
 	public Form(String name, IModel model, String expression,
-			final IValidationErrorHandler validationErrorHandler)
+			final IValidationFeedback validationFeedback)
 	{
 		super(name, model, expression);
-		this.validationErrorHandler = validationErrorHandler;
+		this.validationFeedback = validationFeedback;
 	}
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param name Name of this form component
-	 * @param validationErrorHandler Interface to a component that can
+	 * @param validationFeedback Interface to a component that can
 	 *           handle/display validation errors
 	 */
-	public Form(final String name, final IValidationErrorHandler validationErrorHandler)
+	public Form(final String name, final IValidationFeedback validationFeedback)
 	{
 		super(name);
-		this.validationErrorHandler = validationErrorHandler;
+		this.validationFeedback = validationFeedback;
 	}
 
 	/**
@@ -188,16 +180,16 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * 
 	 * @param name The non-null name of this component
 	 * @param object the object that will be used as a simple model
-	 * @param validationErrorHandler Interface to a component that can
+	 * @param validationFeedback Interface to a component that can
 	 *           handle/display validation errors
 	 * @throws WicketRuntimeException Thrown if the component has been given a
 	 *            null name.
 	 */
 	public Form(String name, Serializable object,
-			final IValidationErrorHandler validationErrorHandler)
+			final IValidationFeedback validationFeedback)
 	{
 		super(name, object);
-		this.validationErrorHandler = validationErrorHandler;
+		this.validationFeedback = validationFeedback;
 	}
 
 	/**
@@ -216,16 +208,16 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * @param object the object that will be used as the subject for the given
 	 *           expression
 	 * @param expression the OGNL expression that works on the given object
-	 * @param validationErrorHandler Interface to a component that can
+	 * @param validationFeedback Interface to a component that can
 	 *           handle/display validation errors
 	 * @throws WicketRuntimeException Thrown if the component has been given a
 	 *            null name.
 	 */
 	public Form(String name, Serializable object, String expression,
-			final IValidationErrorHandler validationErrorHandler)
+			final IValidationFeedback validationFeedback)
 	{
 		super(name, object, expression);
-		this.validationErrorHandler = validationErrorHandler;
+		this.validationFeedback = validationFeedback;
 	}
 
 	/**
@@ -238,9 +230,12 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		// implementation may wish to redirect somewhere else. In that case,
 		// they can simply call setRedirect(false) in handleSubmit.
 		getRequestCycle().setRedirect(true);
+        
+        // Clear all feedback messages
+        getSession().getFeedbackMessages().clear();
 
 		// Validate model using validation delegate
-		final FeedbackMessages messages = validationDelegate.validate(this);
+		validationDelegate.validate(this);
 
 		// Update model using form data
 		updateFormComponentModels();
@@ -248,11 +243,11 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		// Persist FormComponents if requested
 		persistFormComponentData();
 
-		// If validation or update caused error messages to appear
-		if (messages.hasErrorMessages())
+		// If validation or update caused error message(s) to appear
+		if (hasError())
 		{
 			// handle those errors
-			handleErrors(messages.getErrorMessages());
+			handleErrors();
 		}
 		else
 		{
@@ -270,52 +265,6 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	{
 		return validationDelegate;
 	}
-
-	/**
-	 * Convenience method in case there is one known (validation) error that is
-	 * to be registered with the form directly.
-	 * 
-	 * @param message the message
-	 */
-	public final void handleError(final ValidationErrorMessage message)
-	{
-		handleErrors(FeedbackMessages.get().add(message));
-	}
-
-	/**
-	 * Sets error messages for form. First all childs (form components) are asked
-	 * to do their part of error handling, and after that, the registered (if
-	 * any) error handler of this form is called.
-	 * 
-	 * @param errors the recorded errors
-	 */
-	public final void handleErrors(final FeedbackMessages errors)
-	{
-		// Traverse children of this form, calling validationError() on any
-		// components implementing IValidationErrorHandler.
-		visitChildren(IValidationErrorHandler.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Call validation error handler
-				((IValidationErrorHandler)component).validationError(errors);
-
-				// Traverse all children
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-
-		// Call the validation handler that is registered with this form, if any
-		if (validationErrorHandler != null)
-		{
-			validationErrorHandler.validationError(errors);
-		}
-	}
-
-	/**
-	 * Implemented by subclasses to deal with form submits.
-	 */
-	public abstract void handleSubmit();
 
 	/**
 	 * Removes already persisted data for all FormComponent childs and disable
@@ -411,6 +360,39 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	}
 
 	/**
+	 * Sets error messages for form. First all childs (form components) are asked
+	 * to do their part of error handling, and after that, the registered (if
+	 * any) error handler of this form is called.
+	 */
+	protected final void handleErrors()
+	{
+		// Traverse children of this form, calling validationError() on any
+		// components implementing IValidationFeedback.
+		visitChildren(IValidationFeedback.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Call validation error handler
+				((IValidationFeedback)component).update();
+
+				// Traverse all children
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+
+		// Call the validation handler that is registered with this form, if any
+		if (validationFeedback != null)
+		{
+			validationFeedback.update();
+		}
+	}
+
+	/**
+	 * Implemented by subclasses to deal with form submits.
+	 */
+	protected abstract void handleSubmit();
+
+	/**
 	 * Sets the value persister for this form.
 	 * 
 	 * @param persister the CookieValuePersister
@@ -433,6 +415,28 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		}
 		return persister;
 	}
+    
+    /**
+     * @return True if this form has at least one error.
+     */
+    private boolean hasError()
+    {
+        final Object value = visitChildren(new IVisitor()
+        {
+            public Object component(final Component component)
+            {
+                if (component.hasErrorMessage())
+                {
+                    return STOP_TRAVERSAL;   
+                }
+
+                // Traverse all children
+                return CONTINUE_TRAVERSAL;
+            }
+        });
+        
+        return value == IVisitor.STOP_TRAVERSAL ? true : false;
+    }
 
 	/**
 	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned to

@@ -19,21 +19,20 @@ package wicket.markup.html.form.validation;
 
 import java.io.Serializable;
 
-import wicket.FeedbackMessages;
 import wicket.markup.html.form.Form;
 
 /**
  * Delegate for form validation. Implementors of this interface provide the actual
  * validation checking.
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
 public interface IFormValidationDelegate extends Serializable
 {
 	/**
-	 * Validates the form and return the collected feeback messages.
-	 * @param form the form that the validation is applied to
-	 * @return the collected feedback messages
+	 * Validates the form.
+	 * @param form The form that the validation is applied to
 	 */
-	public FeedbackMessages validate(Form form);
+	public void validate(Form form);
 }

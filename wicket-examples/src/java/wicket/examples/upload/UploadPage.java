@@ -32,7 +32,7 @@ import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.upload.FileUploadForm;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -98,7 +98,7 @@ public class UploadPage extends HtmlPage
          * @param validationErrorHandler error handler
          * @param targetDirectory directory to save uploads
          */
-        public UploadForm(String name, IValidationErrorHandler validationErrorHandler, File targetDirectory)
+        public UploadForm(String name, IValidationFeedback validationErrorHandler, File targetDirectory)
         {
             super(name, validationErrorHandler, targetDirectory);
             add(new TextField("fileName", ""));

@@ -54,11 +54,10 @@ public abstract class AbstractValidator implements IValidator
 	 * </p>
 	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
-	 * @return The validation error message
 	 */
-	public ValidationErrorMessage errorMessage(final String input, final FormComponent component)
+	public void error(final String input, final FormComponent component)
 	{
-		return errorMessage(getResourceKey(component), input, component);
+		error(getResourceKey(component), input, component);
 	}
 
 	/**
@@ -70,15 +69,14 @@ public abstract class AbstractValidator implements IValidator
 	 * @param resourceModel the model for variable interpolation
 	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
-	 * @return The validation error message
 	 */
-	public ValidationErrorMessage errorMessage(final String resourceKey, final IModel resourceModel,
+	public void error(final String resourceKey, final IModel resourceModel,
 			final String input, final FormComponent component)
 	{
 		// Return formatted error message
 		Localizer localizer = component.getLocalizer();
 		String message = localizer.getString(resourceKey, component, resourceModel);
-		return new ValidationErrorMessage(component, message);
+        component.error(message);
 	}
 
 	/**
@@ -90,12 +88,11 @@ public abstract class AbstractValidator implements IValidator
 	 * @param map the model for variable interpolation
 	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
-	 * @return The validation error message
 	 */
-	public ValidationErrorMessage errorMessage(final String resourceKey, final Map map,
+	public void error(final String resourceKey, final Map map,
 			final String input, final FormComponent component)
 	{
-		return errorMessage(resourceKey, MapModel.valueOf(map), input, component);
+		error(resourceKey, MapModel.valueOf(map), input, component);
 	}
 
 	/**
@@ -115,13 +112,12 @@ public abstract class AbstractValidator implements IValidator
 	 * @param resourceKey the resource key to be used for the message
 	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
-	 * @return The validation error message
 	 */
-	public ValidationErrorMessage errorMessage(final String resourceKey, final String input,
+	public void error(final String resourceKey, final String input,
 			final FormComponent component)
 	{
 		final Map resourceModel = getMessageContextVariables(input, component);
-		return errorMessage(resourceKey, resourceModel, input, component);
+		error(resourceKey, resourceModel, input, component);
 	}
 
 	/**

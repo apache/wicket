@@ -23,8 +23,7 @@ import wicket.RequestCycle;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
-import wicket.markup.html.form.validation.ValidationErrorMessage;
+import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.util.value.ValueMap;
 
 /**
@@ -125,7 +124,7 @@ public abstract class SignInPanel extends Panel
 		 * @param feedback
 		 *            The feedback panel to update
 		 */
-		public SignInForm(final String componentName, final IValidationErrorHandler feedback)
+		public SignInForm(final String componentName, final IValidationFeedback feedback)
 		{
 			super(componentName, feedback);
 
@@ -165,7 +164,7 @@ public abstract class SignInPanel extends Panel
 			}
 			else
 			{
-				handleError(new ValidationErrorMessage(this, error));
+				error(error);
 			}
 		}
 	}

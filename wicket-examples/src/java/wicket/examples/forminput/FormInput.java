@@ -36,10 +36,9 @@ import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractValidator;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.validation.TypeValidator;
-import wicket.markup.html.form.validation.ValidationErrorMessage;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.Model;
@@ -117,7 +116,7 @@ public class FormInput extends HtmlPage
 		 * @param name componentnaam
 		 * @param validationErrorHandler error handler
 		 */
-		public InputForm(String name, IValidationErrorHandler validationErrorHandler)
+		public InputForm(String name, IValidationFeedback validationErrorHandler)
 		{
 			super(name, validationErrorHandler);
 			RequiredValidator requiredValidator = new RequiredValidator();
@@ -145,7 +144,7 @@ public class FormInput extends HtmlPage
 			// for the convenience error messages
 			integerInRangeInput.add(new AbstractValidator(){
 
-				public ValidationErrorMessage validate(FormComponent component)
+				public void validate(FormComponent component)
 				{
                     final String input = component.getRequestString();
 					int value = Integer.parseInt(input.toString());
@@ -155,9 +154,8 @@ public class FormInput extends HtmlPage
 						vars.put("input", input);
 						vars.put("lower", "0");
 						vars.put("upper", "100");
-						return errorMessage("error.outOfRange", vars, input, component);
+						error("error.outOfRange", vars, input, component);
 					}
-					return ValidationErrorMessage.NO_MESSAGE; // same as null
 				}
 				
 			});

@@ -118,6 +118,9 @@ public abstract class Session implements Serializable
 
 	/** The still-live pages for this user session. */
 	private final Map pages;
+    
+    /** Feedback messages for this session */
+    private final FeedbackMessages feedbackMessages = new FeedbackMessages();
 
 	/** Session properties. */
 	private Map properties;
@@ -194,6 +197,14 @@ public abstract class Session implements Serializable
 	public final IClassResolver getClassResolver()
 	{
 		return classResolver;
+	}
+    
+    /**
+	 * @return Returns the feedbackMessages.
+	 */
+	public FeedbackMessages getFeedbackMessages()
+	{
+		return feedbackMessages;
 	}
 
 	/**

@@ -55,9 +55,6 @@ public abstract class Page extends Container implements IRedirectListener
 	/** static for access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
 
-	/** Temporary reference to the messages in case we are redirecting. */
-	FeedbackMessages messages;
-
 	/** This page's identifier. */
 	private int id = -1;
 
@@ -70,8 +67,8 @@ public abstract class Page extends Container implements IRedirectListener
 	/** The rendering before which all pages are stale. */
 	private int staleRendering = 0;
 
-    /** Used to create page-unique numbers */
-    private int autoIndex;
+	/** Used to create page-unique numbers */
+	private int autoIndex;
 
 	/**
 	 * Constructor.
@@ -195,7 +192,6 @@ public abstract class Page extends Container implements IRedirectListener
 	{
 		try
 		{
-			initUIMessages();
 			super.render();
 
 			// If the application wants component uses checked and
@@ -207,11 +203,9 @@ public abstract class Page extends Container implements IRedirectListener
 			}
 		}
 		finally
-		// be sure to have models detached
 		{
-			// Visit components on page
-			final Page page = (Page)this;
-			detachModels(page);
+            // Be sure to detach models
+			detachModels(this);
 		}
 	}
 
@@ -303,30 +297,12 @@ public abstract class Page extends Container implements IRedirectListener
 		this.staleRendering = staleRendering;
 	}
 
-	/**
-	 * Looks if any messages were set as a temporary variable on the page and,
-	 * if so, sets these messages as the current.
-	 */
-	private void initUIMessages()
-	{
-		if (this.messages != null)
-		{
-			// so, we are comming from a redirect;
-			// these are the saved messages from the thread that issued
-			// the redirect. Set as the current threads' messages
-			FeedbackMessages.set(this.messages);
-
-			// reset the page variable
-			this.messages = null;
-		}
-	}
-
 	static
 	{
 		// Allow calls through the IRedirectListener interface
 		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
 	}
-	
+
 	/**
 	 * Get a page unique number, which will be increased with each call.
 	 * 
@@ -334,7 +310,7 @@ public abstract class Page extends Container implements IRedirectListener
 	 */
 	public int getAutoIndex()
 	{
-	    return this.autoIndex ++;
+		return this.autoIndex++;
 	}
 }
 

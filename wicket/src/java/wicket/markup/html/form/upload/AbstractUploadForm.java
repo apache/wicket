@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.protocol.http.HttpRequest;
 
 
@@ -55,7 +55,7 @@ public abstract class AbstractUploadForm extends Form
 	 * @param validationErrorHandler
 	 *            validation error handler
 	 */
-	public AbstractUploadForm(String name, IValidationErrorHandler validationErrorHandler)
+	public AbstractUploadForm(String name, IValidationFeedback validationErrorHandler)
 	{
 		super(name, validationErrorHandler);
 	}

@@ -27,7 +27,7 @@ import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -61,11 +61,11 @@ public class FValidateFormInput extends HtmlPage
 		/**
 		 * Construct.
 		 * @param name componentnaam
-		 * @param validationErrorHandler error handler
+		 * @param validationFeedback error handler
 		 */
-		public InputForm(String name, IValidationErrorHandler validationErrorHandler)
+		public InputForm(String name, IValidationFeedback validationFeedback)
 		{
-			super(name, validationErrorHandler);
+			super(name, validationFeedback);
 
 			FValidateTextField stringInput =
 				new FValidateTextField("stringInput", input, "stringProperty");

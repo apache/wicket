@@ -25,7 +25,6 @@ import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.ValidationErrorMessage;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.util.value.ValueMap;
 
@@ -106,7 +105,7 @@ public final class SignIn extends HtmlPage
             else
             {
                 // Form method that will notify feedback panel
-                handleError(new ValidationErrorMessage(this, "Couldn't sign you in"));
+                error("Couldn't sign you in");
             }
         }
     }

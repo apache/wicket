@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.16 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -25,7 +25,6 @@ import java.util.List;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.validation.IValidator;
-import wicket.markup.html.form.validation.ValidationErrorMessage;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringList;
@@ -46,15 +45,6 @@ public abstract class FormComponent extends HtmlContainer
 	 * sessions. This is false by default.
 	 */
 	private boolean persistent = false;
-
-	/**
-	 * Indicator whether this component is 'valid'. Valid in this context means
-	 * that no validation errors were reported the last time the form component
-	 * was processed. This variable not only is convenient for 'business' use,
-	 * but is also nescesarry as we don't want the form component models updated
-	 * with invalid input.
-	 */
-	private boolean valid = true;
 
 	/** The validator or validator list for this component. */
 	private IValidator validator = IValidator.NULL;
@@ -77,8 +67,10 @@ public abstract class FormComponent extends HtmlContainer
 		/**
 		 * Constructs a list with validators in it.
 		 * 
-		 * @param left The left validator
-		 * @param right The right validator
+		 * @param left
+		 *            The left validator
+		 * @param right
+		 *            The right validator
 		 */
 		ValidatorList(final IValidator left, final IValidator right)
 		{
@@ -98,7 +90,8 @@ public abstract class FormComponent extends HtmlContainer
 
 			while (true)
 			{
-				stringList.add(Classes.name(current.left.getClass()) + " " + current.left.toString());
+				stringList.add(Classes.name(current.left.getClass()) + " "
+						+ current.left.toString());
 
 				if (current.right instanceof ValidatorList)
 				{
@@ -119,26 +112,20 @@ public abstract class FormComponent extends HtmlContainer
 		/**
 		 * Validates the given component.
 		 * 
-		 * @param component The component to validate
-		 * @return The error returned by the first validator in the list which
-		 *         reported an error or null if no validator reported an error
+		 * @param component
+		 *            The component to validate
 		 */
-		public ValidationErrorMessage validate(final FormComponent component)
+		public void validate(final FormComponent component)
 		{
-			final ValidationErrorMessage message = left.validate(component);
-
-			if (message != ValidationErrorMessage.NO_MESSAGE && message.isLevelError())
-			{
-				return message;
-			}
-
-			return right.validate(component);
+			left.validate(component);
+			right.validate(component);
 		}
 
 		/**
 		 * Adds the given code validator to this list of code validators.
 		 * 
-		 * @param validator The validator
+		 * @param validator
+		 *            The validator
 		 */
 		void add(final IValidator validator)
 		{
@@ -221,7 +208,8 @@ public abstract class FormComponent extends HtmlContainer
 	/**
 	 * Adds a validator to this form component.
 	 * 
-	 * @param validator The validator
+	 * @param validator
+	 *            The validator
 	 * @return This
 	 */
 	public final FormComponent add(final IValidator validator)
@@ -256,21 +244,21 @@ public abstract class FormComponent extends HtmlContainer
 	 */
 	public final List getValidators()
 	{
-		final List l;
+		final List list;
 		if (this.validator == null)
 		{
-			l = Collections.EMPTY_LIST;
+			list = Collections.EMPTY_LIST;
 		}
 		else if (this.validator instanceof ValidatorList)
 		{
-			l = ((ValidatorList)this.validator).asList();
+			list = ((ValidatorList)this.validator).asList();
 		}
 		else
 		{
-			l = new ArrayList(1);
-			l.add(validator);
+			list = new ArrayList(1);
+			list.add(validator);
 		}
-		return l;
+		return list;
 	}
 
 	/**
@@ -293,6 +281,20 @@ public abstract class FormComponent extends HtmlContainer
 	}
 
 	/**
+	 * Gets whether this component is 'valid'. Valid in this context means that
+	 * no validation errors were reported the last time the form component was
+	 * processed. This variable not only is convenient for 'business' use, but
+	 * is also nescesarry as we don't want the form component models updated
+	 * with invalid input.
+	 * 
+	 * @return valid whether this component is 'valid'
+	 */
+	public final boolean isValid()
+	{
+		return !hasErrorMessage();
+	}
+
+	/**
 	 * Gets whether this component is to be validated.
 	 * 
 	 * @return True if this component has one or more validators
@@ -305,7 +307,8 @@ public abstract class FormComponent extends HtmlContainer
 	/**
 	 * Sets whether this component is to be persisted.
 	 * 
-	 * @param persistent True if this component is to be persisted.
+	 * @param persistent
+	 *            True if this component is to be persisted.
 	 */
 	public final void setPersistent(final boolean persistent)
 	{
@@ -323,7 +326,8 @@ public abstract class FormComponent extends HtmlContainer
 	/**
 	 * Sets the value for a form component.
 	 * 
-	 * @param value The value
+	 * @param value
+	 *            The value
 	 */
 	public void setValue(final String value)
 	{
@@ -339,36 +343,31 @@ public abstract class FormComponent extends HtmlContainer
 	}
 
 	/**
-	 * Gets whether this component is 'valid'. Valid in this context means
-	 * that no validation errors were reported the last time the form component
-	 * was processed. This variable not only is convenient for 'business' use,
-	 * but is also nescesarry as we don't want the form component models updated
-	 * with invalid input.
-	 * @return valid whether this component is 'valid'
-	 */
-	public final boolean isValid()
-	{
-		return valid;
-	}
-
-	/**
-	 * Sets whether this component is 'valid'. Valid in this context means
-	 * that no validation errors were reported the last time the form component
-	 * was processed. This variable not only is convenient for 'business' use,
-	 * but is also nescesarry as we don't want the form component models updated
-	 * with invalid input.
-	 * @param valid whether this component is 'valid'
-	 */
-	protected final void setValid(boolean valid)
-	{
-		this.valid = valid;
-	}
-
-	/**
 	 * Implemented by form component subclass to update the form component's
 	 * model.
 	 */
 	public abstract void updateModel();
+
+	/**
+	 * Validates this component using the component's validator.
+	 */
+	public final void validate()
+	{
+		validator.validate(this);
+	}
+
+	/**
+	 * Processes the component tag.
+	 * 
+	 * @param tag
+	 *            Tag to modify
+	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 */
+	protected void handleComponentTag(final ComponentTag tag)
+	{
+		super.handleComponentTag(tag);
+		tag.put("name", getPath());
+	}
 
 	/**
 	 * Template method that can be implemented by form component subclass to
@@ -376,32 +375,5 @@ public abstract class FormComponent extends HtmlContainer
 	 */
 	protected void invalid()
 	{
-	}
-
-	/**
-	 * Validates this component and returns an optional message. If a message is
-	 * returned, and its level is higher than ValidationErrorMessage.ERROR, the
-	 * form will be in error state. A message with a lower level than that
-	 * however, will be recorded, but will not have the form fail.
-	 * 
-	 * @return the {@link ValidationErrorMessage}or null
-	 *         (ValidationErrorMessage.NO_MESSAGE).
-	 */
-	public final ValidationErrorMessage validate()
-	{
-		ValidationErrorMessage msg = validator.validate(this);
-		return msg;
-	}
-
-	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag Tag to modify
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
-	 */
-	protected void handleComponentTag(final ComponentTag tag)
-	{
-		super.handleComponentTag(tag);
-		tag.put("name", getPath());
 	}
 }

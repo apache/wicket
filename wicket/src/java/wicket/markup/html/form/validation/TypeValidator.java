@@ -91,27 +91,26 @@ public class TypeValidator extends AbstractValidator
 	 * {@link wicket.util.convert.ConverterRegistry}instance of that can be found in the
 	 * application settings.
 	 * @param component the component that wants to validate its input
-	 * @return validation error message
 	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
-	public final ValidationErrorMessage validate(FormComponent component)
+	public final void validate(FormComponent component)
 	{
 		// Get component value
 		final String value = component.getRequestString();
-		if (isNullOrEmpty(value))
-			return ValidationErrorMessage.NO_MESSAGE;
-		// Check value by attempting to convert it
-		final ConversionUtils conversionUtils = getConversionUtils();
-		final Locale localeForValidation = getLocaleForValidation();
-		try
-		{
-			conversionUtils.convert(component.getRequestString(), type, localeForValidation);
-			return ValidationErrorMessage.NO_MESSAGE;
-		}
-		catch (ConversionException e)
-		{
-			return getError(value, component, e);
-		}
+		if (!isNullOrEmpty(value))
+        {
+    		// Check value by attempting to convert it
+    		final ConversionUtils conversionUtils = getConversionUtils();
+    		final Locale localeForValidation = getLocaleForValidation();
+    		try
+    		{
+    			conversionUtils.convert(component.getRequestString(), type, localeForValidation);
+    		}
+    		catch (ConversionException e)
+    		{
+    			conversionError(value, component, e);
+    		}
+        }
 	}
 
 	/**
@@ -139,13 +138,12 @@ public class TypeValidator extends AbstractValidator
 	 * @param input The input
 	 * @param component the component
 	 * @param e the conversion exception
-	 * @return the validation error message
 	 */
-	protected ValidationErrorMessage getError(String input, FormComponent component,
+	protected void conversionError(String input, FormComponent component,
 			ConversionException e)
 	{
 		Map ctx = getMessageContext(input, component, e);
-		return errorMessage(getResourceKey(component), ctx, input, component);
+		error(getResourceKey(component), ctx, input, component);
 	}
 
 	/**

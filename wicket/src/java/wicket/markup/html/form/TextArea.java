@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,7 +16,6 @@
  * the License.
  */
 package wicket.markup.html.form;
-
 
 import java.io.Serializable;
 
@@ -35,19 +34,22 @@ public final class TextArea extends FormComponent
 	private static final long serialVersionUID = -1323747673401786242L;
 
 	/**
-	 * when the user input does not validate, this is a temporary store
-	 * for the input he/she provided. We have to store it somewhere as we
-	 * loose the request parameter when redirecting.
+	 * when the user input does not validate, this is a temporary store for the
+	 * input he/she provided. We have to store it somewhere as we loose the
+	 * request parameter when redirecting.
 	 */
 	private String invalidInput;
 
 	/**
 	 * Constructor that uses the provided {@link IModel}as its model. All
 	 * components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param model the model
-	 * @throws wicket.WicketRuntimeException Thrown if the component has been
-	 *            given a null name.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param model
+	 *            the model
+	 * @throws wicket.WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
 	 */
 	public TextArea(String name, IModel model)
 	{
@@ -55,8 +57,8 @@ public final class TextArea extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a dynamic
-	 * model. This model will be wrapped in an instance of
+	 * Constructor that uses the provided instance of {@link IModel}as a
+	 * dynamic model. This model will be wrapped in an instance of
 	 * {@link wicket.model.PropertyModel}using the provided expression. Thus,
 	 * using this constructor is a short-hand for:
 	 * 
@@ -65,12 +67,16 @@ public final class TextArea extends FormComponent
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param model the instance of {@link IModel}from which the model object
-	 *           will be used as the subject for the given expression
-	 * @param expression the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException Thrown if the component has been
-	 *            given a null name.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param model
+	 *            the instance of {@link IModel}from which the model object
+	 *            will be used as the subject for the given expression
+	 * @param expression
+	 *            the OGNL expression that works on the given object
+	 * @throws wicket.WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
 	 */
 	public TextArea(String name, IModel model, String expression)
 	{
@@ -81,10 +87,13 @@ public final class TextArea extends FormComponent
 	 * Constructor that uses the provided object as a simple model. This object
 	 * will be wrapped in an instance of {@link wicket.model.Model}. All
 	 * components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param object the object that will be used as a simple model
-	 * @throws wicket.WicketRuntimeException Thrown if the component has been
-	 *            given a null name.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param object
+	 *            the object that will be used as a simple model
+	 * @throws wicket.WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
 	 */
 	public TextArea(String name, Serializable object)
 	{
@@ -102,12 +111,16 @@ public final class TextArea extends FormComponent
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
-	 * @param name The non-null name of this component
-	 * @param object the object that will be used as the subject for the given
-	 *           expression
-	 * @param expression the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException Thrown if the component has been
-	 *            given a null name.
+	 * 
+	 * @param name
+	 *            The non-null name of this component
+	 * @param object
+	 *            the object that will be used as the subject for the given
+	 *            expression
+	 * @param expression
+	 *            the OGNL expression that works on the given object
+	 * @throws wicket.WicketRuntimeException
+	 *             Thrown if the component has been given a null name.
 	 */
 	public TextArea(String name, Serializable object, String expression)
 	{
@@ -116,16 +129,19 @@ public final class TextArea extends FormComponent
 
 	/**
 	 * Updates this components' model from the request.
+	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	public void updateModel()
 	{
-		invalidInput = null; // component validated, so clear the input
+        // Component validated, so clear the input
+		invalidInput = null; 
 		setModelObject(getRequestString());
 	}
 
 	/**
 	 * Handle a validation error.
+	 * 
 	 * @see wicket.markup.html.form.FormComponent#invalid()
 	 */
 	protected void invalid()
@@ -136,19 +152,24 @@ public final class TextArea extends FormComponent
 
 	/**
 	 * Handle the container's body.
-	 * @param markupStream The markup stream
-	 * @param openTag The open tag for the body
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
 	 * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
 	 */
 	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String bodyContent;
-		if(invalidInput == null) // no validation errors
+		if (invalidInput == null) 
 		{
+            // No validation errors
 			bodyContent = getModelObjectAsString();
 		}
-		else // invalid input detected
+		else
 		{
+            // Invalid input detected
 			bodyContent = invalidInput;
 		}
 		replaceBody(markupStream, openTag, getModelObjectAsString());
