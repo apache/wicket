@@ -23,11 +23,12 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
@@ -69,12 +70,15 @@ import wicket.model.Model;
  *  
  * </pre>
  * 
- * and you have an indented tree.
+ * and here is your indented tree.
  * </p>
  * @author Eelco Hillenius
  */
-public abstract class IndentTree extends Tree
+public abstract class IndentTree extends Tree implements TreeModelListener
 {
+	/** list with tree paths. */
+	private List treePathList;
+
 	/**
 	 * Constructor.
 	 * @param componentName The name of this container
@@ -83,41 +87,40 @@ public abstract class IndentTree extends Tree
 	public IndentTree(final String componentName, final TreeModel model)
 	{
 		super(componentName, model);
-		VisibleTreePathListView treePathsListView = createTreePathsListView();
+		TreePathsListView treePathsListView = createTreePathsListView();
 		add(treePathsListView);
+		model.addTreeModelListener(this);
 	}
 
 	/**
 	 * Creates the tree paths list view.
 	 * @return the tree paths list view
 	 */
-	protected final VisibleTreePathListView createTreePathsListView()
+	protected final TreePathsListView createTreePathsListView()
 	{
 		TreeModel model = (TreeModel)getTreeState().getModel();
 		TreeStateCache treeState = getTreeState();
-		List treePathList = new ArrayList();
+		this.treePathList = new ArrayList();
 		DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
 		Enumeration e = rootNode.preorderEnumeration();
 		while (e.hasMoreElements())
 		{
 			DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)e.nextElement();
 			TreePath path = new TreePath(treeNode.getPath());
-			TreeNodeModel treeNodeModel = new TreeNodeModel(
-					treeNode, treeState, path);
-			treePathList.add(treeNodeModel);
+			treePathList.add(treeNode);
 		}
-		VisibleTreePathListView treePathsListView =
-				new VisibleTreePathListView("tree",
+		TreePathsListView treePathsListView =
+				new TreePathsListView("tree",
 				new Model((Serializable)treePathList));
 		return treePathsListView;
 	}
 
 	/**
 	 * Creates a junction link.
-	 * @param node the model of the node
+	 * @param node the node
 	 * @return link for expanding/ collapsing the tree
 	 */
-	private final Link createJunctionLink(final TreeNodeModel node)
+	private final Link createJunctionLink(final DefaultMutableTreeNode node)
 	{
 		Link junctionLink = new Link("junctionLink")
 		{
@@ -141,19 +144,19 @@ public abstract class IndentTree extends Tree
 
 	/**
 	 * Get image name for junction; used by method createExpandCollapseLink.
-	 * @param node the model with the current node
+	 * @param node the tree node
 	 * @return image name
 	 */
-	protected abstract String getJunctionImageName(TreeNodeModel node);
+	protected abstract String getJunctionImageName(final DefaultMutableTreeNode node);
 
 	/**
 	 * Handler that is called when a junction link is clicked; this implementation sets the
 	 * expanded state to one that corresponds with the node selection.
-	 * @param node the tree node model
+	 * @param node the tree node
 	 */
-	protected void junctionLinkClicked(TreeNodeModel node)
+	protected void junctionLinkClicked(final DefaultMutableTreeNode node)
 	{
-		setExpandedState(node.getTreeNode());
+		setExpandedState(node);
 	}
 
 	/**
@@ -161,9 +164,9 @@ public abstract class IndentTree extends Tree
 	 * @param node the model of the node
 	 * @return link for selection
 	 */
-	private final Link createNodeLink(final TreeNodeModel node)
+	private final Link createNodeLink(final DefaultMutableTreeNode node)
 	{
-		Object userObject = node.getTreeNode().getUserObject();
+		Object userObject = node.getUserObject();
 		Link nodeLink = new Link("nodeLink")
 		{
 			public void linkClicked()
@@ -189,17 +192,17 @@ public abstract class IndentTree extends Tree
 	/**
 	 * Gets the label of the node that is used for the node link. Defaults to
 	 * treeNodeModel.getUserObject().toString(); override to provide a custom label
-	 * @param node the tree node model
+	 * @param node the tree node
 	 * @return the label of the node that is used for the node link
 	 */
-	protected abstract String getNodeLabel(TreeNodeModel node);
+	protected abstract String getNodeLabel(final DefaultMutableTreeNode node);
 
 	/**
 	 * Get image name for node; used by method createExpandCollapseLink.
-	 * @param node the model with the current node
+	 * @param node the tree node
 	 * @return image name
 	 */
-	protected abstract String getNodeImageName(TreeNodeModel node);
+	protected abstract String getNodeImageName(final DefaultMutableTreeNode node);
 
 	/**
 	 * Handler that is called when a node link is clicked; this implementation sets the
@@ -207,9 +210,9 @@ public abstract class IndentTree extends Tree
 	 * behaviour.
 	 * @param node the tree node model
 	 */
-	protected void nodeLinkClicked(TreeNodeModel node)
+	protected void nodeLinkClicked(final DefaultMutableTreeNode node)
 	{
-		setSelected(node.getTreeNode());
+		setSelected(node);
 	}
 
 	/**
@@ -248,16 +251,16 @@ public abstract class IndentTree extends Tree
 	}
 
 	/**
-	 * Table for visible tree paths.
+	 * List view for tree paths.
 	 */
-	private final class VisibleTreePathListView extends ListView
+	private final class TreePathsListView extends ListView
 	{
 		/**
 		 * Construct.
 		 * @param name name of the component
 		 * @param model the model
 		 */
-		public VisibleTreePathListView(String name, IModel model)
+		public TreePathsListView(String name, IModel model)
 		{
 			super(name, model);
 		}
@@ -295,8 +298,8 @@ public abstract class IndentTree extends Tree
 						add(listItem);
 					}
 
-					TreeNodeModel treeNodeModel = (TreeNodeModel)listItem.getModelObject();
-					TreePath path = treeNodeModel.getPath();
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode)listItem.getModelObject();
+					TreePath path = new TreePath(node.getPath());
 					int row = treeState.getRowForPath(path);
 					if(row != -1)
 					{
@@ -323,29 +326,23 @@ public abstract class IndentTree extends Tree
 		 */
 		protected void populateItem(ListItem listItem)
 		{
-			TreeNodeModel treeNodeModel = (TreeNodeModel)listItem.getModelObject();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)listItem.getModelObject();
 
 			// add spacers
-			int level = treeNodeModel.getLevel();
+			int level = node.getLevel();
 			listItem.add(new SpacerList("spacers", level));
 
 			// add node
 			HtmlContainer nodeContainer = new HtmlContainer("node");
-			Serializable userObject = treeNodeModel.getUserObject();
-
-			if (userObject == null)
-			{
-				throw new WicketRuntimeException("User object cannot be null");
-			}
-			Link expandCollapsLink = IndentTree.this.createJunctionLink(treeNodeModel);
+			Link expandCollapsLink = IndentTree.this.createJunctionLink(node);
 			nodeContainer.add(expandCollapsLink);
 
-			Link selectLink = IndentTree.this.createNodeLink(treeNodeModel);
+			Link selectLink = IndentTree.this.createNodeLink(node);
 			nodeContainer.add(selectLink);
 			listItem.add(nodeContainer);
 
 			listItem.add(new ComponentTagAttributeModifier("class", true,
-					new SelectedPathReplacementModel(treeNodeModel)));
+					new SelectedPathReplacementModel(node)));
 		}
 	}
 
@@ -354,16 +351,16 @@ public abstract class IndentTree extends Tree
 	 */
 	private final class SelectedPathReplacementModel extends Model
 	{
-		/** the tree node model. */
-		private final TreeNodeModel treeNodeModel;
+		/** the tree node. */
+		private final DefaultMutableTreeNode node;
 
 		/**
 		 * Construct.
-		 * @param treeNodeModel tree node model
+		 * @param node tree node
 		 */
-		public SelectedPathReplacementModel(TreeNodeModel treeNodeModel)
+		public SelectedPathReplacementModel(DefaultMutableTreeNode node)
 		{
-			this.treeNodeModel = treeNodeModel;
+			this.node = node;
 		}
 
 		/**
@@ -371,8 +368,8 @@ public abstract class IndentTree extends Tree
 		 */
 		public Object getObject()
 		{
-			TreePath path = treeNodeModel.getPath();
-			TreePath selectedPath = treeNodeModel.getTreeState().getSelectedPath();
+			TreePath path = new TreePath(node.getPath());
+			TreePath selectedPath = getTreeState().getSelectedPath();
 			if (selectedPath != null)
 			{
 				boolean equals = IndentTree.this.equals(path, selectedPath);
@@ -409,5 +406,46 @@ public abstract class IndentTree extends Tree
 		{
 			// nothing needed; we just render the tags and use CSS to indent
 		}
+	}
+
+	/**
+	 * @see javax.swing.event.TreeModelListener#treeNodesChanged(javax.swing.event.TreeModelEvent)
+	 */
+	public void treeNodesChanged(TreeModelEvent e)
+	{
+		System.err.println(e);
+	}
+
+	/**
+	 * @see javax.swing.event.TreeModelListener#treeNodesInserted(javax.swing.event.TreeModelEvent)
+	 */
+	public void treeNodesInserted(TreeModelEvent e)
+	{
+		TreePath parentPath = e.getTreePath();
+		TreeStateCache treeState = getTreeState();
+		int row = treeState.getRowForPath(parentPath);
+		Object[] newChildren = e.getChildren();
+		int len = newChildren.length;
+		for(int i = 0; i < len; i++)
+		{
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)newChildren[i];
+			treePathList.add(row++, node);
+		}
+	}
+
+	/**
+	 * @see javax.swing.event.TreeModelListener#treeNodesRemoved(javax.swing.event.TreeModelEvent)
+	 */
+	public void treeNodesRemoved(TreeModelEvent e)
+	{
+		System.err.println(e);
+	}
+
+	/**
+	 * @see javax.swing.event.TreeModelListener#treeStructureChanged(javax.swing.event.TreeModelEvent)
+	 */
+	public void treeStructureChanged(TreeModelEvent e)
+	{
+		System.err.println(e);
 	}
 }

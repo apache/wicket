@@ -85,6 +85,28 @@ public abstract class Tree extends Panel
 	}
 
 	/**
+	 * Convenience method that determines whether the path of the
+	 * given tree node is expanded in this tree's state.
+	 * @param node the tree node
+	 * @return whether the path of the given tree node is expanded
+	 */
+	public final boolean isExpanded(DefaultMutableTreeNode node)
+	{
+		return isExpanded(new TreePath(node.getPath()));
+	}
+
+	/**
+	 * Convenience method that determines whether the given path is expanded
+	 * in this tree's state.
+	 * @param path the tree path
+	 * @return whether the given path is expanded
+	 */
+	public final boolean isExpanded(TreePath path)
+	{
+		return treeState.isExpanded(path);
+	}
+
+	/**
 	 * Gets the current tree state.
 	 * @return the tree current tree state
 	 */
