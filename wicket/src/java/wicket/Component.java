@@ -962,6 +962,9 @@ public abstract class Component implements Serializable
 		}
 	}
 
+    /**
+     * Detaches the model for this component if it is detachable
+     */
 	protected void detachModel()
 	{
 		if (model instanceof IDetachableModel)
