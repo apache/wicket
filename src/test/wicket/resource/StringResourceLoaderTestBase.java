@@ -20,8 +20,8 @@ package wicket.resource;
 
 import java.util.Locale;
 
+import wicket.Application;
 import wicket.Component;
-import wicket.IApplication;
 import wicket.Session;
 import wicket.resource.IStringResourceLoader;
 import junit.framework.Assert;
@@ -39,7 +39,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	protected IStringResourceLoader loader;
 
 	// The dummy application
-	protected IApplication application;
+	protected Application application;
 
 	// The dummy component
 	protected Component component;

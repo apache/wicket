@@ -20,6 +20,7 @@ package wicket.protocol.http;
 
 import javax.servlet.http.HttpServletRequest;
 
+import wicket.Application;
 import wicket.Session;
 
 /**
@@ -39,7 +40,7 @@ public class HttpSession extends Session
      * @param application The application
      * @param httpServletSession The underlying servlet session
      */
-    protected HttpSession(final HttpApplication application,
+    protected HttpSession(final Application application,
             final javax.servlet.http.HttpSession httpServletSession)
     {
         super(application);
@@ -52,7 +53,7 @@ public class HttpSession extends Session
      * @param request The http request object
      * @return The session object
      */
-    static HttpSession getSession(final HttpApplication application,
+    static HttpSession getSession(final Application application,
             final HttpServletRequest request)
     {
         // Get session, creating if it doesn't exist

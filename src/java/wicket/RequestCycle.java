@@ -145,7 +145,7 @@ public abstract class RequestCycle
     private static final Log log = LogFactory.getLog(RequestCycle.class);
 
     /** The application object. */
-    protected final IApplication application;
+    protected final Application application;
 
     /** The session object. */
     protected final Session session;
@@ -234,7 +234,7 @@ public abstract class RequestCycle
      * @param request The request
      * @param response The response
      */
-    protected RequestCycle(final IApplication application,
+    protected RequestCycle(final Application application,
             final Session session, final Request request, final Response response)
     {
         this.application = application;
@@ -335,7 +335,7 @@ public abstract class RequestCycle
      * Gets the application object.
      * @return Application interface
      */
-    public final IApplication getApplication()
+    public final Application getApplication()
     {
         return application;
     }

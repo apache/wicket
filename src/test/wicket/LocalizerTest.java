@@ -22,7 +22,7 @@ import java.util.MissingResourceException;
 
 import wicket.ApplicationSettings;
 import wicket.Component;
-import wicket.IApplication;
+import wicket.Application;
 import wicket.Localizer;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -40,7 +40,7 @@ import junit.framework.TestCase;
 public class LocalizerTest extends TestCase
 {
 
-	private IApplication application;
+	private Application application;
 
 	private ApplicationSettings settings;
 
@@ -61,7 +61,7 @@ public class LocalizerTest extends TestCase
 		application = new DummyApplication();
 		settings = application.getSettings();
 		settings.addStringResourceLoader(new ApplicationStringResourceLoader(application));
-		localizer = settings.getLocalizer();
+		localizer = application.getLocalizer();
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class LocalizerTest extends TestCase
 	public void testGetStringMissingStringNoDefault()
 	{
 		settings.setUseDefaultOnMissingResource(true);
-		settings.setExceptionOnMissingResource(false);
+		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on no default", "??unknown.string??",
 				localizer.getString("unknown.string", null, null, null, null, null));
 	}
@@ -104,7 +104,7 @@ public class LocalizerTest extends TestCase
 	public void testGetStringMissingStringDoNotUseDefault()
 	{
 		settings.setUseDefaultOnMissingResource(false);
-		settings.setExceptionOnMissingResource(false);
+		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
 				"??unknown.string??", localizer.getString("unknown.string", null, null, null, null,
 						"DEFAULT"));
@@ -117,7 +117,7 @@ public class LocalizerTest extends TestCase
 	public void testGetStringMissingStringExceptionThrown()
 	{
 		settings.setUseDefaultOnMissingResource(false);
-		settings.setExceptionOnMissingResource(true);
+		settings.setThrowExceptionOnMissingResource(true);
 		try
 		{
 			localizer.getString("unknown.string", null, null, null, null, "DEFAULT");

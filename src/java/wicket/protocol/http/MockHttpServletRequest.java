@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import wicket.Component;
-import wicket.IApplication;
+import wicket.Application;
 import wicket.IRedirectListener;
 import wicket.IResourceListener;
 import wicket.Page;
@@ -63,7 +63,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 { // TODO finalize javadoc
 
 	// The session and application
-	private final IApplication application;
+	private final Application application;
 
 	private final HttpSession session;
 
@@ -93,7 +93,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param session The session object
 	 * @param context The current servlet context
 	 */
-	public MockHttpServletRequest(final IApplication application, final HttpSession session,
+	public MockHttpServletRequest(final Application application, final HttpSession session,
 			final ServletContext context)
 	{
 		this.application = application;

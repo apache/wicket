@@ -18,8 +18,8 @@
  */
 package wicket.resource;
 
+import wicket.Application;
 import wicket.Component;
-import wicket.IApplication;
 import wicket.Session;
 
 /**
@@ -37,7 +37,7 @@ public class DummyComponent extends Component
 	 * @param name The name of the component
 	 * @param application The application for this component
 	 */
-	public DummyComponent(final String name, final IApplication application)
+	public DummyComponent(final String name, final Application application)
 	{
 		super(name);
 		testSession = new Session(application)

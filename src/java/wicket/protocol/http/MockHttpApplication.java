@@ -25,7 +25,7 @@ import javax.servlet.ServletException;
 import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.Page;
-import wicket.protocol.http.HttpApplication;
+import wicket.WebApplication;
 import wicket.protocol.http.HttpRequest;
 import wicket.protocol.http.HttpRequestCycle;
 import wicket.protocol.http.HttpResponse;
@@ -71,7 +71,7 @@ import wicket.protocol.http.HttpSession;
  *
  * @author Chris Turner
  */
-public class MockHttpApplication extends HttpApplication
+public class MockHttpApplication extends WebApplication
 { // TODO finalize javadoc
 
 	/** Serial Version ID */
@@ -166,7 +166,7 @@ public class MockHttpApplication extends HttpApplication
 	}
 
     /**
-     * @see wicket.IApplication#getPages()
+     * @see wicket.Application#getPages()
      */
     public ApplicationPages getPages()
     {

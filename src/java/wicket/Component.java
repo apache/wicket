@@ -67,7 +67,7 @@ import wicket.util.string.Strings;
  * Components participate in four phases of processing to produce output.
  * <p>
  * 1. An incoming request is processed by the application class for the protocol
- * in use, for example, HttpApplication. The application class creates Session,
+ * in use, for example, WicketServlet. The application class creates Session,
  * Request and Response objects for use by a component in updating is model and
  * rendering a response. These objects are stored inside a container called
  * RequestCycle, which is a parameter to most of the methods involved in
@@ -285,9 +285,9 @@ public abstract class Component implements Serializable
      * 
      * @return The application associated with the session that this component
      *         is in.
-     * @see IApplication
+     * @see Application
      */
-    public final IApplication getApplication()
+    public final Application getApplication()
     {
         return getSession().getApplication();
     }
@@ -325,7 +325,7 @@ public abstract class Component implements Serializable
      */
     public final Localizer getLocalizer()
     {
-        return getApplicationSettings().getLocalizer();
+        return getApplication().getLocalizer();
     }
 
     /**

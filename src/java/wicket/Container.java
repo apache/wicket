@@ -32,7 +32,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.IComponentResolver;
-import wicket.markup.IMarkupParser;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
@@ -720,8 +719,8 @@ public abstract class Container extends Component
 	/**
 	 * Loads markup.
 	 * 
-	 * @param settings
-	 *           Application settings
+	 * @param application
+	 *           Application
 	 * @param key
 	 *           Key under which markup should be cached
 	 * @param markupResource
@@ -731,37 +730,11 @@ public abstract class Container extends Component
 	 * @throws IOException
 	 * @throws ResourceNotFoundException
 	 */
-	private Markup loadMarkup(final ApplicationSettings settings, final String key,
+	private Markup loadMarkup(final Application application, final String key,
 			final Resource markupResource) throws ParseException, IOException, ResourceNotFoundException
 	{
-	    final Class markupParserClass = settings.getMarkupParserClass();
-	    
-	    final IMarkupParser parser;
-	    try
-	    {
-	        parser = (IMarkupParser) markupParserClass.newInstance();
-	    }
-	    catch (IllegalAccessException ex)
-	    {
-	        throw new IOException("Failed to load MarkupParser: " + ex.getMessage());
-	    }
-	    catch (InstantiationException ex)
-	    {
-	        throw new IOException("Failed to load MarkupParser: " + ex.getMessage());
-	    }
-	    
-		parser.setComponentNameAttribute(settings.getComponentNameAttribute()); 
-		parser.setWicketNamespace(settings.getWicketNamespace());
-		parser.setStripComments(settings.getStripComments());
-		parser.setCompressWhitespace(settings.getCompressWhitespace());
-		parser.setStripWicketParamTag(settings.getStripWicketParamTag());
-		parser.setAutolinking(settings.isAutomaticLinking());
-		parser.setAutolinkBasePage(this.getPage());
-
-		final Markup markup = parser.read(markupResource);
-
+		final Markup markup = application.getMarkupParser().read(markupResource);
 		markupCache.put(key, markup);
-
 		return markup;
 	}
 
@@ -776,12 +749,12 @@ public abstract class Container extends Component
 	 */
 	private Markup loadMarkupAndWatchForChanges(final String key, final Resource markupResource)
 	{
-		final ApplicationSettings settings = getApplicationSettings();
+		final Application application = getApplication();
 
 		try
 		{
 			// Watch file in the future
-			final ModificationWatcher watcher = settings.getResourceWatcher();
+			final ModificationWatcher watcher = application.getResourceWatcher();
 
 			if (watcher != null)
 			{
@@ -794,7 +767,7 @@ public abstract class Container extends Component
 							try
 							{
 								log.info("Reloading markup from " + markupResource);
-								loadMarkup(settings, key, markupResource);
+								loadMarkup(application, key, markupResource);
 							}
 							catch (ParseException e)
 							{
@@ -815,7 +788,7 @@ public abstract class Container extends Component
 
 			log.info("Loading markup from " + markupResource);
 
-			return loadMarkup(settings, key, markupResource);
+			return loadMarkup(application, key, markupResource);
 		}
 		catch (ParseException e)
 		{
@@ -890,7 +863,7 @@ public abstract class Container extends Component
 			else 
 			{
 			    // 2nd try: all static name resolvers
-			    final List componentResolvers = this.getApplicationSettings().getComponentResolvers();
+			    final List componentResolvers = this.getApplication().getComponentResolvers();
 			    final Iterator iter = componentResolvers.iterator();
 			    while (iter.hasNext())
 			    {

@@ -24,22 +24,17 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.AutolinkComponentResolver;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupParser;
-import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.Crypt;
 import wicket.markup.html.form.FormComponentPersistenceDefaults;
-import wicket.markup.html.form.ICrypt;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
-import wicket.util.convert.ConverterRegistry;
 import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.time.Duration;
-import wicket.util.watch.ModificationWatcher;
 
 /**
  * Contains application settings as property values. All settings exposed are
@@ -64,18 +59,8 @@ import wicket.util.watch.ModificationWatcher;
  * <i>unexpectedExceptionDisplay </i> (defaults to SHOW_EXCEPTION_PAGE) -
  * Determines how exceptions are displayed to the developer or user
  * <p>
- * <i>homePage </i> (no default) - You must set this property to the
- * bookmarkable page that you want the framework to respond with when no path
- * information is specified.
- * <p>
- * <i>internalErrorPage </i>- You can override this with your own page class to
- * display internal errors in a different way.
- * <p>
  * <i>maxSessionPages </i>- The maximum number of pages in the user's session
  * before old pages are expired.
- * <p>
- * <i>pageExpiredErrorPage </i>- You can override this with your own
- * bookmarkable page class to display expired page errors in a different way.
  * <p>
  * <i>resourcePollFrequency </i> (defaults to no polling frequency) - Frequency
  * at which resources should be polled for changes.
@@ -83,40 +68,22 @@ import wicket.util.watch.ModificationWatcher;
  * <i>sourcePath </i> (no default) - Set this to enable polling of resources on
  * your source path
  * <p>
- * <i>staleDataErrorPage </i>- You can override this with your own bookmarkable
- * page class to display stale data errors in a different way.
- * <p>
  * <i>stripComments </i> (defaults to false) - Set to true to strip HTML
  * comments during markup loading
  * <p>
  * <i>stripComponentNames </i> (defaults to false) - Set to true to strip
  * component name attributes during rendering
  * <p>
- * <i>exceptionOnMissingResource </i> (defaults to true) - Set to true to throw
+ * <i>throwExceptionOnMissingResource </i> (defaults to true) - Set to true to throw
  * a runtime exception if a required string resource is not found. Set to false
  * to return the requested resource key surrounded by pairs of question mark
  * characters (e.g. "??missingKey??")
  * <p>
  * <i>useDefaultOnMissingResource </i> (defaults to true) - Set to true to
  * return a default value if available when a required string resource is not
- * found. If set to false then the exceptionOnMissingResource flag is used to
+ * found. If set to false then the throwExceptionOnMissingResource flag is used to
  * determine how to behave. If no default is available then this is the same as
  * if this flag were false
- * <p>
- * <i>stringResourceLoaders </i>- A chain of <code>IStringResourceLoader</code>
- * instances that are searched in order to obtain string resources used during
- * localization. By default the chain is set up to first search for resources
- * against a particular component (e.g. page etc.) and then against the
- * application.
- * <p>
- * <i>localizer </i> (read-only) - An application wide object encapsulating all
- * of the functionality required to access localized resources.
- * <p>
- * <i>converterRegistry </i> (read-only) - The registry with converters that
- * should be used for type conversion e.g. by {@link wicket.model.PropertyModel}.
- * Use the reference of converterRegistry to register/ deregister type
- * converters if needed. Also, there are convenience method in converterRegistry
- * to swith to a localized/ non-localized set of type converters.
  * <p>
  * <i>defaultPageFactory </i>- the factory class that is used for constructing
  * page instances.
@@ -132,17 +99,13 @@ import wicket.util.watch.ModificationWatcher;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class ApplicationSettings
-{
-    // TODO finalize javadoc
+public final class ApplicationSettings
+{ // TODO finalize javadoc
     /** Log */
     private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
     /** Component attribute name */
     private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
-
-    /** List of (static) ComponentResolvers */
-    private List componentResolvers;
 
     /** True to check that each component on a page is used */
     private boolean componentUseCheck = true;
@@ -150,10 +113,7 @@ public class ApplicationSettings
     /** True if multiple tabs/spaces should be compressed to a single space */
     private boolean compressWhitespace = false;
 
-    // Registry with converters
-    private ConverterRegistry converterRegistry = new ConverterRegistry();
-
-    // Class of type ICrypt to implement encryption
+    /** Class of type ICrypt to implement encryption */
     private Class cryptClass = Crypt.class;
 
     /** Default markup for after a disabled link */
@@ -172,16 +132,13 @@ public class ApplicationSettings
     private String encryptionKey = "WiCkEt-FRAMEwork";
 
     /** Flags used to determine how to behave if resources are not found */
-    private boolean exceptionOnMissingResource = true;
+    private boolean throwExceptionOnMissingResource = true;
 
     /** Default values for persistence of form data (by means of cookies) */
     private FormComponentPersistenceDefaults formComponentPersistenceDefaults = new FormComponentPersistenceDefaults();
 
-    /** The single application-wide localization class */
-    private Localizer localizer;
-
     /** Pluggable markup parser */
-    private String markupParserClassName = MarkupParser.class.getName();
+    private Class markupParserClass = MarkupParser.class;
 
     /** The maximum number of pages in a session */
     private int maxSessionPages = 10;
@@ -197,9 +154,6 @@ public class ApplicationSettings
 
     /** Frequency at which files should be polled */
     private Duration resourcePollFrequency = null;
-
-    /** ModificationWatcher to watch for changes in markup files */
-    private ModificationWatcher resourceWatcher;
 
     /** Source path */
     private Path sourcePath = new Path();
@@ -248,7 +202,7 @@ public class ApplicationSettings
      */
     public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
             "SHOW_NO_EXCEPTION_PAGE");
-    
+
     /**
      * Enumerated type for different ways of displaying unexpected exceptions.
      */
@@ -267,16 +221,10 @@ public class ApplicationSettings
      * @param application
      *            The application that these settings are for
      */
-    public ApplicationSettings(final IApplication application)
+    public ApplicationSettings(final Application application)
     {
-        localizer = new Localizer(this);
         stringResourceLoaders.add(new ComponentStringResourceLoader());
-        stringResourceLoaders.add(new ApplicationStringResourceLoader(
-                application));
-
-        componentResolvers = new ArrayList();
-        componentResolvers.add(new AutolinkComponentResolver());
-        componentResolvers.add(new WicketTagComponentResolver());
+        stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
     }
 
     /**
@@ -288,8 +236,7 @@ public class ApplicationSettings
      *            The loader to be added
      * @return This
      */
-    public ApplicationSettings addStringResourceLoader(
-            final IStringResourceLoader loader)
+    public final ApplicationSettings addStringResourceLoader(final IStringResourceLoader loader)
     {
         if (!overriddenStringResourceLoaders)
         {
@@ -314,17 +261,6 @@ public class ApplicationSettings
     }
 
     /**
-     * Get the (modifiable) List of ComponentResolvers.
-     * 
-     * @see wicket.markup.AutolinkComponentResolver for an example
-     * @return List of ComponentResolvers
-     */
-    public final List getComponentResolvers()
-    {
-        return componentResolvers;
-    }
-
-    /**
      * Get whether component use should be checked or not.
      * 
      * @return True if component use should be checked
@@ -339,50 +275,23 @@ public class ApplicationSettings
      * @return Returns the compressWhitespace.
      * @see ApplicationSettings#setCompressWhitespace(boolean)
      */
-    public boolean getCompressWhitespace()
+    public final boolean getCompressWhitespace()
     {
         return compressWhitespace;
     }
-
+    
     /**
-     * Get converterRegistry.
-     * 
-     * @return converterRegistry.
+     * @return Returns the cryptClass.
      */
-    public final ConverterRegistry getConverterRegistry()
+    public final Class getCryptClass()
     {
-        return converterRegistry;
-    }
-
-    /**
-     * Get instance of de-/encryption class.
-     * 
-     * @return instance of de-/encryption class
-     */
-    public ICrypt getCryptInstance()
-    {
-        try
-        {
-            final ICrypt crypt = (ICrypt) this.cryptClass.newInstance();
-            crypt.setKey(getEncryptionKey());
-            return crypt;
-        }
-        catch (InstantiationException e)
-        {
-            throw new WicketRuntimeException(
-                    "Encryption/decryption object can not be instantiated", e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new WicketRuntimeException(
-                    "Encryption/decryption object can not be instantiated", e);
-        }
+        return cryptClass;
     }
 
     /**
      * @return Returns the defaultAfterDisabledLink.
      */
-    public String getDefaultAfterDisabledLink()
+    public final String getDefaultAfterDisabledLink()
     {
         return defaultAfterDisabledLink;
     }
@@ -390,7 +299,7 @@ public class ApplicationSettings
     /**
      * @return Returns the defaultBeforeDisabledLink.
      */
-    public String getDefaultBeforeDisabledLink()
+    public final String getDefaultBeforeDisabledLink()
     {
         return defaultBeforeDisabledLink;
     }
@@ -400,7 +309,7 @@ public class ApplicationSettings
      * 
      * @return Default class resolver
      */
-    public IClassResolver getDefaultClassResolver()
+    public final IClassResolver getDefaultClassResolver()
     {
         return defaultClassResolver;
     }
@@ -410,7 +319,7 @@ public class ApplicationSettings
      * 
      * @return The default page factory
      */
-    public IPageFactory getDefaultPageFactory()
+    public final IPageFactory getDefaultPageFactory()
     {
         return defaultPageFactory;
     }
@@ -420,7 +329,7 @@ public class ApplicationSettings
      * 
      * @return encryption key
      */
-    public String getEncryptionKey()
+    public final String getEncryptionKey()
     {
         return encryptionKey;
     }
@@ -429,9 +338,9 @@ public class ApplicationSettings
      * @return Whether to throw an exception when a missing resource is
      *         requested
      */
-    public final boolean getExceptionOnMissingResource()
+    public final boolean getThrowExceptionOnMissingResource()
     {
-        return exceptionOnMissingResource;
+        return throwExceptionOnMissingResource;
     }
 
     /**
@@ -439,17 +348,9 @@ public class ApplicationSettings
      * 
      * @return FormComponentPersistenceDefaults
      */
-    public FormComponentPersistenceDefaults getFormComponentPersistenceDefaults()
+    public final FormComponentPersistenceDefaults getFormComponentPersistenceDefaults()
     {
         return formComponentPersistenceDefaults;
-    }
-
-    /**
-     * @return The application wide localizer instance
-     */
-    public Localizer getLocalizer()
-    {
-        return localizer;
     }
 
     /**
@@ -457,7 +358,7 @@ public class ApplicationSettings
      */
     public final Class getMarkupParserClass()
     {
-        return getDefaultClassResolver().resolveClass(markupParserClassName);
+        return markupParserClass;
     }
 
     /**
@@ -478,7 +379,7 @@ public class ApplicationSettings
      * @return whether the {@link wicket.model.PropertyModel}instances apply
      *         formatting by default
      */
-    public boolean getPropertyModelDefaultApplyFormatting()
+    public final boolean getPropertyModelDefaultApplyFormatting()
     {
         return propertyModelDefaultApplyFormatting;
     }
@@ -487,27 +388,12 @@ public class ApplicationSettings
      * @return Returns the resourcePollFrequency.
      * @see ApplicationSettings#setResourcePollFrequency(Duration)
      */
-    public Duration getResourcePollFrequency()
+    public final Duration getResourcePollFrequency()
     {
         return resourcePollFrequency;
     }
 
-    /**
-     * @return Resource watcher with polling frequency determined by setting, or
-     *         null if no polling frequency has been set.
-     */
-    public ModificationWatcher getResourceWatcher()
-    {
-        if (resourceWatcher == null)
-        {
-            final Duration pollFrequency = getResourcePollFrequency();
-            if (pollFrequency != null)
-            {
-                resourceWatcher = new ModificationWatcher(pollFrequency);
-            }
-        }
-        return resourceWatcher;
-    }
+
 
     /**
      * Gets any source code path to use when searching for resources.
@@ -524,7 +410,7 @@ public class ApplicationSettings
      * @return Returns the stripComments.
      * @see ApplicationSettings#setStripComments(boolean)
      */
-    public boolean getStripComments()
+    public final boolean getStripComments()
     {
         return stripComments;
     }
@@ -588,8 +474,7 @@ public class ApplicationSettings
      *            The componentNameAttribute to set.
      * @return This
      */
-    public final ApplicationSettings setComponentNameAttribute(
-            final String componentNameAttribute)
+    public final ApplicationSettings setComponentNameAttribute(final String componentNameAttribute)
     {
         this.componentNameAttribute = componentNameAttribute;
         return this;
@@ -603,8 +488,7 @@ public class ApplicationSettings
      * @param componentUseCheck
      * @return This
      */
-    public final ApplicationSettings setComponentUseCheck(
-            boolean componentUseCheck)
+    public final ApplicationSettings setComponentUseCheck(boolean componentUseCheck)
     {
         this.componentUseCheck = componentUseCheck;
         return this;
@@ -628,7 +512,7 @@ public class ApplicationSettings
      *            The compressWhitespace to set.
      * @return This
      */
-    public ApplicationSettings setCompressWhitespace(boolean compressWhitespace)
+    public final ApplicationSettings setCompressWhitespace(boolean compressWhitespace)
     {
         this.compressWhitespace = compressWhitespace;
         return this;
@@ -640,7 +524,7 @@ public class ApplicationSettings
      * @param crypt
      * @return This
      */
-    public ApplicationSettings setCrypt(Class crypt)
+    public final ApplicationSettings setCryptClass(Class crypt)
     {
         this.cryptClass = crypt;
         return this;
@@ -651,8 +535,7 @@ public class ApplicationSettings
      *            The defaultAfterDisabledLink to set.
      * @return This
      */
-    public ApplicationSettings setDefaultAfterDisabledLink(
-            String defaultAfterDisabledLink)
+    public final ApplicationSettings setDefaultAfterDisabledLink(String defaultAfterDisabledLink)
     {
         this.defaultAfterDisabledLink = defaultAfterDisabledLink;
         return this;
@@ -663,8 +546,7 @@ public class ApplicationSettings
      *            The defaultBeforeDisabledLink to set.
      * @return This
      */
-    public ApplicationSettings setDefaultBeforeDisabledLink(
-            String defaultBeforeDisabledLink)
+    public final ApplicationSettings setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
     {
         this.defaultBeforeDisabledLink = defaultBeforeDisabledLink;
         return this;
@@ -677,8 +559,7 @@ public class ApplicationSettings
      *            The default class resolver
      * @return This
      */
-    public ApplicationSettings setDefaultClassResolver(
-            final IClassResolver defaultClassResolver)
+    public final ApplicationSettings setDefaultClassResolver(final IClassResolver defaultClassResolver)
     {
         this.defaultClassResolver = defaultClassResolver;
         return this;
@@ -691,8 +572,7 @@ public class ApplicationSettings
      *            The default factory
      * @return This
      */
-    public ApplicationSettings setDefaultPageFactory(
-            final IPageFactory defaultPageFactory)
+    public final ApplicationSettings setDefaultPageFactory(final IPageFactory defaultPageFactory)
     {
         this.defaultPageFactory = defaultPageFactory;
         return this;
@@ -704,34 +584,33 @@ public class ApplicationSettings
      * @param encryptionKey
      * @return This
      */
-    public ApplicationSettings setEncryptionKey(String encryptionKey)
+    public final ApplicationSettings setEncryptionKey(String encryptionKey)
     {
         this.encryptionKey = encryptionKey;
         return this;
     }
 
     /**
-     * @param exceptionOnMissingResource
+     * @param throwExceptionOnMissingResource
      *            Whether to throw an exception when a missing resource is
      *            requested
      * @return This
      */
-    public final ApplicationSettings setExceptionOnMissingResource(
-            final boolean exceptionOnMissingResource)
+    public final ApplicationSettings setThrowExceptionOnMissingResource(
+            final boolean throwExceptionOnMissingResource)
     {
-        this.exceptionOnMissingResource = exceptionOnMissingResource;
+        this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
         return this;
     }
 
     /**
-     * @param markupParserClassName
+     * @param markupParserClass
      *            The markupParserClass to set.
      * @return This
      */
-    public final ApplicationSettings setMarkupParserClassName(
-            final String markupParserClassName)
+    public final ApplicationSettings setMarkupParserClass(final Class markupParserClass)
     {
-        this.markupParserClassName = markupParserClassName;
+        this.markupParserClass = markupParserClass;
         return this;
     }
 
@@ -745,8 +624,7 @@ public class ApplicationSettings
      *            The maxSessionPages to set.
      * @return This
      */
-    public final ApplicationSettings setMaxSessionPages(
-            final int maxSessionPages)
+    public final ApplicationSettings setMaxSessionPages(final int maxSessionPages)
     {
         this.maxSessionPages = maxSessionPages;
         return this;
@@ -761,7 +639,7 @@ public class ApplicationSettings
      *            formatting by default
      * @return This
      */
-    public ApplicationSettings setPropertyModelDefaultApplyFormatting(
+    public final ApplicationSettings setPropertyModelDefaultApplyFormatting(
             boolean propertyModelDefaultApplyFormatting)
     {
         this.propertyModelDefaultApplyFormatting = propertyModelDefaultApplyFormatting;
@@ -779,8 +657,7 @@ public class ApplicationSettings
      * @return This
      * @see ApplicationSettings#setSourcePath(Path)
      */
-    public final ApplicationSettings setResourcePollFrequency(
-            final Duration resourcePollFrequency)
+    public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
     {
         this.resourcePollFrequency = resourcePollFrequency;
         return this;
@@ -810,7 +687,7 @@ public class ApplicationSettings
      *            True to strip markup comments from rendered pages
      * @return This
      */
-    public ApplicationSettings setStripComments(boolean stripComments)
+    public final ApplicationSettings setStripComments(boolean stripComments)
     {
         this.stripComments = stripComments;
         return this;
@@ -826,8 +703,7 @@ public class ApplicationSettings
      *            The stripComponentNames to set.
      * @return This
      */
-    public final ApplicationSettings setStripComponentNames(
-            final boolean stripComponentNames)
+    public final ApplicationSettings setStripComponentNames(final boolean stripComponentNames)
     {
         this.stripComponentNames = stripComponentNames;
         return this;

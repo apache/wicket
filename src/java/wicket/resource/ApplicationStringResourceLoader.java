@@ -27,7 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IApplication;
+import wicket.Application;
 import wicket.Page;
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
@@ -50,7 +50,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
     private static final Log log = LogFactory.getLog(Page.class);
 
     /** The application we are loading for. */
-    private IApplication application;
+    private Application application;
 
     /** The cache of previously loaded resources. */
     private Map resourceCache;
@@ -61,7 +61,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
      * @param application
      *            The application that this resource loader is associated with
      */
-    public ApplicationStringResourceLoader(final IApplication application)
+    public ApplicationStringResourceLoader(final Application application)
     {
         if (application == null)
         {
