@@ -19,7 +19,7 @@
 package wicket.protocol.http;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 
@@ -29,7 +29,7 @@ import wicket.markup.html.link.Link;
  *
  * @author Chris Turner
  */
-public class MockPage extends HtmlPage {
+public class MockPage extends WebPage {
 
 	/** Serial Version ID */
 	private static final long serialVersionUID = 2957175986254155110L;

@@ -18,14 +18,14 @@
 package wicket.markup.html.pages;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 
 /**
  * Internal error display page.
  * 
  * @author Jonathan Locke
  */
-public class InternalErrorPage extends HtmlPage
+public class InternalErrorPage extends WebPage
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -4676797850273383367L;

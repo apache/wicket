@@ -18,14 +18,14 @@
 package wicket.markup.html.pages;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 
 /**
  * Page expired error page.
  * 
  * @author Jonathan Locke
  */
-public class PageExpiredErrorPage extends HtmlPage
+public class PageExpiredErrorPage extends WebPage
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -4566588225634687534L;

@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
 import wicket.util.string.Strings;
 
 /**
@@ -34,7 +34,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class MultiLineLabel extends HtmlComponent
+public class MultiLineLabel extends WebComponent
 { 
 	/** Serial Version ID */
 	private static final long serialVersionUID = 7949493094618802759L;

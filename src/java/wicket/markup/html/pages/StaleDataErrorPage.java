@@ -18,7 +18,7 @@
 package wicket.markup.html.pages;
 
 import wicket.Page;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 
@@ -27,7 +27,7 @@ import wicket.markup.html.link.PageLink;
  * 
  * @author Jonathan Locke
  */
-public class StaleDataErrorPage extends HtmlPage
+public class StaleDataErrorPage extends WebPage
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3703752578058679886L;

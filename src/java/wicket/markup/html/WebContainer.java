@@ -20,29 +20,32 @@ package wicket.markup.html;
 import java.io.Serializable;
 
 import wicket.Component;
+import wicket.Container;
 
 /**
- * Base class for simple HTML components which do not hold nested components. If
- * you need to support nested components, see HtmlContainer or use Panel if the
- * component will have its own associated markup.
+ * A container of HTML markup and components. It is very similar to the base
+ * class Container, except that the markup type is defined to be HTML.
  * 
- * @see wicket.markup.html.HtmlContainer
  * @author Jonathan Locke
  */
-public abstract class HtmlComponent extends Component
+public class WebContainer extends Container
 {
+	/** Serial Version ID. */
+	private static final long serialVersionUID = 4704928946724566158L;
+
 	/**
 	 * @see Component#Component(String)
 	 */
-	public HtmlComponent(final String name)
+	public WebContainer(final String name)
 	{
 		super(name);
 	}
 
+
 	/**
 	 * @see Component#Component(String, Serializable)
 	 */
-	public HtmlComponent(final String name, final Serializable object)
+	public WebContainer(final String name, final Serializable object)
 	{
 		super(name, object);
 	}
@@ -50,13 +53,23 @@ public abstract class HtmlComponent extends Component
 	/**
 	 * @see Component#Component(String, Serializable, String)
 	 */
-	public HtmlComponent(final String name, final Serializable object, final String expression)
+	public WebContainer(final String name, final Serializable object, final String expression)
 	{
 		super(name, object, expression);
 	}
 
 	/**
-	 * Renders this component.
+	 * Gets the markup type for this component.
+	 * 
+	 * @return Markup type of HTML
+	 */
+	public final String getMarkupType()
+	{
+		return "html";
+	}
+
+	/**
+	 * Renders this component. This implementation just calls renderComponent.
 	 */
 	protected void handleRender()
 	{

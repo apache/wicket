@@ -26,7 +26,7 @@ import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
 import wicket.protocol.http.WebResponse;
 import wicket.util.io.Streams;
 import wicket.util.lang.Classes;
@@ -51,7 +51,7 @@ import java.util.Locale;
  *
  * @author Jonathan Locke
  */
-public class Image extends HtmlComponent implements IResourceListener
+public class Image extends WebComponent implements IResourceListener
 {
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
@@ -32,7 +32,7 @@ import wicket.markup.html.list.PageableListViewNavigationIncrementLink;
 /**
  * Dummy page used for resource testing.
  */
-public class IncrementalTableNavigationPage extends HtmlPage
+public class IncrementalTableNavigationPage extends WebPage
 {
 
 	/**

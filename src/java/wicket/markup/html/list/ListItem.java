@@ -21,7 +21,7 @@ package wicket.markup.html.list;
 import java.util.Collections;
 
 import wicket.WicketRuntimeException;
-import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.WebContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.Model;
 
@@ -30,7 +30,7 @@ import wicket.model.Model;
  *
  * @author Jonathan Locke
  */
-public class ListItem extends HtmlContainer
+public class ListItem extends WebContainer
 {
 	/** The index of the ListItem in the parent listView */
 	private final int index;

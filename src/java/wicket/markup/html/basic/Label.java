@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
 
 /**
  * A Label component replaces its body with the String version of its model
@@ -64,7 +64,7 @@ import wicket.markup.html.HtmlComponent;
  * 
  * @author Jonathan Locke
  */
-public class Label extends HtmlComponent
+public class Label extends WebComponent
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = -2180588252471379004L;

@@ -19,8 +19,8 @@ package wicket.markup.html.pages;
 
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlContainer;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebContainer;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
 import wicket.util.string.Strings;
@@ -30,7 +30,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class ExceptionErrorPage extends HtmlPage
+public class ExceptionErrorPage extends WebPage
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 5578704587965089202L;
@@ -68,7 +68,7 @@ public class ExceptionErrorPage extends HtmlPage
 		markupLabel.setShouldEscapeModelStrings(false);
 
 		// Add container with markup highlighted
-		final HtmlContainer markupHighlight = new HtmlContainer("markupHighlight");
+		final WebContainer markupHighlight = new WebContainer("markupHighlight");
 
 		markupHighlight.add(markupLabel);
 		markupHighlight.add(new Label("resource", resource));

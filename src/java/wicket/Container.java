@@ -446,7 +446,7 @@ public abstract class Container extends Component
 	protected String getMarkupType()
 	{
 		throw new IllegalStateException(
-				exceptionMessage("You cannot directly subclass Page or Container.  Instead, subclass a markup-specific class, such as HtmlPage or HtmlContainer"));
+				exceptionMessage("You cannot directly subclass Page or Container.  Instead, subclass a markup-specific class, such as WebPage or WebContainer"));
 	}
 
 	/**

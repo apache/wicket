@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.text.MessageFormat;
 
 import wicket.RequestCycle;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.model.DetachableModel;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -46,7 +46,7 @@ public class StringResourceModelTest extends TestCase
 
 	private MockWebApplication application;
 
-	private HtmlPage page;
+	private WebPage page;
 
 	private WeatherStation ws;
 

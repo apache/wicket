@@ -27,7 +27,7 @@ import wicket.FeedbackMessages;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.WebContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationDelegate;
@@ -43,7 +43,7 @@ import wicket.protocol.http.WebRequestCycle;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public abstract class Form extends HtmlContainer implements IFormSubmitListener
+public abstract class Form extends WebContainer implements IFormSubmitListener
 { // TODO finalize javadoc
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);

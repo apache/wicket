@@ -84,7 +84,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *      public MyPage extends HtmlPage 
+ *      public MyPage extends WebPage 
  *      {
  *          public MyPage(final PageParameters parameters) 
  *          {
@@ -104,7 +104,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *      public MyPage extends HtmlPage 
+ *      public MyPage extends WebPage 
  *      {
  *          public MyPage(final PageParameters parameters) 
  *          {
@@ -136,7 +136,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *      public MyPage extends HtmlPage 
+ *      public MyPage extends WebPage 
  *      {
  *          public MyPage(final PageParameters parameters) 
  *          {
@@ -160,7 +160,7 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * 
  * <pre>
  * 
- *      public MyPage extends HtmlPage 
+ *      public MyPage extends WebPage 
  *      {
  *          public MyPage(final PageParameters parameters) 
  *          {

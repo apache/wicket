@@ -31,7 +31,7 @@ public class ImagesApplication extends WebApplication
 			<subsection name="Home.java">
 				<source>
 					<![CDATA[
-public final class Home extends HtmlPage
+public final class Home extends WebPage
 {
     public Home(final PageParameters parameters)
     {
