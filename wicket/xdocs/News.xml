@@ -11,6 +11,14 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="March, 4, 2005 - 0.9.19-beta released">
+				<p>
+					The releases are getting smaller, so it is nearly that special time for RC1.
+					The current release marks the work done between 0.9.18-beta and now. An issue
+					regarding dependencies of Wicket has been resolved. Wicket doesn't depend any more
+					on difficult to distribute libraries.
+				</p>
+			</subsection>
 			<subsection name="Februari 20, 2005 - 0.9.18-beta released">
 				<p>
 					The Wicket team has worked really hard to make this beta release possible.

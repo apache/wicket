@@ -42,6 +42,14 @@
 			</ul>
 		</section>
 		<section name="Latest News">
+			<subsection name="March, 4, 2005 - 0.9.19-beta released">
+				<p>
+					The releases are getting smaller, so it is nearly that special time for RC1.
+					The current release marks the work done between 0.9.18-beta and now. An issue
+					regarding dependencies of Wicket has been resolved. Wicket doesn't depend any more
+					on difficult to distribute libraries.
+				</p>
+			</subsection>
 			<subsection name="Februari 20, 2005 - 0.9.18-beta released">
 				<p>
 					The Wicket team has worked really hard to make this beta release possible.
@@ -59,27 +67,6 @@
 						<li>Reorganized components and examples for final 1.0 structure.</li>
 					</ul>
 					<a href="changes-report.html">Check out</a> all modifications on our <a href="changes-report.html">release history page</a>.
-				</p>
-			</subsection>
-			<subsection name="January 25, 2005 - 0.9.17-beta released">
-				<p>
-					The Wicket team is proud to present yet another release of the Wicket core
-					framework and its examples. This release contains major refactoring work
-					and interface changes, including:
-					<ul>
-						<li>The Java API</li>
-						<li>
-							Wicket component markup:
-							<![CDATA[<wicket:xxxxx>]]>
-						</li>
-						<li>Changes to web.xml configuration</li>
-						<li>Major updates of the javadoc</li>
-					</ul>
-					Please see the
-					<a href="ExampleHelloWorld.html">Hello World</a>
-					example for an update on the web.xml configuration. Also please check the
-					examples project for more information regarding the Wicket component markup
-					change.
 				</p>
 			</subsection>
 			<p>
