@@ -116,7 +116,7 @@ public class ExampleSorting extends Displaytag
             /*
              * If object does not support equals()
              */
-	        protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
+	        protected int compare(SortableListViewHeader header, Object o1, Object o2)
 	        {
 	            if (header.getName().equals("id"))
 	            {
