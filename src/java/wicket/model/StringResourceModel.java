@@ -413,9 +413,6 @@ public class StringResourceModel extends DetachableModel
 
     /**
      * Attaches to the given session.
-     * 
-     * @param session
-     *            The session
      */
     protected final void doAttach()
     {
@@ -434,9 +431,6 @@ public class StringResourceModel extends DetachableModel
 
     /**
      * Detaches from the given session
-     * 
-     * @param session
-     *            The session
      */
     protected final void doDetach()
     {

@@ -32,13 +32,11 @@ public interface IIdList extends List, Serializable
 {
     /**
      * Detach from a request.
-     * @param cycle the request cycle
      */
     public void detach();
 
     /**
      * Attach to a request.
-     * @param cycle the request cycle
      */
     public void attach();
 

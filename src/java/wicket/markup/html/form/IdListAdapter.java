@@ -21,8 +21,6 @@ package wicket.markup.html.form;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import wicket.RequestCycle;
-
 /**
  * Partial adapter for {@link wicket.markup.html.form.IIdList} that makes
  * it easier to work with anonymous implementations.
@@ -107,26 +105,26 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
 
     /**
      * Attach to the current request.
-     * @see wicket.markup.html.form.IIdList#attach(wicket.RequestCycle)
+     * @see wicket.markup.html.form.IIdList#attach()
      */
-    public final void attach(final RequestCycle cycle)
+    public final void attach()
     {
         if (!attached)
         {
-            doAttach(cycle);
+            doAttach();
             attached = true;
         }
     }
 
     /**
      * Detach from the current request.
-     * @see wicket.markup.html.form.IIdList#detach(wicket.RequestCycle)
+     * @see wicket.markup.html.form.IIdList#detach()
      */
-    public final void detach(final RequestCycle cycle)
+    public final void detach()
     {
         if (attached)
         {
-            doDetach(cycle);
+            doDetach();
             attached = false;
         }
     }
@@ -134,18 +132,16 @@ public abstract class IdListAdapter extends ArrayList implements IIdList
     /**
      * Attach to the current request. Implement this method with custom behaviour, such
      * as loading the list of object you need for this list.
-     * @param cycle the current request cycle
      */
-    protected void doAttach(final RequestCycle cycle)
+    protected void doAttach()
     {
     }
 
     /**
      * Detach from the current request. Implement this method with custom behaviour, such as
      * clearing the list.
-     * @param cycle the current request cycle
      */
-    protected void doDetach(final RequestCycle cycle)
+    protected void doDetach()
     {
     }
 }

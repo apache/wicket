@@ -19,13 +19,11 @@
 package wicket.markup.html.form;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
