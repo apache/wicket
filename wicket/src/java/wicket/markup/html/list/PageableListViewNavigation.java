@@ -17,8 +17,11 @@
  */
 package wicket.markup.html.list;
 
+import java.util.AbstractList;
+
 import wicket.markup.html.basic.Label;
-import wicket.model.Model;
+import wicket.model.DetachableModel;
+import wicket.model.IModel;
 
 /**
  * A navigation for a PageableListView that holds links to other pages of the
@@ -30,11 +33,11 @@ import wicket.model.Model;
  * 
  * <pre>
  * 
- *        &lt;td id=&quot;wicket-navigation&quot;&gt;
- *            &lt;a id=&quot;wicket-pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- *               &lt;span id=&quot;wicket-pageNumber&quot;/&gt;
- *            &lt;/a&gt;
- *        &lt;/td&gt;
+ *          &lt;td id=&quot;wicket-navigation&quot;&gt;
+ *              &lt;a id=&quot;wicket-pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *                 &lt;span id=&quot;wicket-pageNumber&quot;/&gt;
+ *              &lt;/a&gt;
+ *          &lt;/td&gt;
  *  
  * </pre>
  * 
@@ -42,7 +45,7 @@ import wicket.model.Model;
  * 
  * <pre>
  * 
- *        1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 |
+ *          1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 |
  *  
  * </pre>
  * 
@@ -76,12 +79,12 @@ import wicket.model.Model;
  * 
  * <pre>
  * 
- *        &lt;td id=&quot;wicket-navigation&quot;&gt;
- *            &lt;span id=&quot;wicket-separator&quot;/&gt;
- *            &lt;a id=&quot;wicket-pageLink&quot; href=&quot;#&quot;&gt;
- *              &lt;span id=&quot;wicket-pageLabel&quot;/&gt;&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
- *            &lt;/a&gt;
- *        &lt;/td&gt;
+ *          &lt;td id=&quot;wicket-navigation&quot;&gt;
+ *              &lt;span id=&quot;wicket-separator&quot;/&gt;
+ *              &lt;a id=&quot;wicket-pageLink&quot; href=&quot;#&quot;&gt;
+ *                &lt;span id=&quot;wicket-pageLabel&quot;/&gt;&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
+ *              &lt;/a&gt;
+ *          &lt;/td&gt;
  *  
  * </pre>
  * 
@@ -116,68 +119,52 @@ public class PageableListViewNavigation extends ListView
 	public PageableListViewNavigation(final String componentName,
 			final PageableListView pageableListView)
 	{
-		super(componentName, new Model(null));
+		super(componentName, (IModel)null);
 
 		this.pageableListView = pageableListView;
 		this.setStartIndex(0);
 	}
 
 	/**
-	 * Get the PageableListView which the navigation bar is navigating.
-	 * 
-	 * @return the PageableListView that is used to get the number of pages
+	 * @see wicket.Component#initModel()
 	 */
-	public PageableListView getPageableListView()
+	protected IModel initModel()
 	{
-		return pageableListView;
+		return new DetachableModel()
+		{
+			protected void onAttach()
+			{
+				setObject(new AbstractList()
+				{
+					public Object get(final int index)
+					{
+						return new Integer(index);
+					}
+
+					public int size()
+					{
+						return getViewSize();
+					}
+				});
+			}
+
+			protected void onDetach()
+			{
+				setObject(null);
+			}
+		};
 	}
 
 	/**
 	 * Get the number of page links per "window".
 	 * 
 	 * @see wicket.markup.html.list.ListView#setViewSize(int)
-	 * @return The overall number of page links (= number of PageableListView
-	 *         pages), or 0 (zero) if no underlying PageableListView is
-	 *         available.
+	 * @return The overall number of page links (number of PageableListView
+	 *         pages)
 	 */
 	public int getViewSize()
 	{
-		if (pageableListView != null)
-		{
-			return Math.min(pageableListView.getPageCount(), this.viewSize);
-		}
-		else
-		{
-			return 0;
-		}
-	}
-
-	/**
-	 * Set the PageableListView which the navigation bar is navigating.
-	 * 
-	 * @param pageableListView
-	 *            the PageableListView that is used to get the number of pages
-	 */
-	public void setPageableListView(PageableListView pageableListView)
-	{
-		this.pageableListView = pageableListView;
-	}
-
-	/**
-	 * Provide the ListItem for the index given.
-	 * <p>
-	 * PageableListViewNavigation actually does not have an underlying model
-	 * like most other ListViews. It doesn't have to, because the model is
-	 * simply the index of the PageableListView's page. Thus we create a model
-	 * based on the PageableListView's page index.
-	 * 
-	 * @param index
-	 *            ListItem index
-	 * @return The new ListItem
-	 */
-	protected ListItem newItem(final int index)
-	{
-		return new ListItem(index, new Model(new Integer(index)));
+		return pageableListView.getPageCount();
 	}
 
 	/**

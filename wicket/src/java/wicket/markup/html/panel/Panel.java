@@ -21,6 +21,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
+import wicket.model.IModel;
 
 /**
  * A panel is a reusable component that holds markup and other components.
@@ -56,10 +57,18 @@ public class Panel extends WebMarkupContainer
     /**
      * @see wicket.Component#Component(String)
      */
-    public Panel(final String componentName)
+    public Panel(final String name)
     {
-        super(componentName);
+        super(name);
     }
+    
+    /**
+     * @see wicket.Component#Component(String, IModel)
+     */
+    public Panel(final String name, final IModel model)
+    {
+        super(name, model);
+    }    
 
     /**
      * Renders this component.

@@ -27,7 +27,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.form.Form;
-import wicket.model.IModel;
 import wicket.util.string.StringList;
 
 /**
@@ -46,69 +45,6 @@ public final class FeedbackMessages implements Serializable
 	 * Holds a list of {@link wicket.FeedbackMessage}s.
 	 */
 	private List messages = null;
-
-	/**
-	 * The {@link IModel}representation of FeedbackMessages for a given Form.
-	 */
-	private class Model implements IModel
-	{
-		/** The form for this model */
-		private Form form;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param form
-		 *            The form for this model
-		 */
-		public Model(final Form form)
-		{
-			this.form = form;
-		}
-
-		/**
-		 * Gets the list of messages relevant to this model's form.
-		 * 
-		 * @see wicket.model.IModel#getObject()
-		 */
-		public Object getObject()
-		{
-			if (messages != null)
-			{
-				// List of messages reported by children of the form
-				final List list = new ArrayList();
-
-				// Loop through messages
-				for (Iterator iterator = messages.iterator(); iterator.hasNext();)
-				{
-					// Get next message
-					final FeedbackMessage message = (FeedbackMessage)iterator.next();
-
-					// If the reporter is the form itself of the report is contained by the form
-					if (form == message.getReporter() || form.contains(message.getReporter(), true))
-					{
-						// add the message to the list
-						list.add(message);
-					}
-				}
-
-				// Return list of messages reported by children of the form.
-				return Collections.unmodifiableList(list);
-			}
-			return Collections.EMPTY_LIST;
-		}
-
-		/**
-		 * Sets the messages; the object should either be of type
-		 * {@link java.util.List}or an array of {@link FeedbackMessage}s.
-		 * 
-		 * @see wicket.model.IModel#setObject(java.lang.Object)
-		 */
-		public void setObject(Object object)
-		{
-			throw new UnsupportedOperationException("Cannot set feedback messages model");
-		}
-	}
 
 	/**
 	 * Package local constructor; clients are not allowed to create instances as
@@ -130,16 +66,38 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
-	 * Gets the FeedbackMessages as an instance of {@link IModel}.
+	 * Gets the list of messages relevant to this model's form.
 	 * 
 	 * @param form
-	 *            The form to get a model for
-	 * 
-	 * @return the FeedbackMessages as an instance of {@link IModel}
+	 *            The form to get messages for
+	 * @return The messages
 	 */
-	public IModel model(final Form form)
+	public List messages(final Form form)
 	{
-		return new Model(form);
+		if (messages != null)
+		{
+			// List of messages reported by children of the form
+			final List list = new ArrayList();
+
+			// Loop through messages
+			for (Iterator iterator = messages.iterator(); iterator.hasNext();)
+			{
+				// Get next message
+				final FeedbackMessage message = (FeedbackMessage)iterator.next();
+
+				// If the reporter is the form itself of the report is contained
+				// by the form
+				if (form == message.getReporter() || form.contains(message.getReporter(), true))
+				{
+					// add the message to the list
+					list.add(message);
+				}
+			}
+
+			// Return list of messages reported by children of the form.
+			return Collections.unmodifiableList(list);
+		}
+		return Collections.EMPTY_LIST;
 	}
 
 	/**

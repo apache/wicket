@@ -36,6 +36,7 @@ import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
 import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
 import wicket.util.listener.IChangeListener;
@@ -113,6 +114,15 @@ public abstract class MarkupContainer extends Component
 	public MarkupContainer(final String name)
 	{
 		super(name);
+		optimize();
+	}
+	
+	/**
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public MarkupContainer(String name, IModel model)
+	{
+		super(name, model);
 		optimize();
 	}
 

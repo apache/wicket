@@ -18,16 +18,15 @@
  */
 package wicket.examples.hangman;
 
-import wicket.ApplicationSettings;
+import wicket.ISessionFactory;
+import wicket.Session;
 import wicket.examples.WicketExampleApplication;
-import wicket.util.time.Duration;
-
 
 /**
  * Class defining the main Hangman application.
  * 
  * @author Chris Turner
- * @version 1.0
+ * @author Jonathan Locke
  */
 public class HangmanApplication extends WicketExampleApplication
 {
@@ -36,15 +35,21 @@ public class HangmanApplication extends WicketExampleApplication
      */
     public HangmanApplication()
     {
-        this.getSettings().setStripComponentNames(true);
-
-        // Initialise Wicket settings
         getPages().setHomePage(Home.class);
-
-        ApplicationSettings settings = getSettings();
-        if (!Boolean.getBoolean("cache-templates"))
-        {
-            settings.setResourcePollFrequency(Duration.ONE_SECOND);
-        }
+        getSettings().setStripComponentNames(true);
     }
+    
+    /**
+	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
+	 */
+	public ISessionFactory getSessionFactory()
+	{
+		return new ISessionFactory()
+		{
+			public Session newSession()
+			{
+				return new HangmanSession(HangmanApplication.this);
+			}	
+		};
+	}
 }

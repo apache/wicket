@@ -114,8 +114,6 @@ public final class EditBook extends AuthenticatedWebPage
 
             Model bookModel = new Model(book);
 
-            setModel(new PropertyModel(bookModel, getName()));
-
             // Create a required text field with a max length of 30 characters that edits the book's title
             final TextField title = new TextField("title", bookModel, "title");
             title.add(RequiredValidator.getInstance());

@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1151982">       
+		Made setModel() private and added initModel() method for lazy initialization of models in components that cannot set a model in their constructor.  Used initModel to rework ListItem class and PageableListViewNavigation.  Other minor tweaks and major refactor of hangman example.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1151403">
 		Added modelChanged() method to Component which is called when setModel() or
 		setModelObject() are called.  This method calls onModelChanged() to allow 

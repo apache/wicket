@@ -51,9 +51,9 @@ public class HangManTest extends WebTestCase
 	 */
 	public void testHangmanWinGame() throws Exception
 	{
-		Hangman hangman = new Hangman(5, new String[] { "testing" });
-
-		hangman.newGame();
+		Hangman hangman = new Hangman();
+		hangman.newGame(5, "testing");
+		
 		Assert.assertEquals(5, hangman.getGuessesRemaining());
 		Assert.assertFalse(hangman.isGuessed());
 		Assert.assertFalse(hangman.isAllGuessesUsed());
@@ -106,9 +106,9 @@ public class HangManTest extends WebTestCase
 	 */
 	public void testHangmanLooseGame() throws Exception
 	{
-		Hangman hangman = new Hangman(2, new String[] { "foo" });
-
-		hangman.newGame();
+		Hangman hangman = new Hangman();
+		hangman.newGame(2, "foo");
+		
 		Assert.assertEquals(2, hangman.getGuessesRemaining());
 		Assert.assertFalse(hangman.isGuessed());
 		Assert.assertFalse(hangman.isAllGuessesUsed());

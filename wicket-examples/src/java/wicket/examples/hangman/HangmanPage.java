@@ -17,35 +17,20 @@
  */
 package wicket.examples.hangman;
 
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.Link;
+import wicket.examples.WicketExamplePage;
 
 /**
- * Page called when the user has correctly guessed the word.
+ * Session for hangman game.
  * 
- * @author Chris Turner
  * @author Jonathan Locke
  */
-public class Win extends HangmanPage
+public class HangmanPage extends WicketExamplePage
 {
 	/**
-	 * Create the win page and its associated components.
-	 * 
-	 * @param guessPage
-	 *            The guess page that we came from and return back to
+	 * @return Returns the hangman.
 	 */
-	public Win(final Guess guessPage)
+	public Hangman getHangman()
 	{
-		add(new Label("guessesRemaining", new Integer(getHangman().getGuessesRemaining())));
-		add(new Label("currentWord", getHangman().getCurrentWord()));
-		add(new Link("playAgain")
-		{
-			public void onClick()
-			{
-				getHangman().newGame();
-				guessPage.resetLetters();
-				getRequestCycle().setPage(guessPage);
-			}
-		});
+		return ((HangmanSession)getSession()).getHangman();
 	}
 }

@@ -64,7 +64,7 @@ public abstract class TableWithAlternatingRowStyle extends ListView
 
         // Return an extended Cell, which will automatically change the CSS style with
         // every other Cell.
-        return new ListItem(index, this)
+        return new ListItem(this, index)
         {
             protected void onComponentTag(final ComponentTag tag)
             {
