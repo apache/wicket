@@ -389,6 +389,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 			// Handle request by rendering page
 			render();
+			
+			// Check rendering if it happened fully
+			checkRendering();
 		}
 		finally
 		{
@@ -549,15 +552,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected final void internalOnEndRequest()
 	{
-		// If the application wants component uses checked and
-		// the response is not a redirect
-		final ApplicationSettings settings = getSession().getApplication().getSettings();
-		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
-		{
-			// Visit components on page
-			checkRendering();
-		}
-
 		// Clear all feedback messages
 		getFeedbackMessages().clear();
 
@@ -785,31 +779,37 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	private final void checkRendering()
 	{
-		final Count unrenderedComponents = new Count();
-		final StringBuffer buffer = new StringBuffer();
-		visitChildren(new IVisitor()
+		// If the application wants component uses checked and
+		// the response is not a redirect
+		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
-			public Object component(final Component component)
+			final Count unrenderedComponents = new Count();
+			final StringBuffer buffer = new StringBuffer();
+			visitChildren(new IVisitor()
 			{
-				// If component never rendered
-				if (renderedComponents == null || !renderedComponents.contains(component))
+				public Object component(final Component component)
 				{
-					unrenderedComponents.increment();
-					buffer.append("" + unrenderedComponents.getCount() + ". " + component + "\n");
+					// If component never rendered
+					if (renderedComponents == null || !renderedComponents.contains(component))
+					{
+						unrenderedComponents.increment();
+						buffer.append("" + unrenderedComponents.getCount() + ". " + component + "\n");
+					}
+					return CONTINUE_TRAVERSAL;
 				}
-				return CONTINUE_TRAVERSAL;
+			});
+	
+			// Get rid of set
+			renderedComponents = null;
+	
+			// Throw exception if any errors were found
+			if (unrenderedComponents.getCount() > 0)
+			{
+				// Throw exception
+				throw new WicketRuntimeException("The component(s) below failed to render:\n\n"
+						+ buffer.toString());
 			}
-		});
-
-		// Get rid of set
-		renderedComponents = null;
-
-		// Throw exception if any errors were found
-		if (unrenderedComponents.getCount() > 0)
-		{
-			// Throw exception
-			throw new WicketRuntimeException("The component(s) below failed to render:\n\n"
-					+ buffer.toString());
 		}
 	}
 

@@ -8,6 +8,11 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+      <action type="update" dev="Jonathan Locke" issue="">
+		Changed Page's request() handling method so that it does not do a 
+		component check in the finally block.  This was masking exceptions and
+		displaying them as rendering check problems.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1167377">
       IMG tags are no longer split into open/close pair.
       </action>
