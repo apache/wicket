@@ -1,99 +1,153 @@
 <?xml version="1.0"?>
 <document>
-    <properties>
-        <title>Building a release</title>
-    </properties>
-    <meta name="keyword" content="wicket, web, j2ee, java"/>
-    <body>
-        <section name="Building a release for Wicket">
-            <p>
-                <em>NB. This is a work in progress, the document is not 
-                    finished yet!</em>
-            </p>
-            <p> This document outlines the steps needed to perform a succesful 
-                release of Wicket on SourceForge. No intimate knowledge of 
-                Wicket or maven is required to perform the release if you use 
-                this guide, but should be very handy. </p>
-            <subsection name="Introduction">
-                <p>The steps will use maven as a build tool, as it helps 
-                    resolving our dependencies, creating a new website and 
-                    ultimately upload and perform a SourceForge release for us 
-                    (not implemented yet). </p>
-                <p> This document will fall into four parts: </p>
-                <ol>
-                    <li>preparing the release</li>
-                    <li>building the release</li>
-                    <li>distributing the release</li>
-                    <li>publicizing the release</li>
-                </ol>
-                <p>The following part of this document describes in detail how 
-                    to perform each part of building a Wicket release.</p>
-            </subsection>
-        </section>
-        <section name="Preparing the release">
-            <p>This section describes the preparation step to perform a release 
-                of the Wicket project.</p>
-            <p>In short the following steps are performed, each step will be 
-                described in more detail in the rest of this section:</p>
-            <ul>
-                <li>checkout the latest and greatest from CVS</li>
-                <ul>
-                    <li>Wicket</li>
-                    <li>wicket-examples</li>
-                    <li>wicket-contrib</li>
-                    <li>wicket-quickstart</li>
-                    <li>wicket-cdapp</li>
-                    <li>wicket-hangman</li>
-                </ul>
-                <li>check the issue trackers on SourceForge</li>
-                <li>update the changes.xml document</li>
-                <li>add a news item to the front page and news archive</li>
-                <li>run the unit tests and generate the website locally using 
-                    maven</li>
-                <li>check the website</li>
-            </ul>
-        </section>
-        <section name="Building the release">
-            <p>This section describes the building stage to perform a release 
-                of the Wicket project.</p>
-            <p>In short the following steps are performed, each step will be 
-                described in more detail in the rest of this section:</p>
-            <ul>
-                <li>commit all outstanding changes (news items spring to 
-                    mind)</li>
-                <li>prepare the release using maven</li>
-                <li>create the distributable using maven</li>
-            </ul>
-        </section>
-        <section name="Distributing the release">
-            <p>This section describes the distribution step to perform a 
-                release of the Wicket project. Wicket is downloadable from 
-                SourceForge, but also available from the Maven remote 
-                repositories. This section describes how to get the Wicket 
-                binaries to our users.</p>
-            <p>In short the following steps are performed, each step will be 
-                described in more detail in the rest of this section:</p>
-            <ul>
-                <li>upload the distributable to sourceforge</li>
-                <li>upload the generated website using maven</li>
-                <li>create an upload bundle for ibiblio using maven</li>
-                <li>upload the upload bundle to the website</li>
-                <li>create an upload request in JIRA for the maven 
-                    maintainers</li>
-            </ul>
-        </section>
-        <section name="Publicizing the release">
-            <p>This section describes the publication step after a release of 
-                the Wicket project is built. No project can survive without 
-                users, and the users need to be informed of the release. 
-                Various channels are available to publicize our project on, and 
-                this section describes how to do this without much effort.</p>
-            <p>In short the following steps are performed, each step will be 
-                described in more detail in the rest of this section:</p>
-            <ul>
-                <li>send announcement text to mailinglists</li>
-                <li>make noise on theserverside.com</li>
-            </ul>
-        </section>
-    </body>
+	<properties>
+		<title>Building a release</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+	<body>
+		<section name="Building a release for Wicket">
+			<p>
+				<em>
+					NB. This is a work in progress, the document is not
+					finished yet!
+				</em>
+			</p>
+			<p>
+				This document outlines the steps needed to perform a
+				succesful release of Wicket on SourceForge. No intimate
+				knowledge of Wicket or maven is required to perform the
+				release if you use this guide, but should be very handy.
+			</p>
+			<subsection name="Introduction">
+				<p>
+					The steps will use maven as a build tool, as it
+					helps resolving our dependencies, creating a new
+					website and ultimately upload and perform a
+					SourceForge release for us (not implemented yet).
+				</p>
+				<p>This document will fall into four parts:</p>
+				<ol>
+					<li>preparing the release</li>
+					<li>building the release</li>
+					<li>distributing the release</li>
+					<li>publicizing the release</li>
+				</ol>
+				<p>
+					The following part of this document describes in
+					detail how to perform each part of building a Wicket
+					release.
+				</p>
+			</subsection>
+		</section>
+		<section name="Preparing the release">
+			<p>
+				This section describes the preparation step to perform a
+				release of the Wicket project.
+			</p>
+			<p>
+				In short the following steps are performed, each step
+				will be described in more detail in the rest of this
+				section:
+			</p>
+			<ul>
+				<li>checkout the latest and greatest from CVS</li>
+				<li>check the issue trackers on SourceForge</li>
+				<li>update the changes.xml document</li>
+				<li>
+					add a news item to the front page and news archive
+				</li>
+				<li>
+					run the unit tests and generate the website locally
+					using maven
+				</li>
+				<li>check the website</li>
+			</ul>
+			<subsection name="Checkout latest and greatest">
+				<p>
+					A release normally consists of just one project.
+					However, we use the examples projects as
+					(integration) testcases for Wicket. This makes
+					sense, as the examples are showcases of what can be
+					done with Wicket. As such, they represent normal
+					usecases of the Wicket core components and provide
+					the first feedback on whether the core is still
+					functional.
+				</p>
+				<p>
+					Normally one will checkout all projects in CVS. At
+					the moment of writing these projects are:
+				</p>
+				<ul>
+					<li>Wicket</li>
+					<li>wicket-contrib</li>
+					<li>wicket-quickstart</li>
+					<li>wicket-examples</li>
+					<li>wicket-cdapp-example</li>
+					<li>wicket-hangman-example</li>
+				</ul>
+			</subsection>
+		</section>
+		<section name="Building the release">
+			<p>
+				This section describes the building stage to perform a
+				release of the Wicket project.
+			</p>
+			<p>
+				In short the following steps are performed, each step
+				will be described in more detail in the rest of this
+				section:
+			</p>
+			<ul>
+				<li>
+					commit all outstanding changes (news items spring to
+					mind)
+				</li>
+				<li>prepare the release using maven</li>
+				<li>create the distributable using maven</li>
+			</ul>
+		</section>
+		<section name="Distributing the release">
+			<p>
+				This section describes the distribution step to perform
+				a release of the Wicket project. Wicket is downloadable
+				from SourceForge, but also available from the Maven
+				remote repositories. This section describes how to get
+				the Wicket binaries to our users.
+			</p>
+			<p>
+				In short the following steps are performed, each step
+				will be described in more detail in the rest of this
+				section:
+			</p>
+			<ul>
+				<li>upload the distributable to sourceforge</li>
+				<li>upload the generated website using maven</li>
+				<li>create an upload bundle for ibiblio using maven</li>
+				<li>upload the upload bundle to the website</li>
+				<li>
+					create an upload request in JIRA for the maven
+					maintainers
+				</li>
+			</ul>
+		</section>
+		<section name="Publicizing the release">
+			<p>
+				This section describes the publication step after a
+				release of the Wicket project is built. No project can
+				survive without users, and the users need to be informed
+				of the release. Various channels are available to
+				publicize our project on, and this section describes how
+				to do this without much effort.
+			</p>
+			<p>
+				In short the following steps are performed, each step
+				will be described in more detail in the rest of this
+				section:
+			</p>
+			<ul>
+				<li>send announcement text to mailinglists</li>
+				<li>make noise on theserverside.com</li>
+			</ul>
+		</section>
+	</body>
 </document>
