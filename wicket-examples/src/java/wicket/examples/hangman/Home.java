@@ -68,7 +68,7 @@ public class Home extends HtmlPage {
 				return new Guess(hangman);
 			}
 
-			public Class getPageClass() {
+			public Class getIdentity() {
 				return Guess.class;
 			}
 		}));

@@ -54,9 +54,9 @@ public interface IPageLink extends Serializable
 	 * Gets the class of the destination page, which serves as a form of
 	 * identity that can be used at rendering time to determine if a link is on
 	 * the same Page that it links to (except when pages are parameterized. in
-	 * that case, see Link.linksTo for details).
+	 * that case, see Link.linksTo() for details).
 	 * <p>
-	 * This page identity class is important because links which are on the same
+	 * A page's identity is important because links which are on the same
 	 * page that they link to often need to be displayed in a different way to
 	 * indicate that they are 'disabled' and don't go anywhere. Links can be
 	 * manually disabled by calling Link.setDisabled(). Links which have
