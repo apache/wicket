@@ -27,63 +27,55 @@ import wicket.Session;
 import wicket.util.string.interpolator.OgnlVariableInterpolator;
 
 /**
- * This model class encapsulates the full power of localization support within
- * the Wicket framework. It combines the flexible Wicket resource loading
- * mechanism with OGNL expressions, property models and standard Java
- * <code>MessageFormat</code> substitutions. This combination should be able
- * to solve any dynamic localization requirement that a project has.
+ * This model class encapsulates the full power of localization support within the Wicket
+ * framework. It combines the flexible Wicket resource loading mechanism with OGNL
+ * expressions, property models and standard Java <code>MessageFormat</code>
+ * substitutions. This combination should be able to solve any dynamic localization
+ * requirement that a project has.
  * <p>
- * The model should be created with four parameters, which are described in
- * detail below:
+ * The model should be created with four parameters, which are described in detail below:
  * <ul>
- * <li><b>resourceKey </b>- This is the most important parameter as it contains
- * the key that should be used to obtain resources from any string resource
- * loaders. This paramater is mandatory: a null value will throw an exception.
- * Typically it will contain an ordinary string such as
- * &quot;label.username&quot;. To add extra power to the key functionality the
- * key may also contain an OGNL expression which will be evaluated if the model
- * parameter (see below) is not null. This allows keys to be changed dynamically
+ * <li><b>resourceKey </b>- This is the most important parameter as it contains the key
+ * that should be used to obtain resources from any string resource loaders. This
+ * paramater is mandatory: a null value will throw an exception. Typically it will contain
+ * an ordinary string such as &quot;label.username&quot;. To add extra power to the key
+ * functionality the key may also contain an OGNL expression which will be evaluated if
+ * the model parameter (see below) is not null. This allows keys to be changed dynamically
  * as the application is running. For example, the key could be
  * &quot;product.${product.id}&quot; which prior to rendering will call
- * model.getObject().getProduct().getId() and substitute this value into the
- * resource key before is is passed to the loader.
- * 
- * <li><b>relativeComponent </b>- This parameter should be a component that the
- * string resource is relative to. In a simple application this will usually be
- * the Page on which the component resides. For reusable components/containers
- * that are packaged with their own string resource bundles it should be the
- * actual component/container rather than the page. For more information on this
- * please see {@link wicket.resource.ComponentStringResourceLoader}. The
- * relative component may actually be <code>null</code> when all resource
- * loading is to be done from a global resource loader. However, we recommend
- * that a relative component is still supplied even in these cases in order to
- * 'future proof' your application with regards to changing resource loading
- * strategies.
- * 
- * <li><b>model </b>- This parameter is mandatory if either the resourceKey,
- * the found string resource (see below) or any of the substitution parameters
- * (see below) contain OGNL expressions. Where OGNL expressions are present they
- * will all be evaluated relative to this model object. If there are no OGNL
- * expressions present then this model parameter may be <code>null</code>
- * 
- * <li><b>parameters </b>- The parameters parameter allows an array of objects
- * to be passed for substitution on the found string resource (see below) using
- * a standard <code>java.text.MessageFormat</code> object. Each parameter may
- * be an ordinary Object, in which case it will be processed by the standard
- * formatting rules associated with <code>java.text.MessageFormat</code>.
- * Alternatively, the parameter may be an instance of <code>IModel</code> in
- * which case the <code>getObject()</code> method will be applied prior to the
- * parameter being passed to the <code>java.text.MessageFormat</code>. This
- * allows such features dynamic parameters that are obtained using a
- * <code>PropertyModel</code> object or even nested string resource models.
+ * model.getObject().getProduct().getId() and substitute this value into the resource key
+ * before is is passed to the loader.
+ * <li><b>relativeComponent </b>- This parameter should be a component that the string
+ * resource is relative to. In a simple application this will usually be the Page on which
+ * the component resides. For reusable components/containers that are packaged with their
+ * own string resource bundles it should be the actual component/container rather than the
+ * page. For more information on this please see
+ * {@link wicket.resource.ComponentStringResourceLoader}. The relative component may
+ * actually be <code>null</code> when all resource loading is to be done from a global
+ * resource loader. However, we recommend that a relative component is still supplied even
+ * in these cases in order to 'future proof' your application with regards to changing
+ * resource loading strategies.
+ * <li><b>model </b>- This parameter is mandatory if either the resourceKey, the found
+ * string resource (see below) or any of the substitution parameters (see below) contain
+ * OGNL expressions. Where OGNL expressions are present they will all be evaluated
+ * relative to this model object. If there are no OGNL expressions present then this model
+ * parameter may be <code>null</code>
+ * <li><b>parameters </b>- The parameters parameter allows an array of objects to be
+ * passed for substitution on the found string resource (see below) using a standard
+ * <code>java.text.MessageFormat</code> object. Each parameter may be an ordinary
+ * Object, in which case it will be processed by the standard formatting rules associated
+ * with <code>java.text.MessageFormat</code>. Alternatively, the parameter may be an
+ * instance of <code>IModel</code> in which case the <code>getObject()</code> method
+ * will be applied prior to the parameter being passed to the
+ * <code>java.text.MessageFormat</code>. This allows such features dynamic parameters
+ * that are obtained using a <code>PropertyModel</code> object or even nested string
+ * resource models.
  * </ul>
- * 
- * As well as the supplied parameters, the found string resource can contain
- * formatting information. It may contain OGNL expressions in which case these
- * are evaluated using the model object supplied when the string resource model
- * is created. The string resource may also contain
- * <code>java.text.MessageFormat</code> style markup for replacement of
- * parameters. Where a string resource contains both types of formatting
+ * As well as the supplied parameters, the found string resource can contain formatting
+ * information. It may contain OGNL expressions in which case these are evaluated using
+ * the model object supplied when the string resource model is created. The string
+ * resource may also contain <code>java.text.MessageFormat</code> style markup for
+ * replacement of parameters. Where a string resource contains both types of formatting
  * information then the OGNL will be applied first.
  * <p>
  * <b>Example 1 </b>
@@ -91,13 +83,15 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * In its simplest form, the model can be used as follows:
  * 
  * <pre>
- *     public MyPage extends HtmlPage 
- *     {
- *         public MyPage(final PageParameters parameters) 
- *         {
- *             add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
- *         }
- *     }
+ * 
+ *      public MyPage extends HtmlPage 
+ *      {
+ *          public MyPage(final PageParameters parameters) 
+ *          {
+ *              add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
+ *          }
+ *      }
+ *  
  * </pre>
  * 
  * Where the resource bundle for the page contains the entry
@@ -105,30 +99,33 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * <p>
  * <b>Example 2 </b>
  * <p>
- * In this example, the resource key is selected based on the evaluation of an
- * OGNL expression:
+ * In this example, the resource key is selected based on the evaluation of an OGNL
+ * expression:
  * 
  * <pre>
- *     public MyPage extends HtmlPage 
- *     {
- *         public MyPage(final PageParameters parameters) 
- *         {
- *             WeatherStation ws = new WeatherStation();
- *             add(new Label(&quot;weatherMessage&quot;,
- *                           new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
- *         }
- *     }
+ * 
+ *      public MyPage extends HtmlPage 
+ *      {
+ *          public MyPage(final PageParameters parameters) 
+ *          {
+ *              WeatherStation ws = new WeatherStation();
+ *              add(new Label(&quot;weatherMessage&quot;,
+ *                            new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
+ *          }
+ *      }
+ *  
  * </pre>
  * 
- * Which will call the WeatherStation.getCurrentStatus() method each time the
- * string resource model is used and where the resource bundle for the page
- * contains the entries:
+ * Which will call the WeatherStation.getCurrentStatus() method each time the string
+ * resource model is used and where the resource bundle for the page contains the entries:
  * 
  * <pre>
- *     weather.sunny=Don't forget sunscreen!
- *     weather.raining=You might need an umberella
- *     weather.snowing=Got your skis?
- *     weather.overcast=Best take a coat to be safe
+ * 
+ *      weather.sunny=Don't forget sunscreen!
+ *      weather.raining=You might need an umberella
+ *      weather.snowing=Got your skis?
+ *      weather.overcast=Best take a coat to be safe
+ *  
  * </pre>
  * 
  * <p>
@@ -138,15 +135,17 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * substituted via the model:
  * 
  * <pre>
- *     public MyPage extends HtmlPage 
- *     {
- *         public MyPage(final PageParameters parameters) 
- *         {
- *             WeatherStation ws = new WeatherStation();
- *             add(new Label(&quot;weatherMessage&quot;,
- *                           new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
- *         }
- *     }
+ * 
+ *      public MyPage extends HtmlPage 
+ *      {
+ *          public MyPage(final PageParameters parameters) 
+ *          {
+ *              WeatherStation ws = new WeatherStation();
+ *              add(new Label(&quot;weatherMessage&quot;,
+ *                            new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
+ *          }
+ *      }
+ *  
  * </pre>
  * 
  * Where the resource bundle contains the entry
@@ -155,327 +154,308 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * <p>
  * <b>Example 4 </b>
  * <p>
- * In this example, the use of substitution parameters is employed to format a
- * quite complex message string. This is an example of the most complex and
- * powerful use of the string resource model:
+ * In this example, the use of substitution parameters is employed to format a quite
+ * complex message string. This is an example of the most complex and powerful use of the
+ * string resource model:
  * 
  * <pre>
- *     public MyPage extends HtmlPage 
- *     {
- *         public MyPage(final PageParameters parameters) 
- *         {
- *             WeatherStation ws = new WeatherStation();
- *             Model model = new Model(ws);
- *             add(new Label(&quot;weatherMessage&quot;,
- *                       new StringResourceModel(
- *                           &quot;weather.detail&quot;, this, model,
- *                           new Object[] 
- *                           {
- *                               new Date(),
- *                               new PropertyModel(model, &quot;currentStatus&quot;),
- *                               new PropertyModel(model, &quot;currentTemperature&quot;),
- *                               new PropertyModel(model, &quot;units&quot;)
- *                           }));
- *         }
- *     }
+ * 
+ *      public MyPage extends HtmlPage 
+ *      {
+ *          public MyPage(final PageParameters parameters) 
+ *          {
+ *              WeatherStation ws = new WeatherStation();
+ *              Model model = new Model(ws);
+ *              add(new Label(&quot;weatherMessage&quot;,
+ *                        new StringResourceModel(
+ *                            &quot;weather.detail&quot;, this, model,
+ *                            new Object[] 
+ *                            {
+ *                                new Date(),
+ *                                new PropertyModel(model, &quot;currentStatus&quot;),
+ *                                new PropertyModel(model, &quot;currentTemperature&quot;),
+ *                                new PropertyModel(model, &quot;units&quot;)
+ *                            }));
+ *          }
+ *      }
+ *  
  * </pre>
  * 
  * And where the resource bundle entry is:
  * 
  * <pre>
- *     weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
- *                    and the weather to be {1}
+ * 
+ *      weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
+ *                     and the weather to be {1}
+ *  
  * </pre>
  * 
  * @author Chris Turner
  */
 public class StringResourceModel extends DetachableModel
 {
-    /** Serial Version ID. */
-    private static final long serialVersionUID = 6659487382203513733L;
+	/** Serial Version ID. */
+	private static final long serialVersionUID = 6659487382203513733L;
 
-    /** The locale to use. */
-    private Locale locale = null;
+	/** The locale to use. */
+	private Locale locale = null;
 
-    /**
-     * The localizer to be used to access localized resources and the associated
-     * locale for formatting.
-     */
-    private Localizer localizer = null;
+	/**
+	 * The localizer to be used to access localized resources and the associated locale for
+	 * formatting.
+	 */
+	private Localizer localizer = null;
 
-    /** The wrapped model. */
-    private IModel model;
+	/** The wrapped model. */
+	private IModel model;
 
-    /** Optional parameters. */
-    private Object[] parameters;
+	/** Optional parameters. */
+	private Object[] parameters;
 
-    /** The relative component used for lookups. */
-    private Component relativeComponent;
+	/** The relative component used for lookups. */
+	private Component relativeComponent;
 
-    /** The key of message to get. */
-    private String resourceKey;
+	/** The key of message to get. */
+	private String resourceKey;
 
-    /**
-     * Construct.
-     * 
-     * @param resourceKey
-     *            The resource key for this string resource
-     * @param relativeComponent
-     *            The component that the resource is relative to
-     * @param model
-     *            The model to use for OGNL substitutions
-     * @see #StringResourceModel(String, Component, IModel, Object[])
-     */
-    public StringResourceModel(final String resourceKey, final Component relativeComponent,
-            final IModel model)
-    {
-        this(resourceKey, relativeComponent, model, null);
-    }
+	/**
+	 * Construct.
+	 * @param resourceKey The resource key for this string resource
+	 * @param relativeComponent The component that the resource is relative to
+	 * @param model The model to use for OGNL substitutions
+	 * @see #StringResourceModel(String, Component, IModel, Object[])
+	 */
+	public StringResourceModel(final String resourceKey, final Component relativeComponent,
+			final IModel model)
+	{
+		this(resourceKey, relativeComponent, model, null);
+	}
 
-    /**
-     * Creates a new string resource model using the supplied parameters.
-     * <p>
-     * The relative component parameter should generally be supplied, as without
-     * it resources can not be obtained from resouce bundles that are held
-     * relative to a particular component or page. However, for application that
-     * use only global resources then this parameter may be null.
-     * <p>
-     * The model parameter is also optional and only needs to be supplied if
-     * value substitutions are to take place on either the resource key or the
-     * actual resource strings.
-     * <p>
-     * The parameters parameter is also optional and is used for substitutions.
-     * 
-     * @param resourceKey
-     *            The resource key for this string resource
-     * @param relativeComponent
-     *            The component that the resource is relative to
-     * @param model
-     *            The model to use for OGNL substitutions
-     * @param parameters
-     *            The parameters to substitute using a Java MessageFormat object
-     */
-    public StringResourceModel(final String resourceKey, final Component relativeComponent,
-            final IModel model, final Object[] parameters)
-    {
-        super(null);
-        if (resourceKey == null)
-        {
-            throw new IllegalArgumentException("Resource key must not be null");
-        }
-        this.resourceKey = resourceKey;
-        this.relativeComponent = relativeComponent;
-        this.model = model;
-        this.parameters = parameters;
-    }
+	/**
+	 * Creates a new string resource model using the supplied parameters.
+	 * <p>
+	 * The relative component parameter should generally be supplied, as without it
+	 * resources can not be obtained from resouce bundles that are held relative to a
+	 * particular component or page. However, for application that use only global
+	 * resources then this parameter may be null.
+	 * <p>
+	 * The model parameter is also optional and only needs to be supplied if value
+	 * substitutions are to take place on either the resource key or the actual resource
+	 * strings.
+	 * <p>
+	 * The parameters parameter is also optional and is used for substitutions.
+	 * @param resourceKey The resource key for this string resource
+	 * @param relativeComponent The component that the resource is relative to
+	 * @param model The model to use for OGNL substitutions
+	 * @param parameters The parameters to substitute using a Java MessageFormat object
+	 */
+	public StringResourceModel(final String resourceKey, final Component relativeComponent,
+			final IModel model, final Object[] parameters)
+	{
+		super(null);
+		if (resourceKey == null)
+		{
+			throw new IllegalArgumentException("Resource key must not be null");
+		}
+		this.resourceKey = resourceKey;
+		this.relativeComponent = relativeComponent;
+		this.model = model;
+		this.parameters = parameters;
+	}
 
-    /**
-     * Gets the localizer that is being used by this string resource model.
-     * 
-     * @return The localizer
-     */
-    public Localizer getLocalizer()
-    {
-        return localizer;
-    }
+	/**
+	 * Gets the localizer that is being used by this string resource model.
+	 * @return The localizer
+	 */
+	public Localizer getLocalizer()
+	{
+		return localizer;
+	}
 
-    /**
-     * Gets the string that this string resource model currently represents. The
-     * string is returned as an object to allow it to be used generically within
-     * components.
-     * 
-     * @return The string for this model object
-     */
-    public final Object getObject()
-    {
-        return getString();
-    }
+	/**
+	 * Gets the string that this string resource model currently represents. The string is
+	 * returned as an object to allow it to be used generically within components.
+	 * @return The string for this model object
+	 */
+	public final Object getObject()
+	{
+		return getString();
+	}
 
-    /**
-     * Gets the string currently represented by this string resource model. The
-     * string that is returned may vary for each call to this method depending
-     * on the values contained in the model and an the parameters that were
-     * passed when this string resource model was created.
-     * 
-     * @return The string
-     */
-    public final String getString()
-    {
-        final Component c = getRelativeComponent();
+	/**
+	 * Gets the string currently represented by this string resource model. The string that
+	 * is returned may vary for each call to this method depending on the values contained
+	 * in the model and an the parameters that were passed when this string resource model
+	 * was created.
+	 * @return The string
+	 */
+	public final String getString()
+	{
+		final Component c = getRelativeComponent();
 
-        // Make sure we have a localizer before commencing
-        if (getLocalizer() == null)
-        {
-            if (c != null)
-            {
-                setLocalizer(c.getLocalizer());
-            }
-            else
-            {
-                throw new IllegalStateException("No localizer has been set");
-            }
-        }
+		// Make sure we have a localizer before commencing
+		if (getLocalizer() == null)
+		{
+			if (c != null)
+			{
+				setLocalizer(c.getLocalizer());
+			}
+			else
+			{
+				throw new IllegalStateException("No localizer has been set");
+			}
+		}
 
-        // Get the string resource, doing any OGNL substitutions as part
-        // of the get operation
-        String s = localizer.getString(getResourceKey(), c, getModel());
+		// Get the string resource, doing any OGNL substitutions as part
+		// of the get operation
+		String s = localizer.getString(getResourceKey(), c, getModel());
 
-        // Substitute any parameters if necessary
-        Object[] parameters = getParameters();
-        if (parameters != null)
-        {
-            // Build the real parameters
-            Object[] realParams = new Object[parameters.length];
-            for (int i = 0; i < parameters.length; i++)
-            {
-                if (parameters[i] instanceof IModel)
-                {
-                    realParams[i] = ((IModel)parameters[i]).getObject();
-                }
-                else if (model != null && parameters[i] instanceof String)
-                {
-                    realParams[i] = OgnlVariableInterpolator.interpolate((String)parameters[i],
-                            model.getObject());
-                }
-                else
-                {
-                    realParams[i] = parameters[i];
-                }
-            }
+		// Substitute any parameters if necessary
+		Object[] parameters = getParameters();
+		if (parameters != null)
+		{
+			// Build the real parameters
+			Object[] realParams = new Object[parameters.length];
+			for (int i = 0; i < parameters.length; i++)
+			{
+				if (parameters[i] instanceof IModel)
+				{
+					realParams[i] = ((IModel)parameters[i]).getObject();
+				}
+				else if (model != null && parameters[i] instanceof String)
+				{
+					realParams[i] = OgnlVariableInterpolator.interpolate((String)parameters[i], model
+							.getObject());
+				}
+				else
+				{
+					realParams[i] = parameters[i];
+				}
+			}
 
-            // Apply the parameters
-            Locale workingLocale = locale;
-            if (c != null)
-            {
-                // Use component locale out of preference
-                workingLocale = c.getLocale();
-            }
-            final MessageFormat format = new MessageFormat(s, workingLocale);
-            s = format.format(realParams);
-        }
+			// Apply the parameters
+			Locale workingLocale = locale;
+			if (c != null)
+			{
+				// Use component locale out of preference
+				workingLocale = c.getLocale();
+			}
+			final MessageFormat format = new MessageFormat(s, workingLocale);
+			s = format.format(realParams);
+		}
 
-        // Return the string resource
-        return s;
-    }
+		// Return the string resource
+		return s;
+	}
 
-    /**
-     * Sets the localizer that is being used by this string resource model. This
-     * method is provided to allow the default application localizer to be
-     * overridden if required.
-     * 
-     * @param localizer
-     *            The localizer to use
-     */
-    public void setLocalizer(final Localizer localizer)
-    {
-        this.localizer = localizer;
-    }
+	/**
+	 * Sets the localizer that is being used by this string resource model. This method is
+	 * provided to allow the default application localizer to be overridden if required.
+	 * @param localizer The localizer to use
+	 */
+	public void setLocalizer(final Localizer localizer)
+	{
+		this.localizer = localizer;
+	}
 
-    /**
-     * This method does not apply for string resource models. The contents of
-     * the model are set on construction and any variations should be achieved
-     * through OGNL expressions in the key, the resource string and the
-     * parameters or by the contents of the model object.
-     * 
-     * @param object
-     *            Not used
-     */
-    public final void setObject(final Object object)
-    {
-        // No implementation
-    }
+	/**
+	 * This method does not apply for string resource models. The contents of the model are
+	 * set on construction and any variations should be achieved through OGNL expressions
+	 * in the key, the resource string and the parameters or by the contents of the model
+	 * object.
+	 * @param object Not used
+	 */
+	public final void setObject(final Object object)
+	{
+		// No implementation
+	}
 
-    /**
-     * Override of the default method to return the resource string represented
-     * by this string resource model. Useful in debugging and so on, to avoid
-     * the explicit need to call the getString() method.
-     * 
-     * @return The string for this model object
-     */
-    public String toString()
-    {
-        return getString();
-    }
+	/**
+	 * Override of the default method to return the resource string represented by this
+	 * string resource model. Useful in debugging and so on, to avoid the explicit need to
+	 * call the getString() method.
+	 * @return The string for this model object
+	 */
+	public String toString()
+	{
+		return getString();
+	}
 
-    /**
-     * Attaches to the given session.
-     */
-    protected final void doAttach()
-    {
-        // Attach the model if necessary
-        if (model != null && model instanceof IDetachableModel)
-        {
-            ((IDetachableModel)model).attach();
-        }
+	/**
+	 * Attaches to the given session.
+	 */
+	protected final void doAttach()
+	{
+		// Attach the model if necessary
+		if (model != null && model instanceof IDetachableModel)
+		{
+			((IDetachableModel)model).attach();
+		}
 
-        // Initialise information that we need to work successfully
-        Session session = RequestCycle.get().getSession();
-        localizer = session.getApplication().getLocalizer();
-        locale = session.getLocale();
-    }
+		// Initialise information that we need to work successfully
+		Session session = RequestCycle.get().getSession();
+		localizer = session.getApplication().getLocalizer();
+		locale = session.getLocale();
+	}
 
-    /**
-     * Detaches from the given session
-     */
-    protected final void doDetach()
-    {
-        // Detach the model if necessary
-        if (model != null && model instanceof IDetachableModel)
-        {
-            ((IDetachableModel)model).detach();
-        }
+	/**
+	 * Detaches from the given session
+	 */
+	protected final void doDetach()
+	{
+		// Detach the model if necessary
+		if (model != null && model instanceof IDetachableModel)
+		{
+			((IDetachableModel)model).detach();
+		}
 
-        // Clear down any information we don't want held in the session
-        localizer = null;
-        locale = null;
-    }
+		// Clear down any information we don't want held in the session
+		localizer = null;
+		locale = null;
+	}
 
-    /**
-     * Gets the model used for OGNL substitutions.
-     * 
-     * @return The model
-     */
-    protected final IModel getModel()
-    {
-        return model;
-    }
+	/**
+	 * Gets the model used for OGNL substitutions.
+	 * @return The model
+	 */
+	protected final IModel getModel()
+	{
+		return model;
+	}
 
-    /**
-     * Gets the Java MessageFormat substitution parameters.
-     * 
-     * @return The substitution parameters
-     */
-    protected final Object[] getParameters()
-    {
-        return parameters;
-    }
+	/**
+	 * Gets the Java MessageFormat substitution parameters.
+	 * @return The substitution parameters
+	 */
+	protected final Object[] getParameters()
+	{
+		return parameters;
+	}
 
-    /**
-     * Gets the component that this string resource is relative to.
-     * 
-     * @return The relative component
-     */
-    protected final Component getRelativeComponent()
-    {
-        return relativeComponent;
-    }
+	/**
+	 * Gets the component that this string resource is relative to.
+	 * @return The relative component
+	 */
+	protected final Component getRelativeComponent()
+	{
+		return relativeComponent;
+	}
 
-    /**
-     * Gets the resource key for this string resource. If the resource key
-     * contains OGNL and the model is null then the returned value is the actual
-     * resource key with all substitutions undertaken.
-     * 
-     * @return The (possibly substituted) resource key
-     */
-    protected final String getResourceKey()
-    {
-        if (model != null)
-        {
-            return OgnlVariableInterpolator.interpolate(resourceKey, model.getObject());
-        }
-        else
-        {
-            return resourceKey;
-        }
-    }
+	/**
+	 * Gets the resource key for this string resource. If the resource key contains OGNL
+	 * and the model is null then the returned value is the actual resource key with all
+	 * substitutions undertaken.
+	 * @return The (possibly substituted) resource key
+	 */
+	protected final String getResourceKey()
+	{
+		if (model != null)
+		{
+			return OgnlVariableInterpolator.interpolate(resourceKey, model.getObject());
+		}
+		else
+		{
+			return resourceKey;
+		}
+	}
 }

@@ -22,45 +22,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A Model subclass that holds a Map, wrapping it in a HashMap (if necessary) to
- * ensure that it is Serializable.
- * 
+ * A Model subclass that holds a Map, wrapping it in a HashMap (if necessary) to ensure
+ * that it is Serializable.
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
 public class MapModel extends Model
 {
-    /** Serial Version ID. */
-    static final long serialVersionUID = 898435312991208901L;
-    
-    /**
-     * Static factory method for creating a MapModel for a given Map.
-     * 
-     * @param map
-     *            The map to construct a MapModel for
-     * @return The MapModel
-     */
-    public static MapModel valueOf(final Map map)
-    {
-        if (map instanceof Serializable)
-        {
-            return new MapModel((Serializable)map);
-        }
-        else
-        {
-            return new MapModel(new HashMap(map));
-        }
-    }
+	/** Serial Version ID. */
+	static final long serialVersionUID = 898435312991208901L;
 
-    /**
-     * Private constructor forces use of static factory method.
-     * 
-     * @param object
-     *            The model object
-     */
-    private MapModel(Serializable object)
-    {
-        super(object);
-    }
+	/**
+	 * Static factory method for creating a MapModel for a given Map.
+	 * @param map The map to construct a MapModel for
+	 * @return The MapModel
+	 */
+	public static MapModel valueOf(final Map map)
+	{
+		if (map instanceof Serializable)
+		{
+			return new MapModel((Serializable)map);
+		}
+		else
+		{
+			return new MapModel(new HashMap(map));
+		}
+	}
+
+	/**
+	 * Private constructor forces use of static factory method.
+	 * @param object The model object
+	 */
+	private MapModel(Serializable object)
+	{
+		super(object);
+	}
 }

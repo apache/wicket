@@ -22,81 +22,72 @@ import java.io.Serializable;
 import wicket.WicketRuntimeException;
 
 /**
- * Model is the basic implementation of IModel. It just wraps the model object.
- * The model object must be serializable, as it is stored in the session. If you
- * have large objects to store, consider using
- * {@link wicket.model.IDetachableModel} instead of this class.
- * 
+ * Model is the basic implementation of IModel. It just wraps the model object. The model
+ * object must be serializable, as it is stored in the session. If you have large objects
+ * to store, consider using {@link wicket.model.IDetachableModel}instead of this class.
  * @author Chris Turner
  * @author Eelco Hillenius
  */
 public class Model implements IModel
 {
-    /** Serial Version ID. */
-    private static final long serialVersionUID = 3031804965001519439L;
+	/** Serial Version ID. */
+	private static final long serialVersionUID = 3031804965001519439L;
 
-    /** Backing object. */
-    private Serializable object;
+	/** Backing object. */
+	private Serializable object;
 
-    /**
-     * Construct the model without providing an object.
-     */
-    public Model()
-    {
-    }
+	/**
+	 * Construct the model without providing an object.
+	 */
+	public Model()
+	{
+	}
 
-    /**
-     * Construct the model, setting the given object as the wrapped object.
-     * 
-     * @param object
-     *            de model object proper
-     */
-    public Model(final Serializable object)
-    {
-        this.object = object;
-    }
+	/**
+	 * Construct the model, setting the given object as the wrapped object.
+	 * @param object de model object proper
+	 */
+	public Model(final Serializable object)
+	{
+		this.object = object;
+	}
 
-    /**
-     * Get the model object proper.
-     * 
-     * @return the model object proper
-     */
-    public Object getObject()
-    {
-        return object;
-    }
+	/**
+	 * Get the model object proper.
+	 * @return the model object proper
+	 */
+	public Object getObject()
+	{
+		return object;
+	}
 
-    /**
-     * Set the model object; calls setObject(java.io.Serializable). The model
-     * object must be serializable, as it is stored in the session
-     * 
-     * @param object
-     *            the model object
-     * @see wicket.model.IModel#setObject(java.lang.Object)
-     */
-    public void setObject(Object object)
-    {
-        if (object != null)
-        {
-            if (!(object instanceof Serializable))
-            {
-                throw new WicketRuntimeException("Model object must be Serializable");
-            }
-        }
+	/**
+	 * Set the model object; calls setObject(java.io.Serializable). The model object must
+	 * be serializable, as it is stored in the session
+	 * @param object the model object
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
+	 */
+	public void setObject(Object object)
+	{
+		if (object != null)
+		{
+			if (!(object instanceof Serializable))
+			{
+				throw new WicketRuntimeException("Model object must be Serializable");
+			}
+		}
 
-        setObject((Serializable)object);
-    }
+		setObject((Serializable)object);
+	}
 
-    /**
-     * Sets the model object. The model object must be serializable, as it is
-     * stored in the session
-     * 
-     * @param object
-     *            the serializable model object
-     * @see wicket.model.IModel#setObject(java.lang.Object)
-     */
-    public void setObject(Serializable object)
-    {
-        this.object = object;
-    }
+	/**
+	 * Sets the model object. The model object must be serializable, as it is stored in the
+	 * session
+	 * @param object the serializable model object
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
+	 */
+	public void setObject(Serializable object)
+	{
+		this.object = object;
+	}
 }
