@@ -33,6 +33,8 @@ import wicket.WicketRuntimeException;
 import wicket.util.string.StringValueConversionException;
 
 /**
+ * THIS CLASS IS CURRENTLY EXPERIMENTAL ONLY.
+ * 
  * &lt;wicket:component class="myApp.MyTable" key=value&gt; tags may be used to add 
  * Wicket components (e.g. a specialized PageableListView) and pass parameters (e.g. the number
  * of rows per list view page). The object is automatically instantiated, initialized
@@ -42,8 +44,6 @@ import wicket.util.string.StringValueConversionException;
  * the component name.
  * <p>
  * Note: The component must provide a setter for each key/value attribute provided.
- * <p>
- * This class is currently experimental only.
  * 
  * @author Juergen Donnerstag
  */
@@ -52,11 +52,12 @@ public class WicketTagComponentResolver implements IComponentResolver
     /** Logging */
     private static Log log = LogFactory.getLog(WicketTagComponentResolver.class);
 
-    /** Temporary storage for containers currently being rendered. Thus child
+    /** 
+     * Temporary storage for containers currently being rendered. Thus child
      * components can be re-parented. Remember: <wicket:component> are an 
      * exception to the rule. Though the markup of the children are nested
-     * inside <wicket:component>, there respective java components are not.
-     * They must be added to the parent container auf <wicket:component>.
+     * inside <wicket:component>, their respective Java components are not.
+     * They must be added to the parent container of <wicket:component>.
      */ 
     private Map nestedComponents = new HashMap();
     
