@@ -149,7 +149,7 @@ public class CookieTest extends TestCase
 		
 		// validate
         Collection cookies = application.getServletResponse().getCookies();
-        Assert.assertEquals(2, cookies.size());
+        Assert.assertEquals(4, cookies.size());
         Iterator iter = cookies.iterator();
         while (iter.hasNext()) 
         {
