@@ -3,7 +3,7 @@
 <project>
   <id>wicket-quickstart</id>
   <name>Wicket QuickStart</name>
-  <currentVersion>0.9.19-beta</currentVersion>
+  <currentVersion>SNAPSHOT</currentVersion>
   <package>wicket</package>
   <description><![CDATA[
 	    Quickstart project for the Wicket framework. This project will get you up and running using Jetty as a]]><![CDATA[
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>0.9.19-beta</version>
+      <version>SNAPSHOT</version>
       <type>jar</type>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>

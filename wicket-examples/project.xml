@@ -4,7 +4,7 @@
   <extend>../Wicket/project.xml</extend>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>0.9.19-beta</currentVersion>
+  <currentVersion>SNAPSHOT</currentVersion>
   <package>wicket.examples</package>
   <inceptionYear>2004</inceptionYear>
   <description>Example for web framework Wicket.</description>
@@ -35,7 +35,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>0.9.19-beta</version>
+      <version>SNAPSHOT</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -44,7 +44,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-contrib</artifactId>
-      <version>0.9.19-beta</version>
+      <version>SNAPSHOT</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -53,7 +53,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <version>0.9.19-beta</version>
+      <version>SNAPSHOT</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
