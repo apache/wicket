@@ -95,9 +95,6 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	/**
 	 * Convenience method.
 	 * 
-	 * @see #saveComponent(FormComponent). Fills "missing" parameters with
-	 *      defaults.
-	 * 
 	 * @param name
 	 *           The FormComponent's name
 	 * @param value
@@ -110,10 +107,7 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	}
 
 	/**
-	 * Convinience method.
-	 * 
-	 * @see #saveComponent(FormComponent). Fills "missing" parameters with
-	 *      defaults.
+	 * Convenience method.
 	 * 
 	 * @param name
 	 *           The FormComponent's name

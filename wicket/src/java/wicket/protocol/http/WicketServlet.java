@@ -107,6 +107,9 @@ public class WicketServlet extends HttpServlet
                 // Finished
                 log.info("Successfully constructed WicketServlet for application class "
                         + applicationClass);
+                
+                // Call init method of web application
+                this.webApplication.init();
             }
             else
             {
