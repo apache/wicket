@@ -20,6 +20,10 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.Response;
 import wicket.markup.ComponentTag;
 
 /**
@@ -56,6 +60,9 @@ import wicket.markup.ComponentTag;
  */
 public abstract class OnClickLink extends AbstractLink
 {
+	/** Log. */
+	private static Log log = LogFactory.getLog(OnClickLink.class);
+
     /**
      * @see wicket.Component#Component(String)
      */
@@ -89,13 +96,14 @@ public abstract class OnClickLink extends AbstractLink
     {
         // Add simple javascript on click handler that links to this
         // link's linkClicked method
-        final String url = getURL().replaceAll("&", "&amp;");
+        final Response response = getRequestCycle().getResponse();
+        final String url = getURL();
+        // NOTE: don't encode to HTML as that is not valid JavaScript
         final PopupSettings popupSettings = getPopupSettings();
         if (popupSettings != null)
         {
         	popupSettings.setTarget("'" + url + "'");
             String popupScript = popupSettings.getPopupJavaScript();
-            popupScript = popupScript.replaceAll("&", "&amp;");
             tag.put("onclick", popupScript);
         }
         else
