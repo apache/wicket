@@ -25,13 +25,6 @@
 			<li><em>Download</em> <a href="http://sourceforge.net/projects/wicket/files">the SDK</a></li>
 		</ul>
 	</subsection>
-	<subsection name="Feedback">
-		<p>Please send any suggestions or constructive feedback to 
-			<a href="mailto:jonl@muppetlabs.com">jonl@muppetlabs.com</a>.</p>
-		<p><em>Wicket is currently looking for a new development lead. Please 
-			send suggestions to 
-			<a href="mailto:jonl@muppetlabs.com">jonl@muppetlabs.com</a></em></p>
-	</subsection>
 </section>
 </body>
 </document>
