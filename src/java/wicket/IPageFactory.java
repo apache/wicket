@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import java.io.Serializable;
+
 /**
  * A factory class that creates Pages. A Page can be created by Class, with or
  * without a PageParameters argument to pass to the Page's constructor. A Page
@@ -28,7 +30,7 @@ package wicket;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public interface IPageFactory
+public interface IPageFactory extends Serializable
 {
     /**
      * Creates a new page using a page class.
