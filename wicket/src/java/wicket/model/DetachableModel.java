@@ -130,18 +130,12 @@ public abstract class DetachableModel implements IDetachableModel
     /**
      * Attaches to the given session. Implement this method with custom
      * behaviour, such as loading the model object.
-     * 
-     * @param session
-     *            The session
      */
     protected abstract void doAttach();
 
     /**
      * Detaches from the given session. Implement this method with custom
      * behaviour, such as setting the model object to null.
-     * 
-     * @param session
-     *            The session
      */
     protected abstract void doDetach();
 }

@@ -281,7 +281,7 @@ public class PropertyModel extends DetachableModel
      * in case the wrapped model is a {@link IDetachableModel}, calls attach on
      * the wrapped model.
      * 
-     * @see wicket.model.DetachableModel#doAttach(Session)
+     * @see wicket.model.DetachableModel#doAttach()
      */
     protected final void doAttach()
     {
@@ -305,7 +305,7 @@ public class PropertyModel extends DetachableModel
      * case the wrapped model is a {@link IDetachableModel}, calls dettach on
      * the wrapped model.
      * 
-     * @see wicket.model.DetachableModel#doDetach(Session)
+     * @see wicket.model.DetachableModel#doDetach()
      */
     protected final void doDetach()
     {
