@@ -99,14 +99,14 @@ public abstract class Component implements Serializable
 	/** List of AttributeModifiers to be applied for this Component */
 	private AttributeModifier attributeModifiers = null;
 
+	/** Component id. */
+	private String id;
+
 	/** True if this component desires versioning */
 	private boolean isVersioned = true;
 
 	/** The model for this component. */
 	private IModel model;
-
-	/** Component id. */
-	private String id;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -339,6 +339,16 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Gets the id of this component.
+	 * 
+	 * @return The id of this component
+	 */
+	public String getId()
+	{
+		return id;
+	}
+
+	/**
 	 * Gets the locale for the session holding this component.
 	 * 
 	 * @return The locale for the session holding this component
@@ -434,16 +444,6 @@ public abstract class Component implements Serializable
 			}
 		}
 		return "";
-	}
-
-	/**
-	 * Gets the id of this component.
-	 * 
-	 * @return The id of this component
-	 */
-	public String getId()
-	{
-		return id;
 	}
 
 	/**
@@ -1015,6 +1015,19 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * If this Component is a Page, returns self. Otherwise, searches for the
+	 * nearest Page parent in the component hierarchy. If no Page parent can be
+	 * found, null is returned
+	 * 
+	 * @return The Page or null if none can be found
+	 */
+	protected final Page findPage()
+	{
+		// Search for page
+		return (Page)(this instanceof Page ? this : findParent(Page.class));
+	}
+
+	/**
 	 * Called when a null model is about to be retrieved in order to allow a
 	 * subclass to provide an initial model. This gives FormComponent, for
 	 * example, an opportunity to instantiate a model on the fly using the
@@ -1276,19 +1289,6 @@ public abstract class Component implements Serializable
 			current = current.getParent();
 		}
 		return null;
-	}
-
-	/**
-	 * If this Component is a Page, returns self. Otherwise, searches for the
-	 * nearest Page parent in the component hierarchy. If no Page parent can be
-	 * found, null is returned
-	 * 
-	 * @return The Page or null if none can be found
-	 */
-	final Page findPage()
-	{
-		// Search for page
-		return (Page)(this instanceof Page ? this : findParent(Page.class));
 	}
 
 	/**
