@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IRequestCycleFactory;
 import wicket.Session;
 import wicket.resource.IStringResourceLoader;
 import junit.framework.Assert;
@@ -86,6 +87,11 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 
 			protected void removeAttribute(String name)
 			{
+			}
+
+			protected IRequestCycleFactory getRequestCycleFactory()
+			{
+				return null;
 			}
 		});
 		this.component = new DummyComponent("test", this.application);

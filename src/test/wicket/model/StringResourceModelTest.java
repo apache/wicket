@@ -192,7 +192,7 @@ public class StringResourceModelTest extends TestCase
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
 		application.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
+		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getLocalizer());
@@ -231,7 +231,7 @@ public class StringResourceModelTest extends TestCase
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		application.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
+		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(),
 				application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(((IModel)model.getNestedModel()).getObject(page));

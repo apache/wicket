@@ -8,6 +8,17 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+      <action type="fix" dev="Jonathan Locke" issue="1166893">
+      Changed resource urls and added shared resources to Application via new 
+      add/getResource() methods.  The techniques are pretty well demonstrated in
+      FormInput and Hangman examples, which show how to use the new ResourceFactory
+      code and how to share resources efficiently across an application.  Docs are
+      somewhat lacking, but the code should at least make sense now.
+      </action>
+      <action type="fix" dev="Jonathan Locke" issue="1168600">
+      Added IRequestCycleFactory for first-class request cycle factories to enable
+      such things as a pluggable hibernate session manager in the future.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Moved ImageResourceFactory map to Application since that's a much more obvious
       and intuitive place for it to be.

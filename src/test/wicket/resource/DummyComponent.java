@@ -22,6 +22,7 @@ import java.util.List;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IRequestCycleFactory;
 import wicket.Session;
 
 /**
@@ -64,6 +65,11 @@ public class DummyComponent extends Component
 
 			protected void removeAttribute(String name)
 			{
+			}
+
+			protected IRequestCycleFactory getRequestCycleFactory()
+			{
+				return null;
 			}
 		};
 	}

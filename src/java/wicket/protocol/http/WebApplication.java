@@ -45,12 +45,6 @@ import wicket.markup.html.pages.PageExpiredErrorPage;
  * init() method. For example:
  * 
  * <pre>
- * 
- *  
- *   
- *    
- *     
- *      
  *                        public void init()
  *                        {
  *                          String webXMLParameter = getWicketServlet()
@@ -58,12 +52,6 @@ import wicket.markup.html.pages.PageExpiredErrorPage;
  *                          URL schedulersConfig = getWicketServlet().getServletContext()
  *                          			.getResource(&quot;/WEB-INF/schedulers.xml&quot;);
  *                          ...
- *       
- *      
- *     
- *    
- *   
- *  
  * </pre>
  * 
  * @see WicketServlet
@@ -108,6 +96,14 @@ public abstract class WebApplication extends Application
 	public final WicketServlet getWicketServlet()
 	{
 		return wicketServlet;
+	}
+	
+	/**
+	 * @param sessionFactory The session factory to use
+	 */
+	public void setSessionFactory(final ISessionFactory sessionFactory)
+	{
+		this.sessionFactory = sessionFactory;
 	}
 
 	/**
@@ -168,24 +164,6 @@ public abstract class WebApplication extends Application
 		{
 			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
 		}
-	}
-
-	/**
-	 * Creates a new WebRequestCycle object for this web application
-	 * 
-	 * @param session
-	 *            The session
-	 * @param request
-	 *            The request
-	 * @param response
-	 *            The response
-	 * @return The cycle
-	 */
-	protected WebRequestCycle newRequestCycle(final WebSession session, final WebRequest request,
-			final WebResponse response)
-	{
-		// Respond to request
-		return new WebRequestCycle(this, session, request, response);
 	}
 
 	/**

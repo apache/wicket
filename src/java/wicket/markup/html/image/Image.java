@@ -17,8 +17,11 @@
  */
 package wicket.markup.html.image;
 
+import wicket.IResourceListener;
+import wicket.SharedResource;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.WebComponent;
 import wicket.markup.html.image.resource.ImageResource;
 import wicket.markup.html.image.resource.LocalizedImageResource;
 import wicket.model.IModel;
@@ -34,7 +37,7 @@ import wicket.model.Model;
  * 
  * @author Jonathan Locke
  */
-public class Image extends AbstractImage
+public class Image extends WebComponent implements IResourceListener
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
@@ -48,6 +51,20 @@ public class Image extends AbstractImage
 	public Image(final String id)
 	{
 		super(id);
+	}
+
+	/**
+	 * Constructs an image directly from an image resource.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param namedResource
+	 *            The shared image resource
+	 */
+	public Image(final String id, final SharedResource namedResource)
+	{
+		super(id);
+		localizedImageResource.setResource(namedResource);
 	}
 
 	/**
@@ -86,11 +103,11 @@ public class Image extends AbstractImage
 	}
 
 	/**
-	 * @see AbstractImage#getResourcePath()
+	 * @see wicket.IResourceListener#onResourceRequested()
 	 */
-	public String getResourcePath()
+	public void onResourceRequested()
 	{
-		return localizedImageResource.getImageResource().getPath();
+		localizedImageResource.onResourceRequested();
 	}
 
 	/**
@@ -99,7 +116,7 @@ public class Image extends AbstractImage
 	 */
 	public void setImageResource(final ImageResource imageResource)
 	{
-		this.localizedImageResource.setImageResource(imageResource);
+		this.localizedImageResource.setResource(imageResource);
 	}
 
 	/**
@@ -107,8 +124,11 @@ public class Image extends AbstractImage
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		checkComponentTag(tag, "img");
 		localizedImageResource.loadImageResource(tag);
 		super.onComponentTag(tag);
+		final String url = urlFor(IResourceListener.class);
+		tag.put("src", getResponse().encodeURL(url).replaceAll("&", "&amp;"));
 	}
 
 	/**

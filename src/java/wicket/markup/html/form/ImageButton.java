@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.form;
 
+import wicket.IResourceListener;
+import wicket.SharedResource;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.markup.html.image.resource.ImageResource;
@@ -27,7 +29,7 @@ import wicket.markup.html.image.resource.LocalizedImageResource;
  * 
  * @author Jonathan Locke
  */
-public class ImageButton extends Button
+public class ImageButton extends Button implements IResourceListener
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -2913294206388017417L;
@@ -55,7 +57,21 @@ public class ImageButton extends Button
 	public ImageButton(final String id, final ImageResource imageResource)
 	{
 		super(id);
-		this.localizedImageResource.setImageResource(imageResource);
+		this.localizedImageResource.setResource(imageResource);
+	}
+
+	/**
+	 * Constructs an image directly from an image resource.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param namedResource
+	 *            The shared image resource
+	 */
+	public ImageButton(final String id, final SharedResource namedResource)
+	{
+		super(id);
+		localizedImageResource.setResource(namedResource);
 	}
 
 	/**
@@ -72,6 +88,14 @@ public class ImageButton extends Button
 	}
 
 	/**
+	 * @see wicket.IResourceListener#onResourceRequested()
+	 */
+	public void onResourceRequested()
+	{
+		localizedImageResource.onResourceRequested();
+	}
+
+	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -80,10 +104,11 @@ public class ImageButton extends Button
 	 */
 	protected final void onComponentTag(final ComponentTag tag)
 	{
+		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "image");
-
-		// Try to load image resource from src attribute if not already loaded
 		localizedImageResource.loadImageResource(tag);
 		super.onComponentTag(tag);
+		final String url = urlFor(IResourceListener.class);
+		tag.put("src", getResponse().encodeURL(url).replaceAll("&", "&amp;"));
 	}
 }

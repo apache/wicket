@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,6 +24,10 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
+import wicket.IRequestCycleFactory;
+import wicket.Request;
+import wicket.RequestCycle;
+import wicket.Response;
 import wicket.Session;
 
 /**
@@ -40,6 +44,9 @@ public class WebSession extends Session
 
 	/** The underlying HttpSession object */
 	private transient javax.servlet.http.HttpSession httpSession;
+
+	/** The request cycle factory for the session */
+	private transient IRequestCycleFactory requestCycleFactory;
 
 	/** The attribute in the HttpSession where this WebSession object is stored */
 	private transient String sessionAttributePrefix;
@@ -103,6 +110,27 @@ public class WebSession extends Session
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * @see wicket.Session#getRequestCycleFactory()
+	 */
+	protected IRequestCycleFactory getRequestCycleFactory()
+	{
+		if (requestCycleFactory == null)
+		{
+			this.requestCycleFactory = new IRequestCycleFactory()
+			{
+				public RequestCycle newRequestCycle(Session session, Request request,
+						Response response)
+				{
+					// Respond to request
+					return new WebRequestCycle((WebSession)session, (WebRequest)request,
+							(WebResponse)response);
+				}
+			};
+		}
+		return requestCycleFactory;
 	}
 
 	/**

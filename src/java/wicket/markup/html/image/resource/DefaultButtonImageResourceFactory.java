@@ -17,32 +17,97 @@
  */
 package wicket.markup.html.image.resource;
 
+import java.util.Locale;
+
+import wicket.IResourceFactory;
+import wicket.Resource;
+import wicket.WicketRuntimeException;
+import wicket.util.parse.metapattern.Group;
+import wicket.util.parse.metapattern.IntegerGroup;
+import wicket.util.parse.metapattern.MetaPattern;
+import wicket.util.parse.metapattern.OptionalMetaPattern;
+import wicket.util.parse.metapattern.parsers.MetaPatternParser;
+
 /**
  * A factory which creates default button images.
  * 
  * @author Jonathan Locke
  */
-public class DefaultButtonImageResourceFactory extends ImageResourceFactory
+public class DefaultButtonImageResourceFactory implements IResourceFactory
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param name
-	 *            Name of this resource factory
+	 * @see wicket.IResourceFactory#newResource(java.lang.String, java.util.Locale, java.lang.String)
 	 */
-	public DefaultButtonImageResourceFactory(final String name)
+	public Resource newResource(final String specification, final Locale locale, final String style)
 	{
-		super(name);
+		final Parser parser = new Parser(specification);
+		if (parser.matches())
+		{
+			return new DefaultButtonImageResource(parser.getWidth(), parser.getHeight(), parser.getLabel());
+		}
+		else
+		{
+			throw new WicketRuntimeException("DefaultButtonImageResourceFactory does not recognized the specification " + specification);
+		}
 	}
 
 	/**
-	 * @see ImageResourceFactory#newImageResource(int, int, String)
+	 * Parses image value specifications.
+	 * 
+	 * @author Jonathan Locke
 	 */
-	public ImageResource newImageResource(final int width, final int height, String label)
+	private static final class Parser extends MetaPatternParser
 	{
-		return new DefaultButtonImageResource(width, height, label);
+		/** Group value. */
+		private static final IntegerGroup width = new IntegerGroup();
+
+		/** Group value. */
+		private static final IntegerGroup height = new IntegerGroup();
+
+		/** Label */
+		private static final Group label = new Group(MetaPattern.ANYTHING);
+
+		/** Meta pattern. */
+		private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {
+				new OptionalMetaPattern(new MetaPattern[] { width, MetaPattern.COMMA, height,
+						MetaPattern.COLON }), label });
+
+		/**
+		 * Construct.
+		 * 
+		 * @param input
+		 *            to parse
+		 */
+		public Parser(final CharSequence input)
+		{
+			super(pattern, input);
+		}
+
+		/**
+		 * @return The label
+		 */
+		public String getLabel()
+		{
+			return label.get(matcher());
+		}
+
+		/**
+		 * @return Any width
+		 */
+		public int getWidth()
+		{
+			return width.getInt(matcher(), -1);
+		}
+
+		/**
+		 * @return Any height
+		 */
+		public int getHeight()
+		{
+			return width.getInt(matcher(), -1);
+		}
 	}
 }

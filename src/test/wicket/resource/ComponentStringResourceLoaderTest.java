@@ -87,7 +87,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		try
 		{
 			loader.loadStringResource(c, "test.string", Locale.getDefault(), null);
-			Assert.fail("InvalidResourceSpecificationException should be thrown");
+			Assert.fail("IllegalStateException should be thrown");
 		}
 		catch (IllegalStateException e)
 		{

@@ -312,7 +312,7 @@ public abstract class Session implements Serializable
 	 *            Name of page map, or null for default page map
 	 * @return PageMap for name
 	 */
-	public PageMap getPageMap(String pageMapName)
+	public final PageMap getPageMap(String pageMapName)
 	{
 		if (pageMapName == null)
 		{
@@ -353,11 +353,28 @@ public abstract class Session implements Serializable
 	 *            The name for the new page map
 	 * @return The newly created page map
 	 */
-	public PageMap newPageMap(final String name)
+	public final PageMap newPageMap(final String name)
 	{
 		final PageMap pageMap = new PageMap(name, this);
 		pageMapForName.put(name, pageMap);
 		return pageMap;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Creates a new RequestCycle for the given request and response using the
+	 * session's request cycle factory.
+	 * 
+	 * @param request
+	 *            The request
+	 * @param response
+	 *            The response
+	 * @return The new request cycle.
+	 */
+	public final RequestCycle newRequestCycle(final Request request, final Response response)
+	{
+		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
 
 	/**
@@ -417,7 +434,7 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Set the locale.
+	 * Set the locale for this session.
 	 * 
 	 * @param locale
 	 *            New locale
@@ -546,6 +563,11 @@ public abstract class Session implements Serializable
 	protected abstract List getAttributeNames();
 
 	/**
+	 * @return Request cycle factory for this kind of session.
+	 */
+	protected abstract IRequestCycleFactory getRequestCycleFactory();
+
+	/**
 	 * Gets a PageState record for a given Page. The default, inefficient
 	 * implementation is to simply wrap the entire Page object. More intimate
 	 * knowledge of a Page, however, may allow significant compression of state
@@ -599,7 +621,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @return The next access number
 	 */
-	int nextPageStateSequenceNumber()
+	final int nextPageStateSequenceNumber()
 	{
 		dirty();
 		return this.pageStateSequenceNumber++;
@@ -608,7 +630,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @param pageStates
 	 */
-	private void addPages(final List pageStates)
+	private final void addPages(final List pageStates)
 	{
 		// Add page states as need be
 		for (final Iterator iterator = pageStates.iterator(); iterator.hasNext();)
@@ -636,7 +658,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @return List of PageState values set as session attributes
 	 */
-	private List getPageStateAttributes()
+	private final List getPageStateAttributes()
 	{
 		// PageStates to add
 		final List pageStates = new ArrayList();
@@ -657,7 +679,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @param pageStates
 	 */
-	private void sortBySequenceNumber(final List pageStates)
+	private final void sortBySequenceNumber(final List pageStates)
 	{
 		// Sort in ascending order by access number so that pages which have
 		// a higher access number (which means they were accessed more recently)
