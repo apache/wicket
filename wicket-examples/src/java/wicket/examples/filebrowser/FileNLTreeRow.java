@@ -20,14 +20,14 @@ package wicket.examples.filebrowser;
 
 import java.io.File;
 
+import wicket.RequestCycle;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.tree.OnClickTreeNodeLink;
-import wicket.markup.html.tree.NLTree;
-import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.NLTreeRowReplacementModel;
+import wicket.markup.html.tree.OnClickTreeNodeLink;
+import wicket.markup.html.tree.TreeNodeModel;
 
 /**
  * Panel for displaying one tree row. This overrides the default
@@ -35,7 +35,7 @@ import wicket.markup.html.tree.NLTreeRowReplacementModel;
  *
  * @author Eelco Hillenius
  */
-public final class FileTreeRow extends Panel
+public final class FileNLTreeRow extends Panel
 {
     /**
      * Construct.
@@ -43,14 +43,22 @@ public final class FileTreeRow extends Panel
      * @param tree
      * @param nodeModel the tree node for this row
      */
-    public FileTreeRow(String componentName, NLTree tree, TreeNodeModel nodeModel)
+    public FileNLTreeRow(String componentName, final FileNLTreeCustomRows tree,
+    		TreeNodeModel nodeModel)
     {
         super(componentName);
         HtmlContainer li = null;
         if(nodeModel != null)
         {
             File file = (File)nodeModel.getUserObject();
-            li = new OnClickTreeNodeLink("li", tree, nodeModel);
+            li = new OnClickTreeNodeLink("li", tree, nodeModel){
+
+                public void linkClicked(RequestCycle cycle, TreeNodeModel node)
+                {
+                	// link to tree
+                	tree.linkClicked(cycle, node);
+                }   
+            };
             li.add(new Label("label", file.getName()));
         }
         else

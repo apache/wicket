@@ -24,9 +24,8 @@ import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
-import wicket.markup.html.tree.NLTree;
-import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.NLTreeRowReplacementModel;
+import wicket.markup.html.tree.TreeNodeModel;
 
 /**
  * This example list knows how to display sublists. It expects a list where
@@ -34,10 +33,10 @@ import wicket.markup.html.tree.NLTreeRowReplacementModel;
  *
  * @author Eelco Hillenius
  */
-public final class FileTreeRows extends Panel
+public final class FileNLTreeRows extends Panel
 {
     /** the holding tree component. */
-    private final NLTree tree;
+    private final FileNLTreeCustomRows tree;
 
     /**
      * Constructor.
@@ -45,7 +44,7 @@ public final class FileTreeRows extends Panel
      * @param list a list where each element is either a string or another list
      * @param tree the holding tree component
      */
-    public FileTreeRows(final String componentName, List list, NLTree tree)
+    public FileNLTreeRows(final String componentName, List list, FileNLTreeCustomRows tree)
     {
         super(componentName);
         this.tree = tree;
@@ -78,7 +77,7 @@ public final class FileTreeRows extends Panel
                 Panel row = getTreeRowPanel("row", null);
                 row.setVisible(false);
                 listItem.add(row);
-                FileTreeRows nested = new FileTreeRows("nested", (List)modelObject, tree);
+                FileNLTreeRows nested = new FileNLTreeRows("nested", (List)modelObject, tree);
                 listItem.add(nested);
             }
             else
@@ -86,7 +85,7 @@ public final class FileTreeRows extends Panel
                 TreeNodeModel nodeModel = (TreeNodeModel)modelObject;
                 Panel row = getTreeRowPanel("row", nodeModel);
                 listItem.add(row);
-                FileTreeRows nested = new FileTreeRows("nested", null, tree);
+                FileNLTreeRows nested = new FileNLTreeRows("nested", null, tree);
                 nested.setVisible(false);
                 listItem.add(nested);
             }
@@ -102,8 +101,8 @@ public final class FileTreeRows extends Panel
         {
             NLTreeRowReplacementModel replacementModel =
                 new NLTreeRowReplacementModel(nodeModel);
-            Panel rowPanel = new FileTreeRow(componentName,
-            		FileTreeRows.this.tree, nodeModel);
+            Panel rowPanel = new FileNLTreeRow(componentName,
+            		FileNLTreeRows.this.tree, nodeModel);
             rowPanel.add(new ComponentTagAttributeModifier(
                     "class", true, replacementModel));
             return rowPanel;

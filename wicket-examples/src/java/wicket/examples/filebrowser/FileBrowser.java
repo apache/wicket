@@ -18,7 +18,6 @@
  */
 package wicket.examples.filebrowser;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +34,9 @@ import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.IOnChangeListener;
-import wicket.markup.html.panel.Panel;
-import wicket.markup.html.tree.Tree;
-import wicket.markup.html.tree.IndentTree;
 import wicket.markup.html.tree.NLTree;
+import wicket.markup.html.tree.Tree;
 import wicket.markup.html.tree.TreeNodeModel;
-import wicket.markup.html.tree.TreeStateCache;
 import wicket.model.IModel;
 
 /**
@@ -50,26 +46,27 @@ import wicket.model.IModel;
  */
 public class FileBrowser extends HtmlPage
 {
-	/** our override of the nested tree with a custom rows panel. */
-	private static final String TYPE_NESTED_CUSTOM_ROWS = "nested tree custom rows";
-
-	/** the normal, nested tree. */
-	private static final String TYPE_NESTED = "plain nested tree";
+    /** Log. */
+    private static Log log = LogFactory.getLog(FileBrowser.class);
 
 	/** the flat tree. */
-	private static final String TYPE_FLAT = "flat tree";
+	private static final String TYPE_INDENT = "indent tree";
+
+	/** the default NLTree. */
+	private static final String TYPE_NL = "nested lists (NL) tree";
+
+	/** our override of the NLTree with a custom rows panel. */
+	private static final String TYPE_NL_CUSTOM_ROWS =
+		"nested lists (NL) tree with custom rows";
 
 	/** the types of lists that are available for selection. */
 	private static final List types;
 	static {
 		types = new ArrayList(3);
-		types.add(TYPE_NESTED_CUSTOM_ROWS);
-		types.add(TYPE_NESTED);
-		types.add(TYPE_FLAT);
+		types.add(TYPE_INDENT);
+		types.add(TYPE_NL_CUSTOM_ROWS);
+		types.add(TYPE_NL);
 	}
-
-    /** Log. */
-    private static Log log = LogFactory.getLog(FileBrowser.class);
 
 	/** property that holds the current selection of tree types. */
 	private String currentType;
@@ -84,7 +81,7 @@ public class FileBrowser extends HtmlPage
     public FileBrowser(final PageParameters parameters)
     {
         TreeModel model = new FileModelProvider().getFileModel();
-        setTreeComponent(new FileTreeCustomRow("fileTree", model, true));
+        setTreeComponent(new FileNLTreeCustomRows("fileTree", model, true));
     }
 
 	/**
@@ -102,11 +99,11 @@ public class FileBrowser extends HtmlPage
 
 			public Object getObject()
 			{
-				if(TYPE_FLAT.equals(currentType))
+				if(TYPE_INDENT.equals(currentType))
 				{
 					return "flattree";
 				}
-				else if(TYPE_NESTED.equals(currentType))
+				else if(TYPE_NL.equals(currentType))
 				{
 					return "nestedtree";
 				}
@@ -174,187 +171,41 @@ public class FileBrowser extends HtmlPage
         public void selectionChanged(RequestCycle cycle, Object newSelection)
         {
             String type = (String)newSelection;
-            final Tree tree;
-            if(TYPE_NESTED.equals(type))
+            setCurrentTree(type);
+        }
+
+		/**
+		 * Sets the current tree.
+		 * @param type type of the tree
+		 */
+		private void setCurrentTree(String type)
+		{
+			final Tree tree;
+			if(TYPE_NL.equals(type)) // create NL with simple linkClicked override
             {
-                tree = new NLTree("fileTree", currentTree.getTreeState());
+                tree = new NLTree("fileTree", currentTree.getTreeState()){
+
+                	protected void linkClicked(RequestCycle cycle, TreeNodeModel node)
+                	{
+                        super.linkClicked(cycle, node);
+                        FileBrowser.log.info("tree link was clicked, user object: "
+                        		+ node.getUserObject());
+                	}
+                };
             }
-            else if(TYPE_FLAT.equals(type))
+            else if(TYPE_INDENT.equals(type)) // create indent tree
             {
-            	tree = new FileTreeFlat("fileTree", currentTree.getTreeState());
+            	tree = new FileIndentTree("fileTree", currentTree.getTreeState());
             }
-            else if(TYPE_NESTED_CUSTOM_ROWS.equals(type))
+            else if(TYPE_NL_CUSTOM_ROWS.equals(type)) // create NL tree with custom panels
             {
-            	tree = new FileTreeCustomRows("fileTree", currentTree.getTreeState());
+            	tree = new FileNLTreeCustomRows("fileTree", currentTree.getTreeState());
             }
             else
             {
             	throw new RuntimeException("invalid type selection");
             }
-            FileBrowser.this.setTreeComponent(tree);
-        }
-    }
-
-    /** Custom tree that provides our own row panel. */
-    private static class FileTreeCustomRow extends NLTree
-    {
-        /**
-         * Constructor.
-         * @param componentName The name of this container
-         * @param model the underlying tree model
-         * @param makeTreeModelUnique whether to make the user objects of the tree model
-         * unique. If true, the default implementation will wrapp all user objects so that
-         * they will have unique id's attached. If false, users must ensure that the
-         * user objects are unique within the tree in order to have the tree working properly
-         */
-        public FileTreeCustomRow(final String componentName, final TreeModel model,
-        		final boolean makeTreeModelUnique)
-        {
-            super(componentName, model, makeTreeModelUnique);
-        }
-
-        /**
-         * Constructor using the given tree state. This tree state holds the tree model and
-         * the currently visible paths.
-         * @param componentName The name of this container
-         * @param treeState the tree state that holds the tree model and the currently visible
-         * paths
-         */
-        public FileTreeCustomRow(final String componentName, TreeStateCache treeState)
-        {
-            super(componentName, treeState);
-        }
-
-		/**
-         * Provides a custom row panel.
-         * @see wicket.markup.html.tree.Tree#getTreeRowPanel(java.lang.String, wicket.markup.html.tree.TreeNodeModel)
-         */
-        protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
-        {
-            Panel rowPanel = new FileTreeRow(componentName, this, nodeModel);
-            return rowPanel;
-        } 
-    }
-
-    /** Custom tree that provides our own rows panel. */
-    private static class FileTreeCustomRows extends NLTree
-    {
-        /**
-         * Constructor.
-         * @param componentName The name of this container
-         * @param model the underlying tree model
-         * @param makeTreeModelUnique whether to make the user objects of the tree model
-         * unique. If true, the default implementation will wrapp all user objects so that
-         * they will have unique id's attached. If false, users must ensure that the
-         * user objects are unique within the tree in order to have the tree working properly
-         */
-        public FileTreeCustomRows(final String componentName, final TreeModel model,
-        		final boolean makeTreeModelUnique)
-        {
-            super(componentName, model, makeTreeModelUnique);
-        }
-
-        /**
-         * Constructor using the given tree state. This tree state holds the tree model and
-         * the currently visible paths.
-         * @param componentName The name of this container
-         * @param treeState the tree state that holds the tree model and the currently visible
-         * paths
-         */
-        public FileTreeCustomRows(final String componentName, TreeStateCache treeState)
-        {
-            super(componentName, treeState);
-        }
-
-        /**
-         * Provides a custom rows panel 
-         * @see wicket.markup.html.tree.Tree#getTreeRowsPanel(java.lang.String, java.util.List)
-         */
-        protected Panel getTreeRowsPanel(String componentName, List nestedList)
-        {
-            return new FileTreeRows(componentName, nestedList, this);
-        } 
-    }
-
-    /** flat tree implementation. */
-    private static class FileTreeFlat extends IndentTree
-    {
-
-        /**
-         * Constructor using the given tree state. This tree state holds the tree model and
-         * the currently visible paths.
-         * @param componentName The name of this container
-         * @param treeState the tree state that holds the tree model and the currently visible
-         * paths
-         */
-        public FileTreeFlat(final String componentName, TreeStateCache treeState)
-        {
-            super(componentName, treeState);
-        }
-
-		/**
-         * Get image name for junction.
-         * @param node the model with the current node
-         * @return image name
-         */
-        protected String getJunctionImageName(TreeNodeModel node)
-        {
-            final String img;
-
-            if(!node.isLeaf())
-            {
-	            if (node.isExpanded())
-	            {
-	                img = "filebrowser/minus.gif";
-	            }
-	            else
-	            {
-	                img = "filebrowser/plus.gif";
-	            }
-            }
-            else
-            {
-            	img = "filebrowser/blank.gif";
-            }
-
-            return img;
-        }
-
-        /**
-         * Get image name for node.
-         * @param node the model with the current node
-         * @return image name
-         */
-        protected String getNodeImageName(TreeNodeModel node)
-        {
-            final String img;
-
-            if (node.isLeaf())
-            {
-                img = "filebrowser/node.gif";
-            }
-            else
-            {
-                if (node.isExpanded())
-                {
-                    img = "filebrowser/folderopen.gif";
-                }
-                else
-                {
-                    img = "filebrowser/folder.gif";
-                }
-            }
-
-            return img;
-        }
-
-		/**
-		 * @see wicket.markup.html.tree.FlatTree#getNodeLabel(wicket.markup.html.tree.TreeNodeModel)
-		 */
-		protected String getNodeLabel(TreeNodeModel node)
-		{
-			File file = (File)node.getUserObject();
-			return file.getName();
+			FileBrowser.this.setTreeComponent(tree);
 		}
     }
 }
