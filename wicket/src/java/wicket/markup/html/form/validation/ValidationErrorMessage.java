@@ -29,6 +29,7 @@ import wicket.markup.html.form.FormComponent;
  * @see wicket.markup.html.form.validation.IValidator
  * @see wicket.FeedbackMessage
  * @see wicket.markup.html.form.validation.IValidationErrorHandler
+ *
  * @author Eelco Hillenius
  */
 public final class ValidationErrorMessage extends FeedbackMessage
@@ -60,4 +61,3 @@ public final class ValidationErrorMessage extends FeedbackMessage
         return null;
     }
 }
-

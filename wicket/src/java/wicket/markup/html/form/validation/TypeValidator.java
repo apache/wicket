@@ -98,7 +98,7 @@ public class TypeValidator extends AbstractValidator
 	 * @return validation error message
 	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
-	public ValidationErrorMessage validate(FormComponent component)
+	public final ValidationErrorMessage validate(FormComponent component)
 	{
         // Get component value
         final String value = component.getRequestString();
@@ -149,11 +149,12 @@ public class TypeValidator extends AbstractValidator
 		ctx.put("pattern", e.getPattern());
 		return ctx;
 	}
+
 	/**
 	 * Gets the conversion utilities.
 	 * @return the conversion utilities
 	 */
-	protected ConversionUtils getConversionUtils()
+	protected final ConversionUtils getConversionUtils()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		if(requestCycle != null)
@@ -173,7 +174,7 @@ public class TypeValidator extends AbstractValidator
 	 * Gets the locale that should be used for the current validation.
 	 * @return the locale that should be used for the current validation
 	 */
-	private Locale getLocaleForValidation()
+	private final Locale getLocaleForValidation()
 	{
 		Locale localeForValidation = null;
 		if (isUseLocalized())
@@ -192,7 +193,7 @@ public class TypeValidator extends AbstractValidator
 	 * will be used..
 	 * @return the locale to use
 	 */
-	protected Locale getLocale()
+	protected final Locale getLocale()
 	{
 		return locale;
 	}
@@ -201,7 +202,7 @@ public class TypeValidator extends AbstractValidator
 	 * Gets the type to use for checking.
 	 * @return the type to use for checking
 	 */
-	protected Class getType()
+	protected final Class getType()
 	{
 		return type;
 	}
@@ -210,7 +211,7 @@ public class TypeValidator extends AbstractValidator
 	 * Gets whether to use either the set locale or the session's locale.
 	 * @return whether to use either the set locale or the session's locale.
 	 */
-	protected boolean isUseLocalized()
+	protected final boolean isUseLocalized()
 	{
 		return useLocalized;
 	}

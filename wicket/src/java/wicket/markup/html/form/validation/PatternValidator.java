@@ -43,7 +43,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * @see wicket.util.parse.metapattern.MetaPattern
  * @author Jonathan Locke
  */
-public final class PatternValidator extends AbstractValidator
+public class PatternValidator extends AbstractValidator
 {
     /** The regexp pattern. */
     private final Pattern pattern;
@@ -90,7 +90,7 @@ public final class PatternValidator extends AbstractValidator
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(final FormComponent component)
+    public final ValidationErrorMessage validate(final FormComponent component)
     {
         // Get component value
         final String value = component.getRequestString();

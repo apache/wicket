@@ -28,14 +28,14 @@ import wicket.markup.html.form.FormComponent;
  *
  * @author Jonathan Locke
  */
-public final class RequiredValidator extends AbstractValidator
+public class RequiredValidator extends AbstractValidator
 {
     /**
      * Validates the given form component.
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(final FormComponent component)
+    public final ValidationErrorMessage validate(final FormComponent component)
     {
         // Get component value
         final String value = component.getRequestString();
