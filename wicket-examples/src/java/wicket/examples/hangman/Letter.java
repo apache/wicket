@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.io.Serializable;
 
 import wicket.Application;
+import wicket.ISharedResourceFactory;
 import wicket.Resource;
 import wicket.SharedResource;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
@@ -51,33 +52,6 @@ public class Letter implements Serializable
 	}
 
 	/**
-	 * @param application
-	 *            Application where shared resources are stored
-	 * @param enabled
-	 *            True to get the enabled resource, false to get the disabled
-	 *            resource
-	 * @return Shared image resource
-	 */
-	public SharedResource getImage(final Application application, final boolean enabled)
-	{
-		// Lazy loading of shared resource
-		final String sharedResourceName = asString() + (enabled ? "_enabled" : "_disabled");
-		Resource resource = application.getResource(Application.class, sharedResourceName, null, null);
-		if (resource == null)
-		{
-			DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(30, 30,
-					asString());
-			if (!enabled)
-			{
-				buttonResource.setColor(Color.GRAY);
-			}
-			application.addResource(sharedResourceName, buttonResource);
-			resource = buttonResource;
-		}
-		return new SharedResource(sharedResourceName);
-	}
-
-	/**
 	 * @return This letter as a string
 	 */
 	public String asString()
@@ -96,6 +70,38 @@ public class Letter implements Serializable
 			return that.letter == this.letter && that.isGuessed == this.isGuessed;
 		}
 		return false;
+	}
+
+	/**
+	 * @param application
+	 *            Application where shared resources are stored
+	 * @param enabled
+	 *            True to get the enabled resource, false to get the disabled
+	 *            resource
+	 * @return Shared image resource
+	 */
+	public SharedResource getImage(final Application application, final boolean enabled)
+	{
+		// Return a shared resource scoped by the Letter class. The resource
+		// will only be constructed the first time this method is called for a
+		// given letter. In each case, a SharedResource will be returned, which
+		// is a logical reference to the resource in Application, and not the
+		// resource itself.
+		final String name = asString() + (enabled ? "_enabled" : "_disabled");
+		return application.getSharedResource(Letter.class, name, new ISharedResourceFactory()
+		{
+			public Resource newResource()
+			{
+				// Lazy loading of shared resource
+				final DefaultButtonImageResource buttonResource = new DefaultButtonImageResource(
+						30, 30, asString());
+				if (!enabled)
+				{
+					buttonResource.setColor(Color.GRAY);
+				}
+				return buttonResource;
+			}
+		});
 	}
 
 	/**

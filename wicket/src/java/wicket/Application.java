@@ -184,17 +184,6 @@ public abstract class Application
 	/**
 	 * @param name
 	 *            Logical name of resource
-	 * @param resource
-	 *            Resource to store
-	 */
-	public void addResource(final String name, final Resource resource)
-	{
-		addResource(Application.class, name, null, null, resource);
-	}
-
-	/**
-	 * @param name
-	 *            Logical name of resource
 	 * @param locale
 	 *            The locale of the resource
 	 * @param resource
@@ -203,6 +192,17 @@ public abstract class Application
 	public void addResource(final String name, final Locale locale, final Resource resource)
 	{
 		addResource(Application.class, name, locale, null, resource);
+	}
+
+	/**
+	 * @param name
+	 *            Logical name of resource
+	 * @param resource
+	 *            Resource to store
+	 */
+	public void addResource(final String name, final Resource resource)
+	{
+		addResource(Application.class, name, null, null, resource);
 	}
 
 	/**
@@ -328,7 +328,33 @@ public abstract class Application
 			}
 		};
 	}
-	
+
+	/**
+	 * @param scope
+	 *            The resource's scope
+	 * @param name
+	 *            Name of resource to get
+	 * @return The logical resource
+	 */
+	public Resource getResource(final Class scope, final String name)
+	{
+		return getResource(scope, name, null, null);
+	}
+
+	/**
+	 * @param scope
+	 *            The resource's scope
+	 * @param name
+	 *            Name of resource to get
+	 * @param locale
+	 *            The locale of the resource
+	 * @return The logical resource
+	 */
+	public Resource getResource(final Class scope, final String name, final Locale locale)
+	{
+		return getResource(scope, name, locale, null);
+	}
+
 	/**
 	 * @param scope
 	 *            The resource's scope
@@ -370,7 +396,7 @@ public abstract class Application
 		{
 			return resource;
 		}
-		
+
 		// 4. Look for base name
 		return (Resource)resourceMap.get(new ResourceKey(scope, name));
 	}
@@ -426,6 +452,61 @@ public abstract class Application
 			throw new IllegalStateException("Application settings not found");
 		}
 		return settings;
+	}
+
+	/**
+	 * @param scope
+	 *            Scope of resource
+	 * @param name
+	 *            Logical name of resource
+	 * @param factory
+	 *            The factory for lazy-initializing the shared resource
+	 * @return The shared resource
+	 */
+	public SharedResource getSharedResource(final Class scope, final String name,
+			final ISharedResourceFactory factory)
+	{
+		return getSharedResource(scope, name, null, null, factory);
+	}
+
+	/**
+	 * @param scope
+	 *            Scope of resource
+	 * @param name
+	 *            Logical name of resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param factory
+	 *            The factory for lazy-initializing the shared resource
+	 * @return The shared resource
+	 */
+	public SharedResource getSharedResource(final Class scope, final String name,
+			final Locale locale, final ISharedResourceFactory factory)
+	{
+		return getSharedResource(scope, name, locale, null, factory);
+	}
+
+	/**
+	 * @param scope
+	 *            Scope of resource
+	 * @param name
+	 *            Logical name of resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The resource style
+	 * @param factory
+	 *            The factory for lazy-initializing the shared resource
+	 * @return The shared resource
+	 */
+	public SharedResource getSharedResource(final Class scope, final String name,
+			final Locale locale, final String style, final ISharedResourceFactory factory)
+	{
+		if (getResource(scope, name, locale, style) == null)
+		{
+			addResource(scope, name, locale, style, factory.newResource());
+		}
+		return new SharedResource(scope, name);
 	}
 
 	/**
