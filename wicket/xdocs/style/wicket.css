@@ -61,7 +61,7 @@ div .xright {
 
 #leftColumn {
     float : left;
-    width : 200px;
+    width : 180px;
 }
 
 #navcolumn {
@@ -103,7 +103,7 @@ div .xright {
 #bodyColumn {
     float : right;
     border-top : 1px solid #C3C3C3;
-    width : 515px;
+    width : 535px;
     padding-top : 2em;
     padding-right : 25px;
     text-align : left;
