@@ -27,7 +27,7 @@ import wicket.markup.MarkupStream;
  * 
  * @author Jonathan Locke
  */
-public class TextArea extends TextComponent
+public class TextArea extends AbstractTextComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1323747673401786242L;
