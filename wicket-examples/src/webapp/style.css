@@ -45,6 +45,7 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	font-weight: bold;
 	border-bottom: solid #E9601A;
 	border-width: thin;
+	padding: 2px 2px 2px 6px;	
 }
 
 h2 {
