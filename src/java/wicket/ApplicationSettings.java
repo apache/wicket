@@ -131,6 +131,9 @@ public final class ApplicationSettings
 			"SHOW_NO_EXCEPTION_PAGE");
 	/** Log */
 	private static final Log log = LogFactory.getLog(ApplicationSettings.class);
+	
+	/** The application */
+	private Application application;
 
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
@@ -221,6 +224,7 @@ public final class ApplicationSettings
 	 */
 	public ApplicationSettings(final Application application)
 	{
+		this.application = application;
 		stringResourceLoaders.add(new ComponentStringResourceLoader());
 		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
 	}
@@ -656,6 +660,10 @@ public final class ApplicationSettings
 	public final ApplicationSettings setSourcePath(final Path sourcePath)
 	{
 		this.sourcePath = sourcePath;
+		
+		// Cause resource locator to get recreated 
+		application.sourcePathChanged();
+		
 		return this;
 	}
 

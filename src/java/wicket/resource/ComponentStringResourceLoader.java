@@ -31,7 +31,6 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceLocator;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.value.ValueMap;
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
@@ -181,8 +180,8 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// Do the resource load
 		final Properties properties = new Properties();
-		final IResource resource = ResourceLocator.locate(component.getApplicationSettings()
-				.getSourcePath(), component.getClass(), style, locale, "properties");
+		final IResource resource = component.getApplication().getResourceLocator().locate(
+				component.getClass(), style, locale, "properties");
 		if (resource != null)
 		{
 			try

@@ -122,8 +122,8 @@ public class Image extends AbstractImage
 			}
 
 			final Package basePackage = findParentWithAssociatedMarkup().getClass().getPackage();
-			this.imageResource = StaticImageResource.get(getClass().getClassLoader(), basePackage,
-					resourcePath, getLocale(), getStyle());
+			this.imageResource = StaticImageResource.get(basePackage, resourcePath, getLocale(),
+					getStyle());
 
 			if (this.imageResource == null)
 			{
