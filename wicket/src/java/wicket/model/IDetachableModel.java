@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -20,9 +20,9 @@ package wicket.model;
 
 /**
  * A IDetachableModel wraps the actual model objects of components and provides
- * a call back mechanism for reacting on the starting/ending of a request.
- * Please use the abstract class {@link wicket.model.DetachableModel}for
- * implementations instead of implementing this interface directely.
+ * a call back mechanism for reacting to the start/end of a request. Please use
+ * the abstract class {@link wicket.model.DetachableModel} for implementations
+ * instead of implementing this interface directely.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius

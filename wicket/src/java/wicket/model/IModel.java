@@ -27,7 +27,6 @@ import java.io.Serializable;
  * instance variables sparingly.
  * 
  * @see wicket.model.IDetachableModel
- * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
