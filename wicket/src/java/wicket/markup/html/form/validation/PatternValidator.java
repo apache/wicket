@@ -103,6 +103,15 @@ public class PatternValidator extends AbstractValidator
 	}
 
 	/**
+	 * Gets the regexp pattern.
+	 * @return the regexp pattern
+	 */
+	public final Pattern getPattern()
+	{
+		return pattern;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()

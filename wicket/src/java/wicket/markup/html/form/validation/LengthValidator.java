@@ -22,12 +22,14 @@ import wicket.markup.html.form.FormComponent;
 import wicket.util.string.StringList;
 
 /**
- * Validates that a form component's value is of a certain min/max length. Validators are
- * constructed by calling the min, max and range static factory methods. For example,
- * LengthValidator.min(6) would return a validator valid only when the input of the
- * component it is attached to is at least 6 characters long. Likewise,
- * LengthValidator.range(3, 5) would only validate a component containing between 3 and 5
- * characters (inclusive).
+ * Validates that a form component's string value is of a certain min/max
+ * length. Validators are constructed by calling the min, max and range
+ * static factory methods. For example, LengthValidator.min(6) would return
+ * a validator valid only when the input of the component it is attached to
+ * is at least 6 characters long. Likewise, LengthValidator.range(3, 5)
+ * would only validate a component containing between 3 and 5 characters
+ * (inclusive).
+ *
  * @author Jonathan Locke
  */
 public class LengthValidator extends AbstractValidator
@@ -110,6 +112,42 @@ public class LengthValidator extends AbstractValidator
 		}
 
 		return NO_ERROR;
+	}
+
+	/**
+	 * Gets whether the maximum bound should be checked.
+	 * @return whether the minimum bound should be checked
+	 */
+	public final boolean isCheckMax()
+	{
+		return checkMax;
+	}
+
+	/**
+	 * Gets whether the minimum bound should be checked.
+	 * @return whether the minimum bound should be checked
+	 */
+	public final boolean isCheckMin()
+	{
+		return checkMin;
+	}
+
+	/**
+	 * Gets the upper bound on valid length.
+	 * @return the upper bound on valid length
+	 */
+	public final int getMax()
+	{
+		return max;
+	}
+
+	/**
+	 * Gets the lower bound on valid length.
+	 * @return the lower bound on valid length
+	 */
+	public final int getMin()
+	{
+		return min;
 	}
 
 	/**
