@@ -44,6 +44,9 @@ public final class ConvertersTest extends TestCase
 		super(name);
 	}
 
+	/**
+	 * Test generalized conversion
+	 */
 	public void testConversion()
 	{
         final IConverter converter = new ConverterFactory().newConverter(Locale.US);
