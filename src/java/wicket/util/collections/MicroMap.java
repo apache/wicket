@@ -28,21 +28,24 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An implementation of the Map interface which can hold just a single object.
+ * An implementation of the java.util.Map interface which can only hold 
+ * a single object.  This is particularly useful to control memory usage 
+ * in Wicket because many containers hold only a single component.
+ * 
  * @author Jonathan Locke
  */
 public final class MicroMap implements Map, Serializable
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = 6392759678359952206L;
 
 	/** The maximum number of entries this map supports. */
     public static final int MAX_ENTRIES = 1;
 
-    // The key
+    /** The one and only key in this tiny map */
     private Object key;
 
-    // The value
+    /** The value for the only key in this tiny map */
     private Object value;
 
     /**
@@ -53,7 +56,7 @@ public final class MicroMap implements Map, Serializable
     }
 
     /**
-     * Constructs map with a key and value
+     * Constructs map with a single key and value pair.
      * @param key The key
      * @param value The value
      */
