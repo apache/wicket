@@ -19,17 +19,21 @@
 package wicket.markup.html.tree;
 
 
+import java.io.Serializable;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import wicket.Model;
 
 /**
- * Specialized model for trees.
+ * Specialized model for trees. It makes it easier/ less verbose to work with the
+ * current tree node, and acts as a context-like wrapper object.
+ * Each tree node has its own node model.
  *
  * @author Eelco Hillenius
  */
-public class NodeModel extends Model
+public final class NodeModel extends Model
 {
     /** tree node. */
     private final DefaultMutableTreeNode treeNode;
@@ -56,8 +60,8 @@ public class NodeModel extends Model
     }
 
     /**
-     * Get path.
-     * @return path.
+     * Gets the wrapped tree path.
+     * @return the wrapped tree path.
      */
     public final TreePath getPath()
     {
@@ -65,8 +69,8 @@ public class NodeModel extends Model
     }
 
     /**
-     * Get treeNode.
-     * @return treeNode.
+     * Gets the wrapped treeNode.
+     * @return the wrapped treeNode
      */
     public final DefaultMutableTreeNode getTreeNode()
     {
@@ -74,11 +78,83 @@ public class NodeModel extends Model
     }
 
     /**
-     * Get treeState.
-     * @return treeState.
+     * Gets the user object of the wrapped tree node.
+     * @return the user object of the wrapped tree node
+     */
+    public final Serializable getUserObject()
+    {
+        return (Serializable)treeNode.getUserObject();
+    }
+
+    /**
+     * Gets the tree state object.
+     * @return the tree state object.
      */
     public final TreeStateCache getTreeState()
     {
         return treeState;
+    }
+
+    /**
+     * Gets whether this node is a leaf.
+     * @return whether this node is a leaf.
+     */
+    public final boolean isLeaf()
+    {
+        return treeNode.isLeaf();
+    }
+
+    /**
+     * Gets the current level.
+     * @return the current level.
+     */
+    public final int getLevel()
+    {
+        return treeNode.getLevel();
+    }
+
+    /**
+     * Gets whether this node is the root.
+     * @return whether this node is the root.
+     */
+    public final boolean isRoot()
+    {
+        return treeNode.isRoot();
+    }
+
+    /**
+     * Finds the tree path for the given user object.
+     * @param userObject the user object
+     * @return the tree path for the given user object
+     */
+    public TreePath findTreePath(Object userObject)
+    {
+        return treeState.findTreePath(userObject);
+    }
+
+    /**
+     * Gets the tree node's siblings.
+     * @return siblings.
+     */
+    public final boolean hasSiblings()
+    {
+        return (treeNode.getNextSibling() != null);
+    }
+
+    /**
+     * Whether this node is part of the expanded path.
+     * @return whether this node is part of the expanded path
+     */
+    public boolean isExpanded()
+    {
+        return treeState.isExpanded(path);
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        return String.valueOf(treeNode);
     }
 }

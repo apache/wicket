@@ -18,10 +18,14 @@
  */
 package wicket.markup.html.tree;
 
+import java.io.Serializable;
+
+import javax.swing.tree.TreePath;
+
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.link.AbstractLink;
 import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.link.Link;
 
@@ -32,7 +36,7 @@ import wicket.markup.html.link.Link;
  *
  * @author Eelco Hillenius
  */
-public abstract class TreeNodeLink extends HtmlContainer implements ILinkListener
+public class TreeNodeLink extends AbstractLink
 {
     /** force static block to execute (registers ILinkListener). */
     private static final Class LINK = Link.class;
@@ -41,27 +45,22 @@ public abstract class TreeNodeLink extends HtmlContainer implements ILinkListene
     private final Tree tree;
 
     /** node. */
-    private final Node node;
+    private final NodeModel node;
 
     /** object id. */
     Object id;
-
-    final int creatorHash;
 
     /**
      * Construct.
      * @param componentName name of component
      * @param tree tree component
      * @param node current node (subject)
-     * @param creator the object that creates this instance (needed for internal id
-     *            keeping)
      */
-    public TreeNodeLink(final String componentName, final Tree tree, final Node node, Object creator)
+    public TreeNodeLink(final String componentName, final Tree tree, final NodeModel node)
     {
         super(componentName);
         this.tree = tree;
         this.node = node;
-        this.creatorHash = creator.hashCode();
         tree.addLink(this);
     }
 
@@ -81,43 +80,53 @@ public abstract class TreeNodeLink extends HtmlContainer implements ILinkListene
      * @param cycle The cycle object
      * @param node
      */
-    public abstract void linkClicked(final RequestCycle cycle, final Node node);
+    public void linkClicked(RequestCycle cycle, NodeModel node)
+    {
+        Serializable userObject = node.getUserObject();
+        TreeStateCache state = tree.getTreeState();
+        TreePath selection = state.findTreePath(userObject);
+        tree.setExpandedState(selection, (!node.isExpanded())); // inverse
+    }
 
     /**
      * @param cycle Request cycle
      * @return The URL that this link links to
      */
-    String getURL(final RequestCycle cycle)
+    protected String getURL(final RequestCycle cycle)
     {
         return cycle.urlFor(tree, ILinkListener.class) + "&linkId=" + id;
     }
 
     /**
-     * Get node.
-     * @return node.
+     * Gets the node model.
+     * @return the node model
      */
-    protected final Node getNode()
+    public NodeModel getNode()
     {
         return node;
     }
 
     /**
-     * Get tree.
-     * @return tree.
+     * Gets the holding tree component.
+     * @return the holding tree component.
      */
     protected final Tree getTree()
     {
         return tree;
     }
 
+    /**
+     * Sets the link's unique id.
+     * @param id the link's unique id
+     */
     final void setId(Object id)
     {
         this.id = id;
     }
 
     /**
-     * Get id.
-     * @return id
+     * Gets the link's unique id.
+     * @return the link's unique id
      */
     final Object getId()
     {
@@ -125,8 +134,7 @@ public abstract class TreeNodeLink extends HtmlContainer implements ILinkListene
     }
 
     /**
-     * @see wicket.Component#handleBody(RequestCycle, MarkupStream,
-     *      ComponentTag)
+     * @see wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
      */
     protected final void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
             final ComponentTag openTag)
@@ -150,5 +158,3 @@ public abstract class TreeNodeLink extends HtmlContainer implements ILinkListene
         tag.put("href", getURL(cycle));
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////

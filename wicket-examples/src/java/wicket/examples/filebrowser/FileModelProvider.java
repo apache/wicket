@@ -20,6 +20,7 @@ package wicket.examples.filebrowser;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -127,6 +128,7 @@ public final class FileModelProvider
 
         if (c != null)
         {
+            Arrays.sort(c); // sort files
             for (int i = 0; i < c.length; i++)
             { // for all directories
 

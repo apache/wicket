@@ -18,6 +18,7 @@
  */
 package wicket.examples.filebrowser;
 
+import wicket.ApplicationSettings;
 import wicket.WebApplication;
 import wicket.util.time.Duration;
 
@@ -33,11 +34,9 @@ public class FileBrowserApplication extends WebApplication
      */
     public FileBrowserApplication()
     {
-        getSettings().setHomePage(FileBrowser.class);
-
-        Duration pollFreq = Duration.ONE_SECOND;
-
-        getSettings().setResourcePollFrequency(pollFreq);
+        ApplicationSettings settings = getSettings();
+        settings.setHomePage(FileBrowser.class);
+        settings.setResourcePollFrequency(Duration.ONE_SECOND);
 
         // pre-load tree in a separate thread
         new Thread() {
