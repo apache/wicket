@@ -417,6 +417,15 @@ public abstract class RequestCycle
 			}
 			catch (RuntimeException e)
 			{
+				try
+				{
+					// current page should be deattached.
+					getPage().detachModels(getPage());
+				}
+				catch (RuntimeException e1)
+				{
+					log.debug("Error detaching models when exception is thrown", e1);
+				}
 				handleRenderingException(e);
 			}
 			finally
@@ -522,6 +531,11 @@ public abstract class RequestCycle
 	 *            The page to redirect to
 	 */
 	protected abstract void redirectToPage(final Page page);
+	
+	protected void deattachModels(final Page page)
+	{
+		page.detachModels(page);
+	}
 
 	/**
 	 * Sets up to handle a runtime exception thrown during rendering
