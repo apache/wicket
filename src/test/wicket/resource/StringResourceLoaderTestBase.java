@@ -18,6 +18,7 @@
  */
 package wicket.resource;
 
+import java.util.List;
 import java.util.Locale;
 
 import wicket.Application;
@@ -75,6 +76,15 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 			}
 
 			protected void setAttribute(String name, Object object)
+			{
+			}
+
+			protected List getAttributeNames()
+			{
+				return null;
+			}
+
+			protected void removeAttribute(String name)
 			{
 			}
 		});

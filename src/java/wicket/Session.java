@@ -18,11 +18,9 @@
 package wicket;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.convert.IConverter;
@@ -85,7 +83,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public abstract class Session
+public abstract class Session implements Serializable
 {
 	/** Separator for component paths. */
 	private static final char componentPathSeparator = '.';
@@ -109,13 +107,13 @@ public abstract class Session
 	private transient IPageFactory pageFactory;
 
 	/** The still-live pages for this user session. */
-	private transient final Map pages;
+	private transient MostRecentlyUsedMap pages;
 
 	/** Session state that can be replicated when dirty */
 	private transient State state = new State();
 
 	/**
-	 * Record for a page which changed that can be added to changedPages in
+	 * Record for a page which changed that can be added to pageStateList in
 	 * order to replicate page changes across a cluster. The object implementing
 	 * this interface is simply responsible for using its internal details to
 	 * produce the page. It may simply wrap a Page object (which is
@@ -125,18 +123,24 @@ public abstract class Session
 	 * 
 	 * @author Jonathan Locke
 	 */
-	protected static interface IPage extends Serializable
+	protected static abstract class PageState implements Serializable
 	{
+		// This value will be true when the page is added and false on
+		// whatever server this object is replicated to
+		private transient boolean addedToSession = true;
+
 		/**
 		 * @return The Page.
 		 */
-		public Page getPage();
+		public abstract Page getPage();
 
 		/**
-		 * @return True if this object is the original clustered page object
-		 *         (and not a replicated copy)
+		 * @return True if this object has been added to the session yet
 		 */
-		public boolean isMaster();
+		private final boolean addedToSession()
+		{
+			return addedToSession;
+		}
 	}
 
 	/**
@@ -162,9 +166,6 @@ public abstract class Session
 	 */
 	private static class State implements Serializable
 	{
-		/** Any changed pages */
-		private List changedPages = new ArrayList();
-
 		/** True if any of this state has changed */
 		private boolean dirty = false;
 
@@ -213,10 +214,6 @@ public abstract class Session
 	protected Session(final Application application)
 	{
 		this.application = application;
-		setPageFactory(application.getSettings().getDefaultPageFactory());
-		setClassResolver(application.getSettings().getDefaultClassResolver());
-		this.pages = MostRecentlyUsedMap
-				.newInstance(application.getSettings().getMaxSessionPages());
 	}
 
 	/**
@@ -266,7 +263,7 @@ public abstract class Session
 		Page freshest = null;
 
 		// Loop through session pages
-		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = getPageMap().values().iterator(); iterator.hasNext();)
 		{
 			// Get next page
 			final Page current = (Page)iterator.next();
@@ -345,19 +342,16 @@ public abstract class Session
 	public abstract void invalidate();
 
 	/**
-	 * Called when an IPage record should be added to the replicated state
+	 * Called when an PageState record should be added to the replicated state
 	 * 
 	 * @param page
 	 */
 	public final void pageChanged(final Page page)
 	{
-		// Add IPage for this page to the list of changed pages
+		// Add PageState for this page to the list of changed pages
 		// that need to be replicated
-		final IPage changedPage = onPageChanged(page);
-		synchronized (state.changedPages)
-		{
-			state.changedPages.add(changedPage);
-		}
+		final PageState pageState = pageState(page);
+		setAttribute(page.getName(), pageState);
 	}
 
 	/**
@@ -438,7 +432,10 @@ public abstract class Session
 	 */
 	public final void updateCluster()
 	{
-		setAttribute("state", state);
+		if (this.state.dirty)
+		{
+			setAttribute("state", state);
+		}
 	}
 
 	/**
@@ -453,29 +450,27 @@ public abstract class Session
 		{
 			// Copy state into Session
 			this.state = state;
-			
-			// Lock changed pages
-			synchronized (state.changedPages)
+
+			// Copy any changed pages into our (transient) Session
+			for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
 			{
-				// Copy any changed pages into our (transient) Session
-				for (final Iterator iterator = state.changedPages.iterator(); iterator.hasNext();)
+				// Get next pageState guy
+				final PageState pageState = (PageState)getAttribute((String)iterator.next());
+
+				// If PageState has not been added to the session
+				if (!pageState.addedToSession())
 				{
-					// Get next change
-					final IPage changedPage = (IPage)iterator.next();
-	
-					// If its not the master copy, we need to add it since it was
-					// replicated over here
-					if (!changedPage.isMaster())
-					{
-						// Get page
-						final Page page = changedPage.getPage();
-	
-						// Add to page map
-						pages.put(new Integer(page.getId()), page);
-					}
-	
-					iterator.remove();
+					// Get page from page state
+					final Page page = pageState.getPage();
+
+					// Add to page map
+					getPageMap().put(new Integer(page.getId()), page);
+
+					// Page has been added to session now
+					pageState.addedToSession = true;
 				}
+
+				iterator.remove();
 			}
 		}
 	}
@@ -486,64 +481,79 @@ public abstract class Session
 	 * @param page
 	 *            Page to add to this session
 	 */
-	protected void addPage(final Page page)
+	protected final void addPage(final Page page)
 	{
 		// Set session and identifier
 		page.setId(this.state.pageId++);
 		state.dirty = true;
 
 		// Add to page local transient page map
-		pages.put(new Integer(page.getId()), page);
+		final MostRecentlyUsedMap pageMap = getPageMap();
+		pageMap.put(new Integer(page.getId()), page);
 
-		// Add IChangedPage entry to list of changed pages
+		// Get any page that was removed
+		Page removedPage = (Page)pageMap.getRemovedValue();
+		if (removedPage != null)
+		{
+			removeAttribute(removedPage.getName());
+		}
+
+		// Add PageState entry to list of changed pages
 		pageChanged(page);
 	}
 
 	/**
 	 * @param name
-	 *            The name of the replicated session object to retrieve
-	 * @return The session object
+	 *            The name of the attribute to store
+	 * @return The value of the attribute
 	 */
 	protected abstract Object getAttribute(final String name);
 
 	/**
+	 * @return List of attributes for this session
+	 */
+	protected abstract List getAttributeNames();
+
+	/**
+	 * Gets a PageState record for a given Page. The default, inefficient
+	 * implementation is to simply wrap the entire Page object. More intimate
+	 * knowledge of a Page, however, may allow significant compression of state
+	 * information.
+	 * 
 	 * @param page
 	 *            The page
-	 * @return The change record
+	 * @return The page state record
 	 */
-	protected IPage onPageChanged(final Page page)
+	protected PageState pageState(final Page page)
 	{
 		// Add to list of pages to replicate
-		return new IPage()
+		return new PageState()
 		{
 			// NOTE: Since this is an anonymous class referencing the final
 			// parameter "final Page page", the anonymous class implementation
 			// that Java creates on the fly will contain a field with this
-			// value in it. Since IChangedPage is Serializable, this anonymous
-			// subclass is actually a fully clusterable IChangedPage record
+			// value in it. Since PageState is Serializable, this anonymous
+			// subclass is actually a fully clusterable PageState record
 			// which simply references (and therefore copies) the entire Page.
-
-			// This value will be true when the page is added and false on
-			// whatever server this object is replicated to
-			private transient boolean isMaster = true;
 
 			public Page getPage()
 			{
 				return page;
-			}
-
-			public boolean isMaster()
-			{
-				return isMaster;
 			}
 		};
 	}
 
 	/**
 	 * @param name
-	 *            The name of the replicated session object to store
+	 *            The name of the attribute to remove
+	 */
+	protected abstract void removeAttribute(final String name);
+
+	/**
+	 * @param name
+	 *            The name of the attribute to store
 	 * @param object
-	 *            The object to replicate across the cluster
+	 *            The attribute value
 	 */
 	protected abstract void setAttribute(final String name, final Object object);
 
@@ -566,7 +576,7 @@ public abstract class Session
 	 */
 	final Page getPage(final int id)
 	{
-		return (Page)pages.get(new Integer(id));
+		return (Page)getPageMap().get(new Integer(id));
 	}
 
 	/**
@@ -590,10 +600,23 @@ public abstract class Session
 	final void visitPages(final IPageVisitor visitor)
 	{
 		// Loop through pages in page map
-		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = getPageMap().values().iterator(); iterator.hasNext();)
 		{
 			// Visit next page
 			visitor.page((Page)iterator.next());
 		}
+	}
+
+	/**
+	 * @return Most recently used Page map
+	 */
+	private MostRecentlyUsedMap getPageMap()
+	{
+		if (this.pages == null)
+		{
+			this.pages = MostRecentlyUsedMap.newInstance(application.getSettings()
+					.getMaxSessionPages());
+		}
+		return this.pages;
 	}
 }

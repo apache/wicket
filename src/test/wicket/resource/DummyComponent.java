@@ -18,6 +18,8 @@
  */
 package wicket.resource;
 
+import java.util.List;
+
 import wicket.Application;
 import wicket.Component;
 import wicket.Session;
@@ -52,6 +54,15 @@ public class DummyComponent extends Component
 			}
 
 			protected void setAttribute(String name, Object object)
+			{
+			}
+
+			protected List getAttributeNames()
+			{
+				return null;
+			}
+
+			protected void removeAttribute(String name)
 			{
 			}
 		};

@@ -17,6 +17,10 @@
  */
 package wicket.protocol.http;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -60,7 +64,7 @@ public class WebSession extends Session
 		// requires it to be unique per servlet. That is, there must be a 1..n
 		// relationship between HTTP sessions (JSESSIONID) and Wicket
 		// applications.
-		final String sessionAttributeName = "session" + request.getServletPath();
+		final String sessionAttributeName = "session-" + request.getServletPath();
 
 		// Get Session abstraction from httpSession attribute
 		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttributeName);
@@ -136,6 +140,14 @@ public class WebSession extends Session
 	{
 		return httpSession.getAttribute(sessionAttributeName + "-" + name);
 	}
+	
+	/**
+	 * @see wicket.Session#removeAttribute(java.lang.String)
+	 */
+	protected void removeAttribute(final String name)
+	{
+		httpSession.removeAttribute(sessionAttributeName + "-" + name);
+	}
 
 	/**
 	 * @see Session#setAttribute(String, Object)
@@ -143,5 +155,24 @@ public class WebSession extends Session
 	protected void setAttribute(final String name, final Object object)
 	{
 		httpSession.setAttribute(sessionAttributeName + "-" + name, object);
+	}
+	
+	/**
+	 * @see Session#getAttributeNames()
+	 */
+	protected List getAttributeNames()
+	{
+		final List list = new ArrayList();
+		final Enumeration names = httpSession.getAttributeNames();
+		final String prefix = sessionAttributeName + "-";
+		while (names.hasMoreElements())
+		{
+			final String name = (String)names.nextElement();
+			if (name.startsWith(prefix))
+			{
+				list.add(name.substring(prefix.length()));
+			}
+		}
+		return list;
 	}
 }

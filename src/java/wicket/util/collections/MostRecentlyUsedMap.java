@@ -30,6 +30,20 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 {
 	/** serialVersionUID */
 	private static final long serialVersionUID = 895458107686513000L;
+	
+	/** Value most recently removed from map */
+	Object removedValue;
+
+	/**
+	 * Constructor
+	 */
+	public MostRecentlyUsedMap()
+	{
+		// First two parameters are defaults from HashMap for initial capacity
+		// and load factor. The third parameter specifies that this is an
+		// access-ordered map.
+		super(16, 0.75f, true);
+	}
 
 	/**
 	 * Gets instance of LRU map with given maximum limit on entries
@@ -38,7 +52,7 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	 *            Maximum number of entries allowed in the map
 	 * @return MRU map instance
 	 */
-	public static Map newInstance(final int maxEntries)
+	public static MostRecentlyUsedMap newInstance(final int maxEntries)
 	{
 		if (maxEntries <= 0)
 		{
@@ -52,8 +66,18 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 
 			protected boolean removeEldestEntry(final Map.Entry eldest)
 			{
-				return size() > maxEntries;
+				final boolean remove = size() > maxEntries;
+				this.removedValue = eldest.getValue();
+				return remove;
 			}
 		};
+	}
+	
+	/**
+	 * @return Returns the removedValue.
+	 */
+	public Object getRemovedValue()
+	{
+		return removedValue;
 	}
 }
