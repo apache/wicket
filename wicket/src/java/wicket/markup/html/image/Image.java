@@ -21,7 +21,6 @@ import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.image.resource.DynamicImageResource;
 import wicket.markup.html.image.resource.ImageResource;
 import wicket.markup.html.image.resource.StaticImageResource;
 import wicket.util.string.Strings;
