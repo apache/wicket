@@ -150,7 +150,7 @@ public final class CheckBox extends FormComponent
 			final boolean tagValue;
 			if(value instanceof String) // probably was formatted or straight from request
 			{
-				tagValue = Boolean.parseBoolean((String)value);
+				tagValue = Boolean.valueOf((String)value).booleanValue();
 			}
 			else if(value instanceof Boolean)
 			{
