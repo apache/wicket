@@ -42,7 +42,7 @@ public class TreeNodeLink extends AbstractLink
     private static final Class LINK = Link.class;
 
     /** tree component. */
-    private final Tree tree;
+    private final AbstractTree tree;
 
     /** node. */
     private final TreeNodeModel node;
@@ -56,7 +56,8 @@ public class TreeNodeLink extends AbstractLink
      * @param tree tree component
      * @param node current node (subject)
      */
-    public TreeNodeLink(final String componentName, final Tree tree, final TreeNodeModel node)
+    public TreeNodeLink(final String componentName,
+            final AbstractTree tree, final TreeNodeModel node)
     {
         super(componentName);
         this.tree = tree;
@@ -110,7 +111,7 @@ public class TreeNodeLink extends AbstractLink
      * Gets the holding tree component.
      * @return the holding tree component.
      */
-    protected final Tree getTree()
+    protected final AbstractTree getTree()
     {
         return tree;
     }

@@ -18,37 +18,24 @@
  */
 package wicket.markup.html.tree;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 
-import wicket.RequestCycle;
-import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.panel.Panel;
-import wicket.protocol.http.HttpRequest;
 
 /**
- * A component that represents a tree.
+ * A component that represents a tree. It renders using nested lists that in turn
+ * use panels.
  *
  * @author Eelco Hillenius
  */
-public class Tree extends Panel implements ILinkListener
+public class Tree extends AbstractTree
 {
-    /** tree state for this component. */
-    private TreeStateCache treeState;
-
-    /** hold references to links on 'generated' id to be able to chain events. */
-    private Map links = new HashMap();
-
     /**
      * Constructor.
      * @param componentName The name of this container
@@ -56,109 +43,19 @@ public class Tree extends Panel implements ILinkListener
      */
     public Tree(final String componentName, TreeModel model)
     {
-        super(componentName);
-        treeState = new TreeStateCache();
-        setTreeModel(model);
-        setSelectedPaths();
+        super(componentName, model);
     }
 
-    /**
-     * Registers a link with this tree.
-     * @param link the link to register
-     */
-    void addLink(TreeNodeLink link)
-    {
-        TreeNodeModel node = link.getNode();
-        Serializable userObject = node.getUserObject();
-
-        // links can change, but the target user object should be the same, so
-        // if a new link is added that actually points to the same userObject, it will
-        // replace the old one thus allowing the old link to be GC-ed. We need the creator hash
-        // to be able to have more trees in the same page with the same link names
-        String linkId = link.getName() + "." + userObject.hashCode();
-
-        link.setId(linkId);
-        links.put(linkId, link);
-    }
-
-    /**
-     * Called when a link is clicked.
-     * @see ILinkListener
-     * @param cycle The cycle object
-     */
-    public void linkClicked(final RequestCycle cycle)
-    {
-        String linkId = ((HttpRequest) cycle.getRequest()).getParameter("linkId");
-        TreeNodeLink link = (TreeNodeLink) links.get(linkId);
-        if (link == null)
-        {
-            throw new IllegalStateException("link " + linkId + " not found");
-        }
-
-        link.linkClicked(cycle);
-    }
-
-    /**
-     * Set tree model.
-     * @param model tree model
-     */
-    private void setTreeModel(TreeModel model)
-    {
-        treeState.setModel(model);
-        TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
-        treeState.setSelectionModel(selectionModel);
-        treeState.setRootVisible(true);
-    }
-
-    /**
-     * Set expanded property in tree state for selection.
-     * @param selection the selection to set the expanded property for
-     * @param expanded true if the selection is expanded, false otherwise
-     */
-    public void setExpandedState(TreePath selection, boolean expanded)
-    {
-        treeState.setExpandedState(selection, expanded);
-        setSelectedPaths();
-    }
-
-    /**
-     * Find tree path for the given user object.
-     * @param userObject the user object to find the path for
-     * @return tree path of given user object
-     */
-    public TreePath findTreePath(Serializable userObject)
-    {
-        return treeState.findTreePath(userObject);
-    }
-
-    /**
-     * Get tree state object.
-     * @return tree state object
-     */
-    public TreeStateCache getTreeState()
-    {
-        return treeState;
-    }
-
-    /**
-     * Find tree node for given user object.
-     * @param userObject the user object to find the node for
-     * @return node of given user object
-     */
-    public DefaultMutableTreeNode findNode(Serializable userObject)
-    {
-        return treeState.findNode(userObject);
-    }
 
     /**
      * Builds the structures needed to display the currently visible tree paths.
      */
-    private void setSelectedPaths()
+    protected void setSelectedPaths()
     {
         removeAll();
         List visiblePathsList = new ArrayList();
-        TreePath selectedPath = treeState.getSelectedPath(); // get current
-        Enumeration e = treeState.getVisiblePathsFromRoot(); // get all visible
+        TreePath selectedPath = getTreeState().getSelectedPath(); // get current
+        Enumeration e = getTreeState().getVisiblePathsFromRoot(); // get all visible
         while (e.hasMoreElements()) // put enumeration in a list
         {
             visiblePathsList.add(e.nextElement());
@@ -237,7 +134,7 @@ public class Tree extends Panel implements ILinkListener
             }
             else // node
             {
-                TreeNodeModel nodeModel = new TreeNodeModel(treeNode, treeState, path);
+                TreeNodeModel nodeModel = new TreeNodeModel(treeNode, getTreeState(), path);
                 rows.add(nodeModel);
                 index++;
             }

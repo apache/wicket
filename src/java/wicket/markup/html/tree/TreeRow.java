@@ -36,7 +36,7 @@ public final class TreeRow extends Panel
      * @param tree reference to the holding tree component
      * @param nodeModel model for the current node
      */
-    public TreeRow(String componentName, Tree tree, TreeNodeModel nodeModel)
+    public TreeRow(String componentName, AbstractTree tree, TreeNodeModel nodeModel)
     {
         super(componentName);
         if(nodeModel != null)
