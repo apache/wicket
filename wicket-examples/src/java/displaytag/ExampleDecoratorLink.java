@@ -22,6 +22,7 @@ import java.util.List;
 import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.markup.ComponentTagAttributeModifier;
+import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
@@ -54,23 +55,25 @@ public class ExampleDecoratorLink extends HtmlPage
             {
                 final ListObject value = (ListObject) cell.getModelObject();
 
-                cell.addAttributeModifier(new ComponentTagAttributeModifier("class",
+                HtmlContainer table = new HtmlContainer("class");
+                table.addAttributeModifier(new ComponentTagAttributeModifier("class",
                                                           new Model(cell.isEvenIndex() ? "even" : "odd")));
-
+                cell.add(table);
+                
                 ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", new Integer(value.getId())));
-                cell.add(idLink);
+                table.add(idLink);
 
                 ExternalPageLink emailLink = new ExternalPageLink("mailLink", Page3.class);
                 emailLink.setParameter("action", "sendamail");
                 emailLink.add(new Label("email", value.getEmail()));
-                cell.add(emailLink);
+                table.add(emailLink);
 
                 ExternalPageLink statusLink = new ExternalPageLink("statusLink", Page3.class);
                 statusLink.setParameter("id", value.getId());
                 statusLink.add(new Label("status", value.getStatus()));
-                cell.add(statusLink);
+                table.add(statusLink);
             }
         });
 
@@ -81,27 +84,29 @@ public class ExampleDecoratorLink extends HtmlPage
             {
                 final ListObject value = (ListObject) cell.getModelObject();
 
-                cell.addAttributeModifier(new ComponentTagAttributeModifier("class",
+                HtmlContainer table = new HtmlContainer("class");
+                table.addAttributeModifier(new ComponentTagAttributeModifier("class",
                                                           new Model(cell.isEvenIndex() ? "even" : "odd")));
-
+                cell.add(table);
+                
                 ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", new Integer(value.getId())));
-                cell.add(idLink);
+                table.add(idLink);
 
-                cell.add(new Label("email", value.getEmail()));
+                table.add(new Label("email", value.getEmail()));
 
-                cell.add(
+                table.add(
                         new ExternalPageLink("view", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "view"));
 
-                cell.add(
+                table.add(
                         new ExternalPageLink("edit", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "edit"));
 
-                cell.add(
+                table.add(
                         new ExternalPageLink("delete", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "delete"));
