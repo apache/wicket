@@ -413,7 +413,7 @@ public class HtmlDocumentValidator
             DocumentElement e = (DocumentElement) expectedElements.next();
             if (e instanceof TextContent)
             {
-                if (!((TextContent) e).getValue().equals(parser.getText()))
+                if (!parser.getText().matches(((TextContent) e).getValue()))
                 {
                     System.err.println("Found text '"
                             + parser.getText() + "' does not match " + "expected text '"
