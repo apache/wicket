@@ -30,9 +30,8 @@ import wicket.ApplicationSettings;
 import wicket.IApplication;
 import wicket.PageFactory;
 import wicket.RenderException;
-import wicket.util.file.URL;
 import wicket.util.listener.IChangeListener;
-import wicket.util.string.Strings;
+import wicket.util.resource.Resource;
 import wicket.util.watch.Watcher;
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
 
@@ -77,14 +76,13 @@ public class GroovyPageFactory extends PageFactory
         }
 
         // Else, try Groovy.
-        String filename = Strings.replaceAll(classname, ".", "/") + ".groovy";
-        final URL url = new URL(filename);
-        if (url != null)
+        final Resource resource = Resource.locate(classname, ".groovy");
+        if (resource != null)
         {
 	        try
 	        {
 	            // Load the groovy file, get the Class and watch for changes
-	            clazz = loadGroovyFileAndWatchForChanges(classname, url);
+	            clazz = loadGroovyFileAndWatchForChanges(classname, resource);
 	            if (clazz != null)
 	            {
 	                return clazz;
@@ -97,7 +95,7 @@ public class GroovyPageFactory extends PageFactory
         }
         else
         {
-            throw new RenderException("File not found: " + url.getAbsolutePath());
+            throw new RenderException("File not found: " + resource);
         }
         
         throw new RenderException("Unable to load class with name: " + classname);
@@ -110,7 +108,7 @@ public class GroovyPageFactory extends PageFactory
      * @param groovyResource The Groovy resource
      * @return the Class object created by the groovy resouce
      */
-    private final Class loadGroovyFile(String classname, final URL url)
+    private final Class loadGroovyFile(String classname, final Resource resource)
     {
 		// Ensure that we use the correct classloader so that we can find
 		// classes in an application server.
@@ -125,7 +123,7 @@ public class GroovyPageFactory extends PageFactory
         
         try 
         {
-            final InputStream in = url.getUrl().openStream();
+            final InputStream in = resource.getInputStream();
             if (in != null)
             {
 	            clazz = groovyCl.parseClass(in);
@@ -144,23 +142,23 @@ public class GroovyPageFactory extends PageFactory
             }
             else
             {
-                log.warn("Groovy file not found: " + url.getAbsolutePath());
+                log.warn("Groovy file not found: " + resource);
             }
         } 
         catch (CompilationFailedException e) 
         {
             throw new RenderException("Error parsing groovy file: " 
-                    + url.getAbsolutePath(), e);
+                    + resource, e);
         } 
         catch (IOException e) 
         {
             throw new RenderException("Error reading groovy file: " 
-                    + url.getAbsolutePath(), e);
+                    + resource, e);
         }
         catch (Throwable e) 
         {
             throw new RenderException("Error while reading groovy file: " 
-                    + url.getAbsolutePath(), e);
+                    + resource, e);
         }
         finally
         {
@@ -191,7 +189,7 @@ public class GroovyPageFactory extends PageFactory
      * @param groovyResource
      * @return
      */
-    private Class loadGroovyFileAndWatchForChanges(final String classname, final URL url)
+    private Class loadGroovyFileAndWatchForChanges(final String classname, final Resource resource)
     {
         final ApplicationSettings settings = getApplication().getSettings();
 
@@ -200,27 +198,27 @@ public class GroovyPageFactory extends PageFactory
 
         if (watcher != null)
         {
-            watcher.add(url, new IChangeListener()
+            watcher.add(resource, new IChangeListener()
             {
                 public void changed()
                 {
                     try
                     {
-                        log.info("Reloading groovy file from " + url.getAbsolutePath());
+                        log.info("Reloading groovy file from " + resource);
                         
                         // Reload file and update cache
-                        final Class clazz = loadGroovyFile(classname, url);
+                        final Class clazz = loadGroovyFile(classname, resource);
                         log.debug("Groovy file contained definition for class: " + clazz.getName());
                     }
                     catch (Exception e)
                     {
-                        log.error("Unable to load groovyy file: " + url.getAbsolutePath(), e);
+                        log.error("Unable to load groovyy file: " + resource, e);
                     }                
                 }
             });
         }
 
-        log.info("Loading groovy file from " + url.getAbsolutePath());
-        return loadGroovyFile(classname, url);
+        log.info("Loading groovy file from " + resource);
+        return loadGroovyFile(classname, resource);
     }
 }
