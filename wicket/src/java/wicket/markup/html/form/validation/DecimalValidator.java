@@ -94,23 +94,25 @@ public class DecimalValidator extends AbstractValidator
     {
         // Get component value
         final String value = component.getRequestString();
-        
-        try
+        // Don't test emtpy/null values that should required validator do.
+        if(value != null && !"".equals(value))
         {
-            // Get long value
-            final long longValue = Long.parseLong(value);
-            
-            // Check range
-            if (longValue < min || longValue > max)
-            {
-                return errorMessage(value, component);
-            }
+	        try
+	        {
+	            // Get long value
+	            final long longValue = Long.parseLong(value);
+	            
+	            // Check range
+	            if (longValue < min || longValue > max)
+	            {
+	                return errorMessage(value, component);
+	            }
+	        }
+	        catch (NumberFormatException e)
+	        {
+	            return errorMessage(value, component);
+	        }
         }
-        catch (NumberFormatException e)
-        {
-            return errorMessage(value, component);
-        }
-
         return NO_ERROR;
     }
 }
