@@ -28,7 +28,7 @@ import wicket.markup.html.form.Form;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public interface IFormValidationDelegate extends Serializable
+public interface IFormValidationStrategy extends Serializable
 {
 	/**
 	 * Validates the form.
