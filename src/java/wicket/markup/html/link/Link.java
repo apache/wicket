@@ -21,8 +21,10 @@ import java.io.Serializable;
 
 import wicket.MarkupContainer;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.WebMarkupContainer;
 
 /**
  * Implementation of a hyperlink component. A link must be used with an anchor
@@ -55,8 +57,14 @@ import wicket.markup.MarkupStream;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class Link extends AbstractLink
+public abstract class Link extends WebMarkupContainer implements ILinkListener
 {
+	/**
+	 * The popup specification. If not-null, a javascript on-click event handler
+	 * will be generated that opens a new window using the popup properties.
+	 */
+	private PopupSettings popupSettings = null;
+
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
 	 * link </i>.
@@ -97,6 +105,57 @@ public abstract class Link extends AbstractLink
 	public Link(String name, Serializable object, String expression)
 	{
 		super(name, object, expression);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR
+	 * CALL IT.
+	 * 
+	 * Called when a link is clicked. The implementation of this method is
+	 * currently to simply call onClick(), but this may be augmented in the
+	 * future.
+	 * 
+	 * @see ILinkListener
+	 */
+	public final void onLinkClicked()
+	{
+		// Since the invocation of onLinkClicked occurred through a URL that
+		// would repeat the action if the user refreshed the page, we redirect
+		// to our resulting page so this won't happen.
+		getRequestCycle().setRedirect(true);
+		
+		onClick();
+	}
+
+	/**
+	 * Called when a link is clicked.
+	 */
+	public abstract void onClick();
+
+	/**
+	 * Gets the popup specification. If not-null, a javascript on-click event
+	 * handler will be generated that opens a new window using the popup
+	 * properties.
+	 * 
+	 * @return the popup specification.
+	 */
+	public final PopupSettings getPopupSettings()
+	{
+		return popupSettings;
+	}
+
+	/**
+	 * Sets the popup specification. If not-null, a javascript on-click event
+	 * handler will be generated that opens a new window using the popup
+	 * properties.
+	 * 
+	 * @param popupSettings the popup specification.
+	 * @return This
+	 */
+	public final Link setPopupSettings(PopupSettings popupSettings)
+	{
+		this.popupSettings = popupSettings;
+		return this;
 	}
 
 	/**
@@ -262,9 +321,6 @@ public abstract class Link extends AbstractLink
 	 */
 	protected final void onComponentTag(final ComponentTag tag)
 	{
-		// Can only attach links to anchor tags
-		checkComponentTag(tag, "a");
-
 		// Default handling for tag
 		super.onComponentTag(tag);
 
@@ -278,24 +334,59 @@ public abstract class Link extends AbstractLink
 		// If we're disabled
 		if (!enabled)
 		{
-			// Change anchor link to span tag
-			tag.setName("span");
+			// if the tag is an anchor proper
+			if(tag.getName().equalsIgnoreCase("a"))
+			{
+				// Change anchor link to span tag
+				tag.setName("span");
 
-			// Remove any href from the old link
-			tag.remove("href");
+				// Remove any href from the old link
+				tag.remove("href");
+
+				// if it generates a popupscript, remove the design time JS handler
+				if (popupSettings != null)
+				{
+					tag.remove("onclick");
+				}
+			}
+			else
+			{
+				// Remove any onclick design time code
+				tag.remove("onclick");
+			}
 		}
 		else
 		{
 			// Set href to link to this link's linkClicked method
-			tag.put("href", getURL().replaceAll("&", "&amp;"));
-		}
+			String url = getURL();
 
-		// Add any popup script
-		final PopupSettings popupSettings = getPopupSettings();
-		if (popupSettings != null)
-		{
-			// NOTE: don't encode to HTML as that is not valid JavaScript
-			tag.put("onClick", popupSettings.getPopupJavaScript());
+			// if the tag is an anchor proper
+			if(tag.getName().equalsIgnoreCase("a"))
+			{
+				// generate the href attribute
+				tag.put("href", url.replaceAll("&", "&amp;"));
+				// Add any popup script
+				if (popupSettings != null)
+				{
+					// NOTE: don't encode to HTML as that is not valid JavaScript
+					tag.put("onclick", popupSettings.getPopupJavaScript());
+				}
+			}
+			else
+			{
+				// generate either a popup script by asking popup settings for one
+				if (popupSettings != null)
+				{
+					popupSettings.setTarget("'" + url + "'");
+					String popupScript = popupSettings.getPopupJavaScript();
+					tag.put("onclick", popupScript);
+				}
+				else
+				{
+					// or generate an onclick JS handler directly
+					tag.put("onclick", "location.href='" + url + "';");
+				}
+			}
 		}
 	}
 
@@ -309,5 +400,21 @@ public abstract class Link extends AbstractLink
 	protected boolean linksTo(final Page page)
 	{
 		return false;
+	}
+
+	/**
+	 * Gets the url to use for this link.
+	 * 
+	 * @return The URL that this link links to
+	 */
+	protected String getURL()
+	{
+		return getRequestCycle().urlFor(Link.this, ILinkListener.class);
+	}
+
+	static
+	{
+		// Allow calls through the ILinkListener interface
+		RequestCycle.registerRequestListenerInterface(ILinkListener.class);
 	}
 }
