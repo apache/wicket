@@ -70,6 +70,7 @@ import java.util.Collection;
  * 
  * </p>
  * 
+ * @author Johan Compagner
  * @author Eelco Hillenius
  */
 public abstract class DetachableChoiceList extends ArrayList implements IDetachableChoiceList
