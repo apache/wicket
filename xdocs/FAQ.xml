@@ -34,6 +34,69 @@ A: Classes and methods in Wicket are generally declared as final until the
    you and rebuild the project.</p>
 </subsection>
 
+<subsection name="Q: How can I set a session property?">
+<p>
+A: The best and safest way to set a property for a session is to create a 
+   subclass of Session (for web applications, a subclass of HttpSession)
+   which has the properties you desire.  Then override the getSessionFactory()
+   method of Application and provide code which instantiates instances of
+   your session subclass.  For example:
+</p>
+<p>
+<source><![CDATA[
+    public class MySession extends HttpSession
+    {
+    	private MyObject object;
+		protected MySession(Application application) { super(application); }
+    	public MyObject getMyObject() { return object; }
+    	public void setMyObject(MyObject object) { this.object = object; }
+    }    
+    
+    public class MyApplication extends WebApplication
+    {
+		public ISessionFactory getSessionFactory()
+		{
+			return new ISessionFactory()
+			{
+				public Session newSession()
+				{
+					return new MySession(MyApplication.this);
+				}
+			};
+		}
+    }
+]]></source>
+</p>
+<p>
+	Then you can provide access to session properties in a typesafe manner
+	that requires only a single downcast in your whole project:
+</p>
+<p>
+<source><![CDATA[
+    public class MyPage extends HtmlPage
+    {
+    	...
+    	
+    	public MySession getMySession()
+    	{
+    		return (MySession)getSession();
+    	}
+    }
+    
+    public class Home extends MyPage
+    {
+    	...
+    	
+    	public void whateverMethod()
+    	{
+    		getMySession().setMyObject(new MyObject());
+    	}
+    }
+    
+]]></source>	
+</p>
+</subsection>
+
 <subsection name="Q: How can I get Wicket to automatically reload changed markup files?">
 <p>
 A: By default, Wicket will not reload changed markup files.  This default is a
