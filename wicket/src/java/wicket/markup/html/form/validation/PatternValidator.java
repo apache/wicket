@@ -91,8 +91,8 @@ public final class PatternValidator extends AbstractValidator
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(final String input, 
-            final FormComponent component)
+    public ValidationErrorMessage validate(
+            final String input, final FormComponent component)
     {
         if (!pattern.matcher(input).matches())
         {
