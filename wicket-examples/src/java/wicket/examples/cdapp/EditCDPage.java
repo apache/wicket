@@ -42,6 +42,7 @@ import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.DetachableModel;
+import wicket.model.IModel;
 
 
 /**
@@ -53,6 +54,9 @@ public final class EditCDPage extends SimpleBorderedPage
 {
 	/** Logger. */
 	private static Log log = LogFactory.getLog(SearchCDPage.class);
+
+	/** model for one cd. */
+	private PersistentObjectModel cdModel;
 
 	/**
 	 * Constructor for new CD.
@@ -67,29 +71,7 @@ public final class EditCDPage extends SimpleBorderedPage
 		{
 			id = Long.valueOf(idFromRequest);
 		}
-		HibernateObjectModel model = createObjectModel(id);
-		addComponents(model);
-	}
-
-	/**
-	 * Creates the object model with the given id.
-	 * 
-	 * @param id the object's id
-	 * @return the object's model
-	 */
-	private HibernateObjectModel createObjectModel(Long id)
-	{
-		return new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
-	}
-
-	/**
-	 * Add the components for this page.
-	 * 
-	 * @param model the model with the detail object
-	 */
-	private void addComponents(HibernateObjectModel model)
-	{
-		setModel(model); // set model on page
+		cdModel = new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
 		// add a label with expression title. What happens is that a
 		// PropertyModel is constructed with our instance of IModel
 		// (DetachableCDModel) and
@@ -98,10 +80,18 @@ public final class EditCDPage extends SimpleBorderedPage
 		// load the CD as the actual model. That CD will be used for the
 		// expression,
 		// thus property 'title' of the current CD will be used for the label.
-		add(new Label("cdTitle", new TitleModel(model)));
+		add(new Label("cdTitle", new TitleModel(cdModel)));
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
-		add(new DetailForm("detailForm", feedback, model));
+		add(new DetailForm("detailForm", feedback, cdModel));
+	}
+
+	/**
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		return cdModel;
 	}
 
 	/**
@@ -114,24 +104,24 @@ public final class EditCDPage extends SimpleBorderedPage
 		 * 
 		 * @param name component name
 		 * @param validationErrorHandler error handler
-		 * @param model the model
+		 * @param cdModel the model
 		 */
 		public DetailForm(String name, IValidationFeedback validationErrorHandler,
-				PersistentObjectModel model)
+				PersistentObjectModel cdModel)
 		{
-			super(name, model, validationErrorHandler);
-			DataTextField titleField = new DataTextField("title", model, "title");
+			super(name, cdModel, validationErrorHandler);
+			DataTextField titleField = new DataTextField("title", cdModel, "title");
 			titleField.add(RequiredValidator.getInstance());
 			titleField.add(LengthValidator.max(50));
 			add(titleField);
-			DataTextField performersField = new DataTextField("performers", model, "performers");
+			DataTextField performersField = new DataTextField("performers", cdModel, "performers");
 			performersField.add(RequiredValidator.getInstance());
 			performersField.add(LengthValidator.max(50));
 			add(performersField);
-			DataTextField labelField = new DataTextField("label", model, "label");
+			DataTextField labelField = new DataTextField("label", cdModel, "label");
 			labelField.add(LengthValidator.max(50));
 			add(labelField);
-			DataTextField yearField = new DataTextField("year", model, "year");
+			DataTextField yearField = new DataTextField("year", cdModel, "year");
 			yearField.add(RequiredValidator.getInstance());
 			yearField.add(IntegerValidator.POSITIVE_INT);
 			add(yearField);
