@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -153,7 +153,7 @@ import wicket.util.lang.Classes;
  * methods could also be useful in "interstitial" advertising or other kinds of
  * "intercepts".
  * <p>
- * 
+ *
  * @author Jonathan Locke
  */
 public abstract class RequestCycle
@@ -200,7 +200,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets request cycle for calling thread.
-	 * 
+	 *
 	 * @return Request cycle for calling thread
 	 */
 	public final static RequestCycle get()
@@ -213,7 +213,7 @@ public abstract class RequestCycle
 	 * outsiders. The interface must have a single method with the signature
 	 * methodName(RequestCycle). NOTE: THIS METHOD IS NOT INTENDED FOR USE BY
 	 * FRAMEWORK CLIENTS.
-	 * 
+	 *
 	 * @param i
 	 *            The interface class, which must extend IRequestListener.
 	 */
@@ -251,7 +251,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param application
 	 *            The application
 	 * @param session
@@ -276,7 +276,7 @@ public abstract class RequestCycle
 	/**
 	 * Redirects to any intercept page previously specified by a call to
 	 * redirectToInterceptPage.
-	 * 
+	 *
 	 * @return True if an original destination was redirected to
 	 * @see RequestCycle#redirectToInterceptPage(Class)
 	 * @see RequestCycle#redirectToInterceptPage(Page)
@@ -301,7 +301,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the application object.
-	 * 
+	 *
 	 * @return Application interface
 	 */
 	public final Application getApplication()
@@ -311,7 +311,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the current page.
-	 * 
+	 *
 	 * @return The page
 	 */
 	public final Page getPage()
@@ -321,7 +321,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Convinience method to get the Page factory
-	 * 
+	 *
 	 * @return DefaultPageFactory from application settings
 	 */
 	public final IPageFactory getPageFactory()
@@ -331,7 +331,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets whether the page for this request should be redirected.
-	 * 
+	 *
 	 * @return whether the page for this request should be redirected
 	 */
 	public final boolean getRedirect()
@@ -341,7 +341,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the request.
-	 * 
+	 *
 	 * @return Request object
 	 */
 	public final Request getRequest()
@@ -351,7 +351,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the response.
-	 * 
+	 *
 	 * @return Response object
 	 */
 	public final Response getResponse()
@@ -361,7 +361,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the session.
-	 * 
+	 *
 	 * @return Session object
 	 */
 	public final Session getSession()
@@ -371,7 +371,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
-	 * 
+	 *
 	 * @param c
 	 *            The sign in page class
 	 */
@@ -382,7 +382,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
-	 * 
+	 *
 	 * @param c
 	 *            The sign in page class
 	 * @param parameters
@@ -395,7 +395,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
-	 * 
+	 *
 	 * @param page
 	 *            The sign in page
 	 */
@@ -409,7 +409,7 @@ public abstract class RequestCycle
 	/**
 	 * Renders response for request. NOTE: THIS METHOD IS INTENDED FOR INTERNAL
 	 * USE ONLY AND MAY NOT BE SUPPORTED IN THE FUTURE.
-	 * 
+	 *
 	 * @throws ServletException
 	 */
 	public final void render() throws ServletException
@@ -418,10 +418,14 @@ public abstract class RequestCycle
 		// can be rendered at a time for a given session.
 		synchronized (session)
 		{
+			// Restore the transient application association with the session
+			session.setApplication(application);
+
 			// Set this request cycle as the active request cycle for the
 			// session for easy access by the page being rendered and any
 			// components on that page
 			session.setRequestCycle(this);
+
 
 			try
 			{
@@ -457,7 +461,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Convenience method that sets page on response object.
-	 * 
+	 *
 	 * @param page
 	 *            The page to render as a response
 	 */
@@ -468,7 +472,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets whether the page for this request should be redirected.
-	 * 
+	 *
 	 * @param redirect
 	 *            True if the page for this request cycle should be redirected
 	 *            to rather than directly rendered.
@@ -480,7 +484,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets response.
-	 * 
+	 *
 	 * @param response
 	 *            The response
 	 */
@@ -492,7 +496,7 @@ public abstract class RequestCycle
 	/**
 	 * Gets the url for the given page class using the given parameters. THIS
 	 * METHOD IS NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
-	 * 
+	 *
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -504,7 +508,7 @@ public abstract class RequestCycle
 	/**
 	 * Gets the url for the given component/ listener interface. THIS METHOD IS
 	 * NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
-	 * 
+	 *
 	 * @param component
 	 *            Component that has listener interface
 	 * @param listenerInterface
@@ -515,7 +519,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Looks up an interface method by name.
-	 * 
+	 *
 	 * @param name
 	 *            The interface
 	 * @return The method
@@ -538,7 +542,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to the given page.
-	 * 
+	 *
 	 * @param page
 	 *            The page to redirect to
 	 */
@@ -546,7 +550,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets up to handle a runtime exception thrown during rendering
-	 * 
+	 *
 	 * @param e
 	 *            The exception
 	 */

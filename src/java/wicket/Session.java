@@ -1,14 +1,14 @@
 /*
  * $Id$ $Revision$
  * $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -84,7 +84,7 @@ import wicket.util.string.Strings;
  * Although public, the removeNewerThan(Page) and getFreshestPage() methods are
  * intended for internal use only and may not be supported in the future.
  * Framework clients should not call these methods.
- * 
+ *
  * @author Jonathan Locke
  */
 public abstract class Session implements Serializable
@@ -99,7 +99,7 @@ public abstract class Session implements Serializable
 	private transient Application application;
 
 	/** Resolver for finding classes for this Session */
-	private IClassResolver classResolver;
+	private transient IClassResolver classResolver;
 
 	/** Active request cycle */
 	private transient RequestCycle cycle;
@@ -114,7 +114,7 @@ public abstract class Session implements Serializable
 	private transient IConverter converter;
 
 	/** Factory for constructing Pages for this Session */
-	private IPageFactory pageFactory;
+	private transient IPageFactory pageFactory;
 
 	/** Next available page identifier. */
 	private int pageId = 0;
@@ -127,14 +127,14 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Interface called when visiting session pages.
-	 * 
+	 *
 	 * @author Jonathan Locke
 	 */
 	static interface IPageVisitor
 	{
 		/**
 		 * Visit method.
-		 * 
+		 *
 		 * @param page
 		 *            the page
 		 */
@@ -143,7 +143,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get the session for the calling thread.
-	 * 
+	 *
 	 * @return Session for calling thread
 	 */
 	public static Session get()
@@ -154,7 +154,7 @@ public abstract class Session implements Serializable
 	/**
 	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
 	 * THE FUTURE. Sets session for calling thread.
-	 * 
+	 *
 	 * @param session
 	 *            The session
 	 */
@@ -165,7 +165,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param application
 	 *            The application that this is a session of
 	 */
@@ -180,7 +180,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get the application that is currently working with this session.
-	 * 
+	 *
 	 * @return Returns the application.
 	 */
 	public final Application getApplication()
@@ -193,12 +193,13 @@ public abstract class Session implements Serializable
 	 */
 	public final IClassResolver getClassResolver()
 	{
-		return classResolver;
+		if ( classResolver == null ) return application.getSettings().getDefaultClassResolver();
+		else return classResolver;
 	}
 
 	/**
 	 * Gets the converter instance.
-	 * 
+	 *
 	 * @return the converter
 	 */
 	public final IConverter getConverter()
@@ -214,7 +215,7 @@ public abstract class Session implements Serializable
 	/**
 	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
 	 * THE FUTURE. Get the freshest page in the session.
-	 * 
+	 *
 	 * @return The freshest page in the session
 	 */
 	public final Page getFreshestPage()
@@ -246,7 +247,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get this session's locale.
-	 * 
+	 *
 	 * @return This session's locale
 	 */
 	public final Locale getLocale()
@@ -256,7 +257,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get the page for the given path.
-	 * 
+	 *
 	 * @param path
 	 *            Component path
 	 * @return The page based on the first path component (the page id)
@@ -272,13 +273,14 @@ public abstract class Session implements Serializable
 	 */
 	public final IPageFactory getPageFactory()
 	{
-		return pageFactory;
+		if ( pageFactory == null ) return application.getSettings().getDefaultPageFactory();
+		else return pageFactory;
 	}
 
 	/**
 	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
 	 * THE FUTURE.
-	 * 
+	 *
 	 * @return The currently active request cycle for this session
 	 */
 	public final RequestCycle getRequestCycle()
@@ -288,7 +290,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get the style.
-	 * 
+	 *
 	 * @return Returns the style.
 	 */
 	public final String getStyle()
@@ -305,7 +307,7 @@ public abstract class Session implements Serializable
 	 * Removes the given page from the cache. This method may be useful if you
 	 * have special knowledge that a given page cannot be accessed again. For
 	 * example, the user may have closed a popup window.
-	 * 
+	 *
 	 * @param page
 	 *            The page to remove
 	 */
@@ -325,7 +327,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Set class resolver for this session
-	 * 
+	 *
 	 * @param classResolver
 	 *            The class resolver
 	 */
@@ -336,7 +338,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Set the locale.
-	 * 
+	 *
 	 * @param locale
 	 *            New locale
 	 */
@@ -348,7 +350,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Set page factory for this session
-	 * 
+	 *
 	 * @param pageFactory
 	 *            The page factory
 	 */
@@ -360,7 +362,7 @@ public abstract class Session implements Serializable
 	/**
 	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
 	 * THE FUTURE. Sets the currently active request cycle for this session.
-	 * 
+	 *
 	 * @param cycle
 	 *            The request cycle
 	 */
@@ -370,8 +372,19 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
+	 * THE FUTURE. Sets the application that this session is associated with.
+	 *
+	 * @param application The application
+	 */
+	public final void setApplication(final Application application)
+	{
+		this.application = application;
+	}
+
+	/**
 	 * Set the style.
-	 * 
+	 *
 	 * @param style
 	 *            The style to set.
 	 */
@@ -382,7 +395,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Adds page to session if not already added.
-	 * 
+	 *
 	 * @param page
 	 *            Page to add to this session
 	 */
@@ -397,7 +410,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get the interceptContinuationURL.
-	 * 
+	 *
 	 * @return Returns the interceptContinuationURL.
 	 */
 	final String getInterceptContinuationURL()
@@ -407,7 +420,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get the page with the given id.
-	 * 
+	 *
 	 * @param id
 	 *            Page id
 	 * @return Page with the given id
@@ -419,7 +432,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Set the interceptContinuationURL.
-	 * 
+	 *
 	 * @param interceptContinuationURL
 	 *            The interceptContinuationURL to set.
 	 */
@@ -430,7 +443,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Visits the pages in this session.
-	 * 
+	 *
 	 * @param visitor
 	 *            The visitor to call
 	 */

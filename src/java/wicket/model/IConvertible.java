@@ -18,7 +18,7 @@
  */
 package wicket.model;
 
-import wicket.util.convert.IConverter;
+import wicket.Component;
 
 /**
  * Interface that can be implemented by instances of {@link wicket.model.IModel}
@@ -31,8 +31,8 @@ import wicket.util.convert.IConverter;
 public interface IConvertible
 {
 	/**
-	 * Sets the converter.
-	 * @param converter the converter
+	 * Sets the component that acts as a provider for the converter.
+	 * @param component the converter provider component
 	 */
-	void setConverter(IConverter converter);
+	void setConverterProvider(Component component);
 }
