@@ -30,19 +30,27 @@ import nl.openedge.util.jetty.JettyDecorator;
  * @author Chris Turner
  * @version 1.0
  */
-public class HangManTest extends WebTestCase {
+public class HangManTest extends WebTestCase
+{
 
 	/**
 	 * Create the test case.
 	 * 
 	 * @param message
-	 *            The test name
+	 *           The test name
 	 */
-	public HangManTest(String message) {
+	public HangManTest(String message)
+	{
 		super(message);
 	}
 
-	public void testHangmanWinGame() throws Exception {
+	/**
+	 * Tests the hangman class directly for a winning game.
+	 * 
+	 * @throws Exception
+	 */
+	public void testHangmanWinGame() throws Exception
+	{
 		Hangman hangman = new Hangman(5, new String[] { "testing" });
 
 		hangman.newGame();
@@ -91,8 +99,14 @@ public class HangManTest extends WebTestCase {
 		Assert.assertFalse(hangman.isAllGuessesUsed());
 	}
 
-	public void testHangmanLooseGame() throws Exception {
-		Hangman hangman = new Hangman(2);
+	/**
+	 * Tests the hangman class directly for a lost game.
+	 * 
+	 * @throws Exception
+	 */
+	public void testHangmanLooseGame() throws Exception
+	{
+		Hangman hangman = new Hangman(2, new String[] { "foo" });
 
 		hangman.newGame();
 		Assert.assertEquals(2, hangman.getGuessesRemaining());
@@ -110,7 +124,11 @@ public class HangManTest extends WebTestCase {
 		Assert.assertTrue(hangman.isAllGuessesUsed());
 	}
 
-	public void testHangmanSuccessWebGame() {
+	/**
+	 * Tests the webapplication for a successful match.
+	 */
+	public void testHangmanSuccessWebGame()
+	{
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
 		beginAt("/hangman?setWord=hangman");
 
@@ -122,9 +140,9 @@ public class HangManTest extends WebTestCase {
 
 		assertElementPresent("guessesRemaining");
 		assertTextInElement("guessesRemaining", "5");
-		
+
 		clickLink("letter_f");
-		
+
 		assertElementPresent("guessesRemaining");
 		assertTextInElement("guessesRemaining", "4");
 
@@ -139,7 +157,11 @@ public class HangManTest extends WebTestCase {
 		assertTextPresent("Congratulations! You guessed that the word was ");
 	}
 
-	public void testHangmanFailureWebGame() {
+	/**
+	 * Tests the webapplication for an unsuccessful match.
+	 */
+	public void testHangmanFailureWebGame()
+	{
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
 		beginAt("/hangman?setWord=hangman");
 
@@ -151,9 +173,9 @@ public class HangManTest extends WebTestCase {
 
 		assertElementPresent("guessesRemaining");
 		assertTextInElement("guessesRemaining", "5");
-		
+
 		clickLink("letter_f");
-		
+
 		assertElementPresent("guessesRemaining");
 		assertTextInElement("guessesRemaining", "4");
 
@@ -171,13 +193,23 @@ public class HangManTest extends WebTestCase {
 		assertTextPresent("Bad Luck! You failed to guess that the word was");
 	}
 
-	private void doGuessTest(Hangman hangman, char c, boolean expected) {
+	/**
+	 * Performs a guess.
+	 */
+	private void doGuessTest(Hangman hangman, char c, boolean expected)
+	{
 		Assert.assertFalse(hangman.isGuessed(c));
 		Assert.assertEquals(expected, hangman.guessLetter(c));
 		Assert.assertTrue(hangman.isGuessed(c));
 	}
 
-	public static Test suite() {
+	/**
+	 * Creates the testsuite.
+	 * 
+	 * @return the testsuite.
+	 */
+	public static Test suite()
+	{
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(HangManTest.class);
 
