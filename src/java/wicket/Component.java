@@ -1049,7 +1049,12 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	protected IModel initModel()
 	{
-		return new PropertyModel(getPage().getModel(), getName());
+		final IModel pageModel = getPage().getModel();
+		if (pageModel != null)
+		{
+			return new PropertyModel(pageModel, getName());
+		}
+		return null;
 	}
 
 	/**

@@ -19,6 +19,7 @@ package wicket.markup.html.form;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
@@ -37,17 +38,17 @@ public class Button extends FormComponent
 	 */
 	public Button(String name)
 	{
-		// We pass null as the model explicitly because we don't want the
-		// Component constructor attempting to auto-assign a property model
-		// to the FormComponent via onNullModel().
-		super(name, null);
+		super(name);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @see FormComponent#initModel()
 	 */
-	protected void updateModel()
+	protected IModel initModel()
 	{
+		// Buttons don't have models and so we don't want
+		// FormComponent.initModel() to try to attach one automatically.
+		return null;
 	}
 
 	/**
@@ -91,6 +92,13 @@ public class Button extends FormComponent
 	 * form
 	 */
 	protected void onSubmit()
+	{
+	}
+
+	/**
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	protected void updateModel()
 	{
 	}
 }

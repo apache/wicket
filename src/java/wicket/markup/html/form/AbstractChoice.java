@@ -46,6 +46,19 @@ abstract class AbstractChoice extends FormComponent
 
 	/** The list of values. */
 	private List values;
+	
+	/**
+	 * @param name
+	 *            See Component constructor
+	 * @param values
+	 *            The collection of values in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(String name, final Collection values)
+	{
+		super(name);
+		setValues(values);
+	}
 
 	/**
 	 * @param name
@@ -139,13 +152,6 @@ abstract class AbstractChoice extends FormComponent
 		}
 		return this;
 	}
-
-	/**
-	 * Updates the model of this component from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public abstract void updateModel();
 
 	/**
 	 * @see wicket.Component#detachModel()
@@ -291,4 +297,11 @@ abstract class AbstractChoice extends FormComponent
 	{
 		return true;
 	}
+
+	/**
+	 * Updates the model of this component from the request.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	protected abstract void updateModel();
 }

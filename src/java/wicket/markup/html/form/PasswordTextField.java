@@ -50,6 +50,14 @@ public class PasswordTextField extends TextField
 	private boolean resetPassword = true;
 
 	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public PasswordTextField(final String name)
+	{
+		super(name);
+	}
+
+	/**
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public PasswordTextField(String name, Serializable object)

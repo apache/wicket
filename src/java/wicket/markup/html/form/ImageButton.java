@@ -86,12 +86,4 @@ public class ImageButton extends Button
 		localizedImageResource.loadImageResource(tag);
 		super.onComponentTag(tag);
 	}
-	
-	/**
-	 * @return Image resource path
-	 */
-	public String getResourcePath()
-	{
-		return localizedImageResource.getImageResource().getPath();
-	}
 }

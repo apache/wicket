@@ -339,7 +339,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Set response locale from session locale
 		response.setLocale(getSession().getLocale());
 	}
-
+	
+	/**
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		return null;
+	}
+	
 	/**
 	 * Renders this container to the given response object.
 	 */

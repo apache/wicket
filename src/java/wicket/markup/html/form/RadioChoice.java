@@ -42,6 +42,14 @@ public class RadioChoice extends FormComponent
 	private final List values = new ArrayList();
 
 	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public RadioChoice(String name)
+	{
+		super(name);
+	}
+
+	/**
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public RadioChoice(String name, Serializable object)
@@ -76,9 +84,17 @@ public class RadioChoice extends FormComponent
 	}
 
 	/**
+	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
+	{
+		return true;
+	}
+
+	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public final void updateModel()
+	protected final void updateModel()
 	{
 		final int index = inputAsInt(NULL_VALUE);
 
@@ -86,14 +102,6 @@ public class RadioChoice extends FormComponent
 		{
 			setModelObject(values.get(index));
 		}
-	}
-
-	/**
-	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-	 */
-	protected final boolean supportsPersistence()
-	{
-		return true;
 	}
 
 	/**

@@ -248,28 +248,6 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.Component#initModel()
-	 */
-	public IModel initModel()
-	{
-		if (getParent() != null)
-		{
-			// Get form model
-			final IModel model = getForm().getModel();
-			if (model != null)
-			{
-				// Create PropertyModel using the Form's model and the name of the component
-				return new PropertyModel(model, getName());
-			}
-			else
-			{
-				throw new WicketRuntimeException("FormComponent " + this + " and parent Form " + getForm() + " cannot both have null models");
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Gets the registered validators as a list.
 	 * 
 	 * @return the validators as a list
@@ -380,6 +358,28 @@ public abstract class FormComponent extends WebMarkupContainer
 	public final void valid()
 	{
 		onValid();
+	}
+
+	/**
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		if (getParent() != null)
+		{
+			// Get form model
+			final IModel model = getForm().getModel();
+			if (model != null)
+			{
+				// Create PropertyModel using the Form's model and the name of the component
+				return new PropertyModel(model, getName());
+			}
+			else
+			{
+				throw new WicketRuntimeException("FormComponent " + this + " and parent Form " + getForm() + " cannot both have null models");
+			}
+		}
+		return null;
 	}
 
 	/**

@@ -428,11 +428,14 @@ public abstract class RequestCycle
 			// components on that page
 			session.setRequestCycle(this);
 
-
 			try
 			{
 				// Render response for request cycle
 				onRender();
+			}
+			catch (StackOverflowError e)
+			{
+				throw new ServletException("Wicket could not render page", e);
 			}
 			catch (RuntimeException e)
 			{
@@ -446,7 +449,7 @@ public abstract class RequestCycle
 				}
 
 				// Handle the exception
-				handleRenderingException(e);
+				onException(e);
 			}
 			finally
 			{
@@ -565,10 +568,11 @@ public abstract class RequestCycle
 	/**
 	 * Sets up to handle a runtime exception thrown during rendering
 	 *
-	 * @param e
+	 * @param throwable
 	 *            The exception
+	 * @throws ServletException The exception rethrown for the servlet container
 	 */
-	private void handleRenderingException(RuntimeException e)
+	private final void onException(final Throwable throwable) throws ServletException
 	{
 		// Render a page for the user
 		try
@@ -585,8 +589,9 @@ public abstract class RequestCycle
 				else
 				{
 					// otherwise show full details
-					setPage(new ExceptionErrorPage(e, getPage()));
+					setPage(new ExceptionErrorPage(throwable, getPage()));
 				}
+				
 				// We generally want to redirect the response because we were
 				// in the middle of rendering and the page may end up looking
 				// like spaghetti otherwise
@@ -605,7 +610,7 @@ public abstract class RequestCycle
 		}
 
 		// Rethrow error for console / container
-		throw e;
+		throw new ServletException("Wicket could not render page", throwable);
 	}
 
 	/**

@@ -38,6 +38,14 @@ public class RadioOption extends FormComponent
 	private String label = null;
 
 	/**
+     * @see wicket.Component#Component(String)
+	 */
+	public RadioOption(String name)
+	{
+		super(name);
+	}
+
+	/**
      * @see wicket.Component#Component(String, Serializable)
 	 */
 	public RadioOption(String name, Serializable object)
@@ -79,35 +87,6 @@ public class RadioOption extends FormComponent
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public final void updateModel()
-	{
-	}
-
-	/**
-	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream,
-	 *      wicket.markup.ComponentTag)
-	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		final String displayLabel;
-
-		if (label != null)
-		{
-			displayLabel = label;
-		}
-		else
-		{
-			displayLabel = String.valueOf(getModelObject());
-		}
-
-		final String s = getLocalizer().getString(getName() + "." + displayLabel, this, displayLabel);
-
-		replaceComponentTagBody(markupStream, openTag, s);
-	}
-
-	/**
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
 	protected final void onComponentTag(final ComponentTag tag)
@@ -135,5 +114,34 @@ public class RadioOption extends FormComponent
 		{
 			tag.put("checked", "true");
 		}
+	}
+
+	/**
+	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream,
+	 *      wicket.markup.ComponentTag)
+	 */
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		final String displayLabel;
+
+		if (label != null)
+		{
+			displayLabel = label;
+		}
+		else
+		{
+			displayLabel = String.valueOf(getModelObject());
+		}
+
+		final String s = getLocalizer().getString(getName() + "." + displayLabel, this, displayLabel);
+
+		replaceComponentTagBody(markupStream, openTag, s);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	protected final void updateModel()
+	{
 	}
 }

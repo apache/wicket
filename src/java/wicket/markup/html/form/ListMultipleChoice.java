@@ -41,12 +41,11 @@ public class ListMultipleChoice extends AbstractChoice
 	private static final long serialVersionUID = -1000324612688307682L;
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public ListMultipleChoice(final String name, final Serializable model,
-			final String expression, final Collection values)
+	public ListMultipleChoice(String name, final Collection values)
 	{
-		super(name, new PropertyModel(new Model(model), expression), values);
+		super(name, values);
 	}
 
 	/**
@@ -56,6 +55,15 @@ public class ListMultipleChoice extends AbstractChoice
 			final Collection values)
 	{
 		super(name, model, values);
+	}
+	
+	/**
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
+	 */
+	public ListMultipleChoice(final String name, final Serializable model,
+			final String expression, final Collection values)
+	{
+		super(name, new PropertyModel(new Model(model), expression), values);
 	}
 
 	/**
@@ -126,11 +134,40 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
+	 * Gets whether the given value represents the current selection.
+	 *
+	 * @param currentValue
+	 *            the current list value
+	 * @return whether the given value represents the current selection
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(java.lang.Object)
+	 */
+	protected final boolean isSelected(Object currentValue)
+	{
+		Collection collection = (Collection)getModelObject();
+		if (collection != null)
+			return collection.contains(currentValue);
+		return false;
+	}
+
+	/**
+	 * Processes the component tag.
+	 *
+	 * @param tag
+	 *            Tag to modify
+	 * @see wicket.Component#onComponentTag(ComponentTag)
+	 */
+	protected final void onComponentTag(final ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		tag.put("multiple", true);
+	}
+
+	/**
 	 * Updates this forms model from the request.
 	 *
 	 * @see FormComponent#updateModel()
 	 */
-	public final void updateModel()
+	protected final void updateModel()
 	{
 		// Get the list of selected values
 		Collection selectedValues = (Collection)getModelObject();
@@ -172,34 +209,5 @@ public class ListMultipleChoice extends AbstractChoice
 				}
 			}
 		}
-	}
-
-	/**
-	 * Processes the component tag.
-	 *
-	 * @param tag
-	 *            Tag to modify
-	 * @see wicket.Component#onComponentTag(ComponentTag)
-	 */
-	protected final void onComponentTag(final ComponentTag tag)
-	{
-		super.onComponentTag(tag);
-		tag.put("multiple", true);
-	}
-
-	/**
-	 * Gets whether the given value represents the current selection.
-	 *
-	 * @param currentValue
-	 *            the current list value
-	 * @return whether the given value represents the current selection
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(java.lang.Object)
-	 */
-	protected final boolean isSelected(Object currentValue)
-	{
-		Collection collection = (Collection)getModelObject();
-		if (collection != null)
-			return collection.contains(currentValue);
-		return false;
 	}
 }
