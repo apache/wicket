@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.util.Locale;
 
 import wicket.markup.ComponentTag;
+import wicket.util.time.Time;
 
 /**
  * Abstract base class for different implementations of response writing. A
@@ -93,6 +94,27 @@ public abstract class Response
 	 *            The mime type
 	 */
 	public void setContentType(final String mimeType)
+	{
+	}
+
+	/**
+	 * Set the content length on the response, if appropriate in the subclass.
+	 * This default implementation does nothing.
+	 * 
+	 * @param length
+	 *            The length of the content
+	 */
+	public void setContentLength(final long length)
+	{
+	}
+	
+	/**
+	 * Set the contents last modified time, if appropriate in the subclass.
+	 * This default implementation does nothing.
+	 * @param time 
+	 *				The time object 
+	 */
+	public void setLastModifiedTime(Time time)
 	{
 	}
 
