@@ -19,14 +19,14 @@ import com.voicetribe.wicket.protocol.http.documentvalidation.TextContent;
 /**
  * Test for simple table behaviour.
  */
-public class SimpleTableTest extends TestCase
+public class PagedTableTest extends TestCase
 {
 
     /**
      * Construct.
      * 
      */
-    public SimpleTableTest()
+    public PagedTableTest()
     {
         super();
     }
@@ -35,7 +35,7 @@ public class SimpleTableTest extends TestCase
      * Construct.
      * @param arg0
      */
-    public SimpleTableTest(String arg0)
+    public PagedTableTest(String arg0)
     {
         super(arg0);
     }
@@ -47,10 +47,10 @@ public class SimpleTableTest extends TestCase
     public void testSimpleTable() throws Exception
     {
         MockHttpApplication application = new MockHttpApplication(null);
-        application.getSettings().setHomePage(SimpleTablePage.class);
+        application.getSettings().setHomePage(PagedTablePage.class);
         application.setupRequestAndResponse();
         application.processRequestCycle();
-        SimpleTablePage page = (SimpleTablePage)application.getLastRenderedPage();
+        PagedTablePage page = (PagedTablePage)application.getLastRenderedPage();
         String document = application.getServletResponse().getDocument();
         assertTrue(validateDocument(document));
     }
@@ -68,13 +68,13 @@ public class SimpleTableTest extends TestCase
         html.addExpectedChild(head);
         Tag title = new Tag("title");
         head.addExpectedChild(title);
-        title.addExpectedChild(new TextContent("Simple Table Page"));
+        title.addExpectedChild(new TextContent("Paged Table Page"));
         Tag body = new Tag("body");
         html.addExpectedChild(body);
         Tag ul = new Tag("ul");
         ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("one"))));
         ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("two"))));
-        ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("three"))));
+        // note that we DO NOT expect the third element as this is not on the current page
         body.addExpectedChild(ul);
         validator.addRootElement(html);
 
