@@ -75,7 +75,7 @@ public final class EditCDPage extends WicketExamplePage
 		add(feedback);
 		add(new DetailForm("detailForm", feedback, cdModel));
 	}
-
+	
 	/**
 	 * @see wicket.Component#initModel()
 	 */

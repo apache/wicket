@@ -22,7 +22,6 @@ import java.util.List;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
-import wicket.contrib.data.model.ISelectCountAndListAction;
 import wicket.contrib.data.model.PageableList;
 import wicket.contrib.data.model.hibernate.HibernateCountAndListAction;
 import wicket.contrib.data.util.hibernate.HibernateHelperSessionDelegate;
@@ -42,6 +41,9 @@ public final class CDSearchModel extends DetachableModel
 	/** number of rows on each page. */
 	private int rowsPerPage = 8;
 
+	/** action used by the pageable list (has our order columns). */
+	private CountAndListAction countAndListAction = new CountAndListAction();;
+
 	/**
 	 * Construct.
 	 */
@@ -59,31 +61,20 @@ public final class CDSearchModel extends DetachableModel
 	}
 
 	/**
+	 * @see wicket.model.DetachableModel#getObject()
+	 */
+	public Object getObject()
+	{
+		attach(); // in case we are not calling this on a component
+		return super.getObject();
+	}
+
+	/**
 	 * @see wicket.model.DetachableModel#onAttach()
 	 */
 	protected void onAttach()
 	{
-		final String searchStringParameter;
-		if (searchString != null)
-		{
-			searchStringParameter = '%' + searchString.toUpperCase() + '%';
-		}
-		else
-		{
-			searchStringParameter = null;
-		}
-		ISelectCountAndListAction searchCDAction = new HibernateCountAndListAction(
-				"wicket.examples.cdapp.model.SearchCD", "wicket.examples.cdapp.model.SearchCD.count",
-				new HibernateHelperSessionDelegate())
-		{
-			protected void setParameters(Query query, Object queryObject) throws HibernateException
-			{
-				query.setString("performers", searchStringParameter);
-				query.setString("title", searchStringParameter);
-				query.setString("label", searchStringParameter);
-			}
-		};
-		PageableList list = new PageableList(rowsPerPage, searchCDAction);
+		PageableList list = new PageableList(rowsPerPage, countAndListAction);
 		setObject(list);
 	}
 
@@ -115,6 +106,22 @@ public final class CDSearchModel extends DetachableModel
 	}
 
 	/**
+	 * Add order-by field to query
+	 * @param field the field to add
+	 */
+	public final void addOrdering(String field)
+	{
+		PageableList list = (PageableList)getObject();
+		if (list != null)
+		{
+			HibernateCountAndListAction action =
+				(HibernateCountAndListAction)list.getCountAndListAction();
+			action.addOrdering(field);
+			list.clear();
+		}	
+	}
+
+	/**
 	 * Gets number of rows on each page.
 	 * @return number of rows on each page
 	 */
@@ -129,8 +136,46 @@ public final class CDSearchModel extends DetachableModel
 	 */
 	public final boolean hasResults()
 	{
-		attach(); // just to be sure
 		List results = (List)getObject();
 		return (!results.isEmpty());
+	}
+
+	/**
+	 * Gets the current search string as a query parameter.
+	 * @return the current search string as a query parameter
+	 */
+	private String getSearchStringParameter()
+	{
+		final String searchStringParameter;
+		if (searchString != null)
+		{
+			return '%' + searchString.toUpperCase() + '%';
+		}
+		return null;
+	}
+
+	/** count and list action that works with this model. */
+	private final class CountAndListAction extends HibernateCountAndListAction
+	{
+		/**
+		 * Construct.
+		 */
+		public CountAndListAction()
+		{
+			super("wicket.examples.cdapp.model.SearchCD",
+					"wicket.examples.cdapp.model.SearchCD.count",
+					new HibernateHelperSessionDelegate());
+		}
+
+		/**
+		 * @see wicket.contrib.data.model.hibernate.HibernateCountAndListAction#setParameters(net.sf.hibernate.Query, java.lang.Object)
+		 */
+		protected void setParameters(Query query, Object queryObject) throws HibernateException
+		{
+			final String searchStringParameter = getSearchStringParameter();
+			query.setString("performers", searchStringParameter);
+			query.setString("title", searchStringParameter);
+			query.setString("label", searchStringParameter);
+		}
 	}
 }

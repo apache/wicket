@@ -18,6 +18,8 @@
  */
 package wicket.examples.cdapp;
 
+import java.util.List;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
@@ -42,6 +44,7 @@ import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListViewNavigationLink;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 
 
@@ -111,6 +114,23 @@ public class SearchCDPage extends WicketExamplePage
 	}
 
 	/**
+	 * Gets the current number of results.
+	 * @return the current number of results
+	 */
+	private int getNumberOfResults()
+	{
+		return ((List)resultsListView.getModelObject()).size();
+	}
+
+	/**
+	 * Sets the result page to the first page.
+	 */
+	private void setCurrentResultPageToFirst()
+	{
+		resultsListView.setCurrentPage(0);
+	}
+
+	/**
 	 * Form for search actions.
 	 */
 	private class SearchForm extends Form
@@ -135,8 +155,14 @@ public class SearchCDPage extends WicketExamplePage
 		 */
 		public final void onSubmit()
 		{
-			searchModel.setSearchString(search);
+			searchModel.setSearchString(search); // set search query on model
+			setCurrentResultPageToFirst(); // start with first page
 			SearchCDPage.this.modelChangedStructure();
+
+			if(search != null && (!search.trim().equals("")))
+			{
+				info(getNumberOfResults() + " results found for query '" + search + "'");
+			}
 		}
 
 		/**
@@ -196,6 +222,15 @@ public class SearchCDPage extends WicketExamplePage
 
 			// add a delete link for each found record
 			item.add(new DeleteLink("delete", id));
+		}
+
+		/**
+		 * @see wicket.markup.html.list.ListView#modelChangedStructure()
+		 */
+		public void modelChangedStructure()
+		{
+			((IDetachableModel)getModel()).detach(); // force reload right away
+			super.modelChangedStructure();
 		}
 	}
 
@@ -266,7 +301,6 @@ public class SearchCDPage extends WicketExamplePage
 				throw new WicketRuntimeException(e);
 			}
 		}
-		
 	}
 
 	/** Link for sorting on a column. */
@@ -294,15 +328,8 @@ public class SearchCDPage extends WicketExamplePage
 		 */
 		public void onClick()
 		{
-//			PageableList list = (PageableList)resultsTable.getModelObject();
-//			if (list != null)
-//			{
-//				searchCDAction.addOrdering(field);
-//				list.clear();
-//				resultsTable.setCurrentPage(0);
-//				resultsTable.setCurrentPage(0);
-//				replaceModel(list);
-//			}
+			searchModel.addOrdering(field);
+			SearchCDPage.this.modelChangedStructure();
 		}
 	}
 
