@@ -231,9 +231,6 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		// implementation may wish to redirect somewhere else. In that case,
 		// they can simply call setRedirect(false) in handleSubmit.
 		getRequestCycle().setRedirect(true);
-        
-        // Clear all feedback messages
-        getPage().getFeedbackMessages().clear();
 
 		// Validate model using validation delegate
 		validationDelegate.validate(this);
