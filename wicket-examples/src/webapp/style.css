@@ -87,3 +87,13 @@ a.none {
     background : transparent;
     padding-right : 0px;
 }
+
+#inputForm {
+ width: 300px; }
+#inputForm label {
+ display: block;
+ padding: 3px 0 0;
+}
+#inputForm label.non {
+ display: inline !important;
+}

@@ -23,6 +23,12 @@
     </servlet>
 
     <servlet>
+        <servlet-name>FormInputApplication</servlet-name>
+        <servlet-class>wicket.examples.forminput.FormInputApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
         <servlet-name>NestedApplication</servlet-name>
         <servlet-class>wicket.examples.nested.NestedApplication</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -178,7 +184,12 @@
 
     <servlet-mapping>
         <servlet-name>GuestBook2Application</servlet-name>
-        <url-pattern>/guestbook2/*</url-pattern>
+        <url-pattern>/guestbook2</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>FormInputApplication</servlet-name>
+        <url-pattern>/forminput</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
