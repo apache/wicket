@@ -22,9 +22,15 @@ import java.io.Serializable;
 import wicket.markup.html.form.FormComponent;
 
 /**
+ * THIS INTERFACE IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+ * <p>
+ * Instead of subclassing IValidator, you should use one of the existing
+ * validators, which cover a huge number of cases, or if none satisfies your
+ * need, subclass CustomValidator.
+ * <p>
  * Interface to code that validates Form components. When the validate() method
  * of the interface is called by the framework, the IValidator implementation is
- * expected to check the input String it is passed
+ * expected to check the input String it is passed.
  * 
  * @author Jonathan Locke
  */
@@ -36,8 +42,16 @@ public interface IValidator extends Serializable
 	public static final IValidator NULL = new NullValidator();
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT IMPLEMENT IT.
+	 * <p>
+	 * Instead of subclassing IValidator, you should use one of the existing
+	 * validators, which cover a huge number of cases, or if none satisfies your
+	 * need, subclass CustomValidator.
+	 * <p>
 	 * Validates the given input. The input corresponds to the input from the
-	 * request for a component.
+	 * request for a component. Any implementation of this method should be
+	 * synchronized because validators are intended to be shared across
+	 * sessions/threads.
 	 * 
 	 * @param component
 	 *            Component to validate
@@ -54,7 +68,7 @@ public interface IValidator extends Serializable
 		 * 
 		 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 		 */
-		public void validate(final FormComponent component)
+		public synchronized void validate(final FormComponent component)
 		{
 		}
 

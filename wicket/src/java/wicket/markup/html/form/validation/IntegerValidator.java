@@ -19,8 +19,6 @@ package wicket.markup.html.form.validation;
 
 import java.util.Map;
 
-import wicket.markup.html.form.FormComponent;
-
 /**
  * Ensures that the form component has a numeric value in a given range. The
  * range static factory method constructs a IntegerValidator with minimum and
@@ -30,7 +28,7 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  */
-public class IntegerValidator extends AbstractValidator
+public class IntegerValidator extends StringValidator
 {
 	/**
 	 * Validator that ensures int value.
@@ -39,40 +37,25 @@ public class IntegerValidator extends AbstractValidator
 			Integer.MAX_VALUE);
 
 	/**
-	 * Validator that ensures positive int value.
-	 */
-	public static final IntegerValidator POSITIVE_INT = new IntegerValidator(0, Integer.MAX_VALUE);
-
-	/**
 	 * Validator that ensures long value.
 	 */
 	public static final IntegerValidator LONG = new IntegerValidator(Long.MIN_VALUE, Long.MAX_VALUE);
+
+	/**
+	 * Validator that ensures positive int value.
+	 */
+	public static final IntegerValidator POSITIVE_INT = new IntegerValidator(0, Integer.MAX_VALUE);
 
 	/**
 	 * Validator that ensures positive long value.
 	 */
 	public static final IntegerValidator POSITIVE_LONG = new IntegerValidator(0, Long.MAX_VALUE);
 
-	/** Lower bound on valid decimal number. */
-	private final long min;
-
 	/** Upper bound on valid decimal number. */
 	private final long max;
 
-	/**
-	 * Private constructor forces use of static factory method and static
-	 * instances.
-	 * 
-	 * @param min
-	 *            Lower bound on valid decimal number
-	 * @param max
-	 *            Upper bound on valid decimal number
-	 */
-	private IntegerValidator(final long min, final long max)
-	{
-		this.min = min;
-		this.max = max;
-	}
+	/** Lower bound on valid decimal number. */
+	private final long min;
 
 	/**
 	 * Gets a decimal validator with a given range.
@@ -89,45 +72,18 @@ public class IntegerValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validates the given form component. Ensures that the form component has a
-	 * numeric value. If min and max arguments are given, this validator also
-	 * ensures the value is in bounds.
+	 * Private constructor forces use of static factory method and static
+	 * instances.
 	 * 
-	 * @param component
-	 *            The component to validate
+	 * @param min
+	 *            Lower bound on valid decimal number
+	 * @param max
+	 *            Upper bound on valid decimal number
 	 */
-	public final void validate(final FormComponent component)
+	private IntegerValidator(final long min, final long max)
 	{
-		// Get component value
-		final String value = component.getRequestString();
-
-		// Don't test emtpy/null values that should required validator do.
-		if (value != null && !"".equals(value))
-		{
-            boolean error = false;
-			try
-			{
-				// Get long value
-				final long longValue = Long.parseLong(value);
-
-				// Check range
-				if (longValue < min || longValue > max)
-				{
-                    error = true;
-				}
-			}
-			catch (NumberFormatException e)
-			{
-                error = true;
-			}
-            if (error)
-            {
-                final Map map = messageModel(component, value);
-                map.put("min", new Long(min));
-                map.put("max", new Long(max));
-                error(component, resourceKey(component), map); 
-            }
-		}
+		this.min = min;
+		this.max = max;
 	}
 
 	/**
@@ -148,6 +104,48 @@ public class IntegerValidator extends AbstractValidator
 	public final long getMin()
 	{
 		return min;
+	}
+
+
+	/**
+	 * Validates the given form component. Ensures that the form component has a
+	 * numeric value. If min and max arguments are given, this validator also
+	 * ensures the value is in bounds.
+	 * 
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(java.lang.String)
+	 */
+	public void onValidate(String value)
+	{
+		// Don't test emtpy/null values that should required validator do.
+		if (value != null && !"".equals(value))
+		{
+			try
+			{
+				// Get long value
+				final long longValue = Long.parseLong(value);
+
+				// Check range
+				if (longValue < min || longValue > max)
+				{
+                    error();
+				}
+			}
+			catch (NumberFormatException e)
+			{
+				error();
+			}
+		}
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.validation.AbstractValidator#messageModel()
+	 */
+	protected Map messageModel()
+	{
+		final Map map = super.messageModel();
+        map.put("min", new Long(min));
+        map.put("max", new Long(max));
+        return map;
 	}
 
 	/**

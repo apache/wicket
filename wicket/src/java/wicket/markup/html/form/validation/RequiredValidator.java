@@ -17,8 +17,6 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.markup.html.form.FormComponent;
-
 /**
  * Validator that ensures a component has a non-null and non-empty value. If the
  * component's value is null or empty (a value is considered empty if it just
@@ -27,23 +25,28 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  */
-public class RequiredValidator extends AbstractValidator
+public class RequiredValidator extends StringValidator
 {
+	/** Singleton instance */
+	private static final RequiredValidator instance = new RequiredValidator();
+	
 	/**
-	 * Validates the given form component.
-	 * 
-	 * @param component
-	 *            The component to validate
+	 * @return Instance of required validator
 	 */
-	public final void validate(final FormComponent component)
+	public static RequiredValidator getInstance()
 	{
-		// Get component value
-		final String value = component.getRequestString();
-
+		return instance;
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(java.lang.String)
+	 */
+	public void onValidate(String value)
+	{
 		// Check value
 		if (value == null || value.trim().equals(""))
 		{
-			error(component, value);
+			error();
 		}
 	}
 

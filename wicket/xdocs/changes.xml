@@ -8,6 +8,10 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+	  <action type="update" dev="Jonathan Locke" issue="">
+		Refactored and simplified form validation.  Added CustomValidator and removed
+		a lot of unnecessary code and complexity.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1149604">
 		When core calls onClick() it automatically causes redirection to prevent
 		repeating of the action on browser refreshes.
