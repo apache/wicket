@@ -19,8 +19,6 @@
 
 package wicket;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,13 +31,12 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.ExceptionErrorPage;
 import wicket.util.lang.Classes;
 
-
 /**
  * Represents the request cycle.
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT INTENDED
  * TO BE SUBCLASSED BY FRAMEWORK CLIENTS.
  * <p>
- * Convenient container for an application, session, request and wicket.response object
+ * Convenient container for an application, session, request and response object
  * for a page request cycle.  Each of these properties can be retrieved with the
  * corresponding getter method.  In addition, getPage and setPage can be used to
  * access the page property of the RequestCycle, which determines what page is
@@ -151,7 +148,7 @@ public abstract class RequestCycle
     /** the current request. */
     protected final Request request;
 
-    /** the current wicket.response. */
+    /** the current response. */
     protected Response response;
 
     /** The page to render to the user. */
@@ -233,7 +230,7 @@ public abstract class RequestCycle
      * @param application The application
      * @param session The session
      * @param request The request
-     * @param response The wicket.response
+     * @param response The response
      */
     protected RequestCycle(final IApplication application,
             final Session session, final Request request, final Response response)
@@ -278,7 +275,7 @@ public abstract class RequestCycle
      */
     public final void redirectToInterceptPage(final Class c)
     {
-        redirectToInterceptPage(newPage(c));
+        redirectToInterceptPage(getPageFactory().newPage(c));
     }
 
     /**
@@ -293,7 +290,7 @@ public abstract class RequestCycle
     }
 
     /**
-     * Renders wicket.response for request.
+     * Renders response for request.
      * NOTE: THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN THE FUTURE.
      * @throws ServletException
      */
@@ -301,7 +298,7 @@ public abstract class RequestCycle
     {
         try
         {
-            // Render wicket.response for request cycle
+            // Render response for request cycle
             handleRender();
         }
         catch (RuntimeException e)
@@ -318,14 +315,14 @@ public abstract class RequestCycle
                         ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
                     {
                         // use internal error page
-                        setPage(newPage(settings.getInternalErrorPage()));
+                        setPage(getPageFactory().newPage(settings.getInternalErrorPage()));
                     }
                     else
                     {
                         // otherwise show full details
                         setPage(new ExceptionErrorPage(e));
                     }
-                    // We generally want to redirect the wicket.response because we were
+                    // We generally want to redirect the response because we were
                     // in the middle of rendering and the page may end up looking
                     // like spaghetti otherwise
                     redirectToPage(getPage());
@@ -347,7 +344,7 @@ public abstract class RequestCycle
         finally
         {
             release();
-            response.close(); //close the wicket.response
+            response.close(); //close the response
         }
     }
 
@@ -424,7 +421,7 @@ public abstract class RequestCycle
     }
 
     /**
-     * Gets the wicket.response.
+     * Gets the response.
      * @return Response object
      */
     public final Response getResponse()
@@ -442,27 +439,61 @@ public abstract class RequestCycle
     }
 
     /**
-     * Convenience method that sets page on wicket.response object.
-     * @param c The page class to render as a wicket.response
+     * Convinience method to get the Page factory
+     * 
+     * @return PageFactory from application settings
+     */
+    public final IPageFactory getPageFactory()
+    {
+        return getApplication().getSettings().getPageFactory();
+    }
+    
+    /**
+     * Convenience method that sets page on response object.
+     * @param c The page class to render as a response
+     * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(Class)) instead
      */
     public final void setPage(final Class c)
     {
-        this.page = newPage(c);
+        this.page = getPageFactory().newPage(c, new PageParameters(request.getParameterMap()));
     }
 
     /**
-     * Convenience method that sets page on wicket.response object.
-     * @param c The page class to render as a wicket.response
+     * Convenience method that sets page on response object.
+     * @param classname The page class name (groovy file name) 
+     * 		to render as a response
+     * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(String)) instead
+     */
+    public final void setPage(final String classname)
+    {
+        this.page = getPageFactory().newPage(classname);
+    }
+
+    /**
+     * Convenience method that sets page on response object.
+     * @param c The page class to render as a response
      * @param parameters Parameters to page
+     * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(Class, PageParameters)) instead
      */
     public final void setPage(final Class c, final PageParameters parameters)
     {
-        this.page = newPage(c, parameters);
+        this.page = getPageFactory().newPage(c, parameters);
     }
 
     /**
-     * Convenience method that sets page on wicket.response object.
-     * @param page The page to render as a wicket.response
+     * Convenience method that sets page on response object.
+     * @param c The page class to render as a response
+     * @param parameters Parameters to page
+     * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(Class, Page)) instead
+     */
+    public final void setPage(final Class c, final Page page)
+    {
+        this.page = getPageFactory().newPage(c, page);
+    }
+
+    /**
+     * Convenience method that sets page on response object.
+     * @param page The page to render as a response
      */
     public final void setPage(final Page page)
     {
@@ -480,8 +511,8 @@ public abstract class RequestCycle
     }
 
     /**
-     * Sets wicket.response.
-     * @param response The wicket.response
+     * Sets response.
+     * @param response The response
      */
     public void setResponse(final Response response)
     {
@@ -524,7 +555,7 @@ public abstract class RequestCycle
     }
 
     /**
-     * Renders wicket.response for request.
+     * Renders response for request.
      */
     protected abstract void handleRender();
 
@@ -536,38 +567,19 @@ public abstract class RequestCycle
      */
     protected final Page newPage(final Class pageClass)
     {
-        return newPage(pageClass, new PageParameters(request.getParameterMap()));
+        return getPageFactory().newPage(
+                pageClass, new PageParameters(request.getParameterMap()));
     }
 
     /**
-     * Creates a new instance of a page using the given class name. If the page is
-     * successfully created, it is added to the session and used to render a wicket.response.
-     * @param pageClass The name of the page class to create
-     * @param parameters The page parameters
-     * @return The new page
-     * @throws RenderException
+     * Create a new page
+     * @param pageClassName The name of class may be a groovy file as well)
+     * @return The Page object created
      */
-    protected Page newPage(final Class pageClass, final PageParameters parameters)
+    protected final Page newPage(final String pageClassName)
     {
-    	//Find constructor for page class
-    	Constructor constructor = null;
-		try
-		{
-			constructor = getConstructor(pageClass, PageParameters.class);
-		}
-		catch (RuntimeException e)
-		{
-			constructor = getConstructor(pageClass, null);
-		}
-		if (constructor != null)
-        {
-            return newPage(constructor, parameters);
-        }
-        else
-        {
-            throw new RenderException("Could not find constructor for page '"
-                    + pageClass + "'");
-        }
+        return getPageFactory().newPage(
+                pageClassName, new PageParameters(request.getParameterMap()));
     }
 
     /**
@@ -579,22 +591,12 @@ public abstract class RequestCycle
      */
     protected final Page newPage(final Class pageClass, final Page page)
     {
-        // Find constructor for page class
-        final Constructor constructor = getConstructor(pageClass, Page.class);
-        if (constructor != null)
-        {
-            return newPage(constructor, page);
-        }
-        else
-        {
-            throw new RenderException("Could not find constructor for page '"
-                    + pageClass + "'");
-        }
+        return getPageFactory().newPage(pageClass, page);
     }
 
     /**
-     * Gets a null wicket.response.
-     * @return A copy of this request cycle object with a NULL wicket.response
+     * Gets a null response.
+     * @return A copy of this request cycle object with a NULL response
      */
     protected abstract RequestCycle nullResponse();
 
@@ -604,83 +606,4 @@ public abstract class RequestCycle
      */
     protected abstract void redirectToPage(final Page page);
 
-    /**
-     * Looks up a page constructor by class name.
-     * @param pageClass The class of page
-     * @param parameter The parameter class for the constructor
-     * @return The page constructor
-     * @throws RenderException
-     */
-    private Constructor getConstructor(final Class pageClass, final Class parameter)
-    {
-        Constructor constructor = (Constructor)constructors.get(pageClass);
-        if (constructor == null)
-        {
-            try
-            {
-            	if(parameter == null)
-            	{
-            		constructor = pageClass.getConstructor(null);
-            	}
-            	else
-            	{
-            		constructor = pageClass.getConstructor(new Class[] { parameter });
-            	}
-            	constructors.put(pageClass, constructor);
-            }
-            catch (NoSuchMethodException e)
-            {
-                throw new RenderException("Could not find page constructor in "
-                        + pageClass, e);
-            }
-        }
-        return constructor;
-    }
-
-    /**
-     * Creates a new instance of a page using the given class name.  If the page is
-     * successfully created, it is added to the session and used to render a wicket.response.
-     * @param constructor The constructor to invoke
-     * @param parameter The parameter to pass to the constructor
-     * @return The new page
-     * @throws RenderException
-     */
-    private Page newPage(final Constructor constructor, final Object parameter)
-    {
-        // Get page parameters
-        try
-        {
-            // Construct page and set as wicket.response page
-        		if(constructor.getParameterTypes().length == 0)
-        		{
-        			return (Page)constructor.newInstance(new Object[0]);
-        		}
-        		else
-        		{
-        			return (Page)constructor.newInstance(new Object[] { parameter });
-        		}
-        }
-        catch (InstantiationException e)
-        {
-            throw new RenderException("Cannot instantiate page object with "
-                    + constructor, e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new RenderException("Cannot access " + constructor, e);
-        }
-        catch (InvocationTargetException e)
-        {
-        	// In order to avoid classloader issues within Wicket, wicket.jar
-        	// has to be in /WEB-INF/lib
-        	ApplicationSettings settings = getApplication().getSettings();
-            Class homePageClass = settings.getHomePage();
-            if (homePageClass.getClassLoader() != constructor.getClass().getClassLoader())
-        	{
-        		log.error("Most probably Wicket-xxx.jar is not in /WEB-INF/lib");
-	    	}
-
-            throw new RenderException("Exception thown by " + constructor, e);
-        }
-    }
 }

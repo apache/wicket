@@ -38,7 +38,6 @@ import wicket.util.lang.EnumeratedType;
 import wicket.util.time.Duration;
 import wicket.util.watch.Watcher;
 
-
 /**
  * Contains application settings as property values.  All settings exposed are generic to any
  * kind of protocol or markup.
@@ -105,7 +104,7 @@ import wicket.util.watch.Watcher;
  *    functionality required to access localized resources.
  * <p>
  * <i>converterRegistry</i> (read-only) - The registry with converters that should be used
- *    for type conversion e.g. by {@link wicket.PropertyModel}. Use the reference
+ *    for type conversion e.g. by {@link com.voicetribe.wicket.PropertyModel}. Use the reference
  *    of converterRegistry to register/ deregister type converters if needed. Also, there are
  *    convenience method in converterRegistry to swith to a localized/ non-localized set
  *    of type converters.
@@ -135,6 +134,7 @@ public class ApplicationSettings
 
     // Home page class name
     private Class homePage;
+    private String homePageClassName;
     private Class internalErrorPage;
     private Class staleDataErrorPage;
     private Class pageExpiredErrorPage;
@@ -183,6 +183,9 @@ public class ApplicationSettings
     
     // Class of type ICrypt to implement encryption
     private Class cryptClass = Crypt.class;
+   
+    /** Factory to create new Page objects */
+    private IPageFactory pageFactory;
     
     // Code broadcaster for reporting
     private static final Log log = LogFactory.getLog(ApplicationSettings.class);
@@ -216,6 +219,7 @@ public class ApplicationSettings
         localizer = new Localizer(this);
         stringResourceLoaders.add(new ComponentStringResourceLoader());
         stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
+        pageFactory = new PageFactory(application);    
     }
 
     /**
@@ -264,11 +268,21 @@ public class ApplicationSettings
      */
     public final Class getHomePage()
     {
-        if (homePage == null)
+        if (homePage != null)
         {
-            throw new IllegalStateException("No home page specified");
+            return homePage;
         }
-        return homePage;
+        
+        if ((homePageClassName != null) && (homePageClassName.trim().length() > 0))
+        {
+            final Class homePage = getPageFactory().getClassInstance(homePageClassName);
+            if (homePage != null)
+            {
+                return homePage;
+            }
+        }
+        
+        throw new IllegalStateException("No home page specified");
     }
 
     /**
@@ -430,6 +444,12 @@ public class ApplicationSettings
     public final ApplicationSettings setHomePage(final Class homePage)
     {
         this.homePage = homePage;
+        return this;
+    }
+
+    public final ApplicationSettings setHomePage(final String homePage)
+    {
+        this.homePageClassName = homePage;
         return this;
     }
 
@@ -639,7 +659,7 @@ public class ApplicationSettings
      * @return Resource watcher with polling frequency determined by setting,
      * or null if no polling frequency has been set.
      */
-    Watcher getResourceWatcher()
+    public Watcher getResourceWatcher()
     {
         if (!triedToCreateResouceWatcher)
         {
@@ -722,6 +742,22 @@ public class ApplicationSettings
     public void setCrypt(Class crypt)
     {
         this.cryptClass = crypt;
+    }
+    
+    /**
+     * @return Returns the pageFactory.
+     */
+    public IPageFactory getPageFactory()
+    {
+        return pageFactory;
+    }
+    
+    /**
+     * @param pageFactory The pageFactory to set.
+     */
+    public void setPageFactory(final IPageFactory pageFactory)
+    {
+        this.pageFactory = pageFactory;
     }
 }
 
