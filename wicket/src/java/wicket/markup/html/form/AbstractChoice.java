@@ -37,7 +37,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class AbstractDropDownChoice extends FormComponent
+public abstract class AbstractChoice extends FormComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -8334966481181600604L;
@@ -63,7 +63,7 @@ public abstract class AbstractDropDownChoice extends FormComponent
 	 *            The collection of values in the dropdown
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractDropDownChoice(String name, IModel model, final Collection values)
+	public AbstractChoice(String name, IModel model, final Collection values)
 	{
 		super(name, model);
 		setValues(values);
@@ -80,7 +80,7 @@ public abstract class AbstractDropDownChoice extends FormComponent
 	 *            The collection of values in the dropdown
 	 * @see wicket.Component#Component(String, IModel, String)
 	 */
-	public AbstractDropDownChoice(String name, IModel model, String expression,
+	public AbstractChoice(String name, IModel model, String expression,
 			final Collection values)
 	{
 		super(name, model, expression);
@@ -96,7 +96,7 @@ public abstract class AbstractDropDownChoice extends FormComponent
 	 *            The collection of values in the dropdown
 	 * @see wicket.Component#Component(String, Serializable)
 	 */
-	public AbstractDropDownChoice(String name, Serializable object, final Collection values)
+	public AbstractChoice(String name, Serializable object, final Collection values)
 	{
 		super(name, object);
 		setValues(values);
@@ -113,7 +113,7 @@ public abstract class AbstractDropDownChoice extends FormComponent
 	 *            The collection of values in the dropdown
 	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
-	public AbstractDropDownChoice(String name, Serializable object, String expression,
+	public AbstractChoice(String name, Serializable object, String expression,
 			final Collection values)
 	{
 		super(name, object, expression);
@@ -173,7 +173,7 @@ public abstract class AbstractDropDownChoice extends FormComponent
 	 *            values to set
 	 * @return dropdown choice
 	 */
-	public AbstractDropDownChoice setValues(final Collection values)
+	public AbstractChoice setValues(final Collection values)
 	{
 		if (values == null)
 		{
