@@ -80,13 +80,11 @@ public class Localizer
 			final Locale locale, final String style, final String defaultValue)
 			throws MissingResourceException
 	{
+		// The string to return
 		String string = null;
 
+		// Get application settings
 		final ApplicationSettings settings = application.getSettings();
-		if (settings == null)
-		{
-			throw new IllegalStateException("Application did not contain configured settings");
-		}
 
 		// Search each loader in turn and return the string if it is found
 		for (final Iterator iterator = settings.getStringResourceLoaders().iterator(); iterator
