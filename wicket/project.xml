@@ -2,7 +2,7 @@
     <pomVersion>3</pomVersion>
     <name>Wicket</name>
     <groupId>wicket</groupId>
-    <currentVersion>0.9.12-alpha</currentVersion>
+    <currentVersion>SNAPSHOT</currentVersion>
     <organization>
         <name>SourceForge</name>
         <url>http://sourceforge.net</url>
