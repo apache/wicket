@@ -30,7 +30,7 @@ import wicket.markup.html.HtmlContainer;
  * 
  * @author Juergen Donnerstag
  */
-public class SimpleHref extends HtmlContainer
+public class ExternalLink extends HtmlContainer
 {
     final private String href;
     final private String label;
@@ -42,7 +42,7 @@ public class SimpleHref extends HtmlContainer
      * @param href the href attribute to set
      * @param label the label (body)
      */
-    public SimpleHref(final String componentName, final String href, final String label)
+    public ExternalLink(final String componentName, final String href, final String label)
     {
         super(componentName);
         

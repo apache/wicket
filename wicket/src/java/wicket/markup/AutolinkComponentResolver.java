@@ -28,7 +28,7 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RenderException;
 import wicket.RequestCycle;
-import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -41,7 +41,7 @@ import wicket.util.value.ValueMap;
  * [autolink] components which are used in hrefs like 
  * &lt;a wicket="[autolink] href="Home.html"&gt;Home&lt;/a&gt;
  * 
- * It automatically creates a ExternalPageLink component using the tag syntax:
+ * It automatically creates a BookmarkablePageLink component using the tag syntax:
  * "[autolink:parameters]", where parameters can be a list of comma separated key
  * value pairs, such as "x=9,y=foo".
  * 
@@ -85,7 +85,7 @@ public class AutolinkComponentResolver implements IComponentResolver
     private PageParameters automaticLinkPageParameters;
 
     /**
-     * Automatically creates a ExternalPageLink component using the tag syntax:
+     * Automatically creates a BookmarkablePageLink component using the tag syntax:
      * "[autolink:parameters]", where parameters can be a list of comma separated key
      * value pairs, such as "x=9,y=foo".
      * 
@@ -126,7 +126,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 	        tag.attributes.makeImmutable();
 
 	        // Create an external (bookmarkable) Link
-	        final Link link = new ExternalPageLink(id, automaticLinkPageClass,
+	        final Link link = new BookmarkablePageLink(id, automaticLinkPageClass,
 	                automaticLinkPageParameters);
 			
 	        // Add the link to the container
