@@ -189,8 +189,9 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
+	 * 
 	 * @see wicket.markup.parser.XmlTag#getType()
 	 * @return the tag type (OPEN, CLOSE or OPEN_CLOSE).
 	 */
@@ -363,14 +364,21 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @param componentNameAttribute
 	 *            The attribute name to remove
+	 * @param removeComponentsWithDefaultName
+	 *            If true, components with name "wicket" get removed as
 	 */
-	public void removeComponentName(final String componentNameAttribute)
+	public void removeComponentName(final String componentNameAttribute,
+			final boolean removeComponentsWithDefaultName)
 	{
 		if (xmlTag.isMutable())
 		{
 			this.componentName = null;
 			xmlTag.remove(componentNameAttribute);
-			xmlTag.remove(DEFAULT_COMPONENT_NAME_ATTRIBUTE);
+			
+			if (removeComponentsWithDefaultName)
+			{
+				xmlTag.remove(DEFAULT_COMPONENT_NAME_ATTRIBUTE);
+			}
 		}
 		else
 		{
@@ -426,7 +434,7 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @see wicket.markup.parser.XmlTag#setType(Type)
 	 * @param type
@@ -436,7 +444,7 @@ public class ComponentTag extends MarkupElement
 	{
 		xmlTag.setType(type);
 	}
-	
+
 	/**
 	 * @return A synthetic close tag for this tag
 	 */
