@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 public class CsvView extends BaseExportView
 {
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#BaseExportView(TableModel, boolean, boolean, boolean)
+     * @see wicket.examples.displaytag.export.BaseExportView#BaseExportView(TableModel, boolean, boolean, boolean)
      */
     public CsvView(final List tableModel, final boolean exportFullList, final boolean includeHeader, final boolean decorateValues)
     {
@@ -38,7 +38,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getRowStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getRowStart()
      */
     protected String getRowStart()
     {
@@ -46,7 +46,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getRowEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getRowEnd()
      */
     protected String getRowEnd()
     {
@@ -54,7 +54,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getCellStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getCellStart()
      */
     protected String getCellStart()
     {
@@ -62,7 +62,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getCellEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getCellEnd()
      */
     protected String getCellEnd()
     {
@@ -70,7 +70,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getDocumentStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getDocumentStart()
      */
     protected String getDocumentStart()
     {
@@ -78,7 +78,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getDocumentEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getDocumentEnd()
      */
     protected String getDocumentEnd()
     {
@@ -86,7 +86,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendCellEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendCellEnd()
      */
     protected boolean getAlwaysAppendCellEnd()
     {
@@ -94,7 +94,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendRowEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendRowEnd()
      */
     protected boolean getAlwaysAppendRowEnd()
     {
@@ -102,7 +102,7 @@ public class CsvView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getMimeType()
+     * @see wicket.examples.displaytag.export.BaseExportView#getMimeType()
      */
     public String getMimeType()
     {
@@ -116,7 +116,7 @@ public class CsvView extends BaseExportView
      * <li>Fields containings newlines or , are surrounded by ""</li>
      * </ul>
      * Note this is the standard CVS format and it's not handled well by excel.
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
+     * @see wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
      */
     protected Object escapeColumnValue(Object value)
     {

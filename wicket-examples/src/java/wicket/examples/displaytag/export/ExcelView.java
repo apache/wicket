@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 public class ExcelView extends BaseExportView
 {
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#BaseExportView(TableModel, boolean, boolean, boolean)
+     * @see wicket.examples.displaytag.export.BaseExportView#BaseExportView(TableModel, boolean, boolean, boolean)
      */
     public ExcelView(final List tableModel, final boolean exportFullList, final boolean includeHeader, final boolean decorateValues)
     {
@@ -38,7 +38,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getMimeType()
+     * @see wicket.examples.displaytag.export.BaseExportView#getMimeType()
      * @return "application/vnd.ms-excel"
      */
     public String getMimeType()
@@ -47,7 +47,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getRowStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getRowStart()
      * @return ""
      */
     protected String getRowStart()
@@ -56,7 +56,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getRowEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getRowEnd()
      * @return "\n"
      */
     protected String getRowEnd()
@@ -65,7 +65,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getCellStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getCellStart()
      * @return ""
      */
     protected String getCellStart()
@@ -74,7 +74,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getCellEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getCellEnd()
      * @return "\t"
      */
     protected String getCellEnd()
@@ -83,7 +83,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getDocumentStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getDocumentStart()
      * @return ""
      */
     protected String getDocumentStart()
@@ -92,7 +92,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getDocumentEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getDocumentEnd()
      * @return ""
      */
     protected String getDocumentEnd()
@@ -101,7 +101,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendCellEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendCellEnd()
      * @return false
      */
     protected boolean getAlwaysAppendCellEnd()
@@ -110,7 +110,7 @@ public class ExcelView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendRowEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendRowEnd()
      * @return false
      */
     protected boolean getAlwaysAppendRowEnd()
@@ -124,7 +124,7 @@ public class ExcelView extends BaseExportView
      * <li>Quotes inside quoted strings are escaped with a double quote</li>
      * <li>Fields are surrounded by "" (should be optional, but sometimes you get a "Sylk error" without those)</li>
      * </ul>
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
+     * @see wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
      */
     protected Object escapeColumnValue(Object value)
     {

@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class XmlView extends BaseExportView
 {
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#BaseExportView(TableModel, boolean, boolean, boolean)
+     * @see wicket.examples.displaytag.export.BaseExportView#BaseExportView(TableModel, boolean, boolean, boolean)
      */
     public XmlView(final List tableModel, final boolean exportFullList, final boolean includeHeader, final boolean decorateValues)
     {
@@ -39,7 +39,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getRowStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getRowStart()
      */
     protected String getRowStart()
     {
@@ -47,7 +47,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getRowEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getRowEnd()
      */
     protected String getRowEnd()
     {
@@ -55,7 +55,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getCellStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getCellStart()
      */
     protected String getCellStart()
     {
@@ -63,7 +63,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getCellEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getCellEnd()
      */
     protected String getCellEnd()
     {
@@ -71,7 +71,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getDocumentStart()
+     * @see wicket.examples.displaytag.export.BaseExportView#getDocumentStart()
      */
     protected String getDocumentStart()
     {
@@ -79,7 +79,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getDocumentEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getDocumentEnd()
      */
     protected String getDocumentEnd()
     {
@@ -87,7 +87,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendCellEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendCellEnd()
      */
     protected boolean getAlwaysAppendCellEnd()
     {
@@ -95,7 +95,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendRowEnd()
+     * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendRowEnd()
      */
     protected boolean getAlwaysAppendRowEnd()
     {
@@ -103,7 +103,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#getMimeType()
+     * @see wicket.examples.displaytag.export.BaseExportView#getMimeType()
      */
     public String getMimeType()
     {
@@ -111,7 +111,7 @@ public class XmlView extends BaseExportView
     }
 
     /**
-     * @see org.wicket.examples.wicket.examples.wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
+     * @see wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
      */
     protected Object escapeColumnValue(Object value)
     {
