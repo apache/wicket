@@ -21,11 +21,16 @@ package wicket;
 import wicket.markup.ComponentTag;
 
 /**
- * Base class for different implementations of page output.
+ * Abstract base class for different implementations of response writing.
+ * A subclass must implement write(String) to write a String to the response
+ * destination (whether it be a browser, a file, a test harness or some other
+ * place).  A subclass may optionally implement close(), encodeURL(String),
+ * redirect(String), isRedirect() or setContentType(String) as appropriate.
+ * 
  * @author Jonathan Locke
  */
 public abstract class Response
-{ // TODO finalize javadoc
+{
     /**
      * Closes the response output stream
      */
@@ -34,40 +39,43 @@ public abstract class Response
     }
 
     /**
+     * An implementation of this method is only required if a subclass wishes
+     * to support sessions via URL rewriting.  This default implementation 
+     * simply returns the URL String it is passed.
      * @param url The URL to encode
      * @return The encoded url
      */
     public String encodeURL(final String url)
     {
-        // An implementation is only required to support sessions via URL
-        // rewriting.
         return url;
     }
 
     /**
+     * A subclass may override this method to implement redirection.  Subclasses
+     * which have no need to do redirection may choose not to override this 
+     * default implementation, which does nothing.  For example, if a subclass 
+     * wishes to write output to a file or is part of a testing harness, there
+     * may be no meaning to redirection.
      * @param url The URL to redirect to
      */
     public void redirect(final String url)
     {
-        // No implementation of redirect is required. For example, for something
-        // like output testing or writing pages to files, redirects may be
-        // irrelevant.
     }
 
     /**
-     * Set the content type on the response.
+     * Set the content type on the response, if appropriate in the subclass.
+     * This default implementation does nothing.
      * @param mimeType The mime type
      */
     public void setContentType(final String mimeType)
     {
-        // No implementation of redirect is required. For example, for something
-        // like output testing or writing pages to files, content type may be
-        // irrelevant.
     }
 
     /**
-     * @return True if the redirect method has been called, making this response a
-     *         redirect
+     * Returns true if a redirection has occurred.  The default implementation
+     * always returns false since redirect is not implemented by default.
+     * @return True if the redirect method has been called, making this 
+     * response a redirect. 
      */
     public boolean isRedirect()
     {
@@ -75,7 +83,7 @@ public abstract class Response
     }
 
     /**
-     * Writes the given tag to output
+     * Writes the given tag to via the write(String) abstract method.
      * @param tag The tag to write
      */
     public final void write(final ComponentTag tag)
@@ -84,7 +92,7 @@ public abstract class Response
     }
 
     /**
-     * Writes the given string to output
+     * Writes the given string to the Response subclass output destination.
      * @param string The string to write
      */
     public abstract void write(final String string);
