@@ -27,7 +27,6 @@ import javax.swing.tree.TreeModel;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.contrib.markup.html.tree.AbstractTree;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.border.Border;
@@ -35,6 +34,7 @@ import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.tree.AbstractTree;
 import wicket.model.Model;
 
 /**
