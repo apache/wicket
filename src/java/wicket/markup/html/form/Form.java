@@ -251,7 +251,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 *
 	 * @see Form#validate()
 	 */
-	public final void onFormSubmitted()
+	public void onFormSubmitted()
 	{
 		onValidate();
 	}

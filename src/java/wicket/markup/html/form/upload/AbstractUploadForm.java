@@ -20,25 +20,18 @@ package wicket.markup.html.form.upload;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.WicketRuntimeException;
+import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.protocol.http.WebRequest;
 
-
 /**
- * Base class for upload components.
+ * Base class for upload forms.
  * 
  * @author Eelco Hillenius
  */
@@ -61,53 +54,17 @@ public abstract class AbstractUploadForm extends Form
 	}
 
 	/**
-	 * Handles an upload.
-	 * 
-	 * @see wicket.markup.html.form.Form#onSubmit()
+	 * @see wicket.markup.html.form.Form#onFormSubmitted()
 	 */
-	public void onSubmit()
+	public void onFormSubmitted()
 	{
-		try
-		{
-			final WebRequest httpRequest = (WebRequest)getRequest();
-			final HttpServletRequest request = httpRequest.getHttpServletRequest();
-			final boolean isMultipart = FileUpload.isMultipartContent(request);
-			if (!isMultipart)
-			{
-				throw new IllegalStateException("Request is not a multipart request");
-			}
-			prepareUpload();
-			final FileUploadBase upload = createUpload();
-			final List items = parseRequest(request, upload);
-			processFileItems(items);
-			finishUpload();
-		}
-		catch (FileUploadException e)
-		{
-			// For the time being, we throw
-			throw new WicketRuntimeException(e);
-		}
-	}
+		// Change the request to a multipart web request so parameters are
+		// parsed out correctly
+		RequestCycle.get().setRequest(
+				new MultipartWebRequest(((WebRequest)getRequest()).getHttpServletRequest()));
 
-	/**
-	 * Create an upload object. Override this to use anything else than
-	 * {@link DiskFileUpload}or to parameterize the upload object (e.g. set the
-	 * max size, temp dir, etc).
-	 * 
-	 * @return upload object
-	 */
-	protected FileUploadBase createUpload()
-	{
-		FileUploadBase upload = new DiskFileUpload();
-		return upload;
-	}
-
-	/**
-	 * Template method that is called after the handling of the upload form
-	 * finishes. Use for things like re-rendering the UI etc.
-	 */
-	protected void finishUpload()
-	{
+		// Now do normal form submit validation processing
+		super.onFormSubmitted();
 	}
 
 	/**
@@ -124,66 +81,24 @@ public abstract class AbstractUploadForm extends Form
 	}
 
 	/**
-	 * parse the request and return a List of {@link FileItem}s.
-	 * 
-	 * @param request
-	 *            http servlet request
-	 * @param upload
-	 *            upload object
-	 * @return List with {@link FileItem}s
-	 * @throws FileUploadException
+	 * @see wicket.markup.html.form.Form#onSubmit()
 	 */
-	protected List parseRequest(HttpServletRequest request, FileUploadBase upload)
-			throws FileUploadException
+	protected void onSubmit()
 	{
-		List items = upload.parseRequest(request);
-		return items;
-	}
-
-	/**
-	 * Template method that is called before the handling of the upload form
-	 * starts. Use for initialization of directories etc.
-	 */
-	protected void prepareUpload()
-	{
-	}
-
-	/**
-	 * Process the list of file items.
-	 * 
-	 * @param items
-	 *            List of {@link FileItem}s
-	 */
-	protected void processFileItems(List items)
-	{
-		for (Iterator i = items.iterator(); i.hasNext();)
+		// The submit was valid and some form subclass implementation of
+		// onSubmit() called super.onSubmit()
+		final List files = ((MultipartWebRequest)getRequest()).getFiles();
+		for (final Iterator iterator = files.iterator(); iterator.hasNext();)
 		{
-			FileItem item = (FileItem)i.next();
-
-			if (item.isFormField())
-			{
-				processFormField(item);
-			}
-			else
-			{
-				processUploadedFile(item);
-			}
+			onUpload((FileItem)iterator.next());
 		}
 	}
 
 	/**
-	 * Process a form field.
+	 * Override this method to handle uploading a file
 	 * 
-	 * @param item
-	 *            form field item (item.isFormField() == true)
+	 * @param fileItem
+	 *            The file item to deal with
 	 */
-	protected abstract void processFormField(FileItem item);
-
-	/**
-	 * Process an upload item.
-	 * 
-	 * @param item
-	 *            upload item (item.isFormField() == false)
-	 */
-	protected abstract void processUploadedFile(FileItem item);
+	protected abstract void onUpload(FileItem fileItem);
 }

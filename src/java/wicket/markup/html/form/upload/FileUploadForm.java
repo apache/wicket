@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
+ * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -23,231 +23,192 @@ import org.apache.commons.fileupload.FileItem;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.validation.IValidationFeedback;
+import wicket.util.file.Files;
+import wicket.util.file.Folder;
+import wicket.util.string.Strings;
+import wicket.util.thread.Lock;
 
 /**
  * Form that uploads files and writes them to the file system. It uses a
  * conflict handler that is called when a file with the same name exists in the
  * same directory when trying to save an uploaded file.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class FileUploadForm extends AbstractUploadForm
 {
-
 	/**
 	 * This conflict handler renames the file using an ascending number until it
 	 * finds a name that it not used yet. Names are of form:
 	 * {simple-filename}({number}).{ext}. e.g.: myfile.gif, myfile(1).gif and
 	 * myfile(2).gif
 	 */
-	public final static FileExistsConflictHandler NUMBER_FILE_CONFLICT_HANDLER = new FileExistsConflictHandler()
+	public final static IFileConflictResolver NUMBERING_FILE_CONFLICT_RESOLVER = new IFileConflictResolver()
 	{
 		/**
-		 * @see wicket.markup.html.form.upload.FileUploadForm.FileExistsConflictHandler#getFileForSaving(java.io.File)
+		 * @see wicket.markup.html.form.upload.FileUploadForm.IFileConflictResolver#resolveConflict(java.io.File)
 		 */
-		public File getFileForSaving(final File uploadFile)
+		public File resolveConflict(final File file)
 		{
-			final File targetDirectory = uploadFile.getParentFile();
-			final String fileName = uploadFile.getName();
-			final int extloc = fileName.lastIndexOf('.');
-			final String ext = fileName.substring((extloc + 1), fileName.length());
-			File newFile;
-			int i = 1;
-			while (true)
+			final String path = Strings.beforeLast(file.getPath(), '.');
+			final String extension = Strings.afterLast(file.getPath(), '.');
+			for (int i = 1;; i++)
 			{
-				File testFile = new File(targetDirectory, (fileName + "(" + i + ")." + ext));
-				if (testFile.exists())
+				final File newFile = new File(path + "(" + i + ")." + extension);
+				if (!newFile.exists())
 				{
-					i++;
-				}
-				else
-				{
-					newFile = testFile;
-					break;
+					return newFile;
 				}
 			}
-			return newFile;
 		}
 	};
 
 	/**
 	 * This conflict handler tries to delete the current file and returns the
-	 * given file handler. Hence, the current file will be overwritten by the
-	 * upload file.
+	 * given file. Hence, the current file will be overwritten by the upload
+	 * file.
 	 */
-	public final static FileExistsConflictHandler OVERWRITE_FILE_CONFLICT_HANDLER = new FileExistsConflictHandler()
+	public final static IFileConflictResolver OVERWRITING_FILE_CONFLICT_RESOLVER = new IFileConflictResolver()
 	{
 		/**
-		 * @see wicket.markup.html.form.upload.FileUploadForm.FileExistsConflictHandler#getFileForSaving(java.io.File)
+		 * @see wicket.markup.html.form.upload.FileUploadForm.IFileConflictResolver#resolveConflict(java.io.File)
 		 */
-		public File getFileForSaving(final File uploadFile)
+		public File resolveConflict(final File file)
 		{
-			if (!uploadFile.delete()) // delete current file
+			// Try one more time to delete the file
+			if (!Files.delete(file))
 			{
-				// fix for java/win bug
-				// see:
-				// http://forum.java.sun.com/thread.jsp?forum=4&thread=158689&tstart=0&trange=15
-				System.gc();
-				try
-				{
-					Thread.sleep(100);
-				}
-				catch (InterruptedException e)
-				{
-				}
-				if (!uploadFile.delete())
-				{
-					throw new IllegalStateException("unable to delete old file "
-							+ uploadFile.getAbsolutePath());
-				}
+				throw new IllegalStateException("Unable to overwrite " + file.getAbsolutePath());
 			}
-			return uploadFile;
+			return file;
 		}
 	};
 
-	/**
-	 * give the resource a new, numbered, name when a resource with the same
-	 * name exists.
-	 */
-	private final static int MODE_NUMBER = 1;
+	/** Lock used to serialize file conflict resolutions */
+	private static final Lock conflictResolverLock = new Lock();
 
-	/** overwrite existing resources. */
-	private final static int MODE_OVERWRITE = 0;
 	/** Serial Version ID */
 	private static final long serialVersionUID = 6615560494113373735L;
 
 	/**
-	 * conflict handler that will be called when a file with the same name
+	 * Conflict handler that will be called when a file with the same name
 	 * already exists in the same directory when trying to save an uploaded
 	 * file.
 	 */
-	private FileExistsConflictHandler fileExistsConflictHandler;
+	private IFileConflictResolver fileExistsConflictHandler;
 
-	private String fileName = null;
-
-	/** the directory where the uploaded files should be put. */
-	private final File targetDirectory;
-
-	/** the current upload mode. */
-	private int uploadMode = MODE_NUMBER;
+	/** The directory where the uploaded files should be put. */
+	private final Folder uploadFolder;
 
 	/**
 	 * Interface for handlers that will be called when a file with the same name
 	 * already exists in the same directory when trying to save an uploaded
 	 * file.
 	 */
-	public static interface FileExistsConflictHandler
+	public static interface IFileConflictResolver
 	{
 		/**
-		 * Get the file handle that should be used to save the upload to.
-		 *
-		 * @param uploadFile
-		 *            the current, allready existing file.
-		 * @return the file that should be used to save the upload to
+		 * Get the file that should be used to save the upload to.
+		 * 
+		 * @param file
+		 *            The current, already existing file.
+		 * @return The file that should be used to save the upload to
 		 */
-		File getFileForSaving(File uploadFile);
+		public File resolveConflict(File file);
 	}
 
 	/**
-	 * Construct; uses NUMBER_FILE_CONFLICT_HANDLER as the
-	 * fileExistsConflictHandler.
-	 *
+	 * Constructor; uses NUMBER_FILE_CONFLICT_HANDLER to handle conflicts with
+	 * existing files.
+	 * 
 	 * @param name
-	 *            component name
+	 *            Component name
 	 * @param validationErrorHandler
-	 *            error handler for validations
-	 * @param targetDirectory
-	 *            the directory where the uploaded files should be put
+	 *            Error handler for validation errors
+	 * @param uploadFolder
+	 *            The folder to upload files to
 	 */
 	public FileUploadForm(String name, IValidationFeedback validationErrorHandler,
-			File targetDirectory)
+			Folder uploadFolder)
 	{
-		this(name, validationErrorHandler, targetDirectory, NUMBER_FILE_CONFLICT_HANDLER);
+		this(name, validationErrorHandler, uploadFolder, NUMBERING_FILE_CONFLICT_RESOLVER);
 	}
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param name
-	 *            component name
+	 *            Component name
 	 * @param validationErrorHandler
-	 *            error handler for validations
-	 * @param targetDirectory
-	 *            the directory where the uploaded files should be put
+	 *            Error handler for validation errors
+	 * @param uploadFolder
+	 *            The folder to upload files to
 	 * @param fileExistsConflictHandler
-	 *            conflict handler that will be called when a file with the same
+	 *            Conflict handler that will be called when a file with the same
 	 *            name already exists in the same directory when trying to save
 	 *            an uploaded file
 	 */
 	public FileUploadForm(String name, IValidationFeedback validationErrorHandler,
-			File targetDirectory, FileExistsConflictHandler fileExistsConflictHandler)
+			Folder uploadFolder, IFileConflictResolver fileExistsConflictHandler)
 	{
 		super(name, validationErrorHandler);
-		this.targetDirectory = targetDirectory;
+		this.uploadFolder = uploadFolder;
 		this.fileExistsConflictHandler = fileExistsConflictHandler;
 	}
-
+	
 	/**
-	 * Processes a form field.
-	 *
-	 * @param item
-	 *            a file item
-	 * @see wicket.markup.html.form.upload.AbstractUploadForm#processFormField(org.apache.commons.fileupload.FileItem)
+	 * @return Returns the uploadFolder.
 	 */
-	protected final void processFormField(FileItem item)
+	protected Folder getUploadFolder()
 	{
-		this.fileName = item.getString();
+		return uploadFolder;
 	}
 
 	/**
-	 * Process an upload item.
-	 *
-	 * @param item
-	 *            upload item (item.isFormField() == false)
-	 * @see wicket.markup.html.form.upload.AbstractUploadForm#processUploadedFile(org.apache.commons.fileupload.FileItem)
+	 * @see wicket.markup.html.form.upload.AbstractUploadForm#onUpload(org.apache.commons.fileupload.FileItem)
 	 */
-	protected final void processUploadedFile(FileItem item)
+	protected void onUpload(FileItem fileItem)
 	{
-		if (item == null)
-		{
-			throw new IllegalArgumentException("No file");
-		}
-		String originalName = item.getName();
-		int extloc = originalName.lastIndexOf('.');
-		String ext = originalName.substring((extloc + 1), originalName.length());
-		if (fileName == null)
-		{
-			fileName = originalName.substring(0, extloc);
-		}
-
-		if (fileName == null || fileName.trim().equals(""))
-		{
-			throw new WicketRuntimeException("No file name given");
-		}
-
-		File targetFile = new File(targetDirectory, fileName + "." + ext);
-		saveFile(item, targetFile);
+		saveFile(fileItem, new File(uploadFolder, fileItem.getName()));
 	}
 
 	/**
 	 * Saves the uploaded file to disk.
-	 *
+	 * 
 	 * @param item
 	 *            the upload item
-	 * @param targetFile
+	 * @param file
 	 *            the target file
 	 */
-	private final void saveFile(final FileItem item, final File targetFile)
+	protected final void saveFile(final FileItem item, final File file)
 	{
+		File newFile = file;
 		try
 		{
-			item.write(targetFile.exists()
-					? fileExistsConflictHandler.getFileForSaving(targetFile)
-					: targetFile);
+			// We need to hold this lock because more than one thread could be
+			// uploading to the same file and both threads might run into the
+			// same conflict simultaneously. If both threads were to resolve the
+			// same conflict in the same way, they might end up writing to the
+			// same file, so we serialize conflict resolution so that only one
+			// conflict is resolved at a time.
+			synchronized (conflictResolverLock)
+			{
+				if (newFile.exists())
+				{
+					newFile = fileExistsConflictHandler.resolveConflict(file);
+				}
+
+				// By creating the file while we still hold the
+				// conflictResovlerLock monitor, we ensure that any other
+				// threads waiting to resolve the same conflict will take
+				// a higher conflict resolution number.
+				newFile.createNewFile();
+			}
+			item.write(newFile);
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new WicketRuntimeException("Could not save upload to " + newFile, e);
 		}
 	}
 }

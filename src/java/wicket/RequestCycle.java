@@ -175,7 +175,7 @@ public abstract class RequestCycle
 	protected final Application application;
 
 	/** The current request. */
-	protected final Request request;
+	protected Request request;
 
 	/** The current response. */
 	protected Response response;
@@ -485,6 +485,14 @@ public abstract class RequestCycle
 	public final void setRedirect(final boolean redirect)
 	{
 		this.redirect = redirect;
+	}
+	
+	/**
+	 * @param request The request to set.
+	 */
+	public void setRequest(Request request)
+	{
+		this.request = request;
 	}
 
 	/**
