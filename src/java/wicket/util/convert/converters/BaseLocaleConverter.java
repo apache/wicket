@@ -20,7 +20,6 @@ package wicket.util.convert.converters;
 
 
 import java.text.ParseException;
-
 import java.util.Locale;
 
 import wicket.util.convert.Formatter;
@@ -29,9 +28,7 @@ import wicket.util.convert.Formatter;
  * base class for localized converters.
  */
 public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
-{ // TODO finalize javadoc
-    // ----------------------------------------------------- Instance Variables
-
+{
     /** The locale specified to our Constructor, by default - system locale. */
     protected Locale locale = Locale.getDefault();
 
@@ -41,10 +38,9 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
     /** The flag indicating whether the given pattern string is localized or not. */
     protected boolean locPattern = false;
 
-    // ----------------------------------------------------------- Constructors
-
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link wicket.util.convert.ConversionException}if a
+     * Create a {@link LocaleConverter}that will throw a
+     * {@link wicket.util.convert.ConversionException} if a
      * conversion error occurs. An unlocalized pattern is used for the convertion.
      * @param locale The locale
      * @param pattern The convertion pattern
@@ -55,8 +51,8 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
     }
 
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link wicket.util.convert.ConversionException}if
-     * an conversion error occurs.
+     * Create a {@link LocaleConverter}that will throw a
+     * {@link wicket.util.convert.ConversionException} if an conversion error occurs.
      * @param locale The locale
      * @param pattern The convertion pattern
      * @param locPattern Indicate whether the pattern is localized or not
@@ -72,10 +68,8 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
         this.locPattern = locPattern;
     }
 
-    // --------------------------------------------------------- Methods
-
     /**
-     * Convert the specified locale-sensitive input object into an output object of the
+     * Converts the specified locale-sensitive input object into an output object of the
      * specified type.
      * @param value The input object to be converted
      * @param pattern The pattern is used for the convertion
@@ -83,11 +77,23 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
      * @throws ParseException
      * @exception wicket.util.convert.ConversionException if conversion cannot be performed successfully
      */
-    abstract protected Object parse(Object value, String pattern) throws ParseException;
+    protected abstract Object parse(Object value, String pattern) throws ParseException;
 
     /**
-     * Convert the specified locale-sensitive input object into an output object. The
-     * default pattern is used for the convertion.
+     * Converts the specified locale-sensitive input object into an output object.
+     * @param value The input object to be converted
+     * @param pattern The pattern is used for the convertion
+     * @return converted object
+     * @exception wicket.util.convert.ConversionException if conversion cannot be performed successfully
+     */
+    public Object convert(Object value, String pattern)
+    {
+        return convert(value, pattern);
+    }
+
+    /**
+     * Converts the specified locale-sensitive input object into an output object of the
+     * specified type. The default pattern is used for the convertion.
      * @param value The input object to be converted
      * @return converted object
      * @exception wicket.util.convert.ConversionException if conversion cannot be performed successfully
@@ -98,33 +104,8 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
     }
 
     /**
-     * Convert the specified locale-sensitive input object into an output object.
-     * @param value The input object to be converted
-     * @param pattern The pattern is used for the convertion
-     * @return converted object
-     * @exception wicket.util.convert.ConversionException if conversion cannot be performed successfully
-     */
-    public Object convert(Object value, String pattern)
-    {
-        return convert(null, value, pattern);
-    }
-
-    /**
-     * Convert the specified locale-sensitive input object into an output object of the
-     * specified type. The default pattern is used for the convertion.
-     * @param type Data type to which this value should be converted
-     * @param value The input object to be converted
-     * @return converted object
-     * @exception wicket.util.convert.ConversionException if conversion cannot be performed successfully
-     */
-    public Object convert(Class type, Object value)
-    {
-        return convert(type, value, null);
-    }
-
-    /**
-     * get the locale
-     * @return Locale
+     * gets the locale.
+     * @return the locale
      */
     public Locale getLocale()
     {
@@ -132,8 +113,8 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
     }
 
     /**
-     * get the pattern
-     * @return String
+     * gets the pattern.
+     * @return the pattern
      */
     public String getPattern()
     {
@@ -141,8 +122,8 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
     }
 
     /**
-     * set the locale
-     * @param locale
+     * sets the locale.
+     * @param locale the locale
      */
     public void setLocale(Locale locale)
     {
@@ -150,8 +131,8 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
     }
 
     /**
-     * set the pattern
-     * @param string
+     * sets the pattern.
+     * @param string the pattern
      */
     public void setPattern(String string)
     {

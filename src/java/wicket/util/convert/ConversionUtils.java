@@ -77,7 +77,7 @@ public final class ConversionUtils
                         value = ((String[]) value)[0];
                     }
                 }
-                converted = converter.convert(toType, value);
+                converted = converter.convert(value);
             }
             else
             // no converter was found

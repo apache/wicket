@@ -27,13 +27,13 @@ import java.util.Locale;
  * Utiltiy for formatting that works with the given instance of converter registry.
  */
 public final class FormattingUtils
-{ // TODO finalize javadoc
+{
     /** converter registry to use. */
     private final ConverterRegistry converterRegistry;
 
     /**
      * Construct.
-     * @param registry
+     * @param registry the converter registry to be used by this utils instance
      */
     FormattingUtils(ConverterRegistry registry)
     {
@@ -73,7 +73,7 @@ public final class FormattingUtils
                 try
                 {
                     Converter converter = this.converterRegistry.lookup(String.class);
-                    Object converted = converter.convert(String.class, value);
+                    Object converted = converter.convert(value);
 
                     return (converted instanceof String) ? (String) converted : String
                             .valueOf(converted);
@@ -90,7 +90,7 @@ public final class FormattingUtils
             try
             {
                 Converter converter = this.converterRegistry.lookup(String.class);
-                Object converted = converter.convert(String.class, value);
+                Object converted = converter.convert(value);
 
                 return (converted instanceof String) ? (String) converted : String
                         .valueOf(converted);

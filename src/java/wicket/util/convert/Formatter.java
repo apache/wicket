@@ -22,13 +22,12 @@ package wicket.util.convert;
  * Interface for formatting values.
  */
 public interface Formatter
-{ // TODO finalize javadoc
+{
     /**
      * Convert the specified input object into a locale-sensitive output string.
      * @param value The input object to be formatted
      * @param pattern The pattern is used for the conversion
      * @return object as a formatted string
-     * @exception IllegalArgumentException if formatting cannot be performed successfully
      */
-    public String format(Object value, String pattern) throws IllegalArgumentException;
+    public String format(Object value, String pattern);
 }

@@ -18,7 +18,6 @@
  */
 package wicket.util.convert.converters;
 
-
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
@@ -29,19 +28,16 @@ import java.util.regex.Pattern;
 import wicket.util.convert.ConversionException;
 
 /**
- * <p>
- * Modified {@link LocaleConverter}implementation for this framework
- * </p>
+ * {@link wicket.util.convert.converters.LocaleConverter} implementation
+ * for decimal numbers.
  */
 public abstract class DecimalLocaleConverter extends BaseLocaleConverter
-{ // TODO finalize javadoc
+{
+	/** non digit regex pattern. */
     protected Pattern nonDigitPattern = Pattern.compile(".*[^0-9&&[^\\,]&&[^\\.]&&[^\\-]].*");
 
-    // ----------------------------------------------------------- Constructors
-
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link ConversionException}if a
-     * conversion error occurs. The locale is the default locale for this instance of the
+     * Construct. The locale is the default locale for this instance of the
      * Java Virtual Machine and an unlocalized pattern is used for the convertion.
      */
     public DecimalLocaleConverter()
@@ -50,8 +46,7 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link ConversionException}if a
-     * conversion error occurs. No pattern is used for the convertion.
+     * Construct. No pattern is used for the convertion.
      * @param locale The locale
      */
     public DecimalLocaleConverter(Locale locale)
@@ -60,8 +55,7 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link ConversionException}if a
-     * conversion error occurs. An unlocalized pattern is used for the convertion.
+     * Construct. An unlocalized pattern is used for the convertion.
      * @param locale The locale
      * @param pattern The convertion pattern
      */
@@ -71,8 +65,7 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * Create a {@link LocaleConverter}that will throw a {@link ConversionException}if a
-     * conversion error occurs.
+     * Construct.
      * @param locale The locale
      * @param pattern The convertion pattern
      * @param locPattern Indicate whether the pattern is localized or not
@@ -82,10 +75,8 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
         super(locale, pattern, locPattern);
     }
 
-    // --------------------------------------------------------- Methods
-
     /**
-     * Convert the specified locale-sensitive input object into an output object of the
+     * Converts the specified locale-sensitive input object into an output object of the
      * specified type.
      * @param value The input object to be converted
      * @param pattern The pattern is used for the conversion
@@ -106,7 +97,7 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * Convert the specified input object into a locale-sensitive output string
+     * Converts the specified input object into a locale-sensitive output string
      * @param value The input object to be formatted
      * @param pattern The pattern is used for the conversion
      * @return formatted object
@@ -125,7 +116,7 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * get format and optionally apply pattern if given
+     * Gets the format and optionally apply the pattern if given
      * @param pattern pattern or null
      * @return DecimalFormat formatter instance
      */
@@ -149,10 +140,10 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
     }
 
     /**
-     * translate value to a number optionally using the supplied pattern
+     * Translates the given value to a number optionally using the supplied pattern.
      * @param value the value to convert
      * @param pattern the patter to use (optional)
-     * @return Number
+     * @return parsed number
      * @throws ConversionException
      */
     protected Number getNumber(Object value, String pattern) throws ConversionException

@@ -18,13 +18,10 @@
  */
 package wicket.util.convert;
 
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-
 import java.sql.Date;
 import java.sql.Timestamp;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,24 +44,17 @@ import wicket.util.convert.converters.LocaleConverter;
 import wicket.util.convert.converters.LocaleFormatter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.LongLocaleConverter;
-import wicket.util.convert.converters.NoopConverter;
 import wicket.util.convert.converters.ShortConverter;
 import wicket.util.convert.converters.ShortLocaleConverter;
 
 /**
- * Global registry for converters. This serves as the alternative for ConvertUtils. We use
- * this instead of ConvertUtils for the following reasons:
- * <ul>
- * <li>to avoid conflicts with other uses of BeanUtils</li>
- * <li>to have a simple, flat registry with mixed usage of locales</li>
- * <li>to keep control of the registry within this framework</li>
- * <li>to have an extra option for the registration of 'just' formatters</li>
- * </ul>
+ * Registry for converters. Converters are used by {@link wicket.model.PropertyModel}s,
+ * but can also be used by clients directly.
  * The registry is using non localized converters by default. See methods
  * setLocalizedDefaults() and setNonLocalizedDefaults().
  */
 public final class ConverterRegistry
-{ // TODO finalize javadoc
+{
     /**
      * converter for fallthrough.
      */
@@ -540,9 +530,11 @@ public final class ConverterRegistry
         return formatter;
     }
 
-    /*
-     * get key for localized converters @param clazz class @param locale locale @return
-     * String key
+    /**
+     * gets key for localized converters.
+     * @param clazz class
+     * @param locale locale
+     * @return key
      */
     private String getLocKey(Class clazz, Locale locale)
     {
@@ -609,4 +601,21 @@ public final class ConverterRegistry
     {
         return conversionUtils;
     }
+
+    /**
+     * Converter that does nothing at all! Used for fallthrough; if really no converter is
+     * found at all, this one is used.
+     */
+    private static final class NoopConverter implements Converter
+    {
+        /**
+         * Noop; returns the value as was provided.
+         * @see Converter#convert(java.lang.Object)
+         */
+        public Object convert(Object value)
+        {
+            return value;
+        }
+    }
+
 }
