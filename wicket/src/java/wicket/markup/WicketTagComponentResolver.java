@@ -20,6 +20,7 @@ package wicket.markup;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -51,6 +52,14 @@ public class WicketTagComponentResolver implements IComponentResolver
     /** Logging */
     private static Log log = LogFactory.getLog(WicketTagComponentResolver.class);
 
+    /** Temporary storage for containers currently being rendered. Thus child
+     * components can be re-parented. Remember: <wicket:component> are an 
+     * exception to the rule. Though the markup of the children are nested
+     * inside <wicket:component>, there respective java components are not.
+     * They must be added to the parent container auf <wicket:component>.
+     */ 
+    private Map nestedComponents = new HashMap();
+    
     /**
      * @see wicket.markup.IComponentResolver#resolve(Container, MarkupStream,
      *      ComponentTag)
@@ -77,8 +86,26 @@ public class WicketTagComponentResolver implements IComponentResolver
                 final Component component = createComponent(container, wicketTag);
                 if (component != null)
                 {
+                    nestedComponents.put(component, null);
                     // Add it to the hierarchy and render it
                     container.add(component);
+                    component.render();
+                    
+                    nestedComponents.remove(component);
+                    return true;
+                }
+            }
+        }
+        
+        // Re-parent children of <wicket:component>. 
+        if ((tag.getComponentName() != null) && nestedComponents.containsKey(container))
+        {
+            final Container parent = container.getParent();
+            if (parent != null)
+            {
+                final Component component = parent.get(tag.getComponentName());
+                if (component != null)
+                {
                     component.render();
                     return true;
                 }
