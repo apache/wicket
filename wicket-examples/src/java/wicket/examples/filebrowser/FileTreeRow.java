@@ -20,12 +20,15 @@ package wicket.examples.filebrowser;
 
 import java.io.File;
 
+import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.tree.OnClickTreeNodeLink;
 import wicket.markup.html.tree.Tree;
 import wicket.markup.html.tree.TreeNodeLink;
 import wicket.markup.html.tree.TreeNodeModel;
+import wicket.markup.html.tree.TreeRowReplacementModel;
 
 /**
  * Panel for displaying one tree row. This overrides the default
@@ -43,17 +46,23 @@ public final class FileTreeRow extends Panel
     public FileTreeRow(String componentName, Tree tree, TreeNodeModel nodeModel)
     {
         super(componentName);
+        HtmlContainer li = null;
         if(nodeModel != null)
         {
             TreeNodeLink link = new TreeNodeLink("link", tree, nodeModel);
             File file = (File)nodeModel.getUserObject();
             link.add(new Label("label", file.getName()));
-            add(link);
+            li = new OnClickTreeNodeLink("li", tree, nodeModel);
+            li.add(link);
         }
         else
         {
             // not a real node; just add some dummies
-            add(new HtmlContainer("link").add(new HtmlContainer("label")));
+        	li = new HtmlContainer("li");
+            li.add(new HtmlContainer("link").add(new HtmlContainer("label")));
         }
+        TreeRowReplacementModel replacementModel = new TreeRowReplacementModel(nodeModel);
+        li.add(new ComponentTagAttributeModifier("class", true, replacementModel));
+        add(li);
     }
 }

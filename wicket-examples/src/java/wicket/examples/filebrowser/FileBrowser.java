@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
-import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.DropDownChoice;
@@ -39,7 +38,6 @@ import wicket.markup.html.tree.AbstractTree;
 import wicket.markup.html.tree.FlatTree;
 import wicket.markup.html.tree.Tree;
 import wicket.markup.html.tree.TreeNodeModel;
-import wicket.markup.html.tree.TreeRowReplacementModel;
 import wicket.markup.html.tree.TreeStateCache;
 
 /**
@@ -204,11 +202,7 @@ public class FileBrowser extends HtmlPage
          */
         protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
         {
-            TreeRowReplacementModel replacementModel =
-                new TreeRowReplacementModel(nodeModel);
             Panel rowPanel = new FileTreeRow(componentName, this, nodeModel);
-            rowPanel.add(new ComponentTagAttributeModifier(
-                    "class", true, replacementModel));
             return rowPanel;
         } 
     }
