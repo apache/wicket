@@ -19,9 +19,11 @@ import wicket.model.Model;
  * RENDER THE INPUT ON THE COMPONENT, AND TO AVOID POSSIBLE EXCEPTIONS THAT CAN
  * OCCUR WHEN INVALID VALUES ARE SET INTO THE MODEL.
  * </p>
+ *
+ * @author Eelco Hillenius
  */
 public final class ValidationErrorModelDecorator extends Model
-{ // TODO finalize javadoc
+{
     /** the decorated model. */
     private IModel originalModel;
 

@@ -29,7 +29,7 @@ import wicket.markup.html.form.FormComponent;
  *
  * @author Jonathan Locke
  */
-public final class DecimalValidator extends AbstractValidator
+public class DecimalValidator extends AbstractValidator
 {
     /**
      * Validator that ensures int value.
@@ -78,7 +78,7 @@ public final class DecimalValidator extends AbstractValidator
      * @param max Upper bound on valid decimal number
      * @return Validator object
      */
-    public static DecimalValidator range(final long min, final long max)
+    public final static DecimalValidator range(final long min, final long max)
     {
         return new DecimalValidator(min, max);
     }
@@ -90,7 +90,7 @@ public final class DecimalValidator extends AbstractValidator
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(final FormComponent component)
+    public final ValidationErrorMessage validate(final FormComponent component)
     {
         // Get component value
         final String value = component.getRequestString();

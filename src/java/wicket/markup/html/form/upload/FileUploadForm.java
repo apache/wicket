@@ -24,7 +24,6 @@ import org.apache.commons.fileupload.FileItem;
 
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 
-
 /**
  * Form that uploads files and writes them to the file system. It uses a conflict handler
  * that is called when a file with the same name exists in the same directory when
@@ -33,7 +32,7 @@ import wicket.markup.html.form.validation.IValidationErrorHandler;
  * @author Eelco Hillenius
  */
 public class FileUploadForm extends AbstractUploadForm
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 6615560494113373735L;
 
@@ -87,7 +86,8 @@ public class FileUploadForm extends AbstractUploadForm
 			int i = 1;
 			while(true)
 			{
-				File testFile = new File(targetDirectory, (fileName + "(" + i + ")." + ext));
+				File testFile = new File(targetDirectory,
+                        (fileName + "(" + i + ")." + ext));
 				if (testFile.exists())
 				{
 					i++;
@@ -118,19 +118,23 @@ public class FileUploadForm extends AbstractUploadForm
 
 	/**
 	 * conflict handler that will be called when a file with the same name
-     * already exists in the same directory when trying to save an uploaded file.
+     * already exists in the same directory when trying to save an uploaded
+     * file.
      */
 	private FileExistsConflictHandler fileExistsConflictHandler;
 
     /**
-     * Construct; uses NUMBER_FILE_CONFLICT_HANDLER as the fileExistsConflictHandler.
+     * Construct; uses NUMBER_FILE_CONFLICT_HANDLER as the
+     * fileExistsConflictHandler.
      * @param name component name
      * @param validationErrorHandler error handler for validations
      * @param targetDirectory the directory where the uploaded files should be put
      */
-    public FileUploadForm(String name, IValidationErrorHandler validationErrorHandler, File targetDirectory)
+    public FileUploadForm(String name, IValidationErrorHandler validationErrorHandler,
+            File targetDirectory)
     {
-        this(name, validationErrorHandler, targetDirectory, NUMBER_FILE_CONFLICT_HANDLER);
+        this(name, validationErrorHandler, targetDirectory,
+                NUMBER_FILE_CONFLICT_HANDLER);
     }
 
     /**
@@ -151,6 +155,8 @@ public class FileUploadForm extends AbstractUploadForm
     }
 
     /**
+     * Processes a form field.
+     * @param item a file item
      * @see wicket.markup.html.form.upload.AbstractUploadForm#processFormField(org.apache.commons.fileupload.FileItem)
      */
     protected final void processFormField(FileItem item)
@@ -159,6 +165,8 @@ public class FileUploadForm extends AbstractUploadForm
     }
 
     /**
+     * Process an upload item.
+     * @param item upload item (item.isFormField() == false)
      * @see wicket.markup.html.form.upload.AbstractUploadForm#processUploadedFile(org.apache.commons.fileupload.FileItem)
      */
     protected final void processUploadedFile(FileItem item)
@@ -189,7 +197,7 @@ public class FileUploadForm extends AbstractUploadForm
      * @param item the upload item 
      * @param targetFile the target file
      */
-    private void saveFile(final FileItem item, final File targetFile)
+    private final void saveFile(final FileItem item, final File targetFile)
     {
         final File writeTo;
         // do some checking: does file allready exist?

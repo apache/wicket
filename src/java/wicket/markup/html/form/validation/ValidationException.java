@@ -20,6 +20,8 @@ package wicket.markup.html.form.validation;
 
 /**
  * Exception class for validation problems.
+ *
+ * @author Eelco Hillenius
  */
 public final class ValidationException extends RuntimeException
 {

@@ -32,7 +32,7 @@ import wicket.util.string.StringList;
  *
  * @author Jonathan Locke
  */
-public final class LengthValidator extends AbstractValidator
+public class LengthValidator extends AbstractValidator
 {
     /** True if minimum bound should be checked. */
     private final boolean checkMin;
@@ -67,7 +67,7 @@ public final class LengthValidator extends AbstractValidator
      * @param min Minimum number of characters
      * @return Validator object
      */
-    public static LengthValidator min(final int min)
+    public final static LengthValidator min(final int min)
     {
         return new LengthValidator(true, min, false, 0);
     }
@@ -77,7 +77,7 @@ public final class LengthValidator extends AbstractValidator
      * @param max Maximum number of characters
      * @return Validator object
      */
-    public static LengthValidator max(final int max)
+    public final static LengthValidator max(final int max)
     {
         return new LengthValidator(false, 0, true, max);
     }
@@ -89,7 +89,7 @@ public final class LengthValidator extends AbstractValidator
      * @param max Maximum number of characters
      * @return Validator object
      */
-    public static LengthValidator range(final int min, final int max)
+    public final static LengthValidator range(final int min, final int max)
     {
         return new LengthValidator(true, min, true, max);
     }
@@ -101,7 +101,7 @@ public final class LengthValidator extends AbstractValidator
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(final FormComponent component)
+    public final ValidationErrorMessage validate(final FormComponent component)
     {
         // Get component value
         final String value = component.getRequestString();

@@ -43,8 +43,8 @@ import wicket.protocol.http.HttpRequest;
  * @author Eelco Hillenius
  */
 public abstract class AbstractUploadForm extends Form
-{ // TODO finalize javadoc
-    /** Code broadcaster for reporting. */
+{
+    /** Log. */
     private static Log log = LogFactory.getLog(AbstractUploadForm.class);
 
     /**
@@ -58,6 +58,8 @@ public abstract class AbstractUploadForm extends Form
     }
 
     /**
+     * Processes the component tag.
+     * @param tag the component tag
      * @see wicket.Component#handleComponentTag(ComponentTag)
      */
     protected final void handleComponentTag(final ComponentTag tag)
@@ -74,7 +76,8 @@ public abstract class AbstractUploadForm extends Form
     {
 		try
         {
-			HttpServletRequest request = ((HttpRequest)getRequest()).getServletRequest();
+			HttpRequest httpRequest = (HttpRequest)getRequest();
+            HttpServletRequest request = (httpRequest).getServletRequest();
 			boolean isMultipart = FileUpload.isMultipartContent(request);
 			if(!isMultipart)
 			{
@@ -118,8 +121,7 @@ public abstract class AbstractUploadForm extends Form
      * Use for initialization of directories etc.
      */
     protected void prepareUpload()
-    {
-        
+    {  
     }
 
     /**
@@ -128,7 +130,6 @@ public abstract class AbstractUploadForm extends Form
      */
     protected void finishUpload()
     {
-        
     }
 
     /**
