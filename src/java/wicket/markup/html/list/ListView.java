@@ -171,7 +171,7 @@ public abstract class ListView extends WebMarkupContainer
 		}
 
 		// firstIndex + size must be smaller than Integer.MAX_VALUE
-		if ((Integer.MAX_VALUE - size) <= firstIndex)
+		if ((Integer.MAX_VALUE - size) < firstIndex)
 		{
 			throw new IllegalStateException(
 					"firstIndex + size must be smaller than Integer.MAX_VALUE");
@@ -231,7 +231,7 @@ public abstract class ListView extends WebMarkupContainer
 
 		return this;
 	}
-
+	
 	/**
 	 * Provide list object at index. May be subclassed for virtual list, which
 	 * don't implement List.
