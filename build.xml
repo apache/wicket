@@ -1,209 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
 
-<project name    = "Wicket-SDK"
-         default = "buildExamples"
-         basedir = ".">
-
-    <property name = "folder.root" value = "."/>
-            
-    <import file = "./build-properties-import.xml"/>
-    
-    <target name = "buildClasses" 
-            if   = "folder.sdk.src.exists">
-    
-        <mkdir dir = "${folder.sdk.classes}"/>
-    
-        <javac srcdir       = "${folder.sdk.src}" 
-               destdir      = "${folder.sdk.classes}" 
-               debug        = "on"
-               classpathref = "classpath.sdk">
-        
-            <!-- <compilerarg value = "-Xlint"/> -->
-        
-        </javac>
-
-        <copy todir = "${folder.sdk.classes}">      
-        
-            <fileset dir = "${folder.sdk.src}" excludes = "**/*.java"/>
-            
-        </copy>
-    
-    </target>
-
-    <target name        = "buildJar"
-            depends     = "buildClasses"
-            description = "Builds toolkit JAR file"
-            if          = "folder.sdk.src.exists">
-
-        <delete>
-            
-            <fileset dir = "${folder.sdk.lib}" includes = "**/${toolkit.name}-*.jar"/>
-        
-        </delete>
-    
-        <jar destfile = "${file.toolkit.jar}">
-            
-            <fileset dir = "${folder.sdk.classes}" excludes = "**/CVS/**"/>
-
-        </jar>
-        
-    </target>
-    
-    <target name = "clean">
-        
-        <delete dir = "${folder.root}/build"/>
-    
-    </target>
-
-    <target name        = "buildDistribution"
-            depends     = "clean, buildJar, buildDocumentation"
-            description = "Creates a full SDK in the distribution folder">
-
-        <mkdir dir = "${folder.sdk.distribution}"/>
-        
-        <zip destfile = "${file.sdk.distribution}">
-            
-            <zipfileset dir      = "${folder.root}" 
-                        prefix   = "${sdk.full.name}"
-                        includes = "lib/**"/>
-            
-            <zipfileset dir      = "${folder.root}" 
-                        prefix   = "${sdk.full.name}"
-                        includes = ".settings/**,.classpath,.project,Wicket.ipr,build*.xml,*.txt"
-                        excludes = "build-upload-password-import.xml"/>
-                
-            <zipfileset dir      = "${folder.root}" 
-                        prefix   = "${sdk.full.name}"
-                        includes = "doc/**"
-                        excludes = ""/>
-            
-            <zipfileset dir      = "${folder.root}" 
-                        prefix   = "${sdk.full.name}"
-                        includes = "examples/**"
-                        excludes = "examples/PetStore/**"/>
-            
-            <zipfileset dir      = "${folder.root}" 
-                        prefix   = "${sdk.full.name}"
-                        includes = "src/**"/>
-        
-        </zip>
-
-    </target>
-
-    <target name        = "buildDocumentation"
-            description = "Builds API documentation">
-    
-        <delete dir = "${folder.sdk.javadoc}"/>
-    
-        <javadoc destdir      = "${folder.sdk.javadoc}"
-                 author       = "true"
-                 version      = "true"
-                 use          = "true"
-                 windowtitle  = "${sdk.full.name}"
-                 classpathref = "classpath.sdk">
-    
-            <doctitle>${sdk.full.name}</doctitle>
-            <bottom>Copyright &#169; 2004 Jonathan W. Locke.  All Rights Reserved.</bottom>
-            <packageset dir = "${folder.sdk.src}" defaultexcludes = "yes">
-                <include name = "com/voicetribe/wicket/**" />
-            </packageset>   
-            
-        </javadoc>
-        
-    </target>
-    
-    <target name        = "buildExamples"
-            depends     = "clean, buildJar, buildGuestBookExample, buildGuestBook2Example, buildHelloWorldExample, buildImagesExample, buildLibraryExample, buildLinkomaticExample, buildNavomaticExample, buildPubExample, buildSignInExample"
-            description = "Builds all examples"/>
-        
-    <target name        = "buildGuestBookExample"
-            description = "Builds example">
-
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "GuestBook"/>
-        </antcall>
-    
-    </target>
-        
-    <target name        = "buildGuestBook2Example"
-            description = "Builds example">
-        
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "GuestBook2"/>
-        </antcall>
-        
-    </target>
-                
-    <target name        = "buildHelloWorldExample"
-            description = "Builds example">
-        
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "HelloWorld"/>
-        </antcall>
-    
-    </target>
-        
-    <target name        = "buildImagesExample"
-            description = "Builds example">
-            
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "Images"/>
-        </antcall>
-            
-    </target>
-        
-    <target name        = "buildLibraryExample"
-            description = "Builds example">
-                
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "Library"/>
-        </antcall>
-                
-    </target>
-        
-    <target name        = "buildLinkomaticExample"
-            description = "Builds example">
-                    
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "Linkomatic"/>
-        </antcall>
-                    
-    </target>
-        
-    <target name        = "buildNavomaticExample"
-            description = "Builds example">
-                            
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "Navomatic"/>
-        </antcall>
-                            
-    </target>
-        
-    <target name        = "buildPubExample"
-            description = "Builds example">
-                        
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "Pub"/>
-        </antcall>
-                        
-    </target>
-        
-    <target name        = "buildSignInExample"
-            description = "Builds example">
-                                
-        <antcall target = "buildExample">
-            <param name = "example.name" value = "SignIn"/>
-        </antcall>
-        
-    </target>
-            
-    <target name = "buildExample">
-    
-        <ant dir         = "examples/${example.name}"  
-             antfile     = "build.xml"  
-             inheritAll  = "false"
-             inheritRefs = "false"
-             target      = "buildWar"/>
-
-    </target>
-
+<project default="jar" name="wicket" basedir=".">
+  <property name="defaulttargetdir" value="./target">
+  </property>
+  <property name="libdir" value="./lib">
+  </property>
+  <property name="classesdir" value="./target/classes">
+  </property>
+  <property name="testclassesdir" value="./target/test-classes">
+  </property>
+  <property name="testclassesdir" value="./target/test-classes">
+  </property>
+  <property name="testreportdir" value="./target/test-reports">
+  </property>
+  <property name="distdir" value="dist">
+  </property>
+  <property name="javadocdir" value="./dist/docs/api">
+  </property>
+  <property name="final.name" value="wicket-SNAPSHOT">
+  </property>
+  <target name="init" description="o Initializes some properties">
+    <mkdir dir="${libdir}">
+    </mkdir>
+    <condition property="noget">
+      <equals arg2="only" arg1="${build.sysclasspath}">
+      </equals>
+    </condition>
+  </target>
+  <target name="compile" description="o Compile the code" depends="get-deps">
+    <mkdir dir="${classesdir}">
+    </mkdir>
+    <javac destdir="${classesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
+      <src>
+        <pathelement location="src/java">
+        </pathelement>
+      </src>
+      <classpath>
+        <fileset dir="${libdir}">
+          <include name="*.jar">
+          </include>
+        </fileset>
+      </classpath>
+    </javac>
+  </target>
+  <target name="jar" description="o Create the jar" depends="compile">
+    <jar jarfile="${defaulttargetdir}/${final.name}.jar" excludes="**/package.html" basedir="${classesdir}">
+    </jar>
+  </target>
+  <target name="clean" description="o Clean up the generated directories">
+    <delete dir="${defaulttargetdir}">
+    </delete>
+    <delete dir="${distdir}">
+    </delete>
+  </target>
+  <target name="dist" description="o Create a distribution" depends="jar, javadoc">
+    <mkdir dir="dist">
+    </mkdir>
+    <copy todir="dist">
+      <fileset dir="${defaulttargetdir}" includes="*.jar">
+      </fileset>
+      <fileset dir="${basedir}" includes="LICENSE*, README*">
+      </fileset>
+    </copy>
+  </target>
+  <target name="internal-test" depends="compile-tests">
+    <mkdir dir="${testreportdir}">
+    </mkdir>
+    <junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
+      <sysproperty key="basedir" value=".">
+      </sysproperty>
+      <formatter type="xml">
+      </formatter>
+      <formatter usefile="false" type="plain">
+      </formatter>
+      <classpath>
+        <fileset dir="${libdir}">
+          <include name="*.jar">
+          </include>
+        </fileset>
+        <pathelement path="${testclassesdir}">
+        </pathelement>
+        <pathelement path="${classesdir}">
+        </pathelement>
+      </classpath>
+      <batchtest todir="${testreportdir}">
+        <fileset dir="src/test">
+          <include name="**/*Test.java">
+          </include>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+  <target name="compile-tests" depends="compile">
+    <mkdir dir="${testclassesdir}">
+    </mkdir>
+    <javac destdir="${testclassesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
+      <src>
+        <pathelement location="src/test">
+        </pathelement>
+      </src>
+      <classpath>
+        <fileset dir="${libdir}">
+          <include name="*.jar">
+          </include>
+        </fileset>
+        <pathelement path="${classesdir}">
+        </pathelement>
+      </classpath>
+    </javac>
+  </target>
+  <target name="javadoc" description="o Generate javadoc">
+    <mkdir dir="${javadocdir}">
+    </mkdir>
+    <tstamp>
+      <format pattern="2004-yyyy" property="year">
+      </format>
+    </tstamp>
+    <property name="copyright" value="Copyright &amp;copy;  SourceForge. All Rights Reserved.">
+    </property>
+    <property name="title" value="Wicket SNAPSHOT">
+    </property>
+    <javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/java" packagenames="com.voicetribe.*">
+      <classpath>
+        <fileset dir="${libdir}">
+          <include name="*.jar">
+          </include>
+        </fileset>
+        <pathelement location="${defaulttargetdir}/${final.name}.jar">
+        </pathelement>
+      </classpath>
+    </javadoc>
+  </target>
+  <target name="get-deps" unless="noget" depends="init">
+    <get dest="${libdir}/dom4j-1.4.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/dom4j/jars/dom4j-1.4.jar">
+    </get>
+    <get dest="${libdir}/junit-3.8.1.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/junit/jars/junit-3.8.1.jar">
+    </get>
+    <get dest="${libdir}/log4j-1.2.8.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/log4j/jars/log4j-1.2.8.jar">
+    </get>
+    <get dest="${libdir}/ognl-2.6.5.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/ognl/jars/ognl-2.6.5.jar">
+    </get>
+    <get dest="${libdir}/servletapi-2.3.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/servletapi/jars/servletapi-2.3.jar">
+    </get>
+    <get dest="${libdir}/junit-3.8.1.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/junit/jars/junit-3.8.1.jar">
+    </get>
+    <get dest="${libdir}/ant-1.5.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/ant/jars/ant-1.5.jar">
+    </get>
+    <get dest="${libdir}/ant-optional-1.5.jar" usetimestamp="true" ignoreerrors="true" src="http:/www.ibiblio.org/maven/ant/jars/ant-optional-1.5.jar">
+    </get>
+  </target>
+  <target name="install-maven">
+    <get dest="${user.home}/maven-install-latest.jar" usetimestamp="true" src="${repo}/maven/maven-install-latest.jar">
+    </get>
+    <unjar dest="${maven.home}" src="${user.home}/maven-install-latest.jar">
+    </unjar>
+  </target>
 </project>
