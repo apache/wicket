@@ -146,8 +146,15 @@ public final class WicketComponentTree extends Panel
 	
 					object.path = component.getPageRelativePath();
 					object.type = name;
-					object.value = component.getModelObjectAsString();
-	
+					try 
+					{
+						object.value = component.getModelObjectAsString();
+					}
+					catch (Exception e)
+					{
+						object.value = e.getMessage();
+					}
+						
 					data.add(object);
 			    }
 			    
