@@ -188,6 +188,17 @@ public class AttributeModifier implements Serializable
 	}
 
 	/**
+	 * Checks whether this modifier will add an attribute to the tag if it is
+	 * not present in the markup and the replacement value is not null.
+	 * 
+	 * @return Whether the attribute will be added if not present or not
+	 */
+	final boolean getAddAttributeIfNotPresent()
+	{
+		return addAttributeIfNotPresent;
+	}
+
+	/**
 	 * Gets the name of the attribute whose value is being replaced.
 	 * 
 	 * @return The name of the attribute
@@ -220,17 +231,6 @@ public class AttributeModifier implements Serializable
 			((IDetachableModel)replaceModel).attach();
 		}
 		return replaceModel;
-	}
-
-	/**
-	 * Checks whether this modifier will add an attribute to the tag if it is
-	 * not present in the markup and the replacement value is not null.
-	 * 
-	 * @return Whether the attribute will be added if not present or not
-	 */
-	final boolean getAddAttributeIfNotPresent()
-	{
-		return addAttributeIfNotPresent;
 	}
 
 	/**
