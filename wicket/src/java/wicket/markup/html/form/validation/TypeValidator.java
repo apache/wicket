@@ -103,9 +103,8 @@ public class TypeValidator extends AbstractValidator
 		// If value is non-empty
 		if (!Strings.isEmpty(value))
 		{
-			// Check value by attempting to convert it using the given locale
+			// Check value by attempting to convert it
 			final IConverter converter = component.getConverter();
-			converter.setLocale(getLocale());
 			try
 			{
 				converter.convert(value, type);

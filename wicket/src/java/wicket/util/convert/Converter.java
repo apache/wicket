@@ -17,20 +17,30 @@
  */
 package wicket.util.convert;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
 import ognl.OgnlOps;
+import wicket.util.convert.converters.BooleanConverter;
+import wicket.util.convert.converters.ByteConverter;
+import wicket.util.convert.converters.CharacterConverter;
+import wicket.util.convert.converters.DateConverter;
+import wicket.util.convert.converters.DoubleConverter;
+import wicket.util.convert.converters.FloatConverter;
+import wicket.util.convert.converters.IntegerConverter;
+import wicket.util.convert.converters.LongConverter;
+import wicket.util.convert.converters.ShortConverter;
+import wicket.util.convert.converters.StringConverter;
 
 /**
  * Implementation of IConverter interface, which converts objects from one class
  * to another. This class allows specific type converters implementing the
  * ITypeConverter interface to be registered as conversion operations for
- * specific types. This registration can be done manually, but is normally
- * performed by a converter factory implementation such as ConverterFactory,
- * which registers type converters for Date, String and all Java primitive types
- * and their wrapper classes.
+ * specific types. By default this class registers type converters for Date,
+ * String and all Java primitive types and their wrapper classes.
  * <p>
  * To convert from a Double value to a String value you can use the generalized
  * converter interface:
@@ -50,9 +60,9 @@ import ognl.OgnlOps;
  * converter.convert(new Double(7.1));
  * </pre>
  * 
- * When using Wicket, you should rarely need to use any of the conversion classes
- * directly.  There are convenient validators and conversion features built into
- * Wicket that you can use directly. 
+ * When using Wicket, you should rarely need to use any of the conversion
+ * classes directly. There are convenient validators and conversion features
+ * built into Wicket that you can use directly.
  * 
  * @see IConverterFactory
  * @author Eelco Hillenius
@@ -91,6 +101,43 @@ public final class Converter implements IConverter
 
 	/** The current locale. */
 	private Locale locale = null;
+
+	/**
+	 * Constructor
+	 */
+	public Converter()
+	{
+		set(Boolean.TYPE, new BooleanConverter());
+		set(Boolean.class, new BooleanConverter());
+		set(Byte.TYPE, new ByteConverter());
+		set(Byte.class, new ByteConverter());
+		set(Character.TYPE, new CharacterConverter());
+		set(Character.class, new CharacterConverter());
+		set(Double.TYPE, new DoubleConverter());
+		set(Double.class, new DoubleConverter());
+		set(Float.TYPE, new FloatConverter());
+		set(Float.class, new FloatConverter());
+		set(Integer.TYPE, new IntegerConverter());
+		set(Integer.class, new IntegerConverter());
+		set(Long.TYPE, new LongConverter());
+		set(Long.class, new LongConverter());
+		set(Short.TYPE, new ShortConverter());
+		set(Short.class, new ShortConverter());
+		set(String.class, new StringConverter());
+		set(Date.class, new DateConverter());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param locale
+	 *            The locale
+	 */
+	public Converter(final Locale locale)
+	{
+		this();
+		setLocale(locale);
+	}
 
 	/**
 	 * Registers a converter for use with class c.
@@ -159,12 +206,8 @@ public final class Converter implements IConverter
 		final ITypeConverter converter = get(c);
 		if (converter == null)
 		{
-			defaultConverter.setLocale(locale);
 			return defaultConverter.convert(value, c);
 		}
-
-		// Set locale
-		converter.setLocale(locale);
 
 		try
 		{
@@ -173,13 +216,13 @@ public final class Converter implements IConverter
 		}
 		catch (ConversionException e)
 		{
-			throw e.setConverter(this).setTypeConverter(converter).setLocale(locale).setTargetType(
-					c).setSourceValue(value);
+			throw e.setConverter(this).setTypeConverter(converter).setTargetType(c).setSourceValue(
+					value);
 		}
 		catch (Exception e)
 		{
-			throw new ConversionException(e).setConverter(this).setLocale(locale).setTargetType(c)
-					.setSourceValue(value);
+			throw new ConversionException(e).setConverter(this).setTargetType(c).setSourceValue(
+					value);
 		}
 	}
 
@@ -249,6 +292,15 @@ public final class Converter implements IConverter
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
+
+		// Set locale on each string type converter
+		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
+		{
+			((ITypeConverter)iterator.next()).setLocale(locale);
+		}
+
+		// Set locale on default converter
+		defaultConverter.setLocale(locale);
 	}
 
 	/**
