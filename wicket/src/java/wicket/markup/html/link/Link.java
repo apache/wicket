@@ -72,12 +72,6 @@ public abstract class Link extends AbstractLink
     private boolean enabled = true;
 
     /**
-     * The popup specs; if not-null, a javascript on-click event handler will be generated
-     * that opens a new window using the popup properties.
-     */
-    private PopupSpecification popupSpecification = null;
-
-    /**
      * Construct.
      * @param componentName the name of the component
      */
@@ -139,7 +133,7 @@ public abstract class Link extends AbstractLink
     }
 
     /**
-     * Whether link should automatically enable/disable based on current page
+     * Gets whether link should automatically enable/disable based on current page.
      * @return Whether this link should automatically enable/disable
      * based on current page.
      */
@@ -150,8 +144,8 @@ public abstract class Link extends AbstractLink
 
     /**
      * Sets whether this link should automatically enable/disable based on current page.
-     * @param autoEnable whether this link should automatically enable/disable based on
-     *            current page.
+     * @param autoEnable whether this link should automatically enable/disable
+     * 	based on current page.
      * @return This
      */
     public final Link setAutoEnable(final boolean autoEnable)
@@ -235,27 +229,6 @@ public abstract class Link extends AbstractLink
     public String getAfterDisabledLink()
     {
     	return afterDisabledLink;
-    }
-
-    /**
-     * Get popupSpecification.
-     * @return popupSpecification.
-     */
-    public final PopupSpecification getPopupSpecification()
-    {
-        return popupSpecification;
-    }
-
-    /**
-     * Set popupSpecification.
-     * @param popupSpecification popupSpecification.
-     * @return This
-     */
-    public final Link setPopupSpecification(PopupSpecification popupSpecification)
-    {
-        this.popupSpecification = popupSpecification;
-
-        return this;
     }
 
     /**
@@ -343,6 +316,7 @@ public abstract class Link extends AbstractLink
         }
 
         // Add any popup script
+        PopupSpecification popupSpecification = getPopupSpecification();
         if (popupSpecification != null)
         {
             String popupScript = popupSpecification.getPopupJavaScript();

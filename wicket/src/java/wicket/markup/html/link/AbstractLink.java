@@ -24,7 +24,6 @@ import wicket.RequestCycle;
 import wicket.markup.html.HtmlContainer;
 import wicket.model.IModel;
 
-
 /**
  * Base class for links.
  *
@@ -32,12 +31,18 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  */
 public abstract class AbstractLink extends HtmlContainer implements ILinkListener
-{ // TODO finalize javadoc
+{
     static
     {
         // Allow calls through the ILinkListener interface
         RequestCycle.registerListenerInterface(ILinkListener.class);
     }
+
+    /**
+     * The popup specification. If not-null, a javascript on-click event handler will be
+     * generated that opens a new window using the popup properties.
+     */
+    private PopupSpecification popupSpecification = null;
 
     /**
      * Construct.
@@ -109,11 +114,35 @@ public abstract class AbstractLink extends HtmlContainer implements ILinkListene
     public abstract void linkClicked(final RequestCycle cycle);
 
     /**
+     * Gets the url to use for this link.
      * @param cycle Request cycle
      * @return The URL that this link links to
      */
     protected String getURL(final RequestCycle cycle)
     {
         return cycle.urlFor(AbstractLink.this, ILinkListener.class);
+    }
+
+
+    /**
+     * Gets the popup specification. If not-null, a javascript on-click event handler
+     * will be generated that opens a new window using the popup properties.
+     * @return the popup specification.
+     */
+    public final PopupSpecification getPopupSpecification()
+    {
+        return popupSpecification;
+    }
+
+    /**
+     * Sets the popup specification. If not-null, a javascript on-click event handler
+     * will be generated that opens a new window using the popup properties.
+     * @param popupSpecification the popup specification.
+     * @return This
+     */
+    public final AbstractLink setPopupSpecification(PopupSpecification popupSpecification)
+    {
+        this.popupSpecification = popupSpecification;
+        return this;
     }
 }

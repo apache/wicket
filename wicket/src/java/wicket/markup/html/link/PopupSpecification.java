@@ -24,46 +24,55 @@ import java.io.Serializable;
  * A popup specification can be used as a property of the {@link Link}classes to specify
  * that the link should be rendered with an onClick javascript event handler that opens a
  * new window with the links' URL.
+ *
+ * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public class PopupSpecification implements Serializable
-{ // TODO finalize javadoc
-    // Width and height of any popup window
+{
+    /** Width of popup window. */
     private int width = -1;
 
+    /** Height of popup window. */
     private int height = -1;
 
-    // left/ top position of any popup window
+    /** left position of popup window. */
     private int left = -1;
 
+    /** top position of popup window. */
     private int top = -1;
 
-    // The logical name of the window. This can be anything you want, although
-    // you
-    // should use alphanumeric characters only (no spaces or punctuation).
-    // If you have a window already open and call window.open a second time
-    // using
-    // the same windowName, the first window will be reused rather than opening
-    // a second window.
+    /**
+     * The logical name of the window. This can be anything you want, although you
+     * should use alphanumeric characters only (no spaces or punctuation).
+     * If you have a window already open and call window.open a second time using
+     * the same windowName, the first window will be reused rather than opening
+     * a second window.
+     */
     private String windowName = null;
 
-    // Whether the popup window should have scrollbars
+    /** Whether the popup window should have scrollbars. */
     private boolean scrollBars = false;
 
-    // Whether the browser should display the browser location toolbar
+    /** Whether the browser should display the browser location toolbar. */
     private boolean locationbar = false;
 
-    // Whether the browser should display the menu bar
+    /** Whether the browser should display the menu bar. */
     private boolean menubar = false;
 
-    // Whether the popup window is resizable
+    /** Whether the popup window is resizable. */
     private boolean resizable = false;
 
-    // Whether the popup window should have a status bar (the area at the bottom
-    // of the browser)
+    /**
+     * Whether the popup window should have a status bar (the area at the bottom
+     * of the browser).
+     */ 
     private boolean statusBar = false;
 
-    // Whether the browser should display the toolbar that contains the
-    // back/forward/etc buttons
+    /** 
+     * Whether the browser should display the toolbar that contains
+     * the back/forward/etc buttons.
+     */
     private boolean toolbar = false;
 
     /**
@@ -71,7 +80,25 @@ public class PopupSpecification implements Serializable
      */
     public PopupSpecification()
     {
-        //
+    }
+
+    /**
+     * Copy constructor.
+     * @param popupSpecification spec to copy
+     */
+    public PopupSpecification(PopupSpecification popupSpecification)
+    {
+    	this.width = popupSpecification.width;
+    	this.height = popupSpecification.height;
+    	this.left = popupSpecification.left;
+    	this.top = popupSpecification.top;
+    	this.windowName = popupSpecification.windowName;
+    	this.scrollBars = popupSpecification.scrollBars;
+    	this.locationbar = popupSpecification.locationbar;
+    	this.menubar = popupSpecification.menubar;
+    	this.resizable = popupSpecification.resizable;
+    	this.statusBar = popupSpecification.statusBar;
+    	this.toolbar = popupSpecification.toolbar;
     }
 
     /**
@@ -106,15 +133,13 @@ public class PopupSpecification implements Serializable
         }
         else
         {
-            windowTitle = windowTitle.replace('.', '_'); // Fix for IE bug. Are
-
-            // there more of these
-            // bugs?
+            windowTitle = windowTitle.replace('.', '_'); // Fix for IE bug.
         }
 
+        String target = getTarget();
         StringBuffer script = new StringBuffer(
-                "if (!window.focus) return true; window.open(href, '").append(windowTitle).append(
-                "', '");
+                "if (!window.focus) return true; window.open(" + target + ", '")
+                .append(windowTitle).append("', '");
 
         script.append("scrollbars=").append(isScrollBars() ? "yes" : "no");
         script.append(", location=").append(isLocationbar() ? "yes" : "no");
@@ -149,8 +174,22 @@ public class PopupSpecification implements Serializable
         return script.toString();
     }
 
+	/**
+	 * Gets the target of the link. This implementation refers to the href element. 
+	 * @return the target of the link
+	 */
+	protected String getTarget()
+	{
+		String target = "href";
+		return target;
+	}
+
     /**
-     * Get window name.
+     * Gets the name of the window. This can be anything you want, although you
+     * should use alphanumeric characters only (no spaces or punctuation).
+     * If you have a window already open and call window.open a second time using
+     * the same windowName, the first window will be reused rather than opening
+     * a second window..
      * @return window name.
      */
     public String getWindowName()
@@ -159,7 +198,7 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set window name. The logical name of the window. This can be anything you want,
+     * Sets the window name. The logical name of the window. This can be anything you want,
      * although you should use alphanumeric characters only (no spaces or punctuation). If
      * you have a window already open and call window.open a second time using the same
      * windowName, the first window will be reused rather than opening a second window
@@ -169,12 +208,11 @@ public class PopupSpecification implements Serializable
     public PopupSpecification setWindowName(String popupWindowName)
     {
         this.windowName = popupWindowName;
-
         return this;
     }
 
     /**
-     * Set the with and height of the popup window.
+     * Sets the with and height of the popup window.
      * @param popupWidth The popup width.
      * @param popupHeight The popup height.
      * @return This
@@ -183,12 +221,11 @@ public class PopupSpecification implements Serializable
     {
         setWidth(popupWidth);
         setHeight(popupHeight);
-
         return this;
     }
 
     /**
-     * Set the location of the popup window.
+     * Sets the location of the popup window.
      * @param popupLeft The left position of the popup.
      * @param popupTop The top position of the popup.
      * @return This
@@ -197,12 +234,11 @@ public class PopupSpecification implements Serializable
     {
         setLeft(popupLeft);
         setTop(popupTop);
-
         return this;
     }
 
     /**
-     * Get the popup window height.
+     * Gets the popup window height.
      * @return the popup window height.
      */
     public int getHeight()
@@ -211,7 +247,7 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Get the popup window width.
+     * Gets the popup window width.
      * @return the popup window width.
      */
     public int getWidth()
@@ -220,31 +256,29 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set the popup window height.
+     * Sets the popup window height.
      * @param popupHeight the popup window height.
      * @return This
      */
     public PopupSpecification setHeight(int popupHeight)
     {
         this.height = popupHeight;
-
         return this;
     }
 
     /**
-     * Set the popup window width.
+     * Sets the popup window width.
      * @param popupWidth the popup window width.
      * @return This
      */
     public PopupSpecification setWidth(int popupWidth)
     {
         this.width = popupWidth;
-
         return this;
     }
 
     /**
-     * Get whether the popup window should have scrollbars.
+     * Gets whether the popup window should have scrollbars.
      * @return whether the popup window should have scrollbars.
      */
     public boolean isScrollBars()
@@ -253,19 +287,18 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set whether the popup window should have scrollbars.
+     * Sets whether the popup window should have scrollbars.
      * @param popupScrollBars Whether the popup window should have scrollbars.
      * @return This
      */
     public PopupSpecification setScrollBars(boolean popupScrollBars)
     {
         this.scrollBars = popupScrollBars;
-
         return this;
     }
 
     /**
-     * Get whether the browser should display the browser location toolbar.
+     * Gets whether the browser should display the browser location toolbar.
      * @return Whether the browser should display the browser location toolbar.
      */
     public boolean isLocationbar()
@@ -274,7 +307,7 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set whether the browser should display the browser location toolbar.
+     * Sets whether the browser should display the browser location toolbar.
      * @param popupLocation Whether the browser should display the browser location
      *            toolbar.
      * @return This
@@ -282,12 +315,11 @@ public class PopupSpecification implements Serializable
     public PopupSpecification setLocationbar(boolean popupLocation)
     {
         this.locationbar = popupLocation;
-
         return this;
     }
 
     /**
-     * Get whether the browser should display the menu bar.
+     * Gets whether the browser should display the menu bar.
      * @return Whether the browser should display the menu bar.
      */
     public boolean isMenubar()
@@ -296,19 +328,18 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set whether the browser should display the menu bar.
+     * Sets whether the browser should display the menu bar.
      * @param popupMenubar Whether the browser should display the menu bar.
      * @return This
      */
     public PopupSpecification setMenubar(boolean popupMenubar)
     {
         this.menubar = popupMenubar;
-
         return this;
     }
 
     /**
-     * Get the left position of the popup window.
+     * Gets the left position of the popup window.
      * @return the left position of the popup window.
      */
     public int getLeft()
@@ -317,19 +348,18 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set the left position of the popup window.
+     * Sets the left position of the popup window.
      * @param popupPositionLeft the left position of the popup window.
      * @return This
      */
     public PopupSpecification setLeft(int popupPositionLeft)
     {
         this.left = popupPositionLeft;
-
         return this;
     }
 
     /**
-     * Get the top position of the popup window.
+     * Gets the top position of the popup window.
      * @return the top position of the popup window.
      */
     public int getTop()
@@ -338,19 +368,18 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set the top position of the popup window.
+     * Sets the top position of the popup window.
      * @param popupPositionTop the top position of the popup window.
      * @return This
      */
     public PopupSpecification setTop(int popupPositionTop)
     {
         this.top = popupPositionTop;
-
         return this;
     }
 
     /**
-     * Get whether the popup window is resizable.
+     * Gets whether the popup window is resizable.
      * @return Whether the popup window is resizable.
      */
     public boolean isResizable()
@@ -359,19 +388,18 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set whether the popup window is resizable.
+     * Sets whether the popup window is resizable.
      * @param popupResizable Whether the popup window is resizable.
      * @return This
      */
     public PopupSpecification setResizable(boolean popupResizable)
     {
         this.resizable = popupResizable;
-
         return this;
     }
 
     /**
-     * Get whether the popup window should have a status bar (the area at the bottom of
+     * Gets whether the popup window should have a status bar (the area at the bottom of
      * the browser).
      * @return Whether the popup window should have a status bar (the area at the bottom
      *         of the browser).
@@ -382,7 +410,7 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set whether the popup window should have a status bar (the area at the bottom of
+     * Sets whether the popup window should have a status bar (the area at the bottom of
      * the browser).
      * @param popupStatus Whether the popup window should have a status bar (the area at
      *            the bottom of the browser).
@@ -391,12 +419,11 @@ public class PopupSpecification implements Serializable
     public PopupSpecification setStatusBar(boolean popupStatus)
     {
         this.statusBar = popupStatus;
-
         return this;
     }
 
     /**
-     * Get whether the browser should display the toolbar that contains the
+     * Gets whether the browser should display the toolbar that contains the
      * back/forward/etc buttons.
      * @return Whether the browser should display the toolbar that contains the
      *         back/forward/etc buttons.
@@ -407,7 +434,7 @@ public class PopupSpecification implements Serializable
     }
 
     /**
-     * Set whether the browser should display the toolbar that contains the
+     * Sets whether the browser should display the toolbar that contains the
      * back/forward/etc buttons.
      * @param toolbar Whether the browser should display the toolbar that contains the
      *            back/forward/etc buttons.
@@ -416,7 +443,6 @@ public class PopupSpecification implements Serializable
     public PopupSpecification setToolbar(boolean toolbar)
     {
         this.toolbar = toolbar;
-
         return this;
     }
 }
