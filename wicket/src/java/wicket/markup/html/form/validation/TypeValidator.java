@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -95,7 +95,7 @@ public class TypeValidator extends AbstractValidator
 	 *            The component that wants to validate its input
 	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
-	public final void validate(FormComponent component)
+	public final void validate(final FormComponent component)
 	{
 		// Get component value
 		final String value = component.getRequestString();
@@ -127,7 +127,8 @@ public class TypeValidator extends AbstractValidator
 	 * @param e
 	 *            the conversion exception
 	 */
-	protected void conversionError(String input, FormComponent component, ConversionException e)
+	protected void conversionError(final String input, final FormComponent component,
+			final ConversionException e)
 	{
 		error(getResourceKey(component), messageModel(component, input, e), input, component);
 	}
@@ -143,11 +144,12 @@ public class TypeValidator extends AbstractValidator
 	 *            the conversion exception
 	 * @return a map with variables for interpolation
 	 */
-	protected Map messageModel(FormComponent component, String input, ConversionException e)
+	protected Map messageModel(final FormComponent component, final String input,
+			final ConversionException e)
 	{
-		Map model = super.messageModel(component, input);
+		final Map model = super.messageModel(component, input);
 		model.put("type", type);
-		Locale locale = e.getLocale();
+		final Locale locale = e.getLocale();
 		if (locale != null)
 		{
 			model.put("locale", locale);
