@@ -149,7 +149,6 @@ public abstract class Link extends AbstractLink
     public final Link setAutoEnable(final boolean autoEnable)
     {
         this.autoEnable = autoEnable;
-
         return this;
     }
 
@@ -258,7 +257,7 @@ public abstract class Link extends AbstractLink
         }
 
         // Draw anything before the body?
-        if (!enabled && (beforeDisabledLink != null))
+        if (!enabled && beforeDisabledLink != null)
         {
             getResponse().write(beforeDisabledLink);
         }
@@ -267,7 +266,7 @@ public abstract class Link extends AbstractLink
         renderBody(markupStream, openTag);
 
         // Draw anything after the body?
-        if (!enabled && (afterDisabledLink != null))
+        if (!enabled && afterDisabledLink != null)
         {
             getResponse().write(afterDisabledLink);
         }
@@ -305,18 +304,14 @@ public abstract class Link extends AbstractLink
         else
         {
             // Set href to link to this link's linkClicked method
-            String url = getURL();
-            url = url.replaceAll("&", "&amp;");
-			tag.put("href", url);
+			tag.put("href", getURL().replaceAll("&", "&amp;"));
         }
 
         // Add any popup script
         PopupSpecification popupSpecification = getPopupSpecification();
         if (popupSpecification != null)
         {
-            String popupScript = popupSpecification.getPopupJavaScript();
-            popupScript = popupScript.replaceAll("&", "&amp;");
-            tag.put("onClick", popupScript);
+            tag.put("onClick", popupSpecification.getPopupJavaScript().replaceAll("&", "&amp;"));
         }
     }
 }

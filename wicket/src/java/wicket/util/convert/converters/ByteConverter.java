@@ -19,14 +19,14 @@
 package wicket.util.convert.converters;
 
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.Converter;
+import wicket.util.convert.IConverter;
 
 /**
- * {@link wicket.util.convert.Converter }implementation that converts an
+ * {@link wicket.util.convert.IConverter }implementation that converts an
  * incoming String into a <code>java.lang.Byte</code> object, throwing a
  * {@link wicket.util.convert.ConversionException} if a conversion error occurs.
  */
-public final class ByteConverter implements Converter
+public final class ByteConverter implements IConverter
 {
     /**
      * Construct.

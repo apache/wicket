@@ -36,7 +36,7 @@ public final class ConversionException extends RuntimeException
     /**
      * The converter that was used.
      */
-    private Converter converter;
+    private IConverter converter;
 
     /**
      * The value that was tried to convert.
@@ -85,7 +85,7 @@ public final class ConversionException extends RuntimeException
      * Gets the used converter.
      * @return the used converter.
      */
-    public final Converter getConverter()
+    public final IConverter getConverter()
     {
         return converter;
     }
@@ -95,7 +95,7 @@ public final class ConversionException extends RuntimeException
      * @param converter the converter.
      * @return This
      */
-    public final ConversionException setConverter(Converter converter)
+    public final ConversionException setConverter(IConverter converter)
     {
         this.converter = converter;
         return this;

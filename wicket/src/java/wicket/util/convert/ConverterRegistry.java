@@ -59,13 +59,13 @@ public final class ConverterRegistry
     private final static NoopConverter NOOP_CONVERTER = new NoopConverter();
 
     /**
-     * The set of {@link Converter}s that can be used to convert Strings into objects of
+     * The set of {@link IConverter}s that can be used to convert Strings into objects of
      * a specified Class, keyed by the destination Class.
      */
     private final Map converters = new HashMap();
 
     /**
-     * The set of {@link Converter}s that can be used to convert Strings into objects of
+     * The set of {@link IConverter}s that can be used to convert Strings into objects of
      * a specified Class, keyed by the destination Class and locale.
      */
     private final Map localizedConverters = new HashMap();
@@ -144,21 +144,21 @@ public final class ConverterRegistry
     }
 
     /**
-     * Register a custom {@link Converter}for the specified destination
-     * <code>Class</code>, replacing any previously registered Converter.
-     * @param converter Converter to be registered
-     * @param clazz Destination class for conversions performed by this Converter
+     * Register a custom {@link IConverter}for the specified destination
+     * <code>Class</code>, replacing any previously registered IConverter.
+     * @param converter IConverter to be registered
+     * @param clazz Destination class for conversions performed by this IConverter
      */
-    public void register(Converter converter, Class clazz)
+    public void register(IConverter converter, Class clazz)
     {
         converters.put(clazz, converter);
     }
 
     /**
      * Register a custom {@link LocaleConverter}for the specified destination
-     * <code>Class</code>, replacing any previously registered Converter.
+     * <code>Class</code>, replacing any previously registered IConverter.
      * @param converter LocaleConverter to be registered
-     * @param clazz Destination class for conversions performed by this Converter
+     * @param clazz Destination class for conversions performed by this IConverter
      */
     public void register(LocaleConverter converter, Class clazz)
     {
@@ -167,9 +167,9 @@ public final class ConverterRegistry
 
     /**
      * Register a custom {@link LocaleConverter}for the specified destination
-     * <code>Class</code>, replacing any previously registered Converter.
+     * <code>Class</code>, replacing any previously registered IConverter.
      * @param converter LocaleConverter to be registered
-     * @param clazz Destination class for conversions performed by this Converter
+     * @param clazz Destination class for conversions performed by this IConverter
      * @param locale Locale class
      */
     public void register(LocaleConverter converter, Class clazz, Locale locale)
@@ -182,9 +182,9 @@ public final class ConverterRegistry
     /**
      * register a global formatter with the given key
      * @param formatter the formatter
-     * @param key the key to register the instance of Formatter with
+     * @param key the key to register the instance of IFormatter with
      */
-    public void register(Formatter formatter, String key)
+    public void register(IFormatter formatter, String key)
     {
         key = getLocKey(key);
         converters.put(key, formatter);
@@ -193,7 +193,7 @@ public final class ConverterRegistry
     /**
      * register a global locale aware formatter with the given key and locale
      * @param formatter the formatter
-     * @param key the key to register the instance of Formatter with
+     * @param key the key to register the instance of IFormatter with
      * @param locale the locale
      */
     public void register(LocaleFormatter formatter, String key, Locale locale)
@@ -205,7 +205,7 @@ public final class ConverterRegistry
     /**
      * register a global locale aware formatter with the given key
      * @param formatter the formatter
-     * @param key the key to register the instance of Formatter with
+     * @param key the key to register the instance of IFormatter with
      */
     public void register(LocaleFormatter formatter, String key)
     {
@@ -214,9 +214,9 @@ public final class ConverterRegistry
     }
 
     /**
-     * Remove any registered {@link Converter}for the specified destination
+     * Remove any registered {@link IConverter}for the specified destination
      * <code>Class</code> and <code>Locale</code>.
-     * @param clazz Class for which to remove a registered Converter
+     * @param clazz Class for which to remove a registered IConverter
      * @param locale the locale
      */
     public void deregister(Class clazz, Locale locale)
@@ -227,9 +227,9 @@ public final class ConverterRegistry
     }
 
     /**
-     * Remove any registered {@link Converter}for the specified destination
+     * Remove any registered {@link IConverter}for the specified destination
      * <code>Class</code>.
-     * @param clazz Class for which to remove a registered Converter
+     * @param clazz Class for which to remove a registered IConverter
      */
     public void deregister(Class clazz)
     {
@@ -244,7 +244,7 @@ public final class ConverterRegistry
     }
 
     /**
-     * Remove all instances registered {@link Converter}by class of converter
+     * Remove all instances registered {@link IConverter}by class of converter
      * @param clazz Class of converter to remove. Removes all subclasses as well.
      */
     public void deregisterByConverterClass(Class clazz)
@@ -254,7 +254,7 @@ public final class ConverterRegistry
         for (Iterator i = converters.keySet().iterator(); i.hasNext();)
         {
             Object key = i.next();
-            Converter converter = (Converter) converters.get(key);
+            IConverter converter = (IConverter) converters.get(key);
 
             if (converter.getClass().isAssignableFrom(clazz))
             {
@@ -318,8 +318,8 @@ public final class ConverterRegistry
     }
 
     /**
-     * Remove any registered {@link Formatter}for the specified key
-     * @param key key for which to remove a registered Formatter
+     * Remove any registered {@link IFormatter}for the specified key
+     * @param key key for which to remove a registered IFormatter
      */
     public void deregister(String key)
     {
@@ -350,37 +350,37 @@ public final class ConverterRegistry
     /**
      * lookup a globally registered formatter
      * @param key key of formatter
-     * @return Formatter instance of Formatter that was registered with the specified key
+     * @return IFormatter instance of IFormatter that was registered with the specified key
      *         or null if not found
      */
-    public Formatter lookup(String key)
+    public IFormatter lookup(String key)
     {
         key = getLocKey(key);
 
-        return (Formatter) converters.get(key);
+        return (IFormatter) converters.get(key);
     }
 
     /**
-     * Look up and return any registered {@link Converter}for the specified destination
-     * class. If there is no registered Converter, return an instance of NoopConverter if
+     * Look up and return any registered {@link IConverter}for the specified destination
+     * class. If there is no registered IConverter, return an instance of NoopConverter if
      * returnNoopConverterWhenNotFound == true or else <code>null</code>.
-     * @param clazz Class for which to return a registered Converter
-     * @return Converter converter
+     * @param clazz Class for which to return a registered IConverter
+     * @return IConverter converter
      * @throws NoSuchMethodException
      * @throws IllegalArgumentException
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public Converter lookup(Class clazz) throws NoSuchMethodException, IllegalArgumentException,
+    public IConverter lookup(Class clazz) throws NoSuchMethodException, IllegalArgumentException,
             InstantiationException, IllegalAccessException, InvocationTargetException
     {
         return lookup(clazz, null);
     }
 
     /**
-     * Look up and return any registered {@link Converter}for the specified destination
-     * class and locale. If there is no registered Converter, return an instance of
+     * Look up and return any registered {@link IConverter}for the specified destination
+     * class and locale. If there is no registered IConverter, return an instance of
      * NoopConverter if returnNoopConverterWhenNotFound == true or else <code>null</code>.
      * Precedence: if a locale is given the first search is for a converter that was
      * registered for the given type and locale. If it is not found, the second search is
@@ -390,24 +390,24 @@ public final class ConverterRegistry
      * registered for the given type and locale (and thus will be found at the first
      * search next time). If it is not found, the search is the same as when no locale was
      * given (locale == null): the 'normal', not localized registry will be searched for
-     * an entry with the given type. If still no Converter is found after this, and
+     * an entry with the given type. If still no IConverter is found after this, and
      * returnNoopConverterWhenNotFound is true an instance of NoopConverter is returned,
      * so that clients allways get a valid converter. If returnNoopConverterWhenNotFound
      * is false, null will be returned.
-     * @param clazz Class for which to return a registered Converter
+     * @param clazz Class for which to return a registered IConverter
      * @param locale The Locale
-     * @return Converter converter
+     * @return IConverter converter
      * @throws NoSuchMethodException
      * @throws IllegalArgumentException
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public Converter lookup(Class clazz, Locale locale) throws NoSuchMethodException,
+    public IConverter lookup(Class clazz, Locale locale) throws NoSuchMethodException,
             IllegalArgumentException, InstantiationException, IllegalAccessException,
             InvocationTargetException
     {
-        Converter converter = null;
+        IConverter converter = null;
 
         if (locale != null)
         {
@@ -452,7 +452,7 @@ public final class ConverterRegistry
         // else // get without locale right away
         if (converter == null) // (still) not found, try generic non-localized registration
         {
-            converter = (Converter) converters.get(clazz);
+            converter = (IConverter) converters.get(clazz);
         }
 
         if ((converter == null) && useNoopConverter) // STILL not found; return no-op
@@ -464,8 +464,8 @@ public final class ConverterRegistry
     }
 
     /**
-     * Look up and return any registered {@link Formatter}for the specified destination
-     * key and locale; if there is no registered Formatter, return <code>null</code>.
+     * Look up and return any registered {@link IFormatter}for the specified destination
+     * key and locale; if there is no registered IFormatter, return <code>null</code>.
      * Precedence: if a locale is given the first search is for a formatter that was
      * registered for the given type and locale. If it is not found, the second search is
      * for any formatter of the type LocaleFormatter that was registered for the given
@@ -484,11 +484,11 @@ public final class ConverterRegistry
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public Formatter lookup(String key, Locale locale) throws NoSuchMethodException,
+    public IFormatter lookup(String key, Locale locale) throws NoSuchMethodException,
             IllegalArgumentException, InstantiationException, IllegalAccessException,
             InvocationTargetException
     {
-        Formatter formatter = null;
+        IFormatter formatter = null;
 
         if (locale != null)
         {
@@ -520,7 +520,7 @@ public final class ConverterRegistry
         // else get without locale right away
         if (formatter == null) // (still) not found, try generic non-localized registration
         {
-            formatter = (Formatter) converters.get(getLocKey(key));
+            formatter = (IFormatter) converters.get(getLocKey(key));
         }
 
         return formatter;
@@ -603,14 +603,14 @@ public final class ConverterRegistry
     }
 
     /**
-     * Converter that does nothing at all! Used for fallthrough; if really no converter is
+     * IConverter that does nothing at all! Used for fallthrough; if really no converter is
      * found at all, this one is used.
      */
-    private static final class NoopConverter implements Converter
+    private static final class NoopConverter implements IConverter
     {
         /**
          * Noop; returns the value as was provided.
-         * @see Converter#convert(java.lang.Object)
+         * @see IConverter#convert(java.lang.Object)
          */
         public Object convert(Object value)
         {

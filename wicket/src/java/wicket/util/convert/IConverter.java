@@ -19,15 +19,15 @@
 package wicket.util.convert;
 
 /**
- * Interface for formatting values.
+ * General purpose data type converter.
  */
-public interface Formatter
+public interface IConverter
 {
     /**
-     * Convert the specified input object into a locale-sensitive output string.
-     * @param value The input object to be formatted
-     * @param pattern The pattern is used for the conversion
-     * @return object as a formatted string
+     * Convert the specified input object into an output object of the specified type.
+     * @param value The input value to be converted
+     * @return converted object
+     * @exception ConversionException if conversion cannot be performed successfully
      */
-    public String format(Object value, String pattern);
+    public Object convert(Object value);
 }

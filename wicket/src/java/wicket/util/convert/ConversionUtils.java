@@ -61,7 +61,7 @@ public final class ConversionUtils
      */
     public Object convert(Object value, Class toType, Locale locale)
     {
-        Converter converter = null;
+        IConverter converter = null;
         Object converted = null;
         try
         {
