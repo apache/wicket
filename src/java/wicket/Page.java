@@ -63,12 +63,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** Used to create page-unique numbers */
 	private int autoIndex;
-
-	/** Feedback messages for this page */
-	private FeedbackMessages feedbackMessages;
 	
 	/** Any feedback display for this page */
 	private IFeedback feedback;
+
+	/** Feedback messages for this page */
+	private FeedbackMessages feedbackMessages;
 
 	/** This page's identifier. */
 	private int id = -1;
@@ -181,6 +181,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		return stale;
 	}
 
+	/**
+	 * @return Gets a PageState record for this page
+	 */
+	public PageState newPageState()
+	{
+		// Add to list of pages to replicate
+		return new PageState()
+		{
+			public Page getPage()
+			{
+				return Page.this;
+			}
+		};
+	}
+	
 	/**
 	 * Redirect to this page.
 	 * 

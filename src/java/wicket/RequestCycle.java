@@ -425,15 +425,10 @@ public abstract class RequestCycle
 
 			try
 			{
-				// Handle request 
-				final boolean renderPage = onRespond();
-
-				// Replicate session if need be
-				session.updateCluster();
-
-				// Is there a page to render?
-				if (renderPage)
+				// If subclass response to request set a Page to render
+				if (onRespond())
 				{
+					// Get page set by subclass response
 					final Page page = getPage();
 					if (page != null)
 					{

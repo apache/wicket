@@ -18,6 +18,9 @@
 package wicket;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -91,6 +94,9 @@ public abstract class Session implements Serializable
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
 
+	/** Session state that can be replicated when dirty */
+	transient State state = new State();
+
 	/** Application that this is a session of. */
 	private transient Application application;
 
@@ -108,40 +114,6 @@ public abstract class Session implements Serializable
 
 	/** The still-live pages for this user session. */
 	private transient MostRecentlyUsedMap pages;
-
-	/** Session state that can be replicated when dirty */
-	private transient State state = new State();
-
-	/**
-	 * Record for a page which changed that can be added to pageStateList in
-	 * order to replicate page changes across a cluster. The object implementing
-	 * this interface is simply responsible for using its internal details to
-	 * produce the page. It may simply wrap a Page object (which is
-	 * Serializable) or it may create one on the fly and configure it using
-	 * implementation specific information. This allows for efficient clustering
-	 * of pages.
-	 * 
-	 * @author Jonathan Locke
-	 */
-	protected static abstract class PageState implements Serializable
-	{
-		// This value will be true when the page is added and false on
-		// whatever server this object is replicated to
-		private transient boolean addedToSession;
-
-		/**
-		 * @return The Page.
-		 */
-		public abstract Page getPage();
-
-		/**
-		 * @return True if this object has been added to the session yet
-		 */
-		private final boolean addedToSession()
-		{
-			return addedToSession;
-		}
-	}
 
 	/**
 	 * Interface called when visiting session pages.
@@ -164,8 +136,11 @@ public abstract class Session implements Serializable
 	 * 
 	 * @author Jonathan Locke
 	 */
-	private static class State implements Serializable
+	static class State implements Serializable
 	{
+		/** Next available access number */
+		int accessNumber;
+
 		/** True if any of this state has changed */
 		private boolean dirty = false;
 
@@ -348,9 +323,13 @@ public abstract class Session implements Serializable
 	 */
 	public final void pageChanged(final Page page)
 	{
-		// Add PageState for this page to the list of changed pages
-		// that need to be replicated
-		final PageState pageState = pageState(page);
+		// Create PageState for page
+		final PageState pageState = newPageState(page);
+
+		// The page must have been added to the session already
+		pageState.addedToSession = true;
+
+		// Set HttpSession attribute for new PageState
 		setAttribute(page.getName(), pageState);
 	}
 
@@ -442,7 +421,7 @@ public abstract class Session implements Serializable
 	 * Updates this session using changed state information that may have been
 	 * replicated to this node on a cluster.
 	 */
-	public final void updateSession()
+public final void updateSession()
 	{
 		// Get any replicated state from the session
 		final State state = (State)getAttribute("state");
@@ -452,35 +431,61 @@ public abstract class Session implements Serializable
 			this.state = state;
 		}
 
+		// PageStates to add
+		final List pageStates = new ArrayList();
+
 		// Copy any changed pages into our (transient) Session
 		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
 		{
-			// Get next attribute name
-			final String attributeName = (String)iterator.next();
-
 			// Get attribute value
-			final Object value = getAttribute(attributeName);
+			final Object value = getAttribute((String)iterator.next());
 			if (value instanceof PageState)
 			{
-				// Get next pageState guy
-				final PageState pageState = (PageState)value;
+				pageStates.add(value);
+			}
+		}
 
-				// If PageState has not been added to the session
-				if (!pageState.addedToSession())
+		// Sort in ascending order by access number so that pages which have
+		// a higher access number (which means they were accessed more recently)
+		// are added /last/.
+		Collections.sort(pageStates, new Comparator()
+		{
+			public int compare(Object object1, Object object2)
+			{
+				int accessNumber1 = ((PageState)object1).accessNumber;
+				int accessNumber2 = ((PageState)object2).accessNumber;
+				if (accessNumber1 < accessNumber2)
 				{
-					// Get page from page state
-					final Page page = pageState.getPage();
-
-					// Add to page map
-					getPageMap().put(new Integer(page.getId()), page);
-
-					// Page has been added to session now
-					pageState.addedToSession = true;
+					return -1;
 				}
+				if (accessNumber1 > accessNumber2)
+				{
+					return 1;
+				}
+				return 0;
+			}
+		});
+
+		// Add page states as need be
+		for (final Iterator iterator = pageStates.iterator(); iterator.hasNext();)
+		{
+			// Get next attribute name
+			final PageState pageState = (PageState)iterator.next();
+
+			// If PageState has not been added to the session
+			if (!pageState.addedToSession)
+			{
+				// Get page from page state
+				final Page page = pageState.getPage();
+
+				// Add to page map
+				getPageMap().put(new Integer(page.getId()), page);
+
+				// Page has been added to session now
+				pageState.addedToSession = true;
 			}
 		}
 	}
-
 	/**
 	 * Adds page to session if not already added.
 	 * 
@@ -498,7 +503,7 @@ public abstract class Session implements Serializable
 		pageMap.put(new Integer(page.getId()), page);
 
 		// Get any page that was removed
-		Page removedPage = (Page)pageMap.getRemovedValue();
+		final Page removedPage = (Page)pageMap.getRemovedValue();
 		if (removedPage != null)
 		{
 			removeAttribute(removedPage.getName());
@@ -530,25 +535,11 @@ public abstract class Session implements Serializable
 	 *            The page
 	 * @return The page state record
 	 */
-	protected PageState pageState(final Page page)
+	protected PageState newPageState(final Page page)
 	{
-		// Add to list of pages to replicate
-		return new PageState()
-		{
-			// NOTE: Since this is an anonymous class referencing the final
-			// parameter "final Page page", the anonymous class implementation
-			// that Java creates on the fly will contain a field with this
-			// value in it. Since PageState is Serializable, this anonymous
-			// subclass is actually a fully clusterable PageState record
-			// which simply references (and therefore copies) the entire Page.
-
-			public Page getPage()
-			{
-				return page;
-			}
-		};
+		return page.newPageState();
 	}
-
+	
 	/**
 	 * @param name
 	 *            The name of the attribute to remove
