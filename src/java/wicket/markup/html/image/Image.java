@@ -131,10 +131,8 @@ public class Image extends WebComponent implements IResourceListener
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "img");
-		localizedImageResource.loadImageResource(tag);
 		super.onComponentTag(tag);
-		final String url = urlFor(IResourceListener.class);
-		tag.put("src", getResponse().encodeURL(url).replaceAll("&", "&amp;"));
+		localizedImageResource.setSrcAttribute(tag);
 	}
 
 	/**

@@ -106,9 +106,7 @@ public class ImageButton extends Button implements IResourceListener
 	{
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "image");
-		localizedImageResource.loadImageResource(tag);
 		super.onComponentTag(tag);
-		final String url = urlFor(IResourceListener.class);
-		tag.put("src", getResponse().encodeURL(url).replaceAll("&", "&amp;"));
+		localizedImageResource.setSrcAttribute(tag);
 	}
 }

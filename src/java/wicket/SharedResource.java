@@ -72,6 +72,28 @@ public final class SharedResource extends Resource
 	}
 	
 	/**
+	 * @return Path to this shared resource
+	 */
+	public final String getPath()
+	{
+		final StringBuffer buffer = new StringBuffer();
+		buffer.append(scope.getName());
+		buffer.append('_');
+		buffer.append(name);
+		if (locale != null)
+		{
+			buffer.append('_');
+			buffer.append(locale.toString());
+		}
+		if (style != null)
+		{
+			buffer.append('_');
+			buffer.append(style);
+		}
+		return buffer.toString();
+	}
+	
+	/**
 	 * Sets any loaded resource to null, thus forcing a reload on the next
 	 * request.
 	 */
