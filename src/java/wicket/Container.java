@@ -29,12 +29,13 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.IComponentResolver;
 import wicket.markup.ComponentTag;
+import wicket.markup.ComponentWicketTag;
+import wicket.markup.IComponentResolver;
+import wicket.markup.IMarkupParser;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
-import wicket.markup.MarkupParser;
 import wicket.markup.MarkupStream;
 import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
@@ -454,7 +455,7 @@ public abstract class Container extends Component
 	 * @param exceptionMessage
 	 *           message that will be used for exceptions
 	 */
-	protected final void renderAssociatedMarkup(final RequestCycle cycle, final String openTagName,
+	protected final void renderAssociatedMarkup(final RequestCycle cycle, final String name,
 			final String exceptionMessage)
 	{
 		// Get markup associated with Border or Panel component
@@ -464,14 +465,16 @@ public abstract class Container extends Component
 		associatedMarkupStream.skipRawMarkup();
 		setMarkupStream(associatedMarkupStream);
 
-		// Check for required open tag name
-		if (!associatedMarkupStream.atOpenTag(openTagName))
-		{
-			associatedMarkupStream.throwMarkupException(exceptionMessage);
-		}
-
 		// Get open tag in associated markup of border component
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
+
+		// Check for required open tag name
+		if (!associatedMarkupStream.atOpenTag("[" + name + "]") &&
+		        !(associatedMarkupStream.atOpenTag("region") 
+		                && name.equalsIgnoreCase(((ComponentWicketTag) associatedMarkupOpenTag).getNameAttribute())))
+		{
+		    associatedMarkupStream.throwMarkupException(exceptionMessage);
+		}
 
 		renderTag(cycle, associatedMarkupStream, associatedMarkupOpenTag);
 		renderBody(cycle, associatedMarkupStream, associatedMarkupOpenTag);
@@ -757,10 +760,27 @@ public abstract class Container extends Component
 	private Markup loadMarkup(final ApplicationSettings settings, final String key,
 			final Resource markupResource) throws ParseException, IOException, ResourceNotFoundException
 	{
-		final MarkupParser parser = new MarkupParser(settings.getComponentNameAttribute());
-
+	    final Class markupParserClass = settings.getMarkupParserClass();
+	    
+	    final IMarkupParser parser;
+	    try
+	    {
+	        parser = (IMarkupParser) markupParserClass.newInstance();
+	    }
+	    catch (IllegalAccessException ex)
+	    {
+	        throw new IOException("Failed to load MarkupParser: " + ex.getMessage());
+	    }
+	    catch (InstantiationException ex)
+	    {
+	        throw new IOException("Failed to load MarkupParser: " + ex.getMessage());
+	    }
+	    
+		parser.setComponentNameAttribute(settings.getComponentNameAttribute()); 
+		parser.setWicketTagName(settings.getWicketTagName());
 		parser.setStripComments(settings.getStripComments());
 		parser.setCompressWhitespace(settings.getCompressWhitespace());
+		parser.setRemoveWicketTagsFromOutput(settings.getRemoveWicketTagsFromOutput());
 
 		final Markup markup = parser.read(markupResource);
 
@@ -782,12 +802,12 @@ public abstract class Container extends Component
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();
 
-		// Is it a component?
-		if (element instanceof ComponentTag && (!markupStream.atCloseTag()))
+		// If it a tag like <wicket..> or <span id="wicket-..." >
+		if ((element instanceof ComponentTag) && !markupStream.atCloseTag())
 		{
 			// Get element as tag
 			final ComponentTag tag = (ComponentTag) element;
-
+			
 			// Get component name
 			final String componentName = tag.getComponentName();
 
@@ -823,7 +843,7 @@ public abstract class Container extends Component
 			        }
 				}
 
-			    // 3rd try: a subclass replacing resolveComponentName()
+			    // 3rd try: a subclass replacing resolveComponent()
 			    Container container = this;
 			    while (container != null)
 			    {
@@ -851,9 +871,9 @@ public abstract class Container extends Component
 
 	/**
 	 * The Container was not able to resolve the component name. Subclasses may 
-	 * augment the default strategy by subclassing resolveComponentName().
+	 * augment the default strategy by subclassing resolveComponent().
 	 * @see wicket.markup.html.border.Border for an example.<p>
-	 * Note: resolveComponentName must also render the components created
+	 * Note: resolveComponent must also render the components created
 	 *  
 	 * @param cycle The current request cycle
 	 * @param markupStream The current markup stream

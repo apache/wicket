@@ -21,6 +21,7 @@ package wicket.markup.html.border;
 import wicket.Container;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
+import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 
@@ -124,7 +125,7 @@ public abstract class Border extends HtmlContainer
         this.openTag = openTag;
 
         // Render the associated markup
-        renderAssociatedMarkup(cycle, "[border]",
+        renderAssociatedMarkup(cycle, "border",
                 "Markup for a border component must begin a component named '[border]'");
     }
 
@@ -152,15 +153,18 @@ public abstract class Border extends HtmlContainer
 	protected boolean resolveComponent(final RequestCycle cycle, final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// If it's a [body] tag
-		if (false == tag.getComponentName().equals("[body]"))
+		if (!tag.getComponentName().equals("[body]") &&
+		        !(markupStream.atOpenTag("region") 
+		                && "body".equalsIgnoreCase(((ComponentWicketTag)tag).getNameAttribute())))
 		{
 		    return false;
 		}
 		
 		if (!markupStream.atOpenCloseTag())
 		{
-			markupStream.throwMarkupException("A [body] tag must be an openclose tag.");
+			markupStream.throwMarkupException("A <wicket:region name=body> tag must be an open-close tag.");
 		}
+		
 		// Render the children tag
 		renderTag(cycle, tag);
 		markupStream.next();

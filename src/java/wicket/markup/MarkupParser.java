@@ -31,12 +31,16 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.RenderException;
 import wicket.util.io.Streams;
+import wicket.util.parse.metapattern.MetaPattern;
+import wicket.util.parse.metapattern.OptionalMetaPattern;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import wicket.util.parse.metapattern.parsers.WordParser;
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.StringValue;
+import wicket.util.value.ValueMap;
 
 
 /**
@@ -49,14 +53,17 @@ import wicket.util.string.StringValue;
  * correctly.
  * @author Jonathan Locke
  */
-public final class MarkupParser
+public final class MarkupParser implements IMarkupParser
 {
     /** Code broadcaster for reporting. */
     private static final Log log = LogFactory.getLog(MarkupParser.class);
 
     /** Name of desired componentName tag attribute. */
-    private final String componentNameAttribute;
+    private String componentNameAttribute;
 
+    /** Name of the desired wicket tag: e.g. &lt;wicket&gt; */
+    private String wicketTagName;
+    
     /** Position in parse. */
     private int inputPosition;
 
@@ -83,17 +90,74 @@ public final class MarkupParser
 
     /** Regex to find <?xml encoding ... ?> */
     private static final Pattern encodingPattern = Pattern.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
+
+    /** if true, <wicket:param ..> tags will be removed from markup */
+    private boolean removeWicketParamTags;
+
+    /** pattern for tag names with optional namespace */
+    private static final MetaPattern tagNamePattern =
+        new MetaPattern(new MetaPattern[] {
+            MetaPattern.WORD, 
+            new OptionalMetaPattern(new MetaPattern[] {
+                    MetaPattern.COLON, MetaPattern.WORD})});
+    
+    /**
+     * Constructor.
+     */
+    public MarkupParser()
+    {
+    }
     
     /**
      * Constructor.
      * @param componentNameAttribute The name of the componentName attribute
+     * @param wicketTagName The name of the wicket namespace
      */
-    public MarkupParser(final String componentNameAttribute)
+    public MarkupParser(final String componentNameAttribute, final String wicketTagName)
     {
-        this.componentNameAttribute = componentNameAttribute;
-        //this.autoIndexPrefix = autoIndexPrefix;
+        setComponentNameAttribute(componentNameAttribute);
+        setWicketTagName(wicketTagName);
     }
 
+    /** 
+     * Name of desired componentName tag attribute.
+     * @param name component name 
+     */
+    public void setComponentNameAttribute(final String name)
+    {
+        this.componentNameAttribute = name;
+        
+        if (!ComponentTag.WICKET_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
+        {
+            log.info("You are using a non-standard component name: " + componentNameAttribute);
+        }
+    }
+    
+    /** 
+     * Name of the desired wicket tag: e.g. &lt;wicket&gt; 
+     * @param name wicket xml namespace (xmlns:wicket) 
+     */
+    public void setWicketTagName(final String name)
+    {
+        this.wicketTagName = name;
+        
+        if (!ComponentWicketTag.WICKET_TAG_NAME.equals(wicketTagName))
+        {
+            log.info("You are using a non-standard wicket tag name: " + wicketTagName);
+        }
+    }
+    
+    /**
+     * &lt;wicket:param ...&gt; tags may be included with the output for 
+     * markup debugging purposes.
+     *   
+     * @param remove If true, markup elements will not be forwarded
+     */
+    public void setRemoveWicketTagsFromOutput(boolean remove)
+    {
+        this.removeWicketParamTags = remove;
+    }
+    
     /**
      * Return the encoding used while reading the markup file.
      * @return if null, than JVM default
@@ -246,7 +310,9 @@ public final class MarkupParser
 
         // Position in parse
         int position = 0;
-
+       
+        boolean hasWicketParamTag = false;
+        
         // Loop through tags
         for (ComponentTag tag; null != (tag = nextTag());)
         {
@@ -254,7 +320,12 @@ public final class MarkupParser
             {
                 log.debug("tag: " + tag.toUserDebugString() + ", stack: " + stack);
             }
-
+        
+            if ((tag instanceof ComponentWicketTag) && "param".equalsIgnoreCase(tag.getName()))
+            {
+                hasWicketParamTag = true;
+            }
+            
             // True if tag should be added to list
             boolean addTag = false;
 
@@ -382,9 +453,103 @@ public final class MarkupParser
         // "[remove]"
         removePreviewComponents(list);
 
+        // Validate wicket-param tag are following component tags
+        if (hasWicketParamTag == true)
+        {
+            validateWicketTag(list);
+        }
+
         return Collections.unmodifiableList(list);
     }
 
+    /**
+     * Handle wicket parameter tags
+     * 
+     * @param markupElements
+     * @param tag
+     * @throws ParseException
+     */
+    private final void validateWicketTag(final List markupElements)
+    	throws ParseException
+    {
+        for (int i=0; i < markupElements.size(); i++)
+        {
+            final Object elem = markupElements.get(i);
+            
+            if (!(elem instanceof ComponentWicketTag))
+            {
+                continue;
+            }
+            
+            // There might be more than one wicket parameter tag. 
+            // Find the component tag (which is not a param tag).
+            MarkupElement parentTag = (MarkupElement) elem;
+            int pos = i;
+            while (parentTag instanceof ComponentWicketTag)
+            {
+                pos -= 1;
+                if (pos < 0)
+                {
+                    throw new ParseException(
+                            "Found Wicket parameter tag without related component tag.",
+                            ((ComponentTag)elem).getPos());
+                }
+                
+                parentTag = (MarkupElement) markupElements.get(pos);
+                
+                if (parentTag instanceof RawMarkup)
+                {
+                    String text = ((RawMarkup)parentTag).toString();
+                    text = text.replaceAll("\n", "");
+                    text = text.replaceAll("\r", "");
+                    text = text.trim();
+                    if (text.length() == 0)
+                    {
+                        pos -= 1;
+                        if (pos < 0)
+                        {
+                            throw new ParseException(
+                                    "Found Wicket parameter tag without related component tag.",
+                                    ((ComponentTag)elem).getPos());
+                        }
+                        
+                        parentTag = (MarkupElement) markupElements.get(pos);
+                    }
+                }
+            }
+            
+	        if (!(parentTag instanceof ComponentTag))
+	        {
+	            throw new ParseException(
+	                    "Wicket parameter tag must immediately follow a wicket parameter "
+	                    + "or wicket component tag.", 
+	                    ((ComponentTag)elem).getPos());
+	        }
+	        
+	        // TODO: <wicket:params name = "myProperty">My completely free text that can
+	        //   contain everything</wicket:params> is currently not supported
+	        
+	        // Add the parameters to the component tag
+	        final ComponentTag tag = (ComponentTag)parentTag;
+	        ValueMap params = new ValueMap(tag.attributes);
+	        params.putAll(((ComponentTag)elem).getAttributes());
+	        params.makeImmutable();
+	        
+	        tag.attributes = params;
+	        
+	        // Shall the wicket tag be removed from output?
+	        if (removeWicketParamTags == true)
+	        {
+	            // TODO "empty" RawMarkup could also be removed: 
+	            //  like <wicket:param..> being the only tag in the whole line 
+	            markupElements.remove(elem);
+	            
+	            // adjust the index to match the removal
+	            i -= 1;
+	        }
+        }
+    }
+    
     /**
      * Removes components marked as "[remove]" from list. Nested components are not
      * allowed, for obvious reasons.
@@ -403,22 +568,39 @@ public final class MarkupParser
             {
                 // Check for open tag labelled "[remove]"
                 final ComponentTag openTag = (ComponentTag) element;
-
-                if (openTag.isOpen() && openTag.componentName.equalsIgnoreCase("[remove]"))
+                
+                boolean remove = (openTag.isOpen() && openTag.componentName.equalsIgnoreCase("[remove]"));
+                if (remove == true)
                 {
+                    throw new RenderException(
+                            "[remove] has been replaced by <wicket:region name=remove>. Please modify your markup accordingly");
+                }
+                
+                if ((remove == false) && (element instanceof ComponentWicketTag))
+                {
+                    remove = ((ComponentWicketTag)element).isRemoveTag();
+                }
+                
+                if (remove == true)
+                {
+                    if (openTag.isOpenClose())
+                    {
+                        throw new MarkupException("Wicket remove tag must not be an open-close tag. Position:" + openTag.getPos());
+                    }
+                    
                     // Remove open tag
                     list.remove(i);
 
                     // If a raw markup tag follows (new value at index i after
                     // deletion)
-                    if ((i < list.size()) && list.get(i) instanceof RawMarkup)
+                    if ((i < list.size()) && (list.get(i) instanceof RawMarkup))
                     {
                         // remove any raw markup
                         list.remove(i);
                     }
 
                     // Must have close tag
-                    if ((i < list.size()) && list.get(i) instanceof ComponentTag)
+                    if ((i < list.size()) && (list.get(i) instanceof ComponentTag))
                     {
                         // Get close tag
                         ComponentTag closeTag = (ComponentTag) list.get(i);
@@ -433,17 +615,22 @@ public final class MarkupParser
                             // of the loop
                             // and we still need to process list[i].
                             i--;
+                            
+                            continue;
                         }
-                        else
-                        {
-                            throw new MarkupException("[Remove] open tag "
-                                    + openTag + " not closed by " + list.get(i));
-                        }
+                    }
+
+                    if (i < list.size())
+                    {
+                        throw new MarkupException("[Remove] open tag "
+                                + openTag + " not closed by " + list.get(i) 
+                                + " It must nt contain a nested wicket component.");
                     }
                     else
                     {
                         throw new MarkupException("[Remove] open tag "
-                                + openTag + " not closed by " + list.get(i));
+                                + openTag + " not closed"
+                        		+ " It must nt contain a nested wicket component.");
                     }
                 }
             }
@@ -555,7 +742,7 @@ public final class MarkupParser
                 }
                 else
                 {
-                    // Parse remainting tag text, obtaining a tag object or null
+                    // Parse remaining tag text, obtaining a tag object or null
                     // if it's invalid
                     final ComponentTag tag = parseTagText(tagText);
 
@@ -595,21 +782,59 @@ public final class MarkupParser
      * @param tagText The text between tags
      * @return A new Tag object or null if the tag is invalid
      */
-    private ComponentTag parseTagText(final String tagText)
+    private ComponentTag parseTagText(final String tagText) throws ParseException
     {
         // Get the length of the tagtext
         final int tagTextLength = tagText.length();
-
+        
         // If we match tagname pattern
         final WordParser tagnameParser = new WordParser(tagText);
-        final ComponentTag tag = new ComponentTag();
 
         if (tagnameParser.matcher().lookingAt())
         {
             // Extract the tag from the pattern matcher
-            tag.name = tagnameParser.getWord().toLowerCase();
+            final String tagName = tagnameParser.getWord().toLowerCase();
+            
+            int pos;
+            final ComponentTag tag;
+            
+            if (!wicketTagName.equalsIgnoreCase(tagName))
+            {
+                tag = new ComponentTag();
+                
+                tag.name = tagnameParser.getWord().toLowerCase();
+                pos = tagnameParser.matcher().end(0);
+            }
+            else
+            {
+                tag = new ComponentWicketTag();
+                
+                // make sure there is a colon next and a word
+                pos = tagnameParser.matcher().end(0);
+                
+                // 2 chars: ":" and at least one character
+                if ((tagTextLength <= (pos + 2)) || (tagText.charAt(pos) != ':'))
+                {
+                    throw new ParseException("No valid wicket tag name found: '" 
+                            + tagText 
+                            + "'. Must be like <wicket:param ...", 0 /* tag.getPos() */);
+                    // TODO where to get tag.getPos() from
+                }
+                
+                int endPos = tagText.indexOf(' ', pos);
+                if (endPos == -1)
+                {
+                    tag.name = tagText.substring(pos + 1).toLowerCase();
+                    pos = tagTextLength;
+                }
+                else
+                {
+                    tag.name = tagText.substring(pos + 1, endPos).toLowerCase();
+                    pos = endPos;
+                }
 
-            int pos = tagnameParser.matcher().end(0);
+                tag.componentName = tag.name;
+            }
 
             // Are we at the end? Then there are no attributes, so we just
             // return the tag
@@ -625,6 +850,12 @@ public final class MarkupParser
             {
                 // Get key and value using attribute pattern
                 String value = attributeParser.getValue();
+                
+                // In case like <html xmlns:wicket> will the value be null
+                if (value == null)
+                {
+                    value = "";
+                }
 
                 // Set new position to end of attribute
                 pos = attributeParser.matcher().end(0);
@@ -658,6 +889,21 @@ public final class MarkupParser
                 {
                     // Set componentName value on tag
                     tag.componentName = value;
+                    
+                    // value must match allowed characters
+                    Matcher matcher = MetaPattern.VARIABLE_NAME.matcher(value);
+                    if (!matcher.matches())
+                    {
+                        log.warn("WILL BE ACTIVATED SOON: Invalid character in component name '" 
+                                + componentNameAttribute + "-" + value + "'"
+                                + " Regex: [a-z_]+ (case insensitive)");
+/*                        
+                        throw new ParseException("Invalid character in component name '" 
+                                + componentNameAttribute + "-" + value + "'"
+                                + " Regex: [a-z_]+ (case insensitive)", 
+                                tag.getPos());
+*/                                
+                    }
                 }
 
                 // Put the attribute in the attributes hash

@@ -27,6 +27,9 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.AutolinkComponentResolver;
 import wicket.markup.ComponentTag;
+import wicket.markup.ComponentWicketTag;
+import wicket.markup.MarkupParser;
+import wicket.markup.WicketTagComponentResolver;
 import wicket.markup.html.form.Crypt;
 import wicket.markup.html.form.FormComponentPersistenceDefaults;
 import wicket.markup.html.form.ICrypt;
@@ -128,6 +131,9 @@ public class ApplicationSettings
     // Component attribute name
     private String componentNameAttribute = ComponentTag.WICKET_COMPONENT_NAME_ATTRIBUTE;
 
+    // Default xhtml wicket tag name: e.g. <wicket>
+    private String wicketTagName = ComponentWicketTag.WICKET_TAG_NAME;
+    
     // True to check that each component on a page is used
     private boolean componentUseCheck = true;
 
@@ -203,7 +209,13 @@ public class ApplicationSettings
 
     /** Factory to create new Page objects */
     private IPageFactory pageFactory;
+    
+    // If true, wicket tags (<wicket ..>) will be removed from output
+    private boolean removeWicketTagsFromOutput = false;
 
+    /** Pluggable markup parser */
+    private String markupParserClassName = MarkupParser.class.getName();
+    
     // Code broadcaster for reporting
     private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
@@ -252,6 +264,7 @@ public class ApplicationSettings
         
         componentResolvers = new ArrayList();
         componentResolvers.add(new AutolinkComponentResolver());
+        componentResolvers.add(new WicketTagComponentResolver());
     }
 
     /**
@@ -818,9 +831,55 @@ public class ApplicationSettings
      * 
      * @return List of ComponentResolvers
      */
-    public List getComponentResolvers()
+    public final List getComponentResolvers()
     {
         return componentResolvers;
+    }
+    
+    /**
+     * Define a new wicket tag name to use instead of "wicket"
+     * 
+     * @param wicketTagName the tag name
+     */
+    public final void setWicketTagName(final String wicketTagName)
+    {
+        this.wicketTagName = wicketTagName;
+    }
+    
+    /**
+     * Get the current tag name
+     * 
+     * @return wicket tag name
+     */
+    public final String getWicketTagName()
+    {
+        return this.wicketTagName;
+    }
+    
+    public final boolean getRemoveWicketTagsFromOutput()
+    {
+        return removeWicketTagsFromOutput;
+    }
+    
+    public final void setRemoveWicketTagsFromOutput(boolean remove)
+    {
+        this.removeWicketTagsFromOutput = remove;
+    }
+    
+    /**
+     * @return Returns the markupParserClass.
+     */
+    public final Class getMarkupParserClass()
+    {
+        return getPageFactory().getClassInstance(markupParserClassName);
+    }
+    
+    /**
+     * @param markupParserClass The markupParserClass to set.
+     */
+    public final void setMarkupParserClassName(final String markupParserClassName)
+    {
+        this.markupParserClassName = markupParserClassName;
     }
 }
 

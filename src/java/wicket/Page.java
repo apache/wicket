@@ -65,9 +65,6 @@ public abstract class Page extends Container implements IRedirectListener
     /** The rendering before which all pages are stale. */
     private int staleRendering = 0;
 
-    /** used to make autolink name like autolink-0-0 unique */
-    private int autoIndex = 0;
-
     /** temporary reference to the messages in case we are redirecting. */
     FeedbackMessages messages;
 
@@ -310,16 +307,6 @@ public abstract class Page extends Container implements IRedirectListener
                 return CONTINUE_TRAVERSAL;
             }
         });
-	}
-	
-	/**
-	 * Return the autoindex required to make [autolink] unique on page level
-	 * 
-	 * @return increased autolink prefix index
-	 */
-	final public int incrementAutoIndex()
-	{
-	    return this.autoIndex ++;
 	}
 }
 
