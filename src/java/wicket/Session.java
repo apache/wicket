@@ -342,6 +342,28 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Removes the given page from the cache. This method may be useful if you
+	 * have special knowledge that a given page cannot be accessed again. For
+	 * example, the user may have closed a popup window.
+	 * 
+	 * @param page
+	 *            The page to remove
+	 */
+	public final void remove(final Page page)
+	{
+		pages.remove(page.getId());
+	}
+
+	/**
+	 * Removes all pages from the session. Although this method should rarely be
+	 * needed, it is available (possibly for security reasons).
+	 */
+	public final void removeAll()
+	{
+		pages.clear();
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Sets the application that this session is associated with.
