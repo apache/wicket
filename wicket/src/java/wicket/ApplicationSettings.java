@@ -31,6 +31,7 @@ import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
+import wicket.util.file.Folder;
 import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -136,13 +137,14 @@ public final class ApplicationSettings
 	/** The application */
 	private Application application;
 
-	/** If true and if componentIdAttribute has been changed, than not only
-	 * use the new componentIdAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentIdAttribute and 
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
-     * If componentIdAttribute has not be changed, the system's behaviour
-     * is the same, not matter if applyDefaultComponentId is true or false.
+	/**
+	 * If true and if componentIdAttribute has been changed, than not only use
+	 * the new componentIdAttribute to identify wicket components, but also the
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back to default. Both the
+	 * new componentIdAttribute and DEFAULT_COMPONENT_ID_ATTRIBUTE would
+	 * identify wicket components. If componentIdAttribute has not be changed,
+	 * the system's behaviour is the same, not matter if applyDefaultComponentId
+	 * is true or false.
 	 */
 	private boolean applyDefaultComponentId = false;
 
@@ -154,7 +156,7 @@ public final class ApplicationSettings
 
 	/** Component id attribute */
 	private String componentIdAttribute = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
-	
+
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
 
@@ -175,7 +177,7 @@ public final class ApplicationSettings
 
 	/** Default class resolver to find classes */
 	private IClassResolver defaultClassResolver = new DefaultClassResolver();
-	
+
 	/** The default locale to use */
 	private Locale defaultLocale = Locale.getDefault();
 
@@ -269,21 +271,57 @@ public final class ApplicationSettings
 		return this;
 	}
 
-	/** 
-	 * If true and if componentIdAttribute has been changed, than not only
-	 * use the new componentIdAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentIdAttribute and 
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
+	/**
+	 * Configures application settings for a given configuration type.
 	 * 
-	 * @return true, if "wicket" will be used IN ADDITION to the changed
-	 *   value for the componentIdAttribute.
+	 * @param configurationType
+	 *            The configuration type. Must currently be either "development"
+	 *            or "deployment".
+	 * @param sourceFolder
+	 *            If configurationType is "development", then this folder will
+	 *            be polled for resource changes
+	 */
+	public final void configure(final String configurationType, final String sourceFolder)
+	{
+		if ("development".equalsIgnoreCase(configurationType))
+		{
+			if (sourceFolder != null)
+			{
+				setSourcePath(new Path(new Folder(sourceFolder)));
+				setResourcePollFrequency(Duration.ONE_SECOND);
+			}
+			setComponentUseCheck(true);
+			setStripWicketTags(false);
+			setStripComponentIds(false);
+		}
+		else if ("deployment".equalsIgnoreCase(configurationType))
+		{
+			setComponentUseCheck(false);
+			setStripComponentIds(true);
+			setStripWicketTags(true);
+		}
+		else
+		{
+			throw new IllegalArgumentException(
+					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
+		}
+	}
+
+	/**
+	 * If true and if componentIdAttribute has been changed, than not only use
+	 * the new componentIdAttribute to identify wicket components, but also the
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back to default. Both the
+	 * new componentIdAttribute and DEFAULT_COMPONENT_ID_ATTRIBUTE would
+	 * identify wicket components.
+	 * 
+	 * @return true, if "wicket" will be used IN ADDITION to the changed value
+	 *         for the componentIdAttribute.
 	 */
 	public boolean getApplyDefaultComponentId()
 	{
-	    return applyDefaultComponentId;
+		return applyDefaultComponentId;
 	}
-	
+
 	/**
 	 * If true, automatic link resolution is enabled.
 	 * 
@@ -303,9 +341,9 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Gets component id attribute in use in this application. Normally, this
-	 * is "wicket", but it can be changed in the unlikely event that tag
-	 * attribute naming conflicts arise.
+	 * Gets component id attribute in use in this application. Normally, this is
+	 * "wicket", but it can be changed in the unlikely event that tag attribute
+	 * naming conflicts arise.
 	 * 
 	 * @return The current component id attribute
 	 * @see ApplicationSettings#setComponentIdAttribute(String)
@@ -456,8 +494,8 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Returns true if componentId attributes should be stripped from tags
-	 * when rendering.
+	 * Returns true if componentId attributes should be stripped from tags when
+	 * rendering.
 	 * 
 	 * @return Returns the stripComponentIds.
 	 * @see ApplicationSettings#setStripComponentIds(boolean)
@@ -503,7 +541,7 @@ public final class ApplicationSettings
 	{
 		return useDefaultOnMissingResource;
 	}
-	
+
 	/**
 	 * @return Returns the pagesVersionedByDefault.
 	 */
@@ -512,19 +550,20 @@ public final class ApplicationSettings
 		return versionPagesByDefault;
 	}
 
-	/** 
-	 * If true and if componentIdAttribute has been changed, than not only
-	 * use the new componentIdAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentIdAttribute and 
-	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
+	/**
+	 * If true and if componentIdAttribute has been changed, than not only use
+	 * the new componentIdAttribute to identify wicket components, but also the
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back to default. Both the
+	 * new componentIdAttribute and DEFAULT_COMPONENT_ID_ATTRIBUTE would
+	 * identify wicket components.
 	 * 
-	 * @param applyDefault if true, "wicket" will be used IN ADDITION to the 
-	 *   changed value for the componentIdAttribute.
+	 * @param applyDefault
+	 *            if true, "wicket" will be used IN ADDITION to the changed
+	 *            value for the componentIdAttribute.
 	 */
 	public void setApplyDefaultComponentId(final boolean applyDefault)
 	{
-	    this.applyDefaultComponentId = applyDefault;
+		this.applyDefaultComponentId = applyDefault;
 	}
 
 	/**
@@ -548,9 +587,9 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Sets component id attribute in use in this application. Normally, this
-	 * is "wicket", but it can be changed in the unlikely event that tag
-	 * attribute naming conflicts arise.
+	 * Sets component id attribute in use in this application. Normally, this is
+	 * "wicket", but it can be changed in the unlikely event that tag attribute
+	 * naming conflicts arise.
 	 * 
 	 * @param componentIdAttribute
 	 *            The componentIdAttribute to set.
@@ -558,13 +597,13 @@ public final class ApplicationSettings
 	 */
 	public final ApplicationSettings setComponentIdAttribute(final String componentIdAttribute)
 	{
-	    if (!MetaPattern.VARIABLE_NAME.matcher(componentIdAttribute).matches())
-	    {
-	        throw new IllegalArgumentException(
-	                "Component id attribute must be a valid variable name ([a-z][a-z0-9_]*)");
-	    }
-	    
-	    this.applyDefaultComponentId = true;
+		if (!MetaPattern.VARIABLE_NAME.matcher(componentIdAttribute).matches())
+		{
+			throw new IllegalArgumentException(
+					"Component id attribute must be a valid variable name ([a-z][a-z0-9_]*)");
+		}
+
+		this.applyDefaultComponentId = true;
 		this.componentIdAttribute = componentIdAttribute;
 		return this;
 	}
@@ -665,9 +704,10 @@ public final class ApplicationSettings
 		this.defaultClassResolver = defaultClassResolver;
 		return this;
 	}
-	
+
 	/**
-	 * @param defaultLocale The defaultLocale to set.
+	 * @param defaultLocale
+	 *            The defaultLocale to set.
 	 */
 	public void setDefaultLocale(Locale defaultLocale)
 	{
@@ -859,9 +899,10 @@ public final class ApplicationSettings
 		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
 		return this;
 	}
-	
+
 	/**
-	 * @param pagesVersionedByDefault The pagesVersionedByDefault to set.
+	 * @param pagesVersionedByDefault
+	 *            The pagesVersionedByDefault to set.
 	 */
 	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
