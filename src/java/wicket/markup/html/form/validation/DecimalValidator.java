@@ -87,27 +87,28 @@ public final class DecimalValidator extends AbstractValidator
      * Validates the given form component.
      * Ensures that the form component has a numeric value. If min and max arguments are
      * given, this validator also ensures the value is in bounds.
-     * @param input The input
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(
-            final String input, final FormComponent component)
+    public ValidationErrorMessage validate(final FormComponent component)
     {
+        // Get component value
+        final String value = component.getStringValue();
+        
         try
         {
             // Get long value
-            final long value = Long.parseLong(input);
+            final long longValue = Long.parseLong(value);
             
             // Check range
-            if (value < min || value > max)
+            if (longValue < min || longValue > max)
             {
-                return errorMessage(input, component);
+                return errorMessage(value, component);
             }
         }
         catch (NumberFormatException e)
         {
-            return errorMessage(input, component);
+            return errorMessage(value, component);
         }
 
         return NO_ERROR;

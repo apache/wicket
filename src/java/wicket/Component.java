@@ -368,10 +368,10 @@ public abstract class Component implements Serializable
 	 */
 	public final void setModelObject(final Object value)
 	{
-		IModel mod = getModel();
-		if (mod != null)
+		final IModel model = getModel();
+		if (model != null)
 		{
-			mod.setObject(value);
+			model.setObject(value);
 		}
 	}
 

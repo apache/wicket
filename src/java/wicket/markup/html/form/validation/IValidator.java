@@ -23,7 +23,9 @@ import java.io.Serializable;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * Interface to code that validates form components.
+ * Interface to code that validates Form components.  When the validate()
+ * method of the interface is called by the framework, the IValidator
+ * implementation is expected to check the input String it is passed 
  *
  * @author Jonathan Locke
  */
@@ -40,14 +42,12 @@ public interface IValidator extends Serializable
     public static final IValidator NULL = new NullValidator();
 
     /**
-     * Validates the given input. The input corresponds to the input from the request
-     * for a component.
-     * @param input the input to validate.
-     * @param component Component to check for
+     * Validates the given input. The input corresponds to the input from the 
+     * request for a component.
+     * @param component Component to validate
      * @return the validation message or NO_ERROR
      */
-    public ValidationErrorMessage validate(
-            final String input, final FormComponent component);
+    public ValidationErrorMessage validate(final FormComponent component);
 
     /**
      * Validator that does nothing.
@@ -56,10 +56,9 @@ public interface IValidator extends Serializable
     {
         /**
          * Returns null.
-         * @see wicket.markup.html.form.validation.IValidator#validate(java.lang.String, wicket.markup.html.form.FormComponent)
+         * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
          */
-        public ValidationErrorMessage validate(
-                final String input, final FormComponent component)
+        public ValidationErrorMessage validate(final FormComponent component)
         {
             return null;
         }
@@ -74,3 +73,5 @@ public interface IValidator extends Serializable
         }
     }
 }
+
+///////////////////////////////// End of File /////////////////////////////////

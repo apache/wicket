@@ -18,18 +18,16 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import wicket.Component;
 import wicket.Localizer;
 import wicket.RenderException;
-import wicket.RequestCycle;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
-import wicket.model.Model;
+import wicket.model.MapModel;
 import wicket.util.lang.Classes;
 
 /**
@@ -40,16 +38,6 @@ import wicket.util.lang.Classes;
  */
 public abstract class AbstractValidator implements IValidator
 {
-    /**
-     * Gets the input for the given current component.
-     * @param component the component to get the input for
-     * @return the input for the given current component
-     */
-    public final String getInput(final FormComponent component)
-    {
-        return component.getRequestString(RequestCycle.get());
-    }
-
     /**
      * Returns a formatted validation error message for a given component. The error
      * message is retrieved from a message bundle associated with the page in which this
@@ -75,31 +63,49 @@ public abstract class AbstractValidator implements IValidator
      * @return The validation error message
      */
     public final ValidationErrorMessage errorMessage(
-            final Serializable input, final FormComponent component)
+            final String input, final FormComponent component)
     {
     	return errorMessage(getResourceKey(component), input, component);
     }
 
+
     /**
-     * Gets the resource key based on the form component. It will have the form:
-     * <code>[form-name].[component-name].[validator-class]</code>
-     * @param component the form component
-     * @return the resource key based on the form component
+     * Returns a formatted validation error message for a given component. The error
+     * message is retrieved from a message bundle associated with the page in which this
+     * validator is contained using the given resource key. The resourceModel is used
+     * for variable interpolation.
+     * @param resourceKey the resource key to be used for the message
+     * @param resourceModel the model for variable interpolation
+     * @param input the input (that caused the error)
+     * @param component The component where the error occurred
+     * @return The validation error message
      */
-    protected final String getResourceKey(final FormComponent component)
+    public final ValidationErrorMessage errorMessage(
+    		final String resourceKey, final IModel resourceModel,
+            final String input, final FormComponent component)
     {
-        // Resource key must be <form-name>.<component-name>.<validator-class>
-        final Component parentForm = component.findParent(Form.class);
-        if (parentForm != null)
-        {
-            return parentForm.getName() + "." + component.getName()
-            	+ "." + Classes.name(getClass());
-        }
-        else
-        {
-            throw new RenderException(
-                    "Unable to find Form parent for FormComponent " + component);
-        }
+        // Return formatted error message
+        Localizer localizer = component.getLocalizer();
+		String message = localizer.getString(resourceKey, component, resourceModel);
+        return new ValidationErrorMessage(input, component, message);
+    }
+
+    /**
+     * Returns a formatted validation error message for a given component. The error
+     * message is retrieved from a message bundle associated with the page in which this
+     * validator is contained using the given resource key. The resourceModel is used
+     * for variable interpolation.
+     * @param resourceKey the resource key to be used for the message
+     * @param map the model for variable interpolation
+     * @param input the input (that caused the error)
+     * @param component The component where the error occurred
+     * @return The validation error message
+     */
+    public final ValidationErrorMessage errorMessage(
+    		final String resourceKey, final Map map,
+            final String input, final FormComponent component)
+    {
+    	return errorMessage(resourceKey, MapModel.valueOf(map), input, component);
     }
 
     /**
@@ -127,7 +133,7 @@ public abstract class AbstractValidator implements IValidator
      */
     public final ValidationErrorMessage errorMessage(
     		final String resourceKey,
-            final Serializable input, final FormComponent component)
+            final String input, final FormComponent component)
     {
         Map resourceModel = getMessageContextVariables(input, component);
 		return errorMessage(resourceKey, resourceModel, input, component);
@@ -148,7 +154,7 @@ public abstract class AbstractValidator implements IValidator
 	 * @return a map with the variables for interpolation
 	 */
 	protected Map getMessageContextVariables(
-			final Serializable input, final FormComponent component)
+			final String input, final FormComponent component)
 	{
 		Map resourceModel = new HashMap(2);
 		resourceModel.put("input", input);
@@ -157,51 +163,26 @@ public abstract class AbstractValidator implements IValidator
 	}
 
     /**
-     * Returns a formatted validation error message for a given component. The error
-     * message is retrieved from a message bundle associated with the page in which this
-     * validator is contained using the given resource key. The resourceModel is used
-     * for variable interpolation.
-     * @param resourceKey the resource key to be used for the message
-     * @param resourceModel the model for variable interpolation
-     * @param input the input (that caused the error)
-     * @param component The component where the error occurred
-     * @return The validation error message
+     * Gets the resource key based on the form component. It will have the form:
+     * <code>[form-name].[component-name].[validator-class]</code>
+     * @param component the form component
+     * @return the resource key based on the form component
      */
-    public final ValidationErrorMessage errorMessage(
-    		final String resourceKey, final Map resourceModel,
-            final Serializable input, final FormComponent component)
+    protected final String getResourceKey(final FormComponent component)
     {
-    	final IModel model;
-    	if(resourceModel instanceof Serializable)
-    	{
-    		model = new Model((Serializable)resourceModel);
-    	}
-    	else
-    	{
-    		model = new Model(new HashMap(resourceModel));
-    	}
-    	return errorMessage(resourceKey, model, input, component);
-    }
-
-
-    /**
-     * Returns a formatted validation error message for a given component. The error
-     * message is retrieved from a message bundle associated with the page in which this
-     * validator is contained using the given resource key. The resourceModel is used
-     * for variable interpolation.
-     * @param resourceKey the resource key to be used for the message
-     * @param resourceModel the model for variable interpolation
-     * @param input the input (that caused the error)
-     * @param component The component where the error occurred
-     * @return The validation error message
-     */
-    public final ValidationErrorMessage errorMessage(
-    		final String resourceKey, final IModel resourceModel,
-            final Serializable input, final FormComponent component)
-    {
-        // Return formatted error message
-        Localizer localizer = component.getLocalizer();
-		String message = localizer.getString(resourceKey, component, resourceModel);
-        return new ValidationErrorMessage(input, component, message);
+        // Resource key must be <form-name>.<component-name>.<validator-class>
+        final Component parentForm = component.findParent(Form.class);
+        if (parentForm != null)
+        {
+            return parentForm.getName() + "." + component.getName()
+            	+ "." + Classes.name(getClass());
+        }
+        else
+        {
+            throw new RenderException(
+                    "Unable to find Form parent for FormComponent " + component);
+        }
     }
 }
+
+///////////////////////////////// End of File /////////////////////////////////

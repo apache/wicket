@@ -32,16 +32,18 @@ public final class RequiredValidator extends AbstractValidator
 {
     /**
      * Validates the given form component.
-     * @param input The input to validate
      * @param component The component to validate
      * @return Error for component or NO_ERROR if none
      */
-    public ValidationErrorMessage validate(
-            final String input, final FormComponent component)
+    public ValidationErrorMessage validate(final FormComponent component)
     {
-        if (input == null || input.trim().equals(""))
+        // Get component value
+        final String value = component.getStringValue();
+        
+        // Check value
+        if (value == null || value.trim().equals(""))
         {
-            return errorMessage(input, component);
+            return errorMessage(value, component);
         }
 
         return NO_ERROR;

@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,23 +43,23 @@ public class TypeValidator extends AbstractValidator
 	/** Log. */
 	private static Log log = LogFactory.getLog(TypeValidator.class);
 
-	/** the type to use for checking. */
+	/** The type to use for checking. */
 	private Class type;
 
 	/**
-	 * the locale to use. if null and useLocaled == true, the session's locale
-	 * will be used.
+	 * The locale to use.  If null and useLocaled == true, the session's 
+     * locale will be used.
 	 */
 	private Locale locale = null;
 
-	/** whether to use either the set locale or the session's locale. */
+	/** Whether to use either the set locale or the session's locale. */
 	private boolean useLocalized = true;
 
 	/**
 	 * Construct. The current session's locale will be used for conversion.
 	 * @param type the type to use for checking
 	 */
-	public TypeValidator(Class type)
+	public TypeValidator(final Class type)
 	{
 		this(type, null);
 	}
@@ -71,7 +70,7 @@ public class TypeValidator extends AbstractValidator
 	 * @param type the type to use for checking
 	 * @param locale the locale to use
 	 */
-	public TypeValidator(Class type, Locale locale)
+	public TypeValidator(final Class type, final Locale locale)
 	{
 		this.type = type;
 		this.locale = locale;
@@ -85,7 +84,7 @@ public class TypeValidator extends AbstractValidator
 	 * @param useLocalized whether localization (using the current session's locale)
 	 * should be used
 	 */
-	public TypeValidator(Class type, boolean useLocalized)
+	public TypeValidator(final Class type, final boolean useLocalized)
 	{
 		this(type, null);
 		this.useLocalized = useLocalized;
@@ -95,34 +94,37 @@ public class TypeValidator extends AbstractValidator
 	 * Validates input by trying it to convert to the given type using the
 	 * {@link wicket.util.convert.ConverterRegistry} instance of that can be
 	 * found in the application settings.
-	 * @param input the input to validate
 	 * @param component the component that wants to validate its input
 	 * @return validation error message
-	 * @see wicket.markup.html.form.validation.IValidator#validate(java.lang.String, wicket.markup.html.form.FormComponent)
+	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
-	public ValidationErrorMessage validate(String input, FormComponent component)
+	public ValidationErrorMessage validate(FormComponent component)
 	{
-		ConversionUtils conversionUtils = getConversionUtils();
-		Locale localeForValidation = getLocaleForValidation();
+        // Get component value
+        final String value = component.getStringValue();
+        
+        // Check value by attempting to convert it
+		final ConversionUtils conversionUtils = getConversionUtils();
+		final Locale localeForValidation = getLocaleForValidation();
 		try
 		{
-			conversionUtils.convert(input, type, localeForValidation);
+			conversionUtils.convert(component.getStringValue(), type, localeForValidation);
 			return ValidationErrorMessage.NO_MESSAGE;
 		}
 		catch (ConversionException e)
 		{
-			return getError(input, component, e);
+			return getError(value, component, e);
 		}
 	}
 
 	/**
 	 * Gets the error message.
-	 * @param input the input
+	 * @param input The input
 	 * @param component the component
 	 * @param e the conversion exception
 	 * @return the validation error message
 	 */
-	protected ValidationErrorMessage getError(Serializable input,
+	protected ValidationErrorMessage getError(String input,
 			FormComponent component, ConversionException e)
 	{
 		Map ctx = getMessageContext(input, component, e);
@@ -131,18 +133,18 @@ public class TypeValidator extends AbstractValidator
 
 	/**
 	 * Gets the message context.
-	 * @param input the input
+	 * @param input The input
 	 * @param component the component
 	 * @param e the conversion exception
 	 * @return a map with variables for interpolation
 	 */
-	protected Map getMessageContext(Serializable input,
+	protected Map getMessageContext(String input,
 			FormComponent component, ConversionException e)
 	{
 		Map ctx = super.getMessageContextVariables(input, component);
 		ctx.put("type", type);
 		Locale loc = e.getLocale();
-		if(loc != null) ctx.put("locale", loc);
+		if (loc != null) ctx.put("locale", loc);
 		ctx.put("exception", e.getMessage());
 		ctx.put("pattern", e.getPattern());
 		return ctx;
@@ -174,10 +176,10 @@ public class TypeValidator extends AbstractValidator
 	private Locale getLocaleForValidation()
 	{
 		Locale localeForValidation = null;
-		if(isUseLocalized())
+		if (isUseLocalized())
 		{
 			localeForValidation = getLocale();
-			if(localeForValidation == null)
+			if (localeForValidation == null)
 			{
 				localeForValidation = RequestCycle.get().getSession().getLocale();
 			}
