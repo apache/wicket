@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.parser.filter;
 
@@ -30,8 +29,8 @@ import wicket.markup.parser.IMarkupFilter;
 /**
  * This is a markup inline filter. It identifies xml tags which include a href
  * attribute and which are not Wicket specific components and flags these tags
- * (ComponentTag) as autolink enabled. A component resolver will later 
- * resolve the href and assign a BookmarkablePageLink to it (automatically).
+ * (ComponentTag) as autolink enabled. A component resolver will later resolve
+ * the href and assign a BookmarkablePageLink to it (automatically).
  * <p>
  * An application setting is used as default value, which might be modified for
  * specific regions. These regions are identified by &lt;wicket:link&gt; tags
@@ -55,7 +54,7 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 	 * Construct.
 	 * 
 	 * @param parent
-	 *           The next element in the chain.
+	 *            The next element in the chain.
 	 */
 	public AutolinkHandler(final IMarkupFilter parent)
 	{
@@ -66,7 +65,7 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 	 * Set the default value for autolinking
 	 * 
 	 * @param enable
-	 *           if true, autolinks are enabled
+	 *            if true, autolinks are enabled
 	 */
 	public void setAutomaticLinking(final boolean enable)
 	{
@@ -92,12 +91,13 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 		}
 
 		// Only xml tags not already identified as Wicket components will be
-		// considered for autolinking. This is because it is assumed that Wicket 
-		// components like images or all other kind of Wicket Links will handle it
+		// considered for autolinking. This is because it is assumed that Wicket
+		// components like images or all other kind of Wicket Links will handle
+		// it
 		// themselves.
 		final String href = tag.getAttributes().getString("href");
 		if ((autolinking == true) && (tag.getComponentName() == null) && (href != null)
-				&& (href.endsWith(".html") || (href.indexOf(".html?") != -1)) 
+				&& (href.endsWith(".html") || (href.indexOf(".html?") != -1))
 				&& (href.indexOf(":") == -1))
 		{
 			// Mark it as autolink enabled
@@ -125,14 +125,15 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 							autolinkStatus = new Stack();
 						}
 
-						// remember the current setting to be reset after the region
+						// remember the current setting to be reset after the
+						// region
 						autolinkStatus.push(new Boolean(autolinking));
 					}
 
 					// html allows to represent true in different ways
 					final String autolink = tag.getAttributes().getString("autolink");
-					if ((autolink == null) || "".equals(autolink) || "true".equalsIgnoreCase(autolink)
-							|| "1".equals(autolink))
+					if ((autolink == null) || "".equals(autolink)
+							|| "true".equalsIgnoreCase(autolink) || "1".equals(autolink))
 					{
 						autolinking = true;
 					}

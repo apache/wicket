@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.form.validation;
 
@@ -23,13 +22,12 @@ import wicket.util.string.StringList;
 
 /**
  * Validates that a form component's string value is of a certain min/max
- * length. Validators are constructed by calling the min, max and range
- * static factory methods. For example, LengthValidator.min(6) would return
- * a validator valid only when the input of the component it is attached to
- * is at least 6 characters long. Likewise, LengthValidator.range(3, 5)
- * would only validate a component containing between 3 and 5 characters
- * (inclusive).
- *
+ * length. Validators are constructed by calling the min, max and range static
+ * factory methods. For example, LengthValidator.min(6) would return a validator
+ * valid only when the input of the component it is attached to is at least 6
+ * characters long. Likewise, LengthValidator.range(3, 5) would only validate a
+ * component containing between 3 and 5 characters (inclusive).
+ * 
  * @author Jonathan Locke
  */
 public class LengthValidator extends AbstractValidator
@@ -47,11 +45,17 @@ public class LengthValidator extends AbstractValidator
 	private final int max;
 
 	/**
-	 * Private constructor forces use of static factory method and static instances.
-	 * @param checkMin True if minimum bound should be checked
-	 * @param min Lower bound on valid length
-	 * @param checkMax True if maximum bound should be checked
-	 * @param max Upper bound on valid length
+	 * Private constructor forces use of static factory method and static
+	 * instances.
+	 * 
+	 * @param checkMin
+	 *            True if minimum bound should be checked
+	 * @param min
+	 *            Lower bound on valid length
+	 * @param checkMax
+	 *            True if maximum bound should be checked
+	 * @param max
+	 *            Upper bound on valid length
 	 */
 	private LengthValidator(final boolean checkMin, final int min, final boolean checkMax,
 			final int max)
@@ -63,8 +67,11 @@ public class LengthValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a length validator object that requires a minimum number of characters.
-	 * @param min Minimum number of characters
+	 * Gets a length validator object that requires a minimum number of
+	 * characters.
+	 * 
+	 * @param min
+	 *            Minimum number of characters
 	 * @return Validator object
 	 */
 	public final static LengthValidator min(final int min)
@@ -73,8 +80,11 @@ public class LengthValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a length validator object that requires a maximum number of characters.
-	 * @param max Maximum number of characters
+	 * Gets a length validator object that requires a maximum number of
+	 * characters.
+	 * 
+	 * @param max
+	 *            Maximum number of characters
 	 * @return Validator object
 	 */
 	public final static LengthValidator max(final int max)
@@ -83,10 +93,13 @@ public class LengthValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a length validator object that requires a minimum and maximum number of
-	 * characters.
-	 * @param min Minimum number of characters
-	 * @param max Maximum number of characters
+	 * Gets a length validator object that requires a minimum and maximum number
+	 * of characters.
+	 * 
+	 * @param min
+	 *            Minimum number of characters
+	 * @param max
+	 *            Maximum number of characters
 	 * @return Validator object
 	 */
 	public final static LengthValidator range(final int min, final int max)
@@ -95,9 +108,11 @@ public class LengthValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validates the given form component. Validates that a form component's value is of a
-	 * certain minimum and/or maximum length.
-	 * @param component The component to validate
+	 * Validates the given form component. Validates that a form component's
+	 * value is of a certain minimum and/or maximum length.
+	 * 
+	 * @param component
+	 *            The component to validate
 	 */
 	public final void validate(final FormComponent component)
 	{
@@ -107,12 +122,13 @@ public class LengthValidator extends AbstractValidator
 		// Check length
 		if ((checkMin && value.length() < min) || (checkMax && value.length() > max))
 		{
-            error(component, value);
+			error(component, value);
 		}
 	}
 
 	/**
 	 * Gets whether the maximum bound should be checked.
+	 * 
 	 * @return whether the minimum bound should be checked
 	 */
 	public final boolean isCheckMax()
@@ -122,6 +138,7 @@ public class LengthValidator extends AbstractValidator
 
 	/**
 	 * Gets whether the minimum bound should be checked.
+	 * 
 	 * @return whether the minimum bound should be checked
 	 */
 	public final boolean isCheckMin()
@@ -131,6 +148,7 @@ public class LengthValidator extends AbstractValidator
 
 	/**
 	 * Gets the upper bound on valid length.
+	 * 
 	 * @return the upper bound on valid length
 	 */
 	public final int getMax()
@@ -140,6 +158,7 @@ public class LengthValidator extends AbstractValidator
 
 	/**
 	 * Gets the lower bound on valid length.
+	 * 
 	 * @return the lower bound on valid length
 	 */
 	public final int getMin()

@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: AutolinkComponentResolver.java,v 1.2 2005/02/10 18:01:32 jonathanlocke
+ * Exp $ $Revision$ $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.link;
 
@@ -58,14 +57,14 @@ public class AutolinkComponentResolver implements IComponentResolver
 	/**
 	 * Automatically creates a BookmarkablePageLink component.
 	 * 
-	 * @see wicket.markup.IComponentResolver#resolve(MarkupContainer, MarkupStream,
-	 *      ComponentTag)
+	 * @see wicket.markup.IComponentResolver#resolve(MarkupContainer,
+	 *      MarkupStream, ComponentTag)
 	 * @param markupStream
-	 *           The current markupStream
+	 *            The current markupStream
 	 * @param tag
-	 *           The current component tag while parsing the markup
+	 *            The current component tag while parsing the markup
 	 * @param container
-	 *           The container parsing its markup
+	 *            The container parsing its markup
 	 * @return true, if componentName was handle by the resolver. False,
 	 *         otherwise
 	 */
@@ -98,22 +97,22 @@ public class AutolinkComponentResolver implements IComponentResolver
 	}
 
 	/**
-	 * Resolves the given tag's page class and page parameters by parsing the tag
-	 * component name and then searching for a page class at the absolute or
+	 * Resolves the given tag's page class and page parameters by parsing the
+	 * tag component name and then searching for a page class at the absolute or
 	 * relative URL specified by the href attribute of the tag.
 	 * 
 	 * @param container
-	 *           The container where the link is
+	 *            The container where the link is
 	 * @param componentName
-	 *           the name of the component
+	 *            the name of the component
 	 * @param tag
-	 *           the component tag
+	 *            the component tag
 	 * @return A BookmarkablePageLink to handle the href
 	 */
-	private Component resolveAutomaticLink(final MarkupContainer container, final String componentName,
-			final ComponentTag tag)
+	private Component resolveAutomaticLink(final MarkupContainer container,
+			final String componentName, final ComponentTag tag)
 	{
-        final Page page = container.getPage();
+		final Page page = container.getPage();
 		final String originalHref = tag.getAttributes().getString("href");
 		final int pos = originalHref.indexOf(".html");
 
@@ -129,9 +128,9 @@ public class AutolinkComponentResolver implements IComponentResolver
 
 		// Make the componentName (page-)unique
 		final String id = componentName + page.getAutoIndex();
-        
-        // The component name on the tag changed
-        tag.setComponentName(id);
+
+		// The component name on the tag changed
+		tag.setComponentName(id);
 
 		// Obviously a href like href="myPkg.MyLabel.html" will do as well.
 		// Wicket will not throw an exception. It accepts it.
@@ -139,16 +138,18 @@ public class AutolinkComponentResolver implements IComponentResolver
 
 		if (!classPath.startsWith("."))
 		{
-			// Href is relative. Resolve the url given relative to the current page
+			// Href is relative. Resolve the url given relative to the current
+			// page
 			final String className = page.getClass().getPackage().getName() + "." + classPath;
-			final Class clazz = page.getApplicationSettings().getDefaultClassResolver().resolveClass(
-					className);
+			final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
+					.resolveClass(className);
 
 			return new BookmarkablePageLink(id, clazz, pageParameters);
 		}
 		else
 		{
-			// href is absolute. If class with the same absolute path exists, use
+			// href is absolute. If class with the same absolute path exists,
+			// use
 			// it.
 			// Else don't change the href.
 			final String className = classPath.substring(1);

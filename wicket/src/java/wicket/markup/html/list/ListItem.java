@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.list;
 
@@ -27,7 +26,7 @@ import wicket.model.Model;
 
 /**
  * Items of the ListView.
- *
+ * 
  * @author Jonathan Locke
  */
 public class ListItem extends WebMarkupContainer
@@ -51,6 +50,7 @@ public class ListItem extends WebMarkupContainer
 		{
 			return listView.getListObject(index);
 		}
+
 		/**
 		 * @see wicket.model.Model#setObject(java.lang.Object)
 		 */
@@ -61,10 +61,13 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * A constructor which uses the index and the list provided to create a ListItem. This
-	 * constructor is the default one.
-	 * @param listView The listView that holds this listItem
-	 * @param index The listItem number
+	 * A constructor which uses the index and the list provided to create a
+	 * ListItem. This constructor is the default one.
+	 * 
+	 * @param listView
+	 *            The listView that holds this listItem
+	 * @param index
+	 *            The listItem number
 	 */
 	protected ListItem(final int index, final ListView listView)
 	{
@@ -75,12 +78,15 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * This is a special constructor, which allows to create listItems without an
-	 * underlying listView. PageableListView navigation bar is good example. Be aware that some
-	 * methods e.g. isLast() will throw an exception, because no underlying List is
-	 * available.
-	 * @param index The listItem number
-	 * @param model The model object for the listItem
+	 * This is a special constructor, which allows to create listItems without
+	 * an underlying listView. PageableListView navigation bar is good example.
+	 * Be aware that some methods e.g. isLast() will throw an exception, because
+	 * no underlying List is available.
+	 * 
+	 * @param index
+	 *            The listItem number
+	 * @param model
+	 *            The model object for the listItem
 	 */
 	protected ListItem(final int index, final Model model)
 	{
@@ -90,6 +96,7 @@ public class ListItem extends WebMarkupContainer
 
 	/**
 	 * Gets the index of the listItem in the parent listView.
+	 * 
 	 * @return The index of this listItem in the parent listView
 	 */
 	public final int getIndex()
@@ -99,6 +106,7 @@ public class ListItem extends WebMarkupContainer
 
 	/**
 	 * Convinience method for ListViews with alternating style for colouring.
+	 * 
 	 * @return True, if index is even ((index % 2) == 0)
 	 */
 	public final boolean isEvenIndex()
@@ -108,7 +116,9 @@ public class ListItem extends WebMarkupContainer
 
 	/**
 	 * Gets if this listItem is the first listItem in the containing listView.S
-	 * @return True if this listItem is the first listItem in the containing listView
+	 * 
+	 * @return True if this listItem is the first listItem in the containing
+	 *         listView
 	 */
 	public final boolean isFirst()
 	{
@@ -116,8 +126,11 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets whether this listItem is the last listItem in the containing listView.
-	 * @return True if this listItem is the last listItem in the containing listView.
+	 * Gets whether this listItem is the last listItem in the containing
+	 * listView.
+	 * 
+	 * @return True if this listItem is the last listItem in the containing
+	 *         listView.
 	 */
 	public final boolean isLast()
 	{
@@ -126,9 +139,11 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns a link that will move the given listItem "down" (towards the end) in the
-	 * listView.
-	 * @param componentName Name of move-down link component to create
+	 * Returns a link that will move the given listItem "down" (towards the end)
+	 * in the listView.
+	 * 
+	 * @param componentName
+	 *            Name of move-down link component to create
 	 * @return The link component
 	 */
 	public final Link moveDownLink(final String componentName)
@@ -152,9 +167,11 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns a link that will move the given listItem "up" (towards the beginning) in the
-	 * listView.
-	 * @param componentName Name of move-up link component to create
+	 * Returns a link that will move the given listItem "up" (towards the
+	 * beginning) in the listView.
+	 * 
+	 * @param componentName
+	 *            Name of move-up link component to create
 	 * @return The link component
 	 */
 	public final Link moveUpLink(final String componentName)
@@ -178,8 +195,11 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns a link that will remove this listItem from the listView t hat holds it.
-	 * @param componentName Name of remove link component to create
+	 * Returns a link that will remove this listItem from the listView t hat
+	 * holds it.
+	 * 
+	 * @param componentName
+	 *            Name of remove link component to create
 	 * @return The link component
 	 */
 	public final Link removeLink(final String componentName)
@@ -197,6 +217,7 @@ public class ListItem extends WebMarkupContainer
 
 	/**
 	 * Get the listView that holds this cell.
+	 * 
 	 * @return Returns the list view.
 	 */
 	protected final ListView getListView()
