@@ -41,21 +41,35 @@ public class Tree extends AbstractTree
      * @param componentName The name of this container
      * @param model the underlying tree model
      */
-    public Tree(final String componentName, TreeModel model)
+    public Tree(final String componentName, final TreeModel model)
     {
         super(componentName, model);
     }
 
+    /**
+     * Constructor.
+     * @param componentName The name of this container
+     * @param model the underlying tree model
+     * @param makeTreeModelUnique whether to make the user objects of the tree model
+     * unique. If true, the default implementation will wrapp all user objects in
+     * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
+     * user objects are unique within the tree in order to have the tree working properly
+     */
+    public Tree(final String componentName, final TreeModel model,
+    		final boolean makeTreeModelUnique)
+    {
+        super(componentName, model, makeTreeModelUnique);
+    }
 
     /**
      * Builds the structures needed to display the currently visible tree paths.
+     * @param treeState the current tree state
      */
-    protected void setSelectedPaths()
+    protected void applySelectedPaths(TreeStateCache treeState)
     {
         removeAll();
         List visiblePathsList = new ArrayList();
-        TreePath selectedPath = getTreeState().getSelectedPath(); // get current
-        Enumeration e = getTreeState().getVisiblePathsFromRoot(); // get all visible
+        Enumeration e = treeState.getVisiblePathsFromRoot(); // get all visible
         while (e.hasMoreElements()) // put enumeration in a list
         {
             visiblePathsList.add(e.nextElement());
