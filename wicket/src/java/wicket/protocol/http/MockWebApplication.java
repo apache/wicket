@@ -225,6 +225,17 @@ public class MockWebApplication extends WebApplication
     }
 
     /**
+     * Create and process the request cycle using the current request and
+     * response information.
+     * 
+     * @return A new and initialized WebRequestCyle
+     */
+    public WebRequestCycle createRequestCycle()
+    {
+        return new WebRequestCycle(this, wicketSession, wicketRequest, wicketResponse);
+    }
+
+    /**
      * Reset the request and the response back to a starting state and recreate
      * the necessary wicket request, response and session objects. The request
      * and response objects can be accessed and initialised at this point.
