@@ -22,17 +22,12 @@ import wicket.Page;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 
-
 /**
  * An incremental link to a page of a PageableListView.
  * Assuming your list view navigation looks like
- * 
  * <pre>
- * 
  *  [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *  
  * </pre>
- * 
  * <p>
  * and "&lt;" meaning the previous and "&lt;&lt;" goto the "current page - 5", than it is
  * this kind of incremental page links which can easily be created.

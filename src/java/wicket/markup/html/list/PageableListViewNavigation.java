@@ -21,7 +21,6 @@ package wicket.markup.html.list;
 import wicket.markup.html.basic.Label;
 import wicket.model.Model;
 
-
 /**
  * A navigation for a PageableListView that holds links to other pages of the PageableListView.
  * <p>
@@ -29,33 +28,17 @@ import wicket.model.Model;
  * will be added that contains a {@link Label}with the page number of that link (1..n).
  * 
  * <pre>
- * 
- *  
- *  
- *  
  *       &lt;td id=&quot;wicket-navigation&quot;&gt;
  *           &lt;a id=&quot;wicket-pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
  *              &lt;span id=&quot;wicket-pageNumber&quot;/&gt;
  *           &lt;/a&gt;
  *       &lt;/td&gt;
- *  
- *  
- *   
- *  
  * </pre>
  * 
  * thus renders like:
  * 
  * <pre>
- * 
- *  
- *  
- *  
  *       1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 |
- *  
- *  
- *   
- *  
  * </pre>
  * 
  * </p>
@@ -88,20 +71,12 @@ import wicket.model.Model;
  * With:
  * 
  * <pre>
- * 
- *  
- *  
- *  
  *       &lt;td id=&quot;wicket-navigation&quot;&gt;
  *           &lt;span id=&quot;wicket-separator&quot;/&gt;
  *           &lt;a id=&quot;wicket-pageLink&quot; href=&quot;#&quot;&gt;
  *             &lt;span id=&quot;wicket-pageLabel&quot;/&gt;&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
  *           &lt;/a&gt;
  *       &lt;/td&gt;
- *  
- *  
- *   
- *  
  * </pre>
  * 
  * renders like:
