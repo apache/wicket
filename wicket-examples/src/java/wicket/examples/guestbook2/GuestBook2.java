@@ -15,14 +15,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.examples.guestbook;
+package wicket.examples.guestbook2;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import wicket.PageParameters;
+import wicket.WicketRuntimeException;
 import wicket.examples.WicketExamplePage;
+import wicket.examples.util.hibernate.HibernateHelper;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
 import wicket.markup.html.form.Form;
@@ -30,19 +32,63 @@ import wicket.markup.html.form.TextArea;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.MappingException;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.Transaction;
+
 /**
  * A simple "guest book" example that allows visitors to the page to add a
  * comment and see the comments others have added.
  * 
  * @author Jonathan Locke
  */
-public class Home extends WicketExamplePage
+public class GuestBook2 extends WicketExamplePage
 {
-	// A global list of all comments from all users
+	/** A global list of all comments from all users */
 	private static final List commentList = new ArrayList();
 
-	// The commentListView of comments shown on this page
+	/** The commentListView of comments shown on this page */
 	private final ListView commentListView;
+
+	static
+	{
+		try
+		{
+			try
+			{
+				new DBUtil().initDB("/hibernate.cfg.xml");
+			}
+			catch (Exception e1)
+			{
+				e1.printStackTrace();
+			}
+
+			// Get hibernate session
+			Session session = HibernateHelper.getSession();
+
+			try
+			{
+				// Save comment to db
+				commentList.clear();
+				commentList.addAll(session
+						.find("from comment in class wicket.examples.guestbook2.Comment "
+								+ "order by comment.date desc"));
+			}
+			finally
+			{
+				HibernateHelper.closeSession();
+			}
+		}
+		catch (MappingException e)
+		{
+			e.printStackTrace();
+		}
+		catch (HibernateException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
@@ -50,18 +96,17 @@ public class Home extends WicketExamplePage
 	 * @param parameters
 	 *            Page parameters
 	 */
-	public Home(final PageParameters parameters)
+	public GuestBook2(final PageParameters parameters)
 	{
 		// Add comment form
 		add(new CommentForm("commentForm"));
 
-		// Add commentListView of existing comments
+		// Add table of existing comments
 		add(commentListView = new ListView("comments", commentList)
 		{
 			public void populateItem(final ListItem listItem)
 			{
 				final Comment comment = (Comment)listItem.getModelObject();
-
 				listItem.add(new Label("date", comment.getDate()));
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
@@ -79,7 +124,7 @@ public class Home extends WicketExamplePage
 		private final Comment comment = new Comment();
 
 		/**
-		 * Constructor
+		 * Constructor.
 		 * 
 		 * @param componentName
 		 *            The name of this component
@@ -94,7 +139,7 @@ public class Home extends WicketExamplePage
 		}
 
 		/**
-		 * Show the resulting valid edit
+		 * Show the resulting valid edit.
 		 */
 		public final void handleSubmit()
 		{
@@ -105,14 +150,36 @@ public class Home extends WicketExamplePage
 			newComment.setDate(new Date());
 
 			// Add the component we edited to the list of comments
-			commentList.add(newComment);
+			commentList.add(0, newComment);
 
-			// Invalidate the commentListView's model since a structural change
-			// was made to the comment list model
+			try
+			{
+				// Get hibernate session
+				Session session = HibernateHelper.getSession();
+
+				try
+				{
+					// Save comment to db
+					Transaction transaction = session.beginTransaction();
+					session.save(newComment);
+					transaction.commit();
+				}
+				finally
+				{
+					HibernateHelper.closeSession();
+				}
+			}
+			catch (MappingException e)
+			{
+				throw new WicketRuntimeException("Unable to map hibernate object", e);
+			}
+			catch (HibernateException e)
+			{
+				throw new WicketRuntimeException("Unable to save comment", e);
+			}
+
+			// Tell list view that its model was changed
 			commentListView.invalidateModel();
-
-			// Clear out the text component
-			comment.setText("");
 		}
 	}
 }

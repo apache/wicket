@@ -31,7 +31,7 @@ public class GuestBook2Application extends WicketExampleApplication
      */
     public GuestBook2Application()
     {
-        getPages().setHomePage(Home.class);
+        getPages().setHomePage(GuestBook2.class);
     }
 }
 
