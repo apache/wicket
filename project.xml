@@ -135,5 +135,6 @@
     	<report>maven-changes-plugin</report>
     	<report>maven-tasklist-plugin</report>
     	<report>maven-javadoc-plugin</report>
+    	<report>maven-junit-report-plugin</report>
     </reports>
 </project>
