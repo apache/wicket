@@ -113,6 +113,7 @@ public abstract class DynamicImageResource extends ImageResource
 				if (inputStream != null)
                 {
 					inputStream.close();
+					inputStream = null;
                 }
 			}
 
