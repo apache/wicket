@@ -71,6 +71,18 @@ public abstract class FlatTree extends AbstractTree
     }
 
     /**
+     * Constructor using the given tree state. This tree state holds the tree model and
+     * the currently visible paths.
+     * @param componentName The name of this container
+     * @param treeState the tree state that holds the tree model and the currently visible
+     * paths
+     */
+    public FlatTree(final String componentName, TreeStateCache treeState)
+    {
+        super(componentName, treeState);
+    }
+
+    /**
      * Builds the structures needed to display the currently visible tree paths.
      * @param treeState the current tree state
      */
