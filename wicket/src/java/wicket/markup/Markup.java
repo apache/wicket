@@ -33,11 +33,11 @@ import wicket.util.resource.Resource;
  */
 public final class Markup
 {
-    /** The markup's resource stream for diagnostic purposes */
-    private final Resource resource;
-
     /** The list of markup elements */
     private final List markup;
+    
+    /** The markup's resource stream for diagnostic purposes */
+    private final Resource resource;
 
     /**
      * Constructor
@@ -51,11 +51,11 @@ public final class Markup
     }
 
     /**
-     * @return Number of markup elements
+     * @return String representation of markup list
      */
-    int size()
+    public String toString()
     {
-        return markup.size();
+        return resource.toString();
     }
 
     /**
@@ -77,11 +77,11 @@ public final class Markup
     }
 
     /**
-     * @return String representation of markup list
+     * @return Number of markup elements
      */
-    public String toString()
+    int size()
     {
-        return resource.toString();
+        return markup.size();
     }
 }
 
