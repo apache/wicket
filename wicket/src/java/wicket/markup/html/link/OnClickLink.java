@@ -1,0 +1,132 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package wicket.markup.html.link;
+
+import java.io.Serializable;
+
+import wicket.IModel;
+import wicket.RequestCycle;
+import wicket.markup.ComponentTag;
+
+/**
+ * Implementation of a special link component that can handle linkClicked events (implements
+ * {@link wicket.markup.html.link.ILinkListener}) but that can be used with any kind of tag.
+ * At render time, an onclick event handler is added to the tag (or the existing one
+ * is replaced) like: <pre>onclick="location.href='/myapp/...'"</pre>.
+ * <p>
+ * The OnClickLink can be placed on any tag that has a onclick handler
+ * (e.g. buttons, tr/ td's etc).
+ * </p>
+ * <p>
+ * You can use a onClickLink like:
+ * <pre>
+ * add(new OnClickLink("myLink"){
+ *
+ *   public void linkClicked(RequestCycle cycle)
+ *   {
+ *      // do something here...  
+ *   }
+ * );
+ * </pre>
+ * and in your HTML file:
+ * <pre>
+ *  &lt;input type="button" id="wcn-remove" value="push me" /&gt;
+ * </pre>
+ * or (with a onclick handler that will be replaced but can be usefull when designing):
+ * <pre>
+ *  &lt;input type="button" onclick="alert('test');" id="wcn-remove" value="push me" /&gt;
+ * </pre>
+ * </p>
+ *
+ * @author Eelco Hillenius
+ */
+public abstract class OnClickLink extends AbstractLink
+{
+    /**
+     * Construct.
+     * @param componentName the name of the component
+     */
+    public OnClickLink(String componentName)
+    {
+        super(componentName);
+    }
+
+    /**
+     * Constructor that uses the provided {@link IModel} as its model.
+     * @param name The non-null name of this component
+     * @param model the model
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public OnClickLink(String name, IModel model)
+    {
+        super(name, model);
+    }
+
+    /**
+     * Constructor that uses the provided instance of {@link IModel} as a dynamic model.
+     * This model will be wrapped in an instance of {@link wicket.PropertyModel}
+     * using the provided expression.
+     *
+     * @param name The non-null name of this component
+     * @param model the instance of {@link IModel} from which the model object will be
+     *            used as the subject for the given expression
+     * @param expression the OGNL expression that works on the given object
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public OnClickLink(String name, IModel model, String expression)
+    {
+        super(name, model, expression);
+    }
+
+    /**
+     * Constructor that uses the provided object as a simple model. This object will be
+     * wrapped in an instance of {@link wicket.Model}.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as a simple model
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public OnClickLink(String name, Serializable object)
+    {
+        super(name, object);
+    }
+
+    /**
+     * Constructor that uses the provided object as a dynamic model. This object will be
+     * wrapped in an instance of {@link wicket.Model} that will be wrapped in an instance of
+     * {@link wicket.PropertyModel} using the provided expression.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as the subject for the given expression
+     * @param expression the OGNL expression that works on the given object
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public OnClickLink(String name, Serializable object, String expression)
+    {
+        super(name, object, expression);
+    }
+
+    /**
+     * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
+     */
+    protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+    {
+        // Add simple javascript on click handler that links to this
+        // link's linkClicked method
+        tag.put("onclick", "location.href='"+ getURL(cycle) + "';");
+    }
+}
