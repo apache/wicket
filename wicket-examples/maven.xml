@@ -204,6 +204,11 @@
                 <include name="**/*"/>
             </fileset>
         </ant:copy>
+        <ant:copy todir="${maven.dist.bin.assembly.dir}/src/webapp">
+            <fileset dir="src/webapp">
+                <include name="**/*"/>
+            </fileset>
+        </ant:copy>
         <ant:copy todir="${maven.dist.bin.assembly.dir}" file="project.xml" />
         <ant:copy todir="${maven.dist.bin.assembly.dir}" 
             file="project.properties" />
