@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,13 +18,6 @@
  */
 package wicket.markup.html.form.upload;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
@@ -31,15 +25,12 @@ import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.protocol.http.WebRequest;
 
 /**
- * Base class for upload forms.
+ * Form for handling (file) uploads with multipart requests.
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractUploadForm extends Form
+public abstract class UploadForm extends Form
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(AbstractUploadForm.class);
-
 	/**
 	 * Construct.
 	 * 
@@ -48,7 +39,7 @@ public abstract class AbstractUploadForm extends Form
 	 * @param validationErrorHandler
 	 *            validation error handler
 	 */
-	public AbstractUploadForm(String name, IValidationFeedback validationErrorHandler)
+	public UploadForm(String name, IValidationFeedback validationErrorHandler)
 	{
 		super(name, validationErrorHandler);
 	}
@@ -83,22 +74,5 @@ public abstract class AbstractUploadForm extends Form
 	/**
 	 * @see wicket.markup.html.form.Form#onSubmit()
 	 */
-	protected void onSubmit()
-	{
-		// The submit was valid and some form subclass implementation of
-		// onSubmit() called super.onSubmit()
-		final List files = ((MultipartWebRequest)getRequest()).getFiles();
-		for (final Iterator iterator = files.iterator(); iterator.hasNext();)
-		{
-			onUpload((FileItem)iterator.next());
-		}
-	}
-
-	/**
-	 * Override this method to handle uploading a file
-	 * 
-	 * @param fileItem
-	 *            The file item to deal with
-	 */
-	protected abstract void onUpload(FileItem fileItem);
+	protected abstract void onSubmit();
 }

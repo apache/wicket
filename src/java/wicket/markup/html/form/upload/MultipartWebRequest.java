@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +18,6 @@
  */
 package wicket.markup.html.form.upload;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +40,8 @@ import wicket.util.value.ValueMap;
  */
 public class MultipartWebRequest extends WebRequest
 {	
-	/** File items */
-	private final List files = new ArrayList();
+	/** Map of file items */
+	private final ValueMap files = new ValueMap();
 	
 	/** Map of parameters */
 	private final ValueMap parameters = new ValueMap();
@@ -83,7 +83,7 @@ public class MultipartWebRequest extends WebRequest
 				else
 				{
 					// Add to file list
-					files.add(item);
+					files.put(item.getFieldName(), item);
 				}
 			}
 		}
@@ -97,9 +97,19 @@ public class MultipartWebRequest extends WebRequest
 	/**
 	 * @return Returns the files.
 	 */
-	public List getFiles()
+	public Map getFiles()
 	{
 		return files;
+	}
+
+	/**
+	 * Gets the file that was uploaded using the given field name.
+	 * @param fieldName the field name that was used for the upload
+	 * @return the upload with the given field name
+	 */
+	public FileItem getFile(String fieldName)
+	{
+		return (FileItem)files.get(fieldName);
 	}
 	
 	/**
