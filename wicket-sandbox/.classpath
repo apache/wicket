@@ -9,7 +9,6 @@
 	<classpathentry kind="src" path="src/martijn/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/wicket"/>
-	<classpathentry kind="src" path="/wicket-contrib"/>
 	<classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-2.1.6.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/geronimo-spec/jars/geronimo-spec-jta-1.0-M1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.1.jar"/>
