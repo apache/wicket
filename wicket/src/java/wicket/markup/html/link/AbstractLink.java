@@ -85,12 +85,12 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	 */
 	public final void onLinkClicked()
 	{
-		onClick();
-
 		// Since the invocation of onLinkClicked occurred through a URL that
 		// would repeat the action if the user refreshed the page, we redirect
 		// to our resulting page so this won't happen.
 		getRequestCycle().setRedirect(true);
+		
+		onClick();
 	}
 
 	/**

@@ -99,6 +99,21 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	}
 
 	/**
+	 * Handles a link click by asking for a concrete Page instance through the
+	 * IPageLink.getPage() delayed linking interface. This call will normally
+	 * cause the destination page to be created.
+	 * 
+	 * @see wicket.markup.html.link.Link#onClick()
+	 */
+	public void onClick()
+	{
+	    // We do not need to redirect
+		getRequestCycle().setRedirect(false);
+		
+		super.onClick();
+	}
+	
+	/**
 	 * @return True if it is referring to the first page of the underlying
 	 *         PageableListView.
 	 */
