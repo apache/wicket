@@ -30,92 +30,106 @@ import wicket.util.time.Time;
 
 
 /**
- * THIS CLASS IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY
- * FRAMEWORK CLIENTS.<br/>
+ * THIS CLASS IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY FRAMEWORK
+ * CLIENTS.<br/>
  * 
  * This is an attempt to abstract the implementation details of cookies away.
  * Wicket users (and developer) should not need to care about Cookies. In that
  * context the persister is responsible to store and retrieve FormComponent
  * data.<br/>
  * 
- * The persistence manager is responsible to store and retrieve a FormComponent's
- * data by means of Cookies. That is, by means of the HTTP protocol the data are
- * transferred to the client to be stored locally. And are transmitted from
- * the client to the server whenever the Cookie's path matches the request
- * URI. @see javax.servlet.http.Cookie for more details.
+ * The persistence manager is responsible to store and retrieve a
+ * FormComponent's data by means of Cookies. That is, by means of the HTTP
+ * protocol the data are transferred to the client to be stored locally. And are
+ * transmitted from the client to the server whenever the Cookie's path matches
+ * the request URI.
+ * 
+ * @see javax.servlet.http.Cookie for more details.
  * 
  * @author Juergen Donnerstag
  */
-public class FormComponentPersistenceManager implements IFormComponentPersistenceManager 
+public class FormComponentPersistenceManager implements IFormComponentPersistenceManager
 {
-    /** Logging */
-    private static Log log = LogFactory.getLog(FormComponentPersistenceManager.class);
+	/** Logging */
+	private final static Log log = LogFactory.getLog(FormComponentPersistenceManager.class);
 
 	/**
 	 * (Protected) Constructor. Only Form should be able to instantiate a
-	 * persister. 
+	 * persister.
 	 */
-	protected FormComponentPersistenceManager() 
+	protected FormComponentPersistenceManager()
 	{
 	}
 
 	/**
-	 * Persister defaults are maintained centrally by the Application. 
+	 * Persister defaults are maintained centrally by the Application.
 	 * 
 	 * @return Persister default value
 	 */
-	private FormComponentPersistenceDefaults getDefaults() 
+	private FormComponentPersistenceDefaults getDefaults()
 	{
-		return RequestCycle.get().getApplication().getSettings().getFormComponentPersistenceDefaults();
+		return RequestCycle.get().getApplication().getSettings()
+				.getFormComponentPersistenceDefaults();
 	}
 
 	/**
 	 * Convenience method to get the http request.
+	 * 
 	 * @return HttpRequest related to the RequestCycle
 	 */
-	private HttpRequest getRequest() 
+	private HttpRequest getRequest()
 	{
-		return (HttpRequest) RequestCycle.get().getRequest();
+		return (HttpRequest)RequestCycle.get().getRequest();
 	}
 
 	/**
 	 * Convinience method to get the http response.
+	 * 
 	 * @return HttpResponse related to the RequestCycle
 	 */
-	private HttpResponse getResponse() 
+	private HttpResponse getResponse()
 	{
-		return (HttpResponse) RequestCycle.get().getResponse();
+		return (HttpResponse)RequestCycle.get().getResponse();
 	}
-	
+
 	/**
-	 * Convenience method. @see #saveComponent(FormComponent). Fills "missing"
-	 * parameters with defaults.
+	 * Convenience method.
 	 * 
-	 * @param name The FormComponent's name
-	 * @param value The FormComponent's value
-	 * @return The cookie created, based on defaults and the params provided 
+	 * @see #saveComponent(FormComponent). Fills "missing" parameters with
+	 *      defaults.
+	 * 
+	 * @param name
+	 *           The FormComponent's name
+	 * @param value
+	 *           The FormComponent's value
+	 * @return The cookie created, based on defaults and the params provided
 	 */
-	public Cookie save(String name, String value) 
+	public Cookie save(String name, String value)
 	{
 		return save(name, value, getRequest().getContextPath());
 	}
 
 	/**
-	 * Convinience method. @see #saveComponent(FormComponent). Fills "missing"
-	 * parameters with defaults.
+	 * Convinience method.
 	 * 
-	 * @param name The FormComponent's name
-	 * @param value The FormComponent's value
-	 * @param path @see javax.servlet.http.Cookie#setPath(java.lang.String) for details
-	 * @return The cookie created, based on defaults and the params provided 
+	 * @see #saveComponent(FormComponent). Fills "missing" parameters with
+	 *      defaults.
+	 * 
+	 * @param name
+	 *           The FormComponent's name
+	 * @param value
+	 *           The FormComponent's value
+	 * @param path
+	 * @see javax.servlet.http.Cookie#setPath(java.lang.String) for details
+	 * @return The cookie created, based on defaults and the params provided
 	 */
-	public Cookie save(String name, String value, String path) 
+	public Cookie save(String name, String value, String path)
 	{
 		if (value == null)
 		{
 			value = "";
 		}
-		
+
 		Cookie cookie = new Cookie(name, value);
 		cookie.setSecure(false);
 		cookie.setPath(path);
@@ -127,69 +141,71 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	/**
 	 * Persist/save the data using Cookies.
 	 * 
-	 * @param cookie The Cookie to be persisted.
+	 * @param cookie
+	 *           The Cookie to be persisted.
 	 * @return The cookie provided
 	 */
-	private Cookie save(Cookie cookie) 
+	private Cookie save(Cookie cookie)
 	{
-		if (cookie == null) 
+		if (cookie == null)
 		{
 			return null;
 		}
-		
-		if (getDefaults().getComment() != null) 
+
+		if (getDefaults().getComment() != null)
 		{
 			cookie.setComment(getDefaults().getComment());
 		}
-		
-		if (getDefaults().getDomain() != null) 
+
+		if (getDefaults().getDomain() != null)
 		{
 			cookie.setDomain(getDefaults().getDomain());
 		}
-		
+
 		cookie.setVersion(getDefaults().getVersion());
 		cookie.setSecure(getDefaults().isSecure());
-		
+
 		getResponse().addCookie(cookie);
 
 		if (log.isDebugEnabled())
 		{
-		    log.debug("saved: " + getCookieDebugString(cookie));
+			log.debug("saved: " + getCookieDebugString(cookie));
 		}
 
 		return cookie;
 	}
 
 
-    /**
-	 * Retrieve a persisted Cookie by means of its name which in wicket
-	 * context by default is the components page relative path   
-	 * (@see wicket.markup.html.form.FormComponent#getPageRelativePath()).
-	 * Be reminded that only if the cookie data have been provided by the 
-	 * client (browser), they'll be accessible by the server.
+	/**
+	 * Retrieve a persisted Cookie by means of its name which in wicket context
+	 * by default is the components page relative path (@see
+	 * wicket.markup.html.form.FormComponent#getPageRelativePath()). Be reminded
+	 * that only if the cookie data have been provided by the client (browser),
+	 * they'll be accessible by the server.
 	 * 
-	 * @param name The "primary key" to find the data
+	 * @param name
+	 *           The "primary key" to find the data
 	 * @return the cookie (if found), null if not found
 	 */
-	public Cookie retrieve(String name) 
+	public Cookie retrieve(String name)
 	{
 		// Get all cookies attached to the Request by the client browser
 		Cookie[] cookies = getRequest().getCookies();
-		if (cookies != null) 
+		if (cookies != null)
 		{
-			for (int i = 0; i < cookies.length; i++) 
+			for (int i = 0; i < cookies.length; i++)
 			{
 				Cookie cookie = cookies[i];
 
 				// Names must match and Value must not be empty
-				if (cookie.getName().equals(name)) 
+				if (cookie.getName().equals(name))
 				{
 					// cookies with no value do me no good!
-					if ((cookie.getValue() != null) && (cookie.getValue().length() > 0)) 
+					if ((cookie.getValue() != null) && (cookie.getValue().length() > 0))
 					{
 						if (log.isDebugEnabled())
 						{
-						    log.debug("retrieved: " + getCookieDebugString(cookie));
+							log.debug("retrieved: " + getCookieDebugString(cookie));
 						}
 						return cookie;
 					}
@@ -197,8 +213,9 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 					{
 						if (log.isDebugEnabled())
 						{
-						    log.debug("retrieved cookie " + name
-						            + ", but it had no value; returning null");
+							log
+									.debug("retrieved cookie " + name
+											+ ", but it had no value; returning null");
 						}
 					}
 				}
@@ -211,47 +228,51 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	/**
 	 * Convenience method to retrieve the value of a cookie right away.
 	 * 
-	 * @param name The "primary key" to find the data
-	 * @return The value related to the name (key) or null if a cookie
-	 *        with the given name was not found
+	 * @param name
+	 *           The "primary key" to find the data
+	 * @return The value related to the name (key) or null if a cookie with the
+	 *         given name was not found
 	 */
-	public String retrieveValue(String name) 
+	public String retrieveValue(String name)
 	{
 		Cookie cookie = retrieve(name);
-		if (cookie == null) 
+		if (cookie == null)
 		{
 			return null;
 		}
-		
+
 		return cookie.getValue();
 	}
 
 	/**
-	 * Remove data related to a FormComponent 
+	 * Remove data related to a FormComponent
 	 * 
-	 * @param name The "primary key" of the data to be deleted
+	 * @param name
+	 *           The "primary key" of the data to be deleted
 	 * @return the cookie that was removed or null if none was found.
 	 */
-	public Cookie remove(String name) 
+	public Cookie remove(String name)
 	{
 		Cookie cookie = retrieve(name);
-		if (cookie != null) 
+		if (cookie != null)
 		{
 			remove(cookie);
-			if(log.isDebugEnabled()) log.debug("cookie " + name + " removed");
+			if (log.isDebugEnabled())
+				log.debug("cookie " + name + " removed");
 		}
 		return cookie;
 	}
 
 	/**
-	 * Convenience method for deleting a cookie by name.
-     * Delete the cookie by setting its maximum age to zero.
+	 * Convenience method for deleting a cookie by name. Delete the cookie by
+	 * setting its maximum age to zero.
 	 * 
-	 * @param cookie The cookie to delete
+	 * @param cookie
+	 *           The cookie to delete
 	 */
-	private void remove(Cookie cookie) 
+	private void remove(Cookie cookie)
 	{
-		if (cookie != null) 
+		if (cookie != null)
 		{
 			// Delete the cookie by setting its maximum age to zero
 			cookie.setMaxAge(0);
@@ -263,19 +284,16 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 
 	/**
 	 * Gets debug info as a string for the given cookie.
-     * @param cookie the cookie to debug.
-     * @return a string that represents the internals of the cookie.
-     */
-    private String getCookieDebugString(Cookie cookie)
-    {
-        return "cookie{"
-                + "name=" + cookie.getName() 
-                + ",value=" + cookie.getValue()
-                + ",domain=" + cookie.getDomain()
-                + ",path=" + cookie.getPath()
-                + ",maxAge=" + Time.valueOf(cookie.getMaxAge()).toDateString()
-                + "(" + cookie.getMaxAge() + ")" + "}";
-    }
+	 * 
+	 * @param cookie
+	 *           the cookie to debug.
+	 * @return a string that represents the internals of the cookie.
+	 */
+	private String getCookieDebugString(Cookie cookie)
+	{
+		return "cookie{" + "name=" + cookie.getName() + ",value=" + cookie.getValue() + ",domain="
+				+ cookie.getDomain() + ",path=" + cookie.getPath() + ",maxAge="
+				+ Time.valueOf(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")"
+				+ "}";
+	}
 }
-
-
