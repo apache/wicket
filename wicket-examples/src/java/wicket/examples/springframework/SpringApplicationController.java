@@ -26,6 +26,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
+import wicket.WebApplication;
+import wicket.protocol.http.WicketServlet;
+
 /**
  * I'm not sure this is the best approach to integrate Spring and Wicket.
  * But beside that you now may use all of Spring's ApplicationContext capabilities,  
@@ -33,7 +36,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
  * 
  * The apprach taken is to create a Spring controller derived from 
  * AbstractController and forward handleRequestInternal() to Wicket's
- * application object and it's doGet() method.
+ * Servlet object and it's doGet() method.
  * 
  * The Wicket application to use must be configured with Spring's web application
  * context (<servlet-name>-servlet.xml). 
@@ -58,6 +61,7 @@ public class SpringApplicationController extends AbstractController
     public void setApplication(final SpringApplication application)
     {
         this.application = application;
+        this.application.setWicketServlet(new WicketSpringServlet(application));
         //this.application.setSpringApplicationContext(this.getApplicationContext());
     }
     
@@ -80,5 +84,19 @@ public class SpringApplicationController extends AbstractController
         }
         
         return null;
+    }
+    
+    public final class WicketSpringServlet extends WicketServlet
+    {
+        public WicketSpringServlet(final WebApplication application)
+        {
+            this.webApplication = application;
+        }
+        
+        public void init()
+        {
+            ; // replace super implementation with nothing. Apllication class
+              // will be defined through Spring xml. 
+        }
     }
 }
