@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>QuickStart</title>
+  </properties>
+
+  <meta name="keyword" content="wicket, web, j2ee, java"/>
+
+<body>
+
+<section name="User's manual">
+    <p>This is not the actual user's manual, but a place holder for the 
+        integration of Jonathan Locke's (legacy) <a href="">document</a>.</p>
+    <p>You can download the <a href="Wicket%20User's%20Guide.pdf">PDF version 
+        here</a>.</p>
+    <p>Work is under way to create a more concise manual for Wicket. If you 
+        have suggestions, don't hesitate to post them on the developers 
+        mailinglist.</p>
+</section>
+
+ </body>
+</document>

@@ -3,9 +3,7 @@
 	<title>Wicket</title>
 	<body>
 		<links>
-		    <item name="News" href="/News.html"/>
-		    <item name="Quickstart" href="/QuickStart.html"/>
-		    <item name="SF.net page" href="http://sourceforge.net/projects/wicket"/>
+		    <item name="Download Wicket" href="http://sourceforge.net/project/showfiles.php?group_id=119783"/>
 		</links>				    
 	    <menu name="Wicket">
 	        <item name="Home" href="/index.html"/>
@@ -16,40 +14,40 @@
 	        	<item name="Motivations" href="#Motivations"/>
 	        	<item name="Goals" href="#Goals"/>
 	        </item>
-	        <item name="Quick start" href="/QuickStart.html" collapse="true">
-	        	<item name="Using Jetty" href="#How_to_build_and_run_the_examples_under_Jetty"/>
-	        	<item name="Using Tomcat" href="#How_to_build_and_run_the_examples_under_Tomcat"/>
-	        </item>
-	        <item name="Examples" href="/Examples.html" collapse="true">
-	        	<item name="HelloWorld" href="#HelloWorld"/>
-	        	<item name="Images" href="#Images"/>
-	        	<item name="Navomatic" href="#Navomatic"/>
-	        	<item name="Tables" href="#Tables"/>
-	        </item>
 	    </menu>
-	    <menu name="Quick links">
-	        <item name="Javadoc" href="/apidocs/index.html" />
-	        <item name="Dependencies" href="/dependencies.html"/>
-	        <item name="Changes" href="/changes-report.html"/>
+        <menu name="Getting started">
 	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
-<!--
-	        <item name="FAQ" href="/faq.html"/>
--->
-	        <item name="CVS access" href="/cvs-usage.html"/>
+	        <item name="Quick start" href="/QuickStart.html"/>
+	        <item name="Examples" href="/Examples.html"/>
         </menu>
-        <menu name="Developers">
+	    <menu name="Project info">
+	        <item name="Mailing Lists" href="/mail-lists.html" />
+	        <item name="SourceForge" href="/SourceForge.html" collapse="true">
+    	        <item name="SourceForge Project page" href="http://sourceforge.net/projects/wicket"/>
+    	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
+    	        <item name="Issue tracking" href="http://sourceforge.net/tracker/?group_id=119783"/>
+            </item>
+	        <item name="Changes" href="/changes-report.html"/>
+        </menu>
+        <menu name="Documentation">
+	        <item name="User's manual" href="/manual.html" />
+	        <item name="Examples" href="/Examples.html"/>
+	        <item name="Javadoc" href="/apidocs/index.html" />
 	        <item name="The Wicket Vision" href="/Vision.html" collapse="true">
 				<item name="The Overall Wicket Vision" href="#The_Overall_Wicket_Vision" />
 				<item name="Design Decision Q&amp;A" href="#Design_Decision_Q_and_A" />
 				<item name="Future Directions" href="#Future_Directions" />
 				<item name="Open Issues" href="#Open_Issues" />
 	        </item>
+	        <item name="Dependencies" href="/dependencies.html"/>
         </menu>
-	    <menu name="Sourceforge">
-	        <item name="Project page" href="http://sourceforge.net/projects/wicket"/>
-	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
-	        <item name="Lists" href="http://sourceforge.net/projects/wicket/lists" />
-	        <item name="Issue tracking" href="http://sourceforge.net/tracker/?group_id=119783"/>
+	    <menu name="Contributing">
+	        <item name="Developers" href="/team-list.html"/>
+	        <item name="CVS access" href="/cvs-usage.html"/>
+	        <item name="Build reports" href="/maven-reports.html" collapse="true">
+    	        <item name="Unit test report" href="/junit-report.html"/>
+    	        <item name="Clover test coverage report" href="/clover/index.html"/>
+	        </item>
 	    </menu>
 <!--	    <search /> -->
 	</body>
