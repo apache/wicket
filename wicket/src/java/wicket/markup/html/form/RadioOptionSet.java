@@ -33,7 +33,7 @@ import wicket.util.lang.EnumeratedType;
  * 
  * @author Jonathan Locke
  */
-public final class RadioOptionSet extends FormComponent
+public class RadioOptionSet extends FormComponent
 {
 	/** Line break markup. */
 	public static final Style LINE_BREAK = new Style("<br>");
@@ -99,14 +99,14 @@ public final class RadioOptionSet extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void updateModel()
+	public final void updateModel()
 	{
 	}
 
 	/**
 	 * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
 	 */
-	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Buffer to hold generated body
 		final StringBuffer options = new StringBuffer();
@@ -151,5 +151,3 @@ public final class RadioOptionSet extends FormComponent
 		replaceBody(markupStream, openTag, options.toString());
 	}
 }
-
-

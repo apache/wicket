@@ -28,7 +28,7 @@ import wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public final class TextArea extends FormComponent
+public class TextArea extends FormComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1323747673401786242L;
@@ -159,7 +159,7 @@ public final class TextArea extends FormComponent
 	 *            The open tag for the body
 	 * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
 	 */
-	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String bodyContent;
 		if (invalidInput == null) 

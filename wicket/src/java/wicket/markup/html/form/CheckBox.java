@@ -31,7 +31,7 @@ import wicket.model.PropertyModel;
  *
  * @author Jonathan Locke
  */
-public final class CheckBox extends FormComponent
+public class CheckBox extends FormComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 7559827519977114184L;
@@ -110,7 +110,7 @@ public final class CheckBox extends FormComponent
 	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
-	public boolean supportsPersistence()
+	public final boolean supportsPersistence()
 	{
 		return true;
 	}
@@ -118,7 +118,7 @@ public final class CheckBox extends FormComponent
 	/**
 	 * @see FormComponent#setValue(java.lang.String)
 	 */
-	public void setValue(String value)
+	public final void setValue(String value)
 	{
 		setModelObject(Boolean.valueOf(value));
 	}
@@ -137,7 +137,7 @@ public final class CheckBox extends FormComponent
 	 * @param tag Tag to modify
 	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected final void handleComponentTag(final ComponentTag tag)
 	{
 		checkTag(tag, "input");
 		checkAttribute(tag, "type", "checkbox");

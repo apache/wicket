@@ -30,7 +30,7 @@ import wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public final class RadioOption extends FormComponent
+public class RadioOption extends FormComponent
 {
 	/** Serial Version ID */
 	private static final long serialVersionUID = -2933133745573428936L;
@@ -123,7 +123,7 @@ public final class RadioOption extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void updateModel()
+	public final void updateModel()
 	{
 	}
 
@@ -131,7 +131,7 @@ public final class RadioOption extends FormComponent
 	 * @see wicket.Container#handleBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
-	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String displayLabel;
 
@@ -152,7 +152,7 @@ public final class RadioOption extends FormComponent
 	/**
 	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected final void handleComponentTag(final ComponentTag tag)
 	{
 		// Check that this option is attached to a radio input
 		checkTag(tag, "input");
@@ -179,5 +179,3 @@ public final class RadioOption extends FormComponent
 		}
 	}
 }
-
-

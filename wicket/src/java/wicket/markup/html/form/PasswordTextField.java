@@ -35,7 +35,7 @@ import wicket.model.PropertyModel;
  *
  * @author Jonathan Locke
  */
-public final class PasswordTextField extends FormComponent
+public class PasswordTextField extends FormComponent
 {
     /** log. */
     private static final Log log = LogFactory.getLog(PasswordTextField.class);
@@ -125,7 +125,7 @@ public final class PasswordTextField extends FormComponent
 	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final ComponentTag tag)
+    protected final void handleComponentTag(final ComponentTag tag)
     {
         checkTag(tag, "input");
         checkAttribute(tag, "type", "password");
@@ -152,7 +152,7 @@ public final class PasswordTextField extends FormComponent
     /**
      * @see wicket.markup.html.form.FormComponent#supportsPersistence()
      */
-    public boolean supportsPersistence()
+    public final boolean supportsPersistence()
     {
         return true;
     }
@@ -160,7 +160,7 @@ public final class PasswordTextField extends FormComponent
     /**
      * @see wicket.markup.html.form.FormComponent#getValue()
      */
-    public String getValue()
+    public final String getValue()
     {
         final String value = getModelObjectAsString();
         try
@@ -178,7 +178,7 @@ public final class PasswordTextField extends FormComponent
     /**
      * @see wicket.markup.html.form.FormComponent#setValue(java.lang.String)
      */
-    public void setValue(String value)
+    public final void setValue(String value)
     {
         String decryptedValue;
         try
