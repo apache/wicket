@@ -101,7 +101,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 */
 	protected final TreePathsListView createTreePathsListView()
 	{
-		TreeStateCache treeState = getTreeState();
+		TreeState treeState = getTreeState();
 		this.treePathList = new ArrayList();
 		addNodesToTreePathList();
 		TreePathsListView treePaths = new TreePathsListView(
@@ -289,7 +289,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 		 */
 		protected void handleRender()
 		{
-			TreeStateCache treeState = getTreeState();
+			TreeState treeState = getTreeState();
 			// Ask parents for markup stream to use
 			final MarkupStream markupStream = findMarkupStream();
 			// Save position in markup stream
@@ -441,7 +441,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	public void treeNodesInserted(TreeModelEvent e)
 	{
 		TreePath parentPath = e.getTreePath();
-		TreeStateCache treeState = getTreeState();
+		TreeState treeState = getTreeState();
 		Object[] newNodes = e.getChildren();
 		int len = newNodes.length;
 		for(int i = 0; i < len; i++)
@@ -477,7 +477,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	public void treeNodesRemoved(TreeModelEvent e)
 	{
 		TreePath parentPath = e.getTreePath();
-		TreeStateCache treeState = getTreeState();
+		TreeState treeState = getTreeState();
 		Object[] deletedNodes = e.getChildren();
 		int len = deletedNodes.length;
 		for(int i = 0; i < len; i++)

@@ -37,7 +37,7 @@ import wicket.markup.html.panel.Panel;
 public abstract class Tree extends Panel
 {
 	/** tree state for this component. */
-	private TreeStateCache treeState;
+	private TreeState treeState;
 
 	/**
 	 * Construct using the given model as the tree model to use. A new tree state
@@ -110,7 +110,7 @@ public abstract class Tree extends Panel
 	 * Gets the current tree state.
 	 * @return the tree current tree state
 	 */
-	public final TreeStateCache getTreeState()
+	public final TreeState getTreeState()
 	{
 		return treeState;
 	}
@@ -119,35 +119,35 @@ public abstract class Tree extends Panel
 	 * Sets the current tree state to the given tree state.
 	 * @param treeState the tree state to set as the current one
 	 */
-	public final void setTreeState(final TreeStateCache treeState)
+	public final void setTreeState(final TreeState treeState)
 	{
 		this.treeState = treeState;
 	}
 
 	/**
-	 * Creates a new tree state by creating a new {@link TreeStateCache}object,
+	 * Creates a new tree state by creating a new {@link TreeState}object,
 	 * which is then set as the current tree state, creating a new
 	 * {@link TreeSelectionModel}and then calling setTreeModel with this
 	 * @param model the model that the new tree state applies to
 	 * @return the tree state
 	 */
-	public TreeStateCache newTreeState(final TreeModel model)
+	public TreeState newTreeState(final TreeModel model)
 	{
 		return newTreeState(model, true);
 	}
 
 
 	/**
-	 * Creates a new tree state by creating a new {@link TreeStateCache}object,
+	 * Creates a new tree state by creating a new {@link TreeState}object,
 	 * which is then set as the current tree state, creating a new
 	 * {@link TreeSelectionModel}and then calling setTreeModel with this
 	 * @param model the model that the new tree state applies to
 	 * @param rootVisible whether the tree node should be displayed
 	 * @return the tree state
 	 */
-	protected final TreeStateCache newTreeState(final TreeModel model, boolean rootVisible)
+	protected final TreeState newTreeState(final TreeModel model, boolean rootVisible)
 	{
-		TreeStateCache treeStateCache = new TreeStateCache();
+		TreeState treeStateCache = new TreeState();
 		TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
 		selectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		treeStateCache.setModel(model);
@@ -173,7 +173,7 @@ public abstract class Tree extends Panel
 	public final String getTreeModelAsDebugString()
 	{
 		StringBuffer b = new StringBuffer("-- TREE MODEL --\n");
-		TreeStateCache state = getTreeState();
+		TreeState state = getTreeState();
 		TreeModel treeModel = null;
 		if (state != null)
 		{
