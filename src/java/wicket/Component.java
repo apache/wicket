@@ -1460,7 +1460,7 @@ public abstract class Component implements Serializable, IConverterSource
 			this.model.detach();
 		}
 
-		// Set self in case the model is component aware
+		// Set self as source of converter in case the model needs to do conversions
 		if (model instanceof IConvertible)
 		{
 			((IConvertible)model).setConverterSource(this);
