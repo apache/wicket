@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
-import wicket.model.IModel;
-import wicket.model.Model;
 
 /**
  * A multiple choice list component.
@@ -40,35 +38,23 @@ public class ListMultipleChoice extends Choice
 	private static final long serialVersionUID = -1000324612688307682L;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param componentName
-	 *            the name of the component
-	 * @param model
-	 *            the component model
-	 * @param values
-	 *            the values to choose from
+	 * @see Choice#Choice(String, Serializable, String, Collection)
 	 */
-	public ListMultipleChoice(final String componentName, final IModel model, final List values)
+	public ListMultipleChoice(final String componentName, final Serializable model,
+			final String expression, final Collection values)
 	{
 		super(componentName, model, values);
 		setRenderNullOption(false);
 	}
 
 	/**
-	 * Convenience constructor; wraps the given model in a {@link Model}object.
-	 * 
-	 * @param componentName
-	 *            the name of the component
-	 * @param model
-	 *            the component model; will be wraped in a {@link Model}object
-	 * @param values
-	 *            the values to choose from
+	 * @see Choice#Choice(String, Serializable, Collection)
 	 */
 	public ListMultipleChoice(final String componentName, final Serializable model,
-			final List values)
+			final Collection values)
 	{
-		this(componentName, new Model(model), values);
+		super(componentName, model, values);
+		setRenderNullOption(false);
 	}
 
 	/**
