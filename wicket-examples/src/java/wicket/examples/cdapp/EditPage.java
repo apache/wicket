@@ -18,7 +18,6 @@
  */
 package wicket.examples.cdapp;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,6 +32,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.upload.UploadForm;
 import wicket.markup.html.form.validation.IntegerValidator;
@@ -44,7 +44,6 @@ import wicket.markup.html.image.resource.StaticImageResource;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.IModel;
-import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.util.resource.IResource;
 
@@ -137,9 +136,8 @@ public final class EditPage extends WicketExamplePage
 	 */
 	private final class ImageUploadForm extends UploadForm
 	{
-		/** model to put the reference to the uploaded file in. */
-		private final Model fileModel = new Model();
-
+		private FileUploadField uploadField;
+		
 		/**
 		 * Construct.
 		 * @param name
@@ -148,15 +146,15 @@ public final class EditPage extends WicketExamplePage
 		public ImageUploadForm(String name, PersistentObjectModel cdModel)
 		{
 			super(name, cdModel, null);
-			add(new FileUploadField("file", fileModel));
+			add(uploadField = new FileUploadField("file"));
 		}
 
 		protected void onSubmit()
 		{
 			// get the uploaded file
-			FileItem item = (FileItem)fileModel.getObject(this);
+			FileUpload upload = uploadField.getFileUpload();
 			CD cd = (CD)getModelObject();
-			cd.setImage(item.get());
+			cd.setImage(upload.getBytes());
 			dao.save(cd);
 		}
 	}
