@@ -27,7 +27,7 @@ import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.table.ListItem;
+import wicket.markup.html.list.ListItem;
 
 
 

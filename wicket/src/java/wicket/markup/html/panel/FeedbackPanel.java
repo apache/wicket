@@ -22,8 +22,8 @@ import wicket.FeedbackMessages;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.model.IModel;
 
 /**
@@ -70,7 +70,7 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
 		}
 
 		/**
-		 * @see wicket.markup.html.table.ListView#populateItem(wicket.markup.html.table.ListItem)
+		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
 		protected void populateItem(final ListItem listItem)
 		{

@@ -31,8 +31,8 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -295,7 +295,7 @@ public abstract class IndentTree extends Tree
         }
 
         /**
-         * @see wicket.markup.html.table.ListView#populateItem(wicket.markup.html.table.ListItem)
+         * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
          */
         protected void populateItem(ListItem listItem)
         {
@@ -383,7 +383,7 @@ public abstract class IndentTree extends Tree
         }
 
         /**
-         * @see wicket.markup.html.table.ListView#populateItem(wicket.markup.html.table.ListItem)
+         * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
          */
         protected void populateItem(ListItem listItem)
         {

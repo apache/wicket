@@ -34,8 +34,8 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.upload.FileUploadForm;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 
 /**
  * Upload example.

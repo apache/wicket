@@ -23,9 +23,9 @@ import java.util.List;
 
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
 import wicket.model.IModel;
 
 

@@ -25,8 +25,8 @@ import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 
 
 

@@ -27,10 +27,10 @@ import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.PagedTableNavigator;
-import wicket.markup.html.table.SortableTableHeader;
-import wicket.markup.html.table.SortableTableHeaders;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.PageableListViewNavigator;
+import wicket.markup.html.list.SortableListViewHeader;
+import wicket.markup.html.list.SortableListViewHeaders;
 
 
 
@@ -93,9 +93,9 @@ public class ExamplePse extends Displaytag
         add(table);
         
         // Add the sortable header and define how to sort the different columns
-        add(new SortableTableHeaders("header", table)
+        add(new SortableListViewHeaders("header", table)
         {
-	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
+	        protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
 	        {
 	            final String name = header.getName();
 	            if (name.equals("city"))
@@ -112,7 +112,7 @@ public class ExamplePse extends Displaytag
         });
 
         // Add a table navigator
-        add(new PagedTableNavigator("pageTableNav", table));
+        add(new PageableListViewNavigator("pageTableNav", table));
 
         // Add export links
         add(new ExportLink("exportCsv", data, new CsvView(data, true, false, false)));

@@ -22,9 +22,9 @@ import java.util.List;
 
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
 
 /**
  * This example list knows how to display sublists. It expects a list where

@@ -23,8 +23,8 @@ import java.util.List;
 
 import wicket.Page;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.model.Model;
 
 /**

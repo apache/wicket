@@ -25,10 +25,10 @@ import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
-import wicket.markup.html.table.SortableTableHeader;
-import wicket.markup.html.table.SortableTableHeaders;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
+import wicket.markup.html.list.SortableListViewHeader;
+import wicket.markup.html.list.SortableListViewHeaders;
 
 
 
@@ -111,12 +111,12 @@ public class ExampleSorting extends Displaytag
         add(table);
         
         // And this is with a little bit of magic
-        add(new SortableTableHeaders("header", table)
+        add(new SortableListViewHeaders("header", table)
         {
             /*
              * If object does not support equals()
              */
-	        protected int compareTo(SortableTableHeader header, Object o1, Object o2)
+	        protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
 	        {
 	            if (header.getName().equals("id"))
 	            {
@@ -131,7 +131,7 @@ public class ExampleSorting extends Displaytag
 	         * 
 	         * @see wicket.markup.html.table.SortableTableHeaders#getObjectToCompare(wicket.markup.html.table.SortableTableHeader, java.lang.Object)
 	         */
-	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
+	        protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
 	        {
 	            final String name = header.getName();
 	            if (name.equals("name"))

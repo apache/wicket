@@ -26,13 +26,13 @@ import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.SortableListViewHeader;
+import wicket.markup.html.list.SortableListViewHeaders;
+import wicket.markup.html.list.PageableListViewNavigation;
+import wicket.markup.html.list.PageableListViewNavigationIncrementLink;
+import wicket.markup.html.list.PageableListViewNavigationLink;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.SortableTableHeader;
-import wicket.markup.html.table.SortableTableHeaders;
-import wicket.markup.html.table.TableNavigation;
-import wicket.markup.html.table.TableNavigationIncrementLink;
-import wicket.markup.html.table.TableNavigationLink;
 
 /**
  * Sortable + pageable table example
@@ -77,9 +77,9 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         add(table);
 
         // Add a sortable header to the table
-        add(new SortableTableHeaders("header", table)
+        add(new SortableListViewHeaders("header", table)
         {
-	        protected int compareTo(SortableTableHeader header, Object o1, Object o2)
+	        protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
 	        {
 	            if (header.getName().equals("id"))
 	            {
@@ -89,7 +89,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 	            return super.compareTo(header, o1, o2);
 	        }
 
-	        protected Comparable getObjectToCompare(final SortableTableHeader header, final Object object)
+	        protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
 	        {
 	            final String name = header.getName();
 	            if (name.equals("name"))
@@ -132,14 +132,14 @@ public class SortablePageableDisplaytagTableComponent extends Panel
             }
         });
 
-        final TableNavigation tableNavigation = new TableNavigation("navigation", table /* , 5, 2 */);
+        final PageableListViewNavigation tableNavigation = new PageableListViewNavigation("navigation", table /* , 5, 2 */);
         add(tableNavigation);
 
         // Add some navigation links
-        add(new TableNavigationLink("first", table, 0));
-        add(new TableNavigationIncrementLink("prev", table, -1));
-        add(new TableNavigationIncrementLink("next", table, 1));
-        add(new TableNavigationLink("last", table, table.getPageCount() - 1));
+        add(new PageableListViewNavigationLink("first", table, 0));
+        add(new PageableListViewNavigationIncrementLink("prev", table, -1));
+        add(new PageableListViewNavigationIncrementLink("next", table, 1));
+        add(new PageableListViewNavigationLink("last", table, table.getPageCount() - 1));
     }
 }
 

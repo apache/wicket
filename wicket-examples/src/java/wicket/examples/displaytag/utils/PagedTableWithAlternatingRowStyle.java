@@ -21,8 +21,8 @@ package wicket.examples.displaytag.utils;
 import java.util.List;
 
 import wicket.markup.ComponentTagAttributeModifier;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.Table;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.PageableListView;
 import wicket.model.Model;
 
 
@@ -31,7 +31,7 @@ import wicket.model.Model;
  * 
  * @author Juergen
  */
-public abstract class PagedTableWithAlternatingRowStyle extends Table
+public abstract class PagedTableWithAlternatingRowStyle extends PageableListView
 {
     /**
      * Constructor

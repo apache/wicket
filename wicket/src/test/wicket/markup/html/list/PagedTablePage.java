@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.table;
+package wicket.markup.html.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,32 +24,39 @@ import java.util.List;
 import wicket.PageParameters;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.PageableListView;
+import wicket.markup.html.list.PageableListViewNavigation;
 
 
 /**
  * Dummy page used for resource testing.
  */
-public class SimpleTablePage extends HtmlPage {
+public class PagedTablePage extends HtmlPage
+{
 
-    /**
-     * Construct.
-     * @param parameters page parameters.
-     */
-    public SimpleTablePage(final PageParameters parameters) {
-        super();
-        List list = new ArrayList();
-        list.add("one");
-        list.add("two");
-        list.add("three");
-        add(new ListView("table", list)
-        {
-	        protected void populateItem(ListItem listItem)
-	        {
-	            String txt = (String)listItem.getModelObject();
-	            listItem.add(new Label("txt", txt));
-	        }
-        });
-    }
+	/**
+	 * Construct.
+	 * @param parameters page parameters.
+	 */
+	public PagedTablePage(final PageParameters parameters)
+	{
+		super();
+		List list = new ArrayList();
+		list.add("one");
+		list.add("two");
+		list.add("three");
+		PageableListView table = new PageableListView("table", list, 2)
+		{
+			protected void populateItem(ListItem listItem)
+			{
+				String txt = (String)listItem.getModelObject();
+				listItem.add(new Label("txt", txt));
+			}
+		};
+
+		add(table);
+		PageableListViewNavigation navigation = new PageableListViewNavigation("navigation", table);
+		add(navigation);
+	}
 }

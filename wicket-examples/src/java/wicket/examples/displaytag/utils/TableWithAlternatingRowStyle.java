@@ -22,8 +22,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 
 
 /**

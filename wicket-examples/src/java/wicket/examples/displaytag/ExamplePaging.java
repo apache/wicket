@@ -26,11 +26,11 @@ import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.PagedTableNavigator;
-import wicket.markup.html.table.Table;
-import wicket.markup.html.table.TableNavigation;
-import wicket.markup.html.table.TableNavigationWithMargin;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.PageableListViewNavigator;
+import wicket.markup.html.list.PageableListView;
+import wicket.markup.html.list.PageableListViewNavigation;
+import wicket.markup.html.list.PageableListViewNavigationWithMargin;
 
 
 
@@ -69,7 +69,7 @@ public class ExamplePaging extends Displaytag
         };
 
         add(table);
-        add(new PagedTableNavigator("pageTableNav", table));
+        add(new PageableListViewNavigator("pageTableNav", table));
 
 /*
         final TableNavigation tableNavigation = new TableNavigation("navigation", table, 5, 2);
@@ -118,7 +118,7 @@ public class ExamplePaging extends Displaytag
         };
         add(table2);
         
-        add(new PagedTableNavigator("pageTableNav2", table2));
+        add(new PageableListViewNavigator("pageTableNav2", table2));
         
         // Add pageable table with alternating row styles
         final PagedTableWithAlternatingRowStyle table3 = new PagedTableWithAlternatingRowStyle("rows3", data, 10)
@@ -138,11 +138,11 @@ public class ExamplePaging extends Displaytag
         };
         add(table3);
         
-        PagedTableNavigator nav3 = new PagedTableNavigator("pageTableNav3", table3)
+        PageableListViewNavigator nav3 = new PageableListViewNavigator("pageTableNav3", table3)
         {
-            protected TableNavigation newTableNavigation(final Table table)
+            protected PageableListViewNavigation newNavigation(final PageableListView table)
             {
-                TableNavigationWithMargin nav = new TableNavigationWithMargin("navigation", table);
+                PageableListViewNavigationWithMargin nav = new PageableListViewNavigationWithMargin("navigation", table);
                 nav.setMargin(2);
                 nav.setViewSize(5);
                 nav.setSeparator(", ");
@@ -171,11 +171,11 @@ public class ExamplePaging extends Displaytag
         };
         add(table4);
         
-        PagedTableNavigator nav4 = new PagedTableNavigator("pageTableNav4", table4)
+        PageableListViewNavigator nav4 = new PageableListViewNavigator("pageTableNav4", table4)
         {
-            protected TableNavigation newTableNavigation(final Table table)
+            protected PageableListViewNavigation newNavigation(final PageableListView table)
             {
-                TableNavigationWithMargin nav = new TableNavigationWithMargin("navigation", table);
+                PageableListViewNavigationWithMargin nav = new PageableListViewNavigationWithMargin("navigation", table);
                 nav.setMargin(2);
                 if (nav.getViewSize() > 5)
                 {
