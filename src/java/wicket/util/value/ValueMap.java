@@ -75,12 +75,13 @@ public class ValueMap implements Map, Serializable
      * Constructor.
      * @param keyValuePairs List of key value pairs separated by commas. For example,
      *            "param1=foo,param2=bar"
+     * @param delimiter Delimiter string used to separate key/value pairs
      */
-    public ValueMap(final String keyValuePairs)
+    public ValueMap(final String keyValuePairs, final String delimiter)
     {
         this.map = new HashMap();
 
-        final StringList pairs = StringList.tokenize(keyValuePairs);
+        final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
 
         for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
         {
@@ -99,6 +100,16 @@ public class ValueMap implements Map, Serializable
         }
     }
 
+    /**
+     * Constructor.
+     * @param keyValuePairs List of key value pairs separated by commas. For example,
+     *            "param1=foo,param2=bar"
+     */
+    public ValueMap(final String keyValuePairs)
+    {
+        this(keyValuePairs, ",");
+    }
+    
     /**
      * Makes this value map immutable by changing the underlying map representation to a
      * collections "unmodifiableMap". After calling this method, any attempt to modify
