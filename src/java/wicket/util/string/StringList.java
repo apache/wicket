@@ -249,6 +249,16 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
+	 * @param string
+	 *            The string to look for
+	 * @return True if the list contains the string
+	 */
+	public boolean contains(final String string)
+	{
+		return strings.contains(string);
+	}
+
+	/**
 	 * Gets the string at the given index
 	 * 
 	 * @param index
