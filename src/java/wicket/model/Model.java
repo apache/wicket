@@ -25,7 +25,7 @@ import wicket.WicketRuntimeException;
  * Model is the basic implementation of IModel. It just wraps the model object.
  * The model object must be serializable, as it is stored in the session. If you
  * have large objects to store, consider using
- * {@link wicket.model.IDetachableModel}instead of this class.
+ * {@link wicket.model.IDetachableModel} instead of this class.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius

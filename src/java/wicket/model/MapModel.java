@@ -23,10 +23,11 @@ import java.util.Map;
 
 /**
  * A Model subclass that holds a Map, wrapping it in a HashMap (if necessary) to
- * make it Serializable.
+ * ensure that it is Serializable.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class MapModel extends Model
 {
@@ -64,5 +65,3 @@ public class MapModel extends Model
         super(object);
     }
 }
-
-

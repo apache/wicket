@@ -33,7 +33,6 @@ import wicket.util.convert.ConversionUtils;
 import wicket.util.convert.ConverterRegistry;
 import wicket.util.convert.FormattingUtils;
 
-
 /**
  * A PropertyModel is used to dynamically access a model using an <a
  * href="www.ognl.org">Ognl expression </a>.
@@ -41,7 +40,6 @@ import wicket.util.convert.FormattingUtils;
  * For example, take the following bean:
  * 
  * <pre>
- * 
  * public class Person
  * {
  *     private String name;
@@ -62,13 +60,9 @@ import wicket.util.convert.FormattingUtils;
  * given person object like this:
  * 
  * <pre>
- * 
- *   
  *      Person person = getSomePerson();
  *      ...
  *      add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
- *   
- *  
  * </pre>
  * 
  * Where 'myLabel' is the name of the component, and 'name' is the Ognl
@@ -80,16 +74,12 @@ import wicket.util.convert.FormattingUtils;
  * updates the name property of a person like this:
  * 
  * <pre>
- * 
- *   
  *      add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
- *   
- *  
  * </pre>
  * 
  * </p>
  * <p>
- * For conversions and formatting, the converter sub framework is used. This
+ * For conversions and formatting, the converter sub-framework is used. This
  * allows for plugging in custom converters and formatters that are used for
  * converting and formatting objects of a given type.
  * </p>
@@ -441,6 +431,16 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
+     * Gets whether to apply formatting when getObject is invoked.
+     * 
+     * @return Whether to apply formatting when getObject is invoked.
+     */
+    protected final boolean getApplyFormatting()
+    {
+        return applyFormatting;
+    }
+
+    /**
      * Gets the Ognl context that is used for evaluating expressions. It
      * contains the type converter that is used to access the converter
      * framework.
@@ -517,16 +517,6 @@ public class PropertyModel extends DetachableModel
     protected final IModel getModel()
     {
         return model;
-    }
-
-    /**
-     * Gets whether to apply formatting when getObject is invoked.
-     * 
-     * @return Whether to apply formatting when getObject is invoked.
-     */
-    protected final boolean isApplyFormatting()
-    {
-        return applyFormatting;
     }
 
     /**
