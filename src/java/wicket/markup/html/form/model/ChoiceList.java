@@ -24,8 +24,8 @@ import java.util.List;
 
 /**
  * Simple choice list backed by an ArrayList. This class implements
- * {@link wicket.markup.html.form.model.IChoiceList}so that it is easier to create
- * subclasses and anonymous implementations.
+ * {@link wicket.markup.html.form.model.IChoiceList}so that it is easier to
+ * create subclasses and anonymous implementations.
  * 
  * @author Jonathan Locke
  */
@@ -125,6 +125,18 @@ public class ChoiceList implements IChoiceList
 	{
 		attach();
 		list.add(object);
+	}
+
+	/**
+	 * Add all the elements from a collection to this choice list
+	 * 
+	 * @param collection
+	 *            The collection
+	 */
+	public void addAll(final Collection collection)
+	{
+		attach();
+		list.add(collection);
 	}
 
 	/**
