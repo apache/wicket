@@ -141,7 +141,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected Page()
 	{
-		// A page's componentName is its id, which is not determined until
+		// A page's componentId is its id, which is not determined until
 		// setId is called when the page is added to the session
 		super(null);
 		init();

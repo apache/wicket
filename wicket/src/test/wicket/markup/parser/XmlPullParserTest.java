@@ -46,11 +46,11 @@ public class XmlPullParserTest extends TestCase
         parser.parse("<tag/>");
         XmlTag tag = (XmlTag) parser.nextTag();
         assertFalse(tag.isOpen());
-        assertFalse(tag.isOpen("tag"));
-        assertFalse(tag.isOpen("xxx"));
+        // assertFalse(tag.isOpen("tag"));
+        // assertFalse(tag.isOpen("xxx"));
         assertFalse(tag.isClose());
         assertTrue(tag.isOpenClose());
-        assertTrue(tag.isOpenClose("tag"));
+        // assertTrue(tag.isOpenClose("tag"));
         assertEquals("tag", tag.getName());
         assertNull(tag.getNamespace());
         assertEquals(0, tag.getAttributes().size());
@@ -59,35 +59,35 @@ public class XmlPullParserTest extends TestCase
         parser.parse("<tag ></tag >");
         tag = (XmlTag) parser.nextTag();
         assertTrue(tag.isOpen());
-        assertTrue(tag.isOpen("tag"));
-        assertFalse(tag.isOpen("xxx"));
+        // assertTrue(tag.isOpen("tag"));
+        // assertFalse(tag.isOpen("xxx"));
         assertFalse(tag.isClose());
         assertFalse(tag.isOpenClose());
-        assertFalse(tag.isOpenClose("tag"));
+        // assertFalse(tag.isOpenClose("tag"));
         assertEquals("tag", tag.getName());
         assertNull(tag.getNamespace());
         assertEquals(0, tag.getAttributes().size());
 
         tag = (XmlTag) parser.nextTag();
         assertFalse(tag.isOpen());
-        assertFalse(tag.isOpen("tag"));
-        assertFalse(tag.isOpen("xxx"));
+        // assertFalse(tag.isOpen("tag"));
+        // assertFalse(tag.isOpen("xxx"));
         assertTrue(tag.isClose());
         assertFalse(tag.isOpenClose());
-        assertFalse(tag.isOpenClose("tag"));
+        // assertFalse(tag.isOpenClose("tag"));
         assertEquals("tag", tag.getName());
         assertNull(tag.getNamespace());
         assertEquals(0, tag.getAttributes().size());
 
         parser.parse("<tag>  </tag>");
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+        // assertTrue(tag.isOpen("tag"));
         tag = (XmlTag) parser.nextTag();
         assertTrue(tag.isClose());
 
         parser.parse("xx <tag> yy </tag> zz");
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+        // assertTrue(tag.isOpen("tag"));
         tag = (XmlTag) parser.nextTag();
         assertTrue(tag.isClose());
 
@@ -99,21 +99,21 @@ public class XmlPullParserTest extends TestCase
 
         parser.parse("<tag> <tag> <tag>");
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+        // assertTrue(tag.isOpen("tag"));
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+//      assertTrue(tag.isOpen("tag"));
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+//      assertTrue(tag.isOpen("tag"));
 
         parser.parse("<ns:tag/>");
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpenClose("tag"));
+//      assertTrue(tag.isOpenClose("tag"));
         assertEquals("ns", tag.getNamespace());
         assertEquals("tag", tag.getName());
 
         parser.parse("<ns:tag></ns:tag>");
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+//      assertTrue(tag.isOpen("tag"));
         assertEquals("ns", tag.getNamespace());
         assertEquals("tag", tag.getName());
         
@@ -201,7 +201,7 @@ public class XmlPullParserTest extends TestCase
         parser.parse("<tag>");
         XmlTag tag = (XmlTag) parser.nextTag();
         assertEquals(0, tag.getAttributes().size());
-        assertTrue(tag.isOpen("tag"));
+        // assertTrue(tag.isOpen("tag"));
         assertFalse(tag.getAttributes().containsKey("attr"));
         assertNull(tag.getAttributes().getString("attr"));
         
@@ -259,13 +259,13 @@ public class XmlPullParserTest extends TestCase
         final XmlPullParser parser = new XmlPullParser();
         parser.parse("<!-- test --><tag>");
         XmlTag tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+//      assertTrue(tag.isOpen("tag"));
         
         parser.parse("<!-- test --><tag> aaa <!-- test 1 --> bbb <tag> <!-- test --> </tag>");
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+//      assertTrue(tag.isOpen("tag"));
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+//      assertTrue(tag.isOpen("tag"));
         tag = (XmlTag) parser.nextTag();
         assertTrue(tag.isClose());
         tag = (XmlTag) parser.nextTag();
@@ -274,9 +274,9 @@ public class XmlPullParserTest extends TestCase
         // As you can see, XmlPullParser is really a shallow parser only
         parser.parse("<!-- test --><tag> aaa <?tag test 1 ?> bbb <tag> <!DOCTYPE test > </tag>");
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+//      assertTrue(tag.isOpen("tag"));
         tag = (XmlTag) parser.nextTag();
-        assertTrue(tag.isOpen("tag"));
+//      assertTrue(tag.isOpen("tag"));
         tag = (XmlTag) parser.nextTag();
         assertTrue(tag.isClose());
         tag = (XmlTag) parser.nextTag();

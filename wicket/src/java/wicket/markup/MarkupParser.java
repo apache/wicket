@@ -55,9 +55,9 @@ public final class MarkupParser
     /** Logging */
     private static final Log log = LogFactory.getLog(MarkupParser.class);
 
-    /** Name of desired componentName tag attribute.
+    /** Name of desired componentId tag attribute.
      * E.g. &lt;tag id="wicket-..."&gt; or &lt;tag wicket=..&gt; */
-    private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
+    private String componentIdAttribute = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
 
     /** True to strip out HTML comments. */
     private boolean stripComments;
@@ -77,25 +77,25 @@ public final class MarkupParser
      */
     private boolean automaticLinking = false;
 
-	/** If true and if componentNameAttribute has been changed, than not only
-	 * use the new componentNameAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentNameAttribute and 
-	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	/** If true and if componentIdAttribute has been changed, than not only
+	 * use the new componentIdAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentIdAttribute and 
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
 	 */
-	private boolean applyDefaultComponentName = false;
+	private boolean applyDefaultComponentId = false;
 
     private IXmlPullParser xmlParser = new XmlPullParser();
 
     /**
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
-     * @param componentNameAttribute The name of the componentName attribute
+     * @param componentIdAttribute The name of the componentId attribute
      */
-    public MarkupParser(final IXmlPullParser xmlParser, final String componentNameAttribute)
+    public MarkupParser(final IXmlPullParser xmlParser, final String componentIdAttribute)
     {
         this.xmlParser = xmlParser;
-        this.componentNameAttribute = componentNameAttribute;
+        this.componentIdAttribute = componentIdAttribute;
     }
 
     /**
@@ -113,13 +113,13 @@ public final class MarkupParser
 	 */
 	public void configure(final ApplicationSettings settings)
 	{
-        this.componentNameAttribute = settings.getComponentNameAttribute();
+        this.componentIdAttribute = settings.getComponentIdAttribute();
         this.stripWicketTag = settings.getStripWicketTags();
         this.stripComments = settings.getStripComments();
         this.compressWhitespace = settings.getCompressWhitespace();
         this.automaticLinking = settings.getAutomaticLinking();
-        this.stripWicketFromComponentTag = settings.getStripComponentNames();
-        this.applyDefaultComponentName = settings.getApplyDefaultComponentName();
+        this.stripWicketFromComponentTag = settings.getStripComponentIds();
+        this.applyDefaultComponentId = settings.getApplyDefaultComponentId();
 	}
 
     /**
@@ -176,9 +176,9 @@ public final class MarkupParser
 
         // Chain together all the different markup filters
         final WicketComponentTagIdentifier detectWicketComponents = new WicketComponentTagIdentifier(xmlParser);
-        detectWicketComponents.setComponentNameAttribute(this.componentNameAttribute);
+        detectWicketComponents.setComponentIdAttribute(this.componentIdAttribute);
         detectWicketComponents.setStripWicketFromComponentTag(this.stripWicketFromComponentTag);
-        detectWicketComponents.setApplyDefaultComponentName(this.applyDefaultComponentName);
+        detectWicketComponents.setApplyDefaultComponentId(this.applyDefaultComponentId);
         
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
                 new HtmlHandler(detectWicketComponents));
@@ -195,10 +195,10 @@ public final class MarkupParser
         // Loop through tags
         for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
         {
-            boolean add = (tag.getComponentId() != null);
+            boolean add = (tag.getId() != null);
             if (!add && tag.getXmlTag().isClose())
             {
-                add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getComponentId() != null));
+                add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
             }
 
             // Add tag to list?
@@ -227,7 +227,7 @@ public final class MarkupParser
                 }
 
                 // Add to list unless preview component tag remover flagged as removed
-                if (!PreviewComponentTagRemover.IGNORE.equals(tag.getComponentId()))
+                if (!PreviewComponentTagRemover.IGNORE.equals(tag.getId()))
                 {
 	                list.add(tag);
                 }

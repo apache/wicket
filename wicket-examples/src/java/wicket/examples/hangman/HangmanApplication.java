@@ -36,7 +36,7 @@ public class HangmanApplication extends WicketExampleApplication
     public HangmanApplication()
     {
         getPages().setHomePage(Home.class);
-        getSettings().setStripComponentNames(true);
+        getSettings().setStripComponentIds(true);
     }
     
     /**

@@ -326,12 +326,12 @@ public final class MarkupParserTest extends TestCase
 	    assertEquals(3, markup.size());
 
 	    final ApplicationSettings settings = new ApplicationSettings(new MockWebApplication(null));
-	    settings.setComponentNameAttribute("wcn");
+	    settings.setComponentIdAttribute("wcn");
 	    parser.configure(settings);
 	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
 	    assertEquals(3, markup.size());
 	    
-	    settings.setApplyDefaultComponentName(false);
+	    settings.setApplyDefaultComponentId(false);
 	    parser.configure(settings);
 	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
 	    assertEquals(1, markup.size());

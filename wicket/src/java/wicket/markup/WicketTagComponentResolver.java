@@ -71,7 +71,7 @@ public class WicketTagComponentResolver implements IComponentResolver
      *            The current markupStream
      * @param tag
      *            The current component tag while parsing the markup
-     * @return true, if componentName was handle by the resolver. False,
+     * @return true, if componentId was handle by the resolver. False,
      *         otherwise
      */
     public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
@@ -109,7 +109,7 @@ public class WicketTagComponentResolver implements IComponentResolver
         }
         
         // Re-parent children of <wicket:component>. 
-        if ((tag.getComponentId() != null) && nestedComponents.containsKey(container))
+        if ((tag.getId() != null) && nestedComponents.containsKey(container))
         {
             MarkupContainer parent = container.getParent();
             
@@ -121,7 +121,7 @@ public class WicketTagComponentResolver implements IComponentResolver
             
             if (parent != null)
             {
-                final Component component = parent.get(tag.getComponentId());
+                final Component component = parent.get(tag.getId());
                 if (component != null)
                 {
                     component.render();
@@ -130,7 +130,7 @@ public class WicketTagComponentResolver implements IComponentResolver
             }
         }
 
-        // We were not able to handle the componentName
+        // We were not able to handle the componentId
         return false;
     }
 
@@ -146,10 +146,10 @@ public class WicketTagComponentResolver implements IComponentResolver
     private Component createComponent(final MarkupContainer container, final ComponentWicketTag tag)
     {
         // If no component name is given, create a page-unique one yourself.
-        String componentName = tag.getNameAttribute();
-        if (componentName == null)
+        String componentId = tag.getNameAttribute();
+        if (componentId == null)
         {
-            componentName = "anonymous-" + container.getPage().getAutoIndex();
+            componentId = "anonymous-" + container.getPage().getAutoIndex();
         }
 
         // Get the component class name
@@ -166,13 +166,13 @@ public class WicketTagComponentResolver implements IComponentResolver
         final Class componentClass = container.getSession().getClassResolver().resolveClass(classname);
 
         // construct the component. It must have a constructor with a single
-        // String (componentName) parameter.
+        // String (componentId) parameter.
         final Component component;
         try
         {
             final Constructor constructor = componentClass
                     .getConstructor(new Class[] { String.class });
-            component = (Component)constructor.newInstance(new Object[] { componentName });
+            component = (Component)constructor.newInstance(new Object[] { componentId });
         }
         catch (NoSuchMethodException e)
         {

@@ -29,7 +29,7 @@ import wicket.markup.parser.XmlTag;
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
  * Note 2: The namespace name is configurable through ApplicationSettings.
- *   @see wicket.ApplicationSettings#setComponentNameAttribute(String)
+ *   @see wicket.ApplicationSettings#setComponentIdAttribute(String)
  * 
  * @author Juergen Donnerstag
  */
@@ -112,7 +112,7 @@ public final class ComponentWicketTag extends ComponentTag
 		else
 		{
 			final ComponentWicketTag tag = new ComponentWicketTag(xmlTag.mutable());
-			tag.setComponentId(getComponentId());
+			tag.setId(getId());
 			return tag;
 		}
 	}

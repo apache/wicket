@@ -20,8 +20,8 @@ package wicket.markup;
 import wicket.MarkupContainer;
 
 /**
- * ApplicationSettings maintains a list of IComponentNameResolvers.
- * IComponentNameResolvers are responsible for mapping component names to Wicket
+ * ApplicationSettings maintains a list of IcomponentIdResolvers.
+ * IcomponentIdResolvers are responsible for mapping component names to Wicket
  * components. 
  * 
  * @author Juergen Donnerstag
@@ -38,7 +38,7 @@ public interface IComponentResolver
 	 *            The current markupStream
 	 * @param tag
 	 *            The current component tag while parsing the markup
-	 * @return True if componentName was handled by the resolver, false
+	 * @return True if componentId was handled by the resolver, false
 	 *         otherwise.
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
