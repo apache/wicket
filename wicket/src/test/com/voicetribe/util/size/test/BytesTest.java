@@ -19,7 +19,6 @@
 
 package com.voicetribe.util.size.test;
 
-import java.text.NumberFormat;
 import java.util.Locale;
 import com.voicetribe.util.size.Bytes;
 import com.voicetribe.util.string.StringValueConversionException;
