@@ -55,32 +55,25 @@ public class GuestbookTest extends WicketWebTestCase
      * Test page.
      * @throws Exception
      */
-    public void testHomePage() throws Exception {
-        try
-        {
-            beginAt("/guestbook");
-        } 
-        catch (Throwable ex)
-        {
-            log.error(ex.getMessage());
-        }
+    public void testHomePage() throws Exception 
+    {
+        beginAt("/guestbook");
         
-        this.dumpResponse(System.out);
         this.dumpResponse(System.out);
         assertTitleEquals("Wicket Examples - guestbook");
-        this.assertXpathNodeNotPresent("//*[@wicket:id='comments']");
-        //this.assertElementNotPresent("comments");
+        //this.assertXpathNodeNotPresent("//*[@wicket:id='comments']");
+        this.assertElementNotPresent("comments");
         
-        assertFormPresent("wicket-commentForm");
+        assertFormPresent("commentForm");
         this.assertFormElementPresent("0.commentForm.text");
         this.setFormElement("0.commentForm.text", "test-1");
         this.submit();
 
         this.dumpResponse(System.err);
         assertTitleEquals("Wicket Examples - guestbook");
-        assertFormPresent("wicket-commentForm");
+        assertFormPresent("commentForm");
         this.assertFormElementPresent("0.commentForm.text");
-        this.assertElementPresent("wicket-comments");
+        this.assertElementPresent("comments");
         // assertTextInElement() seems to be buggy
         //this.assertTextInElement("text", "test-1");
         this.assertTextPresent("test-1");
@@ -88,7 +81,7 @@ public class GuestbookTest extends WicketWebTestCase
         this.submit();
 
         assertTitleEquals("Wicket Examples - guestbook");
-        this.assertElementPresent("wicket-comments");
+        this.assertElementPresent("comments");
         // assertTextInElement() seems to be buggy
         //this.assertTextInElement("text", "test-1");
         this.assertTextPresent("test-1");

@@ -18,16 +18,13 @@
  */
 package wicket.examples;
 
-import java.io.StringReader;
+import java.util.List;
 
 import net.sourceforge.jwebunit.WebTestCase;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Node;
-import org.xml.sax.InputSource;
-
-import com.meterware.httpunit.HttpUnitUtils;
 
 /**
  * Add XPATH based validation
@@ -36,9 +33,6 @@ import com.meterware.httpunit.HttpUnitUtils;
  */
 public class WicketWebTestCase extends WebTestCase
 {
-    private String responseText;
-    private Document doc;
-    
     /**
      * 
      * @param name
@@ -65,20 +59,11 @@ public class WicketWebTestCase extends WebTestCase
      */
     public Node selectSingleNode(final String xpath) throws Exception
     {
-        if ((this.doc == null) || (this.responseText != this.getDialog().getResponseText()))
-        {
-	        this.responseText = this.getDialog().getResponseText();
-	        org.w3c.dom.Document xdoc = HttpUnitUtils.newParser().parse(new InputSource(new StringReader(this.responseText)));
-	        this.doc = new org.dom4j.io.DOMReader().read(xdoc);
-/*
-	        final SAXReader reader = new SAXReader();
-	    	reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true); 
-	        // Convert the DOMDocument to a DOM4J-Document
-	        this.doc = reader.read(new InputSource(new StringReader(responseText)));
-*/
-        }
-        
-        final Node node = this.doc.selectSingleNode(xpath);
+        final org.w3c.dom.Document w3cDoc = this.getDialog().getResponse().getDOM();
+        final Document doc = new org.dom4j.io.DOMReader().read(w3cDoc);
+        final String xml = doc.asXML();
+        final List list = doc.selectNodes(xpath);
+        final Node node = doc.selectSingleNode(xpath);
         return node;
     }
     
@@ -91,7 +76,7 @@ public class WicketWebTestCase extends WebTestCase
     public void assertXPath(final String xpath, final String assertValue) throws Exception
     {
         final Node node = selectSingleNode(xpath);
-        assertNotNull(node);
+        assertNotNull("Node not found: " + xpath, node);
         final String value;
         if (node instanceof Attribute)
         {

@@ -56,6 +56,18 @@ public abstract class WicketExampleApplication extends WebApplication
         // Use development settings 
         getSettings().configure("development", "src/java");
     }
+    
+    /**
+     * Determine operations mode: deploymnent or development
+     */
+	protected void init()
+	{
+	    if (this.getWicketServlet().getServletContext().getInitParameter("deployment") != null)
+	    {
+	        getSettings().configure("deployment");
+	    }
+	}
+    
 	/**
 	 * Main function, starts the jetty server.
 	 * 

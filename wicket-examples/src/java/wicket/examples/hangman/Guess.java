@@ -17,11 +17,13 @@
  */
 package wicket.examples.hangman;
 
+import wicket.AttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.model.Model;
 import wicket.model.PropertyModel;
 
 /**
@@ -80,6 +82,7 @@ public class Guess extends HangmanPage
 						}
 					}
 				};
+				link.add(new AttributeModifier("id", true, new Model("letter_" + letter.asString())));
 				link.add(new Image("enabled", letter.getSharedImageResource(true)));
 				link.add(new Image("disabled", letter.getSharedImageResource(false)));
 				listItem.add(link);

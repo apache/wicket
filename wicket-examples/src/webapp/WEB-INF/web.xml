@@ -15,6 +15,16 @@
 		</locale-encoding-mapping>
 	</locale-encoding-mapping-list>
 	-->	  
+  
+<!--  With wicket examples this is the means to configure deployment
+      resp. a development configuration.  
+      Uncomment the following lines to for "development" 
+
+		<context-param>
+		  <param-name>deployment</param-name>
+		  <param-value>true</param-value>
+		</context-param>
+-->
 
 	<servlet>
 		<servlet-name>HelloWorldApplication</servlet-name>

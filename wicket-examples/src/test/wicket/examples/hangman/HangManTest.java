@@ -210,7 +210,7 @@ public class HangManTest extends WebTestCase
 		assertTextInElement("guessesRemaining", "1");
 
 		clickLink("letter_v");
-		assertTextPresent("Bad Luck! You failed to guess that the word was");
+		assertTextPresent("Bad luck. You failed to guess that the word was");
 	}
 
 	/**
