@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -61,7 +61,8 @@ public final class UrlResource extends AbstractResource
 	{
 		try
 		{
-			// Get file from URL (see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4701321)
+			// Get file from URL (see
+			// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4701321)
 			final File file = new File(new URI(url.toExternalForm()));
 
 			// If file exists
@@ -76,7 +77,10 @@ public final class UrlResource extends AbstractResource
 		}
 		catch (URISyntaxException e)
 		{
-			throw new IllegalArgumentException("Invalid URL parameter " + url);
+			final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(
+					"Invalid URL parameter " + url);
+			illegalArgumentException.initCause(e);
+			throw illegalArgumentException;
 		}
 	}
 
@@ -95,7 +99,8 @@ public final class UrlResource extends AbstractResource
 	}
 
 	/**
-	 * @return The content type of this resource, such as "image/jpeg" or "text/html"
+	 * @return The content type of this resource, such as "image/jpeg" or
+	 *         "text/html"
 	 */
 	public String getContentType()
 	{
