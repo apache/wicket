@@ -1,11 +1,9 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
+ * $Id$ $Revision:
+ * 1.2 $ $Date$
+ * 
  * ================================================================================
- * Copyright (c)
- * All rechten voorbehouden.
+ * Copyright (c) All rechten voorbehouden.
  */
 package wicket.util.convert.converters;
 
@@ -15,12 +13,10 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.converters.i18n.DateLocaleConverter;
-import wicket.util.convert.converters.i18n.DoubleLocaleConverter;
 
 /**
  * Tests for the base converters.
- *
+ * 
  * @author Eelco Hillenius
  */
 public final class ConvertersTest extends TestCase
@@ -38,6 +34,7 @@ public final class ConvertersTest extends TestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public ConvertersTest(String name)
@@ -46,230 +43,206 @@ public final class ConvertersTest extends TestCase
 	}
 
 	/**
-	 * Test boolean converter.
+	 * Test boolean conversions.
 	 */
-	public void testBooleanConverter()
+	public void testBooleanConversions()
 	{
-		BooleanConverter conv = new BooleanConverter();
-		assertEquals("true", conv.convert(Boolean.TRUE, String.class));
-		assertEquals("false", conv.convert(Boolean.FALSE, String.class));
-		assertEquals(Boolean.TRUE, conv.convert("true", Boolean.class));
-		assertEquals(Boolean.FALSE, conv.convert("false", Boolean.class));
+		assertEquals("true", new StringConverter().convert(Boolean.TRUE));
+		assertEquals("false", new StringConverter().convert(Boolean.FALSE));
+        assertEquals(Boolean.TRUE, new BooleanConverter().convert(Boolean.TRUE));
+        assertEquals(Boolean.FALSE, new BooleanConverter().convert(Boolean.FALSE));
+        assertEquals(Boolean.TRUE, new BooleanConverter().convert("true"));
+		assertEquals(Boolean.FALSE, new BooleanConverter().convert("false"));
 		try
 		{
-			conv.convert("foo", Integer.class);
-			fail("illegal conversion attempt should have thrown an exception");
+            new BooleanConverter().convert("whatever");
+			fail("Conversion should have thrown an exception");
 		}
-		catch(ConversionException e)
+		catch (ConversionException e)
 		{
 			// this is correct
 		}
 	}
 
 	/**
-	 * Test byte converter.
+	 * Test byte conversions.
 	 */
-	public void testByteConverter()
+	public void testByteConversions()
 	{
-		ByteConverter conv = new ByteConverter();
-		assertEquals("1", conv.convert(Byte.valueOf("1"), String.class));
-		assertEquals(Byte.valueOf("1"), conv.convert("1", Byte.class));
+        assertEquals(new Byte((byte)10), new ByteConverter().convert(Byte.valueOf("10")));
+        assertEquals(new Byte((byte)10), new ByteConverter().convert("10"));
+        assertEquals("10", new StringConverter().convert(new Byte((byte)10)));                
+        try
+        {
+            new ByteConverter().convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+        try
+        {
+            new ByteConverter().convert("256");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+	}
+
+	/**
+	 * Test double conversions.
+	 */
+	public void testDoubleConversions()
+	{
+        assertEquals(new Double(1.1), new DoubleConverter().convert(new Double(1.1)));
+        assertEquals(new Double(1.1), new DoubleConverter().convert("1.1"));
+		assertEquals("1.1", new StringConverter().convert(new Double(1.1)));
 		try
 		{
-			conv.convert("true", Boolean.class);
-			fail("illegal conversion attempt should have thrown an exception");
+			new DoubleConverter().convert("whatever");
+			fail("Conversion should have thrown an exception");
 		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
-		try
-		{
-			conv.convert("123456", Byte.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
+		catch (ConversionException e)
 		{
 			// this is correct
 		}
 	}
 
 	/**
-	 * Test double converter.
+	 * Test float conversions.
 	 */
-	public void testDoubleConverter()
+	public void testFloatConversions()
 	{
-		DoubleConverter conv = new DoubleConverter();
-		assertEquals("1.1", conv.convert(Double.valueOf("1.1"), String.class));
-		assertEquals(Double.valueOf("1.1"), conv.convert("1.1", Double.class));
-		try
-		{
-			conv.convert("true", Boolean.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
+        assertEquals(new Float(1.1), new FloatConverter().convert(new Float(1.1)));
+        assertEquals(new Float(1.1), new FloatConverter().convert("1.1"));
+        assertEquals("1.1", new StringConverter().convert(new Float(1.1)));
+        try
+        {
+            new FloatConverter().convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // this is correct
+        }
 	}
 
 	/**
-	 * Test float converter.
+	 * Test integer conversions.
 	 */
-	public void testFloatConverter()
+	public void testIntegerConversions()
 	{
-		FloatConverter conv = new FloatConverter();
-		assertEquals("1.1", conv.convert(Float.valueOf("1.1"), String.class));
-		assertEquals(Float.valueOf("1.1"), conv.convert("1.1", Float.class));
-		try
-		{
-			conv.convert("true", Boolean.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
+        assertEquals(new Integer(10), new IntegerConverter().convert(Integer.valueOf("10")));
+        assertEquals(new Integer(10), new IntegerConverter().convert("10"));
+        assertEquals("10", new StringConverter().convert(new Integer(10)));                
+        try
+        {
+            new IntegerConverter().convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+        try
+        {
+            new IntegerConverter().convert("" + ((long)Integer.MAX_VALUE + 1));
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
 	}
 
 	/**
-	 * Test integer converter.
+	 * Test long conversions.
 	 */
-	public void testIntegerConverter()
+	public void testLongConversions()
 	{
-		IntegerConverter conv = new IntegerConverter();
-		assertEquals("10", conv.convert(Integer.valueOf("10"), String.class));
-		assertEquals(Integer.valueOf("10"), conv.convert("10", Integer.class));
-		try
-		{
-			conv.convert("true", Boolean.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
-		try
-		{
-			conv.convert("1.1", Integer.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
+        assertEquals(new Integer(10), new IntegerConverter().convert(Integer.valueOf("10")));
+        assertEquals(new Integer(10), new IntegerConverter().convert("10"));
+        assertEquals("10", new StringConverter().convert(new Integer(10)));                
+        try
+        {
+            new IntegerConverter().convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+        try
+        {
+            new LongConverter().convert("" + Long.MAX_VALUE + "0");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
 	}
 
 	/**
-	 * Test long converter.
+	 * Test short conversions
 	 */
-	public void testLongConverter()
+	public void testShortConversions()
 	{
-		LongConverter conv = new LongConverter();
-		assertEquals("10", conv.convert(Long.valueOf("10"), String.class));
-		assertEquals(Long.valueOf("10"), conv.convert("10", Integer.class));
-		try
-		{
-			conv.convert("true", Boolean.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
-		try
-		{
-			conv.convert("1.1", Long.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
+        assertEquals(new Short((short)10), new ShortConverter().convert(Short.valueOf("10")));
+        assertEquals(new Short((short)10), new ShortConverter().convert("10"));
+        assertEquals("10", new StringConverter().convert(new Short((short)10)));                
+        try
+        {
+            new ShortConverter().convert("whatever");
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
+        try
+        {
+            new ShortConverter().convert("" + (Short.MAX_VALUE + 1));
+            fail("Conversion should have thrown an exception");
+        }
+        catch (ConversionException e)
+        {
+            // This is correct
+        }
 	}
 
 	/**
-	 * Test short converter.
+	 * Test date locale conversions.
 	 */
-	public void testShortConverter()
+	public void testDateConverter()
 	{
-		ShortConverter conv = new ShortConverter();
-		assertEquals("10", conv.convert(Short.valueOf("10"), String.class));
-		assertEquals(Short.valueOf("10"), conv.convert("10", Short.class));
-		try
-		{
-			conv.convert("true", Boolean.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
-		try
-		{
-			conv.convert("1.1", Short.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
-		try
-		{
-			conv.convert("32768", Short.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
-	}
+		DateConverter converter = new DateConverter();
+        StringConverter stringConverter = new StringConverter();
+        
+        converter.setLocale(DUTCH_LOCALE);
+        stringConverter.setLocale(DUTCH_LOCALE);
 
-	/**
-	 * Test double locale converter.
-	 */
-	public void testDoubleLocaleConverter()
-	{
-		DoubleLocaleConverter conv = new DoubleLocaleConverter();
-		conv.setLocale(DUTCH_LOCALE);
-		assertEquals("1,1", conv.convert(Double.valueOf("1.1"), String.class));
-		assertEquals(Double.valueOf("1.1"), conv.convert("1,1", Double.class));
-		assertEquals(Double.valueOf("11"), conv.convert("1.1", Double.class));
-		try
-		{
-			conv.convert("true", Boolean.class);
-			fail("illegal conversion attempt should have thrown an exception");
-		}
-		catch(ConversionException e)
-		{
-			// this is correct
-		}
-	}
-
-
-	/**
-	 * Test date locale converter.
-	 */
-	public void testDateLocaleConverter()
-	{
-		DateLocaleConverter conv = new DateLocaleConverter();
-		conv.setLocale(DUTCH_LOCALE);
-		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
-		cal.clear(); // clear time fields for comparisonS
-		cal.set(2002, 9, 24); // months from 0 - 11!
+        Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
+		cal.clear();
+		cal.set(2002, Calendar.OCTOBER, 24);
 		Date date = cal.getTime();
-		assertEquals("24-10-02", conv.convert(date, String.class));
-		assertEquals(date, conv.convert("24-10-02", Date.class));
+        
+		assertEquals("24-okt-2002", stringConverter.convert(date));
+		assertEquals(date, converter.convert("24-okt-2002"));
 
-		conv.setLocale(Locale.US);
-		assertEquals("10/24/02", conv.convert(date, String.class));
-		assertEquals(date, conv.convert("10/24/02", Date.class));
+		converter.setLocale(Locale.US);
+        stringConverter.setLocale(Locale.US);
+		assertEquals("Oct 24, 2002", stringConverter.convert(date));
+		assertEquals(date, converter.convert("Oct 24, 2002"));
 		try
 		{
-			conv.convert("true", Boolean.class);
-			fail("illegal conversion attempt should have thrown an exception");
+			converter.convert("whatever");
+			fail("Conversion should have thrown an exception");
 		}
-		catch(ConversionException e)
+		catch (ConversionException e)
 		{
 			// this is correct
 		}

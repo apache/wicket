@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,29 +15,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.util.convert.converters;
-
-import wicket.util.convert.ConversionException;
-import wicket.util.convert.ITypeConverter;
+package wicket.util.convert;
 
 /**
- * Converts from Object to Character.
+ * Converter for a specific data type. The type of the conversion is implicit in
+ * the class which implements ITypeConverter. For example, a BooleanConverter
+ * which implements this interface might convert values from Object to Boolean.
  * 
- * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class CharacterConverter implements ITypeConverter
+public interface ITypeConverter
 {
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * Converts the given value
+	 * 
+	 * @param value
+	 *            The value to convert
+	 * @return The converted value
 	 */
-	public Object convert(final Object value)
-	{
-		final String stringValue = value.toString();
-		if (stringValue.length() == 1)
-		{
-			return new Character(value.toString().charAt(0));
-		}
-		throw new ConversionException("Cannot convert '" + stringValue + "' to Character");
-	}
+	public Object convert(Object value);
 }

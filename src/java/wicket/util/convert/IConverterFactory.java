@@ -22,12 +22,13 @@ package wicket.util.convert;
  * Factory that creates instances of {@link wicket.util.convert.IConverter}.
  *
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public interface IConverterFactory
 {
 	/**
 	 * Creates and returns a new instance of {@link IConverter}.
-	 * @return a new IConverter instance
+	 * @return A new IConverter instance
 	 */
 	IConverter newConverter();
 }

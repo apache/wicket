@@ -18,56 +18,47 @@
  */
 package wicket.util.convert.converters;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import wicket.util.convert.ConversionException;
 
 /**
- * Converts to and from Long objects.
+ * Converts from Object to Long.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public final class LongConverter extends AbstractConverter
+public final class LongConverter extends NumberConverter
 {
-	/**
-	 * Construct.
-	 */
-	public LongConverter()
-	{
-	}
+    /**
+     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+     */
+    public Object convert(final Object value)
+    {
+        if (value instanceof Number)
+        {
+            Number number = (Number)value;
+            return new Long(number.longValue());
+        }
 
-	/**
-	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
-	 */
-	public Object convert(Object value, Class c)
-	{
-		if (value == null)
-		{
-			return null;
-		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
-				|| c == Long.TYPE)
-		{
-			if (value instanceof Long)
-			{
-				return (value);
-			}
-			else if (value instanceof Number)
-			{
-				return new Long(((Number)value).longValue());
-			}
-			try
-			{
-				return (new Long(value.toString()));
-			}
-			catch (Exception e)
-			{
-				throw new ConversionException(e);
-			}
-		}
-		else if(String.class.isAssignableFrom(c))
-		{
-			return toString(value);
-		}
-		throw new ConversionException(this +
-				" cannot handle conversions of type " + c);
-	}
+        final String stringValue = value.toString();
+        try
+        {
+            final NumberFormat numberFormat = getNumberFormat();
+            if (numberFormat != null)
+            {
+                return new Long(numberFormat.parse(stringValue).longValue());
+            }
+            return new Long(stringValue);
+        }
+        catch (ParseException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Long", e);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Long", e);
+        }
+    }
 }

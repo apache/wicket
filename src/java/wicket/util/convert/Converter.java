@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.util.convert;
 
@@ -26,124 +25,190 @@ import ognl.OgnlOps;
 
 /**
  * Default converter implementation.
- *
+ * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public final class Converter implements IConverter, IStringConverter, ILocalizable
+public final class Converter implements IConverter, ILocalizable
 {
-	/** maps classes to converters. */
-	private final Map converters = new HashMap();
-
-	/** the current locale. */
-	private Locale locale = null;
+	/** Maps Classes to ITypeConverters. */
+	private final Map classToConverter = new HashMap();
 
 	/**
-	 * converter that is to be used when no registered converter is found.
+	 * Converter that is to be used when no registered converter is found.
 	 */
-	private IConverter fallThroughConverter = new IConverter()
+	private IConverter defaultConverter = new IConverter()
 	{
 		/**
 		 * Converts the given value object to class c using OgnlOps.
-		 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
+		 * 
+		 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
+		 *      java.lang.Class)
 		 */
 		public Object convert(Object value, Class c)
 		{
 			return OgnlOps.convertValue(value, c);
 		}
 	};
-	
+
+	/** The current locale. */
+	private Locale locale = null;
+
 	/**
-	 * Construct.
+	 * Registers a converter for use with class c.
+	 * 
+	 * @param converter
+	 *            The converter to add
+	 * @param c
+	 *            The class for which the converter should be used
+	 * @return The previous registered converter for class c or null if none was
+	 *         registered yet for class c
 	 */
-	public Converter()
+	public ITypeConverter set(final Class c, final ITypeConverter converter)
 	{
-		super();
+		if (converter == null)
+		{
+			throw new IllegalArgumentException("Converter cannot be null");
+		}
+		if (c == null)
+		{
+			throw new IllegalArgumentException("Class cannot be null");
+		}
+		return (ITypeConverter)classToConverter.put(c, converter);
+	}
+
+	/**
+	 * Removes all registered converters.
+	 */
+	public void clear()
+	{
+		classToConverter.clear();
 	}
 
 	/**
 	 * Converts the given value to class c.
-	 * @param value the value to convert
-	 * @param c the class to convert to
-	 * @return the converted value
-	 *
-	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
+	 * 
+	 * @param value
+	 *            The value to convert
+	 * @param c
+	 *            The class to convert to
+	 * @return The converted value
+	 * 
+	 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
+	 *      java.lang.Class)
 	 */
 	public Object convert(Object value, Class c)
 	{
-		if(value == null)
+		// Null is always converted to null
+		if (value == null)
 		{
 			return null;
 		}
-		if(c == null) // as a fallthrough, try to convert to object
+
+		// Class cannot be null
+		if (c == null)
 		{
-			c = Object.class;
+			throw new IllegalArgumentException("Class cannot be null");
 		}
-		IConverter converter = get(c);
-		if(converter == null)
+
+		// Catch all cases where value is already the right type
+		if (c.isAssignableFrom(value.getClass()))
 		{
-			converter = fallThroughConverter;
+			return value;
 		}
-		if(converter instanceof ILocalizable)
+
+		// Get type converter for class
+		ITypeConverter converter = get(c);
+		if (converter == null)
+		{
+			if (defaultConverter instanceof ILocalizable)
+			{
+				((ILocalizable)defaultConverter).setLocale(locale);
+			}
+			return defaultConverter.convert(value, c);
+		}
+
+		// Set locale
+		if (converter instanceof ILocalizable)
 		{
 			((ILocalizable)converter).setLocale(locale);
 		}
+
 		try
 		{
-			return converter.convert(value, c);
+			// Use type converter to convert to value
+			return converter.convert(value);
 		}
-      catch (ConversionException e)
-      {
-          throw e.setConverter(converter).setLocale(locale)
-          	.setTargetType(c).setTriedValue(value);
-      }
-      catch (Exception e)
-      {
-          throw new ConversionException(e).setConverter(converter)
-          	.setLocale(locale).setTargetType(c).setTriedValue(value);
-      }
+		catch (ConversionException e)
+		{
+			throw e.setConverter(this).setTypeConverter(converter).setLocale(locale).setTargetType(
+					c).setSourceValue(value);
+		}
+		catch (Exception e)
+		{
+			throw new ConversionException(e).setConverter(this).setLocale(locale).setTargetType(c)
+					.setSourceValue(value);
+		}
 	}
 
 	/**
-	 * @see wicket.util.convert.IStringConverter#valueOf(java.lang.String)
+	 * Gets the type converter that is registered for class c.
+	 * 
+	 * @param c
+	 *            The class to get the type converter for
+	 * @return The type converter that is registered for class c or null if no
+	 *         type converter was registered for class c
 	 */
-	public Object valueOf(String string)
+	public ITypeConverter get(Class c)
 	{
-		return convert(string, String.class);
+		return (ITypeConverter)classToConverter.get(c);
 	}
 
 	/**
-	 * @see wicket.util.convert.IStringConverter#toString(java.lang.Object)
+	 * Gets the converter that is to be used when no registered converter is
+	 * found.
+	 * 
+	 * @return the converter that is to be used when no registered converter is
+	 *         found
 	 */
-	public String toString(Object value)
+	public final IConverter getDefaultConverter()
 	{
-		if(value == null)
-		{
-			return null;
-		}
-		Class c = value.getClass();
-		IConverter converter = get(c);
-		if(converter == null)
-		{
-			converter = fallThroughConverter;
-		}
-		if(converter instanceof ILocalizable)
-		{
-			((ILocalizable)converter).setLocale(locale);
-		}
-		try
-		{
-			return (String)converter.convert(value, String.class);
-		}
-      catch (ConversionException e)
-      {
-          throw e.setConverter(converter).setLocale(locale)
-          	.setTargetType(c).setTriedValue(value);
-      }
-      catch (Exception e)
-      {
-          throw new ConversionException(e).setConverter(converter)
-          	.setLocale(locale).setTargetType(c).setTriedValue(value);
-      }
+		return defaultConverter;
+	}
+
+	/**
+	 * @see wicket.util.convert.ILocalizable#getLocale()
+	 */
+	public Locale getLocale()
+	{
+		return locale;
+	}
+
+	/**
+	 * Removes the type converter currently registered for class c.
+	 * 
+	 * @param c
+	 *            The class for which the converter registration should be
+	 *            removed
+	 * @return The converter that was registered for class c before removal or
+	 *         null if none was registered
+	 */
+	public ITypeConverter remove(Class c)
+	{
+		return (ITypeConverter)classToConverter.remove(c);
+	}
+
+	/**
+	 * Sets the converter that is to be used when no registered converter is
+	 * found. This allows converter chaining.
+	 * 
+	 * @param defaultConverter
+	 *            The converter that is to be used when no registered converter
+	 *            is found
+	 */
+	public final void setDefaultConverter(IConverter defaultConverter)
+	{
+		this.defaultConverter = defaultConverter;
 	}
 
 	/**
@@ -155,72 +220,12 @@ public final class Converter implements IConverter, IStringConverter, ILocalizab
 	}
 
 	/**
-	 * Registers a converter for use with class c.
-	 * @param converter the converter to add
-	 * @param c the class for which the converter should be used
-	 * @return the previous registered converter for class c or null if
-	 * none was registered yet for class c
+	 * @param value
+	 *            The value to convert to a String
+	 * @return The string
 	 */
-	public IConverter add(IConverter converter, Class c)
+	public String toString(Object value)
 	{
-		if(converter == null || c == null)
-		{
-			throw new IllegalArgumentException(
-					"parameters converter and c(lass( must be not-null");
-		}
-		IConverter old = (IConverter)converters.put(c, converter);
-		return old;
-	}
-
-	/**
-	 * Removes the converter currently registered for class c.
-	 * @param c the class for which the converter registration should be removed
-	 * @return the converter that was registered for class c before removal or
-	 * null if none was registered
-	 */
-	public IConverter remove(Class c)
-	{
-		return (IConverter)converters.remove(c);
-	}
-
-	/**
-	 * Gets the converter that is registered for class c.
-	 * @param c the class to get the converter for
-	 * @return the converter that is registered for class c or null if no
-	 *         converter was registered for class c
-	 */
-	public IConverter get(Class c)
-	{
-		return (IConverter)converters.get(c);
-	}
-
-	/**
-	 * Removes all registers converters.
-	 */
-	public void clear()
-	{
-		converters.clear();
-	}
-
-	/**
-	 * Gets the converter that is to be used when no registered
-	 * 	converter is found.
-	 * @return the converter that is to be used when no registered
-	 * 	converter is found
-	 */
-	protected final IConverter getFallThroughConverter()
-	{
-		return fallThroughConverter;
-	}
-
-	/**
-	 * Sets the converter that is to be used when no registered
-	 * 	converter is found.
-	 * @param fallThroughConverter the converter that is to be used
-	 * 	when no registered converter is found
-	 */
-	protected final void setFallThroughConverter(IConverter fallThroughConverter)
-	{
-		this.fallThroughConverter = fallThroughConverter;
+		return (String)convert(value, String.class);
 	}
 }

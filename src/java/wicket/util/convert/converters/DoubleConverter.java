@@ -18,59 +18,47 @@
  */
 package wicket.util.convert.converters;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import wicket.util.convert.ConversionException;
 
 /**
- * Converts to and from Double objects.
+ * Converts from Object to Double.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public final class DoubleConverter extends AbstractConverter
+public final class DoubleConverter extends NumberConverter
 {
-	/**
-	 * Construct.
-	 */
-	public DoubleConverter()
-	{
-	}
+    /**
+     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+     */
+    public Object convert(final Object value)
+    {
+        if (value instanceof Number)
+        {
+            Number number = (Number)value;
+            return new Double(number.doubleValue());
+        }
 
-	/**
-	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
-	 */
-	public Object convert(Object value, Class c)
-	{
-		if (value == null)
-		{
-			return null;
-		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
-				|| c == Double.TYPE)
-		{
-			if (value instanceof Double)
-			{
-				return (value);
-			}
-			else if (value instanceof Number)
-			{
-				return new Double(((Number)value).doubleValue());
-			}
-			else
-			{
-				try
-				{
-					return (new Double(value.toString()));
-				}
-				catch (Exception e)
-				{
-					throw new ConversionException(e);
-				}
-			}
-		}
-		else if(String.class.isAssignableFrom(c))
-		{
-			return toString(value);
-		}
-		throw new ConversionException(this +
-				" cannot handle conversions of type " + c);
-	}
+        final String stringValue = value.toString();
+        try
+        {
+            final NumberFormat numberFormat = getNumberFormat();
+            if (numberFormat != null)
+            {
+                return new Double(numberFormat.parse(stringValue).doubleValue());
+            }
+            return new Double(stringValue);
+        }
+        catch (ParseException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Double", e);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Double", e);
+        }
+    }
 }

@@ -18,58 +18,47 @@
  */
 package wicket.util.convert.converters;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import wicket.util.convert.ConversionException;
 
 /**
- * Converts to and from Short objects.
+ * Converts from Object to Short.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public final class ShortConverter extends AbstractConverter
+public final class ShortConverter extends NumberConverter
 {
-	/**
-	 * Construct.
-	 */
-	public ShortConverter()
-	{
-	}
+    /**
+     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+     */
+    public Object convert(final Object value)
+    {
+        if (value instanceof Number)
+        {
+            Number number = (Number)value;
+            return new Short(number.shortValue());
+        }
 
-	/**
-	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
-	 */
-	public Object convert(Object value, Class c)
-	{
-		if (value == null)
-		{
-			return null;
-		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
-				|| c == Short.TYPE)
-		{
-			if (value instanceof Short)
-			{
-				return (value);
-			}
-			else if (value instanceof Number)
-			{
-				return new Short(((Number)value).shortValue());
-			}
-
-			try
-			{
-				return (new Short(value.toString()));
-			}
-			catch (Exception e)
-			{
-				throw new ConversionException(e);
-			}
-		}
-		else if(String.class.isAssignableFrom(c))
-		{
-			return toString(value);
-		}
-		throw new ConversionException(this +
-				" cannot handle conversions of type " + c);
-
-	}
+        final String stringValue = value.toString();
+        try
+        {
+            final NumberFormat numberFormat = getNumberFormat();
+            if (numberFormat != null)
+            {
+                return new Short(numberFormat.parse(stringValue).shortValue());
+            }
+            return new Short(stringValue);
+        }
+        catch (ParseException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Short", e);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Short", e);
+        }
+    }
 }

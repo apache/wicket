@@ -18,57 +18,47 @@
  */
 package wicket.util.convert.converters;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import wicket.util.convert.ConversionException;
 
 /**
- * Converts to and from Integer objects.
+ * Converts from Object to Integer.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public final class IntegerConverter extends AbstractConverter
-{
-	/**
-	 * Construct.
-	 */
-	public IntegerConverter()
-	{
-	}
+public final class IntegerConverter extends NumberConverter
+{    
+    /**
+     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+     */
+    public Object convert(final Object value)
+    {
+        if (value instanceof Number)
+        {
+            Number number = (Number)value;
+            return new Integer(number.intValue());
+        }
 
-	/**
-	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
-	 */
-	public Object convert(Object value, Class c)
-	{
-		if (value == null)
-		{
-			return null;
-		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
-				|| c == Integer.TYPE)
-		{
-			if (value instanceof Integer)
-			{
-				return (value);
-			}
-			else if (value instanceof Number)
-			{
-				return new Integer(((Number)value).intValue());
-			}
-
-			try
-			{
-				return (new Integer(value.toString()));
-			}
-			catch (Exception e)
-			{
-				throw new ConversionException(e);
-			}
-		}
-		else if(String.class.isAssignableFrom(c))
-		{
-			return toString(value);
-		}
-		throw new ConversionException(this +
-				" cannot handle conversions of type " + c);
-	}
+        final String stringValue = value.toString();
+        try
+        {
+            final NumberFormat numberFormat = getNumberFormat();
+            if (numberFormat != null)
+            {
+                return new Integer(numberFormat.parse(stringValue).intValue());
+            }
+            return new Integer(stringValue);
+        }
+        catch (ParseException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Integer", e);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Integer", e);
+        }
+    }
 }
