@@ -31,27 +31,44 @@ import wicket.WebApplication;
 import wicket.WicketRuntimeException;
 
 /**
- * Base class for applications such as WebApplications that are based on the
- * HTTP protocol. Each WicketServlet has a name that comes from the name of the
- * concrete subclass which is instantiated. It also holds application settings
- * which are typically initialized in the subclass constructor. When GET/POST
- * requests are made via HTTP, a RequestCycle object is created from the
- * request, response and session objects. The RequestCycle's render() method is
- * called to produce a response to the HTTP request.
- * </p>
+ * Servlet class for all wicket applications. The specific application class to
+ * instantiate should be specified to the application server via an init-params
+ * argument named "applicationClassName" in the servlet declaration, which is
+ * typically in a <i>web.xml </i> file. The servlet declaration may vary from
+ * one application server to another, but should look something like this:
+ * 
+ * <pre>
+ *        &lt;servlet&gt;
+ *            &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *            &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *            &lt;init-param&gt;
+ *                &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *            &lt;/init-param&gt;
+ *            &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *         &lt;/servlet&gt;
+ * </pre>
+ * 
+ * Note that the applicationClassName parameter you specify must be the fully
+ * qualified name of a class that extends WebApplication. If your class cannot
+ * be found, does not extend WebApplication or cannot be instantiated, a runtime
+ * exception of type WicketRuntimeException will be thrown.
+ * <p>
+ * When GET/POST requests are made via HTTP, an HttpRequestCycle object is
+ * created from the request, response and session objects (after wrapping them
+ * in the appropriate wicket wrappers). The RequestCycle's render() method is
+ * then called to produce a response to the HTTP request.
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters
  * from the {@link javax.servlet.ServletConfig}object, you should override the
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- * 
- *       public void init() throws ServletException
- *       {
- *         ServletConfig config = getServletConfig();
- *         String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *         ...
- *  
+ *           public void init() throws ServletException
+ *           {
+ *               ServletConfig config = getServletConfig();
+ *               String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *               ...
  * </pre>
  * 
  * </p>

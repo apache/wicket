@@ -36,7 +36,6 @@ import wicket.util.value.ValueMap;
 
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
 
-
 /**
  * This string resource loader attempts to find the resource from a bundle that
  * corresponds the the supplied component object or one of its parent

@@ -61,8 +61,6 @@ import wicket.util.value.ValueMap;
  */
 public class MockHttpServletRequest implements HttpServletRequest
 { 
-    // TODO finalize javadoc
-
     /** The application */
     private final Application application;
 
