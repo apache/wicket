@@ -34,16 +34,10 @@ import wicket.markup.html.WebMarkupContainer;
  * Example:
  * 
  * <pre>
- * 
- *  
- *   
  *      &lt;tbody&gt;
  *        &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
  *            &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
  *        ...    
- *    
- *   
- *  
  * </pre>
  * 
  * <p>

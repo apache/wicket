@@ -25,10 +25,10 @@ package wicket.markup.html.form.validation;
  * form validation.
  * <p>
  * When a form is submitted and one or more validation errors occurs, logic in
- * the Form.handleErrors() method traverses the component hierarchy of the Form
- * being submitted, calling each IValidationFeedback interface it finds.
- * Implementers of the update() method can change their appearance depending on
- * the state of errors in a child component or in the Form as a whole.
+ * the Form.onError() method traverses the component hierarchy of the Form being
+ * submitted, calling each IValidationFeedback interface it finds. Implementers
+ * of the update() method can change their appearance depending on the state of
+ * errors in a child component or in the Form as a whole.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
