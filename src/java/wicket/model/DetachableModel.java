@@ -58,8 +58,7 @@ public abstract class DetachableModel extends AbstractDetachableModel
 	 */
 	public Object getObject()
 	{
-		// TODO Commenting this out seems right, but breaks a test 
-//		attach();
+		attach();
 		return object;
 	}
 

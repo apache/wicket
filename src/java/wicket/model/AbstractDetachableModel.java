@@ -79,11 +79,15 @@ public abstract class AbstractDetachableModel implements IDetachableModel
 	 * Attaches to the given session. Implement this method with custom
 	 * behaviour, such as loading the model object.
 	 */
-	protected abstract void onAttach();
+	protected void onAttach()
+	{		
+	}
 
 	/**
 	 * Detaches from the given session. Implement this method with custom
 	 * behaviour, such as setting the model object to null.
 	 */
-	protected abstract void onDetach();
+	protected void onDetach()
+	{	
+	}
 }
