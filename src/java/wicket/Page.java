@@ -795,7 +795,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					// Throw exception
 					throw new WicketRuntimeException(component
 							.exceptionMessage("Component never rendered. You probably failed to "
-									+ "reference it in your markup."));
+									+ "reference it in your markup"));
 				}
 				return CONTINUE_TRAVERSAL;
 			}

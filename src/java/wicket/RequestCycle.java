@@ -582,8 +582,9 @@ public abstract class RequestCycle
 			currentPage.resetMarkupStreams();
 		}
 
-		// Rethrow error for console / container
-		throw new ServletException("Wicket could not render page: " + Strings.toString(e), e);
+		// DON'T Rethrow error for console / container because then we see the standard error page and we should see the wicket error page
+		//throw new ServletException("Wicket could not render page: " + Strings.toString(e), e);
+		log.error("Rendering exception", e);
 	}
 
 	/**
