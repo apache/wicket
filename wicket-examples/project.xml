@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <project>
   <extend>../Wicket/project.xml</extend>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>0.9.16-beta</version>
+      <version>SNAPSHOT</version>
       <properties>
     	<eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -278,6 +278,7 @@
   </build>
   <reports>
     <report>maven-changes-plugin</report>
+    <report>maven-junit-report-plugin</report>
     <report>maven-tasklist-plugin</report>
     <report>maven-javadoc-plugin</report>
   </reports>
