@@ -179,8 +179,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		}
 
 		// TODO: <wicket:params name = "myProperty">My completely free text that
-		// can
-		// contain everything</wicket:params> is currently not supported
+		// can contain everything</wicket:params> is currently not supported
 
 		// Add the parameters to the previous component tag
 		lastTag.putAll(tag.getAttributes());
