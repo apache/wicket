@@ -28,12 +28,15 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 /**
- * Provide some simple means to encrypt and decrypt strings (e.g. passwords)
+ * Provide some simple means to encrypt and decrypt strings (e.g. passwords).
+ * The whole implementation is based around Sun's security providers
+ * and uses the <a href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES</a> 
+ * method and encrypt and decrypt the data.
  * 
  * @author Juergen Donnerstag
  */
 public class Crypt implements ICrypt
-{ // TODO finalize javadoc
+{
     /** Name of encryption method */
     private static final String CRYPT_METHOD = "PBEWithMD5AndDES";
     
@@ -41,11 +44,14 @@ public class Crypt implements ICrypt
     private final static byte[] salt = { (byte) 0x15, (byte) 0x8c, (byte) 0xa3,
             (byte) 0x4a, (byte) 0x66, (byte) 0x51, (byte) 0x2a, (byte) 0xbc };
 
+    /** Iteration count used in combination with the salt to create the 
+     * encryption key.
+     */
     private final static int count = 17;
 
-    // Initialize the provider
     static
     {
+        // Initialize and adda security provider required for encryption
         Security.addProvider(new com.sun.crypto.provider.SunJCE());
     }
 
@@ -70,11 +76,14 @@ public class Crypt implements ICrypt
     }
     
     /**
-     * Generate the de-/encryption key
+     * Generate the de-/encryption key.<p>
+     * Note: if you don't provide your own encryption key, the implementation
+     * will use a default. Be aware that this is potential security risk. Thus
+     * make sure you always provide your own one.
      * 
-     * @return secretKey
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeySpecException
+     * @return secretKey the security key generated
+     * @throws NoSuchAlgorithmException unable to find encryption algorithm specified
+     * @throws InvalidKeySpecException invalid encryption key
      */
     private final SecretKey generateKey() throws NoSuchAlgorithmException,
             InvalidKeySpecException
@@ -90,9 +99,10 @@ public class Crypt implements ICrypt
 
     /**
      * Crypts the given byte array
+     * 
      * @param input byte array to be crypted
      * @param mode crypt mode
-     * @return the input crypted
+     * @return the input crypted. Null in case of an error
      */
     private final byte[] crypt(final byte[] input, final int mode)
     {
@@ -114,7 +124,8 @@ public class Crypt implements ICrypt
     }
 
     /**
-     * Encrypts the given text.
+     * Encrypts the given text into a byte array.
+     * 
      * @param plainText text to encrypt
      * @return the string encrypted
      */
@@ -124,9 +135,9 @@ public class Crypt implements ICrypt
     }
 
     /**
-     * Encrypt a string
+     * Encrypt a string into a string
      * 
-     * @param plainText
+     * @param plainText text to encrypt
      * @return encrypted string
      */
     public final String encryptStringToString(final String plainText)
@@ -136,8 +147,9 @@ public class Crypt implements ICrypt
     }
 
     /**
-     * Decrypts a String.
-     * @param plainText text to decript
+     * Decrypts a String into a byte array.
+     * 
+     * @param plainText text to decrypt
      * @return the decrypted text
      */
     private final byte[] decryptString(final String plainText)
@@ -155,12 +167,15 @@ public class Crypt implements ICrypt
     }
 
     /**
-     * Decrypts a string.
+     * Decrypts a string into a string.
+     * 
      * @param text text to decript
-     * @return the dycripted text
+     * @return the decrypted text
      */
     public final String decryptStringToString(final String text)
     {
         return new String(decryptString(text));
     }
 }
+
+////////////////////////////////// END OF FILE //////////////////////////
