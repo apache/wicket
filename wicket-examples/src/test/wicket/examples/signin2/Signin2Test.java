@@ -51,11 +51,11 @@ public class Signin2Test extends WebTestCase
      */
     public void testSignIn2() {
         beginAt("/signin2");
-        //this.dumpResponse(System.err);
+        this.dumpResponse(System.err);
         assertTitleEquals("Wicket Examples - signin2");
         
-        this.setFormElement("1.signInPanel.signInForm.username", "jonathan");
-        this.setFormElement("1.signInPanel.signInForm.password", "password");
+        this.setFormElement("1.signInPanel.signInForm.username", "wicket");
+        this.setFormElement("1.signInPanel.signInForm.password", "wicket");
         this.checkCheckbox("1.signInPanel.signInForm.rememberMeRow.rememberMe");
         this.submit("submit");
         
