@@ -20,6 +20,7 @@ package com.voicetribe.wicket;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.text.MessageFormat;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.protocol.http.HttpRequestCycle;
 import com.voicetribe.wicket.protocol.http.MockHttpApplication;
@@ -100,6 +101,8 @@ public class StringResourceModelTest extends TestCase {
     public void testSubstitutionParametersResource() {
         Calendar cal = Calendar.getInstance();
         cal.set(2004, Calendar.OCTOBER, 15, 13, 21);
+        MessageFormat format = new MessageFormat("The report for {0,date,medium}, shows the temparature as {2,number,###.##} {3} and the weather to be {1}",
+                                                 page.getLocale());
         StringResourceModel model = new StringResourceModel(
                           "weather.detail", page, wsModel,
                           new Object[] {
@@ -107,13 +110,23 @@ public class StringResourceModelTest extends TestCase {
                               "${currentStatus}",
                               new PropertyModel(wsModel, "currentTemperature"),
                               new PropertyModel(wsModel, "units")});
+        String expected = format.format(new Object[] {
+                                             cal.getTime(),
+                                             "sunny",
+                                             new Double(25.7),
+                                             "\u00B0C"});
         Assert.assertEquals("Text should be as expected",
-                            "The report for 15-Oct-2004, shows the temparature as 25.7 \u00B0C and the weather to be sunny",
+                            expected,
                             model.getString());
         ws.setCurrentStatus("raining");
         ws.setCurrentTemperature(11.568);
+        expected = format.format(new Object[] {
+                                     cal.getTime(),
+                                     "raining",
+                                     new Double(11.568),
+                                     "\u00B0C"});
         Assert.assertEquals("Text should be as expected",
-                            "The report for 15-Oct-2004, shows the temparature as 11.57 \u00B0C and the weather to be raining",
+                            expected,
                             model.getString());
     }
 
