@@ -56,7 +56,7 @@ public final class SignIn2Session extends WebSession
 		if (user == null)
 		{
 			// Trivial password "db"
-			if ("jonathan".equalsIgnoreCase(username) && "password".equalsIgnoreCase(password))
+			if ("wicket".equalsIgnoreCase(username) && "wicket".equalsIgnoreCase(password))
 			{
 				user = username;
 			}

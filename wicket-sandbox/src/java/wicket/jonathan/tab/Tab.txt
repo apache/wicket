@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.9 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,35 +15,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.examples.signin2;
+package wicket.markup.html.jontab;
 
-import wicket.PageParameters;
-import wicket.contrib.markup.html.panel.signin.SignInPanel;
-import wicket.examples.WicketExamplePage;
+import wicket.Page;
 
 /**
- * Simple example of a sign in page. It extends SignInPage, a base class which
- * provide standard functionality for typical log-in pages
+ * Definition of a tab within a TabNavigator component.
  * 
  * @author Jonathan Locke
  */
-public final class SignIn2 extends WicketExamplePage
+public abstract class Tab
 {
+	/** Serial Version ID. */
+	private static final long serialVersionUID = 209001445308790198L;
+	
+	/** Label on tab */
+	final String label;
+
 	/**
 	 * Constructor
-	 * 
-	 * @param parameters
-	 *            The page parameters
+	 * @param label Label for tab
 	 */
-	public SignIn2(final PageParameters parameters)
+	public Tab(final String label)
 	{
-		add(new SignInPanel("signInPanel")
-		{
-			public boolean signIn(String username, String password)
-			{
-				return ((SignIn2Session)getSession()).authenticate(username, password);
-			}
-		});
+		this.label = label;
 	}
+	
+	protected abstract boolean isActive(final Page page);
 }
-

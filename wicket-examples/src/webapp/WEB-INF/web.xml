@@ -295,7 +295,7 @@
 	 
     <servlet-mapping>
         <servlet-name>PubApplication</servlet-name>
-        <url-pattern>/pub</url-pattern>
+        <url-pattern>/pub/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

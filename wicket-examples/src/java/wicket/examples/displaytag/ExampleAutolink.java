@@ -24,11 +24,9 @@ import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
+import wicket.extensions.markup.html.basic.SmartLinkLabel;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.basic.SmartLinkLabel;
 import wicket.markup.html.list.ListItem;
-
-
 
 /**
  * A table with autolink cells.

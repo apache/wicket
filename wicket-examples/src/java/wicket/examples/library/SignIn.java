@@ -19,9 +19,8 @@
 package wicket.examples.library;
 
 import wicket.PageParameters;
+import wicket.contrib.markup.html.panel.signin.SignInPanel;
 import wicket.examples.WicketExamplePage;
-import wicket.markup.html.panel.SignInPanel;
-
 
 /**
  * Simple example of a sign in page.

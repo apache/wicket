@@ -7,18 +7,19 @@
     <span id="wicket-mainNavigation"/>
 
     <form id="wicket-upload">
-      <fieldset>
-        <legend>File Upload</legend>
-        <label for="fileName">name</label>
-        <input id="wicket-fileName" type="text" size="20"/>
-        <label for="upload">file</label>
-        <input name="upload" type="file"/>
-        <input type="submit" value="upload"/>
-      </fieldset>
+    	<p>
+	    <label for="fileName">Name</label><br/>
+	    <input id="wicket-fileName" type="text" size="20"/>
+	    </p>
+	    <p>
+	    <label for="upload">File</label><br/>
+	    <input name="upload" type="file"/>
+	    </p>
+	    <input type="submit" value="Upload!"/>
     </form>
 
     <div>
-      <h4>current files (directory <span id="wicket-dir">(dir)</span>):</h4>
+      <h4>Current files in <span id="wicket-dir">(dir)</span>:</h4>
       <table>
         <tr id="wicket-fileList">
             <td width="200"><span id="wicket-file">(file)</span></td>

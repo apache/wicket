@@ -53,8 +53,8 @@ public final class LibrarySession extends WebSession
         if (user == null)
         {
             // Trivial password "db"
-            if ("jonathan".equalsIgnoreCase(username)
-                && "password".equalsIgnoreCase(password))
+            if ("wicket".equalsIgnoreCase(username)
+                && "wicket".equalsIgnoreCase(password))
             {
                 // Create User object
                 final User user = new User();

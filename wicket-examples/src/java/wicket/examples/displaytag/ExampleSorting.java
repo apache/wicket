@@ -21,14 +21,14 @@ package wicket.examples.displaytag;
 import java.util.List;
 
 import wicket.PageParameters;
+import wicket.contrib.markup.html.list.SortableListViewHeader;
+import wicket.contrib.markup.html.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
-import wicket.markup.html.list.SortableListViewHeader;
-import wicket.markup.html.list.SortableListViewHeaders;
 
 
 
@@ -129,7 +129,7 @@ public class ExampleSorting extends Displaytag
 	        /**
 	         * Define how to do sorting
 	         * 
-	         * @see wicket.markup.html.list.SortableListViewHeaders#getObjectToCompare(wicket.markup.html.list.SortableListViewHeader, java.lang.Object)
+	         * @see SortableListViewHeaders#getObjectToCompare(SortableListViewHeader, java.lang.Object)
 	         */
 	        protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
 	        {

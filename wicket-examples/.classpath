@@ -36,5 +36,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/concurrent/jars/concurrent-1.3.3.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="src" path="/wicket-contrib"/>
+	<classpathentry kind="src" path="/wicket-extensions"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -15,35 +15,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.examples.signin2;
-
-import wicket.PageParameters;
-import wicket.contrib.markup.html.panel.signin.SignInPanel;
-import wicket.examples.WicketExamplePage;
+package wicket.jonathan.stylesheet;
 
 /**
- * Simple example of a sign in page. It extends SignInPage, a base class which
- * provide standard functionality for typical log-in pages
+ * A source of stylesheet information.
  * 
  * @author Jonathan Locke
  */
-public final class SignIn2 extends WicketExamplePage
+public interface IStylesheetSource
 {
+	
+	
+//	public Class getClass();
+	
 	/**
-	 * Constructor
-	 * 
-	 * @param parameters
-	 *            The page parameters
+	 * @return Stylesheet information
 	 */
-	public SignIn2(final PageParameters parameters)
-	{
-		add(new SignInPanel("signInPanel")
-		{
-			public boolean signIn(String username, String password)
-			{
-				return ((SignIn2Session)getSession()).authenticate(username, password);
-			}
-		});
-	}
+	public String getStylesheet();
 }
-

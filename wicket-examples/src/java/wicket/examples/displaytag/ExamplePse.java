@@ -19,6 +19,8 @@
 package wicket.examples.displaytag;
 
 import wicket.PageParameters;
+import wicket.contrib.markup.html.list.SortableListViewHeader;
+import wicket.contrib.markup.html.list.SortableListViewHeaders;
 import wicket.examples.displaytag.export.CsvView;
 import wicket.examples.displaytag.export.ExcelView;
 import wicket.examples.displaytag.export.ExportLink;
@@ -29,8 +31,6 @@ import wicket.examples.displaytag.utils.ReportableListObject;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListViewNavigator;
-import wicket.markup.html.list.SortableListViewHeader;
-import wicket.markup.html.list.SortableListViewHeaders;
 
 
 

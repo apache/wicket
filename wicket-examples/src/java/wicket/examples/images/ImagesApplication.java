@@ -24,8 +24,8 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import wicket.examples.WicketExampleApplication;
+import wicket.extensions.markup.html.image.resource.ButtonImageResource;
 import wicket.markup.html.image.resource.BufferedDynamicImageResource;
-import wicket.markup.html.image.resource.ButtonImageResource;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
