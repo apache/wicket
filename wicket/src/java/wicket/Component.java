@@ -737,7 +737,7 @@ public abstract class Component implements Serializable, IConverterSource
 	 * 
 	 * @return True if component and any children are visible
 	 */
-	public final boolean isVisible()
+	public boolean isVisible()
 	{
 		return visible;
 	}
