@@ -79,6 +79,9 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	/** list with tree paths. */
 	private List treePathList;
 
+	/** list view for tree paths. */
+	private final TreePathsListView treePathsListView;
+
 	/**
 	 * Constructor.
 	 * @param componentName The name of this container
@@ -87,7 +90,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	public IndentTree(final String componentName, final TreeModel model)
 	{
 		super(componentName, model);
-		TreePathsListView treePathsListView = createTreePathsListView();
+		treePathsListView = createTreePathsListView();
 		add(treePathsListView);
 		model.addTreeModelListener(this);
 	}
@@ -98,9 +101,20 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 */
 	protected final TreePathsListView createTreePathsListView()
 	{
-		TreeModel model = (TreeModel)getTreeState().getModel();
 		TreeStateCache treeState = getTreeState();
 		this.treePathList = new ArrayList();
+		addNodesToTreePathList();
+		TreePathsListView treePaths = new TreePathsListView(
+				"tree", new Model((Serializable)treePathList));
+		return treePaths;
+	}
+
+	/**
+	 * Add the nodes to the backing tree paths list.
+	 */
+	private final void addNodesToTreePathList()
+	{
+		TreeModel model = (TreeModel)getTreeState().getModel();
 		DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
 		Enumeration e = rootNode.preorderEnumeration();
 		while (e.hasMoreElements())
@@ -109,10 +123,15 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 			TreePath path = new TreePath(treeNode.getPath());
 			treePathList.add(treeNode);
 		}
-		TreePathsListView treePathsListView =
-				new TreePathsListView("tree",
-				new Model((Serializable)treePathList));
-		return treePathsListView;
+	}
+
+	/**
+	 * Invalidates this tree and forces the rows to re-render.
+	 * @see wicket.Component#invalidateModel()
+	 */
+	protected final void invalidateModel()
+	{
+		treePathsListView.invalidateModel();
 	}
 
 	/**
@@ -413,7 +432,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 */
 	public void treeNodesChanged(TreeModelEvent e)
 	{
-		System.err.println(e);
+		// nothing to do hereS
 	}
 
 	/**
@@ -423,14 +442,33 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	{
 		TreePath parentPath = e.getTreePath();
 		TreeStateCache treeState = getTreeState();
-		int row = treeState.getRowForPath(parentPath);
-		Object[] newChildren = e.getChildren();
-		int len = newChildren.length;
+		Object[] newNodes = e.getChildren();
+		int len = newNodes.length;
 		for(int i = 0; i < len; i++)
 		{
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)newChildren[i];
-			treePathList.add(row++, node);
+			DefaultMutableTreeNode newNode = (DefaultMutableTreeNode)newNodes[i];
+			DefaultMutableTreeNode previousNode = newNode.getPreviousSibling();
+			int insertRow;
+			if(previousNode == null)
+			{
+				previousNode = (DefaultMutableTreeNode)newNode.getParent();
+			}
+			if(previousNode != null)
+			{
+				insertRow = treePathList.indexOf(previousNode) + 1;
+				if(insertRow == -1)
+				{
+					throw new IllegalStateException("node " + previousNode
+							+ " not found in backing list");
+				}
+			}
+			else
+			{
+				insertRow = 0;
+			}
+			treePathList.add(insertRow, newNode);
 		}
+		invalidateModel();
 	}
 
 	/**
@@ -438,7 +476,16 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 */
 	public void treeNodesRemoved(TreeModelEvent e)
 	{
-		System.err.println(e);
+		TreePath parentPath = e.getTreePath();
+		TreeStateCache treeState = getTreeState();
+		Object[] deletedNodes = e.getChildren();
+		int len = deletedNodes.length;
+		for(int i = 0; i < len; i++)
+		{
+			DefaultMutableTreeNode deletedNode = (DefaultMutableTreeNode)deletedNodes[i];
+			treePathList.remove(deletedNode);
+		}
+		invalidateModel();
 	}
 
 	/**
@@ -446,6 +493,8 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	 */
 	public void treeStructureChanged(TreeModelEvent e)
 	{
-		System.err.println(e);
+		// just totally rebuild the tree paths structure
+		this.treePathList.clear();
+		addNodesToTreePathList();
 	}
 }
