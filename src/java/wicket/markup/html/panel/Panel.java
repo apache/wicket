@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.10 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.panel;
 
@@ -22,39 +21,49 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 
 /**
- * A panel holds markup and other components.<p>
+ * A panel holds markup and other components.
+ * <p>
  * <p>
  * Whereas HTMLContainer is an inline container like
+ * 
  * <pre>
- * ...
- * &lt;span id="wicket-xxx"&gt;
- *   &lt;span id="wicket-mylabel"&gt;My label&lt;/span&gt;
- *   ....
- * &lt;/span&gt;
- * ...
+ * 
+ *  ...
+ *  &lt;span id=&quot;wicket-xxx&quot;&gt;
+ *    &lt;span id=&quot;wicket-mylabel&quot;&gt;My label&lt;/span&gt;
+ *    ....
+ *  &lt;/span&gt;
+ *  ...
+ *  
  * </pre>
- * a Panel does have its own associated markup file and the container
- * content is taken from that file, like:
+ * 
+ * a Panel does have its own associated markup file and the container content is
+ * taken from that file, like:
+ * 
  * <pre>
- * &lt;span id="wicket-mypanel"/&gt;
- *
- * TestPanel.html
- * &lt;wicket:panel&gt;
- *   &lt;span id="wicket-mylabel"&gt;My label&lt;/span&gt;
- *   ....
- * &lt;/wicket:panel&gt;
+ * 
+ *  &lt;span id=&quot;wicket-mypanel&quot;/&gt;
+ * 
+ *  TestPanel.html
+ *  &lt;wicket:panel&gt;
+ *    &lt;span id=&quot;wicket-mylabel&quot;&gt;My label&lt;/span&gt;
+ *    ....
+ *  &lt;/wicket:panel&gt;
+ *  
  * </pre>
  * 
  * @author Jonathan Locke
  */
 public class Panel extends HtmlContainer
 { // TODO finalize javadoc
-	/** Serial Version ID */
-	private static final long serialVersionUID = -5449444447932560536L;
+    /** Serial Version ID */
+    private static final long serialVersionUID = -5449444447932560536L;
 
-	/**
+    /**
      * Constructor.
-     * @param componentName The name of this container
+     * 
+     * @param componentName
+     *            The name of this container
      */
     public Panel(final String componentName)
     {
@@ -71,8 +80,7 @@ public class Panel extends HtmlContainer
 
         if (!markupStream.atOpenCloseTag())
         {
-            markupStream.throwMarkupException(
-                    "A panel must be referenced by an openclose tag.");
+            markupStream.throwMarkupException("A panel must be referenced by an openclose tag.");
         }
 
         renderTag(markupStream);
