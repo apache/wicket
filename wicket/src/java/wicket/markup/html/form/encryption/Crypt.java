@@ -35,7 +35,7 @@ import wicket.WicketRuntimeException;
  * The whole implementation is based around Sun's security providers and uses
  * the <a
  * href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES
- * </a> method and encrypt and decrypt the data.
+ * </a> method to encrypt and decrypt the data.
  * 
  * @author Juergen Donnerstag
  */
