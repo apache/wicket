@@ -210,15 +210,28 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
 
             if (value != null)
             {
-                options.append("\n<option " + (isSelected(value) ? "selected " : "") + "value=\"");
-                options.append((list instanceof IIdList) ? ((IIdList) list).getIdValue(i) : Integer
-                        .toString(i));
+                final String idValue;
+                final String displayValue;
+                final boolean currentOptionIsSelected;
+                if(list instanceof IIdList)
+                {
+                    IIdList idList = (IIdList)list;
+                    idValue = idList.getIdValue(i);
+                    displayValue = idList.getDisplayValue(i);
+                }
+                else
+                {
+                    idValue = Integer.toString(i);
+                    displayValue = value.toString();
+                }
+                currentOptionIsSelected = isSelected(value);
+                options.append("\n<option ");
+                if(currentOptionIsSelected) options.append("selected ");
+                options.append("value=\"");
+                options.append(idValue);
                 options.append("\">");
-
-                final String label = (list instanceof IIdList) ? ((IIdList) list)
-                        .getDisplayValue(i) : value.toString();
-
-                options.append(getLocalizer().getString(getName() + "." + label, this, label));
+                options.append(getLocalizer().getString(
+                        getName() + "." + displayValue, this, displayValue));
                 options.append("</option>");
             }
             else
@@ -238,6 +251,11 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
         }
     }
 
+    /**
+     * Whether the given value represents the current selection.
+     * @param currentValue the current list value
+     * @return whether the given value represents the current selection
+     */
     protected boolean isSelected(Object currentValue)
     {
         return currentValue.equals(getModelObject());
