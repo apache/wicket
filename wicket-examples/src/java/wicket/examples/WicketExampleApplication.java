@@ -18,6 +18,7 @@
  */
 package wicket.examples;
 
+import wicket.markup.html.form.encryption.NoCrypt;
 import wicket.protocol.http.WebApplication;
 import wicket.util.file.Folder;
 import wicket.util.file.Path;
@@ -33,7 +34,17 @@ public abstract class WicketExampleApplication extends WebApplication
      * Constructor.
      */
     public WicketExampleApplication()
-    {
+    {        
+        // WARNING: DO NOT do this on a real world application unless
+        // you really want your app's passwords all passed around and 
+        // stored in unencrypted browser cookies (BAD IDEA!)!!! 
+        
+        // The NoCrypt class is being used here because not everyone
+        // has the java security classes required by Crypt installed
+        // and we want them to be able to run the examples out of the
+        // box.
+        getSettings().setCryptClass(NoCrypt.class);
+
         try
         {
         	getSettings().setSourcePath(new Path(new Folder("c:\\Proects\\wicket-examples\\src\\java")));

@@ -35,14 +35,6 @@ public final class SignIn2Application extends WicketExampleApplication
     public SignIn2Application()
     {
         getPages().setHomePage(Home.class);
-        
-        // WARNING: DO NOT do this on a real world application!!
-        
-        // The NoCrypt class is being used here because not everyone
-        // has the java security classes required by Crypt installed
-        // and we want them to be able to run the examples out of the
-        // box.
-        getSettings().setCryptClass(NoCrypt.class);
     }
     
     /**
