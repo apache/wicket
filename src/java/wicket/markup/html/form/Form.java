@@ -104,8 +104,13 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 					if (!formComponent.isValid())
 					{
 						// tell component to deal with invalidity
-						formComponent.invalid();
+						formComponent.handleInvalid();
 					}
+                    else
+                    {
+                        // tell component that it is valid now
+                    	formComponent.handleValid();
+                    }
 
 					// Continue until the end
 					return IVisitor.CONTINUE_TRAVERSAL;

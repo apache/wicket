@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.html.form.validation.TypeValidator;
 
 /**
  * A simple text field.
@@ -30,21 +31,68 @@ public class TextField extends AbstractTextComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -2913294206388017417L;
+    
+    /** Model type for conversions */
+    private Class type;
 
-	/**
+    /**
      * @see wicket.Component#Component(String, Serializable)
-	 */
-	public TextField(String name, Serializable object)
-	{
-		super(name, object);
-	}
+     */
+    public TextField(String name, Serializable object)
+    {
+        super(name, object);
+    }
 
-	/**
+    /**
      * @see wicket.Component#Component(String, Serializable, String)
+     */
+    public TextField(String name, Serializable object, String expression)
+    {
+        super(name, object, expression);
+    }
+
+    /**
+     * @param name See Component constructor
+     * @param object See Component constructor
+     * @param type The type to use when updating the model for this text field
+     * @see wicket.Component#Component(String, Serializable)
+     */
+    public TextField(String name, Serializable object, Class type)
+    {
+        super(name, object);
+        this.type = type;
+        add(new TypeValidator(type));
+    }
+
+    /**
+     * @param name See Component constructor
+     * @param object See Component constructor
+     * @param expression See Component constructor
+     * @param type The type to use when updating the model for this text field
+     * @see wicket.Component#Component(String, Serializable, String)
+     */
+    public TextField(String name, Serializable object, String expression, Class type)
+    {
+        super(name, object, expression);
+        this.type = type;
+        add(new TypeValidator(type));
+    }
+    
+    /**
+	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
 	 */
-	public TextField(String name, Serializable object, String expression)
+	public void updateModel()
 	{
-		super(name, object, expression);
+        if (type != null)
+        {
+            // Set model to request string converted to the appropriate type
+        	setModelObject(getConverter().convert(getRequestString(), type));
+        }
+        else
+        {
+            // Update String model
+        	super.updateModel();
+        }
 	}
 
 	/**

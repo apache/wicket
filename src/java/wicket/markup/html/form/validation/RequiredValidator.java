@@ -41,7 +41,7 @@ public class RequiredValidator extends AbstractValidator
 		// Check value
 		if (value == null || value.trim().equals(""))
 		{
-			error(value, component);
+            error(component, value);
 		}
 	}
 

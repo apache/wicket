@@ -95,7 +95,7 @@ public class PatternValidator extends AbstractValidator
 		// Check value against pattern
 		if (!pattern.matcher(value).matches())
 		{
-			error(value, component);
+            error(component, value);
 		}
 	}
 
@@ -113,6 +113,6 @@ public class PatternValidator extends AbstractValidator
 	 */
 	public String toString()
 	{
-		return "[pattern = " + pattern + "]";
+		return "[PatternValidator pattern = " + pattern + "]";
 	}
 }

@@ -55,9 +55,9 @@ public abstract class AbstractValidator implements IValidator
 	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
 	 */
-	public void error(final String input, final FormComponent component)
+	public void error(final FormComponent component, final String input)
 	{
-		error(getResourceKey(component), input, component);
+		error(component, resourceKey(component), input);
 	}
 
 	/**
@@ -70,8 +70,8 @@ public abstract class AbstractValidator implements IValidator
 	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
 	 */
-	public void error(final String resourceKey, final IModel resourceModel,
-			final String input, final FormComponent component)
+	public void error(final FormComponent component, final String resourceKey, final IModel resourceModel,
+			final String input)
 	{
 		// Return formatted error message
 		Localizer localizer = component.getLocalizer();
@@ -89,10 +89,10 @@ public abstract class AbstractValidator implements IValidator
 	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
 	 */
-	public void error(final String resourceKey, final Map map,
-			final String input, final FormComponent component)
+	public void error(final FormComponent component, final String resourceKey, final Map map,
+			final String input)
 	{
-		error(resourceKey, MapModel.valueOf(map), input, component);
+		error(component, resourceKey, MapModel.valueOf(map), input);
 	}
 
 	/**
@@ -113,11 +113,10 @@ public abstract class AbstractValidator implements IValidator
 	 * @param input the input (that caused the error)
 	 * @param component The component where the error occurred
 	 */
-	public void error(final String resourceKey, final String input,
-			final FormComponent component)
+	public void error(final FormComponent component, final String resourceKey, final String input)
 	{
 		final Map resourceModel = messageModel(component, input);
-		error(resourceKey, resourceModel, input, component);
+		error(component, resourceKey, resourceModel, input);
 	}
 
 	/**
@@ -144,7 +143,7 @@ public abstract class AbstractValidator implements IValidator
 	 * @param component the form component
 	 * @return the resource key based on the form component
 	 */
-	protected String getResourceKey(final FormComponent component)
+	protected String resourceKey(final FormComponent component)
 	{
 		// Resource key must be <form-name>.<component-name>.<validator-class>
 		final Component parentForm = component.findParent(Form.class);
