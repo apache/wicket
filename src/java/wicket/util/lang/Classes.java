@@ -23,11 +23,12 @@ import wicket.util.string.StringList;
 import wicket.util.string.Strings;
 
 /**
- * Class utilities
+ * Utilities for dealing with classes and packages.
+ * 
  * @author Jonathan Locke
  */
 public final class Classes
-{ // TODO finalize javadoc
+{
     /**
      * Instantiation not allowed
      */
@@ -46,9 +47,9 @@ public final class Classes
     }
 
     /**
-     * Gets the name of a given class
+     * Gets the name of a given package
      * @param c The class
-     * @return The class name
+     * @return The class' package
      */
     public static String packageName(final Class c)
     {
@@ -56,6 +57,10 @@ public final class Classes
     }
 
     /**
+     * Takes a package and a relative path to a class and returns any class
+     * at that relative path.  For example, if the given package was java.lang
+     * and the relative path was "../util/List", then the java.util.List class
+     * would be returned.
      * @param p The package to start at
      * @param path The relative path to the class
      * @return The class
