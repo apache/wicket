@@ -39,7 +39,7 @@ import wicket.model.Model;
  * 
  * <pre>
  * 
- *       add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *       add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
  *  
  * </pre>
  * 
