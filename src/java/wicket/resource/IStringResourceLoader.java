@@ -68,10 +68,6 @@ public interface IStringResourceLoader
      *            the strings from
      * @return The string resource value or null if the resource could not be
      *         loaded by this loader
-     * @throws InvalidResourceSpecificationException
-     *             If information supplied to the method is insufficient to load
-     *             the resource
      */
-    String loadStringResource(Component component, String key, Locale locale, String style)
-            throws InvalidResourceSpecificationException;
+    String loadStringResource(Component component, String key, Locale locale, String style);
 }

@@ -106,11 +106,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
      *            The (optional) style identifying the resource set to select
      *            the strings from
      * @return The string resource value or null if resource not found
-     * @throws InvalidResourceSpecificationException
-     *             If the component is not associated with a page
      */
     public final String loadStringResource(final Component component, final String key,
-            final Locale locale, final String style) throws InvalidResourceSpecificationException
+            final Locale locale, final String style)
     {
         // Check rules
         if (component != null && component.getPage() != null)
