@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -46,10 +45,8 @@ public final class GuestBook extends WicketExamplePage
 
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
-	 * 
-	 * @param parameters
 	 */
-	public GuestBook(final PageParameters parameters)
+	public GuestBook()
 	{
 		// Add comment form
 		add(new CommentForm("commentForm"));

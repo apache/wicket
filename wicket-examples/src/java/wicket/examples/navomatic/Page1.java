@@ -18,21 +18,20 @@
  */
 package wicket.examples.navomatic;
 
-import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 
 
 /**
- * Trivial bookmarkable page.
+ * Trivial page.
+ * 
  * @author Jonathan Locke
  */
 public class Page1 extends WicketExamplePage
 {
     /**
      * Constructor
-     * @param parameters
      */
-    public Page1(PageParameters parameters)
+    public Page1()
     {
         add(new NavomaticBorder("navomaticBorder"));
     }

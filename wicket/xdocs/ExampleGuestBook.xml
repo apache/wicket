@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>Wicket Example: GuestBook</title>
+		<title>Wicket QuickTour: GuestBook</title>
 	</properties>
 
 	<meta
@@ -9,57 +9,180 @@
 		content="wicket, example, web, j2ee, java" />
 
 	<body>
-		<section name="GuestBook Example">
+		<section name="GuestBook">
 			<p>
-				A quick teaser here that shows what Tables look like in Wicket. The GuestBook
-				example in the Wicket SDK has a form that allows users to enter comments. It draws
-				its list of comments in a table and shows how easy it is to do that. What's more,
-				tables automatically support structural modifications such as move up/down links and
-				remove links. In doing this, the dreaded "back button" problem is automatically and
-				transparently dealt with by Wicket.
+				The GuestBook application allows users to enter comments that appear on a page
+				like a weblog.  Drawing the list of comments is very easy with the Wicket
+				<code>ListView</code> component.  This example also gives an impression of
+				what form handling is like.
 			</p>
 			<img src="images/image005.png" alt="Tables" />
-			<subsection name="GuestBook.java">
-				<source><![CDATA[public class GuestBook extends WebPage
+			<p>
+			The <code>Comment</code> POJO model is very straightforward:
+			</p>
+			<subsection name="Comment.java">
+				<source><![CDATA[
+public class Comment implements Serializable
 {
-    public GuestBook(final PageParameters parameters)
-    {
-        // Add comment form
-        add(new CommentForm("commentForm"));
- 
-        // Add table of existing comments
-        add(new Table("comments", commentList)
-        {
-            public void populateCell(final Cell cell)
-            {
-                final Comment comment = (Comment)cell.getModel();
-                cell.add(new Label("date", comment.getDate()));
-                cell.add(new MultiLineLabel("text", comment.getText()));
-            }  
-        });
-    }
-    /* ... */
-}]]></source>
+	private String text;
+	private Date date = new Date();
+
+	public Comment()
+	{
+	}
+
+	public Comment(final Comment comment)
+	{
+		this.text = comment.text;
+		this.date = comment.date;
+	}
+
+	public String getText()
+	{
+		return text;
+	}
+
+	public void setText(String text)
+	{
+		this.text = text;
+	}
+
+	public Date getDate()
+	{
+		return date;
+	}
+
+	public void setDate(Date date)
+	{
+		this.date = date;
+	}
+}
+]]></source>
+			<p>
+			The <code>GuestBook</code> constructor adds a <code>CommentForm</code> and
+			a <code>ListView</code> of the comments.  Notice how the model is passed 
+			in as the second argument to the <code>ListView</code> constructor.  Then
+			as the view renders, the <code>populateItem</code> method is called passing
+			in a <code>ListItem</code> container for the current row in the list.  The
+			implementation below obtains the <code>Comment</code> POJO from the list
+			item and adds label components for the date and text of the <code>Comment</code>.
+			This is all accomplished in just a few lines of code.
+			</p>
+
+			</subsection>
+			<subsection name="GuestBook.java">
+				<source><![CDATA[
+package wicket.examples.guestbook;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import wicket.examples.WicketExamplePage;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.basic.MultiLineLabel;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextArea;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
+
+public final class GuestBook extends WicketExamplePage
+{
+	private static final List commentList = new ArrayList();
+	private final ListView commentListView;
+
+	public GuestBook()
+	{
+		add(new CommentForm("commentForm"));
+		add(commentListView = new ListView("comments", commentList)
+		{
+			public void populateItem(final ListItem listItem)
+			{
+				final Comment comment = (Comment)listItem.getModelObject();
+				listItem.add(new Label("date", comment.getDate()));
+				listItem.add(new MultiLineLabel("text", comment.getText()));
+			}
+		});
+	}
+
+	public final class CommentForm extends Form
+	{
+		private final Comment comment = new Comment();
+
+		public CommentForm(final String componentName)
+		{
+			super(componentName);
+			add(new TextArea("text", comment, "text"));
+		}
+
+		public final void onSubmit()
+		{
+			final Comment newComment = new Comment(comment);
+			newComment.setDate(new Date());
+			synchronized (commentListView.getModelLock())
+			{
+				commentList.add(0, newComment);
+			}
+			commentListView.invalidateModel();
+			comment.setText("");
+		}
+	}
+}
+]]></source>
+	<p>
+	When the <code>CommentForm</code> is submitted, the <code>onSubmit()</code> 
+	method is called.  Notice that nothing gets the value of the <code>TextArea</code>
+	that was added in the <code>CommentForm</code> constructor.  This is because the
+	comment is the model and the third parameter to the <code>TextArea</code> constructor
+	specified the property of the model to update.  So all <code>onSubmit()</code>
+	has to do is create a new comment from the model that was updated and add it to the
+	comment list.  When the page redraws, the new list will be rendered.  
+	</p><p>
+	The synchronized
+	block is present to ensure that the shared static model used by <code>commentListView</code>
+	(<code>commentList</code>) is only updated by one thread at a time.  Remember, this is
+	a multi-user application with a shared model!  
+	</p><p>
+	Finally, you may notice the call to 
+	commentListView.invalidateModel().  This informs the list view that its model has
+	been modified.  In more advanced usage scenarios, this would allow Wicket to expire
+	stale pages accessed with the browser's back button.
+	</p>
+	<p>
+	In the HTML below, notice the way that the <code>TextArea</code> component is being nested
+	inside the <code>CommentForm</code>.  Wicket is able to keep everything straight because
+	the Java <code>Component.add()</code> calls have to result in the same nesting structure
+	as the HTML.  Finally, notice the <![CDATA[<wicket:remove>]]> block.  This is simply markup
+	that is there for previewing purposes only.  When the page renders, it is stripped out.
+	</p>
 			</subsection>
 			<subsection name="GuestBook.html">
-				<source><![CDATA[<html>
+				<source><![CDATA[
+<html>
 <body>
-  <form componentName = "commentForm">
+  <form id = "wicket-commentForm">
     Add your comment here:
     <p>
-    <textarea componentName = "text">This is a comment</textarea>
+    <textarea id = "wicket-text">This is a comment</textarea>
     <p>
     <input type = "submit" value = "Submit"/>
   </form>
   <p>
-  <span componentName = "comments">
-      <p>
-          <span componentName = "date">1/1/2004</span><br>
-          <span componentName = "text">Comment text goes here.</span>
-      </p>
+  <span id = "wicket-comments">
+    <p>
+	    <span id = "wicket-date">1/1/2004</span><br>
+	    <span id = "wicket-text">Comment text goes here.</span>
+	</p>
   </span>
+  <wicket:remove>
+    <p>
+	    1/2/2004<br/>
+	    More comment text here.
+    </p>
+  </wicket:remove>
 </body>
-</html>]]></source>
+</html>				
+]]></source>
 			</subsection>
 		</section>
 	</body>

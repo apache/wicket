@@ -18,11 +18,11 @@
  */
 package wicket.examples.navomatic;
 
-import wicket.ApplicationSettings;
 import wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for hello world example.
+ * Application class.
+ * 
  * @author Jonathan Locke
  */
 public class NavomaticApplication extends WicketExampleApplication
@@ -33,6 +33,5 @@ public class NavomaticApplication extends WicketExampleApplication
     public NavomaticApplication()
     {
         getPages().setHomePage(Page1.class);
-        getSettings().setUnexpectedExceptionDisplay(ApplicationSettings.SHOW_NO_EXCEPTION_PAGE);
     }
 }

@@ -34,8 +34,8 @@ public class NavomaticBorder extends Border
     public NavomaticBorder(final String componentName)
     {
         super(componentName);
-        add(new BoxBorder("boxBorder"));
-        add(new BoxBorder("boxBorder2"));
+        add(new BoxBorder("navigationBorder"));
+        add(new BoxBorder("bodyBorder"));
     }
 }
 
