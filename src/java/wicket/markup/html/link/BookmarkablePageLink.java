@@ -146,7 +146,7 @@ public final class BookmarkablePageLink extends Link
 	 */
 	protected String getURL()
 	{
-		// add href using url to the dispatcher
+		// gets url to the dispatcher
 		return getRequestCycle().urlFor(pageClass, parameters);
 	}
 }
