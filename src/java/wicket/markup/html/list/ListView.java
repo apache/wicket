@@ -258,10 +258,10 @@ public abstract class ListView extends WebMarkupContainer
 				int lastIndex = firstIndex + i;
 
 				// Get the name of the component for listItem i
-				final String componentId = Integer.toString(lastIndex);
+				final String id = Integer.toString(lastIndex);
 
 				// If this component does not already exist, populate it
-				ListItem listItem = (ListItem)get(componentId);
+				ListItem listItem = (ListItem)get(id);
 				if (listItem == null)
 				{
 					// Create listItem for index i of the list
@@ -272,11 +272,15 @@ public abstract class ListView extends WebMarkupContainer
 					add(listItem);
 				}
 
-				// Rewind to start of markup for kids
-				markupStream.setCurrentIndex(markupStart);
-
-				// Render cell
-				renderItem(listItem, i >= (size - 1));
+				// Only render list item if visible
+				if (listItem.isVisible())
+				{
+					// Rewind to start of markup for kids
+					markupStream.setCurrentIndex(markupStart);
+	
+					// Render cell
+					renderItem(listItem, i >= (size - 1));
+				}
 			}
 		}
 		else
