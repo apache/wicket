@@ -7,311 +7,63 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
-      <action type="update" dev="Jonathan Locke" issue="">
-        Enhanced WicketComponentTree and added this diagnostic to the bottom of the 
-        ExceptionErrorPage.
+    <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="update" dev="Jonathan Locke" issue="">Enhanced WicketComponentTree and added this diagnostic to the bottom of the ExceptionErrorPage.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Reorganized components and examples for final 1.0 structure. This included moving sortable list view and sign in panel to wicket-contrib and SmartLinkLabel classes to wicket-extensions. Also moved ButtonImageResource to wicket-extensions. In the process, fixed a bug in localized images where they would not change when the session locale was changed. Added an early sketch of stylesheet stuff to sandbox. Trimmed down examples index to just the examples most relevant to wicket core and extensions.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1123536">Added
+        <code>emptyAllowed</code>to the
+        <code>AbstractChoice</code>class allowing the select components to set the model value to
+        <code>null</code>.
       </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Reorganized components and examples for final 1.0 structure.  This included moving
-		sortable list view and sign in panel to wicket-contrib and SmartLinkLabel classes to 
-		wicket-extensions.  Also moved ButtonImageResource to wicket-extensions.  In the 
-		process, fixed a bug in localized images where they would not change when the session 
-		locale was changed.  Added an early sketch of stylesheet stuff to sandbox.  Trimmed
-		down examples index to just the examples most relevant to wicket core and extensions.
-	  </action>
-      <action type="fix" dev="Martijn Dashorst" issue="1123536">
-        Added <code>emptyAllowed</code> to the <code>AbstractChoice</code> class allowing
-        the select components to set the model value to <code>null</code>.
-      </action>
-      <action type="fix" dev="Eelco Hillenius" issue="1120137">
-    	Changed selected attribute to selected = "selected" to be XHTML compliant.  
-    	Added ComponentTag.syntheticCloseTagString() method which returns a close 
-    	tag for the given component tag.  Changed Juergen's fix to Panel use this method 
-    	and then added another call to the same method to renderClosingComponentTag, 
-    	which had been ignoring generation of close tags on /all/ openclose tags.  
-    	This problem was actually a bug in HelloWorld, if you changed the &lt;span&gt; tag 
-    	to a &lt;span/&gt; tag!
-      </action>
-      <action type="update" dev="Eelco Hillenius" issue="">
-		Moved tree to contrib until packaged CSS is supported.
-	  </action>
-      <action type="update" dev="Eelco Hillenius" issue="">
-		Tree now images instead of image names and attribute modifiers. Also, some
-		default images that work well with a regular tree are pacakged and used
-		by default. 
-	  </action>
-      <action type="update" dev="Eelco Hillenius" issue="">
-		The tree component is now greatly simplified. Users are not required to
-		use unique user objects, but instead the tree nodes are used. Also, as
-		a result of a different rendering strategy, normal links can be used.
-		The IndentTree is now the default tree. Removed the nested tree as that
-		tree had several usability issues.
-	  </action>
-      <action type="fix" dev="Eelco Hillenius" issue="">
-		Fixed JavaScript issue that resulted in problems with Firefox.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Major refactor of resource handling to separate resource referencing components
-		from the actual resources themselves.  Added new Resource base class in wicket
-		top level package.  WebResource extends this and AbstractImage extends that.
-		the Image subclass of AbstractImage is the only component for now.  It can be
-		either attached to an IMG tag with a src attribute or it can be given a 
-		DynamicImageResource and it will draw that.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Changed methods taking Resource as a parameter to IResource for increased generality.
-		Then added IModifiable interface to IResource to ensure all resources have a last
-		modified time.  This will be key in getting browser caching to work correctly.
-		Finally, created AbstractResource and subclasses FileResource and UrlResource and
-		moved the static Resource.locate methods into ResourceLocator.  
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Made Link.onLinkClicked() final and added an onClick() method that it calls.  This
-		avoids exposing the interface method to subclassing directly.  Did a similar thing 
-		to Form by making onFormSubmitted() final and exposing onValidate() as the overridable
-		method.  Also did a little early refactoring of resources that should affect nobody.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1121946">
-		The getResource() method in Image now uses the new findParentWithAssociatedMarkup() 
-		method to find the nearest parent with associated markup, which it then uses as the 
-		base class for image loading.  This should always be right for Images since they are 
-		referenced from markup and findParentWithAssociatedMarkup() should always find that 
-		markup.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1121959">
-      	Added ResourceComponent base class for components that provide resources by
-      	implementing IResourceListener.  There doesn't appear to be an easy way to 
-      	generalize this to Pages since they inherit from Component and since their
-      	behavior is quite different.  Also changed IResource.getExtension() to 
-      	getContentType() and changed the implementation of this interface in Resource
-      	to use the JDK's FileNameMap class to map from filenames to mime types.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Renamed handleX() methods and other events to conform to the onX() 
-		pattern.
-	  </action>
-      <action type="add" dev="Jonathan Locke" issue="">
-      	Added ButtonImage DynamicImage subclass and added to images example.
-      </action>
-      <action type="add" dev="Jonathan Locke" issue="1119620">
-      	Added Button class and Form buttons support.  When a class has one button, it
-      	works pretty much as before.  But when it has two or more buttons, the onSubmit()
-      	handler is called on the button which submitted the Form.
-      </action>
-      <action type="add" dev="Jonathan Locke" issue="">
-		Added getSharing() method to Component with values UNSHARED, APPLICATION_SHARED 
-		and SESSION_SHARED (see javadoc for details).  Changed the AbstractImage class 
-		so that it allows a component user to set the sharing mode for an image to one 
-		of these values.  When an image is SESSION_SHARED, it will have a stable URL 
-		within a given session.  When an image is APPLICATION_SHARED, it will have a 
-		stable URL across all sessions in an application.  So, to implement a really 
-		efficient dynamic image, simply store the image component in a static variable 
-		and set its sharing to APPLICATION_SHARED.  Now you will have one object that 
-		is shared everywhere that has a stable URL.  None of this requires access to 
-		temporary storage.  One catch that might come up is that shared components will 
-		have a URL like /applicationName/a0 for application shared components or 
-		/applicationName/s0 for session shared components.  In order for an application 
-		to handle such URLs it must have a servlet url mapping pattern that includes /* 
-		on the end, such as /images/*.  Also updated image example to demonstrate all this.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Created AbstractImage base class and simplified code in Image.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1119725">
-		Changed DefaultPageFactory so that it always tries default constructor if 
-		PageParameters constructor cannot be found and one exists.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Restructed image component hierarchy to deal with clustering issues that
-		Chris brought up.  Changed example to demonstrate both BufferedDynamicImages
-		(which will have a potentially large size when replicated across a cluster)
-		and DynamicImages which draw themselves when they are requested.  Caching
-		issues are not addressed by this change, but I will be working on that soon.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1119560">
-      	Restructured class hierarchy for converters a little so that all integral
-      	converters such as IntegerConverter extend AbstractIntegerConverter. 
-      	Then made getNumberFormat() in AbstractNumberConverter abstract and 
-      	implemented it in AbstractIntegerConverter by creating an integer NumberFormat
-      	instance and then turning grouping off and integer-only on.  I like this fix
-      	because it really respects i18n, which is sometimes very complex stuff. 
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Changed HtmlPage to WebPage, HtmlContainer to WebContainer and HtmlComponent
-      	to WebComponent for friendliness and consistency with http protocol package.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Added constructors to TextField that take a class as the last argument.
-		TextFields constructed with a type like this are considered typed and 
-		will automatically have a type validator attached to them.  In addition, 
-		even if the field is not attached to a PropertyModel, conversions will 
-		be performed to/from the given type.  Also, changed invalid to 
-		handleInvalid() and added handleValid().  This allows updateModel() to 
-		simply focus on doing that.  Finally, worked on forminput to ensure 
-		validation works completely.  Renamed the horribly named 
-		DecimalValidator to IntegerValidator and used all of this to simplify 
-		the forminput example.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Changed inheritance hierarchy of text form components and added an abstract base
-      	class AbstractTextComponent.  Now PasswordTextField inherits from TextField and 
-      	TextField inherits from AbstractTextComponent.  TextArea also inherits from 
-      	AbstractTextComponent.  This restructuing got rid of some duplication of methods 
-      	and fields among the text components.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1118466">
-      	Reworked conversion code to deal with the fact that the java.text Format 
-      	parsing parses /leading/ values and not complete values.  In other words,
-      	it sees 10foo and parses an Integer without throwing an Exception.  The
-      	resulting code is smaller, more efficient (since it doesn't rely on exceptions
-      	to signal bad parses) and better structured.  Also changed the ConversionException
-      	class so that it stores the Format used for the conversion instead of just
-      	a String 'pattern'.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1118784">
-    	Fixed problem with autolink component resolver where it would continually 
-    	resolve the same links on every render.  The solution is to set the component's
-    	name when the auto-id is generated so that it can be found in the container
-    	the next time (so the resolver doesn't get called again).  Also moved the
-    	AutolinkComponentResolver class into markup.html since it is html specific.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1118413">
-    	The Component.getModelLock() method was changed to respond more appropriately
-    	when a real model doesn't exist.  The code now returns model (without attaching
-    	it) if model is non-null and new Object() as a dummy lock if model is null.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="">
-    	Fix for unreported synchronization bug in ModificationWatcher where a 
-    	ConcurrentModificationException can be thrown if the entries to be watched
-    	are modified while polling is going on (which takes a while).  The solution
-    	was to make a defensive copy rather than holding a lock since that might
-    	introduce liveness issues since iterating the list of files and checking
-    	all their timestamps might take a while.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Reworked signin panel and signin examples, including the library example so 
-		that they work with the new session factory model.  Also added remember me
-		functionality to the signin panel and moved localizations of the signin panel
-		into the core.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1116800">
-		Added Page.reset() method that is called when runtime exceptions prevent full 
-		rendering of pages.  I highly suspect this is behind bug 1116800 where Eelco 
-		reported that "Exception when rendering leaves markup in invalid state".
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1116805">
-		Added BufferedHttpResponse class, along with ApplicationSettings.setBufferResponse
-		to enable response buffering.  Response buffering is on by default. 
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Added ISessionFactory interface for creating sessions and added an abstract 
-		method getSessionFactory() to Application so applications can implement 
-		their own session factories.  Since the downcasting of getProperty() is 
-		obviated by this, removed session properties.  Will add a FAQ entry on how 
-		to set values on a session using the session factory approach since this 
-		will come up /a lot/.
-      </action>
-      <action type="remove" dev="Jonathan Locke" issue="">
-		Removed IModel constructors throughout the project and added instanceof 
-		logic to Component to wrap model objects unless they are already IModel 
-		implementors.  Updated documentation to reflect this.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="">
-      	Implemented getModelLock() method on Component so that client code can 
-      	synchronize updates to the model for a component.  Updated core code
-      	so that it synchronizes on the returned lock object (which is currently
-      	the model's object as returned by IModel.getObject()) during rendering
-      	and form model updating.  This lack of synchronization was a bug in the
-      	guestbook application which never showed symptoms simply because it had 
-      	never been used by many users at once.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Reworked examples navigation.  Worked on code for GuestBook and GuestBook2.
-      	Provided base classes for future examples to extend (WicketExampleApplication,
-      	WicketExamplePage).
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Reworked feedback messages code significantly including the FeedbackMessages 
-      	container class.  Removed all the thread-local code and put feedback messages into
-      	Page instead.  Added info(), debug(), warning(), error() and fatal() convenience 
-      	methods to Component which report messages via the Page's FeedbackMessages container
-      	object.      	
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Wrote a new persistence abstraction that is more abstract and free of Cookieness
-      	(IValuePersister).  Implemented this interface using browser cookies in the new
-      	class CookieValuePersister.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Got rid of ValidationErrorDecorator and other code by doing a major refactor
-      	of the form validation package.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Split up ApplicationSettings and ApplicationPages and moved many of the non-settings
-      	getters to Application.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="">
-      	Fixed guestbook test and other problems with example tests.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="">
-      	Made examples work from http://localhost:8080 via redirecting.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1113613">
-      	Created FAQ page and added an explanation of why so many classes and methods are final
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1091897">
-      	Added comments and refactored renderBody to the more illustrative name 
-      	renderComponentTagBody.  Also changed names throughout the project to 
-      	match this pattern.  Simplified renderComponentTag() by folding in
-		stripComponentName() logic and removed the overload of that method which 
-		advances the markup stream in addition to rendering the tag.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1092016">
-		Closed request to make RawMarkup class public since we do not want to
-		expose this implementation detail.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1091288">
-		Changed parser to allow single quotes as well as double quotes around 
-		attribute values in XML tags.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1106563">
-		Fixed bug where popups expire due to removeNewerThan call in HttpRequestCycle.
-		Also removed the method itself since it is not used for any other purpose.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1100078">
-		Closed RFE to allow custom object properties on ApplicationSettings since
-		ApplicationSettings is really only for Wicket configuration.
-
-		To store "global" objects for your application, just put
-		regular old Java properties on your Application subclass. 
-		If I'm somehow missing your point, please reopen the bug and
-		explain why subclassing Application won't provide the
-		functionality you need.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1032465">
-		Closed old RFE for license aggregation since we already have the licenses
-		available in the licenses folder in the core.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Major reworking of converter code.  Folded localized converters into a 
-		single set of converters, removing casts to ILocalizable in the process.  
-		Implemented converters for all Java primitive types plus Date, Timestamp 
-		and String.  Added javadoc documentation for converter API.  Refactored 
-		Component, TypeValidator and Session code to use the new converter code 
-		and to enable customization through overrides of getConverter(). Wrote
-		new tests for converters.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Refactored ComponentTagAttributeModifier and changed name to AttributeModifier.
-		Made more of this class private and removed inappropriate tests of private API.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-        Renamed IIdList -> IDetachableChoiceList and IdListAdaptor -> DetachableChoiceList 
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-        Renamed IPageLink.getPageClass() -> IPageLink.getPageIdentity()
-      </action>
+      <action type="fix" dev="Eelco Hillenius" issue="1120137">Changed selected attribute to selected = "selected" to be XHTML compliant. Added ComponentTag.syntheticCloseTagString() method which returns a close tag for the given component tag. Changed Juergen's fix to Panel use this method and then added another call to the same method to renderClosingComponentTag, which had been ignoring generation of close tags on /all/ openclose tags. This problem was actually a bug in HelloWorld, if you changed the &lt;span&gt; tag to a &lt;span/&gt; tag!</action>
+      <action type="update" dev="Eelco Hillenius" issue="">Moved tree to contrib until packaged CSS is supported.</action>
+      <action type="update" dev="Eelco Hillenius" issue="">Tree now images instead of image names and attribute modifiers. Also, some default images that work well with a regular tree are pacakged and used by default.</action>
+      <action type="update" dev="Eelco Hillenius" issue="">The tree component is now greatly simplified. Users are not required to use unique user objects, but instead the tree nodes are used. Also, as a result of a different rendering strategy, normal links can be used. The IndentTree is now the default tree. Removed the nested tree as that tree had several usability issues.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="">Fixed JavaScript issue that resulted in problems with Firefox.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Major refactor of resource handling to separate resource referencing components from the actual resources themselves. Added new Resource base class in wicket top level package. WebResource extends this and AbstractImage extends that. the Image subclass of AbstractImage is the only component for now. It can be either attached to an IMG tag with a src attribute or it can be given a DynamicImageResource and it will draw that.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed methods taking Resource as a parameter to IResource for increased generality. Then added IModifiable interface to IResource to ensure all resources have a last modified time. This will be key in getting browser caching to work correctly. Finally, created AbstractResource and subclasses FileResource and UrlResource and moved the static Resource.locate methods into ResourceLocator.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Made Link.onLinkClicked() final and added an onClick() method that it calls. This avoids exposing the interface method to subclassing directly. Did a similar thing to Form by making onFormSubmitted() final and exposing onValidate() as the overridable method. Also did a little early refactoring of resources that should affect nobody.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1121946">The getResource() method in Image now uses the new findParentWithAssociatedMarkup() method to find the nearest parent with associated markup, which it then uses as the base class for image loading. This should always be right for Images since they are referenced from markup and findParentWithAssociatedMarkup() should always find that markup.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1121959">Added ResourceComponent base class for components that provide resources by implementing IResourceListener. There doesn't appear to be an easy way to generalize this to Pages since they inherit from Component and since their behavior is quite different. Also changed IResource.getExtension() to getContentType() and changed the implementation of this interface in Resource to use the JDK's FileNameMap class to map from filenames to mime types.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Renamed handleX() methods and other events to conform to the onX() pattern.</action>
+      <action type="add" dev="Jonathan Locke" issue="">Added ButtonImage DynamicImage subclass and added to images example.</action>
+      <action type="add" dev="Jonathan Locke" issue="1119620">Added Button class and Form buttons support. When a class has one button, it works pretty much as before. But when it has two or more buttons, the onSubmit() handler is called on the button which submitted the Form.</action>
+      <action type="add" dev="Jonathan Locke" issue="">Added getSharing() method to Component with values UNSHARED, APPLICATION_SHARED and SESSION_SHARED (see javadoc for details). Changed the AbstractImage class so that it allows a component user to set the sharing mode for an image to one of these values. When an image is SESSION_SHARED, it will have a stable URL within a given session. When an image is APPLICATION_SHARED, it will have a stable URL across all sessions in an application. So, to implement a really efficient dynamic image, simply store the image component in a static variable and set its sharing to APPLICATION_SHARED. Now you will have one object that is shared everywhere that has a stable URL. None of this requires access to temporary storage. One catch that might come up is that shared components will have a URL like /applicationName/a0 for application shared components or /applicationName/s0 for session shared components. In order for an application to handle such URLs it must have a servlet url mapping pattern that includes /* on the end, such as /images/*. Also updated image example to demonstrate all this.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Created AbstractImage base class and simplified code in Image.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1119725">Changed DefaultPageFactory so that it always tries default constructor if PageParameters constructor cannot be found and one exists.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Restructed image component hierarchy to deal with clustering issues that Chris brought up. Changed example to demonstrate both BufferedDynamicImages (which will have a potentially large size when replicated across a cluster) and DynamicImages which draw themselves when they are requested. Caching issues are not addressed by this change, but I will be working on that soon.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1119560">Restructured class hierarchy for converters a little so that all integral converters such as IntegerConverter extend AbstractIntegerConverter. Then made getNumberFormat() in AbstractNumberConverter abstract and implemented it in AbstractIntegerConverter by creating an integer NumberFormat instance and then turning grouping off and integer-only on. I like this fix because it really respects i18n, which is sometimes very complex stuff.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed HtmlPage to WebPage, HtmlContainer to WebContainer and HtmlComponent to WebComponent for friendliness and consistency with http protocol package.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added constructors to TextField that take a class as the last argument. TextFields constructed with a type like this are considered typed and will automatically have a type validator attached to them. In addition, even if the field is not attached to a PropertyModel, conversions will be performed to/from the given type. Also, changed invalid to handleInvalid() and added handleValid(). This allows updateModel() to simply focus on doing that. Finally, worked on forminput to ensure validation works completely. Renamed the horribly named DecimalValidator to IntegerValidator and used all of this to simplify the forminput example.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed inheritance hierarchy of text form components and added an abstract base class AbstractTextComponent. Now PasswordTextField inherits from TextField and TextField inherits from AbstractTextComponent. TextArea also inherits from AbstractTextComponent. This restructuing got rid of some duplication of methods and fields among the text components.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1118466">Reworked conversion code to deal with the fact that the java.text Format parsing parses /leading/ values and not complete values. In other words, it sees 10foo and parses an Integer without throwing an Exception. The resulting code is smaller, more efficient (since it doesn't rely on exceptions to signal bad parses) and better structured. Also changed the ConversionException class so that it stores the Format used for the conversion instead of just a String 'pattern'.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1118784">Fixed problem with autolink component resolver where it would continually resolve the same links on every render. The solution is to set the component's name when the auto-id is generated so that it can be found in the container the next time (so the resolver doesn't get called again). Also moved the AutolinkComponentResolver class into markup.html since it is html specific.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1118413">The Component.getModelLock() method was changed to respond more appropriately when a real model doesn't exist. The code now returns model (without attaching it) if model is non-null and new Object() as a dummy lock if model is null.</action>
+      <action type="fix" dev="Jonathan Locke" issue="">Fix for unreported synchronization bug in ModificationWatcher where a ConcurrentModificationException can be thrown if the entries to be watched are modified while polling is going on (which takes a while). The solution was to make a defensive copy rather than holding a lock since that might introduce liveness issues since iterating the list of files and checking all their timestamps might take a while.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Reworked signin panel and signin examples, including the library example so that they work with the new session factory model. Also added remember me functionality to the signin panel and moved localizations of the signin panel into the core.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1116800">Added Page.reset() method that is called when runtime exceptions prevent full rendering of pages. I highly suspect this is behind bug 1116800 where Eelco reported that "Exception when rendering leaves markup in invalid state".</action>
+      <action type="fix" dev="Jonathan Locke" issue="1116805">Added BufferedHttpResponse class, along with ApplicationSettings.setBufferResponse to enable response buffering. Response buffering is on by default.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added ISessionFactory interface for creating sessions and added an abstract method getSessionFactory() to Application so applications can implement their own session factories. Since the downcasting of getProperty() is obviated by this, removed session properties. Will add a FAQ entry on how to set values on a session using the session factory approach since this will come up /a lot/.</action>
+      <action type="remove" dev="Jonathan Locke" issue="">Removed IModel constructors throughout the project and added instanceof logic to Component to wrap model objects unless they are already IModel implementors. Updated documentation to reflect this.</action>
+      <action type="fix" dev="Jonathan Locke" issue="">Implemented getModelLock() method on Component so that client code can synchronize updates to the model for a component. Updated core code so that it synchronizes on the returned lock object (which is currently the model's object as returned by IModel.getObject()) during rendering and form model updating. This lack of synchronization was a bug in the guestbook application which never showed symptoms simply because it had never been used by many users at once.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Reworked examples navigation. Worked on code for GuestBook and GuestBook2. Provided base classes for future examples to extend (WicketExampleApplication, WicketExamplePage).</action>
+      <action type="update" dev="Jonathan Locke" issue="">Reworked feedback messages code significantly including the FeedbackMessages container class. Removed all the thread-local code and put feedback messages into Page instead. Added info(), debug(), warning(), error() and fatal() convenience methods to Component which report messages via the Page's FeedbackMessages container object.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Wrote a new persistence abstraction that is more abstract and free of Cookieness (IValuePersister). Implemented this interface using browser cookies in the new class CookieValuePersister.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Got rid of ValidationErrorDecorator and other code by doing a major refactor of the form validation package.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Split up ApplicationSettings and ApplicationPages and moved many of the non-settings getters to Application.</action>
+      <action type="fix" dev="Jonathan Locke" issue="">Fixed guestbook test and other problems with example tests.</action>
+      <action type="fix" dev="Jonathan Locke" issue="">Made examples work from http://localhost:8080 via redirecting.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1113613">Created FAQ page and added an explanation of why so many classes and methods are final</action>
+      <action type="fix" dev="Jonathan Locke" issue="1091897">Added comments and refactored renderBody to the more illustrative name renderComponentTagBody. Also changed names throughout the project to match this pattern. Simplified renderComponentTag() by folding in stripComponentName() logic and removed the overload of that method which advances the markup stream in addition to rendering the tag.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1092016">Closed request to make RawMarkup class public since we do not want to expose this implementation detail.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1091288">Changed parser to allow single quotes as well as double quotes around attribute values in XML tags.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1106563">Fixed bug where popups expire due to removeNewerThan call in HttpRequestCycle. Also removed the method itself since it is not used for any other purpose.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1100078">Closed RFE to allow custom object properties on ApplicationSettings since ApplicationSettings is really only for Wicket configuration. To store "global" objects for your application, just put regular old Java properties on your Application subclass. If I'm somehow missing your point, please reopen the bug and explain why subclassing Application won't provide the functionality you need.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1032465">Closed old RFE for license aggregation since we already have the licenses available in the licenses folder in the core.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Major reworking of converter code. Folded localized converters into a single set of converters, removing casts to ILocalizable in the process. Implemented converters for all Java primitive types plus Date, Timestamp and String. Added javadoc documentation for converter API. Refactored Component, TypeValidator and Session code to use the new converter code and to enable customization through overrides of getConverter(). Wrote new tests for converters.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Refactored ComponentTagAttributeModifier and changed name to AttributeModifier. Made more of this class private and removed inappropriate tests of private API.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Renamed IIdList -&gt; IDetachableChoiceList and IdListAdaptor -&gt; DetachableChoiceList</action>
+      <action type="update" dev="Jonathan Locke" issue="">Renamed IPageLink.getPageClass() -&gt; IPageLink.getPageIdentity()</action>
     </release>
     <release version="0.9.17-beta" date="2005-01-26" description="Major refactorings">
       <action type="update" dev="Martijn Dashorst" issue="1107845">Moved wicket-examples-hangman into the wicket-examples project.</action>
