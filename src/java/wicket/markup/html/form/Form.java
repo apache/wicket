@@ -230,7 +230,8 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * <p>
 	 * Retrieves FormComponent values related to the page using the persister
 	 * and assign the values to the FormComponent. Thus initializing them.
 	 */

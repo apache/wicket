@@ -190,7 +190,7 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
-	 * 
+	 * <p>
 	 * @see wicket.markup.parser.XmlTag#getType()
 	 * @return the tag type (OPEN, CLOSE or OPEN_CLOSE).
 	 */

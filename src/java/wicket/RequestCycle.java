@@ -30,11 +30,12 @@ import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
 
 /**
- * Represents the request cycle, including the applicable application, page,
- * request, response and session.
- * <p>
+ * 
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
  * INTENDED TO BE SUBCLASSED BY FRAMEWORK CLIENTS.
+ * <p>
+ * Represents the request cycle, including the applicable application, page,
+ * request, response and session.
  * <p>
  * Convenient container for an application, session, request and response object
  * for a page request cycle. Each of these properties can be retrieved with the
@@ -209,10 +210,11 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * <p>
 	 * Adds an interface to the map of interfaces that can be invoked by
 	 * outsiders. The interface must have a single method with the signature
-	 * methodName(RequestCycle). NOTE: THIS METHOD IS NOT INTENDED FOR USE BY
-	 * FRAMEWORK CLIENTS.
+	 * methodName(RequestCycle). 
 	 *
 	 * @param i
 	 *            The interface class, which must extend IRequestListener.
@@ -407,8 +409,9 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Renders response for request. NOTE: THIS METHOD IS INTENDED FOR INTERNAL
-	 * USE ONLY AND MAY NOT BE SUPPORTED IN THE FUTURE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * <p>
+	 * Renders response for request.
 	 *
 	 * @throws ServletException
 	 */
@@ -496,8 +499,9 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the url for the given page class using the given parameters. THIS
-	 * METHOD IS NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * <p>
+	 * Gets the url for the given page class using the given parameters. 
 	 *
 	 * @param pageClass
 	 *            Class of page
@@ -508,8 +512,9 @@ public abstract class RequestCycle
 	public abstract String urlFor(final Class pageClass, final PageParameters parameters);
 
 	/**
-	 * Gets the url for the given component/ listener interface. THIS METHOD IS
-	 * NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * <p>
+	 * Gets the url for the given component/ listener interface. 
 	 *
 	 * @param component
 	 *            Component that has listener interface
