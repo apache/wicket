@@ -127,6 +127,22 @@ public final class FileResourceStream extends AbstractResourceStream
 	 */
 	public String toString()
 	{
-		return file.toString();
+		if(file != null)
+		{
+			return file.toString();
+		}
+		return "";
+	}
+
+	/**
+	 * @see wicket.util.resource.IResourceStream#length()
+	 */
+	public long length()
+	{
+		if(file != null)
+		{
+			return file.length();
+		}
+		return 0;
 	}
 }

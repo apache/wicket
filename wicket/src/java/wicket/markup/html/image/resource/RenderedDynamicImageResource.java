@@ -20,6 +20,8 @@ package wicket.markup.html.image.resource;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import wicket.util.time.Time;
+
 /**
  * A DynamicImageResource subclass that allows easy rendering of regenenerable
  * (unbuffered) dynamic images. A RenderedDynamicImageResource implements the
@@ -131,6 +133,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 		if (imageData == null)
 		{
 			imageData = render();
+			lastModifiedTime = Time.now();
 		}
 		return imageData;
 	}

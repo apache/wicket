@@ -40,17 +40,6 @@ public class BufferedDynamicImageResource extends DynamicImageResource
 	/** The byte array holding the contents of the dynamic image */
 	private byte[] imageData;
 
-	/** The time this image resource was last modified */
-	private Time lastModifiedTime;
-
-	/**
-	 * @see wicket.markup.html.image.resource.DynamicImageResource#lastModifiedTime()
-	 */
-	public Time lastModifiedTime()
-	{
-		return lastModifiedTime;
-	}
-
 	/**
 	 * @param image
 	 *            The image to set

@@ -49,6 +49,13 @@ public interface IResourceStream extends IModifiable, Serializable
 	public String getContentType();
 	
 	/**
+	 * Gets the size of this resource
+	 * 
+	 * @return The size of this resource in the number of bytes
+	 */
+	public long length();
+
+	/**
 	 * Gets the resource stream. You should not directly close this stream.
 	 * Instead call the close() method on IResourceStream.
 	 * 
@@ -65,4 +72,5 @@ public interface IResourceStream extends IModifiable, Serializable
 	 * @throws IOException
 	 */
 	public void close() throws IOException;
+
 }
