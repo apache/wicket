@@ -18,40 +18,58 @@
  */
 package wicket.markup.html.link;
 
+import java.io.Serializable;
+
 import wicket.Container;
+import wicket.IModel;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlContainer;
 
 
 /**
- * Implementation of a hyperlink component.
+ * Implementation of a hyperlink component. A link must be used with an anchor (&lt;a href...)
+ * element.
+ * <p>
+ * You can use a link like:
+ * <pre>
+ * add(new Link("myLink"){
+ *
+ *   public void linkClicked(RequestCycle cycle)
+ *   {
+ *      // do something here...  
+ *   }
+ * );
+ * </pre>
+ * and in your HTML file:
+ * <pre>
+ *  &lt;a href="#" id="wcn-myLink"&gt;click here&lt;/a&gt;
+ * </pre>
+ * </p>
+ *
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
-public abstract class Link extends HtmlContainer implements ILinkListener
+public abstract class Link extends AbstractLink
 {
-    static
-    {
-        // Allow calls through the ILinkListener interface
-        RequestCycle.registerListenerInterface(ILinkListener.class);
-    }
 
-    //--------------------------------------------------------------------------------
-    //----------------------------------- properties
-    // ---------------------------------
-    //--------------------------------------------------------------------------------
-    // True if link should automatically enable/disable based on current page
+    /** True if link should automatically enable/disable based on current page. */
     private boolean autoEnable = true;
 
-    // Simple insertion strings to allow disabled links to look like <i>Disabled
-    // link</i>
+    /** 
+     * Simple insertion strings to allow disabled links to
+     * look like <i>Disabled link</i>.
+     */
     private String beforeDisabledLink;
 
+    /** 
+     * Simple insertion strings to allow disabled links to
+     * look like <i>Disabled link</i>.
+     */
     private String afterDisabledLink;
 
-    // True if this link is enabled
+    /** True if this link is enabled. */
     private boolean enabled = true;
 
     /**
@@ -61,20 +79,65 @@ public abstract class Link extends HtmlContainer implements ILinkListener
     private PopupSpecification popupSpecification = null;
 
     /**
-     * Constructor.
-     * @param componentName The name of the component
+     * Construct.
+     * @param componentName the name of the component
      */
-    public Link(final String componentName)
+    public Link(String componentName)
     {
         super(componentName);
     }
 
     /**
-     * Called when a link is clicked.
-     * @see ILinkListener
-     * @param cycle The cycle object
+     * Constructor that uses the provided {@link IModel}as its model.
+     * @param name The non-null name of this component
+     * @param model the model
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
      */
-    public abstract void linkClicked(final RequestCycle cycle);
+    public Link(String name, IModel model)
+    {
+        super(name, model);
+    }
+
+    /**
+     * Constructor that uses the provided instance of {@link IModel}as a dynamic model.
+     * This model will be wrapped in an instance of {@link wicket.PropertyModel}using the
+     * provided expression.
+     * @param name The non-null name of this component
+     * @param model the instance of {@link IModel}from which the model object will be
+     *            used as the subject for the given expression
+     * @param expression the OGNL expression that works on the given object
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public Link(String name, IModel model, String expression)
+    {
+        super(name, model, expression);
+    }
+
+    /**
+     * Constructor that uses the provided object as a simple model. This object will be
+     * wrapped in an instance of {@link wicket.Model}.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as a simple model
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public Link(String name, Serializable object)
+    {
+        super(name, object);
+    }
+
+    /**
+     * Constructor that uses the provided object as a dynamic model. This object will be
+     * wrapped in an instance of {@link wicket.Model}that will be wrapped in an instance
+     * of {@link wicket.PropertyModel}using the provided expression.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as the subject for the given expression
+     * @param expression the OGNL expression that works on the given object
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public Link(String name, Serializable object, String expression)
+    {
+        super(name, object, expression);
+    }
 
     /**
      * Whether link should automatically enable/disable based on current page
@@ -131,15 +194,6 @@ public abstract class Link extends HtmlContainer implements ILinkListener
     }
 
     /**
-     * @param cycle Request cycle
-     * @return The URL that this link links to
-     */
-    String getURL(final RequestCycle cycle)
-    {
-        return cycle.urlFor(Link.this, ILinkListener.class);
-    }
-
-    /**
      * Set the after disabled link.
      * @param afterDisabledLink The afterDisabledLink to set.
      */
@@ -189,14 +243,8 @@ public abstract class Link extends HtmlContainer implements ILinkListener
         return this;
     }
 
-    //--------------------------------------------------------------------------------
-    //----------------------------------- rendering
-    // ----------------------------------
-    //--------------------------------------------------------------------------------
-
     /**
-     * @see wicket.Component#handleBody(RequestCycle, MarkupStream,
-     *      ComponentTag)
+     * @see wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
      */
     protected final void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
             final ComponentTag openTag)
@@ -279,5 +327,3 @@ public abstract class Link extends HtmlContainer implements ILinkListener
         }
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////
