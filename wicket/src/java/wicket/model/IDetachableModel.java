@@ -25,17 +25,20 @@ import wicket.RequestCycle;
  * back mechanism for reacting on the starting/ ending of a request. Please use the
  * abstract class {@link wicket.model.DetachableModel}for implementations instead
  * of implementing this interface directely.
+ *
+ * @author Chris Turner
+ * @author Eelco Hillenius
  */
 public interface IDetachableModel extends IModel
-{ // TODO finalize javadoc
+{
     /**
-     * Detach from a request.
+     * Detaches from a request.
      * @param cycle the request cycle
      */
     public void detach(RequestCycle cycle);
 
     /**
-     * Attach to a request.
+     * Attaches to a request.
      * @param cycle the request cycle
      */
     public void attach(RequestCycle cycle);

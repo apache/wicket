@@ -30,19 +30,22 @@ import wicket.RequestCycle;
  * attachement should be used to ensure the model onject is again available (after a
  * possible serialization), or extending classes should hold their own instance data
  * representing the model.
+ *
+ * @author Chris Turner
+ * @author Eelco Hillenius
  */
 public abstract class DetachableModel implements IDetachableModel
-{ // TODO finalize javadoc
+{
     /**
      * The wrapped model object. Note that this object is transient to ensure we never
      * serialize it even if the user forgets to set the object to null in their detach()
-     * method
+     * method.
      */
     private transient Object object;
 
     /**
      * Transient flag to prevent multiple detach/attach scenario. We need to maintain this
-     * flag as we allow 'null' model values!
+     * flag as we allow 'null' model values.
      */
     private transient boolean attached = false;
 
@@ -54,7 +57,7 @@ public abstract class DetachableModel implements IDetachableModel
     }
 
     /**
-     * Construct the detachable model with the given model object.
+     * Constructs the detachable model with the given model object.
      * @param object the model object
      */
     public DetachableModel(final Object object)
@@ -63,7 +66,7 @@ public abstract class DetachableModel implements IDetachableModel
     }
 
     /**
-     * Get the model object.
+     * Gets the model object.
      * @return the model object
      * @see wicket.model.IModel#getObject()
      */
@@ -73,7 +76,7 @@ public abstract class DetachableModel implements IDetachableModel
     }
 
     /**
-     * Set the model object.
+     * Sets the model object.
      * @param object the model object
      * @see wicket.model.IModel#setObject(java.lang.Object)
      */
@@ -83,7 +86,7 @@ public abstract class DetachableModel implements IDetachableModel
     }
 
     /**
-     * Whether this model has been attached to the current request.
+     * Gets whether this model has been attached to the current request.
      * @return whether this model has been attached to the current request
      */
     public boolean isAttached()
@@ -92,7 +95,7 @@ public abstract class DetachableModel implements IDetachableModel
     }
 
     /**
-     * Attach to the current request.
+     * Attaches to the current request.
      * @param cycle the current request cycle
      * @see wicket.model.IDetachableModel#attach(wicket.RequestCycle)
      */
@@ -108,7 +111,7 @@ public abstract class DetachableModel implements IDetachableModel
     }
 
     /**
-     * Detach from the current request.
+     * Detaches from the current request.
      * @param cycle the current request cycle
      * @see wicket.model.IDetachableModel#detach(wicket.RequestCycle)
      */
@@ -124,14 +127,14 @@ public abstract class DetachableModel implements IDetachableModel
     }
 
     /**
-     * Attach to the current request. Implement this method with custom behaviour, such
+     * Attaches to the current request. Implement this method with custom behaviour, such
      * as loading the model object.
      * @param cycle the current request cycle
      */
     protected abstract void doAttach(final RequestCycle cycle);
 
     /**
-     * Detach from the current request. Implement this method with custom behaviour, such as
+     * Detaches from the current request. Implement this method with custom behaviour, such as
      * setting the model object to null.
      * @param cycle the current request cycle
      */

@@ -169,23 +169,29 @@ import wicket.util.string.interpolator.OgnlVariableInterpolator;
  * @author Chris Turner
  */
 public class StringResourceModel extends DetachableModel
-{ // TODO finalize javadoc
-	/** Serial Version ID */
+{
+	/** Serial Version ID. */
 	private static final long serialVersionUID = 6659487382203513733L;
 
-	// The localizer to be used to access localized resources
-	// And the associated locale for formatting
+	/**
+	 * The localizer to be used to access localized resources and the associated
+	 * locale for formatting.
+	 */
 	private Localizer localizer = null;
 
+	/** the locale to use. */
 	private Locale locale = null;
 
-	// The information used to generate string resources
+	/** the key of message to get. */
 	private String resourceKey;
 
+	/** the relative component used for lookups. */
 	private Component relativeComponent;
 
+	/** the wrapped model. */
 	private IModel model;
 
+	/** optional parameters. */
 	private Object[] parameters;
 
 	/**
@@ -202,7 +208,7 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Create a new string resource model using the supplied
+	 * Creates a new string resource model using the supplied
 	 * parameters.
 	 * <p>
 	 * The relative component parameter should generally
@@ -238,8 +244,7 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Get the localizer that is being used by this string resource model.
-	 *
+	 * Gets the localizer that is being used by this string resource model.
 	 * @return The localizer
 	 */
 	public Localizer getLocalizer()
@@ -248,10 +253,9 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Set the localizer that is being used by this string resource model.
+	 * Sets the localizer that is being used by this string resource model.
 	 * This method is provided to allow the default application localizer to
 	 * be overridden if required.
-	 *
 	 * @param localizer The localizer to use
 	 */
 	public void setLocalizer(final Localizer localizer)
@@ -260,12 +264,11 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Get the string currently represented by this string resource model.
+	 * Gets the string currently represented by this string resource model.
 	 * The string that is returned may vary for each call to this method
 	 * depending on the values contained in the model and an the
 	 * parameters that were passed when this string resource model
 	 * was created.
-	 *
 	 * @return The string
 	 */
 	public final String getString()
@@ -328,12 +331,10 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Get the string that this string resource model currently
+	 * Gets the string that this string resource model currently
 	 * represents. The string is returned as an object to allow it
 	 * to be used generically within components.
-	 *
 	 * @return The string for this model object
-	 * @see #getString()
 	 */
 	public final Object getObject()
 	{
@@ -346,7 +347,6 @@ public class StringResourceModel extends DetachableModel
 	 * variations should be achieved through OGNL expressions in
 	 * the key, the resource string and the parameters or by the
 	 * contents of the model object.
-	 *
 	 * @param object Not used
 	 */
 	public final void setObject(final Object object)
@@ -359,9 +359,7 @@ public class StringResourceModel extends DetachableModel
 	 * string represented by this string resource model.
 	 * Useful in debugging and so on, to avoid the explicit need
 	 * to call the getString() method.
-	 *
 	 * @return The string for this model object
-	 * @see #getString()
 	 */
 	public String toString()
 	{
@@ -369,7 +367,7 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Attach to the current request.
+	 * Attaches to the current request.
 	 * @param cycle the current request cycle
 	 */
 	protected final void doAttach(RequestCycle cycle)
@@ -387,7 +385,7 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Detach from the current request.
+	 * Detaches from the current request.
 	 * @param cycle the current request cycle
 	 */
 	protected final void doDetach(RequestCycle cycle)
@@ -404,10 +402,9 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Get the resource key for this string resource. If the resource
+	 * Gets the resource key for this string resource. If the resource
 	 * key contains OGNL and the model is null then the returned value
 	 * is the actual resource key with all substitutions undertaken.
-	 *
 	 * @return The (possibly substituted) resource key
 	 */
 	protected final String getResourceKey()
@@ -423,8 +420,7 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Get the component that this string resource is relative to.
-	 *
+	 * Gets the component that this string resource is relative to.s
 	 * @return The relative component
 	 */
 	protected final Component getRelativeComponent()
@@ -433,8 +429,7 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Get the model used for OGNL substitutions.
-	 *
+	 * Gets the model used for OGNL substitutions.
 	 * @return The model
 	 */
 	protected final IModel getModel()
@@ -443,8 +438,7 @@ public class StringResourceModel extends DetachableModel
 	}
 
 	/**
-	 * Get the Java MessageFormat substitution parameters.
-	 *
+	 * Gets the Java MessageFormat substitution parameters.
 	 * @return The substitution parameters
 	 */
 	protected final Object[] getParameters()
