@@ -92,8 +92,8 @@ import wicket.util.string.Strings;
  */
 public abstract class Session implements Serializable
 {
-	/** Session attribute used for storing session state */
-	private static final String stateSessionAttribute = "state";
+	/** Name of session attribute under which this session is stored */
+	public static final String sessionAttributeName = "session";
 
 	/** Separator for component paths. */
 	private static final char componentPathSeparator = '.';
@@ -104,6 +104,9 @@ public abstract class Session implements Serializable
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
+	/** Next available page state sequence number */
+	int pageStateSequenceNumber;
+
 	/** Application that this is a session of. */
 	private transient Application application;
 
@@ -113,11 +116,20 @@ public abstract class Session implements Serializable
 	/** Active request cycle */
 	private transient RequestCycle cycle;
 
+	/** True if session state has been changed */
+	private boolean dirty = false;
+
+	/** The locale to use when loading resources for this session. */
+	private Locale locale;
+
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** Session state that can be replicated when dirty */
-	private State state = new State();
+	/** Maps from name to page map */
+	private final Map pageMapForName = new HashMap();
+
+	/** Any special "skin" style to use when loading resources. */
+	private String style;
 
 	/**
 	 * Interface called when visiting session pages.
@@ -133,46 +145,6 @@ public abstract class Session implements Serializable
 		 *            the page
 		 */
 		public void page(final Page page);
-	}
-
-	/**
-	 * Clusterable session state.
-	 * 
-	 * @author Jonathan Locke
-	 */
-	static class State implements Serializable
-	{
-		/** Next available page state sequence number */
-		int pageStateSequenceNumber;
-
-		/** True if any of this state has changed */
-		private boolean dirty = false;
-
-		/** The locale to use when loading resources for this session. */
-		private Locale locale;
-
-		/** Maps from name to page map */
-		private final Map pageMapForName = new HashMap();
-
-		/** Any special "skin" style to use when loading resources. */
-		private String style;
-
-		/**
-		 * Attaches state to session, restoring transient values
-		 * 
-		 * @param session
-		 *            The session to attach to
-		 */
-		void attach(final Session session)
-		{
-			// Go through each page map in the session
-			for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
-			{
-				// Remove all pages from the current page map
-				PageMap pageMap = ((PageMap)iterator.next());
-				pageMap.setSession(session);
-			}
-		}
 	}
 
 	/**
@@ -244,7 +216,7 @@ public abstract class Session implements Serializable
 		if (converter == null)
 		{
 			// Let the factory create a new converter
-			converter = getApplication().getConverterFactory().newConverter(state.locale);
+			converter = getApplication().getConverterFactory().newConverter(locale);
 		}
 		return converter;
 	}
@@ -256,7 +228,7 @@ public abstract class Session implements Serializable
 	 */
 	public final Locale getLocale()
 	{
-		return this.state.locale;
+		return locale;
 	}
 
 	/**
@@ -346,7 +318,7 @@ public abstract class Session implements Serializable
 		{
 			pageMapName = PageMap.defaultName;
 		}
-		return (PageMap)state.pageMapForName.get(pageMapName);
+		return (PageMap)pageMapForName.get(pageMapName);
 	}
 
 	/**
@@ -366,7 +338,7 @@ public abstract class Session implements Serializable
 	 */
 	public final String getStyle()
 	{
-		return state.style;
+		return style;
 	}
 
 	/**
@@ -384,7 +356,7 @@ public abstract class Session implements Serializable
 	public PageMap newPageMap(final String name)
 	{
 		final PageMap pageMap = new PageMap(name, this);
-		state.pageMapForName.put(name, pageMap);
+		pageMapForName.put(name, pageMap);
 		return pageMap;
 	}
 
@@ -424,7 +396,7 @@ public abstract class Session implements Serializable
 	public final void removeAll()
 	{
 		// Go through each page map in the session
-		for (final Iterator iterator = state.pageMapForName.values().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
 		{
 			// Remove all pages from the current page map
 			((PageMap)iterator.next()).removeAll();
@@ -452,7 +424,7 @@ public abstract class Session implements Serializable
 	 */
 	public final void setLocale(final Locale locale)
 	{
-		this.state.locale = locale;
+		this.locale = locale;
 		this.converter = null;
 		dirty();
 	}
@@ -478,23 +450,29 @@ public abstract class Session implements Serializable
 	 */
 	public final void setStyle(final String style)
 	{
-		this.state.style = style;
+		this.style = style;
 		dirty();
 	}
 
 	/**
-	 * Replicates any changed data to the cluser.
+	 * Replicates this session to the cluster if it has changed.
 	 */
 	public final void updateCluster()
 	{
 		// If state is dirty
-		if (this.state.dirty)
+		if (dirty)
 		{
-			// State is no longer dirty
-			this.state.dirty = false;
+			log.debug("updateCluster(): Session is dirty.  Replicating.");
 
-			// Set attribute
-			setAttribute(stateSessionAttribute, state);
+			// State is no longer dirty
+			this.dirty = false;
+
+			// Set attribute.
+			setAttribute(sessionAttributeName, this);
+		}
+		else
+		{
+			log.debug("updateCluster(): Session not dirty.");
 		}
 	}
 
@@ -504,16 +482,19 @@ public abstract class Session implements Serializable
 	 */
 	public final void updateSession()
 	{
-		// Get any replicated state from the session
-		final State state = (State)getAttribute(stateSessionAttribute);
-		if (state != null)
+		// Go through each page map in the session
+		log.debug("updateSession(): Updating session.");
+		for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
 		{
-			// Copy state into Session
-			state.attach(this);
-			this.state = state;
+			// Remove all pages from the current page map
+			final PageMap pageMap = ((PageMap)iterator.next());
+			pageMap.setSession(this);
+
+			log.debug("updateSession(): Attaching session to PageMap " + pageMap);
 		}
 
 		// Get PageStates from session attributes
+		log.debug("updateSession(): Getting PageState attributes.");
 		final List pageStates = getPageStateAttributes();
 
 		// Sort page states so that they can be added in reverse order of
@@ -522,6 +503,7 @@ public abstract class Session implements Serializable
 
 		// Adds pages to session
 		addPages(pageStates);
+		log.debug("updateSession(): Done updating session.");
 	}
 
 	/**
@@ -532,9 +514,6 @@ public abstract class Session implements Serializable
 	 */
 	protected final void add(final Page page)
 	{
-		// TODO This could potentially enable denial of service attacks. We may
-		// want to limit pagemaps.
-
 		// Set page map for page. If cycle is null, we may be being called from
 		// some kind of test harness, so we will just use the default page map
 		final String pageMapName = cycle == null ? PageMap.defaultName : cycle.getRequest()
@@ -600,7 +579,7 @@ public abstract class Session implements Serializable
 	 */
 	final void dirty()
 	{
-		state.dirty = true;
+		this.dirty = true;
 	}
 
 	/**
@@ -623,7 +602,7 @@ public abstract class Session implements Serializable
 	int nextPageStateSequenceNumber()
 	{
 		dirty();
-		return state.pageStateSequenceNumber++;
+		return this.pageStateSequenceNumber++;
 	}
 
 	/**
@@ -642,6 +621,8 @@ public abstract class Session implements Serializable
 			{
 				// Get page from page state
 				final Page page = pageState.getPage();
+				log.debug("addPages(): Adding replicated page state " + pageState
+						+ ", which produced page " + page);
 
 				// Add to page map specified in page state info
 				getPageMap(pageState.pageMapName).put(page);

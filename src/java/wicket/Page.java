@@ -401,7 +401,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		final Session session = getSession();
 		this.pageMap = session.getPageMap(pageMapName);
 		if (this.pageMap == null)
-		{
+		{		
+			// TODO This could potentially enable denial of service attacks. We may
+			// want to limit pagemaps created via URLs (see Session.java)
 			this.pageMap = session.newPageMap(pageMapName);
 		}
 	}

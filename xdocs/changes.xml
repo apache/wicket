@@ -13,6 +13,9 @@
   	  	to run the examples using an embedded Jetty server.
   	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
+      Removed State and refactored clustering.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Changed loop to use iterations rather than size, since this makes more sense.  Removed LoopItem so that Loop is less easily confused with ListView.
       </action>
       <action type="update" dev="Jonathan Locke" issue="">
