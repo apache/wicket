@@ -20,12 +20,12 @@ package wicket.examples.library;
 
 import java.util.Iterator;
 
-import wicket.Model;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.ExternalPageLink;
+import wicket.model.Model;
 import wicket.util.string.StringList;
 import wicket.util.string.StringValueConversionException;
 

@@ -16,14 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket;
+package wicket.model;
 
 import java.io.Serializable;
 
 /**
  * Model is the basic implementation of IModel. It just wraps the model object. The model
  * object must be serializable, as it is stored in the session. If you have large objects
- * to store, consider using {@link wicket.IDetachableModel}instead of this
+ * to store, consider using {@link wicket.model.IDetachableModel}instead of this
  * class.
  */
 public class Model implements IModel
@@ -63,7 +63,7 @@ public class Model implements IModel
      * Set the model object; calls setObject(java.io.Serializable). The model object must
      * be serializable, as it is stored in the session
      * @param object the model object
-     * @see wicket.IModel#setObject(java.lang.Object)
+     * @see wicket.model.IModel#setObject(java.lang.Object)
      */
     public void setObject(Object object)
     {
@@ -82,7 +82,7 @@ public class Model implements IModel
      * Sets the model object. The model object must be serializable, as it is stored in
      * the session
      * @param object the serializable model object
-     * @see wicket.IModel#setObject(java.lang.Object)
+     * @see wicket.model.IModel#setObject(java.lang.Object)
      */
     public void setObject(Serializable object)
     {

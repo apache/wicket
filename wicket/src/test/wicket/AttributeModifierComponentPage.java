@@ -18,13 +18,13 @@
  */
 package wicket;
 
-import wicket.IDetachableModel;
-import wicket.Model;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
+import wicket.model.IDetachableModel;
+import wicket.model.Model;
 
 /**
  * Test page used for checking the attribute modification functionality of Component.

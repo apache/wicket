@@ -20,9 +20,9 @@ package wicket.markup;
 
 import java.io.Serializable;
 
-import wicket.IDetachableModel;
-import wicket.IModel;
 import wicket.RequestCycle;
+import wicket.model.IDetachableModel;
+import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
 

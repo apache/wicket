@@ -21,12 +21,12 @@ package wicket.examples.displaytag;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.IModel;
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
+import wicket.model.IModel;
 
 
 

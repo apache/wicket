@@ -22,9 +22,7 @@ package wicket.examples.library;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.Model;
 import wicket.Page;
-import wicket.PropertyModel;
 import wicket.RequestCycle;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
@@ -40,6 +38,8 @@ import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 import wicket.util.lang.EnumeratedType;
 
 /**

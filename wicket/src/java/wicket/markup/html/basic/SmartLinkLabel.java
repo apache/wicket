@@ -22,13 +22,13 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import wicket.IModel;
-import wicket.Model;
-import wicket.PropertyModel;
 import wicket.RenderException;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 
 
 /**

@@ -20,9 +20,9 @@ package wicket.markup;
 
 import java.io.Serializable;
 
-import wicket.Model;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentTagAttributeModifier;
+import wicket.model.Model;
 import wicket.util.value.ValueMap;
 import junit.framework.TestCase;
 import junit.framework.Assert;

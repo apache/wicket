@@ -3,8 +3,8 @@ package wicket.markup.html.form.validation;
 import java.io.Serializable;
 
 import wicket.Component;
-import wicket.IModel;
-import wicket.Model;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 
 /**
@@ -43,7 +43,7 @@ public final class ValidationErrorModelDecorator extends Model
 
     /**
      * Will do nothing.
-     * @see wicket.IModel#setObject(java.lang.Object)
+     * @see wicket.model.IModel#setObject(java.lang.Object)
      */
     public void setObject(Object object)
     {

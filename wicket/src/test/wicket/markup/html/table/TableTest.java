@@ -20,9 +20,9 @@ package wicket.markup.html.table;
 
 import java.util.ArrayList;
 
-import wicket.Model;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.Table;
+import wicket.model.Model;
 
 import junit.framework.TestCase;
 

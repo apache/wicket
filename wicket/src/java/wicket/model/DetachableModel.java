@@ -16,10 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket;
+package wicket.model;
+
+import wicket.RequestCycle;
 
 /**
- * This provide a base class to work with {@link wicket.IDetachableModel}.
+ * This provide a base class to work with {@link wicket.model.IDetachableModel}.
  * It wraps the actual model objects of components and provides a call back mechanism for
  * reacting on the starting/ ending of a request. doAttach will be called at the first
  * access to this model within a request and - if the model was attached earlier, doDetach
@@ -63,7 +65,7 @@ public abstract class DetachableModel implements IDetachableModel
     /**
      * Get the model object.
      * @return the model object
-     * @see wicket.IModel#getObject()
+     * @see wicket.model.IModel#getObject()
      */
     public Object getObject()
     {
@@ -73,7 +75,7 @@ public abstract class DetachableModel implements IDetachableModel
     /**
      * Set the model object.
      * @param object the model object
-     * @see wicket.IModel#setObject(java.lang.Object)
+     * @see wicket.model.IModel#setObject(java.lang.Object)
      */
     public void setObject(final Object object)
     {
@@ -92,7 +94,7 @@ public abstract class DetachableModel implements IDetachableModel
     /**
      * Attach to the current request.
      * @param cycle the current request cycle
-     * @see wicket.IDetachableModel#attach(wicket.RequestCycle)
+     * @see wicket.model.IDetachableModel#attach(wicket.RequestCycle)
      */
     public final void attach(final RequestCycle cycle)
     {
@@ -108,7 +110,7 @@ public abstract class DetachableModel implements IDetachableModel
     /**
      * Detach from the current request.
      * @param cycle the current request cycle
-     * @see wicket.IDetachableModel#detach(wicket.RequestCycle)
+     * @see wicket.model.IDetachableModel#detach(wicket.RequestCycle)
      */
     public final void detach(final RequestCycle cycle)
     {

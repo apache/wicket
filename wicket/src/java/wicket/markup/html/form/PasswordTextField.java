@@ -23,12 +23,12 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.IModel;
-import wicket.Model;
-import wicket.PropertyModel;
 import wicket.RenderException;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
 
 
 /**

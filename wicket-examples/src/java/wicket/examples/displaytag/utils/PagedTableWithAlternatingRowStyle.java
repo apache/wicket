@@ -20,10 +20,10 @@ package wicket.examples.displaytag.utils;
 
 import java.util.List;
 
-import wicket.Model;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.Table;
+import wicket.model.Model;
 
 
 /**

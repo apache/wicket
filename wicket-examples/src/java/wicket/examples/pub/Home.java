@@ -20,16 +20,16 @@ package wicket.examples.pub;
 
 import java.util.Locale;
 
-import wicket.Model;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Session;
-import wicket.StringResourceModel;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
+import wicket.model.Model;
+import wicket.model.StringResourceModel;
 import wicket.util.value.ValueMap;
 
 /**

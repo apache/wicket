@@ -21,7 +21,6 @@ package wicket.markup.html.image;
 
 import javax.servlet.http.HttpServletResponse;
 
-import wicket.IModel;
 import wicket.IResourceListener;
 import wicket.Page;
 import wicket.RenderException;
@@ -29,6 +28,7 @@ import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
+import wicket.model.IModel;
 import wicket.protocol.http.HttpResponse;
 import wicket.util.io.Streams;
 import wicket.util.lang.Classes;
@@ -86,7 +86,7 @@ public class Image extends HtmlComponent implements IResourceListener
     /**
      * Constructor that uses the provided instance of {@link IModel}as a dynamic model;
      * the model object will be used to find the image resource. This model will be
-     * wrapped in an instance of {@link wicket.PropertyModel}
+     * wrapped in an instance of {@link wicket.model.PropertyModel}
      * using the provided expression.
      * Thus, using this constructor is a short-hand for:
      * 
@@ -109,7 +109,7 @@ public class Image extends HtmlComponent implements IResourceListener
     /**
      * Constructor that uses the provided object as a simple model; the model object will
      * be used to find the image resource. This object will be wrapped in an instance of
-     * {@link wicket.Model}. All components have names.
+     * {@link wicket.model.Model}. All components have names.
      * A component's name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
@@ -123,8 +123,8 @@ public class Image extends HtmlComponent implements IResourceListener
     /**
      * Constructor that uses the provided object as a dynamic model; the model object will
      * be used to find the image resource. This object will be wrapped in an instance of
-     * {@link wicket.Model} that will be wrapped in an instance of
-     * {@link wicket.PropertyModel} using
+     * {@link wicket.model.Model} that will be wrapped in an instance of
+     * {@link wicket.model.PropertyModel} using
      * the provided expression. Thus, using this constructor is a short-hand for:
      * 
      * <pre>

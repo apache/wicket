@@ -16,19 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket;
+package wicket.model;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.text.MessageFormat;
 
-import wicket.DetachableModel;
-import wicket.IModel;
-import wicket.Model;
-import wicket.PropertyModel;
 import wicket.RequestCycle;
-import wicket.StringResourceModel;
 import wicket.markup.html.HtmlPage;
+import wicket.model.DetachableModel;
+import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
+import wicket.model.StringResourceModel;
 import wicket.protocol.http.HttpRequestCycle;
 import wicket.protocol.http.MockHttpApplication;
 import wicket.protocol.http.MockPage;
@@ -66,7 +66,7 @@ public class StringResourceModelTest extends TestCase
 		super.setUp();
 		application = new MockHttpApplication(null);
 		application.getSettings().addStringResourceLoader(
-				new BundleStringResourceLoader("wicket.StringResourceModelTest"));
+				new BundleStringResourceLoader("wicket.model.StringResourceModelTest"));
 		page = new MockPage(null);
 		ws = new WeatherStation();
 		wsModel = new Model(ws);

@@ -26,7 +26,6 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.IModel;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
@@ -41,6 +40,7 @@ import wicket.markup.html.tree.FlatTree;
 import wicket.markup.html.tree.Tree;
 import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.TreeStateCache;
+import wicket.model.IModel;
 
 /**
  * Tree example that uses the user-home dirs to populate the tree.

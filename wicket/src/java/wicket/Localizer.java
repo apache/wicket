@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
+import wicket.model.IModel;
 import wicket.resource.IStringResourceLoader;
 import wicket.util.string.interpolator.OgnlVariableInterpolator;
 

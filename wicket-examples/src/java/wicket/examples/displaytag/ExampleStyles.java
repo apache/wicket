@@ -20,7 +20,6 @@ package wicket.examples.displaytag;
 
 import java.util.List;
 
-import wicket.Model;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.TableWithAlternatingRowStyle;
@@ -30,6 +29,7 @@ import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.ExternalPageLink;
 import wicket.markup.html.table.ListItem;
+import wicket.model.Model;
 
 
 

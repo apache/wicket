@@ -27,13 +27,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import wicket.IModel;
-import wicket.Model;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * A Tree that renders as a flat list, using spacers and nodes.

@@ -24,7 +24,7 @@ import java.io.Serializable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import wicket.Model;
+import wicket.model.Model;
 
 /**
  * Specialized model for trees. It makes it easier/ less verbose to work with the

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket;
+package wicket.model;
 
 import java.lang.reflect.Member;
 import java.util.Locale;
@@ -26,6 +26,8 @@ import ognl.DefaultTypeConverter;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
+import wicket.ApplicationSettings;
+import wicket.RequestCycle;
 import wicket.util.convert.ConversionUtils;
 import wicket.util.convert.ConverterRegistry;
 
@@ -95,9 +97,9 @@ import wicket.util.convert.ConverterRegistry;
  * plugging in custom converters and formatters that are used for converting and
  * formatting objects of a given type.
  * </p>
- * @see wicket.IModel
- * @see wicket.Model
- * @see wicket.DetachableModel
+ * @see wicket.model.IModel
+ * @see wicket.model.Model
+ * @see wicket.model.DetachableModel
  * @see wicket.util.convert.ConverterRegistry
  * @see wicket.util.convert.ConversionUtils
  * @see wicket.util.convert.FormattingUtils
@@ -175,7 +177,7 @@ public class PropertyModel extends DetachableModel
      * object (Ognl.getValue).
      * @return the value that results when the given Ognl expression is applied to the
      *         model object
-     * @see wicket.IModel#getObject()
+     * @see wicket.model.IModel#getObject()
      */
     public Object getObject()
     {
@@ -221,7 +223,7 @@ public class PropertyModel extends DetachableModel
      * (Ognl.setValue).
      * @param object the object that will be used when applying Ognl.setValue on the model
      *            object
-     * @see wicket.IModel#setObject(java.lang.Object)
+     * @see wicket.model.IModel#setObject(java.lang.Object)
      */
     public void setObject(Object object)
     {
@@ -238,7 +240,7 @@ public class PropertyModel extends DetachableModel
     /**
      * Sets the current {@link Locale}and the {@link ConverterRegistry}, and in case the
      * wrapped model is a {@link IDetachableModel}, calls attach on the wrapped model.
-     * @see wicket.DetachableModel#doAttach(wicket.RequestCycle)
+     * @see wicket.model.DetachableModel#doAttach(wicket.RequestCycle)
      */
     protected final void doAttach(final RequestCycle cycle)
     {
@@ -259,7 +261,7 @@ public class PropertyModel extends DetachableModel
     /**
      * Unsets the current {@link Locale}and {@link ConverterRegistry}and, in case the
      * wrapped model is a {@link IDetachableModel}, calls dettach on the wrapped model.
-     * @see wicket.DetachableModel#doDetach(wicket.RequestCycle)
+     * @see wicket.model.DetachableModel#doDetach(wicket.RequestCycle)
      */
     protected final void doDetach(final RequestCycle cycle)
     {

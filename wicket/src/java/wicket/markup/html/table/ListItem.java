@@ -20,10 +20,10 @@ package wicket.markup.html.table;
 
 import java.util.Collections;
 
-import wicket.Model;
 import wicket.RequestCycle;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.link.Link;
+import wicket.model.Model;
 
 
 /**
