@@ -1,22 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////////
-//
-// Created May 21, 2004
-//
-// Copyright 2004, Jonathan W. Locke
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package library;
 
 import com.voicetribe.wicket.PageParameters;
@@ -37,24 +36,27 @@ public final class SignIn extends HtmlPage
     public SignIn(final PageParameters parameters)
     {
         add(new SignInPanel("signInPanel")
-        {
-            protected String signIn(final RequestCycle cycle, final String username, final String password)
             {
-                // Sign the user in
-                final User user = Authenticator.forSession(cycle.getSession()).authenticate(username, password);
+                protected String signIn(final RequestCycle cycle,
+                    final String username, final String password)
+                {
+                    // Sign the user in
+                    final User user = Authenticator.forSession(cycle.getSession())
+                                                   .authenticate(username,
+                            password);
 
-                // If the user was signed in
-                if (user != null)
-                {
-                    return null;
+                    // If the user was signed in
+                    if (user != null)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        // Form method that will notify feedback panel
+                        return getLocalizedString("couldNotAuthenticate");
+                    }
                 }
-                else
-                {
-                    // Form method that will notify feedback panel
-                    return getLocalizedString("couldNotAuthenticate");
-                }
-            }
-        });
+            });
     }
 }
 

@@ -1,25 +1,25 @@
-///////////////////////////////////////////////////////////////////////////////////
-//
-// Created Jun 12, 2004
-//
-// Copyright 2004, Jonathan W. Locke
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package guestbook2;
 
 import java.io.Serializable;
+
 import java.util.Date;
 
 /**
@@ -29,13 +29,17 @@ import java.util.Date;
  */
 public class Comment implements Serializable
 {
+    private int id;
+    private String text;
+    private Date date = new Date();
+
     /**
      * Constructor
      */
     public Comment()
     {
     }
-    
+
     /**`
      * Copy constructor
      * @param comment The comment to copy
@@ -47,14 +51,14 @@ public class Comment implements Serializable
     }
 
     /**
-     * @hibernate.property 
+     * @hibernate.property
      * @return Returns the text.
      */
     public String getText()
     {
         return text;
     }
-    
+
     /**
      * @param text The text to set.
      */
@@ -62,9 +66,9 @@ public class Comment implements Serializable
     {
         this.text = text;
     }
-    
+
     /**
-     * @hibernate.property 
+     * @hibernate.property
      * @return Returns the date.
      */
     public Date getDate()
@@ -88,6 +92,7 @@ public class Comment implements Serializable
     {
         return id;
     }
+
     /**
      * @param id The id to set.
      */
@@ -95,10 +100,6 @@ public class Comment implements Serializable
     {
         this.id = id;
     }
-
-    private int id;
-    private String text;
-    private Date date = new Date();
 }
 
 ///////////////////////////////// End of File /////////////////////////////////
