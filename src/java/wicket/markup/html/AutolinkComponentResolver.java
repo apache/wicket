@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup;
+package wicket.markup.html;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +26,9 @@ import wicket.Container;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
+import wicket.markup.ComponentTag;
+import wicket.markup.IComponentResolver;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
 import wicket.util.value.ValueMap;
@@ -76,7 +79,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 		{
 			// Try to find the Page matching the href
 			final String componentName = tag.getComponentName();
-			final Component link = resolveAutomaticLink(container.getPage(), componentName, tag);
+			final Component link = resolveAutomaticLink(container, componentName, tag);
 
 			// Add the link to the container
 			container.add(link);
@@ -101,17 +104,18 @@ public class AutolinkComponentResolver implements IComponentResolver
 	 * component name and then searching for a page class at the absolute or
 	 * relative URL specified by the href attribute of the tag.
 	 * 
-	 * @param page
-	 *           The page where the link is
+	 * @param container
+	 *           The container where the link is
 	 * @param componentName
 	 *           the name of the component
 	 * @param tag
 	 *           the component tag
 	 * @return A BookmarkablePageLink to handle the href
 	 */
-	private Component resolveAutomaticLink(final Page page, final String componentName,
+	private Component resolveAutomaticLink(final Container container, final String componentName,
 			final ComponentTag tag)
 	{
+        final Page page = container.getPage();
 		final String originalHref = tag.getAttributes().getString("href");
 		final int pos = originalHref.indexOf(".html");
 
@@ -121,12 +125,15 @@ public class AutolinkComponentResolver implements IComponentResolver
 		// ".html?" => 6 chars
 		if ((classPath.length() + 6) < originalHref.length())
 		{
-			String queryString = originalHref.substring(classPath.length() + 6);
+			final String queryString = originalHref.substring(classPath.length() + 6);
 			pageParameters = new PageParameters(new ValueMap(queryString, "&"));
 		}
 
 		// Make the componentName (page-)unique
 		final String id = componentName + page.getAutoIndex();
+        
+        // The component name on the tag changed
+        tag.setComponentName(id);
 
 		// Obviously a href like href="myPkg.MyLabel.html" will do as well.
 		// Wicket will not throw an exception. It accepts it.

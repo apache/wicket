@@ -20,9 +20,9 @@ package wicket;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.markup.AutolinkComponentResolver;
 import wicket.markup.MarkupParser;
 import wicket.markup.WicketTagComponentResolver;
+import wicket.markup.html.AutolinkComponentResolver;
 import wicket.markup.html.form.encryption.ICrypt;
 import wicket.markup.parser.XmlPullParser;
 import wicket.util.convert.ConverterFactory;
