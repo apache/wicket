@@ -20,8 +20,8 @@ package wicket.model;
 /**
  * This provide a base class to work with {@link wicket.model.IDetachableModel}. It wraps
  * the actual model objects of components and provides a call back mechanism for reacting
- * to the start/end of a request. doAttach will be called at the first access to this
- * model within a request and - if the model was attached earlier, doDetach will be called
+ * to the start/end of a request. onAttach will be called at the first access to this
+ * model within a request and - if the model was attached earlier, onDetach will be called
  * at the end of the request. In effect, attachment and detachment is only done when it is
  * actually needed. As the wrapped model object is transient, either attachment should be
  * used to ensure the model object is again available (after a possible serialization), or
