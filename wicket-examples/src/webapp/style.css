@@ -107,22 +107,15 @@ a.none {
 #wicket-inputForm label.non {
 	display: inline !important;
 }
-#wicket-tabbar a.selected {
-	background: #C3C3C3;
-	font-weight: bold;
-	padding: 5px;
-}
-
-#wicket-tabbar a.not-selected {
-	background: #F5F5F5;
-	font-weight: bold;
-	padding: 5px;
-}
 <!-- css style for TabPanel,thanks Wouter -->
 <!-- TODO clean up stuff that is not used by TabPanel-->
+#wicket-tab
+{
+	float:left;
+}
 #navigation
 {
-<!--	float:left;	-->
+	float:left;
 	width:100%;
 	background:#DAE0D2 url("bg_blue.gif") repeat-x bottom;
 	font-size:100%;
@@ -145,7 +138,7 @@ a.none {
 
 #navigation a 
 {
-<!--	float:left;	-->
+	float:left;
 	background:url("left_both_blue.gif") no-repeat left top;
 	margin:0;
 	padding:0 0 0 9px;
@@ -155,7 +148,7 @@ a.none {
 
 #navigation a span 
 {
-<!--	float:left;	-->
+	float:left;
 	display:block;
 	background:url("right_both_blue.gif") no-repeat right top;
 	padding:5px 15px 4px 6px;
@@ -164,7 +157,7 @@ a.none {
 
 #navigation a span 
 {
-<!--	float:none;	-->
+	float:none;
 }
 
 #navigation a:hover span 
