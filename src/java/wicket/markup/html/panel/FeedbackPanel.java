@@ -17,8 +17,9 @@
  */
 package wicket.markup.html.panel;
 
+import java.util.Collections;
+
 import wicket.FeedbackMessage;
-import wicket.Session;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.validation.IValidationFeedback;
@@ -52,9 +53,9 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 		/**
 		 * @see wicket.Component#Component(String)
 		 */
-		public MessageListView(String name)
+		public MessageListView(final String name)
 		{
-			super(name, Session.get().getFeedbackMessages().model());
+			super(name, Collections.EMPTY_LIST);
 		}
 
 		/**
@@ -65,10 +66,11 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 		 */
 		protected void handleRender()
 		{
+            setModel(getPage().getFeedbackMessages().model());
 			super.handleRender();
 			removeAll();
 		}
-
+        
 		/**
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */

@@ -282,7 +282,7 @@ public abstract class Component implements Serializable
      */
     public final void debug(final String message)
     {
-        getSession().getFeedbackMessages().debug(this, message);   
+        getPage().getFeedbackMessages().debug(this, message);   
     }
     
     /**
@@ -291,7 +291,7 @@ public abstract class Component implements Serializable
      */
     public final void error(final String message)
     {
-        getSession().getFeedbackMessages().error(this, message);   
+        getPage().getFeedbackMessages().error(this, message);   
     }
     
     /**
@@ -300,7 +300,7 @@ public abstract class Component implements Serializable
      */
     public final void fatal(final String message)
     {
-        getSession().getFeedbackMessages().fatal(this, message);   
+        getPage().getFeedbackMessages().fatal(this, message);   
     }
 
 	/**
@@ -397,7 +397,7 @@ public abstract class Component implements Serializable
      */
     public FeedbackMessage getFeedbackMessage()
     {
-        return getSession().getFeedbackMessages().getMessageFor(this);   
+        return getPage().getFeedbackMessages().getMessageFor(this);   
     }
 
 	/**
@@ -737,7 +737,7 @@ public abstract class Component implements Serializable
      */
     public final boolean hasErrorMessage()
     {
-    	return getSession().getFeedbackMessages().hasErrorMessageFor(this);
+    	return getPage().getFeedbackMessages().hasErrorMessageFor(this);
     }
     
     /**
@@ -745,7 +745,7 @@ public abstract class Component implements Serializable
      */
     public final boolean hasFeedbackMessage()
     {
-        return getSession().getFeedbackMessages().hasMessageFor(this);    
+        return getPage().getFeedbackMessages().hasMessageFor(this);    
     }
     
     /**
@@ -754,7 +754,7 @@ public abstract class Component implements Serializable
      */
     public final void info(final String message)
     {
-        getSession().getFeedbackMessages().info(this, message);   
+        getPage().getFeedbackMessages().info(this, message);   
     }
 
 	/**
@@ -870,7 +870,7 @@ public abstract class Component implements Serializable
      */
     public final void warn(final String message)
     {
-        getSession().getFeedbackMessages().warn(this, message);   
+        getPage().getFeedbackMessages().warn(this, message);   
     }
 
 	/**

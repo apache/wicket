@@ -88,7 +88,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		public void validate(final Form form)
 		{
             // Remove any old feedback messages
-            final FeedbackMessages messages = form.getSession().getFeedbackMessages();
+            final FeedbackMessages messages = form.getPage().getFeedbackMessages();
             
             // Visit all the form components and validate each
 			form.visitChildren(FormComponent.class, new IVisitor()
@@ -232,7 +232,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		getRequestCycle().setRedirect(true);
         
         // Clear all feedback messages
-        getSession().getFeedbackMessages().clear();
+        getPage().getFeedbackMessages().clear();
 
 		// Validate model using validation delegate
 		validationDelegate.validate(this);
