@@ -28,9 +28,6 @@ import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
 /**
- * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
- * INTENDED TO BE SUBCLASSED BY FRAMEWORK CLIENTS.
- * <p>
  * Holds information about a user session, including some fixed number of most
  * recent pages (and all their nested component information).
  * <p>
@@ -152,8 +149,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-	 * THE FUTURE. Sets session for calling thread.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * <p>
+	 * Sets session for calling thread.
 	 *
 	 * @param session
 	 *            The session
@@ -213,8 +211,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-	 * THE FUTURE. Get the freshest page in the session.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * 
+	 * Get the freshest page in the session.
 	 *
 	 * @return The freshest page in the session
 	 */
@@ -278,8 +277,7 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-	 * THE FUTURE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
 	 *
 	 * @return The currently active request cycle for this session
 	 */
@@ -360,8 +358,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-	 * THE FUTURE. Sets the currently active request cycle for this session.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * 
+	 * Sets the currently active request cycle for this session.
 	 *
 	 * @param cycle
 	 *            The request cycle
@@ -372,8 +371,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS INTENDED FOR INTERNAL USE ONLY AND MAY NOT BE SUPPORTED IN
-	 * THE FUTURE. Sets the application that this session is associated with.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * <p>
+	 * Sets the application that this session is associated with.
 	 *
 	 * @param application The application
 	 */
