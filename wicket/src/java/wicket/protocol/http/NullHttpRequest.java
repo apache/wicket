@@ -79,7 +79,7 @@ public class NullHttpRequest extends HttpRequest
      */
     public String getURL()
     {
-        return "[no request url]";
+        return "[No request URL]";
     }
 
     /**
@@ -87,7 +87,7 @@ public class NullHttpRequest extends HttpRequest
      */
     public String getContextPath()
     {
-        return "[no context path]";
+        return "[No context path]";
     }
 
     /**
@@ -103,7 +103,7 @@ public class NullHttpRequest extends HttpRequest
      */
     public String getPathInfo()
     {
-        return "[no path info]";
+        return "[No path info]";
     }
 
     /**
@@ -111,7 +111,7 @@ public class NullHttpRequest extends HttpRequest
      */
     public String getServletPath()
     {
-        return "[no servlet path]";
+        return "[No servlet path]";
     }
 
     /**
