@@ -31,7 +31,7 @@
 	        <item name="Changes" href="/changes-report.html"/>
         </menu>
         <menu name="Documentation">
-	        <item name="User's manual" href="/manual.html" />
+	        <item name="User's guide" href="/manual.html" />
             <item name="Wiki" href="/wiki" />
 	        <item name="Examples" href="/Examples.html"/>
 	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
