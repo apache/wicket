@@ -9,7 +9,7 @@
 		<property name="show_sql">false</property>
 		<property name="dialect">net.sf.hibernate.dialect.HSQLDialect</property>
 
-		<property name="connection.url">jdbc:hsqldb:gaps</property>
+		<property name="connection.url">jdbc:hsqldb:guestbook</property>
 		<property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
 		<property name="connection.username">sa</property>
 		<property name="connection.password"></property>

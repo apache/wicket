@@ -1,2 +1,5 @@
 work
 target
+guestbook.lck
+guestbook.log
+guestbook.properties
