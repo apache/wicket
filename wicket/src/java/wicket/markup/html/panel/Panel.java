@@ -35,16 +35,16 @@ import wicket.markup.html.HtmlContainer;
  * &lt;/span&gt;
  * ...
  * </pre>
- * A Panel does have its own associated markup file and the container
+ * a Panel does have its own associated markup file and the container
  * content is taken from that file, like:
  * <pre>
  * &lt;span id="wicket-mypanel"/&gt;
  *
  * TestPanel.html
- * &lt;span id="wicket-[panel]"&gt;
+ * &lt;wicket:region name="panel"&gt;
  *   &lt;span id="wicket-mylabel"&gt;My label&lt;/span&gt;
  *   ....
- * &lt;/span&gt;
+ * &lt;/wicket:region&gt;
  * </pre>
  * 
  * @author Jonathan Locke
