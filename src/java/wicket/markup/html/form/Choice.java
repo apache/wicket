@@ -214,9 +214,9 @@ abstract class Choice extends FormComponent
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
-	 * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final StringBuffer options = new StringBuffer();
 		final Object selected = getModelObject();
@@ -272,7 +272,7 @@ abstract class Choice extends FormComponent
 		}
 
 		options.append("\n");
-		replaceBody(markupStream, openTag, options.toString());
+		replaceComponentTagBody(markupStream, openTag, options.toString());
 	}
 
 	/**
@@ -284,7 +284,7 @@ abstract class Choice extends FormComponent
 	 */
 	protected void handleComponentTag(final ComponentTag tag)
 	{
-		checkTag(tag, "select");
+		checkComponentTag(tag, "select");
 		super.handleComponentTag(tag);
 	}
 

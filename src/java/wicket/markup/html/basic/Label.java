@@ -103,11 +103,11 @@ public class Label extends HtmlComponent
 	}
 
 	/**
-	 * @see wicket.Component#handleBody(wicket.markup.MarkupStream,
+	 * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
-	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceBody(markupStream, openTag, getModelObjectAsString());
+		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
 	}
 }

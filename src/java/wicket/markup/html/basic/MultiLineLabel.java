@@ -73,11 +73,11 @@ public class MultiLineLabel extends HtmlComponent
 	}
 
 	/**
-	 * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String body = Strings.toMultilineMarkup(getModelObjectAsString());
-		replaceBody(markupStream, openTag, body);
+		replaceComponentTagBody(markupStream, openTag, body);
 	}
 }

@@ -78,15 +78,15 @@ public class ExternalLink extends HtmlContainer
      * Handle the container's body.
      * @param markupStream The markup stream
      * @param openTag The open tag for the body
-     * @see wicket.Component#handleBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+     * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected void handleBody(MarkupStream markupStream,
+    protected void handleComponentTagBody(MarkupStream markupStream,
             ComponentTag openTag)
     {
-        this.checkTag(openTag, "a");
+        this.checkComponentTag(openTag, "a");
         if (label != null)
         {
-            replaceBody(markupStream, openTag, label);
+            replaceComponentTagBody(markupStream, openTag, label);
         }
     }
 }

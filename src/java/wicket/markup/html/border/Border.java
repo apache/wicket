@@ -81,10 +81,10 @@ public abstract class Border extends HtmlContainer
 	}
 
 	/**
-	 * @see wicket.Component#handleBody(wicket.markup.MarkupStream,
+	 * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
-	protected final void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Save open tag for callback later to render body
 		this.openTag = openTag;
@@ -125,7 +125,7 @@ public abstract class Border extends HtmlContainer
 			}
 
 			// Render the body tag
-			renderTag(tag);
+			renderComponentTag(tag);
 			markupStream.next();
 
 			// Find nearest Border at or above this container
@@ -152,7 +152,7 @@ public abstract class Border extends HtmlContainer
 
 			// Draw the children of the border component using its original
 			// in-line markup stream (not the border's associated markup stream)
-			border.renderBody(border.findMarkupStream(), border.openTag);
+			border.renderComponentTagBody(border.findMarkupStream(), border.openTag);
 
 			// Restore border markup so it can continue rendering
 			border.setMarkupStream(borderMarkup);

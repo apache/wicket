@@ -212,8 +212,8 @@ public class PasswordTextField extends FormComponent
      */
     protected final void handleComponentTag(final ComponentTag tag)
     {
-        checkTag(tag, "input");
-        checkAttribute(tag, "type", "password");
+        checkComponentTag(tag, "input");
+        checkComponentTagAttribute(tag, "type", "password");
         super.handleComponentTag(tag);
 		if (isResetPassword())
 		{

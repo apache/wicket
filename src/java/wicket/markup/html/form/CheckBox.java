@@ -133,8 +133,8 @@ public class CheckBox extends FormComponent
 	 */
 	protected final void handleComponentTag(final ComponentTag tag)
 	{
-		checkTag(tag, "input");
-		checkAttribute(tag, "type", "checkbox");
+		checkComponentTag(tag, "input");
+		checkComponentTagAttribute(tag, "type", "checkbox");
 		super.handleComponentTag(tag);
 
 		Object value = getModelObject();

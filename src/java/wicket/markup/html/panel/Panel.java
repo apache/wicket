@@ -72,7 +72,7 @@ public class Panel extends HtmlContainer
             markupStream.throwMarkupException("A panel must be referenced by an openclose tag.");
         }
 
-        renderTag(markupStream);
+        renderComponentTag(markupStream);
 
         // Render the associated markup
         renderAssociatedMarkup("panel",
