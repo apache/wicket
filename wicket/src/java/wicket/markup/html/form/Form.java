@@ -5,7 +5,8 @@
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
- * the Licens *
+ * the License at
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -138,12 +139,12 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	/**
 	 * Constructs a form with no validation.
 	 *
-	 * @param componentName
+	 * @param name
 	 *            Name of this form
 	 */
-	public Form(final String componentName)
+	public Form(final String name)
 	{
-		this(componentName, null);
+		this(name, null);
 	}
 
 	/**
@@ -256,22 +257,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * Called when a form that has been submitted needs to be validated.
-	 */
-	protected void onValidate()
-	{
-		final int buttons = countButtons();
-		if (buttons <= 1)
-		{
-			validate();
-		}
-		else if (buttons > 1)
-		{
-			invokeButtonClicked();
-		}
-	}
-
-	/**
 	 * Removes already persisted data for all FormComponent childs and disable
 	 * persistence for the same components.
 	 *
@@ -362,6 +347,22 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 * Implemented by subclasses to deal with form submits.
 	 */
 	protected abstract void onSubmit();
+
+	/**
+	 * Called when a form that has been submitted needs to be validated.
+	 */
+	protected void onValidate()
+	{
+		final int buttons = countButtons();
+		if (buttons <= 1)
+		{
+			validate();
+		}
+		else if (buttons > 1)
+		{
+			invokeButtonClicked();
+		}
+	}
 
 	/**
 	 * Validates the form and updates the models of form components. If the form
