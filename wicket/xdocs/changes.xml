@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="fix" dev="Jonathan Locke" issue="1156254">
+      Added setResponsePage(Page) to Component.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1164326">
       Changed Panel so you can have preview text inside the wicket:panel tag.  Fixed a bug in XmlTag regarding what the attributes map holds.  It now holds ordinary Strings.
 	  </action>

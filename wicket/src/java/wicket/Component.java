@@ -875,6 +875,17 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Sets the page that will respond to this request
+	 * 
+	 * @param page
+	 *            The response page
+	 */
+	public final void setResponsePage(final Page page)
+	{
+		getRequestCycle().setResponsePage(page);
+	}
+
+	/**
 	 * Sets whether model strings should be escaped.
 	 * 
 	 * @param escapeMarkup
