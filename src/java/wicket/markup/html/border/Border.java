@@ -22,6 +22,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.WicketTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
 
 /**
@@ -65,6 +66,13 @@ import wicket.model.IModel;
  * In other words, the body of the myBorder component is substituted into the
  * border's associated markup at the position indicated by the
  * &lt;wicket:body&gt; tag.
+ * <p>
+ * Regarding &lt;wicket:body/&gt; you have two options. Either use 
+ * &lt;wicket:body/&gt; (open-close tag) which will automatically be expanded 
+ * to &lt;wicket:body&gt;body content&lt;/wicket:body&gt; or use
+ * &lt;wicket:body&gt;preview region&lt;/wicket:body&gt; in your border's
+ * markup. The preview region (everything in between the open and close tag)
+ * will automatically be removed.
  *
  * @author Jonathan Locke
  */
@@ -107,6 +115,13 @@ public abstract class Border extends WebMarkupContainer
 	 * Border makes use of a &lt;wicket:body&gt; tag to indentify the position
 	 * to insert within the border's body. As &lt;wicket:body&gt; is a special
      * tag and MarkupContainer is not able to handle it, we do that here.
+     * <p>
+     * You have two options. Either use &lt;wicket:body/&gt; (open-close tag) 
+     * which will automatically be expanded to 
+     * &lt;wicket:body&gt;body content&lt;/wicket:body&gt; or use
+     * &lt;wicket:body&gt;preview region&lt;/wicket:body&gt; in your border's
+     * markup. The preview region (everything in between the open and close tag)
+     * will automatically be removed.
 	 *
 	 * @param markupStream
 	 *            The current markup stream
@@ -118,56 +133,80 @@ public abstract class Border extends WebMarkupContainer
 	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// Determine if tag is a <wicket:body> tag
-		final boolean isBodyTag = (tag instanceof WicketTag && markupStream.atOpenCloseTag("body"));
-
 		// If we're being asked to resolve a component for a <wicket:body> tag
-		if (!isBodyTag)
+		if (!(tag instanceof WicketTag))
         {
             return false;
         }
+		
+		final WicketTag wtag = (WicketTag) tag;
+        if (!wtag.isBodyTag())
+        {
+            return false;
+        }
+
+        ComponentTag bodyTag = tag;
+        if (tag.isOpen())
+        {
+            // It is open-preview-close already.
+            // Only RawMarkup is allowed within the preview region, which
+            // gets stripped from output
+            markupStream.next();
+            markupStream.skipRawMarkup();
+        }
+        else if (tag.isOpenClose())
+        {
+            // Automatically expand <wicket:body/> to <wicket:body>...</wicket:body>
+            // in order for the html to look right: insert the body in between the
+            // wicket tags instead of behind the open-close tag.
+            bodyTag = tag.mutable();
+            bodyTag.setType(XmlTag.OPEN);
+        }
         else
+        {
+			markupStream.throwMarkupException("A <wicket:body> tag must be an open or open-close tag.");
+        }
+
+		// Render the body tag
+		renderComponentTag(bodyTag);
+
+		// Find nearest Border at or above this container
+		Border border = (Border)((this instanceof Border) ? this : findParent(Border.class));
+
+		// If markup stream is null, that indicates we already recursed into
+		// this block of log and set it to null (below). If we did that,
+		// then we want to go up another level of border nesting.
+		if (border.getMarkupStream() == null)
 		{
-			// Check that it's <wicket:body/> not <wicket:body>
-			if (!markupStream.atOpenCloseTag())
-			{
-				markupStream.throwMarkupException("A <wicket:body> tag must be an open-close tag.");
-			}
-
-			// Render the body tag
-			renderComponentTag(tag);
-			markupStream.next();
-
-			// Find nearest Border at or above this container
-			Border border = (Border)((this instanceof Border) ? this : findParent(Border.class));
-
-			// If markup stream is null, that indicates we already recursed into
-			// this block of log and set it to null (below). If we did that,
-			// then we want to go up another level of border nesting.
-			if (border.getMarkupStream() == null)
-			{
-				// Find Border at or above parent of this border
-				final MarkupContainer borderParent = border.getParent();
-				border = (Border)((borderParent instanceof Border) ? borderParent : borderParent
-						.findParent(Border.class));
-			}
-
-			// Get the border's markup
-			final MarkupStream borderMarkup = border.findMarkupStream();
-
-			// Set markup of border to null. This allows us to find the border's
-			// parent's markup. It also indicates that we've been here in the
-			// log just above.
-			border.setMarkupStream(null);
-
-			// Draw the children of the border component using its original
-			// in-line markup stream (not the border's associated markup stream)
-			border.renderComponentTagBody(border.findMarkupStream(), border.openTag);
-
-			// Restore border markup so it can continue rendering
-			border.setMarkupStream(borderMarkup);
-			return true;
+			// Find Border at or above parent of this border
+			final MarkupContainer borderParent = border.getParent();
+			border = (Border)((borderParent instanceof Border) ? borderParent : borderParent
+					.findParent(Border.class));
 		}
+
+		// Get the border's markup
+		final MarkupStream borderMarkup = border.findMarkupStream();
+
+		// Set markup of border to null. This allows us to find the border's
+		// parent's markup. It also indicates that we've been here in the
+		// log just above.
+		border.setMarkupStream(null);
+
+		// Draw the children of the border component using its original
+		// in-line markup stream (not the border's associated markup stream)
+		border.renderComponentTagBody(border.findMarkupStream(), border.openTag);
+
+		// Restore border markup so it can continue rendering
+		border.setMarkupStream(borderMarkup);
+		
+		// Render body close tag: </wicket:body>
+		if (tag.isOpenClose())
+		{
+			markupStream.next();
+		    bodyTag.setType(XmlTag.CLOSE);
+			renderComponentTag(bodyTag);
+		}
+		
+		return true;
 	}
 }
-
-
