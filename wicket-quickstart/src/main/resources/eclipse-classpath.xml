@@ -133,12 +133,6 @@
     <j:set var="eclipseDependency"
            value="${lib.dependency.getProperty('eclipse.dependency')}"/>
     <j:choose>
-      <j:when test="${eclipseDependency == 'true'}">
-        <classpathentry kind="src" path="/${lib.dependency.artifactId}"/>
-      </j:when>
-      <j:when test="${eclipseDependency == 'false'}">
-        <!-- ignore specific dependencies -->
-      </j:when>      
       <j:when test="${lib.dependency.groupId == 'junit' and ignoreJUnit}">
         <!-- ignoring junit dependency as we've already created it -->
       </j:when>
