@@ -7,6 +7,14 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1119560">
+      	Restructured class hierarchy for converters a little so that all integral
+      	converters such as IntegerConverter extend AbstractIntegerConverter. 
+      	Then made getNumberFormat() in AbstractNumberConverter abstract and 
+      	implemented it in AbstractIntegerConverter by creating an integer NumberFormat
+      	instance and then turning grouping off and integer-only on.  I like this fix
+      	because it really respects i18n, which is sometimes very complex stuff. 
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
       	Changed HtmlPage to WebPage, HtmlContainer to WebContainer and HtmlComponent
       	to WebComponent for friendliness and consistency with http protocol package.

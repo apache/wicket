@@ -26,7 +26,7 @@ import java.util.Locale;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class ShortConverter extends NumberConverter
+public final class ShortConverter extends AbstractIntegerConverter
 {
     /**
      * Constructor

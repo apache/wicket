@@ -25,7 +25,7 @@ import java.util.Locale;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class ByteConverter extends NumberConverter
+public final class ByteConverter extends AbstractIntegerConverter
 {
     /**
      * Constructor

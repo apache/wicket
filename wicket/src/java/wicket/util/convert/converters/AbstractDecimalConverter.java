@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractDecimalConverter.java,v 1.2 2005/02/09 04:55:38 jonathanlocke
+ * Exp $ $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -26,33 +26,38 @@ import java.util.Locale;
  * 
  * @author Jonathan Locke
  */
-public abstract class DecimalConverter extends NumberConverter 
+public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 {
-    /**
-     * Constructor
-     */
-    public DecimalConverter()
-    {
-    }
-    
-    /**
-     * Constructor
-     * @param locale The locale for this converter
-     */
-    public DecimalConverter(final Locale locale)
-    {
-        super(locale);
-    }
-    
-    /**
+	/** Current format */
+	private NumberFormat numberFormat;
+
+	/**
+	 * Constructor
+	 */
+	public AbstractDecimalConverter()
+	{
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param locale
+	 *            The locale for this converter
+	 */
+	public AbstractDecimalConverter(final Locale locale)
+	{
+		super(locale);
+	}
+
+	/**
 	 * @return Returns the numberFormat.
 	 */
 	public final NumberFormat getNumberFormat()
 	{
-        if (numberFormat == null)
-        {
-            numberFormat = DecimalFormat.getInstance(getLocale());
-        }
+		if (numberFormat == null)
+		{
+			numberFormat = DecimalFormat.getInstance(getLocale());
+		}
 		return numberFormat;
-	}       
+	}
 }

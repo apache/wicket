@@ -26,7 +26,7 @@ import java.util.Locale;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FloatConverter extends DecimalConverter
+public final class FloatConverter extends AbstractDecimalConverter
 {
     /**
      * Constructor

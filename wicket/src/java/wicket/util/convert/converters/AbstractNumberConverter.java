@@ -27,15 +27,12 @@ import wicket.util.convert.ConversionException;
  * 
  * @author Jonathan Locke
  */
-public abstract class NumberConverter extends AbstractConverter
+public abstract class AbstractNumberConverter extends AbstractConverter
 {
-	/** The number format */
-	protected NumberFormat numberFormat;
-
 	/**
 	 * Constructor
 	 */
-	public NumberConverter()
+	public AbstractNumberConverter()
 	{
 	}
 
@@ -45,7 +42,7 @@ public abstract class NumberConverter extends AbstractConverter
 	 * @param locale
 	 *            The locale for this converter
 	 */
-	public NumberConverter(final Locale locale)
+	public AbstractNumberConverter(final Locale locale)
 	{
 		super(locale);
 	}
@@ -53,23 +50,7 @@ public abstract class NumberConverter extends AbstractConverter
 	/**
 	 * @return Returns the numberFormat.
 	 */
-	public NumberFormat getNumberFormat()
-	{
-		if (numberFormat == null)
-		{
-			numberFormat = NumberFormat.getInstance(getLocale());
-		}
-		return numberFormat;
-	}
-
-	/**
-	 * @param numberFormat
-	 *            The numberFormat to set.
-	 */
-	public final void setNumberFormat(final NumberFormat numberFormat)
-	{
-		this.numberFormat = numberFormat;
-	}
+	public abstract NumberFormat getNumberFormat();
 
 	/**
 	 * Parses a value as a String and returns a Number.
@@ -86,7 +67,8 @@ public abstract class NumberConverter extends AbstractConverter
 	 */
 	protected Number parse(final Object value, final double min, final double max)
 	{
-		final Number number = (Number)parse(getNumberFormat(), value);
+		final NumberFormat numberFormat = getNumberFormat();
+		final Number number = (Number)parse(numberFormat, value);
 		if (number.doubleValue() < min)
 		{
 			throw newConversionException("Value cannot be less than " + min, value).setFormat(
