@@ -259,9 +259,9 @@ public abstract class Container extends Component
 
 		if (child.getParent() != this)
 		{
-			// first reset the childs parent (can't set them at once with
-			// another)
+			// First reset the childs parent (can't set them at once with another)
 			child.setParent(null);
+			
 			// Set child's parent
 			child.setParent(this);
 
