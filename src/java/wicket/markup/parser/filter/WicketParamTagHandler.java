@@ -38,7 +38,7 @@ import wicket.markup.parser.IXmlPullParser;
  * Example:
  * 
  * <pre>
- *    &lt;table&gt;&lt;tr id=&quot;wicket-myTable&quot;&gt;
+ *    &lt;table&gt;&lt;tr wicket:id=&quot;myTable&quot;&gt;
  *      &lt;wicket:param rowsPerPage=10/&gt;
  *      ...
  *    &lt;/tr&gt;&lt;/table&gt;

@@ -56,8 +56,8 @@ public final class MarkupParser
     private static final Log log = LogFactory.getLog(MarkupParser.class);
 
     /** Name of desired componentId tag attribute.
-     * E.g. &lt;tag id="wicket-..."&gt; or &lt;tag wicket=..&gt; */
-    private String wicketNamespace = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
+     * E.g. &lt;tag wicket:id="..."&gt; */
+    private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
 
     /** True to strip out HTML comments. */
     private boolean stripComments;
@@ -103,7 +103,7 @@ public final class MarkupParser
 	 */
 	public void configure(final ApplicationSettings settings)
 	{
-        this.wicketNamespace = settings.getComponentIdAttribute();
+        this.wicketNamespace = settings.getWicketNamespace();
         this.stripWicketTag = settings.getStripWicketTags();
         this.stripComments = settings.getStripComments();
         this.compressWhitespace = settings.getCompressWhitespace();

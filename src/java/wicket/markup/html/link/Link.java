@@ -50,7 +50,7 @@ import wicket.model.IModel;
  * 
  * <pre>
  * 
- *        &lt;a href=&quot;#&quot; id=&quot;wicket-myLink&quot;&gt;click here&lt;/a&gt;
+ *        &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  *  
  * </pre>
  * 
@@ -58,7 +58,7 @@ import wicket.model.IModel;
  * 
  * <pre>
  * 
- *        &lt;td id=&quot;wicket-myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *        &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  *  
  * </pre>
  * 

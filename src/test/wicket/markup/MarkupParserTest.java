@@ -296,9 +296,9 @@ public final class MarkupParserTest extends TestCase
 	    
 	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
 	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
-	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span id=\"wicket-msg\">hello world!</span></wicket:component>");
+	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
 	    
-	    parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span id=\"wicket-contentPanel\"/></div></wicket:panel>");
+	    parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
    	}
 
     /**
@@ -322,7 +322,7 @@ public final class MarkupParserTest extends TestCase
 	    assertEquals(3, markup.size());
 
 	    final ApplicationSettings settings = new ApplicationSettings(new MockWebApplication(null));
-	    settings.setComponentIdAttribute("wcn");
+	    settings.setWicketNamespace("wcn");
 	    parser.configure(settings);
 	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
 	    assertEquals(1, markup.size());

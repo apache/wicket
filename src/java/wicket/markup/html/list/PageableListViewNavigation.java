@@ -34,9 +34,9 @@ import wicket.model.IModel;
  * {@link Label}with the page number of that link (1..n).
  * 
  * <pre>
- *			 &lt;td id=&quot;wicket-navigation&quot;&gt;
- *				 &lt;a id=&quot;wicket-pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- *					&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
+ *			 &lt;td wicket:id=&quot;navigation&quot;&gt;
+ *				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *					&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
  *				 &lt;/a&gt;
  *			 &lt;/td&gt;
  * </pre>
@@ -76,10 +76,10 @@ import wicket.model.IModel;
  * With:
  * 
  * <pre>
- *			 &lt;td id=&quot;wicket-navigation&quot;&gt;
- *				 &lt;span id=&quot;wicket-separator&quot;/&gt;
- *				 &lt;a id=&quot;wicket-pageLink&quot; href=&quot;#&quot;&gt;
- *				   &lt;span id=&quot;wicket-pageLabel&quot;/&gt;&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
+ *			 &lt;td wicket:id=&quot;navigation&quot;&gt;
+ *				 &lt;span wicket:id=&quot;separator&quot;/&gt;
+ *				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ *				   &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
  *				 &lt;/a&gt;
  *			 &lt;/td&gt;
  * </pre>

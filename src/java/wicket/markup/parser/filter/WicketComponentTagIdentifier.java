@@ -36,7 +36,7 @@ import wicket.markup.parser.XmlTag;
  * <p>
  * <ul>
  * <li>All tags with Wicket namespace, e.g. &lt;wicket:remove&gt;</li>
- * <li>All tags with an attribute like id="wicket-myLabel" or wicket="myLabel"
+ * <li>All tags with an attribute like wicket:id="myLabel"
  * </li>
  * </ul>
  * 
@@ -48,7 +48,7 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	private static final Log log = LogFactory.getLog(WicketComponentTagIdentifier.class);
 
 	/** Wicket namespace */
-	private String wicketNamespace = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
+	private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
 
 	/**
 	 * Construct.
@@ -71,7 +71,7 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	{
 		this.wicketNamespace = name;
 
-		if (!ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE.equals(wicketNamespace))
+		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
 		{
 			log.info("You are using a non-standard component name: " + wicketNamespace);
 		}
@@ -117,7 +117,7 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 			tag = new ComponentTag(xmlTag);
 		}
 
-		// If the form <tag id = "wicket-value"> is used
+		// If the form <tag wicket:id = "value"> is used
 		final String value = tag.getAttributes().getString(wicketNamespace + ":id");
 		if (value != null)
 		{

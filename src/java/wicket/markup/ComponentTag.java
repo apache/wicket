@@ -41,7 +41,7 @@ public class ComponentTag extends MarkupElement
 	 * regardless of user ApplicationSettings for id attribute; value ==
 	 * 'wicket'.
 	 */
-	public static final String DEFAULT_COMPONENT_ID_ATTRIBUTE = "wicket";
+	public static final String DEFAULT_WICKET_NAMESPACE = "wicket";
 
 	/**
 	 * Assuming this is a open (or open-close) tag, 'closes' refers to the
@@ -369,7 +369,7 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * Set the component's id. The value is usually taken from the tag's id
-	 * attribute, e.g. id="wicket-id" or wicket="id".
+	 * attribute, e.g. wicket:id="componentName".
 	 * 
 	 * @param id
 	 *            The component's id assigned to the tag.
@@ -448,7 +448,7 @@ public class ComponentTag extends MarkupElement
 	    }
 	    else
 	    {
-	        return xmlTag.toXmlString(DEFAULT_COMPONENT_ID_ATTRIBUTE + ":id");
+	        return xmlTag.toXmlString(DEFAULT_WICKET_NAMESPACE + ":id");
 	    }
 	}
 	
