@@ -22,6 +22,9 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.RenderException;
 import wicket.RequestCycle;
 import wicket.markup.MarkupStream;
@@ -65,7 +68,11 @@ import wicket.model.IModel;
  */
 public abstract class ListView extends HtmlContainer 
 { // TODO finalize javadoc
-    /** Index of the first listItem to show */
+	
+	/** log. */
+	private static Log log = LogFactory.getLog(ListView.class);
+
+	/** Index of the first listItem to show */
     private int firstIndex = 0;
  
     /** max number (not index) of listItems to show */
@@ -260,10 +267,10 @@ public abstract class ListView extends HtmlContainer
                 size = modelSize - firstIndex;
             }
         }
-        else
+        else if(viewSize == Integer.MAX_VALUE)
         {
-        	// the model is not a list and the size is not set
-        	throw new IllegalStateException("model object (" + modelObject.getClass()
+        	// the model is not a list and the size is not set; probably an error
+        	log.warn("model object (" + modelObject
         			+ ") is not a List and the view size is not explicitly set");
         }
         
