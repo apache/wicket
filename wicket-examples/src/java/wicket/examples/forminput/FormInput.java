@@ -19,6 +19,7 @@ package wicket.examples.forminput;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import wicket.examples.WicketExamplePage;
@@ -40,6 +41,9 @@ import wicket.markup.html.panel.FeedbackPanel;
  */
 public class FormInput extends WicketExamplePage
 {
+	/** all available locales wrapped in a list. */
+	private static final List ALL_LOCALES = Arrays.asList(Locale.getAvailableLocales());
+
 	/**
 	 * Constructor
 	 */
@@ -51,9 +55,13 @@ public class FormInput extends WicketExamplePage
 		add(new InputForm("inputForm", feedback));
 
 		// Dropdown for selecting locale
-		add(new DropDownChoice("localeSelect", this, "locale", Arrays.asList(Locale
-				.getAvailableLocales())) 
+		add(new DropDownChoice("localeSelect", this, "locale", ALL_LOCALES) 
 		{
+			protected boolean wantOnSelectionChangedNotifications()
+			{
+				return true;
+			}
+
 			public void onSelectionChanged(Object newSelection)
 			{
 				setLocale((Locale)newSelection);
