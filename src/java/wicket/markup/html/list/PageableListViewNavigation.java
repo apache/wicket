@@ -60,20 +60,20 @@ import wicket.model.IModel;
  * 
  * protected void populateItem(ListItem listItem)
  * {
- * 	final int page = ((Integer)listItem.getModelObject()).intValue();
- * 	final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
+ * 	 final int page = ((Integer)listItem.getModelObject()).intValue();
+ * 	 final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
  * 			pageableListView, page);
- * 	if (page &gt; 0)
- * 	{
+ * 	 if (page &gt; 0)
+ * 	 {
  * 		listItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
- * 	}
- * 	else
- * 	{
+ * 	 }
+ * 	 else
+ * 	 {
  * 		listItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
- * 	}
- * 	link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
- * 	link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
- * 	listItem.add(link);
+ * 	 }
+ * 	 link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
+ * 	 link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
+ * 	 listItem.add(link);
  * }
  * </pre>
  * 
@@ -97,6 +97,21 @@ import wicket.model.IModel;
  * </pre>
  * 
  * </p>
+ * Assuming a PageableListView with 1000 entries and not more than 10 lines shall
+ * be printed per page, the navigation bar would have 100 entries.
+ * Because this is not feasible PageableListViewNavigation's navigation bar is 
+ * pageable as well. 
+ * <p>
+ * The page links displayed are automatically adjusted based on the number of
+ * page links to be displayed and a margin. The margin makes sure that the page
+ * link pointing to the current page is not at the left or right end of the page
+ * links currently printed and thus provinding a better user experience.
+ * <p>
+ * Use setMargin() and setViewSize() to adjust the navigation's bar view size
+ * and margin.
+ * <p>
+ * Please @see PageableListViewNavigator for a ready made component which already
+ * includes links to the first, previous, next and last page. 
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -109,6 +124,15 @@ public class PageableListViewNavigation extends ListView
 
 	/** The PageableListView this navigation is navigating. */
 	protected PageableListView pageableListView;
+	
+	/**
+	 * Number of links on the left and/or right to keep the current
+	 * page link somewhere near the middle.
+	 */
+	private int margin;
+	
+	/** Default separator between page numbers. Null: no separator. */
+	private String separator = null;
 
 	/**
 	 * Constructor.
@@ -125,6 +149,48 @@ public class PageableListViewNavigation extends ListView
 
 		this.pageableListView = pageableListView;
 		this.setStartIndex(0);
+	}
+
+	/**
+	 * Gets the margin.
+	 * 
+	 * @return the margin
+	 */
+	public int getMargin()
+	{
+		return margin;
+	}
+
+	/**
+	 * Gets the seperator.
+	 * 
+	 * @return the seperator
+	 */
+	public String getSeparator()
+	{
+		return separator;
+	}
+
+	/**
+	 * Sets the margin.
+	 * 
+	 * @param margin
+	 *            the margin
+	 */
+	public void setMargin(final int margin)
+	{
+		this.margin = margin;
+	}
+	
+	/**
+	 * Sets the seperator. Null meaning, no separator at all.
+	 * 
+	 * @param separator
+	 *            the seperator
+	 */
+	public void setSeparator(final String separator)
+	{
+		this.separator = separator;
 	}
 
 	/**
@@ -204,5 +270,82 @@ public class PageableListViewNavigation extends ListView
 		// Add a label (the page number) to the list which is enclosed by the
 		// link
 		link.add(new Label("pageNumber", String.valueOf(pageIndex + 1)));
+	}
+
+	/**
+	 * Renders this component.
+	 * 
+	 * @see wicket.markup.html.list.ListView#onRender()
+	 */
+	protected void onBeginRender()
+	{
+		// PageableListViewNavigation itself (as well as the PageableListView)
+		// may have pages.
+
+		// The index of the first page link depends on the PageableListView's
+		// page currently printed.
+		this.setStartIndex();
+	}
+
+	/**
+	 * Renders the page link. Add the separator if not the last page link
+	 * 
+	 * @param listItem
+	 *            The current page link to render
+	 * @param lastItem
+	 *            True, if last page link to render
+	 */
+	protected void renderItem(final ListItem listItem, final boolean lastItem)
+	{
+		// call default implementation
+		super.renderItem(listItem, lastItem);
+
+		// add separator if not last page
+		if ((separator != null) && !lastItem)
+		{
+			getResponse().write(separator);
+		}
+	}
+
+	/**
+	 * Get the first page link to render. Adjust the first page link based on
+	 * the current PageableListView page displayed.
+	 */
+	private void setStartIndex()
+	{
+		// Which startIndex are we currently using
+		int firstListItem = this.getStartIndex();
+
+		// How many page links shall be displayed
+		int viewSize = this.getViewSize();
+
+		// What is the PageableListView's page index to be displayed
+		int currentPage = pageableListView.getCurrentPage();
+
+		// Make sure the current page link index is within the current
+		// window taking the left and right margin into account
+		if (currentPage < (firstListItem + this.margin))
+		{
+			firstListItem = currentPage - viewSize + margin;
+		}
+		else if (currentPage >= (firstListItem + viewSize - this.margin))
+		{
+			firstListItem = currentPage - margin;
+		}
+
+		// Make sure the first index is >= 0 and the last index is <=
+		// than the last page link index.
+		if ((firstListItem + viewSize) >= pageableListView.getPageCount())
+		{
+			firstListItem = pageableListView.getPageCount() - viewSize;
+		}
+
+		if (firstListItem < 0)
+		{
+			firstListItem = 0;
+		}
+
+		// Tell the ListView what the new start index shall be
+		this.setStartIndex(firstListItem);
 	}
 }
