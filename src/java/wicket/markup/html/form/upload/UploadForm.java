@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,24 +17,34 @@
  */
 package wicket.markup.html.form.upload;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 
 import wicket.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
+import wicket.util.lang.Bytes;
 
 /**
  * Form for handling (file) uploads with multipart requests. Use this with
- * {@link wicket.markup.html.form.upload.FileUploadField}components. You can attach
- * mutliple FileInput fields for muliple file uploads.
+ * {@link wicket.markup.html.form.upload.FileUploadField}components. You can
+ * attach mutliple FileInput fields for muliple file uploads.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
 public abstract class UploadForm extends Form
 {
+	/** Maximum size of an upload in bytes */
+	Bytes maxSize;
+
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -70,11 +80,43 @@ public abstract class UploadForm extends Form
 		// Change the request to a multipart web request so parameters are
 		// parsed out correctly
 		final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
-		final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(request);
-		getRequestCycle().setRequest(multipartWebRequest);
+		try
+		{
+			final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(this, request);
+			getRequestCycle().setRequest(multipartWebRequest);
+		}
+		catch (FileUploadException e)
+		{
+			// Create model with exception and maximum size values
+			final HashMap model = new HashMap();
+			model.put("exception", e);
+			model.put("maxSize", maxSize);
+
+			if (e instanceof SizeLimitExceededException)
+			{
+				// Resource key should be <form-id>.uploadTooLarge to override default message
+				final String defaultValue = "Upload must be less than " + maxSize;
+				error(getString(getId() + ".uploadTooLarge", Model.valueOf(model), defaultValue));
+			}
+			else
+			{
+				// Resource key should be <form-id>.uploadFailed to override default message
+				final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
+				error(getString(getId() + ".uploadFailed", Model.valueOf(model), defaultValue));
+			}
+		}
 
 		// Now do normal form submit validation processing
 		super.onFormSubmitted();
+	}
+
+	/**
+	 * @param maxSize
+	 *            The maxSize to set.
+	 */
+	public void setMaxSize(final Bytes maxSize)
+	{
+		this.maxSize = maxSize;
 	}
 
 	/**
