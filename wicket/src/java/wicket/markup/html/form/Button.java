@@ -47,12 +47,12 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * @see FormComponent#initModel()
+	 * @see wicket.Component#initModel()
 	 */
 	protected IModel initModel()
 	{
 		// Buttons don't have models and so we don't want
-		// FormComponent.initModel() to try to attach one automatically.
+		// Component.initModel() to try to attach one automatically.
 		return null;
 	}
 

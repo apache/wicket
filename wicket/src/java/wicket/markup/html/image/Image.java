@@ -28,12 +28,10 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * An image component represents a localizable image resource. The image name
- * comes from the src attribute of the image tag that the component is attached
- * to. The image component responds to requests made via IResourceListener's
- * resourceRequested method. The image or subclass responds by returning an
- * IResource from getImageResource(String), where String is the source attribute
- * of the image tag.
+ * An Image component displays a localizable image resource.
+ * <p>
+ * For details of how Images load, generate and manage images, see
+ * {@link LocalizedImageResource}.
  * 
  * @author Jonathan Locke
  */
@@ -114,6 +112,17 @@ public class Image extends WebComponent implements IResourceListener
 	public void setImageResource(final ImageResource imageResource)
 	{
 		this.localizedImageResource.setResource(imageResource);
+	}
+
+	/**
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		// Images don't support Compound models. They either have a simple
+		// model, explicitly set, or they use their tag's src or value
+		// attribute to determine the image.
+		return null;
 	}
 
 	/**

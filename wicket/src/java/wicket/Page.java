@@ -572,15 +572,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		// A Page has no default model
-		return null;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
 	 * 

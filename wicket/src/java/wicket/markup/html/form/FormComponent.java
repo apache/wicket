@@ -392,30 +392,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		return getModelObjectAsString(); 
 	}
-
-	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		if (getParent() != null)
-		{
-			// Get form model
-			final IModel model = getForm().getModel();
-			if (model != null)
-			{
-				// Use form's model
-				return model;
-			}
-			else
-			{
-				throw new WicketRuntimeException("FormComponent " + this + " and parent Form "
-						+ getForm() + " cannot both have null models");
-			}
-		}
-		return null;
-	}
-
+	
 	/**
 	 * Gets the request parameter for this component as an int.
 	 * 

@@ -93,7 +93,7 @@ public final class GuestBook extends WicketExamplePage
 		public final void onSubmit()
 		{
 			// Construct a copy of the edited comment
-			final Comment comment = (Comment)getRootModelObject();
+			final Comment comment = (Comment)getModelObject();
 			final Comment newComment = new Comment(comment);
 
 			// Set date of comment to add
