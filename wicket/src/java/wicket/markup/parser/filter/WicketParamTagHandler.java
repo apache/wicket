@@ -20,6 +20,9 @@ package wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupElement;
@@ -43,6 +46,9 @@ import wicket.markup.parser.IXmlPullParser;
  */
 public class WicketParamTagHandler implements IMarkupFilter
 {
+    /** Logging */
+    private final static Log log = LogFactory.getLog(WicketParamTagHandler.class);
+    
     /** The next MarkupFilter in the chain */
     private final IMarkupFilter parent;
 
@@ -182,14 +188,22 @@ public class WicketParamTagHandler implements IMarkupFilter
         // TODO: <wicket:params name = "myProperty">My completely free text that can
         //   contain everything</wicket:params> is currently not supported
         
-        // Add the parameters to the component tag
-        tag.putAll(tag.getAttributes());
+        // Add the parameters to the previous component tag
+        lastTag.putAll(tag.getAttributes());
 
         // If wicket param tags shall not be included in the output, than
         // go ahead and process the next one.
+        
         if (stripWicketTag == true)
         {
             tag = (ComponentTag)parent.nextTag();
+        }
+        else
+        {
+            // E.g. An "Expected close tag" exception will be thrown if the
+            // component uses replaceComponentTagBody() to replace the body
+            // of the component (see src/test/.../MyLabel.html).
+            log.debug("Be careful. Not stripping <wicket:param> may cause subtle errors.");
         }
         
         return tag;

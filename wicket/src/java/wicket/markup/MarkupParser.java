@@ -213,8 +213,6 @@ public final class MarkupParser
 
                 if (!"_ignore_".equals(tag.getComponentName()))
                 {
-	                // Add immutable tag
-	                tag.makeImmutable();
 	                list.add(tag);
                 }
 
@@ -230,6 +228,21 @@ public final class MarkupParser
             list.add(new RawMarkup(text));
         }
 
+        // Make all tags immutable. Note: We can not make tag immutable 
+        // just prior to adding to the list, because <wicket:param> 
+        // needs to modify its preceding tag (add the attributes). And 
+        // because WicketParamTagHandler and ComponentTag are not in the 
+        // same package, WicketParamTagHandler is not able to modify the
+        // default protected variables of ComponentTag, either.
+        for (int i=0; i < list.size(); i++)
+        {
+            MarkupElement elem = (MarkupElement) list.get(i);
+            if (elem instanceof ComponentTag)
+            {
+                ((ComponentTag)elem).makeImmutable();
+            }
+        }
+        
         // Return immutable list of all MarkupElements
         return Collections.unmodifiableList(list);
     }
