@@ -104,7 +104,7 @@ import wicket.util.watch.Watcher;
  *    functionality required to access localized resources.
  * <p>
  * <i>converterRegistry</i> (read-only) - The registry with converters that should be used
- *    for type conversion e.g. by {@link com.voicetribe.wicket.PropertyModel}. Use the reference
+ *    for type conversion e.g. by {@link wicket.PropertyModel}. Use the reference
  *    of converterRegistry to register/ deregister type converters if needed. Also, there are
  *    convenience method in converterRegistry to swith to a localized/ non-localized set
  *    of type converters.

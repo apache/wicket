@@ -32,7 +32,7 @@ public class URL extends File implements IChangeable
     
 	/**
      * Construct.
-     * @param pathname path name
+     * @param url A standard java URL
      */
     public URL(final java.net.URL url)
     {
