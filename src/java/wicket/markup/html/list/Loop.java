@@ -42,7 +42,7 @@ public abstract class Loop extends WebMarkupContainer
 	 * 
 	 * @author Jonathan Locke
 	 */
-	static public class Iteration extends WebMarkupContainer
+	static public class LoopItem extends WebMarkupContainer
 	{
 		/** The iteration number */
 		private final int iteration;
@@ -53,7 +53,7 @@ public abstract class Loop extends WebMarkupContainer
 		 * @param iteration
 		 *            The iteration of the loop
 		 */
-		private Iteration(final int iteration)
+		private LoopItem(final int iteration)
 		{
 			super(Integer.toString(iteration));
 			this.iteration = iteration;
@@ -120,7 +120,7 @@ public abstract class Loop extends WebMarkupContainer
 			for (int i = 0; i < iterations; i++)
 			{
 				// Create container for the given loop iteration
-				final Iteration iteration = new Iteration(i);
+				final LoopItem iteration = new LoopItem(i);
 
 				// Add iteration and populate it
 				add(iteration);
@@ -148,7 +148,7 @@ public abstract class Loop extends WebMarkupContainer
 			for (int i = 0; i < iterations; i++)
 			{
 				// Create container for the given loop iteration
-				final Iteration iteration = (Iteration)get(Integer.toString(i));
+				final LoopItem iteration = (LoopItem)get(Integer.toString(i));
 				if (iteration == null)
 				{
 					throw new WicketRuntimeException(
@@ -174,7 +174,7 @@ public abstract class Loop extends WebMarkupContainer
 	 * @param iteration
 	 *            The iteration of the loop
 	 */
-	protected abstract void populateIteration(Iteration iteration);
+	protected abstract void populateIteration(LoopItem iteration);
 
 	/**
 	 * Renders this loop iteration.
@@ -182,7 +182,7 @@ public abstract class Loop extends WebMarkupContainer
 	 * @param iteration
 	 *            The loop iteration
 	 */
-	protected void renderIteration(final Iteration iteration)
+	protected void renderIteration(final LoopItem iteration)
 	{
 		iteration.render();
 	}
