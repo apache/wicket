@@ -68,25 +68,25 @@ public final class Home extends WicketExamplePage
 
         // add a couple of links to be able to play around with the Locales
         add(new Link("goCanadian"){
-            public void onLinkClicked()
+            public void onClick()
             {
                 currentLocale = Locale.CANADA;
             }
         });
         add(new Link("goUS"){
-            public void onLinkClicked()
+            public void onClick()
             {
                 currentLocale = Locale.US;
             }
         });
         add(new Link("goDutch"){
-            public void onLinkClicked()
+            public void onClick()
             {
                 currentLocale = new Locale("nl", "NL");
             }
         });
         add(new Link("goGerman"){
-            public void onLinkClicked()
+            public void onClick()
             {
                 currentLocale = new Locale("de", "DE");
             }

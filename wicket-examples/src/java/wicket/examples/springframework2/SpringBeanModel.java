@@ -175,12 +175,12 @@ public class SpringBeanModel extends DetachableModel
      * want to force the separation of the overall Wicket application
      * configuration from the configuration of the middle tier beans.
      */
-    protected void doAttach()
+    protected void onAttach()
     {
         this.applicationContext = SpringContextLocator.getApplicationContext(RequestCycle.get());
     }
 
-    protected void doDetach()
+    protected void onDetach()
     {
         this.applicationContext = null;
     }

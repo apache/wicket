@@ -101,7 +101,7 @@ public class Guess extends WicketExamplePage {
          * Handle clicking of this link. Redirects the request cycle based
          * on the current state of the game.
          */
-        public void onLinkClicked() {
+        public void onClick() {
             final RequestCycle requestCycle = getRequestCycle();
             System.err.println("Linked clicked for letter: " + letter);
             setEnabled(false);

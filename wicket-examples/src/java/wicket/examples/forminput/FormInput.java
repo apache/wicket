@@ -70,7 +70,7 @@ public class FormInput extends WicketExamplePage
 		add(new LocaleSelect("localeSelect", this, "currentLocale", ALL_LOCALES));
 		add(new Link("defaultLocaleLink")
 		{
-			public void onLinkClicked()
+			public void onClick()
 			{
 				// Get locale of request
 				final Locale requestLocale = getRequest().getLocale();
@@ -146,7 +146,7 @@ public class FormInput extends WicketExamplePage
             
 			add(new OnClickLink("resetButton")
 			{
-				public void onLinkClicked()
+				public void onClick()
 				{
 					testInputObject = new TestInputObject();
 				}

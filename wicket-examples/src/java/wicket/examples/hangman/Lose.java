@@ -50,7 +50,7 @@ public class Lose extends WicketExamplePage {
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public void onLinkClicked() {
+			public void onClick() {
 				Hangman hangman = (Hangman) guessPage.getModelObject();
 				hangman.newGame();
 				guessPage.resetLetters();

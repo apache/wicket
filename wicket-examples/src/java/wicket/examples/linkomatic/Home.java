@@ -54,7 +54,7 @@ public class Home extends WicketExamplePage
 		// Action link counts link clicks
 		final Link actionLink = new Link("actionLink")
 		{
-			public void onLinkClicked()
+			public void onClick()
 			{
 				linkClickCount++;
 
@@ -69,7 +69,7 @@ public class Home extends WicketExamplePage
 		// Action link counts link clicks on works with onclick handler
 		final OnClickLink actionOnClickLink = new OnClickLink("actionOnClickLink")
 		{
-			public void onLinkClicked()
+			public void onClick()
 			{
 				onClickLinkClickCount++;
 
