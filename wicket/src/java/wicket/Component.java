@@ -838,7 +838,7 @@ public abstract class Component implements Serializable, IConverterSource
 		final Response originalResponse = cycle.getResponse();
 
 		// If component is not visible, set response to NullResponse
-		if (!visible)
+		if (!isVisible())
 		{
 			cycle.setResponse(NullResponse.getInstance());
 		}
