@@ -201,14 +201,14 @@ public abstract class WebApplication extends Application
 		// Get session, creating if it doesn't exist
 		final HttpSession httpSession = request.getSession(true);
 
-		// The request session object is unique per web application, but wicket
-		// requires it to be unique per servlet. That is, there must be a 1..n
-		// relationship between HTTP sessions (JSESSIONID) and Wicket
-		// applications.
-		final String sessionAttributeName = "session-" + request.getServletPath();
+		// Namespacing for session attributes is provided by adding the servlet path
+		final String sessionAttributePrefix = "wicket-" + request.getServletPath();
+
+		// The actual attribute for the session is "wicket-<servlet-path>-session"
+		final String sessionAttribute = sessionAttributePrefix + "-" + Session.sessionAttributeName;
 
 		// Get Session abstraction from httpSession attribute
-		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttributeName);
+		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttribute);
 		if (webSession == null)
 		{
 			// Create session using session factory
@@ -227,11 +227,11 @@ public abstract class WebApplication extends Application
 			webSession.setLocale(request.getLocale());
 
 			// Save this session in the HttpSession using the attribute name
-			httpSession.setAttribute(sessionAttributeName, webSession);
+			httpSession.setAttribute(sessionAttribute, webSession);
 		}
 
 		// Set session attribute name and attach/reattach http servlet session
-		webSession.init(httpSession, sessionAttributeName);
+		webSession.init(httpSession, sessionAttributePrefix);
 
 		return webSession;
 	}

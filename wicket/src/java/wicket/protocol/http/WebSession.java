@@ -42,7 +42,7 @@ public class WebSession extends Session
 	private transient javax.servlet.http.HttpSession httpSession;
 
 	/** The attribute in the HttpSession where this WebSession object is stored */
-	private transient String sessionAttributeName;
+	private transient String sessionAttributePrefix;
 
 	/**
 	 * Constructor
@@ -83,7 +83,7 @@ public class WebSession extends Session
 	 */
 	protected Object getAttribute(final String name)
 	{
-		return httpSession.getAttribute(sessionAttributeName + "-" + name);
+		return httpSession.getAttribute(sessionAttributePrefix + "-" + name);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class WebSession extends Session
 	{
 		final List list = new ArrayList();
 		final Enumeration names = httpSession.getAttributeNames();
-		final String prefix = sessionAttributeName + "-";
+		final String prefix = sessionAttributePrefix + "-";
 		while (names.hasMoreElements())
 		{
 			final String name = (String)names.nextElement();
@@ -110,7 +110,7 @@ public class WebSession extends Session
 	 */
 	protected void removeAttribute(final String name)
 	{
-		httpSession.removeAttribute(sessionAttributeName + "-" + name);
+		httpSession.removeAttribute(sessionAttributePrefix + "-" + name);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class WebSession extends Session
 	 */
 	protected void setAttribute(final String name, final Object object)
 	{
-		httpSession.setAttribute(sessionAttributeName + "-" + name, object);
+		httpSession.setAttribute(sessionAttributePrefix + "-" + name, object);
 	}
 
 	/**
@@ -126,18 +126,18 @@ public class WebSession extends Session
 	 * 
 	 * @param httpSession
 	 *            The http session to attach
-	 * @param sessionAttributeName
+	 * @param sessionAttributePrefix
 	 *            The session attribute name
 	 */
-	final void init(final HttpSession httpSession, final String sessionAttributeName)
+	final void init(final HttpSession httpSession, final String sessionAttributePrefix)
 	{
 		// Set session attribute name
-		this.sessionAttributeName = sessionAttributeName;
+		this.sessionAttributePrefix = sessionAttributePrefix;
 
 		// Attach / reattach http servlet session
 		this.httpSession = httpSession;
-		
-		// Set the current session to the session we just retrieved
+
+		// Set the current session
 		set(this);
 	}
 }
