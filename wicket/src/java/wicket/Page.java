@@ -127,6 +127,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** The PageMap within the session that this page is stored in */
 	private transient PageMap pageMap;
+	
+	/** Name of PageMap  that this page is stored in */
+	private String pageMapName;
 
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
@@ -391,6 +394,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public final void setPageMap(final String pageMapName)
 	{
+		// Save name for restoring transient
+		this.pageMapName = pageMapName;
+
+		// Get or create page map
 		final Session session = getSession();
 		this.pageMap = session.getPageMap(pageMapName);
 		if (this.pageMap == null)
@@ -478,6 +485,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected PageMap getPageMap()
 	{
+		if (pageMap == null)
+		{
+			setPageMap(pageMapName);
+		}
 		return pageMap;
 	}
 
