@@ -51,6 +51,9 @@ public class WebSession extends Session
 	/** The attribute in the HttpSession where this WebSession object is stored */
 	private transient String sessionAttributePrefix;
 
+	/** True, if session has been invalidated */
+	private transient boolean sessionInvalid = false;
+	
 	/**
 	 * Constructor
 	 * 
@@ -83,8 +86,21 @@ public class WebSession extends Session
 		{
 			// Ignore
 		}
+		
+		sessionInvalid = true;
 	}
 
+	/**
+	 * Replicates this session to the cluster if it has changed.
+	 */
+	public final void updateCluster()
+	{
+	    if (sessionInvalid == false)
+	    {
+	        super.updateCluster();
+	    }
+	}
+	
 	/**
 	 * @see Session#getAttribute(String)
 	 */
