@@ -143,7 +143,7 @@ public class PageableListViewNavigation extends ListView
 
 					public int size()
 					{
-						return Integer.MAX_VALUE;
+						return pageableListView.getPageCount();
 					}
 				});
 			}
