@@ -17,12 +17,14 @@
  */
 package wicket.markup.html.pages;
 
+import wicket.Page;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
+import wicket.markup.html.debug.WicketComponentTree;
 import wicket.util.string.Strings;
 
 /**
@@ -40,8 +42,10 @@ public class ExceptionErrorPage extends WebPage
 	 * 
 	 * @param e
 	 *            The markup exception to show
+	 * @param page
+	 *            The page being rendered when the exception was thrown
 	 */
-	public ExceptionErrorPage(final RuntimeException e)
+	public ExceptionErrorPage(final RuntimeException e, final Page page)
 	{
 		// Add exception label
 		add(new MultiLineLabel("exception", Strings.toString(e)));
@@ -76,5 +80,8 @@ public class ExceptionErrorPage extends WebPage
 
 		// Show container if markup stream is available
 		markupHighlight.setVisible(markupStream != null);
+
+		// Show component tree of the page
+		add(new WicketComponentTree("componentTree", page));
 	}
 }
