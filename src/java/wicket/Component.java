@@ -1136,7 +1136,9 @@ public abstract class Component implements Serializable, IConverterSource
 			{
 				// Get mutable copy of tag and remove component name
 				tag = tag.mutable();
-				tag.removeComponentName(settings.getComponentNameAttribute());
+				tag.removeComponentName(
+				        settings.getComponentNameAttribute(), 
+				        settings.getApplyDefaultComponentName());
 			}
 
 			// Write the tag

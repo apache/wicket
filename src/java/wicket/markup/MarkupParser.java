@@ -77,6 +77,14 @@ public final class MarkupParser
      */
     private boolean automaticLinking = false;
 
+	/** If true and if componentNameAttribute has been changed, than not only
+	 * use the new componentNameAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentNameAttribute and 
+	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	 */
+	private boolean applyDefaultComponentName = false;
+
     private IXmlPullParser xmlParser = new XmlPullParser();
 
     /**
@@ -103,7 +111,7 @@ public final class MarkupParser
 	 * Configure the markup parser based on Wicket application settings
 	 * @param settings Wicket application settings
 	 */
-	public void configure(ApplicationSettings settings)
+	public void configure(final ApplicationSettings settings)
 	{
         this.componentNameAttribute = settings.getComponentNameAttribute();
         this.stripWicketTag = settings.getStripWicketTags();
@@ -111,6 +119,7 @@ public final class MarkupParser
         this.compressWhitespace = settings.getCompressWhitespace();
         this.automaticLinking = settings.getAutomaticLinking();
         this.stripWicketFromComponentTag = settings.getStripComponentNames();
+        this.applyDefaultComponentName = settings.getApplyDefaultComponentName();
 	}
 
     /**
@@ -169,10 +178,14 @@ public final class MarkupParser
         final WicketComponentTagIdentifier detectWicketComponents = new WicketComponentTagIdentifier(xmlParser);
         detectWicketComponents.setComponentNameAttribute(this.componentNameAttribute);
         detectWicketComponents.setStripWicketFromComponentTag(this.stripWicketFromComponentTag);
+        detectWicketComponents.setApplyDefaultComponentName(this.applyDefaultComponentName);
+        
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
                 new HtmlHandler(detectWicketComponents));
         wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
+        
         final PreviewComponentTagRemover previewComponentTagRemover = new PreviewComponentTagRemover(wicketParamTagHandler);
+        
         final AutolinkHandler autolinkHandler = new AutolinkHandler(previewComponentTagRemover);
         autolinkHandler.setAutomaticLinking(this.automaticLinking);
 

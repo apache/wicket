@@ -144,6 +144,16 @@ public final class ApplicationSettings
 	/** Component attribute name */
 	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
 
+	/** If true and if componentNameAttribute has been changed, than not only
+	 * use the new componentNameAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentNameAttribute and 
+	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+     * If componentNameAttribute has not be changed, the system's behaviour
+     * is the same, not matter if applyDefaultComponentName is true or false.
+	 */
+	private boolean applyDefaultComponentName = false;
+	
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
 
@@ -252,6 +262,21 @@ public final class ApplicationSettings
 		return this;
 	}
 
+	/** 
+	 * If true and if componentNameAttribute has been changed, than not only
+	 * use the new componentNameAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentNameAttribute and 
+	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	 * 
+	 * @return true, if "wicket" will be used IN ADDITION to the changed
+	 *   value for the componentNameAttribute.
+	 */
+	public boolean getApplyDefaultComponentName()
+	{
+	    return applyDefaultComponentName;
+	}
+	
 	/**
 	 * If true, automatic link resolution is enabled.
 	 * 
@@ -464,6 +489,21 @@ public final class ApplicationSettings
 		return useDefaultOnMissingResource;
 	}
 
+	/** 
+	 * If true and if componentNameAttribute has been changed, than not only
+	 * use the new componentNameAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentNameAttribute and 
+	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	 * 
+	 * @param applyDefault if true, "wicket" will be used IN ADDITION to the 
+	 *   changed value for the componentNameAttribute.
+	 */
+	public void setApplyDefaultComponentName(final boolean applyDefault)
+	{
+	    this.applyDefaultComponentName = applyDefault;
+	}
+
 	/**
 	 * Application default for automatic link resolution.
 	 * 
@@ -500,6 +540,7 @@ public final class ApplicationSettings
 	                "Component name attribute must be a valid variable name ([a-z][a-z0-9_]*)");
 	    }
 	    
+	    this.applyDefaultComponentName = true;
 		this.componentNameAttribute = componentNameAttribute;
 		return this;
 	}

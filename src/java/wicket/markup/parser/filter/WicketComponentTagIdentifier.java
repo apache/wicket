@@ -53,6 +53,14 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	/** if true, "wicket-" will be removed from id="wicket-xxx" */
 	private boolean stripWicketFromComponentTag = false;
 
+	/** If true and if componentNameAttribute has been changed, than not only
+	 * use the new componentNameAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentNameAttribute and 
+	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	 */
+	private boolean applyDefaultComponentName = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -92,6 +100,21 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 		this.stripWicketFromComponentTag = enable;
 	}
 
+	/** 
+	 * If true and if componentNameAttribute has been changed, than not only
+	 * use the new componentNameAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentNameAttribute and 
+	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	 * 
+	 * @param applyDefault if true, "wicket" will be used IN ADDITION to the 
+	 *   changed value for the componentNameAttribute.
+	 */
+	public void setApplyDefaultComponentName(final boolean applyDefault)
+	{
+	    this.applyDefaultComponentName = applyDefault;
+	}
+
 	/**
 	 * Get the next tag from the next MarkupFilter in the chain and search for
 	 * Wicket specific tags.
@@ -119,8 +142,8 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
 		if (componentNameAttribute.equalsIgnoreCase(xmlTag.getNamespace())
-				|| ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.equalsIgnoreCase(xmlTag
-						.getNamespace()))
+				|| (applyDefaultComponentName && ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE
+						.equalsIgnoreCase(xmlTag.getNamespace())))
 		{
 			// It is <wicket:...>
 			tag = new ComponentWicketTag(xmlTag);
@@ -148,7 +171,8 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 				tag.put("id", tag.getComponentName());
 			}
 		}
-		else if ((id != null) && id.startsWith(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
+		else if ((id != null) && applyDefaultComponentName
+				&& id.startsWith(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
 		{
 			// extract component name from value
 			tag.setComponentName(id.substring(
@@ -165,7 +189,8 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 			// Set componentName value on tag
 			tag.setComponentName(tag.getAttributes().getString(componentNameAttribute));
 		}
-		else if (tag.getAttributes().containsKey(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
+		else if (applyDefaultComponentName
+				&& tag.getAttributes().containsKey(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
 		{
 			// Set componentName value on tag
 			tag.setComponentName(tag.getAttributes().getString(
