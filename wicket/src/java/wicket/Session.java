@@ -75,6 +75,7 @@ import wicket.util.string.Strings;
  * Although public, the expireNewerThan and getFreshestPage methods are intended for
  * internal use only and may not be supported in the future. Framework clients should not
  * call these methods.
+ * 
  * @author Jonathan Locke
  */
 public abstract class Session implements Serializable
@@ -133,7 +134,7 @@ public abstract class Session implements Serializable
      */
     final static Session get()
     {
-        return (Session) current.get();
+        return (Session)current.get();
     }
 
     /**
@@ -150,7 +151,7 @@ public abstract class Session implements Serializable
         for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
         {
             // Get next page
-            final Page current = (Page) iterator.next();
+            final Page current = (Page)iterator.next();
 
             // If the page has a higher id than the given page
             if (current.getId() > page.getId())
@@ -194,7 +195,7 @@ public abstract class Session implements Serializable
         for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
         {
             // Get next page
-            final Page current = (Page) iterator.next();
+            final Page current = (Page)iterator.next();
 
             // If the page isn't stale
             if (!current.isStale())
@@ -331,7 +332,7 @@ public abstract class Session implements Serializable
      */
     final Page getPage(final int id)
     {
-        return (Page) pages.get(new Integer(id));
+        return (Page)pages.get(new Integer(id));
     }
 
     /**
@@ -352,10 +353,8 @@ public abstract class Session implements Serializable
         // Loop through pages in page map
         for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
         {
-            // Get next page
-            final Page current = (Page) iterator.next();
-
-            visitor.page(current);
+            // Visit next page
+            visitor.page((Page)iterator.next());
         }
     }
 
