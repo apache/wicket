@@ -71,4 +71,20 @@ public class ComponentCreateTagTest extends TestCase {
         String document = application.getServletResponse().getDocument();
         System.out.println(document);
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testRenderHomePage_3() throws Exception {
+        application = new MockWebApplication(null);
+        application.getPages().setHomePage(ComponentCreateTag_3.class);
+        
+        // Do the processing
+        application.setupRequestAndResponse();
+        application.processRequestCycle();
+
+        // Validate the document
+        String document = application.getServletResponse().getDocument();
+        System.out.println(document);
+    }
 }
