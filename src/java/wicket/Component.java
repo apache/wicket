@@ -870,7 +870,7 @@ public abstract class Component implements Serializable
 
     /**
      * Writes a simple tag out to the wicket.response stream. Any components that might be
-     * referenced by the tag are ignored. Also undertakes any tag addtibute modifications
+     * referenced by the tag are ignored. Also undertakes any tag attribute modifications
      * if they have been added to the component.
      * @param cycle The wicket.response stream
      * @param tag The tag to write
