@@ -364,6 +364,11 @@ public abstract class RequestCycle
 				internalOnEndRequest();
 				onEndRequest();
 			}
+			catch (RuntimeException e)
+			{
+				// Handle any runtime exception
+				onRuntimeException(null, e);
+			}
 			finally
 			{
 				// Release thread local resources
