@@ -146,7 +146,7 @@ public class DateLocaleConverter extends BaseLocaleConverter
      * @param value the value to format
      * @param pattern the pattern to use
      * @return the formatted value
-     * @see wicket.util.convert.Formatter#format(java.lang.Object, java.lang.String)
+     * @see wicket.util.convert.IFormatter#format(java.lang.Object, java.lang.String)
      */
     public String format(Object value, String pattern)
     {

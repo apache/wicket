@@ -21,12 +21,12 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
-import wicket.util.convert.Formatter;
+import wicket.util.convert.IFormatter;
 
 /**
- * Formatter that uses a locale.
+ * IFormatter that uses a locale.
  */
-public interface LocaleFormatter extends Formatter
+public interface LocaleFormatter extends IFormatter
 {
     /**
      * Sets the locale for this instance.

@@ -22,12 +22,12 @@ package wicket.util.convert.converters;
 import java.text.ParseException;
 import java.util.Locale;
 
-import wicket.util.convert.Formatter;
+import wicket.util.convert.IFormatter;
 
 /**
  * base class for localized converters.
  */
-public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
+public abstract class BaseLocaleConverter implements LocaleConverter, IFormatter
 {
     /** The locale specified to our Constructor, by default - system locale. */
     protected Locale locale = Locale.getDefault();

@@ -18,12 +18,12 @@
  */
 package wicket.util.convert.converters;
 
-import wicket.util.convert.Converter;
+import wicket.util.convert.IConverter;
 
 /**
  * General purpose data type converter.
  */
-public interface LocaleConverter extends Converter
+public interface LocaleConverter extends IConverter
 {
     /**
      * Converts the specified locale-sensitive input object into an output object of the

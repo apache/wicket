@@ -43,7 +43,7 @@ public final class FormattingUtils
     /**
      * Convert the specified value into a String. If the specified value is an array, the
      * first element (converted to a String) will be returned. The registered
-     * {@link Converter}for the <code>java.lang.String</code> class will be used, which
+     * {@link IConverter}for the <code>java.lang.String</code> class will be used, which
      * allows applications to customize Object->String conversions (the default
      * implementation simply uses toString()).
      * @param value Value to be converted (may be null)
@@ -72,7 +72,7 @@ public final class FormattingUtils
             {
                 try
                 {
-                    Converter converter = this.converterRegistry.lookup(String.class);
+                    IConverter converter = this.converterRegistry.lookup(String.class);
                     Object converted = converter.convert(value);
 
                     return (converted instanceof String) ? (String) converted : String
@@ -89,7 +89,7 @@ public final class FormattingUtils
         {
             try
             {
-                Converter converter = this.converterRegistry.lookup(String.class);
+                IConverter converter = this.converterRegistry.lookup(String.class);
                 Object converted = converter.convert(value);
 
                 return (converted instanceof String) ? (String) converted : String
@@ -104,13 +104,13 @@ public final class FormattingUtils
 
     /**
      * Get the formatter for the given class/ locale. looks in the ConverterRegistry if a
-     * Converter was stored for the type of the property that implements Formatter (as
-     * well as Converter).
+     * IConverter was stored for the type of the property that implements IFormatter (as
+     * well as IConverter).
      * @param clazz class of property
-     * @param locale locale to get Formatter for
-     * @return Formatter instance of Formatter if found, null otherwise
+     * @param locale locale to get IFormatter for
+     * @return IFormatter instance of IFormatter if found, null otherwise
      */
-    private Formatter getFormatter(Class clazz, Locale locale)
+    private IFormatter getFormatter(Class clazz, Locale locale)
     {
         return getFormatter(null, null, clazz, locale);
     }
@@ -120,17 +120,17 @@ public final class FormattingUtils
      * ConverterRegistry if a formatter was stored with the formatterName and optionally
      * locale as key. 2. if not found, look in the ConverterRegistry if a formatter was
      * stored with the pattern and optionally the locale as key. 3. if not found, look in
-     * the ConverterRegistry if a Converter was stored for the type of the property that
-     * implements Formatter (as well as Converter).
+     * the ConverterRegistry if a IConverter was stored for the type of the property that
+     * implements IFormatter (as well as IConverter).
      * @param formatterName name of formatter
-     * @param pattern pattern: might be used as a key to store a Formatter
+     * @param pattern pattern: might be used as a key to store a IFormatter
      * @param clazz class of property
-     * @param locale locale to get Formatter for
-     * @return Formatter instance of Formatter if found, null otherwise
+     * @param locale locale to get IFormatter for
+     * @return IFormatter instance of IFormatter if found, null otherwise
      */
-    private Formatter getFormatter(String formatterName, String pattern, Class clazz, Locale locale)
+    private IFormatter getFormatter(String formatterName, String pattern, Class clazz, Locale locale)
     {
-        Formatter formatter = null;
+        IFormatter formatter = null;
 
         // first look up on fieldname
         if (formatterName != null)
@@ -143,7 +143,7 @@ public final class FormattingUtils
             formatter = this.converterRegistry.lookup(pattern);
         }
 
-        Converter converter = null;
+        IConverter converter = null;
 
         if ((formatter == null) && (clazz != null)) // not found, try converter
         {
@@ -168,9 +168,9 @@ public final class FormattingUtils
                 throw new RuntimeException(e);
             }
 
-            if ((converter != null) && (converter instanceof Formatter))
+            if ((converter != null) && (converter instanceof IFormatter))
             {
-                formatter = (Formatter) converter;
+                formatter = (IFormatter) converter;
             } // else will return null
         }
 
@@ -206,7 +206,7 @@ public final class FormattingUtils
         }
 
         String formatted = null;
-        Formatter formatter = getFormatter(formatterName, formatPattern, object.getClass(), locale);
+        IFormatter formatter = getFormatter(formatterName, formatPattern, object.getClass(), locale);
 
         if (formatter != null)
         {

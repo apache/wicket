@@ -19,15 +19,15 @@
 package wicket.util.convert.converters;
 
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.Converter;
+import wicket.util.convert.IConverter;
 
 /**
- * Standard {@link wicket.util.convert.Converter} implementation that converts an
+ * Standard {@link wicket.util.convert.IConverter} implementation that converts an
  * incoming String into a <code>java.lang.Long</code> object, optionally using a
  * default value or throwing a {@link wicket.util.convert.ConversionException}
  * if a conversion error occurs.
  */
-public final class LongConverter implements Converter
+public final class LongConverter implements IConverter
 {
     /**
      * Construct.
