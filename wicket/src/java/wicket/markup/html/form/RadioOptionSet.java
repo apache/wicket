@@ -132,9 +132,7 @@ public class RadioOptionSet extends FormComponent
 					+ ((selected == value) ? " checked" : "") + " value=\"" + index + "\">");
 
 			// Add label for radio button
-			// TODO support custom labels in future
 			final String label = String.valueOf(value.toString());
-
 			options.append(getLocalizer().getString(getName() + "." + label, this, label));
 
 			// Append separator
