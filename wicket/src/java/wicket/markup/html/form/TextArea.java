@@ -68,17 +68,6 @@ public class TextArea extends FormComponent
 	}
 
 	/**
-	 * Handle a validation error.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#invalid()
-	 */
-	protected void invalid()
-	{
-		// store the user input
-		invalidInput = getRequestString();
-	}
-
-	/**
 	 * Handle the container's body.
 	 * 
 	 * @param markupStream
@@ -101,5 +90,16 @@ public class TextArea extends FormComponent
 			bodyContent = invalidInput;
 		}
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
+	}
+
+	/**
+	 * Handle a validation error.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#invalid()
+	 */
+	protected void invalid()
+	{
+		// store the user input
+		invalidInput = getRequestString();
 	}
 }
