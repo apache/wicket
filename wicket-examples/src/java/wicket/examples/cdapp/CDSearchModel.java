@@ -110,6 +110,7 @@ public final class CDSearchModel extends DetachableModel
 	 */
 	public final void setSearchString(String searchString)
 	{
+		detach(); // force reload right away
 		this.searchString = searchString;
 	}
 

@@ -107,7 +107,7 @@ public class SearchCDPage extends WicketExamplePage
 	 */
 	public void modelChangedStructure()
 	{
-		resultsListView.modelChangedStructure(); // let list view re-populateS
+		resultsListView.modelChangedStructure(); // let list view re-populate
 		super.modelChangedStructure();
 	}
 
@@ -136,8 +136,8 @@ public class SearchCDPage extends WicketExamplePage
 		 */
 		public final void onSubmit()
 		{
-			SearchCDPage.this.modelChangedStructure();
 			searchModel.setSearchString(search);
+			SearchCDPage.this.modelChangedStructure();
 		}
 
 		/**

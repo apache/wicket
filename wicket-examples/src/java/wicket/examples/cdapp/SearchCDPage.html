@@ -20,33 +20,34 @@
       <table id="resultstable">
         <thead id="wicket-resultsHeader">
           <tr>
-            <th>
-                <a id="wicket-sortOnArtist" href="#">Artist</a>
+            <!--
+            	note: we could do the rollovers with CSS, but IE doesn't support
+            	them on other elements than anchors without providing a .htc hack
+             -->
+            <th id="wicket-sortOnArtist" class="litupColumn"
+          		onmouseover="this.className='litupColumnOver';"
+          		onmouseout="this.className='litupColumn';">
+                <span>Artist</span>
+                <span id="updownImg"><img src="cdapp/updown.gif"/></span>
             </th>
-            <th>
-                <a id="wicket-sortOnTitle" href="#">Title</a>
+            <th id="wicket-sortOnTitle" class="litupColumn"
+          		onmouseover="this.className='litupColumnOver';"
+          		onmouseout="this.className='litupColumn';">
+                Title
             </th>
-            <th>
-                <a id="wicket-sortOnLabel" href="#">Label</a>
+            <th id="wicket-sortOnLabel" class="litupColumn"
+          		onmouseover="this.className='litupColumnOver';"
+          		onmouseout="this.className='litupColumn';">
+                Label
             </th>
-            <th>
-                <a id="wicket-sortOnYear" href="#">Year</a>
+            <th id="wicket-sortOnYear" class="number litupColumn"
+          		onmouseover="this.className='number litupColumnOver';"
+          		onmouseout="this.className='number litupColumn';">
+                Year
             </th>
-            <th class="delete">Delete</th>
+            <th class="delete"></th>
           </tr>
         </thead>
-        <tfoot>
-          <tr>
-            <td colspan="2">
-                <span id="wicket-navigation">
-                    <span id="wicket-separator"/>
-                    <a id="wicket-pageLink" href="#">
-                      <span id="wicket-pageLabel"/><span id="wicket-pageNumber"/>
-                    </a>
-                </span>
-            </td>
-          </tr>
-        </tfoot>
         <tbody>
           <tr id="wicket-results" class="litupRow"
           		onmouseover="this.className='litupRowOver';"
@@ -61,7 +62,7 @@
             <td id="wicket-label">
                 <span id="wicket-label">(label)</span>
             </td>
-            <td id="wicket-year">
+            <td id="wicket-year" class="number">
                 <span id="wicket-year">(year)</span>
             </td>
             <td>
@@ -72,6 +73,17 @@
           </tr>
         </tbody>
       </table>
+     </div>
+
+	 <div id="resultsNavigation">
+		<ul>
+          <li id="wicket-navigation">
+            <span id="wicket-separator"/>
+            <a id="wicket-pageLink" href="#">
+              <span id="wicket-pageLabel"/><span id="wicket-pageNumber"/>
+            </a>
+          </li>
+        </ul>
      </div>
 
 	<div>

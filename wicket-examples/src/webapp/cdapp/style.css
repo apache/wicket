@@ -34,9 +34,6 @@
 	background-color: #FFFFCC;
 }
 
-.litupRow {
-}
-
 .mediumButton {
  width: 80px;
 }
@@ -45,9 +42,25 @@
 	margin: 5px;
 }
 
+.litupRow {
+}
+
 .litupRowOver  {
 	background-color: #FFFF66;
 	cursor: pointer;
+}
+
+.litupColumn {
+}
+
+.litupColumnOver  {
+	background-color: #FFFF66;
+	cursor: pointer;
+}
+
+.updownImg {
+	border: 0px;
+	float: right;
 }
 
 input, select, label  { 	
@@ -59,17 +72,26 @@ input, select, label  {
  caption-side:bottom;
  width:100%;
 }
+#resultstable .number {
+ width: 60px;
+}
+
 #resultstable thead th {
  text-align: center;
  width:140px;
 }
 #resultstable thead th.delete {
  text-align: center;
- width:40px;
+ width:1px;
 }
 #resultstable tbody td.delete {
-
  text-align: center;
+}
+#resultsNavigation ul {
+	list-style: none;
+}
+#resultsNavigation li {
+	display: inline;	
 }
 #wicket-detailForm {
  width: 300px; }
