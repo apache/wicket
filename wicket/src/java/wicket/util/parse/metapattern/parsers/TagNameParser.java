@@ -23,15 +23,25 @@ import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.parse.metapattern.OptionalMetaPattern;
 
 /**
+ * Parses XML tag names and attribute names which may include 
+ * optional namespaces like "namespace:name" or "name".
+ * Both ":name" and "namespace:" are not allowed. Both,
+ * the namespace and the name have to follow nameing rules for
+ * variable names (identifier).
+ * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
+// TODO: do we need to support ":name" according to the xml spec?
 public final class TagNameParser extends MetaPatternParser
-{ // TODO finalize javadoc
+{ 
+    /** Namespace names must comply with variable name guidelines */
     private static final Group namespace = new Group(MetaPattern.VARIABLE_NAME);
 
+    /** Tag names must comply with variable name guidelines */
     private static final Group name = new Group(MetaPattern.VARIABLE_NAME);
 
-    /** pattern for tag names with optional namespace */
+    /** pattern for tag names with optional namespace: (namespace:)?name */
     private static final MetaPattern pattern =
         	new MetaPattern( new MetaPattern[] {
         	        new OptionalMetaPattern(new MetaPattern[] {
@@ -48,21 +58,31 @@ public final class TagNameParser extends MetaPatternParser
     }
 
     /**
-     * Gets the key part (eg 'foo' in 'foo=bar').
-     * @return the key part
+     * Get the namespace part (eg 'html' in 'html:form') converted
+     * to all lower case characters.
+     * 
+     * @return the namespace part. Will be null, if optonal namespace was not found
      */
     public String getNamespace()
     {
-        return namespace.get(matcher);
+        String namespaceBuf = namespace.get(matcher());
+        if (namespaceBuf != null)
+        {
+            namespaceBuf = namespaceBuf.toLowerCase();
+        }
+        
+        return namespaceBuf;
     }
 
     /**
-     * Gets the value part (eg 'bar' in 'foo=bar').
-     * @return the value part
+     * Gets the value part (eg 'form' in 'html:form' or 'form')
+     * converted to all lower case characters.
+     * 
+     * @return the name part
      */
     public String getName()
     {
-        return name.get(matcher);
+        return name.get(matcher()).toLowerCase();
     }
 }
 

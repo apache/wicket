@@ -23,25 +23,31 @@ import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.parse.metapattern.OptionalMetaPattern;
 
 /**
- * Parses key value assignment statements like "foo=bar".
+ * Parses key value assignment statements like "foo=bar" but also supporting
+ * namespaces like "wicket:foo=bar". However the 'key' value returned will
+ * contain "wicket:foo". It does not separate namespace and name.
+ * 
  * @author Jonathan Locke
  */
 public final class VariableAssignmentParser extends MetaPatternParser
-{ // TODO finalize javadoc
-    // Parse variable = 9 and variable = "string" syntaxes 
-    // and variable (without =... like e.g. <html xmlns:wicket>)
+{
+    /** The optional namespace like "namespace:* */
     private static final MetaPattern namespace = new OptionalMetaPattern(
             new MetaPattern[] { MetaPattern.VARIABLE_NAME, MetaPattern.COLON });
 
+    /** The key (lvalue) like "name" or "namespace:name" */
     private static final Group key = new Group(new MetaPattern(
             new MetaPattern[] { namespace, MetaPattern.VARIABLE_NAME }));
 
+    /** The rvalue of the assignment */
     private static final Group value = new Group(MetaPattern.STRING);
 
+    /** The whole assignment without optional leading and trailing spaces */ 
     private static final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {
             MetaPattern.OPTIONAL_WHITESPACE,
             MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE, value});
 
+    /** Ignore leading and trailing spaces surrounding the assignment */
     private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {
             MetaPattern.OPTIONAL_WHITESPACE, key, 
             new OptionalMetaPattern(variableAssignment), MetaPattern.OPTIONAL_WHITESPACE});
@@ -56,12 +62,14 @@ public final class VariableAssignmentParser extends MetaPatternParser
     }
 
     /**
-     * Gets the key part (eg 'foo' in 'foo=bar').
+     * Gets the key part (eg 'foo' in 'foo=bar'). The key will include
+     * the otional namespace (eg 'html:foo' in 'html:foo=bar').
+     * 
      * @return the key part
      */
     public String getKey()
     {
-        return key.get(matcher);
+        return key.get(matcher());
     }
 
     /**
@@ -70,7 +78,7 @@ public final class VariableAssignmentParser extends MetaPatternParser
      */
     public String getValue()
     {
-        return value.get(matcher);
+        return value.get(matcher());
     }
 }
 

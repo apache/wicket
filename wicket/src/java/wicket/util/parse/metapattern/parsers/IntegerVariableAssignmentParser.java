@@ -23,12 +23,13 @@ import wicket.util.parse.metapattern.IntegerGroup;
 import wicket.util.parse.metapattern.MetaPattern;
 
 /**
- * Parses integer variable assignments, such as "x = 9".
+ * Parses integer variable assignments, such as "x = 9" or "x=9".
+ * 
  * @author Jonathan Locke W. Locke
  */
 public final class IntegerVariableAssignmentParser extends MetaPatternParser
-{ // TODO finalize javadoc
-    /** Parse "variable = <number>". */
+{
+    /** Parse "variable = &lt;number&gt;". */
     private static final Group variable = new Group(MetaPattern.VARIABLE_NAME);
 
     /** group value. */
@@ -54,7 +55,7 @@ public final class IntegerVariableAssignmentParser extends MetaPatternParser
      */
     public String getVariable()
     {
-        return variable.get(matcher);
+        return variable.get(matcher());
     }
 
     /**
@@ -63,7 +64,7 @@ public final class IntegerVariableAssignmentParser extends MetaPatternParser
      */
     public int getIntValue()
     {
-        return value.getInt(matcher);
+        return value.getInt(matcher());
     }
 
     /**
@@ -72,7 +73,7 @@ public final class IntegerVariableAssignmentParser extends MetaPatternParser
      */
     public long getLongValue()
     {
-        return value.getLong(matcher);
+        return value.getLong(matcher());
     }
 }
 
