@@ -247,7 +247,7 @@
         <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
         <init-param>
           <param-name>applicationClassName</param-name>
-          <param-value>wicket.examples.tabPanel.TabPanelApplication</param-value>
+          <param-value>wicket.examples.tabpanel.TabPanelApplication</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -371,7 +371,7 @@
 
     <servlet-mapping>
         <servlet-name>TabPanelApplication</servlet-name>
-        <url-pattern>/tabPanel</url-pattern>
+        <url-pattern>/tabpanel</url-pattern>
     </servlet-mapping>
 
     <!-- servlet-mapping>
