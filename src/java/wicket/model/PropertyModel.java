@@ -114,6 +114,9 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	/** Ognl context wrapper object. It contains the type converter. */
 	private transient OgnlContext context;
 
+	/** The converter to be used by this model. */
+	private IConverter converter;
+
 	/** Ognl expression for property access. */
 	private final String expression;
 
@@ -130,9 +133,6 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	 * integer, propertyType should be set to Integer.
 	 */
 	private final Class propertyType;
-
-	/** The converter to be used by this model. */
-	private IConverter converter;
 
 	/**
 	 * This class is registered with the Ognl context before parsing in order to
@@ -258,22 +258,6 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	}
 
 	/**
-	 * The converter to be used by this property model.
-	 * 
-	 * @param converter
-	 *            the converter converter
-	 * @see wicket.model.IConvertable#setConverter(wicket.util.convert.IConverter)
-	 */
-	public final void setConverter(IConverter converter)
-	{
-		if (converter == null)
-		{
-			throw new IllegalArgumentException("the converter must be not-null");
-		}
-		this.converter = converter;
-	}
-
-	/**
 	 * Gets the value that results when the given Ognl expression is applied to
 	 * the model object (Ognl.getValue).
 	 * 
@@ -313,6 +297,34 @@ public class PropertyModel extends DetachableModel implements IConvertable
 		{
 			throw new WicketRuntimeException(e);
 		}
+	}
+
+	/**
+	 * Gets the type to be used for conversion instead of the type that is
+	 * figured out by Ognl.
+	 * 
+	 * @return the type to be used for conversion instead of the type that is
+	 *         figured out by Ognl
+	 */
+	public final Class getPropertyType()
+	{
+		return propertyType;
+	}
+
+	/**
+	 * The converter to be used by this property model.
+	 * 
+	 * @param converter
+	 *            the converter converter
+	 * @see wicket.model.IConvertable#setConverter(wicket.util.convert.IConverter)
+	 */
+	public final void setConverter(IConverter converter)
+	{
+		if (converter == null)
+		{
+			throw new IllegalArgumentException("the converter must be not-null");
+		}
+		this.converter = converter;
 	}
 
 	/**
@@ -412,18 +424,6 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	protected final String getExpression()
 	{
 		return expression;
-	}
-
-	/**
-	 * Gets the type to be used for conversion instead of the type that is
-	 * figured out by Ognl.
-	 * 
-	 * @return the type to be used for conversion instead of the type that is
-	 *         figured out by Ognl
-	 */
-	public final Class getPropertyType()
-	{
-		return propertyType;
 	}
 
 	/**
