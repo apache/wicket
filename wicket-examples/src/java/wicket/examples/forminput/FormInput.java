@@ -45,7 +45,8 @@ import wicket.model.PropertyModel;
 public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.US, new Locale("nl") });
+	private static final List LOCALES = Arrays.asList(new Locale[] 
+	        { Locale.US, new Locale("nl"), new Locale("de") });
 
 	/**
 	 * Constructor
