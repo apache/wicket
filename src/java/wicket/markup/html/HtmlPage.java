@@ -24,6 +24,12 @@ import wicket.markup.html.link.BookmarkablePageLink;
  * Base class for HTML pages. This subclass of Page simply returns HTML when
  * asked for its markup type. It also has a method which subclasses can use to
  * retrieve a bookmarkable link to the application's home page.
+ * <p>
+ * Pages can be constructed with any constructor when they are being used in a
+ * Wicket session, but if you wish to link to a Page using a URL that is
+ * bookmarkable (doesn't have session information encoded into it), you need to
+ * implement your Page with a constructor that accepts a single PageParameters
+ * argument.
  * 
  * @author Jonathan Locke
  */
