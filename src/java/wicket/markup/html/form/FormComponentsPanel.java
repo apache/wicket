@@ -18,6 +18,9 @@
  */
 package wicket.markup.html.form;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -76,6 +79,27 @@ public abstract class FormComponentsPanel extends FormComponent
         });
 	}
 
+	/**
+	 * Gets all form components that are nested in this container.
+	 * @return all nested form components
+	 */
+	protected List getFormComponents()
+	{
+		final List children = new ArrayList();
+		visitChildren(FormComponent.class, new IVisitor()
+        {
+            public Object component(final Component component)
+            {
+                if(component instanceof FormComponent)
+                {
+                	children.add(component);
+                }
+                return IVisitor.CONTINUE_TRAVERSAL; // continue until the end
+            }
+        });
+		return children;
+	}
+
     /**
      * Renders this component like a {@link wicket.markup.html.panel.Panel}.
      * @param cycle Response to write to
@@ -124,7 +148,7 @@ public abstract class FormComponentsPanel extends FormComponent
 		 * @param component the component with the validating children
 		 * @param messages the messages to add any results to
 		 */
-		private void validate(HtmlContainer component, final FeedbackMessages messages)
+		private final void validate(HtmlContainer component, final FeedbackMessages messages)
 		{
 			component.visitChildren(FormComponent.class, new IVisitor()
             {
