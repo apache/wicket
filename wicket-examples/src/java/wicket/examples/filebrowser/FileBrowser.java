@@ -42,6 +42,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.Serializable;
 
 import java.util.Enumeration;
@@ -118,7 +119,14 @@ public class FileBrowser extends HtmlPage
         }
 
         File d = new File(currentPath);
-        String[] c = d.list(); // get list of directories
+        String[] c = d.list(new FilenameFilter(){
+
+            public boolean accept(File dir, String name)
+            {
+                return dir.isDirectory();
+            }
+            
+        }); // get list of directories
 
         if (c != null)
         {
@@ -190,12 +198,6 @@ public class FileBrowser extends HtmlPage
         protected void populateNode(final Node node)
         {
             final Serializable userObject = node.getUserObject();
-
-            if (userObject == null)
-            {
-                throw new RuntimeException("userObject == null");
-            }
-
             File file = (File) userObject;
             TreeNodeLink expandCollapsLink = new TreeNodeLink("expandCollapsLink",
                     fileTree, node, this)
@@ -237,7 +239,7 @@ public class FileBrowser extends HtmlPage
          */
         protected void populateFiller(Filler filler)
         {
-            filler.add(new SimpleImage("fillImg", "vert.gif"));
+            filler.add(new SimpleImage("fillImg", "filebrowser/vert.gif"));
         }
 
         /**
@@ -251,17 +253,17 @@ public class FileBrowser extends HtmlPage
 
             if (node.isRoot())
             {
-                img = "cross.gif";
+                img = "filebrowser/cross.gif";
             }
             else if (node.isLeaf())
             {
                 if (node.hasSiblings())
                 {
-                    img = "cross.gif";
+                    img = "filebrowser/cross.gif";
                 }
                 else
                 {
-                    img = "end.gif";
+                    img = "filebrowser/end.gif";
                 }
             }
             else
@@ -270,22 +272,22 @@ public class FileBrowser extends HtmlPage
                 {
                     if (node.isExpanded())
                     {
-                        img = "mcross.gif";
+                        img = "filebrowser/mcross.gif";
                     }
                     else
                     {
-                        img = "pcross.gif";
+                        img = "filebrowser/pcross.gif";
                     }
                 }
                 else
                 {
                     if (node.isExpanded())
                     {
-                        img = "mend.gif";
+                        img = "filebrowser/mend.gif";
                     }
                     else
                     {
-                        img = "pcross.gif";
+                        img = "filebrowser/pcross.gif";
                     }
                 }
             }
@@ -304,22 +306,22 @@ public class FileBrowser extends HtmlPage
 
             if (node.isRoot())
             {
-                img = "folderopen.gif";
+                img = "filebrowser/folderopen.gif";
             }
             else if (node.isLeaf())
             {
                 // just a dummy for now
-                img = "node.gif";
+                img = "filebrowser/node.gif";
             }
             else
             {
                 if (node.isExpanded())
                 {
-                    img = "folderopen.gif";
+                    img = "filebrowser/folderopen.gif";
                 }
                 else
                 {
-                    img = "folder.gif";
+                    img = "filebrowser/folder.gif";
                 }
             }
 
@@ -329,10 +331,10 @@ public class FileBrowser extends HtmlPage
 
     /**
      * Component that writes the given content as-is. This is a *hack*, as getting a load
-     * of wicket.examples.images as resources is just too inefficient, but we still want to set them dynamicaly.
-     * Another option would be to have components for all possible wicket.examples.images, and just set the
-     * needed wicket.examples.images visible. Not nice either.
-     * TODO we should really have an optimized resource strategy for this kind of things.
+     * of wicket.examples.images as resources is just too inefficient, but we still want
+     * to set them dynamicaly. Another option would be to have components for all possible
+     * wicket.examples.images, and just set the needed wicket.examples.images visible. Not
+     * nice either.
      */
     private static class SimpleImage extends HtmlComponent
     {
