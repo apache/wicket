@@ -1,15 +1,18 @@
 package wicket.quickstart;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
 
 /**
+ * Basic bookmarkable index page.
+ * 
+ * NOTE: You can get session properties from QuickStartSession via getQuickStartSession()
  */
-public class Index extends HtmlPage {
-	/**
-	 * <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 1L;
+public class Index extends QuickStartPage 
+{
+	/** serialVersionUID */
+    static final long serialVersionUID = -1975120319575009331L;
+    
+    // TODO Add any page properties or variables here
 
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
@@ -17,7 +20,8 @@ public class Index extends HtmlPage {
 	 * @param parameters
 	 *            Page parameters
 	 */
-	public Index(final PageParameters parameters) {
-		super();
+	public Index(final PageParameters parameters) 
+    {
+        // TODO Add your page's components here   
 	}
 }

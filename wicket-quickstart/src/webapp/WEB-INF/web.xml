@@ -11,7 +11,7 @@
         <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
         <init-param>
           <param-name>applicationClassName</param-name>
-          <param-value>wicket.quickstart.QuickStart</param-value>
+          <param-value>wicket.quickstart.QuickStartApplication</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

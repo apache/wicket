@@ -8,21 +8,16 @@ import org.mortbay.jetty.Server;
 
 import wicket.protocol.http.WebApplication;
 import wicket.util.time.Duration;
-import wicket.ApplicationSettings;
+import wicket.ISessionFactory;
+import wicket.Session;
 
 /**
+ * Runs the QuickStartApplication when invoked from command line.
  */
-public class QuickStart extends WebApplication
-{
-	/**
-	 * Used for logging.
-	 */
-	private static final Log log = LogFactory.getLog(QuickStart.class);
-
-	/**
-	 * The Jetty server.
-	 */
-	private static Server jettyServer;
+public class QuickStartApplication extends WebApplication
+{    
+	/** Logging */
+	private static final Log log = LogFactory.getLog(QuickStartApplication.class);
 
 	/**
 	 * Main function, starts the jetty server.
@@ -31,6 +26,7 @@ public class QuickStart extends WebApplication
 	 */
 	public static void main(String[] args)
 	{
+        Server jettyServer = null;
 		try
 		{
 			URL jettyConfig = new URL("file:src/main/resources/jetty-config.xml");
@@ -39,7 +35,6 @@ public class QuickStart extends WebApplication
 				log.fatal("Unable to locate jetty-test-config.xml on the classpath");
 			}
 			jettyServer = new Server(jettyConfig);
-
 			jettyServer.start();
 		}
 		catch (Exception e)
@@ -59,19 +54,34 @@ public class QuickStart extends WebApplication
 		}
 	}
 
-	public QuickStart()
+    /**
+     * Constructor
+     */
+	public QuickStartApplication()
 	{
-		ApplicationSettings settings = getSettings();
 		getPages().setHomePage(Index.class);
-		if (!Boolean.getBoolean("cache-templates"))
+		if (!Boolean.getBoolean("cache-markup"))
 		{
-			Duration pollFreq = Duration.ONE_SECOND;
-			settings.setResourcePollFrequency(pollFreq);
-			log.info("template caching is INACTIVE");
+			getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+			log.info("Markup caching is INACTIVE");
 		}
 		else
 		{
-			log.info("template caching is ACTIVE");
+			log.info("Markup caching is ACTIVE");
 		}
 	}
+
+    /**
+     * @see wicket.protocol.http.WebApplication#getSessionFactory()
+     */
+    public ISessionFactory getSessionFactory()
+    {
+        return new ISessionFactory()
+        {
+            public Session newSession()
+            {
+                return new QuickStartSession(QuickStartApplication.this);
+            }
+        };
+    }
 }
