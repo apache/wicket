@@ -1,5 +1,8 @@
 /*
  * $Log$
+ * Revision 1.2  2004/12/28 12:27:18  eelco12
+ * javadoc fixes (to stop Eclipse from complaining)
+ *
  * Revision 1.1  2004/12/19 17:19:41  eelco12
  * package rename
  *
@@ -142,6 +145,12 @@ public class Diff
      * Note that if we return the "wrong" diagonal value, or if the value of
      * bdiag at that diagonal is "wrong", the worst this can do is cause
      * suboptimal diff output. It cannot cause incorrect diff output.
+     * @param xoff x offset
+     * @param xlim x limit
+     * @param yoff y offset
+     * @param ylim y limit
+     * @return the midpoint of the shortest edit script for a specified portion of
+     * the two files
      */
 
     private int diag(int xoff, int xlim, int yoff, int ylim)
@@ -342,6 +351,10 @@ public class Diff
      * 
      * Note that XLIM, YLIM are exclusive bounds. All line numbers are origin-0
      * and discarded lines are not counted.
+     * @param xoff 
+     * @param xlim 
+     * @param yoff 
+     * @param ylim 
      */
 
     private void compareseq(int xoff, int xlim, int yoff, int ylim)
@@ -766,8 +779,8 @@ public class Diff
         /**
          * Don't really discard the provisional lines except when they occur in
          * a run of discardables, with nonprovisionals at the beginning and end.
+         * @param discards to discard
          */
-
         private void filterDiscards(final byte[] discards)
         {
             final int end = buffered_lines;
