@@ -21,7 +21,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>0.9.15-beta</version>
+      <version>0.9.16-beta</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
