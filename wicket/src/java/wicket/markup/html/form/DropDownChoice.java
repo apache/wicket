@@ -176,8 +176,8 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	}
 
 	/**
-	 * @return True if the form containing this component should be resubmitted
-	 *         using javascript if the selection changes
+	 * @return True if this component's onSelectionChanged event handler should
+	 * 			called using javascript if the selection changes
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{
