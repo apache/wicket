@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.table;
+package wicket.markup.html.debug;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +29,8 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.table.ListItem;
+import wicket.markup.html.table.ListView;
 import wicket.util.string.Strings;
 
 
