@@ -7,33 +7,33 @@
     <span wicket:id="mainNavigation"/>
 
 	<div>
-		Use locale: 
+		Gebruik locale: 
 		<select wicket:id="localeSelect">
 			<option>locale1</option>
 			<option>locale2</option>
 		</select>
-		<a href="#" wicket:id="defaultLocaleLink">[default]</a>
+		<a href="#" wicket:id="defaultLocaleLink">[standaard]</a>
     </div>
 	<p>
-    <form wicket:id="inputForm">
+    <form wicket:id="inputForm" id="inputForm">
       <fieldset>
         <legend>Input Form</legend>
-          <label for="wicket-stringProperty">String</label>
-          <input wicket:id="stringProperty" type="text" size="40"/>
-          <label for="wicket-integerProperty">Integer</label>
-          <input wicket:id="integerProperty" type="text" size="40"/>
-          <label for="wicket-doubleProperty">Double</label>
-          <input wicket:id="doubleProperty" type="text" size="40"/>
-          <label for="wicket-dateProperty">Date</label>
-          <input wicket:id="dateProperty" type="text" size="40"/>
-          <label for="wicket-booleanProperty">Boolean</label>
-          <input wicket:id="booleanProperty" type="checkbox"/>
-          <label for="wicket-integerInRangeProperty">Value between 0 and 100</label>
-          <input wicket:id="integerInRangeProperty" type="text" size="40"/>
+          <label for="stringProperty">String</label>
+          <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
+          <label for="integerProperty">Integer</label>
+          <input wicket:id="integerProperty" id="integerProperty" type="text" size="40"/>
+          <label for="doubleProperty">Double</label>
+          <input wicket:id="doubleProperty" id="doubleProperty" type="text" size="40"/>
+          <label for="dateProperty">Date</label>
+          <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
+          <label for="booleanProperty">Boolean</label>
+          <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
+          <label for="integerInRangeProperty">Waarde tussen 0 en 100</label>
+          <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
 		  <p>
-		  <input id = "wicket-saveButton" type="image" value="buttonFactory:Opslaan"/>
-		  <a id = "wicket-resetButtonLink" src="">
-		      <img id = "wicket-resetButtonImage" value="buttonFactory:Beginwaarden"/> 
+		  <input wicket:id="saveButton" type="image" value="buttonFactory:Opslaan"/>
+		  <a wicket:id="resetButtonLink" src="">
+		      <img wicket:id="resetButtonImage" value="buttonFactory:Beginwaarden"/> 
 		  </a>
       </fieldset>
      </form>

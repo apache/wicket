@@ -16,7 +16,7 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	color: #E9601A;
 }
 
-#extitle, #wicket-extitle {
+#extitle {
 	font-size: 12pt;
 	font-weight: bold;
 	color: #E9601A;
@@ -92,21 +92,21 @@ a.none {
 	padding-right: 0px;
 }
 
-#wicket-inputForm {
+#inputForm {
 	width: 300px;
 }
 
-#wicket-inputForm label {
+#inputForm label {
 	display: block;
 	padding: 3px 0 0;
 }
 
-#wicket-inputForm label.non {
+#inputForm label.non {
 	display: inline !important;
 }
 <!-- css style for TabPanel,thanks Wouter -->
 <!-- TODO clean up stuff that is not used by TabPanel-->
-#wicket-tab
+#tab
 {
 	float:left;
 }

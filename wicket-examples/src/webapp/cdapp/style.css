@@ -93,13 +93,13 @@ input, select, label  {
 #resultsNavigation li {
 	display: inline;	
 }
-#wicket-detailForm {
+#detailForm {
  width: 300px; }
-#wicket-detailForm label {
+#detailForm label {
  display: block;
  padding: 3px 0 0;
 }
-#wicket-detailForm label.non {
+#detailForm label.non {
  display: inline !important;
 }
 
