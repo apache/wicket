@@ -18,14 +18,16 @@
  */
 package displaytag;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 import com.voicetribe.wicket.markup.html.table.PagedTableNavigator;
+import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.TableNavigation;
+import com.voicetribe.wicket.markup.html.table.TableNavigationWithMargin;
 
 import displaytag.utils.ListObject;
 import displaytag.utils.PagedTableWithAlternatingRowStyle;
@@ -36,7 +38,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExamplePaging extends HtmlPage
+public class ExamplePaging extends Displaytag
 {
     /**
      * Constructor.
@@ -51,22 +53,23 @@ public class ExamplePaging extends HtmlPage
         // Add pageable table with alternating row styles
         final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
-
-                tagClass.add(new Label("id", new Integer(value.getId())));
-                tagClass.add(new Label("name", value.getName()));
-                tagClass.add(new Label("email", value.getEmail()));
-                tagClass.add(new Label("status", value.getStatus()));
-                tagClass.add(new Label("comments", value.getDescription()));
+                super.populateItem(listItem);
                 
-                return true;
+                final ListObject value = (ListObject) listItem.getModelObject();
+
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
             }
         };
+
         add(table);
-        
         add(new PagedTableNavigator("pageTableNav", table));
+
 /*
         final TableNavigation tableNavigation = new TableNavigation("navigation", table, 5, 2);
         add(tableNavigation);
@@ -93,5 +96,59 @@ public class ExamplePaging extends HtmlPage
         add(new TableNavigationIncrementLink("next", table, 1));
         add(new TableNavigationLink("last", table, table.pageCount() - 1));
 */        
+        
+        // Add pageable table with alternating row styles
+        List data2 = new ArrayList();
+        data2.addAll(data.subList(0, 10));
+        final PagedTableWithAlternatingRowStyle table2 = new PagedTableWithAlternatingRowStyle("rows2", data2, 20)
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                super.populateItem(listItem);
+                
+                final ListObject value = (ListObject) listItem.getModelObject();
+
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
+            }
+        };
+        add(table2);
+        
+        add(new PagedTableNavigator("pageTableNav2", table2));
+        
+        // Add pageable table with alternating row styles
+        final PagedTableWithAlternatingRowStyle table3 = new PagedTableWithAlternatingRowStyle("rows3", data, 10)
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                super.populateItem(listItem);
+                
+                final ListObject value = (ListObject) listItem.getModelObject();
+
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
+            }
+        };
+        add(table3);
+        
+        PagedTableNavigator nav3 = new PagedTableNavigator("pageTableNav3", table3)
+        {
+            protected TableNavigation newTableNavigation(final Table table)
+            {
+                TableNavigationWithMargin nav = new TableNavigationWithMargin("navigation", table);
+                nav.setMargin(2);
+                nav.setViewSize(5);
+                nav.setSeparator(", ");
+                return nav;
+            }
+        };
+        
+        add(nav3);
     }
 }

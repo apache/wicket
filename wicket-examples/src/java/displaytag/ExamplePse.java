@@ -18,21 +18,16 @@
  */
 package displaytag;
 
-import java.util.List;
-
-import com.voicetribe.wicket.Container;
-import com.voicetribe.wicket.Page;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.RequestCycle;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.link.Link;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 import com.voicetribe.wicket.markup.html.table.PagedTableNavigator;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeader;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeaders;
 
-import displaytag.export.Export;
+import displaytag.export.CsvView;
+import displaytag.export.ExcelView;
+import displaytag.export.ExportLink;
 import displaytag.export.XmlView;
 import displaytag.utils.PagedTableWithAlternatingRowStyle;
 import displaytag.utils.ReportList;
@@ -43,7 +38,7 @@ import displaytag.utils.ReportableListObject;
  * 
  * @author Juergen Donnerstag
  */
-public class ExamplePse extends HtmlPage
+public class ExamplePse extends Displaytag
 {
     /**
      * Constructor.
@@ -83,32 +78,33 @@ public class ExamplePse extends HtmlPage
             /**
              * @see displaytag.utils.PagedTableWithAlternatingRowStyle#populateCell(com.voicetribe.wicket.markup.html.table.Cell, com.voicetribe.wicket.Container)
              */
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ReportableListObject value = (ReportableListObject) cell.getModelObject();
+                super.populateItem(listItem);
+                
+                final ReportableListObject value = (ReportableListObject) listItem.getModelObject();
 
                 // If first row of table, print anyway
                 if (previousValue == null)
                 {
-	                tagClass.add(new Label("city", value.getCity()));
-	                tagClass.add(new Label("project", value.getProject()));
+                    listItem.add(new Label("city", value.getCity()));
+                    listItem.add(new Label("project", value.getProject()));
                 } 
                 else
                 {
 	                boolean equal = value.getCity().equals(previousValue.getCity());
-	                tagClass.add(new Label("city", equal ? "" : value.getCity()));
+	                listItem.add(new Label("city", equal ? "" : value.getCity()));
 	                
 	                equal &= value.getProject().equals(previousValue.getProject());
-	                tagClass.add(new Label("project", equal ? "" : value.getProject()));
+	                listItem.add(new Label("project", equal ? "" : value.getProject()));
                 }
 
                 // Not included in grouping
-                tagClass.add(new Label("hours", new Double(value.getAmount())));
-                tagClass.add(new Label("task", value.getTask()));
+                listItem.add(new Label("hours", new Double(value.getAmount())));
+                listItem.add(new Label("task", value.getTask()));
                 
                 // remember the current value for the next row
                 previousValue = value;
-                return true;
             }
         };
 
@@ -118,33 +114,8 @@ public class ExamplePse extends HtmlPage
         add(new PagedTableNavigator("pageTableNav", table));
 
         // Add export links
-        add(new ExportLink("exportCsv", data));
-        add(new ExportLink("exportExcel", data));
-        add(new ExportLink("exportXml", data));
-    }
-    
-    /**
-     * Simple extension to Link
-
-     * @author Juergen Donnerstag
-     */
-    private class ExportLink extends Link
-    {
-        final private List data;
-        
-        public ExportLink(final String componentName, final List data)
-	    {
-            super(componentName);
-            this.data = data;
-	    }
-        
-        public void linkClicked(final RequestCycle cycle)
-        {
-            // This is very rudimentary only
-            new Export().doExport(cycle, new XmlView(data, true, false, false), data);
-            
-            // rendering completed
-            cycle.setPage((Page)null);
-        }
+        add(new ExportLink("exportCsv", data, new CsvView(data, true, false, false)));
+        add(new ExportLink("exportExcel", data, new ExcelView(data, true, false, false)));
+        add(new ExportLink("exportXml", data, new XmlView(data, true, false, false)));
     }
 }

@@ -20,11 +20,9 @@ package displaytag;
 
 import java.util.List;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeader;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeaders;
 
@@ -37,7 +35,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleSorting extends HtmlPage
+public class ExampleSorting extends Displaytag
 {
     /**
      * Constructor.
@@ -141,17 +139,15 @@ public class ExampleSorting extends HtmlPage
         // Add table 
         add(new TableWithAlternatingRowStyle("rows", data)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
-                tagClass.add(new Label("id", new Integer(value.getId())));
-                tagClass.add(new Label("name", value.getName()));
-                tagClass.add(new Label("email", value.getEmail()));
-                tagClass.add(new Label("status", value.getStatus()));
-                tagClass.add(new Label("comment", value.getDescription()));
-                
-                return true;
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comment", value.getDescription()));
             }
         });
     }

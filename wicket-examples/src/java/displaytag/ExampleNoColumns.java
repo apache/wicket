@@ -18,15 +18,11 @@
  */
 package displaytag;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 
 import displaytag.utils.ListObject;
 import displaytag.utils.TableWithAlternatingRowStyle;
@@ -37,7 +33,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleNoColumns extends HtmlPage
+public class ExampleNoColumns extends Displaytag
 {
     /**
      * Constructor.
@@ -52,15 +48,10 @@ public class ExampleNoColumns extends HtmlPage
         // Add table
         add(new TableWithAlternatingRowStyle("entries", data)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
-
-                Map attrs = new HashMap();
-                attrs.put("id", "class");
-                tagClass.add(new Label("entry", value.getName()));
-                
-                return true;
+                final ListObject value = (ListObject) listItem.getModelObject();
+                listItem.add(new Label("entry", value.getName()));
             }
         });
     }

@@ -79,13 +79,13 @@ public abstract class BaseExportView
     protected abstract String getRowEnd();
 
     /**
-     * String to add before a cell.
+     * String to add before a listItem.
      * @return String
      */
     protected abstract String getCellStart();
 
     /**
-     * String to add after a cell.
+     * String to add after a listItem.
      * @return String
      */
     protected abstract String getCellEnd();

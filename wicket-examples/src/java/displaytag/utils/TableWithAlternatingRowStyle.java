@@ -18,23 +18,21 @@
  */
 package displaytag.utils;
 
+import java.io.Serializable;
 import java.util.List;
-import com.voicetribe.wicket.Container;
-import com.voicetribe.wicket.Model;
-import com.voicetribe.wicket.markup.ComponentTagAttributeModifier;
-import com.voicetribe.wicket.markup.html.HtmlContainer;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+
+import com.voicetribe.wicket.RequestCycle;
+import com.voicetribe.wicket.markup.ComponentTag;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * This is a simple Table extension providing alternate row styles (colours). 
  * The styles are named "even" and "odd".
  * 
- * Pre-requiste: The HTML markup references a Wicket component named "class"
- * 
  * @author Juergen Donnerstag
  */
-public abstract class TableWithAlternatingRowStyle extends Table
+public abstract class TableWithAlternatingRowStyle extends ListView
 {
     /**
      * Constructor
@@ -48,23 +46,32 @@ public abstract class TableWithAlternatingRowStyle extends Table
     }
 
     /**
-     * Besides default behaviour, add a modifier, which will handle the
-     * alternate styles.
-     * TODO just an idea. Why not do during render time, avoiding the need for
-     *   an extra component for each row????
-     * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+     * Subclass Table's newCell() and return a Cell which will add/modify its
+     * class attribute and thus provide Cells with alternating row colours.
+     * 
+     * @see com.voicetribe.wicket.markup.html.table.Table#newCell(int)
      */
-    public void populateCell(final Cell cell)
+    protected ListItem newItem(final int index)
     {
-        //HtmlContainer hc = new HtmlContainer("class");
-        cell.addAttributeModifier(
-                new ComponentTagAttributeModifier(
-                        "class",
-                        new Model(cell.isEvenIndex() ? "even" : "odd")));
-        
-        //cell.add(hc);
-        populateCell(cell, cell);
-    }
+        // Make sure the model object is serializable
+        Object listItem = getList().get(index);
+        if (!(listItem instanceof Serializable))
+        {
+            throw new IllegalArgumentException("Table and table cell model data must be serializable");
+        }
 
-    protected abstract boolean populateCell(final Cell cell, final Container tagClass);
+        // Return an extended Cell, which will automatically change the CSS style with
+        // every other Cell.
+        return new ListItem(index, this)
+        {
+            protected void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+            {
+                // add/modify the attribute controlling the CSS style
+                tag.put("class", this.isEvenIndex() ? "even" : "odd");
+                
+                // continue with default behaviour
+                super.handleComponentTag(cycle, tag);
+            }
+        };
+    }
 }

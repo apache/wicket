@@ -21,7 +21,6 @@ package displaytag;
 import java.util.List;
 
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 
 import displaytag.utils.TestList;
 
@@ -30,7 +29,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleTwoTables extends HtmlPage
+public class ExampleTwoTables extends Displaytag
 {
     /**
      * Constructor.

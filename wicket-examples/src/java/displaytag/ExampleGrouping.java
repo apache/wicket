@@ -18,22 +18,20 @@
  */
 package displaytag;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 
-import displaytag.utils.TableWithAlternatingRowStyle;
 import displaytag.utils.ReportList;
 import displaytag.utils.ReportableListObject;
+import displaytag.utils.TableWithAlternatingRowStyle;
 
 /**
  * A table supporting grouping
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleGrouping extends HtmlPage
+public class ExampleGrouping extends Displaytag
 {
     /**
      * Constructor.
@@ -51,32 +49,31 @@ public class ExampleGrouping extends HtmlPage
             // Remember the value from the previous row
             private ReportableListObject previousValue = null;
             
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ReportableListObject value = (ReportableListObject) cell.getModelObject();
+                final ReportableListObject value = (ReportableListObject) listItem.getModelObject();
 
                 // If first row, print anyway
                 if (previousValue == null)
                 {
-	                tagClass.add(new Label("city", value.getCity()));
-	                tagClass.add(new Label("project", value.getProject()));
+	                listItem.add(new Label("city", value.getCity()));
+	                listItem.add(new Label("project", value.getProject()));
                 } 
                 else
                 {
 	                boolean equal = value.getCity().equals(previousValue.getCity());
-	                tagClass.add(new Label("city", equal ? "" : value.getCity()));
+	                listItem.add(new Label("city", equal ? "" : value.getCity()));
 	                
 	                equal &= value.getProject().equals(previousValue.getProject());
-	                tagClass.add(new Label("project", equal ? "" : value.getProject()));
+	                listItem.add(new Label("project", equal ? "" : value.getProject()));
                 }
 
                 // These values are not grouped
-                tagClass.add(new Label("hours", new Double(value.getAmount())));
-                tagClass.add(new Label("task", value.getTask()));
+                listItem.add(new Label("hours", new Double(value.getAmount())));
+                listItem.add(new Label("task", value.getTask()));
                 
                 // Remember current value
                 previousValue = value;
-                return true;
             }
         });
     }

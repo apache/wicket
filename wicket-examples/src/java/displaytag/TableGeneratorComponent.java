@@ -21,12 +21,11 @@ package displaytag;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.IModel;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.panel.Panel;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 import displaytag.utils.TableWithAlternatingRowStyle;
 
@@ -93,15 +92,15 @@ public class TableGeneratorComponent extends Panel
     private final void init(final List data, final List headers, final List columns)
     {
         // Add table header
-        add(new Table("headers", headers)
+        add(new ListView("headers", headers)
         {
-            protected void populateCell(Cell cell)
+            protected void populateItem(final ListItem listItem)
             {
-                Object header = headers.get(cell.getIndex());
-                if (populateHeader(cell, header) == false)
+                Object header = headers.get(listItem.getIndex());
+                if (populateHeader(listItem, header) == false)
                 {
                     String value = (String)(header instanceof String ? header : ((IModel)header).getObject());
-                    cell.add(new Label("header", value));
+                    listItem.add(new Label("header", value));
                 }
             }
         });
@@ -109,22 +108,20 @@ public class TableGeneratorComponent extends Panel
         // Add table rows
         add(new TableWithAlternatingRowStyle("rows", data)
         {
-            protected boolean populateCell(final Cell rowCell, final Container tagClass)
+            protected void populateItem(final ListItem rowItem)
             {
-                tagClass.add(new Table("columns", columns)
+                rowItem.add(new ListView("columns", columns)
                 {
-                    protected void populateCell(final Cell colCell)
+                    protected void populateItem(final ListItem colItem)
                     {
-                        Object column = columns.get(colCell.getIndex());
-                        if (populateColumn(colCell, column) == false)
+                        Object column = columns.get(colItem.getIndex());
+                        if (populateColumn(colItem, column) == false)
                         {
                             String value = (String)(column instanceof String ? column : ((IModel)column).getObject());
-                            colCell.add(new Label("column", rowCell.getModel(), value));
+                            colItem.add(new Label("column", rowItem.getModel(), value));
                         }
                     }
                 });
-                
-                return true;
             }
         });
     }
@@ -136,7 +133,7 @@ public class TableGeneratorComponent extends Panel
      * @param header
      * @return
      */
-    protected boolean populateHeader(final Cell cell, final Object header)
+    protected boolean populateHeader(final ListItem listItem, final Object header)
     {
         return false;
     }
@@ -148,7 +145,7 @@ public class TableGeneratorComponent extends Panel
      * @param column
      * @return
      */
-    protected boolean populateColumn(final Cell cell, final Object column)
+    protected boolean populateColumn(final ListItem listItem, final Object column)
     {
         return false;
     }

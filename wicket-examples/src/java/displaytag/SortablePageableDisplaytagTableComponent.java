@@ -21,15 +21,15 @@ package displaytag;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.ComponentTag;
 import com.voicetribe.wicket.markup.MarkupStream;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.panel.Panel;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeader;
 import com.voicetribe.wicket.markup.html.table.SortableTableHeaders;
+import com.voicetribe.wicket.markup.html.table.TableNavigation;
 import com.voicetribe.wicket.markup.html.table.TableNavigationIncrementLink;
 import com.voicetribe.wicket.markup.html.table.TableNavigationLink;
 
@@ -99,17 +99,17 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         // Add a table 
         final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
-
-                tagClass.add(new Label("id", new Integer(value.getId())));
-                tagClass.add(new Label("name", value.getName()));
-                tagClass.add(new Label("email", value.getEmail()));
-                tagClass.add(new Label("status", value.getStatus()));
-                tagClass.add(new Label("comments", value.getDescription()));
+                super.populateItem(listItem);
                 
-                return true;
+                final ListObject value = (ListObject) listItem.getModelObject();
+
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
             }
         };
         add(table);
@@ -120,22 +120,27 @@ public class SortablePageableDisplaytagTableComponent extends Panel
             protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream,
                     final ComponentTag openTag)
             {
+                int firstCell = table.getCurrentPage() * table.getRowsPerPage();
+                
                 String text = 
                     String.valueOf(data.size()) 
                     + " items found, displaying "
-                    + String.valueOf(table.firstCell() + 1)
+                    + String.valueOf(firstCell + 1)
                     + " to "
-                    + String.valueOf(table.firstCell() + table.getPageSizeInCells())
+                    + String.valueOf(firstCell + table.getRowsPerPage())
                     + ".";
                 
                 replaceBody(cycle, markupStream, openTag, text);
             }
         });
 
+        final TableNavigation tableNavigation = new TableNavigation("navigation", table /* , 5, 2 */);
+        add(tableNavigation);
+
         // Add some navigation links
         add(new TableNavigationLink("first", table, 0));
         add(new TableNavigationIncrementLink("prev", table, -1));
         add(new TableNavigationIncrementLink("next", table, 1));
-        add(new TableNavigationLink("last", table, table.pageCount() - 1));
+        add(new TableNavigationLink("last", table, table.getPageCount() - 1));
     }
 }

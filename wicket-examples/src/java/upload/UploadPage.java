@@ -34,8 +34,8 @@ import com.voicetribe.wicket.markup.html.form.TextField;
 import com.voicetribe.wicket.markup.html.form.upload.FileUploadForm;
 import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
 import com.voicetribe.wicket.markup.html.link.Link;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * Upload example.
@@ -115,7 +115,7 @@ public class UploadPage extends HtmlPage
     /**
      * table for files.
      */
-    private class FileTable extends Table
+    private class FileTable extends ListView
     {
         /**
          * Construct.
@@ -130,11 +130,11 @@ public class UploadPage extends HtmlPage
         /**
          * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
          */
-        protected void populateCell(Cell cell)
+        protected void populateItem(ListItem listItem)
         {
-            final String fileName = (String)cell.getModelObject();
-            cell.add(new Label("file", fileName));
-            cell.add(new Link("delete") {
+            final String fileName = (String)listItem.getModelObject();
+            listItem.add(new Label("file", fileName));
+            listItem.add(new Link("delete") {
                 
                 public void linkClicked(RequestCycle cycle)
                 {

@@ -18,6 +18,10 @@
  */
 package guestbook;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
@@ -25,12 +29,8 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.basic.MultiLineLabel;
 import com.voicetribe.wicket.markup.html.form.Form;
 import com.voicetribe.wicket.markup.html.form.TextArea;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * A simple "guest book" example that allows visitors to the page to add a comment
@@ -43,7 +43,7 @@ public class Home extends HtmlPage
     private static final List commentList = new ArrayList();
 
     // The table of comments shown on this page
-    private final Table table;
+    private final ListView table;
 
     /**
      * Constructor that is invoked when page is invoked without a session.
@@ -55,14 +55,14 @@ public class Home extends HtmlPage
         add(new CommentForm("commentForm"));
 
         // Add table of existing comments
-        add(table = new Table("comments", commentList)
+        add(table = new ListView("comments", commentList)
             {
-                public void populateCell(final Cell cell)
+                public void populateItem(final ListItem listItem)
                 {
-                    final Comment comment = (Comment) cell.getModelObject();
+                    final Comment comment = (Comment) listItem.getModelObject();
 
-                    cell.add(new Label("date", comment.getDate()));
-                    cell.add(new MultiLineLabel("text", comment.getText()));
+                    listItem.add(new Label("date", comment.getDate()));
+                    listItem.add(new MultiLineLabel("text", comment.getText()));
                 }
             });
     }

@@ -20,12 +20,10 @@ package displaytag;
 
 import java.util.List;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.basic.SmartLinkLabel;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 
 import displaytag.utils.ListObject;
 import displaytag.utils.TableWithAlternatingRowStyle;
@@ -36,7 +34,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleAutolink extends HtmlPage
+public class ExampleAutolink extends Displaytag
 {
     /**
      * Constructor.
@@ -51,15 +49,13 @@ public class ExampleAutolink extends HtmlPage
         // Add table 
         add(new TableWithAlternatingRowStyle("rows", data)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
-                tagClass.add(new Label("id", new Integer(value.getId())));
-                tagClass.add(new SmartLinkLabel("email", value.getEmail()));
-                tagClass.add(new SmartLinkLabel("url", value.getUrl()));
-                
-                return true;
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new SmartLinkLabel("email", value.getEmail()));
+                listItem.add(new SmartLinkLabel("url", value.getUrl()));
             }
         });
     }

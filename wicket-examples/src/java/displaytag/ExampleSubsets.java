@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 
 import displaytag.utils.TestList;
 
@@ -31,7 +30,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleSubsets extends HtmlPage
+public class ExampleSubsets extends Displaytag
 {
     /**
      * Constructor.
@@ -46,16 +45,16 @@ public class ExampleSubsets extends HtmlPage
         add(new SimpleDisplaytagTableComponent("table1", data));
 
         // First alternativ
+        // Because subList() returns a view (not a copy) it is not serializable
+        // and thus can not be used directly.
         List data2 = new ArrayList();
         data2.addAll(data.subList(0, 5));
         add(new SimpleDisplaytagTableComponent("table2", data2));
-
+        
         // Second alternativ
-/* TODO Currently broken, because functionality has been removed from Table        
         SimpleDisplaytagTableComponent table = new SimpleDisplaytagTableComponent("table3", data);
         table.setStartIndex(3);
-        table.setNumberOfCellsToDisplay(8 - 3);
+        table.setViewSize(8 - 3);
         add(table);
-*/        
     }
 }

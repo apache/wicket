@@ -22,11 +22,9 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import com.voicetribe.util.time.Time;
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 
 import displaytag.utils.ListObject;
 import displaytag.utils.TableWithAlternatingRowStyle;
@@ -37,7 +35,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleDecorator extends HtmlPage
+public class ExampleDecorator extends Displaytag
 {
     /**
      * Constructor.
@@ -52,35 +50,31 @@ public class ExampleDecorator extends HtmlPage
         // Add table 
         add(new TableWithAlternatingRowStyle("rows", data)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
-                tagClass.add(new Label("id", new Integer(value.getId())));
-                tagClass.add(new Label("email", value.getEmail()));
-                tagClass.add(new Label("status", value.getStatus()));
-                tagClass.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd")));
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd")));
                 
                 final DecimalFormat format = new DecimalFormat("$ #,##0.00");
-                tagClass.add(new Label("money", format.format(value.getMoney())));
-                
-                return true;
+                listItem.add(new Label("money", format.format(value.getMoney())));
             }
         });
         
         // Add table 
         add(new TableWithAlternatingRowStyle("rows2", data)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
-                tagClass.add(new Label("id", cell.getModel(), "id"));
-                tagClass.add(new Label("email", cell.getModel(), "email"));
-                tagClass.add(new Label("status", cell.getModel(), "status"));
-                tagClass.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd HH:mm:ss")));
-                
-                return true;
+                listItem.add(new Label("id", listItem.getModel(), "id"));
+                listItem.add(new Label("email", listItem.getModel(), "email"));
+                listItem.add(new Label("status", listItem.getModel(), "status"));
+                listItem.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd HH:mm:ss")));
             }
         });
      }

@@ -21,16 +21,13 @@ package displaytag;
 import java.util.List;
 
 import com.voicetribe.util.time.Time;
-import com.voicetribe.wicket.Container;
-import com.voicetribe.wicket.Page;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.RequestCycle;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.link.Link;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 
-import displaytag.export.Export;
+import displaytag.export.CsvView;
+import displaytag.export.ExcelView;
+import displaytag.export.ExportLink;
 import displaytag.export.XmlView;
 import displaytag.utils.ListObject;
 import displaytag.utils.TableWithAlternatingRowStyle;
@@ -41,7 +38,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleExport extends HtmlPage
+public class ExampleExport extends Displaytag
 {
     /**
      * Constructor.
@@ -56,48 +53,22 @@ public class ExampleExport extends HtmlPage
         // Add the table
         TableWithAlternatingRowStyle table = new TableWithAlternatingRowStyle("rows", data)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
-                tagClass.add(new Label("id", new Integer(value.getId())));
-                tagClass.add(new Label("email", value.getEmail()));
-                tagClass.add(new Label("status", value.getStatus()));
-                tagClass.add(new Label("date", Time.valueOf(value.getDate()).toDateString()));
-                
-                return true;
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("date", Time.valueOf(value.getDate()).toDateString()));
             }
         };
         
         add(table);
         
         // Add the export links
-        add(new ExportLink("exportCsv", data));
-        add(new ExportLink("exportExcel", data));
-        add(new ExportLink("exportXml", data));
-    }
-    
-    /**
-     * Define action if Link is selected
-     * 
-     * @author Juergen Donnerstag
-     */
-    private class ExportLink extends Link
-    {
-        final private List data;
-        
-        public ExportLink(final String componentName, final List data)
-	    {
-            super(componentName);
-            this.data = data;
-	    }
-        
-        public void linkClicked(final RequestCycle cycle)
-        {
-            new Export().doExport(cycle, new XmlView(data, true, false, false), data);
-            
-            // rendering completed
-            cycle.setPage((Page)null);
-        }
+        add(new ExportLink("exportCsv", data, new CsvView(data, true, false, false)));
+        add(new ExportLink("exportExcel", data, new ExcelView(data, true, false, false)));
+        add(new ExportLink("exportXml", data, new XmlView(data, true, false, false)));
     }
 }

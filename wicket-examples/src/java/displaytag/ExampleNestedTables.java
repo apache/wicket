@@ -20,11 +20,9 @@ package displaytag;
 
 import java.util.List;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 
 import displaytag.utils.ListObject;
 import displaytag.utils.TableWithAlternatingRowStyle;
@@ -35,7 +33,7 @@ import displaytag.utils.TestList;
  * 
  * @author Juergen Donnerstag
  */
-public class ExampleNestedTables extends HtmlPage
+public class ExampleNestedTables extends Displaytag
 {
     /**
      * Constructor.
@@ -50,30 +48,27 @@ public class ExampleNestedTables extends HtmlPage
         // straight forward
         add(new TableWithAlternatingRowStyle("rows", data)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
-                tagClass.add(new Label("id", new Integer(value.getId())));
-                tagClass.add(new Label("status", value.getStatus()));
-                tagClass.add(new Label("comments", value.getDescription()));
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
 
                 List data2 = new TestList(3, false);
                 
                 // Just create a new table, which will be put into the current cell
-                tagClass.add(new TableWithAlternatingRowStyle("rows", data2)
+                listItem.add(new TableWithAlternatingRowStyle("rows", data2)
                 {
-                    public boolean populateCell(final Cell cell, final Container tagClass)
+                    public void populateItem(final ListItem listItem)
                     {
-                        final ListObject value = (ListObject) cell.getModelObject();
+                        final ListObject value = (ListObject) listItem.getModelObject();
 
-                        tagClass.add(new Label("name", value.getName()));
-                        tagClass.add(new Label("email", value.getEmail()));
-                        return true;
+                        listItem.add(new Label("name", value.getName()));
+                        listItem.add(new Label("email", value.getEmail()));
                     }
                 });
-                
-                return true;
             }
         });
     }

@@ -64,7 +64,6 @@ public class TestList extends ArrayList implements Serializable
             // number of times.
             for (int j = 0; j < size; j++)
             {
-
                 ListObject object1 = new ListObject();
                 ListObject object2 = new ListObject();
                 ListObject object3 = new ListObject();

@@ -20,15 +20,13 @@ package displaytag;
 
 import java.util.List;
 
-import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.markup.ComponentTagAttributeModifier;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
-import com.voicetribe.wicket.markup.html.table.Cell;
+import com.voicetribe.wicket.markup.html.table.ListItem;
 
 import displaytag.utils.ListObject;
 import displaytag.utils.TableWithAlternatingRowStyle;
@@ -39,7 +37,7 @@ import displaytag.utils.TestList;
  *
  * @author Juergen Donnerstag
  */
-public class ExampleStyles extends HtmlPage
+public class ExampleStyles extends Displaytag
 {
     /**
      * Constructor.
@@ -71,17 +69,15 @@ public class ExampleStyles extends HtmlPage
         // Add table 
         htmlTable.add(new TableWithAlternatingRowStyle("rows", data)
         {
-            public boolean populateCell(final Cell cell, final Container tagClass)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
-                tagClass.add(new Label("id", new Integer(value.getId())));
-                tagClass.add(new Label("name", value.getName()));
-                tagClass.add(new Label("email", value.getEmail()));
-                tagClass.add(new Label("status", value.getStatus()));
-                tagClass.add(new Label("comments", value.getDescription()));
-
-                return true;
+                listItem.add(new Label("id", new Integer(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
             }
         });
     }

@@ -1,12 +1,12 @@
 
 <html>
 <head>
-	<title>How to do tables like displaytag with Wicket</title>
+	<title>Example Paging</title>
 	<meta http-equiv="Expires" content="-1" />
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Cache-Control" content="no-cache" />
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
-	<link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+	<link id="wcn-styleLink" rel="stylesheet" href="css/displaytag.css" type="text/css" media="screen, print" />
 </head>
 	
 <body>
@@ -40,6 +40,52 @@
 					<td>Test Comments</td>
 				</tr>
       </span>
+    </tbody>
+  </table>
+	<br/>
+  This table has deliberately only one page<p/><p/>
+	<span id="wcn-pageTableNav2" />
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+	  </thead>
+    <tbody>
+	    <tr id="wcn-rows2" class="even">
+				<td><span id="wcn-id">Test ID</span></td>
+				<td><span id="wcn-name">Test Name</span></td>
+				<td><span id="wcn-email">Test EMail</span></td>
+				<td><span id="wcn-status">Test Status</span></td>
+				<td><span id="wcn-comments">Test Comments</span></td>
+		  </tr>
+    </tbody>
+  </table>
+	<br/>
+  Make use of an extended table navigator<p/><p/>
+	<span id="wcn-pageTableNav3" />
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+	  </thead>
+    <tbody>
+	    <tr id="wcn-rows3" class="even">
+				<td><span id="wcn-id">Test ID</span></td>
+				<td><span id="wcn-name">Test Name</span></td>
+				<td><span id="wcn-email">Test EMail</span></td>
+				<td><span id="wcn-status">Test Status</span></td>
+				<td><span id="wcn-comments">Test Comments</span></td>
+		  </tr>
     </tbody>
   </table>
 </body>

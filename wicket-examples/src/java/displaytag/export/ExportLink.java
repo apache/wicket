@@ -16,36 +16,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package displaytag;
+package displaytag.export;
 
-import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.HtmlPage;
+import java.util.List;
 
-import displaytag.utils.AbsoluteHref;
+import com.voicetribe.wicket.Page;
+import com.voicetribe.wicket.RequestCycle;
+import com.voicetribe.wicket.markup.html.link.Link;
 
 /**
- * Start page for different displaytag pages
+ * Define action if Link is selected
  * 
  * @author Juergen Donnerstag
  */
-public class Displaytag extends HtmlPage
+public class ExportLink extends Link
 {
-    /**
-     * 
-     *
-     */
-    public Displaytag()
+    final private List data;
+    final private BaseExportView exportView; 
+    
+    public ExportLink(final String componentName, final List data, final BaseExportView exportView)
     {
-        this(null);
+        super(componentName);
+        this.data = data;
+        this.exportView = exportView;
     }
     
-    /**
-     * Constructor.
-     * 
-     * @param parameters Page parameters
-     */
-    public Displaytag(final PageParameters parameters)
+    public void linkClicked(final RequestCycle cycle)
     {
-        add(new AbsoluteHref("styleLink"));
+        new Export().doExport(cycle, exportView, data);
+        
+        // rendering completed
+        cycle.setPage((Page)null);
     }
 }

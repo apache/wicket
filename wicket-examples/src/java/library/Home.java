@@ -20,8 +20,8 @@ package library;
 
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * Page that displays a list of books and lets the user re-order them.
@@ -36,19 +36,19 @@ public final class Home extends AuthenticatedHtmlPage
     public Home(final PageParameters parameters)
     {
         // Add table of books
-        add(new Table("books", getUser(), "books")
+        add(new ListView("books", getUser(), "books")
             {
-                public void populateCell(final Cell cell)
+                public void populateItem(final ListItem listItem)
                 {
-                    final Book book = (Book) cell.getModelObject();
+                    final Book book = (Book) listItem.getModelObject();
 
-                    cell.add(BookDetails.link("details", book,
+                    listItem.add(BookDetails.link("details", book,
                             getLocalizer().getString("noBookTitle", this)));
-                    cell.add(new Label("author", book));
-                    cell.add(cell.moveUpLink("moveUp"));
-                    cell.add(cell.moveDownLink("moveDown"));
-                    cell.add(cell.removeLink("remove"));
-                    cell.add(EditBook.link("edit", book.getId()));
+                    listItem.add(new Label("author", book));
+                    listItem.add(listItem.moveUpLink("moveUp"));
+                    listItem.add(listItem.moveDownLink("moveDown"));
+                    listItem.add(listItem.removeLink("remove"));
+                    listItem.add(EditBook.link("edit", book.getId()));
                 }
             });
     }

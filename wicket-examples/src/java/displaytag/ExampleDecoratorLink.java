@@ -25,11 +25,10 @@ import linkomatic.Page3;
 import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.markup.ComponentTagAttributeModifier;
-import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 import displaytag.utils.ListObject;
 import displaytag.utils.TestList;
@@ -40,7 +39,7 @@ import displaytag.utils.TestList;
  *
  * @author Juergen Donnerstag
  */
-public class ExampleDecoratorLink extends HtmlPage
+public class ExampleDecoratorLink extends Displaytag
 {
     /**
      * Constructor.
@@ -53,61 +52,61 @@ public class ExampleDecoratorLink extends HtmlPage
         List data = new TestList(10, false);
 
         // Add the table
-        add(new Table("rows", data)
+        add(new ListView("rows", data)
         {
-            public void populateCell(final Cell cell)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
                 // alternating row styles
-                cell.addAttributeModifier(new ComponentTagAttributeModifier("class",
-                                                          new Model(cell.isEvenIndex() ? "even" : "odd")));
+                listItem.addAttributeModifier(new ComponentTagAttributeModifier("class",
+                                                          new Model(listItem.isEvenIndex() ? "even" : "odd")));
                 
                 ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", new Integer(value.getId())));
-                cell.add(idLink);
+                listItem.add(idLink);
 
                 ExternalPageLink emailLink = new ExternalPageLink("mailLink", Page3.class);
                 emailLink.setParameter("action", "sendamail");
                 emailLink.add(new Label("email", value.getEmail()));
-                cell.add(emailLink);
+                listItem.add(emailLink);
 
                 ExternalPageLink statusLink = new ExternalPageLink("statusLink", Page3.class);
                 statusLink.setParameter("id", value.getId());
                 statusLink.add(new Label("status", value.getStatus()));
-                cell.add(statusLink);
+                listItem.add(statusLink);
             }
         });
 
         // Add table of existing comments
-        add(new Table("rows2", data)
+        add(new ListView("rows2", data)
         {
-            public void populateCell(final Cell cell)
+            public void populateItem(final ListItem listItem)
             {
-                final ListObject value = (ListObject) cell.getModelObject();
+                final ListObject value = (ListObject) listItem.getModelObject();
 
-                cell.addAttributeModifier(new ComponentTagAttributeModifier("class",
-                                                          new Model(cell.isEvenIndex() ? "even" : "odd")));
+                listItem.addAttributeModifier(new ComponentTagAttributeModifier("class",
+                                                          new Model(listItem.isEvenIndex() ? "even" : "odd")));
                 
                 ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
                 idLink.setParameter("id", value.getId());
                 idLink.add(new Label("id", new Integer(value.getId())));
-                cell.add(idLink);
+                listItem.add(idLink);
 
-                cell.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("email", value.getEmail()));
 
-                cell.add(
+                listItem.add(
                         new ExternalPageLink("view", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "view"));
 
-                cell.add(
+                listItem.add(
                         new ExternalPageLink("edit", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "edit"));
 
-                cell.add(
+                listItem.add(
                         new ExternalPageLink("delete", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "delete"));
