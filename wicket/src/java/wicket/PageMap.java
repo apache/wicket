@@ -86,9 +86,13 @@ public final class PageMap implements Serializable
 	 */
 	public final boolean continueToOriginalDestination()
 	{
-		final RequestCycle cycle = RequestCycle.get();
+		// Get request cycle
+		final RequestCycle cycle = session.getRequestCycle();
+		
+		// If there's a place to go to
 		if (interceptContinuationURL != null)
 		{
+			// Redirect there
 			cycle.getResponse().redirect(interceptContinuationURL);
 
 			// Since we are explicitly redirecting to a page already, we do not
@@ -98,7 +102,6 @@ public final class PageMap implements Serializable
 			// Reset interception URL
 			interceptContinuationURL = null;
 			session.dirty();
-			
 			return true;
 		}
 		return false;

@@ -94,7 +94,7 @@ public final class PageableListViewNavigationLink extends PageLink
 	public void onClick()
 	{
 	    // We do not need to redirect
-		getRequestCycle().setRedirect(false);
+		setRedirect(false);
 		
 		super.onClick();
 	}

@@ -84,9 +84,9 @@ import wicket.version.undo.UndoPageVersionManager;
  * ACCESS_ALLOWED (true), then onRender() will render the page. If it returns
  * false (ACCESS_DENIED), then onRender() will not render the page. Besides
  * returning true or false, an implementation of checkAccess() may also choose
- * to send the user to another page with getRequestCycle().setPage() or
- * getRequestCycle().redirectToInterceptPage(). This can be used to allow a user
- * to authenticate themselves if they were denied access.
+ * to send the user to another page with Component.setResponsePage() or
+ * Page.redirectToInterceptPage(). This can be used to allow a user to
+ * authenticate themselves if they were denied access.
  * 
  * @see wicket.markup.html.WebPage
  * @see wicket.MarkupContainer

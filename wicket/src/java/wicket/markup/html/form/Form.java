@@ -379,7 +379,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		// redirecting on as the first thing because the user's handleSubmit
 		// implementation may wish to redirect somewhere else. In that case,
 		// they can simply call setRedirect(false) in handleSubmit.
-		getRequestCycle().setRedirect(true);
+		setRedirect(true);
 
 		// Validate model using validation strategy
 		getValidationStrategy().validate(this);
