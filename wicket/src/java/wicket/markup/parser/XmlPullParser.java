@@ -290,6 +290,7 @@ public final class XmlPullParser implements IXmlPullParser
 			// If no, return the whole line. determineEncoding will read-ahead
 			// at max. the very first line of the markup
 			this.encoding = determineEncoding(bin, readAheadSize);
+			bin.reset();
 
 			// Depending on the encoding determined from the markup-file, read
 			// the rest either with specific encoding or JVM default
@@ -297,7 +298,6 @@ public final class XmlPullParser implements IXmlPullParser
 			if (this.encoding == null)
 			{
 				// Use JVM default
-				bin.reset();
 				markup = Streams.readString(bin);
 			}
 			else
