@@ -13,9 +13,15 @@
 	        </item>
 	    </menu>
         <menu name="Getting started">
-	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
-	        <item name="Quick start" href="/QuickStart.html"/>
-	        <item name="Examples" href="/Examples.html"/>
+            <item name="Download" 
+                href="http://sourceforge.net/projects/wicket/files"/>
+            <item name="Quick start" href="/QuickStart.html" collapse="true">
+                <item name="Summary"/>
+                <item name="Setting_up"/>
+                <item name="Running_Eclipse"/>
+                <item name="Further development"/>
+            </item>
+            <item name="Examples" href="/Examples.html"/>
         </menu>
 	    <menu name="Project info">
 	        <item name="Mailing Lists" href="/mail-lists.html" />
