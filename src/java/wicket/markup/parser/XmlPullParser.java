@@ -35,7 +35,6 @@ import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.StringValue;
 
-
 /**
  * A fairly shallow markup pull or streaming parser. Parses a markup string of a
  * given type of markup (for example, html, xml, vxml or wml) into Tag and
@@ -487,8 +486,8 @@ public final class XmlPullParser implements IXmlPullParser
 				// Set new position to end of attribute
 				pos = attributeParser.matcher().end(0);
 
-				// Chop off double quotes
-				if (value.startsWith("\""))
+				// Chop off double quotes or single quotes
+				if (value.startsWith("\"") || value.startsWith("\'"))
 				{
 					value = value.substring(1, value.length() - 1);
 				}

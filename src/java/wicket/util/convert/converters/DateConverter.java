@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.6 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.util.convert.converters;
 
@@ -34,21 +33,23 @@ public final class DateConverter extends AbstractConverter
 {
 	/** The date format to use. */
 	private DateFormat dateFormat;
-    
-    /**
+
+	/**
 	 * Constructor
 	 */
 	public DateConverter()
 	{
 	}
-    
-    /**
+
+	/**
 	 * Constructor
-     * @param locale The locale for this converter
+	 * 
+	 * @param locale
+	 *            The locale for this converter
 	 */
 	public DateConverter(final Locale locale)
 	{
-        super(locale);
+		super(locale);
 	}
 
 	/**
@@ -72,17 +73,22 @@ public final class DateConverter extends AbstractConverter
 	}
 
 	/**
-	 * create and return a new conversion exception, with the pattern when available
-	 * @param stringValue the tried value
-	 * @param e the exception
+	 * create and return a new conversion exception, with the pattern when
+	 * available
+	 * 
+	 * @param stringValue
+	 *            the tried value
+	 * @param e
+	 *            the exception
 	 * @return the new conversion exception
 	 */
-	private final ConversionException conversionException(
-			final String stringValue, Exception e)
+	private final ConversionException conversionException(final String stringValue, Exception e)
 	{
-		ConversionException conversionException =
-			new ConversionException("Cannot convert '" + stringValue + "' to Date", e);
-		if(dateFormat instanceof SimpleDateFormat) // usually, this is
+		ConversionException conversionException = new ConversionException("Cannot convert '"
+				+ stringValue + "' to Date", e);
+
+        // Usually, this is
+        if (dateFormat instanceof SimpleDateFormat) 
 		{
 			String pattern = ((SimpleDateFormat)dateFormat).toLocalizedPattern();
 			conversionException.setPattern(pattern);
@@ -90,20 +96,21 @@ public final class DateConverter extends AbstractConverter
 		return conversionException;
 	}
 
-    /**
-     * @return Returns the date format.
-     */
-    public final DateFormat getDateFormat()
-    {
-        if (dateFormat == null)
-        {
-            dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
-        }
-        return dateFormat;
-    }
+	/**
+	 * @return Returns the date format.
+	 */
+	public final DateFormat getDateFormat()
+	{
+		if (dateFormat == null)
+		{
+			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
+		}
+		return dateFormat;
+	}
 
 	/**
-	 * @param dateFormat The dateFormat to set.
+	 * @param dateFormat
+	 *            The dateFormat to set.
 	 */
 	public void setDateFormat(final DateFormat dateFormat)
 	{
