@@ -80,7 +80,6 @@ public final class XmlPullParser implements IXmlPullParser
 	private int positionMarker;
 
 	/** Regex to find <?xml encoding ... ?> */
-	// TODO convert to MetaPatterm
 	private static final Pattern encodingPattern = Pattern
 			.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
 
