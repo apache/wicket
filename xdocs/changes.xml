@@ -8,6 +8,10 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+      <action type="update" dev="Jonathan Locke" issue="">
+      Moved ImageResourceFactory map to Application since that's a much more obvious
+      and intuitive place for it to be.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1167154">
 		Enhanced Component.toString() to include page name.
       </action>

@@ -18,9 +18,7 @@
 package wicket.markup.html.image.resource;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import wicket.Component;
 import wicket.WicketRuntimeException;
@@ -41,9 +39,6 @@ import wicket.util.string.Strings;
  */
 public class LocalizedImageResource implements Serializable
 {
-	/** Map from image factory names to image factories */
-	private static final Map nameToImageFactory = new HashMap();
-
 	/** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 
@@ -55,18 +50,6 @@ public class LocalizedImageResource implements Serializable
 
 	/** The locale of the image resource */
 	private Locale locale;
-
-	/**
-	 * Adds an image resource factory to the list of factories to consult when
-	 * generating images
-	 * 
-	 * @param imageFactory
-	 *            The image factory to add
-	 */
-	public static void add(final ImageResourceFactory imageFactory)
-	{
-		nameToImageFactory.put(imageFactory.getName(), imageFactory);
-	}
 
 	/**
 	 * Constructor
@@ -179,8 +162,8 @@ public class LocalizedImageResource implements Serializable
 			if (valueParser.matches())
 			{
 				// Look up factory
-				final ImageResourceFactory factory = (ImageResourceFactory)nameToImageFactory
-						.get(valueParser.getFactoryName());
+				final ImageResourceFactory factory = component.getApplication()
+						.getImageResourceFactory(valueParser.getFactoryName());
 
 				// Found factory?
 				if (factory == null)
@@ -201,11 +184,6 @@ public class LocalizedImageResource implements Serializable
 								+ "\".  Was expecting either a static image reference or a value attribute of the form \"imageResourceFactoryName:(width,height:)?label\".");
 			}
 		}
-	}
-
-	static
-	{
-		add(new DefaultButtonImageResourceFactory("buttonFactory"));
 	}
 
 	/**
