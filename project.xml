@@ -5,7 +5,7 @@
   <id>wicket</id>
   <name>Wicket</name>
   <groupId>wicket</groupId>
-  <currentVersion>SNAPSHOT</currentVersion>
+  <currentVersion>0.9.19-beta</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -64,6 +64,11 @@
       <id>0.9.18-beta</id>
       <name>0.9.18-beta</name>
       <tag>WICKET_R_0_9_18_BETA</tag>
+    </version>
+    <version>
+      <id>0.9.19-beta</id>
+      <name>0.9.19-beta</name>
+      <tag>WICKET_R_0_9_19_BETA</tag>
     </version>
   </versions>
   <mailingLists>
