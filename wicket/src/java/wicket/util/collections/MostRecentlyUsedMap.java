@@ -22,11 +22,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Holds a map of most recently used items
+ * Holds a map of most recently used items of a given maximum size.  
+ * Old entries are expired when the map exceeds that maximum size.
+ * 
  * @author Jonathan Locke
  */
 public class MostRecentlyUsedMap extends LinkedHashMap
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = 895458107686513000L;
 

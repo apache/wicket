@@ -28,24 +28,28 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A fixed size map implementation.
+ * A fixed size map implementation.  Holds an array of keys and array of values
+ * which correspond by index.  Null key entries are available for use.  This means
+ * that null is not a valid key.
+ * 
  * @author Jonathan Locke
  */
 public final class MiniMap implements Map, Serializable
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = 5304939100732595513L;
 
-	// The keys and values
+	/** The array of keys.  Keys that are null are not used. */
     private final Object[] keys;
 
+    /** The array of values which correspond by index with the keys array. */
     private final Object[] values;
 
-    // The number of valid entries
+    /** The number of valid entries */
     private int size;
 
-    // The last search index
-    private int searchIndex;
+    /** The last search index.  This makes putting and getting more efficient. */
+    private int lastSearchIndex;
 
     /**
      * Constructor
@@ -149,9 +153,9 @@ public final class MiniMap implements Map, Serializable
         {
             // Store at first null index and continue searching after null index
             // next time
-            final int nullIndex = nextNull(searchIndex);
+            final int nullIndex = nextNullKey(lastSearchIndex);
 
-            searchIndex = nextIndex(nullIndex);
+            lastSearchIndex = nextIndex(nullIndex);
             keys[nullIndex] = key;
             values[nullIndex] = value;
             size++;
@@ -347,6 +351,8 @@ public final class MiniMap implements Map, Serializable
     }
 
     /**
+     * Computes the next index in the key or value array (both are
+     * the same length)
      * @param index The index
      * @return The next index, taking into account wraparound
      */
@@ -356,6 +362,8 @@ public final class MiniMap implements Map, Serializable
     }
 
     /**
+     * Finds the index of the next non-null key.  If the map is empty,
+     * -1 will be returned.
      * @param start Index to start at
      * @return Index of next non-null key
      */
@@ -378,10 +386,12 @@ public final class MiniMap implements Map, Serializable
     }
 
     /**
+     * Finds the index of the next null key.  If no null key can be found, 
+     * the map is full and -1 will be returned.
      * @param start Index to start at
      * @return Index of next null key
      */
-    private int nextNull(final int start)
+    private int nextNullKey(final int start)
     {
         int i = start;
 
@@ -400,19 +410,22 @@ public final class MiniMap implements Map, Serializable
     }
 
     /**
+     * Finds a key by starting at lastSearchIndex and searching from there.
+     * If the key is found, lastSearchIndex is advanced so the next key search
+     * can find the next key in the array, which is the most likely to be retrieved. 
      * @param key Key to find in map
      * @return Index of matching key or -1 if not found
      */
     private int findKey(final Object key)
     {
         // Find key starting at search index
-        final int index = findKey(searchIndex, key);
+        final int index = findKey(lastSearchIndex, key);
 
         // Found match?
         if (index != -1)
         {
             // Start search at the next index next time
-            searchIndex = nextIndex(index);
+            lastSearchIndex = nextIndex(index);
 
             // Return index of key
             return index;
@@ -422,6 +435,7 @@ public final class MiniMap implements Map, Serializable
     }
 
     /**
+     * Searches for a key from a given starting index.
      * @param key The key to find in this map
      * @param start Index to start at
      * @return Index of matching key or -1 if not found
@@ -445,6 +459,7 @@ public final class MiniMap implements Map, Serializable
     }
 
     /**
+     * Searches for a value from a given starting index.
      * @param start Index to start at
      * @param value The value to find in this map
      * @return Index of matching value or -1 if not found
