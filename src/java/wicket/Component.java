@@ -166,7 +166,6 @@ public abstract class Component implements Serializable, IConverterSource
 	public Component(final String name)
 	{
 		setName(name);
-		onNullModel();
 	}
 
 	/**
