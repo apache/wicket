@@ -25,8 +25,6 @@ import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 import wicket.Component;
-import wicket.RequestCycle;
-import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.util.convert.IConverter;
 
@@ -59,9 +57,11 @@ import wicket.util.convert.IConverter;
  * <pre>
  * 
  *  
- *        Person person = getSomePerson();
- *        ...
- *        add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *   
+ *         Person person = getSomePerson();
+ *         ...
+ *         add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *    
  *   
  *  
  * </pre>
@@ -77,16 +77,28 @@ import wicket.util.convert.IConverter;
  * <pre>
  * 
  *  
- *        add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *   
+ *         add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *    
  *   
  *  
  * </pre>
  * 
  * </p>
+ * <p>
+ * To force Ognl to convert to a specific type, you can provide constructor argument
+ * 'propertyType'.if that is set, that type is used for conversion instead of the type
+ * that is figured out by Ognl. This can be especially usefull for when you have a generic
+ * property (like Serializable myProp) that you want to be converted to a narrower type
+ * (e.g. an Integer). Ognl sees an incomming string being compatible with the target
+ * property, and will then bypass the converter. Hence, to force myProp being converted to
+ * and from and integer, propertyType should be set to Integer.
+ * </p>
  *
  * @see wicket.model.IModel
  * @see wicket.model.Model
  * @see wicket.model.DetachableModel
+ *
  * @author Chris Turner
  * @author Eelco Hillenius
  */
@@ -104,6 +116,17 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 	/** The model. */
 	private final IModel model;
 
+	/**
+	 * if this is set, this type is used for conversion instead of the type that
+	 * is figured out by Ognl. This can be especially usefull for when you have a
+	 * generic property (like Serializable myProp) that you want to be converted
+	 * to a narrower type (e.g. an Integer). Ognl sees an incomming string being
+	 * compatible with the target property, and will then bypass the converter.
+	 * Hence, to force myProp being converted to and from and integer, propertyType
+	 * should be set to Integer.
+	 */
+	private final Class propertyType;
+	
 	/** The component that uses this model. */
 	private Component component;
 
@@ -161,8 +184,7 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 		 * @param value The value
 		 * @param toType The type to convert to
 		 * @return the converted value
-		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,
-		 *      java.lang.Class)
+		 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,java.lang.Class)
 		 */
 		public Object convertValue(Map context, Object target,
 				Member member, String propertyName,
@@ -180,12 +202,31 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 	 */
 	public PropertyModel(final IModel model, final String expression)
 	{
+		this(model, expression, null);
+	}
+
+	/**
+	 * Construct with an IModel object and a Ognl expression that works on the given model.
+	 * Additional formatting will be used depending on the configuration setting.
+	 * @param model the wrapper
+	 * @param expression Ognl expression for property access
+	 * @param propertyType the type to be used for conversion instead of the type that
+	 * 	is figured out by Ognl. This can be especially usefull for when you have a
+	 * 	generic property (like Serializable myProp) that you want to be converted
+	 * 	to a narrower type (e.g. an Integer). Ognl sees an incomming string being
+	 * 	compatible with the target property, and will then bypass the converter.
+	 * 	Hence, to force myProp being converted to and from and integer, propertyType
+	 * 	should be set to Integer.
+	 */
+	public PropertyModel(final IModel model, final String expression, Class propertyType)
+	{
 		super(null);
 
 		checkModelNotNull(model);
 
 		this.model = model;
 		this.expression = expression;
+		this.propertyType = propertyType;
 	}
 
 	/**
@@ -229,7 +270,8 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 		try
 		{
 			OgnlContext ctx = getContext();
-			Object result = Ognl.getValue(expr, ctx, modelObject);
+			Object result = Ognl.getValue(expr, ctx, modelObject, propertyType);
+			// note: if property type is null it is ignored by Ognl
 			return result;
 		}
 		catch (OgnlException e)
@@ -249,10 +291,15 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 	{
 		try
 		{
-			String expr = getExpression();
-			Object target = getModel().getObject();
-			OgnlContext ctx = getContext();
-			Ognl.setValue(expr, ctx, target, object);
+			String expr = getExpression(); // get the ognl expression
+			Object target = getModel().getObject(); // get the real object
+			if(propertyType != null) // convert the incomming object to the target type
+			{
+				IConverter converter = component.getConverter(); // get converter
+				object = converter.convert(object, propertyType); // convert to set type
+			}
+			OgnlContext ctx = getContext(); // get the ognl context instance
+			Ognl.setValue(expr, ctx, target, object); // let ognl set the value
 		}
 		catch (OgnlException e)
 		{
@@ -318,6 +365,17 @@ public class PropertyModel extends DetachableModel implements IComponentAware
 	protected final String getExpression()
 	{
 		return expression;
+	}
+
+	/**
+	 * Gets the type to be used for conversion instead of the type that
+	 * 	is figured out by Ognl.
+	 * @return the type to be used for conversion instead of the type that
+	 * 	is figured out by Ognl
+	 */
+	public final Class getPropertyType()
+	{
+		return propertyType;
 	}
 
 	/**
