@@ -29,10 +29,10 @@ import wicket.util.io.Streams;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractResource implements IResource
+public abstract class AbstractResource implements IStringResource
 {
 	/** Charset for resource */
-	private Charset charset;
+	private Charset charset = Charset.defaultCharset();
 
 	/**
 	 * Sets the character set used for reading this resource.
