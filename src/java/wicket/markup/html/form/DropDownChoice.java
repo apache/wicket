@@ -36,7 +36,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public class DropDownChoice extends AbstractDropDownChoice
+public class DropDownChoice extends AbstractChoice
 {
 	/** serial UID. */
 	private static final long serialVersionUID = 122777360064586107L;
@@ -203,7 +203,7 @@ public class DropDownChoice extends AbstractDropDownChoice
 	/**
 	 * Updates this components' model from the request.
 	 * 
-	 * @see wicket.markup.html.form.AbstractDropDownChoice#updateModel()
+	 * @see wicket.markup.html.form.AbstractChoice#updateModel()
 	 */
 	public final void updateModel()
 	{
