@@ -10,18 +10,22 @@
 <section name="The Wicket Vision">
 <p><author>Jonathan Locke</author></p>
 <p>
-What I like about Wicket's design is that it shows restraint and focus in 
-providing a powerful solution to a very specific problem:
+Designing and implementing any framework for use in the real world inevitably 
+involves compromises and some degree of complexity, and Wicket is no exception.  
+However, I believe you will find that Wicket is quite compact, focused and 
+powerful as a framework. If Wicket has these characteristics, it is because 
+it was designed to solve one very specific problem well:
 </p>
 <blockquote>
   enabling component-oriented, programmatic manipulation of markup
 </blockquote>
 <p>
+Wicket does this and very little else, and that is a good thing.
+</p>
+<p>
 I once heard Josh Bloch talk about the <em>power to weight ratio</em> of an API.  
 The highest compliment anyone could make of Wicket would be to suggest that 
-Wicket has a lot of power and not much conceptual surface area.  That is 
-the primary guiding principle of Wicket's design and the ideal I would like
-to see it approach.
+Wicket has a lot of power and not much conceptual surface area.
 </p>
 <p>
 In art, negative space is the part that's not the subject.  In music, negative 
@@ -31,7 +35,8 @@ excellent from what is merely good.
 </p>
 <p>
 Following this metaphor, if Wicket is our foreground object, it is defined 
-<em>in a negative sense</em> by all the things that it <em>is not</em> (by the background).  
+<em>in a negative sense</em> by all the things that it <em>is not</em> 
+(by the background).  
 </p>
 <p>
 In other words, ideally, Wicket is a web UI framework that delegates as many 
