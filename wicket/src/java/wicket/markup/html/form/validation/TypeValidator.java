@@ -147,10 +147,10 @@ public class TypeValidator extends AbstractValidator
 	{
 		Map model = super.messageModel(component, input);
 		model.put("type", type);
-		Locale loc = e.getLocale();
-		if (loc != null)
+		Locale locale = e.getLocale();
+		if (locale != null)
 		{
-			model.put("locale", loc);
+			model.put("locale", locale);
 		}
 		model.put("exception", e.getMessage());
 		model.put("pattern", e.getPattern());
