@@ -39,15 +39,16 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
- * An image component represents a localizable image resource. The image name 
- * comes from the src attribute of the image tag that the component is attached 
+ * An image component represents a localizable image resource. The image name
+ * comes from the src attribute of the image tag that the component is attached
  * to.  The image component responds to requests made via IResourceListener's
  * resourceRequested method.  The image or subclass responds by returning an
  * IResource from getImageResource(String), where String is the source attribute
  * of the image tag.
- * 
+ *
  * @author Jonathan Locke
  */
 public class Image extends HtmlComponent implements IResourceListener
@@ -55,8 +56,22 @@ public class Image extends HtmlComponent implements IResourceListener
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
 
-    /** The image resource. */
-    private IResource image;
+	/**
+	 * The string representation of the resource to be loaded. Actual
+	 * resource objects are not allocated until the image is
+	 * actually requested.
+	 */
+	private String resourceToLoad;
+
+	/**
+	 * The style to use when locating the image resource.
+	 */
+	private String style;
+
+	/**
+	 * The locale to use when locating the image resource
+	 */
+	private Locale locale;
 
     /**
      * @see wicket.Component#Component(String)
@@ -88,9 +103,16 @@ public class Image extends HtmlComponent implements IResourceListener
      */
     public void resourceRequested()
     {
+	    // Obtain the resource
+	    IResource image = getResource(resourceToLoad);
+	    if (image == null)
+	    {
+	        throw new WicketRuntimeException("Could not find image resource " + resourceToLoad);
+	    }
+
         // Get request cycle
         final RequestCycle cycle = getRequestCycle();
-        
+
         // The cycle's page is set to null so that it won't be rendered back to
         // the client since the resource being requested has nothing to do with pages
         cycle.setPage((Page)null);
@@ -136,11 +158,11 @@ public class Image extends HtmlComponent implements IResourceListener
         final String path = Classes.packageName(getPage().getClass()) + "." + source;
         return Resource.locate
         (
-            getApplicationSettings().getSourcePath(), 
-            getPage().getClass().getClassLoader(), 
-            path, 
-            getStyle(), 
-            getLocale(), 
+            getApplicationSettings().getSourcePath(),
+            getPage().getClass().getClassLoader(),
+            path,
+            style,
+            locale,
             null
         );
     }
@@ -160,7 +182,6 @@ public class Image extends HtmlComponent implements IResourceListener
         checkComponentTag(tag, "img");
         super.handleComponentTag(tag);
 
-        final String resourceToLoad;
         final String imageResource = (String)getModelObject();
 
         if (imageResource != null)
@@ -171,13 +192,8 @@ public class Image extends HtmlComponent implements IResourceListener
         {
             resourceToLoad = tag.getString("src");
         }
-
-        this.image = getResource(resourceToLoad);
-
-        if (this.image == null)
-        {
-            throw new WicketRuntimeException("Could not find image resource " + resourceToLoad);
-        }
+	    style = getStyle();
+	    locale = getLocale();
 
         final String url = getRequestCycle().urlFor(this, IResourceListener.class);
 		tag.put("src", url.replaceAll("&", "&amp;"));

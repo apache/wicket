@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -36,7 +36,7 @@ import java.io.InputStream;
  * be set with setImage(BufferedImage) and its extension can be specified with
  * setExtension(String). After this, the image will be cached as an input stream
  * and will render as would any other Image resource.
- * 
+ *
  * @author Jonathan Locke
  */
 public class DynamicImage extends Image
@@ -47,15 +47,12 @@ public class DynamicImage extends Image
 	/** The image extension */
 	private String extension;
 
-	/** The dynamic, buffered image itself */
-	private BufferedImage image;
-
-	/** A cached input stream of the image converted to the given extension type */
-	private InputStream inputStream;
+	/** The byte array holding the contents of the dynamic image */
+	private byte[] imageData;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param name
 	 *            Component name
 	 */
@@ -66,7 +63,7 @@ public class DynamicImage extends Image
 
 	/**
 	 * Sets the extension of this dynamic image
-	 * 
+	 *
 	 * @param extension
 	 *            The extension to set.
 	 * @return This object, to enable invocation chaining
@@ -97,8 +94,8 @@ public class DynamicImage extends Image
 			writer.setOutput(ImageIO.createImageOutputStream(out));
 			writer.write(image);
 
-			// Set input stream
-			this.inputStream = new ByteArrayInputStream(out.toByteArray());
+			// Store the image data
+			this.imageData = out.toByteArray();
 		}
 		catch (IOException e)
 		{
@@ -117,9 +114,11 @@ public class DynamicImage extends Image
 	{
 		return new IResource()
 		{
+			private InputStream inputStream = null;
+
 			public void close() throws IOException
 			{
-				inputStream.close();
+				if ( inputStream != null ) inputStream.close();
 			}
 
 			public String getExtension()
@@ -129,6 +128,9 @@ public class DynamicImage extends Image
 
 			public InputStream getInputStream() throws ResourceNotFoundException
 			{
+				if ( inputStream == null) {
+					inputStream = new ByteArrayInputStream(imageData);
+				}
 				return inputStream;
 			}
 		};
