@@ -47,19 +47,26 @@ public abstract class Objects
 	 */
 	public static Object clone(final Object object)
 	{
-		try
+		if (object == null)
 		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			new ObjectOutputStream(out).writeObject(object);
-			return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
+			return null;
 		}
-		catch (ClassNotFoundException e)
+		else
 		{
-			throw new RuntimeException("Internal error cloning object", e);
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("Internal error cloning object", e);
+			try
+			{
+				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				new ObjectOutputStream(out).writeObject(object);
+				return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new RuntimeException("Internal error cloning object", e);
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException("Internal error cloning object", e);
+			}
 		}
 	}
 }

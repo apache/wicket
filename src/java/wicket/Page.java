@@ -86,9 +86,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** The session that this page is in. */
 	private transient Session session = null;
 
-	/** True if this page is stale. */
-	private boolean stale = false;
-
 	/** True when changes to the Page should be tracked by versioning */
 	private boolean trackChanges = false;
 
@@ -196,17 +193,23 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public Page getVersion(final int version)
 	{
-		return getVersionManager().getVersion(version);
-	}
-
-	/**
-	 * Whether this page has been marked as stale.
-	 * 
-	 * @return True if this page has been marked as stale
-	 */
-	public final boolean isStale()
-	{
-		return stale;
+		// If we're still the original Page
+		if (versionManager == IPageVersionManager.NULL)
+		{
+			// return self
+			return this;
+		}
+		
+		// Get page of desired version
+		final Page page = getVersionManager().getVersion(version);
+		
+		// If we went all the way back to the original page, remove version info
+		if (page.getVersion() == -1)
+		{
+			page.versionManager = IPageVersionManager.NULL;
+		}
+		
+		return page;
 	}
 
 	/**
@@ -345,7 +348,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected IPageVersionManager newVersionManager()
 	{
-		return new UndoPageVersionManager(this);
+		return new UndoPageVersionManager(this, getSession().getApplication().getSettings()
+				.getMaxPageVersions());
 	}
 
 	/**
@@ -458,7 +462,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		if (getApplicationSettings().getComponentUseCheck() && !getResponse().isRedirect())
+		if (getSession().getApplication().getSettings().getComponentUseCheck()
+				&& !getResponse().isRedirect())
 		{
 			// Visit components on page
 			checkRendering();
@@ -533,17 +538,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void setId(final int id)
 	{
 		this.id = id;
-	}
-
-	/**
-	 * Set whether this page is stale.
-	 * 
-	 * @param stale
-	 *            whether this page is stale
-	 */
-	final void setStale(final boolean stale)
-	{
-		this.stale = stale;
 	}
 
 	/**

@@ -142,10 +142,5 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	{
 		// Clear feedback
 		messageListView.getList().clear();
-
-		// We use removeAll() here because the usual modelChangedStructure()
-		// call only works correctly if it's called before rendering has begun
-		// due to issues with stale data detection and the rendering cycle.
-		messageListView.removeAll();
 	}
 }

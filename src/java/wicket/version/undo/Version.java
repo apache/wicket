@@ -28,9 +28,9 @@ import wicket.Component;
  * @author Jonathan Locke
  */
 class Version
-{
+{	
 	private List changes = new ArrayList();
-	
+		
 	void componentAdded(Component component)
 	{
 		changes.add(new Add(component));

@@ -33,6 +33,8 @@ import wicket.model.IModel;
  */
 public class ListItem extends WebMarkupContainer
 {
+	// TODO change this 
+	
 	/** The index of the ListItem in the parent listView */
 	private final int index;
 

@@ -226,40 +226,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Get the freshest page in the session.
-	 * 
-	 * @return The freshest page in the session
-	 */
-	public final Page getFreshestPage()
-	{
-		// No fresh page found at first
-		Page freshest = null;
-
-		// Loop through session pages
-		for (final Iterator iterator = getPageMap().values().iterator(); iterator.hasNext();)
-		{
-			// Get next page
-			final Page current = (Page)iterator.next();
-
-			// If the page isn't stale
-			if (!current.isStale())
-			{
-				// and we don't yet have a freshest page OR the current page is
-				// fresher
-				if ((freshest == null) || (current.getId() < freshest.getId()))
-				{
-					// then we found a fresher page
-					freshest = current;
-				}
-			}
-		}
-
-		return freshest;
-	}
-
-	/**
 	 * Get this session's locale.
 	 * 
 	 * @return This session's locale
@@ -270,23 +236,40 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Get the page for the given path.
 	 * 
 	 * @param path
 	 *            Component path
+	 * @param version
+	 *            The version of the page required
 	 * @return The page based on the first path component (the page id)
 	 */
-	public final Page getPage(final String path)
+	public final Page getPage(final String path, final int version)
 	{
 		// Retrieve the page for the first path component from this session
-		final Page page = getPage(Integer.parseInt(Strings.firstPathComponent(path, componentPathSeparator)));
-		
+		Page page = getPage(Integer.parseInt(Strings.firstPathComponent(path,
+				componentPathSeparator)));
+
+		// Get the version of the page requested from the page
+		final Page pageVersion = page.getVersion(version);
+
+		// Need to update session with new page?
+		if (pageVersion != page)
+		{
+			// This is our new page
+			page = pageVersion;
+
+			// Replaces old page entry
+			getPageMap().put(new Integer(pageVersion.getId()), page);
+			pageChanged(page);
+		}
+
 		// Modifications to this page are potentially beginning
 		page.onInternalBeginRequest();
 		page.onBeginRequest();
-		
+
 		return page;
 	}
 

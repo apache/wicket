@@ -248,6 +248,8 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected void onRender()
 	{
+		// TODO optimize this...
+		
 		// Remove any former children
 		removeAll();
 		

@@ -17,8 +17,8 @@
  */
 package wicket.version.undo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import wicket.Component;
 import wicket.IPageVersionManager;
@@ -35,22 +35,37 @@ public class UndoPageVersionManager implements IPageVersionManager
 {
 	/** The page being managed */
 	private final Page page;
-	
+
 	/** List of versions */
-	private final List versions = new ArrayList();
-	
+	private final Map versions;
+
 	/** The current version */
 	private Version version;
+
+	/** The next available version number. */
+	private int nextVersionNumber = 0;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param page
 	 *            The page that we're versioning
+	 * @param maxVersions
+	 *            The maximum number of versions to maintain before expiring the
+	 *            old versions
 	 */
-	public UndoPageVersionManager(final Page page)
+	public UndoPageVersionManager(final Page page, final int maxVersions)
 	{
 		this.page = page;
+		this.versions = new LinkedHashMap()
+		{
+			protected boolean removeEldestEntry(Map.Entry ignored)
+			{
+				// Remove oldest entry if there are more than maxVersions
+				// entries
+				return size() > maxVersions;
+			}
+		};
 	}
 
 	/**
@@ -59,6 +74,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	public void beginVersion()
 	{
 		version = new Version();
+		nextVersionNumber++;
 	}
 
 	/**
@@ -90,20 +106,35 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public void endVersion()
 	{
-		versions.add(version);
+		versions.put(new Integer(getVersion()), version);
 	}
 
 	/**
 	 * @see wicket.IPageVersionManager#getVersion(int)
 	 */
-	public Page getVersion(int version)
+	public Page getVersion(int versionNumber)
 	{
-		// Undo each version to get the version we're after
-		for (int i = versions.size() - 1; i >= version; i--)
+		// Get version for version number
+		final Version version = (Version)versions.get(new Integer(versionNumber));
+
+		// Found it?
+		if (version != null)
 		{
-			((Version)versions.get(i)).undo();
+			// Undo each version from last to first up to our version number
+			while (getVersion() > versionNumber)
+			{
+				nextVersionNumber--;
+				final Integer key = new Integer(nextVersionNumber);
+				final Version versionToUndo = (Version)versions.get(key);
+				versionToUndo.undo();
+				versions.remove(key);
+			}
+
+			// Return modified page
+			return page;
 		}
-		return page; 
+
+		return null;
 	}
 
 	/**
@@ -111,6 +142,6 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public int getVersion()
 	{
-		return versions.size() - 1;
+		return nextVersionNumber - 1;
 	}
 }
