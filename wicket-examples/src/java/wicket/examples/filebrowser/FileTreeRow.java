@@ -25,9 +25,9 @@ import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.tree.OnClickTreeNodeLink;
-import wicket.markup.html.tree.Tree;
+import wicket.markup.html.tree.NLTree;
 import wicket.markup.html.tree.TreeNodeModel;
-import wicket.markup.html.tree.TreeRowReplacementModel;
+import wicket.markup.html.tree.NLTreeRowReplacementModel;
 
 /**
  * Panel for displaying one tree row. This overrides the default
@@ -43,7 +43,7 @@ public final class FileTreeRow extends Panel
      * @param tree
      * @param nodeModel the tree node for this row
      */
-    public FileTreeRow(String componentName, Tree tree, TreeNodeModel nodeModel)
+    public FileTreeRow(String componentName, NLTree tree, TreeNodeModel nodeModel)
     {
         super(componentName);
         HtmlContainer li = null;
@@ -59,7 +59,7 @@ public final class FileTreeRow extends Panel
         	li = new HtmlContainer("li");
             li.add(new HtmlContainer("label"));
         }
-        TreeRowReplacementModel replacementModel = new TreeRowReplacementModel(nodeModel);
+        NLTreeRowReplacementModel replacementModel = new NLTreeRowReplacementModel(nodeModel);
         li.add(new ComponentTagAttributeModifier("class", true, replacementModel));
         add(li);
     }

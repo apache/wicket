@@ -24,9 +24,9 @@ import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
-import wicket.markup.html.tree.Tree;
+import wicket.markup.html.tree.NLTree;
 import wicket.markup.html.tree.TreeNodeModel;
-import wicket.markup.html.tree.TreeRowReplacementModel;
+import wicket.markup.html.tree.NLTreeRowReplacementModel;
 
 /**
  * This example list knows how to display sublists. It expects a list where
@@ -37,7 +37,7 @@ import wicket.markup.html.tree.TreeRowReplacementModel;
 public final class FileTreeRows extends Panel
 {
     /** the holding tree component. */
-    private final Tree tree;
+    private final NLTree tree;
 
     /**
      * Constructor.
@@ -45,7 +45,7 @@ public final class FileTreeRows extends Panel
      * @param list a list where each element is either a string or another list
      * @param tree the holding tree component
      */
-    public FileTreeRows(final String componentName, List list, Tree tree)
+    public FileTreeRows(final String componentName, List list, NLTree tree)
     {
         super(componentName);
         this.tree = tree;
@@ -100,8 +100,8 @@ public final class FileTreeRows extends Panel
          */
         protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
         {
-            TreeRowReplacementModel replacementModel =
-                new TreeRowReplacementModel(nodeModel);
+            NLTreeRowReplacementModel replacementModel =
+                new NLTreeRowReplacementModel(nodeModel);
             Panel rowPanel = new FileTreeRow(componentName,
             		FileTreeRows.this.tree, nodeModel);
             rowPanel.add(new ComponentTagAttributeModifier(

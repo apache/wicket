@@ -36,9 +36,9 @@ import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.tree.AbstractTree;
-import wicket.markup.html.tree.FlatTree;
 import wicket.markup.html.tree.Tree;
+import wicket.markup.html.tree.IndentTree;
+import wicket.markup.html.tree.NLTree;
 import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.TreeStateCache;
 import wicket.model.IModel;
@@ -75,7 +75,7 @@ public class FileBrowser extends HtmlPage
 	private String currentType;
 
 	/** the current tree component (holds the tree state we're interested in). */
-	private AbstractTree currentTree = null;
+	private Tree currentTree = null;
 
     /**
      * Constructor.
@@ -92,7 +92,7 @@ public class FileBrowser extends HtmlPage
 	 * default components.
 	 * @param tree the tree to set as the currently active
 	 */
-	private void setTreeComponent(AbstractTree tree)
+	private void setTreeComponent(Tree tree)
 	{
 		removeAll();
 		addDefaultComponents();
@@ -174,10 +174,10 @@ public class FileBrowser extends HtmlPage
         public void selectionChanged(RequestCycle cycle, Object newSelection)
         {
             String type = (String)newSelection;
-            final AbstractTree tree;
+            final Tree tree;
             if(TYPE_NESTED.equals(type))
             {
-                tree = new Tree("fileTree", currentTree.getTreeState());
+                tree = new NLTree("fileTree", currentTree.getTreeState());
             }
             else if(TYPE_FLAT.equals(type))
             {
@@ -196,7 +196,7 @@ public class FileBrowser extends HtmlPage
     }
 
     /** Custom tree that provides our own row panel. */
-    private static class FileTreeCustomRow extends Tree
+    private static class FileTreeCustomRow extends NLTree
     {
         /**
          * Constructor.
@@ -237,7 +237,7 @@ public class FileBrowser extends HtmlPage
     }
 
     /** Custom tree that provides our own rows panel. */
-    private static class FileTreeCustomRows extends Tree
+    private static class FileTreeCustomRows extends NLTree
     {
         /**
          * Constructor.
@@ -277,7 +277,7 @@ public class FileBrowser extends HtmlPage
     }
 
     /** flat tree implementation. */
-    private static class FileTreeFlat extends FlatTree
+    private static class FileTreeFlat extends IndentTree
     {
 
         /**

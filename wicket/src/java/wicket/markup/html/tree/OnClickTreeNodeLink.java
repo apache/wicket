@@ -37,7 +37,7 @@ public class OnClickTreeNodeLink extends AbstractTreeNodeLink
      * @param node current node (subject)
      */
     public OnClickTreeNodeLink(final String componentName,
-            final AbstractTree tree, final TreeNodeModel node)
+            final Tree tree, final TreeNodeModel node)
     {
     	super(componentName, tree, node);
     }

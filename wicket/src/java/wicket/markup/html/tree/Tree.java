@@ -18,68 +18,76 @@
  */
 package wicket.markup.html.tree;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
+import wicket.RequestCycle;
+import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.panel.Panel;
+import wicket.protocol.http.HttpRequest;
 
 /**
- * A component that represents a tree. It renders using nested lists that in turn
- * use panels.
- * <p>
- * This type of tree is best used when you want to display your tree using nested
- * &lt;ul&gt; and &lt;li&gt; tags.
- * </p>
- * <p>
- * For example, this could be the rendering result of a tree: (it will actually look
- * a bit different as we are using panels as well, but you'll get the idea)
- * <pre>
- * &lt;ul id="nested"&gt;
- *   &lt;li id="row"&gt;
- *     &lt;span id="label"&gt;foo&lt;/span&gt;
- *   &lt;/li&gt;
- *   &lt;ul id="nested"&gt;
- *     &lt;li id="row"&gt;
- *       &lt;span id="label"&gt;bar&lt;/span&gt;
- *     &lt;/li&gt;
- *   &lt;/ul&gt;
- *   &lt;li id="row"&gt;
- *     &lt;span id="label"&gt;suck&lt;/span&gt;
- *   &lt;/li&gt;
- * &lt;/ul&gt;
- * </pre>
- * </p>
- * Override the getXXXPanel methods to provide your own customized rendering.
- * Look at the filebrowser example of the wicket-examples project for an example
- * </p>
+ * Base component for trees. The trees from this package work with the Swing tree models
+ * and {@link javax.swing.tree.DefaultMutableTreeNode}s. Hence, users can re-use their
+ * Swing trees.
  *
- * @see wicket.markup.html.tree.AbstractTree
- * @see wicket.markup.html.tree.TreeNodeModel
- * @see wicket.markup.html.tree.TreeRows
- * @see wicket.markup.html.tree.TreeRow
- * @see wicket.markup.html.tree.TreeRowReplacementModel
+ * An important requirement of the trees in this package, is that the user objects of the
+ * {@link javax.swing.tree.DefaultMutableTreeNode}s must be unique (have a unique hashcode)
+ * within the tree. Users can either ensure this themselves, or use the makeUnique
+ * method or constructor parameter for this.
+ * </p><p>
+ * We need unique user objects to be able to decouple the links in the trees from
+ * actual components that are used for rendering the visible tree paths.
+ * As every expand, collapse and select action has the effect of a structural change
+ * of the components that are used for rendering, the tree would be marked stale on every
+ * request. That would mean that we could never allow for using the back button. By
+ * decoupling the tree links, we support trees that keep working when end-users fool
+ * around with their back buttons.
+ * <p></p>
+ * Users can either extends this class directly, or use one of the provided subclasses, like
+ * {@link wicket.markup.html.tree.NLTree} (uses nested lists to render and is best used
+ * with UL/ LI elements) or {@link wicket.markup.html.tree.IndentTree} (uses spacers and
+ * CSS for indentation). Currently {@link wicket.markup.html.tree.IndentTree} is more usuable,
+ * is it has the distinction between junction links (for folding/ unfolding of tree paths)
+ * and node links (for the actual selection of a link).
+ * </p>
  *
  * @author Eelco Hillenius
  */
-public class Tree extends AbstractTree
+public abstract class Tree extends Panel implements ILinkListener
 { // TODO finalize javadoc
+    /** tree state for this component. */
+    private TreeStateCache treeState;
+
+    /** hold references to links on 'generated' id to be able to chain events. */
+    private Map links = new HashMap();
+
     /**
-     * Constructor.
+     * Construct using the given model as the tree model to use. A new tree state will
+     * be constructed by calling newTreeState.
      * @param componentName The name of this container
      * @param model the underlying tree model
      */
     public Tree(final String componentName, final TreeModel model)
     {
-        super(componentName, model);
+        this(componentName, model, false);
     }
 
     /**
-     * Constructor.
+     * Construct using the given model as the tree model to use. A new tree state will
+     * be constructed by calling newTreeState. If parameter makeTreeModelUnique is true,
+     * all tree nodes will also be wrapped in an instance of {@link IdWrappedUserObject}
+     * in order to attach a unique id to them. If makeTreeModelUnique is false, the model
+     * will be used as is, and the user is responsible for the userObjects of the tree
+     * nodes being unique within the tree model.
      * @param componentName The name of this container
      * @param model the underlying tree model
      * @param makeTreeModelUnique whether to make the user objects of the tree model
@@ -90,9 +98,14 @@ public class Tree extends AbstractTree
     public Tree(final String componentName, final TreeModel model,
     		final boolean makeTreeModelUnique)
     {
-        super(componentName, model, makeTreeModelUnique);
+        super(componentName);
+        this.treeState = newTreeState(model);
+        applySelectedPaths(treeState);
+        if(makeTreeModelUnique)
+        {
+        	makeUnique(model);
+        }
     }
-
 
     /**
      * Constructor using the given tree state. This tree state holds the tree model and
@@ -103,108 +116,185 @@ public class Tree extends AbstractTree
      */
     public Tree(final String componentName, TreeStateCache treeState)
     {
-        super(componentName, treeState);
+        super(componentName);
+        this.treeState = treeState;
+        applySelectedPaths(treeState);
     }
 
     /**
-     * Builds the structures needed to display the currently visible tree paths.
+     * Loops through all tree nodes and make the user object of each tree node unique.
+     * By default, this is done by wrapping the found user objects in instances
+     * of {@link IdWrappedUserObject}.
+     * @param treeModel the tree model
+     */
+    public void makeUnique(TreeModel treeModel)
+    {
+        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)treeModel.getRoot();
+        makeUnique(rootNode);
+        DefaultMutableTreeNode node;
+        Enumeration e = rootNode.preorderEnumeration();
+        while (e.hasMoreElements())
+        {
+            node = (DefaultMutableTreeNode)e.nextElement();
+            makeUnique(node);
+        }
+    }
+
+    /**
+     * Makes the user object of the given tree node unique. This implementation
+     * wraps the user object in a {@link IdWrappedUserObject}.
+     * @param node the tree node with the user object
+     */
+    protected void makeUnique(DefaultMutableTreeNode node)
+    {
+    	Object userObject = node.getUserObject();
+    	if(!(userObject instanceof Serializable))
+    	{
+    		throw new IllegalArgumentException(
+    				"user objects of tree nodes must be serializable");
+    	}
+    	else if(userObject instanceof IdWrappedUserObject)
+    	{
+    		// nothing needs to be done
+    	}
+    	else
+    	{
+			IdWrappedUserObject wrapped = new IdWrappedUserObject((Serializable)userObject);
+	    	node.setUserObject(wrapped);
+    	}
+    }
+
+    /**
+     * Registers a link with this tree.
+     * @param link the link to register
+     */
+    final void addLink(AbstractTreeNodeLink link)
+    {
+        links.put(link.getId(), link);
+    }
+
+    /**
+     * Called when a link is clicked.
+     * @param cycle The current request cycle
+     * @see ILinkListener
+     */
+    public final void linkClicked(final RequestCycle cycle)
+    {
+    	String param = AbstractTreeNodeLink.REQUEST_PARAMETER_LINK_ID;
+        String linkId = ((HttpRequest)cycle.getRequest()).getParameter(param);
+        AbstractTreeNodeLink link = (AbstractTreeNodeLink) links.get(linkId);
+        if (link == null)
+        {
+            throw new IllegalStateException("link " + linkId + " not found");
+        }
+        link.linkClicked(cycle);
+    }
+
+	/**
+	 * Sets the new expanded state, based on the given node
+	 * @param node the tree node model
+	 */
+	public final void setExpandedState(TreeNodeModel node)
+	{
+		TreeStateCache state = getTreeState();
+		Object userObject = node.getTreeNode().getUserObject();
+		TreePath selection = state.findTreePath(userObject);
+		setExpandedState(selection, (!node.isExpanded())); // inverse
+	}
+
+    /**
+     * Sets the expanded property in the stree state for selection.
+     * @param selection the selection to set the expanded property for
+     * @param expanded true if the selection is expanded, false otherwise
+     */
+    public final void setExpandedState(TreePath selection, boolean expanded)
+    {
+        treeState.setExpandedState(selection, expanded);
+        applySelectedPaths(treeState);
+    }
+
+    /**
+     * Finds the tree path for the given user object.
+     * @param userObject the user object to find the path for
+     * @return tree path of given user object
+     */
+    public final TreePath findTreePath(Serializable userObject)
+    {
+        return treeState.findTreePath(userObject);
+    }
+
+    /**
+     * Gets the current tree state.
+     * @return the tree current tree state
+     */
+    public final TreeStateCache getTreeState()
+    {
+        return treeState;
+    }
+
+    /**
+     * Sets the current tree state to the given tree state.
+     * @param treeState the tree state to set as the current one
+     */
+    public final void setTreeState(final TreeStateCache treeState)
+    {
+    	this.treeState = treeState;
+    }
+
+	/**
+	 * Creates a new tree state by creating a new {@link TreeStateCache} object, which
+	 * is then set as the current tree state, creating a new {@link TreeSelectionModel}
+	 * and then calling setTreeModel with this
+	 * @param model the model that the new tree state applies to
+	 * @return the tree state
+	 */
+	public TreeStateCache newTreeState(final TreeModel model)
+	{
+		return newTreeState(model, true);
+	}
+
+
+	/**
+	 * Creates a new tree state by creating a new {@link TreeStateCache} object, which
+	 * is then set as the current tree state, creating a new {@link TreeSelectionModel}
+	 * and then calling setTreeModel with this
+	 * @param model the model that the new tree state applies to
+	 * @param rootVisible whether the tree node should be displayed
+	 * @return the tree state
+	 */
+	protected final TreeStateCache newTreeState(final TreeModel model, boolean rootVisible)
+	{
+		TreeStateCache treeStateCache = new TreeStateCache();
+		TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
+        treeStateCache.setModel(model);
+        treeStateCache.setSelectionModel(selectionModel);
+        treeStateCache.setRootVisible(rootVisible);
+        return treeStateCache;
+	}
+
+    /**
+     * Finds the tree node that holds the given user object.
+     * @param userObject the user object to find the node for
+     * @return the node that holds the user object
+     */
+    public final DefaultMutableTreeNode findNode(Serializable userObject)
+    {
+        return treeState.findNode(userObject);
+    }
+
+    /**
+     * Applies the current selection. Implementations need to prepare the model
+     * of the concrete tree for rendering.
      * @param treeState the current tree state
      */
-    protected void applySelectedPaths(TreeStateCache treeState)
-    {
-        removeAll();
-        List visiblePathsList = new ArrayList();
-        Enumeration e = treeState.getVisiblePathsFromRoot(); // get all visible
-        boolean skip = (!treeState.isRootVisible());
-        while (e.hasMoreElements()) // put enumeration in a list
-        {
-        	TreePath path = (TreePath)e.nextElement();
-        	if(skip) // skip root if not visible
-        	{
-        		skip = false;
-        		continue;
-        	}
-            visiblePathsList.add(path);
-        }
-        List nestedList = new ArrayList(); // reference to the first level list
-        buildList(visiblePathsList, 0, 0, nestedList); // build the nested lists
-        add(getTreeRowsPanel("tree", nestedList)); // add the tree panel
-    }
+    protected abstract void applySelectedPaths(TreeStateCache treeState);
 
     /**
-     * Gets the panel which displays the tree rows. Usually you'll want this panel
-     * to be attached to a UL (Unnumbered List) tag.
-     * Override this if you want to provide your own panel.
-     * @param nestedList the list that represents the currently visible tree paths.
-     * @param componentName the name of the panel. Warning: this must be used to construct
-     * the panel.
-     * @return the panel that is used to display visible tree paths
+     * Sets whether the tree node should be displayed.
+     * @param rootVisible whether the tree node should be displayed
      */
-    protected Panel getTreeRowsPanel(String componentName, List nestedList)
+    public final void setRootVisible(boolean rootVisible)
     {
-        return new TreeRows(componentName, nestedList, this);
-    }
-
-    /**
-     * Gets the panel that displays one row. Usually you'll want this panel to
-     * be attached to a LI (List Item) tag.
-     * Override this if you want to provide your own panel.
-     * @param componentName the name of the panel.
-     * Warning: if you did not override {@link TreeRows}, this must be
-     * used to construct the panel.
-     * @param nodeModel the model that holds a reference to the tree node and some
-     * other usefull objects that help you construct the panel
-     * @return the panel that displays one row
-     */
-    protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
-    {
-        return new TreeRow(componentName, this, nodeModel);
-    }
-
-    /**
-     * Gets the panel that displays one row. For internal usage only.
-     * @param componentName the name o fthe panel
-     * @param nodeModel the node model
-     * @return the panel that displays one row
-     */
-    final Panel internalGetTreeRowPanel(String componentName, TreeNodeModel nodeModel)
-    {
-        return getTreeRowPanel(componentName, nodeModel);
-    }
-
-    /**
-     * Builds nested lists that represent the current visible tree paths.
-     * @param visiblePathsList the whole - flat - list of visible paths
-     * @param index the current index in the list of visible paths
-     * @param level the current nesting level
-     * @param rows a list that holds the current level of rows
-     * @return the index in the list of visible paths
-     */
-    private int buildList(final List visiblePathsList, int index, int level, final List rows)
-    {
-        int len = visiblePathsList.size();
-        while (index < len)
-        {
-            TreePath path = (TreePath) visiblePathsList.get(index);
-            DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)path.getLastPathComponent();
-            int thisLevel = treeNode.getLevel();
-            if (thisLevel > level) // go deeper
-            {
-                List nestedRows = new ArrayList();
-                rows.add(nestedRows);
-                index = buildList(visiblePathsList, index, thisLevel, nestedRows);
-            }
-            else if (thisLevel < level) // end of nested
-            {
-                return index;
-            }
-            else // node
-            {
-                TreeNodeModel nodeModel = new TreeNodeModel(treeNode, getTreeState(), path);
-                rows.add(nodeModel);
-                index++;
-            }
-        }
-        return index;
+    	treeState.setRootVisible(rootVisible);
     }
 }
