@@ -627,8 +627,10 @@ public abstract class Container extends Component
 				else
 				{
 					// There is no associated markup for this class
-					throw new RenderException(exceptionMessage("Markup of type '" + getMarkupType()
-							+ "' not found"));
+                    throw new RenderException(exceptionMessage("Markup of type '"
+                            + getMarkupType() + "' for component '" 
+                            + getClass().getName() + "' not found." 
+                            + " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried."));
 				}
 
 				// Save any markup list (or absence of one) for next time
