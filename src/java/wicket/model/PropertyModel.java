@@ -143,13 +143,21 @@ public class PropertyModel extends DetachableModel
 
     /**
      * Construct with an IModel object and a Ognl expression that works on the given
-     * model. Additional formatting will be not be used.
+     * model. Additional formatting will be used depending on the configuration setting.
      * @param model the wrapper
      * @param expression Ognl expression for property access
      */
     public PropertyModel(final IModel model, final String expression)
     {
-        this(model, expression, false);
+        super(null);
+
+        checkModelNotNull(model);
+        
+        this.model = model;
+        this.expression = expression;
+
+        ApplicationSettings settings = RequestCycle.get().getApplication().getSettings();
+        this.applyFormatting = settings.isPropertyModelDefaultApplyFormatting();
     }
 
     /**
@@ -166,15 +174,24 @@ public class PropertyModel extends DetachableModel
     {
         super(null);
 
-        if (model == null)
-        {
-        	throw new NullPointerException("Parameter 'model' must not be null");
-        }
+        checkModelNotNull(model);
         
         this.model = model;
         this.expression = expression;
         this.applyFormatting = applyFormatting;
     }
+
+	/**
+	 * Checks the given model; if null, a null pointer exception is thrown.
+	 * @param model the model to check
+	 */
+	private final void checkModelNotNull(final IModel model)
+	{
+		if (model == null)
+        {
+        	throw new NullPointerException("Parameter 'model' must not be null");
+        }
+	}
 
     /**
      * Gets the value that results when the given Ognl expression is applied to the model
