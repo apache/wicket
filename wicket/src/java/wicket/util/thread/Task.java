@@ -23,14 +23,27 @@ import org.apache.commons.logging.Log;
 import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
-
 /**
- * Runs a block of code periodically. The Task can be started at a given time and can be a
- * daemon.
+ * Runs a block of code periodically. The Task can be started at a given 
+ * time in the future and can be a daemon.  The block of code will be passed
+ * a Log object each time it is run through its ICode interface.
+ * <p>
+ * If the code block takes longer than the period to run, the next task
+ * invocation will occur immediately.  In this case, tasks will not occur
+ * at precise multiples of the period.  For example, if you run a task
+ * every 30 seconds, and the first run takes 40 seconds but the second 
+ * takes 20 seconds, your task will be invoked at 0 seconds, 40 seconds
+ * and 70 seconds (40 seconds + 30 seconds), which is not an even multiple
+ * of 30 seconds.  
+ * <p>
+ * In general, this is a simple task class designed for polling activities.  
+ * If you need precise guarantees, you probably should be using a different 
+ * task class.
+ * 
  * @author Jonathan Locke
  */
 public final class Task
-{ // TODO finalize javadoc
+{
     /** The name of this task. */
     private final String name;
 
@@ -56,7 +69,9 @@ public final class Task
     }
 
     /**
-     * Runs this task at the given frequency.
+     * Runs this task at the given frequency.  You may only call this method 
+     * if the task has not yet been started.  If the task is already running, 
+     * an IllegalStateException will be thrown.
      * @param frequency The frequency at which to run the code
      * @param code The code to run
      * @throws IllegalStateException Thrown if task is already running
@@ -94,21 +109,24 @@ public final class Task
                 }
             };
 
+            // Start the thread
             final Thread thread = new Thread(runnable, name + " Task");
-
             thread.setDaemon(isDaemon);
             thread.start();
-
+            
+            // We're started all right!
             isStarted = true;
         }
         else
         {
-            throw new IllegalStateException("Attempt to start task that is already started");
+            throw new IllegalStateException
+            ("Attempt to start task that has already been started");
         }
     }
 
     /**
-     * Sets start time for this task.
+     * Sets start time for this task.  You cannot set the start time for a task which
+     * is already running.  If you attempt to, an IllegalStateException will be thrown.
      * @param startTime The time this task should start running
      * @throws IllegalStateException Thrown if task is already running
      */
@@ -116,15 +134,17 @@ public final class Task
     {
         if (isStarted)
         {
-            throw new IllegalStateException(
-                    "Attempt to set start time of task that is already started");
+            throw new IllegalStateException
+            ("Attempt to set start time of task that has already been started");
         }
 
         this.startTime = startTime;
     }
 
     /**
-     * Set daemon or not.
+     * Set daemon or not.  For obvious reasons, this value can only be set 
+     * before the task starts running.  If you attempt to set this value
+     * after the task starts running, an IllegalStateException will be thrown.
      * @param daemon True if this task's thread should be a daemon
      * @throws IllegalStateException Thrown if task is already running
      */
@@ -132,15 +152,15 @@ public final class Task
     {
         if (isStarted)
         {
-            throw new IllegalStateException(
-                    "Attempt to set daemon boolean of task that is already started");
+            throw new IllegalStateException
+            ("Attempt to set daemon state of a task that has already been started");
         }
 
         isDaemon = daemon;
     }
 
     /**
-     * Set log for user code.
+     * Set log for user code to log to when task runs.
      * @param log The log
      */
     public synchronized void setLog(final Log log)
@@ -153,9 +173,11 @@ public final class Task
      */
     public String toString()
     {
-        return "[name="
-                + name + ", startTime=" + startTime + ", isDaemon=" + isDaemon + ", isStarted="
-                + isStarted + ", codeListener=" + log + "]";
+        return "[name=" + name + 
+              ", startTime=" + startTime + 
+              ", isDaemon=" + isDaemon + 
+              ", isStarted=" + isStarted + 
+              ", codeListener=" + log + "]";
     }
 }
 
