@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.54 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -923,10 +923,21 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * @param redirect
+	 *            True if the response should be redirected to
+	 * @see RequestCycle#setRedirect(boolean)
+	 */
+	public final void setRedirect(final boolean redirect)
+	{
+		getRequestCycle().setRedirect(redirect);
+	}
+
+	/**
 	 * Sets the page that will respond to this request
 	 * 
 	 * @param page
 	 *            The response page
+	 * @see RequestCycle#setResponsePage(Page)
 	 */
 	public final void setResponsePage(final Page page)
 	{
