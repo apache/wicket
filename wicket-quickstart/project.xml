@@ -37,7 +37,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>0.9.17-beta</version>
+      <version>SNAPSHOT</version>
       <type>jar</type>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
