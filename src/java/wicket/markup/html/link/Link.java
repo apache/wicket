@@ -382,18 +382,11 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 			tag.put("onclick", onClickJavaScript);
 		}
 	}
-
+	
 	/**
-	 * Renders this link's body.
-	 * 
-	 * @param markupStream
-	 *            the markup stream
-	 * @param openTag
-	 *            the open part of this tag
-	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#internalOnBeginRequest()
 	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected void internalOnBeginRequest()
 	{
 		// Get disabled component of the same name with "Disabled" appended
 		final Component disabledComponent = (Component)get("disabled");
@@ -413,8 +406,21 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		{
 			beforeDisabledLink = getApplicationSettings().getDefaultBeforeDisabledLink();
 			afterDisabledLink = getApplicationSettings().getDefaultAfterDisabledLink();
-		}
+		}		
+	}
 
+	/**
+	 * Renders this link's body.
+	 * 
+	 * @param markupStream
+	 *            the markup stream
+	 * @param openTag
+	 *            the open part of this tag
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 */
+	protected final void onComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
+	{
 		// Draw anything before the body?
 		if (!enabled && beforeDisabledLink != null)
 		{

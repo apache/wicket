@@ -57,7 +57,7 @@ public abstract class Loop extends WebMarkupContainer
 			super(Integer.toString(iteration));
 			this.iteration = iteration;
 		}
-		
+
 		/**
 		 * @return Returns the iteration.
 		 */
@@ -104,18 +104,12 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * Renders this Loop container.
+	 * @see wicket.Component#internalOnBeginRequest()
 	 */
-	protected final void onRender()
+	protected void internalOnBeginRequest()
 	{
 		// Remove any previous loop contents
 		removeAll();
-
-		// Ask parents for markup stream to use
-		final MarkupStream markupStream = findMarkupStream();
-
-		// Save position in markup stream
-		final int markupStart = markupStream.getCurrentIndex();
 
 		// Get number of iterations
 		final int iterations = getIterations();
@@ -130,6 +124,30 @@ public abstract class Loop extends WebMarkupContainer
 				// Add iteration and populate it
 				add(iteration);
 				populateIteration(iteration);
+			}
+		}
+	}
+
+	/**
+	 * Renders this Loop container.
+	 */
+	protected final void onRender()
+	{
+		// Ask parents for markup stream to use
+		final MarkupStream markupStream = findMarkupStream();
+
+		// Save position in markup stream
+		final int markupStart = markupStream.getCurrentIndex();
+
+		// Get number of iterations
+		final int iterations = getIterations();
+		if (iterations > 0)
+		{
+			// Loop through the markup in this container for each iteration
+			for (int i = 0; i < iterations; i++)
+			{
+				// Create container for the given loop iteration
+				final Iteration iteration = (Iteration)get(Integer.toString(i));
 
 				// Rewind to start of markup for kids
 				markupStream.setCurrentIndex(markupStart);
@@ -140,7 +158,6 @@ public abstract class Loop extends WebMarkupContainer
 		}
 		else
 		{
-			removeAll();
 			markupStream.skipComponent();
 		}
 	}

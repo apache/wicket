@@ -51,10 +51,9 @@ import wicket.version.undo.UndoPageVersionManager;
  * constructor or with a constructor that accepts a PageParameters argument.
  * <p>
  * Subclasses of Page which are interested in lifecycle events can override
- * onEndRequest(), onBeginRender(), onEndRender() and onModelChanged(), each of
- * which are called at the obvious time. Note that there is no onBeginRequest
- * for pages because there is no way to know when a request has begun working
- * with a page, since it might change the page it uses to respond at any time.
+ * onBeginRequest, onEndRequest(), and onModelChanged(). All onBeginRequest()
+ * method calls are made prior to rendering of the page. All onEndRequest()
+ * calls are made after rendering has completed.
  * <p>
  * Pages, like other components, can have models. A page can be assigned a model
  * by passing one to a page's constructor, by overriding initModel() or with an
@@ -101,17 +100,20 @@ import wicket.version.undo.UndoPageVersionManager;
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener
 {
-	/** True if a new version was created for this request */
-	private static final byte FLAG_NEW_VERSION = 0x10;
-
-	/** True if a new version was created for this request */
-	private static final byte FLAG_TRACK_CHANGES = 0x20;
-
 	/** Access allowed flag (value == true). */
 	protected static final boolean ACCESS_ALLOWED = true;
 
 	/** Access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
+
+	/** True if this page is currently rendering */
+	private static final byte FLAG_IS_RENDERING = 0x40;
+
+	/** True if a new version was created for this request */
+	private static final byte FLAG_NEW_VERSION = 0x10;
+
+	/** True if a new version was created for this request */
+	private static final byte FLAG_TRACK_CHANGES = 0x20;
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
@@ -130,8 +132,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** The PageMap within the session that this page is stored in */
 	private transient PageMap pageMap;
-	
-	/** Name of PageMap  that this page is stored in */
+
+	/** Name of PageMap that this page is stored in */
 	private String pageMapName;
 
 	/** Set of components that rendered if component use checking is enabled */
@@ -375,6 +377,26 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 */
+	public final void request()
+	{
+		try
+		{
+			// Start of request to page
+			internalBeginRequest();
+
+			// Handle request by rendering page
+			render();
+		}
+		finally
+		{
+			// The request is over
+			internalEndRequest();
+		}
+	}
+
+	/**
 	 * Sets the feedback display for this page
 	 * 
 	 * @param feedback
@@ -401,8 +423,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		final Session session = getSession();
 		this.pageMap = session.getPageMap(pageMapName);
 		if (this.pageMap == null)
-		{		
-			// TODO This could potentially enable denial of service attacks. We may
+		{
+			// TODO This could potentially enable denial of service attacks. We
+			// may
 			// want to limit pagemaps created via URLs (see Session.java)
 			this.pageMap = session.newPageMap(pageMapName);
 		}
@@ -417,22 +440,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return "[Page class = " + getClass().getName() + ", id = " + id + "]";
 	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Gets the url for the given page class using the given parameters.
-	 * 
-	 * @param pageMapName
-	 *            Name of pagemap to use
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public abstract String urlFor(final String pageMapName, final Class pageClass,
-			final PageParameters parameters);
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -456,6 +463,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * @return The url for the path
 	 */
 	public abstract String urlFor(final String path);
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Gets the url for the given page class using the given parameters.
+	 * 
+	 * @param pageMapName
+	 *            Name of pagemap to use
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public abstract String urlFor(final String pageMapName, final Class pageClass,
+			final PageParameters parameters);
 
 	/**
 	 * Whether access is allowed to this page.
@@ -504,11 +527,72 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * @see wicket.Component#internalOnBeginRequest()
+	 */
+	protected final void internalOnBeginRequest()
+	{	
+		// Adds any feedback messages on this page to the given component
+		if (feedback != null)
+		{
+			feedback.addFeedbackMessages(this, false);
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * @see wicket.Component#internalOnEndRequest()
+	 */
+	protected final void internalOnEndRequest()
+	{
+		// If the application wants component uses checked and
+		// the response is not a redirect
+		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
+		{
+			// Visit components on page
+			checkRendering();
+		}
+
+		// Clear all feedback messages
+		getFeedbackMessages().clear();
+
+		// If page is versioned
+		if (isVersioned())
+		{
+			// Any changes to the page after this point will be tracked by the
+			// page's version manager. Since trackChanges is never set to false,
+			// this effectively means that change tracking begins after the
+			// first request to a page completes.
+			setFlag(FLAG_TRACK_CHANGES, true);
+
+			// If a new version was created
+			if (getFlag(FLAG_NEW_VERSION))
+			{
+				// We're done with this version
+				if (versionManager != null)
+				{
+					versionManager.endVersion();
+				}
+
+				// Reset boolean for next request
+				setFlag(FLAG_NEW_VERSION, false);
+			}
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
 	 * @see wicket.Component#internalOnModelChanged()
 	 */
-	protected void internalOnModelChanged()
+	protected final void internalOnModelChanged()
 	{
-		// Visit all the form components and validate each
 		visitChildren(new Component.IVisitor()
 		{
 			public Object component(final Component component)
@@ -533,13 +617,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Called when this page is no longer being used in a request
-	 */
-	protected void onEndRequest()
-	{
-	}
-
-	/**
 	 * Renders this container to the given response object.
 	 */
 	protected final void onRender()
@@ -555,7 +632,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			setMarkupStream(markupStream);
 
 			// Render all the page's markup
-			renderAll(markupStream);
+			setFlag(FLAG_IS_RENDERING, true);
+			try
+			{
+				renderAll(markupStream);
+			}
+			finally
+			{
+				setFlag(FLAG_IS_RENDERING, false);
+			}
 		}
 	}
 
@@ -565,6 +650,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentAdded(final Component component)
 	{
+		checkModification();
 		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
 		{
 			newVersion();
@@ -576,12 +662,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * @param component
 	 *            The component whose model is about to change
 	 */
-	final void componentModelChangeImpending(final Component component)
+	final void componentModelChanging(final Component component)
 	{
+		checkModification();
 		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
 		{
 			newVersion();
-			versionManager.componentModelChangeImpending(component);
+			versionManager.componentModelChanging(component);
 		}
 	}
 
@@ -591,10 +678,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentRemoved(final Component component)
 	{
+		checkModification();
 		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
 		{
 			newVersion();
 			versionManager.componentRemoved(component);
+		}
+	}
+
+	/**
+	 * @param component
+	 *            The component that was removed
+	 */
+	final void componentVisibilityChanged(final Component component)
+	{
+		checkModification();
+		if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
+		{
+			newVersion();
+			versionManager.componentVisibilityChanged(component);
 		}
 	}
 
@@ -617,64 +719,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			if (log.isDebugEnabled())
 			{
 				log.debug("Rendered " + component);
-			}
-		}
-	}
-
-	/**
-	 * @see wicket.Component#internalOnBeginRender()
-	 */
-	final void internalOnBeginRender()
-	{
-		// Adds any feedback messages on this page to the given component
-		if (feedback != null)
-		{
-			feedback.addFeedbackMessages(this, false);
-		}
-	}
-
-	/**
-	 * @see wicket.Component#internalOnEndRender()
-	 */
-	final void internalOnEndRender()
-	{
-		// If the application wants component uses checked and
-		// the response is not a redirect
-		final ApplicationSettings settings = getSession().getApplication().getSettings();
-		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
-		{
-			// Visit components on page
-			checkRendering();
-		}
-
-		// Clear all feedback messages
-		getFeedbackMessages().clear();
-	}
-
-	/**
-	 * Called when this page is no longer being used in a request
-	 */
-	final void internalOnEndRequest()
-	{
-		if (isVersioned())
-		{
-			// Any changes to the page after this point will be tracked by the
-			// page's version manager. Since trackChanges is never set to false,
-			// this effectively means that change tracking begins after the
-			// first request to a page completes.
-			setFlag(FLAG_TRACK_CHANGES, true);
-
-			// If a new version was created
-			if (getFlag(FLAG_NEW_VERSION))
-			{
-				// We're done with this version
-				if (versionManager != null)
-				{
-					versionManager.endVersion();
-				}
-
-				// Reset boolean for next request
-				setFlag(FLAG_NEW_VERSION, false);
 			}
 		}
 	}
@@ -708,6 +752,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void setId(final int id)
 	{
 		this.id = id;
+	}
+
+	/**
+	 * Throws exception is page is currently rendering
+	 * 
+	 * @throws WicketRuntimeException
+	 */
+	private final void checkModification()
+	{
+		if (getFlag(FLAG_IS_RENDERING))
+		{
+			throw new WicketRuntimeException(
+					"Cannot modify component hierarchy during render phase");
+		}
 	}
 
 	/**
@@ -759,7 +817,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			pageSet.init(this);
 		}
 	}
-	
+
 	/**
 	 * Starts a new version of this page
 	 */

@@ -204,12 +204,12 @@ public class PageableListViewNavigation extends Loop
 	}
 
 	/**
-	 * Renders this component.
-	 * 
-	 * @see wicket.markup.html.list.ListView#onRender()
+	 * @see wicket.Component#internalOnBeginRequest()
 	 */
-	protected void onBeginRender()
+	protected void internalOnBeginRequest()
 	{
+		super.internalOnBeginRequest();
+		
 		// PageableListViewNavigation itself (as well as the PageableListView)
 		// may have pages.
 
@@ -298,7 +298,7 @@ public class PageableListViewNavigation extends Loop
 		
 		if ((viewSize != getIterations()) || (this.startIndex != firstListItem))
 		{
-		    this.modelChangeImpending();
+		    this.modelChanging();
 
 			// Tell the ListView what the new start index shall be
 			this.startIndex = firstListItem;

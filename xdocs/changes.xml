@@ -8,6 +8,20 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+      <action type="update" dev="Jonathan Locke" issue="">
+      Changed the render cycle to make it better defined.  You can no longer change the component
+      hierarchy during rendering.  If you attempt to do so, an exception will be thrown.  To allow
+      for modification of the component hierarchy prior to rendering, there is a new onBeginRequest
+      and onEndRequest pair, which wholly replaces onBeginRender / onEndRender.  There should be no
+      need to do anything just before something renders now because the whole component tree is 
+      expected to be immutable throughout the rendering process.  I updated the Link, ListView and
+      Loop components so that they use internalOnBeginRequest() to add their children.  But we have
+      an ongoing problem with auto-links and auto-components, which now must be added during 
+      internalOnBeginRequest(), requiring changes to the markup parser as well (which should probably
+      just make notes about what components if any need to be added in internalOnBeginRequest()).
+      Also, fixed a major stupid bug in Component where i had implemented space efficient booleans 
+      nicely, but failed to initialize them.
+      </action>
   	  <action type="fix" dev="Martijn Dashorst" issue="1167605">
   	  	Documented running the examples using a binary or source distribution. Made it possible
   	  	to run the examples using an embedded Jetty server.

@@ -26,11 +26,10 @@ import java.io.Serializable;
  * <p>
  * During a request cycle, just before a change is about to occur,
  * beginVersion() is called, followed by one or more calls to componentAdded(),
- * componentRemoved() or componentModelChangeImpending(). If beginVersion() is
- * called by the framework during a given request cycle, a balancing
- * endVersion() call will occur at the end of the request cycle. However, if no
- * changes occur to a page during a request cycle, none of these methods will be
- * called.
+ * componentRemoved() or componentModelChanging(). If beginVersion() is called
+ * by the framework during a given request cycle, a balancing endVersion() call
+ * will occur at the end of the request cycle. However, if no changes occur to a
+ * page during a request cycle, none of these methods will be called.
  * <p>
  * Once version information has been added to a version manager, versions can be
  * retrieved by number using getVersion(int). Since version 0 is the first
@@ -62,12 +61,20 @@ public interface IPageVersionManager extends Serializable
 	public void componentAdded(Component component);
 
 	/**
+	 * Indicates that the given component was hidden or shown
+	 * 
+	 * @param component
+	 *            The component whose visibility state was changed.
+	 */
+	public void componentVisibilityChanged(Component component);
+
+	/**
 	 * Indicates that the model for the given component is about to change.
 	 * 
 	 * @param component
 	 *            The component whose model is about to change
 	 */
-	public void componentModelChangeImpending(Component component);
+	public void componentModelChanging(Component component);
 
 	/**
 	 * Indicates that the given component was removed.
