@@ -22,7 +22,7 @@ import wicket.Container;
 /**
  * ApplicationSettings maintains a list of IComponentNameResolvers.
  * IComponentNameResolvers are responsible for mapping component names to Wicket
- * components. For example, autolinks are such a special case.
+ * components. 
  * 
  * @author Juergen Donnerstag
  */
