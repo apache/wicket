@@ -20,6 +20,7 @@ package wicket.markup;
 import java.io.IOException;
 import java.text.ParseException;
 
+import wicket.Page;
 import wicket.util.resource.Resource;
 import wicket.util.resource.ResourceNotFoundException;
 
@@ -50,7 +51,7 @@ public interface IMarkupParser
      * @param name
      *            wicket xml namespace (xmlns:wicket)
      */
-    public void setWicketTagName(final String name);
+    public void setWicketNamespace(final String name);
 
     /**
      * &lt;wicket:param ...&gt; tags may be included with the output for markup
@@ -83,6 +84,21 @@ public interface IMarkupParser
      *            whether whitespace should be compressed.
      */
     public void setCompressWhitespace(boolean compressWhitespace);
+
+    /**
+     * Set default autolink setting for the markup.
+     * @param enable automatic linking
+     */
+    public void setAutolinking(final boolean enable);
+    
+    /**
+     * Autolinks are resolved relative to a page. The page provided
+     * will serve as the reference for autolinks on the current
+     * markup.
+     * 
+     * @param page Autolink reference page
+     */
+    public void setAutolinkBasePage(final Page page);
 
     /**
      * Reads and parses markup from a file.
