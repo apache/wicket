@@ -219,16 +219,9 @@ public abstract class ListView extends WebMarkupContainer
 	 *            The list object's index
 	 * @return the model list's object
 	 */
-	protected Serializable getListObject(final int index)
+	protected Object getListObject(final int index)
 	{
-		Object object = getList().get(index);
-		if ((object != null) && !(object instanceof Serializable))
-		{
-			throw new ClassCastException(
-					"ListView and ListItem model data must be serializable, index: " + index
-							+ ", data: " + object); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return (Serializable)object;
+		return getList().get(index);
 	}
 
 	/**
