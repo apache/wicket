@@ -131,7 +131,7 @@ public abstract class Container extends Component
 	 *           The non-null name of this component
 	 * @param model
 	 *           the model
-	 * @throws RenderException
+	 * @throws WicketRuntimeException
 	 *            Thrown if the component has been given a null name.
 	 */
 	public Container(String name, IModel model)
@@ -159,7 +159,7 @@ public abstract class Container extends Component
 	 *           be used as the subject for the given expression
 	 * @param expression
 	 *           the OGNL expression that works on the given object
-	 * @throws RenderException
+	 * @throws WicketRuntimeException
 	 *            Thrown if the component has been given a null name.
 	 */
 	public Container(String name, IModel model, String expression)
@@ -177,7 +177,7 @@ public abstract class Container extends Component
 	 *           The non-null name of this component
 	 * @param object
 	 *           the object that will be used as a simple model
-	 * @throws RenderException
+	 * @throws WicketRuntimeException
 	 *            Thrown if the component has been given a null name.
 	 */
 	public Container(String name, Serializable object)
@@ -205,7 +205,7 @@ public abstract class Container extends Component
 	 *           expression
 	 * @param expression
 	 *           the OGNL expression that works on the given object
-	 * @throws RenderException
+	 * @throws WicketRuntimeException
 	 *            Thrown if the component has been given a null name.
 	 */
 	public Container(String name, Serializable object, String expression)
@@ -481,7 +481,7 @@ public abstract class Container extends Component
 			if (c == null)
 			{
 				// Failed to find markup stream
-				throw new RenderException(exceptionMessage("No markup found"));
+				throw new WicketRuntimeException(exceptionMessage("No markup found"));
 			}
 		}
 
@@ -676,7 +676,7 @@ public abstract class Container extends Component
 				else
 				{
 					// There is no associated markup for this class
-                    throw new RenderException(exceptionMessage("Markup of type '"
+                    throw new WicketRuntimeException(exceptionMessage("Markup of type '"
                             + getMarkupType() + "' for component '" 
                             + getClass().getName() + "' not found." 
                             + " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried."));

@@ -62,7 +62,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
      * @param name The non-null name of this component
      * @param model the model
      * @param values the drop down values
-     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     * @throws wicket.WicketRuntimeException Thrown if the component has been given a null name.
      */
     public AbstractDropDownChoice(String name, IModel model, final Collection values)
     {
@@ -85,7 +85,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
      *            used as the subject for the given expression
      * @param values the drop down values
      * @param expression the OGNL expression that works on the given object
-     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     * @throws wicket.WicketRuntimeException Thrown if the component has been given a null name.
      */
     public AbstractDropDownChoice(String name, IModel model, String expression,
             final Collection values)
@@ -101,7 +101,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
      * @param values the drop down values
-     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     * @throws wicket.WicketRuntimeException Thrown if the component has been given a null name.
      */
     public AbstractDropDownChoice(String name, Serializable object, final Collection values)
     {
@@ -124,7 +124,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
      * @param values the drop down values
-     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     * @throws wicket.WicketRuntimeException Thrown if the component has been given a null name.
      */
     public AbstractDropDownChoice(String name, Serializable object, String expression,
             final Collection values)

@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Container;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.Session;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
@@ -215,7 +215,7 @@ public class AutolinkComponentResolver implements IComponentResolver
                         automaticLinkPageParameters = PageParameters.NULL;
                     }
                 }
-                catch (RenderException e)
+                catch (WicketRuntimeException e)
                 {
                     markupStream.throwMarkupException("Could not find page at "
                             + path);

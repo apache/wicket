@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.util.io.Streams;
 import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.parse.metapattern.parsers.TagNameParser;
@@ -606,7 +606,7 @@ public final class MarkupParser implements IMarkupParser
                 boolean remove = (openTag.isOpen() && openTag.componentName.equalsIgnoreCase("[remove]"));
                 if (remove == true)
                 {
-                    throw new RenderException(
+                    throw new WicketRuntimeException(
                             "[remove] has been replaced by <wicket:remove>. Please modify your markup accordingly");
                 }
                 

@@ -30,6 +30,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
@@ -99,7 +100,7 @@ public abstract class AbstractUploadForm extends Form
         catch (FileUploadException e)
         {
             // For the time being, we throw
-            throw new RuntimeException(e);
+            throw new WicketRuntimeException(e);
         }
     }
 

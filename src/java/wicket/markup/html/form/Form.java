@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.FeedbackMessages;
 import wicket.Page;
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
@@ -85,7 +85,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      * @param model the model
      * @param validationErrorHandler Interface to a component that can handle/display
      *            validation errors
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Form(String name, IModel model, final IValidationErrorHandler validationErrorHandler)
     {
@@ -109,7 +109,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      * @param expression the OGNL expression that works on the given object
      * @param validationErrorHandler Interface to a component that can handle/display
      *            validation errors
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Form(String name, IModel model, String expression,
             final IValidationErrorHandler validationErrorHandler)
@@ -126,7 +126,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      * @param object the object that will be used as a simple model
      * @param validationErrorHandler Interface to a component that can handle/display
      *            validation errors
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Form(String name, Serializable object,
             final IValidationErrorHandler validationErrorHandler)
@@ -151,7 +151,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      * @param expression the OGNL expression that works on the given object
      * @param validationErrorHandler Interface to a component that can handle/display
      *            validation errors
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Form(String name, Serializable object, String expression,
             final IValidationErrorHandler validationErrorHandler)

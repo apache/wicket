@@ -20,7 +20,7 @@ package wicket.markup.html.basic;
 
 import java.io.Serializable;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -52,7 +52,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
      * names. A component's name cannot be null.
      * @param name The non-null name of this component
      * @param model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public SmartLinkMultiLineLabel(String name, IModel model)
     {
@@ -73,7 +73,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
      * @param model the instance of {@link IModel}from which the model object will be
      *            used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public SmartLinkMultiLineLabel(String name, IModel model, String expression)
     {
@@ -86,7 +86,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
      * name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public SmartLinkMultiLineLabel(String name, String object)
     {
@@ -107,7 +107,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
      * @param name The non-null name of this component
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public SmartLinkMultiLineLabel(String name, Serializable object, String expression)
     {

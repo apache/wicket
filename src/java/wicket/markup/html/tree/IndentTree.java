@@ -27,6 +27,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
@@ -315,7 +316,7 @@ public abstract class IndentTree extends Tree
 
             if (userObject == null)
             {
-                throw new RuntimeException("User object cannot be null");
+                throw new WicketRuntimeException("User object cannot be null");
             }
             TreeNodeLink expandCollapsLink = IndentTree.this.createJunctionLink(treeNodeModel);
             nodeContainer.add(expandCollapsLink);

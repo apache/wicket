@@ -79,7 +79,7 @@ public final class DefaultPageFactory implements IPageFactory
      * @param pageClass
      *            The page class to instantiate
      * @return The page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     public final Page newPage(final Class pageClass)
     {
@@ -95,7 +95,7 @@ public final class DefaultPageFactory implements IPageFactory
      * @param parameters
      *            The page parameters
      * @return The new page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     public Page newPage(final Class pageClass, final PageParameters parameters)
     {
@@ -115,7 +115,7 @@ public final class DefaultPageFactory implements IPageFactory
 
         if (constructor == null)
         {
-            throw new RenderException("Could not find constructor for page '"
+            throw new WicketRuntimeException("Could not find constructor for page '"
                     + pageClass
                     + "' with PageParameter argument or default constructor");
         }
@@ -136,7 +136,7 @@ public final class DefaultPageFactory implements IPageFactory
      * @param page
      *            Parameter to page constructor
      * @return The new page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     public final Page newPage(final Class pageClass, final Page page)
     {
@@ -151,7 +151,7 @@ public final class DefaultPageFactory implements IPageFactory
             return newPage(constructor, page);
         }
 
-        throw new RenderException("Could not find constructor for page '"
+        throw new WicketRuntimeException("Could not find constructor for page '"
                 + pageClass
                 + "' with Page argument constructor or default constructor");
     }
@@ -165,7 +165,7 @@ public final class DefaultPageFactory implements IPageFactory
      * @param parameter
      *            The parameter class for the constructor
      * @return The page constructor
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     protected final Constructor getConstructor(final Class pageClass,
             final Class parameter)
@@ -197,7 +197,7 @@ public final class DefaultPageFactory implements IPageFactory
             }
             catch (NoSuchMethodException e)
             {
-                throw new RenderException(
+                throw new WicketRuntimeException(
                         "Could not find proper page constructor in "
                                 + pageClass
                                 + "; Constructor parameter="
@@ -218,7 +218,7 @@ public final class DefaultPageFactory implements IPageFactory
      * @param parameter
      *            The parameter to pass to the constructor
      * @return The new page
-     * @throws RenderException
+     * @throws WicketRuntimeException
      */
     protected Page newPage(final Constructor constructor, final Object parameter)
     {
@@ -233,12 +233,12 @@ public final class DefaultPageFactory implements IPageFactory
         }
         catch (InstantiationException e)
         {
-            throw new RenderException("Cannot instantiate page object with "
+            throw new WicketRuntimeException("Cannot instantiate page object with "
                     + constructor, e);
         }
         catch (IllegalAccessException e)
         {
-            throw new RenderException("Cannot access " + constructor, e);
+            throw new WicketRuntimeException("Cannot access " + constructor, e);
         }
         catch (InvocationTargetException e)
         {
@@ -248,12 +248,12 @@ public final class DefaultPageFactory implements IPageFactory
             if (homePageClass.getClassLoader() != constructor.getClass()
                     .getClassLoader())
             {
-                throw new RenderException(
+                throw new WicketRuntimeException(
                         "Classloader problems: Most probably Wicket-xxx.jar is not in /WEB-INF/lib: Exception thrown by "
                                 + constructor, e);
             }
 
-            throw new RenderException("Exception thrown by " + constructor, e);
+            throw new WicketRuntimeException("Exception thrown by " + constructor, e);
         }
     }
 }

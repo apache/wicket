@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.Response;
 
 
@@ -132,7 +132,7 @@ public class HttpResponse extends Response
     	}
     	catch (IOException ex)
     	{
-    		throw new RenderException("Error while writing to servlet output writer.", ex);
+    		throw new WicketRuntimeException("Error while writing to servlet output writer.", ex);
     	}
     }
 
@@ -170,7 +170,7 @@ public class HttpResponse extends Response
             }
             catch (IOException e)
             {
-                throw new RuntimeException("Redirect failed", e);
+                throw new WicketRuntimeException("Redirect failed", e);
             }
         }
     }

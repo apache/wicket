@@ -25,7 +25,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 import wicket.model.IModel;
@@ -83,7 +83,7 @@ public abstract class ListView extends HtmlContainer
      * 
      * @param name The non-null name of this component
      * @param model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public ListView(String name, IModel model)
     {
@@ -106,7 +106,7 @@ public abstract class ListView extends HtmlContainer
      * @param model The instance of {@link IModel}from which the model object 
      * 	          will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public ListView(String name, IModel model, String expression)
     {
@@ -120,7 +120,7 @@ public abstract class ListView extends HtmlContainer
      * 
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public ListView(String name, Serializable object)
     {
@@ -143,7 +143,7 @@ public abstract class ListView extends HtmlContainer
      * @param name The non-null name of this component
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public ListView(String name, Serializable object, String expression)
     {
@@ -158,7 +158,7 @@ public abstract class ListView extends HtmlContainer
      * 
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public ListView(String name, List object)
     {
@@ -211,7 +211,7 @@ public abstract class ListView extends HtmlContainer
     {
         if ((object != null) && (!(object instanceof Serializable)))
         {
-            throw new RenderException("object must be of type Serializable");
+            throw new WicketRuntimeException("object must be of type Serializable");
         }
 
         return (Serializable) object;

@@ -23,7 +23,7 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -58,7 +58,7 @@ public final class PasswordTextField extends FormComponent implements FormCompon
      * names. A component's name cannot be null.
      * @param name The non-null name of this component
      * @param model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public PasswordTextField(String name, IModel model)
     {
@@ -79,7 +79,7 @@ public final class PasswordTextField extends FormComponent implements FormCompon
      * @param model the instance of {@link IModel}from which the model object will be
      *            used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public PasswordTextField(String name, IModel model, String expression)
     {
@@ -92,7 +92,7 @@ public final class PasswordTextField extends FormComponent implements FormCompon
      * name cannot be null.
      * @param name The non-null name of this component
      * @param object the object that will be used as a simple model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public PasswordTextField(String name, Serializable object)
     {
@@ -113,7 +113,7 @@ public final class PasswordTextField extends FormComponent implements FormCompon
      * @param name The non-null name of this component
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public PasswordTextField(String name, Serializable object, String expression)
     {

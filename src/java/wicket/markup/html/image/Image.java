@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import wicket.IResourceListener;
 import wicket.Page;
-import wicket.RenderException;
+import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -80,7 +80,7 @@ public class Image extends HtmlComponent implements IResourceListener
      * name cannot be null.
      * @param name The non-null name of this component
      * @param model the model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Image(final String name, final IModel model)
     {
@@ -103,7 +103,7 @@ public class Image extends HtmlComponent implements IResourceListener
      * @param model the instance of {@link IModel}from which the model object will be
      *            used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Image(final String name, final IModel model, final String expression)
     {
@@ -117,7 +117,7 @@ public class Image extends HtmlComponent implements IResourceListener
      * A component's name cannot be null.
      * @param name The non-null name of this component
      * @param object The object that will be used as a simple model
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Image(final String name, final Serializable object)
     {
@@ -139,7 +139,7 @@ public class Image extends HtmlComponent implements IResourceListener
      * @param name The non-null name of this component
      * @param object the object that will be used as the subject for the given expression
      * @param expression the OGNL expression that works on the given object
-     * @throws RenderException Thrown if the component has been given a null name.
+     * @throws WicketRuntimeException Thrown if the component has been given a null name.
      */
     public Image(final String name, final Serializable object, final String expression)
     {
@@ -154,7 +154,7 @@ public class Image extends HtmlComponent implements IResourceListener
     {
         if (source.indexOf("..") != -1 || source.indexOf("/") != -1)
         {
-            throw new RenderException("Source for image resource cannot contain a path");
+            throw new WicketRuntimeException("Source for image resource cannot contain a path");
         }
 
         final String path = Classes.packageName(getPage().getClass()) + "." + source;
@@ -193,7 +193,7 @@ public class Image extends HtmlComponent implements IResourceListener
 
         if (this.image == null)
         {
-            throw new RenderException("Could not find image resource " + resourceToLoad);
+            throw new WicketRuntimeException("Could not find image resource " + resourceToLoad);
         }
 
         final String url = getRequestCycle().urlFor(this, IResourceListener.class);
@@ -239,11 +239,11 @@ public class Image extends HtmlComponent implements IResourceListener
         }
         catch (IOException e)
         {
-            throw new RenderException("Unable to render resource " + image, e);
+            throw new WicketRuntimeException("Unable to render resource " + image, e);
         }
         catch (ResourceNotFoundException e)
         {
-            throw new RenderException("Unable to render resource " + image, e);
+            throw new WicketRuntimeException("Unable to render resource " + image, e);
         }
     }
 }

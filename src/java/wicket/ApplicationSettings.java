@@ -367,12 +367,12 @@ public class ApplicationSettings
         }
         catch (InstantiationException e)
         {
-            throw new RuntimeException(
+            throw new WicketRuntimeException(
                     "Encryption/decryption object can not be instantiated", e);
         }
         catch (IllegalAccessException e)
         {
-            throw new RuntimeException(
+            throw new WicketRuntimeException(
                     "Encryption/decryption object can not be instantiated", e);
         }
     }
