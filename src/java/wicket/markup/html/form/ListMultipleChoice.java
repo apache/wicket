@@ -38,7 +38,7 @@ public class ListMultipleChoice extends AbstractChoice
 	private static final long serialVersionUID = -1000324612688307682L;
 
 	/**
-	 * @see AbstractChoice#Choice(String, Serializable, String, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, String, Collection)
 	 */
 	public ListMultipleChoice(final String componentName, final Serializable model,
 			final String expression, final Collection values)
@@ -48,7 +48,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see AbstractChoice#Choice(String, Serializable, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, Serializable, Collection)
 	 */
 	public ListMultipleChoice(final String componentName, final Serializable model,
 			final Collection values)
