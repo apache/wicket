@@ -793,6 +793,11 @@ public abstract class Component implements Serializable
     {
         // Find the page where this component lives
         final Page page = getPage();
+        
+        if (page == null)
+        {
+            return;
+        }
 
         // Make all previous renderings of the page stale
         page.setStaleRendering(page.getRendering());
