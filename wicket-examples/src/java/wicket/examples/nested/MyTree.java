@@ -18,6 +18,7 @@
  */
 package wicket.examples.nested;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -27,9 +28,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.IResourceListener;
+import wicket.markup.ComponentTag;
 import wicket.markup.html.image.AbstractImage;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.tree.IndentTree;
+import wicket.util.file.Path;
+import wicket.util.lang.Classes;
+import wicket.util.resource.IResource;
+import wicket.util.resource.Resource;
 
 /** indent tree implementation. */
 public class MyTree extends IndentTree
@@ -38,13 +45,13 @@ public class MyTree extends IndentTree
 	private static Log log = LogFactory.getLog(MyTree.class);
 
 	/** node image. */
-	private static final Image IMG_NODE = new Image(NODE_IMAGE_NAME, "node.gif");
+	private static final LocalImage IMG_NODE = new LocalImage(NODE_IMAGE_NAME, "node.gif");
 
 	/** folder image. */
-	private static final Image IMG_FOLDER = new Image(NODE_IMAGE_NAME, "folder.gif");
+	private static final LocalImage IMG_FOLDER = new LocalImage(NODE_IMAGE_NAME, "folder.gif");
 
 	/** open folder image. */
-	private static final Image IMG_FOLDER_OPEN = new Image(NODE_IMAGE_NAME, "folderopen.gif");
+	private static final LocalImage IMG_FOLDER_OPEN = new LocalImage(NODE_IMAGE_NAME, "folderopen.gif");
 
 	// set scope of images
 	static
@@ -82,21 +89,30 @@ public class MyTree extends IndentTree
 		log.info("tree node link was clicked, user object: " + node.getUserObject());
 	}
 
+	/**
+	 * @see wicket.markup.html.tree.IndentTree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
+	 */
 	protected AbstractImage getNodeImage(final DefaultMutableTreeNode node)
 	{
 		if (node.isLeaf())
 		{
-			return IMG_NODE;
+			String url = getRequestCycle().urlFor(IMG_NODE, IResourceListener.class);
+			LocalImage img = new LocalImage(NODE_IMAGE_NAME, url);
+			return img;
 		}
 		else
 		{
 			if (isExpanded(node))
 			{
-				return IMG_FOLDER_OPEN;
+				String url= getRequestCycle().urlFor(IMG_FOLDER_OPEN, IResourceListener.class);
+				LocalImage img = new LocalImage(NODE_IMAGE_NAME, url);
+				return img;
 			}
 			else
 			{
-				return IMG_FOLDER;
+				String url = getRequestCycle().urlFor(IMG_FOLDER, IResourceListener.class);
+				LocalImage img = new LocalImage(NODE_IMAGE_NAME, url);
+				return img;
 			}
 		}
 	}
@@ -115,5 +131,50 @@ public class MyTree extends IndentTree
 		{
 			return String.valueOf(node.getUserObject());
 		}
+	}
+
+	/**
+	 * Image that loads from this package (instead of Image's page)
+	 * without locale, style etc.
+	 */
+	private static final class LocalImage extends Image
+	{
+		/**
+		 * Construct.
+		 * @param name component name
+		 * @param object model
+		 */
+		public LocalImage(String name, Serializable object)
+		{
+			super(name, object);
+		}
+
+	    /**
+	     * @return Gets the image resource for the component.
+	     */
+	    protected IResource getResource()
+	    {
+	    	final String imageResource = getModelObjectAsString();
+			final String path = Classes.packageName(MyTree.class) + "." + imageResource;
+	        return Resource.locate
+	        (
+	            new Path(),
+	            MyTree.class.getClassLoader(),
+	            path,
+	            null,
+	            null,
+	            null
+	        );
+	    }
+
+	    /**
+	     * @see wicket.Component#onComponentTag(ComponentTag)
+	     */
+	    protected void onComponentTag(final ComponentTag tag)
+	    {
+	        checkComponentTag(tag, "img");
+	        final String url = getModelObjectAsString();
+			tag.put("src", url.replaceAll("&", "&amp;"));
+	    }
 	}
 }
