@@ -104,7 +104,7 @@ public class Image extends WebComponent implements IResourceListener
     public void resourceRequested()
     {
 	    // Obtain the resource
-	    IResource image = getResource(resourceToLoad);
+	    final IResource image = getResource(resourceToLoad);
 	    if (image == null)
 	    {
 	        throw new WicketRuntimeException("Could not find image resource " + resourceToLoad);
