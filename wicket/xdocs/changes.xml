@@ -6,6 +6,9 @@
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
   </properties>
   <body>
+    <release version="0.9.16-beta" date="2004-12-XX" description="Last release before march to 1.0">
+      <action type="add" dev="Juergen Donnerstag">Added Spring-framework integration example to Wicket-examples.</action>
+    </release>
     <release version="0.9.15-beta" date="2004-12-19" description="Last release before march to 1.0">
       <action type="add" dev="Eelco Hillenius" issue="1032507">Create a contrib section (site &amp; cvs) where high level components and other contributions that should not be part of the core can be put.</action>
       <action type="add" dev="Martijn Dashorst">Added quickstart project</action>
