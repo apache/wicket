@@ -33,7 +33,6 @@ import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.IntegerValidator;
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -123,7 +122,6 @@ public class FormInput extends WicketExamplePage
 		public InputForm(String name, IValidationFeedback validationErrorHandler)
 		{
 			super(name, validationErrorHandler);
-			RequiredValidator requiredValidator = new RequiredValidator();
 
 			// model that allways gets the current input property so that can
 			// we change the property itself and have our other models still
