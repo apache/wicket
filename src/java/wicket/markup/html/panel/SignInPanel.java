@@ -1,14 +1,14 @@
 /*
  * $Id$ $Revision:
  * 1.11 $ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.panel;
 
-import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.html.WebMarkupContainer;
@@ -35,20 +34,20 @@ import wicket.util.value.ValueMap;
  * password submitted. The signIn() method should sign the user in and return
  * null if no error ocurred, or a descriptive String in the event that the sign
  * in fails.
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
 public abstract class SignInPanel extends Panel
 {
-    
+
     /** True if the panel should display a remember-me checkbox */
     private boolean includeRememberMe = true;
 
 	/** Field for password. */
 	private PasswordTextField password;
-    
+
     /** True if the user should be remembered via form persistence (cookies) */
     private boolean rememberMe = true;
 	/** Field for user name. */
@@ -67,7 +66,7 @@ public abstract class SignInPanel extends Panel
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param componentName
 		 *            Name of the form component
 		 * @param feedback
@@ -81,7 +80,7 @@ public abstract class SignInPanel extends Panel
 			// in lieu of a formal beans model
 			add(username = new TextField("username", properties, "username"));
 			add(password = new PasswordTextField("password", properties, "password"));
-            
+
             // MarkupContainer row for remember me checkbox
             WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
             add(rememberMeRow);
@@ -90,7 +89,7 @@ public abstract class SignInPanel extends Panel
             rememberMeRow.add(new CheckBox("rememberMe", SignInPanel.this, "rememberMe"));
 
             // Make form values persistent
-            setPersistent(rememberMe);   
+            setPersistent(rememberMe);
 
             // Show remember me checkbox?
             rememberMeRow.setVisible(includeRememberMe);
@@ -113,7 +112,7 @@ public abstract class SignInPanel extends Panel
 				{
 					// HTTP redirect response has been committed. No more data
 					// shall be written to the response.
-					cycle.setPage((Page)null);
+					cycle.setPage(null);
 				}
 				else
 				{
@@ -145,7 +144,7 @@ public abstract class SignInPanel extends Panel
     public SignInPanel(final String componentName, final boolean includeRememberMe)
 	{
 		super(componentName);
-        
+
         this.includeRememberMe = includeRememberMe;
 
 		// Create feedback panel and add to page
@@ -156,7 +155,7 @@ public abstract class SignInPanel extends Panel
 		// validation error handler
 		add(new SignInForm("signInForm", feedback));
 	}
-    
+
     /**
      * Removes persisted form data for the signin panel (forget me)
      */
@@ -169,7 +168,7 @@ public abstract class SignInPanel extends Panel
 
 	/**
 	 * Convenience method to access the password.
-	 * 
+	 *
 	 * @return The password
 	 */
 	public String getPassword()
@@ -179,7 +178,7 @@ public abstract class SignInPanel extends Panel
 
     /**
      * Get model object of the rememberMe checkbox
-     * 
+     *
      * @return True if user should be remembered in the future
      */
     public boolean getRememberMe()
@@ -189,7 +188,7 @@ public abstract class SignInPanel extends Panel
 
 	/**
 	 * Convenience method to access the username.
-	 * 
+	 *
 	 * @return The user name
 	 */
 	public String getUsername()
@@ -199,7 +198,7 @@ public abstract class SignInPanel extends Panel
 
 	/**
 	 * Convenience method set persistence for username and password.
-	 * 
+	 *
 	 * @param enable
 	 *            Whether the fields should be persistent
 	 */
@@ -211,7 +210,7 @@ public abstract class SignInPanel extends Panel
 
     /**
      * Set model object for rememberMe checkbox
-     * 
+     *
      * @param rememberMe
      */
     public void setRememberMe(boolean rememberMe)
@@ -222,7 +221,7 @@ public abstract class SignInPanel extends Panel
 
 	/**
 	 * Sign in user if possible.
-	 * 
+	 *
 	 * @param username
 	 *            The username
 	 * @param password

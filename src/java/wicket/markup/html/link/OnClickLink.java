@@ -23,7 +23,6 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Response;
 import wicket.markup.ComponentTag;
 
 /**
@@ -42,7 +41,7 @@ import wicket.markup.ComponentTag;
  *
  *   public void linkClicked(RequestCycle cycle)
  *   {
- *      // do something here...  
+ *      // do something here...
  *   }
  * );
  * </pre>
@@ -96,7 +95,6 @@ public abstract class OnClickLink extends AbstractLink
     {
         // Add simple javascript on click handler that links to this
         // link's linkClicked method
-        final Response response = getRequestCycle().getResponse();
         final String url = getURL();
         // NOTE: don't encode to HTML as that is not valid JavaScript
         final PopupSettings popupSettings = getPopupSettings();

@@ -1,14 +1,14 @@
 /*
  * $Id$ $Revision$
  * $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,7 +24,7 @@ import wicket.markup.MarkupStream;
 
 /**
  * Multi-row text editing component.
- * 
+ *
  * @author Jonathan Locke
  */
 public class TextArea extends AbstractTextComponent
@@ -50,7 +50,7 @@ public class TextArea extends AbstractTextComponent
 
 	/**
 	 * Handle the container's body.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -60,7 +60,7 @@ public class TextArea extends AbstractTextComponent
 	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String bodyContent;
-		if (getInvalidInput() == null) 
+		if (getInvalidInput() == null)
 		{
             // No validation errors
 			bodyContent = getModelObjectAsString();
@@ -70,6 +70,6 @@ public class TextArea extends AbstractTextComponent
             // Invalid input detected
 			bodyContent = getInvalidInput();
 		}
-		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
+		replaceComponentTagBody(markupStream, openTag, bodyContent);
 	}
 }
