@@ -20,18 +20,27 @@
 package filebrowser;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Enumeration;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.voicetribe.wicket.PageParameters;
+import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
+import com.voicetribe.wicket.markup.html.image.Image;
+import com.voicetribe.wicket.markup.html.link.Link;
+import com.voicetribe.wicket.markup.html.tree.Filler;
+import com.voicetribe.wicket.markup.html.tree.Node;
+import com.voicetribe.wicket.markup.html.tree.Tree;
+import com.voicetribe.wicket.markup.html.tree.TreeStateCache;
 
 /**
  * Tree example that uses the user-home dirs to populate the tree.
@@ -42,22 +51,35 @@ public class FileBrowser extends HtmlPage
     /** Log. */
     private static Log log = LogFactory.getLog(FileBrowser.class);
 
+    /** tree component. */
+    private FileTree fileTree = null;
+
     /**
      * Constructor.
      * @param parameters Page parameters
      */
     public FileBrowser(final PageParameters parameters)
     {
-        add(new Label("message", "Hello world!"));
-        buildTree();
+        TreeModel model = buildTree();
+        fileTree = new FileTree("fileTree", model);
+        add(fileTree);
     }
 
-    protected void buildTree()
+    /**
+     * Build the tree.
+     * @return the tree
+     */
+    protected TreeModel buildTree()
     {
         TreeModel model = buildTreeModel();
         debugTree((DefaultTreeModel)model);
+        return model;
     }
 
+    /**
+     * Build the tree model.
+     * @return the tree model
+     */
 	protected TreeModel buildTreeModel() 
 	{
 		long tsBegin = System.currentTimeMillis();
@@ -76,16 +98,20 @@ public class FileBrowser extends HtmlPage
 		long tsEnd = System.currentTimeMillis();
 		if(log.isDebugEnabled())
 		{
-			log.debug("build resource directory tree in " + (tsEnd - tsBegin) + " miliseconds");	
+			log.debug("built tree in " + (tsEnd - tsBegin) + " miliseconds");	
 		}
 		return model;
 	}
 
+	/**
+	 * Add childs recursively.
+	 * @param currentPath current path
+	 * @param currentNode current node
+	 */
 	private void addChildDirsRecursively(
 		String currentPath,
 		DefaultMutableTreeNode currentNode)
 	{
-
 		if (log.isDebugEnabled())
 			log.debug("scan path " + currentPath);
 
@@ -109,14 +135,17 @@ public class FileBrowser extends HtmlPage
 		}
 	}
 
-
-	private void debugTree(DefaultTreeModel m)
+	/**
+	 * Debug tree to logger.
+	 * @param treeModel tree model
+	 */
+	private void debugTree(DefaultTreeModel treeModel)
 	{
 
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode)m.getRoot();
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)treeModel.getRoot();
 		Enumeration enum = node.breadthFirstEnumeration();
 		enum = node.preorderEnumeration();
-		log.info("-- DUMPING DIRECTORY TREE --");
+		log.info("-- DUMPING TREE --");
 		while (enum.hasMoreElements())
 		{
 			DefaultMutableTreeNode nd = 
@@ -126,6 +155,144 @@ public class FileBrowser extends HtmlPage
 				tabs += "-";
 			log.info(tabs + nd);
 		}
+	}
+
+	/**
+	 * Tree for files/ directories.
+	 */
+	class FileTree extends Tree
+	{
+	    /**
+	     * Construct.
+	     * @param componentName
+	     * @param model
+	     */
+	    public FileTree(String componentName, TreeModel model)
+	    {
+	        super(componentName, model);
+	    }
+
+	    /**
+	     * @see com.voicetribe.wicket.markup.html.tree.Tree#populateNode(com.voicetribe.wicket.markup.html.tree.Node)
+	     */
+	    protected void populateNode(Node node)
+	    {
+	       final Serializable userObject = node.getUserObject();
+	       File file = (File)userObject;
+	       Link expandCollapsLink = new Link("expandCollapsLink")
+           {
+	            public void linkClicked(RequestCycle cycle)
+	            {
+	                TreeStateCache state = fileTree.getTreeState();
+	                TreePath selection = state.findTreePath(userObject);
+	                state.setSelectedPath(selection);
+	            }
+           };
+           expandCollapsLink.add(new Image("junctionImg", getJunctionImageName(node)));
+           expandCollapsLink.add(new Image("nodeImg", getNodeImageName(node)));
+           node.add(expandCollapsLink);
+	       Link selectLink = new Link("link")
+           {
+	            public void linkClicked(RequestCycle cycle)
+	            {
+	                TreeStateCache state = fileTree.getTreeState();
+	                TreePath selection = state.findTreePath(userObject);
+	                state.setSelectedPath(selection);
+	            }
+           };
+           selectLink.add(new Label("name", file.getName()));
+	       node.add(selectLink);
+	    }
+
+	    /**
+	     * @see com.voicetribe.wicket.markup.html.tree.Tree#populateFiller(com.voicetribe.wicket.markup.html.tree.Filler)
+	     */
+	    protected void populateFiller(Filler filler)
+	    {
+	        // just render the tags
+	    }
+
+	    /**
+	     * Get image name for junction.
+	     * @param node the current node
+	     * @return image name
+	     */
+	    protected String getJunctionImageName(Node node)
+	    {
+	        final String img;
+	        if(node.isRoot())
+	        {
+	            img = "cross.gif";
+	        }
+	        else if(node.isLeaf())
+	        {
+	            if(node.hasSiblings())
+	            {
+	                img = "cross.gif";
+	            }
+	            else
+	            {
+	                img = "end.gif";
+	            }
+	        }
+	        else
+	        {
+	            if(node.hasSiblings())
+	            {
+	                if(node.isExpanded())
+	                {
+	                    img = "mcross.gif";
+	                }
+	                else
+	                {
+	                    img = "pcross.gif";
+	                }
+	            }
+	            else
+	            {
+	                if(node.isExpanded())
+	                {
+	                    img = "mend.gif";
+	                }
+	                else
+	                {
+	                    img = "pcross.gif";
+	                }
+	            } 
+	        }
+	        return img;
+	    }
+
+	    /**
+	     * Get image name for node.
+	     * @param node the current node
+	     * @return image name
+	     */
+	    protected String getNodeImageName(Node node)
+	    {
+	        final String img;
+	        if(node.isRoot())
+	        {
+	            img = "folderopen.gif";
+	        }
+	        else if(node.isLeaf())
+	        {
+	            // just a dummy for now
+	            img = "node.gif";
+	        }
+	        else
+	        {
+                if(node.isExpanded())
+                {
+                    img = "folderopen.gif";
+                }
+                else
+                {
+                    img = "folder.gif";
+                }
+	        }
+	        return img;
+	    }
 	}
 }
 
