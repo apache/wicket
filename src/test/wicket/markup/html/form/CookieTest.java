@@ -147,6 +147,11 @@ public class CookieTest extends TestCase
         FormComponent username = (FormComponent)panel.get("signInForm.username");
         FormComponent password = (FormComponent)panel.get("signInForm.password");
         
+        System.out.println("!!!!!!!!!!!!! cookieUsername.getValue() = " + cookieUsername.getValue());
+        System.out.println("!!!!!!!!!!!!! username.getModelObjectAsString() = " + username.getModelObjectAsString());
+        
+        // TODO I don't understand what these tests are supposed to do, so I don't know why they are failing...
+        
         Assert.assertEquals(cookieUsername.getValue(), username.getModelObjectAsString());
         Assert.assertEquals("test", password.getModelObjectAsString());
     }
