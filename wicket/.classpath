@@ -12,12 +12,12 @@
 	<classpathentry output="build/examples/HelloWorld/WEB-INF/classes" kind="src" path="examples/HelloWorld/src"/>
 	<classpathentry output="build/examples/Images/WEB-INF/classes" kind="src" path="examples/Images/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/dom4j-full.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate2.jar"/>
-	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="lib/junit.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/hibernate-2.1.6-src.jar" kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-2.1.6.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/servletapi-2.3-src.jar" kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/junit-3.8.1-src.jar" kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/log4j-1.2.8-src.jar" kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/ognl-2.6.5-src.jar" kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.5.jar"/>
 	<classpathentry kind="lib" path="lib/objectprofiler.jar"/>
-	<classpathentry kind="lib" path="lib/ognl-2.6.5.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
