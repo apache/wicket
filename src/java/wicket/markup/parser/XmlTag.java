@@ -17,6 +17,7 @@
  */
 package wicket.markup.parser;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import wicket.markup.MarkupElement;
@@ -221,7 +222,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public String getString(final String key)
 	{
-		return attributes.getString(key);
+		return attributes.getString(key.toLowerCase());
 	}
 
 	/**
@@ -367,7 +368,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public Object put(final String key, final String value)
 	{
-		return attributes.put(key, value);
+		return attributes.put(key.toLowerCase(), value);
 	}
 
 	/**
@@ -384,18 +385,22 @@ public class XmlTag extends MarkupElement
 	 */
 	public Object put(final String key, final StringValue value)
 	{
-		return attributes.put(key, value);
+		return attributes.put(key.toLowerCase(), value);
 	}
 
 	/**
-	 * Puts all {@link StringValue}attributes in map
+	 * Puts all attributes in map
 	 * 
 	 * @param map
-	 *            a key/value map
+	 *            A key/value map
 	 */
 	public void putAll(final Map map)
 	{
-		attributes.putAll(map);
+		for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext(); )
+		{
+			final String key = (String)iterator.next();
+			put(key, map.get(key).toString());
+		}
 	}
 
 	/**
@@ -406,7 +411,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public void remove(final String key)
 	{
-		attributes.remove(key);
+		attributes.remove(key.toLowerCase());
 	}
 
 	/**

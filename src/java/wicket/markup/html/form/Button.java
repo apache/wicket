@@ -42,6 +42,14 @@ public class Button extends FormComponent
 	}
 
 	/**
+	 * @return Any onClick JavaScript that should be used
+	 */
+	protected String getOnClickScript()
+	{
+		return null;
+	}
+
+	/**
 	 * @see FormComponent#initModel()
 	 */
 	protected IModel initModel()
@@ -85,6 +93,13 @@ public class Button extends FormComponent
 
 		// Default handling for component tag
 		super.onComponentTag(tag);
+
+		// If the subclass specified javascript, use that
+		final String onClickJavaScript = getOnClickScript();
+		if (onClickJavaScript != null)
+		{
+			tag.put("onclick", onClickJavaScript);
+		}
 	}
 
 	/**

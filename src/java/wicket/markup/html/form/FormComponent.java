@@ -40,12 +40,12 @@ import wicket.util.string.StringList;
  */
 public abstract class FormComponent extends WebMarkupContainer
 {
-
 	/**
 	 * Special flag value to indicate when there is no invalid input, since null
 	 * is a valid value!
 	 */
 	protected static final String NO_INVALID_INPUT = "[No invalid input]";
+	
 	/**
 	 * When the user input does not validate, this is a temporary store for the
 	 * input he/she provided. We have to store it somewhere as we loose the
