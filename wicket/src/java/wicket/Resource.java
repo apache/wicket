@@ -90,6 +90,16 @@ public abstract class Resource implements IResourceListener
 	public void dispose()
 	{
 		resourceForId.remove(new Long(id));
+		reset();
+	}
+
+	/**
+	 * Sets any loaded resource to null, thus forcing a reload on the next
+	 * request.
+	 */
+	protected final void reset()
+	{
+		this.resource = null;
 	}
 
 	/**
