@@ -59,9 +59,9 @@ public class Image extends AbstractImage
 	 *            See Component#Component(String)
 	 * 
 	 * @param imageResource
-	 *            Dynamic image resource
+	 *            The image resource
 	 */
-	public Image(final String name, final DynamicImageResource imageResource)
+	public Image(final String name, final ImageResource imageResource)
 	{
 		super(name);
 		this.imageResource = imageResource;
