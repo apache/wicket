@@ -76,5 +76,5 @@ public interface IPageLink extends Serializable
 	 * @return The class of page linked to, as a form of identity
 	 * @see Link#linksTo(Page)
 	 */
-	public Class getIdentity();
+	public Class getPageIdentity();
 }
