@@ -1,0 +1,209 @@
+
+<project name    = "Wicket-SDK"
+         default = "buildExamples"
+         basedir = ".">
+
+    <property name = "folder.root" value = "."/>
+            
+    <import file = "./build-properties-import.xml"/>
+    
+    <target name = "buildClasses" 
+            if   = "folder.sdk.src.exists">
+    
+        <mkdir dir = "${folder.sdk.classes}"/>
+    
+        <javac srcdir       = "${folder.sdk.src}" 
+               destdir      = "${folder.sdk.classes}" 
+               debug        = "on"
+               classpathref = "classpath.sdk">
+        
+            <!-- <compilerarg value = "-Xlint"/> -->
+        
+        </javac>
+
+        <copy todir = "${folder.sdk.classes}">      
+        
+            <fileset dir = "${folder.sdk.src}" excludes = "**/*.java"/>
+            
+        </copy>
+    
+    </target>
+
+    <target name        = "buildJar"
+            depends     = "buildClasses"
+            description = "Builds toolkit JAR file"
+            if          = "folder.sdk.src.exists">
+
+        <delete>
+            
+            <fileset dir = "${folder.sdk.lib}" includes = "**/${toolkit.name}-*.jar"/>
+        
+        </delete>
+    
+        <jar destfile = "${file.toolkit.jar}">
+            
+            <fileset dir = "${folder.sdk.classes}" excludes = "**/CVS/**"/>
+
+        </jar>
+        
+    </target>
+    
+    <target name = "clean">
+        
+        <delete dir = "${folder.root}/build"/>
+    
+    </target>
+
+    <target name        = "buildDistribution"
+            depends     = "clean, buildJar, buildDocumentation"
+            description = "Creates a full SDK in the distribution folder">
+
+        <mkdir dir = "${folder.sdk.distribution}"/>
+        
+        <zip destfile = "${file.sdk.distribution}">
+            
+            <zipfileset dir      = "${folder.root}" 
+                        prefix   = "${sdk.full.name}"
+                        includes = "lib/**"/>
+            
+            <zipfileset dir      = "${folder.root}" 
+                        prefix   = "${sdk.full.name}"
+                        includes = ".settings/**,.classpath,.project,Wicket.ipr,build*.xml,*.txt"
+                        excludes = "build-upload-password-import.xml"/>
+                
+            <zipfileset dir      = "${folder.root}" 
+                        prefix   = "${sdk.full.name}"
+                        includes = "doc/**"
+                        excludes = ""/>
+            
+            <zipfileset dir      = "${folder.root}" 
+                        prefix   = "${sdk.full.name}"
+                        includes = "examples/**"
+                        excludes = "examples/PetStore/**"/>
+            
+            <zipfileset dir      = "${folder.root}" 
+                        prefix   = "${sdk.full.name}"
+                        includes = "src/**"/>
+        
+        </zip>
+
+    </target>
+
+    <target name        = "buildDocumentation"
+            description = "Builds API documentation">
+    
+        <delete dir = "${folder.sdk.javadoc}"/>
+    
+        <javadoc destdir      = "${folder.sdk.javadoc}"
+                 author       = "true"
+                 version      = "true"
+                 use          = "true"
+                 windowtitle  = "${sdk.full.name}"
+                 classpathref = "classpath.sdk">
+    
+            <doctitle>${sdk.full.name}</doctitle>
+            <bottom>Copyright &#169; 2004 Jonathan W. Locke.  All Rights Reserved.</bottom>
+            <packageset dir = "${folder.sdk.src}" defaultexcludes = "yes">
+                <include name = "com/voicetribe/wicket/**" />
+            </packageset>   
+            
+        </javadoc>
+        
+    </target>
+    
+    <target name        = "buildExamples"
+            depends     = "clean, buildJar, buildGuestBookExample, buildGuestBook2Example, buildHelloWorldExample, buildImagesExample, buildLibraryExample, buildLinkomaticExample, buildNavomaticExample, buildPubExample, buildSignInExample"
+            description = "Builds all examples"/>
+        
+    <target name        = "buildGuestBookExample"
+            description = "Builds example">
+
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "GuestBook"/>
+        </antcall>
+    
+    </target>
+        
+    <target name        = "buildGuestBook2Example"
+            description = "Builds example">
+        
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "GuestBook2"/>
+        </antcall>
+        
+    </target>
+                
+    <target name        = "buildHelloWorldExample"
+            description = "Builds example">
+        
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "HelloWorld"/>
+        </antcall>
+    
+    </target>
+        
+    <target name        = "buildImagesExample"
+            description = "Builds example">
+            
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "Images"/>
+        </antcall>
+            
+    </target>
+        
+    <target name        = "buildLibraryExample"
+            description = "Builds example">
+                
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "Library"/>
+        </antcall>
+                
+    </target>
+        
+    <target name        = "buildLinkomaticExample"
+            description = "Builds example">
+                    
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "Linkomatic"/>
+        </antcall>
+                    
+    </target>
+        
+    <target name        = "buildNavomaticExample"
+            description = "Builds example">
+                            
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "Navomatic"/>
+        </antcall>
+                            
+    </target>
+        
+    <target name        = "buildPubExample"
+            description = "Builds example">
+                        
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "Pub"/>
+        </antcall>
+                        
+    </target>
+        
+    <target name        = "buildSignInExample"
+            description = "Builds example">
+                                
+        <antcall target = "buildExample">
+            <param name = "example.name" value = "SignIn"/>
+        </antcall>
+        
+    </target>
+            
+    <target name = "buildExample">
+    
+        <ant dir         = "examples/${example.name}"  
+             antfile     = "build.xml"  
+             inheritAll  = "false"
+             inheritRefs = "false"
+             target      = "buildWar"/>
+
+    </target>
+
+</project>

@@ -1,0 +1,97 @@
+
+<project name    = "build-example-import"
+         basedir = ".">
+
+    <property name = "folder.src"           value = "./src"/>   
+    <property name = "folder.build"         value = "${folder.root}/build/examples/${ant.project.name}"/>
+    
+    <import file = "build-properties-import.xml"/>
+    
+    <property name = "folder.build.web-inf" value = "${folder.build}/WEB-INF"/>
+    <property name = "folder.build.lib"     value = "${folder.build.web-inf}/lib"/>
+    <property name = "folder.build.classes" value = "${folder.build.web-inf}/classes"/>
+    
+    <path id = "classpath.build">
+
+        <pathelement path = "${folder.build.classes}"/>
+        <pathelement path = "${folder.sdk.classes}"/>
+        <fileset dir      = "${folder.sdk.lib}" 
+                 includes = "**/*.jar"/>
+
+    </path> 
+    
+    <target name = "buildSDKJar">
+    
+        <ant dir         = "${folder.root}"
+             antfile     = "build.xml"  
+             inheritAll  = "false"
+             inheritRefs = "false"
+             target      = "buildJar"/>
+    
+    </target>
+
+    <target name    = "buildClasses">
+    
+        <mkdir dir = "${folder.build.classes}"/>
+    
+        <javac srcdir       = "${folder.src}" 
+               destdir      = "${folder.build.classes}" 
+               debug        = "on"
+               classpathref = "classpath.build"/>
+
+        <copy todir = "${folder.build.classes}">        
+        
+            <fileset dir = "${folder.src}" excludes = "**/*.java"/>
+            
+        </copy>
+        
+        <copy todir = "${folder.build}">        
+        
+            <fileset dir = "." excludes = "web/**,src/**,build.xml,web.xml"/>
+            
+        </copy>
+        
+        <copy todir = "${folder.build.classes}">        
+        
+            <fileset dir = "." includes = "hibernate.properties,hibernate.cfg.xml"/>
+            
+        </copy>
+    
+    </target>
+        
+    <target name        = "buildContext"
+            description = "Builds servlet context">
+
+        <delete dir = "${folder.build}"/>
+        
+        <antcall target = "buildClasses"/>
+
+        <mkdir dir = "${folder.build.lib}"/>
+
+        <copy todir = "${folder.build}">
+
+            <fileset dir = "web"/>
+            
+        </copy>
+    
+        <copy todir = "${folder.build.lib}">        
+        
+            <fileset dir = "${folder.sdk.lib}" excludes = "**/javax.servlet.jar"/>
+            
+        </copy>
+    
+    </target>
+    
+    <target name        = "buildWar"
+            depends     = "buildContext"
+            description = "Builds WAR file from servlet context">
+                    
+        <war destfile = "${folder.build}/../${ant.project.name}.war" webxml = "${folder.build.web-inf}/web.xml">
+
+            <zipfileset dir = "${folder.build}" excludes = "WEB-INF/web.xml"/>          
+
+        </war>
+    
+    </target>
+            
+</project>
