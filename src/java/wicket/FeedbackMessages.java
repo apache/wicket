@@ -182,45 +182,6 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Adds a new ui message with level DEBUG to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	public static void debug(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.debug(reporter, message));
-	}
-
-	/**
-	 * Adds a new ui message with level ERROR to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	public static void error(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.error(reporter, message));
-	}
-
-	/**
-	 * Adds a new ui message with level FATAL to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	public static void fatal(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.fatal(reporter, message));
-	}
-
-	/**
 	 * Gets the messages for the calling Thread. The current messages are lazily
 	 * constructed (thus created on the first call to this method within a
 	 * request) and are stored in a thread local variable.
@@ -240,19 +201,6 @@ public final class FeedbackMessages
 			}
 		}
 		return currentMessages;
-	}
-
-	/**
-	 * Adds a new ui message with level INFO to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	public static void info(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.info(reporter, message));
 	}
 
 	/**
@@ -280,16 +228,55 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Adds a new ui message with level WARN to the current messages.
+	 * Adds a new ui message with level DEBUG to the current messages.
 	 * 
 	 * @param reporter
 	 *            the reporting component
 	 * @param message
 	 *            the actual message
 	 */
-	public static void warn(Component reporter, String message)
+	static void debug(Component reporter, String message)
 	{
-		get().add(FeedbackMessage.warn(reporter, message));
+		get().add(FeedbackMessage.debug(reporter, message));
+	}
+
+	/**
+	 * Adds a new ui message with level ERROR to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	static void error(Component reporter, String message)
+	{
+		get().add(FeedbackMessage.error(reporter, message));
+	}
+
+	/**
+	 * Adds a new ui message with level FATAL to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	static void fatal(Component reporter, String message)
+	{
+		get().add(FeedbackMessage.fatal(reporter, message));
+	}
+
+	/**
+	 * Adds a new ui message with level INFO to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	static void info(Component reporter, String message)
+	{
+		get().add(FeedbackMessage.info(reporter, message));
 	}
 
 	/**
@@ -383,6 +370,19 @@ public final class FeedbackMessages
 				log.debug("No FeedbackMessages to release for thread " + Thread.currentThread());
 			}
 		}
+	}
+
+	/**
+	 * Adds a new ui message with level WARN to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+    static void warn(Component reporter, String message)
+	{
+		get().add(FeedbackMessage.warn(reporter, message));
 	}
 
 	/**
