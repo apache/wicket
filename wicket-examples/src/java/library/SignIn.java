@@ -37,7 +37,7 @@ public final class SignIn extends HtmlPage
     {
         add(new SignInPanel("signInPanel")
             {
-                protected String signIn(final RequestCycle cycle,
+                public String signIn(final RequestCycle cycle,
                     final String username, final String password)
                 {
                     // Sign the user in
