@@ -86,13 +86,23 @@ public abstract class AbstractValidator implements IValidator
     public final ValidationErrorMessage errorMessage(
             final Serializable input, final FormComponent component)
     {
+    	return errorMessage(getResourceKey(component), input, component);
+    }
+
+    /**
+     * Gets the resource key based on the form component. It will have the form:
+     * <code>[form-name].[component-name].[validator-class]</code>
+     * @param component the form component
+     * @return the resource key based on the form component
+     */
+    protected final String getResourceKey(final FormComponent component)
+    {
         // Resource key must be <form-name>.<component-name>.<validator-class>
         final Component parentForm = component.findParent(Form.class);
         if (parentForm != null)
         {
-            final String resourceKey = parentForm.getName()
-                    + "." + component.getName() + "." + Classes.name(getClass());
-            return errorMessage(resourceKey, input, component);
+            return parentForm.getName() + "." + component.getName()
+            	+ "." + Classes.name(getClass());
         }
         else
         {
@@ -106,7 +116,7 @@ public abstract class AbstractValidator implements IValidator
      * message is retrieved from a message bundle associated with the page in which this
      * validator is contained using the given resource key.
      * <p>
-     * Available variables for interpolation are:
+     * The available variables for interpolation are by default:
      * <ul>
      *   <li>
      * 		${input}: the user's input
@@ -115,6 +125,9 @@ public abstract class AbstractValidator implements IValidator
      *   	${name}: the name of the component
      *   </li>
      * </ul>
+     * Optionally, you can either override getMessageContextVariables, or provide
+     * a model or a map with those variables yourself by using one of the other errorMessage
+     * methods.
      * </p>
      * @param resourceKey the resource key to be used for the message
      * @param input the input (that caused the error)
@@ -125,11 +138,32 @@ public abstract class AbstractValidator implements IValidator
     		final String resourceKey,
             final Serializable input, final FormComponent component)
     {
-        Map resourceModel = new HashMap(2);
-        resourceModel.put("input", input);
-        resourceModel.put("name", component.getName());
+        Map resourceModel = getMessageContextVariables(input, component);
 		return errorMessage(resourceKey, resourceModel, input, component);
     }
+
+	/**
+	 * Gets the default variables for interpolation. These are:
+     * <ul>
+     *   <li>
+     * 		${input}: the user's input
+     *   </li>
+     *   <li>
+     *   	${name}: the name of the component
+     *   </li>
+     * </ul>
+	 * @param input the user's input
+	 * @param component the component
+	 * @return a map with the variables for interpolation
+	 */
+	protected Map getMessageContextVariables(
+			final Serializable input, final FormComponent component)
+	{
+		Map resourceModel = new HashMap(2);
+		resourceModel.put("input", input);
+		resourceModel.put("name", component.getName());
+		return resourceModel;
+	}
 
     /**
      * Returns a formatted validation error message for a given component. The error
