@@ -18,8 +18,8 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
 
@@ -29,8 +29,24 @@ import wicket.util.convert.ConversionException;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class DoubleConverter extends NumberConverter
+public final class DoubleConverter extends DecimalConverter
 {
+    /**
+     * Constructor
+     */
+    public DoubleConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public DoubleConverter(final Locale locale)
+    {
+        super(locale);
+    }
+
     /**
      * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
      */
@@ -38,27 +54,16 @@ public final class DoubleConverter extends NumberConverter
     {
         if (value instanceof Number)
         {
-            Number number = (Number)value;
-            return new Double(number.doubleValue());
+            return new Double(((Number)value).doubleValue());
         }
 
-        final String stringValue = value.toString();
         try
         {
-            final NumberFormat numberFormat = getNumberFormat();
-            if (numberFormat != null)
-            {
-                return new Double(numberFormat.parse(stringValue).doubleValue());
-            }
-            return new Double(stringValue);
+            return new Double(getNumberFormat().parse(value.toString()).doubleValue());
         }
         catch (ParseException e)
         {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Double", e);
-        }
-        catch (NumberFormatException e)
-        {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Double", e);
+            throw new ConversionException("Cannot convert '" + value + "' to Double", e);
         }
     }
 }

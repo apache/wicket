@@ -18,8 +18,8 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
 
@@ -32,33 +32,44 @@ import wicket.util.convert.ConversionException;
 public final class LongConverter extends NumberConverter
 {
     /**
+     * Constructor
+     */
+    public LongConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public LongConverter(final Locale locale)
+    {
+        super(locale);
+    }
+
+    /**
      * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
      */
     public Object convert(final Object value)
     {
         if (value instanceof Number)
         {
-            Number number = (Number)value;
-            return new Long(number.longValue());
+            return new Long(((Number)value).longValue());
         }
 
-        final String stringValue = value.toString();
         try
         {
-            final NumberFormat numberFormat = getNumberFormat();
-            if (numberFormat != null)
+            final Number number = getNumberFormat().parse(value.toString());
+            if (number.doubleValue() > Long.MAX_VALUE || 
+                number.doubleValue() < Long.MIN_VALUE)
             {
-                return new Long(numberFormat.parse(stringValue).longValue());
+                throw new ConversionException("Long value out of range");
             }
-            return new Long(stringValue);
+            return new Long(number.longValue());
         }
         catch (ParseException e)
         {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Long", e);
-        }
-        catch (NumberFormatException e)
-        {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Long", e);
+            throw new ConversionException("Cannot convert '" + value + "' to Long", e);
         }
     }
 }

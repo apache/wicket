@@ -31,6 +31,22 @@ public final class NumberToStringConverter extends AbstractConverter
 	/** The date format to use */
 	private NumberFormat numberFormat;
 
+    /**
+     * Constructor
+     */
+    public NumberToStringConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public NumberToStringConverter(final Locale locale)
+    {
+        super(locale);
+    }
+
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#setLocale(java.util.Locale)
 	 */
@@ -45,10 +61,9 @@ public final class NumberToStringConverter extends AbstractConverter
 	 */
 	public final NumberFormat getNumberFormat()
 	{
-        final Locale locale = getLocale();
-		if (numberFormat == null && locale != null)
+		if (numberFormat == null)
 		{
-			numberFormat = NumberFormat.getInstance(locale);
+			numberFormat = NumberFormat.getInstance(getLocale());
 		}
 		return numberFormat;
 	}

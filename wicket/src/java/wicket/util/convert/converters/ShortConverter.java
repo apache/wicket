@@ -18,8 +18,8 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
 
@@ -32,33 +32,44 @@ import wicket.util.convert.ConversionException;
 public final class ShortConverter extends NumberConverter
 {
     /**
+     * Constructor
+     */
+    public ShortConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public ShortConverter(final Locale locale)
+    {
+        super(locale);
+    }
+
+    /**
      * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
      */
     public Object convert(final Object value)
     {
         if (value instanceof Number)
         {
-            Number number = (Number)value;
-            return new Short(number.shortValue());
+            return new Short(((Number)value).shortValue());
         }
 
-        final String stringValue = value.toString();
         try
         {
-            final NumberFormat numberFormat = getNumberFormat();
-            if (numberFormat != null)
+            final Number number = getNumberFormat().parse(value.toString());
+            if (number.doubleValue() > Short.MAX_VALUE || 
+                number.doubleValue() < Short.MIN_VALUE)
             {
-                return new Short(numberFormat.parse(stringValue).shortValue());
+                throw new ConversionException("Short value out of range");
             }
-            return new Short(stringValue);
+            return new Short(number.shortValue());
         }
         catch (ParseException e)
         {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Short", e);
-        }
-        catch (NumberFormatException e)
-        {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Short", e);
+            throw new ConversionException("Cannot convert '" + value + "' to Short", e);
         }
     }
 }

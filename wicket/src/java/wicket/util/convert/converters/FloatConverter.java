@@ -18,8 +18,8 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
 
@@ -29,8 +29,24 @@ import wicket.util.convert.ConversionException;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FloatConverter extends NumberConverter
+public final class FloatConverter extends DecimalConverter
 {
+    /**
+     * Constructor
+     */
+    public FloatConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public FloatConverter(final Locale locale)
+    {
+        super(locale);
+    }
+
     /**
      * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
      */
@@ -38,27 +54,22 @@ public final class FloatConverter extends NumberConverter
     {
         if (value instanceof Number)
         {
-            Number number = (Number)value;
-            return new Float(number.floatValue());
+            return new Float(((Number)value).floatValue());
         }
 
-        final String stringValue = value.toString();
         try
         {
-            final NumberFormat numberFormat = getNumberFormat();
-            if (numberFormat != null)
+            final Number number = getNumberFormat().parse(value.toString());
+            if (number.doubleValue() > Float.MAX_VALUE || 
+                number.doubleValue() < Float.MIN_VALUE)
             {
-                return new Float(numberFormat.parse(stringValue).floatValue());
+                throw new ConversionException("Float value out of range");
             }
-            return new Float(stringValue);
+            return new Float(number.floatValue());
         }
         catch (ParseException e)
         {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Float", e);
-        }
-        catch (NumberFormatException e)
-        {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Float", e);
+            throw new ConversionException("Cannot convert '" + value + "' to Float", e);
         }
     }
 }

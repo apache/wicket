@@ -18,8 +18,8 @@
  */
 package wicket.util.convert.converters;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
 
@@ -32,33 +32,44 @@ import wicket.util.convert.ConversionException;
 public final class IntegerConverter extends NumberConverter
 {    
     /**
+     * Constructor
+     */
+    public IntegerConverter()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param locale The locale for this converter
+     */
+    public IntegerConverter(final Locale locale)
+    {
+        super(locale);
+    }
+
+    /**
      * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
      */
     public Object convert(final Object value)
     {
         if (value instanceof Number)
         {
-            Number number = (Number)value;
-            return new Integer(number.intValue());
+            return new Integer(((Number)value).intValue());
         }
 
-        final String stringValue = value.toString();
         try
         {
-            final NumberFormat numberFormat = getNumberFormat();
-            if (numberFormat != null)
+            final Number number = getNumberFormat().parse(value.toString());
+            if (number.doubleValue() > Integer.MAX_VALUE || 
+                number.doubleValue() < Integer.MIN_VALUE)
             {
-                return new Integer(numberFormat.parse(stringValue).intValue());
+                throw new ConversionException("Integer value out of range");
             }
-            return new Integer(stringValue);
+            return new Integer(number.intValue());
         }
         catch (ParseException e)
         {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Integer", e);
-        }
-        catch (NumberFormatException e)
-        {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Integer", e);
+            throw new ConversionException("Cannot convert '" + value + "' to Integer", e);
         }
     }
 }
