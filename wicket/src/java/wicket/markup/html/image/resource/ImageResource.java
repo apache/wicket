@@ -21,8 +21,11 @@ import wicket.protocol.http.WebResource;
 import wicket.util.resource.IResource;
 
 /**
- * Base class for image resources.
+ * Base class for image resources. See the base class {@link wicket.Resource}
+ * for details on resources in general, including how they can be shared in an
+ * application. 
  * 
+ * @see wicket.Resource
  * @author Jonathan Locke
  */
 public abstract class ImageResource extends WebResource
@@ -35,5 +38,3 @@ public abstract class ImageResource extends WebResource
 	 */
 	public abstract IResource getResource();
 }
-
-
