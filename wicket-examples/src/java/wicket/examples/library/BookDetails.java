@@ -28,7 +28,6 @@ import wicket.model.Model;
 import wicket.util.string.StringList;
 import wicket.util.string.StringValueConversionException;
 
-
 /**
  * A book details page.  Shows information about a book.
  * @author Jonathan Locke
