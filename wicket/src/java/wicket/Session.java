@@ -263,15 +263,14 @@ public abstract class Session implements Serializable
 		}
 
 		// Retrieve the page for the first path component from this session
-		Page page = getPage(Integer.parseInt(Strings.firstPathComponent(path,
-				componentPathSeparator)));
-		
+		Page page = getPage(Strings.firstPathComponent(path, componentPathSeparator));
+
 		// Is there a page with the right id at all?
 		if (page != null)
 		{
 			// Get the version of the page requested from the page
 			final Page version = page.getVersion(versionNumber);
-	
+
 			// Is the requested version available?
 			if (version != null)
 			{
@@ -280,16 +279,17 @@ public abstract class Session implements Serializable
 				{
 					// This is our new page
 					page = version;
-		
+
 					// Replaces old page entry
 					getPageMap().put(page.getId(), page);
 					pageChanged(page);
-				}				
+				}
 				return page;
 			}
 		}
 		return null;
 	}
+
 	/**
 	 * @return The page factory for this session
 	 */
@@ -580,9 +580,9 @@ public abstract class Session implements Serializable
 	 *            Page id
 	 * @return Page with the given id
 	 */
-	final Page getPage(final int id)
+	final Page getPage(final String id)
 	{
-		return (Page)getPageMap().get(new Integer(id));
+		return (Page)getPageMap().get(id);
 	}
 
 	/**

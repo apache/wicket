@@ -66,6 +66,9 @@ public class AttributeModifier implements Serializable
 
 	/** The model that is to be used for the replacement. */
 	private final IModel replaceModel;
+	
+	/** The next attribute modifier in any chain */
+	AttributeModifier next;
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model
