@@ -1114,7 +1114,7 @@ public abstract class Component implements Serializable
 	 */
 	protected final String exceptionMessage(final String message)
 	{
-		return toString() + " : " + message;
+		return message + ": \n" + toString();
 	}
 
 	/**
