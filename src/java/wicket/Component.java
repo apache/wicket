@@ -542,7 +542,7 @@ public abstract class Component implements Serializable, IConverterSource
 	{
 		return getRequestCycle().getResponse();
 	}
-	
+
 	/**
 	 * @return The root model (innermost nested model) for this component
 	 */
@@ -672,15 +672,21 @@ public abstract class Component implements Serializable, IConverterSource
 	/**
 	 * Called to indicate that the model for this component has been changed
 	 */
-	public final void modelChanged()
+	public final void modelChangeImpending()
 	{
 		// Tell the page that our model changed
 		final Page page = findPage();
 		if (page != null)
 		{
-			page.componentModelChanged(this);
+			page.componentModelChangeImpending(this);
 		}
-
+	}
+	
+	/**
+	 * Called to indicate that the model for this component has been changed
+	 */
+	public final void modelChanged()
+	{
 		// Call user code
 		onInternalModelChanged();
 		onModelChanged();
@@ -699,27 +705,27 @@ public abstract class Component implements Serializable, IConverterSource
 		{
 			// Get request cycle to render to
 			final RequestCycle cycle = getRequestCycle();
-	
+
 			// Save original Response
 			final Response originalResponse = cycle.getResponse();
-	
+
 			// If component is not visible, set response to NullResponse
 			if (!isVisible())
 			{
 				cycle.setResponse(NullResponse.getInstance());
 			}
-	
+
 			// Synchronize on model lock while rendering to help ensure
 			// that the model doesn't change while its being read
 			synchronized (getModelLock())
 			{
 				// Call implementation to render component
 				onRender();
-				
+
 				// Tell the page that the component rendered
 				getPage().componentRendered(this);
 			}
-	
+
 			// Restore original response
 			cycle.setResponse(originalResponse);
 		}
@@ -728,10 +734,18 @@ public abstract class Component implements Serializable, IConverterSource
 			// Rendering has completed
 			onEndRender();
 			onInternalEndRender();
-			
+
 			// Detach models now that rendering is fully completed
 			detachModels();
 		}
+	}
+	
+	/**
+	 * Removes this component from its parent.
+	 */
+	public void remove()
+	{
+		parent.remove(getName());
 	}
 
 	/**
@@ -790,6 +804,7 @@ public abstract class Component implements Serializable, IConverterSource
 		// Change model
 		if (this.model != model)
 		{
+			modelChangeImpending();
 			this.model = (IModel)model;
 			modelChanged();
 		}
@@ -809,6 +824,7 @@ public abstract class Component implements Serializable, IConverterSource
 		{
 			if (model.getObject(this) != object)
 			{
+				modelChangeImpending();
 				model.setObject(this, object);
 				modelChanged();
 			}
@@ -982,7 +998,7 @@ public abstract class Component implements Serializable, IConverterSource
 
 	/**
 	 * This method is called immediately before a component is rendered
-	 */	
+	 */
 	protected void onBeginRender()
 	{
 	}
@@ -1018,7 +1034,14 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Called anytime a model is changed via setModel or setModelObject.
+	 * Called anytime a model is changed, but before the change actually occurs
+	 */
+	protected void onModelChanging()
+	{
+	}
+
+	/**
+	 * Called anytime a model is changed after the change has occurred
 	 */
 	protected void onModelChanged()
 	{
@@ -1232,7 +1255,7 @@ public abstract class Component implements Serializable, IConverterSource
 
 	/**
 	 * This method is called immediately before a component is rendered
-	 */	
+	 */
 	void onInternalBeginRender()
 	{
 	}
@@ -1245,9 +1268,20 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
+	 * 
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 */
-	void onInternalModelChanged()
+	protected void onInternalModelChanged()
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
+	 * 
+	 * Called anytime a model is changed via setModel or setModelObject.
+	 */
+	protected void onInternalModelChanging()
 	{
 	}
 
