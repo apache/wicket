@@ -43,6 +43,7 @@ public final class Time extends AbstractTime
 
 	/** Parser in 'yyyy.MM.dd-h.mma' format. */
 	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy.MM.dd-h.mma");
+	
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 4441606416914169210L;
 
@@ -287,17 +288,6 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Gets a Date object for this time object. A new Date object is always
-	 * returned rather than attempting to cache a date since Date is mutable.
-	 * 
-	 * @return This immutable time object as a mutable java.util.Date object
-	 */
-	public Date getDate()
-	{
-		return new Date(getMilliseconds());
-	}
-
-	/**
 	 * Gets the day of month field of the current calendar.
 	 * 
 	 * @return the field value
@@ -452,6 +442,17 @@ public final class Time extends AbstractTime
 	public Duration subtract(final Time that)
 	{
 		return Duration.milliseconds(this.getMilliseconds() - that.getMilliseconds());
+	}
+
+	/**
+	 * Gets a Date object for this time object. A new Date object is always
+	 * returned rather than attempting to cache a date since Date is mutable.
+	 * 
+	 * @return This immutable time object as a mutable java.util.Date object
+	 */
+	public Date toDate()
+	{
+		return new Date(getMilliseconds());
 	}
 
 	/**
