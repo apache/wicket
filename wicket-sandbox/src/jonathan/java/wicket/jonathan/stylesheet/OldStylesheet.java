@@ -18,8 +18,8 @@
 package wicket.jonathan.stylesheet;
 
 import wicket.protocol.http.WebResource;
-import wicket.util.resource.IResource;
-import wicket.util.resource.StringBufferResource;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.StringBufferResourceStream;
 
 /**
  * A stylesheet resource.
@@ -29,7 +29,7 @@ import wicket.util.resource.StringBufferResource;
 public class OldStylesheet extends WebResource
 {
 	/** Stylesheet information */
-	private StringBufferResource resource = new StringBufferResource();
+	private StringBufferResourceStream resource = new StringBufferResourceStream();
 	
 	/**
 	 * @param s String to append to stylesheet
@@ -40,9 +40,9 @@ public class OldStylesheet extends WebResource
 	}
 	
 	/**
-	 * @see WebResource#getResource()
+	 * @see WebResource#getResourceStream()
 	 */
-	protected IResource getResource()
+	protected IResourceStream getResourceStream()
 	{
 		return resource;
 	}

@@ -22,8 +22,8 @@ import java.io.InputStream;
 import java.io.StringReader;
 
 import wicket.protocol.http.WebResource;
-import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
 
 /**
@@ -55,18 +55,18 @@ public class Stylesheet extends WebResource
 	}
 	
 	/**
-	 * @see WebResource#getResource()
+	 * @see WebResource#getResourceStream()
 	 */
-	protected IResource getResource()
+	protected IResourceStream getResourceStream()
 	{
-		return new IResource()
+		return new IResourceStream()
 		{
 			public String getContentType()
 			{
 				return "text/css";
 			}
 
-			public InputStream getInputStream() throws ResourceNotFoundException
+			public InputStream getInputStream() throws ResourceStreamNotFoundException
 			{
 				final StringReader reader = new StringReader(buffer.toString());
 				return new InputStream()
