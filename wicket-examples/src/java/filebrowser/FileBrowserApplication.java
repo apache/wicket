@@ -25,8 +25,8 @@ import com.voicetribe.util.time.Duration;
 import com.voicetribe.wicket.WebApplication;
 
 /**
- * HttpApplication class for hello world example.
- * @author Jonathan Locke
+ * HttpApplication class for FileBrowser example.
+ * @author Eelco Hillenius
  */
 public class FileBrowserApplication extends WebApplication
 {
