@@ -251,8 +251,8 @@ public class CookieValuePersister implements IValuePersister
     
     		cookie.setVersion(getSettings().getVersion());
     		cookie.setSecure(getSettings().isSecure());
-    
-    		getWebResponse().addCookie(cookie);
+
+    		getWebResponse().getHttpServletResponse().addCookie(cookie);
     
     		if (log.isDebugEnabled())
     		{

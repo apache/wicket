@@ -20,14 +20,13 @@ package wicket.protocol.http;
 import java.io.IOException;
 import java.util.Locale;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.WicketRuntimeException;
 import wicket.Response;
+import wicket.WicketRuntimeException;
 
 /**
  * Implements responses over the HTTP protocol by holding an underlying
@@ -44,11 +43,11 @@ public class WebResponse extends Response
     /** Log. */
     private static final Log log = LogFactory.getLog(WebResponse.class);
 
-    /** The underlying response object. */
-    private final HttpServletResponse httpServletResponse;
-
     /** True if response is a redirect. */
     protected boolean redirect;
+
+    /** The underlying response object. */
+    private final HttpServletResponse httpServletResponse;
 
     /**
      * Constructor for testing harness.
@@ -68,17 +67,6 @@ public class WebResponse extends Response
     WebResponse(final HttpServletResponse httpServletResponse) throws IOException
     {
         this.httpServletResponse = httpServletResponse;
-    }
-
-    /**
-     * Adds a cookie.
-     * 
-     * @param cookie
-     *            The cookie to add
-     */
-    public final void addCookie(final Cookie cookie)
-    {
-        httpServletResponse.addCookie(cookie);
     }
 
     /**
