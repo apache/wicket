@@ -87,7 +87,7 @@ public abstract class AbstractValidator implements IValidator
         // Return formatted error message
         Localizer localizer = component.getLocalizer();
 		String message = localizer.getString(resourceKey, component, resourceModel);
-        return new ValidationErrorMessage(input, component, message);
+        return new ValidationErrorMessage(component, message);
     }
 
     /**

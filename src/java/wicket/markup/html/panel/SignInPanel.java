@@ -152,7 +152,7 @@ public abstract class SignInPanel extends Panel
             }
             else
             {
-                handleError(new ValidationErrorMessage(null, this, error));
+                handleError(new ValidationErrorMessage(this, error));
             }
         }
     }
