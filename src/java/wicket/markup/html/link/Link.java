@@ -242,12 +242,12 @@ public abstract class Link extends AbstractLink
     		final MarkupStream markupStream, final ComponentTag openTag)
     {
         // Get disabled component of the same name with "Disabled" appended
-        final Container disabledContainer = (Container) get("disabled");
+        final Container disabledContainer = (Container)get("disabled");
 
         if (disabledContainer != null)
         {
             // Get enabled container
-            final Container enabledContainer = (DisabledLink) get("enabled");
+            final Container enabledContainer = (Container)get("enabled");
 
             // Set visibility of enabled and disabled children
             enabledContainer.setVisible(enabled);

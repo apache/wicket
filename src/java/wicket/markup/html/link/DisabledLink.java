@@ -21,11 +21,13 @@ package wicket.markup.html.link;
 import wicket.markup.html.HtmlContainer;
 
 /**
- * Holds what to display when a navigation link is disabled.
+ * Handy class for holding markup to display when a link is disabled.
+ * 
+ * @see Link
  * @author Jonathan Locke
  */
 public final class DisabledLink extends HtmlContainer
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 5315730184113248127L;
 
