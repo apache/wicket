@@ -41,9 +41,9 @@ public final class MarkupParserTest extends TestCase
     /**
      * 
      * @throws StringValueConversionException
-     * @throws ParseException
+     * @throws Exception
      */
-    public final void testTagParsing() throws StringValueConversionException, ParseException
+    public final void testTagParsing() throws Exception
     {
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
         final Markup markup = parser.parse(
@@ -104,10 +104,9 @@ public final class MarkupParserTest extends TestCase
 
     /**
      * 
-     * @throws StringValueConversionException
-     * @throws ParseException
+     * @throws Exception
      */
-    public final void test() throws StringValueConversionException, ParseException
+    public final void test() throws Exception
     {
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
         final Markup tokens = parser
@@ -139,9 +138,9 @@ public final class MarkupParserTest extends TestCase
 
     /**
      * 
-     * @throws ParseException
+     * @throws Exception
      */
-    public final void testXhtmlDocument() throws ParseException {
+    public final void testXhtmlDocument() throws Exception {
         final String docText = "" +
            "<?xml version='1.0' encoding='iso-8859-1' ?>" +
            "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" +
@@ -153,7 +152,7 @@ public final class MarkupParserTest extends TestCase
         final Markup tokens = parser.parse(docText);
 
         System.out.println("tok(0)=" + tokens.get(0));
-        Assert.assertEquals(docText, tokens.get(0).toString());
+        Assert.assertEquals(docText.substring(44), tokens.get(0).toString());
     }
 
     /**

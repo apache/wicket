@@ -145,8 +145,11 @@ public final class MarkupParser
      * @param string The markup
      * @return The markup
      * @throws ParseException
+     * @throws IOException
+     * @throws ResourceNotFoundException
      */
-    Markup parse(final String string) throws ParseException
+    Markup parse(final String string) throws ParseException, IOException,
+    	ResourceNotFoundException
     {
         xmlParser.parse(string);
         return new Markup(null, parseMarkup());
