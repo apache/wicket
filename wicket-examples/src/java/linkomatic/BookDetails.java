@@ -19,6 +19,7 @@
 
 package linkomatic;
 
+import com.voicetribe.wicket.PropertyModel;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 
@@ -34,7 +35,7 @@ public final class BookDetails extends HtmlPage
      */
     public BookDetails(final Book book)
     {
-        add(new Label("title", book));
+        add(new Label("title", new PropertyModel(book, "title")));
     }
 }
 

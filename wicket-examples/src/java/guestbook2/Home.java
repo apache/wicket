@@ -19,8 +19,6 @@
 
 package guestbook2;
 
-import guestbook.Comment;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -78,7 +76,7 @@ public class Home extends HtmlPage
     public final class CommentForm extends Form
     {
         /**
-         * Constructor
+         * Constructor.
          * @param componentName The name of this component
          */
         public CommentForm(final String componentName)
@@ -91,7 +89,7 @@ public class Home extends HtmlPage
         }
 
         /**
-         * Show the resulting valid edit
+         * Show the resulting valid edit.
          * @param cycle The request cycle
          */
         public final void handleSubmit(final RequestCycle cycle)
