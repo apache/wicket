@@ -60,7 +60,7 @@ public abstract class ImageResourceFactory
 	 *            Any label to put on the image that's created
 	 * @return Image resource
 	 */
-	protected ImageResource imageResource(final String label)
+	public ImageResource imageResource(final String label)
 	{
 		ImageResource image = (ImageResource)labelToImageResource.get(label);
 		if (image == null)

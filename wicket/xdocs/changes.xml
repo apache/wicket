@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="fix" dev="Jonathan Locke" issue="1162633">
+      Added setImageResource() to Image.  Changed image factory syntax from . separator to : separator for eelco.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1156254">
       Added setResponsePage(Page) to Component.
 	  </action>

@@ -40,7 +40,7 @@ public class Image extends AbstractImage
 	private static final long serialVersionUID = 555385780092173403L;
 
 	/** The image resource this image component references */
-	private LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
+	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -82,7 +82,7 @@ public class Image extends AbstractImage
 	 */
 	public Image(final String id, final String string)
 	{
-		super(id, new Model(string));
+		this(id, new Model(string));
 	}
 
 	/**
@@ -91,6 +91,15 @@ public class Image extends AbstractImage
 	public String getResourcePath()
 	{
 		return localizedImageResource.getImageResource().getPath();
+	}
+
+	/**
+	 * @param imageResource
+	 *            The new ImageResource to set.
+	 */
+	public void setImageResource(final ImageResource imageResource)
+	{
+		this.localizedImageResource.setImageResource(imageResource);
 	}
 
 	/**

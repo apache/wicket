@@ -169,13 +169,10 @@ public class LocalizedImageResource implements Serializable
 		}
 
 		// Generate a button image from the value attribute
-		if (label.indexOf('.') != -1)
+		if (label.indexOf(':') != -1)
 		{
 			// Get factory name
-			final String imageFactoryName = Strings.beforeFirst(label, '.');
-			
-			// Get label to pass to factory
-			label = Strings.afterFirst(label, '.');
+			final String imageFactoryName = Strings.beforeFirst(label, ':');
 			
 			// Look up factory
 			final ImageResourceFactory factory = (ImageResourceFactory)nameToImageFactory
@@ -188,8 +185,11 @@ public class LocalizedImageResource implements Serializable
 						+ imageFactoryName);
 			}
 			
+			// Get value to pass to factory
+			final String imageLabel = Strings.afterFirst(label, ':');
+			
 			// Have factory create new labelled image
-			return factory.imageResource(label);
+			return factory.imageResource(imageLabel);
 		}
 		else
 		{
@@ -200,6 +200,6 @@ public class LocalizedImageResource implements Serializable
 
 	static
 	{
-		add(new DefaultButtonImageResourceFactory("button"));
+		add(new DefaultButtonImageResourceFactory("buttonFactory"));
 	}
 }
