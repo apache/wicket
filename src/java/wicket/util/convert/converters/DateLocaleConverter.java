@@ -30,8 +30,8 @@ import wicket.util.convert.ConversionException;
 
 /**
  * Standard {@link LocaleConverter} implementation that converts an incoming
- * locale-sensitive String into a <code>java.util.Date</code> object, optionally using a
- * default value or throwing a {@link ConversionException} if a conversion error occurs.
+ * locale-sensitive String into a <code>java.util.Date</code> object, throwing a
+ * {@link ConversionException} if a conversion error occurs.
  */
 public class DateLocaleConverter extends BaseLocaleConverter
 {
