@@ -97,7 +97,7 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets if this listItem is the first listItem in the containing listView.S
+	 * Gets if this listItem is the first listItem in the containing listView.
 	 * 
 	 * @return True if this listItem is the first listItem in the containing
 	 *         listView
