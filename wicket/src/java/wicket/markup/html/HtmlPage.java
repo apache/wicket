@@ -18,11 +18,7 @@
  */
 package wicket.markup.html;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import wicket.Page;
-import wicket.PageParameters;
 import wicket.markup.html.link.ExternalPageLink;
 
 
@@ -58,16 +54,7 @@ public class HtmlPage extends Page
      */
     protected final ExternalPageLink homePageLink(final String componentName)
     {
-    	Map parameters = getApplicationSettings().getHomePageParameters();
-   	if(parameters == null)
-   	{
-   		return new ExternalPageLink(componentName, getApplicationSettings().getHomePage());
-   	}
-   	else
-   	{
-   		Map map = new HashMap(parameters);
-   		return new ExternalPageLink(componentName, getApplicationSettings().getHomePage(),new PageParameters(map));
-   	}    	
+        return new ExternalPageLink(componentName, getApplicationSettings().getHomePage());
     }
 }
 

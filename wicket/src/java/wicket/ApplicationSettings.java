@@ -21,7 +21,6 @@ package wicket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -235,8 +234,6 @@ public class ApplicationSettings
      */
     public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE =
         new UnexpectedExceptionDisplay("SHOW_EXCEPTION_PAGE");
-
-	private Map homePageParameters;
 
     /**
      * Create the application settings, carrying out any necessary initialisations.
@@ -790,24 +787,6 @@ public class ApplicationSettings
         this.cryptClass = crypt;
     }
 
- 	/**
- 	 * Set the map with the key->value pairs that will be used in the homepage constructor as a PageParameter.
- 	 * @return The Map with the key->value pairs that will send to the homepage constructor.
- 	 */
- 	public void setHomePageParameters(Map homePageParameters)
- 	{
- 		this.homePageParameters = homePageParameters;
- 	}
-
- 	/**
-	 * Returns the map with the key->value pairs that are send to the homepage as a PageParameter.
-	 * @return The Map with the key->value pairs that will send to the homepage constructor.
-	 */
-	public Map getHomePageParameters()
-	{
-		return homePageParameters;
-	}
-    
     /**
      * Gets the factory class to be used when creating pages
      * @return the factory class to be used when creating pages
