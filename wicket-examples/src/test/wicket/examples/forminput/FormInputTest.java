@@ -49,7 +49,7 @@ public class FormInputTest extends WebTestCase
     /**
      * Test page.
      */
-    public void testHelloWorld() {
+    public void testHome() {
         beginAt("/forminput");
         assertTitleEquals("Wicket Examples - forminput");
     }

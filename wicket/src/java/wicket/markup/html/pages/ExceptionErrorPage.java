@@ -40,24 +40,24 @@ public class ExceptionErrorPage extends WebPage
 	/**
 	 * Constructor.
 	 * 
-	 * @param e
-	 *            The markup exception to show
+	 * @param throwable
+	 *            The exception to show
 	 * @param page
 	 *            The page being rendered when the exception was thrown
 	 */
-	public ExceptionErrorPage(final RuntimeException e, final Page page)
+	public ExceptionErrorPage(final Throwable throwable, final Page page)
 	{
 		// Add exception label
-		add(new MultiLineLabel("exception", Strings.toString(e)));
+		add(new MultiLineLabel("exception", Strings.toString(throwable)));
 
 		// Get values
 		String resource = "";
 		String markup = "";
 		MarkupStream markupStream = null;
 
-		if (e instanceof MarkupException)
+		if (throwable instanceof MarkupException)
 		{
-			markupStream = ((MarkupException)e).getMarkupStream();
+			markupStream = ((MarkupException)throwable).getMarkupStream();
 
 			if (markupStream != null)
 			{

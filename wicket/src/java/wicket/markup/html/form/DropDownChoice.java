@@ -38,6 +38,14 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 {
 	/** serial UID. */
 	private static final long serialVersionUID = 122777360064586107L;
+	
+	/**
+	 * @see AbstractChoice#AbstractChoice(String, Collection)
+	 */
+	public DropDownChoice(String name, final Collection values)
+	{
+		super(name, values);
+	}
 
 	/**
 	 * @param name
@@ -116,16 +124,6 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	}
 
 	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.AbstractChoice#updateModel()
-	 */
-	public final void updateModel()
-	{
-		internalUpdateModel();
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -161,6 +159,16 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	 */
 	protected void onSelectionChanged(final Object newSelection)
 	{
+	}
+
+	/**
+	 * Updates this components' model from the request.
+	 * 
+	 * @see wicket.markup.html.form.AbstractChoice#updateModel()
+	 */
+	protected final void updateModel()
+	{
+		internalUpdateModel();
 	}
 
 	/**

@@ -61,6 +61,14 @@ public class ListChoice extends DropDownChoice
 	{
 		ListChoice.defaultMaxRows = defaultMaxRows;
 	}
+	
+	/**
+	 * @see AbstractChoice#AbstractChoice(String, Collection)
+	 */
+	public ListChoice(String name, final Collection values)
+	{
+		super(name, values);
+	}
 
 	/**
 	 * @param name

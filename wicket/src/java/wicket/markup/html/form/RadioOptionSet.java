@@ -97,13 +97,6 @@ public class RadioOptionSet extends FormComponent
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public final void updateModel()
-	{
-	}
-
-	/**
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
@@ -147,5 +140,12 @@ public class RadioOptionSet extends FormComponent
 
 		// Replace body
 		replaceComponentTagBody(markupStream, openTag, options.toString());
+	}
+
+	/**
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	protected final void updateModel()
+	{
 	}
 }
