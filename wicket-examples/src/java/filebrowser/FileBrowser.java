@@ -37,7 +37,6 @@ import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.image.Image;
-import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.tree.Filler;
 import com.voicetribe.wicket.markup.html.tree.Node;
 import com.voicetribe.wicket.markup.html.tree.Tree;
@@ -178,24 +177,16 @@ public class FileBrowser extends HtmlPage
 	           throw new RuntimeException("userObject == null");
 	       }
 	       File file = (File)userObject;
-//           TreeNodeLink expandCollapsLink = new TreeNodeLink("expandCollapsLink", fileTree, node)
-//           {
-//            public void linkClicked(RequestCycle cycle, Node node)
-//            {
-//                TreeStateCache state = fileTree.getTreeState();
-//                TreePath selection = state.findTreePath(userObject);
-//                fileTree.setExpandedState(selection, (!node.isExpanded())); // inverse
-//            }
-//           };
-	       Link expandCollapsLink = new Link("expandCollapsLink")
-           {
-	            public void linkClicked(RequestCycle cycle)
-	            {
-	                TreeStateCache state = fileTree.getTreeState();
-	                TreePath selection = state.findTreePath(userObject);
-	                fileTree.setExpandedState(selection, (!node.isExpanded())); // inverse
-	            }
-           };
+           TreeNodeLink expandCollapsLink = new TreeNodeLink(
+                    "expandCollapsLink", fileTree, node)
+            {
+                public void linkClicked(RequestCycle cycle, Node node)
+                {
+                    TreeStateCache state = fileTree.getTreeState();
+                    TreePath selection = state.findTreePath(userObject);
+                    fileTree.setExpandedState(selection, (!node.isExpanded())); // inverse
+                }
+            };
            expandCollapsLink.add(new Image("junctionImg", new Model(node)
             {
                 public Object getObject()
