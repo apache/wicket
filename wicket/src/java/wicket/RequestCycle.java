@@ -494,7 +494,7 @@ public abstract class RequestCycle
             {
                 // Hmmm, no page, which probably means we are rendering directely
                 // ourselves; as a fallthrough, we have to clear things up
-                FeedbackMessages.release(); 
+                FeedbackMessages.threadDetach(); 
             }
         }
         else
@@ -502,7 +502,7 @@ public abstract class RequestCycle
             // Clear the ui messages and reset the original component models
             // the components have had the possibility of rendering the messages,
             // and the messages are meant for 'one time use' only.
-            FeedbackMessages.release();
+            FeedbackMessages.threadDetach();
         }
         
         // Clear ThreadLocal reference

@@ -60,11 +60,6 @@ public final class FeedbackMessages
      */
     public static final class LevelComparator implements Comparator
     {
-        private static final int ASCENDING = 1;
-        private static final int DESCENDING = -1;
-        
-        /** Ascending / descending sign value. */
-        private final int sign;
 
         /**
          * Construct.
@@ -98,6 +93,11 @@ public final class FeedbackMessages
                 return 0;
             }
         }
+        
+        /** Ascending / descending sign value. */
+        private final int sign;
+        private static final int ASCENDING = 1;
+        private static final int DESCENDING = -1;
     }
 
     /**
@@ -105,11 +105,6 @@ public final class FeedbackMessages
      */
     private static class UIMessagesModel implements IModel
     {
-        /**
-         * level to narrow the model to. If undefined (the default),
-         * it is not used.
-         */
-        private int level = FeedbackMessage.UNDEFINED;
 
         /**
          * Construct.
@@ -172,14 +167,41 @@ public final class FeedbackMessages
                 throw new WicketRuntimeException("Invalid model type for FeedbackMessages");
             }
         }
+        /**
+         * level to narrow the model to. If undefined (the default),
+         * it is not used.
+         */
+        private int level = FeedbackMessage.UNDEFINED;
     }
 
     /**
-     * Hidden constructor; clients are not allowed to create instances as this
-     * class is managed by the framework.
+     * Adds a new ui message with level DEBUG to the current messages.
+     * @param reporter the reporting component
+     * @param message the actual message
      */
-    private FeedbackMessages()
+    public static void debug(Component reporter, String message)
     {
+        get().add(FeedbackMessage.debug(reporter, message));
+    }
+
+    /**
+     * Adds a new ui message with level ERROR to the current messages.
+     * @param reporter the reporting component
+     * @param message the actual message
+     */
+    public static void error(Component reporter, String message)
+    {
+        get().add(FeedbackMessage.error(reporter, message));
+    }
+
+    /**
+     * Adds a new ui message with level FATAL to the current messages.
+     * @param reporter the reporting component
+     * @param message the actual message
+     */
+    public static void fatal(Component reporter, String message)
+    {
+        get().add(FeedbackMessage.fatal(reporter, message));
     }
 
     /** 
@@ -204,27 +226,44 @@ public final class FeedbackMessages
     }
 
     /**
-     * Sets the messages for the current thread.
-     * @param messages the messages to use with the current thread
+     * Adds a new ui message with level INFO to the current messages.
+     * @param reporter the reporting component
+     * @param message the actual message
      */
-    static void set(FeedbackMessages messages)
+    public static void info(Component reporter, String message)
     {
-        if (current.get() != null) // that would be wrong
-        {
-            log.error("messages were allready set for this thread!" +
-            		" Either a former cleanup failed, or the current thread has illegal" +
-            		" access. Trying to release the current messages first.");
-            // try cleaning up
-            release();
-        }
-        else
-        {
-            if (log.isDebugEnabled())
-            {
-                log.debug(messages + " set for thread " + Thread.currentThread());
-            }
-        }
-        current.set(messages);
+        get().add(FeedbackMessage.info(reporter, message));
+    }
+
+    /**
+     * Gets the FeedbackMessages as an instance of {@link IModel}.
+     * @return the FeedbackMessages as an instance of {@link IModel}
+     */
+    public static IModel model()
+    {
+        return new UIMessagesModel();
+    }
+
+    /**
+     * Gets the FeedbackMessages as an instance of {@link IModel},
+     * narrowed down to the given level.
+     * @param level the level to narrow down to
+     * @return tthe FeedbackMessages as an instance of {@link IModel},
+     * narrowed down to the given level
+     */
+    public static IModel model(int level)
+    {
+        return new UIMessagesModel(level);
+    }
+
+    /**
+     * Adds a new ui message with level WARN to the current messages.
+     * @param reporter the reporting component
+     * @param message the actual message
+     */
+    public static void warn(Component reporter, String message)
+    {
+        get().add(FeedbackMessage.warn(reporter, message));
     }
 
     /**
@@ -232,7 +271,7 @@ public final class FeedbackMessages
      * reset the original models of the components that had theirs replaced
      * with decorator models. To be used by the framework only (package local).
      */
-    static void release()
+    static void threadDetach()
     {
         final FeedbackMessages currentMessages = (FeedbackMessages)current.get();
         if (currentMessages != null)
@@ -288,74 +327,35 @@ public final class FeedbackMessages
     }
 
     /**
-     * Gets the FeedbackMessages as an instance of {@link IModel}.
-     * @return the FeedbackMessages as an instance of {@link IModel}
+     * Sets the messages for the current thread.
+     * @param messages the messages to use with the current thread
      */
-    public static IModel model()
+    static void set(FeedbackMessages messages)
     {
-        return new UIMessagesModel();
+        if (current.get() != null) // that would be wrong
+        {
+            log.error("messages were allready set for this thread!" +
+            		" Either a former cleanup failed, or the current thread has illegal" +
+            		" access. Trying to release the current messages first.");
+            // try cleaning up
+            threadDetach();
+        }
+        else
+        {
+            if (log.isDebugEnabled())
+            {
+                log.debug(messages + " set for thread " + Thread.currentThread());
+            }
+        }
+        current.set(messages);
     }
 
     /**
-     * Gets the FeedbackMessages as an instance of {@link IModel},
-     * narrowed down to the given level.
-     * @param level the level to narrow down to
-     * @return tthe FeedbackMessages as an instance of {@link IModel},
-     * narrowed down to the given level
+     * Hidden constructor; clients are not allowed to create instances as this
+     * class is managed by the framework.
      */
-    public static IModel model(int level)
+    private FeedbackMessages()
     {
-        return new UIMessagesModel(level);
-    }
-
-    /**
-     * Adds a new ui message with level DEBUG to the current messages.
-     * @param reporter the reporting component
-     * @param message the actual message
-     */
-    public static void debug(Component reporter, String message)
-    {
-        get().add(FeedbackMessage.debug(reporter, message));
-    }
-
-    /**
-     * Adds a new ui message with level INFO to the current messages.
-     * @param reporter the reporting component
-     * @param message the actual message
-     */
-    public static void info(Component reporter, String message)
-    {
-        get().add(FeedbackMessage.info(reporter, message));
-    }
-
-    /**
-     * Adds a new ui message with level WARN to the current messages.
-     * @param reporter the reporting component
-     * @param message the actual message
-     */
-    public static void warn(Component reporter, String message)
-    {
-        get().add(FeedbackMessage.warn(reporter, message));
-    }
-
-    /**
-     * Adds a new ui message with level ERROR to the current messages.
-     * @param reporter the reporting component
-     * @param message the actual message
-     */
-    public static void error(Component reporter, String message)
-    {
-        get().add(FeedbackMessage.error(reporter, message));
-    }
-
-    /**
-     * Adds a new ui message with level FATAL to the current messages.
-     * @param reporter the reporting component
-     * @param message the actual message
-     */
-    public static void fatal(Component reporter, String message)
-    {
-        get().add(FeedbackMessage.fatal(reporter, message));
     }
 
     /**
@@ -378,105 +378,41 @@ public final class FeedbackMessages
     }
 
     /**
-     * Gets whether this list contains any messages.
-     * @return whether this list contains any messages
+     * Convenience method that gets a sub list of messages with messages that are
+     * of level ERROR or above (FATAL). This is the same as calling
+     * 'getMessages(FeedbackMessage.ERROR)'.
+     * @return the sub list of message with messages that are of level ERROR or above,
+     * or an empty list
      */
-    public boolean hasMessages()
+    public FeedbackMessages getErrorMessages()
     {
-        return messages != null && !messages.isEmpty();
+        return getMessages(FeedbackMessage.ERROR);
     }
 
     /**
-     * Convenience method that gets whether this list contains any messages with level
-     * ERROR or up. This is the same as
-     * calling 'hasMessages(FeedbackMessage.ERROR)'.
-     * @return whether this list contains any messages with level
-     * ERROR or up
+     * Convenience method that gets the set of reporters of messages that
+     * are of the ERROR level or above.
+     * @return the set of reporters of messages that are of the ERROR level or above
      */
-    public boolean hasErrorMessages()
-    {
-        return hasMessages(FeedbackMessage.ERROR);
-    }
-
-    /**
-     * Gets whether this list contains any messages with the given level or up.
-     * @param level the level
-     * @return whether this list contains any messages with the given level or up
-     */
-    public boolean hasMessages(final int level)
-    {
-        boolean errors = false;
-        if (hasMessages())
-        {
-            for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
-            {
-                final FeedbackMessage message = (FeedbackMessage)iterator.next();
-                if (message.isLevel(level))
-                {
-                    errors = true;
-                    break;
-                }
-            }
-        }
-        return errors;
-    }
-
-    /**
-     * Gets the list with messages (not sorted; the same ordering as they were added).
-     * @return the list with messages
-     */
-    public List getMessages()
-    {
-        return (this.messages != null) ? Collections.unmodifiableList(this.messages) : 
-            Collections.EMPTY_LIST;
-    }
-
-    /**
-     * Gets the list with messages sorted on level ascending
-     * (from UNDEFINED/ DEBUG up to FATAL).
-     * @return the list with messages
-     */
-    public List getMessagesAscending()
-    {
-        return getMessagesSorted(true);
-    }
-
-    /**
-     * Gets the list with messages sorted on level descending
-     * (from FATAL down to UNDEFINED/ DEBUG).
-     * @return the list with messages
-     */
-    public List getMessagesDescending()
-    {
-        return getMessagesSorted(false);
-    }
-
-    /**
-     * Gets the messages sorted.
-     * @param ascending Whether to sort ascending (true) or descending (false)
-     * @return sorted list
-     */
-    private List getMessagesSorted(boolean ascending)
+    public Set getErrorReporters()
     {
         if (messages != null)
         {
-	        final List sorted = new ArrayList(messages);
-	        Collections.sort(sorted, new LevelComparator(ascending));
-	        return sorted;
+            final Set subset = new HashSet();
+            for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+            {
+                final FeedbackMessage message = (FeedbackMessage)iterator.next();
+                if (message.isLevel(FeedbackMessage.ERROR))
+                {
+                    subset.add(message.getReporter());
+                }
+            }
+            return subset;
         }
         else
         {
-            return Collections.EMPTY_LIST;
+            return Collections.EMPTY_SET;
         }
-    }
-
-    /**
-     * Convenience method to get the iterator for the currently registered messages.
-     * @return the iterator for the currently registered messages
-     */
-    public Iterator iterator()
-    {
-        return getMessages().iterator();
     }
 
     /**
@@ -508,58 +444,13 @@ public final class FeedbackMessages
     }
 
     /**
-     * Looks up whether the given component registered a message with this list.
-     * @param component the component to look up whether it registered a message
-     * @return whether the given component registered a message with this list
+     * Gets the list with messages (not sorted; the same ordering as they were added).
+     * @return the list with messages
      */
-    public boolean hasMessageFor(Component component)
+    public List getMessages()
     {
-        return getMessageFor(component) != null;
-    }
-
-    /**
-     * Convenience method that looks up whether the given component registered a
-     * message with this list with the level ERROR.
-     * @param component the component to look up whether it registered a message
-     * @return whether the given component registered a message with
-     * this list with level ERROR
-     */
-    public boolean hasErrorMessageFor(Component component)
-    {
-        return hasMessageFor(component, FeedbackMessage.ERROR);
-    }
-
-    /**
-     * Looks up whether the given component registered a message with this list with the
-     * given level.
-     * @param component the component to look up whether it registered a message
-     * @param level the level of the message
-     * @return whether the given component registered a message with this list
-     * with the given level
-     */
-    public boolean hasMessageFor(Component component, int level)
-    {
-        FeedbackMessage message = getMessageFor(component);
-        if (message != null)
-        {
-            return (message.isLevel(level));
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Convenience method that gets a sub list of messages with messages that are
-     * of level ERROR or above (FATAL). This is the same as calling
-     * 'getMessages(FeedbackMessage.ERROR)'.
-     * @return the sub list of message with messages that are of level ERROR or above,
-     * or an empty list
-     */
-    public FeedbackMessages getErrorMessages()
-    {
-        return getMessages(FeedbackMessage.ERROR);
+        return (this.messages != null) ? Collections.unmodifiableList(this.messages) : 
+            Collections.EMPTY_LIST;
     }
 
     /**
@@ -590,40 +481,23 @@ public final class FeedbackMessages
     }
 
     /**
-     * Sets the list with messages.
-     * @param messages the messages
-     * @return This
+     * Gets the list with messages sorted on level ascending
+     * (from UNDEFINED/ DEBUG up to FATAL).
+     * @return the list with messages
      */
-    private FeedbackMessages setMessages(List messages)
+    public List getMessagesAscending()
     {
-        this.messages = messages;
-        return this;
+        return getMessagesSorted(true);
     }
 
     /**
-     * Convenience method that gets the set of reporters of messages that
-     * are of the ERROR level or above.
-     * @return the set of reporters of messages that are of the ERROR level or above
+     * Gets the list with messages sorted on level descending
+     * (from FATAL down to UNDEFINED/ DEBUG).
+     * @return the list with messages
      */
-    public Set getErrorReporters()
+    public List getMessagesDescending()
     {
-        if (messages != null)
-        {
-            final Set subset = new HashSet();
-            for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
-            {
-                final FeedbackMessage message = (FeedbackMessage)iterator.next();
-                if (message.isLevel(FeedbackMessage.ERROR))
-                {
-                    subset.add(message.getReporter());
-                }
-            }
-            return subset;
-        }
-        else
-        {
-            return Collections.EMPTY_SET;
-        }
+        return getMessagesSorted(false);
     }
 
     /**
@@ -653,10 +527,136 @@ public final class FeedbackMessages
     }
 
     /**
+     * Convenience method that looks up whether the given component registered a
+     * message with this list with the level ERROR.
+     * @param component the component to look up whether it registered a message
+     * @return whether the given component registered a message with
+     * this list with level ERROR
+     */
+    public boolean hasErrorMessageFor(Component component)
+    {
+        return hasMessageFor(component, FeedbackMessage.ERROR);
+    }
+
+    /**
+     * Convenience method that gets whether this list contains any messages with level
+     * ERROR or up. This is the same as
+     * calling 'hasMessages(FeedbackMessage.ERROR)'.
+     * @return whether this list contains any messages with level
+     * ERROR or up
+     */
+    public boolean hasErrorMessages()
+    {
+        return hasMessages(FeedbackMessage.ERROR);
+    }
+
+    /**
+     * Looks up whether the given component registered a message with this list.
+     * @param component the component to look up whether it registered a message
+     * @return whether the given component registered a message with this list
+     */
+    public boolean hasMessageFor(Component component)
+    {
+        return getMessageFor(component) != null;
+    }
+
+    /**
+     * Looks up whether the given component registered a message with this list with the
+     * given level.
+     * @param component the component to look up whether it registered a message
+     * @param level the level of the message
+     * @return whether the given component registered a message with this list
+     * with the given level
+     */
+    public boolean hasMessageFor(Component component, int level)
+    {
+        FeedbackMessage message = getMessageFor(component);
+        if (message != null)
+        {
+            return (message.isLevel(level));
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Gets whether this list contains any messages.
+     * @return whether this list contains any messages
+     */
+    public boolean hasMessages()
+    {
+        return messages != null && !messages.isEmpty();
+    }
+
+    /**
+     * Gets whether this list contains any messages with the given level or up.
+     * @param level the level
+     * @return whether this list contains any messages with the given level or up
+     */
+    public boolean hasMessages(final int level)
+    {
+        boolean errors = false;
+        if (hasMessages())
+        {
+            for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+            {
+                final FeedbackMessage message = (FeedbackMessage)iterator.next();
+                if (message.isLevel(level))
+                {
+                    errors = true;
+                    break;
+                }
+            }
+        }
+        return errors;
+    }
+
+    /**
+     * Convenience method to get the iterator for the currently registered messages.
+     * @return the iterator for the currently registered messages
+     */
+    public Iterator iterator()
+    {
+        return getMessages().iterator();
+    }
+
+    /**
      * @see java.lang.Object#toString()
      */
     public String toString()
     {
         return "[feedbackMessages = " + StringList.valueOf(getMessages()) + "]";
+    }
+
+    /**
+     * Gets the messages sorted.
+     * @param ascending Whether to sort ascending (true) or descending (false)
+     * @return sorted list
+     */
+    private List getMessagesSorted(boolean ascending)
+    {
+        if (messages != null)
+        {
+	        final List sorted = new ArrayList(messages);
+	        Collections.sort(sorted, new LevelComparator(ascending));
+	        return sorted;
+        }
+        else
+        {
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    /**
+     * Sets the list with messages.
+     * @param messages the messages
+     * @return This
+     */
+    private FeedbackMessages setMessages(List messages)
+    {
+        this.messages = messages;
+        return this;
     }
 }
