@@ -34,7 +34,7 @@ public final class ConversionUtils
      * Construct.
      * @param registry the converter registry
      */
-    ConversionUtils(ConverterRegistry registry)
+    public ConversionUtils(ConverterRegistry registry)
     {
         this.converterRegistry = registry;
     }
