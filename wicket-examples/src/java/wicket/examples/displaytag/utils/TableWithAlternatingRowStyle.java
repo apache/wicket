@@ -66,13 +66,13 @@ public abstract class TableWithAlternatingRowStyle extends ListView
         // every other Cell.
         return new ListItem(index, this)
         {
-            protected void handleComponentTag(final ComponentTag tag)
+            protected void onComponentTag(final ComponentTag tag)
             {
                 // add/modify the attribute controlling the CSS style
                 tag.put("class", this.isEvenIndex() ? "even" : "odd");
                 
                 // continue with default behaviour
-                super.handleComponentTag(tag);
+                super.onComponentTag(tag);
             }
         };
     }

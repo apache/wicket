@@ -54,7 +54,7 @@ public class PageableListViewNavigator extends Panel
 		add(new Label("headline", null)
 		{
 			// Dynamically - at runtime - create the text
-			protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+			protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 			{
 				String text = getHeadlineText(pageableListView);
 				replaceComponentTagBody(markupStream, openTag, text);
@@ -66,17 +66,6 @@ public class PageableListViewNavigator extends Panel
 		add(new PageableListViewNavigationIncrementLink("prev", pageableListView, -1));
 		add(new PageableListViewNavigationIncrementLink("next", pageableListView, 1));
 		add(new PageableListViewNavigationLink("last", pageableListView, pageableListView.getPageCount() - 1));
-	}
-
-	/**
-	 * Create a new PageableListViewNavigation. May be subclassed to make us of specialized
-	 * PageableListViewNavigation.
-	 * @param pageableListView the pageable list view
-	 * @return the navigation object
-	 */
-	protected PageableListViewNavigation newNavigation(final PageableListView pageableListView)
-	{
-		return new PageableListViewNavigation("navigation", pageableListView);
 	}
 
 	/**
@@ -93,5 +82,16 @@ public class PageableListViewNavigator extends Panel
 						String.valueOf(firstListItem + pageableListView.getRowsPerPage())).append(".");
 
 		return buf.toString();
+	}
+
+	/**
+	 * Create a new PageableListViewNavigation. May be subclassed to make us of specialized
+	 * PageableListViewNavigation.
+	 * @param pageableListView the pageable list view
+	 * @return the navigation object
+	 */
+	protected PageableListViewNavigation newNavigation(final PageableListView pageableListView)
+	{
+		return new PageableListViewNavigation("navigation", pageableListView);
 	}
 }

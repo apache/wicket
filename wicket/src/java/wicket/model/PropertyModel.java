@@ -23,7 +23,6 @@ import ognl.DefaultTypeConverter;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
-import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.util.string.Strings;
 
@@ -98,8 +97,8 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	/** Ognl context wrapper object. It contains the type converter. */
 	private transient OgnlContext context;
 
-	/** The converter provider to use to get converters to be used by this model. */
-	private Component converterProvider;
+	/** The converter source for converters to be used by this model. */
+	private IConverterSource converterSource;
 
 	/** Ognl expression for property access. */
 	private final String expression;
@@ -162,7 +161,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 			{
 				return null;
 			}
-			return converterProvider.getConverter().convert(value, toType);
+			return converterSource.getConverter().convert(value, toType);
 		}
 
 		/**
@@ -293,15 +292,11 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	}
 
 	/**
-	 * Set the provider of the converter to be used by this property model.
-	 * 
-	 * @param component
-	 *            the converter provider component
-	 * @see wicket.model.IConvertible#setConverterProvider(wicket.Component)
+	 * @see wicket.model.IConvertible#setConverterSource(IConverterSource)
 	 */
-	public void setConverterProvider(final Component component)
+	public void setConverterSource(final IConverterSource converterSource)
 	{
-		this.converterProvider = component;
+		this.converterSource = converterSource;
 	}
 
 	/**
@@ -330,7 +325,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 					&& (!((String)object).trim().equals("")))
 			{
 				// Convert to set type
-				object = converterProvider.getConverter().convert(object, propertyType);
+				object = converterSource.getConverter().convert(object, propertyType);
 			}
 
 			// Let ognl set the value

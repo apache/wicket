@@ -48,19 +48,19 @@ public class MyLabel extends WebComponent
     /**
      * Allows modification of component tag.
      * @param tag The tag to modify
-     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+     * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
      */
-    protected final void handleComponentTag(final ComponentTag tag)
+    protected final void onComponentTag(final ComponentTag tag)
     {
         checkComponentTag(tag, "component");
-        super.handleComponentTag(tag);
+        super.onComponentTag(tag);
     }
 
     /**
-     * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
+     * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
      *      wicket.markup.ComponentTag)
      */
-    protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
         replaceComponentTagBody(markupStream, openTag, text);
     }

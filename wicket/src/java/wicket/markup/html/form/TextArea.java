@@ -55,9 +55,9 @@ public class TextArea extends AbstractTextComponent
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
-	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String bodyContent;
 		if (getInvalidInput() == null) 

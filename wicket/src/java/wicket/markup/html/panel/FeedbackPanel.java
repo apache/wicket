@@ -62,12 +62,12 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 		 * Removes all subcomponents on each render pass, to ensure that the
 		 * dynamic model is always read again.
 		 * 
-		 * @see wicket.Component#handleRender()
+		 * @see wicket.Component#onRender()
 		 */
-		protected void handleRender()
+		protected void onRender()
 		{
             setModel(getPage().getFeedbackMessages().model());
-			super.handleRender();
+			super.onRender();
 			removeAll();
 		}
         

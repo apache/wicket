@@ -79,18 +79,18 @@ abstract class AbstractTextComponent extends FormComponent
     }
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#handleInvalid()
+	 * @see wicket.markup.html.form.FormComponent#onInvalid()
 	 */
-	protected void handleInvalid()
+	protected void onInvalid()
 	{
 		// Store the user input for form repopulation
 		invalidInput = getRequestString();
 	}
  
     /**
-     * @see wicket.markup.html.form.FormComponent#handleValid()
+     * @see wicket.markup.html.form.FormComponent#onValid()
      */
-    protected void handleValid()
+    protected void onValid()
     {
         invalidInput = null;     	
     }

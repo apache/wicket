@@ -135,13 +135,13 @@ public class PasswordTextField extends TextField
     /**
 	 * Processes the component tag.
 	 * @param tag Tag to modify
-     * @see wicket.Component#handleComponentTag(ComponentTag)
+     * @see wicket.Component#onComponentTag(ComponentTag)
      */
-    protected final void handleComponentTag(final ComponentTag tag)
+    protected final void onComponentTag(final ComponentTag tag)
     {
         checkComponentTag(tag, "input");
         checkComponentTagAttribute(tag, "type", "password");
-        super.handleComponentTag(tag);
+        super.onComponentTag(tag);
 		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
     }
 }

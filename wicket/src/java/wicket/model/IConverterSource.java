@@ -15,20 +15,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.util.time;
+package wicket.model;
+
+import wicket.util.convert.IConverter;
 
 /**
- * A timeframe source produces time frame values. The value returned by a
- * timeframe source may vary over time.
- * 
- * @see wicket.util.time.TimeFrame
+ * Interface for objects that can produce a converter for a client that needs
+ * one to do conversions.
  * 
  * @author Jonathan Locke
  */
-public interface ITimeFrameSource
+public interface IConverterSource
 {
 	/**
-	 * @return Gets current time frame value
+	 * @return The converter
 	 */
-	public TimeFrame getTimeFrame();
+	public IConverter getConverter();
 }

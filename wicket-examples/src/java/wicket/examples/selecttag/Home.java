@@ -48,9 +48,9 @@ public class Home extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleValidSubmit()
+		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
-		public void handleValidSubmit()
+		public void onSubmit()
 		{
 			getRequestCycle().setRedirect(true);
 			getRequestCycle().setPage(Home.this);

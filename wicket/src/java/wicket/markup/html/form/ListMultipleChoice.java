@@ -174,11 +174,11 @@ public class ListMultipleChoice extends AbstractChoice
 	 * 
 	 * @param tag
 	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected final void onComponentTag(final ComponentTag tag)
 	{
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 		tag.put("multiple", true);
 	}
 

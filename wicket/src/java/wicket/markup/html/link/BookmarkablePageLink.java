@@ -75,9 +75,9 @@ public final class BookmarkablePageLink extends Link
     /**
      * Called when a link is clicked; this is here to satisfy the interface,
      * as bookmarkable links will be dispatched by the handling servlet.
-     * @see wicket.markup.html.link.Link#linkClicked()
+     * @see wicket.markup.html.link.Link#onLinkClicked()
      */
-    public void linkClicked()
+    public void onLinkClicked()
     {
         // Bookmarkable links do not have a click handler.
         // Instead they are dispatched by the request handling servlet.

@@ -77,13 +77,13 @@ public class CheckBox extends FormComponent
 	/**
 	 * Processes the component tag.
 	 * @param tag Tag to modify
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected final void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 
 		Object value = getModelObject();
 

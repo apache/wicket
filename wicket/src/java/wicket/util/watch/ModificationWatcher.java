@@ -46,6 +46,19 @@ public final class ModificationWatcher
 	/** Maps Modifiable objects to Entry objects */
 	private final Map modifiableToEntry = new HashMap();
 
+	// MarkupContainer class for holding modifiable entries to watch
+	private static final class Entry
+	{
+
+		// The most recent lastModificationTime polled on the object
+		Time lastModifiedTime;
+
+		// The set of listeners to call when the modifiable changes
+		final ChangeListenerSet listeners = new ChangeListenerSet();
+		// The modifiable thing
+		IModifiable modifiable;
+	}
+
 	/**
 	 * For two-phase construction
 	 */
@@ -62,47 +75,6 @@ public final class ModificationWatcher
 	public ModificationWatcher(final Duration pollFrequency)
 	{
 		start(pollFrequency);
-	}
-
-	/**
-	 * Start watching at a given polling rate
-	 * 
-	 * @param pollFrequency
-	 *            The poll rate
-	 */
-	public void start(final Duration pollFrequency)
-	{
-		// Construct task with the given polling frequency
-		final Task task = new Task("ModificationWatcher");
-
-		task.run(pollFrequency, new ICode()
-		{
-			public void run(final Log log)
-			{
-				// Iterate over a copy of the list of entries to avoid concurrent
-				// modification problems without the associated liveness issues
-				// of holding a lock while potentially polling file times!
-				for (final Iterator iterator = new ArrayList(modifiableToEntry.values()).iterator(); iterator
-						.hasNext();)
-				{
-					// Get next entry
-					final Entry entry = (Entry)iterator.next();
-
-					// If the modifiable has been modified after the last known
-					// modification time
-					final Time modifiableLastModified = entry.modifiable.lastModifiedTime();
-
-					if (modifiableLastModified.after(entry.lastModifiedTime))
-					{
-						// Notify all listeners that the modifiable was modified
-						entry.listeners.notifyListeners();
-
-						// Update timestamp
-						entry.lastModifiedTime = modifiableLastModified;
-					}
-				}
-			}
-		});
 	}
 
 	/**
@@ -147,18 +119,45 @@ public final class ModificationWatcher
 		}
 	}
 
-	// MarkupContainer class for holding modifiable entries to watch
-	private static final class Entry
+	/**
+	 * Start watching at a given polling rate
+	 * 
+	 * @param pollFrequency
+	 *            The poll rate
+	 */
+	public void start(final Duration pollFrequency)
 	{
-		// The modifiable thing
-		IModifiable modifiable;
+		// Construct task with the given polling frequency
+		final Task task = new Task("ModificationWatcher");
 
-		// The most recent lastModificationTime polled on the object
-		Time lastModifiedTime;
+		task.run(pollFrequency, new ICode()
+		{
+			public void run(final Log log)
+			{
+				// Iterate over a copy of the list of entries to avoid
+				// concurrent
+				// modification problems without the associated liveness issues
+				// of holding a lock while potentially polling file times!
+				for (final Iterator iterator = new ArrayList(modifiableToEntry.values()).iterator(); iterator
+						.hasNext();)
+				{
+					// Get next entry
+					final Entry entry = (Entry)iterator.next();
 
-		// The set of listeners to call when the modifiable changes
-		final ChangeListenerSet listeners = new ChangeListenerSet();
+					// If the modifiable has been modified after the last known
+					// modification time
+					final Time modifiableLastModified = entry.modifiable.lastModifiedTime();
+
+					if (modifiableLastModified.after(entry.lastModifiedTime))
+					{
+						// Notify all listeners that the modifiable was modified
+						entry.listeners.notifyListeners();
+
+						// Update timestamp
+						entry.lastModifiedTime = modifiableLastModified;
+					}
+				}
+			}
+		});
 	}
 }
-
-

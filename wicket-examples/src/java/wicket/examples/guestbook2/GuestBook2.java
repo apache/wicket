@@ -141,7 +141,7 @@ public class GuestBook2 extends WicketExamplePage
 		/**
 		 * Show the resulting valid edit.
 		 */
-		public final void handleValidSubmit()
+		public final void onSubmit()
 		{
 			// Construct a copy of the edited comment
 			final Comment newComment = new Comment(comment);

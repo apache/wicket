@@ -60,10 +60,10 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
     }
 
     /**
-     * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
+     * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
      *      wicket.markup.ComponentTag)
      */
-    protected void handleComponentTagBody(final MarkupStream markupStream,
+    protected void onComponentTagBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
         final String body = Strings.toMultilineMarkup(getModelObjectAsString());

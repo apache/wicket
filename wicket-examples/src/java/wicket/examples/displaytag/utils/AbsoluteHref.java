@@ -39,9 +39,9 @@ public class AbsoluteHref extends WebComponent
     }
     
     /**
-     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+     * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
      */
-    protected void handleComponentTag(ComponentTag tag)
+    protected void onComponentTag(ComponentTag tag)
     {
         String href = tag.getString("href");
         if (href.charAt(0) != '/')
@@ -58,14 +58,14 @@ public class AbsoluteHref extends WebComponent
             tag.put("href", href);
         }
         
-        super.handleComponentTag(tag);
+        super.onComponentTag(tag);
     }
 
     /**
      * 
-     * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+     * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected void handleComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+    protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
     {
     }
 }

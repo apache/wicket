@@ -81,10 +81,10 @@ public abstract class Border extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
+	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
-	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Save open tag for callback later to render body
 		this.openTag = openTag;

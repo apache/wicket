@@ -48,9 +48,9 @@ public class ExportLink extends Link
     }
     
     /**
-     * @see wicket.markup.html.link.AbstractLink#linkClicked()
+     * @see wicket.markup.html.link.AbstractLink#onLinkClicked()
      */
-    public void linkClicked()
+    public void onLinkClicked()
     {
         final RequestCycle cycle = getRequestCycle();
         

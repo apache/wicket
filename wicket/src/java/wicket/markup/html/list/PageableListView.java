@@ -36,6 +36,23 @@ public abstract class PageableListView extends ListView
 	private final int rowsPerPage;
 
 	/**
+     * Creates a pagable list view having the given number of rows per page that
+     * uses the provided object as a simple model.
+     * 
+     * @see wicket.Component#Component(String, Serializable)
+     * @param name
+     *            See Component constructor
+     * @param object
+     *            See Component constructor
+     * @param rowsPerPage
+     *            Number of rows to show on a page
+	 */
+	public PageableListView(String name, List object, int rowsPerPage)
+	{
+		this(name, (Serializable)object, rowsPerPage);
+	}
+
+	/**
 	 * Creates a pagable list view having the given number of rows per page that
 	 * uses the provided object as a simple model.
 	 * 
@@ -74,23 +91,6 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-     * Creates a pagable list view having the given number of rows per page that
-     * uses the provided object as a simple model.
-     * 
-     * @see wicket.Component#Component(String, Serializable)
-     * @param name
-     *            See Component constructor
-     * @param object
-     *            See Component constructor
-     * @param rowsPerPage
-     *            Number of rows to show on a page
-	 */
-	public PageableListView(String name, List object, int rowsPerPage)
-	{
-		this(name, (Serializable)object, rowsPerPage);
-	}
-
-	/**
 	 * Gets the index of the current page being displayed by this list view.
 	 * 
 	 * @return Returns the currentPage.
@@ -117,29 +117,6 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-	 * Sets the current page that this list view should show.
-	 * 
-	 * @param currentPage
-	 *            The currentPage to set.
-	 */
-	public final void setCurrentPage(final int currentPage)
-	{
-		if (currentPage < 0)
-		{
-			throw new IllegalArgumentException("Cannot set current page to " + currentPage);
-		}
-
-		int pageCount = getPageCount();
-		if (currentPage > 0 && (currentPage >= pageCount))
-		{
-			throw new IllegalArgumentException("Cannot set current page to " + currentPage
-					+ " because this pageable list view only has " + pageCount + " pages");
-		}
-
-		this.currentPage = currentPage;
-	}
-
-	/**
 	 * Get the maximum number of rows on each page.
 	 * 
 	 * @return the maximum number of rows on each page.
@@ -161,6 +138,29 @@ public abstract class PageableListView extends ListView
 		}
 
 		return super.getViewSize();
+	}
+
+	/**
+	 * Sets the current page that this list view should show.
+	 * 
+	 * @param currentPage
+	 *            The currentPage to set.
+	 */
+	public final void setCurrentPage(final int currentPage)
+	{
+		if (currentPage < 0)
+		{
+			throw new IllegalArgumentException("Cannot set current page to " + currentPage);
+		}
+
+		int pageCount = getPageCount();
+		if (currentPage > 0 && (currentPage >= pageCount))
+		{
+			throw new IllegalArgumentException("Cannot set current page to " + currentPage
+					+ " because this pageable list view only has " + pageCount + " pages");
+		}
+
+		this.currentPage = currentPage;
 	}
 
 	/**

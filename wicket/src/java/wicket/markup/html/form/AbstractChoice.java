@@ -103,7 +103,7 @@ abstract class AbstractChoice extends FormComponent
 	 * 
 	 * @return boolean
 	 */
-	public boolean isRenderNullOption()
+	public boolean getRenderNullOption()
 	{
 		return renderNullOption;
 	}
@@ -170,12 +170,12 @@ abstract class AbstractChoice extends FormComponent
 	 * 
 	 * @param tag
 	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "select");
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 	}
 
 	/**
@@ -185,15 +185,15 @@ abstract class AbstractChoice extends FormComponent
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
-	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final StringBuffer options = new StringBuffer();
 		final Object selected = getModelObject();
 		final List list = getValues();
 
-		if (selected == null && isRenderNullOption())
+		if (selected == null && getRenderNullOption())
 		{
 			final String chooseOne = getLocalizer().getString(getName() + ".null", this,
 					DEFAULT_NULL_OPTION_VALUE);

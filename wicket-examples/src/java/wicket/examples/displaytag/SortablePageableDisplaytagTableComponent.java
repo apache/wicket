@@ -116,7 +116,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         // Add a headline
         add(new Label("headline", null)
         {
-            protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+            protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
             {
                 int firstCell = table.getCurrentPage() * table.getRowsPerPage();
                 

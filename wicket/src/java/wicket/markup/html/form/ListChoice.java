@@ -155,11 +155,11 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected final void onComponentTag(final ComponentTag tag)
 	{
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 		tag.put("size", Math.min(maxRows, getValues().size()));
 	}
 

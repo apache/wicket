@@ -44,7 +44,7 @@ public class MockPage extends WebPage {
 			/** Serial Version ID */
 			private static final long serialVersionUID = 6609669501359176769L;
 
-			public void linkClicked() {
+			public void onLinkClicked() {
                 linkClickCount++;
 
                 // Redirect back to result to avoid refresh updating the link count

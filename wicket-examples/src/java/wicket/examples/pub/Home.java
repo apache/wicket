@@ -68,25 +68,25 @@ public final class Home extends WicketExamplePage
 
         // add a couple of links to be able to play around with the Locales
         add(new Link("goCanadian"){
-            public void linkClicked()
+            public void onLinkClicked()
             {
                 currentLocale = Locale.CANADA;
             }
         });
         add(new Link("goUS"){
-            public void linkClicked()
+            public void onLinkClicked()
             {
                 currentLocale = Locale.US;
             }
         });
         add(new Link("goDutch"){
-            public void linkClicked()
+            public void onLinkClicked()
             {
                 currentLocale = new Locale("nl", "NL");
             }
         });
         add(new Link("goGerman"){
-            public void linkClicked()
+            public void onLinkClicked()
             {
                 currentLocale = new Locale("de", "DE");
             }
@@ -94,9 +94,9 @@ public final class Home extends WicketExamplePage
     }
 
     /**
-     * @see wicket.MarkupContainer#handleRender()
+     * @see wicket.MarkupContainer#onRender()
      */
-    protected void handleRender()
+    protected void onRender()
     {
         final Session session = getSession();
 
@@ -107,7 +107,7 @@ public final class Home extends WicketExamplePage
         session.setLocale(currentLocale);
         try
         {
-            super.handleRender();
+            super.onRender();
         }
         finally
         {

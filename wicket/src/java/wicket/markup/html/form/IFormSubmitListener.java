@@ -30,5 +30,5 @@ public interface IFormSubmitListener extends IRequestListener
     /**
      * Called when a form is submitted
      */
-    public void formSubmitted();
+    public void onFormSubmitted();
 }

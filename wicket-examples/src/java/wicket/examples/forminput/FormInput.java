@@ -70,7 +70,7 @@ public class FormInput extends WicketExamplePage
 		add(new LocaleSelect("localeSelect", this, "currentLocale", ALL_LOCALES));
 		add(new Link("defaultLocaleLink")
 		{
-			public void linkClicked()
+			public void onLinkClicked()
 			{
 				// Get locale of request
 				final Locale requestLocale = getRequest().getLocale();
@@ -146,7 +146,7 @@ public class FormInput extends WicketExamplePage
             
 			add(new OnClickLink("resetButton")
 			{
-				public void linkClicked()
+				public void onLinkClicked()
 				{
 					testInputObject = new TestInputObject();
 				}
@@ -154,9 +154,9 @@ public class FormInput extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleValidSubmit()
+		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
-		public void handleValidSubmit()
+		public void onSubmit()
 		{
 			// Everything went well; just display a message
 			info("Saved model " + testInputObject);
@@ -186,9 +186,9 @@ public class FormInput extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.markup.html.form.DropDownChoice#selectionChanged(java.lang.Object)
+		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
-		public void selectionChanged(Object newSelection)
+		public void onSelectionChanged(Object newSelection)
 		{
 			getSession().setLocale((Locale)newSelection);
 		}

@@ -58,7 +58,7 @@ public abstract class WebComponent extends Component
 	/**
 	 * Renders this component.
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 		renderComponent(findMarkupStream());
 	}

@@ -51,8 +51,8 @@ import wicket.util.string.Strings;
  * models, simply call validate().
  * <p>
  * If you want to do something when validation errors occur you can override
- * handleValidationErrors(), but if you do, you probably will want to call
- * super.handleValidationErrors() to get the default handling to occur.
+ * onError(), but if you do, you probably will want to call super.onError() to
+ * get the default handling to occur.
  * <p>
  * To get form components to persist their values for users via cookies, simply
  * call setPersistent(true) on the form component.
@@ -125,12 +125,12 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 					if (!formComponent.isValid())
 					{
 						// tell component to deal with invalidity
-						formComponent.handleInvalid();
+						formComponent.onInvalid();
 					}
 					else
 					{
 						// tell component that it is valid now
-						formComponent.handleValid();
+						formComponent.onValid();
 					}
 
 					// Continue until the end
@@ -201,25 +201,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * Handles form submissions. By default, this method simply calls validate()
-	 * to validate the form and update the model.
-	 * 
-	 * @see Form#validate()
-	 */
-	public void formSubmitted()
-	{
-		final int buttons = countButtons();
-		if (buttons <= 1)
-		{
-			validate();
-		}
-		else if (buttons > 1)
-		{
-			invokeButtonClicked();
-		}
-	}
-
-	/**
 	 * Gets the delegate to be used for execution of validation of this form.
 	 * 
 	 * @return the delegate to be used for execution of validation of this form
@@ -230,7 +211,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Retrieves FormComponent values related to the page using the persister
 	 * and assign the values to the FormComponent. Thus initializing them.
@@ -261,6 +242,25 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 				return CONTINUE_TRAVERSAL;
 			}
 		});
+	}
+
+	/**
+	 * Handles form submissions. By default, this method simply calls validate()
+	 * to validate the form and update the model.
+	 * 
+	 * @see Form#validate()
+	 */
+	public void onFormSubmitted()
+	{
+		final int buttons = countButtons();
+		if (buttons <= 1)
+		{
+			validate();
+		}
+		else if (buttons > 1)
+		{
+			invokeButtonClicked();
+		}
 	}
 
 	/**
@@ -310,12 +310,12 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "form");
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 		tag.put("method", "POST");
 		String url = getRequestCycle().urlFor(Form.this, IFormSubmitListener.class);
 		url = url.replaceAll("&", "&amp;");
@@ -327,7 +327,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 * asked to do their part of error handling, and after that, the registered
 	 * (if any) error handler of this form is called.
 	 */
-	protected void handleValidationErrors()
+	protected void onError()
 	{
 		// Traverse children of this form, calling validationError() on any
 		// components implementing IValidationFeedback.
@@ -353,15 +353,15 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	/**
 	 * Implemented by subclasses to deal with form submits.
 	 */
-	protected abstract void handleValidSubmit();
+	protected abstract void onSubmit();
 
 	/**
 	 * Validates the form and updates the models of form components. If the form
 	 * validates successfully, handleValidSubmit() is called. If not,
 	 * handleErrors() is called.
 	 * 
-	 * @see Form#handleValidSubmit()
-	 * @see Form#handleValidationErrors()
+	 * @see Form#onSubmit()
+	 * @see Form#onError()
 	 */
 	protected final void validate()
 	{
@@ -384,12 +384,12 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		if (hasError())
 		{
 			// handle those errors
-			handleValidationErrors();
+			onError();
 		}
 		else
 		{
 			// Model was successfully updated with valid data
-			handleValidSubmit();
+			onSubmit();
 		}
 	}
 

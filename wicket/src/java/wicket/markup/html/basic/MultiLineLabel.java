@@ -56,9 +56,9 @@ public class MultiLineLabel extends WebComponent
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String body = Strings.toMultilineMarkup(getModelObjectAsString());
 		replaceComponentTagBody(markupStream, openTag, body);

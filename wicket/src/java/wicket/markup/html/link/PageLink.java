@@ -99,9 +99,9 @@ public class PageLink extends Link
      * Handles a link click by asking for a concrete Page instance through the 
      * IPageLink.getPage() delayed linking interface.  This call will normally 
      * cause the destination page to be created. 
-     * @see wicket.markup.html.link.ILinkListener#linkClicked()
+     * @see wicket.markup.html.link.ILinkListener#onLinkClicked()
      */
-    public final void linkClicked()
+    public final void onLinkClicked()
     {
         // Set page source's page as response page
         getRequestCycle().setPage(pageLink.getPage());

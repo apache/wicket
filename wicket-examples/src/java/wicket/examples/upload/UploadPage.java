@@ -134,7 +134,7 @@ public class UploadPage extends WicketExamplePage
             listItem.add(new Label("file", fileName));
             listItem.add(new Link("delete") {
                 
-                public void linkClicked()
+                public void onLinkClicked()
                 {
                     File toDelete = new File(tempDir, fileName);
                     log.info("delete " + toDelete);

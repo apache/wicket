@@ -56,67 +56,11 @@ public final class Resource implements IResource, IModifiable
     /** Any associated file */
     private File file;
 
-    /** Any resource location */
-    private URL url;
-
     /** Resource stream */
     private InputStream inputStream;
 
-    /**
-     * Private constructor to force use of static factory methods.
-     */
-    private Resource()
-    {
-    }
-
-    /**
-     * Private constructor to force use of static factory methods.
-     * @param file File containing resource
-     */
-    private Resource(final File file)
-    {
-        this.file = file;
-    }
-
-    /**
-     * Private constructor to force use of static factory methods.
-     * @param url URL of resource
-     */
-    private Resource(final URL url)
-    {
-        // Get filename from URL
-        String filename = url.getFile();
-
-        // If there is a filename
-        if (filename != null)
-        {
-            // If a file with the given name exists
-            final File file = new File(filename);
-
-            if (file.exists())
-            {
-                // save that file for future checking
-                this.file = file;
-            }
-        }
-
-        // Save URL
-        this.url = url;
-    }
-
-    /**
-     * Finds a Resource with a given class name and extension
-     * @param classname A fully qualified class name with dotted separators, 
-     * such as "com.whatever.MyPage"
-     * @param extension The resource extension including '.', such as ".html"
-     * @return The Resource, or null if it does not exist
-     */
-    public static Resource locate(final String classname, final String extension)
-    {
-        String filename = Strings.replaceAll(classname, ".", "/") + extension;
-        final URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
-        return url != null ? new Resource(url) : null;
-    }
+    /** Any resource location */
+    private URL url;
 
     /**
      * Locate a resource based on a class and an extension.
@@ -251,6 +195,62 @@ public final class Resource implements IResource, IModifiable
     }
 
     /**
+     * Finds a Resource with a given class name and extension
+     * @param classname A fully qualified class name with dotted separators, 
+     * such as "com.whatever.MyPage"
+     * @param extension The resource extension including '.', such as ".html"
+     * @return The Resource, or null if it does not exist
+     */
+    public static Resource locate(final String classname, final String extension)
+    {
+        String filename = Strings.replaceAll(classname, ".", "/") + extension;
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
+        return url != null ? new Resource(url) : null;
+    }
+
+    /**
+     * Private constructor to force use of static factory methods.
+     */
+    private Resource()
+    {
+    }
+
+    /**
+     * Private constructor to force use of static factory methods.
+     * @param file File containing resource
+     */
+    private Resource(final File file)
+    {
+        this.file = file;
+    }
+
+    /**
+     * Private constructor to force use of static factory methods.
+     * @param url URL of resource
+     */
+    private Resource(final URL url)
+    {
+        // Get filename from URL
+        String filename = url.getFile();
+
+        // If there is a filename
+        if (filename != null)
+        {
+            // If a file with the given name exists
+            final File file = new File(filename);
+
+            if (file.exists())
+            {
+                // save that file for future checking
+                this.file = file;
+            }
+        }
+
+        // Save URL
+        this.url = url;
+    }
+
+    /**
      * Closes this resource.
      * @throws IOException
      */
@@ -261,14 +261,6 @@ public final class Resource implements IResource, IModifiable
             inputStream.close();
             inputStream = null;
         }
-    }
-
-    /**
-     * @return The file this resource resides in, if any.
-     */
-    public File getFile()
-    {
-        return file;
     }
 
     /**
@@ -284,6 +276,14 @@ public final class Resource implements IResource, IModifiable
         {
             return Strings.lastPathComponent(url.getPath(), '.');
         }
+    }
+
+    /**
+     * @return The file this resource resides in, if any.
+     */
+    public File getFile()
+    {
+        return file;
     }
 
     /**

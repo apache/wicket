@@ -51,7 +51,7 @@ public class DummyComponent extends Component
 	/**
 	 * Implementation which renders this component.
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 	}
 

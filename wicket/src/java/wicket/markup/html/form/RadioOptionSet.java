@@ -104,9 +104,9 @@ public class RadioOptionSet extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Buffer to hold generated body
 		final StringBuffer options = new StringBuffer();

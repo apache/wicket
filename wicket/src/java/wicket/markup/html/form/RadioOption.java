@@ -86,10 +86,10 @@ public class RadioOption extends FormComponent
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#handleComponentTagBody(wicket.markup.MarkupStream,
+	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
-	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String displayLabel;
 
@@ -108,16 +108,16 @@ public class RadioOption extends FormComponent
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected final void onComponentTag(final ComponentTag tag)
 	{
 		// Check that this option is attached to a radio input
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "radio");
 
 		// Let superclass do whatever
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 
 		// Find parent RadioChoice
 		final RadioChoice parent = (RadioChoice)findParent(RadioChoice.class);

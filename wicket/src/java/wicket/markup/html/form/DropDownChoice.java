@@ -94,27 +94,9 @@ public class DropDownChoice extends AbstractChoice
 	/**
 	 * Called when a selection changes.
 	 */
-	public final void selectionChanged()
+	public final void onSelectionChanged()
 	{
-		selectionChanged(internalUpdateModel());
-	}
-
-	/**
-	 * Template method that can be overriden by clients that implement
-	 * IOnChangeListener to be notified by onChange events of a select element.
-	 * This method does nothing by default.
-	 * <p>
-	 * Called when a option is selected of a dropdown list that wants to be
-	 * notified of this event. This method is to be implemented by clients that
-	 * want to be notified of selection events.
-	 * 
-	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is
-	 *            the same as you would get by calling getModelObject() if the
-	 *            new selection were current
-	 */
-	public void selectionChanged(final Object newSelection)
-	{
+		onSelectionChanged(internalUpdateModel());
 	}
 
 	/**
@@ -148,9 +130,9 @@ public class DropDownChoice extends AbstractChoice
 	 * 
 	 * @param tag
 	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		if (this instanceof IOnChangeListener)
 		{
@@ -161,7 +143,25 @@ public class DropDownChoice extends AbstractChoice
 			tag.put("onChange", "location.href='" + url + "&amp;" + getPath()
 					+ "=' + this.options[this.selectedIndex].value;");
 		}
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
+	}
+
+	/**
+	 * Template method that can be overriden by clients that implement
+	 * IOnChangeListener to be notified by onChange events of a select element.
+	 * This method does nothing by default.
+	 * <p>
+	 * Called when a option is selected of a dropdown list that wants to be
+	 * notified of this event. This method is to be implemented by clients that
+	 * want to be notified of selection events.
+	 * 
+	 * @param newSelection
+	 *            The newly selected object of the backing model NOTE this is
+	 *            the same as you would get by calling getModelObject() if the
+	 *            new selection were current
+	 */
+	protected void onSelectionChanged(final Object newSelection)
+	{
 	}
 
 	/**

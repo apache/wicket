@@ -86,9 +86,9 @@ public class HelloMozilla extends WebPage
     	}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleValidSubmit()
+		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
-		public void handleValidSubmit()
+		public void onSubmit()
 		{
 			// we just let our property model handle the updating
 		}

@@ -50,7 +50,7 @@ public class Win extends WicketExamplePage {
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public void linkClicked() {
+			public void onLinkClicked() {
                 Hangman hangman = (Hangman)guessPage.getModelObject();
                 hangman.newGame();
                 guessPage.resetLetters();
