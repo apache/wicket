@@ -20,7 +20,6 @@ public class MyTree extends IndentTree
 	 * Construct.
 	 * @param componentName The name of this container
 	 * @param model the tree model
-	 * @param makeTreeModelUnique whether to make the userObject nodes unique
 	 */
 	public MyTree(String componentName, TreeModel model)
 	{
