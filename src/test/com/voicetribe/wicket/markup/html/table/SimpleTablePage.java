@@ -40,31 +40,13 @@ public class SimpleTablePage extends HtmlPage {
         list.add("one");
         list.add("two");
         list.add("three");
-        add(new SimpleTable("table", list));
-    }
-
-    /** simple table. */
-    class SimpleTable extends Table
-    {
-
-        /**
-         * Construct.
-         * @param name
-         * @param object
-         */
-        public SimpleTable(String name, List object)
+        add(new ListView("table", list)
         {
-            super(name, object);
-        }
-
-        /**
-         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
-         */
-        protected void populateCell(Cell cell)
-        {
-            String txt = (String)cell.getModelObject();
-            cell.add(new Label("txt", txt));
-        }
-        
+	        protected void populateItem(ListItem listItem)
+	        {
+	            String txt = (String)listItem.getModelObject();
+	            listItem.add(new Label("txt", txt));
+	        }
+        });
     }
 }

@@ -28,18 +28,24 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 /**
  * Dummy page used for resource testing.
  */
-public class PagedTablePage extends HtmlPage {
+public class PagedTableNavigatorPage extends HtmlPage {
 
     /**
      * Construct.
      * @param parameters page parameters.
      */
-    public PagedTablePage(final PageParameters parameters) {
+    public PagedTableNavigatorPage(final PageParameters parameters) {
         super();
         List list = new ArrayList();
         list.add("one");
         list.add("two");
         list.add("three");
+        list.add("four");
+        list.add("five");
+        list.add("six");
+        list.add("seven");
+        list.add("eight");
+        
         Table table = new Table("table", list, 2)
         {
             protected void populateItem(ListItem listItem)
@@ -50,7 +56,6 @@ public class PagedTablePage extends HtmlPage {
         };
 
         add(table);
-        TableNavigation navigation = new TableNavigation("navigation", table);
-        add(navigation);
+        add(new PagedTableNavigator("navigator", table));
     }
 }

@@ -1,0 +1,136 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.voicetribe.wicket.markup.html.table;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import com.voicetribe.wicket.Model;
+import com.voicetribe.wicket.protocol.http.HttpRequestCycle;
+import com.voicetribe.wicket.protocol.http.MockHttpApplication;
+import com.voicetribe.wicket.protocol.http.MockPage;
+
+import junit.framework.TestCase;
+
+/**
+ * @author Juergen Donnerstag
+ *
+ * TODO To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Style - Code Templates
+ */
+public class ListViewTest extends TestCase
+{
+    /** Use a mock application to handle Link-clicked event */
+    private static MockHttpApplication application; // = new MockHttpApplication(null);
+
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        
+        if (application == null)
+        {
+            application = new MockHttpApplication(null);
+        }
+    }
+
+    /**
+     * 
+     * @param modelListSize
+     * @return
+     */
+    private ListView createListView(final int modelListSize)
+    {
+        ArrayList modelList = new ArrayList();
+        for (int i=0; i < modelListSize; i++)
+        {
+            modelList.add(new Integer(i));
+        }
+        
+        return new ListView("listView", new Model(modelList))
+	    {
+	        protected void populateItem(final ListItem listItem)
+	        {
+	            ; // do nothing
+	        }
+	    };
+    }
+
+    /**
+     * 
+     * @return
+     * @throws IOException
+     */
+    private HttpRequestCycle createRequestCycle() throws IOException
+    {
+        // Prepare the mock application to test the Link
+        application.setupRequestAndResponse();
+        HttpRequestCycle cycle = new HttpRequestCycle(
+                application, 
+                application.getWicketSession(), 
+                application.getWicketRequest(), 
+                application.getWicketResponse());
+
+        MockPage page = new MockPage(null);
+        cycle.setPage(page);
+        
+        return cycle;
+    }
+
+    public void testListView()
+    {
+        ListView lv = createListView(4);
+        assertEquals(4, lv.getList().size());
+        assertEquals(4, lv.getViewSize());
+        assertEquals(0, lv.getStartIndex());
+        assertEquals(new Integer(0), lv.getListObject(0));
+        
+        // This is the number of ListViews child-components
+        assertEquals(0, lv.size());
+        
+        lv.setStartIndex(-1);
+        assertEquals(0, lv.getStartIndex());
+        
+        lv.setStartIndex(3);
+        assertEquals(3, lv.getStartIndex());
+        
+        // The upper boundary doesn't get tested, yet.
+        lv.setStartIndex(99);
+        assertEquals(99, lv.getStartIndex());
+
+        lv.setViewSize(-1);
+        assertEquals(0, lv.getViewSize());
+
+        lv.setViewSize(0);
+        assertEquals(0, lv.getViewSize());
+
+        // The upper boundary doesn't get tested, yet.
+        lv.setViewSize(99);
+        assertEquals(0, lv.getViewSize());
+        lv.setStartIndex(1);
+        assertEquals(3, lv.getViewSize());
+    }
+    
+    public void testListViewNewItem() throws IOException
+    {
+        ListView lv = createListView(4);
+        ListItem li = lv.newItem(0);
+        assertEquals(0, li.getIndex());
+        assertEquals(new Integer(0), li.getModelObject());
+    }
+}
