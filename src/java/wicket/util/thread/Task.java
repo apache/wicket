@@ -19,6 +19,7 @@
 package wicket.util.thread;
 
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.util.time.Duration;
 import wicket.util.time.Time;
@@ -95,11 +96,11 @@ public final class Task
                         try
                         {
                             // Run the user's code
-                            code.run(log);
+                            code.run(getLog());
                         }
                         catch (Exception e)
                         {
-                            log.error("Unhandled exception thrown by user code in task " + name, e);
+                        	getLog().error("Unhandled exception thrown by user code in task " + name, e);
                         }
 
                         // Sleep until the period is over (or not at all if it's
@@ -125,6 +126,15 @@ public final class Task
     }
 
     /**
+	 * @return
+	 */
+	protected Log getLog()
+	{
+		if(log == null) log = LogFactory.getLog(Task.class);
+		return log;
+	}
+
+	/**
      * Sets start time for this task.  You cannot set the start time for a task which
      * is already running.  If you attempt to, an IllegalStateException will be thrown.
      * @param startTime The time this task should start running
