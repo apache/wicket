@@ -41,43 +41,14 @@ import wicket.util.resource.ResourceNotFoundException;
 
 
 /**
- * A fairly shallow markup parser. Parses a markup string of a given type of markup (for
- * example, html, xml, vxml or wml) into ComponentTag and RawMarkup tokens. The ComponentTag 
- * tokens must have either the componentNameAttribute attribute or the tag's name 
- * must have the wicketTagName namespace. Tags matching these conditions are 
- * returned as ComponentTag values. Text before, between and after such tags are returned as 
- * RawMarkup values. A check is done to ensure that tags returned balance correctly.
- * MarkupParser also applies some special treatment to specific ComponentTags like 
- * &lt;wicket:remove&gt; . MarkupParser will remove all text (RawMarkup)
- * between the respective open and close tag. ComponentTags are not allowed within this region.
- * The parameters specified through &lt;wicket:param ..&gt; tags are added to the
- * immediately preceding ComponentTag. And all attributes named 'href' are flagged for later
- * automatic linking of the URL. <p>
- * Note: Why are we not using SAX or DOM parsers to read the markup? The reason is, we need only
- * a few tags as described above. All the rest is treated as text only. 
+ * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a 
+ * streaming XML parser to read the markup and IMarkupFilters to remove
+ * comments, identify Wicket relevant tags, apply html specific treatments
+ * etc.. <p>
+ * The result will be an Markup object, which is basically a list, containing
+ * Wicket relevant tags and RawMarkup.      
  * 
  * @author Jonathan Locke
- */
-
-/* TODO: This class needs some re-factoring as it is growing to large and inflexible.
- * I have the following things in mind:
- * a) some kind of XML PullParser to separate XML logic from Wicket specific markup logic
- * b) some kind of filter/listener interface which gets called on specific filter conditions
- *    like e.g. id starts with "wicket-" or tag namespace == "wicket" or attribute href exists.
- * c) avoid post-processing the markup elements. <wicket:region name=remove> should simply
- *    skip all markup until the end of the region
- * d) similar is true for <wicket:param> with a flag controlling the output: write yes/no
- * e) similar is true for <wicket:link> 
- * The idea is to avoid creating ComponentTags for everything or you end up writing creating
- * your own DOM structure. This is especially true with href, which are everywhere. Besides,
- * the current approach has it's weakness if the tag, which the href attribute belongs to,
- * already is a ComponentTag, e.g. <a id="wicket-myLink" href="Home.html" text="my tooltip">. 
- * Assuming you want to localize the tooltip. You have to handle the href yourself. Automatic 
- * linking will not touch it. If it would, should it modify it before or after Component.render()?
- * May be the Component should get an additional transient variable like originalHref.
- * What about attaching an AttributeModifier if href is found? Con: AttributeModifier can 
- * only work on the tag itself, not on the tags children. Thus you again would need a component
- * per href tag or analyze the html a second time.
  */
 public final class MarkupParser 
 {
@@ -161,8 +132,7 @@ public final class MarkupParser
      * @throws IOException
      * @throws ResourceNotFoundException
      */
-    // TODO rename to parse(). See below 
-    public Markup read(final Resource resource) throws ParseException, IOException,
+    public Markup readAndParse(final Resource resource) throws ParseException, IOException,
             ResourceNotFoundException
     {
         xmlParser.parse(resource);
