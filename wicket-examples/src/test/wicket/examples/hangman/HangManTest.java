@@ -195,6 +195,9 @@ public class HangManTest extends WebTestCase
 
 	/**
 	 * Performs a guess.
+	 * @param hangman
+	 * @param c
+	 * @param expected
 	 */
 	private void doGuessTest(Hangman hangman, char c, boolean expected)
 	{

@@ -1,73 +1,63 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.util.convert.converters;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 import wicket.util.convert.ConversionException;
 
 /**
- * Converts to and from Byte objects.
+ * Converts from Object to Byte.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public final class ByteConverter extends AbstractConverter
+public final class ByteConverter extends NumberConverter
 {
-	/**
-	 * Construct.
-	 */
-	public ByteConverter()
-	{
-	}
+    /**
+     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+     */
+    public Object convert(final Object value)
+    {
+        if (value instanceof Number)
+        {
+            Number number = (Number)value;
+            return new Byte(number.byteValue());
+        }
 
-	/**
-	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
-	 */
-	public Object convert(Object value, Class c)
-	{
-		if (value == null)
-		{
-			return null;
-		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
-				|| c == Byte.TYPE)
-		{
-			if (value instanceof Byte)
-			{
-				return (value);
-			}
-			else if (value instanceof Number)
-			{
-				return new Byte(((Number)value).byteValue());
-			}
-			try
-			{
-				return (new Byte(value.toString()));
-			}
-			catch (Exception e)
-			{
-				throw new ConversionException(e);
-			}
-		}
-		else if(String.class.isAssignableFrom(c))
-		{
-			return toString(value);
-		}
-		throw new ConversionException(this +
-				" cannot handle conversions of type " + c);
-	}
+        final String stringValue = value.toString();
+        try
+        {
+            final NumberFormat numberFormat = getNumberFormat();
+            if (numberFormat != null)
+            {
+                return new Byte(numberFormat.parse(stringValue).byteValue());
+            }
+            return new Byte(stringValue);
+        }
+        catch (ParseException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Byte", e);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Byte", e);
+        }
+    }
 }

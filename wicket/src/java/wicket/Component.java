@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.17 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -37,7 +37,6 @@ import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.response.NullResponse;
 import wicket.util.convert.IConverter;
-import wicket.util.convert.IStringConverter;
 import wicket.util.string.Strings;
 
 /**
@@ -277,33 +276,39 @@ public abstract class Component implements Serializable
 		attributeModifiers.add(modifier);
 		return this;
 	}
-    
-    /**
-     * Registers a debug message for this component
-     * @param message The message
-     */
-    public final void debug(final String message)
-    {
-        getPage().getFeedbackMessages().debug(this, message);   
-    }
-    
-    /**
-     * Registers an error message for this component
-     * @param message The message
-     */
-    public final void error(final String message)
-    {
-        getPage().getFeedbackMessages().error(this, message);   
-    }
-    
-    /**
-     * Registers an fatal error message for this component
-     * @param message The message
-     */
-    public final void fatal(final String message)
-    {
-        getPage().getFeedbackMessages().fatal(this, message);   
-    }
+
+	/**
+	 * Registers a debug message for this component
+	 * 
+	 * @param message
+	 *            The message
+	 */
+	public final void debug(final String message)
+	{
+		getPage().getFeedbackMessages().debug(this, message);
+	}
+
+	/**
+	 * Registers an error message for this component
+	 * 
+	 * @param message
+	 *            The message
+	 */
+	public final void error(final String message)
+	{
+		getPage().getFeedbackMessages().error(this, message);
+	}
+
+	/**
+	 * Registers an fatal error message for this component
+	 * 
+	 * @param message
+	 *            The message
+	 */
+	public final void fatal(final String message)
+	{
+		getPage().getFeedbackMessages().fatal(this, message);
+	}
 
 	/**
 	 * Finds the first container parent of this component of the given class.
@@ -396,58 +401,21 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the converter that should be used by this component.
+	 * 
 	 * @return the converter that should be used by this component
 	 */
-	public IStringConverter getConverter()
+	public IConverter getConverter()
 	{
-		final IStringConverter stringConverter;
-		final IConverter converter = (IConverter)getSession().getConverter();
-		if(converter instanceof IStringConverter)
-		{
-			stringConverter = (IStringConverter)converter;
-		}
-		else
-		{
-			// A user provided converter that is not a IStringConverter. Wrap
-			// that converter to act as a IStringConverter
-			stringConverter = new IStringConverter()
-			{
-				/**
-				 * @see wicket.util.convert.IStringConverter#toString(java.lang.Object)
-				 */
-				public String toString(Object value)
-				{
-					return (String)converter.convert(value, String.class);
-				}
-
-				/**
-				 * Convert using the default converter.
-				 * @see wicket.util.convert.IStringConverter#valueOf(java.lang.String)
-				 */
-				public Object valueOf(String string)
-				{
-					return converter.convert(string, null); // converts to default
-				}
-
-				/**
-				 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
-				 */
-				public Object convert(Object value, Class c)
-				{
-					return converter.convert(value, c);
-				}
-			};
-		}
-		return stringConverter;
+		return getSession().getConverter();
 	}
-    
-    /** 
-     * @return Any feedback message for this component
-     */
-    public final FeedbackMessage getFeedbackMessage()
-    {
-        return getPage().getFeedbackMessages().messageForComponent(this);   
-    }
+
+	/**
+	 * @return Any feedback message for this component
+	 */
+	public final FeedbackMessage getFeedbackMessage()
+	{
+		return getPage().getFeedbackMessages().messageForComponent(this);
+	}
 
 	/**
 	 * Gets the model. It returns the object that wraps the backing model.
@@ -495,10 +463,12 @@ public abstract class Component implements Serializable
 			final Object modelObject = model.getObject();
 			if (modelObject != null)
 			{
-				// get converter
-				IStringConverter stringConverter = getConverter();
+				// Get converter
+				IConverter converter = getConverter();
+                
 				//	Model string from property
-				final String modelString = stringConverter.toString(modelObject);
+				final String modelString = (String)converter.convert(modelObject, String.class);
+                
 				// If we should escape the markup
 				if (shouldEscapeModelStrings)
 				{
@@ -780,31 +750,33 @@ public abstract class Component implements Serializable
 	{
 		return getSession().getStyle();
 	}
-    
-    /**
-     * @return True if this component has an error message
-     */
-    public final boolean hasErrorMessage()
-    {
-    	return getPage().getFeedbackMessages().hasErrorMessageFor(this);
-    }
-    
-    /**
-     * @return True if this component has some kind of feedback message
-     */
-    public final boolean hasFeedbackMessage()
-    {
-        return getPage().getFeedbackMessages().hasMessageFor(this);    
-    }
-    
-    /**
-     * Registers a info message for this component
-     * @param message The message
-     */
-    public final void info(final String message)
-    {
-        getPage().getFeedbackMessages().info(this, message);   
-    }
+
+	/**
+	 * @return True if this component has an error message
+	 */
+	public final boolean hasErrorMessage()
+	{
+		return getPage().getFeedbackMessages().hasErrorMessageFor(this);
+	}
+
+	/**
+	 * @return True if this component has some kind of feedback message
+	 */
+	public final boolean hasFeedbackMessage()
+	{
+		return getPage().getFeedbackMessages().hasMessageFor(this);
+	}
+
+	/**
+	 * Registers a info message for this component
+	 * 
+	 * @param message
+	 *            The message
+	 */
+	public final void info(final String message)
+	{
+		getPage().getFeedbackMessages().info(this, message);
+	}
 
 	/**
 	 * Gets whether this component and any children are visible.
@@ -852,13 +824,14 @@ public abstract class Component implements Serializable
 	 */
 	public final Component setModel(final IModel model)
 	{
-		final IModel currentModel = getModel(); // see if there is a current model
+		final IModel currentModel = getModel(); // see if there is a current
+												// model
 		if (currentModel != null && currentModel instanceof IDetachableModel)
 		{
 			// detach in case it is a IDetachableModel
 			((IDetachableModel)currentModel).detach();
 		}
-		if(model instanceof IComponentAware)
+		if (model instanceof IComponentAware)
 		{
 			// set self in case the model is component aware
 			((IComponentAware)model).setComponent(this);
@@ -918,15 +891,17 @@ public abstract class Component implements Serializable
 	{
 		return getPath();
 	}
-    
-    /**
-     * Registers a warning message for this component
-     * @param message The message
-     */
-    public final void warn(final String message)
-    {
-        getPage().getFeedbackMessages().warn(this, message);   
-    }
+
+	/**
+	 * Registers a warning message for this component
+	 * 
+	 * @param message
+	 *            The message
+	 */
+	public final void warn(final String message)
+	{
+		getPage().getFeedbackMessages().warn(this, message);
+	}
 
 	/**
 	 * Checks that a given tag has a required attribute value.
@@ -1045,9 +1020,9 @@ public abstract class Component implements Serializable
 	 */
 	protected void invalidateModel()
 	{
-		// Find the page where this component lives.  There is no need to
-        // check the return value for null here since getPage() will throw
-        // an IllegalState exception if its return value is null.
+		// Find the page where this component lives. There is no need to
+		// check the return value for null here since getPage() will throw
+		// an IllegalState exception if its return value is null.
 		final Page page = getPage();
 
 		// Make all previous renderings of the page stale
@@ -1067,14 +1042,15 @@ public abstract class Component implements Serializable
 						public Object component(final Component current)
 						{
 							// If the components have the same equals identity
-							// (which is assumed to be implemented in terms of 
-                            // database identity) and component is accessing 
-                            // the same property of the model
+							// (which is assumed to be implemented in terms of
+							// database identity) and component is accessing
+							// the same property of the model
 							if (current.getModel() != null && getModel() != null
 									&& current.getModel().equals(getModel())
 									&& current.getName().equals(getName()))
 							{
-								// then make the page holding the component stale
+								// then make the page holding the component
+								// stale
 								currentPage.setStale(true);
 							}
 							return CONTINUE_TRAVERSAL;
@@ -1285,10 +1261,10 @@ public abstract class Component implements Serializable
 			}
 		});
 	}
-	
+
 	protected void detachModel()
 	{
-		if(model instanceof IDetachableModel)
+		if (model instanceof IDetachableModel)
 		{
 			((IDetachableModel)model).detach();
 		}

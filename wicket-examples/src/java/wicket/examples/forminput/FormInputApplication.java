@@ -20,8 +20,8 @@ package wicket.examples.forminput;
 
 import wicket.ApplicationSettings;
 import wicket.protocol.http.WebApplication;
+import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
-import wicket.util.convert.converters.i18n.LocalizedConverterFactory;
 import wicket.util.time.Duration;
 
 /**
@@ -32,7 +32,7 @@ import wicket.util.time.Duration;
 public class FormInputApplication extends WebApplication
 {
 	/** converter factory. */
-	private final IConverterFactory converterFactory = new LocalizedConverterFactory();
+	private final IConverterFactory converterFactory = new ConverterFactory();
 
     /**
      * Constructor.

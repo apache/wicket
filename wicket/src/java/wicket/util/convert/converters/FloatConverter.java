@@ -18,57 +18,47 @@
  */
 package wicket.util.convert.converters;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import wicket.util.convert.ConversionException;
 
 /**
- * Converts to and from Float objects.
+ * Converts from Object to Float.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
-public final class FloatConverter extends AbstractConverter
+public final class FloatConverter extends NumberConverter
 {
-	/**
-	 * Construct.
-	 */
-	public FloatConverter()
-	{
-	}
+    /**
+     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+     */
+    public Object convert(final Object value)
+    {
+        if (value instanceof Number)
+        {
+            Number number = (Number)value;
+            return new Float(number.floatValue());
+        }
 
-	/**
-	 * @see wicket.util.convert.IConverter#convert(java.lang.Object, java.lang.Class)
-	 */
-	public Object convert(Object value, Class c)
-	{
-		if (value == null)
-		{
-			return null;
-		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
-				|| c == Float.TYPE)
-		{
-			if (value instanceof Float)
-			{
-				return (value);
-			}
-			else if (value instanceof Number)
-			{
-				return new Float(((Number)value).floatValue());
-			}
-
-			try
-			{
-				return (new Float(value.toString()));
-			}
-			catch (Exception e)
-			{
-				throw new ConversionException(e);
-			}
-		}
-		else if(String.class.isAssignableFrom(c))
-		{
-			return toString(value);
-		}
-		throw new ConversionException(this +
-				" cannot handle conversions of type " + c);
-	}
+        final String stringValue = value.toString();
+        try
+        {
+            final NumberFormat numberFormat = getNumberFormat();
+            if (numberFormat != null)
+            {
+                return new Float(numberFormat.parse(stringValue).floatValue());
+            }
+            return new Float(stringValue);
+        }
+        catch (ParseException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Float", e);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new ConversionException("Cannot convert '" + stringValue + "' to Float", e);
+        }
+    }
 }

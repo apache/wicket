@@ -29,11 +29,6 @@ public final class ConversionException extends RuntimeException
 {
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 3751845072374225603L;
-	
-	/**
-     * Target type for the failed conversion.
-     */
-    private Class targetType;
 
     /**
      * The converter that was used.
@@ -41,9 +36,9 @@ public final class ConversionException extends RuntimeException
     private IConverter converter;
 
     /**
-     * The value that was tried to convert.
+     * Locale that was used for the conversion.
      */
-    private Object triedValue;
+    private Locale locale;
 
     /**
      * Pattern that was used for conversion.
@@ -51,9 +46,19 @@ public final class ConversionException extends RuntimeException
     private String pattern;
 
     /**
-     * Locale that was used for the conversion.
+     * The value that was tried to convert.
      */
-    private Locale locale;
+    private Object sourceValue;
+	
+	/**
+     * Target type for the failed conversion.
+     */
+    private Class targetType;
+    
+    /**
+     * The type converter that was used
+     */
+    private ITypeConverter typeConverter;
 
     /**
      * Construct exception with message.
@@ -93,6 +98,49 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
+     * Gets the used locale.
+     * @return the used locale.
+     */
+    public final Locale getLocale()
+    {
+        return locale;
+    }
+
+    /**
+     * Get the used pattern.
+     * @return the used pattern
+     */
+    public final String getPattern()
+    {
+        return pattern;
+    }
+
+    /**
+     * Gets the tried value.
+     * @return the tried value.
+     */
+    public final Object getSourceValue()
+    {
+        return sourceValue;
+    }
+
+    /**
+     * Gets the target property type.
+     * @return the target property type.
+     */
+    public final Class getTargetType()
+    {
+        return targetType;
+    }
+	/**
+	 * @return Returns the typeConverter.
+	 */
+	public ITypeConverter getTypeConverter()
+	{
+		return typeConverter;
+	}
+
+    /**
      * Sets the used converter.
      * @param converter the converter.
      * @return This
@@ -104,52 +152,14 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
-     * Gets the target property type.
-     * @return the target property type.
-     */
-    public final Class getTargetType()
-    {
-        return targetType;
-    }
-
-    /**
-     * Sets the target property type.
-     * @param targetType sets the target property type
+     * Sets the used locale.
+     * @param locale the used locale.
      * @return This
      */
-    public final ConversionException setTargetType(Class targetType)
+    public final ConversionException setLocale(Locale locale)
     {
-        this.targetType = targetType;
+        this.locale = locale;
         return this;
-    }
-
-    /**
-     * Gets the tried value.
-     * @return the tried value.
-     */
-    public final Object getTriedValue()
-    {
-        return triedValue;
-    }
-
-    /**
-     * Sets the tried value.
-     * @param triedValue the tried value.
-     * @return This
-     */
-    public final ConversionException setTriedValue(Object triedValue)
-    {
-        this.triedValue = triedValue;
-        return this;
-    }
-
-    /**
-     * Get the used pattern.
-     * @return the used pattern
-     */
-    public final String getPattern()
-    {
-        return pattern;
     }
 
     /**
@@ -164,22 +174,33 @@ public final class ConversionException extends RuntimeException
     }
 
     /**
-     * Gets the used locale.
-     * @return the used locale.
+     * Sets the tried value.
+     * @param sourceValue the tried value.
+     * @return This
      */
-    public final Locale getLocale()
+    public final ConversionException setSourceValue(Object sourceValue)
     {
-        return locale;
+        this.sourceValue = sourceValue;
+        return this;
     }
 
     /**
-     * Sets the used locale.
-     * @param locale the used locale.
+     * Sets the target property type.
+     * @param targetType sets the target property type
      * @return This
      */
-    public final ConversionException setLocale(Locale locale)
+    public final ConversionException setTargetType(Class targetType)
     {
-        this.locale = locale;
+        this.targetType = targetType;
         return this;
     }
+	/**
+	 * @param typeConverter The typeConverter to set.
+     * @return This
+	 */
+	public ConversionException setTypeConverter(ITypeConverter typeConverter)
+	{
+		this.typeConverter = typeConverter;
+        return this;
+	}
 }

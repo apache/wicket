@@ -105,7 +105,7 @@ public abstract class AbstractValidator implements IValidator
 	 * <li>${input}: the user's input</li>
 	 * <li>${name}: the name of the component</li>
 	 * </ul>
-	 * Optionally, you can either override getMessageContextVariables, or provide a model
+	 * Optionally, you can either override messageModel, or provide a model
 	 * or a map with those variables yourself by using one of the other errorMessage
 	 * methods.
 	 * </p>
@@ -116,7 +116,7 @@ public abstract class AbstractValidator implements IValidator
 	public void error(final String resourceKey, final String input,
 			final FormComponent component)
 	{
-		final Map resourceModel = getMessageContextVariables(input, component);
+		final Map resourceModel = messageModel(component, input);
 		error(resourceKey, resourceModel, input, component);
 	}
 
@@ -130,7 +130,7 @@ public abstract class AbstractValidator implements IValidator
 	 * @param component the component
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map getMessageContextVariables(final String input, final FormComponent component)
+	protected Map messageModel(final FormComponent component, final String input)
 	{
 		final Map resourceModel = new HashMap(4);
 		resourceModel.put("input", input);
@@ -157,18 +157,5 @@ public abstract class AbstractValidator implements IValidator
 			throw new WicketRuntimeException("Unable to find Form parent for FormComponent "
 					+ component);
 		}
-	}
-
-
-	/**
-	 * Gets whether the provided argument is null or an empty string.
-	 * @param toCheck the string to check
-	 * @return whether the provided argument is null or an empty string
-	 */
-	protected final boolean isNullOrEmpty(String toCheck)
-	{
-		if (toCheck == null)
-			return true;
-		return (toCheck.trim().equals(""));
 	}
 }

@@ -17,27 +17,35 @@
  */
 package wicket.util.convert.converters;
 
-import wicket.util.convert.ConversionException;
-import wicket.util.convert.ITypeConverter;
+import java.text.NumberFormat;
 
 /**
- * Converts from Object to Character.
+ * Base class for all number converters.
  * 
- * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class CharacterConverter implements ITypeConverter
+public abstract class NumberConverter extends AbstractConverter 
 {
-	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+    /** The number format */
+    private NumberFormat numberFormat;
+    
+    /**
+	 * @return Returns the numberFormat.
 	 */
-	public Object convert(final Object value)
+	public final NumberFormat getNumberFormat()
 	{
-		final String stringValue = value.toString();
-		if (stringValue.length() == 1)
-		{
-			return new Character(value.toString().charAt(0));
-		}
-		throw new ConversionException("Cannot convert '" + stringValue + "' to Character");
+        if (numberFormat == null && locale != null)
+        {
+            numberFormat = NumberFormat.getIntegerInstance(locale);        	
+        }
+		return numberFormat;
+	}
+    
+    /**
+	 * @param numberFormat The numberFormat to set.
+	 */
+	public final void setNumberFormat(final NumberFormat numberFormat)
+	{
+		this.numberFormat = numberFormat;
 	}
 }
