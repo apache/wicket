@@ -47,48 +47,78 @@ public class DropDownChoice extends AbstractDropDownChoice
         RequestCycle.registerListenerInterface(IOnChangeListener.class);
     }
 
-	/**
-	 * @param name
-	 * @param model
-	 * @param expression
-	 * @param values
-	 */
-	public DropDownChoice(String name, IModel model, String expression, Collection values)
-	{
-		super(name, model, expression, values);
+    /**
+     * Constructor that uses the provided {@link IModel}as its model. All components have
+     * names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param model the model
+     * @param values the drop down values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public DropDownChoice(String name, IModel model, final Collection values)
+    {
+        super(name, model, values);
+    }
 
-	}
-	/**
-	 * @param name
-	 * @param object
-	 * @param values
-	 */
-	public DropDownChoice(String name, Serializable object, Collection values)
-	{
-		super(name, object, values);
+    /**
+     * Constructor that uses the provided instance of {@link IModel}as a dynamic model.
+     * This model will be wrapped in an instance of {@link wicket.PropertyModel}using the
+     * provided expression. Thus, using this constructor is a short-hand for:
+     * 
+     * <pre>
+     * new MyComponent(name, new PropertyModel(myIModel, expression));
+     * </pre>
+     * 
+     * All components have names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param model the instance of {@link IModel}from which the model object will be
+     *            used as the subject for the given expression
+     * @param values the drop down values
+     * @param expression the OGNL expression that works on the given object
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public DropDownChoice(String name, IModel model, String expression,
+            final Collection values)
+    {
+        super(name, model, expression, values);
+    }
 
-	}
-	/**
-	 * @param name
-	 * @param object
-	 * @param expression
-	 * @param values
-	 */
-	public DropDownChoice(String name, Serializable object, String expression, Collection values)
-	{
-		super(name, object, expression, values);
+    /**
+     * Constructor that uses the provided object as a simple model. This object will be
+     * wrapped in an instance of {@link wicket.Model}. All components have names. A
+     * component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as a simple model
+     * @param values the drop down values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public DropDownChoice(String name, Serializable object, final Collection values)
+    {
+        super(name, object, values);
+    }
 
-	}
-	/**
-	 * @param name
-	 * @param model
-	 * @param values
-	 */
-	public DropDownChoice(String name, IModel model, Collection values)
-	{
-		super(name, model, values);
-		
-	}
+    /**
+     * Constructor that uses the provided object as a dynamic model. This object will be
+     * wrapped in an instance of {@link wicket.Model}that will be wrapped in an instance
+     * of {@link wicket.PropertyModel}using the provided expression. Thus, using this
+     * constructor is a short-hand for:
+     * 
+     * <pre>
+     * new MyComponent(name, new PropertyModel(new Model(object), expression));
+     * </pre>
+     * 
+     * All components have names. A component's name cannot be null.
+     * @param name The non-null name of this component
+     * @param object the object that will be used as the subject for the given expression
+     * @param expression the OGNL expression that works on the given object
+     * @param values the drop down values
+     * @throws wicket.RenderException Thrown if the component has been given a null name.
+     */
+    public DropDownChoice(String name, Serializable object, String expression,
+            final Collection values)
+    {
+        super(name, object, expression, values);
+    }
 
     /**
      * @see wicket.Component#handleComponentTag(RequestCycle, wicket.markup.ComponentTag)
