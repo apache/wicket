@@ -20,7 +20,6 @@ package wicket;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.model.DetachableModel;
-import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
@@ -72,6 +71,7 @@ public class AttributeModifierComponentPage extends WebPage
 
 			public Object getObject()
 			{
+				attach();
 				return text;
 			}
 
@@ -82,5 +82,4 @@ public class AttributeModifierComponentPage extends WebPage
 		}));
 		add(label3);
 	}
-
 }
