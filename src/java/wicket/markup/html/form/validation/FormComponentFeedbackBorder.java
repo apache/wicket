@@ -67,6 +67,8 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	 */
 	public void validationError(final FeedbackMessages errors)
 	{
-		errorIndicator.setVisible(errors.hasErrorMessageFor(child));
+        // TODO is this right?  was:
+        // errorIndicator.setVisible(errors.hasErrorMessageFor(child));
+		errorIndicator.setVisible(child.hasErrorMessage());
 	}
 }

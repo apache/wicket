@@ -228,58 +228,6 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Adds a new ui message with level DEBUG to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	static void debug(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.debug(reporter, message));
-	}
-
-	/**
-	 * Adds a new ui message with level ERROR to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	static void error(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.error(reporter, message));
-	}
-
-	/**
-	 * Adds a new ui message with level FATAL to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	static void fatal(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.fatal(reporter, message));
-	}
-
-	/**
-	 * Adds a new ui message with level INFO to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	static void info(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.info(reporter, message));
-	}
-
-	/**
 	 * Removes from the thread local without releasing.
 	 */
 	static void remove()
@@ -373,19 +321,6 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Adds a new ui message with level WARN to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-    static void warn(Component reporter, String message)
-	{
-		get().add(FeedbackMessage.warn(reporter, message));
-	}
-
-	/**
 	 * Hidden constructor; clients are not allowed to create instances as this
 	 * class is managed by the framework.
 	 */
@@ -452,36 +387,6 @@ public final class FeedbackMessages
 		else
 		{
 			return Collections.EMPTY_SET;
-		}
-	}
-
-	/**
-	 * Looks up a message for the given component.
-	 * 
-	 * @param component
-	 *            the component to look up the message for
-	 * @return the message that is found for the given component (first match)
-	 *         or null if none was found
-	 */
-	public FeedbackMessage getMessageFor(Component component)
-	{
-		if (messages != null)
-		{
-			FeedbackMessage message = null;
-			for (Iterator i = messages.iterator(); i.hasNext();)
-			{
-				FeedbackMessage toTest = (FeedbackMessage)i.next();
-				if ((toTest.getReporter() != null) && (toTest.getReporter().equals(component)))
-				{
-					message = toTest;
-					break;
-				}
-			}
-			return message;
-		}
-		else
-		{
-			return null;
 		}
 	}
 
@@ -581,20 +486,6 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Convenience method that looks up whether the given component registered a
-	 * message with this list with the level ERROR.
-	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @return whether the given component registered a message with this list
-	 *         with level ERROR
-	 */
-	public boolean hasErrorMessageFor(Component component)
-	{
-		return hasMessageFor(component, FeedbackMessage.ERROR);
-	}
-
-	/**
 	 * Convenience method that gets whether this list contains any messages with
 	 * level ERROR or up. This is the same as calling
 	 * 'hasMessages(FeedbackMessage.ERROR)'.
@@ -604,42 +495,6 @@ public final class FeedbackMessages
 	public boolean hasErrorMessages()
 	{
 		return hasMessages(FeedbackMessage.ERROR);
-	}
-
-	/**
-	 * Looks up whether the given component registered a message with this list.
-	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @return whether the given component registered a message with this list
-	 */
-	public boolean hasMessageFor(Component component)
-	{
-		return getMessageFor(component) != null;
-	}
-
-	/**
-	 * Looks up whether the given component registered a message with this list
-	 * with the given level.
-	 * 
-	 * @param component
-	 *            the component to look up whether it registered a message
-	 * @param level
-	 *            the level of the message
-	 * @return whether the given component registered a message with this list
-	 *         with the given level
-	 */
-	public boolean hasMessageFor(Component component, int level)
-	{
-		FeedbackMessage message = getMessageFor(component);
-		if (message != null)
-		{
-			return (message.isLevel(level));
-		}
-		else
-		{
-			return false;
-		}
 	}
 
 	/**
@@ -695,6 +550,151 @@ public final class FeedbackMessages
 	public String toString()
 	{
 		return "[feedbackMessages = " + StringList.valueOf(getMessages()) + "]";
+	}
+
+	/**
+	 * Adds a new ui message with level DEBUG to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	void debug(Component reporter, String message)
+	{
+		add(FeedbackMessage.debug(reporter, message));
+	}
+
+	/**
+	 * Adds a new ui message with level ERROR to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	void error(Component reporter, String message)
+	{
+		add(FeedbackMessage.error(reporter, message));
+	}
+
+	/**
+	 * Adds a new ui message with level FATAL to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	void fatal(Component reporter, String message)
+	{
+		add(FeedbackMessage.fatal(reporter, message));
+	}
+
+	/**
+	 * Looks up a message for the given component.
+	 * 
+	 * @param component
+	 *            the component to look up the message for
+	 * @return the message that is found for the given component (first match)
+	 *         or null if none was found
+	 */
+	FeedbackMessage getMessageFor(Component component)
+	{
+		if (messages != null)
+		{
+			FeedbackMessage message = null;
+			for (Iterator i = messages.iterator(); i.hasNext();)
+			{
+				FeedbackMessage toTest = (FeedbackMessage)i.next();
+				if ((toTest.getReporter() != null) && (toTest.getReporter().equals(component)))
+				{
+					message = toTest;
+					break;
+				}
+			}
+			return message;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Convenience method that looks up whether the given component registered a
+	 * message with this list with the level ERROR.
+	 * 
+	 * @param component
+	 *            the component to look up whether it registered a message
+	 * @return whether the given component registered a message with this list
+	 *         with level ERROR
+	 */
+	boolean hasErrorMessageFor(Component component)
+	{
+		return hasMessageFor(component, FeedbackMessage.ERROR);
+	}
+
+	/**
+	 * Looks up whether the given component registered a message with this list.
+	 * 
+	 * @param component
+	 *            the component to look up whether it registered a message
+	 * @return whether the given component registered a message with this list
+	 */
+	boolean hasMessageFor(Component component)
+	{
+		return getMessageFor(component) != null;
+	}
+
+	/**
+	 * Looks up whether the given component registered a message with this list
+	 * with the given level.
+	 * 
+	 * @param component
+	 *            the component to look up whether it registered a message
+	 * @param level
+	 *            the level of the message
+	 * @return whether the given component registered a message with this list
+	 *         with the given level
+	 */
+	boolean hasMessageFor(Component component, int level)
+	{
+		FeedbackMessage message = getMessageFor(component);
+		if (message != null)
+		{
+			return (message.isLevel(level));
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * Adds a new ui message with level INFO to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	void info(Component reporter, String message)
+	{
+		add(FeedbackMessage.info(reporter, message));
+	}
+
+	/**
+	 * Adds a new ui message with level WARN to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+    void warn(Component reporter, String message)
+	{
+		add(FeedbackMessage.warn(reporter, message));
 	}
 
 	/**
