@@ -23,11 +23,7 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
 
 /**
  * A password text field component. As you type, characters show up as asterisks or some
@@ -43,7 +39,6 @@ public class PasswordTextField extends FormComponent
     /** Serial Version ID. */
 	private static final long serialVersionUID = 1776665507834380353L;
 
-
 	/**
 	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
 	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
@@ -53,46 +48,8 @@ public class PasswordTextField extends FormComponent
 	 */
 	private boolean resetPassword = true;
 	
-	/**
-     * Constructor that uses the provided {@link IModel}as its model. All components have
-     * names. A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param model
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
-     */
-    public PasswordTextField(String name, IModel model)
-    {
-        super(name, model);
-    }
-
     /**
-     * Constructor that uses the provided instance of {@link IModel}as a dynamic model.
-     * This model will be wrapped in an instance of {@link PropertyModel}using the
-     * provided expression. Thus, using this constructor is a short-hand for:
-     * 
-     * <pre>
-     * new MyComponent(name, new PropertyModel(myIModel, expression));
-     * </pre>
-     * 
-     * All components have names. A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param model the instance of {@link IModel}from which the model object will be
-     *            used as the subject for the given expression
-     * @param expression the OGNL expression that works on the given object
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
-     */
-    public PasswordTextField(String name, IModel model, String expression)
-    {
-        super(name, model, expression);
-    }
-
-    /**
-     * Constructor that uses the provided object as a simple model. This object will be
-     * wrapped in an instance of {@link Model}. All components have names. A component's
-     * name cannot be null.
-     * @param name The non-null name of this component
-     * @param object the object that will be used as a simple model
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable)
      */
     public PasswordTextField(String name, Serializable object)
     {
@@ -100,20 +57,7 @@ public class PasswordTextField extends FormComponent
     }
 
     /**
-     * Constructor that uses the provided object as a dynamic model. This object will be
-     * wrapped in an instance of {@link Model}that will be wrapped in an instance of
-     * {@link PropertyModel}using the provided expression. Thus, using this constructor
-     * is a short-hand for:
-     * 
-     * <pre>
-     * new MyComponent(name, new PropertyModel(new Model(object), expression));
-     * </pre>
-     * 
-     * All components have names. A component's name cannot be null.
-     * @param name The non-null name of this component
-     * @param object the object that will be used as the subject for the given expression
-     * @param expression the OGNL expression that works on the given object
-     * @throws WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable, String)
      */
     public PasswordTextField(String name, Serializable object, String expression)
     {

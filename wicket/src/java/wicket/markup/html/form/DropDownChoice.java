@@ -23,7 +23,6 @@ import java.util.List;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
-import wicket.model.IModel;
 
 /**
  * A choice implemented as a dropdown menu/list. Framework users can extend this
@@ -39,36 +38,6 @@ public class DropDownChoice extends Choice
 {
 	/** serial UID. */
 	private static final long serialVersionUID = 122777360064586107L;
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param model
-	 *            See Component constructor
-	 * @param values
-	 *            The drop down values
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public DropDownChoice(String name, IModel model, final Collection values)
-	{
-		super(name, model, values);
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param model
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The drop down values
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public DropDownChoice(String name, IModel model, String expression, final Collection values)
-	{
-		super(name, model, expression, values);
-	}
 
 	/**
 	 * @param name

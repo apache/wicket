@@ -279,7 +279,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 		 * @param name name of the component
 		 * @param model the model
 		 */
-		public TreePathsListView(String name, IModel model)
+		public TreePathsListView(String name, Serializable model)
 		{
 			super(name, model);
 		}

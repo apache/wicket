@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import wicket.markup.ComponentTag;
-import wicket.model.IModel;
 
 /**
  * Essentially a drop down choice that doesn't drop down. Instead, it scrolls
@@ -61,75 +60,6 @@ public class ListChoice extends DropDownChoice
 	protected static void setDefaultMaxRows(final int defaultMaxRows)
 	{
 		ListChoice.defaultMaxRows = defaultMaxRows;
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param model
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public ListChoice(final String name, final IModel model, final Collection values)
-	{
-		this(name, model, values, defaultMaxRows);
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param model
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @param maxRows
-	 *            Maximum number of rows to show
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public ListChoice(final String name, final IModel model, final Collection values, final int maxRows)
-	{
-		super(name, model, values);
-		setRenderNullOption(false);
-		this.maxRows = maxRows;
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param model
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public ListChoice(final String name, final IModel model, final String expression, final Collection values)
-	{
-		this(name, model, values, defaultMaxRows);
-	}
-
-	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param model
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @param maxRows
-	 *            Maximum number of rows to show
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public ListChoice(final String name, final IModel model, final String expression, final Collection values,
-			final int maxRows)
-	{
-		super(name, model, expression, values);
-		setRenderNullOption(false);
-		this.maxRows = maxRows;
 	}
 
 	/**

@@ -21,7 +21,6 @@ import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.model.IModel;
 
 /**
  * Represents a radio option specified in HTML which can be added to a
@@ -35,24 +34,8 @@ public class RadioOption extends FormComponent
 	/** Serial Version ID */
 	private static final long serialVersionUID = -2933133745573428936L;
 
-	/** the optional label to use. */
+	/** The optional label to use. */
 	private String label = null;
-
-	/**
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public RadioOption(String name, IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-     * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public RadioOption(String name, IModel model, String expression)
-	{
-		super(name, model, expression);
-	}
 
 	/**
      * @see wicket.Component#Component(String, Serializable)
@@ -68,31 +51,6 @@ public class RadioOption extends FormComponent
 	public RadioOption(String name, Serializable object, String expression)
 	{
 		super(name, object, expression);
-	}
-
-	/**
-     * @param name See Component constructor
-	 * @param label Label for option
-	 * @param model See Component constructor
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public RadioOption(String name, String label, IModel model)
-	{
-		super(name, model);
-		this.label = label;
-	}
-
-	/**
-     * @param name See Component constructor
-     * @param label Label for option
-     * @param model See Component constructor
-     * @param expression See Component constructor
-     * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public RadioOption(String name, String label, IModel model, String expression)
-	{
-		super(name, model, expression);
-		this.label = label;
 	}
 
 	/**

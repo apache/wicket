@@ -21,7 +21,6 @@ package wicket.markup.html.link;
 import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
-import wicket.model.IModel;
 
 /**
  * Implementation of a special link component that can handle linkClicked events (implements
@@ -58,8 +57,7 @@ import wicket.model.IModel;
 public abstract class OnClickLink extends AbstractLink
 {
     /**
-     * Construct.
-     * @param componentName the name of the component
+     * @see wicket.Component#Component(String)
      */
     public OnClickLink(String componentName)
     {
@@ -67,38 +65,7 @@ public abstract class OnClickLink extends AbstractLink
     }
 
     /**
-     * Constructor that uses the provided {@link IModel} as its model.
-     * @param name The non-null name of this component
-     * @param model the model
-     * @throws wicket.WicketRuntimeException Thrown if the component has been given a null name.
-     */
-    public OnClickLink(String name, IModel model)
-    {
-        super(name, model);
-    }
-
-    /**
-     * Constructor that uses the provided instance of {@link IModel} as a dynamic model.
-     * This model will be wrapped in an instance of {@link wicket.model.PropertyModel}
-     * using the provided expression.
-     *
-     * @param name The non-null name of this component
-     * @param model the instance of {@link IModel} from which the model object will be
-     *            used as the subject for the given expression
-     * @param expression the OGNL expression that works on the given object
-     * @throws wicket.WicketRuntimeException Thrown if the component has been given a null name.
-     */
-    public OnClickLink(String name, IModel model, String expression)
-    {
-        super(name, model, expression);
-    }
-
-    /**
-     * Constructor that uses the provided object as a simple model. This object will be
-     * wrapped in an instance of {@link wicket.model.Model}.
-     * @param name The non-null name of this component
-     * @param object the object that will be used as a simple model
-     * @throws wicket.WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable)
      */
     public OnClickLink(String name, Serializable object)
     {
@@ -106,13 +73,7 @@ public abstract class OnClickLink extends AbstractLink
     }
 
     /**
-     * Constructor that uses the provided object as a dynamic model. This object will be
-     * wrapped in an instance of {@link wicket.model.Model} that will be wrapped in an instance of
-     * {@link wicket.model.PropertyModel} using the provided expression.
-     * @param name The non-null name of this component
-     * @param object the object that will be used as the subject for the given expression
-     * @param expression the OGNL expression that works on the given object
-     * @throws wicket.WicketRuntimeException Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable, String)
      */
     public OnClickLink(String name, Serializable object, String expression)
     {

@@ -26,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
-import wicket.model.IModel;
 
 /**
  * A ListView holds ListItems of information. The listItem can be re-ordered and
@@ -83,22 +82,6 @@ public abstract class ListView extends HtmlContainer
 
 	/** Index of the first listItem to show */
 	private int firstIndex = 0;
-
-	/**
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public ListView(String name, IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public ListView(String name, IModel model, String expression)
-	{
-		super(name, model, expression);
-	}
 
 	/**
 	 * @param name

@@ -27,7 +27,6 @@ import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
-import wicket.model.IModel;
 import wicket.protocol.http.HttpResponse;
 import wicket.util.io.Streams;
 import wicket.util.lang.Classes;
@@ -65,22 +64,6 @@ public class Image extends HtmlComponent implements IResourceListener
     public Image(final String name)
     {
         super(name);
-    }
-
-    /**
-     * @see wicket.Component#Component(String, IModel)
-     */
-    public Image(final String name, final IModel model)
-    {
-        super(name, model);
-    }
-
-    /**
-     * @see wicket.Component#Component(String, IModel, String)
-     */
-    public Image(final String name, final IModel model, final String expression)
-    {
-        super(name, model, expression);
     }
 
     /**

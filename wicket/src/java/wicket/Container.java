@@ -35,9 +35,6 @@ import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
 import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
 import wicket.util.listener.IChangeListener;
@@ -110,10 +107,7 @@ public abstract class Container extends Component
 	private transient MarkupStream markupStream;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param name
-	 *            The name of this container
+     * @see wicket.Component#Component(String)
 	 */
 	public Container(final String name)
 	{
@@ -122,61 +116,7 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Constructor that uses the provided {@link IModel}as its model. All
-	 * components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the model
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
-	 */
-	public Container(String name, IModel model)
-	{
-		super(name, model);
-		optimize();
-	}
-
-	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a
-	 * dynamic model. This model will be wrapped in an instance of
-	 * {@link PropertyModel}using the provided expression. Thus, using this
-	 * constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(myIModel, expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the instance of {@link IModel}from which the model object
-	 *            will be used as the subject for the given expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
-	 */
-	public Container(String name, IModel model, String expression)
-	{
-		super(name, model, expression);
-		optimize();
-	}
-
-	/**
-	 * Constructor that uses the provided object as a simple model. This object
-	 * will be wrapped in an instance of {@link Model}. All components have
-	 * names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as a simple model
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable)
 	 */
 	public Container(String name, Serializable object)
 	{
@@ -185,26 +125,7 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Constructor that uses the provided object as a dynamic model. This object
-	 * will be wrapped in an instance of {@link Model}that will be wrapped in
-	 * an instance of {@link PropertyModel}using the provided expression. Thus,
-	 * using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(new Model(object), expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as the subject for the given
-	 *            expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+     * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public Container(String name, Serializable object, String expression)
 	{

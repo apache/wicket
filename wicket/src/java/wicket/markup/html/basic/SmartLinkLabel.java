@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.model.IModel;
 
 /**
  * If you have email addresses or web URLs in the data that you are displaying,
@@ -56,22 +55,6 @@ public final class SmartLinkLabel extends Label
 			"([a-zA-Z]+://[\\w\\.\\-\\:\\/]+)[\\w\\.:\\-/?&=%]*", Pattern.DOTALL);
 
 	private static final String urlReplacePattern = "<a href=\"$0\">$1</a>";
-
-	/**
-	 * @see wicket.Component#Component(String, IModel)
-	 */
-	public SmartLinkLabel(String name, IModel model)
-	{
-		super(name, model);
-	}
-
-	/**
-	 * @see wicket.Component#Component(String, IModel, String)
-	 */
-	public SmartLinkLabel(String name, IModel model, String expression)
-	{
-		super(name, model, expression);
-	}
 
 	/**
 	 * @see wicket.Component#Component(String, Serializable)
