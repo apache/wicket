@@ -2,7 +2,6 @@
 // http://www.templemore.co.uk/copyright.html
 package wicket.examples.hangman;
 
-import wicket.examples.helloworld.HelloWorldTest;
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestSuite;
