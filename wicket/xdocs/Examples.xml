@@ -9,14 +9,9 @@
 	<body>
 		<section name="Examples">
 			<p>
-			TODO: explain here how to download and run the examples with or without eclipse.
-			<p>
-				For more examples, check out our 
-				<a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">examples project</a>
-				which includes a 
-				<a href="http://www.springframework.com">Spring</a> framework example, an example
-				written in <a href="http://groovy.codehaus.org">Groovy</a> and much more!
-			</p>
+			TODO: explain here how to download and run
+			<a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">the examples</a>
+			 with or without eclipse.
 			</p>
 		</section>
 	</body>
