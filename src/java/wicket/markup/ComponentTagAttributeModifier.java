@@ -20,7 +20,6 @@ package wicket.markup;
 
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
@@ -206,7 +205,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	{
 		if ((replaceModel != null) && (replaceModel instanceof IDetachableModel))
 		{
-			((IDetachableModel) replaceModel).attach(RequestCycle.get().getSession());
+			((IDetachableModel) replaceModel).attach();
 		}
 		return replaceModel;
 	}

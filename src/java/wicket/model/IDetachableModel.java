@@ -17,7 +17,6 @@
  */
 package wicket.model;
 
-import wicket.Session;
 
 /**
  * A IDetachableModel wraps the actual model objects of components and provides
@@ -32,17 +31,11 @@ public interface IDetachableModel extends IModel
 {
     /**
      * Detaches from a session
-     * 
-     * @param session
-     *            The session
      */
-    public void detach(Session session);
+    public void detach();
 
     /**
      * Attaches to a session
-     * 
-     * @param session
-     *            The session
      */
-    public void attach(Session session);
+    public void attach();
 }

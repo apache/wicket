@@ -336,7 +336,7 @@ public abstract class Component implements Serializable
     {
         if ((model != null) && (model instanceof IDetachableModel))
         {
-            ((IDetachableModel) model).attach(getSession());
+            ((IDetachableModel) model).attach();
         }
         return model;
     }
@@ -402,7 +402,7 @@ public abstract class Component implements Serializable
         final IModel currentModel = getModel();
         if (currentModel != null && currentModel instanceof IDetachableModel)
         {
-            ((IDetachableModel) currentModel).detach(getSession());
+            ((IDetachableModel) currentModel).detach();
         }
         this.model = (IModel) model;
         return this;
@@ -802,7 +802,7 @@ public abstract class Component implements Serializable
                 if ((componentModel != null)
                         && (componentModel instanceof IDetachableModel))
                 {
-                    ((IDetachableModel) componentModel).detach(getSession());
+                    ((IDetachableModel) componentModel).detach();
                 }
 
                 // Also detach models from any contained attribute modifiers
@@ -817,7 +817,7 @@ public abstract class Component implements Serializable
                                 && (modifierModel instanceof IDetachableModel))
                         {
                             ((IDetachableModel) modifierModel)
-                                    .detach(getSession());
+                                    .detach();
                         }
                     }
                 }
