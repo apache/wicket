@@ -1103,7 +1103,6 @@ public abstract class Component implements Serializable
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		markupStream.throwMarkupException("Required onComponentTagBody() was not provided");
 	}
 
 	/**
