@@ -23,7 +23,7 @@ package wicket.util.listener;
  * 
  * @author Jonathan Locke
  */
-public interface IChangeListener
+public interface IChangeListener extends IListener
 {
     /**
      * Client method that is called to indicate that something changed.

@@ -18,14 +18,14 @@
  */
 package wicket.markup.html.link;
 
-import wicket.IListener;
+import wicket.IRequestListener;
 import wicket.RequestCycle;
 
 /**
  * Listener method for link clicks
  * @author Jonathan Locke
  */
-public interface ILinkListener extends IListener
+public interface ILinkListener extends IRequestListener
 { // TODO finalize javadoc
     /**
      * Called when a link is clicked

@@ -19,11 +19,12 @@
 package wicket;
 
 /**
- * Listener called on page redirects.
+ * Request listener called on page redirects.
+ * 
  * @author Jonathan Locke
  */
-public interface IRedirectListener extends IListener
-{ // TODO finalize javadoc
+public interface IRedirectListener extends IRequestListener
+{
     /**
      * Called when a page redirect happens.
      * @param cycle The request cycle

@@ -18,14 +18,14 @@
  */
 package wicket.markup.html.form;
 
-import wicket.IListener;
+import wicket.IRequestListener;
 import wicket.RequestCycle;
 
 /**
  * Listener method for on change events of dropdown lists.
  * @author Eelco Hillenius
  */
-public interface IOnChangeListener extends IListener
+public interface IOnChangeListener extends IRequestListener
 { // TODO finalize javadoc
     /**
      * Called when a option is selected of a dropdown list that wants to be notified of

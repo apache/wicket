@@ -21,11 +21,13 @@ package wicket;
 import java.io.Serializable;
 
 /**
- * Base interface for all listener interfaces.
+ * Base interface for all interfaces that listen for requests from
+ * the client browser.
+ * 
  * @author Jonathan Locke
  */
-public interface IListener extends Serializable
-{ // TODO finalize javadoc
+public interface IRequestListener extends Serializable
+{
 }
 
 ///////////////////////////////// End of File /////////////////////////////////

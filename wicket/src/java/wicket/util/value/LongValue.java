@@ -24,16 +24,18 @@ import java.io.Serializable;
 import wicket.util.lang.Primitives;
 
 /**
- * A base class for value classes based on a Java long primitive which want to implement
- * standard operations on that value without the pain of aggregating a Long object.
+ * A base class for value classes based on a Java long primitive which 
+ * want to implement standard operations on that value without the pain 
+ * of aggregating a Long object.
+ * 
  * @author Jonathan Locke
  */
 public class LongValue implements Comparable, Serializable
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = -8566127098655644274L;
 	
-	// The long value
+	/** The long value */
     protected final long value;
 
     /**
@@ -125,8 +127,8 @@ public class LongValue implements Comparable, Serializable
     }
 
     /**
-     * Converts this byte count to a string
-     * @return The string for this byte count
+     * Converts this value to a string
+     * @return The string for this value
      */
     public String toString()
     {
