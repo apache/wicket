@@ -242,7 +242,43 @@ public abstract class IndentTree extends Tree
 	 */
 	protected void nodeLinkClicked(RequestCycle cycle, TreeNodeModel node)
 	{
-        setExpandedState(node);
+		setSelected(node);
+	}
+
+	/**
+	 * Returns whether the path and the selected path are equal.
+	 * This method is used by the {@link ComponentTagAttributeModifier} that is used
+	 * for setting the CSS class for the selected row.
+	 * @param path the path
+	 * @param selectedPath the selected path
+	 * @return true if the path and the selected are equal, false otherwise
+	 */
+	protected boolean equals(TreePath path, TreePath selectedPath)
+	{
+		boolean equals;
+		Object pathNode = path.getLastPathComponent();
+		Object selectedPathNode = selectedPath.getLastPathComponent();
+		equals = (pathNode != null && selectedPathNode != null &&
+				pathNode.equals(selectedPathNode));
+		return equals;
+	}
+
+	/**
+	 * Gets the CSS class attribute value for the selected row.
+	 * @return the CSS class attribute value for the selected row
+	 */
+	protected String getCSSClassForSelectedRow()
+	{
+		return "treerow-selected";
+	}
+
+	/**
+	 * Gets the CSS class attribute value for a normal (not-selected) row.
+	 * @return the CSS class attribute value for a normal (not-selected) row
+	 */
+	protected String getCSSClassForRow()
+	{
+		return "treerow";
 	}
 
     /**
@@ -284,13 +320,53 @@ public abstract class IndentTree extends Tree
             {
                 throw new RuntimeException("userObject == null");
             }
-            TreeNodeLink expandCollapsLink = createJunctionLink(treeNodeModel);
+            TreeNodeLink expandCollapsLink = IndentTree.this.createJunctionLink(treeNodeModel);
             nodeContainer.add(expandCollapsLink);
 
-            TreeNodeLink selectLink = createNodeLink(treeNodeModel);
+            TreeNodeLink selectLink = IndentTree.this.createNodeLink(treeNodeModel);
             nodeContainer.add(selectLink);
             listItem.add(nodeContainer);
+
+            listItem.add(new ComponentTagAttributeModifier(
+            		"class", true, new SelectedPathReplacementModel(treeNodeModel)));
         }
+    }
+
+    /**
+     * Replacement model that looks up whether the current row is the active one.
+     */
+    private final class SelectedPathReplacementModel extends Model
+    {
+    	/** the tree node model. */
+    	private final TreeNodeModel treeNodeModel;
+
+    	/**
+    	 * Construct.
+    	 * @param treeNodeModel tree node model
+    	 */
+    	public SelectedPathReplacementModel(TreeNodeModel treeNodeModel)
+    	{
+    		this.treeNodeModel = treeNodeModel;
+    	}
+
+		/**
+		 * @see wicket.model.IModel#getObject()
+		 */
+		public Object getObject()
+		{
+			TreePath path = treeNodeModel.getPath();
+			TreePath selectedPath = treeNodeModel.getTreeState().getSelectedPath();
+			if(selectedPath != null)
+			{
+				boolean equals = IndentTree.this.equals(path, selectedPath);
+				
+				if(equals)
+				{
+					return IndentTree.this.getCSSClassForSelectedRow();
+				}
+			}
+			return IndentTree.this.getCSSClassForRow();
+		}
     }
 
     /**
