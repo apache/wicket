@@ -8,6 +8,10 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1138665">
+      	Created MultipartWebRequest class and used that to rework AbstractUploadForm 
+      	and FileUploadForm so that validation will work on upload forms.
+      </action>
 	  <action type="update" dev="Jonathan Locke" issue="">
 		Simplified choices so they just have a single is/setNullValid() property.  When
 		null is valid, the <name>.null string resource is loaded and used.  When null is

@@ -45,12 +45,12 @@ public class WebRequest extends Request
 	private final HttpServletRequest httpServletRequest;
 
 	/**
-	 * Package private constructor.
+	 * Protected constructor.
 	 * 
 	 * @param httpServletRequest
 	 *            The servlet request information
 	 */
-	WebRequest(final HttpServletRequest httpServletRequest)
+	protected WebRequest(final HttpServletRequest httpServletRequest)
 	{
 		this.httpServletRequest = httpServletRequest;
 	}
