@@ -357,12 +357,12 @@ public abstract class RequestCycle
      */
     private void release()
     {
-        if(getRedirect())
+        if (getRedirect())
         {
             // Since we are explicitly redirecting to a page already, we do not
             // want a second redirect to occur automatically
             setRedirect(false);
-            if(page != null)
+            if (page != null)
             {
                 page.messages = FeedbackMessages.get();
                 FeedbackMessages.remove(); // only clean thread local; in fact we moved the

@@ -45,15 +45,16 @@ import wicket.util.string.Strings;
 
 /**
  * Request cycle implementation for HTTP protocol.
+ * 
  * @author Jonathan Locke
  */
 public class HttpRequestCycle extends RequestCycle
 { // TODO finalize javadoc
-	// Code broadcaster for reporting
-	private static final Log code = LogFactory.getLog(HttpRequestCycle.class);
+	/** Logging object */
+	private static final Log log = LogFactory.getLog(HttpRequestCycle.class);
 
 	/**
-	 * Package local constructor
+	 * Constructor
 	 * @param application The application
 	 * @param session The session
 	 * @param request The request
@@ -66,6 +67,8 @@ public class HttpRequestCycle extends RequestCycle
 	}
 
 	/**
+     * Returns a bookmarkable URL that references a given page class using
+     * a given set of page parameters 
 	 * @param pageClass Class of page
 	 * @param parameters Parameters to page
 	 * @return Bookmarkable URL to page
@@ -74,7 +77,7 @@ public class HttpRequestCycle extends RequestCycle
 	{
 		final StringBuffer buffer = urlPrefix();
 
-		buffer.append("?bookmarkablePage=");
+        buffer.append("?bookmarkablePage=");
 		buffer.append(pageClass.getName());
 
 		if (parameters != null)
@@ -94,12 +97,23 @@ public class HttpRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * @param component Component that has listener interface
-	 * @param listenerInterface The listener interface
+     * Returns a URL that references a given interface on a component.  When
+     * the URL is requested from the server at a later time, the interface 
+     * will be called.
+	 * @param component The component to reference
+	 * @param listenerInterface The listener interface on the component
 	 * @return A URL that encodes a page, component and interface to call
 	 */
 	public String urlFor(final Component component, final Class listenerInterface)
 	{
+        // Ensure that component instanceof listenerInterface
+        if (!listenerInterface.isAssignableFrom(component.getClass()))
+        {
+            throw new RenderException("The component " + component + " of class " +
+                    component.getClass() + " does not implement " + listenerInterface);
+        }
+
+        // Compose the URL
 		final StringBuffer buffer = urlPrefix();
 
 		buffer.append("?component=");
@@ -109,22 +123,41 @@ public class HttpRequestCycle extends RequestCycle
 		buffer.append("&interface=");
 		buffer.append(Classes.name(listenerInterface));
 
+        // Return the encoded URL
 		return response.encodeURL(buffer.toString());
 	}
 
 	/**
-	 * Renders a wicket.response for this request cycle.
+	 * Renders a response for the current request.  The following four steps are 
+     * followed in rendering a response:
+     * <p>
+     * 1. If the URL requested is in the form of a component listener invocation, 
+     *    then that invocation will occur and is expected to generate a response.  
+     * <p>
+     * 2. If the URL is to a bookmarkable page, then an instance of that page 
+     *    will render a response.  
+     * <p>
+     * 3. If the URL is for the application's home page, an instance of the home
+     *    page will render a response.
+     * <p>
+     * 4. Finally, an attempt is made to render the requested resource as static 
+     *    content, available through the servlet context.  
+     * <p>
+     * If all four steps are executed and content cannot be found to satisfy the
+     * request, then the request is considered invalid and a response is written 
+     * detailing the problem.
 	 */
 	protected void handleRender()
 	{
-		// Dispatch to component listener or handle as bookmarkable page or home
-		// page
+		// Dispatch to component listener or handle as bookmarkable page 
+        // or home page
 		synchronized (session)
 		{
 			if (callComponentListener() || bookmarkablePage() || homePage())
 			{
 				// Get page set by handler
 				Page page = getPage();
+                
 				// Is there a page to render?
 				if (page != null)
 				{
@@ -141,24 +174,24 @@ public class HttpRequestCycle extends RequestCycle
 					}
 				}
 			}
-			else if (respondWithStaticContent())
-			{
-				// nothing to do
+			else 
+            {
+                // Try to respond with static content
+                if (!renderStaticContent())
+    			{
+                    // No static content could be found
+                    response.write("<pre>Invalid request: " + request + "</pre>");
+                }
 			}
-			else
-			{
-				response.write("<pre>Invalid request: " + request + "</pre>");
-			}
-
 		}
 	}
 
 	/**
-	 * @return A copy of this request cycle object with a NULL wicket.response
+	 * @return A copy of this request cycle object with a NULL response
 	 */
 	protected RequestCycle nullResponse()
 	{
-		return new HttpRequestCycle(application, (HttpSession) session, (HttpRequest) request,
+		return new HttpRequestCycle(application, (HttpSession)session, (HttpRequest)request,
 				NullResponse.getInstance());
 	}
 
@@ -178,11 +211,6 @@ public class HttpRequestCycle extends RequestCycle
 	 */
 	final void setFormComponentValuesFromCookies(final Page page)
 	{
-		if (page == null)
-		{
-			throw new IllegalArgumentException("'page' must not be null");
-		}
-
 		// May be there is some other means I don't know. But I need access
 		// to 'this' from inside the anonymous inner class.
 		final RequestCycle cycle = this;
@@ -193,7 +221,7 @@ public class HttpRequestCycle extends RequestCycle
 			// For each FormComponent found on the Page (not Form)
 			public Object component(final Component component)
 			{
-				((Form) component).setFormComponentValuesFromPersister(cycle);
+				((Form)component).setFormComponentValuesFromPersister(cycle);
 				return CONTINUE_TRAVERSAL;
 			}
 		});
@@ -237,7 +265,7 @@ public class HttpRequestCycle extends RequestCycle
 		if (path != null)
 		{
 			// Get page where component resides
-			code.debug("Getting page " + path);
+			log.debug("Getting page " + path);
 
 			// Get page from path
 			final Page page = session.getPage(path);
@@ -327,7 +355,7 @@ public class HttpRequestCycle extends RequestCycle
 						// get here. So it must be an internal error of some
 						// kind or
 						// someone is hacking around with URLs in their browser.
-						code.error("No component found for " + path);
+						log.error("No component found for " + path);
 						setPage(newPage(application.getSettings().getInternalErrorPage()));
 
 						return true;
@@ -376,15 +404,15 @@ public class HttpRequestCycle extends RequestCycle
 	/**
 	 * @return True if static content was returned
 	 */
-	private boolean respondWithStaticContent()
+	private boolean renderStaticContent()
 	{
 		try
 		{
 			// Get URL
-			final String url = ((HttpRequest) getRequest()).getURL();
+			final String url = ((HttpRequest)getRequest()).getURL();
 
 			// Get servlet context
-			final ServletContext context = ((HttpApplication) application).getServletContext();
+			final ServletContext context = ((HttpApplication)application).getServletContext();
 
 			// Set content type
 			response.setContentType(context.getMimeType(url));
@@ -392,16 +420,13 @@ public class HttpRequestCycle extends RequestCycle
 			// NOTE: Servlet container prevents accessing WEB-INF/** already.
 			// TODO Maybe a kind of exclude/include list would good as well.
 			final InputStream in = context.getResourceAsStream(url);
-
 			if (in != null)
 			{
 				try
 				{
 					// Copy resource input stream to servlet output stream
-					Streams.writeStream(in, ((HttpResponse) response).getServletResponse()
+					Streams.writeStream(in, ((HttpResponse)response).getServletResponse()
 							.getOutputStream());
-
-					return true;
 				}
 				finally
 				{
@@ -409,17 +434,18 @@ public class HttpRequestCycle extends RequestCycle
 					// InputStream only
 					in.close();
 				}
+                return true;
 			}
+            else
+            {
+                // No static content was found
+                return false;
+            }
 		}
 		catch (IOException e)
 		{
-			// Ignore inability to access resource for now
-			// TODO Should this throw a ServletException or some other kind of
-			// runtime exception?
-			// TODO Maybe this should be logged using code broadcaster pattern?
+            throw new RenderException("Cannot load static content for request " + request, e);
 		}
-
-		return false;
 	}
 
 	/**
@@ -431,9 +457,9 @@ public class HttpRequestCycle extends RequestCycle
 
 		if (request != null)
 		{
-			buffer.append(((HttpRequest) request).getContextPath());
+			buffer.append(((HttpRequest)request).getContextPath());
 
-			final String servletPath = ((HttpRequest) request).getServletPath();
+			final String servletPath = ((HttpRequest)request).getServletPath();
 
 			if (servletPath.equals(""))
 			{
