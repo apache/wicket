@@ -23,52 +23,53 @@ import java.util.Locale;
 
 /**
  * Converts from Date to String.
- *
+ * 
  * @author Eelco Hillenius
  */
 public final class NumberToStringConverter extends AbstractConverter
 {
 	/** The date format to use */
-    private NumberFormat numberFormat;
-    
-    /**
-     * @see wicket.util.convert.converters.AbstractConverter#setLocale(java.util.Locale)
-     */
-    public void setLocale(Locale locale)
-    {
-        super.setLocale(locale);
-        numberFormat = null;
-    }
-    
-    /**
-     * @return Returns the numberFormat.
-     */
-    public final NumberFormat getNumberFormat()
-    {
-        if (numberFormat == null && locale != null)
-        {
-            numberFormat = NumberFormat.getInstance(locale);
-        }
-        return numberFormat;
-    }
-    
-    /**
-     * @param numberFormat The numberFormat to set.
-     */
-    public final void setNumberFormat(final NumberFormat numberFormat)
-    {
-        this.numberFormat = numberFormat;
-    }
+	private NumberFormat numberFormat;
+
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#setLocale(java.util.Locale)
+	 */
+	public void setLocale(Locale locale)
+	{
+		super.setLocale(locale);
+		numberFormat = null;
+	}
+
+	/**
+	 * @return Returns the numberFormat.
+	 */
+	public final NumberFormat getNumberFormat()
+	{
+		if (numberFormat == null && locale != null)
+		{
+			numberFormat = NumberFormat.getInstance(locale);
+		}
+		return numberFormat;
+	}
+
+	/**
+	 * @param numberFormat The numberFormat to set.
+	 */
+	public final void setNumberFormat(final NumberFormat numberFormat)
+	{
+		this.numberFormat = numberFormat;
+	}
 
 	/**
 	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
 	 */
 	public Object convert(final Object value)
 	{
-        if (numberFormat != null)
-        {
-            return numberFormat.format(value);
-        }
-        return value.toString();
+		NumberFormat fmt = getNumberFormat();
+		if (fmt != null)
+		{
+			return fmt.format(value);
+		}
+		return value.toString();
 	}
 }
