@@ -64,9 +64,6 @@ public class Home extends WicketExamplePage
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
 		MyTree tree = new MyTree("tree", treeModel);
-		// NOTE: it is important that the user objects are unique within the tree,
-		// as
-		// otherwise the links won't work properly.
 		add(tree);
 	}
 
