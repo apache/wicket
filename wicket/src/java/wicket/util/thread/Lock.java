@@ -19,11 +19,12 @@
 package wicket.util.thread;
 
 /**
- * Typesafe monitor class to be used in place of Object.
+ * Typesafe monitor class to be used in place of Object for readability.
+ * 
  * @author Jonathan Locke
  */
 public final class Lock
-{ // TODO finalize javadoc
+{
 }
 
 ///////////////////////////////// End of File /////////////////////////////////
