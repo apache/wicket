@@ -269,7 +269,7 @@ public class PageFactory implements IPageFactory
                 // Not found. Create a new Constructor
             	if(parameter == null)
             	{
-            		constructor = pageClass.getConstructor(null);
+            		constructor = pageClass.getConstructor((Class[])null);
             	}
             	else
             	{
