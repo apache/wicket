@@ -159,7 +159,7 @@ public final class MarkupParser implements IMarkupParser
     {
         this.wicketTagName = name;
         
-        if (!ComponentWicketTag.WICKET_NAMESPACE.equals(wicketTagName))
+        if (!ComponentWicketTag.DEFAULT_WICKET_NAMESPACE.equals(wicketTagName))
         {
             log.info("You are using a non-standard wicket tag name: " 
                     + wicketTagName);

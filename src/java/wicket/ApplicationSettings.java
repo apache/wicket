@@ -186,7 +186,7 @@ public final class ApplicationSettings
     private boolean useDefaultOnMissingResource = true;
 
     /** Default xhtml wicket namespace: e.g. <wicket:> */
-    private String wicketNamespace = ComponentWicketTag.WICKET_NAMESPACE;
+    private String wicketNamespace = ComponentWicketTag.DEFAULT_WICKET_NAMESPACE;
 
     /**
      * Indicates that an exception page appropriate to development should be
