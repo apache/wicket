@@ -34,7 +34,7 @@ import wicket.model.Model;
  * @author Jonathan Locke
  * @author Johan Compagner
  */
-public final class ListMultipleChoice extends Choice
+public class ListMultipleChoice extends Choice
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1000324612688307682L;
@@ -190,7 +190,7 @@ public final class ListMultipleChoice extends Choice
 	 *            Tag to modify
 	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected final void handleComponentTag(final ComponentTag tag)
 	{
 		super.handleComponentTag(tag);
 		tag.put("multiple", true);
@@ -204,7 +204,7 @@ public final class ListMultipleChoice extends Choice
 	 * @return whether the given value represents the current selection
 	 * @see wicket.markup.html.form.Choice#isSelected(java.lang.Object)
 	 */
-	protected boolean isSelected(Object currentValue)
+	protected final boolean isSelected(Object currentValue)
 	{
 		Collection collection = (Collection)getModelObject();
 		if (collection != null)

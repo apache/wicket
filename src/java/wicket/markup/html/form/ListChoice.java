@@ -31,7 +31,7 @@ import wicket.model.IModel;
  * @author Johan Compagner
  * @author Eelco Hillenius
  */
-public final class ListChoice extends DropDownChoice
+public class ListChoice extends DropDownChoice
 {
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
@@ -206,7 +206,7 @@ public final class ListChoice extends DropDownChoice
 	 * 
 	 * @return the maximum number of rows to display
 	 */
-	public int getMaxRows()
+	public final int getMaxRows()
 	{
 		return maxRows;
 	}
@@ -214,7 +214,7 @@ public final class ListChoice extends DropDownChoice
     /**
      * @see wicket.markup.html.form.FormComponent#supportsPersistence()
      */
-    public boolean supportsPersistence()
+    public final boolean supportsPersistence()
     {
         return true;
     }
@@ -226,7 +226,7 @@ public final class ListChoice extends DropDownChoice
 	 *            the maximum number of rows to display
 	 * @return This
 	 */
-	public ListChoice setMaxRows(int maxRows)
+	public final ListChoice setMaxRows(int maxRows)
 	{
 		this.maxRows = maxRows;
 		return this;
@@ -235,7 +235,7 @@ public final class ListChoice extends DropDownChoice
 	/**
 	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected final void handleComponentTag(final ComponentTag tag)
 	{
 		super.handleComponentTag(tag);
 		tag.put("size", Math.min(maxRows, getValues().size()));

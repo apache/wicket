@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public final class RadioChoice extends FormComponent
+public class RadioChoice extends FormComponent
 {
 	/** Index value for null choice */
 	private static final int NULL_VALUE = -1;
@@ -78,7 +78,7 @@ public final class RadioChoice extends FormComponent
 	/**
 	 * @see FormComponent#getValue()
 	 */
-	public String getValue()
+	public final String getValue()
 	{
 		final int index = values.indexOf(getModelObject());
 
@@ -88,7 +88,7 @@ public final class RadioChoice extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#setValue(java.lang.String)
 	 */
-	public void setValue(final String value)
+	public final void setValue(final String value)
 	{
 		setModelObject(values.get(Integer.parseInt(value)));
 	}
@@ -96,7 +96,7 @@ public final class RadioChoice extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
-	public boolean supportsPersistence()
+	public final boolean supportsPersistence()
 	{
 		return true;
 	}
@@ -104,7 +104,7 @@ public final class RadioChoice extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void updateModel()
+	public final void updateModel()
 	{
 		final int index = getRequestInt(NULL_VALUE);
 
@@ -119,7 +119,7 @@ public final class RadioChoice extends FormComponent
 	 *            The choice to add to this radio choice
 	 * @return The index of the choice
 	 */
-	int addRadioOption(final Object choice)
+	final int addRadioOption(final Object choice)
 	{
 		final int index = values.size();
 
