@@ -1,6 +1,5 @@
 <project>
     <pomVersion>3</pomVersion>
-    <id>wicket</id>
     <name>Wicket Examples</name>
     <groupId>wicket-examples</groupId>
     <currentVersion>0.9.12-alpha</currentVersion>
@@ -10,8 +9,6 @@
         <logo>http://sourceforge.net/sflogo.php?group_id=${maven.sourceforge.project.groupId}&amp;type=5</logo>
     </organization>
     <inceptionYear>2004</inceptionYear>
-    <package></package>
-    <logo/> <!-- /images/logo.gif</logo> -->
     <description>
 	    Wicket is a Java web application framework that takes simplicity, 
 	    separation of concerns and ease of development to a whole new level. Wicket 
@@ -23,10 +20,8 @@
     <shortDescription>Examples for the wicket framework.</shortDescription>
     <url>http://wicket.sourceforge.net</url>
     <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
-
-	<siteAddress>shell.sourceforge.net</siteAddress>
-	<siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
-
+    <siteAddress>shell.sourceforge.net</siteAddress>
+    <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
     <mailingLists>
         <mailingList>
             <name>${pom.name} Dev List</name>
@@ -48,26 +43,30 @@
         </mailingList>
     </mailingLists>
     <developers>
-    	<developer>
-    		<name>Chris Turner</name>
-    		<id>?</id>
-    		<email>?</email>
-    	</developer>
-    	<developer>
-    		<name>Eelco Hillenius</name>
-    		<id>eelco12</id>
-    		<email>eelco12 at users.sourceforge.net</email>
-    	</developer>
-    	<developer>
-    		<name>Johan Compagner</name>
-    		<id>joco01</id>
-    		<email>joco01 at users.sourceforge.net</email>
-    	</developer>
-    	<developer>
-    		<name>Martijn Dashorst</name>
-    		<id>dashorst</id>
-    		<email>dashorst at users.sourceforge.net</email>
-    	</developer>
+        <developer>
+            <name>Chris Turner</name>
+            <id>?</id>
+            <email>?</email>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Eelco Hillenius</name>
+            <id>eelco12</id>
+            <email>eelco12 at users.sourceforge.net</email>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Johan Compagner</name>
+            <id>joco01</id>
+            <email>joco01 at users.sourceforge.net</email>
+            <roles/>
+        </developer>
+        <developer>
+            <name>Martijn Dashorst</name>
+            <id>dashorst</id>
+            <email>dashorst at users.sourceforge.net</email>
+            <roles/>
+        </developer>
     </developers>
     <dependencies>
         <dependency>
@@ -87,53 +86,45 @@
             <properties/>
         </dependency>
         <dependency>
-            <groupId>cglib-full</groupId>
-            <artifactId>cglib-full</artifactId>
-            <version>2.0.2</version>
-            <jar>cglib-full-2.0.2.jar</jar>
+            <groupId>jta</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.0</version>
+            <jar>jta-1.0.jar</jar>
             <type>jar</type>
             <properties/>
         </dependency>
-			<dependency>  
-            <groupId>jta</groupId>  
-            <artifactId>jta</artifactId>  
-            <version>1.0</version> 
-            <jar>jta-1.0.jar</jar> 
-            <type>jar</type> 
-            <properties/> 
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.4</version>
+            <jar>dom4j-1.4.jar</jar>
+            <type>jar</type>
+            <properties/>
         </dependency>
-		  <dependency>  
-            <groupId>dom4j</groupId>  
-            <artifactId>dom4j</artifactId>  
-            <version>1.4</version> 
-            <jar>dom4j-1.4.jar</jar> 
-            <type>jar</type> 
-            <properties/> 
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>2.1</version>
+            <jar>commons-collections-2.1.jar</jar>
+            <type>jar</type>
+            <properties/>
         </dependency>
-			<dependency>  
-            <groupId>commons-collections</groupId>  
-            <artifactId>commons-collections</artifactId>  
-            <version>2.1</version> 
-            <jar>commons-collections-2.1.jar</jar> 
-            <type>jar</type> 
-            <properties/> 
+        <dependency>
+            <groupId>odmg</groupId>
+            <artifactId>odmg</artifactId>
+            <version>3.0</version>
+            <jar>odmg-3.0.jar</jar>
+            <type>jar</type>
+            <properties/>
         </dependency>
-		  <dependency>  
-            <groupId>odmg</groupId>  
-            <artifactId>odmg</artifactId>  
-            <version>3.0</version> 
-            <jar>odmg-3.0.jar</jar> 
-            <type>jar</type> 
-            <properties/> 
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.7.2_4</version>
+            <jar>hsqldb-1.7.2_4.jar</jar>
+            <type>jar</type>
+            <properties/>
         </dependency>
-			<dependency>  
-            <groupId>hsqldb</groupId>  
-            <artifactId>hsqldb</artifactId>  
-            <version>1.7.2_4</version> 
-            <jar>hsqldb-1.7.2_4.jar</jar> 
-            <type>jar</type> 
-            <properties/> 
-        </dependency>		  
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -166,16 +157,30 @@
             <type>jar</type>
             <properties/>
         </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.0.4</version>
+            <jar>commons-logging-1.0.4.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-full</artifactId>
+            <version>2.0.2</version>
+            <jar>cglib-full-2.0.2.jar</jar>
+            <type>jar</type>
+            <properties/>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
-        <includes>
-        	<include>**/*.java</include>
-        </includes>
     </build>
     <reports>
-    	<report>maven-changes-plugin</report>
-    	<report>maven-tasklist-plugin</report>
-    	<report>maven-javadoc-plugin</report>
+        <report>maven-changes-plugin</report>
+        <report>maven-tasklist-plugin</report>
+        <report>maven-javadoc-plugin</report>
     </reports>
+    <properties/>
 </project>
