@@ -26,13 +26,13 @@ import nl.openedge.util.jetty.JettyDecorator;
 /**
  * jWebUnit test for Hello World.
  */
-public class GuestbookTestSuite extends WebTestCase
+public class GuestbookTest extends WebTestCase
 {
     /**
      * Construct.
      * @param name name of test
      */
-    public GuestbookTestSuite(String name)
+    public GuestbookTest(String name)
     {
         super(name);
     }
@@ -87,7 +87,7 @@ public class GuestbookTestSuite extends WebTestCase
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite();
-		suite.addTest(new GuestbookTestSuite("testHomePage"));
+		suite.addTest(new GuestbookTest("testHomePage"));
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
