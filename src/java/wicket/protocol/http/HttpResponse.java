@@ -48,7 +48,7 @@ public class HttpResponse extends Response
     private final HttpServletResponse httpServletResponse;
 
     /** True if response is a redirect. */
-    private boolean redirect;
+    protected boolean redirect;
 
     /**
      * Constructor for testing harness.
@@ -122,7 +122,7 @@ public class HttpResponse extends Response
      * 
      * @return True if this response is going to redirect the user agent
      */
-    public boolean isRedirect()
+    public final boolean isRedirect()
     {
         return redirect;
     }
@@ -133,7 +133,7 @@ public class HttpResponse extends Response
      * @param url
      *            The URL to redirect to
      */
-    public final void redirect(final String url)
+    public void redirect(final String url)
     {
         if (httpServletResponse != null)
         {
