@@ -74,10 +74,9 @@ public final class Converter implements IConverter, IStringConverter, ILocalizab
 		{
 			return null;
 		}
-		if(c == null)
+		if(c == null) // as a fallthrough, try to convert to object
 		{
-			throw new IllegalArgumentException(
-					"parameter c(lass( must be not-null");
+			c = Object.class;
 		}
 		IConverter converter = get(c);
 		if(converter == null)
