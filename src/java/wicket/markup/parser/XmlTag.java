@@ -48,7 +48,7 @@ public class XmlTag extends MarkupElement
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */
-	ValueMap attributes = new ValueMap();
+	private ValueMap attributes = new ValueMap();
 
 	/** Column number. */
 	int columnNumber;
