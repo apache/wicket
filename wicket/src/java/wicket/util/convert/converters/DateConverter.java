@@ -31,8 +31,8 @@ import wicket.util.convert.ConversionException;
  */
 public final class DateConverter extends AbstractConverter
 {
-	/** The date format to use; allway this for converting dates. */
-	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT);
+	/** The date format to use. */
+	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
 	/**
 	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
@@ -80,6 +80,6 @@ public final class DateConverter extends AbstractConverter
 	public void setLocale(final Locale locale)
 	{
 		super.setLocale(locale);
-		this.dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+		this.dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
 	}
 }
