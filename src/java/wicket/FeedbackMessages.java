@@ -43,11 +43,11 @@ import wicket.util.string.StringList;
  */
 public final class FeedbackMessages
 {
-    /** Log. */
-    private static Log log = LogFactory.getLog(FeedbackMessages.class);
 
     /** Thread local holder for the current FeedbackMessages. */
     private static final ThreadLocal current = new ThreadLocal();
+    /** Log. */
+    private static Log log = LogFactory.getLog(FeedbackMessages.class);
 
     /**
      * Holds a list of
@@ -60,6 +60,11 @@ public final class FeedbackMessages
      */
     public static final class LevelComparator implements Comparator
     {
+        private static final int ASCENDING = 1;
+        private static final int DESCENDING = -1;
+        
+        /** Ascending / descending sign value. */
+        private final int sign;
 
         /**
          * Construct.
@@ -93,11 +98,6 @@ public final class FeedbackMessages
                 return 0;
             }
         }
-        
-        /** Ascending / descending sign value. */
-        private final int sign;
-        private static final int ASCENDING = 1;
-        private static final int DESCENDING = -1;
     }
 
     /**
@@ -105,6 +105,11 @@ public final class FeedbackMessages
      */
     private static class UIMessagesModel implements IModel
     {
+        /**
+         * level to narrow the model to. If undefined (the default),
+         * it is not used.
+         */
+        private int level = FeedbackMessage.UNDEFINED;
 
         /**
          * Construct.
@@ -167,11 +172,6 @@ public final class FeedbackMessages
                 throw new WicketRuntimeException("Invalid model type for FeedbackMessages");
             }
         }
-        /**
-         * level to narrow the model to. If undefined (the default),
-         * it is not used.
-         */
-        private int level = FeedbackMessage.UNDEFINED;
     }
 
     /**
@@ -267,6 +267,42 @@ public final class FeedbackMessages
     }
 
     /**
+     * Removes from the thread local without releasing.
+     */
+    static void remove()
+    {
+        if (log.isDebugEnabled())
+        {
+            log.debug("FeedbackMessages cleared without releasing for thread " + Thread.currentThread());
+        }
+        current.set(null);
+    }
+
+    /**
+     * Sets the messages for the current thread.
+     * @param messages the messages to use with the current thread
+     */
+    static void set(FeedbackMessages messages)
+    {
+        if (current.get() != null) // that would be wrong
+        {
+            log.error("messages were allready set for this thread!" +
+            		" Either a former cleanup failed, or the current thread has illegal" +
+            		" access. Trying to release the current messages first.");
+            // try cleaning up
+            threadDetach();
+        }
+        else
+        {
+            if (log.isDebugEnabled())
+            {
+                log.debug(messages + " set for thread " + Thread.currentThread());
+            }
+        }
+        current.set(messages);
+    }
+
+    /**
      * Clears the current message's instance from the thread local and
      * reset the original models of the components that had theirs replaced
      * with decorator models. To be used by the framework only (package local).
@@ -316,42 +352,6 @@ public final class FeedbackMessages
                 log.debug("No FeedbackMessages to release for thread " + Thread.currentThread());
             }
         }
-    }
-
-    /**
-     * Removes from the thread local without releasing.
-     */
-    static void remove()
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug("FeedbackMessages cleared without releasing for thread " + Thread.currentThread());
-        }
-        current.set(null);
-    }
-
-    /**
-     * Sets the messages for the current thread.
-     * @param messages the messages to use with the current thread
-     */
-    static void set(FeedbackMessages messages)
-    {
-        if (current.get() != null) // that would be wrong
-        {
-            log.error("messages were allready set for this thread!" +
-            		" Either a former cleanup failed, or the current thread has illegal" +
-            		" access. Trying to release the current messages first.");
-            // try cleaning up
-            threadDetach();
-        }
-        else
-        {
-            if (log.isDebugEnabled())
-            {
-                log.debug(messages + " set for thread " + Thread.currentThread());
-            }
-        }
-        current.set(messages);
     }
 
     /**
