@@ -26,12 +26,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>FileBrowserApplication</servlet-name>
-        <servlet-class>filebrowser.FileBrowserApplication</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
         <servlet-name>ImagesApplication</servlet-name>
         <servlet-class>images.ImagesApplication</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -67,6 +61,17 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>FileBrowserApplication</servlet-name>
+        <servlet-class>filebrowser.FileBrowserApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>UploadApplication</servlet-name>
+        <servlet-class>upload.UploadApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
     <servlet>
         <servlet-name>SignIn2Application</servlet-name>
@@ -127,6 +132,11 @@
     <servlet-mapping>
         <servlet-name>FileBrowserApplication</servlet-name>
         <url-pattern>/filebrowser/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UploadApplication</servlet-name>
+        <url-pattern>/upload/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
