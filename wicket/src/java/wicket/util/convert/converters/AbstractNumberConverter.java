@@ -30,27 +30,10 @@ import wicket.util.convert.ConversionException;
 public abstract class AbstractNumberConverter extends AbstractConverter
 {
 	/**
-	 * Constructor
-	 */
-	public AbstractNumberConverter()
-	{
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
-	 */
-	public AbstractNumberConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
+	 * @param locale 
 	 * @return Returns the numberFormat.
 	 */
-	public abstract NumberFormat getNumberFormat();
+	public abstract NumberFormat getNumberFormat(Locale locale);
 
 	/**
 	 * Parses a value as a String and returns a Number.
@@ -61,22 +44,23 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	 *            The minimum allowed value
 	 * @param max
 	 *            The maximum allowed value
+	 * @param locale 
 	 * @return The number
 	 * @throws ConversionException
 	 *             if value is unparsable or out of range
 	 */
-	protected Number parse(final Object value, final double min, final double max)
+	protected Number parse(final Object value, final double min, final double max, Locale locale)
 	{
-		final NumberFormat numberFormat = getNumberFormat();
+		final NumberFormat numberFormat = getNumberFormat(locale);
 		final Number number = (Number)parse(numberFormat, value);
 		if (number.doubleValue() < min)
 		{
-			throw newConversionException("Value cannot be less than " + min, value).setFormat(
+			throw newConversionException("Value cannot be less than " + min, value,locale).setFormat(
 					numberFormat);
 		}
 		if (number.doubleValue() > max)
 		{
-			throw newConversionException("Value cannot be greater than " + max, value).setFormat(
+			throw newConversionException("Value cannot be greater than " + max, value,locale).setFormat(
 					numberFormat);
 		}
 		return number;

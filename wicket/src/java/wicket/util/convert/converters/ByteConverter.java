@@ -19,6 +19,9 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
+import wicket.util.convert.ITypeConverter;
+
+
 /**
  * Converts from Object to Byte.
  * 
@@ -27,29 +30,18 @@ import java.util.Locale;
  */
 public final class ByteConverter extends AbstractIntegerConverter
 {
+	/**
+	 * The singleton instance for a byte converter
+	 */
+	public static final ITypeConverter INSTANCE = new ByteConverter();
+	
     /**
-     * Constructor
+     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object, java.util.Locale)
      */
-    public ByteConverter()
-    {
-    }
-    
-    /**
-     * Constructor
-     * @param locale The locale for this converter
-     */
-    public ByteConverter(final Locale locale)
-    {
-        super(locale);
-    }
-
-    /**
-     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-     */
-    public Object convert(final Object value)
+    public Object convert(final Object value, Locale locale)
     {
         final Number number = value instanceof Number ? (Number)value : parse(value,
-                Byte.MIN_VALUE, Byte.MAX_VALUE);
+                Byte.MIN_VALUE, Byte.MAX_VALUE,locale);
         return new Byte(number.byteValue());
     }
 

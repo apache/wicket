@@ -19,6 +19,8 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
+import wicket.util.convert.ITypeConverter;
+
 /**
  * Converts from Object to Integer.
  * 
@@ -28,30 +30,17 @@ import java.util.Locale;
 public final class IntegerConverter extends AbstractIntegerConverter
 {
 	/**
-	 * Constructor
+	 * The singleton instance for a integer converter
 	 */
-	public IntegerConverter()
-	{
-	}
-
+	public static final ITypeConverter INSTANCE = new IntegerConverter();
+	
 	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public IntegerConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
-				Integer.MIN_VALUE, Integer.MAX_VALUE);
+				Integer.MIN_VALUE, Integer.MAX_VALUE,locale);
 		return new Integer(number.intValue());
 	}
 

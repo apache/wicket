@@ -20,7 +20,6 @@ package wicket.util.convert.converters;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -42,11 +41,13 @@ public class StringConverter extends AbstractConverter
 	/** Maps value Classes to specific StringConverters. */
 	private final Map classToConverter = new HashMap();
 	{
-		set(Date.class, new DateToStringConverter());
-		set(java.sql.Date.class, new DateToStringConverter());
-		set(Timestamp.class, new DateToStringConverter());
-		set(Float.class, new NumberToStringConverter());
-		set(Double.class, new NumberToStringConverter());
+		DateToStringConverter dateConverter = new DateToStringConverter();
+		NumberToStringConverter numberConverter = new NumberToStringConverter();
+		set(Date.class, dateConverter);
+		set(java.sql.Date.class, dateConverter);
+		set(Timestamp.class, dateConverter);
+		set(Float.class, numberConverter);
+		set(Double.class, numberConverter);
 	}
 
 	/**
@@ -55,41 +56,13 @@ public class StringConverter extends AbstractConverter
 	private ITypeConverter defaultConverter = new ITypeConverter()
 	{
 		/**
-		 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+		 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 		 */
-		public Object convert(final Object value)
+		public Object convert(final Object value, Locale locale)
 		{
 			return value.toString();
 		}
-
-		public Locale getLocale()
-		{
-			return Locale.getDefault();
-		}
-
-		public void setLocale(Locale locale)
-		{
-		}
 	};
-
-	/**
-	 * Constructor
-	 *  
-	 */
-	public StringConverter()
-	{
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale for this converter
-	 */
-	public StringConverter(final Locale locale)
-	{
-		setLocale(locale);
-	}
 
 	/**
 	 * Removes all registered string converters.
@@ -100,9 +73,9 @@ public class StringConverter extends AbstractConverter
 	}
 
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
 		// Null is always converted to null
 		if (value == null)
@@ -121,11 +94,11 @@ public class StringConverter extends AbstractConverter
 		ITypeConverter converter = get(c);
 		if (converter == null)
 		{
-			return defaultConverter.convert(value);
+			return defaultConverter.convert(value,locale);
 		}
 
 		// Use type converter to convert to value
-		return converter.convert(value);
+		return converter.convert(value,locale);
 	}
 
 	/**
@@ -201,23 +174,6 @@ public class StringConverter extends AbstractConverter
 	public final void setDefaultConverter(final ITypeConverter defaultConverter)
 	{
 		this.defaultConverter = defaultConverter;
-	}
-
-	/**
-	 * @see wicket.util.convert.converters.AbstractConverter#setLocale(java.util.Locale)
-	 */
-	public void setLocale(final Locale locale)
-	{
-		super.setLocale(locale);
-
-		// Set locale on each string type converter
-		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
-		{
-			((ITypeConverter)iterator.next()).setLocale(locale);
-		}
-
-		// Set locale on default converter
-		defaultConverter.setLocale(locale);
 	}
 
     /**

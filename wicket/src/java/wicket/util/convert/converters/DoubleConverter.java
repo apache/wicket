@@ -19,6 +19,8 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
+import wicket.util.convert.ITypeConverter;
+
 /**
  * Converts from Object to Double.
  * 
@@ -28,30 +30,17 @@ import java.util.Locale;
 public final class DoubleConverter extends AbstractDecimalConverter
 {
 	/**
-	 * Constructor.
+	 * The singleton instance for a double converter
 	 */
-	public DoubleConverter()
-	{
-	}
-
+	public static final ITypeConverter INSTANCE = new DoubleConverter();
+	
 	/**
-	 * Constructor.
-	 * 
-	 * @param locale
-	 *            The locale for this converter
+	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public DoubleConverter(final Locale locale)
-	{
-		super(locale);
-	}
-
-	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-	 */
-	public Object convert(final Object value)
+	public Object convert(final Object value, Locale locale)
 	{
         final Number number = value instanceof Number ? (Number)value : parse(value,
-                Double.MAX_VALUE*-1, Double.MAX_VALUE);
+                Double.MAX_VALUE*-1, Double.MAX_VALUE,locale);
         //Double.MIN is the smallest nonzero positive number, not the largest negative number
         return new Double(number.doubleValue());
 	}
