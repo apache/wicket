@@ -107,6 +107,7 @@ public class WicketServlet extends HttpServlet
 				log.info("WicketServlet loaded application " + applicationClass.getName());
 
 				// Call init method of web application
+				this.webApplication.internalInit();
 				this.webApplication.init();
 			}
 			else

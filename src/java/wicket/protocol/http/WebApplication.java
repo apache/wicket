@@ -45,13 +45,23 @@ import wicket.markup.html.pages.PageExpiredErrorPage;
  * init() method. For example:
  * 
  * <pre>
- *                public void init()
- *                {
- *                  String webXMLParameter = getWicketServlet()
- *                  			.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                  URL schedulersConfig = getWicketServlet().getServletContext()
- *                  			.getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                  ...
+ * 
+ *  
+ *   
+ *    
+ *     
+ *                       public void init()
+ *                       {
+ *                         String webXMLParameter = getWicketServlet()
+ *                         			.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                         URL schedulersConfig = getWicketServlet().getServletContext()
+ *                         			.getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                         ...
+ *      
+ *     
+ *    
+ *   
+ *  
  * </pre>
  * 
  * @see WicketServlet
@@ -93,7 +103,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * @return The Wicket servlet for this application
 	 */
-	public WicketServlet getWicketServlet()
+	public final WicketServlet getWicketServlet()
 	{
 		return wicketServlet;
 	}
@@ -107,7 +117,7 @@ public abstract class WebApplication extends Application
 	 *             If an attempt is made to call this method once the wicket
 	 *             servlet has been set for the application.
 	 */
-	public void setWicketServlet(WicketServlet wicketServlet)
+	public final void setWicketServlet(WicketServlet wicketServlet)
 	{
 		if (this.wicketServlet == null)
 		{
@@ -140,6 +150,25 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Internal intialization. Reads servlet init parameter "configuration". If
+	 * the parameter is "development", settings appropriate for development are
+	 * set. If it's "deployment", deployment settings are used. If development
+	 * configuration is specified and a "sourceFolder" init parameter is also
+	 * set, then resources in that folder will be polled for changes.
+	 */
+	protected final void internalInit()
+	{
+		final WicketServlet servlet = getWicketServlet();
+		final String configuration = wicketServlet.getInitParameter("configuration");
+		if (configuration != null)
+		{
+			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
+		}
+	}
+
+	/**
 	 * Creates a new WebRequestCycle object for this web application
 	 * 
 	 * @param session
@@ -165,7 +194,7 @@ public abstract class WebApplication extends Application
 	 *            The http request object
 	 * @return The session object
 	 */
-	WebSession getSession(final HttpServletRequest request)
+	final WebSession getSession(final HttpServletRequest request)
 	{
 		// Get session, creating if it doesn't exist
 		final HttpSession httpSession = request.getSession(true);

@@ -188,12 +188,13 @@ public abstract class Application
 	{
 		if (resourceLocator == null)
 		{
-			// Create compound resource locator using source path from application settings
+			// Create compound resource locator using source path from
+			// application settings
 			resourceLocator = new DefaultResourceLocator(getSettings().getSourcePath());
 		}
 		return resourceLocator;
 	}
-	
+
 	/**
 	 * @return Resource watcher with polling frequency determined by setting, or
 	 *         null if no polling frequency has been set.
@@ -229,14 +230,31 @@ public abstract class Application
 	protected abstract ISessionFactory getSessionFactory();
 
 	/**
-	 * Change the resource locator which will be used to locate resources
-	 * like e.g. markup files.
+	 * Allows for initialization of the application by a subclass.
+	 */
+	protected void init()
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
+	 * CALL THIS METHOD.
+	 * 
+	 * Internal intialization.
+	 */
+	protected void internalInit()
+	{
+	}
+
+	/**
+	 * Change the resource locator which will be used to locate resources like
+	 * e.g. markup files.
 	 * 
 	 * @param locator
 	 */
 	protected void setResourceLocator(final ResourceLocator locator)
 	{
-	    this.resourceLocator = locator;
+		this.resourceLocator = locator;
 	}
 
 	/**
