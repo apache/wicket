@@ -674,10 +674,11 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Determines if componentName attributes should be stripped from tags when
-	 * rendering. Component name attributes in rendered pages can be a helpful
-	 * debugging tool, but they are not helpful to end-users and do not increase
-	 * efficiency in delivering pages over any protocol.
+	 * Determines if componentName attributes and "wicket-" from id attributes 
+	 * should be stripped from tags when rendering. Component name attributes in 
+	 * rendered pages can be a helpful debugging tool, but they are not helpful 
+	 * to end-users and do not increase efficiency in delivering pages over 
+	 * any protocol.
 	 * 
 	 * @param stripComponentNames
 	 *            The stripComponentNames to set.
