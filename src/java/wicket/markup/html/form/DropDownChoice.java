@@ -38,7 +38,7 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 {
 	/** serial UID. */
 	private static final long serialVersionUID = 122777360064586107L;
-	
+
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
@@ -136,10 +136,14 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 		// an onChange scriptlet is added
 		final String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
 		
-		// NOTE: do not encode the url as that would give invalid JavaScript
-		tag.put("onChange", "location.href='" + url + "&" + getPath()
-				+ "=' + this.options[this.selectedIndex].value;");
-		
+		// Should the form be resubmitted if the selection changes?
+		if (wantOnSelectionChangedNotifications())
+		{
+			// NOTE: do not encode the url as that would give invalid JavaScript
+			tag.put("onChange", "location.href='" + url + "&" + getPath()
+					+ "=' + this.options[this.selectedIndex].value;");
+		}
+
 		super.onComponentTag(tag);
 	}
 
@@ -169,6 +173,15 @@ public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 	protected final void updateModel()
 	{
 		internalUpdateModel();
+	}
+
+	/**
+	 * @return True if the form containing this component should be resubmitted
+	 *         using javascript if the selection changes
+	 */
+	protected boolean wantOnSelectionChangedNotifications()
+	{
+		return false;
 	}
 
 	/**
