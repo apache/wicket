@@ -22,13 +22,13 @@ import java.io.Serializable;
 
 import wicket.markup.html.form.FormComponent;
 
-
 /**
  * Validator that ensures a component has a non-null and non-empty value.
+ * 
  * @author Jonathan Locke
  */
 public final class RequiredValidator extends AbstractValidator
-{ // TODO finalize javadoc
+{
     /**
      * Validates the given form component.
      * @param input the input to validate
@@ -40,7 +40,7 @@ public final class RequiredValidator extends AbstractValidator
     {
         final String value = (String)input;
 
-        if ((value == null) || value.trim().equals(""))
+        if (value == null || value.trim().equals(""))
         {
             return errorMessage(input, component);
         }
