@@ -9,6 +9,31 @@
 <body>
 <section name="Frequently Asked Questions">
 <p><author>Jonathan Locke</author></p>
+<subsection name="Q: Why are so many classes and methods in Wicket final?">
+<p>
+A: Classes and methods in Wicket are generally declared as final until the 
+   need for extensibility is well understood.  While this defensive approach may 
+   seem obsessive to some, the major benefit is that classes and methods which 
+   haven't been designed for extension cannot be extended until the problem(s) 
+   at hand are examined by the Wicket development team.  This helps to ensure 
+   that the best approach is taken.  Sometimes, straightforward extension is 
+   not the best approach.  Sometimes, features of the API have been misapplied
+   or misunderstood.  It's best to catch this early.</p>
+   <p>While this does provoke more discussion and sometimes a bit of
+   annoyance, the discussion generally improves Wicket and will help ensure 
+   greater backwards compatibility in the future.  It's really a matter of 
+   how the development team manages API commitments.  By making fewer 
+   commitments in the API in terms of extension points, we are more likely 
+   to be able to support those extension points that we do allow in the future.  
+   We are also more likely to catch anti-pattern use cases and provide features 
+   appropriate to the problems you are trying to solve.</p>
+   <p>Honestly, we aren't trying to annoy anyone and we do aim to respond 
+   quickly to any extension needs that arise which make sense.  If you really 
+   don't agree with all this, remember that Wicket is open source.  You can 
+   always check out the source code, remove the final keyword that offends 
+   you and rebuild the project.</p>
+</subsection>
+
 <subsection name="Q: What design decisions were made regarding state management?">
 <p>
 A: One of the primary objectives was to make state management a Java thing 
