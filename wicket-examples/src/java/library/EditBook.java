@@ -100,7 +100,7 @@ public final class EditBook extends AuthenticatedHtmlPage
             add(titleFeedback);
 
             // Add fiction checkbox
-            add(new CheckBox("fiction", new PropertyModel(bookModel, "fiction")));
+            add(new CheckBox("fiction", bookModel, "fiction"));
 
             // Books is everything but otherBook
             List books = new ArrayList();

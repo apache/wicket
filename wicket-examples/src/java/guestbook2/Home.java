@@ -29,9 +29,7 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 import nl.openedge.util.hibernate.HibernateHelper;
 
-import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.PropertyModel;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
@@ -64,8 +62,7 @@ public class Home extends HtmlPage
             {
                 final Comment comment = (Comment)cell.getModelObject();
                 cell.add(new Label("date", comment.getDate()));
-                cell.add(new MultiLineLabel("text", 
-                        new PropertyModel(new Model(comment), "text")));
+                cell.add(new MultiLineLabel("text", comment.getText()));
             }   
         });
     }
@@ -86,7 +83,7 @@ public class Home extends HtmlPage
             super(componentName, null);
 
             // Add text entry widget
-            add(new TextArea("text", new PropertyModel(new Model(comment), "text")));
+            add(new TextArea("text", comment, "text"));
         }
 
         /**
