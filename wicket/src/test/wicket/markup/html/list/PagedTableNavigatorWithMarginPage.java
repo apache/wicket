@@ -72,7 +72,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
         {
             protected PageableListViewNavigation newNavigation(final PageableListView table)
             {
-                PageableListViewNavigationWithMargin nav = new PageableListViewNavigationWithMargin("navigation", table);
+                PageableListViewNavigation nav = new PageableListViewNavigation("navigation", table);
                 nav.setMargin(2);
                 if (nav.getViewSize() > 5)
                 {

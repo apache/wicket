@@ -30,7 +30,6 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
-import wicket.markup.html.list.PageableListViewNavigationWithMargin;
 
 
 
@@ -142,7 +141,7 @@ public class ExamplePaging extends Displaytag
         {
             protected PageableListViewNavigation newNavigation(final PageableListView table)
             {
-                PageableListViewNavigationWithMargin nav = new PageableListViewNavigationWithMargin("navigation", table);
+                final PageableListViewNavigation nav = new PageableListViewNavigation("navigation", table);
                 nav.setMargin(2);
                 nav.setViewSize(5);
                 nav.setSeparator(", ");
@@ -175,7 +174,7 @@ public class ExamplePaging extends Displaytag
         {
             protected PageableListViewNavigation newNavigation(final PageableListView table)
             {
-                PageableListViewNavigationWithMargin nav = new PageableListViewNavigationWithMargin("navigation", table);
+                final PageableListViewNavigation nav = new PageableListViewNavigation("navigation", table);
                 nav.setMargin(2);
                 if (nav.getViewSize() > 5)
                 {
