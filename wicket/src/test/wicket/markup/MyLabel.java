@@ -21,6 +21,8 @@ package wicket.markup;
 import wicket.markup.html.WebComponent;
 
 /**
+ * Dummy component used for ComponentCreateTagTest
+ * 
  * @author Juergen Donnerstag
  */
 public class MyLabel extends WebComponent

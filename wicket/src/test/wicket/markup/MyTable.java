@@ -28,6 +28,8 @@ import wicket.markup.html.list.ListView;
 import wicket.model.Model;
 
 /**
+ * Dummy component used for ComponentCreateTagTest
+ * 
  * @author Juergen Donnerstag
  */
 public class MyTable extends ListView
