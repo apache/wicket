@@ -3,11 +3,11 @@
     <id>wicket</id>
     <name>Wicket</name>
     <groupId>wicket</groupId>
-    <currentVersion>0.9.15-alpha-SNAPSHOT</currentVersion>
+    <currentVersion>0.9.14-alpha</currentVersion>
     <organization>
         <name>Wicket developers</name>
-        <url>http://sourceforge.net</url>
-        <logo>http://sourceforge.net/sflogo.php?group_id=${maven.sourceforge.project.groupId}&amp;type=5</logo>
+        <url>http://wicket.sourceforge.net</url>
+        <logo>http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1</logo>
     </organization>
     <inceptionYear>2004</inceptionYear>
     <package>com.voicetribe</package>
@@ -23,7 +23,7 @@
     <url>http://wicket.sourceforge.net</url>
     <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
     <siteAddress>shell.sourceforge.net</siteAddress>
-    <siteDirectory>/home/groups/w/wi/wicket/htdocs/cruisecontrol</siteDirectory>
+    <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
     <repository>
         <connection>scm:cvs:pserver:anoncvs@cvs.sourceforge.net:/cvsroot/wicket:Wicket</connection>
         <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
@@ -73,9 +73,9 @@
     </mailingLists>
     <developers>
         <developer>
-            <name>Jonathan Locke (initial developer; currently inactive)</name>
-            <id>-</id>
-            <email>-</email>
+            <name>Jonathan Locke</name>
+            <id>jonathanlocke</id>
+            <email>jonathanlocke at users.sourceforge.net</email>
         </developer>
         <developer>
             <name>Christopher Turner</name>

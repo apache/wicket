@@ -9,6 +9,11 @@
 <body>
 
 <section name="News">
+    <subsection name="December 9, 2004 - New style for the website">
+        <p>Our new layout, design and logo were kindly provided by <a 
+            href="http://www.topicus.nl" target="_blank">Topicus</a> by 
+            providing precious time of their designer Wouter de Jong.</p>
+    </subsection>
     <subsection name="December 5, 2004 - 0.9.14-alpha released">
         <p>The current status of CVS was released under version 
             0.9.14-alpha.</p>
