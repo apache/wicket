@@ -31,7 +31,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.panel.Panel;
-import wicket.protocol.http.HttpRequest;
 
 /**
  * Base component for trees. The trees from this package work with the Swing tree models
@@ -176,8 +175,7 @@ public abstract class Tree extends Panel implements ILinkListener
     public final void linkClicked()
     {
     	String param = AbstractTreeNodeLink.REQUEST_PARAMETER_LINK_ID;
-        // TODO Shouldn't this be getRequestString() now?
-        String linkId = ((HttpRequest)getRequest()).getParameter(param);
+        String linkId = getRequest().getParameter(param);
         AbstractTreeNodeLink link = (AbstractTreeNodeLink) links.get(linkId);
         if (link == null)
         {
