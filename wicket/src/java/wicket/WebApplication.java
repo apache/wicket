@@ -36,20 +36,18 @@ import wicket.protocol.http.WicketServlet;
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters
  * from the {@link javax.servlet.ServletConfig}object, you should override the
- * init() method of {@link javax.servlet.GenericServlet}. For example:
+ * init() method. For example:
  * 
  * <pre>
- * 
- *  
- *   
- *      public void init() throws ServletException
+ *
+ *      public void init()
  *      {
- *        ServletConfig config = getServletConfig();
- *        String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *        String webXMLParameter = getWicketServlet()
+ *        			.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *        URL schedulersConfig = getWicketServlet().getServletContext()
+ *        			.getResource("/WEB-INF/schedulers.xml");
  *        ...
- *    
- *   
- *  
+ *
  * </pre>
  * 
  * </p>
@@ -100,6 +98,18 @@ public abstract class WebApplication extends Application
     public ApplicationSettings getSettings()
     {
         return settings;
+    }
+
+    /**
+     * Initialize; if you need the wicket servlet for initialization, e.g.
+     * because you want to read an initParameter from web.xml or you want to
+     * read a resource from the servlet's context path, you can override this
+     * method and provide custom initialization.
+     * This method is called right after this application class is constructed,
+     * and the wicket servlet is set.
+     */
+    public void init()
+    {
     }
 
     /**
