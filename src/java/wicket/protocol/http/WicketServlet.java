@@ -76,7 +76,7 @@ import wicket.WicketRuntimeException;
  * @see wicket.RequestCycle
  * @author Jonathan Locke
  */
-public abstract class WicketServlet extends HttpServlet
+public class WicketServlet extends HttpServlet
 {
     /** Log. */
     private static final Log log = LogFactory.getLog(WicketServlet.class);
