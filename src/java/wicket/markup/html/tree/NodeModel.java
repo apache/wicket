@@ -22,13 +22,14 @@ package wicket.markup.html.tree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import wicket.DetachableModel;
-import wicket.RequestCycle;
+import wicket.Model;
 
 /**
  * Specialized model for trees.
+ *
+ * @author Eelco Hillenius
  */
-public class NodeModel extends DetachableModel
+public class NodeModel extends Model
 {
     /** tree node. */
     private final DefaultMutableTreeNode treeNode;
@@ -45,8 +46,8 @@ public class NodeModel extends DetachableModel
      * @param treeState the (shared) reference to the tree state
      * @param path the (shared) current path
      */
-    public NodeModel(final DefaultMutableTreeNode treeNode, final TreeStateCache treeState,
-            final TreePath path)
+    public NodeModel(final DefaultMutableTreeNode treeNode,
+            final TreeStateCache treeState, final TreePath path)
     {
         super(null);
         this.treeNode = treeNode;
@@ -79,19 +80,5 @@ public class NodeModel extends DetachableModel
     public final TreeStateCache getTreeState()
     {
         return treeState;
-    }
-
-    /**
-     * @see wicket.DetachableModel#doDetach(wicket.RequestCycle)
-     */
-    protected void doDetach(RequestCycle cycle)
-    {
-    }
-
-    /**
-     * @see wicket.DetachableModel#doAttach(wicket.RequestCycle)
-     */
-    protected void doAttach(RequestCycle cycle)
-    {
     }
 }
