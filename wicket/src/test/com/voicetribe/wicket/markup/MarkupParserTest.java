@@ -33,7 +33,7 @@ public final class MarkupParserTest extends TestCase
 {
     public final void testTagParsing() throws StringValueConversionException, ParseException
     {
-        final MarkupParser parser = new MarkupParser("componentName");
+        final MarkupParser parser = new MarkupParser("componentName", 0);
         final Markup markup = parser
                 .parse("This is a test <a componentName=\"a\" href=\"foo.html\"> <b componentName=\"b\">Bold!</b> "
                         + "<img componentName=\"img\" width=9 height=10 src=\"foo\"> <marker componentName=\"marker\"/> </a>");
@@ -92,7 +92,7 @@ public final class MarkupParserTest extends TestCase
 
     public final void test() throws StringValueConversionException, ParseException
     {
-        final MarkupParser parser = new MarkupParser("componentName");
+        final MarkupParser parser = new MarkupParser("componentName", 0);
         final Markup tokens = parser
                 .parse("This is a test <a componentName=9> <b>bold</b> <b componentName=10/></a> of the emergency broadcasting system");
 
