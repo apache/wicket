@@ -125,7 +125,7 @@ public class ApplicationStringResourceLoader implements IStringResourceLoader
 
 		// Do the resource load
 		final Properties properties = new Properties();
-		final IResourceStream resource = application.getResourceLocator().locate(application.getClass(),
+		final IResourceStream resource = application.getResourceStreamLocator().locate(application.getClass(),
 				style, locale, "properties");
 		if (resource != null)
 		{

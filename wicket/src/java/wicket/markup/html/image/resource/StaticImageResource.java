@@ -114,7 +114,7 @@ public class StaticImageResource extends ImageResource
 		if (resource == null)
 		{
 			// Locate resource
-			this.resource = RequestCycle.get().getApplication().getResourceLocator().locate(
+			this.resource = RequestCycle.get().getApplication().getResourceStreamLocator().locate(
 					absolutePath, style, locale, null);
 			
 			// Check that resource was found

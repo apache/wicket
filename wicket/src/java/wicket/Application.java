@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,21 +46,22 @@ import wicket.util.watch.ModificationWatcher;
  * 
  * Application has the following interesting features / attributes:
  * <ul>
- * <li><b>Name</b> - The application's name, which is the same as its class name.
+ * <li><b>Name </b>- The application's name, which is the same as its class
+ * name.
  * 
- * <li><b>Application Settings</b> - A variety of settings that control the behavior of
- * the Wicket framework for a given application. It is not necessary to learn
- * all the settings. Good defaults can be set for deployment and development by
- * calling ApplicationSettings.configure("deployment") or
+ * <li><b>Application Settings </b>- A variety of settings that control the
+ * behavior of the Wicket framework for a given application. It is not necessary
+ * to learn all the settings. Good defaults can be set for deployment and
+ * development by calling ApplicationSettings.configure("deployment") or
  * ApplicationSettings.configure("development").
  * 
- * <li><b>Application Pages</b> - A particular set of required pages. The required
- * pages returned by getPages() include a home page and pages for handling
- * common error conditions. The only page you must supply to create a Wicket
- * application is the application home page.
+ * <li><b>Application Pages </b>- A particular set of required pages. The
+ * required pages returned by getPages() include a home page and pages for
+ * handling common error conditions. The only page you must supply to create a
+ * Wicket application is the application home page.
  * 
- * <li><b>Shared Resources</b> - Resources added to an application with any of the
- * Application.addResource() methods have application-wide scope and can be
+ * <li><b>Shared Resources </b>- Resources added to an application with any of
+ * the Application.addResource() methods have application-wide scope and can be
  * referenced using a logical scope and a name with the SharedResource class.
  * SharedResources can then be used by multiple components in the same
  * application without additional overhead (beyond the SharedResource instance
@@ -69,38 +70,40 @@ import wicket.util.watch.ModificationWatcher;
  * generated). Resources shared in this manner may also be localized. See
  * {@link wicket.SharedResource}for more details.
  * 
- * <li><b>A Converter Factory</b> - By overriding getConverterFactory(), you can
- * provide your own factory which creates locale sensitive Converter instances.
+ * <li><b>A Converter Factory </b>- By overriding getConverterFactory(), you
+ * can provide your own factory which creates locale sensitive Converter
+ * instances.
  * 
- * <li><b>A ResourceStreamLocator</b> - An Application's ResourceStreamLocator is used to find
- * resources such as images or markup files. You can supply your own
- * ResourceStreamLocator if your prefer to store your applicaiton's resources in a
- * non-standard location (such as a different filesystem location, a particular
- * JAR file or even a database) by overriding the getResourceLocator() method.
+ * <li><b>A ResourceStreamLocator </b>- An Application's ResourceStreamLocator
+ * is used to find resources such as images or markup files. You can supply your
+ * own ResourceStreamLocator if your prefer to store your applicaiton's
+ * resources in a non-standard location (such as a different filesystem
+ * location, a particular JAR file or even a database) by overriding the
+ * getResourceLocator() method.
  * 
- * <li><b>Resource Factories</b> - Resource factories can be used to create resources
- * dynamically from specially formatted HTML tag attribute values. For more
- * details, see {@link IResourceFactory},
+ * <li><b>Resource Factories </b>- Resource factories can be used to create
+ * resources dynamically from specially formatted HTML tag attribute values. For
+ * more details, see {@link IResourceFactory},
  * {@link wicket.markup.html.image.resource.DefaultButtonImageResourceFactory}
  * and especially
  * {@link wicket.markup.html.image.resource.LocalizedImageResource}.
  * 
- * <li><b>A Localizer</b> - The getLocalizer() method returns an object encapsulating
- * all of the functionality required to access localized resources. For many
- * localization problems, even this will not be required, as there are
- * convenience methods available to all components:
+ * <li><b>A Localizer </b>- The getLocalizer() method returns an object
+ * encapsulating all of the functionality required to access localized
+ * resources. For many localization problems, even this will not be required, as
+ * there are convenience methods available to all components:
  * {@link wicket.Component#getString(String key)}and
  * {@link wicket.Component#getString(String key, IModel model)}.
  * 
- * <li><b>A Session Factory</b> - The Application subclass WebApplication supplies an
- * implementation of getSessionFactory() which returns an implementation of
- * ISessionFactory that creates WebSession Session objects appropriate for web
- * applications. You can (and probably will want to) override
- * getSessionFactory() to provide your own session factory that creates Session
- * instances of your own application-specific subclass of WebSession.
+ * <li><b>A Session Factory </b>- The Application subclass WebApplication
+ * supplies an implementation of getSessionFactory() which returns an
+ * implementation of ISessionFactory that creates WebSession Session objects
+ * appropriate for web applications. You can (and probably will want to)
+ * override getSessionFactory() to provide your own session factory that creates
+ * Session instances of your own application-specific subclass of WebSession.
  * 
- * <li><b>A Page Sets Factory</b> - Page sets are an experimental feature which will
- * not be finished until Wicket 1.1.
+ * <li><b>A Page Sets Factory </b>- Page sets are an experimental feature
+ * which will not be finished until Wicket 1.1.
  * </ul>
  * 
  * @see wicket.protocol.http.WebApplication
@@ -130,7 +133,7 @@ public abstract class Application
 	private final ApplicationPages pages = new ApplicationPages();
 
 	/** The default resource locator for this application */
-	private ResourceStreamLocator resourceLocator;
+	private ResourceStreamLocator resourceStreamLocator;
 
 	/** Map of shared resources */
 	private final Map resourceMap = new HashMap();
@@ -162,15 +165,15 @@ public abstract class Application
 
 	/**
 	 * @param scope
-	 *			  Scope of resource
+	 *            Scope of resource
 	 * @param name
-	 *			  Logical name of resource
+	 *            Logical name of resource
 	 * @param locale
-	 *			  The locale of the resource
+	 *            The locale of the resource
 	 * @param style
-	 *			  The resource style
+	 *            The resource style
 	 * @param resource
-	 *			  Resource to store
+	 *            Resource to store
 	 */
 	public void addResource(final Class scope, final String name, final Locale locale,
 			final String style, final Resource resource)
@@ -178,24 +181,25 @@ public abstract class Application
 		final String key = scope.getName() + "_" + name
 				+ (locale == null ? "" : "_" + locale.toString())
 				+ (style == null ? "" : "_" + style);
-		
+
 		// Check type
 		if (resource instanceof SharedResource)
 		{
-			throw new WicketRuntimeException("Cannot add a SharedResource.  SharedResource is a reference to a resource, not an actual resource.");
+			throw new WicketRuntimeException(
+					"Cannot add a SharedResource.  SharedResource is a reference to a resource, not an actual resource.");
 		}
-		
+
 		// Save resource
 		resourceMap.put(key, resource);
 	}
 
 	/**
 	 * @param name
-	 *			  Logical name of resource
+	 *            Logical name of resource
 	 * @param locale
-	 *			  The locale of the resource
+	 *            The locale of the resource
 	 * @param resource
-	 *			  Resource to store
+	 *            Resource to store
 	 */
 	public void addResource(final String name, final Locale locale, final Resource resource)
 	{
@@ -204,9 +208,9 @@ public abstract class Application
 
 	/**
 	 * @param name
-	 *			  Logical name of resource
+	 *            Logical name of resource
 	 * @param resource
-	 *			  Resource to store
+	 *            Resource to store
 	 */
 	public void addResource(final String name, final Resource resource)
 	{
@@ -218,9 +222,9 @@ public abstract class Application
 	 * generating resources automatically
 	 * 
 	 * @param name
-	 *			  The name to give to the factory
+	 *            The name to give to the factory
 	 * @param resourceFactory
-	 *			  The resource factory to add
+	 *            The resource factory to add
 	 */
 	public void addResourceFactory(final String name, final IResourceFactory resourceFactory)
 	{
@@ -315,7 +319,7 @@ public abstract class Application
 	 * THIS FEATURE IS CURRENTLY EXPERIMENTAL. DO NOT USE THIS METHOD.
 	 * 
 	 * @param page
-	 *			  The Page for which a list of PageSets should be retrieved
+	 *            The Page for which a list of PageSets should be retrieved
 	 * @return Sequence of PageSets for a given Page
 	 */
 	public Iterator getPageSets(final Page page)
@@ -341,7 +345,7 @@ public abstract class Application
 
 	/**
 	 * @param key
-	 *			  Shared resource key
+	 *            Shared resource key
 	 * @return The resource
 	 */
 	public final Resource getResource(final String key)
@@ -351,13 +355,13 @@ public abstract class Application
 
 	/**
 	 * @param scope
-	 *			  The resource's scope
+	 *            The resource's scope
 	 * @param name
-	 *			  Name of resource to get
+	 *            Name of resource to get
 	 * @param locale
-	 *			  The locale of the resource
+	 *            The locale of the resource
 	 * @param style
-	 *			  The resource style
+	 *            The resource style
 	 * @return The logical resource
 	 */
 	public Resource getResource(final Class scope, final String name, final Locale locale,
@@ -405,7 +409,7 @@ public abstract class Application
 
 	/**
 	 * @param name
-	 *			  Name of the factory to get
+	 *            Name of the factory to get
 	 * @return The IResourceFactory with the given name.
 	 */
 	public IResourceFactory getResourceFactory(final String name)
@@ -416,20 +420,20 @@ public abstract class Application
 	/**
 	 * @return Resource locator for this application
 	 */
-	public ResourceStreamLocator getResourceLocator()
+	public ResourceStreamLocator getResourceStreamLocator()
 	{
-		if (resourceLocator == null)
+		if (resourceStreamLocator == null)
 		{
 			// Create compound resource locator using source path from
 			// application settings
-			resourceLocator = new DefaultResourceStreamLocator(getSettings().getSourcePath());
+			resourceStreamLocator = new DefaultResourceStreamLocator(getSettings().getSourcePath());
 		}
-		return resourceLocator;
+		return resourceStreamLocator;
 	}
 
 	/**
 	 * @return Resource watcher with polling frequency determined by setting, or
-	 *		   null if no polling frequency has been set.
+	 *         null if no polling frequency has been set.
 	 */
 	public final ModificationWatcher getResourceWatcher()
 	{
@@ -482,20 +486,21 @@ public abstract class Application
 	 * Changes the resource locator which will be used to locate resources like
 	 * markup files.
 	 * 
-	 * @param locator
+	 * @param resourceStreamLocator
+	 *            The new resource stream locator
 	 */
-	protected void setResourceLocator(final ResourceStreamLocator locator)
+	protected void setResourceStreamLocator(final ResourceStreamLocator resourceStreamLocator)
 	{
-		this.resourceLocator = locator;
+		this.resourceStreamLocator = resourceStreamLocator;
 	}
 
 	/**
 	 * Called by ApplicationSettings when source path property is changed. This
-	 * method sets the resourceLocator to null so it will get recreated the next
-	 * time it is accessed using the new source path.
+	 * method sets the resourceStreamLocator to null so it will get recreated
+	 * the next time it is accessed using the new source path.
 	 */
 	void sourcePathChanged()
 	{
-		this.resourceLocator = null;
+		this.resourceStreamLocator = null;
 	}
 }
