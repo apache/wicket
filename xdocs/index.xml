@@ -50,7 +50,7 @@
 					</a>
 					for this release.
 				</p>
-				<p>A list of the most note worthy changes:</p>
+				<p>A list of the most noteworthy changes:</p>
 				<ul>
 					<li>
 						Addition of Wicket namespace for identifying components: instead of
@@ -61,7 +61,7 @@
 					</li>
 					<li>Support for clustering</li>
 					<li>
-						<a href="/apidocs/wicket/model/CompoundPropertyModel.html"><code>CompoundPropertyModel</code></a>
+						<code>CompoundPropertyModel</code>
 						makes development of forms much easier and less verbose
 					</li>
 					<li>
@@ -152,18 +152,15 @@
 				<img alt="SourceForge.net"
 					src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1" />
 			</a>
+			<p>
 			<!-- Begin Nedstat Basic code -->
 			<!-- Title: Wicket - Home -->
 			<!-- URL: http://wicket.sourceforge.net/ -->
 			<script language="JavaScript" type="text/javascript"
 				src="http://m1.nedstatbasic.net/basic.js">
 			</script>
-			<script type="text/javascript">
-				//
-				<![CDATA[
- 					nedstatbasic("ADUqkAqz13yUdWzu82RZ+ob42qQg", 0);
-					//]]>
-				-->
+			<script language="JavaScript" type="text/javascript"
+				src="nedstat.js">
 			</script>
 			<noscript>
 				<a target="_blank"
@@ -177,6 +174,7 @@ Personal homepage website counter" />
 				<a target="_blank" href="http://www.nedstatbasic.net/">Free counter</a>
 			</noscript>
 			<!-- End Nedstat Basic code -->
+			</p>
 		</section>
 	</body>
 </document>
