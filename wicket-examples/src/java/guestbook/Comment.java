@@ -19,13 +19,14 @@
 
 package guestbook;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Simple "POJO" bean that holds a guestbook text.
  * @author Jonathan Locke
  */
-public class Comment
+public class Comment implements Serializable
 {
     /**
      * Constructor

@@ -3,3 +3,4 @@ target
 guestbook.lck
 guestbook.log
 guestbook.properties
+guestbook.script
