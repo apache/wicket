@@ -126,7 +126,7 @@ public class UploadPage extends WicketExamplePage
         }
 
         /**
-         * See wicket.markup.html.table.Table#populateItem(wicket.markup.html.table.ListItem)
+         * @see ListView#populateItem(ListItem)
          */
         protected void populateItem(ListItem listItem)
         {

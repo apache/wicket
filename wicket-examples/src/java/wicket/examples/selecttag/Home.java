@@ -33,6 +33,10 @@ public class Home extends WicketExamplePage
 		SelectModel model;
 		Label label;
 		
+		/**
+		 * Constructor
+		 * @param name Name of form
+		 */
 		public SelectForm(String name)
 		{
 			super(name,null);
@@ -43,8 +47,8 @@ public class Home extends WicketExamplePage
 			add(choice);
 		}
 
-		/*
-		 * @see wicket.markup.html.form.Form#handleSubmit()
+		/**
+		 * @see wicket.markup.html.form.Form#handleValidSubmit()
 		 */
 		public void handleValidSubmit()
 		{
@@ -55,8 +59,9 @@ public class Home extends WicketExamplePage
 	
 	class SelectModel implements IModel
 	{
-		private Object selection; 
-		/*
+		private Object selection;
+		
+		/**
 		 * @see wicket.model.IModel#getObject()
 		 */
 		public Object getObject()
@@ -64,7 +69,7 @@ public class Home extends WicketExamplePage
 			return selection;
 		}
 
-		/*
+		/**
 		 * @see wicket.model.IModel#setObject(java.lang.Object)
 		 */
 		public void setObject(Object object)
@@ -75,7 +80,7 @@ public class Home extends WicketExamplePage
 	
 	class UserIdList extends ArrayList implements IDetachableChoiceList
 	{
-		/*
+		/**
 		 * @see wicket.markup.html.form.IDetachableChoiceList#detach()
 		 */
 		public void detach()
@@ -83,7 +88,7 @@ public class Home extends WicketExamplePage
 			this.clear();
 		}
 
-		/*
+		/**
 		 * @see wicket.markup.html.form.IDetachableChoiceList#attach()
 		 */
 		public void attach()
@@ -96,7 +101,7 @@ public class Home extends WicketExamplePage
 			}
 		}
 
-		/*
+		/**
 		 * @see wicket.markup.html.form.IDetachableChoiceList#getDisplayValue(int)
 		 */
 		public String getDisplayValue(int row)
@@ -104,16 +109,16 @@ public class Home extends WicketExamplePage
 			return ((User)get(row)).getName();
 		}
 
-		/*
-		 * @see wicket.markup.html.form.IDetachableChoiceList#getIdValue(int)
+		/**
+		 * @see wicket.markup.html.form.IDetachableChoiceList#getId(int)
 		 */
 		public String getId(int row)
 		{
 			return ((User)get(row)).getId().toString();
 		}
 
-		/*
-		 * @see wicket.markup.html.form.IDetachableChoiceList#getObjectById(java.lang.String)
+		/**
+		 * @see wicket.markup.html.form.IDetachableChoiceList#objectForId(java.lang.String)
 		 */
 		public Object objectForId(String id)
 		{

@@ -41,12 +41,21 @@ public abstract class SpringAwareModel implements IModel
         this.springBeanModel = model;
     }
 
+    /**
+     * @return Spring application context
+     */
     public final ApplicationContext getApplicationContext()
     {
         return this.springBeanModel.getApplicationContext();
     }
 
+    /**
+     * @see wicket.model.IModel#setObject(java.lang.Object)
+     */
     public abstract void setObject(Object object);
 
+    /**
+     * @see wicket.model.IModel#getObject()
+     */
     public abstract Object getObject();
 }

@@ -27,6 +27,9 @@ import wicket.PageParameters;
  */
 public class DisplaytagIndex extends Displaytag
 {
+    /**
+     * Constructor
+     */
     public DisplaytagIndex()
     {
         this(null);

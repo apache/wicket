@@ -43,10 +43,19 @@ public final class Book implements Serializable
      * Value for non-fiction books.
      */
     public static final boolean NON_FICTION = false;
+    
+    /** Funny book */
     public static final WritingStyle FUNNY = new WritingStyle("funny");
+    
+    /** Boring book */
     public static final WritingStyle BORING = new WritingStyle("boring");
+    
+    /** Sad book */
     public static final WritingStyle SAD = new WritingStyle("sad");
+    
+    /** Bad book */
     public static final WritingStyle BAD = new WritingStyle("bad");
+    
     private static long nextId = 0;
     private static final Map idToBook = new HashMap();
 
@@ -146,21 +155,33 @@ public final class Book implements Serializable
         title = string;
     }
 
+    /**
+     * @return A book that makes a good companion to this one
+     */
     public final Book getCompanionBook()
     {
         return companionBook;
     }
 
+    /**
+     * @param book A book that makes a good companion to this one
+     */
     public final void setCompanionBook(final Book book)
     {
         companionBook = book;
     }
 
+    /**
+     * @param isFiction True if this book is fiction
+     */
     public final void setFiction(final boolean isFiction)
     {
         this.isFiction = isFiction;
     }
 
+    /**
+     * @return True if this book is fiction
+     */
     public final boolean getFiction()
     {
         return isFiction;
@@ -198,6 +219,9 @@ public final class Book implements Serializable
         this.relatedBook = relatedBook;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     */
     public final String toString()
     {
         return title + " (" + author + ")";

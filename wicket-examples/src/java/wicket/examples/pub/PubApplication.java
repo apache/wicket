@@ -27,6 +27,9 @@ import wicket.examples.WicketExampleApplication;
  */
 public class PubApplication extends WicketExampleApplication
 {
+    /**
+     * Constructor
+     */
     public PubApplication()
     {
         getPages().setHomePage(Home.class);

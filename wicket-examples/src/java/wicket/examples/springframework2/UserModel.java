@@ -27,16 +27,26 @@ public class UserModel extends SpringAwareModel
 {
     private SimpleUser user = null;
 
+    /**
+     * Constructor
+     * @param model The model
+     */
     public UserModel(SpringBeanModel model)
     {
         super(model);
     }
 
+    /**
+     * @see wicket.examples.springframework2.SpringAwareModel#setObject(java.lang.Object)
+     */
     public void setObject(Object object)
     {
         this.user = (SimpleUser) object;
     }
 
+    /**
+     * @see wicket.examples.springframework2.SpringAwareModel#getObject()
+     */
     public Object getObject()
     {
         if (user == null)

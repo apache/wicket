@@ -30,6 +30,9 @@ public final class QuickStartSession extends WebSession
 {
 	//  TODO Add any session properties here
 
+	/** serialVersionUID */
+	private static final long serialVersionUID = 3257282535091681080L;
+
 	/**
 	 * Constructor
 	 * 
@@ -41,5 +44,3 @@ public final class QuickStartSession extends WebSession
 		super(application);
 	}
 }
-
-

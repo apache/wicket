@@ -34,6 +34,12 @@ public class ExportLink extends Link
     final private List data;
     final private BaseExportView exportView; 
     
+    /**
+     * Constructor
+     * @param componentName
+     * @param data
+     * @param exportView
+     */
     public ExportLink(final String componentName, final List data, final BaseExportView exportView)
     {
         super(componentName);
@@ -41,6 +47,9 @@ public class ExportLink extends Link
         this.exportView = exportView;
     }
     
+    /**
+     * @see wicket.markup.html.link.AbstractLink#linkClicked()
+     */
     public void linkClicked()
     {
         final RequestCycle cycle = getRequestCycle();

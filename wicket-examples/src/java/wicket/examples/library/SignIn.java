@@ -56,6 +56,9 @@ public final class SignIn extends WicketExamplePage
         });
     }
     
+    /**
+     * Constructor
+     */
     public SignIn()
     {
         this(null);

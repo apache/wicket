@@ -104,21 +104,35 @@ public class ExampleSubtotals extends Displaytag
         private double subtotal = 0;
         private String city;
         
+        /**
+         * Constructor
+         * @param componentName
+         * @param data
+         */
         public SubtotalTable(final String componentName, final List data)
         {
             super(componentName, data);
         }
 
+        /**
+         * @return Subtotal
+         */
         public double getSubtotal()
         {
             return subtotal;
         }
 
+        /**
+         * @return Group 1
+         */
         public String getGroup1()
         {
             return city;
         }
         
+        /**
+         * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
+         */
         public void populateItem(final ListItem listItem)
         {
             final ReportableListObject value = (ReportableListObject) listItem.getModelObject();

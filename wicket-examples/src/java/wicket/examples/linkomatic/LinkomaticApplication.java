@@ -26,6 +26,9 @@ import wicket.examples.WicketExampleApplication;
  */
 public class LinkomaticApplication extends WicketExampleApplication
 {
+    /**
+     * Constructor
+     */
     public LinkomaticApplication()
     {
         getPages().setHomePage(Home.class);

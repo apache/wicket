@@ -49,6 +49,9 @@ public class SpringBeanModel extends DetachableModel
 
     private IModel model = null;
 
+    /**
+     * @return The spring application context
+     */
     public final ApplicationContext getApplicationContext()
     {
         return applicationContext;
@@ -148,11 +151,17 @@ public class SpringBeanModel extends DetachableModel
         }
     }
 
+    /**
+     * @see wicket.model.DetachableModel#setObject(java.lang.Object)
+     */
     public void setObject(Object object)
     {
         this.model.setObject(object);
     }
 
+    /**
+     * @see wicket.model.DetachableModel#getObject()
+     */
     public Object getObject()
     {
         return this.model.getObject();

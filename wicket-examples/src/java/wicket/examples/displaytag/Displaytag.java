@@ -28,7 +28,10 @@ import wicket.examples.displaytag.utils.AbsoluteHref;
  * @author Juergen Donnerstag
  */
 public class Displaytag extends WicketExamplePage
-{
+{    
+    /**
+     * Constructor
+     */
     public Displaytag()
     {
         this(null);

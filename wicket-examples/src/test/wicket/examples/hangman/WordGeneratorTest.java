@@ -42,6 +42,10 @@ public class WordGeneratorTest extends TestCase {
         super(message);
     }
 
+    /**
+     * Tests word generator
+     * @throws Exception
+     */
     public void testWordGenerator() throws Exception {
         WordGenerator wg = new WordGenerator();
         int wordCount = wg.getWordCount();
@@ -62,6 +66,10 @@ public class WordGeneratorTest extends TestCase {
         Assert.assertTrue("All words should have been returned twice", words.isEmpty());
     }
 
+    /**
+     * Tests word generator
+     * @throws Exception
+     */
     public void testSuppliedWordConstructor() throws Exception {
         WordGenerator wg = new WordGenerator(new String[] { "Testing" });
         Assert.assertEquals("Word should be as expected", "testing", wg.nextWord());

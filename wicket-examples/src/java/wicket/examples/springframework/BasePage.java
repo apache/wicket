@@ -37,6 +37,9 @@ public class BasePage extends WicketExamplePage
     {
     }
     
+    /**
+     * @return Application context for Spring
+     */
     public final ApplicationContext getSpringApplicationContext()
     {
         return ((SpringApplication)this.getApplication()).getSpringApplicationContext();

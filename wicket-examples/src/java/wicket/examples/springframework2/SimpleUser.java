@@ -33,21 +33,33 @@ public class SimpleUser
     {
     }
 
+    /**
+     * @return The first name
+     */
     public String getForename()
     {
         return forename;
     }
 
+    /**
+     * @param forename The first name
+     */
     public void setForename(String forename)
     {
         this.forename = forename;
     }
 
+    /**
+     * @return The last name
+     */
     public String getSurname()
     {
         return surname;
     }
 
+    /**
+     * @param surname The last name
+     */
     public void setSurname(String surname)
     {
         this.surname = surname;

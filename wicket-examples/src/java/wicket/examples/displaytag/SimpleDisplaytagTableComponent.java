@@ -64,16 +64,27 @@ public class SimpleDisplaytagTableComponent extends Panel
         add(table);
     }
 
+    /**
+     * @return The starting index for the table
+     */
     public int getStartIndex()
     {
         return table.getStartIndex();
     }
     
+    /**
+     * @param startIndex The new start index
+     * @return The listview
+     */
     public ListView setStartIndex(int startIndex)
     {
         return table.setStartIndex(startIndex);
     }
     
+    /**
+     * @param size New view size
+     * @return The list view
+     */
     public ListView setViewSize(int size)
     {
         return table.setViewSize(size);

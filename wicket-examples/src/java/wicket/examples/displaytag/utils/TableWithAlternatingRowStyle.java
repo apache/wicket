@@ -50,6 +50,8 @@ public abstract class TableWithAlternatingRowStyle extends ListView
      * class attribute and thus provide ListItems with alternating row colours.
      * 
      * See wicket.markup.html.table.Table#newItem(int)
+     * @param index Index of item 
+     * @return List item
      */
     protected ListItem newItem(final int index)
     {

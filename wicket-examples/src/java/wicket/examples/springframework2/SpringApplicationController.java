@@ -86,13 +86,23 @@ public class SpringApplicationController extends AbstractController
         return null;
     }
     
+    /**
+     * Spring servlet
+     */
     public final class WicketSpringServlet extends WicketServlet
     {
+        /**
+         * Constructor
+         * @param application The application
+         */
         public WicketSpringServlet(final WebApplication application)
         {
             this.webApplication = application;
         }
         
+        /**
+         * @see wicket.protocol.http.WicketServlet#init()
+         */
         public void init()
         {
             ; // replace super implementation with nothing. Apllication class
