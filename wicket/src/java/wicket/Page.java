@@ -468,12 +468,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * @param component
 	 *            The component that was added
 	 */
-	final void componentAdded(Component component)
+	final void componentAdded(final Component component)
 	{
 		onChanged();
 		if (versionManager != null)
 		{
-			componentAdded(component);
+		    versionManager.componentAdded(component);
 		}
 	}
 
@@ -481,7 +481,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * @param component
 	 *            The component whose model is about to change
 	 */
-	final void componentModelChangeImpending(Component component)
+	final void componentModelChangeImpending(final Component component)
 	{
 		onChanged();
 		if (versionManager != null)
@@ -494,7 +494,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * @param component
 	 *            The component that was removed
 	 */
-	final void componentRemoved(Component component)
+	final void componentRemoved(final Component component)
 	{
 		onChanged();
 		if (versionManager != null)
@@ -627,7 +627,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			public Object component(final Component component)
 			{
 				// If component never rendered
-				if (!renderedComponents.contains(component))
+				if ((renderedComponents == null) || !renderedComponents.contains(component))
 				{
 					// Throw exception
 					throw new WicketRuntimeException(component
