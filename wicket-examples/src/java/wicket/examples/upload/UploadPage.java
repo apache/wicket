@@ -79,7 +79,7 @@ public class UploadPage extends WicketExamplePage
 
 		// Add simple upload form, which is hooked up to its feedback panel by
 		// virtue of that panel being nested in the form.
-		final SimpleUploadForm simpleUploadForm = new SimpleUploadForm("simpleUpload");
+		final FileUploadForm simpleUploadForm = new FileUploadForm("simpleUpload");
 		simpleUploadForm.add(simpleUploadFeedback);
 		add(simpleUploadForm);
 //
@@ -123,10 +123,9 @@ public class UploadPage extends WicketExamplePage
 	}
 
 	/**
-	 * Form for uploads that just uses the original file name for the uploaded
-	 * file.
+	 * Form for uploads.
 	 */
-	private class SimpleUploadForm extends UploadForm
+	private class FileUploadForm extends UploadForm
 	{
 		/** model to put the reference to the uploaded file in. */
 		private final Model fileModel = new Model();
@@ -135,7 +134,7 @@ public class UploadPage extends WicketExamplePage
 		 * Construct.
 		 * @param name Component name
 		 */
-		public SimpleUploadForm(String name)
+		public FileUploadForm(String name)
 		{
 			super(name);
 
