@@ -69,7 +69,6 @@ public class AttributeModifierComponentPage extends WebPage
 
 			public Object onGetObject()
 			{
-				attach();
 				return text;
 			}
 
