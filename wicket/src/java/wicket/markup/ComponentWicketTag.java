@@ -71,7 +71,7 @@ public final class ComponentWicketTag extends ComponentTag
 
     /**
      * 
-     * @return true, if tag name equals wicket:region
+     * @return true, if tag name equals wicket:component
      */
     public final boolean isComponentTag()
     {
@@ -79,7 +79,8 @@ public final class ComponentWicketTag extends ComponentTag
     }
 
     /**
-     * Get wicket's component name attribute: e.g. &lt;wicket:region name=panel&gt;
+     * Get wicket's component name attribute: e.g. 
+     * &lt;wicket:component name="myComponent"&gt;
      * 
      * @return name attribute
      */

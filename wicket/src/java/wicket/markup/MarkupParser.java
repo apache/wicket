@@ -51,7 +51,7 @@ import wicket.util.value.ValueMap;
  * returned as ComponentTag values. Text before, between and after such tags are returned as 
  * RawMarkup values. A check is done to ensure that tags returned balance correctly.
  * MarkupParser also applies some special treatment to specific ComponentTags like 
- * &lt;wicket:region name=remove&gt; . MarkupParser will remove all text (RawMarkup)
+ * &lt;wicket:remove&gt; . MarkupParser will remove all text (RawMarkup)
  * between the respective open and close tag. ComponentTags are not allowed within this region.
  * The parameters specified through &lt;wicket:param ..&gt; tags are added to the
  * immediately preceding ComponentTag. And all attributes named 'href' are flagged for later
@@ -473,7 +473,7 @@ public final class MarkupParser implements IMarkupParser
             list.add(new RawMarkup(markup.substring(position, markup.length())));
         }
 
-        // remove <wicket:region name=remove> regions
+        // remove <wicket:remove> regions
         removePreviewComponents(list);
 
         // Validate wicket-param tag are following component tags, assign
@@ -590,7 +590,7 @@ public final class MarkupParser implements IMarkupParser
      */
     private void removePreviewComponents(final List list)
     {
-        // Remove any <wicket:region name=remove> components
+        // Remove any <wicket:remove> components
         for (int i = 0; i < list.size(); i++)
         {
             // Get next element
@@ -607,7 +607,7 @@ public final class MarkupParser implements IMarkupParser
                 if (remove == true)
                 {
                     throw new RenderException(
-                            "[remove] has been replaced by <wicket:region name=remove>. Please modify your markup accordingly");
+                            "[remove] has been replaced by <wicket:remove>. Please modify your markup accordingly");
                 }
                 
                 if ((remove == false) && (element instanceof ComponentWicketTag))
@@ -656,13 +656,13 @@ public final class MarkupParser implements IMarkupParser
 
                     if (i < list.size())
                     {
-                        throw new MarkupException("<wicket:region name=remove> open tag "
+                        throw new MarkupException("<wicket:remove> open tag "
                                 + openTag + " not closed by " + list.get(i) 
                                 + ". It must not contain a nested wicket component.");
                     }
                     else
                     {
-                        throw new MarkupException("<wicket:region name=remove> open tag "
+                        throw new MarkupException("<wicket:remove> open tag "
                                 + openTag + " not closed."
                         		+ " It must nt contain a nested wicket component.");
                     }

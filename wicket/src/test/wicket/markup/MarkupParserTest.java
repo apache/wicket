@@ -268,9 +268,9 @@ public final class MarkupParserTest extends TestCase
 	        ; // ignore
 	    }
 
-	    parser.parse("<wicket:region name=remove>  </wicket:region>");
+	    parser.parse("<wicket:remove>  </wicket:remove>");
 
-	    parser.parse("<wicket:region name=remove> <span id=\"test\"/> </wicket:region>");
+	    parser.parse("<wicket:remove> <span id=\"test\"/> </wicket:remove>");
 
 	    try
 	    {
