@@ -40,7 +40,8 @@
 	        <item name="CVS access" href="/cvs-usage.html"/>
 	        <item name="Build reports" href="/maven-reports.html" collapse="true">
     	        <item name="Unit tests" href="/junit-report.html"/>
-    	        <item name="Clover tests" href="/clover/index.html"/>
+    	        <item name="Clover tests" href="/clover/index.html" target="_blank" class="newwindow"/>
+    	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
 	        </item>
 	    </menu>
 <!--	    <search /> -->
