@@ -64,7 +64,6 @@ public final class DateToStringConverter extends AbstractConverter
 		if (dateFormat == null)
 		{
 			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
-            dateFormat.setLenient(true);
 		}
 		return dateFormat;
 	}
@@ -74,10 +73,6 @@ public final class DateToStringConverter extends AbstractConverter
 	 */
 	public final void setDateFormat(final DateFormat dateFormat)
 	{
-		if (dateFormat == null)
-		{
-			throw new IllegalArgumentException("a non null date format must be provided");
-		}
 		this.dateFormat = dateFormat;
 	}
 

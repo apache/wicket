@@ -87,10 +87,6 @@ public final class DateConverter extends AbstractConverter
 	 */
 	public void setDateFormat(final DateFormat dateFormat)
 	{
-		if (dateFormat == null)
-		{
-			throw new IllegalArgumentException("a non null date format must be provided");
-		}
 		this.dateFormat = dateFormat;
 	}
 
