@@ -23,6 +23,7 @@ import wicket.IFeedback;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
+import wicket.model.IModel;
 import wicket.protocol.http.WebRequest;
 
 /**
@@ -49,6 +50,14 @@ public abstract class UploadForm extends Form
 	public UploadForm(String name, IFeedback validationFeedback)
 	{
 		super(name, validationFeedback);
+	}
+
+	/**
+	 * @see Form#Form(String, IModel, IFeedback)
+	 */
+	public UploadForm(String name, IModel model, IFeedback feedback)
+	{
+		super(name, model, feedback);
 	}
 
 	/**
