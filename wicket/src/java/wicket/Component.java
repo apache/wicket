@@ -997,7 +997,8 @@ public abstract class Component implements Serializable
 	public String toString()
 	{
 		final Page page = findPage();
-		return "[" + (page == null ? "<No Page>" : getPage().getClass().getName()) + " path = "
+		return "[Component id = " + getId() + ", page = "
+				+ (page == null ? "<No Page>" : getPage().getClass().getName()) + ", path = "
 				+ getPath() + "." + Classes.name(getClass()) + ", isVisible = " + isVisible()
 				+ ", isVersioned = " + isVersioned() + "]";
 	}
