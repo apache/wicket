@@ -27,17 +27,10 @@ import wicket.markup.MarkupStream;
  * 
  * @author Jonathan Locke
  */
-public class TextArea extends FormComponent
+public class TextArea extends TextComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -1323747673401786242L;
-
-	/**
-	 * when the user input does not validate, this is a temporary store for the
-	 * input he/she provided. We have to store it somewhere as we loose the
-	 * request parameter when redirecting.
-	 */
-	private String invalidInput;
 
 	/**
      * @see wicket.Component#Component(String, Serializable)
@@ -56,18 +49,6 @@ public class TextArea extends FormComponent
 	}
 
 	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public void updateModel()
-	{
-        // Component validated, so clear the input
-		invalidInput = null; 
-		setModelObject(getRequestString());
-	}
-
-	/**
 	 * Handle the container's body.
 	 * 
 	 * @param markupStream
@@ -79,7 +60,7 @@ public class TextArea extends FormComponent
 	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String bodyContent;
-		if (invalidInput == null) 
+		if (getInvalidInput() == null) 
 		{
             // No validation errors
 			bodyContent = getModelObjectAsString();
@@ -87,19 +68,8 @@ public class TextArea extends FormComponent
 		else
 		{
             // Invalid input detected
-			bodyContent = invalidInput;
+			bodyContent = getInvalidInput();
 		}
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
-	}
-
-	/**
-	 * Handle a validation error.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#invalid()
-	 */
-	protected void invalid()
-	{
-		// store the user input
-		invalidInput = getRequestString();
 	}
 }

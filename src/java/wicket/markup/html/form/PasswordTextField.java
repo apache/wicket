@@ -31,9 +31,9 @@ import wicket.markup.ComponentTag;
  *
  * @author Jonathan Locke
  */
-public class PasswordTextField extends FormComponent
+public class PasswordTextField extends TextField
 {
-    /** log. */
+    /** Log. */
     private static final Log log = LogFactory.getLog(PasswordTextField.class);
 
     /** Serial Version ID. */
@@ -65,6 +65,20 @@ public class PasswordTextField extends FormComponent
     }
 
     /**
+	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
+	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
+	 * for login forms. If <code>false</code>, the contents of the model are put into the field.
+	 * This is useful for entry forms where the contents of the model should be editable, or
+	 * resubmitted.
+	 * 
+	 * @return Returns the resetPassword.
+	 */
+	public final boolean getResetPassword()
+	{
+		return resetPassword;
+	}
+
+    /**
      * @see wicket.markup.html.form.FormComponent#getValue()
      */
     public final String getValue()
@@ -81,20 +95,6 @@ public class PasswordTextField extends FormComponent
         
         return value;
     }
-
-    /**
-	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
-	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
-	 * for login forms. If <code>false</code>, the contents of the model are put into the field.
-	 * This is useful for entry forms where the contents of the model should be editable, or
-	 * resubmitted.
-	 * 
-	 * @return Returns the resetPassword.
-	 */
-	public final boolean isResetPassword()
-	{
-		return resetPassword;
-	}
 
 	/**
 	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
@@ -133,23 +133,6 @@ public class PasswordTextField extends FormComponent
     }
 
     /**
-     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-     */
-    public final boolean supportsPersistence()
-    {
-        return true;
-    }
-
-    /**
-     * Updates this components' model from the request.
-     * @see FormComponent#updateModel()
-     */
-    public void updateModel()
-    {
-        setModelObject(getRequestString());
-    }
-
-    /**
 	 * Processes the component tag.
 	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(ComponentTag)
@@ -159,13 +142,6 @@ public class PasswordTextField extends FormComponent
         checkComponentTag(tag, "input");
         checkComponentTagAttribute(tag, "type", "password");
         super.handleComponentTag(tag);
-		if (isResetPassword())
-		{
-			tag.put("value", "");
-		}
-		else
-		{
-			tag.put("value", getModelObjectAsString());
-		}
+		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
     }
 }
