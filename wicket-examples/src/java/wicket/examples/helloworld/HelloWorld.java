@@ -19,16 +19,15 @@
 package wicket.examples.helloworld;
 
 import wicket.PageParameters;
-import wicket.examples.util.NavigationPanel;
-import wicket.markup.html.HtmlPage;
+import wicket.examples.WicketExample;
 import wicket.markup.html.basic.Label;
 
-
 /**
- * Everybody's favorite example.
+ * Everybody's favorite example!
+ * 
  * @author Jonathan Locke
  */
-public class HelloWorld extends HtmlPage
+public class HelloWorld extends WicketExample
 {
     /**
      * Constructor
@@ -36,7 +35,6 @@ public class HelloWorld extends HtmlPage
      */
     public HelloWorld(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Helloworld example"));
-        add(new Label("hellomessage", "Hello world!"));
+        add(new Label("message", "Hello World!"));
     }
 }

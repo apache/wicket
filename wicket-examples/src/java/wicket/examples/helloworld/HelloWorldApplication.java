@@ -18,23 +18,19 @@
  */
 package wicket.examples.helloworld;
 
-import wicket.protocol.http.WebApplication;
-
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for hello world example.
  * @author Jonathan Locke
  */
-public class HelloWorldApplication extends WebApplication
+public class HelloWorldApplication extends WicketExampleApplication
 {
     /**
      * Constructor.
      */
     public HelloWorldApplication()
     {
-        this.getSettings().setStripComponentNames(true);
         getPages().setHomePage(HelloWorld.class);
     }
 }
-
-

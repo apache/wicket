@@ -16,26 +16,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.util;
+package wicket.examples;
 
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.panel.Panel;
+import wicket.protocol.http.WebApplication;
+import wicket.util.file.Folder;
+import wicket.util.file.Path;
+import wicket.util.time.Duration;
 
 /**
- * Navigation panel for the examples project.
- *
- * @author Eelco Hillenius
+ * WicketServlet class for hello world example.
+ * @author Jonathan Locke
  */
-public final class NavigationPanel extends Panel
+public class WicketExampleApplication extends WebApplication
 {
     /**
-     * Construct.
-     * @param componentName name of the component
-     * @param exampleTitle title of the example
+     * Constructor.
      */
-    public NavigationPanel(String componentName, String exampleTitle)
+    public WicketExampleApplication()
     {
-        super(componentName);
-        add(new Label("exampleTitle", exampleTitle));
+        getSettings().setSourcePath(new Path(new Folder("c:\\Projects\\wicket-examples\\src\\java")))
+                     .setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }
