@@ -126,7 +126,8 @@ public final class Task
     }
 
     /**
-	 * @return
+     * Gets the log.
+	 * @return the log
 	 */
 	protected Log getLog()
 	{
