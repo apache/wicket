@@ -33,5 +33,6 @@ public class FormInputApplication extends WicketExampleApplication
     public FormInputApplication()
     {
         getPages().setHomePage(FormInput.class);
+		getSettings().setThrowExceptionOnMissingResource(false);
     }
 }

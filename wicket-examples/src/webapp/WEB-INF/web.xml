@@ -70,16 +70,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>FValidateFormInputApplication</servlet-name>
-        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-        <init-param>
-          <param-name>applicationClassName</param-name>
-          <param-value>wicket.examples.fvalidate.FValidateFormInputApplication</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
         <servlet-name>NestedApplication</servlet-name>
         <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
         <init-param>
@@ -336,12 +326,6 @@
     <servlet-mapping>
         <servlet-name>FormInputApplication</servlet-name>
         <url-pattern>/forminput/*</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet-mapping>
-        <servlet-name>FValidateFormInputApplication</servlet-name>
-        <url-pattern>/fvalidateforminput</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
