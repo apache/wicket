@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.31 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -53,9 +53,11 @@ import wicket.util.string.Strings;
  * given person object like this:
  * 
  * <pre>
- *            Person person = getSomePerson();
- *            ...
- *            add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ * 
+ *             Person person = getSomePerson();
+ *             ...
+ *             add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ *  
  * </pre>
  * 
  * Where 'myLabel' is the name of the component, and 'name' is the Ognl
@@ -67,7 +69,9 @@ import wicket.util.string.Strings;
  * updates the name property of a person like this:
  * 
  * <pre>
- *            add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ * 
+ *             add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
+ *  
  * </pre>
  * 
  * </p>
@@ -84,12 +88,12 @@ import wicket.util.string.Strings;
  * 
  * @see wicket.model.IModel
  * @see wicket.model.Model
- * @see wicket.model.DetachableModel
+ * @see wicket.model.AbstractDetachableModel
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class PropertyModel extends DetachableModel implements IConvertible, INestedModel
+public class PropertyModel extends AbstractDetachableModel implements IConvertible, INestedModel
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
@@ -228,8 +232,6 @@ public class PropertyModel extends DetachableModel implements IConvertible, INes
 	 */
 	public PropertyModel(final IModel model, final String expression, Class propertyType)
 	{
-		super(null);
-
 		if (model == null)
 		{
 			throw new IllegalArgumentException("Model parameter must not be null");
@@ -263,7 +265,6 @@ public class PropertyModel extends DetachableModel implements IConvertible, INes
 	 */
 	public Object getObject()
 	{
-		final String expression = getExpression();
 		if (Strings.isEmpty(expression))
 		{
 			// No expression will cause OGNL to throw an exception. The OGNL
@@ -325,9 +326,6 @@ public class PropertyModel extends DetachableModel implements IConvertible, INes
 	{
 		try
 		{
-			// Get the ognl expression
-			String expression = getExpression();
-
 			// Get the real object
 			Object target = getNestedModel().getObject();
 
@@ -369,30 +367,15 @@ public class PropertyModel extends DetachableModel implements IConvertible, INes
 	}
 
 	/**
-	 * Gets the Ognl expression that works on the model. This expression is used
-	 * with both Ognl.getValue (used in getObject) and Ognl.setValue (used in
-	 * setObject). Usually, this expression accords with simple property acces
-	 * (like if we have a Person object with a name property, the expression
-	 * would be 'name'), but it can in principle contain any valid Ognl
-	 * expression that has meaning with both the Ognl.getValue and Ognl.setValue
-	 * operations.
-	 * 
-	 * @return expression the Ognl expression that works on the model.
-	 */
-	protected final String getExpression()
-	{
-		return expression;
-	}
-
-	/**
 	 * Initializes the instance variables of this property model, and in case
 	 * the wrapped model is a {@link IDetachableModel}, calls attach on the
 	 * wrapped model.
 	 * 
-	 * @see wicket.model.DetachableModel#onAttach()
+	 * @see AbstractDetachableModel#onAttach()
 	 */
 	protected final void onAttach()
 	{
+		// TODO do we need this method at all if getObject() always attaches in AbstractDetachableModel subclasses?
 		if (model instanceof IDetachableModel)
 		{
 			((IDetachableModel)model).attach();
@@ -403,7 +386,7 @@ public class PropertyModel extends DetachableModel implements IConvertible, INes
 	 * Unsets this property model's instance variables and, in case the wrapped
 	 * model is a {@link IDetachableModel}, calls dettach on the wrapped model.
 	 * 
-	 * @see wicket.model.DetachableModel#onDetach()
+	 * @see AbstractDetachableModel#onDetach()
 	 */
 	protected final void onDetach()
 	{
@@ -427,5 +410,14 @@ public class PropertyModel extends DetachableModel implements IConvertible, INes
 	protected final void setContext(OgnlContext context)
 	{
 		this.context = context;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[PropertyModel model = " + model + ", expression = " + expression + ", object = "
+				+ getObject() + "]";
 	}
 }
