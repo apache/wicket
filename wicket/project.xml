@@ -123,6 +123,7 @@
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description/>
+        <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
@@ -133,6 +134,7 @@
       <properties>
         <wicket.group>test</wicket.group>
         <wicket.description>Used for testing Wicket</wicket.description>
+        <war.bundle>false</war.bundle>
       </properties>
     </dependency>
     <dependency>
@@ -143,6 +145,7 @@
       <properties>
         <wicket.group>optional</wicket.group>
         <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
+        <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
@@ -153,6 +156,7 @@
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description>Used for introspection.</wicket.description>
+        <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
@@ -163,6 +167,7 @@
       <properties>
         <wicket.group>compile</wicket.group>
         <wicket.description>Compile time only, is supplied by your application server.</wicket.description>
+        <war.bundle>false</war.bundle>
       </properties>
     </dependency>
     <dependency>
@@ -172,6 +177,7 @@
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description/>
+        <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
