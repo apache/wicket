@@ -171,6 +171,9 @@ public final class ApplicationSettings
 	/** Encryption key used to encode/decode passwords e.g. */
 	private String encryptionKey = "WiCkEt-FRAMEwork";
 
+	/** The maximum number of versions of a page to track */
+	private int maxPageVersions = 10;
+	
 	/** The maximum number of pages in a session */
 	private int maxSessionPages = 10;
 
@@ -362,6 +365,14 @@ public final class ApplicationSettings
 	public final String getEncryptionKey()
 	{
 		return encryptionKey;
+	}
+	
+	/**
+	 * @return Returns the maxPageVersions.
+	 */
+	public int getMaxPageVersions()
+	{
+		return maxPageVersions;
 	}
 
 	/**
@@ -613,6 +624,14 @@ public final class ApplicationSettings
 	{
 		this.encryptionKey = encryptionKey;
 		return this;
+	}
+	
+	/**
+	 * @param maxPageVersions The maxPageVersions to set.
+	 */
+	public void setMaxPageVersions(int maxPageVersions)
+	{
+		this.maxPageVersions = maxPageVersions;
 	}
 
 	/**

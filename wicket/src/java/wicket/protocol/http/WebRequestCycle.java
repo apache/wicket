@@ -290,25 +290,20 @@ public class WebRequestCycle extends RequestCycle
 		final String path = request.getParameter("component");
 		if (path != null)
 		{
+			// Grt version number
+			final String versionString = request.getParameter("version");
+			int version = Strings.isEmpty(versionString) ? 0 : Integer.parseInt(versionString);
+			
 			// Get page from path
-			log.debug("Getting page for path " + path);
-			final Page page = session.getPage(path);
+			log.debug("Getting page [path = " + path + ", version = " + version + "]");
+			final Page page = session.getPage(path, version);
 			
 			// Does page exist?
 			if (page != null)
 			{
-				// Is page stale?
-				if (page.isStale())
-				{
-					onStalePage();
-					return true;
-				}
-				else
-				{
-					// Execute the user's code
-					invokeInterface(page, path, request.getParameter("interface"));
-					return true;
-				}
+				// Execute the user's code
+				invokeInterface(page, path, request.getParameter("interface"));
+				return true;
 			}
 			else
 			{
@@ -445,30 +440,6 @@ public class WebRequestCycle extends RequestCycle
 		// Page was expired from session, probably because backtracking
 		// limit was reached
 		setPage(newPage(application.getPages().getPageExpiredErrorPage()));
-	}
-
-	private void onStalePage()
-	{
-		// Page was marked stale because the data model for some
-		// component on the page is stale. Find the most recent
-		// fresh page and send the user there.
-		final Page freshestPage = session.getFreshestPage();
-
-		if (freshestPage != null)
-		{
-			setPage(newPage(application.getPages().getStaleDataErrorPage(), freshestPage));
-		}
-		else
-		{
-			setPage(newPage(application.getPages().getHomePage()));
-		}
-	}
-
-	private void onStaleRendering(final Page page)
-	{
-		// Just a particular rendering of the page is stale, so send
-		// the user back to the page
-		setPage(newPage(application.getPages().getStaleDataErrorPage(), page));
 	}
 
 	/**

@@ -30,9 +30,6 @@ package wicket;
  * <p>
  * <i>pageExpiredErrorPage </i>- You can override this with your own
  * bookmarkable page class to display expired page errors in a different way.
- * <p>
- * <i>staleDataErrorPage </i>- You can override this with your own bookmarkable
- * page class to display stale data errors in a different way.
  * 
  * @author Jonathan Locke
  */
@@ -46,9 +43,6 @@ public class ApplicationPages
 
     /** The error page displayed when an expired page is accessed */
     private Class pageExpiredErrorPageClass;
-
-    /** Error page to show when stale markup renderings are encountered */
-    private Class staleDataErrorPageClass;
 
     /**
      * Gets home page class.
@@ -88,17 +82,6 @@ public class ApplicationPages
     public final Class getPageExpiredErrorPage()
     {
         return pageExpiredErrorPageClass;
-    }
-
-    /**
-     * Gets the stale data error page class.
-     * 
-     * @return Returns the staleDataErrorPage.
-     * @see ApplicationPages#setStaleDataErrorPage(Class)
-     */
-    public final Class getStaleDataErrorPage()
-    {
-        return staleDataErrorPageClass;
     }
 
     /**
@@ -142,21 +125,6 @@ public class ApplicationPages
     public final ApplicationPages setPageExpiredErrorPage(final Class pageExpiredErrorPage)
     {
         this.pageExpiredErrorPageClass = pageExpiredErrorPage;
-        return this;
-    }
-
-    /**
-     * Sets the stale data error page class. The class must be external /
-     * bookmarkable and therefore must extend Page and must be able to construct
-     * from PageParameters.
-     * 
-     * @param staleDataErrorPage
-     *            The staleDataErrorPage to set
-     * @return This
-     */
-    public final ApplicationPages setStaleDataErrorPage(final Class staleDataErrorPage)
-    {
-        this.staleDataErrorPageClass = staleDataErrorPage;
         return this;
     }
 }

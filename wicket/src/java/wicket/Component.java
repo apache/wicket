@@ -375,7 +375,14 @@ public abstract class Component implements Serializable, IConverterSource
 		if (model == null)
 		{
 			// give subclass a chance to lazy-init model
-			setModel(initModel());
+			this.model = initModel();
+
+			// Set self as source of converter in case the model needs to do
+			// conversions
+			if (model instanceof IConvertible)
+			{
+				((IConvertible)model).setConverterSource(this);
+			}
 		}
 
 		return model;
@@ -681,7 +688,7 @@ public abstract class Component implements Serializable, IConverterSource
 			page.componentModelChangeImpending(this);
 		}
 	}
-	
+
 	/**
 	 * Called to indicate that the model for this component has been changed
 	 */
@@ -739,7 +746,7 @@ public abstract class Component implements Serializable, IConverterSource
 			detachModels();
 		}
 	}
-	
+
 	/**
 	 * Removes this component from its parent.
 	 */
@@ -1268,7 +1275,8 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
 	 * 
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 */
@@ -1277,7 +1285,8 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
 	 * 
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 */

@@ -23,7 +23,6 @@ import wicket.Session;
 import wicket.markup.html.link.AutolinkComponentResolver;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
-import wicket.markup.html.pages.StaleDataErrorPage;
 
 /**
  * A web application is a subclass of Application which associates with an
@@ -72,7 +71,7 @@ public abstract class WebApplication extends Application
 	{
 		// Set default error pages for HTML markup
 		getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class).setInternalErrorPage(
-				InternalErrorPage.class).setStaleDataErrorPage(StaleDataErrorPage.class);
+				InternalErrorPage.class);
 
 		// Add resolver for automatically resolving HTML links
 		getComponentResolvers().add(new AutolinkComponentResolver());
