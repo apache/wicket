@@ -220,7 +220,10 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	{
 		super(null);
 
-		checkModelNotNull(model);
+        if (model == null)
+        {
+            throw new IllegalArgumentException("Model parameter must not be null");
+        }
 
 		this.model = model;
 		this.expression = expression;
@@ -402,17 +405,5 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	protected final void setContext(OgnlContext context)
 	{
 		this.context = context;
-	}
-
-	/**
-	 * Checks the given model; if null, a null pointer exception is thrown.
-	 * @param model the model to check
-	 */
-	private final void checkModelNotNull(final IModel model)
-	{
-		if (model == null)
-		{
-			throw new IllegalArgumentException("Model parameter must not be null");
-		}
 	}
 }
