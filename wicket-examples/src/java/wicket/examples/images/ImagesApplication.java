@@ -26,6 +26,7 @@ import java.util.Random;
 import wicket.Component;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.BufferedDynamicImage;
+import wicket.markup.html.image.ButtonImage;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
@@ -34,6 +35,7 @@ import wicket.markup.html.image.BufferedDynamicImage;
 public class ImagesApplication extends WicketExampleApplication
 {
 	private BufferedDynamicImage image5;
+	private ButtonImage cancelButtonImage;
 	
 	/**
 	 * Constructor
@@ -41,6 +43,9 @@ public class ImagesApplication extends WicketExampleApplication
     public ImagesApplication()
     {
         getPages().setHomePage(Home.class);
+        
+	    cancelButtonImage = new ButtonImage("cancelButton", "Cancel");
+	    cancelButtonImage.setSharing(Component.APPLICATION_SHARED);
     }
     
     /**
@@ -57,6 +62,14 @@ public class ImagesApplication extends WicketExampleApplication
 			image5.setSharing(Component.APPLICATION_SHARED);
     	}
     	return image5;
+    }
+    
+    /**
+     * @return Cancel button image
+     */
+    public ButtonImage getCancelButtonImage()
+    {
+    	return cancelButtonImage;
     }
     
 	/**
