@@ -21,7 +21,6 @@ package wicket.examples.signin2;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.examples.WicketExampleApplication;
-import wicket.markup.html.form.encryption.NoCrypt;
 
 /**
  * Forms example.
