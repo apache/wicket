@@ -1,47 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <document>
-  <properties>
-    <title>Wicket changes</title>
-    <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
-  </properties>
-  <body>
-    <release version="0.9.17-beta" date="in cvs" description="Major refactorings">
-    	<action type="update" dev="Martijn Dashorst" issue="1107845">Moved wicket-examples-hangman into the wicket-examples project.</action>
-    	<action type="fix" dev="Martijn Dashorst" issue="1107802">Hangman gives NPE at startup</action>
-    	<action type="fix" dev="Martijn Dashorst">Made 'maven eclipse:generate-classpath' plugin work with eclipse projects.</action>
-    </release>
-    <release version="0.9.16-beta" date="2004-12-26" description="Really the last release before march to 1.0">
-      <action type="add" dev="Juergen Donnerstag">Added Spring-framework integration example to Wicket-examples.</action>
-      <action type="add" dev="Juergen Donnerstag">Added support for dynamic languages like Groovy. An example has been added to wicket-examples.</action>
-      <action type="fix" dev="Eelco Hillenius" issue="1091100" due-to="Gili">Javadoc bug in MultiLineLabel.</action>
-      <action type="fix" dev="Eelco Hillenius" issue="1091101" due-to="Gili">Font bug in paragraph.</action>
-      <action type="fix" dev="Martijn Dashorst" issue="1091094" due-to="Gili">Quickstart distribution not downloadable</action>
-      <action type="fix" dev="Martijn Dashorst">Fixed javadoc warning in ApplicationSettings.</action>
-      <action type="fix" dev="Eelco Hillenius" issue="1090226" due-to="Alex Chew" due-to-email="alex_chew at users.sourceforge.net">ListChoice Does not Support 'expression' binding</action>
-    </release>
-    <release version="0.9.15-beta" date="2004-12-19" description="Last release before march to 1.0">
-      <action type="add" dev="Eelco Hillenius" issue="1032507">Create a contrib section (site &amp; cvs) where high level components and other contributions that should not be part of the core can be put.</action>
-      <action type="add" dev="Martijn Dashorst">Added quickstart project</action>
-      <action type="update" dev="Eelco Hillenius" issue="1087152">Move packages from com.voicetribe.* to wicket.*</action>
-      <action type="add" dev="Martijn Dashorst" issue="1081709">Replaced the default design of a maven generated website with a more pleasing, non standard look and feel.</action>
-      <action type="add" dev="Martijn Dashorst" issue="1061782">Added Clover logo to front page of our website.</action>
-      <action type="add" dev="Juergen Donnerstag">Added support for a configurable character encoding (i18n) for markup files and HTTP response. And added a new example to show how it works.</action>
-    </release>
-    <release version="0.9.14-alpha" date="2004-12-06" description="State of CVS">
-      <action type="add" dev="Juergen Donnerstag">Model for PasswordTextField will now be encrypted for persistence (cookie)</action>
-      <action type="add" dev="Juergen Donnerstag">Fixed autoIndex bug. AutoIndex numbers are now unique across a whole page.</action>
-      <action type="add" dev="Juergen Donnerstag">Added lots of new and improved Table features. Examples contain displaytag like demos.</action>
-      <action type="add" dev="Juergen Donnerstag">signin example now includes a rememberMe functionality</action>
-      <action type="add" dev="Chris Turner">Introduced new ComponentTagAttributeModifier class and associated methods as a direct replacement for HtmlTagModifier and its subclasses.</action>
-      <action type="fix" dev="Martijn Dashorst" issue="1072362">Added reset password flag for PasswordTextField in order to support input forms without emptying the contents.</action>
-      <action type="add" dev="Eelco Hillenius" issue="1072080">Implemented multi field validation.</action>
-      <action type="add" dev="Eelco Hillenius">Implemented support for ui messaging (also used by validation). FeedbackPanel uses this, and is more generic now as well.</action>
-      <action type="add" dev="Juergen Donnerstag">Introduced ListView for lists (former Tables) that do not use paging. Table supports paging.</action>
-      <action type="fix" dev="Eelco Hillenius">Fixed bug that resulted in random session timeouts.</action>
-    </release>
-    <release version="0.9.13-alpha" date="25-10-2004" description="State of CVS">
-      <action type="add" dev="Martijn Dashorst">Converted confluence documentation to xdocs.</action>
-    </release>
-  </body>
+	<properties>
+		<title>Wicket changes</title>
+		<author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
+	</properties>
+	<body>
+		<release version="0.9.17-beta" date="in cvs" description="Major refactorings">
+			<action type="update" dev="Martijn Dashorst" issue="1107845">
+				Moved wicket-examples-hangman into the wicket-examples project.
+			</action>
+			<action type="fix" dev="Martijn Dashorst" issue="1107802">
+				Hangman gives NPE at startup
+			</action>
+			<action type="fix" dev="Martijn Dashorst">
+				Made 'maven eclipse:generate-classpath' plugin work with eclipse projects.
+			</action>
+			<action type="update" dev="Juergen Donnerstag">
+				Changed the component markup to
+				<![CDATA[<wicket:xxxx>]]>
+			</action>
+			<action type="update" dev="Jonathan Locke">
+				Changed the registration of the servlet in web.xml to
+				<code>wicket.protocol.http.WicketServlet</code>
+			</action>
+			<action type="update" dev="Juergen Donnerstag">
+				Refactored
+				<code>autolink</code>
+				and
+				<code>border</code>
+				to match the
+				<![CDATA[<wicket:xxxx>]]>
+				component markup
+			</action>
+			<action type="update" dev="Jonathan Locke">
+				Simplified
+				<code>IMarkupParser</code>
+			</action>
+			<action type="update">Javadoc for several components updated.</action>
+			<action type="update" dev="Juergen Donnerstag">
+				Refactored
+				<code>MarkupParser</code>
+			</action>
+			<action type="update" dev="Jonathan Locke">
+				Refactored and documented:
+				<ul>
+					<li>wicket</li>
+					<li>wicket.model</li>
+					<li>wicket.protocol</li>
+					<li>wicket.response</li>
+					<li>wicket.request</li>
+					<li>wicket.util</li>
+				</ul>
+			</action>
+			<action type="update" dev="Jonathan Locke"></action>
+		</release>
+		<release version="0.9.16-beta" date="2004-12-26"
+			description="Really the last release before march to 1.0">
+			<action type="add" dev="Juergen Donnerstag">
+				Added Spring-framework integration example to Wicket-examples.
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				Added support for dynamic languages like Groovy. An example has been added to
+				wicket-examples.
+			</action>
+			<action type="fix" dev="Eelco Hillenius" issue="1091100" due-to="Gili">
+				Javadoc bug in MultiLineLabel.
+			</action>
+			<action type="fix" dev="Eelco Hillenius" issue="1091101" due-to="Gili">
+				Font bug in paragraph.
+			</action>
+			<action type="fix" dev="Martijn Dashorst" issue="1091094" due-to="Gili">
+				Quickstart distribution not downloadable
+			</action>
+			<action type="fix" dev="Martijn Dashorst">
+				Fixed javadoc warning in ApplicationSettings.
+			</action>
+			<action type="fix" dev="Eelco Hillenius" issue="1090226" due-to="Alex Chew"
+				due-to-email="alex_chew at users.sourceforge.net">
+				ListChoice Does not Support 'expression' binding
+			</action>
+		</release>
+		<release version="0.9.15-beta" date="2004-12-19"
+			description="Last release before march to 1.0">
+			<action type="add" dev="Eelco Hillenius" issue="1032507">
+				Create a contrib section (site &amp; cvs) where high level components and other
+				contributions that should not be part of the core can be put.
+			</action>
+			<action type="add" dev="Martijn Dashorst">Added quickstart project</action>
+			<action type="update" dev="Eelco Hillenius" issue="1087152">
+				Move packages from com.voicetribe.* to wicket.*
+			</action>
+			<action type="add" dev="Martijn Dashorst" issue="1081709">
+				Replaced the default design of a maven generated website with a more pleasing, non
+				standard look and feel.
+			</action>
+			<action type="add" dev="Martijn Dashorst" issue="1061782">
+				Added Clover logo to front page of our website.
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				Added support for a configurable character encoding (i18n) for markup files and HTTP
+				response. And added a new example to show how it works.
+			</action>
+		</release>
+		<release version="0.9.14-alpha" date="2004-12-06" description="State of CVS">
+			<action type="add" dev="Juergen Donnerstag">
+				Model for PasswordTextField will now be encrypted for persistence (cookie)
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				Fixed autoIndex bug. AutoIndex numbers are now unique across a whole page.
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				Added lots of new and improved Table features. Examples contain displaytag like
+				demos.
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				signin example now includes a rememberMe functionality
+			</action>
+			<action type="add" dev="Chris Turner">
+				Introduced new ComponentTagAttributeModifier class and associated methods as a
+				direct replacement for HtmlTagModifier and its subclasses.
+			</action>
+			<action type="fix" dev="Martijn Dashorst" issue="1072362">
+				Added reset password flag for PasswordTextField in order to support input forms
+				without emptying the contents.
+			</action>
+			<action type="add" dev="Eelco Hillenius" issue="1072080">
+				Implemented multi field validation.
+			</action>
+			<action type="add" dev="Eelco Hillenius">
+				Implemented support for ui messaging (also used by validation). FeedbackPanel uses
+				this, and is more generic now as well.
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				Introduced ListView for lists (former Tables) that do not use paging. Table supports
+				paging.
+			</action>
+			<action type="fix" dev="Eelco Hillenius">
+				Fixed bug that resulted in random session timeouts.
+			</action>
+		</release>
+		<release version="0.9.13-alpha" date="25-10-2004" description="State of CVS">
+			<action type="add" dev="Martijn Dashorst">
+				Converted confluence documentation to xdocs.
+			</action>
+		</release>
+	</body>
 </document>
