@@ -7,6 +7,11 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1118413">
+    	The Component.getModelLock() method was changed to respond more appropriately
+    	when a real model doesn't exist.  The code now returns model (without attaching
+    	it) if model is non-null and new Object() as a dummy lock if model is null.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="">
     	Fix for unreported synchronization bug in ModificationWatcher where a 
     	ConcurrentModificationException can be thrown if the entries to be watched
