@@ -364,9 +364,9 @@ public class SearchPage extends CdAppBasePage
 		}
 
 		/**
-		 * @see wicket.markup.html.list.Loop#populateIteration(wicket.markup.html.list.Loop.Iteration)
+		 * @see wicket.markup.html.list.Loop#populateIteration(wicket.markup.html.list.Loop.LoopItem)
 		 */
-		protected void populateIteration(final Iteration iteration)
+		protected void populateIteration(final LoopItem iteration)
 		{
 			final PageableListViewNavigationLink link = new PageableListViewNavigationLink(
 					"pageLink", pageableListView, iteration.getIteration());
