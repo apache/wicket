@@ -13,7 +13,7 @@
             <item name="License" href="/license.html"/>
 	    </menu>
         <menu name="Getting Started">
-	        <item name="Tour" href="/QuickTour.html" collapse="true">
+	        <item name="A Quick Tour" href="/QuickTour.html" collapse="true">
 	        	<item name="Hello World!" href="/ExampleHelloWorld.html"/>
 	        	<item name="Navomatic" href="/ExampleNavomatic.html"/>
 	        	<item name="Images" href="/ExampleImages.html"/>
