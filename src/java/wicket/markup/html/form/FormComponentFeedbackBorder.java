@@ -22,7 +22,6 @@ import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 
-
 /**
  * A border that can be placed around a form bordered to indicate when the
  * bordered has a validation error.
