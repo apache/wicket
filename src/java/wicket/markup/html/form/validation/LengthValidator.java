@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.markup.html.form.FormComponent;
 import wicket.util.string.StringList;
 
 /**
@@ -30,7 +29,7 @@ import wicket.util.string.StringList;
  * 
  * @author Jonathan Locke
  */
-public class LengthValidator extends AbstractValidator
+public class LengthValidator extends StringValidator
 {
 	/** True if minimum bound should be checked. */
 	private final boolean checkMin;
@@ -107,22 +106,19 @@ public class LengthValidator extends AbstractValidator
 		return new LengthValidator(true, min, true, max);
 	}
 
-	/**
-	 * Validates the given form component. Validates that a form component's
-	 * value is of a certain minimum and/or maximum length.
-	 * 
-	 * @param component
-	 *            The component to validate
-	 */
-	public final void validate(final FormComponent component)
-	{
-		// Get component value
-		final String value = component.getRequestString();
 
+	/**
+	 * Validates that a form component's value is of a certain minimum and/or
+	 * maximum length.
+	 * 
+	 * @see StringValidator#onValidate(String)
+	 */
+	public void onValidate(final String value)
+	{
 		// Check length
 		if ((checkMin && value.length() < min) || (checkMax && value.length() > max))
 		{
-			error(component, value);
+			error();
 		}
 	}
 

@@ -38,7 +38,7 @@ public class RequiredTextField extends TextField
     public RequiredTextField(String name, Serializable object)
     {
         super(name, object);
-        add(new RequiredValidator());
+        add(RequiredValidator.getInstance());
     }
 
     /**
@@ -47,7 +47,7 @@ public class RequiredTextField extends TextField
     public RequiredTextField(String name, Serializable object, String expression)
     {
         super(name, object, expression);
-        add(new RequiredValidator());
+        add(RequiredValidator.getInstance());
     }
 
     /**
@@ -59,7 +59,7 @@ public class RequiredTextField extends TextField
     public RequiredTextField(String name, Serializable object, Class type)
     {
         super(name, object, type);
-        add(new RequiredValidator());
+        add(RequiredValidator.getInstance());
     }
 
     /**
@@ -72,6 +72,6 @@ public class RequiredTextField extends TextField
     public RequiredTextField(String name, Serializable object, String expression, Class type)
     {
         super(name, object, expression, type);
-        add(new RequiredValidator());
+        add(RequiredValidator.getInstance());
     }
 }

@@ -19,7 +19,6 @@ package wicket.markup.html.form.validation;
 
 import java.util.regex.Pattern;
 
-import wicket.markup.html.form.FormComponent;
 import wicket.util.parse.metapattern.MetaPattern;
 
 /**
@@ -42,7 +41,7 @@ import wicket.util.parse.metapattern.MetaPattern;
  * @see wicket.util.parse.metapattern.MetaPattern
  * @author Jonathan Locke
  */
-public class PatternValidator extends AbstractValidator
+public class PatternValidator extends StringValidator
 {
 	/** The regexp pattern. */
 	private final Pattern pattern;
@@ -94,20 +93,14 @@ public class PatternValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validates the given form component.
-	 * 
-	 * @param component
-	 *            The component to validate
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(java.lang.String)
 	 */
-	public final void validate(final FormComponent component)
+	public void onValidate(String value)
 	{
-		// Get component value
-		final String value = component.getRequestString();
-
 		// Check value against pattern
 		if (!pattern.matcher(value).matches())
 		{
-			error(component, value);
+			error();
 		}
 	}
 

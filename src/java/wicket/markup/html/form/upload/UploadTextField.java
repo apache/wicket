@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.1 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,17 +17,18 @@
  */
 package wicket.markup.html.form.upload;
 
+import java.util.Map;
+
 import org.apache.commons.fileupload.FileItem;
 
 import wicket.Request;
-import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.util.collections.MicroMap;
 
 /**
  * Textfield that can be used with upload forms.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class UploadTextField extends TextField
@@ -41,13 +41,19 @@ public class UploadTextField extends TextField
 
 	/**
 	 * Construct.
-	 * @param name component name
-	 * @param fileFieldName the name of the file upload form field
-	 * @param model the upload model to be used for putting the upload and its name
-	 * @param uploadRequired whether the upload is required
+	 * 
+	 * @param name
+	 *            component name
+	 * @param fileFieldName
+	 *            the name of the file upload form field
+	 * @param model
+	 *            the upload model to be used for putting the upload and its
+	 *            name
+	 * @param uploadRequired
+	 *            whether the upload is required
 	 */
-	public UploadTextField(String name, String fileFieldName,
-			UploadModel model, boolean uploadRequired)
+	public UploadTextField(String name, String fileFieldName, UploadModel model,
+			boolean uploadRequired)
 	{
 		super(name, model);
 		if (fileFieldName == null)
@@ -55,7 +61,7 @@ public class UploadTextField extends TextField
 			throw new NullPointerException("fileFieldName must be provided");
 		}
 		this.fileFieldName = fileFieldName;
-		if(model == null)
+		if (model == null)
 		{
 			throw new NullPointerException("model must be provided");
 		}
@@ -75,6 +81,7 @@ public class UploadTextField extends TextField
 
 	/**
 	 * Gets the upload that was sent for this component (with fileFieldName).
+	 * 
 	 * @return the uploaded file or null if not found
 	 */
 	public final FileItem getFile()
@@ -82,8 +89,8 @@ public class UploadTextField extends TextField
 		Request request = getRequest();
 		if (!(request instanceof MultipartWebRequest))
 		{
-			throw new IllegalStateException("this component may only " +
-					"be used with upload (multipart) forms");
+			throw new IllegalStateException("this component may only "
+					+ "be used with upload (multipart) forms");
 		}
 		MultipartWebRequest multipartRequest = (MultipartWebRequest)request;
 		return multipartRequest.getFile(fileFieldName);
@@ -96,34 +103,45 @@ public class UploadTextField extends TextField
 	public final class UploadFieldValidator extends AbstractValidator
 	{
 		/**
-		 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
+		 * @see wicket.markup.html.form.validation.AbstractValidator#onValidate()
 		 */
-		public void validate(FormComponent component)
+		public void onValidate()
 		{
 			final FileItem item = getFile(); // get upload
-			final String name = component.getRequestString(); // get field value
+			final String name = getStringValue(); // get field value
 
 			if (item == null || item.getSize() == 0) // any upload at all?
 			{
-				if(uploadRequired) // is providing an upload mandatory?
+				if (uploadRequired) // is providing an upload mandatory?
 				{
-					error(component, resourceKey(component) + ".file.required",
-							new MicroMap("fileFieldName", fileFieldName));
+					error(super.resourceKey() + ".file.required", messageModel());
 				}
-				else // no upload for this field took place; ignore
+				else
+				// no upload for this field took place; ignore
 				{
 					return;
 				}
 			}
-			else // we have an upload
+			else
+			// we have an upload
 			{
 				if (name == null || name.trim().equals("")) // is the name given
 				{
 					// though an upload was provided, we deny this request is no
 					// name was given for the uploaded file using this component
-					error(component, resourceKey(component) + ".name.required", name);
+					error(super.resourceKey() + ".name.required", messageModel());
 				}
 			}
+		}
+		
+		/**
+		 * @see wicket.markup.html.form.validation.AbstractValidator#messageModel()
+		 */
+		protected Map messageModel()
+		{
+			final Map map = super.messageModel();
+			map.put("fileFieldName", fileFieldName);
+			return map;
 		}
 	}
 }
