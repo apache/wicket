@@ -34,7 +34,6 @@ import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Response;
-import wicket.SharedResource;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.util.io.Streams;
