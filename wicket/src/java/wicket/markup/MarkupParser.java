@@ -68,9 +68,9 @@ import wicket.util.value.ValueMap;
 /* TODO Class needs some refactoring. It is already on my laptop, but not yet committed */
 public final class MarkupParser implements IMarkupParser
 {
-
     /** Regex to find &lt;?xml encoding=... ?&gt; */
     private static final Pattern encodingPattern = Pattern.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
+
     /** Logging */
     private static final Log log = LogFactory.getLog(MarkupParser.class);
 
