@@ -19,10 +19,13 @@
 package wicket;
 
 import java.io.Serializable;
-import java.util.Locale;
-import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentTagAttributeModifier;
@@ -82,7 +85,11 @@ import wicket.util.string.Strings;
  */
 public abstract class Component implements Serializable
 { // TODO finalize javadoc
-    /** The model for this component. */
+
+	/** Log. */
+	private static Log log = LogFactory.getLog(Component.class);
+
+	/** The model for this component. */
     private IModel model;
 
     /** Component name. */
@@ -1068,14 +1075,11 @@ public abstract class Component implements Serializable
      */
     final void setParent(final Container parent)
     {
-        if (this.parent == null || parent == null)
+        if (this.parent != null && log.isDebugEnabled())
         {
-            this.parent = parent;
+        	log.debug("replacing parent " + this.parent + " with " + parent);
         }
-        else
-        {
-            throw new IllegalStateException(exceptionMessage("Cannot change parent once set"));
-        }
+        this.parent = parent;
     }
 
     /**
