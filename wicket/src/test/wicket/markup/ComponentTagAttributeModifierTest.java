@@ -61,9 +61,9 @@ public class ComponentTagAttributeModifierTest extends TestCase
 		try
 		{
 			new ComponentTagAttributeModifier(null, new Model("model"));
-			Assert.fail("NullPointerException should be thrown on null attribute name");
+			Assert.fail("IllegalArgumentException should be thrown on null attribute name");
 		}
-		catch (NullPointerException e)
+		catch (IllegalArgumentException e)
 		{
 			// Expected result
 		}
@@ -71,9 +71,9 @@ public class ComponentTagAttributeModifierTest extends TestCase
 		try
 		{
 			new ComponentTagAttributeModifier("test", null);
-			Assert.fail("NullPointerException should be thrown on null replace model");
+			Assert.fail("IllegalArgumentException should be thrown on null replace model");
 		}
-		catch (NullPointerException e)
+		catch (IllegalArgumentException e)
 		{
 			// Expected result
 		}

@@ -91,9 +91,9 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 		try
 		{
 			new ApplicationStringResourceLoader(null);
-			Assert.fail("NullPointerException expected");
+			Assert.fail("IllegalArgumentException expected");
 		}
-		catch (NullPointerException e)
+		catch (IllegalArgumentException e)
 		{
 			// Extected result
 		}

@@ -18,8 +18,6 @@
  */
 package wicket;
 
-import wicket.util.string.Strings;
-
 /**
  * Holder for Wicket pages with special meanings. 
  *
@@ -29,9 +27,6 @@ public class ApplicationPages
 {    
     /** Home page class */
     private Class homePageClass;
-
-    /** Home page class name */
-    private String homePageClassName;
 
     /** Class of internal error page */
     private Class internalErrorPageClass;
@@ -49,17 +44,10 @@ public class ApplicationPages
      */
     public final Class getHomePage()
     {
-        // If no home page and one was specified
-        if (homePageClass == null && !Strings.isEmpty(homePageClassName))
-        {
-            // try resolving it
-            homePageClass = Session.get().getClassResolver().resolveClass(homePageClassName);
-        }
-
         // If no home page is available
         if (homePageClass == null)
         {
-            // give up
+            // give up with an exception
             throw new IllegalStateException("No home page was specified in application settings");
         }
         
@@ -108,20 +96,7 @@ public class ApplicationPages
     {
         this.homePageClass = homePage;
         return this;
-    }
-
-    /**
-     * Sets home page class as a string. The class must be external / bookmarkable
-     * and therefore must extend Page.
-     * @param homePage The name of the home page class (full class name)
-     * @return This
-     */
-    public final ApplicationPages setHomePage(final String homePage)
-    {
-        this.homePageClassName = homePage;
-        return this;
-    }
-    
+    }    
 
     /**
      * Sets internal error page class. The class must be external / bookmarkable and

@@ -18,6 +18,7 @@
  */
 package wicket.examples.groovy;
 
+import wicket.IClassResolver;
 import wicket.WebApplication;
 import wicket.util.time.Duration;
 
@@ -34,8 +35,9 @@ public class GroovyApplication extends WebApplication
     {
         // Must be set prior to loading a groovy file, as watching for changes 
         // of the groovy file does already use the value defined.
+        final IClassResolver resolver = new GroovyClassResolver(getSettings());
         getSettings().setResourcePollFrequency(Duration.ONE_SECOND)
-                     .setDefaultClassResolver(new GroovyClassResolver(getSettings()));
-        getPages().setHomePage("wicket.examples.groovy.Page1");
+                     .setDefaultClassResolver(resolver);
+        getPages().setHomePage(resolver.resolveClass("wicket.examples.groovy.Page1"));
     }
 }
