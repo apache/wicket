@@ -1,14 +1,14 @@
 /*
  * $Id$ $Revision:
  * 1.7 $ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -87,7 +87,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	{
 		tempStacks = new Stack();
 		treePathMapping = new Hashtable();
-		info = new SearchInfo();		
+		info = new SearchInfo();
 	}
 
 	/**
@@ -726,8 +726,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Messages getTreeNodeForPage(path, onlyIfVisible, shouldCreate, path.length) as long
 	 * as path is non-null and the length is > 0. Otherwise returns null.
 	 * @param path the path
-	 * @param onlyIfVisible 
-	 * @param shouldCreate 
+	 * @param onlyIfVisible
+	 * @param shouldCreate
 	 * @return the tree state node
 	 */
 	private TreeStateNode getNodeForPath(TreePath path, boolean onlyIfVisible,
@@ -1097,7 +1097,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 
 		/**
 		 * Adjusts the receiver, and all its children rows by <code>adjust</code>.
-		 * @param adjust adjustement 
+		 * @param adjust adjustement
 		 */
 		private void adjustRowBy(int adjust)
 		{
@@ -1113,8 +1113,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * Adjusts this node, its child, and its parent starting at an index of
 		 * <code>startIndex</code> index is the index of the child to start adjusting from,
 		 * which is not necessarily the model index.
-		 * @param adjust 
-		 * @param startIndex 
+		 * @param adjust
+		 * @param startIndex
 		 */
 		private void adjustRowBy(int adjust, int startIndex)
 		{
@@ -1155,7 +1155,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * Sets the receivers row to <code>nextRow</code> and recursively updates all
 		 * the children of the receivers rows. The index the next row is to be placed as
 		 * is returned.
-		 * @param nextRow 
+		 * @param nextRow
 		 * @return the index the next row is to be placed
 		 */
 		private int setRowAndChildren(int nextRow)
@@ -1193,9 +1193,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * <code>newRow</code>. This uses <code>setRowAndChildren</code> to
 		 * recursively descend children, and uses <code>resetRowSelection</code> to
 		 * ascend parents.
-		 * @param newRow 
-		 * @param childIndex 
-		 * @param modelIndex 
+		 * @param newRow
+		 * @param childIndex
+		 * @param modelIndex
 		 */
 		// This can be rather expensive, but is needed for the collapse
 		// case this is resulting from a remove (although I could fix
@@ -1349,8 +1349,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		/**
 		 * Removes the child at <code>modelIndex</code>.<code>isChildVisible</code>
 		 * should be true if the receiver is visible and expanded.
-		 * @param modelIndex 
-		 * @param isChildVisible 
+		 * @param modelIndex
+		 * @param isChildVisible
 		 */
 		private void removeChildAtModelIndex(int modelIndex, boolean isChildVisible)
 		{
@@ -1409,8 +1409,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		/**
 		 * Adjusts the child indexs of the receivers children by <code>adjust</code>,
 		 * starting at <code>index</code>.
-		 * @param index 
-		 * @param adjust 
+		 * @param index
+		 * @param adjust
 		 */
 		private void adjustChildIndexs(int index, int adjust)
 		{
@@ -1424,7 +1424,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * Messaged when a child has been inserted at index. For all the children that
 		 * have a childIndex >= index their index is incremented by one.
 		 * @param index the insertion index
-		 * @param isExpandedAndVisible 
+		 * @param isExpandedAndVisible
 		 */
 		private void childInsertedAtModelIndex(int index, boolean isExpandedAndVisible)
 		{
@@ -1466,8 +1466,8 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * gives the bounds of the receiver. Information about the found row is returned
 		 * in <code>info</code>. This should be invoked on root with
 		 * <code>nextRow</code> set to <code>getRowCount</code> ().
-		 * @param row 
-		 * @param nextRow 
+		 * @param row
+		 * @param nextRow
 		 * @param info search info object
 		 * @return true if there is a row for <code>row</code>
 		 */
@@ -1612,7 +1612,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	/**
 	 * Used as a placeholder when getting the path in FHTreeStateNodes.
 	 */
-	private final class SearchInfo
+	private final class SearchInfo implements Serializable
 	{
 		private TreeStateNode node;
 		private boolean isNodeParentNode;
