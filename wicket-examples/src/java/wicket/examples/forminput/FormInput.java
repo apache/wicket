@@ -39,7 +39,9 @@ import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 
@@ -118,16 +120,28 @@ public class FormInput extends WicketExamplePage
 		{
 			super(name, validationErrorHandler);
 			RequiredValidator requiredValidator = new RequiredValidator();
-
-			TextField stringInput = new TextField("stringInput", input, "stringProperty");
+			// model that allways gets the current input property so that can
+			// we change the property itself and have our other models still work
+			IModel inputModel = new Model()
+			{
+				public Object getObject()
+				{
+					return input;
+				}
+			};
+			TextField stringInput = new TextField(
+					"stringInput", inputModel, "stringProperty");
 			stringInput.add(requiredValidator);
-			TextField integerInput = new TextField("integerInput", input, "integerProperty");
+			TextField integerInput = new TextField(
+					"integerInput", inputModel, "integerProperty");
 			integerInput.add(requiredValidator);
 			integerInput.add(new TypeValidator(Integer.class));
-			TextField doubleInput = new TextField("doubleInput", input, "doubleProperty");
+			TextField doubleInput = new TextField(
+					"doubleInput", inputModel, "doubleProperty");
 			doubleInput.add(requiredValidator);
 			doubleInput.add(new TypeValidator(Double.class));
-			TextField dateInput = new TextField("dateInput", input, "dateProperty");
+			TextField dateInput = new TextField(
+					"dateInput", inputModel, "dateProperty");
 			dateInput.add(requiredValidator);
 			dateInput.add(new TypeValidator(Date.class));
 			add(stringInput);
@@ -158,6 +172,13 @@ public class FormInput extends WicketExamplePage
 				
 			});
 			add(integerInRangeInput);
+			add(new OnClickLink("resetButton")
+			{
+				public void linkClicked()
+				{
+					input = new TestInputObject();
+				}
+			});
 		}
 
 		/**
