@@ -395,9 +395,9 @@ public abstract class Component implements Serializable
     /** 
      * @return Any feedback message for this component
      */
-    public FeedbackMessage getFeedbackMessage()
+    public final FeedbackMessage getFeedbackMessage()
     {
-        return getPage().getFeedbackMessages().getMessageFor(this);   
+        return getPage().getFeedbackMessages().messageForComponent(this);   
     }
 
 	/**

@@ -21,10 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +35,7 @@ import wicket.util.string.StringList;
  * acts as a {@link wicket.model.IModel}.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public final class FeedbackMessages
 {
@@ -44,8 +43,7 @@ public final class FeedbackMessages
 	private static Log log = LogFactory.getLog(FeedbackMessages.class);
 
 	/**
-	 * Holds a list of
-	 * {@link wicket.FeedbackMessage}s.
+	 * Holds a list of {@link wicket.FeedbackMessage}s.
 	 */
 	private List messages = null;
 
@@ -183,77 +181,16 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Adds a message.
-	 * 
-	 * @param message
-	 *            the message
-	 * @return This
+	 * Clears any existing messages
 	 */
-	public FeedbackMessages add(FeedbackMessage message)
-	{
-		if (log.isDebugEnabled())
-		{
-			log.debug("adding message " + message + " for thread " + Thread.currentThread());
-		}
-		if (messages == null)
-		{
-			messages = new ArrayList();
-		}
-		messages.add(message);
-		return this;
-	}
-    
-    /**
-     * Clears any existing messages
-     */
-    public void clear()
-    {
-        if (messages != null)
-        {
-        	messages.clear();   
-        }
-    }
-
-	/**
-	 * Convenience method that gets a sub list of messages with messages that
-	 * are of level ERROR or above (FATAL). This is the same as calling
-	 * 'getMessages(FeedbackMessage.ERROR)'.
-	 * 
-	 * @return the sub list of message with messages that are of level ERROR or
-	 *         above, or an empty list
-	 */
-	public FeedbackMessages getErrorMessages()
-	{
-		return getMessages(FeedbackMessage.ERROR);
-	}
-
-	/**
-	 * Convenience method that gets the set of reporters of messages that are of
-	 * the ERROR level or above.
-	 * 
-	 * @return the set of reporters of messages that are of the ERROR level or
-	 *         above
-	 */
-	public Set getErrorReporters()
+	public void clear()
 	{
 		if (messages != null)
 		{
-			final Set subset = new HashSet();
-			for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
-			{
-				final FeedbackMessage message = (FeedbackMessage)iterator.next();
-				if (message.isLevel(FeedbackMessage.ERROR))
-				{
-					subset.add(message.getReporter());
-				}
-			}
-			return subset;
-		}
-		else
-		{
-			return Collections.EMPTY_SET;
+			messages.clear();
 		}
 	}
+
 
 	/**
 	 * Gets the list with messages (not sorted; the same ordering as they were
@@ -321,55 +258,15 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Gets the set of reporters of messages that are of the given level or
-	 * above.
-	 * 
-	 * @param level
-	 *            the level to get the messages for
-	 * @return the set of reporters of messages that are of the given level or
-	 *         above
-	 */
-	public Set getReporters(final int level)
-	{
-		if (messages != null)
-		{
-			final Set subset = new HashSet();
-			for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
-			{
-				final FeedbackMessage message = (FeedbackMessage)iterator.next();
-				if (message.isLevel(level))
-				{
-					subset.add(message.getReporter());
-				}
-			}
-			return subset;
-		}
-		else
-		{
-			return Collections.EMPTY_SET;
-		}
-	}
-
-	/**
 	 * Convenience method that gets whether this list contains any messages with
 	 * level ERROR or up. This is the same as calling
 	 * 'hasMessages(FeedbackMessage.ERROR)'.
 	 * 
 	 * @return whether this list contains any messages with level ERROR or up
 	 */
-	public boolean hasErrorMessages()
+	public boolean hasError()
 	{
-		return hasMessages(FeedbackMessage.ERROR);
-	}
-
-	/**
-	 * Gets whether this list contains any messages.
-	 * 
-	 * @return whether this list contains any messages
-	 */
-	public boolean hasMessages()
-	{
-		return messages != null && !messages.isEmpty();
+		return hasMessage(FeedbackMessage.ERROR);
 	}
 
 	/**
@@ -380,10 +277,10 @@ public final class FeedbackMessages
 	 * @return whether this list contains any messages with the given level or
 	 *         up
 	 */
-	public boolean hasMessages(final int level)
+	public boolean hasMessage(final int level)
 	{
 		boolean errors = false;
-		if (hasMessages())
+		if (!isEmpty())
 		{
 			for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
 			{
@@ -396,6 +293,16 @@ public final class FeedbackMessages
 			}
 		}
 		return errors;
+	}
+
+	/**
+	 * Gets whether this list contains any messages.
+	 * 
+	 * @return whether this list contains any messages
+	 */
+	public boolean isEmpty()
+	{
+		return messages != null && messages.isEmpty();
 	}
 
 	/**
@@ -442,6 +349,27 @@ public final class FeedbackMessages
 	}
 
 	/**
+	 * Adds a message.
+	 * 
+	 * @param message
+	 *            the message
+	 * @return This
+	 */
+	FeedbackMessages add(FeedbackMessage message)
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("adding message " + message + " for thread " + Thread.currentThread());
+		}
+		if (messages == null)
+		{
+			messages = new ArrayList();
+		}
+		messages.add(message);
+		return this;
+	}
+
+	/**
 	 * Adds a new ui message with level DEBUG to the current messages.
 	 * 
 	 * @param reporter
@@ -481,36 +409,6 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Looks up a message for the given component.
-	 * 
-	 * @param component
-	 *            the component to look up the message for
-	 * @return the message that is found for the given component (first match)
-	 *         or null if none was found
-	 */
-	FeedbackMessage getMessageFor(Component component)
-	{
-		if (messages != null)
-		{
-			FeedbackMessage message = null;
-			for (Iterator i = messages.iterator(); i.hasNext();)
-			{
-				FeedbackMessage toTest = (FeedbackMessage)i.next();
-				if ((toTest.getReporter() != null) && (toTest.getReporter().equals(component)))
-				{
-					message = toTest;
-					break;
-				}
-			}
-			return message;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
 	 * Convenience method that looks up whether the given component registered a
 	 * message with this list with the level ERROR.
 	 * 
@@ -533,7 +431,7 @@ public final class FeedbackMessages
 	 */
 	boolean hasMessageFor(Component component)
 	{
-		return getMessageFor(component) != null;
+		return messageForComponent(component) != null;
 	}
 
 	/**
@@ -549,7 +447,7 @@ public final class FeedbackMessages
 	 */
 	boolean hasMessageFor(Component component, int level)
 	{
-		FeedbackMessage message = getMessageFor(component);
+		FeedbackMessage message = messageForComponent(component);
 		if (message != null)
 		{
 			return (message.isLevel(level));
@@ -571,6 +469,36 @@ public final class FeedbackMessages
 	void info(Component reporter, String message)
 	{
 		add(FeedbackMessage.info(reporter, message));
+	}
+
+	/**
+	 * Looks up a message for the given component.
+	 * 
+	 * @param component
+	 *            the component to look up the message for
+	 * @return the message that is found for the given component (first match)
+	 *         or null if none was found
+	 */
+	FeedbackMessage messageForComponent(Component component)
+	{
+		if (messages != null)
+		{
+			FeedbackMessage message = null;
+			for (Iterator i = messages.iterator(); i.hasNext();)
+			{
+				FeedbackMessage toTest = (FeedbackMessage)i.next();
+				if ((toTest.getReporter() != null) && (toTest.getReporter().equals(component)))
+				{
+					message = toTest;
+					break;
+				}
+			}
+			return message;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
