@@ -66,7 +66,8 @@ public final class FloatLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
+				|| c == Float.TYPE)
 		{
 			Number temp = getNumber(value);
 			return (temp instanceof Float) ? (Float)temp : new Float(temp.floatValue());

@@ -43,7 +43,8 @@ public final class IntegerConverter extends AbstractConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
+				|| c == Integer.TYPE)
 		{
 			if (value instanceof Integer)
 			{

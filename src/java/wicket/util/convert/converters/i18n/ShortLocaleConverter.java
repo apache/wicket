@@ -64,7 +64,8 @@ public final class ShortLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
+				|| c == Short.TYPE)
 		{
 			Number temp = getNumber(value);
 			return (temp instanceof Short) ? (Short)temp : new Short(temp.shortValue());

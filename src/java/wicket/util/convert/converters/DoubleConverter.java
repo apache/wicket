@@ -43,7 +43,8 @@ public final class DoubleConverter extends AbstractConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Number.class.isAssignableFrom(c)
+				|| c == Double.TYPE)
 		{
 			if (value instanceof Double)
 			{

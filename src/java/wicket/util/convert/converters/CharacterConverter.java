@@ -43,7 +43,8 @@ public final class CharacterConverter extends AbstractConverter
 		{
 			return null;
 		}
-		if(c == CONVERT_TO_DEFAULT_TYPE || Character.class.isAssignableFrom(c))
+		if(c == CONVERT_TO_DEFAULT_TYPE || Character.class.isAssignableFrom(c)
+				|| c == Character.TYPE)
 		{
 			if (value instanceof Character)
 			{
