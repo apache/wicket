@@ -2,9 +2,6 @@
 <project name="Wicket">
 	<title>Wicket</title>
 	<body>
-		<links>
-		    <item name="Download Wicket" href="http://sourceforge.net/project/showfiles.php?group_id=119783"/>
-		</links>				    
 	    <menu name="Wicket">
 	        <item name="Home" href="/index.html"/>
 	        <item name="News" href="/News.html"/>
@@ -22,17 +19,14 @@
         </menu>
 	    <menu name="Project info">
 	        <item name="Mailing Lists" href="/mail-lists.html" />
-	        <item name="SourceForge" href="/SourceForge.html" collapse="true">
-    	        <item name="SourceForge Project page" href="http://sourceforge.net/projects/wicket"/>
-    	        <item name="Download" href="http://sourceforge.net/projects/wicket/files"/>
-    	        <item name="Issue tracking" href="http://sourceforge.net/tracker/?group_id=119783"/>
-            </item>
+	        <item name="SourceForge" href="/SourceForge.html"/>
 	        <item name="Changes" href="/changes-report.html"/>
         </menu>
         <menu name="Documentation">
 	        <item name="User's manual" href="/manual.html" />
+            <item name="Wiki" href="/wiki" />
 	        <item name="Examples" href="/Examples.html"/>
-	        <item name="Javadoc" href="/apidocs/index.html" />
+	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
 	        <item name="The Wicket Vision" href="/Vision.html" collapse="true">
 				<item name="The Overall Wicket Vision" href="#The_Overall_Wicket_Vision" />
 				<item name="Design Decision Q&amp;A" href="#Design_Decision_Q_and_A" />
@@ -41,18 +35,14 @@
 	        </item>
 	        <item name="Dependencies" href="/dependencies.html"/>
         </menu>
-	    <menu name="Contributing">
+	    <menu name="Wicket development">
 	        <item name="Developers" href="/team-list.html"/>
 	        <item name="CVS access" href="/cvs-usage.html"/>
 	        <item name="Build reports" href="/maven-reports.html" collapse="true">
-    	        <item name="Unit test report" href="/junit-report.html"/>
-    	        <item name="Clover test coverage report" href="/clover/index.html"/>
+    	        <item name="Unit tests" href="/junit-report.html"/>
+    	        <item name="Clover tests" href="/clover/index.html"/>
 	        </item>
 	    </menu>
 <!--	    <search /> -->
-        <menu name="" type="footer">
-            <item name="Code Coverage by Clover" href="http://www.thecortex.net/clover" img="http://www.thecortex.net/clover/images/clovered1.gif"/>
-            <item name="CPU and memory profiler" href="http://www.yourkit.com" img="images/yip_logo.gif"/>
-        </menu>
 	</body>
 </project>
