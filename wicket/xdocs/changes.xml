@@ -28,8 +28,8 @@
       </action>
 	  <action type="update" dev="Jonathan Locke" issue="">
 		Simplified choices so they just have a single is/setNullValid() property.  When
-		null is valid, the <name>.null string resource is loaded and used.  When null is
-		not valid and the selection is null, <name>.null is loaded and used to display
+		null is valid, the [name].null string resource is loaded and used.  When null is
+		not valid and the selection is null, [name].null is loaded and used to display
 		something like "Choose One", since a null selection is not valid.
 	  </action>
 	  <action type="update" dev="Jonathan Locke" issue="">
