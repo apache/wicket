@@ -135,6 +135,20 @@ public abstract class FlatTree extends AbstractTree
     }
 
     /**
+     * Get image name for junction.
+     * @param node the model with the current node
+     * @return image name
+     */
+    protected abstract String getJunctionImageName(TreeNodeModel node);
+
+    /**
+     * Get image name for node.
+     * @param node the model with the current node
+     * @return image name
+     */
+    protected abstract String getNodeImageName(TreeNodeModel node);
+
+    /**
      * Table for visible tree paths.
      */
     private final class VisibleTreePathListView extends ListView
@@ -214,20 +228,6 @@ public abstract class FlatTree extends AbstractTree
     }
 
     /**
-     * Get image name for junction.
-     * @param node the model with the current node
-     * @return image name
-     */
-    protected abstract String getJunctionImageName(TreeNodeModel node);
-
-    /**
-     * Get image name for node.
-     * @param node the model with the current node
-     * @return image name
-     */
-    protected abstract String getNodeImageName(TreeNodeModel node);
-
-    /**
      * Renders spacer items.
      */
     private final class SpacerList extends ListView
@@ -247,6 +247,7 @@ public abstract class FlatTree extends AbstractTree
          */
         protected void populateItem(ListItem listItem)
         {
+        	// nothing needed; we just render the tags and use CSS to indent
         }
     }
 }
