@@ -27,8 +27,11 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
- * Implementation of a hyperlink component. A link must be used with an anchor
- * (&lt;a href...) element.
+ * Implementation of a hyperlink component. A link can be used with an anchor
+ * (&lt;a href...) element or any element that supports the onclick javascript
+ * event handler (such as buttons, td elements, etc). When used with an anchor,
+ * a href attribute will be generated. When used with any other element, an
+ * onclick javascript event handler attribute will be generated.
  * <p>
  * You can use a link like:
  * 
@@ -50,6 +53,14 @@ import wicket.markup.html.WebMarkupContainer;
  * 
  *   &lt;a href=&quot;#&quot; id=&quot;wicket-myLink&quot;&gt;click here&lt;/a&gt;
  *  
+ * </pre>
+ *
+ * or:
+ *
+ * <pre>
+ *
+ *   &lt;td id=&quot;wicket-myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *
  * </pre>
  * 
  * </p>
