@@ -1,44 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <classpath>
-  <classpathentry excluding="" kind="src" path="src/java">
-  </classpathentry>
-  <classpathentry output="build/test-classes" kind="src" path="src/test">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar">
-  </classpathentry>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.5.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/concurrent/jars/concurrent-1.3.3.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.1.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/cglib/jars/cglib-full-2.0.2.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/ehcache/jars/ehcache-0.9.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/odmg/jars/odmg-3.0.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/geronimo-spec/jars/geronimo-spec-jta-1.0-M1.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-2.1.6.jar">
-  </classpathentry>
-  <classpathentry kind="src" path="/wicket">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/groovy/jars/groovy-1.0-beta-7.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/asm/jars/asm-util-1.4.3.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/asm/jars/asm-1.4.3.jar">
-  </classpathentry>
-  <classpathentry kind="output" path="target/classes">
-  </classpathentry>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry output="build/test-classes" kind="src" path="src/test"/>
+	<classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.7.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/concurrent/jars/concurrent-1.3.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/cglib/jars/cglib-full-2.0.2.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/ehcache/jars/ehcache-0.9.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/odmg/jars/odmg-3.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/geronimo-spec/jars/geronimo-spec-jta-1.0-M1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-2.1.6.jar"/>
+	<classpathentry kind="src" path="/wicket"/>
+	<classpathentry kind="var" path="MAVEN_REPO/groovy/jars/groovy-1.0-beta-7.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/asm/jars/asm-util-1.4.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/asm/jars/asm-1.4.3.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
