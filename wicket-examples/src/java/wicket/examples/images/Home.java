@@ -45,9 +45,10 @@ public final class Home extends WicketExamplePage
 		// Dynamically created image.  Will re-render whenever resource is asked for.
 		add(new Image("image3", new RenderedDynamicImageResource(100, 100)
 		{
-			protected void render(Graphics2D graphics)
+			protected boolean render(Graphics2D graphics)
 			{
 				application.drawCircle(graphics);
+				return true;
 			}
 		}));
 
