@@ -17,6 +17,8 @@
  */
 package wicket.util.resource;
 
+import java.io.Serializable;
+
 import wicket.util.watch.IModifiable;
 
 /**
@@ -44,7 +46,7 @@ import wicket.util.watch.IModifiable;
  * @see wicket.util.resource.IResourceStream#close()
  * @author Jonathan Locke
  */
-public interface IResource extends IResourceStream, IModifiable
+public interface IResource extends IResourceStream, IModifiable, Serializable
 {
 	/**
 	 * Gets the mime type of this resource

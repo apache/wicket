@@ -44,7 +44,16 @@ public class StaticImageResource extends ImageResource
 	private static final long serialVersionUID = 555385780092173403L;
 
 	/** The image resource */
-	private IResource resource;
+	private transient IResource resource;
+
+	/** The path to the resource */
+	final String absolutePath;
+
+	/** The resource's locale */
+	final Locale locale;
+
+	/** The resource's style */
+	final String style;
 
 	/**
 	 * Gets the image resource for a given set of criteria. Only one image
@@ -90,15 +99,14 @@ public class StaticImageResource extends ImageResource
 	 * @param style
 	 *            The style of the image
 	 */
-	private StaticImageResource(final Package basePackage, final String path,
-			final Locale locale, final String style)
+	private StaticImageResource(final Package basePackage, final String path, final Locale locale,
+			final String style)
 	{
 		// Convert resource path to absolute path relative to base package
-		final String absolutePath = Packages.absolutePath(basePackage, path);
+		this.absolutePath = Packages.absolutePath(basePackage, path);
 
-		// Locate resource
-		this.resource = RequestCycle.get().getApplication().getResourceLocator().locate(absolutePath,
-				style, locale, null);
+		this.locale = locale;
+		this.style = style;
 	}
 
 	/**
@@ -106,6 +114,12 @@ public class StaticImageResource extends ImageResource
 	 */
 	public IResource getResource()
 	{
+		if (resource == null)
+		{
+			// Locate resource
+			this.resource = RequestCycle.get().getApplication().getResourceLocator().locate(
+					absolutePath, style, locale, null);
+		}
 		return resource;
 	}
 }

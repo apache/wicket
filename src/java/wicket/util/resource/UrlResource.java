@@ -44,7 +44,7 @@ public final class UrlResource extends AbstractResource
 	private File file;
 
 	/** Resource stream */
-	private InputStream inputStream;
+	private transient InputStream inputStream;
 
 	/** The URL to this resource */
 	private URL url;

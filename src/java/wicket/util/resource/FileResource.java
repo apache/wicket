@@ -46,7 +46,7 @@ public final class FileResource extends AbstractResource
 	private File file;
 
 	/** Resource stream */
-	private InputStream inputStream;
+	private transient InputStream inputStream;
 
 	/**
 	 * Private constructor to force use of static factory methods.

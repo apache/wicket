@@ -154,7 +154,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public final Session getSession()
 	{
-		if(session == null)
+		if (session == null)
 		{
 			session = Session.get();
 		}
