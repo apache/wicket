@@ -91,7 +91,7 @@ public final class BookDetails extends AuthenticatedHtmlPage
         final ComponentTagAttributeModifier italic = new ComponentTagAttributeModifier("class", new Model("italic"));
         italic.setEnabled(!hasStyles);
 
-        add(writingStylesLabel.addAttributeModifier(italic));
+        add(writingStylesLabel.add(italic));
         add(EditBook.link("edit", book.getId()));
     }
 

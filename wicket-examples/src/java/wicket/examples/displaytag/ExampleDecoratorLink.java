@@ -60,7 +60,7 @@ public class ExampleDecoratorLink extends Displaytag
                 final ListObject value = (ListObject) listItem.getModelObject();
 
                 // alternating row styles
-                listItem.addAttributeModifier(new ComponentTagAttributeModifier("class",
+                listItem.add(new ComponentTagAttributeModifier("class",
                                                           new Model(listItem.isEvenIndex() ? "even" : "odd")));
                 
                 ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);
@@ -87,7 +87,7 @@ public class ExampleDecoratorLink extends Displaytag
             {
                 final ListObject value = (ListObject) listItem.getModelObject();
 
-                listItem.addAttributeModifier(new ComponentTagAttributeModifier("class",
+                listItem.add(new ComponentTagAttributeModifier("class",
                                                           new Model(listItem.isEvenIndex() ? "even" : "odd")));
                 
                 ExternalPageLink idLink = new ExternalPageLink("idLink", Page3.class);

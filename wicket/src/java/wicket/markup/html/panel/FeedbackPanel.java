@@ -122,8 +122,8 @@ public final class FeedbackPanel extends Panel implements IValidationErrorHandle
             Label label = new Label("message", message, "message");
             ComponentTagAttributeModifier levelModifier =
                 new ComponentTagAttributeModifier("class", replacementModel);
-            label.addAttributeModifier(levelModifier);
-            listItem.addAttributeModifier(levelModifier);
+            label.add(levelModifier);
+            listItem.add(levelModifier);
             listItem.add(label);
         }
 

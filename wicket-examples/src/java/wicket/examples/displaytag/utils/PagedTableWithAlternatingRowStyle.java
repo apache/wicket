@@ -53,7 +53,7 @@ public abstract class PagedTableWithAlternatingRowStyle extends Table
      */
     protected void populateItem(final ListItem listItem)
     {
-        listItem.addAttributeModifier(
+        listItem.add(
                 new ComponentTagAttributeModifier(
                         "class",
                         new Model(listItem.isEvenIndex() ? "even" : "odd")));

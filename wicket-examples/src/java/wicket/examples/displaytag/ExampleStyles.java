@@ -60,7 +60,7 @@ public class ExampleStyles extends Displaytag
 
         // Apply style on current tag (based on URL parameter)
         HtmlContainer htmlTable = new HtmlContainer("htmlTable");
-        htmlTable.addAttributeModifier(
+        htmlTable.add(
                 new ComponentTagAttributeModifier(
                         "class", 
                         new Model(parameters.getString("class"))));
