@@ -86,10 +86,10 @@ import wicket.util.resource.Resource;
 public abstract class IndentTree extends Tree implements TreeModelListener
 {
 	/** name of the junction image component; value = 'junctionImage'. */
-	protected static final String JUNCTION_IMAGE_NAME = "junctionImage";
+	public static final String JUNCTION_IMAGE_NAME = "junctionImage";
 
 	/** name of the node image component; value = 'nodeImage'. */
-	protected static final String NODE_IMAGE_NAME = "nodeImage";
+	public static final String NODE_IMAGE_NAME = "nodeImage";
 
 	/** a blank image for junctions. */
 	private static final StaticLocalImage JUNCTION_IMG_BLANK =
