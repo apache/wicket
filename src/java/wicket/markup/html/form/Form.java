@@ -24,20 +24,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.FeedbackMessages;
 import wicket.IModel;
 import wicket.Model;
 import wicket.Page;
 import wicket.PropertyModel;
 import wicket.RenderException;
 import wicket.RequestCycle;
-import wicket.FeedbackMessages;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.form.validation.ValidationErrorMessage;
-import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
 import wicket.protocol.http.HttpRequestCycle;
-
 
 /**
  * Base class for HTML forms.
@@ -61,6 +59,10 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
     /** The validation error handling delegate. */
     private final IValidationErrorHandler validationErrorHandler;
 
+    /** the delegate to be used for execution of validation of this form. */
+    private IFormValidationDelegate validationDelegate =
+    	new IFormValidationDelegate.DefaultFormValidationDelegate();
+    
     /** Manager responsible to persist and retrieve FormComponent data. */
 	private IFormComponentPersistenceManager persister = null;
 
@@ -264,28 +266,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
      */
     private FeedbackMessages validate()
     {
-        final FeedbackMessages messages = FeedbackMessages.get();
-        visitChildren(FormComponent.class, new IVisitor()
-        {
-            public Object component(final Component component)
-            {
-                ValidationErrorMessage message = ((FormComponent) component).validate();
-                if(message != ValidationErrorMessage.NO_MESSAGE)
-                {
-                    if(log.isDebugEnabled())
-                    {
-                        log.debug("validation error: " + message);
-                    }
-                    messages.add(message);
-                    // replace the model
-                    ValidationErrorModelDecorator deco =
-                        new ValidationErrorModelDecorator(component, message.getInput());
-                    component.setModel(deco);
-                }
-                return IVisitor.CONTINUE_TRAVERSAL; // continue until the end
-            }
-        });
-        return messages;
+        return validationDelegate.validate(this);
     }
     
     /**
@@ -449,4 +430,21 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
         tag.put("action", cycle.urlFor(Form.this, IFormSubmitListener.class));
     }
 
+	/**
+	 * Gets the delegate to be used for execution of validation of this form.
+	 * @return the delegate to be used for execution of validation of this form
+	 */
+	public IFormValidationDelegate getValidationDelegate()
+	{
+		return validationDelegate;
+	}
+
+	/**
+	 * Sets the delegate to be used for execution of validation of this form.
+	 * @param validationDelegate the delegate to be used for execution of validation of this form
+	 */
+	public void setValidationDelegate(IFormValidationDelegate validationDelegate)
+	{
+		this.validationDelegate = validationDelegate;
+	}
 }
