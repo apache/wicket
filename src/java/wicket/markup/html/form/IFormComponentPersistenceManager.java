@@ -41,6 +41,7 @@ import javax.servlet.http.Cookie;
  */
 public interface IFormComponentPersistenceManager extends Serializable
 {
+    // TODO Remove this interface. I vaguely recall talking about abstracting form persistence, but now that i see how it has to work, i think i was wrong -- jonathan
 	/**
 	 * Persist the a key/value pair. The key usually the FormComponent's page
 	 * relative path and the value the FormComponent' value. All remaining
