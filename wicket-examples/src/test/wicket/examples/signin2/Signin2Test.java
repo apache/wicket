@@ -52,7 +52,7 @@ public class Signin2Test extends WebTestCase
     public void testHelloWorld() {
         beginAt("/signin2");
         //this.dumpResponse(System.err);
-        assertTitleEquals("Wicket - Signin Page");
+        assertTitleEquals("Wicket Examples - signin2");
         
         this.setFormElement("1.signInPanel.signInForm.username", "jonathan");
         this.setFormElement("1.signInPanel.signInForm.password", "password");
@@ -60,7 +60,7 @@ public class Signin2Test extends WebTestCase
         this.submit("submit");
         
         //this.dumpResponse(System.err);
-        assertTitleEquals("Wicket - Signin example");
+        assertTitleEquals("Wicket Examples - signin2");
         // a) With wicket submitting a form will result in a temporary redirect, with 
         // the redirect setting the Cookie.
         // b) jWebUnits Cookie test methods are all using the http response object only
@@ -73,7 +73,7 @@ public class Signin2Test extends WebTestCase
         //this.assertCookiePresent("signInPanel.signInForm.password");
         this.clickLinkWithText("Logout");
         
-        assertTitleEquals("Wicket - Signin example: logout page");
+        assertTitleEquals("Wicket Examples - signin2");
         this.clickLinkWithText("Home");
 /* jWebUnit is missing assertCookieNotPresent()
         try
@@ -98,7 +98,7 @@ public class Signin2Test extends WebTestCase
             ; // ok
         }
 */
-        assertTitleEquals("Wicket - Signin Page");
+        assertTitleEquals("Wicket Examples - signin2");
     }
 
 	/**

@@ -51,7 +51,7 @@ public class SpringFrameworkTest extends WebTestCase
     public void testHomePage() 
     { 
         beginAt("/spring");
-        assertTitleEquals("Wicket: Spring integration example");
+        assertTitleEquals("Wicket Examples - springframework");
     }
 
     /**

@@ -60,27 +60,27 @@ public class GuestbookTest extends WebTestCase
         }
         
         this.dumpResponse(System.out);
-        assertTitleEquals("Wicket - Guestbook example");
+        assertTitleEquals("Wicket Examples - guestbook");
         this.assertElementNotPresent("comments");
         
-        assertFormPresent("commentForm");
+        assertFormPresent("wicket-commentForm");
         this.assertFormElementPresent("0.commentForm.text");
         this.setFormElement("0.commentForm.text", "test-1");
         this.submit();
 
         this.dumpResponse(System.err);
-        assertTitleEquals("Wicket - Guestbook example");
-        assertFormPresent("commentForm");
+        assertTitleEquals("Wicket Examples - guestbook");
+        assertFormPresent("wicket-commentForm");
         this.assertFormElementPresent("0.commentForm.text");
-        this.assertElementPresent("comments");
+        this.assertElementPresent("wicket-comments");
         // assertTextInElement() seems to be buggy
         //this.assertTextInElement("text", "test-1");
         this.assertTextPresent("test-1");
         this.setFormElement("0.commentForm.text", "test-2");
         this.submit();
 
-        assertTitleEquals("Wicket - Guestbook example");
-        this.assertElementPresent("comments");
+        assertTitleEquals("Wicket Examples - guestbook");
+        this.assertElementPresent("wicket-comments");
         // assertTextInElement() seems to be buggy
         //this.assertTextInElement("text", "test-1");
         this.assertTextPresent("test-1");

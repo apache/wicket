@@ -51,58 +51,58 @@ public class DisplaytagTest extends WebTestCase
     public void testHomePage() 
     { 
         beginAt("/displaytag");
-        assertTitleEquals("How to do tables like displaytag with Wicket");
+        assertTitleEquals("Wicket Examples - displaytag");
 
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleNoColumns");
-        assertTitleEquals("Example No Columns");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.BasicColumns");
-        assertTitleEquals("Basic Columns");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleStyles");
-        assertTitleEquals("Example Styles");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleImpObjects");
-        assertTitleEquals("Example Imp Objects");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleSubsets");
-        assertTitleEquals("Example Subsets");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleAutolink");
-        assertTitleEquals("Example Autolink");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleDecorator");
-        assertTitleEquals("Example Decorator");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleDecoratorLink");
-        assertTitleEquals("Example Decorator Link");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExamplePaging");
-        assertTitleEquals("Example Paging");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleSorting");
-        assertTitleEquals("Example Sorting");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleGrouping");
-        assertTitleEquals("Example Grouping");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleSubtotals");
-        assertTitleEquals("Example Subtotals");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleExport");
-        assertTitleEquals("Example Export");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExamplePse");
-        assertTitleEquals("Example PSE");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleTwoTables");
-        assertTitleEquals("Example Two Tables");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleNestedTables");
-        assertTitleEquals("Example Nested Table");
+        assertTitleEquals("Wicket Examples - displaytag");
         
         beginAt("/displaytag?bookmarkablePage=wicket.examples.displaytag.ExampleCheckbox");
-        assertTitleEquals("Example Checkbox");
+        assertTitleEquals("Wicket Examples - displaytag");
     }
 
     /**

@@ -132,10 +132,10 @@ public class HangManTest extends WebTestCase
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
 		beginAt("/hangman?setWord=hangman");
 
-		assertTitleEquals("Wicket Hangman");
+		assertTitleEquals("Wicket Examples - hangman");
 		assertLinkPresent("start");
 		clickLink("start");
-		assertTitleEquals("Wicket Hangman");
+		assertTitleEquals("Wicket Examples - hangman");
 		assertTextPresent("guesses remaining");
 
 		assertElementPresent("guessesRemaining");
@@ -165,10 +165,10 @@ public class HangManTest extends WebTestCase
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
 		beginAt("/hangman?setWord=hangman");
 
-		assertTitleEquals("Wicket Hangman");
+		assertTitleEquals("Wicket Examples - hangman");
 		assertLinkPresent("start");
 		clickLink("start");
-		assertTitleEquals("Wicket Hangman");
+		assertTitleEquals("Wicket Examples - hangman");
 		assertTextPresent("guesses remaining");
 
 		assertElementPresent("guessesRemaining");

@@ -51,7 +51,7 @@ public class FormInputTest extends WebTestCase
      */
     public void testHelloWorld() {
         beginAt("/forminput");
-        assertTitleEquals("Wicket - Form Input Example");
+        assertTitleEquals("Wicket Examples - forminput");
     }
 
 	/**

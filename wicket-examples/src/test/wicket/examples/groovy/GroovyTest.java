@@ -51,16 +51,16 @@ public class GroovyTest extends WebTestCase
     public void testHomePage() 
     { 
         beginAt("/groovy");
-        assertTitleEquals("Wicket - Groovy NavOMatic example Page 1");
+        assertTitleEquals("Wicket Examples - groovy");
         
         beginAt("/groovy?bookmarkablePage=wicket.examples.groovy.Page1");
-        assertTitleEquals("Wicket - Groovy NavOMatic example Page 1");
+        assertTitleEquals("Wicket Examples - groovy");
         
         beginAt("/groovy?bookmarkablePage=wicket.examples.groovy.Page2");
-        assertTitleEquals("Wicket - Groovy NavOMatic example Page 2");
+        assertTitleEquals("Wicket Examples - groovy");
         
         beginAt("/groovy?bookmarkablePage=wicket.examples.groovy.Page3");
-        assertTitleEquals("Wicket - Groovy NavOMatic example Page 3");
+        assertTitleEquals("Wicket Examples - groovy");
     }
 
     /**

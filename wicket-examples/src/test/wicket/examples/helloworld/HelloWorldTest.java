@@ -51,8 +51,8 @@ public class HelloWorldTest extends WebTestCase
      */
     public void testHelloWorld() {
         beginAt("/helloworld");
-        assertTitleEquals("Wicket - Hello World example");
-        assertTextInElement("hellomessage", "Hello world!");
+        assertTitleEquals("Wicket Examples - helloworld");
+        assertTextInElement("wicket-message", "Hello World!");
     }
 
 	/**

@@ -51,7 +51,7 @@ public class LinkomaticTest extends WebTestCase
      */
     public void testHelloWorld() {
         beginAt("/linkomatic");
-        assertTitleEquals("Wicket - LinkOMatic example");
+        assertTitleEquals("Wicket Examples - linkomatic");
     }
 
 	/**
