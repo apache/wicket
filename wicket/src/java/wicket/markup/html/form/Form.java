@@ -226,8 +226,14 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		// Validate form
 		onValidate();
 
-		// Update validation feedback no matter how the form was validated
-		addFeedback();
+		// Maurice pointed out that onValidate() calls user code in onSubmit()
+		// which may do something like replace the whole form with something
+		// else!
+		if (findPage() != null)
+		{
+			// Update validation feedback no matter how the form was validated
+			addFeedback();
+		}
 	}
 
 	/**
