@@ -26,6 +26,9 @@ import wicket.markup.html.HtmlPage;
  */
 public class MyPage1 extends HtmlPage
 {
+    /**
+     * Construct.
+     */
     public MyPage1()
     {
     }

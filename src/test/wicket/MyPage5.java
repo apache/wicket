@@ -25,10 +25,17 @@ import wicket.markup.html.HtmlPage;
  */
 public class MyPage5 extends HtmlPage
 {
+    /**
+     * Construct.
+     * @param parameters parameters
+     */
     public MyPage5(final PageParameters parameters)
     {
     }
 
+    /**
+     * Construct.
+     */
     public MyPage5()
     {
     }

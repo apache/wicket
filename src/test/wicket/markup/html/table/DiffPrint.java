@@ -1,5 +1,8 @@
 /*
  * $Log$
+ * Revision 1.2  2004/12/28 12:27:18  eelco12
+ * javadoc fixes (to stop Eclipse from complaining)
+ *
  * Revision 1.1  2004/12/19 17:19:41  eelco12
  * package rename
  *
@@ -219,8 +222,9 @@ public class DiffPrint
         }
 
         /** Print the script header which identifies the files compared. 
-         * @param filea
-         * @param fileb*/
+         * @param filea file a
+         * @param fileb file b
+         */
         protected void print_header(String filea, String fileb)
         {
             setupOutput();
@@ -342,8 +346,10 @@ public class DiffPrint
             super(a, b);
         }
 
-        /** Print a hunk of an ed diff 
-         * @param hunk*/
+        /**
+         * Print a hunk of an ed diff.
+         * @param hunk
+         */
         protected void print_hunk(Diff.change hunk)
         {
 
@@ -437,7 +443,12 @@ public class DiffPrint
             print_context_label("---", new File(fileb), fileb);
         }
 
-        /** If function_regexp defined, search for start of function. */
+        /**
+         * If function_regexp defined, search for start of function. 
+         * @param lines 
+         * @param start 
+         * @return allways null
+         */
         private String find_function(Object[] lines, int start)
         {
             return null;
@@ -672,6 +683,9 @@ public class DiffPrint
      * functionality. A more advanced diff utility will use specialized objects
      * to represent the text lines, with options to, for example, convert
      * sequences of whitespace to a single space for comparison purposes.
+     * @param file the file to read
+     * @return the file contents as a string
+     * @throws IOException 
      */
     static String[] slurp(String file) throws IOException
     {

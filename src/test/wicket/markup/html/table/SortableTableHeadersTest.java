@@ -112,7 +112,9 @@ public class SortableTableHeadersTest extends TestCase
      * Validates page 1 of paged table.
      *
      * @param document The document
+     * @param file the file
      * @return The validation result
+     * @throws IOException 
      */
     private boolean validatePage(final String document, final String file) throws IOException
     {

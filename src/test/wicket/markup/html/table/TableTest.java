@@ -35,8 +35,9 @@ import junit.framework.TestCase;
 public class TableTest extends TestCase
 {
     /**
-     * 
+     * creates a table.
      * @param modelListSize
+     * @param pageSize size of a page
      * @return table
      */
     private Table createTable(final int modelListSize, final int pageSize)
