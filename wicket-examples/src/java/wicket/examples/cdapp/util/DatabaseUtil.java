@@ -277,7 +277,7 @@ public final class DatabaseUtil
 				new Track(3, "First It Giveth", 0, artist),
 				new Track(4, "A Song For The Dead", 0, artist),
 				new Track(5, "The Sky Is Fallin'", 0, artist), new Track(6, "Six Shooter", 0, artist),
-				new Track(7, "Hangin' Tree", 0, artist), new Track(8, "Go With The Flow", 0, artist),
+				new Track(7, "Hangin' AbstractTree", 0, artist), new Track(8, "Go With The Flow", 0, artist),
 				new Track(9, "Gonna Leave You", 0, artist), new Track(10, "Do It Again", 0, artist),
 				new Track(11, "God Is In The Radio", 0, artist),
 				new Track(12, "Another Love Song", 0, artist),

@@ -27,7 +27,7 @@ import javax.swing.tree.TreeModel;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.contrib.markup.html.tree.Tree;
+import wicket.contrib.markup.html.tree.AbstractTree;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.border.Border;
@@ -57,9 +57,9 @@ public class MenuBorder extends Border
 	}
 
 	/**
-	 * Tree that renders as nested lists (UL/ LI).
+	 * AbstractTree that renders as nested lists (UL/ LI).
 	 */
-	private final class ULTree extends Tree
+	private final class ULTree extends AbstractTree
 	{
 		/**
 		 * structure with nested nodes and lists to represent the tree model
