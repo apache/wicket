@@ -149,9 +149,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 		else
 		{
 			// href is absolute. If class with the same absolute path exists,
-			// use
-			// it.
-			// Else don't change the href.
+			// use it. Else don't change the href.
 			final String className = classPath.substring(1);
 			try
 			{

@@ -96,8 +96,7 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 		// Only xml tags not already identified as Wicket components will be
 		// considered for autolinking. This is because it is assumed that Wicket
 		// components like images or all other kind of Wicket Links will handle
-		// it
-		// themselves.
+		// it themselves.
 		final String href = tag.getAttributes().getString("href");
 		if ((autolinking == true) && (tag.getComponentName() == null) && (href != null)
 				&& (href.endsWith(".html") || (href.indexOf(".html?") != -1))
