@@ -4,32 +4,32 @@
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span id="wicket-mainNavigation"/>
+    <span wicket:id="mainNavigation"/>
 
 	<div>
 		Use locale: 
-		<select id="wicket-localeSelect">
+		<select wicket:id="localeSelect">
 			<option>locale1</option>
 			<option>locale2</option>
 		</select>
-		<a href="#" id="wicket-defaultLocaleLink">[default]</a>
+		<a href="#" wicket:id="defaultLocaleLink">[default]</a>
     </div>
 	<p>
-    <form id="wicket-inputForm">
+    <form wicket:id="inputForm">
       <fieldset>
         <legend>Input Form</legend>
           <label for="wicket-stringProperty">String</label>
-          <input id="wicket-stringProperty" type="text" size="40"/>
+          <input wicket:id="stringProperty" type="text" size="40"/>
           <label for="wicket-integerProperty">Integer</label>
-          <input id="wicket-integerProperty" type="text" size="40"/>
+          <input wicket:id="integerProperty" type="text" size="40"/>
           <label for="wicket-doubleProperty">Double</label>
-          <input id="wicket-doubleProperty" type="text" size="40"/>
+          <input wicket:id="doubleProperty" type="text" size="40"/>
           <label for="wicket-dateProperty">Date</label>
-          <input id="wicket-dateProperty" type="text" size="40"/>
+          <input wicket:id="dateProperty" type="text" size="40"/>
           <label for="wicket-booleanProperty">Boolean</label>
-          <input id="wicket-booleanProperty" type="checkbox"/>
+          <input wicket:id="booleanProperty" type="checkbox"/>
           <label for="wicket-integerInRangeProperty">Value between 0 and 100</label>
-          <input id="wicket-integerInRangeProperty" type="text" size="40"/>
+          <input wicket:id="integerInRangeProperty" type="text" size="40"/>
 		  <p>
 		  <input id = "wicket-saveButton" type="image" value="buttonFactory:Opslaan"/>
 		  <a id = "wicket-resetButtonLink" src="">
@@ -39,7 +39,7 @@
      </form>
 
 	<div>
-		<span id="wicket-feedback"/>
+		<span wicket:id="feedback"/>
     </div>
 
 </body>
