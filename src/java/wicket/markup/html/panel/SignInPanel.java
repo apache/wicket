@@ -42,109 +42,17 @@ import wicket.util.value.ValueMap;
  */
 public abstract class SignInPanel extends Panel
 {
-	/** Field for user name. */
-	private TextField username;
+    
+    /** True if the panel should display a remember-me checkbox */
+    private boolean includeRememberMe = true;
 
 	/** Field for password. */
 	private PasswordTextField password;
     
     /** True if the user should be remembered via form persistence (cookies) */
     private boolean rememberMe = true;
-    
-    /** True if the panel should display a remember-me checkbox */
-    private boolean includeRememberMe = true;
-
-    /**
-     * @see wicket.Component#Component(String)
-     */
-    public SignInPanel(final String componentName)
-    {
-    	this(componentName, true);
-    }
-
-    /**
-     * @param componentName See Component constructor
-     * @param includeRememberMe True if form should include a remember-me checkbox
-     * @see wicket.Component#Component(String)
-     */
-    public SignInPanel(final String componentName, final boolean includeRememberMe)
-	{
-		super(componentName);
-        
-        this.includeRememberMe = includeRememberMe;
-
-		// Create feedback panel and add to page
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-		add(feedback);
-
-		// Add sign-in form to page, passing feedback panel as
-		// validation error handler
-		add(new SignInForm("signInForm", feedback));
-	}
-
-	/**
-	 * Convenience method to access the username.
-	 * 
-	 * @return The user name
-	 */
-	public String getUsername()
-	{
-		return username.getModelObjectAsString();
-	}
-
-	/**
-	 * Convenience method to access the password.
-	 * 
-	 * @return The password
-	 */
-	public String getPassword()
-	{
-		return password.getModelObjectAsString();
-	}
-
-	/**
-	 * Convenience method set persistence for username and password.
-	 * 
-	 * @param enable
-	 *            Whether the fields should be persistent
-	 */
-	public void setPersistent(boolean enable)
-	{
-		username.setPersistent(enable);
-		password.setPersistent(enable);
-	}
-
-	/**
-	 * Sign in user if possible.
-	 * 
-	 * @param username
-	 *            The username
-	 * @param password
-	 *            The password
-	 * @return True if signin was successful
-	 */
-	public abstract boolean signIn(final String username, final String password);
-
-    /**
-     * Get model object of the rememberMe checkbox
-     * 
-     * @return True if user should be remembered in the future
-     */
-    public boolean getRememberMe()
-    {
-        return rememberMe;
-    }
-
-    /**
-     * Set model object for rememberMe checkbox
-     * 
-     * @param rememberMe
-     */
-    public void setRememberMe(boolean rememberMe)
-    {
-        this.rememberMe = rememberMe;
-        this.setPersistent(rememberMe);
-    }
+	/** Field for user name. */
+	private TextField username;
 
 	/**
 	 * Sign in form.
@@ -189,9 +97,9 @@ public abstract class SignInPanel extends Panel
 		}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleValidSubmit()
+		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
-		public final void handleValidSubmit()
+		public final void onSubmit()
 		{
 			if (signIn(getUsername(), getPassword()))
 			{
@@ -220,6 +128,34 @@ public abstract class SignInPanel extends Panel
             }
 		}
 	}
+
+    /**
+     * @see wicket.Component#Component(String)
+     */
+    public SignInPanel(final String componentName)
+    {
+    	this(componentName, true);
+    }
+
+    /**
+     * @param componentName See Component constructor
+     * @param includeRememberMe True if form should include a remember-me checkbox
+     * @see wicket.Component#Component(String)
+     */
+    public SignInPanel(final String componentName, final boolean includeRememberMe)
+	{
+		super(componentName);
+        
+        this.includeRememberMe = includeRememberMe;
+
+		// Create feedback panel and add to page
+		final FeedbackPanel feedback = new FeedbackPanel("feedback");
+		add(feedback);
+
+		// Add sign-in form to page, passing feedback panel as
+		// validation error handler
+		add(new SignInForm("signInForm", feedback));
+	}
     
     /**
      * Removes persisted form data for the signin panel (forget me)
@@ -230,5 +166,69 @@ public abstract class SignInPanel extends Panel
         // of type SignInForm and remove its related persistence values.
         getPage().removePersistedFormData(SignInPanel.SignInForm.class, true);
     }
+
+	/**
+	 * Convenience method to access the password.
+	 * 
+	 * @return The password
+	 */
+	public String getPassword()
+	{
+		return password.getModelObjectAsString();
+	}
+
+    /**
+     * Get model object of the rememberMe checkbox
+     * 
+     * @return True if user should be remembered in the future
+     */
+    public boolean getRememberMe()
+    {
+        return rememberMe;
+    }
+
+	/**
+	 * Convenience method to access the username.
+	 * 
+	 * @return The user name
+	 */
+	public String getUsername()
+	{
+		return username.getModelObjectAsString();
+	}
+
+	/**
+	 * Convenience method set persistence for username and password.
+	 * 
+	 * @param enable
+	 *            Whether the fields should be persistent
+	 */
+	public void setPersistent(boolean enable)
+	{
+		username.setPersistent(enable);
+		password.setPersistent(enable);
+	}
+
+    /**
+     * Set model object for rememberMe checkbox
+     * 
+     * @param rememberMe
+     */
+    public void setRememberMe(boolean rememberMe)
+    {
+        this.rememberMe = rememberMe;
+        this.setPersistent(rememberMe);
+    }
+
+	/**
+	 * Sign in user if possible.
+	 * 
+	 * @param username
+	 *            The username
+	 * @param password
+	 *            The password
+	 * @return True if signin was successful
+	 */
+	public abstract boolean signIn(final String username, final String password);
 }
 

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.9 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,20 +15,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.util.time;
+package wicket.markup.html.tab;
 
 /**
- * A timeframe source produces time frame values. The value returned by a
- * timeframe source may vary over time.
- * 
- * @see wicket.util.time.TimeFrame
+ * Definition of a tab within a TabNavigator component.
  * 
  * @author Jonathan Locke
  */
-public interface ITimeFrameSource
+public final class Tab
 {
-	/**
-	 * @return Gets current time frame value
-	 */
-	public TimeFrame getTimeFrame();
+	/** Serial Version ID. */
+	private static final long serialVersionUID = 209001445308790198L;
+
 }

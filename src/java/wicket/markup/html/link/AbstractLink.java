@@ -78,7 +78,7 @@ public abstract class AbstractLink extends WebMarkupContainer implements ILinkLi
 	 * 
 	 * @see ILinkListener
 	 */
-	public abstract void linkClicked();
+	public abstract void onLinkClicked();
 
 	/**
 	 * Sets the popup specification. If not-null, a javascript on-click event

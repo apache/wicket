@@ -167,7 +167,7 @@ public class CookieTest extends TestCase
     {
         // test will call persistFromComponentData(), which is private
 		this.panel.setPersistent(false);
-		this.form.formSubmitted();
+		this.form.onFormSubmitted();
 		
 		// validate
         Collection cookies = application.getServletResponse().getCookies();
@@ -188,7 +188,7 @@ public class CookieTest extends TestCase
         panel.setPersistent(true);
         
         // test will call persistFromComponentData(), which is private
-		this.form.formSubmitted();
+		this.form.onFormSubmitted();
 		
 		// validate
         Collection cookies = application.getServletResponse().getCookies();

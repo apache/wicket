@@ -83,9 +83,9 @@ public abstract class AbstractImage extends WebComponent implements IResourceLis
 
     /**
      * Implementation of IResourceListener.  Renders resource back to requester.
-     * @see wicket.IResourceListener#resourceRequested()
+     * @see wicket.IResourceListener#onResourceRequested()
      */
-    public void resourceRequested()
+    public void onResourceRequested()
     {
         // Get request cycle
         final RequestCycle cycle = getRequestCycle();
@@ -139,20 +139,20 @@ public abstract class AbstractImage extends WebComponent implements IResourceLis
     protected abstract IResource getResource();
 
     /**
-     * @see wicket.Component#handleComponentTag(ComponentTag)
+     * @see wicket.Component#onComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final ComponentTag tag)
+    protected void onComponentTag(final ComponentTag tag)
     {
         checkComponentTag(tag, "img");
-        super.handleComponentTag(tag);
+        super.onComponentTag(tag);
         final String url = getRequestCycle().urlFor(this, IResourceListener.class);
 		tag.put("src", url.replaceAll("&", "&amp;"));
     }
     
     /**
-     * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+     * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
      */
-    protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
     }
 

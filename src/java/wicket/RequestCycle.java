@@ -433,7 +433,7 @@ public abstract class RequestCycle
 			try
 			{
 				// Render response for request cycle
-				handleRender();
+				onRender();
 			}
 			catch (RuntimeException e)
 			{
@@ -545,7 +545,7 @@ public abstract class RequestCycle
 	/**
 	 * Renders response for request.
 	 */
-	protected abstract void handleRender();
+	protected abstract void onRender();
 
 	/**
 	 * Redirects browser to the given page.

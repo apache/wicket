@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.9 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,20 +15,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.util.time;
+package wicket.markup.html.tab;
+
+import java.awt.Graphics2D;
+
+import wicket.markup.html.image.DynamicImage;
 
 /**
- * A timeframe source produces time frame values. The value returned by a
- * timeframe source may vary over time.
- * 
- * @see wicket.util.time.TimeFrame
+ * Draws a basic tab component, varying the image depending on which page is active.
  * 
  * @author Jonathan Locke
  */
-public interface ITimeFrameSource
+public final class TabNavigator extends DynamicImage
 {
+	/** Serial Version ID. */
+	private static final long serialVersionUID = 209001445308790198L;
+
 	/**
-	 * @return Gets current time frame value
+	 * @see DynamicImage#DynamicImage(String, int, int)
 	 */
-	public TimeFrame getTimeFrame();
+	public TabNavigator(final String name, final int width, final int height)
+	{
+		super(name, width, height);
+	}
+
+	/**
+	 * @see wicket.markup.html.image.DynamicImage#render(java.awt.Graphics2D)
+	 */
+	protected void render(Graphics2D graphics)
+	{
+		
+	}
 }

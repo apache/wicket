@@ -30,6 +30,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
+import wicket.model.IConverterSource;
 import wicket.model.IConvertible;
 import wicket.model.IDetachableModel;
 import wicket.model.IModel;
@@ -41,9 +42,9 @@ import wicket.util.string.Strings;
 
 /**
  * Component serves as the highest level abstract base class for all components.
- * A component has a parent. If a component is an instance of MarkupContainer, it may
- * have children. In this way it has a place in the hierarchy of components
- * contained on a given page.
+ * A component has a parent. If a component is an instance of MarkupContainer,
+ * it may have children. In this way it has a place in the hierarchy of
+ * components contained on a given page.
  * <p>
  * The page containing any given component can be retrieved by calling
  * getPage(). The page itself points back to the Session that contains the page.
@@ -96,22 +97,8 @@ import wicket.util.string.Strings;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public abstract class Component implements Serializable
+public abstract class Component implements Serializable, IConverterSource
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(Component.class);
-
-	/** Designates a normal component that is not being shared */
-	public static final int UNSHARED = 0;
-
-	/**
-	 * Designates a component being shared among pages within a session. The
-	 * shared component will be given a stable URL relative to the session so
-	 * the client browser can cache the component's output. A typical use for
-	 * this is to share images which need to be secure (and therefore session
-	 * relative) but which will be used on multiple pages within a session.
-	 */
-	public static final int SESSION_SHARED = 1;
 
 	/**
 	 * Designates a component being shared across all sessions within an
@@ -122,6 +109,20 @@ public abstract class Component implements Serializable
 	 * session.
 	 */
 	public static final int APPLICATION_SHARED = 2;
+
+	/**
+	 * Designates a component being shared among pages within a session. The
+	 * shared component will be given a stable URL relative to the session so
+	 * the client browser can cache the component's output. A typical use for
+	 * this is to share images which need to be secure (and therefore session
+	 * relative) but which will be used on multiple pages within a session.
+	 */
+	public static final int SESSION_SHARED = 1;
+
+	/** Designates a normal component that is not being shared */
+	public static final int UNSHARED = 0;
+	/** Log. */
+	private static Log log = LogFactory.getLog(Component.class);
 
 	/** Collection of AttributeModifiers to be applied for this Component */
 	List attributeModifiers = null;
@@ -224,10 +225,12 @@ public abstract class Component implements Serializable
 	 * instance using the OGNL expression. This is the equivalent of:
 	 * 
 	 * <pre>
-	 *                IModel model;
-	 *                String expression;
-	 *                ...
-	 *                new MyComponent(name, new PropertyModel(model, expression));
+	 * 
+	 *                 IModel model;
+	 *                 String expression;
+	 *                 ...
+	 *                 new MyComponent(name, new PropertyModel(model, expression));
+	 *  
 	 * </pre>
 	 * 
 	 * If the object is not an instance of PropertyModel or IModel, the object
@@ -236,10 +239,12 @@ public abstract class Component implements Serializable
 	 * expression. Thus, this is the equivalent of:
 	 * 
 	 * <pre>
-	 *                Serializable model;
-	 *                String expression;
-	 *                ...
-	 *                new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 * 
+	 *                 Serializable model;
+	 *                 String expression;
+	 *                 ...
+	 *                 new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 *  
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
@@ -392,29 +397,6 @@ public abstract class Component implements Serializable
 	public final ApplicationSettings getApplicationSettings()
 	{
 		return getApplication().getSettings();
-	}
-
-	/**
-	 * Gets the type of sharing this component desires, which must be one of:
-	 * UNSHARED, SESSION_SHARED or APPLICATION_SHARED. If a component is
-	 * unshared, it will have a normal unique URL with a session id and
-	 * component path. If it instead specifies SESSION_SHARED, the component
-	 * will be given a URL that is constant across the session regardless of
-	 * where the component is used. This means that a SESSION_SHARED Image or
-	 * DynamicImage component, for example, can be stored in a Session property
-	 * and used on multiple application Pages. The URL to the component will be
-	 * constant and thus the output of the component can be cached by browsers.
-	 * The APPLICATION_SHARED value specifies the same kind of sharing, but
-	 * without session scoping. A component which is APPLICATION_SHARED will
-	 * have a stable URL to enable browser caching and will be available to ANY
-	 * CLIENT requesting it, regardless of who they are. This has obvious
-	 * security implications if the image data is sensitive.
-	 * 
-	 * @return The kind of sharing this component desires
-	 */
-	public int getSharing()
-	{
-		return UNSHARED;
 	}
 
 	/**
@@ -780,6 +762,29 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Gets the type of sharing this component desires, which must be one of:
+	 * UNSHARED, SESSION_SHARED or APPLICATION_SHARED. If a component is
+	 * unshared, it will have a normal unique URL with a session id and
+	 * component path. If it instead specifies SESSION_SHARED, the component
+	 * will be given a URL that is constant across the session regardless of
+	 * where the component is used. This means that a SESSION_SHARED Image or
+	 * DynamicImage component, for example, can be stored in a Session property
+	 * and used on multiple application Pages. The URL to the component will be
+	 * constant and thus the output of the component can be cached by browsers.
+	 * The APPLICATION_SHARED value specifies the same kind of sharing, but
+	 * without session scoping. A component which is APPLICATION_SHARED will
+	 * have a stable URL to enable browser caching and will be available to ANY
+	 * CLIENT requesting it, regardless of who they are. This has obvious
+	 * security implications if the image data is sensitive.
+	 * 
+	 * @return The kind of sharing this component desires
+	 */
+	public int getSharing()
+	{
+		return UNSHARED;
+	}
+
+	/**
 	 * Gets whether model strings should be escaped.
 	 * 
 	 * @return Returns whether model strings should be escaped
@@ -859,7 +864,7 @@ public abstract class Component implements Serializable
 		synchronized (getModelLock())
 		{
 			// Call implementation to render component
-			handleRender();
+			onRender();
 		}
 
 		// Restore original response
@@ -890,7 +895,7 @@ public abstract class Component implements Serializable
 		// Set self in case the model is component aware
 		if (model instanceof IConvertible)
 		{
-			((IConvertible)model).setConverterProvider(this);
+			((IConvertible)model).setConverterSource(this);
 		}
 		this.model = (IModel)model;
 		return this;
@@ -1049,35 +1054,6 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag
-	 *            Tag to modify
-	 */
-	protected void handleComponentTag(final ComponentTag tag)
-	{
-	}
-
-	/**
-	 * Processes the body.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 * @param openTag
-	 *            The open tag for the body
-	 */
-	protected void handleComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
-	{
-		markupStream.throwMarkupException("Required handleComponentTagBody() was not provided");
-	}
-
-	/**
-	 * Renders this component.
-	 */
-	protected abstract void handleRender();
-
-	/**
 	 * Invalidates the model attached to this component. Traverses all pages in
 	 * the session associated with this component. Within each page in the
 	 * session, traverses all components looking for a component attached to the
@@ -1129,10 +1105,38 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Processes the component tag.
+	 * 
+	 * @param tag
+	 *            Tag to modify
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+	}
+
+	/**
+	 * Processes the body.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		markupStream.throwMarkupException("Required handleComponentTagBody() was not provided");
+	}
+
+	/**
+	 * Renders this component.
+	 */
+	protected abstract void onRender();
+
+	/**
 	 * Renders the component at the current position in the given markup stream.
-	 * The method handleComponentTag() is called to allow the component to
-	 * mutate the start tag. The method handleComponentTagBody() is then called
-	 * to permit the component to render its body.
+	 * The method onComponentTag() is called to allow the component to mutate
+	 * the start tag. The method onComponentTagBody() is then called to permit
+	 * the component to render its body.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -1143,7 +1147,7 @@ public abstract class Component implements Serializable
 		final ComponentTag tag = markupStream.getTag().mutable();
 
 		// Call any tag handler
-		handleComponentTag(tag);
+		onComponentTag(tag);
 
 		// If we're an openclose tag
 		final XmlTag.Type type = tag.getType();
@@ -1168,10 +1172,10 @@ public abstract class Component implements Serializable
 		renderComponentTag(tag);
 		markupStream.next();
 
-		// Render body using original tag type so implementors
-		// of handleBody will know if the tag has a body or not
+		// Render body using original tag type so implementors of
+		// onComponentTagBody will know if the tag has a body or not
 		tag.setType(type);
-		handleComponentTagBody(markupStream, tag);
+		onComponentTagBody(markupStream, tag);
 
 		// Render close tag
 		renderClosingComponentTag(markupStream, tag);

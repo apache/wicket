@@ -71,7 +71,7 @@ public class WebMarkupContainer extends MarkupContainer
 	/**
 	 * Renders this component. This implementation just calls renderComponent.
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 		renderComponent(findMarkupStream());
 	}

@@ -109,16 +109,16 @@ public class Image extends AbstractImage implements IResourceListener
     }
 
     /**
-     * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+     * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
      */
-    protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
     }
 
     /**
-     * @see wicket.Component#handleComponentTag(ComponentTag)
+     * @see wicket.Component#onComponentTag(ComponentTag)
      */
-    protected void handleComponentTag(final ComponentTag tag)
+    protected void onComponentTag(final ComponentTag tag)
     {
         final String imageResource = getModelObjectAsString();
         if (Strings.isEmpty(imageResource))
@@ -132,7 +132,7 @@ public class Image extends AbstractImage implements IResourceListener
 	    style = getStyle();
 	    locale = getLocale();
     	
-        super.handleComponentTag(tag);
+        super.onComponentTag(tag);
     }
 
 	static

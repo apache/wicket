@@ -38,11 +38,11 @@ import wicket.markup.html.WebMarkupContainer;
  */
 public class SortableListViewHeaders extends WebMarkupContainer
 {
-	/** Logging. */
-	final private Log log = LogFactory.getLog(SortableListViewHeaders.class);
 
 	/** Each SortableTableHeader (without 's) must be attached to a group. */
 	final private SortableListViewHeaderGroup group;
+	/** Logging. */
+	final private Log log = LogFactory.getLog(SortableListViewHeaders.class);
 
 	/**
 	 * Construct.
@@ -57,11 +57,38 @@ public class SortableListViewHeaders extends WebMarkupContainer
 	}
 
 	/**
+	 * Compare two object of the column to be sorted, assuming both Objects support
+	 * compareTo().
+	 * @see Comparable#compareTo(java.lang.Object)
+	 * @param header
+	 * @param o1
+	 * @param o2
+	 * @return compare result
+	 */
+	protected int compareTo(final SortableListViewHeader header, final Object o1, final Object o2)
+	{
+		Comparable obj1 = getObjectToCompare(header, o1);
+		Comparable obj2 = getObjectToCompare(header, o2);
+		return obj1.compareTo(obj2);
+	}
+
+	/**
+	 * Get one of the two Object to be compared for sorting a column.
+	 * @param header
+	 * @param object
+	 * @return comparable object
+	 */
+	protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
+	{
+		return (Comparable)object;
+	}
+
+	/**
 	 * Scan the related markup and attach a SortableListViewHeader to each &lt;th&gt; tag
 	 * found.
-	 * @see wicket.Component#handleRender()
+	 * @see wicket.Component#onRender()
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 		// Allow anonmous class to access 'this' methods with same name
 		final SortableListViewHeaders me = this;
@@ -115,33 +142,6 @@ public class SortableListViewHeaders extends WebMarkupContainer
 		markupStream.setCurrentIndex(markupStart);
 
 		// Continue with default behaviour
-		super.handleRender();
-	}
-
-	/**
-	 * Compare two object of the column to be sorted, assuming both Objects support
-	 * compareTo().
-	 * @see Comparable#compareTo(java.lang.Object)
-	 * @param header
-	 * @param o1
-	 * @param o2
-	 * @return compare result
-	 */
-	protected int compareTo(final SortableListViewHeader header, final Object o1, final Object o2)
-	{
-		Comparable obj1 = getObjectToCompare(header, o1);
-		Comparable obj2 = getObjectToCompare(header, o2);
-		return obj1.compareTo(obj2);
-	}
-
-	/**
-	 * Get one of the two Object to be compared for sorting a column.
-	 * @param header
-	 * @param object
-	 * @return comparable object
-	 */
-	protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
-	{
-		return (Comparable)object;
+		super.onRender();
 	}
 }

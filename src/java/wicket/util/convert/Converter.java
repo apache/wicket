@@ -89,13 +89,13 @@ public final class Converter implements IConverter
 			return OgnlOps.convertValue(value, c);
 		}
 
-		public void setLocale(Locale locale)
-		{
-		}
-
 		public Locale getLocale()
 		{
 			return Locale.getDefault();
+		}
+
+		public void setLocale(Locale locale)
+		{
 		}
 	};
 
@@ -137,29 +137,6 @@ public final class Converter implements IConverter
 	{
 		this();
 		setLocale(locale);
-	}
-
-	/**
-	 * Registers a converter for use with class c.
-	 * 
-	 * @param converter
-	 *            The converter to add
-	 * @param c
-	 *            The class for which the converter should be used
-	 * @return The previous registered converter for class c or null if none was
-	 *         registered yet for class c
-	 */
-	public ITypeConverter set(final Class c, final ITypeConverter converter)
-	{
-		if (converter == null)
-		{
-			throw new IllegalArgumentException("Converter cannot be null");
-		}
-		if (c == null)
-		{
-			throw new IllegalArgumentException("Class cannot be null");
-		}
-		return (ITypeConverter)classToConverter.put(c, converter);
 	}
 
 	/**
@@ -265,6 +242,29 @@ public final class Converter implements IConverter
 	public ITypeConverter remove(Class c)
 	{
 		return (ITypeConverter)classToConverter.remove(c);
+	}
+
+	/**
+	 * Registers a converter for use with class c.
+	 * 
+	 * @param converter
+	 *            The converter to add
+	 * @param c
+	 *            The class for which the converter should be used
+	 * @return The previous registered converter for class c or null if none was
+	 *         registered yet for class c
+	 */
+	public ITypeConverter set(final Class c, final ITypeConverter converter)
+	{
+		if (converter == null)
+		{
+			throw new IllegalArgumentException("Converter cannot be null");
+		}
+		if (c == null)
+		{
+			throw new IllegalArgumentException("Class cannot be null");
+		}
+		return (ITypeConverter)classToConverter.put(c, converter);
 	}
 
 	/**

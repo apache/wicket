@@ -33,5 +33,5 @@ public interface IOnChangeListener extends IRequestListener
 	 * Called when a option is selected of a dropdown list that wants to be
 	 * notified of this event.
 	 */
-	void selectionChanged();
+	void onSelectionChanged();
 }

@@ -35,11 +35,11 @@ import wicket.markup.html.link.Link;
  */
 public abstract class SortableListViewHeader extends Border
 {
-	/** All sortable columns of a single list view are grouped */
-	private final SortableListViewHeaderGroup group;
 
 	/** Sort ascending or descending */
 	private boolean ascending;
+	/** All sortable columns of a single list view are grouped */
+	private final SortableListViewHeaderGroup group;
 
 	/**
 	 * Construct.
@@ -58,7 +58,7 @@ public abstract class SortableListViewHeader extends Border
 		final SortableListViewHeader me = this;
 		add(new Link("actionLink")
 		{
-			public void linkClicked()
+			public void onLinkClicked()
 			{
 				// call SortableTableHeaders implementation
 				me.linkClicked();
@@ -67,6 +67,43 @@ public abstract class SortableListViewHeader extends Border
 				getRequestCycle().setRedirect(true);
 			}
 		});
+	}
+
+	/**
+	 * Compare two objects (list elements of list view's model object). Both objects must
+	 * implement Comparable. In order to compare basic types like int or double, simply
+	 * subclass the method.
+	 * @param o1 first object
+	 * @param o2 second object
+	 * @return comparision result
+	 */
+	protected int compareTo(Object o1, Object o2)
+	{
+		Comparable obj1 = getObjectToCompare(o1);
+		Comparable obj2 = getObjectToCompare(o2);
+		return obj1.compareTo(obj2);
+	}
+
+	/**
+	 * Get CSS style for the header based on ascending / descending. Delegate to the header
+	 * group to determine the style.
+	 * @return css class
+	 */
+	protected final String getCssClass()
+	{
+		// TODO This needs to be integrated with our CSS design
+		return group.getCssClass(getName(), ascending);
+	}
+
+	/**
+	 * Returns the comparable object of the list view the header/column is referring to, e.g.
+	 * obj.getId();
+	 * @param object the ListItems model object
+	 * @return The object to compare
+	 */
+	protected Comparable getObjectToCompare(Object object)
+	{
+		return (Comparable)object;
 	}
 
 	/**
@@ -88,49 +125,13 @@ public abstract class SortableListViewHeader extends Border
 	}
 
 	/**
-	 * Get CSS style for the header based on ascending / descending. Delegate to the header
-	 * group to determine the style.
-	 * @return css class
-	 */
-	protected final String getCssClass()
-	{
-		return group.getCssClass(getName(), ascending);
-	}
-
-	/**
 	 * Delegate to the header group to handle the tag.
-	 * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 * @param tag The current ComponentTag to handle
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		group.handleComponentTag(tag, getCssClass());
-	}
-
-	/**
-	 * Compare two objects (list elements of list view's model object). Both objects must
-	 * implement Comparable. In order to compare basic types like int or double, simply
-	 * subclass the method.
-	 * @param o1 first object
-	 * @param o2 second object
-	 * @return comparision result
-	 */
-	protected int compareTo(Object o1, Object o2)
-	{
-		Comparable obj1 = getObjectToCompare(o1);
-		Comparable obj2 = getObjectToCompare(o2);
-		return obj1.compareTo(obj2);
-	}
-
-	/**
-	 * Returns the comparable object of the list view the header/column is referring to, e.g.
-	 * obj.getId();
-	 * @param object the ListItems model object
-	 * @return The object to compare
-	 */
-	protected Comparable getObjectToCompare(Object object)
-	{
-		return (Comparable)object;
 	}
 
 	/**

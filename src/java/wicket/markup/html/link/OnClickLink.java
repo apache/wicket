@@ -83,9 +83,9 @@ public abstract class OnClickLink extends AbstractLink
     /**
 	 * Processes the component tag.
 	 * @param tag Tag to modify
-     * @see wicket.Component#handleComponentTag(ComponentTag)
+     * @see wicket.Component#onComponentTag(ComponentTag)
      */
-    protected final void handleComponentTag(final ComponentTag tag)
+    protected final void onComponentTag(final ComponentTag tag)
     {
         // Add simple javascript on click handler that links to this
         // link's linkClicked method

@@ -133,12 +133,11 @@ public class WebRequestCycle extends RequestCycle
 
 		// Buffer for composing URL
 		final StringBuffer buffer = urlPrefix();
-		
+
 		// Compose URL differently depending on component sharing
 		switch (component.getSharing())
 		{
-			case Component.UNSHARED : 
-			{
+			case Component.UNSHARED : {
 				buffer.append("?component=");
 				buffer.append(component.getPath());
 				buffer.append("&rendering=");
@@ -148,22 +147,19 @@ public class WebRequestCycle extends RequestCycle
 				return response.encodeURL(buffer.toString());
 			}
 
-			case Component.SESSION_SHARED : 
-			{
+			case Component.SESSION_SHARED : {
 				buffer.append('/');
 				buffer.append(((WebSession)session).reference(component));
 				return response.encodeURL(buffer.toString());
 			}
 
-			case Component.APPLICATION_SHARED : 
-			{
+			case Component.APPLICATION_SHARED : {
 				buffer.append('/');
 				buffer.append(((WebApplication)application).reference(component));
 				return buffer.toString();
 			}
-			
-			default:
-			{
+
+			default : {
 				throw new WicketRuntimeException("Illegal component sharing type");
 			}
 		}
@@ -217,7 +213,7 @@ public class WebRequestCycle extends RequestCycle
 	 * request, then the request is considered invalid and a response is written
 	 * detailing the problem.
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 		// Try different methods of parsing and dispatching the request
 		if (callComponentListener() || bookmarkablePage() || homePage())
@@ -338,13 +334,12 @@ public class WebRequestCycle extends RequestCycle
 				// Is page stale?
 				if (page.isStale())
 				{
-					handleStalePage();
+					onStalePage();
 					return true;
 				}
-				else if (page.isRenderingStale(Integer.parseInt(request
-						.getParameter("rendering"))))
+				else if (page.isRenderingStale(Integer.parseInt(request.getParameter("rendering"))))
 				{
-					handleStaleRendering(page);
+					onStaleRendering(page);
 					return true;
 				}
 				else
@@ -355,7 +350,7 @@ public class WebRequestCycle extends RequestCycle
 			}
 			else
 			{
-				handleExpiredPage();
+				onExpiredPage();
 				return true;
 			}
 		}
@@ -365,7 +360,7 @@ public class WebRequestCycle extends RequestCycle
 			final String pathInfo = ((WebRequest)request).getHttpServletRequest().getPathInfo();
 			if (pathInfo != null)
 			{
-				//  Ask application to resolve shared component
+				// Ask application to resolve shared component
 				Component component = ((WebApplication)application).resolve(pathInfo.substring(1));
 				if (component != null)
 				{
@@ -387,6 +382,55 @@ public class WebRequestCycle extends RequestCycle
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * If no context path was provided, activates the home page.
+	 * 
+	 * @return True if the home page was activated
+	 * @throws WicketRuntimeException
+	 */
+	private boolean homePage()
+	{
+		final String pathInfo = ((WebRequest)request).getPathInfo();
+
+		if (pathInfo == null || "/".equals(pathInfo) || "".equals(pathInfo))
+		{
+			try
+			{
+				setPage(newPage(application.getPages().getHomePage()));
+			}
+			catch (WicketRuntimeException e)
+			{
+				throw new WicketRuntimeException("Could not create home page", e);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private void invokeInterface(final Component component, final String interfaceName)
+	{
+		// Look up interface to call
+		final Method method = getInterfaceMethod(interfaceName);
+
+		try
+		{
+			// Invoke the interface method on the component
+			method.invoke(component, new Object[] { });
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new WicketRuntimeException("Cannot access method " + method + " of interface "
+					+ interfaceName, e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new WicketRuntimeException("Method " + method + " of interface " + interfaceName
+					+ " threw an exception", e);
+		}
 	}
 
 	private void invokeInterface(final Page page, final String path, final String interfaceName)
@@ -423,86 +467,6 @@ public class WebRequestCycle extends RequestCycle
 		}
 	}
 
-	private void invokeInterface(final Component component, final String interfaceName)
-	{
-		// Look up interface to call
-		final Method method = getInterfaceMethod(interfaceName);
-
-		try
-		{
-			// Invoke the interface method on the component
-			method.invoke(component, new Object[] { });
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new WicketRuntimeException("Cannot access method " + method + " of interface "
-					+ interfaceName, e);
-		}
-		catch (InvocationTargetException e)
-		{
-			throw new WicketRuntimeException("Method " + method + " of interface " + interfaceName
-					+ " threw an exception", e);
-		}
-	}
-
-	private void handleExpiredPage()
-	{
-		// Page was expired from session, probably because backtracking
-		// limit was reached
-		setPage(newPage(application.getPages().getPageExpiredErrorPage()));
-	}
-
-	private void handleStalePage()
-	{
-		// Page was marked stale because the data model for some
-		// component on the page is stale. Find the most recent
-		// fresh page and send the user there.
-		final Page freshestPage = session.getFreshestPage();
-
-		if (freshestPage != null)
-		{
-			setPage(newPage(application.getPages().getStaleDataErrorPage(), freshestPage));
-		}
-		else
-		{
-			setPage(newPage(application.getPages().getHomePage()));
-		}
-	}
-
-	private void handleStaleRendering(final Page page)
-	{
-		// Just a particular rendering of the page is stale, so send
-		// the user back to the page
-		setPage(newPage(application.getPages().getStaleDataErrorPage(), page));
-	}
-
-	/**
-	 * If no context path was provided, activates the home page.
-	 * 
-	 * @return True if the home page was activated
-	 * @throws WicketRuntimeException
-	 */
-	private boolean homePage()
-	{
-		final String pathInfo = ((WebRequest)request).getPathInfo();
-
-		if (pathInfo == null || "/".equals(pathInfo) || "".equals(pathInfo))
-		{
-			try
-			{
-				setPage(newPage(application.getPages().getHomePage()));
-			}
-			catch (WicketRuntimeException e)
-			{
-				throw new WicketRuntimeException("Could not create home page", e);
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
 	/**
 	 * Creates a new page.
 	 * 
@@ -530,6 +494,37 @@ public class WebRequestCycle extends RequestCycle
 	private final Page newPage(final Class pageClass, final Page page)
 	{
 		return getPageFactory().newPage(pageClass, page);
+	}
+
+	private void onExpiredPage()
+	{
+		// Page was expired from session, probably because backtracking
+		// limit was reached
+		setPage(newPage(application.getPages().getPageExpiredErrorPage()));
+	}
+
+	private void onStalePage()
+	{
+		// Page was marked stale because the data model for some
+		// component on the page is stale. Find the most recent
+		// fresh page and send the user there.
+		final Page freshestPage = session.getFreshestPage();
+
+		if (freshestPage != null)
+		{
+			setPage(newPage(application.getPages().getStaleDataErrorPage(), freshestPage));
+		}
+		else
+		{
+			setPage(newPage(application.getPages().getHomePage()));
+		}
+	}
+
+	private void onStaleRendering(final Page page)
+	{
+		// Just a particular rendering of the page is stale, so send
+		// the user back to the page
+		setPage(newPage(application.getPages().getStaleDataErrorPage(), page));
 	}
 
 	/**

@@ -460,7 +460,7 @@ public abstract class MarkupContainer extends Component
 	 * @param openTag
 	 *            The open tag for the body
 	 */
-	protected void handleComponentTagBody(final MarkupStream markupStream,
+	protected void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
 		renderComponentTagBody(markupStream, openTag);
@@ -469,7 +469,7 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * Renders this component.
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 		renderAll(findMarkupStream());
 	}
@@ -703,7 +703,7 @@ public abstract class MarkupContainer extends Component
 			{
 				watcher.add(markupResource, new IChangeListener()
 				{
-					public void changed()
+					public void onChange()
 					{
 						synchronized (markupCache)
 						{

@@ -64,9 +64,9 @@ public class ExternalLink extends WebMarkupContainer
     /**
      * Processes the component tag.
      * @param tag Tag to modify
-     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+     * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
      */
-    protected void handleComponentTag(ComponentTag tag)
+    protected void onComponentTag(ComponentTag tag)
     {
         if (href != null)
         {
@@ -78,9 +78,9 @@ public class ExternalLink extends WebMarkupContainer
      * Handle the container's body.
      * @param markupStream The markup stream
      * @param openTag The open tag for the body
-     * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+     * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected void handleComponentTagBody(MarkupStream markupStream,
+    protected void onComponentTagBody(MarkupStream markupStream,
             ComponentTag openTag)
     {
         this.checkComponentTag(openTag, "a");
@@ -90,7 +90,7 @@ public class ExternalLink extends WebMarkupContainer
         }
         else
         {
-            super.handleComponentTagBody(markupStream, openTag);
+            super.onComponentTagBody(markupStream, openTag);
         }
     }
 }

@@ -213,9 +213,9 @@ public abstract class Link extends AbstractLink
 	 *            the markup stream
 	 * @param openTag
 	 *            the open part of this tag
-	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Get disabled component of the same name with "Disabled" appended
 		final MarkupContainer disabledContainer = (MarkupContainer)get("disabled");
@@ -258,15 +258,15 @@ public abstract class Link extends AbstractLink
 	 * 
 	 * @param tag
 	 *            the component tag
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected final void onComponentTag(final ComponentTag tag)
 	{
 		// Can only attach links to anchor tags
 		checkComponentTag(tag, "a");
 
 		// Default handling for tag
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 
 		// If we're auto-enabling
 		if (autoEnable)

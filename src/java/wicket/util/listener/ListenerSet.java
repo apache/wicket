@@ -33,12 +33,6 @@ public abstract class ListenerSet
 {
     /** Set of change listeners */
     private final Set listeners = new HashSet();
-    
-    /**
-     * Notifies a listener.
-     * @param listener The listener to notify
-     */
-    protected abstract void notifyListener(IListener listener);
 
     /**
      * Adds a listener to this set of listeners.
@@ -47,15 +41,6 @@ public abstract class ListenerSet
     public void add(final IListener listener)
     {
         listeners.add(listener);
-    }
-
-    /**
-     * Removes a listener from this set.
-     * @param listener The listener to remove
-     */
-    public void remove(final IListener listener)
-    {
-        listeners.remove(listener);
     }
 
     /**
@@ -72,6 +57,21 @@ public abstract class ListenerSet
             notifyListener((IListener)iterator.next());
         }
     }    
+
+    /**
+     * Removes a listener from this set.
+     * @param listener The listener to remove
+     */
+    public void remove(final IListener listener)
+    {
+        listeners.remove(listener);
+    }
+    
+    /**
+     * Notifies a listener.
+     * @param listener The listener to notify
+     */
+    protected abstract void notifyListener(IListener listener);
 }
 
 

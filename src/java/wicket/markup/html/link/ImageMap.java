@@ -328,9 +328,9 @@ public final class ImageMap extends WebComponent
 	/**
 	 * Renders this component.
 	 * 
-	 * @see wicket.Component#handleRender()
+	 * @see wicket.Component#onRender()
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 		// Get markup stream
 		final MarkupStream markupStream = findMarkupStream();

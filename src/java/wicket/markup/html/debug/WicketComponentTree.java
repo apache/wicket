@@ -70,7 +70,7 @@ public final class WicketComponentTree extends Panel
 			// Assuming all other components are already populated
 			// (and rendered), determine the components and fill
 			// the 'our' model object.
-			protected void handleRender()
+			protected void onRender()
 			{
 				// Get the components data and fill and sort the list
 				data.clear();
@@ -84,7 +84,7 @@ public final class WicketComponentTree extends Panel
 				});
 
 				// Keep on rendering the table
-				super.handleRender();
+				super.onRender();
 			}
 
 			// Populate the table with Wicket elements

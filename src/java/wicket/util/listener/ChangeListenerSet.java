@@ -30,7 +30,7 @@ public final class ChangeListenerSet extends ListenerSet
      */
     protected void notifyListener(IListener listener)
     {
-        ((IChangeListener)listener).changed();
+        ((IChangeListener)listener).onChange();
     }    
 }
 

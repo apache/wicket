@@ -76,7 +76,7 @@ public class ListItem extends WebMarkupContainer
 	{
 		final Link link = new Link(componentName)
 		{
-			public void linkClicked()
+			public void onLinkClicked()
 			{
 				// Swap listItems and invalidate listView
 				Collections.swap(listView.getList(), index, index - 1);
@@ -102,7 +102,7 @@ public class ListItem extends WebMarkupContainer
 	{
 		final Link link = new Link(componentName)
 		{
-			public void linkClicked()
+			public void onLinkClicked()
 			{
 				// Swap listeItem and invalidate listView
 				Collections.swap(listView.getList(), index, index + 1);
@@ -127,7 +127,7 @@ public class ListItem extends WebMarkupContainer
 	{
 		return new Link(componentName)
 		{
-			public void linkClicked()
+			public void onLinkClicked()
 			{
 				// Remove listItem and invalidate listView
 				listView.getList().remove(index);

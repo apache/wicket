@@ -260,7 +260,7 @@ public abstract class ListView extends WebMarkupContainer
 	/**
 	 * Renders this ListView (container).
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 		// Ask parents for markup stream to use
 		final MarkupStream markupStream = findMarkupStream();

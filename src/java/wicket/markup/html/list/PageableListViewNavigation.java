@@ -139,56 +139,12 @@ public class PageableListViewNavigation extends ListView
 	}
 
 	/**
-	 * Populate the current cell with a page link (PageableListViewNavigationLink) enclosing the page
-	 * number the link is pointing to. Subclasses may provide there own implementation
-	 * adding more sophisticated page links.
-	 * @param listItem the list item to populate
-	 * @see wicket.markup.html.list.PageableListView#populateItem(wicket.markup.html.list.ListItem)
-	 */
-	protected void populateItem(final ListItem listItem)
-	{
-		// Get the index of page this link shall point to
-		final int pageIndex = ((Integer)listItem.getModelObject()).intValue();
-
-		// Add a page link pointing to the page
-		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
-				pageableListView, pageIndex);
-		listItem.add(link);
-
-		// Add a label (the page number) to the list which is enclosed by the link
-		link.add(new Label("pageNumber", String.valueOf(pageIndex + 1)));
-	}
-
-	/**
-	 * Provide the ListItem for the index given.
-	 * <p>
-	 * PageableListViewNavigation actually does not have an underlying model like most other
-	 * ListViews. It doesn't have to, because the model is simply the index of the
-	 * PageableListView's page. Thus we create a model based on the PageableListView's page index.
-	 * @param index ListItem index
-	 * @return The new ListItem
-	 */
-	protected ListItem newItem(final int index)
-	{
-		return new ListItem(index, new Model(new Integer(index)));
-	}
-
-	/**
 	 * Get the PageableListView which the navigation bar is navigating.
 	 * @return the PageableListView that is used to get the number of pages
 	 */
 	public PageableListView getPageableListView()
 	{
 		return pageableListView;
-	}
-
-	/**
-	 * Set the PageableListView which the navigation bar is navigating.
-	 * @param pageableListView the PageableListView that is used to get the number of pages
-	 */
-	public void setPageableListView(PageableListView pageableListView)
-	{
-		this.pageableListView = pageableListView;
 	}
 
 	/**
@@ -207,5 +163,49 @@ public class PageableListViewNavigation extends ListView
 		{
 			return 0;
 		}
+	}
+
+	/**
+	 * Set the PageableListView which the navigation bar is navigating.
+	 * @param pageableListView the PageableListView that is used to get the number of pages
+	 */
+	public void setPageableListView(PageableListView pageableListView)
+	{
+		this.pageableListView = pageableListView;
+	}
+
+	/**
+	 * Provide the ListItem for the index given.
+	 * <p>
+	 * PageableListViewNavigation actually does not have an underlying model like most other
+	 * ListViews. It doesn't have to, because the model is simply the index of the
+	 * PageableListView's page. Thus we create a model based on the PageableListView's page index.
+	 * @param index ListItem index
+	 * @return The new ListItem
+	 */
+	protected ListItem newItem(final int index)
+	{
+		return new ListItem(index, new Model(new Integer(index)));
+	}
+
+	/**
+	 * Populate the current cell with a page link (PageableListViewNavigationLink) enclosing the page
+	 * number the link is pointing to. Subclasses may provide there own implementation
+	 * adding more sophisticated page links.
+	 * @param listItem the list item to populate
+	 * @see wicket.markup.html.list.PageableListView#populateItem(wicket.markup.html.list.ListItem)
+	 */
+	protected void populateItem(final ListItem listItem)
+	{
+		// Get the index of page this link shall point to
+		final int pageIndex = ((Integer)listItem.getModelObject()).intValue();
+
+		// Add a page link pointing to the page
+		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
+				pageableListView, pageIndex);
+		listItem.add(link);
+
+		// Add a label (the page number) to the list which is enclosed by the link
+		link.add(new Label("pageNumber", String.valueOf(pageIndex + 1)));
 	}
 }

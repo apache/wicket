@@ -95,6 +95,22 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	}
 
 	/**
+	 * @return True if it is referring to the first page of the underlying PageableListView.
+	 */
+	public boolean isFirst()
+	{
+		return pageableListView.getCurrentPage() <= 0;
+	}
+
+	/**
+	 * @return True if it is referring to the last page of the underlying PageableListView.
+	 */
+	public boolean isLast()
+	{
+		return pageableListView.getCurrentPage() >= (pageableListView.getPageCount() - 1);
+	}
+
+	/**
 	 * Returns true if the page link links to the given page.
 	 * @param page The page to test
 	 * @return True if this link links to the given page
@@ -110,21 +126,5 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 		}
 
 		return false;
-	}
-
-	/**
-	 * @return True if it is referring to the first page of the underlying PageableListView.
-	 */
-	public boolean isFirst()
-	{
-		return pageableListView.getCurrentPage() <= 0;
-	}
-
-	/**
-	 * @return True if it is referring to the last page of the underlying PageableListView.
-	 */
-	public boolean isLast()
-	{
-		return pageableListView.getCurrentPage() >= (pageableListView.getPageCount() - 1);
 	}
 }

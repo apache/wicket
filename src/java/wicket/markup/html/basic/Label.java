@@ -86,10 +86,10 @@ public class Label extends WebComponent
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
+	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
-	protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
 	}

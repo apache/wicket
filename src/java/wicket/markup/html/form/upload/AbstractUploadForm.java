@@ -63,9 +63,9 @@ public abstract class AbstractUploadForm extends Form
 	/**
 	 * Handles an upload.
 	 * 
-	 * @see wicket.markup.html.form.Form#handleValidSubmit()
+	 * @see wicket.markup.html.form.Form#onSubmit()
 	 */
-	public void handleValidSubmit()
+	public void onSubmit()
 	{
 		try
 		{
@@ -115,11 +115,11 @@ public abstract class AbstractUploadForm extends Form
 	 * 
 	 * @param tag
 	 *            the component tag
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected final void onComponentTag(final ComponentTag tag)
 	{
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 		tag.put("enctype", "multipart/form-data");
 	}
 

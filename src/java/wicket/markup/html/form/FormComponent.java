@@ -344,11 +344,11 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @param tag
 	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected void handleComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 		tag.put("name", getPath());
 	}
 
@@ -356,7 +356,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * Template method that can be implemented by form component subclass to
 	 * react when validation errors are cleared. This implementation is a noop.
 	 */
-	protected void handleValid()
+	protected void onValid()
 	{
 	}
 
@@ -364,7 +364,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * Template method that can be implemented by form component subclass to
 	 * react on validation errors. This implementation is a noop.
 	 */
-	protected void handleInvalid()
+	protected void onInvalid()
 	{
 	}
 }

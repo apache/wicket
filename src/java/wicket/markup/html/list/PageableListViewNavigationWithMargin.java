@@ -54,10 +54,46 @@ public class PageableListViewNavigationWithMargin extends PageableListViewNaviga
 	}
 
 	/**
-	 * Renders this component.
-	 * @see wicket.markup.html.list.ListView#handleRender()
+	 * Gets the margin.
+	 * @return the margin
 	 */
-	protected void handleRender()
+	public int getMargin()
+	{
+		return margin;
+	}
+
+	/**
+	 * Gets the seperator.
+	 * @return the seperator
+	 */
+	public String getSeparator()
+	{
+		return separator;
+	}
+
+	/**
+	 * Sets the margin.
+	 * @param margin the margin
+	 */
+	public void setMargin(int margin)
+	{
+		this.margin = margin;
+	}
+
+	/**
+	 * Sets the seperator. Null meaning, no separator at all.
+	 * @param separator the seperator
+	 */
+	public void setSeparator(String separator)
+	{
+		this.separator = separator;
+	}
+
+	/**
+	 * Renders this component.
+	 * @see wicket.markup.html.list.ListView#onRender()
+	 */
+	protected void onRender()
 	{
 		// PageableListViewNavigation itself (as well as the PageableListView) may have pages.
 
@@ -66,7 +102,7 @@ public class PageableListViewNavigationWithMargin extends PageableListViewNaviga
 		this.setStartIndex();
 
 		// continue with default
-		super.handleRender();
+		super.onRender();
 	}
 
 	/**
@@ -126,41 +162,5 @@ public class PageableListViewNavigationWithMargin extends PageableListViewNaviga
 
 		// Tell the ListView what the new start index shall be
 		this.setStartIndex(firstListItem);
-	}
-
-	/**
-	 * Gets the margin.
-	 * @return the margin
-	 */
-	public int getMargin()
-	{
-		return margin;
-	}
-
-	/**
-	 * Sets the margin.
-	 * @param margin the margin
-	 */
-	public void setMargin(int margin)
-	{
-		this.margin = margin;
-	}
-
-	/**
-	 * Gets the seperator.
-	 * @return the seperator
-	 */
-	public String getSeparator()
-	{
-		return separator;
-	}
-
-	/**
-	 * Sets the seperator. Null meaning, no separator at all.
-	 * @param separator the seperator
-	 */
-	public void setSeparator(String separator)
-	{
-		this.separator = separator;
 	}
 }

@@ -52,9 +52,9 @@ public class Button extends FormComponent
 	 * 
 	 * @param tag
 	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected final void onComponentTag(final ComponentTag tag)
 	{
 		// Must be attached to an input tag
 		checkComponentTag(tag, "input");
@@ -80,7 +80,7 @@ public class Button extends FormComponent
 		}
 
 		// Default handling for component tag
-		super.handleComponentTag(tag);
+		super.onComponentTag(tag);
 	}
 	
 	/**

@@ -53,14 +53,17 @@ import wicket.markup.html.form.Form;
  */
 public abstract class Page extends MarkupContainer implements IRedirectListener
 {
-	/** Log. */
-	private static final Log log = LogFactory.getLog(Page.class);
 
 	/** static for access allowed flag (value == true). */
 	protected static final boolean ACCESS_ALLOWED = true;
 
 	/** static for access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
+	/** Log. */
+	private static final Log log = LogFactory.getLog(Page.class);
+
+	/** Used to create page-unique numbers */
+	private int autoIndex;
 
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
@@ -76,9 +79,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** The rendering before which all pages are stale. */
 	private int staleRendering = 0;
-
-	/** Used to create page-unique numbers */
-	private int autoIndex;
 
 	/**
 	 * Constructor.
@@ -120,6 +120,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
+	}
+
+	/**
+	 * Get a page unique number, which will be increased with each call.
+	 * 
+	 * @return A page unique number
+	 */
+	public int getAutoIndex()
+	{
+		return this.autoIndex++;
 	}
 
 	/**
@@ -192,9 +202,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * Redirect to this page.
 	 * 
-	 * @see wicket.IRedirectListener#redirect()
+	 * @see wicket.IRedirectListener#onRedirect()
 	 */
-	public final void redirect()
+	public final void onRedirect()
 	{
 		// This method is used when redirecting to a page
 		getRequestCycle().setPage(this);
@@ -236,37 +246,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
-
-	/**
-	 * Reset this page. Called if rendering is interrupted by an exception to
-	 * put the page back into a state where it can function again.
-	 */
-	final void reset()
-	{
-		try
-		{
-			// Models should be detached
-			detachModels();
-		}
-		catch (RuntimeException e1)
-		{
-			log.debug("Error detaching models when exception is thrown", e1);
-		}
-        
-		// When an exception is thrown while rendering a page, there may
-		// be invalid markup streams set on various containers. We need
-		// to reset these to null to ensure they get recreated correctly.
-        visitChildren(MarkupContainer.class, new IVisitor()
-        {
-            public Object component(final Component component)
-            {
-                final MarkupContainer container = (MarkupContainer)component;
-                container.setMarkupStream(null);
-                return CONTINUE_TRAVERSAL;
-            }
-        });
-
 	}
 
 	/**
@@ -331,7 +310,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * Renders this container to the given response object.
 	 */
-	protected void handleRender()
+	protected void onRender()
 	{
 		// Configure response object with locale and content type
 		configureResponse();
@@ -346,6 +325,37 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// Render all the page's markup
 			renderAll(markupStream);
 		}
+	}
+
+	/**
+	 * Reset this page. Called if rendering is interrupted by an exception to
+	 * put the page back into a state where it can function again.
+	 */
+	final void reset()
+	{
+		try
+		{
+			// Models should be detached
+			detachModels();
+		}
+		catch (RuntimeException e1)
+		{
+			log.debug("Error detaching models when exception is thrown", e1);
+		}
+        
+		// When an exception is thrown while rendering a page, there may
+		// be invalid markup streams set on various containers. We need
+		// to reset these to null to ensure they get recreated correctly.
+        visitChildren(MarkupContainer.class, new IVisitor()
+        {
+            public Object component(final Component component)
+            {
+                final MarkupContainer container = (MarkupContainer)component;
+                container.setMarkupStream(null);
+                return CONTINUE_TRAVERSAL;
+            }
+        });
+
 	}
 
 	/**
@@ -385,16 +395,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// Allow calls through the IRedirectListener interface
 		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
-	}
-
-	/**
-	 * Get a page unique number, which will be increased with each call.
-	 * 
-	 * @return A page unique number
-	 */
-	public int getAutoIndex()
-	{
-		return this.autoIndex++;
 	}
 }
 

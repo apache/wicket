@@ -34,11 +34,11 @@ public final class PageableListViewNavigationLink extends PageLink
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 9064718260408332988L;
 
-	/** The page of the PageableListView this link is for. */
-	private final int pageNumber;
-
 	/** The pageable list view. */
 	private final PageableListView pageableListView;
+
+	/** The page of the PageableListView this link is for. */
+	private final int pageNumber;
 
 	/**
 	 * Constructor.
@@ -72,17 +72,6 @@ public final class PageableListViewNavigationLink extends PageLink
 	}
 
 	/**
-	 * Returns true if this PageableListView navigation link links to the given page.
-	 * @param page The page
-	 * @return True if this link links to the given page
-	 * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
-	 */
-	public boolean linksTo(final Page page)
-	{
-		return pageNumber == pageableListView.getCurrentPage();
-	}
-
-	/**
 	 * Get pageNumber.
 	 * @return pageNumber.
 	 */
@@ -105,5 +94,16 @@ public final class PageableListViewNavigationLink extends PageLink
 	public boolean isLast()
 	{
 		return pageNumber == (pageableListView.size() - 1);
+	}
+
+	/**
+	 * Returns true if this PageableListView navigation link links to the given page.
+	 * @param page The page
+	 * @return True if this link links to the given page
+	 * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
+	 */
+	public boolean linksTo(final Page page)
+	{
+		return pageNumber == pageableListView.getCurrentPage();
 	}
 }

@@ -143,7 +143,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 	{
 		Link junctionLink = new Link("junctionLink")
 		{
-			public void linkClicked()
+			public void onLinkClicked()
 			{
 				junctionLinkClicked(node);
 			}
@@ -188,7 +188,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 		Object userObject = node.getUserObject();
 		Link nodeLink = new Link("nodeLink")
 		{
-			public void linkClicked()
+			public void onLinkClicked()
 			{
 				nodeLinkClicked(node);
 			}
@@ -287,7 +287,7 @@ public abstract class IndentTree extends Tree implements TreeModelListener
 		/**
 		 * Renders the tree paths.
 		 */
-		protected void handleRender()
+		protected void onRender()
 		{
 			TreeState treeState = getTreeState();
 			// Ask parents for markup stream to use

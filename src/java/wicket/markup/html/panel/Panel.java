@@ -62,7 +62,7 @@ public class Panel extends WebMarkupContainer
     /**
      * Renders this component.
      */
-    protected final void handleRender()
+    protected final void onRender()
     {
         // Render the tag that included this html compoment
         final MarkupStream markupStream = findMarkupStream();
