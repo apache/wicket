@@ -61,20 +61,20 @@ import wicket.markup.html.panel.Panel;
  *
  * @see wicket.markup.html.tree.Tree
  * @see wicket.markup.html.tree.TreeNodeModel
- * @see wicket.markup.html.tree.NLTreeRows
- * @see wicket.markup.html.tree.NLTreeRow
- * @see wicket.markup.html.tree.NLTreeRowReplacementModel
+ * @see wicket.markup.html.tree.ListTreeRows
+ * @see wicket.markup.html.tree.ListTreeRow
+ * @see wicket.markup.html.tree.ListTreeRowReplacementModel
  *
  * @author Eelco Hillenius
  */
-public class NLTree extends Tree
+public class ListTree extends Tree
 { // TODO finalize javadoc
     /**
      * Constructor.
      * @param componentName The name of this container
      * @param model the underlying tree model
      */
-    public NLTree(final String componentName, final TreeModel model)
+    public ListTree(final String componentName, final TreeModel model)
     {
         super(componentName, model);
     }
@@ -88,7 +88,7 @@ public class NLTree extends Tree
      * instances of {@link IdWrappedUserObject}. If false, users must ensure that the
      * user objects are unique within the tree in order to have the tree working properly
      */
-    public NLTree(final String componentName, final TreeModel model,
+    public ListTree(final String componentName, final TreeModel model,
     		final boolean makeTreeModelUnique)
     {
         super(componentName, model, makeTreeModelUnique);
@@ -102,7 +102,7 @@ public class NLTree extends Tree
      * @param treeState the tree state that holds the tree model and the currently visible
      * paths
      */
-    public NLTree(final String componentName, TreeStateCache treeState)
+    public ListTree(final String componentName, TreeStateCache treeState)
     {
         super(componentName, treeState);
     }
@@ -155,7 +155,7 @@ public class NLTree extends Tree
      */
     protected Panel getTreeRowsPanel(String componentName, List nestedList)
     {
-        return new NLTreeRows(componentName, nestedList, this);
+        return new ListTreeRows(componentName, nestedList, this);
     }
 
     /**
@@ -163,7 +163,7 @@ public class NLTree extends Tree
      * be attached to a LI (List Item) tag.
      * Override this if you want to provide your own panel.
      * @param componentName the name of the panel.
-     * Warning: if you did not override {@link NLTreeRows}, this must be
+     * Warning: if you did not override {@link ListTreeRows}, this must be
      * used to construct the panel.
      * @param nodeModel the model that holds a reference to the tree node and some
      * other usefull objects that help you construct the panel
@@ -171,7 +171,7 @@ public class NLTree extends Tree
      */
     protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
     {
-        return new NLTreeRow(componentName, this, nodeModel);
+        return new ListTreeRow(componentName, this, nodeModel);
     }
 
     /**

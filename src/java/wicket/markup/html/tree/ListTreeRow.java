@@ -29,10 +29,10 @@ import wicket.markup.html.panel.Panel;
  *
  * @author Eelco Hillenius
  */
-public final class NLTreeRow extends Panel
+public final class ListTreeRow extends Panel
 {
 	/** reference to the tree component. */
-	private final NLTree tree;
+	private final ListTree tree;
 
     /**
      * Construct.
@@ -40,7 +40,7 @@ public final class NLTreeRow extends Panel
      * @param tree reference to the holding tree component
      * @param nodeModel model for the current node
      */
-    public NLTreeRow(String componentName, NLTree tree, TreeNodeModel nodeModel)
+    public ListTreeRow(String componentName, ListTree tree, TreeNodeModel nodeModel)
     {
         super(componentName);
         this.tree = tree;
@@ -50,7 +50,7 @@ public final class NLTreeRow extends Panel
 
                 public void linkClicked(RequestCycle cycle, TreeNodeModel node)
                 {
-                	NLTreeRow.this.tree.linkClicked(cycle, node);
+                	ListTreeRow.this.tree.linkClicked(cycle, node);
                 }   
             };
             link.add(new Label("label", String.valueOf(nodeModel.getUserObject())));
