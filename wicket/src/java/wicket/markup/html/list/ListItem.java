@@ -176,7 +176,7 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns a link that will remove this listItem from the listView t hat
+	 * Returns a link that will remove this ListItem from the ListView that
 	 * holds it.
 	 * 
 	 * @param componentName
