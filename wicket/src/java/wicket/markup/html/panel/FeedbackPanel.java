@@ -124,6 +124,6 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	{
 		// Force re-rendering of the list
 		messageListView.setModel(getPage().getFeedbackMessages().model(form));
-		messageListView.invalidateModel();
+		messageListView.modelChangedStructure();
 	}
 }

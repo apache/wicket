@@ -101,7 +101,7 @@ public class UploadPage extends WicketExamplePage
 	{
 		files.clear();
 		files.addAll(Arrays.asList(uploadFolder.listFiles()));
-		fileListView.invalidateModel();
+		fileListView.modelChangedStructure();
 	}
 
 	/**

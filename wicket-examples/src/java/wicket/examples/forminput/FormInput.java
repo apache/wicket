@@ -83,7 +83,9 @@ public class FormInput extends WicketExamplePage
 		getSession().setLocale(locale);
 	}
 
-	/** Form for input. */
+	/**
+	 * Form for collecting input. 
+	 */
 	private static class InputForm extends Form
 	{
 		/**

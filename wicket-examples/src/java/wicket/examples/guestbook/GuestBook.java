@@ -107,7 +107,7 @@ public final class GuestBook extends WicketExamplePage
 
 			// Invalidate the commentListView's model since a structural change
 			// was made to the comment list (we added an entry)
-			commentListView.invalidateModel();
+			commentListView.modelChangedStructure();
 
 			// Clear out the text component
 			comment.setText("");

@@ -179,7 +179,7 @@ public class GuestBook2 extends WicketExamplePage
 			}
 
 			// Tell list view that its model was changed
-			commentListView.invalidateModel();
+			commentListView.modelChangedStructure();
 		}
 	}
 }

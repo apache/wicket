@@ -114,7 +114,7 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public final List getList()
 	{
-		List list = (List)getModelObject();
+		final List list = (List)getModelObject();
 		return (list != null ? list : Collections.EMPTY_LIST);
 	}
 
@@ -182,11 +182,11 @@ public abstract class ListView extends WebMarkupContainer
 	/**
 	 * Indicates a structural change to the ListView model.
 	 */
-	public void invalidateModel()
+	public void modelChangedStructure()
 	{
 		// Now that a structural change has been made to the model,
 		// All pages using the same model should be expired
-		super.invalidateModel();
+		super.modelChangedStructure();
 
 		// Remove child listItems from listView since they came
 		// from the old and now invalid model

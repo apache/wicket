@@ -42,7 +42,6 @@ public class ListItem extends WebMarkupContainer
 	 */
 	private class ListItemModel extends Model
 	{
-
 		/**
 		 * @see wicket.model.Model#getObject()
 		 */
@@ -56,7 +55,7 @@ public class ListItem extends WebMarkupContainer
 		 */
 		public void setObject(Object object)
 		{
-			throw new WicketRuntimeException("Can't set an object through a listitem");
+			throw new WicketRuntimeException("Can't set an object through a ListItem");
 		}
 	}
 
@@ -152,9 +151,9 @@ public class ListItem extends WebMarkupContainer
 		{
 			public void onClick()
 			{
-				// Swap listeItem and invalidate listView
+				// Swap list items and invalidate listView
 				Collections.swap(listView.getList(), index, index + 1);
-				listView.invalidateModel();
+				listView.modelChangedStructure();
 			}
 		};
 
@@ -182,7 +181,7 @@ public class ListItem extends WebMarkupContainer
 			{
 				// Swap listItems and invalidate listView
 				Collections.swap(listView.getList(), index, index - 1);
-				listView.invalidateModel();
+				listView.modelChangedStructure();
 			}
 		};
 
@@ -210,7 +209,7 @@ public class ListItem extends WebMarkupContainer
 			{
 				// Remove listItem and invalidate listView
 				listView.getList().remove(index);
-				listView.invalidateModel();
+				listView.modelChangedStructure();
 			}
 		};
 	}

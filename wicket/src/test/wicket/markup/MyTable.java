@@ -70,7 +70,7 @@ public class MyTable extends ListView
         
         if (this.findParent(Page.class) != null)
         {
-            this.invalidateModel();
+            this.modelChangedStructure();
         }
     }
 }
