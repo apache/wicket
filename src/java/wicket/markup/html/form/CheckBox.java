@@ -93,7 +93,7 @@ public class CheckBox extends FormComponent
 			}
 			catch (StringValueConversionException e)
 			{
-				throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"");
+				throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"", e);
 			}
 		}
 
