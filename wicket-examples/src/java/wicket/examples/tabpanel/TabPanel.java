@@ -6,6 +6,7 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.AttributeModifier;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -194,7 +195,7 @@ public class TabPanel extends Panel
 		final TabPanelModel model = (TabPanelModel) tabs.get(index);
 		if (!model.isEnabled())
 		{
-			throw new RuntimeException("Tab is disabled.");
+			throw new WicketRuntimeException("Tab is disabled.");
 		}
 
 		if (model.isSelected())
@@ -224,7 +225,7 @@ public class TabPanel extends Panel
 		final TabPanelModel model = (TabPanelModel) tabs.get(index);
 		if (model.isSelected())
 		{
-			throw new RuntimeException("Kan geselecteerde tab niet disabelen.");
+			throw new WicketRuntimeException("Kan geselecteerde tab niet disabelen.");
 		}
 
 		model.setEnabled(false);
@@ -249,7 +250,7 @@ public class TabPanel extends Panel
 		final TabPanelModel model = (TabPanelModel) tabs.get(index);
 		if (model.isSelected())
 		{
-			throw new RuntimeException("Kan geselecteerde tab niet disabelen.");
+			throw new WicketRuntimeException("Kan geselecteerde tab niet disabelen.");
 		}
 
 		// if selected enabled must be true

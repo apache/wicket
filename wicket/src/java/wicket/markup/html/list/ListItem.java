@@ -20,6 +20,7 @@ package wicket.markup.html.list;
 
 import java.util.Collections;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.Model;
@@ -191,7 +192,7 @@ public class ListItem extends HtmlContainer
 		 */
 		public void setObject(Object object)
 		{
-			throw new RuntimeException("Can't set an object through a listitem");
+			throw new WicketRuntimeException("Can't set an object through a listitem");
 		}
 
 		/**
