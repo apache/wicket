@@ -106,6 +106,8 @@ public class PreviewComponentTagRemover implements IMarkupFilter
             // tag, must be it's corresponding close tag.
             if (closeTag.closes(openTag))
             {
+                // Component's named "_ignore_" will be ignored by MarkupParser
+                // and not added to the Markup.
                 openTag.setComponentName("_ignore_");
                 return openTag;
             }
