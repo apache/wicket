@@ -1,24 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- * 
- * ==============================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-/*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -46,50 +27,40 @@ import wicket.markup.html.form.FormComponent;
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
  * When a FileInput component is nested in a
- * {@link wicket.markup.html.form.upload.UploadForm}, its model is updated
- * with the {@link org.apache.commons.fileupload.FileItem} for this component.
- *
+ * {@link wicket.markup.html.form.upload.UploadForm}, its model is updated with
+ * the {@link org.apache.commons.fileupload.FileItem}for this component.
+ * 
  * @author Eelco Hillenius
  */
-public class FileInput extends FormComponent
+public class FileInputField extends FormComponent
 {
 	/**
-	 * Construct.
-	 * @param name name of the component
+	 * @see wicket.Component#Component(String)
 	 */
-	public FileInput(String name)
+	public FileInputField(String name)
 	{
 		super(name);
 	}
 
 	/**
-	 * Construct.
-	 * @param name name of the component
-	 * @param object the model; this model will be updated with an instance of
-	 * 		{@link org.apache.commons.fileupload.FileItem} when an upload for this
-	 * 		component happens
+	 * @see wicket.Component#Component(String, Serializable)
 	 */
-	public FileInput(String name, Serializable object)
+	public FileInputField(String name, Serializable object)
 	{
 		super(name, object);
 	}
 
 	/**
-	 * Construct.
-	 * @param name name of the component
-	 * @param object the model; this model will be updated with an instance of
-	 * 		{@link org.apache.commons.fileupload.FileItem} when an upload for this
-	 * 		component happens
-	 * @param expression ognl expression that works on the model
+	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
-	public FileInput(String name, Serializable object, String expression)
+	public FileInputField(String name, Serializable object, String expression)
 	{
 		super(name, object, expression);
 	}
 
 	/**
 	 * FileInputs cannot be persisted; returns false.
-	 *
+	 * 
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
 	protected boolean supportsPersistence()
@@ -102,10 +73,10 @@ public class FileInput extends FormComponent
 	 */
 	protected void updateModel()
 	{
-		MultipartWebRequest multipartWebRequest = ((MultipartWebRequest)getRequest());
-		FileItem item = multipartWebRequest.getFile(getPath());
+		final MultipartWebRequest multipartWebRequest = ((MultipartWebRequest)getRequest());
+		final FileItem item = multipartWebRequest.getFile(getPath());
 
-		// only update the model when there is a file (larger than zero bytes
+		// only update the model when there is a file (larger than zero bytes)
 		if (item != null && item.getSize() > 0)
 		{
 			setModelObject(item);

@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -28,7 +27,7 @@ import wicket.protocol.http.WebRequest;
 
 /**
  * Form for handling (file) uploads with multipart requests. Use this with
- * {@link wicket.markup.html.form.upload.FileInput} components. You can attach
+ * {@link wicket.markup.html.form.upload.FileInputField}components. You can attach
  * mutliple FileInput fields for muliple file uploads.
  * 
  * @author Eelco Hillenius
@@ -37,20 +36,15 @@ import wicket.protocol.http.WebRequest;
 public abstract class UploadForm extends Form
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param name component name
+	 * @see wicket.Component#Component(String)
 	 */
 	public UploadForm(String name)
 	{
 		super(name);
 	}
-	
+
 	/**
-	 * Construct.
-	 * 
-	 * @param name component name
-	 * @param validationFeedback validation error handler
+	 * @see Form#Form(String, IValidationFeedback)
 	 */
 	public UploadForm(String name, IValidationFeedback validationFeedback)
 	{
@@ -58,17 +52,17 @@ public abstract class UploadForm extends Form
 	}
 
 	/**
-	 * Wraps the servlet request in a multipart request and sets it as
-	 * the current request.
-	 *
+	 * Wraps the servlet request in a multipart request and sets it as the
+	 * current request.
+	 * 
 	 * @see wicket.markup.html.form.Form#onFormSubmitted()
 	 */
 	public void onFormSubmitted()
 	{
 		// Change the request to a multipart web request so parameters are
 		// parsed out correctly
-		HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
-		MultipartWebRequest multipartWebRequest = new MultipartWebRequest(request);
+		final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
+		final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(request);
 		RequestCycle.get().setRequest(multipartWebRequest);
 
 		// Now do normal form submit validation processing
@@ -76,9 +70,6 @@ public abstract class UploadForm extends Form
 	}
 
 	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag the component tag
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
 	protected final void onComponentTag(final ComponentTag tag)
@@ -88,7 +79,7 @@ public abstract class UploadForm extends Form
 	}
 
 	/**
-	 * @see wicket.markup.html.form.Form#onSubmit()
+	 * @see Form#onSubmit()
 	 */
 	protected abstract void onSubmit();
 }
