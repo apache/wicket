@@ -62,7 +62,7 @@ public class FormInputTest extends WebTestCase
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite();
-		suite.addTest(new FormInputTest("testHelloWorld"));
+		suite.addTestSuite(FormInputTest.class);
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
