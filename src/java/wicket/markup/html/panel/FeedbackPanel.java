@@ -136,13 +136,10 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#onReset()
+	 * @see Component#onEndRender()
 	 */
-	protected void onReset()
+	protected void onEndRender()
 	{
-		// Reset container
-		super.onReset();
-
 		// Clear feedback
 		messageListView.getList().clear();
 

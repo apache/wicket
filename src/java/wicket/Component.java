@@ -745,41 +745,47 @@ public abstract class Component implements Serializable, IConverterSource
 	/**
 	 * Performs a render of this component.
 	 */
-	public void render()
+	public final void render()
 	{
-		// Get request cycle to render to
-		final RequestCycle cycle = getRequestCycle();
-
-		// Save original Response
-		final Response originalResponse = cycle.getResponse();
-
-		// If component is not visible, set response to NullResponse
-		if (!isVisible())
+		// Rendering is beginning
+		onBeginRender();
+		
+		try
 		{
-			cycle.setResponse(NullResponse.getInstance());
+			// Get request cycle to render to
+			final RequestCycle cycle = getRequestCycle();
+	
+			// Save original Response
+			final Response originalResponse = cycle.getResponse();
+	
+			// If component is not visible, set response to NullResponse
+			if (!isVisible())
+			{
+				cycle.setResponse(NullResponse.getInstance());
+			}
+	
+			// Synchronize on model lock while rendering to help ensure
+			// that the model doesn't change while its being read
+			synchronized (getModelLock())
+			{
+				// Call implementation to render component
+				onRender();
+			}
+	
+			// Restore original response
+			cycle.setResponse(originalResponse);
 		}
-
-		// Synchronize on model lock while rendering to help ensure
-		// that the model doesn't change while its being read
-		synchronized (getModelLock())
+		finally
 		{
-			// Call implementation to render component
-			onRender();
+			// Increase render count for component
+			rendering++;
+
+			// Rendering has completed
+			onEndRender();
+			
+			// Detach models now that rendering is fully completed
+			detachModels();
 		}
-
-		// Restore original response
-		cycle.setResponse(originalResponse);
-
-		// Reset component since rendering is finished
-		onRendered();
-	}
-
-	/**
-	 * Resets component for future requests
-	 */
-	public void reset()
-	{
-		onReset();
 	}
 
 	/**
@@ -1029,6 +1035,13 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * This method is called immediately before a component is rendered
+	 */	
+	protected void onBeginRender()
+	{
+	}
+
+	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -1052,6 +1065,13 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * This method is called after rendering is completed
+	 */
+	protected void onEndRender()
+	{
+	}
+
+	/**
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 */
 	protected void onModelChanged()
@@ -1062,27 +1082,6 @@ public abstract class Component implements Serializable, IConverterSource
 	 * Implementation that renders this component.
 	 */
 	protected abstract void onRender();
-
-	/**
-	 * Called when this component is finished rendering.
-	 */
-	protected void onRendered()
-	{
-		// Increase render count for component
-		rendering++;
-
-		// Detach any detachable model from this component
-		detachModel();
-
-		// Also detach models from any contained attribute modifiers
-		if (attributeModifiers != null)
-		{
-			for (Iterator iterator = attributeModifiers.iterator(); iterator.hasNext();)
-			{
-				((AttributeModifier)iterator.next()).detachModel();
-			}
-		}
-	}
 
 	/**
 	 * Called when component is being reset for future use.
@@ -1365,6 +1364,24 @@ public abstract class Component implements Serializable, IConverterSource
 			log.debug("replacing parent " + this.parent + " with " + parent);
 		}
 		this.parent = parent;
+	}
+
+	/**
+	 * Detaches all models
+	 */
+	private final void detachModels()
+	{
+		// Detach any detachable model from this component
+		detachModel();
+
+		// Also detach models from any contained attribute modifiers
+		if (attributeModifiers != null)
+		{
+			for (Iterator iterator = attributeModifiers.iterator(); iterator.hasNext();)
+			{
+				((AttributeModifier)iterator.next()).detachModel();
+			}
+		}
 	}
 
 	/**

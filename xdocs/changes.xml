@@ -9,6 +9,9 @@
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
       <action type="update" dev="Jonathan Locke" issue="">
+	   Tightened up semantics of rendering/response overrides, which were much too loose.  You can no longer override render() because that method is now final.  You can change the rendering process by overriding onRender().  You can do something before rendering by overriding onBeginRender().  You can do something after rendering by overriding onEndRender().  And you can do something like invalidate the session on sign-out by overriding Page.onEndRequest().  It is not necessary to call the super implementation on Component, MarkupContainer or Page.  These are now coded defensively, assuming programmers will forget to do this.  The only place where you might actually need to do this with a core component would be if you subclassed FeedbackPanel, which overrides onEndRender() to clear out its message components... which makes me wonder if we don't need an auto-reset feature on ListViews...
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Changed clustering code so that PageState records are saved as independent attributes.  This should permit correct failover.
       </action>
       <action type="update" dev="Jonathan Locke" issue="">

@@ -421,7 +421,7 @@ public abstract class Session implements Serializable
 	 * Updates this session using changed state information that may have been
 	 * replicated to this node on a cluster.
 	 */
-public final void updateSession()
+	public final void updateSession()
 	{
 		// Get any replicated state from the session
 		final State state = (State)getAttribute("state");
@@ -486,6 +486,7 @@ public final void updateSession()
 			}
 		}
 	}
+
 	/**
 	 * Adds page to session if not already added.
 	 * 
@@ -539,7 +540,7 @@ public final void updateSession()
 	{
 		return page.newPageState();
 	}
-	
+
 	/**
 	 * @param name
 	 *            The name of the attribute to remove
