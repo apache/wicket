@@ -83,17 +83,6 @@ public class SharedResource extends Resource
 	}
 
 	/**
-	 * Adds this shared resource to the given application
-	 * 
-	 * @param application
-	 *            The application
-	 */
-	public final void add(final Application application)
-	{
-		application.addResource(scope, name, locale, style, this);
-	}
-
-	/**
 	 * @return Returns the locale.
 	 */
 	public final Locale getLocale()
