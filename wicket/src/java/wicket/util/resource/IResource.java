@@ -19,11 +19,21 @@
 package wicket.util.resource;
 
 /**
+ * Interface to a streamed resource of a given type.  The resource 
+ * data itself can be read from the stream returned by getInputStream().  
+ * Subsequently, the resource can be closed with a call to close().
+ * The type of content in the stream can be determined by calling 
+ * getExtension(), which returns an extension String such as "jpeg" 
+ * or "html".
+ * 
+ * @see wicket.util.resource.IResourceStream#getInputStream()
+ * @see wicket.util.resource.IResourceStream#close()
  * @author Jonathan Locke
  */
 public interface IResource extends IResourceStream
-{ // TODO finalize javadoc
+{
     /**
+     * Gets the extension of this resource
      * @return The extension of this resource, such as "jpeg" or "html"
      */
     public String getExtension();
