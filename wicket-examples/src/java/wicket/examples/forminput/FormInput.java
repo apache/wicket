@@ -111,7 +111,7 @@ public class FormInput extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					InputForm.this.getModel().setObject(new FormInputModel());
+					InputForm.this.setModelObject(new FormInputModel());
 				}
 			}.add(new Image("resetButtonImage")));
 		}
@@ -122,7 +122,7 @@ public class FormInput extends WicketExamplePage
 		public void onSubmit()
 		{
 			// Form validation successful. Display message showing edited model.
-			info("Saved model " + getModelObject());
+			info("Saved model " + getModel());
 		}
 	}
 }

@@ -86,6 +86,16 @@ abstract class AbstractTextComponent extends FormComponent
 		// Store the user input for form repopulation
 		invalidInput = getInput();
 	}
+
+	/**
+	 * @see wicket.Component#onModelChanged()
+	 */
+	protected void onModelChanged()
+	{
+		// If the model for this text field changed, we should make it valid
+		// again because there can't be any invalid input for it anymore.
+		valid();
+	}
  
     /**
      * @see wicket.markup.html.form.FormComponent#onValid()

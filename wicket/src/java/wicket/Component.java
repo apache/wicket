@@ -35,6 +35,7 @@ import wicket.model.IConverterSource;
 import wicket.model.IConvertible;
 import wicket.model.IDetachableModel;
 import wicket.model.IModel;
+import wicket.model.INestedModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.response.NullResponse;
@@ -99,7 +100,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  */
 public abstract class Component implements Serializable, IConverterSource
-{	
+{
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
@@ -205,10 +206,12 @@ public abstract class Component implements Serializable, IConverterSource
 	 * 
 	 * <pre>
 	 * 
-	 *                 IModel model;
-	 *                 String expression;
-	 *                 ...
-	 *                 new MyComponent(name, new PropertyModel(model, expression));
+	 *  
+	 *                      IModel model;
+	 *                      String expression;
+	 *                      ...
+	 *                      new MyComponent(name, new PropertyModel(model, expression));
+	 *   
 	 *  
 	 * </pre>
 	 * 
@@ -219,10 +222,12 @@ public abstract class Component implements Serializable, IConverterSource
 	 * 
 	 * <pre>
 	 * 
-	 *                 Serializable model;
-	 *                 String expression;
-	 *                 ...
-	 *                 new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 *  
+	 *                      Serializable model;
+	 *                      String expression;
+	 *                      ...
+	 *                      new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 *   
 	 *  
 	 * </pre>
 	 * 
@@ -340,7 +345,7 @@ public abstract class Component implements Serializable, IConverterSource
 		// Failed to find component
 		return null;
 	}
-	
+
 	/**
 	 * @return The nearest markup container with associated markup
 	 */
@@ -355,7 +360,7 @@ public abstract class Component implements Serializable, IConverterSource
 			}
 			container = container.getParent();
 		}
-		
+
 		// This should never happen since Page always has associated markup
 		throw new WicketRuntimeException("Unable to find parent with associated markup");
 	}
@@ -719,6 +724,14 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * Called to indicate that the model for this component has been changed
+	 */
+	public final void modelChanged()
+	{
+		onModelChanged();
+	}
+
+	/**
 	 * Performs a render of this component.
 	 */
 	public void render()
@@ -751,6 +764,49 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * @param component
+	 *            The component to compare with
+	 * @return True if the given component's model is the same as this
+	 *         component's model.
+	 */
+	public final boolean sameRootModel(final Component component)
+	{
+		return sameRootModel(component.getModel());
+	}
+	
+	/**
+	 * @param model
+	 *            The model to compare with
+	 * @return True if the given component's model is the same as this
+	 *         component's model.
+	 */
+	public final boolean sameRootModel(final IModel model)
+	{
+		// Get the two models
+		IModel thisModel = getModel();
+		IModel thatModel = model;
+
+		// If both models are non-null they could be the same
+		if (thisModel != null && thatModel != null)
+		{
+			// Find most nested models
+			while (thisModel instanceof INestedModel)
+			{
+				thisModel = ((INestedModel)thisModel).getNestedModel();
+			}
+
+			while (thatModel instanceof INestedModel)
+			{
+				thatModel = ((INestedModel)thatModel).getNestedModel();
+			}
+
+			return thisModel == thatModel;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Sets the given model.
 	 * 
 	 * @param model
@@ -773,7 +829,10 @@ public abstract class Component implements Serializable, IConverterSource
 		{
 			((IConvertible)model).setConverterSource(this);
 		}
+
+		// Change model
 		this.model = (IModel)model;
+		modelChanged();
 		return this;
 	}
 
@@ -789,6 +848,7 @@ public abstract class Component implements Serializable, IConverterSource
 		if (model != null)
 		{
 			model.setObject(value);
+			modelChanged();
 		}
 	}
 
@@ -916,7 +976,8 @@ public abstract class Component implements Serializable, IConverterSource
 		}
 		catch (IllegalStateException e)
 		{
-			// happens when we're still in a constructor; just ignore that message part
+			// happens when we're still in a constructor; just ignore that
+			// message part
 			s = "";
 		}
 		if (!(this instanceof Page))
@@ -1000,6 +1061,13 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
+	 * Called anytime a model is changed via setModel or setModelObject.
+	 */
+	protected void onModelChanged()
+	{
+	}
+
+	/**
 	 * Processes the body.
 	 * 
 	 * @param markupStream
@@ -1063,7 +1131,7 @@ public abstract class Component implements Serializable, IConverterSource
 		onComponentTagBody(markupStream, tag);
 
 		// Render close tag
-	    renderClosingComponentTag(markupStream, tag);
+		renderClosingComponentTag(markupStream, tag);
 	}
 
 	/**
@@ -1077,8 +1145,8 @@ public abstract class Component implements Serializable, IConverterSource
 	protected final void renderComponentTag(ComponentTag tag)
 	{
 		final ApplicationSettings settings = getApplication().getSettings();
-	    if (!(tag instanceof ComponentWicketTag) || !settings.getStripWicketTags())
-	    {
+		if (!(tag instanceof ComponentWicketTag) || !settings.getStripWicketTags())
+		{
 			// Apply attribute modifiers
 			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE))
 			{
@@ -1088,7 +1156,7 @@ public abstract class Component implements Serializable, IConverterSource
 					((AttributeModifier)it.next()).replaceAttibuteValue(tag);
 				}
 			}
-	
+
 			// Strip component name attribute if desired
 			if (settings.getStripComponentNames())
 			{
@@ -1096,10 +1164,10 @@ public abstract class Component implements Serializable, IConverterSource
 				tag = tag.mutable();
 				tag.removeComponentName(settings.getComponentNameAttribute());
 			}
-	
+
 			// Write the tag
 			getResponse().write(tag);
-	    }
+		}
 	}
 
 	/**

@@ -35,7 +35,7 @@ public interface IModel extends Serializable
 	/**
 	 * Gets the model object.
 	 * 
-	 * @return the model object
+	 * @return The model object
 	 */
 	public Object getObject();
 
@@ -43,7 +43,7 @@ public interface IModel extends Serializable
 	 * Sets the model object.
 	 * 
 	 * @param object
-	 *            the model object
+	 *            The model object
 	 */
 	public void setObject(Object object);
 }
