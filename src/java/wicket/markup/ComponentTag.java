@@ -25,8 +25,9 @@ import java.util.regex.Matcher;
 
 import wicket.Page;
 import wicket.PageParameters;
+import wicket.RenderException;
+import wicket.RequestCycle;
 import wicket.markup.html.link.ExternalPageLink;
-import wicket.util.lang.Classes;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -600,8 +601,9 @@ public final class ComponentTag extends MarkupElement
 
                 try
                 {
-                    automaticLinkPageClass = Classes.relativeClass(
-                            page.getClass().getPackage(), path);
+                    automaticLinkPageClass = RequestCycle.get().getApplication()
+                    	.getSettings().getPageFactory().getClassInstance(
+                    	        page.getClass().getPackage().getName() + "." + path);
 
                     if (parameters != null)
                     {
@@ -612,7 +614,7 @@ public final class ComponentTag extends MarkupElement
                         automaticLinkPageParameters = PageParameters.NULL;
                     }
                 }
-                catch (ClassNotFoundException e)
+                catch (RenderException e)
                 {
                     markupStream.throwMarkupException("Could not find page at " + path);
                 }

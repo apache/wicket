@@ -29,7 +29,6 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
 import wicket.Component;
 import wicket.IApplication;
 import wicket.IRedirectListener;
@@ -208,21 +207,10 @@ public class HttpRequestCycle extends RequestCycle
 
         if (pageClassName != null)
         {
-            try
-            {
-                final Class pageClass = Class.forName(pageClassName);
-
-                setPage(newPage(pageClass));
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new RenderException("Could not find page class '" + pageClassName + "'", e);
-            }
-            catch (RenderException e)
-            {
-                throw new RenderException("Could not create page '" + pageClassName + "'", e);
-            }
-
+            setPage(getPageFactory().newPage(
+                    pageClassName, 
+                    new PageParameters(this.getRequest().getParameterMap())));
+            
             return true;
         }
 
