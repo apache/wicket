@@ -41,9 +41,9 @@ import wicket.util.string.StringList;
  */
 public final class FeedbackMessages
 {
-
 	/** Thread local holder for the current FeedbackMessages. */
 	private static final ThreadLocal current = new ThreadLocal();
+    
 	/** Log. */
 	private static Log log = LogFactory.getLog(FeedbackMessages.class);
 
