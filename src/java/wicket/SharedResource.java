@@ -200,11 +200,11 @@ public class SharedResource extends Resource
 	}
 
 	/**
-	 * @see wicket.SharedResource#getResource()
+	 * @see wicket.SharedResource#getResourceStream()
 	 */
-	protected final IResourceStream getResource()
+	protected final IResourceStream getResourceStream()
 	{
-		return resource.getResource();
+		return resource.getResourceStream();
 	}
 
 	/**

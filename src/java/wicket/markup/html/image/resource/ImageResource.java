@@ -33,5 +33,5 @@ public abstract class ImageResource extends WebResource
 	/**
 	 * @return Gets the image resource to attach to the component.
 	 */
-	public abstract IResourceStream getResource();
+	public abstract IResourceStream getResourceStream();
 }

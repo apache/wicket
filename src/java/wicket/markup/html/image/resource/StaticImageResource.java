@@ -109,7 +109,7 @@ public class StaticImageResource extends ImageResource
 	/**
 	 * @return Gets the image resource for the component.
 	 */
-	public IResourceStream getResource()
+	public IResourceStream getResourceStream()
 	{
 		if (resource == null)
 		{

@@ -28,7 +28,7 @@ import wicket.util.resource.IResourceStream;
 public abstract class WebResource extends Resource
 {	
 	/**
-	 * @see Resource#getResource()
+	 * @see Resource#getResourceStream()
 	 */
-	protected abstract IResourceStream getResource();
+	protected abstract IResourceStream getResourceStream();
 }

@@ -76,7 +76,7 @@ public abstract class DynamicImageResource extends ImageResource
 	/**
 	 * @return Gets the image resource to attach to the component.
 	 */
-	public IResourceStream getResource()
+	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()
 		{
