@@ -590,9 +590,6 @@ public abstract class RequestCycle
 	 */
 	private void threadAttach()
 	{
-		// Restore the transient application association with the session
-		session.setApplication(application);
-
 		// Set this request cycle as the active request cycle for the
 		// session for easy access by the page being rendered and any
 		// components on that page
