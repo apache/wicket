@@ -18,6 +18,7 @@
 package wicket.util.convert.converters;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Base class for all number converters.
@@ -34,6 +35,7 @@ public abstract class NumberConverter extends AbstractConverter
 	 */
 	public final NumberFormat getNumberFormat()
 	{
+        final Locale locale = getLocale();
         if (numberFormat == null && locale != null)
         {
             numberFormat = NumberFormat.getIntegerInstance(locale);        	
