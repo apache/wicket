@@ -18,12 +18,16 @@
 package wicket;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import wicket.markup.MarkupInheritanceResolver;
 import wicket.markup.MarkupParser;
 import wicket.markup.html.form.encryption.ICrypt;
+import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
+import wicket.markup.html.image.resource.ImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
@@ -56,6 +60,7 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Application
 {
+
 	/** List of (static) ComponentResolvers */
 	private List componentResolvers = new ArrayList();
 
@@ -70,6 +75,8 @@ public abstract class Application
 
 	/** Name of application subclass. */
 	private final String name;
+	/** Map from image factory names to image factories */
+	private final Map nameToImageFactory = new HashMap();
 
 	/** Pages for application */
 	private final ApplicationPages pages = new ApplicationPages();
@@ -96,7 +103,22 @@ public abstract class Application
 
 		// Install default component resolvers
 		componentResolvers.add(new AutoComponentResolver());
-		componentResolvers.add(new MarkupInheritanceResolver());	
+		componentResolvers.add(new MarkupInheritanceResolver());
+
+		// Install button image resource factory
+		addImageResourceFactory(new DefaultButtonImageResourceFactory("buttonFactory"));
+	}
+
+	/**
+	 * Adds an image resource factory to the list of factories to consult when
+	 * generating images
+	 * 
+	 * @param imageFactory
+	 *            The image factory to add
+	 */
+	public void addImageResourceFactory(final ImageResourceFactory imageFactory)
+	{
+		nameToImageFactory.put(imageFactory.getName(), imageFactory);
 	}
 
 	/**
@@ -146,6 +168,16 @@ public abstract class Application
 	}
 
 	/**
+	 * @param name
+	 *            Name of image factory
+	 * @return The ImageResourceFactory with the given name.
+	 */
+	public ImageResourceFactory getImageResourceFactory(final String name)
+	{
+		return (ImageResourceFactory)nameToImageFactory.get(name);
+	}
+
+	/**
 	 * @return The application wide localizer instance
 	 */
 	public Localizer getLocalizer()
@@ -192,9 +224,6 @@ public abstract class Application
 	{
 		return new Iterator()
 		{
-			public void remove()
-			{
-			}
 
 			public boolean hasNext()
 			{
@@ -204,6 +233,9 @@ public abstract class Application
 			public Object next()
 			{
 				return null;
+			}
+			public void remove()
+			{
 			}
 		};
 	}
