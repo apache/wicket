@@ -18,6 +18,8 @@
  */
 package wicket.examples.springframework2;
 
+import wicket.contrib.utils.spring.SpringBeanModel;
+import wicket.contrib.utils.spring.SpringBeanPropertyModel;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 

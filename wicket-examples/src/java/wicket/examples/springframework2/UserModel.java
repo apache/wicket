@@ -19,6 +19,8 @@
 package wicket.examples.springframework2;
 
 import wicket.Component;
+import wicket.contrib.utils.spring.SpringAwareModel;
+import wicket.contrib.utils.spring.SpringBeanModel;
 
 /**
  * Simple example class to access the Spring managed User bean.
@@ -33,13 +35,13 @@ public class UserModel extends SpringAwareModel
      * Constructor
      * @param model The model
      */
-    public UserModel(SpringBeanModel model)
+    public UserModel(final SpringBeanModel model)
     {
         super(model);
     }
 
     /**
-     * @see wicket.examples.springframework2.SpringAwareModel#setObject(Component, Object)
+     * @see wicket.contrib.utils.spring.SpringAwareModel#setObject(Component, Object)
      */
     public void setObject(final Component component, final Object object)
     {
@@ -47,7 +49,7 @@ public class UserModel extends SpringAwareModel
     }
 
     /**
-     * @see wicket.examples.springframework2.SpringAwareModel#getObject(Component)
+     * @see wicket.contrib.utils.spring.SpringAwareModel#getObject(Component)
      */
     public Object getObject(final Component component)
     {

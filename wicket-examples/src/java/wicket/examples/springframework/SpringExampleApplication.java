@@ -18,13 +18,15 @@
  */
 package wicket.examples.springframework;
 
+import wicket.contrib.utils.spring.SpringApplication;
+
 /**
  * @author Juergen Donnerstag
  */
 public class SpringExampleApplication extends SpringApplication
 {
     /**
-     * @see wicket.examples.springframework.SpringApplication#initSettings()
+     * @see wicket.contrib.utils.spring.SpringApplication#initSettings()
      */
     public void initSettings()
     {

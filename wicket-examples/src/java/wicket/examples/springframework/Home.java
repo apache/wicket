@@ -22,13 +22,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
+import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 
 /**
  * Everybody's favorite example.
  * @author Jonathan Locke
  */
-public class Home extends BasePage
+public class Home extends WicketExamplePage
 {
 	private static Log log = LogFactory.getLog(Home.class);
 	
@@ -38,11 +39,6 @@ public class Home extends BasePage
      */
     public Home(final PageParameters parameters)
     {
-        super(parameters);
-        
-        // MyBean bean = (MyBean)this.getSpringApplicationContext().getBean();
-        // UserDao userDao = this.getUserDao();
-        
         add(new Label("message", "Hello world! Test: הצü"));
     }
 }

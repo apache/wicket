@@ -18,13 +18,13 @@
  */
 package wicket.examples.springframework2;
 
-import wicket.examples.springframework2.SpringApplication;
+import wicket.contrib.utils.spring.SpringApplication;
 import wicket.util.time.Duration;
 
 /**
  * Here are some short explanations:
  * I used your approach of a SpringApplicationController and a
- * SpringApplication. But you can also use the nromal deployment model of
+ * SpringApplication. But you can also use the normal deployment model of
  * Wicket, if you want to use the SpringBeanModel.
  *
  * I differ between the ApplicationContext of the DispatcherServlet and
@@ -71,7 +71,7 @@ public class SpringExampleApplication extends SpringApplication
 {
     /**
      * 
-     * @see wicket.examples.springframework.SpringApplication#initSettings()
+     * @see wicket.contrib.utils.spring.SpringApplication#initSettings()
      */
     public void initSettings()
     {

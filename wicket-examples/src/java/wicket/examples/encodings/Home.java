@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
+import wicket.contrib.utils.encoding.CharSetUtil;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 
@@ -57,7 +58,7 @@ public class Home extends WicketExamplePage
 		super.configureResponse();
 
 		final String encoding = "text/" + getMarkupType() + "; charset="
-				+ CharSetUtil.configureResponse(getRequestCycle());
+				+ CharSetUtil.getEncoding(getRequestCycle());
 
 		getResponse().setContentType(encoding);
 		getSession().setLocale(originalLocale);
