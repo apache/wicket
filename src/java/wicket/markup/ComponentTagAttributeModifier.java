@@ -42,7 +42,7 @@ import wicket.util.value.ValueMap;
  * be carried out.
  * <p>
  * Instances of this class should be added to components via the
- * {@link wicket.Component#addAttributeModifier(ComponentTagAttributeModifier)}
+ * {@link wicket.Component#add(ComponentTagAttributeModifier)}
  * method after the componet has been constucted.
  *
  * @author Chris Turner

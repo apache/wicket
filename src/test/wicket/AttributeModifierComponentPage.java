@@ -51,15 +51,15 @@ public class AttributeModifierComponentPage extends HtmlPage {
 
         // Lavel with override attribute modifier
         Label label2 = new Label("label2", new Model("Label 2"));
-        label2.addAttributeModifier(
+        label2.add(
             new ComponentTagAttributeModifier("class", new Model("overrideLabel")));
-        label2.addAttributeModifier(
+        label2.add(
             new ComponentTagAttributeModifier("unknown", new Model("invalid")));
         add(label2);
 
         // Lavel with attribute inserter
         Label label3 = new Label("label3", new Model("Label 3"));
-        label3.addAttributeModifier(
+        label3.add(
             new ComponentTagAttributeModifier("class", true, new IDetachableModel() {
                 private String text = null;
                 

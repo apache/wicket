@@ -598,7 +598,7 @@ public abstract class Component implements Serializable
      * @param modifier The attribute modifier to be added
      * @return this (to allow method call chaining)
      */
-    public final Component addAttributeModifier(final ComponentTagAttributeModifier modifier)
+    public final Component add(final ComponentTagAttributeModifier modifier)
     {
         if (attributeModifiers == null)
         {
