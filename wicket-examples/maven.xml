@@ -162,4 +162,23 @@
 		</ant:delete>
 		<ant:copy file="${maven.build.dir}/${maven.war.final.name}" todir="${maven.dist.bin.assembly.dir}" />
     </postGoal>
+	<postGoal name="dist:prepare-src-filesystem" >
+	    <ant:mkdir dir="${maven.dist.src.assembly.dir}/lib" />
+	    <j:forEach var="lib" items="${pom.artifacts}">
+			<j:set var="dep" value="${lib.dependency}" />
+			<j:if test="${dep.type=='jar'}">
+	            <j:choose>
+	                <j:when test="${dep.getProperty('endorsed')}">
+	                    <ant:copy 
+	                        todir="${maven.dist.src.assembly.dir}/lib/endorsed" 
+	                        file="${lib.path}" />
+	                </j:when>
+	                <j:otherwise>
+	                    <ant:copy todir="${maven.dist.src.assembly.dir}/lib" 
+	                        file="${lib.path}" />
+	                </j:otherwise>
+	            </j:choose>
+			</j:if>
+		</j:forEach>
+	</postGoal>
 </project>
