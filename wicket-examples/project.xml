@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <project>
   <extend>../Wicket/project.xml</extend>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>0.9.16-beta</currentVersion>
+  <currentVersion>0.9.17-beta</currentVersion>
   <package>wicket.examples</package>
   <inceptionYear>2004</inceptionYear>
   <description>Example for web framework Wicket.</description>
@@ -15,6 +15,11 @@
       <name>0.9.15-beta</name>
       <tag>WICKET_R_0_9_15_BETA</tag>
     </version>
+    <version>
+      <id>0.9.17-beta</id>
+      <name>0.9.17-beta</name>
+      <tag>WICKET_R_0_9_17_BETA</tag>
+    </version>
   </versions>
   <dependencies>
     <dependency>
@@ -22,7 +27,7 @@
       <artifactId>wicket</artifactId>
       <version>0.9.17-beta</version>
       <properties>
-    	<eclipse.dependency>true</eclipse.dependency>
+        <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
@@ -223,7 +228,9 @@
     <dependency>
       <groupId>groovy</groupId>
       <artifactId>groovy</artifactId>
-      <version>1.0-beta-7</version>  <!-- don't use 1.0-beta-8. It is uses an incompatible asm version. Incompatible with hibernate -->
+      <version>1.0-beta-7</version>
+      <!-- don't use 1.0-beta-8. It is uses an incompatible asm version. Incompatible with hibernate -->
+
       <jar>groovy-1.0-beta-7.jar</jar>
       <type>jar</type>
       <properties>
