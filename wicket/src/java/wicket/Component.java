@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
@@ -1153,7 +1154,7 @@ public abstract class Component implements Serializable, IConverterSource
 		onComponentTagBody(markupStream, tag);
 
 		// Render close tag
-		renderClosingComponentTag(markupStream, tag);
+	    renderClosingComponentTag(markupStream, tag);
 	}
 
 	/**
@@ -1166,27 +1167,30 @@ public abstract class Component implements Serializable, IConverterSource
 	 */
 	protected final void renderComponentTag(ComponentTag tag)
 	{
-		// Apply attribute modifiers
-		if (attributeModifiers != null && tag.getType() != XmlTag.CLOSE)
-		{
-			tag = tag.mutable();
-			for (Iterator it = attributeModifiers.iterator(); it.hasNext();)
-			{
-				((AttributeModifier)it.next()).replaceAttibuteValue(tag);
-			}
-		}
-
-		// Strip component name attribute if desired
 		final ApplicationSettings settings = getApplication().getSettings();
-		if (settings.getStripComponentNames())
-		{
-			// Get mutable copy of tag and remove component name
-			tag = tag.mutable();
-			tag.removeComponentName(settings.getComponentNameAttribute());
-		}
-
-		// Write the tag
-		getResponse().write(tag);
+	    if (!(tag instanceof ComponentWicketTag) || !settings.getStripWicketTag())
+	    {
+			// Apply attribute modifiers
+			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE))
+			{
+				tag = tag.mutable();
+				for (Iterator it = attributeModifiers.iterator(); it.hasNext();)
+				{
+					((AttributeModifier)it.next()).replaceAttibuteValue(tag);
+				}
+			}
+	
+			// Strip component name attribute if desired
+			if (settings.getStripComponentNames())
+			{
+				// Get mutable copy of tag and remove component name
+				tag = tag.mutable();
+				tag.removeComponentName(settings.getComponentNameAttribute());
+			}
+	
+			// Write the tag
+			getResponse().write(tag);
+	    }
 	}
 
 	/**

@@ -56,7 +56,7 @@ public class WicketParamTagHandler implements IMarkupFilter
     private IXmlPullParser xmlParser;
     
     /** True, if wicket param tags shall be removed from output */
-    private boolean stripWicketParamTag = true;
+    private boolean stripWicketTag = true;
     
     /**
      * Construct.
@@ -87,9 +87,9 @@ public class WicketParamTagHandler implements IMarkupFilter
      * Enable/disable removing Wicket param tags
      * @param strip True, if Wicket param tags shall be removed
      */
-    public void setStripWicketParamTag(final boolean strip)
+    public void setStripWicketTag(final boolean strip)
     {
-        this.stripWicketParamTag = strip;
+        this.stripWicketTag = strip;
     }
     
     /**
@@ -187,7 +187,7 @@ public class WicketParamTagHandler implements IMarkupFilter
 
         // If wicket param tags shall not be included in the output, than
         // go ahead and process the next one.
-        if (stripWicketParamTag == true)
+        if (stripWicketTag == true)
         {
             tag = (ComponentTag)parent.nextTag();
         }

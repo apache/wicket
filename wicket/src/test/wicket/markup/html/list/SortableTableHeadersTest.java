@@ -101,8 +101,10 @@ public class SortableTableHeadersTest extends TestCase
 		application.processRequestCycle();
 
 		// Check that redirect was set as expected and invoke it
+		// Check that wicket:border tag gets removed
 		Assert.assertTrue("Response should be a redirect", application.getServletResponse()
 				.isRedirect());
+		application.getSettings().setStripWicketTags(true);
 		redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToRedirectString(redirect);
