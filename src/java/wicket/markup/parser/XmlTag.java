@@ -123,24 +123,6 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Get the close tag for this tag.
-	 * 
-	 * @return Close tag for this tag
-	 */
-	public final XmlTag closeTag()
-	{
-		final XmlTag tag = new XmlTag();
-
-		tag.namespace = this.namespace;
-		tag.name = this.name;
-		tag.type = CLOSE;
-		tag.text = tag.toString();
-		tag.isMutable = true;
-
-		return tag;
-	}
-
-	/**
 	 * Gets a hashmap of this tag's attributes.
 	 * 
 	 * @return The tag's attributes
