@@ -1,11 +1,6 @@
 /*
-<<<<<<< TextField.java
- * $Id$ $Revision$
- * $Date$
-=======
  * $Id$ $Revision:
  * 1.10 $ $Date$
->>>>>>> 1.12
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
