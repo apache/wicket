@@ -54,19 +54,19 @@ import wicket.util.value.ValueMap;
 public class AttributeModifier implements Serializable
 {
 	/** Whether to add the attribute if it is not an attribute in the markup. */
-	private boolean addAttributeIfNotPresent;
+	private final boolean addAttributeIfNotPresent;
 
 	/** Attribute specification. */
-	private String attribute;
+	private final String attribute;
 
 	/** Modification information. */
 	private boolean enabled;
 
 	/** The pattern. */
-	private String pattern = null;
+	private final String pattern;
 
 	/** The model that is to be used for the replacement. */
-	private IModel replaceModel;
+	private final IModel replaceModel;
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model
@@ -245,15 +245,15 @@ public class AttributeModifier implements Serializable
 	{
 		if (enabled)
 		{
-			ValueMap attributes = tag.getAttributes();
-			Object replacementValue = getReplaceModel().getObject();
+			final ValueMap attributes = tag.getAttributes();
+			final Object replacementValue = getReplaceModel().getObject();
 
 			// Only do something when we have a replacement
 			if (replacementValue != null)
 			{
 				if (attributes.containsKey(attribute))
 				{
-					String value = attributes.get(attribute).toString();
+					final String value = attributes.get(attribute).toString();
 					if (pattern == null || value.matches(pattern))
 					{
 						attributes.put(attribute, replacementValue);
