@@ -260,5 +260,3 @@ public final class MarkupParser
         return Collections.unmodifiableList(list);
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////
