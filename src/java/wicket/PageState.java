@@ -28,7 +28,7 @@ import java.io.Serializable;
 public abstract class PageState implements Serializable
 {
 	// Access number
-	int accessNumber = Session.get().state.accessNumber++;
+	int accessNumber = Session.get().nextAccessNumber();
 
 	// This value will be true when the page is added and false on
 	// whatever server this object is replicated to
