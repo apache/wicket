@@ -12,35 +12,35 @@
     <inceptionYear>2004</inceptionYear>
     <package>com.voicetribe</package>
     <description>
-	    Wicket is a Java web application framework that takes simplicity, 
-	    separation of concerns and ease of development to a whole new level. Wicket 
-	    pages can be mocked up, previewed and later revised using standard WYSIWYG 
-	    HTML design tools. Dynamic content processing and form handling is all handled 
-	    in Java code using a Swing-like component model backed by POJO data beans that 
-	    can easily be persisted with frameworks like Hibernate.
+        Wicket is a Java web application framework that takes simplicity,
+        separation of concerns and ease of development to a whole new level. Wicket
+        pages can be mocked up, previewed and later revised using standard WYSIWYG
+        HTML design tools. Dynamic content processing and form handling is all handled
+        in Java code using a Swing-like component model backed by POJO data beans that
+        can easily be persisted with frameworks like Hibernate.
     </description>
     <shortDescription>a Java web application framework.</shortDescription>
     <url>http://wicket.sourceforge.net</url>
     <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
     <siteAddress>shell.sourceforge.net</siteAddress>
     <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
-	<repository>
-		<connection>scm:cvs:pserver:anoncvs@cvs.sourceforge.net:/cvsroot/wicket:Wicket</connection>
-		<developerConnection>scm:cvs:ext:{maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
-		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/Wicket</url>
-	</repository>
-	<versions>
-		<version>
-			<id>0.9.6-alpha</id>
-			<name>0.9.6-alpha</name>
-			<tag/>
-		</version>
-		<version>
-			<id>0.9.11-alpha</id>
-			<name>0.9.11-alpha</name>
-			<tag/>
-		</version>
-	</versions>
+    <repository>
+        <connection>scm:cvs:pserver:anoncvs@cvs.sourceforge.net:/cvsroot/wicket:Wicket</connection>
+        <developerConnection>scm:cvs:ext:{maven.username}@cvs.sourceforge.net:/cvsroot/wicket:Wicket</developerConnection>
+        <url>http://cvs.sourceforge.net/viewcvs.py/wicket/Wicket</url>
+    </repository>
+    <versions>
+        <version>
+            <id>0.9.6-alpha</id>
+            <name>0.9.6-alpha</name>
+            <tag/>
+        </version>
+        <version>
+            <id>0.9.11-alpha</id>
+            <name>0.9.11-alpha</name>
+            <tag/>
+        </version>
+    </versions>
     <mailingLists>
         <mailingList>
             <name>${pom.name} Dev List</name>
@@ -137,15 +137,15 @@
             <version>1.3.3</version>
             <properties/>
         </dependency>
-		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-			<version>1.0</version>
-			<url>http://jakarta.apache.org/commons/beanutils/</url>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
-		</dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.0</version>
+            <url>http://jakarta.apache.org/commons/beanutils/</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
@@ -185,6 +185,7 @@
         <report>maven-tasklist-plugin</report>
         <report>maven-javadoc-plugin</report>
         <report>maven-junit-report-plugin</report>
+        <report>maven-clover-plugin</report>
     </reports>
     <properties/>
 </project>
