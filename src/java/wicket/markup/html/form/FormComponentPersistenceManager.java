@@ -31,32 +31,36 @@ import wicket.util.time.Time;
 
 /**
  * THIS CLASS IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY
- * FRAMEWORK CLIENTS
+ * FRAMEWORK CLIENTS.<br/>
  * 
  * This is an attempt to abstract the implementation details of cookies away.
  * Wicket users (and developer) should not need to care about Cookies. In that
  * context the persister is responsible to store and retrieve FormComponent
- * data.
+ * data.<br/>
+ * 
+ * The persistence manager is responsible to store and retrieve a FormComponent's
+ * data by means of Cookies. That is, by means of the HTTP protocol the data are
+ * transferred to the client to be stored locally. And are transmitted from
+ * the client to the server whenever the Cookie's path matches the request
+ * URI. @see javax.servlet.http.Cookie for more details.
  * 
  * @author Juergen Donnerstag
  */
 public class FormComponentPersistenceManager implements IFormComponentPersistenceManager 
-{ // TODO finalize javadoc
-    /** Logger. */
+{
+    /** Logging */
     private static Log log = LogFactory.getLog(FormComponentPersistenceManager.class);
 
 	/**
 	 * (Protected) Constructor. Only Form should be able to instantiate a
 	 * persister. 
-	 * <p>
 	 */
 	protected FormComponentPersistenceManager() 
 	{
-
 	}
 
 	/**
-	 * Persister defaults are maintained centrally by the Application.
+	 * Persister defaults are maintained centrally by the Application. 
 	 * 
 	 * @return Persister default value
 	 */
@@ -75,7 +79,7 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	}
 
 	/**
-	 * Convinience method to get the http wicket.response.
+	 * Convinience method to get the http wicket response.
 	 * @return HttpResponse related to the RequestCycle
 	 */
 	private HttpResponse getResponse() 
@@ -87,9 +91,9 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	 * Convenience method. @see #saveComponent(FormComponent). Fills "missing"
 	 * parameters with defaults.
 	 * 
-	 * @param name The name of the FormCompoennt
-	 * @param value FormComponent's value
-	 * @return The cookie created
+	 * @param name The FormComponent's name
+	 * @param value The FormComponent's value
+	 * @return The cookie created, based on defaults and the params provided 
 	 */
 	public Cookie save(String name, String value) 
 	{
@@ -97,11 +101,13 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	}
 
 	/**
-	 * Convinience method.
-	 * @param name The name of the FormCompoennt
-	 * @param value FormComponent's value
-	 * @param path @see Cookie
-	 * @return The Cookie created
+	 * Convinience method. @see #saveComponent(FormComponent). Fills "missing"
+	 * parameters with defaults.
+	 * 
+	 * @param name The FormComponent's name
+	 * @param value The FormComponent's value
+	 * @param path @see javax.servlet.http.Cookie#setPath(java.lang.String) for details
+	 * @return The cookie created, based on defaults and the params provided 
 	 */
 	public Cookie save(String name, String value, String path) 
 	{
@@ -156,8 +162,11 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 
 
     /**
-	 * Retrieve a persisted Cookie by means of its name 
-	 * (FormComponet.getPageRelativePath())
+	 * Retrieve a persisted Cookie by means of its name which in wicket
+	 * context by default is the components page relative path   
+	 * (@see wicket.markup.html.form.FormComponent#getPageRelativePath()).
+	 * Be reminded that only if the cookie data have been provided by the 
+	 * client (browser), they'll be accessible by the server.
 	 * 
 	 * @param name The "primary key" to find the data
 	 * @return the cookie (if found), null if not found
@@ -201,9 +210,10 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 
 	/**
 	 * Convenience method to retrieve the value of a cookie right away.
+	 * 
 	 * @param name The "primary key" to find the data
 	 * @return The value related to the name (key) or null if a cookie
-	 * with the given name was not found
+	 *        with the given name was not found
 	 */
 	public String retrieveValue(String name) 
 	{
@@ -217,7 +227,7 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	}
 
 	/**
-	 * Remove data related to 'name' 
+	 * Remove data related to a FormComponent 
 	 * 
 	 * @param name The "primary key" of the data to be deleted
 	 * @return the cookie that was removed or null if none was found.
@@ -235,7 +245,7 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 
 	/**
 	 * Convenience method for deleting a cookie by name.
-     * Delete the cookie by setting its maximum age to zero
+     * Delete the cookie by setting its maximum age to zero.
 	 * 
 	 * @param cookie The cookie to delete
 	 */

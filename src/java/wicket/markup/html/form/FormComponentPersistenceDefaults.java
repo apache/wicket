@@ -19,14 +19,15 @@
 package wicket.markup.html.form;
 
 /**
- * This class is currently basically (excluding name, value and path) a copy of
- * Cookie. It provides default values for the persister.
+ * This class is basically (excluding name, value and path) a copy of
+ * Cookie (@see javax.servlet.http.Cookie). It provides default values 
+ * for the persistence manager (@see wicket,markup.html.form.IFormComponentPersistenceManager).
  * 
  * @author Juergen Donnerstag
  */
 public class FormComponentPersistenceDefaults
-{ // TODO finalize javadoc
-    /** max age that the component will be persisted. */
+{
+    /** max age that the component will be persisted in seconds. */
     private int maxAge = 3600 * 24 * 30; // 30 days
 
     /** cookie comment. */
@@ -42,7 +43,7 @@ public class FormComponentPersistenceDefaults
     private int version;
 
     /**
-     * Gets the max age.
+     * Gets the max age. After
      * @return the max age
      */
     public int getMaxAge()
@@ -51,8 +52,8 @@ public class FormComponentPersistenceDefaults
     }
 
     /**
-     * Sets the max age.
-     * @param maxAge the max age
+     * Sets the maximum age of the cookie in seconds.
+     * @param maxAge the max age in secs.
      */
     public void setMaxAge(int maxAge)
     {
@@ -78,8 +79,8 @@ public class FormComponentPersistenceDefaults
     }
 
     /**
-     * Gets the cookie domain.
-     * @return the cookie domain
+     * Gets the cookie domain name.
+     * @return the cookie domain name
      */
     public String getDomain()
     {
@@ -87,8 +88,8 @@ public class FormComponentPersistenceDefaults
     }
 
     /**
-     * Sets the cookie domain.
-     * @param domain the cookie domain
+     * Sets the cookie domain name.
+     * @param domain the cookie domain name
      */
     public void setDomain(String domain)
     {
@@ -96,7 +97,8 @@ public class FormComponentPersistenceDefaults
     }
 
     /**
-     * Gets whether this cookie is secure.
+     * Returns true if the browser is sending cookies only over a secure 
+     * protocol, or false if the browser can send cookies using any protocol.
      * @return whether this cookie is secure
      */
     public boolean isSecure()
@@ -105,8 +107,11 @@ public class FormComponentPersistenceDefaults
     }
 
     /**
-     * Sets whether this cookie is secure.
-     * @param secure whether this cookie is secure
+     * Indicates to the browser whether the cookie should only be sent using 
+     * a secure protocol, such as HTTPS or SSL.
+     * 
+     * @param secure  if true, sends the cookie from the browser to the server 
+     * 		using only when using a secure protocol; if false, sent on any protocol
      */
     public void setSecure(boolean secure)
     {
@@ -114,8 +119,13 @@ public class FormComponentPersistenceDefaults
     }
 
     /**
-     * Gets the cookie version.
-     * @return the cookie version
+     * Returns the version of the protocol this cookie complies with. Version 1 
+     * complies with RFC 2109, and version 0 complies with the original cookie 
+     * specification drafted by Netscape. Cookies provided by a browser use 
+     * and identify the browser's cookie version.
+     * 
+     * @return 0 if the cookie complies with the original Netscape specification; 
+     * 		1 if the cookie complies with RFC 2109
      */
     public int getVersion()
     {
@@ -123,11 +133,19 @@ public class FormComponentPersistenceDefaults
     }
 
     /**
-     * Sets the cookie version.
-     * @param version the cookie version
+     * Sets the version of the cookie protocol this cookie complies with. 
+     * Version 0 complies with the original Netscape cookie specification. 
+     * Version 1 complies with RFC 2109.<br/>
+     * Since RFC 2109 is still somewhat new, consider version 1 as experimental; 
+     * do not use it yet on production sites.
+     * 
+     * @param version 0 if the cookie should comply with the original Netscape 
+     * 		specification; 1 if the cookie should comply with RFC 2109
      */
     public void setVersion(int version)
     {
         this.version = version;
     }
 }
+
+//////////////////////////////////////// END OF FILE ////////////////////////
