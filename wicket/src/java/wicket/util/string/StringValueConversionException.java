@@ -20,15 +20,16 @@ package wicket.util.string;
 
 /**
  * Thrown when a string value cannot be converted to some type.
+ * 
  * @author Jonathan Locke
  */
 public final class StringValueConversionException extends Exception
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID. */
 	private static final long serialVersionUID = -3628074800660713435L;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * @param message exception message
 	 */
 	public StringValueConversionException(final String message)
@@ -37,7 +38,7 @@ public final class StringValueConversionException extends Exception
     }
 
 	/**
-	 * Construct.
+     * Constructor.
 	 * @param message exception message
 	 * @param cause exception cause
 	 */

@@ -24,11 +24,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An abstract base class for string list implementations
+ * An abstract base class for string list implementations.  Besides
+ * having an implementation for IStringSequence (iterator(), get(int index) 
+ * and size()), an AbstractStringList can be converted to a String array
+ * or a List of Strings.  
+ * <p>
+ * The total length of all Strings in the list can be determined by 
+ * calling totalLength().
+ * <p>
+ * Strings or a subset of Strings in the list can be formatted using three
+ * join() methods:
+ * <p>
+ * <ul>
+ *   <li>join(String) Joins strings together using a given separator
+ *   <li>join() Joins Strings using comma as a separator
+ *   <li>join(int first, int last, String) Joins a sublist of strings using
+ *       a given separator
+ * </ul>  
+ * 
  * @author Jonathan Locke
  */
 public abstract class AbstractStringList implements IStringSequence, Serializable
-{ // TODO finalize javadoc
+{
     /**
      * @return String iterator
      * @see wicket.util.string.IStringSequence#iterator()
