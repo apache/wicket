@@ -18,7 +18,6 @@
  */
 package wicket.examples.nested;
 
-import wicket.ApplicationSettings;
 import wicket.WebApplication;
 
 /**
@@ -33,7 +32,6 @@ public class NestedApplication extends WebApplication
      */
     public NestedApplication()
     {
-        ApplicationSettings settings = getSettings();
-        settings.setHomePage(Home.class);
+        getPages().setHomePage(Home.class);
     }
 }

@@ -75,7 +75,7 @@ public class SpringExampleApplication extends SpringApplication
      */
     public void initSettings()
     {
-        getSettings().setHomePage(SpringHtmlPage.class);
+        getPages().setHomePage(SpringHtmlPage.class);
         getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }

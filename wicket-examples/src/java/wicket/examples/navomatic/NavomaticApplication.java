@@ -32,9 +32,7 @@ public class NavomaticApplication extends WebApplication
      */
     public NavomaticApplication()
     {
-        ApplicationSettings settings = getSettings();
-
-        settings.setHomePage(Page1.class);
-        settings.setUnexpectedExceptionDisplay(ApplicationSettings.SHOW_NO_EXCEPTION_PAGE);
+        getPages().setHomePage(Page1.class);
+        getSettings().setUnexpectedExceptionDisplay(ApplicationSettings.SHOW_NO_EXCEPTION_PAGE);
     }
 }

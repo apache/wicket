@@ -50,7 +50,7 @@ public class AttributeModifierComponentTest extends TestCase
 	{
 		super.setUp();
 		application = new MockHttpApplication(null);
-		application.getSettings().setHomePage(AttributeModifierComponentPage.class);
+		application.getPages().setHomePage(AttributeModifierComponentPage.class);
 	}
 
 	/**

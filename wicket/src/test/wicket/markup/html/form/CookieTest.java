@@ -70,7 +70,7 @@ public class CookieTest extends TestCase
         
         application = new MockHttpApplication(null);
         final ApplicationSettings settings = application.getSettings();
-        settings.setHomePage(MockPage.class);
+        application.getPages().setHomePage(MockPage.class);
         application.setupRequestAndResponse();
 
         this.panel = new SignInPanel("panel")

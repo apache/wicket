@@ -21,7 +21,6 @@ package wicket.examples.signin2;
 import wicket.WebApplication;
 import wicket.util.time.Duration;
 
-
 /**
  * Forms example.
  * @author Jonathan Locke
@@ -33,10 +32,8 @@ public final class SignIn2Application extends WebApplication
      */
     public SignIn2Application()
     {
-        getSettings().setHomePage(Home.class);
-
-        Duration pollFreq = Duration.ONE_SECOND;
-        getSettings().setResourcePollFrequency(pollFreq);
+        getPages().setHomePage(Home.class);
+        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }
 

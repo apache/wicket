@@ -31,7 +31,7 @@ public final class SignInApplication extends WebApplication
      */
     public SignInApplication()
     {
-        getSettings().setHomePage(Home.class);
+        getPages().setHomePage(Home.class);
     }
 }
 

@@ -28,7 +28,7 @@ public class LinkomaticApplication extends WebApplication
 {
     public LinkomaticApplication()
     {
-        getSettings().setHomePage(Home.class);
+        getPages().setHomePage(Home.class);
     }
 }
 

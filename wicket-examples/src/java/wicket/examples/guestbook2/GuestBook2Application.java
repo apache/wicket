@@ -31,7 +31,7 @@ public class GuestBook2Application extends WebApplication
      */
     public GuestBook2Application()
     {
-        getSettings().setHomePage(Home.class);
+        getPages().setHomePage(Home.class);
     }
 }
 

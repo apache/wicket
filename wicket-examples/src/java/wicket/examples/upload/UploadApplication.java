@@ -33,9 +33,8 @@ public class UploadApplication extends WebApplication
      */
     public UploadApplication()
     {
-        getSettings().setHomePage(UploadPage.class);
-        Duration pollFreq = Duration.ONE_SECOND;
-        getSettings().setResourcePollFrequency(pollFreq);
+        getPages().setHomePage(UploadPage.class);
+        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }
 

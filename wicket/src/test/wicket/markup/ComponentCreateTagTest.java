@@ -45,7 +45,7 @@ public class ComponentCreateTagTest extends TestCase {
      */
     public void testRenderHomePage() throws Exception {
         application = new MockHttpApplication(null);
-        application.getSettings().setHomePage(ComponentCreateTag.class);
+        application.getPages().setHomePage(ComponentCreateTag.class);
         
         // Do the processing
         application.setupRequestAndResponse();
@@ -61,7 +61,7 @@ public class ComponentCreateTagTest extends TestCase {
      */
     public void testRenderHomePage_2() throws Exception {
         application = new MockHttpApplication(null);
-        application.getSettings().setHomePage(ComponentCreateTag_2.class);
+        application.getPages().setHomePage(ComponentCreateTag_2.class);
         
         // Do the processing
         application.setupRequestAndResponse();

@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 
+import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.markup.html.InternalErrorPage;
 import wicket.markup.html.PageExpiredErrorPage;
@@ -46,6 +47,9 @@ public class SpringApplication extends HttpApplication implements InitializingBe
     
 	/** Settings for the application */
     private ApplicationSettings settings;
+    
+    /** Common application pages */
+    private ApplicationPages pages;
     
     /** Spring application context */
     private ApplicationContext springContext;
@@ -79,6 +83,22 @@ public class SpringApplication extends HttpApplication implements InitializingBe
             log.error("Applications settings not yet defined: Check with Spring's web application context!");
         }
         return settings;
+    }
+
+    /**
+     * @return Returns the pages.
+     */
+    public ApplicationPages getPages()
+    {
+        return pages;
+    }
+
+    /**
+     * @param pages The pages to set.
+     */
+    public void setPages(ApplicationPages pages)
+    {
+        this.pages = pages;
     }
 
     /**
@@ -122,7 +142,7 @@ public class SpringApplication extends HttpApplication implements InitializingBe
     public void initSettings()
     {
         // Set default error pages for HTML markup
-        getSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class)
+        getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class)
         	.setInternalErrorPage(InternalErrorPage.class)
             .setStaleDataErrorPage(StaleDataErrorPage.class);
     }

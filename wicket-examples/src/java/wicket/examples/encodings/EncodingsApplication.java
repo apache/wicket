@@ -33,7 +33,7 @@ public class EncodingsApplication extends WebApplication
      */
     public EncodingsApplication()
     {
-        getSettings().setHomePage(Home.class);
+        getPages().setHomePage(Home.class);
 
         Duration pollFreq = Duration.ONE_SECOND;
 

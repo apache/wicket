@@ -165,7 +165,7 @@ public final class EditBook extends AuthenticatedHtmlPage
             final RequestCycle cycle = getRequestCycle();
             PageParameters parameters = new PageParameters();
             parameters.put("id", new Long(book.getId()));
-            cycle.setPage(cycle.getPageFactory().newPage(BookDetails.class, parameters));
+            cycle.setPage(getPageFactory().newPage(BookDetails.class, parameters));
             cycle.setRedirect(true);
         }
     }

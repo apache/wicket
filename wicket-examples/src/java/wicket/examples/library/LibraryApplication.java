@@ -31,7 +31,7 @@ public final class LibraryApplication extends WebApplication
      */
     public LibraryApplication()
     {
-        getSettings().setHomePage(Home.class);
+        getPages().setHomePage(Home.class);
         getSettings().setExceptionOnMissingResource(false);
     }
 }

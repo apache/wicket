@@ -32,7 +32,7 @@ public class HelloWorldApplication extends WebApplication
      */
     public HelloWorldApplication()
     {
-        getSettings().setHomePage(HelloWorld.class);
+        getPages().setHomePage(HelloWorld.class);
     }
 }
 

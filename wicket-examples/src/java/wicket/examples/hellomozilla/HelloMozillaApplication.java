@@ -18,7 +18,6 @@
  */
 package wicket.examples.hellomozilla;
 
-import wicket.ApplicationSettings;
 import wicket.WebApplication;
 
 
@@ -34,7 +33,6 @@ public class HelloMozillaApplication extends WebApplication
      */
     public HelloMozillaApplication()
     {
-        ApplicationSettings settings = getSettings();
-        settings.setHomePage(HelloMozilla.class);
+        getPages().setHomePage(HelloMozilla.class);
     }
 }

@@ -36,7 +36,7 @@ public class FormInputApplication extends WebApplication
     public FormInputApplication()
     {
         ApplicationSettings settings = getSettings();
-        settings.setHomePage(FormInput.class);
+        getPages().setHomePage(FormInput.class);
         settings.setResourcePollFrequency(Duration.ONE_SECOND);
 
         // show ?? markers when a message resource is not found

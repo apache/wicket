@@ -241,8 +241,6 @@ public abstract class RequestCycle
         this.session     = session;
         this.request     = request;
         this.response    = response;
-
-        session.setApplication(application);
         
         // Set this RequestCycle into ThreadLocal variable
         current.set(this); 
@@ -300,57 +298,36 @@ public abstract class RequestCycle
      */
     public final void render() throws ServletException
     {
-        try
+        // Serialize renderings on the session object so that only one page
+        // can be rendered at a time for a given session.
+        synchronized (session)
         {
-            // Render response for request cycle
-            handleRender();
-        }
-        catch (RuntimeException e)
-        {
-            // Render a page for the user
+            // Set this request cycle as the active request cycle for the
+            // session for easy access by the page being rendered and any
+            // components on that page
+            session.setRequestCycle(this);
+
             try
             {
-                // If application doesn't want debug info showing up for users
-                ApplicationSettings settings = application.getSettings();
-                if (settings.getUnexpectedExceptionDisplay() !=
-                    ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
-                {
-                    if (settings.getUnexpectedExceptionDisplay() ==
-                        ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
-                    {
-                        // use internal error page
-                        setPage(getPageFactory().newPage(settings.getInternalErrorPage()));
-                    }
-                    else
-                    {
-                        // otherwise show full details
-                        setPage(new ExceptionErrorPage(e));
-                    }
-                    // We generally want to redirect the response because we were
-                    // in the middle of rendering and the page may end up looking
-                    // like spaghetti otherwise
-                    redirectToPage(getPage());
-                }
+                // Render response for request cycle
+                handleRender();
             }
-            catch (RuntimeException ignored)
+            catch (RuntimeException e)
             {
-                // We ignore any problems trying to render the exception display
-                // page because we are just going to rethrow the exception anyway
-                // and the original problem will be displayed on the console by
-                // the container.  It's better this way because users of the framework
-                // will not want to be distracted by any internal problems rendering
-                // a runtime exception error display page.
+                handleRenderingException(e);
             }
+            finally
+            {
+                // Close the response
+                response.close();
+                
+                // Set the active request cycle back to null since we are
+                // done rendering the requested page
+                session.setRequestCycle(null);
 
-            // Rethrow error for console / container
-            throw e;
-        }
-        finally
-        {
-            release();
-            
-            // Close the response
-            response.close();
+                // Thread is done and should release thread local resources
+                threadDetach();
+            }
         }
     }
 
@@ -411,56 +388,13 @@ public abstract class RequestCycle
     /**
      * Convinience method to get the Page factory
      * 
-     * @return PageFactory from application settings
+     * @return DefaultPageFactory from application settings
      */
     public final IPageFactory getPageFactory()
     {
-        return getApplication().getSettings().getDefaultPageFactory();
+        return getSession().getPageFactory();
     }
     
-    /**
-     * Convenience method that sets page on response object.
-     * @param c The page class to render as a response
-     * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(Class)) instead
-     */
-    public final void setPage(final Class c)
-    {
-        this.page = getPageFactory().newPage(c, new PageParameters(request.getParameterMap()));
-    }
-
-    /**
-     * Convenience method that sets page on response object.
-     * @param classname The page class name (groovy file name) 
-     * 		to render as a response
-     * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(String)) instead
-     */
-    public final void setPage(final String classname)
-    {
-        this.page = getPageFactory().newPage(classname);
-    }
-
-    /**
-     * Convenience method that sets page on response object.
-     * @param c The page class to render as a response
-     * @param parameters Parameters to page
-     * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(Class, PageParameters)) instead
-     */
-    public final void setPage(final Class c, final PageParameters parameters)
-    {
-        this.page = getPageFactory().newPage(c, parameters);
-    }
-
-    /**
-     * Convenience method that sets page on response object.
-     * @param c The page class to render as a response
-     * @param page A "referer" page
-     * @deprecated use cycle.setPage(cycle.getPageFactory().newPage(Class, Page)) instead
-     */
-    public final void setPage(final Class c, final Page page)
-    {
-        this.page = getPageFactory().newPage(c, page);
-    }
-
     /**
      * Convenience method that sets page on response object.
      * @param page The page to render as a response
@@ -529,41 +463,6 @@ public abstract class RequestCycle
     protected abstract void handleRender();
 
     /**
-     * Creates a new page.
-     * @param pageClass The page class to instantiate
-     * @return The page
-     * @throws RenderException
-     */
-    protected final Page newPage(final Class pageClass)
-    {
-        return getPageFactory().newPage(
-                pageClass, new PageParameters(request.getParameterMap()));
-    }
-
-    /**
-     * Create a new page
-     * @param pageClassName The name of class may be a groovy file as well)
-     * @return The Page object created
-     */
-    protected final Page newPage(final String pageClassName)
-    {
-        return getPageFactory().newPage(
-                pageClassName, new PageParameters(request.getParameterMap()));
-    }
-
-    /**
-     * Creates a new instance of a page using the given class name.
-     * @param pageClass The class of page to create
-     * @param page Parameter to page constructor
-     * @return The new page
-     * @throws RenderException
-     */
-    protected final Page newPage(final Class pageClass, final Page page)
-    {
-        return getPageFactory().newPage(pageClass, page);
-    }
-
-    /**
      * Redirects browser to the given page.
      * @param page The page to redirect to
      */
@@ -576,7 +475,7 @@ public abstract class RequestCycle
      * as - e.g. when handling a form - there's a fat change we are comming back
      * for the rendering of it.
      */
-    private void release()
+    private void threadDetach()
     {
         if (getRedirect())
         {
@@ -608,6 +507,52 @@ public abstract class RequestCycle
         
         // Clear ThreadLocal reference
         current.set(null); 
+    }
+    
+    /**
+     * Sets up to handle a runtime exception thrown during rendering
+     * 
+     * @param e The exception
+     */
+    private void handleRenderingException(RuntimeException e)
+    {
+        // Render a page for the user
+        try
+        {
+            // If application doesn't want debug info showing up for users
+            ApplicationSettings settings = application.getSettings();
+            if (settings.getUnexpectedExceptionDisplay() !=
+                ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
+            {
+                if (settings.getUnexpectedExceptionDisplay() ==
+                    ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
+                {
+                    // use internal error page
+                    setPage(getPageFactory().newPage(application.getPages().getInternalErrorPage()));
+                }
+                else
+                {
+                    // otherwise show full details
+                    setPage(new ExceptionErrorPage(e));
+                }
+                // We generally want to redirect the response because we were
+                // in the middle of rendering and the page may end up looking
+                // like spaghetti otherwise
+                redirectToPage(getPage());
+            }
+        }
+        catch (RuntimeException ignored)
+        {
+            // We ignore any problems trying to render the exception display
+            // page because we are just going to rethrow the exception anyway
+            // and the original problem will be displayed on the console by
+            // the container.  It's better this way because users of the framework
+            // will not want to be distracted by any internal problems rendering
+            // a runtime exception error display page.
+        }
+
+        // Rethrow error for console / container
+        throw e;
     }
 }
 

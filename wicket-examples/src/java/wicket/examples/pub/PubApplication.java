@@ -29,6 +29,6 @@ public class PubApplication extends WebApplication
 {
     public PubApplication()
     {
-        getSettings().setHomePage(Home.class);
+        getPages().setHomePage(Home.class);
     }
 }

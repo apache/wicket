@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.text.MessageFormat;
 
 import wicket.RequestCycle;
-import wicket.Session;
 import wicket.markup.html.HtmlPage;
 import wicket.model.DetachableModel;
 import wicket.model.IModel;

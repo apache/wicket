@@ -34,7 +34,7 @@ public class DisplaytagApplication extends WebApplication
      */
     public DisplaytagApplication()
     {
-        getSettings().setHomePage(DisplaytagIndex.class);
+        getPages().setHomePage(DisplaytagIndex.class);
         getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }

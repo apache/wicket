@@ -42,7 +42,7 @@ public class WicketTagPanelTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         application = new MockHttpApplication(null);
-        application.getSettings().setHomePage(WicketPanelPage.class);
+        application.getPages().setHomePage(WicketPanelPage.class);
     }
 
     /**

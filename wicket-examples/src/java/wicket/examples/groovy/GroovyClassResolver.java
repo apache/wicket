@@ -27,8 +27,8 @@ import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
 
 import wicket.ApplicationSettings;
-import wicket.IApplication;
-import wicket.PageFactory;
+import wicket.DefaultClassResolver;
+import wicket.IClassResolver;
 import wicket.RenderException;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.Resource;
@@ -42,31 +42,38 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
  *  
  * @author Juergen Donnerstag
  */
-public class GroovyPageFactory extends PageFactory
+public class GroovyClassResolver implements IClassResolver
 {
     /** Logging */
-    private static final Log log = LogFactory.getLog(GroovyPageFactory.class);
+    private static final Log log = LogFactory.getLog(GroovyClassResolver.class);
     
-    /** cache: class name to groovy class; not sure GroovyClassLoader does it as well */
+    /** Caching map of class name to groovy class; not sure if GroovyClassLoader does it as well */
     private final Map classCache = new ConcurrentHashMap();
-
+    
+    /** Default class resolver */
+    private final IClassResolver defaultClassResolver = new DefaultClassResolver();
+    
+    /** Application settings */
+    private final ApplicationSettings settings;
+    
     /**
      * Constructor
-     * 
-     * @param application Wicket application object
+     * @param settings Application settings
      */
-    public GroovyPageFactory(final IApplication application)
+    public GroovyClassResolver(final ApplicationSettings settings)
     {
-        super(application);
+        this.settings = settings;
     }
-
+    
     /**
-     * Create an object of type 'classname'. First try standard java classes, 
-     * than groovy files. Groovy file name must be 'classname'.groovy.
+     * Resolve the class for the given classname.  First try standard java 
+     * classes, then groovy files. Groovy file name must be &lt;classname&gt;.groovy.
      * 
      * @param classname The object's class name 
+     * @return The class
+     * @see wicket.IClassResolver#resolveClass(String)
      */
-    public Class classForName(final String classname)
+    public Class resolveClass(final String classname)
     {
         // If definition already loaded, ...
         Class clazz = (Class) classCache.get(classname);
@@ -115,10 +122,10 @@ public class GroovyPageFactory extends PageFactory
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		if (cl == null)
 		{
-			cl = GroovyPageFactory.class.getClassLoader();
+			cl = GroovyClassResolver.class.getClassLoader();
 		}
 		
-        final GroovyWarClassLoader groovyCl = new GroovyWarClassLoader(cl);
+        final GroovyWarClassLoader groovyClassLoader = new GroovyWarClassLoader(cl);
         Class clazz = null;
         
         try 
@@ -126,7 +133,7 @@ public class GroovyPageFactory extends PageFactory
             final InputStream in = resource.getInputStream();
             if (in != null)
             {
-	            clazz = groovyCl.parseClass(in);
+	            clazz = groovyClassLoader.parseClass(in);
 	            if (clazz != null)
 	            {
 	                // this is necessary because with groovy the filename can be 
@@ -188,8 +195,6 @@ public class GroovyPageFactory extends PageFactory
      */
     private Class loadGroovyFileAndWatchForChanges(final String classname, final Resource resource)
     {
-        final ApplicationSettings settings = getApplication().getSettings();
-
         // Watch file in the future
         final ModificationWatcher watcher = settings.getResourceWatcher();
 

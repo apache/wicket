@@ -30,7 +30,7 @@ public class ImagesApplication extends WebApplication
 {
     public ImagesApplication()
     {
-        getSettings().setHomePage(Home.class);
+        getPages().setHomePage(Home.class);
 
         Duration pollFreq = Duration.ONE_SECOND;
 

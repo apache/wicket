@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 
+import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.markup.html.InternalErrorPage;
 import wicket.markup.html.PageExpiredErrorPage;
@@ -46,6 +47,9 @@ public class SpringApplication extends HttpApplication implements InitializingBe
 	/** Settings for the application */
     private ApplicationSettings settings;
     
+    /** Common application pages */
+    private ApplicationPages pages;
+
     /**
      * Constructor.
      */
@@ -78,6 +82,22 @@ public class SpringApplication extends HttpApplication implements InitializingBe
     }
 
     /**
+     * @return Returns the pages.
+     */
+    public ApplicationPages getPages()
+    {
+        return pages;
+    }
+
+    /**
+     * @param pages The pages to set.
+     */
+    public void setPages(ApplicationPages pages)
+    {
+        this.pages = pages;
+    }
+
+    /**
      * THIS IS NOT PART IF WICKET'S PUBLIC API. IT IS ONLY MEANT TO BE USED
      * BY SPRING TO SET DEFAULT VALUES FOR THE SETTINGS. 
      * 
@@ -101,7 +121,7 @@ public class SpringApplication extends HttpApplication implements InitializingBe
     public void initSettings()
     {
         // Set default error pages for HTML markup
-        getSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class)
+        getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class)
         	.setInternalErrorPage(InternalErrorPage.class)
             .setStaleDataErrorPage(StaleDataErrorPage.class);
     }
