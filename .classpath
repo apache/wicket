@@ -8,5 +8,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/log4j-1.2.8-src.jar" kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/ognl-2.6.5-src.jar" kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.5.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/commons-fileupload-1.0-src.jar" kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
