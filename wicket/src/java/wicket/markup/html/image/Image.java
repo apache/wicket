@@ -18,14 +18,11 @@
 package wicket.markup.html.image;
 
 import java.io.Serializable;
-import java.util.Locale;
 
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.image.resource.ImageResource;
-import wicket.markup.html.image.resource.StaticImageResource;
-import wicket.util.string.Strings;
+import wicket.markup.html.image.resource.LocalizedImageResource;
 
 /**
  * An image component represents a localizable image resource. The image name
@@ -43,10 +40,7 @@ public class Image extends AbstractImage
 	private static final long serialVersionUID = 555385780092173403L;
 
 	/** The image resource this image component references */
-	private ImageResource imageResource;
-
-	/** The locale of the image resource */
-	private Locale locale;
+	private LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -57,7 +51,7 @@ public class Image extends AbstractImage
 	}
 
 	/**
-	 * Constructs from a
+	 * Constructs an image directly from an image resource.
 	 * 
 	 * @param name
 	 *            See Component#Component(String)
@@ -68,7 +62,7 @@ public class Image extends AbstractImage
 	public Image(final String name, final ImageResource imageResource)
 	{
 		super(name);
-		this.imageResource = imageResource;
+		this.localizedImageResource.setImageResource(imageResource);
 	}
 
 	/**
@@ -92,7 +86,7 @@ public class Image extends AbstractImage
 	 */
 	public String getResourcePath()
 	{
-		return imageResource.getPath();
+		return localizedImageResource.getImageResource().getPath();
 	}
 
 	/**
@@ -100,41 +94,7 @@ public class Image extends AbstractImage
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		// If locale has changed from the initial locale used to attach image
-		// resource, then we need to reload the resource in the new locale
-		if (locale != null && locale != getLocale())
-		{
-			imageResource = null;
-		}
-
-		// Need to load image resource for this component?
-		if (imageResource == null)
-		{
-			final String modelString = getModelObjectAsString();
-			final String resourcePath;
-			if (Strings.isEmpty(modelString))
-			{
-				resourcePath = tag.getString("src");
-			}
-			else
-			{
-				resourcePath = modelString;
-			}
-
-			final Package basePackage = findParentWithAssociatedMarkup().getClass().getPackage();
-			this.imageResource = StaticImageResource.get(basePackage, resourcePath, getLocale(),
-					getStyle());
-
-			if (this.imageResource == null)
-			{
-				throw new WicketRuntimeException("Unable to find image resource [basePackage = "
-						+ basePackage + ", resourcePath = " + resourcePath + ", locale = "
-						+ getLocale() + ", style = " + getStyle() + "]");
-			}
-
-			this.locale = getLocale();
-		}
-
+		localizedImageResource.loadImageResource(tag);
 		super.onComponentTag(tag);
 	}
 

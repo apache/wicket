@@ -54,7 +54,7 @@ public class Button extends FormComponent
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void onComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Must be attached to an input tag
 		checkComponentTag(tag, "input");

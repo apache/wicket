@@ -15,15 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.extensions.markup.html.image.resource;
+package wicket.markup.html.image.resource;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-
-import wicket.markup.html.image.resource.RenderedDynamicImageResource;
 
 
 /**
@@ -32,13 +30,13 @@ import wicket.markup.html.image.resource.RenderedDynamicImageResource;
  * 
  * @author Jonathan Locke
  */
-public class ButtonImageResource extends RenderedDynamicImageResource
+public class DefaultButtonImageResource extends RenderedDynamicImageResource
 {
 	/** The default height for button images */
-	private static int defaultHeight = 32;
+	private static int defaultHeight = 26;
 
 	/** The default width for button images */
-	private static int defaultWidth = 80;
+	private static int defaultWidth = 74;
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 5934721258765771884L;
@@ -70,7 +68,7 @@ public class ButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public static void setDefaultHeight(int defaultHeight)
 	{
-		ButtonImageResource.defaultHeight = defaultHeight;
+		DefaultButtonImageResource.defaultHeight = defaultHeight;
 	}
 
 	/**
@@ -79,7 +77,7 @@ public class ButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public static void setDefaultWidth(int defaultWidth)
 	{
-		ButtonImageResource.defaultWidth = defaultWidth;
+		DefaultButtonImageResource.defaultWidth = defaultWidth;
 	}
 
 	/**
@@ -90,7 +88,7 @@ public class ButtonImageResource extends RenderedDynamicImageResource
 	 * @param height
 	 *            Height of image in pixels
 	 */
-	public ButtonImageResource(final String label, int width, int height)
+	public DefaultButtonImageResource(final String label, int width, int height)
 	{
 		super(width, height);
 		this.label = label;
@@ -103,7 +101,7 @@ public class ButtonImageResource extends RenderedDynamicImageResource
 	 * @param label
 	 *            The label for this button image
 	 */
-	public ButtonImageResource(final String label)
+	public DefaultButtonImageResource(final String label)
 	{
 		this(label, defaultWidth, defaultHeight);
 	}
@@ -233,7 +231,7 @@ public class ButtonImageResource extends RenderedDynamicImageResource
 		graphics.setColor(color);
 		graphics.setBackground(backgroundColor);
 		graphics.fillRoundRect(0, 0, getWidth(), getHeight(), arcWidth, arcHeight);
-
+		
 		// Draw text
 		graphics.setColor(textColor);
 		graphics.setFont(font);

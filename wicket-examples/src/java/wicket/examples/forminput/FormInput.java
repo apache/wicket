@@ -29,10 +29,12 @@ import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IOnChangeListener;
+import wicket.markup.html.form.ImageButton;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.IntegerValidator;
+import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -143,14 +145,19 @@ public class FormInput extends WicketExamplePage
 					"integerInRangeProperty");
 			integerInRangeInput.add(IntegerValidator.range(0, 100));            
 			add(integerInRangeInput);
+			
+			add(new ImageButton("saveButton"));
             
-			add(new OnClickLink("resetButton")
+			OnClickLink link;
+			add(link = new OnClickLink("resetButtonLink")
 			{
 				public void onClick()
 				{
 					testInputObject = new TestInputObject();
 				}
 			});
+			
+			link.add(new Image("resetButtonImage"));
 		}
 
 		/**

@@ -315,7 +315,7 @@
 
     <servlet-mapping>
         <servlet-name>FormInputApplication</servlet-name>
-        <url-pattern>/forminput</url-pattern>
+        <url-pattern>/forminput/*</url-pattern>
     </servlet-mapping>
 
 
