@@ -46,9 +46,10 @@ public class ListItem extends HtmlContainer
      */
     protected ListItem(final int index, final ListView listView)
     {
-        this(index, new Model(listView.getListObject(index)));
-
-        this.listView = listView;
+    	super(Integer.toString(index));
+    	this.index = index;
+    	this.listView = listView;
+    	setModel(new ListItemModel());
     }
     
     /**
@@ -63,9 +64,7 @@ public class ListItem extends HtmlContainer
     protected ListItem(final int index, final Model model)
     {
         super(Integer.toString(index), model);
-
         this.index = index;
-        this.listView = null;
     }
 
     /**
@@ -188,6 +187,24 @@ public class ListItem extends HtmlContainer
     public final boolean isEvenIndex()
     {
         return (getIndex() % 2) == 0;
+    }
+    
+    private class ListItemModel extends Model
+    {
+    	/*
+		 * @see wicket.model.Model#setObject(java.lang.Object)
+		 */
+		public void setObject(Object object)
+		{
+			throw new RuntimeException("Can't set an object through a listitem");
+		}
+    	/*
+		 * @see wicket.model.Model#getObject()
+		 */
+		public Object getObject()
+		{
+			return listView.getListObject(index);
+		}
     }
 }
 
