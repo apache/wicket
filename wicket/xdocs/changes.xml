@@ -9,6 +9,14 @@
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2"> 
       <action type="update" dev="Jonathan Locke" issue="">
+		Changed message model for "exception" to use Exception object:
+		
+				model.put("exception", e);
+		
+		This will allow full access to exception properties in localized Strings.  
+		In particular, you can now say ${exception.localizedMessage}.
+	  </action>
+      <action type="update" dev="Jonathan Locke" issue="">
 		Added Component.getString(final String key, final IModel model, final String defaultValue)
       </action>
     </release> 
