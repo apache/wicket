@@ -26,6 +26,11 @@ import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.parse.metapattern.Group;
+import wicket.util.parse.metapattern.IntegerGroup;
+import wicket.util.parse.metapattern.MetaPattern;
+import wicket.util.parse.metapattern.OptionalMetaPattern;
+import wicket.util.parse.metapattern.parsers.MetaPatternParser;
 import wicket.util.string.Strings;
 
 /**
@@ -39,7 +44,7 @@ public class LocalizedImageResource implements Serializable
 {
 	/** Map from image factory names to image factories */
 	private static final Map nameToImageFactory = new HashMap();
-	
+
 	/** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 
@@ -158,48 +163,120 @@ public class LocalizedImageResource implements Serializable
 	 */
 	private ImageResource generateImageResource(final ComponentTag tag)
 	{
-		// Get label from value attribute
-		String label = tag.getString("value");
-		if (label == null)
+		// Get value attribute
+		String value = tag.getString("value");
+		if (value == null)
 		{
 			throw new WicketRuntimeException(
 					"Component was not assigned an ImageResource, and had neither a src "
 							+ "attribute referencing a static image nor a value "
 							+ "attribute from which to generate an image.");
 		}
-
-		// Generate a button image from the value attribute
-		if (label.indexOf(':') != -1)
-		{
-			// Get factory name
-			final String imageFactoryName = Strings.beforeFirst(label, ':');
-			
-			// Look up factory
-			final ImageResourceFactory factory = (ImageResourceFactory)nameToImageFactory
-					.get(imageFactoryName);
-			
-			// Found factory?
-			if (factory == null)
-			{
-				throw new WicketRuntimeException("Could not find image resource factory named "
-						+ imageFactoryName);
-			}
-			
-			// Get value to pass to factory
-			final String imageLabel = Strings.afterFirst(label, ':');
-			
-			// Have factory create new labelled image
-			return factory.imageResource(imageLabel);
-		}
 		else
 		{
-			throw new WicketRuntimeException(
-					"Could not find or generate image from label \"" + label + "\".  Was expecting either a static image reference or a value or title attribute of the form \"imageResourceFactoryName.label\".");
+			// Parse value
+			final ImageValueParser valueParser = new ImageValueParser(value);
+
+			// Does value match parser?
+			if (valueParser.matches())
+			{
+				// Look up factory
+				final ImageResourceFactory factory = (ImageResourceFactory)nameToImageFactory
+						.get(valueParser.getFactoryName());
+
+				// Found factory?
+				if (factory == null)
+				{
+					throw new WicketRuntimeException("Could not find image resource factory named "
+							+ valueParser.getFactoryName());
+				}
+
+				// Have factory create new labelled image
+				return factory.imageResource(valueParser.getWidth(), valueParser.getHeight(),
+						valueParser.getLabel());
+			}
+			else
+			{
+				throw new WicketRuntimeException(
+						"Could not find or generate image from label \""
+								+ value
+								+ "\".  Was expecting either a static image reference or a value attribute of the form \"imageResourceFactoryName:(width,height:)?label\".");
+			}
 		}
 	}
 
 	static
 	{
 		add(new DefaultButtonImageResourceFactory("buttonFactory"));
+	}
+
+	/**
+	 * Parses image value specifications.
+	 * 
+	 * @author Jonathan Locke
+	 */
+	private static final class ImageValueParser extends MetaPatternParser
+	{
+		/** Factory name */
+		private static final Group factoryName = new Group(MetaPattern.VARIABLE_NAME);
+
+		/** Group value. */
+		private static final IntegerGroup width = new IntegerGroup();
+
+		/** Group value. */
+		private static final IntegerGroup height = new IntegerGroup();
+
+		/** Label */
+		private static final Group label = new Group(MetaPattern.ANYTHING);
+
+		/** Meta pattern. */
+		private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {
+				factoryName,
+				MetaPattern.COLON,
+				new OptionalMetaPattern(new MetaPattern[] { width, MetaPattern.COMMA, height,
+						MetaPattern.COLON }), label });
+
+		/**
+		 * Construct.
+		 * 
+		 * @param input
+		 *            to parse
+		 */
+		public ImageValueParser(final CharSequence input)
+		{
+			super(pattern, input);
+		}
+
+		/**
+		 * @return The label
+		 */
+		public String getLabel()
+		{
+			return label.get(matcher());
+		}
+
+		/**
+		 * @return The factory name
+		 */
+		public String getFactoryName()
+		{
+			return factoryName.get(matcher());
+		}
+
+		/**
+		 * @return Any width
+		 */
+		public int getWidth()
+		{
+			return width.getInt(matcher());
+		}
+
+		/**
+		 * @return Any height
+		 */
+		public int getHeight()
+		{
+			return width.getInt(matcher());
+		}
 	}
 }

@@ -62,7 +62,7 @@ public class Image extends AbstractImage
 	public Image(final String id, final ImageResource imageResource)
 	{
 		super(id);
-		this.localizedImageResource.setImageResource(imageResource);
+		setImageResource(imageResource);
 	}
 
 	/**
