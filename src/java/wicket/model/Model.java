@@ -25,10 +25,13 @@ import java.io.Serializable;
  * object must be serializable, as it is stored in the session. If you have large objects
  * to store, consider using {@link wicket.model.IDetachableModel}instead of this
  * class.
+ *
+ * @author Chris Turner
+ * @author Eelco Hillenius
  */
 public class Model implements IModel
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = 3031804965001519439L;
 	
 	/** backing object. */

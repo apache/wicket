@@ -25,10 +25,14 @@ import java.io.Serializable;
  * as a facade for the real model so that users have control over the actual persistence
  * strategy. Note that instances of implementations of this class will be stored in the
  * session. Hence, you should use (non-transient) instance variables sparcelingly.
+ *
  * @see wicket.model.IDetachableModel
+ *
+ * @author Chris Turner
+ * @author Eelco Hillenius
  */
 public interface IModel extends Serializable
-{ // TODO finalize javadoc
+{
     /**
      * Gets the model object.
      * @return the model object

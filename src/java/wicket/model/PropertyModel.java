@@ -30,6 +30,7 @@ import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.util.convert.ConversionUtils;
 import wicket.util.convert.ConverterRegistry;
+import wicket.util.convert.FormattingUtils;
 
 
 /**
@@ -103,10 +104,13 @@ import wicket.util.convert.ConverterRegistry;
  * @see wicket.util.convert.ConverterRegistry
  * @see wicket.util.convert.ConversionUtils
  * @see wicket.util.convert.FormattingUtils
+ *
+ * @author Chris Turner
+ * @author Eelco Hillenius
  */
 public class PropertyModel extends DetachableModel
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
 
 	/** the model. */
@@ -175,8 +179,8 @@ public class PropertyModel extends DetachableModel
     /**
      * Gets the value that results when the given Ognl expression is applied to the model
      * object (Ognl.getValue).
-     * @return the value that results when the given Ognl expression is applied to the
-     *         model object
+     * @return the value that results when the given Ognl expression
+     * is applied to the model object
      * @see wicket.model.IModel#getObject()
      */
     public Object getObject()
@@ -204,7 +208,8 @@ public class PropertyModel extends DetachableModel
             Object raw = Ognl.getValue(getExpression(), getContext(), modelObject);
             if (applyFormatting)
             {
-                return converterRegistry.getFormattingUtils().getObjectFormatted(
+                FormattingUtils formattingUtils = converterRegistry.getFormattingUtils();
+				return formattingUtils.getObjectFormatted(
                         raw, getLocale(), getFormatPattern(), getFormatPattern());
             }
             else
@@ -221,8 +226,8 @@ public class PropertyModel extends DetachableModel
     /**
      * Applies the Ognl expression on the model object using the given object argument
      * (Ognl.setValue).
-     * @param object the object that will be used when applying Ognl.setValue on the model
-     *            object
+     * @param object the object that will be used when applying
+     * Ognl.setValue on the model object
      * @see wicket.model.IModel#setObject(java.lang.Object)
      */
     public void setObject(Object object)
@@ -238,7 +243,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Sets the current {@link Locale}and the {@link ConverterRegistry}, and in case the
+     * Sets the current {@link Locale} and the {@link ConverterRegistry}, and in case the
      * wrapped model is a {@link IDetachableModel}, calls attach on the wrapped model.
      * @see wicket.model.DetachableModel#doAttach(wicket.RequestCycle)
      */
@@ -259,7 +264,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Unsets the current {@link Locale}and {@link ConverterRegistry}and, in case the
+     * Unsets the current {@link Locale} and {@link ConverterRegistry} and, in case the
      * wrapped model is a {@link IDetachableModel}, calls dettach on the wrapped model.
      * @see wicket.model.DetachableModel#doDetach(wicket.RequestCycle)
      */
@@ -281,7 +286,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Get the Ognl context that is used for evaluating expressions. It contains the type
+     * Gets the Ognl context that is used for evaluating expressions. It contains the type
      * converter that is used to access the converter framework.
      * @return the Ognl context that is used for evaluating expressions.
      */
@@ -297,7 +302,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Set the Ognl context that is used for evaluating expressions. It contains the type
+     * Sets the Ognl context that is used for evaluating expressions. It contains the type
      * converter that is used to access the converter framework.
      * @param context the Ognl context that is used for evaluating expressions
      */
@@ -307,7 +312,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Get the Ognl expression that works on the model. This expression is used with both
+     * Gets the Ognl expression that works on the model. This expression is used with both
      * Ognl.getValue (used in getObject) and Ognl.setValue (used in setObject). Usually,
      * this expression accords with simple property acces (like if we have a Person object
      * with a name property, the expression would be 'name'), but it can in principle
@@ -321,7 +326,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Get the current locale. The locale will be used for conversions and formatting if
+     * Gets the current locale. The locale will be used for conversions and formatting if
      * localized Converters and Formatters are registered for the target types of the
      * applied expression on the model.
      * @return the current locale.
@@ -332,7 +337,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Get the model on which the Ognl expressions are applied. The expression will
+     * Gets the model on which the Ognl expressions are applied. The expression will
      * actually not be applied on the instance of IModel, but (naturally) on the wrapped
      * model object or more accurate, the object that results from calling getObject on
      * the instance of IModel.
@@ -344,7 +349,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Set whether to apply formatting when getObject is invoked.
+     * Sets whether to apply formatting when getObject is invoked.
      * @param applyFormatting whether to apply formatting when getObject is invoked
      * @return This
      */
@@ -356,7 +361,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Set an optional format pattern to use when formatting is used.
+     * Sets an optional format pattern to use when formatting is used.
      * @param formatPattern the format pattern to use
      * @return This
      */
@@ -368,9 +373,9 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Set the keyed formatter that should be used when formatting is used.
-     * @param formatterName the keyed formatter that should be used when formatting is
-     *            used.
+     * Sets the keyed formatter that should be used when formatting is used.
+     * @param formatterName the keyed formatter that should be used when
+     * formatting is used.
      * @return This
      */
     public final PropertyModel setFormatterName(String formatterName)
@@ -381,7 +386,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Get whether to apply formatting when getObject is invoked.
+     * Gets whether to apply formatting when getObject is invoked.
      * @return whether to apply formatting when getObject is invoked.
      */
     protected final boolean isApplyFormatting()
@@ -390,7 +395,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Get format pattern to use when formatting is used.
+     * Gets the format pattern to use when formatting is used.
      * @return format pattern to use when formatting is used.
      */
     protected final String getFormatPattern()
@@ -399,7 +404,7 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Get the keyed formatter that should be used when formatting is used.
+     * Gets the keyed formatter that should be used when formatting is used.
      * @return the keyed formatter that should be used when formatting is used.
      */
     protected final String getFormatterName()
@@ -408,9 +413,9 @@ public class PropertyModel extends DetachableModel
     }
 
     /**
-     * Get the instance of {@link ConverterRegistry}that is used for conversions and
-     * formatting.
-     * @return the instance of {@link ConverterRegistry}that is used for conversions and
+     * Gets the instance of {@link ConverterRegistry }that is used for
+     * conversions and formatting.
+     * @return the instance of {@link ConverterRegistry} that is used for conversions and
      *         formatting.
      */
     public final ConverterRegistry getConverterRegistry()
@@ -424,7 +429,7 @@ public class PropertyModel extends DetachableModel
      * ConverterRegistry to lookup converters. If no converter is found for a given type,
      * the default conversion of Ognl is used.
      */
-    protected class OgnlConverterWrapper extends DefaultTypeConverter
+    protected final class OgnlConverterWrapper extends DefaultTypeConverter
     {
         /**
          * Construct.
@@ -434,13 +439,12 @@ public class PropertyModel extends DetachableModel
         }
 
         /**
-         * Convert the provided value to provided type using provided context.
+         * Converts the provided value to provided type using provided context.
          * @param context Ognl context
          * @param value the current, unconverted value
          * @param toType the type that should be converted to
          * @return Object the converted value
-         * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,
-         *      java.lang.Class)
+         * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.Class)
          */
         public Object convertValue(Map context, Object value, Class toType)
         {
@@ -455,7 +459,6 @@ public class PropertyModel extends DetachableModel
                 value = ((String[]) value)[0];
             }
 
-            //TODO this might be just too crude for strings
             if ((value instanceof String) && ((String) value).trim().equals(""))
             {
                 return null;
@@ -469,15 +472,14 @@ public class PropertyModel extends DetachableModel
         /**
          * This method is only here to satisfy the interface.
          * Method convertValue(Map,Object, Class) is called, so parameters member and propertyName are ignored.
-         * @param context
-         * @param target
-         * @param member
-         * @param propertyName
-         * @param value
-         * @param toType
+         * @param context the context
+         * @param target the target
+         * @param member the member
+         * @param propertyName the name of the property
+         * @param value the value
+         * @param toType the type to convert to
          * @return the converted value
-         * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,
-         *      java.lang.Class)
+         * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.Class)
          */
         public Object convertValue(Map context, Object target, Member member, String propertyName,
                 Object value, Class toType)
