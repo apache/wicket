@@ -53,22 +53,20 @@ public class WebSession extends Session
 		final javax.servlet.http.HttpSession httpServletSession = request.getSession(true);
 
 		// The request session object is unique per web application, but wicket
-		// requires it
-		// to be unique per servlet. That is, there must be a 1..n relationship
-		// between
-		// HTTP sessions (JSESSIONID) and Wicket applications.
+		// requires it to be unique per servlet. That is, there must be a 1..n 
+		// relationship between HTTP sessions (JSESSIONID) and Wicket applications.
 		final String sessionAttributeName = "session" + request.getServletPath();
 
 		// Get Session abstraction from httpSession attribute
-		WebSession httpSession = (WebSession)httpServletSession.getAttribute(sessionAttributeName);
+		WebSession webSession = (WebSession)httpServletSession.getAttribute(sessionAttributeName);
 
-		if (httpSession == null)
+		if (webSession == null)
 		{
 			// Create session using session factory
 			final Session session = application.getSessionFactory().newSession();
 			if (session instanceof WebSession)
 			{
-				httpSession = (WebSession)session;
+				webSession = (WebSession)session;
 			}
 			else
 			{
@@ -76,33 +74,25 @@ public class WebSession extends Session
 						"Session created by a WebApplication session factory must be a subclass of WebSession");
 			}
 
-			// Save servlet session in there
-			httpSession.httpSession = httpServletSession;
-
 			// Set the client Locale for this session
-			httpSession.setLocale(request.getLocale());
-
-			// Attach to httpSession
-			httpServletSession.setAttribute(sessionAttributeName, httpSession);
+			webSession.setLocale(request.getLocale());
 		}
-		else
-		{
-			// Reattach http servlet session
-			httpSession.httpSession = httpServletSession;
+		
+		// Attach / reattach http servlet session
+		webSession.httpSession = httpServletSession;
 
-			// In a clustered environment the session is not replicated
-			// if it is not dirty. If we just read the http session object
-			// and manipulate that then the http servlet session never gets
-			// flagged as being dirty. We therefore need to force a
-			// change on the http servlet session to ensure clustering
-			// occurs.
-			httpServletSession.setAttribute(sessionAttributeName, httpSession);
-		}
+		// In a clustered environment the session is not replicated
+		// if it is not dirty. If we just read the http session object
+		// and manipulate that then the http servlet session never gets
+		// flagged as being dirty. We therefore need to force a
+		// change on the http servlet session to ensure clustering
+		// replication occurs.
+		httpServletSession.setAttribute(sessionAttributeName, webSession);
 
 		// Set the current session to the session we just retrieved
-		Session.set(httpSession);
+		Session.set(webSession);
 
-		return httpSession;
+		return webSession;
 	}
 
 	/**
