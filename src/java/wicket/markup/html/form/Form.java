@@ -55,7 +55,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 
     /** The delegate to be used for execution of validation of this form. */
     private IFormValidationDelegate validationDelegate =
-    	new IFormValidationDelegate.DefaultFormValidationDelegate();
+    	new DefaultFormValidationDelegate();
 
     /** The validation error handling delegate. */
     private final IValidationErrorHandler validationErrorHandler;
