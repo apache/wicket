@@ -191,6 +191,17 @@ public abstract class Tree extends Panel implements ILinkListener
     }
 
 	/**
+	 * Sets the new expanded state (to true), based on the given user object
+	 * @param userObject the user object
+	 */
+	public final void setExpandedState(Object userObject)
+	{
+		TreeStateCache state = getTreeState();
+		TreePath selection = state.findTreePath(userObject);
+		setExpandedState(selection, true);
+	}
+
+	/**
 	 * Sets the new expanded state, based on the given node
 	 * @param node the tree node model
 	 */
