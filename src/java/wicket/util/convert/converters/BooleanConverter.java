@@ -18,7 +18,6 @@
 package wicket.util.convert.converters;
 
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.ITypeConverter;
 
 /**
  * Converts from Object to Boolean.
@@ -26,7 +25,7 @@ import wicket.util.convert.ITypeConverter;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class BooleanConverter implements ITypeConverter
+public final class BooleanConverter extends AbstractConverter
 {
 	/**
 	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -24,12 +24,41 @@ import java.util.Map;
 import ognl.OgnlOps;
 
 /**
- * Default converter implementation.
+ * Implementation of IConverter interface, which converts objects from one class
+ * to another. This class allows specific type converters implementing the
+ * ITypeConverter interface to be registered as conversion operations for
+ * specific types. This registration can be done manually, but is normally
+ * performed by a converter factory implementation such as ConverterFactory,
+ * which registers type converters for Date, String and all Java primitive types
+ * and their wrapper classes.
+ * <p>
+ * To convert from a Double value to a String value you can use the generalized
+ * converter interface:
  * 
+ * <pre>
+ * final IConverter converter = new ConverterFactory().newConverter();
+ * converter.setLocale(Locale.US);
+ * converter.convert(new Double(7.1), String.class);
+ * </pre>
+ * 
+ * Or this can be accomplished by directly using the StringConverter type
+ * conversion class (which is registered as a type converter on the IConverter
+ * returned by the converter factory above).
+ * 
+ * <pre>
+ * final StringConverter converter = new StringConverter(Locale.US);
+ * converter.convert(new Double(7.1));
+ * </pre>
+ * 
+ * When using Wicket, you should rarely need to use any of the conversion classes
+ * directly.  There are convenient validators and conversion features built into
+ * Wicket that you can use directly. 
+ * 
+ * @see IConverterFactory
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class Converter implements IConverter, ILocalizable
+public final class Converter implements IConverter
 {
 	/** Maps Classes to ITypeConverters. */
 	private final Map classToConverter = new HashMap();
@@ -48,6 +77,15 @@ public final class Converter implements IConverter, ILocalizable
 		public Object convert(Object value, Class c)
 		{
 			return OgnlOps.convertValue(value, c);
+		}
+
+		public void setLocale(Locale locale)
+		{
+		}
+
+		public Locale getLocale()
+		{
+			return Locale.getDefault();
 		}
 	};
 
@@ -121,18 +159,12 @@ public final class Converter implements IConverter, ILocalizable
 		ITypeConverter converter = get(c);
 		if (converter == null)
 		{
-			if (defaultConverter instanceof ILocalizable)
-			{
-				((ILocalizable)defaultConverter).setLocale(locale);
-			}
+			defaultConverter.setLocale(locale);
 			return defaultConverter.convert(value, c);
 		}
 
 		// Set locale
-		if (converter instanceof ILocalizable)
-		{
-			((ILocalizable)converter).setLocale(locale);
-		}
+		converter.setLocale(locale);
 
 		try
 		{

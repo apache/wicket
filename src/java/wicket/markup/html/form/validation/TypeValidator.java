@@ -24,7 +24,6 @@ import wicket.Session;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
-import wicket.util.convert.ILocalizable;
 import wicket.util.string.Strings;
 
 /**
@@ -106,7 +105,7 @@ public class TypeValidator extends AbstractValidator
 		{
 			// Check value by attempting to convert it using the given locale
 			final IConverter converter = component.getConverter();
-			((ILocalizable)converter).setLocale(getLocale());
+			converter.setLocale(getLocale());
 			try
 			{
 				converter.convert(value, type);
