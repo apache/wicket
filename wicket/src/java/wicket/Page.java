@@ -40,9 +40,8 @@ import wicket.version.undo.UndoPageVersionManager;
  * page is contained in can be retrieved by calling getSession(). Page
  * identifiers start at 0 for each session and increment as new pages are added
  * to the session. The session-unique identifier assigned to a page can be
- * retrieved by calling getId(). This id also serves as the Page's component
- * name. So, the first page added to a new user session will always be named
- * "0".
+ * retrieved by calling getId(). So, the first page added to a new user session
+ * will always be named "0".
  * <p>
  * Pages can be constructed with any constructor when they are being used in a
  * Wicket session, but if you wish to link to a Page using a URL that is
@@ -195,22 +194,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Get the identifier for this page.
-	 * 
-	 * @return The identifier for this page
+	 * @see wicket.Component#getId()
 	 */
-	public final int getId()
-	{
-		return id;
-	}
-
-	/**
-	 * Get the name of this page instance is its unique id.
-	 * 
-	 * @return The name of this page instance is its unique id
-	 * @see wicket.Component#getName()
-	 */
-	public final String getName()
+	public final String getId()
 	{
 		return Integer.toString(id);
 	}

@@ -36,17 +36,17 @@ public class CheckBox extends FormComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public CheckBox(final String name)
+	public CheckBox(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public CheckBox(String name, IModel model)
+	public CheckBox(final String id, IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**

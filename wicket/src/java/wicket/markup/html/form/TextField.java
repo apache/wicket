@@ -37,43 +37,43 @@ public class TextField extends AbstractTextComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public TextField(final String name)
+	public TextField(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
-	 * @param name
-	 *            See Component(String)
+	 * @param id
+	 *            See Component
 	 * @param type
 	 *            Type for field validation
 	 */
-	public TextField(final String name, final Class type)
+	public TextField(final String id, final Class type)
 	{
-		super(name);
+		super(id);
 		add(new TypeValidator(type));
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextField(final String name, final IModel object)
+	public TextField(final String id, final IModel object)
 	{
-		super(name, object);
+		super(id, object);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param model
-	 *            See Component constructor
+	 *            See Component
 	 * @param type
 	 *            The type to use when updating the model for this text field
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextField(String name, IModel model, Class type)
+	public TextField(final String id, IModel model, Class type)
 	{
-		super(name, model);
+		super(id, model);
 		this.type = type;
 		add(new TypeValidator(type));
 	}

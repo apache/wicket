@@ -56,9 +56,9 @@ public final class FeedbackPanel extends Panel implements IFeedback
 		/**
 		 * @see wicket.Component#Component(String)
 		 */
-		public MessageListView(final String name)
+		public MessageListView(final String id)
 		{
-			super(name, (List)new ArrayList());
+			super(id, (List)new ArrayList());
 		}
 
 		/**
@@ -105,9 +105,9 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FeedbackPanel(final String name)
+	public FeedbackPanel(final String id)
 	{
-		super(name);
+		super(id);
 		this.messageListView = new MessageListView("messages");
 		messageListView.setVersioned(false);
 		add(messageListView);

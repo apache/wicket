@@ -112,7 +112,7 @@ public final class ComponentWicketTag extends ComponentTag
 		else
 		{
 			final ComponentWicketTag tag = new ComponentWicketTag(xmlTag.mutable());
-			tag.setComponentName(getComponentName());
+			tag.setComponentId(getComponentId());
 			return tag;
 		}
 	}

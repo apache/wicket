@@ -42,33 +42,33 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public ListMultipleChoice(String name, final Collection choices)
+	public ListMultipleChoice(final String id, final Collection choices)
 	{
-		super(name, choices);
+		super(id, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
-	public ListMultipleChoice(String name, final IChoiceList choices)
+	public ListMultipleChoice(final String id, final IChoiceList choices)
 	{
-		super(name, choices);
+		super(id, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
-	public ListMultipleChoice(String name, IModel object, final Collection choices)
+	public ListMultipleChoice(final String id, IModel object, final Collection choices)
 	{
-		super(name, object, choices);
+		super(id, object, choices);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
-	public ListMultipleChoice(String name, IModel object, final IChoiceList choices)
+	public ListMultipleChoice(final String id, IModel object, final IChoiceList choices)
 	{
-		super(name, object, choices);
+		super(id, object, choices);
 	}
 
 	/**

@@ -38,7 +38,7 @@ public class ComponentTag extends MarkupElement
 {
 	/**
 	 * Standard component name attribute always available for components
-	 * regardless of user ApplicationSettings for componentName attribute; value ==
+	 * regardless of user ApplicationSettings for componentId attribute; value ==
 	 * 'wicket'.
 	 */
 	public static final String DEFAULT_COMPONENT_NAME_ATTRIBUTE = "wicket";
@@ -59,7 +59,7 @@ public class ComponentTag extends MarkupElement
 	 * The component's name. Wicket supports several means to identify Wicket
 	 * components. E.g. wicket="name", id="wicket-name"
 	 */
-	private String componentName;
+	private String componentId;
 
 	/**
 	 * Construct.
@@ -116,9 +116,9 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return The component name attribute of this tag
 	 */
-	public String getComponentName()
+	public String getComponentId()
 	{
-		return componentName;
+		return componentId;
 	}
 
 	/**
@@ -230,13 +230,13 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @see wicket.markup.parser.XmlTag#isOpen(String)
-	 * @param componentName
-	 *            Required component name attribute
+	 * @param componentId
+	 *            Required component id attribute
 	 * @return True if this tag is an open tag with the given component name
 	 */
-	public boolean isOpen(String componentName)
+	public boolean isOpen(String componentId)
 	{
-		return xmlTag.isOpen(componentName);
+		return xmlTag.isOpen(componentId);
 	}
 
 	/**
@@ -250,14 +250,14 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @see wicket.markup.parser.XmlTag#isOpenClose(String)
-	 * @param componentName
-	 *            Required component name attribute
+	 * @param componentId
+	 *            Required component id attribute
 	 * @return True if this tag is an openclose tag with the given component
 	 *         name
 	 */
-	public boolean isOpenClose(String componentName)
+	public boolean isOpenClose(String componentId)
 	{
-		return xmlTag.isOpenClose(componentName);
+		return xmlTag.isOpenClose(componentId);
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class ComponentTag extends MarkupElement
 		else
 		{
 			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
-			tag.componentName = componentName;
+			tag.componentId = componentId;
 			return tag;
 		}
 	}
@@ -372,7 +372,7 @@ public class ComponentTag extends MarkupElement
 	{
 		if (xmlTag.isMutable())
 		{
-			this.componentName = null;
+			this.componentId = null;
 			xmlTag.remove(componentNameAttribute);
 			
 			if (removeComponentsWithDefaultName)
@@ -401,12 +401,12 @@ public class ComponentTag extends MarkupElement
 	 * Set the component's name. The value is usually taken from the tag's id
 	 * attribute, e.g. id="wicket-name" or wicket="name".
 	 * 
-	 * @param name
-	 *            The component's name assigned to the tag.
+	 * @param id
+	 *            The component's id assigned to the tag.
 	 */
-	public void setComponentName(final String name)
+	public void setComponentId(final String id)
 	{
-		this.componentName = name;
+		this.componentId = id;
 	}
 
 	/**

@@ -36,17 +36,17 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FileUploadField(String name)
+	public FileUploadField(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FileUploadField(String name, IModel model)
+	public FileUploadField(final String id, IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**

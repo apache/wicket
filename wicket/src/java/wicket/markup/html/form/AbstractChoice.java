@@ -42,56 +42,56 @@ abstract class AbstractChoice extends FormComponent
 	private IChoiceList choices;
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(String name, final Collection choices)
+	public AbstractChoice(final String id, final Collection choices)
 	{
-		this(name, new ChoiceList(choices));
+		this(id, new ChoiceList(choices));
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(String name, final IChoiceList choices)
+	public AbstractChoice(final String id, final IChoiceList choices)
 	{
-		super(name);
+		super(id);
 		this.choices = choices;
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param model
-	 *            See Component constructor
+	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(String name, IModel model, final Collection choices)
+	public AbstractChoice(final String id, IModel model, final Collection choices)
 	{
-		this(name, model, new ChoiceList(choices));
+		this(id, model, new ChoiceList(choices));
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param model
-	 *            See Component constructor
+	 *            See Component
 	 * @param choices
 	 *            The drop down choices
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(String name, IModel model, final IChoiceList choices)
+	public AbstractChoice(final String id, IModel model, final IChoiceList choices)
 	{
-		super(name, model);
+		super(id, model);
 		this.choices = choices;
 	}
 
@@ -167,7 +167,7 @@ abstract class AbstractChoice extends FormComponent
 				buffer.append("value=\"");
 				buffer.append(choice.getId());
 				buffer.append("\">");
-				buffer.append(getLocalizer().getString(getName() + "." + displayValue, this,
+				buffer.append(getLocalizer().getString(getId() + "." + displayValue, this,
 						displayValue));
 				buffer.append("</option>");
 			}

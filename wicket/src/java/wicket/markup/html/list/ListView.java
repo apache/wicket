@@ -82,21 +82,21 @@ public abstract class ListView extends WebMarkupContainer
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(String name, IModel model)
+	public ListView(final String id, IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param list
-	 *            List to cast to Serializable
+	 *            Serializable list model
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(String name, List list)
+	public ListView(final String id, List list)
 	{
-		super(name, new Model((Serializable)list));
+		super(id, new Model((Serializable)list));
 	}
 
 	/**

@@ -97,7 +97,7 @@ public class ExamplePse extends Displaytag
         {
 	        protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
 	        {
-	            final String name = header.getName();
+	            final String name = header.getId();
 	            if (name.equals("city"))
 	            {
 	                return ((ReportableListObject)object).getCity();

@@ -555,17 +555,17 @@ public abstract class RequestCycle
 	/**
 	 * Looks up an interface method by name.
 	 * 
-	 * @param name
-	 *            The interface
+	 * @param interfaceName
+	 *            The interface name
 	 * @return The method
 	 * @throws WicketRuntimeException
 	 */
-	protected final Method getInterfaceMethod(final String name)
+	protected final Method getInterfaceMethod(final String interfaceName)
 	{
-		final Method method = (Method)listenerInterfaceMethods.get(name);
+		final Method method = (Method)listenerInterfaceMethods.get(interfaceName);
 		if (method == null)
 		{
-			throw new WicketRuntimeException("Attempt to access unknown interface " + name);
+			throw new WicketRuntimeException("Attempt to access unknown interface " + interfaceName);
 		}
 		return method;
 	}

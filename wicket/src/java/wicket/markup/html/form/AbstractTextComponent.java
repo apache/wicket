@@ -32,17 +32,17 @@ abstract class AbstractTextComponent extends FormComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractTextComponent(String name)
+	public AbstractTextComponent(String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
      * @see wicket.Component#Component(String, IModel)
 	 */
-	AbstractTextComponent(final String name, final IModel model)
+	AbstractTextComponent(final String id, final IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
     /**

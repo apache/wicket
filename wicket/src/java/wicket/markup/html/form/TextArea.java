@@ -34,17 +34,17 @@ public class TextArea extends AbstractTextComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public TextArea(final String name)
+	public TextArea(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextArea(final String name, final IModel model)
+	public TextArea(final String id, final IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**

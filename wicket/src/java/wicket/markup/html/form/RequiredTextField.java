@@ -34,42 +34,42 @@ public class RequiredTextField extends TextField
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public RequiredTextField(final String name)
+	public RequiredTextField(final String id)
 	{
-		super(name);
+		super(id);
 		add(RequiredValidator.getInstance());
 	}
 
 	/**
 	 * @see TextField#TextField(String, Class)
 	 */
-	public RequiredTextField(final String name, final Class type)
+	public RequiredTextField(final String id, final Class type)
 	{
-		super(name, type);
+		super(id, type);
 		add(RequiredValidator.getInstance());
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public RequiredTextField(final String name, final IModel model)
+	public RequiredTextField(final String id, final IModel model)
 	{
-		super(name, model);
+		super(id, model);
 		add(RequiredValidator.getInstance());
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param model
-	 *            See Component constructor
+	 *            See Component
 	 * @param type
 	 *            The type to use when updating the model for this text field
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public RequiredTextField(String name, IModel model, Class type)
+	public RequiredTextField(final String id, IModel model, Class type)
 	{
-		super(name, model, type);
+		super(id, model, type);
 		add(RequiredValidator.getInstance());
 	}
 }

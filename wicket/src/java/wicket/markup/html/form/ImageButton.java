@@ -38,37 +38,37 @@ public class ImageButton extends Button
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public ImageButton(String name)
+	public ImageButton(String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * Constructs an image button directly from an image resource.
 	 * 
-	 * @param name
-	 *            See Component(String)
+	 * @param id
+	 *            See Component
 	 * 
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public ImageButton(final String name, final ImageResource imageResource)
+	public ImageButton(final String id, final ImageResource imageResource)
 	{
-		super(name);
+		super(id);
 		this.localizedImageResource.setImageResource(imageResource);
 	}
 
 	/**
 	 * Constructor
 	 * 
-	 * @param name
-	 *            See Component(String)
+	 * @param id
+	 *            See Component
 	 * @param label
 	 *            The button label
 	 */
-	public ImageButton(final String name, final String label)
+	public ImageButton(final String id, final String label)
 	{
-		this(name, new DefaultButtonImageResource(label));
+		this(id, new DefaultButtonImageResource(label));
 	}
 
 	/**

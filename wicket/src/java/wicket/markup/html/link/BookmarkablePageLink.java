@@ -40,31 +40,31 @@ public final class BookmarkablePageLink extends Link
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
+	 * @param id
 	 *            The name of this component
 	 * @param pageClass
 	 *            The class of page to link to
 	 */
-	public BookmarkablePageLink(final String name, final Class pageClass)
+	public BookmarkablePageLink(final String id, final Class pageClass)
 	{
-		this(name, pageClass, new PageParameters());
+		this(id, pageClass, new PageParameters());
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            The name of this component
+	 * @param id
+	 *            See Component
 	 * @param pageClass
 	 *            The class of page to link to
 	 * @param parameters
 	 *            The parameters to pass to the new page when the link is
 	 *            clicked
 	 */
-	public BookmarkablePageLink(final String name, final Class pageClass,
+	public BookmarkablePageLink(final String id, final Class pageClass,
 			final PageParameters parameters)
 	{
-		super(name);
+		super(id);
 		if (pageClass == null)
 		{
 			throw new IllegalArgumentException("Page class for bookmarkable link cannot be null");

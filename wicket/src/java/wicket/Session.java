@@ -282,7 +282,7 @@ public abstract class Session implements Serializable
 					page = version;
 		
 					// Replaces old page entry
-					getPageMap().put(new Integer(page.getId()), page);
+					getPageMap().put(page.getId(), page);
 					pageChanged(page);
 				}				
 				return page;
@@ -338,7 +338,7 @@ public abstract class Session implements Serializable
 		pageState.addedToSession = true;
 
 		// Set HttpSession attribute for new PageState
-		setAttribute(page.getName(), pageState);
+		setAttribute(page.getId(), pageState);
 	}
 
 	/**
@@ -487,7 +487,7 @@ public abstract class Session implements Serializable
 				final Page page = pageState.getPage();
 
 				// Add to page map
-				getPageMap().put(new Integer(page.getId()), page);
+				getPageMap().put(page.getId(), page);
 
 				// Page has been added to session now
 				pageState.addedToSession = true;
@@ -509,13 +509,13 @@ public abstract class Session implements Serializable
 
 		// Add to page local transient page map
 		final MostRecentlyUsedMap pageMap = getPageMap();
-		pageMap.put(new Integer(page.getId()), page);
+		pageMap.put(page.getId(), page);
 
 		// Get any page that was removed
 		final Page removedPage = (Page)pageMap.getRemovedValue();
 		if (removedPage != null)
 		{
-			removeAttribute(removedPage.getName());
+			removeAttribute(removedPage.getId());
 		}
 
 		// Add PageState entry to list of changed pages

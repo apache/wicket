@@ -118,7 +118,7 @@ public class ExampleSorting extends Displaytag
              */
 	        protected int compare(SortableListViewHeader header, Object o1, Object o2)
 	        {
-	            if (header.getName().equals("id"))
+	            if (header.getId().equals("id"))
 	            {
 	                return ((ListObject)o1).getId() - ((ListObject)o2).getId();
 	            }
@@ -133,7 +133,7 @@ public class ExampleSorting extends Displaytag
 	         */
 	        protected Comparable getObjectToCompare(final SortableListViewHeader header, final Object object)
 	        {
-	            final String name = header.getName();
+	            final String name = header.getId();
 	            if (name.equals("name"))
 	            {
 	                return ((ListObject)object).getName();

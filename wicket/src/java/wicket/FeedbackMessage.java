@@ -207,6 +207,6 @@ public final class FeedbackMessage implements Serializable
 	public String toString()
 	{
 		return "[FeedbackMessage message = \"" + getMessage() + "\", reporter = "
-				+ getReporter().getName() + ", level = " + getLevelAsString() + "]";
+				+ getReporter().getId() + ", level = " + getLevelAsString() + "]";
 	}
 }

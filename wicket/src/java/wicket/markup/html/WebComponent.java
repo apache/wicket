@@ -33,17 +33,17 @@ public abstract class WebComponent extends Component
 	/**
 	 * @see Component#Component(String)
 	 */
-	public WebComponent(final String name)
+	public WebComponent(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * @see Component#Component(String, IModel)
 	 */
-	public WebComponent(final String name, final IModel model)
+	public WebComponent(final String id, final IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**

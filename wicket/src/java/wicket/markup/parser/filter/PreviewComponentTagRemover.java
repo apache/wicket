@@ -88,7 +88,7 @@ public final class PreviewComponentTagRemover extends AbstractMarkupFilter
 		{
 			// No Wicket component tags are allowed within the preview region.
 			// Wicket components will a component name assigned.
-			if (closeTag.getComponentName() == null)
+			if (closeTag.getComponentId() == null)
 			{
 				continue;
 			}
@@ -99,7 +99,7 @@ public final class PreviewComponentTagRemover extends AbstractMarkupFilter
 			{
 				// Component's named with the IGNORE component name will be ignored 
 				// by MarkupParser and not added to the Markup.
-				openTag.setComponentName(IGNORE);
+				openTag.setComponentId(IGNORE);
 				return openTag;
 			}
 

@@ -195,10 +195,10 @@ public final class MarkupParser
         // Loop through tags
         for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
         {
-            boolean add = (tag.getComponentName() != null);
+            boolean add = (tag.getComponentId() != null);
             if (!add && tag.getXmlTag().isClose())
             {
-                add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getComponentName() != null));
+                add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getComponentId() != null));
             }
 
             // Add tag to list?
@@ -227,7 +227,7 @@ public final class MarkupParser
                 }
 
                 // Add to list unless preview component tag remover flagged as removed
-                if (!PreviewComponentTagRemover.IGNORE.equals(tag.getComponentName()))
+                if (!PreviewComponentTagRemover.IGNORE.equals(tag.getComponentId()))
                 {
 	                list.add(tag);
                 }

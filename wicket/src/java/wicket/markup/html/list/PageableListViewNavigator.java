@@ -36,15 +36,14 @@ public class PageableListViewNavigator extends Panel
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            The component's name
+	 * @param id
+	 *            See Component
 	 * @param pageableListView
 	 *            The PageableListView the page links are referring to.
 	 */
-	public PageableListViewNavigator(final String name,
-			final PageableListView pageableListView)
+	public PageableListViewNavigator(final String id, final PageableListView pageableListView)
 	{
-		super(name);
+		super(id);
 
 		// Get the navigation bar and add it to the hierarchy
 		this.pageableListViewNavigation = newNavigation(pageableListView);

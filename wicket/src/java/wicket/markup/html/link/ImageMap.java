@@ -259,12 +259,12 @@ public final class ImageMap extends WebComponent
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            Component name
+	 * @param id
+	 *            See Component
 	 */
-	public ImageMap(final String name)
+	public ImageMap(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**

@@ -34,21 +34,17 @@ import wicket.model.IModel;
  * {@link Label}with the page number of that link (1..n).
  * 
  * <pre>
- * 
- *          &lt;td id=&quot;wicket-navigation&quot;&gt;
- *              &lt;a id=&quot;wicket-pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- *                 &lt;span id=&quot;wicket-pageNumber&quot;/&gt;
- *              &lt;/a&gt;
- *          &lt;/td&gt;
- *  
+ *			 &lt;td id=&quot;wicket-navigation&quot;&gt;
+ *				 &lt;a id=&quot;wicket-pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *					&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
+ *				 &lt;/a&gt;
+ *			 &lt;/td&gt;
  * </pre>
  * 
  * thus renders like:
  * 
  * <pre>
- * 
- *          1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 |
- *  
+ *			 1 |  2 |  3 |	4 |	 5 |  6 |  7 |	8 |	 9 |
  * </pre>
  * 
  * </p>
@@ -60,34 +56,32 @@ import wicket.model.IModel;
  * 
  * protected void populateItem(ListItem listItem)
  * {
- * 	 final int page = ((Integer)listItem.getModelObject()).intValue();
- * 	 final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
- * 			pageableListView, page);
- * 	 if (page &gt; 0)
- * 	 {
- * 		listItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
- * 	 }
- * 	 else
- * 	 {
- * 		listItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
- * 	 }
- * 	 link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
- * 	 link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
- * 	 listItem.add(link);
+ *	final int page = ((Integer)listItem.getModelObject()).intValue();
+ *	final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
+ *			pageableListView, page);
+ *	if (page &gt; 0)
+ *	{
+ *		listItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
+ *	}
+ *	else
+ *	{
+ *		listItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
+ *	}
+ *	link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
+ *	link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
+ *	listItem.add(link);
  * }
  * </pre>
  * 
  * With:
  * 
  * <pre>
- * 
- *          &lt;td id=&quot;wicket-navigation&quot;&gt;
- *              &lt;span id=&quot;wicket-separator&quot;/&gt;
- *              &lt;a id=&quot;wicket-pageLink&quot; href=&quot;#&quot;&gt;
- *                &lt;span id=&quot;wicket-pageLabel&quot;/&gt;&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
- *              &lt;/a&gt;
- *          &lt;/td&gt;
- *  
+ *			 &lt;td id=&quot;wicket-navigation&quot;&gt;
+ *				 &lt;span id=&quot;wicket-separator&quot;/&gt;
+ *				 &lt;a id=&quot;wicket-pageLink&quot; href=&quot;#&quot;&gt;
+ *				   &lt;span id=&quot;wicket-pageLabel&quot;/&gt;&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
+ *				 &lt;/a&gt;
+ *			 &lt;/td&gt;
  * </pre>
  * 
  * renders like:
@@ -97,10 +91,10 @@ import wicket.model.IModel;
  * </pre>
  * 
  * </p>
- * Assuming a PageableListView with 1000 entries and not more than 10 lines shall
- * be printed per page, the navigation bar would have 100 entries.
- * Because this is not feasible PageableListViewNavigation's navigation bar is 
- * pageable as well. 
+ * Assuming a PageableListView with 1000 entries and not more than 10 lines
+ * shall be printed per page, the navigation bar would have 100 entries. Because
+ * this is not feasible PageableListViewNavigation's navigation bar is pageable
+ * as well.
  * <p>
  * The page links displayed are automatically adjusted based on the number of
  * page links to be displayed and a margin. The margin makes sure that the page
@@ -110,8 +104,10 @@ import wicket.model.IModel;
  * Use setMargin() and setViewSize() to adjust the navigation's bar view size
  * and margin.
  * <p>
- * Please @see PageableListViewNavigator for a ready made component which already
- * includes links to the first, previous, next and last page. 
+ * Please
+ * 
+ * @see PageableListViewNavigator for a ready made component which already
+ *		includes links to the first, previous, next and last page.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -124,28 +120,27 @@ public class PageableListViewNavigation extends ListView
 
 	/** The PageableListView this navigation is navigating. */
 	protected PageableListView pageableListView;
-	
+
 	/**
-	 * Number of links on the left and/or right to keep the current
-	 * page link somewhere near the middle.
+	 * Number of links on the left and/or right to keep the current page link
+	 * somewhere near the middle.
 	 */
 	private int margin;
-	
+
 	/** Default separator between page numbers. Null: no separator. */
 	private String separator = null;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            The name of the component
+	 * @param id
+	 *			  See Component
 	 * @param pageableListView
-	 *            The underlying list view to navigate
+	 *			  The underlying list view to navigate
 	 */
-	public PageableListViewNavigation(final String name,
-			final PageableListView pageableListView)
+	public PageableListViewNavigation(final String id, final PageableListView pageableListView)
 	{
-		super(name, (IModel)null);
+		super(id, (IModel)null);
 
 		this.pageableListView = pageableListView;
 		this.setStartIndex(0);
@@ -172,21 +167,33 @@ public class PageableListViewNavigation extends ListView
 	}
 
 	/**
+	 * Get the number of page links per "window".
+	 * 
+	 * @see wicket.markup.html.list.ListView#setViewSize(int)
+	 * @return The overall number of page links (number of PageableListView
+	 *		   pages)
+	 */
+	public int getViewSize()
+	{
+		return Math.min(pageableListView.getPageCount(), super.getViewSize());
+	}
+
+	/**
 	 * Sets the margin.
 	 * 
 	 * @param margin
-	 *            the margin
+	 *			  the margin
 	 */
 	public void setMargin(final int margin)
 	{
 		this.margin = margin;
 	}
-	
+
 	/**
 	 * Sets the seperator. Null meaning, no separator at all.
 	 * 
 	 * @param separator
-	 *            the seperator
+	 *			  the seperator
 	 */
 	public void setSeparator(final String separator)
 	{
@@ -201,7 +208,12 @@ public class PageableListViewNavigation extends ListView
 		return new AbstractReadOnlyDetachableModel()
 		{
 			private transient List list;
-			
+
+			public Object getNestedModel()
+			{
+				return list;
+			}
+
 			protected void onAttach()
 			{
 				this.list = new AbstractList()
@@ -227,49 +239,7 @@ public class PageableListViewNavigation extends ListView
 			{
 				return list;
 			}
-
-			public Object getNestedModel()
-			{
-				return list;
-			}
 		};
-	}
-
-	/**
-	 * Get the number of page links per "window".
-	 * 
-	 * @see wicket.markup.html.list.ListView#setViewSize(int)
-	 * @return The overall number of page links (number of PageableListView
-	 *         pages)
-	 */
-	public int getViewSize()
-	{
-		return Math.min(pageableListView.getPageCount(), super.getViewSize());
-	}
-
-	/**
-	 * Populate the current cell with a page link
-	 * (PageableListViewNavigationLink) enclosing the page number the link is
-	 * pointing to. Subclasses may provide there own implementation adding more
-	 * sophisticated page links.
-	 * 
-	 * @param listItem
-	 *            the list item to populate
-	 * @see wicket.markup.html.list.PageableListView#populateItem(wicket.markup.html.list.ListItem)
-	 */
-	protected void populateItem(final ListItem listItem)
-	{
-		// Get the index of page this link shall point to
-		final int pageIndex = ((Integer)listItem.getModelObject()).intValue();
-
-		// Add a page link pointing to the page
-		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
-				pageableListView, pageIndex);
-		listItem.add(link);
-
-		// Add a label (the page number) to the list which is enclosed by the
-		// link
-		link.add(new Label("pageNumber", String.valueOf(pageIndex + 1)));
 	}
 
 	/**
@@ -288,12 +258,37 @@ public class PageableListViewNavigation extends ListView
 	}
 
 	/**
+	 * Populate the current cell with a page link
+	 * (PageableListViewNavigationLink) enclosing the page number the link is
+	 * pointing to. Subclasses may provide there own implementation adding more
+	 * sophisticated page links.
+	 * 
+	 * @param listItem
+	 *			  the list item to populate
+	 * @see wicket.markup.html.list.PageableListView#populateItem(wicket.markup.html.list.ListItem)
+	 */
+	protected void populateItem(final ListItem listItem)
+	{
+		// Get the index of page this link shall point to
+		final int pageIndex = ((Integer)listItem.getModelObject()).intValue();
+
+		// Add a page link pointing to the page
+		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
+				pageableListView, pageIndex);
+		listItem.add(link);
+
+		// Add a label (the page number) to the list which is enclosed by the
+		// link
+		link.add(new Label("pageNumber", String.valueOf(pageIndex + 1)));
+	}
+
+	/**
 	 * Renders the page link. Add the separator if not the last page link
 	 * 
 	 * @param listItem
-	 *            The current page link to render
+	 *			  The current page link to render
 	 * @param lastItem
-	 *            True, if last page link to render
+	 *			  True, if last page link to render
 	 */
 	protected void renderItem(final ListItem listItem, final boolean lastItem)
 	{

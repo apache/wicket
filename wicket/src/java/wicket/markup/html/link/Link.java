@@ -96,17 +96,17 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	/**
      * @see wicket.Component#Component(String)
 	 */
-	public Link(String name)
+	public Link(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
      * @see wicket.Component#Component(String, IModel)
 	 */
-	public Link(String name, IModel object)
+	public Link(final String id, IModel object)
 	{
-		super(name, object);
+		super(id, object);
 	}
 
 	/**

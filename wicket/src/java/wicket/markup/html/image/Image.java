@@ -45,44 +45,44 @@ public class Image extends AbstractImage
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public Image(final String name)
+	public Image(final String id)
 	{
-		super(name);
+		super(id);
 	}
 
 	/**
 	 * Constructs an image directly from an image resource.
 	 * 
-	 * @param name
-	 *            See Component#Component(String)
+	 * @param id
+	 *            See Component
 	 * 
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public Image(final String name, final ImageResource imageResource)
+	public Image(final String id, final ImageResource imageResource)
 	{
-		super(name);
+		super(id);
 		this.localizedImageResource.setImageResource(imageResource);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Image(final String name, final IModel model)
+	public Image(final String id, final IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**
-	 * @param name
+	 * @param id
 	 *            See Component
 	 * @param string
 	 *            Name of image
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Image(final String name, final String string)
+	public Image(final String id, final String string)
 	{
-		super(name, new Model(string));
+		super(id, new Model(string));
 	}
 
 	/**

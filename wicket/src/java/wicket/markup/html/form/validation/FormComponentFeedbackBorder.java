@@ -42,12 +42,12 @@ public final class FormComponentFeedbackBorder extends Border implements IFeedba
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            This component's name
+	 * @param id
+	 *            See Component
 	 */
-	public FormComponentFeedbackBorder(final String name)
+	public FormComponentFeedbackBorder(final String id)
 	{
-		super(name);
+		super(id);
 
 		// Create invisible error indicator bordered that will be shown when a
 		// validation error occurs

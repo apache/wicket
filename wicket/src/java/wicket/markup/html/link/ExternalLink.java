@@ -39,16 +39,16 @@ public class ExternalLink extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            The name of this component
+	 * @param id
+	 *            See Component
 	 * @param href
 	 *            the href attribute to set
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(final String name, final String href, final String label)
+	public ExternalLink(final String id, final String href, final String label)
 	{
-		super(name);
+		super(id);
 
 		this.href = href;
 		this.label = label;
@@ -57,14 +57,14 @@ public class ExternalLink extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
+	 * @param id
 	 *            The name of this component
 	 * @param href
 	 *            the href attribute to set
 	 */
-	public ExternalLink(final String name, final String href)
+	public ExternalLink(final String id, final String href)
 	{
-		this(name, href, null);
+		this(id, href, null);
 	}
 
 	/**

@@ -65,39 +65,39 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
-	public ListChoice(String name, final Collection values)
+	public ListChoice(final String id, final Collection values)
 	{
-		super(name, values);
+		super(id, values);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param model
-	 *            See Component constructor
+	 *            See Component
 	 * @param values
 	 *            The collection of values in the list
 	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
 	 */
-	public ListChoice(final String name, final IModel model, final Collection values)
+	public ListChoice(final String id, final IModel model, final Collection values)
 	{
-		this(name, model, values, defaultMaxRows);
+		this(id, model, values, defaultMaxRows);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
 	 * @param model
-	 *            See Component constructor
+	 *            See Component
 	 * @param values
 	 *            The collection of values in the list
 	 * @param maxRows
 	 *            Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
 	 */
-	public ListChoice(final String name, final IModel model, final Collection values, final int maxRows)
+	public ListChoice(final String id, final IModel model, final Collection values, final int maxRows)
 	{
-		super(name, model, values);
+		super(id, model, values);
 		this.maxRows = maxRows;
 	}
 

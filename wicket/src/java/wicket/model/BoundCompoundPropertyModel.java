@@ -97,7 +97,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 */
 	public Component bind(final Component component, final Class type)
 	{
-		bind(component, component.getName(), type);
+		bind(component, component.getId(), type);
 		return component;
 	}
 
@@ -136,7 +136,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	protected String ognlExpression(final Component component)
 	{
 		final Binding binding = getBinding(component);
-		return binding != null ? binding.ognlExpression : component.getName();
+		return binding != null ? binding.ognlExpression : component.getId();
 	}
 
 	/**

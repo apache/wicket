@@ -35,17 +35,17 @@ public class WebMarkupContainer extends MarkupContainer
 	/**
 	 * @see Component#Component(String)
 	 */
-	public WebMarkupContainer(final String name)
+	public WebMarkupContainer(final String id)
 	{
-		super(name);
+		super(id);
 	}
 	
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainer(String name, IModel model)
+	public WebMarkupContainer(final String id, IModel model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**
