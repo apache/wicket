@@ -151,6 +151,10 @@
       <name>Martin Fey</name>
       <email>-</email>
     </contributor>
+    <contributor>
+      <name>Cameron Braid</name>
+      <email>-</email>
+    </contributor>
   </contributors>
   <dependencies>
     <dependency>
