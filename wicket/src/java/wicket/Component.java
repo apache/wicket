@@ -1168,7 +1168,7 @@ public abstract class Component implements Serializable, IConverterSource
 	protected final void renderComponentTag(ComponentTag tag)
 	{
 		final ApplicationSettings settings = getApplication().getSettings();
-	    if (!(tag instanceof ComponentWicketTag) || !settings.getStripWicketTag())
+	    if (!(tag instanceof ComponentWicketTag) || !settings.getStripWicketTags())
 	    {
 			// Apply attribute modifiers
 			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE))

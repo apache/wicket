@@ -106,7 +106,7 @@ public final class MarkupParser
 	public void configure(ApplicationSettings settings)
 	{
         this.componentNameAttribute = settings.getComponentNameAttribute();
-        this.stripWicketTag = settings.getStripWicketTag();
+        this.stripWicketTag = settings.getStripWicketTags();
         this.stripComments = settings.getStripComments();
         this.compressWhitespace = settings.getCompressWhitespace();
         this.automaticLinking = settings.getAutomaticLinking();
