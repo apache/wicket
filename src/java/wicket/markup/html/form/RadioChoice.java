@@ -44,15 +44,7 @@ public final class RadioChoice extends FormComponent
 	private final List values = new ArrayList();
 
 	/**
-	 * Constructor that uses the provided {@link IModel}as its model. All
-	 * components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the model
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public RadioChoice(String name, IModel model)
 	{
@@ -60,26 +52,7 @@ public final class RadioChoice extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a
-	 * dynamic model. This model will be wrapped in an instance of
-	 * {@link wicket.model.PropertyModel}using the provided expression. Thus,
-	 * using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(myIModel, expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the instance of {@link IModel}from which the model object
-	 *            will be used as the subject for the given expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @see wicket.Component#Component(String, IModel, String)
 	 */
 	public RadioChoice(String name, IModel model, String expression)
 	{
@@ -87,16 +60,7 @@ public final class RadioChoice extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided object as a simple model. This object
-	 * will be wrapped in an instance of {@link wicket.model.Model}. All
-	 * components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as a simple model
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public RadioChoice(String name, Serializable object)
 	{
@@ -104,26 +68,7 @@ public final class RadioChoice extends FormComponent
 	}
 
 	/**
-	 * Constructor that uses the provided object as a dynamic model. This object
-	 * will be wrapped in an instance of {@link wicket.model.Model}that will be
-	 * wrapped in an instance of {@link wicket.model.PropertyModel}using the
-	 * provided expression. Thus, using this constructor is a short-hand for:
-	 * 
-	 * <pre>
-	 * new MyComponent(name, new PropertyModel(new Model(object), expression));
-	 * </pre>
-	 * 
-	 * All components have names. A component's name cannot be null.
-	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as the subject for the given
-	 *            expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @throws wicket.WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public RadioChoice(String name, Serializable object, String expression)
 	{
