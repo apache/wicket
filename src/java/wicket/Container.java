@@ -93,23 +93,23 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Container extends Component
 { // TODO finalize javadoc
-	/** Map of markup tags by class. */
-	private static final Map markupCache = new HashMap();
+    /** Map of markup tags by class. */
+    private static final Map markupCache = new HashMap();
 
-	/** Size of MiniMaps. */
-	private static final int MINIMAP_MAX_ENTRIES = 8;
+    /** Size of MiniMaps. */
+    private static final int MINIMAP_MAX_ENTRIES = 8;
 
-	/** Whether to optimize maps of children with MicroMap and MiniMap. */
-	private static final boolean optimizeChildMapsForSpace = false;
+    /** Whether to optimize maps of children with MicroMap and MiniMap. */
+    private static final boolean optimizeChildMapsForSpace = false;
 
-	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(Container.class);
+    /** Log for reporting. */
+    private static final Log log = LogFactory.getLog(Container.class);
 
-	/** Map of children by name. */
-	private Map childForName;
+    /** Map of children by name. */
+    private Map childForName;
 
-	/** The markup stream for this container. */
-	private transient MarkupStream markupStream;
+    /** The markup stream for this container. */
+    private transient MarkupStream markupStream;
 
 	/**
 	 * Constructor.
@@ -215,21 +215,6 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Optimize child name mapping.
-	 */
-	private void optimize()
-	{
-		if (optimizeChildMapsForSpace)
-		{
-			childForName = new MicroMap();
-		}
-		else
-		{
-			childForName = new HashMap();
-		}
-	}
-
-	/**
 	 * Adds a child component to this container.
 	 * 
 	 * @param child
@@ -313,6 +298,69 @@ public abstract class Container extends Component
 	}
 
 	/**
+	 * Removes all children from this container.
+	 */
+	public void removeAll()
+	{
+		childForName.clear();
+	}
+	
+	/**
+	 * Replaces a child component of this container with another
+	 * 
+	 * @param child
+	 *           The child
+	 * @throws IllegalArgumentException
+	 *            Thrown if there was no child with the same name.
+	 * @return This
+	 */
+	public Container replace(final Component child)
+	{
+		// Get child name
+		final String childName = child.getName();
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("Add " + childName + " to " + this);
+		}
+
+		if (child.getParent() != this)
+		{
+			// first reset the childs parent (can't set them at once with another)
+			child.setParent(null);
+			// Set child's parent
+			child.setParent(this);
+
+			// Are we using MicroMap optimization?
+			if (optimizeChildMapsForSpace)
+			{
+				if (childForName.size() == MicroMap.MAX_ENTRIES)
+				{
+					// Reallocate MicroMap as MiniMap
+					childForName = new MiniMap(childForName, MINIMAP_MAX_ENTRIES);
+				}
+				else if (childForName.size() == MINIMAP_MAX_ENTRIES)
+				{
+					// Reallocate MiniMap as full HashMap
+					childForName = new HashMap(childForName);
+				}
+			}
+
+			// Add to map
+			final Object replaced = childForName.put(childName, child);
+
+			// Look up to make sure it was already in the map
+			if (replaced == null)
+			{
+				throw new IllegalArgumentException(exceptionMessage("A child component with the name '"
+						+ childName + "' didn't exists"));
+			}
+			((Component) replaced).setParent(null);
+		}
+		return this;
+	}
+
+	/**
 	 * Get the number of children in this container.
 	 * 
 	 * @return Number of children in this container
@@ -347,6 +395,69 @@ public abstract class Container extends Component
 		buffer.append(']');
 
 		return buffer.toString();
+	}
+
+	/**
+	 * Traverses all child components of the given class in this container,
+	 * calling the visitor's visit method at each one.
+	 * 
+	 * @param c
+	 *           The class of child to visit, or null to visit all children
+	 * @param visitor
+	 *           The visitor to call back to
+	 * @return The return value from a visitor which halted the traversal, or
+	 *         null if the entire traversal occurred
+	 */
+	public final Object visitChildren(final Class c, final IVisitor visitor)
+	{
+		// Iterate through children on this container
+		for (Iterator iterator = iterator(); iterator.hasNext();)
+		{
+			// Get next child component
+			final Component child = (Component) iterator.next();
+
+			// Is the child of the correct class (or was no class specified)?
+			if ((c == null) || c.isInstance(child))
+			{
+				// Call visitor
+				final Object value = visitor.component(child);
+
+				// If visitor returns a non-null value, it halts the traversal
+				if (value != IVisitor.CONTINUE_TRAVERSAL)
+				{
+					return value;
+				}
+			}
+
+			// If child is a container
+			if (child instanceof Container)
+			{
+				// visit the children in the container
+				final Object value = ((Container) child).visitChildren(c, visitor);
+
+				// If visitor returns a non-null value, it halts the traversal
+				if (value != IVisitor.CONTINUE_TRAVERSAL)
+				{
+					return value;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Traverses all child components in this container, calling the visitor's
+	 * visit method at each one.
+	 * 
+	 * @param visitor
+	 *           The visitor to call back to
+	 * @return The return value from a visitor which halted the traversal, or
+	 *         null if the entire traversal occurred
+	 */
+	public final Object visitChildren(final IVisitor visitor)
+	{
+		return visitChildren(null, visitor);
 	}
 
 	/**
@@ -432,14 +543,6 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Removes all children from this container.
-	 */
-	public void removeAll()
-	{
-		childForName.clear();
-	}
-
-	/**
 	 * Renders associated markup for a Border or Panel component.
 	 * 
 	 * @param openTagName
@@ -506,6 +609,22 @@ public abstract class Container extends Component
 	}
 
 	/**
+	 * The Container was not able to resolve the component name. Subclasses may 
+	 * augment the default strategy by subclassing resolveComponent().
+	 * @see wicket.markup.html.border.Border for an example.<p>
+	 * Note: resolveComponent must also render the components created
+	 *  
+	 * @param markupStream The current markup stream
+	 * @param tag The current component tag
+	 * @return true, if Container was able to resolve the component name 
+	 * 		and to render the component
+	 */
+	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
+	{
+	    return false;
+	}
+
+	/**
 	 * Set markup stream for this container.
 	 * 
 	 * @param markupStream
@@ -514,69 +633,6 @@ public abstract class Container extends Component
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
 		this.markupStream = markupStream;
-	}
-
-	/**
-	 * Traverses all child components of the given class in this container,
-	 * calling the visitor's visit method at each one.
-	 * 
-	 * @param c
-	 *           The class of child to visit, or null to visit all children
-	 * @param visitor
-	 *           The visitor to call back to
-	 * @return The return value from a visitor which halted the traversal, or
-	 *         null if the entire traversal occurred
-	 */
-	public final Object visitChildren(final Class c, final IVisitor visitor)
-	{
-		// Iterate through children on this container
-		for (Iterator iterator = iterator(); iterator.hasNext();)
-		{
-			// Get next child component
-			final Component child = (Component) iterator.next();
-
-			// Is the child of the correct class (or was no class specified)?
-			if ((c == null) || c.isInstance(child))
-			{
-				// Call visitor
-				final Object value = visitor.component(child);
-
-				// If visitor returns a non-null value, it halts the traversal
-				if (value != IVisitor.CONTINUE_TRAVERSAL)
-				{
-					return value;
-				}
-			}
-
-			// If child is a container
-			if (child instanceof Container)
-			{
-				// visit the children in the container
-				final Object value = ((Container) child).visitChildren(c, visitor);
-
-				// If visitor returns a non-null value, it halts the traversal
-				if (value != IVisitor.CONTINUE_TRAVERSAL)
-				{
-					return value;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Traverses all child components in this container, calling the visitor's
-	 * visit method at each one.
-	 * 
-	 * @param visitor
-	 *           The visitor to call back to
-	 * @return The return value from a visitor which halted the traversal, or
-	 *         null if the entire traversal occurred
-	 */
-	public final Object visitChildren(final IVisitor visitor)
-	{
-		return visitChildren(null, visitor);
 	}
 
 	/**
@@ -662,6 +718,52 @@ public abstract class Container extends Component
 	}
 
 	/**
+	 * Loads markup.
+	 * 
+	 * @param settings
+	 *           Application settings
+	 * @param key
+	 *           Key under which markup should be cached
+	 * @param markupResource
+	 *           The markup resource to load
+	 * @return The markup
+	 * @throws ParseException
+	 * @throws IOException
+	 * @throws ResourceNotFoundException
+	 */
+	private Markup loadMarkup(final ApplicationSettings settings, final String key,
+			final Resource markupResource) throws ParseException, IOException, ResourceNotFoundException
+	{
+	    final Class markupParserClass = settings.getMarkupParserClass();
+	    
+	    final IMarkupParser parser;
+	    try
+	    {
+	        parser = (IMarkupParser) markupParserClass.newInstance();
+	    }
+	    catch (IllegalAccessException ex)
+	    {
+	        throw new IOException("Failed to load MarkupParser: " + ex.getMessage());
+	    }
+	    catch (InstantiationException ex)
+	    {
+	        throw new IOException("Failed to load MarkupParser: " + ex.getMessage());
+	    }
+	    
+		parser.setComponentNameAttribute(settings.getComponentNameAttribute()); 
+		parser.setWicketTagName(settings.getWicketTagName());
+		parser.setStripComments(settings.getStripComments());
+		parser.setCompressWhitespace(settings.getCompressWhitespace());
+		parser.setStripWicketParamTag(settings.getStripWicketParamTag());
+
+		final Markup markup = parser.read(markupResource);
+
+		markupCache.put(key, markup);
+
+		return markup;
+	}
+
+	/**
 	 * Load markup and add a {@link ModificationWatcher}to the markup resource.
 	 * 
 	 * @param key
@@ -731,49 +833,18 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Loads markup.
-	 * 
-	 * @param settings
-	 *           Application settings
-	 * @param key
-	 *           Key under which markup should be cached
-	 * @param markupResource
-	 *           The markup resource to load
-	 * @return The markup
-	 * @throws ParseException
-	 * @throws IOException
-	 * @throws ResourceNotFoundException
+	 * Optimize child name mapping.
 	 */
-	private Markup loadMarkup(final ApplicationSettings settings, final String key,
-			final Resource markupResource) throws ParseException, IOException, ResourceNotFoundException
+	private void optimize()
 	{
-	    final Class markupParserClass = settings.getMarkupParserClass();
-	    
-	    final IMarkupParser parser;
-	    try
-	    {
-	        parser = (IMarkupParser) markupParserClass.newInstance();
-	    }
-	    catch (IllegalAccessException ex)
-	    {
-	        throw new IOException("Failed to load MarkupParser: " + ex.getMessage());
-	    }
-	    catch (InstantiationException ex)
-	    {
-	        throw new IOException("Failed to load MarkupParser: " + ex.getMessage());
-	    }
-	    
-		parser.setComponentNameAttribute(settings.getComponentNameAttribute()); 
-		parser.setWicketTagName(settings.getWicketTagName());
-		parser.setStripComments(settings.getStripComments());
-		parser.setCompressWhitespace(settings.getCompressWhitespace());
-		parser.setStripWicketParamTag(settings.getStripWicketParamTag());
-
-		final Markup markup = parser.read(markupResource);
-
-		markupCache.put(key, markup);
-
-		return markup;
+		if (optimizeChildMapsForSpace)
+		{
+			childForName = new MicroMap();
+		}
+		else
+		{
+			childForName = new HashMap();
+		}
 	}
 
 	/**
@@ -852,77 +923,6 @@ public abstract class Container extends Component
 			getResponse().write(element.toString());
 			markupStream.next();
 		}
-	}
-
-	/**
-	 * The Container was not able to resolve the component name. Subclasses may 
-	 * augment the default strategy by subclassing resolveComponent().
-	 * @see wicket.markup.html.border.Border for an example.<p>
-	 * Note: resolveComponent must also render the components created
-	 *  
-	 * @param markupStream The current markup stream
-	 * @param tag The current component tag
-	 * @return true, if Container was able to resolve the component name 
-	 * 		and to render the component
-	 */
-	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
-	{
-	    return false;
-	}
-	
-	/**
-	 * Replaces a child component of this container with another
-	 * 
-	 * @param child
-	 *           The child
-	 * @throws IllegalArgumentException
-	 *            Thrown if there was no child with the same name.
-	 * @return This
-	 */
-	public Container replace(final Component child)
-	{
-		// Get child name
-		final String childName = child.getName();
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("Add " + childName + " to " + this);
-		}
-
-		if (child.getParent() != this)
-		{
-			// first reset the childs parent (can't set them at once with another)
-			child.setParent(null);
-			// Set child's parent
-			child.setParent(this);
-
-			// Are we using MicroMap optimization?
-			if (optimizeChildMapsForSpace)
-			{
-				if (childForName.size() == MicroMap.MAX_ENTRIES)
-				{
-					// Reallocate MicroMap as MiniMap
-					childForName = new MiniMap(childForName, MINIMAP_MAX_ENTRIES);
-				}
-				else if (childForName.size() == MINIMAP_MAX_ENTRIES)
-				{
-					// Reallocate MiniMap as full HashMap
-					childForName = new HashMap(childForName);
-				}
-			}
-
-			// Add to map
-			final Object replaced = childForName.put(childName, child);
-
-			// Look up to make sure it was already in the map
-			if (replaced == null)
-			{
-				throw new IllegalArgumentException(exceptionMessage("A child component with the name '"
-						+ childName + "' didn't exists"));
-			}
-			((Component) replaced).setParent(null);
-		}
-		return this;
 	}
 }
 
