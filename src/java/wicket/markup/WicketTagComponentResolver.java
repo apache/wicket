@@ -34,8 +34,8 @@ import wicket.util.string.StringValueConversionException;
 
 /**
  * &lt;wicket:component class="myApp.MyTable" key=value&gt; tags may be used to add 
- * Wicket components (e.g. a specialized table) and pass parameters (e.g. the number
- * of rows per table page). The object is automatically instantiated, initialized
+ * Wicket components (e.g. a specialized PageableListView) and pass parameters (e.g. the number
+ * of rows per list view page). The object is automatically instantiated, initialized
  * and added to the page's component hierarchy.
  * <p>
  * Note: The component must have a constructor with a single String parameter: 
