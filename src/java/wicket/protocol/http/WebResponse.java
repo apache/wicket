@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.util.time.Time;
 
 /**
  * Implements responses over the HTTP protocol by holding an underlying
@@ -172,6 +173,28 @@ public class WebResponse extends Response
     {
         httpServletResponse.setContentType(mimeType);
     }
+	 
+	/**
+	 * @see wicket.Response#setContentLength(long)
+	 */
+	public void setContentLength(long length)
+	{
+		 httpServletResponse.setContentLength((int)length);
+	}
+	
+	/**
+	 * @see wicket.Response#setLastModifiedTime(wicket.util.time.Time)
+	 */
+	public void setLastModifiedTime(Time time)
+	{
+		if(time != null)
+		{
+			// If time is set also set cache headers.
+			httpServletResponse.setDateHeader("Expires", time.getMilliseconds()*1000 + 3600);
+			httpServletResponse.setHeader("Cache-Control", "max-age=" + 3600);			
+			httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
+		}
+	}
 
     /**
      * Output stream encoding. If the deployment descriptor contains a

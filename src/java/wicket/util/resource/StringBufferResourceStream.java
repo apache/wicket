@@ -95,4 +95,12 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	{
 		return getString();
 	}
+
+	/**
+	 * @see wicket.util.resource.IResourceStream#length()
+	 */
+	public long length()
+	{
+		return buffer.length();
+	}
 }

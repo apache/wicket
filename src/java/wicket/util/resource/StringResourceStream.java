@@ -83,4 +83,13 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	{
 		return getString();
 	}
+
+	/**
+	 * @see wicket.util.resource.IResourceStream#length()
+	 */
+	public long length()
+	{
+		return string.length();
+	}
+	
 }

@@ -19,15 +19,13 @@ package wicket.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.file.File;
 import wicket.util.time.Time;
 
 /**
@@ -42,14 +40,17 @@ public final class UrlResourceStream extends AbstractResourceStream
 	/** Logging */
 	private static Log log = LogFactory.getLog(UrlResourceStream.class);
 
-	/** The underlying file if this URL points to a file */
-	private File file;
-
 	/** Resource stream */
 	private transient InputStream inputStream;
 
 	/** The URL to this resource */
 	private URL url;
+
+	private int contentLength;
+
+	private String contentType;
+
+	private long lastModified;
 
 	/**
 	 * Private constructor to force use of static factory methods.
@@ -61,34 +62,26 @@ public final class UrlResourceStream extends AbstractResourceStream
 	{
 		// Save URL
 		this.url = url;
-
-		// Get path from URL (for an explanation, see
-		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4701321)
-		final String path = url.toExternalForm();
-		if (path.startsWith("file:"))
+		try
 		{
-			try
+			URLConnection connection = url.openConnection();
+			contentLength = connection.getContentLength();
+			contentType = connection.getContentType();
+			lastModified = connection.getLastModified();
+			if(connection instanceof HttpURLConnection)
 			{
-				// Convert to file
-				final File file = new File(new URI(path));
-
-				// If file exists
-				if (file != null && file.exists())
-				{
-					// save that file for future modification time queries
-					this.file = file;
-				}
+				((HttpURLConnection)connection).disconnect();
 			}
-			catch (URISyntaxException e)
-			{
-				// It should be impossible to get here or the original URL
-				// couldn't have been constructed. But we re-throw with details
-				// anyway.
-				final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(
-						"Invalid URL parameter " + url);
-				illegalArgumentException.initCause(e);
-				throw illegalArgumentException;
-			}
+		}
+		catch (IOException ex)
+		{
+			// It should be impossible to get here or the original URL
+			// couldn't have been constructed. But we re-throw with details
+			// anyway.
+			final IllegalArgumentException illegalArgumentException = new IllegalArgumentException(
+					"Invalid URL parameter " + url);
+			illegalArgumentException.initCause(ex);
+			throw illegalArgumentException;
 		}
 	}
 
@@ -112,15 +105,11 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public String getContentType()
 	{
-		return URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
-	}
-
-	/**
-	 * @return The file this resource resides in, if any.
-	 */
-	public File getFile()
-	{
-		return file;
+		if(contentType == null)
+		{
+			return URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
+		}
+		return contentType;
 	}
 
 	/**
@@ -158,11 +147,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public Time lastModifiedTime()
 	{
-		if (file != null)
-		{
-			return file.lastModifiedTime();
-		}
-		return null;
+		return Time.milliseconds(lastModified); 
 	}
 
 	/**
@@ -172,4 +157,12 @@ public final class UrlResourceStream extends AbstractResourceStream
 	{
 		return url.toString();
 	}
+	
+	/**
+	 * @see wicket.util.resource.IResourceStream#length()
+	 */
+	public long length()
+	{
+		return contentLength;
+	}	
 }

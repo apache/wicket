@@ -63,7 +63,7 @@ public abstract class DynamicImageResource extends ImageResource
 	private String format = "png";
 
 	/** The time this image resource was last modified */
-	private Time lastModifiedTime;
+	protected Time lastModifiedTime;
 
 	/**
 	 * @return Returns the image format.
@@ -111,7 +111,8 @@ public abstract class DynamicImageResource extends ImageResource
 				if (inputStream == null)
 				{
 					inputStream = new ByteArrayInputStream(getImageData());
-					lastModifiedTime = Time.now();
+					// This shouldn't be done here but the getImageData implementation should do it when it is regenerated..
+					//lastModifiedTime = Time.now();
 				}
 				return inputStream;
 			}
@@ -122,6 +123,11 @@ public abstract class DynamicImageResource extends ImageResource
 			public Time lastModifiedTime()
 			{
 				return DynamicImageResource.this.lastModifiedTime();
+			}
+
+			public long length()
+			{
+				return DynamicImageResource.this.getImageData().length;
 			}
 		};
 	}
