@@ -44,8 +44,8 @@ public class Home extends HtmlPage
     // A global list of all comments from all users
     private static final List commentList = new ArrayList();
 
-    // The table of comments shown on this page
-    private final ListView table;
+    // The commentListView of comments shown on this page
+    private final ListView commentListView;
 
     /**
      * Constructor that is invoked when page is invoked without a session.
@@ -57,8 +57,8 @@ public class Home extends HtmlPage
         // Add comment form
         add(new CommentForm("commentForm"));
 
-        // Add table of existing comments
-        add(table = new ListView("comments", commentList)
+        // Add commentListView of existing comments
+        add(commentListView = new ListView("comments", commentList)
             {
                 public void populateItem(final ListItem listItem)
                 {
@@ -107,9 +107,9 @@ public class Home extends HtmlPage
             // Add the component we edited to the list of comments
             commentList.add(newComment);
 
-            // Invalidate the table's model since a structural change
+            // Invalidate the commentListView's model since a structural change
             // was made to the comment list model
-            table.invalidateModel();
+            commentListView.invalidateModel();
 
             // Clear out the text component
             comment.setText("");
