@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
-import wicket.contrib.utils.encoding.CharSetUtil;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 
@@ -55,12 +54,20 @@ public class Home extends WicketExamplePage
 	{
 		final Locale originalLocale = getSession().getLocale();
 		getSession().setLocale(Locale.GERMANY);
+
 		super.configureResponse();
 
+		// This is no longer useful in many cases, since we now forward the 
+		// <?xml ..encoding=".." ?> from the Page's markup and use it explicitly
+		// set the responses encoding (see super class implementation).
+		// It is however not completely useless, as many html (not xhtml) pages
+		// might not have that xml declaration <?xml ..?> string.
+/*		
 		final String encoding = "text/" + getMarkupType() + "; charset="
 				+ CharSetUtil.getEncoding(getRequestCycle());
-
+				
 		getResponse().setContentType(encoding);
+*/
 		getSession().setLocale(originalLocale);
 	}
 }

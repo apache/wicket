@@ -529,8 +529,34 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Get response
 		final Response response = getResponse();
 
-		// Set content type based on markup type for page
-		response.setContentType("text/" + getMarkupType());
+		// In case the Page markup contained a <?xml ..?> to determine the
+		// markup's encoding, than forward that very same declaration to 
+		// the browser. The xml declaration of all components on the page
+		// are swallowed. Note: this is a potential issue in cases where
+		// the page's encoding (e.g. ascii) does not allow for special 
+		// characters used in the contained components.  The user has to 
+		// make sure that the Page's encoding allow for all characters
+		// required.
+		
+		// Note: 
+		
+		final MarkupStream markupStream = findMarkupStream();
+		if (markupStream != null)
+		{
+		    if (markupStream.getXmlDeclaration() != null)
+		    {
+				// Set content type based on markup type for page
+				response.setContentType("text/" + getMarkupType() + "; charset=" 
+				        + markupStream.getEncoding());
+				
+		        response.write(markupStream.getXmlDeclaration());
+		    }
+		}
+		else
+		{
+			// Set content type based on markup type for page
+			response.setContentType("text/" + getMarkupType());
+		}
 
 		// Set response locale from session locale
 		response.setLocale(getSession().getLocale());
@@ -646,12 +672,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Check access to page
 		if (checkAccess())
 		{
-			// Configure response object with locale and content type
-			configureResponse();
-
 			// Set page's associated markup stream
 			final MarkupStream markupStream = getAssociatedMarkupStream();
 			setMarkupStream(markupStream);
+			
+			// Configure response object with locale and content type
+			configureResponse();
 
 			// Render all the page's markup
 			setFlag(FLAG_IS_RENDERING, true);

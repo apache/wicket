@@ -316,6 +316,25 @@ public final class MarkupStream
 			next();
 		}
 	}
+
+	/**
+	 * Return the XML declaration string, in case if found in the
+	 * markup.
+	 * 
+	 * @return Null, if not found.
+	 */
+    public String getXmlDeclaration()
+    {
+        return markup.getXmlDeclaration();
+    }
+
+    /**
+    /* The encoding as found in <?xml ... encoding="" ?>
+     *
+     * @return Null, if not found
+     */
+    public String getEncoding()
+    {
+        return markup.getEncoding();
+    }
 }
-
-
