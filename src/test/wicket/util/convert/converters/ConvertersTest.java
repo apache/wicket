@@ -53,8 +53,16 @@ public final class ConvertersTest extends TestCase
         assertEquals(new Long(7), converter.convert(new Integer(7), Long.class));
         assertEquals("7", converter.convert(new Integer(7), String.class));
         assertEquals("7.1", converter.convert(new Double(7.1), String.class));
-        
-        // TODO someone could add a whole lot more tests here, including DUTCH_LOCALE tests - JL
+        converter.setLocale(DUTCH_LOCALE);
+        assertEquals("7,1", converter.convert(new Double(7.1), String.class));
+		
+		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
+		cal.clear();
+		cal.set(2002, Calendar.OCTOBER, 24);
+		Date date = cal.getTime();
+
+		assertEquals(date, converter.convert("24-10-02", Date.class));
+		assertEquals("24-10-02", converter.convert(date, String.class));
 	}
 
 	/**
