@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import wicket.FeedbackMessages;
 import wicket.PageParameters;
 import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
@@ -171,7 +170,7 @@ public class FormInput extends HtmlPage
 		public void handleSubmit()
 		{
 			// everything went well; just display a message
-			FeedbackMessages.info(this, "form saved");
+			info("form saved");
 		}
     }
 

@@ -275,6 +275,33 @@ public abstract class Component implements Serializable
 		attributeModifiers.add(modifier);
 		return this;
 	}
+    
+    /**
+     * Registers a debug message for this component
+     * @param message The message
+     */
+    public final void debug(final String message)
+    {
+        FeedbackMessages.debug(this, message);   
+    }
+    
+    /**
+     * Registers an error message for this component
+     * @param message The message
+     */
+    public final void error(final String message)
+    {
+        FeedbackMessages.debug(this, message);   
+    }
+    
+    /**
+     * Registers an error message for this component
+     * @param message The message
+     */
+    public final void fatal(final String message)
+    {
+        FeedbackMessages.debug(this, message);   
+    }
 
 	/**
 	 * Finds the first container parent of this component of the given class.
@@ -696,6 +723,15 @@ public abstract class Component implements Serializable
 	{
 		return getSession().getStyle();
 	}
+    
+    /**
+     * Registers a info message for this component
+     * @param message The message
+     */
+    public final void info(final String message)
+    {
+        FeedbackMessages.info(this, message);   
+    }
 
 	/**
 	 * Gets whether this component and any children are visible.
@@ -803,6 +839,15 @@ public abstract class Component implements Serializable
 	{
 		return getPath();
 	}
+    
+    /**
+     * Registers a warning message for this component
+     * @param message The message
+     */
+    public final void warn(final String message)
+    {
+        FeedbackMessages.debug(this, message);   
+    }
 
 	/**
 	 * Checks that a given tag has a required attribute value.
