@@ -67,6 +67,19 @@ public final class BytesTest extends TestCase
 
         Assert.assertTrue(Bytes.valueOf(b.toString()).equals(b));
     }
+    
+    public void testAllOperationsExplicitLocale() throws StringValueConversionException
+    {
+        Assert.assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
+        Assert.assertTrue("1,5G".equals(Bytes.gigabytes(1.5).toString(Locale.GERMAN)));
+        Assert.assertTrue("1.5G".equals(Bytes.gigabytes(1.5).toString(Locale.US)));
+
+        final Bytes b = Bytes.kilobytes(7.3);
+        Assert.assertTrue(Bytes.valueOf(b.toString(Locale.GERMAN)).equals(b));
+
+        Assert.assertTrue(Bytes.valueOf("15,5K", Locale.GERMAN).bytes() == ((15 * 1024) + 512));
+        Assert.assertTrue(Bytes.valueOf("15.5K", Locale.US).bytes() == ((15 * 1024) + 512));
+    }
 }
 
 ///////////////////////////////// End of File /////////////////////////////////

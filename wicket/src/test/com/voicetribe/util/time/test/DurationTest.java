@@ -25,6 +25,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Test cases for this object
@@ -80,6 +81,15 @@ public final class DurationTest extends TestCase
                 Duration.hours(-1).sleep();
             }
         })));
+    }
+    
+    public void testLocale() throws StringValueConversionException 
+    {
+        Assert.assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
+        Assert.assertEquals(Duration.hours(1.5), Duration.valueOf("1.5 hour", Locale.US));
+        Assert.assertEquals(Duration.hours(1.5), Duration.valueOf("1,5 hour", Locale.GERMAN));
+        Assert.assertEquals("1.5 hours", Duration.hours(1.5).toString(Locale.US));
+        Assert.assertEquals("1,5 hours", Duration.hours(1.5).toString(Locale.GERMAN));
     }
 }
 
