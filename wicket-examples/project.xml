@@ -2,7 +2,8 @@
     <pomVersion>3</pomVersion>
     <name>Wicket Examples</name>
     <groupId>wicket-examples</groupId>
-    <currentVersion>0.9.12-alpha</currentVersion>
+	<id>wicket-examples</id>
+    <currentVersion>SNAPSHOT</currentVersion>
     <organization>
         <name>SourceForge</name>
         <url>http://sourceforge.net</url>
@@ -10,14 +11,9 @@
     </organization>
     <inceptionYear>2004</inceptionYear>
     <description>
-	    Wicket is a Java web application framework that takes simplicity, 
-	    separation of concerns and ease of development to a whole new level. Wicket 
-	    pages can be mocked up, previewed and later revised using standard WYSIWYG 
-	    HTML design tools. Dynamic content processing and form handling is all handled 
-	    in Java code using a Swing-like component model backed by POJO data beans that 
-	    can easily be persisted with Hibernate.
+	    Example for web framework Wicket.
     </description>
-    <shortDescription>Examples for the wicket framework.</shortDescription>
+    <shortDescription>Examples for web framework Wicket.</shortDescription>
     <url>http://wicket.sourceforge.net</url>
     <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
     <siteAddress>shell.sourceforge.net</siteAddress>
@@ -45,8 +41,8 @@
     <developers>
         <developer>
             <name>Chris Turner</name>
-            <id>?</id>
-            <email>?</email>
+            <id>skipoles</id>
+            <email>skipoles at users.sourceforge.net</email>
             <roles/>
         </developer>
         <developer>
@@ -70,12 +66,24 @@
     </developers>
     <dependencies>
         <dependency>
+            <groupId>wicket</groupId>
+            <artifactId>wicket</artifactId>
+            <version>SNAPSHOT</version>
+            <jar>wicket-SNAPSHOT.jar</jar>
+            <type>jar</type>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+        </dependency>
+        <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.4</version>
             <jar>dom4j-1.4.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>hibernate</groupId>
@@ -83,15 +91,19 @@
             <version>2.1.6</version>
             <jar>hibernate-2.1.6.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
-            <groupId>jta</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.0</version>
-            <jar>jta-1.0.jar</jar>
+            <groupId>geronimo-spec</groupId><!-- it's the only jta jar available at Ibiblio! -->
+            <artifactId>geronimo-spec-jta</artifactId>
+            <version>1.0-M1</version>
+            <jar>geronimo-spec-jta-1.0-M1.jar</jar>
             <type>jar</type>
-            <properties/>
+ 			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
@@ -99,7 +111,9 @@
             <version>1.4</version>
             <jar>dom4j-1.4.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
@@ -107,7 +121,9 @@
             <version>2.1</version>
             <jar>commons-collections-2.1.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>odmg</groupId>
@@ -115,15 +131,19 @@
             <version>3.0</version>
             <jar>odmg-3.0.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.7.2_4</version>
-            <jar>hsqldb-1.7.2_4.jar</jar>
+            <version>1.7.2.2</version>
+            <jar>hsqldb-1.7.2.2.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -131,7 +151,9 @@
             <version>3.8.1</version>
             <jar>junit-3.8.1.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -139,7 +161,9 @@
             <version>1.2.8</version>
             <jar>log4j-1.2.8.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>ognl</groupId>
@@ -147,7 +171,9 @@
             <version>2.6.5</version>
             <jar>ognl-2.6.5.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>servletapi</groupId>
@@ -155,7 +181,9 @@
             <version>2.3</version>
             <jar>servletapi-2.3.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
@@ -163,19 +191,62 @@
             <version>1.0.4</version>
             <jar>commons-logging-1.0.4.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties> <!-- might want to turn this of for Tomcat? -->
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-full</artifactId>
             <version>2.0.2</version>
-            <jar>cglib-full-2.0.2.jar</jar>
+            <jar>cglib-full-2.0.1.jar</jar>
             <type>jar</type>
-            <properties/>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
         </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/java</sourceDirectory>
+        <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+            <resources>
+                <resource>
+                    <directory>src/test</directory>
+                    <includes>
+                        <include>**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*.java</exclude>
+                    </excludes>
+                    <filtering>false</filtering>
+                </resource>
+            </resources>
+        </unitTest>
+        <resources>
+            <resource>
+                <directory>src/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/test</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
     </build>
     <reports>
         <report>maven-changes-plugin</report>
