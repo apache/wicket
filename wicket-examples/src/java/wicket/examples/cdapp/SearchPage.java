@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.cdapp;
 
@@ -24,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.IFeedback;
-import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.examples.cdapp.model.CD;
@@ -63,8 +61,8 @@ public class SearchPage extends CdAppBasePage
 	private final SearchModel searchModel;
 
 	/**
-	 * Refers to a possible message set from the outside (details page).
-	 * To be checked on each rendering: when there is a message, add it to the current
+	 * Refers to a possible message set from the outside (details page). To be
+	 * checked on each rendering: when there is a message, add it to the current
 	 * queue and set this variable to null.
 	 */
 	private String infoMessageForNextRendering = null;
@@ -79,7 +77,9 @@ public class SearchPage extends CdAppBasePage
 
 	/**
 	 * Construct.
-	 * @param pageParameters parameters for this page
+	 * 
+	 * @param pageParameters
+	 *            parameters for this page
 	 */
 	public SearchPage(PageParameters pageParameters)
 	{
@@ -107,7 +107,7 @@ public class SearchPage extends CdAppBasePage
 		// results yet
 		add(resultsTableHeader);
 		add(new DetailLink("newCdLink", null)); // add with null; the model and
-			// the detail page are smart enough to know we want a new one then
+		// the detail page are smart enough to know we want a new one then
 		add(new CDTableNavigation("navigation", resultsListView));
 	}
 
@@ -121,9 +121,11 @@ public class SearchPage extends CdAppBasePage
 
 	/**
 	 * Sets a message for next rendering.
-	 * @param externalMessage message set from the outside (details page).
-	 * 		To be checked on each rendering: when there is a message, add it to
-	 * 		the current queue and set this variable to null
+	 * 
+	 * @param externalMessage
+	 *            message set from the outside (details page). To be checked on
+	 *            each rendering: when there is a message, add it to the current
+	 *            queue and set this variable to null
 	 */
 	public final void setInfoMessageForNextRendering(String externalMessage)
 	{
@@ -141,6 +143,7 @@ public class SearchPage extends CdAppBasePage
 
 	/**
 	 * Gets the current number of results.
+	 * 
 	 * @return the current number of results
 	 */
 	private int getNumberOfResults()
@@ -159,8 +162,10 @@ public class SearchPage extends CdAppBasePage
 		/**
 		 * Constructor
 		 * 
-		 * @param componentName Name of the form component
-		 * @param errorHandler the error handler
+		 * @param componentName
+		 *            Name of the form component
+		 * @param errorHandler
+		 *            the error handler
 		 */
 		public SearchForm(final String componentName, final IFeedback errorHandler)
 		{
@@ -177,7 +182,7 @@ public class SearchPage extends CdAppBasePage
 			setCurrentResultPageToFirst(); // start with first page
 			// SearchPage.this.modelChangedStructure();
 
-			if(search != null && (!search.trim().equals("")))
+			if (search != null && (!search.trim().equals("")))
 			{
 				info(getNumberOfResults() + " results found for query '" + search + "'");
 			}
@@ -185,6 +190,7 @@ public class SearchPage extends CdAppBasePage
 
 		/**
 		 * Gets search property.
+		 * 
 		 * @return search property
 		 */
 		public final String getSearch()
@@ -194,7 +200,9 @@ public class SearchPage extends CdAppBasePage
 
 		/**
 		 * Sets search property.
-		 * @param search search property
+		 * 
+		 * @param search
+		 *            search property
 		 */
 		public final void setSearch(String search)
 		{
@@ -216,12 +224,14 @@ public class SearchPage extends CdAppBasePage
 		/**
 		 * Construct.
 		 * 
-		 * @param componentName name of the component
-		 * @param model the model
-		 * @param pageSizeInCells page size
+		 * @param componentName
+		 *            name of the component
+		 * @param model
+		 *            the model
+		 * @param pageSizeInCells
+		 *            page size
 		 */
-		public SearchCDResultsListView(String componentName,
-				IModel model, int pageSizeInCells)
+		public SearchCDResultsListView(String componentName, IModel model, int pageSizeInCells)
 		{
 			super(componentName, model, pageSizeInCells);
 		}
@@ -236,14 +246,12 @@ public class SearchPage extends CdAppBasePage
 			final Long id = cd.getId();
 
 			// add links to the details
-			item.add(new DetailLink("title", id)
-					.add(new Label("title", cd.getTitle())));
-			item.add(new DetailLink("performers", id)
-					.add(new Label("performers", cd.getPerformers())));
-			item.add(new DetailLink("label", id)
-					.add(new Label("label", cd.getLabel())));
-			item.add(new DetailLink("year", id)
-					.add(new Label("year", (cd.getYear() != null) ? cd.getYear().toString() : "")));
+			item.add(new DetailLink("title", id).add(new Label("title", cd.getTitle())));
+			item.add(new DetailLink("performers", id).add(new Label("performers", cd
+					.getPerformers())));
+			item.add(new DetailLink("label", id).add(new Label("label", cd.getLabel())));
+			item.add(new DetailLink("year", id).add(new Label("year", (cd.getYear() != null) ? cd
+					.getYear().toString() : "")));
 
 			// add a delete link for each found record
 			item.add(new DeleteLink("delete", id));
@@ -255,8 +263,11 @@ public class SearchPage extends CdAppBasePage
 	{
 		/**
 		 * Construct.
-		 * @param name name of the component
-		 * @param id the id of the cd
+		 * 
+		 * @param name
+		 *            name of the component
+		 * @param id
+		 *            the id of the cd
 		 */
 		public DetailLink(String name, Long id)
 		{
@@ -271,7 +282,7 @@ public class SearchPage extends CdAppBasePage
 			final RequestCycle requestCycle = getRequestCycle();
 			final Long id = (Long)getModelObject();
 			requestCycle.setResponsePage(new EditPage(SearchPage.this, id));
-		}	
+		}
 	}
 
 	/** Link for deleting a row. */
@@ -279,8 +290,11 @@ public class SearchPage extends CdAppBasePage
 	{
 		/**
 		 * Construct.
-		 * @param name name of the component
-		 * @param id the id of the cd
+		 * 
+		 * @param name
+		 *            name of the component
+		 * @param id
+		 *            the id of the cd
 		 */
 		public DeleteLink(String name, Long id)
 		{
@@ -308,8 +322,10 @@ public class SearchPage extends CdAppBasePage
 		/**
 		 * Construct.
 		 * 
-		 * @param componentName name of component
-		 * @param field order by field
+		 * @param componentName
+		 *            name of component
+		 * @param field
+		 *            order by field
 		 */
 		public SortLink(String componentName, String field)
 		{
@@ -337,8 +353,10 @@ public class SearchPage extends CdAppBasePage
 		/**
 		 * Construct.
 		 * 
-		 * @param componentName the name of the component
-		 * @param table the table
+		 * @param componentName
+		 *            the name of the component
+		 * @param table
+		 *            the table
 		 */
 		public CDTableNavigation(String componentName, PageableListView table)
 		{
@@ -346,24 +364,24 @@ public class SearchPage extends CdAppBasePage
 		}
 
 		/**
-		 * @see wicket.markup.html.list.PageableListViewNavigation#populateContainer(wicket.MarkupContainer, int)
+		 * @see wicket.markup.html.list.Loop#populateIteration(wicket.markup.html.list.Loop.Iteration)
 		 */
-		protected void populateContainer(MarkupContainer container, int iteration)
+		protected void populateIteration(final Iteration iteration)
 		{
-			final PageableListViewNavigationLink link =
-				new PageableListViewNavigationLink("pageLink", pageableListView, iteration);
+			final PageableListViewNavigationLink link = new PageableListViewNavigationLink(
+					"pageLink", pageableListView, iteration.getIteration());
 
-			if (iteration > 0)
+			if (iteration.getIteration() > 0)
 			{
-				container.add(new Label("separator", "|"));
+				iteration.add(new Label("separator", "|"));
 			}
 			else
 			{
-				container.add(new Label("separator", ""));
+				iteration.add(new Label("separator", ""));
 			}
-			link.add(new Label("pageNumber", String.valueOf(iteration + 1)));
+			link.add(new Label("pageNumber", String.valueOf(iteration.getIteration() + 1)));
 			link.add(new Label("pageLabel", "page"));
-			container.add(link);
+			iteration.add(link);
 		}
 	}
 }

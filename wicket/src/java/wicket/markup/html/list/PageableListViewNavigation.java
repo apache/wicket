@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.list;
 
-import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 
 /**
@@ -226,17 +225,17 @@ public class PageableListViewNavigation extends Loop
 	 * pointing to. Subclasses may provide there own implementation adding more
 	 * sophisticated page links.
 	 * 
-	 * @see wicket.markup.html.list.Loop#populateContainer(MarkupContainer, int)
+	 * @see wicket.markup.html.list.Loop#populateIteration(Iteration)
 	 */
-	protected void populateContainer(final MarkupContainer container, final int iteration)
+	protected void populateIteration(Loop.Iteration iteration)
 	{
 		// Get the index of page this link shall point to
-		final int pageIndex = this.startIndex + iteration;
+		final int pageIndex = this.startIndex + iteration.getIteration();
 
 		// Add a page link pointing to the page
 		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
 				pageableListView, pageIndex);
-		container.add(link);
+		iteration.add(link);
 
 		// Add a label (the page number) to the list which is enclosed by the
 		// link
@@ -246,15 +245,15 @@ public class PageableListViewNavigation extends Loop
 	/**
 	 * Renders the page link. Add the separator if not the last page link
 	 * 
-	 * @see Loop#renderContainer(MarkupContainer, int)
+	 * @see Loop#renderIteration(Iteration)
 	 */
-	protected void renderContainer(final MarkupContainer container, final int iteration)
+	protected void renderIteration(final Loop.Iteration iteration)
 	{
 		// Call default implementation
-		super.renderContainer(container, iteration);
+		super.renderIteration(iteration);
 
 		// Add separator if not last page
-		if (separator != null && (iteration != getIterations() - 1))
+		if (separator != null && (iteration.getIteration() != getIterations() - 1))
 		{
 			getResponse().write(separator);
 		}

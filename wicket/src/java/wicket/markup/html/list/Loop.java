@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.list;
 
-import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -37,6 +36,37 @@ import wicket.model.Model;
  */
 public abstract class Loop extends WebMarkupContainer
 {
+	/**
+	 * Container for a Loop iteration.
+	 * 
+	 * @author Jonathan Locke
+	 */
+	static public class Iteration extends WebMarkupContainer
+	{
+		/** The iteration number */
+		private final int iteration;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param iteration
+		 *            The iteration of the loop
+		 */
+		private Iteration(final int iteration)
+		{
+			super(Integer.toString(iteration));
+			this.iteration = iteration;
+		}
+		
+		/**
+		 * @return Returns the iteration.
+		 */
+		public int getIteration()
+		{
+			return iteration;
+		}
+	}
+
 	/**
 	 * Construct.
 	 * 
@@ -78,6 +108,9 @@ public abstract class Loop extends WebMarkupContainer
 	 */
 	protected final void onRender()
 	{
+		// Remove any previous loop contents
+		removeAll();
+
 		// Ask parents for markup stream to use
 		final MarkupStream markupStream = findMarkupStream();
 
@@ -89,22 +122,20 @@ public abstract class Loop extends WebMarkupContainer
 		if (iterations > 0)
 		{
 			// Loop through the markup in this container for each iteration
-			for (int iteration = 0; iteration < iterations; iteration++)
+			for (int i = 0; i < iterations; i++)
 			{
 				// Create container for the given loop iteration
-				final MarkupContainer container = new MarkupContainer(Integer.toString(iteration))
-				{
-				};
+				final Iteration iteration = new Iteration(i);
 
-				// Add container and populate it
-				add(container);
-				populateContainer(container, iteration);
+				// Add iteration and populate it
+				add(iteration);
+				populateIteration(iteration);
 
 				// Rewind to start of markup for kids
 				markupStream.setCurrentIndex(markupStart);
 
-				// Render container
-				container.render();
+				// Render iteration
+				renderIteration(iteration);
 			}
 		}
 		else
@@ -115,25 +146,21 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * Populates the container for a given iteration of the loop
+	 * Populates this loop iteration.
 	 * 
-	 * @param container
-	 *            The container to populate
 	 * @param iteration
 	 *            The iteration of the loop
 	 */
-	protected abstract void populateContainer(MarkupContainer container, int iteration);
+	protected abstract void populateIteration(Iteration iteration);
 
 	/**
-	 * Renders the container for this loop iteration
+	 * Renders this loop iteration.
 	 * 
-	 * @param container
-	 *            The container to render
 	 * @param iteration
 	 *            The loop iteration
 	 */
-	protected void renderContainer(final MarkupContainer container, final int iteration)
+	protected void renderIteration(final Iteration iteration)
 	{
-		container.render();
+		iteration.render();
 	}
 }
