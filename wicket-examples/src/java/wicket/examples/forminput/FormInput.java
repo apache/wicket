@@ -21,9 +21,12 @@ package wicket.examples.forminput;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import wicket.FeedbackMessages;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Session;
@@ -31,9 +34,14 @@ import wicket.examples.util.NavigationPanel;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.validation.ValidationErrorMessage;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
@@ -65,6 +73,14 @@ public class FormInput extends HtmlPage
         add(new InputForm("inputForm", feedback));
         currentLocale = RequestCycle.get().getSession().getLocale();
         add(new LocaleSelect("localeSelect", this, "currentLocale", ALL_LOCALES));
+        add(new Link("defaultLocaleLink"){
+
+			public void linkClicked(RequestCycle cycle)
+			{
+				FormInput.this.currentLocale = RequestCycle.get().getSession().getLocale();
+			}
+        	
+        });
     }
 
 	/**
@@ -122,14 +138,45 @@ public class FormInput extends HtmlPage
 		public InputForm(String name, IValidationErrorHandler validationErrorHandler)
 		{
 			super(name, validationErrorHandler);
+			RequiredValidator requiredValidator = new RequiredValidator();
+
 			TextField stringInput = new TextField("stringInput", input, "stringProperty");
+			stringInput.add(requiredValidator);
 			TextField integerInput = new TextField("integerInput", input, "integerProperty");
+			integerInput.add(requiredValidator);
 			TextField doubleInput = new TextField("doubleInput", input, "doubleProperty");
+			doubleInput.add(requiredValidator);
 			TextField dateInput = new TextField("dateInput", input, "dateProperty");
+			dateInput.add(requiredValidator);
 			add(stringInput);
 			add(integerInput);
 			add(doubleInput);
 			add(dateInput);
+
+			TextField integerInRangeInput =
+				new TextField("integerInRangeInput", input, "integerInRangeProperty");
+			integerInRangeInput.add(requiredValidator);
+			// an example of how to create a custom validator; extends AbstractValidator
+			// for the convenience error messages
+			integerInRangeInput.add(new AbstractValidator(){
+
+				public ValidationErrorMessage validate(
+						Serializable input, FormComponent component)
+				{
+					int value = Integer.parseInt(input.toString());
+					if((value < 0) || (value > 100))
+					{
+						Map vars = new HashMap();
+						vars.put("input", input);
+						vars.put("lower", "0");
+						vars.put("upper", "100");
+						return errorMessage("error.outOfRange", vars, input, component);
+					}
+					return ValidationErrorMessage.NO_MESSAGE; // same as null
+				}
+				
+			});
+			add(integerInRangeInput);
 		}
 
 		/**
@@ -137,7 +184,8 @@ public class FormInput extends HtmlPage
 		 */
 		public void handleSubmit(RequestCycle cycle)
 		{
-			
+			// everything went well; just display a message
+			FeedbackMessages.info(this, "form saved");
 		}
     }
 

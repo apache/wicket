@@ -39,6 +39,9 @@ public class FormInputApplication extends WebApplication
         settings.setHomePage(FormInput.class);
         settings.setResourcePollFrequency(Duration.ONE_SECOND);
 
+        // show ?? markers when a message resource is not found
+        settings.setExceptionOnMissingResource(false);
+
         // use the localized converters
         ConverterRegistry converterRegistry = settings.getConverterRegistry();
         converterRegistry.setLocalizedDefaults();
