@@ -70,6 +70,9 @@ public final class MarkupParser
 
     /** if true, <wicket:param ..> tags will be removed from markup */
     private boolean stripWicketParamTag;
+
+    /** if true, "wicket-" will be removed from id="wicket-xxx" */
+    private boolean stripWicketFromComponentTag = false;
     
     /** If true, MarkupParser will automatically create a ComponentWicketTag for
      * all tags surrounding a href attribute with a relative path to a
@@ -113,6 +116,7 @@ public final class MarkupParser
         this.stripComments = settings.getStripComments();
         this.compressWhitespace = settings.getCompressWhitespace();
         this.automaticLinking = settings.getAutomaticLinking();
+        this.stripWicketFromComponentTag = settings.getStripComponentNames();
 	}
     
     /**
@@ -167,6 +171,7 @@ public final class MarkupParser
         final WicketComponentTagIdentifier detectWicketComponents = new WicketComponentTagIdentifier(xmlParser);
         detectWicketComponents.setComponentNameAttribute(this.componentNameAttribute);
         detectWicketComponents.setWicketNamespace(this.wicketNamespace);
+        detectWicketComponents.setStripWicketFromComponentTag(this.stripWicketFromComponentTag);
 
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
                 new HtmlHandler(detectWicketComponents));
