@@ -126,7 +126,7 @@ public class ApplicationSettings
     private ConverterRegistry converterRegistry = new ConverterRegistry();
 
     // Component attribute name
-    private String componentNameAttribute = ComponentTag.wicketComponentNameAttribute;
+    private String componentNameAttribute = ComponentTag.WICKET_COMPONENT_NAME_ATTRIBUTE;
 
     // True to check that each component on a page is used
     private boolean componentUseCheck = true;

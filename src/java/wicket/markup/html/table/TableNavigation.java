@@ -32,9 +32,9 @@ import wicket.markup.html.basic.Label;
  * 
  * 
  * 
- *      &lt;td id=&quot;wcn-navigation&quot;&gt;
- *          &lt;a id=&quot;wcn-pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- *             &lt;span id=&quot;wcn-pageNumber&quot;/&gt;
+ *      &lt;td id=&quot;wicket-navigation&quot;&gt;
+ *          &lt;a id=&quot;wicket-pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *             &lt;span id=&quot;wicket-pageNumber&quot;/&gt;
  *          &lt;/a&gt;
  *      &lt;/td&gt;
  * 
@@ -85,10 +85,10 @@ import wicket.markup.html.basic.Label;
  * 
  * 
  * 
- *      &lt;td id=&quot;wcn-navigation&quot;&gt;
- *          &lt;span id=&quot;wcn-separator&quot;/&gt;
- *          &lt;a id=&quot;wcn-pageLink&quot; href=&quot;#&quot;&gt;
- *            &lt;span id=&quot;wcn-pageLabel&quot;/&gt;&lt;span id=&quot;wcn-pageNumber&quot;/&gt;
+ *      &lt;td id=&quot;wicket-navigation&quot;&gt;
+ *          &lt;span id=&quot;wicket-separator&quot;/&gt;
+ *          &lt;a id=&quot;wicket-pageLink&quot; href=&quot;#&quot;&gt;
+ *            &lt;span id=&quot;wicket-pageLabel&quot;/&gt;&lt;span id=&quot;wicket-pageNumber&quot;/&gt;
  *          &lt;/a&gt;
  *      &lt;/td&gt;
  * 

@@ -39,7 +39,7 @@ import wicket.util.string.Strings;
  * <p>
  * Simply add it like this 
  * add(new WicketComponentTree("componentTree", this.getPage()));
- * to your Page as well as 	<span id="wcn-componentTree"/>
+ * to your Page as well as 	<span id="wicket-componentTree"/>
  * to your markup.
  * 
  * @author Juergen Donnerstag

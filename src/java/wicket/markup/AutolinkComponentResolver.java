@@ -39,7 +39,7 @@ import wicket.util.value.ValueMap;
 /**
  * The AutolinkComponentNameResolver is responsible to deal with 
  * [autolink] components which are used in hrefs like 
- * &lt;a wcn="[autolink] href="Home.html"&gt;Home&lt;/a&gt;
+ * &lt;a wicket="[autolink] href="Home.html"&gt;Home&lt;/a&gt;
  * 
  * It automatically creates a ExternalPageLink component using the tag syntax:
  * "[autolink:parameters]", where parameters can be a list of comma separated key
@@ -96,7 +96,8 @@ public class AutolinkComponentResolver implements IComponentResolver
      * @param container The container parsing its markup
      * @return true, if componentName was handle by the resolver. False, otherwise  
      */
-	public boolean resolve(final RequestCycle cycle, final MarkupStream markupStream, final ComponentTag tag, final Container container)
+	public boolean resolve(final RequestCycle cycle, final MarkupStream markupStream,
+			final ComponentTag tag, final Container container)
 	{
 	    // Get the component name to handle
 	    final String componentName = tag.getComponentName();
@@ -153,8 +154,11 @@ public class AutolinkComponentResolver implements IComponentResolver
      * relative to the package containing the page where this component is contained.
      * @param page The page where the link is
      * @param markupStream Markup stream to use when throwing any exceptions
+     * @param componentName the name of the component
+     * @param tag the component tag
      */
-    private void resolveAutomaticLink(final Page page, final MarkupStream markupStream, final String componentName, final ComponentTag tag)
+    private void resolveAutomaticLink(final Page page, final MarkupStream markupStream,
+    		final String componentName, final ComponentTag tag)
     {
         // Get any automaticLink component
         final Matcher matcher = automaticComponentPattern.matcher(componentName);

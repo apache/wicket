@@ -46,11 +46,11 @@ import wicket.markup.ComponentTag;
  * </pre>
  * and in your HTML file:
  * <pre>
- *  &lt;input type="button" id="wcn-remove" value="push me" /&gt;
+ *  &lt;input type="button" id="wicket-remove" value="push me" /&gt;
  * </pre>
  * or (with a onclick handler that will be replaced but can be usefull when designing):
  * <pre>
- *  &lt;input type="button" onclick="alert('test');" id="wcn-remove" value="push me" /&gt;
+ *  &lt;input type="button" onclick="alert('test');" id="wicket-remove" value="push me" /&gt;
  * </pre>
  * </p>
  *

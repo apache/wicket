@@ -36,8 +36,8 @@ import wicket.markup.html.HtmlContainer;
  * Example:
  * <pre>
  *  &lt;tbody&gt;
- *    &lt;tr id="wcn-rows" class="even"&gt;
- *        &lt;td&gt;&lt;span id="wcn-id"&gt;Test ID&lt;/span>&lt;/td&gt;
+ *    &lt;tr id="wicket-rows" class="even"&gt;
+ *        &lt;td&gt;&lt;span id="wicket-id"&gt;Test ID&lt;/span>&lt;/td&gt;
  *    ...    
  * </pre><p>
  * Though this example is about a HTML table, ListView is not at all limited
