@@ -30,97 +30,161 @@
 
     <servlet>
         <servlet-name>HelloWorldApplication</servlet-name>
-        <servlet-class>wicket.examples.helloworld.HelloWorldApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.helloworld.HelloWorldApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>FormInputApplication</servlet-name>
-        <servlet-class>wicket.examples.forminput.FormInputApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.forminput.FormInputApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>NestedApplication</servlet-name>
-        <servlet-class>wicket.examples.nested.NestedApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.nested.NestedApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>GuestBookApplication</servlet-name>
-        <servlet-class>wicket.examples.guestbook.GuestBookApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.guestbook.GuestBookApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>GuestBook2Application</servlet-name>
-        <servlet-class>wicket.examples.guestbook2.GuestBook2Application</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.guestbook2.GuestBook2Application</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>ImagesApplication</servlet-name>
-        <servlet-class>wicket.examples.images.ImagesApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.images.ImagesApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>LibraryApplication</servlet-name>
-        <servlet-class>wicket.examples.library.LibraryApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.library.LibraryApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>LinkomaticApplication</servlet-name>
-        <servlet-class>wicket.examples.linkomatic.LinkomaticApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.linkomatic.LinkomaticApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>NavomaticApplication</servlet-name>
-        <servlet-class>wicket.examples.navomatic.NavomaticApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.navomatic.NavomaticApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>PubApplication</servlet-name>
-        <servlet-class>wicket.examples.pub.PubApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.pub.PubApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>SignInApplication</servlet-name>
-        <servlet-class>wicket.examples.signin.SignInApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.signin.SignInApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>UploadApplication</servlet-name>
-        <servlet-class>wicket.examples.upload.UploadApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.upload.UploadApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>SignIn2Application</servlet-name>
-        <servlet-class>wicket.examples.signin2.SignIn2Application</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.signin2.SignIn2Application</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>DisplaytagApplication</servlet-name>
-        <servlet-class>wicket.examples.displaytag.DisplaytagApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.displaytag.DisplaytagApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>EncodingsApplication</servlet-name>
-        <servlet-class>wicket.examples.encodings.EncodingsApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.encodings.EncodingsApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>HelloMozillaApplication</servlet-name>
-        <servlet-class>wicket.examples.hellomozilla.HelloMozillaApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.hellomozilla.HelloMozillaApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -140,7 +204,11 @@
 
     <servlet>
         <servlet-name>GroovyApplication</servlet-name>
-        <servlet-class>wicket.examples.groovy.GroovyApplication</servlet-class>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.groovy.GroovyApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
