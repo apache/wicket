@@ -31,7 +31,23 @@
 }
 
 .required {
-	background-color: #FFFFCC;	
+	background-color: #FFFFCC;
+}
+
+.litupRow {
+}
+
+.mediumButton {
+ width: 80px;
+}
+
+.buttons {
+	margin: 5px;
+}
+
+.litupRowOver  {
+	background-color: #FFFF66;
+	cursor: pointer;
 }
 
 input, select, label  { 	

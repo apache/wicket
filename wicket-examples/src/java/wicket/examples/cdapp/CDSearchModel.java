@@ -80,6 +80,7 @@ public final class CDSearchModel extends DetachableModel
 			{
 				query.setString("performers", searchStringParameter);
 				query.setString("title", searchStringParameter);
+				query.setString("label", searchStringParameter);
 			}
 		};
 		PageableList list = new PageableList(rowsPerPage, searchCDAction);

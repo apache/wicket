@@ -52,6 +52,7 @@
 			SELECT cd FROM wicket.examples.cdapp.model.CD as cd
             WHERE (:title is null or upper(cd.title) like :title)
             OR (:performers is null or upper(cd.performers) like :performers)
+            OR (:label is null or upper(cd.label) like :label)
         ]]>
     </query>
 
@@ -60,6 +61,7 @@
 			SELECT count(cd.id) FROM wicket.examples.cdapp.model.CD as cd
             WHERE (:title is null or upper(cd.title) like :title)
             OR (:performers is null or upper(cd.performers) like :performers)
+            OR (:label is null or upper(cd.label) like :label)
         ]]>
     </query>
 

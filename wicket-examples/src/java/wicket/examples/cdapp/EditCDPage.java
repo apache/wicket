@@ -25,6 +25,7 @@ import net.sf.hibernate.Transaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Page;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.contrib.data.model.PersistentObjectModel;
@@ -32,6 +33,7 @@ import wicket.contrib.data.model.hibernate.HibernateObjectModel;
 import wicket.contrib.data.util.hibernate.HibernateHelper;
 import wicket.contrib.data.util.hibernate.HibernateHelperSessionDelegate;
 import wicket.contrib.markup.html.form.DataTextField;
+import wicket.examples.WicketExamplePage;
 import wicket.examples.cdapp.model.CD;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
@@ -50,7 +52,7 @@ import wicket.model.IModel;
  * 
  * @author Eelco Hillenius
  */
-public final class EditCDPage extends SimpleBorderedPage
+public final class EditCDPage extends WicketExamplePage
 {
 	/** Logger. */
 	private static Log log = LogFactory.getLog(SearchCDPage.class);
@@ -72,14 +74,6 @@ public final class EditCDPage extends SimpleBorderedPage
 			id = Long.valueOf(idFromRequest);
 		}
 		cdModel = new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
-		// add a label with expression title. What happens is that a
-		// PropertyModel is constructed with our instance of IModel
-		// (DetachableCDModel) and
-		// property expression 'title'. At execution time, our DetachableCDModel
-		// will
-		// load the CD as the actual model. That CD will be used for the
-		// expression,
-		// thus property 'title' of the current CD will be used for the label.
 		add(new Label("cdTitle", new TitleModel(cdModel)));
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
@@ -129,7 +123,8 @@ public final class EditCDPage extends SimpleBorderedPage
 			{
 				public void onClick()
 				{
-					//getRequestCycle().setPage(getSearchPage());
+					Page searchPage = getPageFactory().newPage(SearchCDPage.class);
+					getRequestCycle().setPage(searchPage);
 				}
 			});
 		}
@@ -148,10 +143,11 @@ public final class EditCDPage extends SimpleBorderedPage
 			{
 				session = HibernateHelper.getSession();
 				tx = session.beginTransaction();
-				session.save(cd);
+				session.saveOrUpdate(cd);
 				tx.commit();
 				info("cd saved");
-				//getRequestCycle().setPage(getSearchPage());
+				Page searchPage = getPageFactory().newPage(SearchCDPage.class);
+				getRequestCycle().setPage(searchPage);
 			}
 			catch (HibernateException e)
 			{
@@ -194,12 +190,12 @@ public final class EditCDPage extends SimpleBorderedPage
 		 */
 		public Object getObject()
 		{
-			if (cdModel.getId() != null)
+			if (cdModel.getId() != null) // it is allready persistent
 			{
 				CD cd = (CD)cdModel.getObject();
 				return cd.getTitle();
 			}
-			else
+			else // it is a new cd
 			{
 				return "<NEW CD>";
 			}

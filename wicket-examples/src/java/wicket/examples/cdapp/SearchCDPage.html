@@ -12,7 +12,7 @@
       <fieldset>
         <legend>Search</legend>
           <input id="wicket-search" type="text" size="20"/>
-          <input type="submit" value="search"/>
+          <input type="submit" value="search" class="mediumButton"/>
       </fieldset>
      </form>
 
@@ -48,26 +48,21 @@
           </tr>
         </tfoot>
         <tbody>
-          <tr id="wicket-results">
-            <td>
-                <a href="#" id="wicket-performers">
-                  <span id="wicket-performers">(performers)</span>
-                </a>
+          <tr id="wicket-results" class="litupRow"
+          		onmouseover="this.className='litupRowOver';"
+          		onmouseout="this.className='litupRow';"
+          	>
+            <td id="wicket-performers">
+                <span id="wicket-performers">(performers)</span>
             </td>
-            <td>
-                <a href="#" id="wicket-title">
-                  <span id="wicket-title">(title)</span>
-                </a>
+            <td id="wicket-title">
+                <span id="wicket-title">(title)</span>
             </td>
-            <td>
-                <a href="#" id="wicket-label">
-                  <span id="wicket-label">(label)</span>
-                </a>
+            <td id="wicket-label">
+                <span id="wicket-label">(label)</span>
             </td>
-            <td>
-                <a href="#" id="wicket-year">
-                  <span id="wicket-year">(year)</span>
-                </a>
+            <td id="wicket-year">
+                <span id="wicket-year">(year)</span>
             </td>
             <td>
                 <a href="#" class="delete" id="wicket-delete">
