@@ -19,19 +19,28 @@
 package wicket.markup;
 
 /**
- * Holds an uninterpreted markup string
+ * This class is for framework purposes only, which is why the class is
+ * (default) protected.<p>
+ * Wicket divides markup like (x)html, wml etc. into two type of markup elements.
+ * <ul>
+ *   <li>ComponentTag, which represents a single xml tag, though including a
+ *       close tag if available
+ *   <li>RawMarkup, which all the rest. An uninterpreted markup string.
+ * </ul>
+ * 
  * @author Jonathan Locke
  */
 final class RawMarkup extends MarkupElement
-{ // TODO finalize javadoc
-    // The raw markup string
-    private final String string;
+{ 
+    /** The raw markup string **/
+    private final CharSequence string;
 
     /**
-     * Constructor
+     * Create a RawMarkup element referencing an uninterpreted markup string.
+     *  
      * @param string The raw markup
      */
-    RawMarkup(final String string)
+    RawMarkup(final CharSequence string)
     {
         this.string = string;
     }
@@ -41,7 +50,7 @@ final class RawMarkup extends MarkupElement
      */
     public String toString()
     {
-        return string;
+        return string.toString();
     }
 
     /**
