@@ -57,7 +57,7 @@ public class ButtonImage extends DynamicImage
 	private Color color = new Color(0xE9, 0x60, 0x1A);
 	
 	/** The font to use */
-	private Font font = new Font("Helvetica", Font.BOLD, 14);
+	private Font font = new Font("Helvetica", Font.BOLD, 16);
 
 	/** The color of the text */
 	private Color textColor = Color.WHITE;
@@ -205,7 +205,7 @@ public class ButtonImage extends DynamicImage
 		
 		// Turn on anti-aliasing
 		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_OFF);
+				RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		// Draw background
 		graphics.setColor(backgroundColor);
@@ -213,6 +213,7 @@ public class ButtonImage extends DynamicImage
 		
 		// Draw round rectangle
 		graphics.setColor(color);
+		graphics.setBackground(backgroundColor);
 		graphics.fillRoundRect(0, 0, getWidth(), getHeight(), arcWidth, arcHeight);
 		
 		// Draw text
