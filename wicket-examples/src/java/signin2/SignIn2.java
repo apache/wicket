@@ -47,7 +47,7 @@ public final class SignIn2 extends SignInPage
                 if (username.equals("jonathan") && password.equals("password"))
                 {
                     // successfully signed in.
-                    cycle.getSession().setProperty("user", "jonathan");
+                    cycle.getSession().setProperty("signin2.user", "jonathan");
                     
                     // Depending on user's choice, remember me or not
                     this.setPersistent(this.getRememberMe());

@@ -81,7 +81,7 @@ public final class SignIn extends HtmlPage
             if (properties.getString("username").equals("jonathan")
                 && properties.getString("password").equals("password"))
             {
-                cycle.getSession().setProperty("user", "jonathan");
+                cycle.getSession().setProperty("signin.user", "jonathan");
 
                 if (!cycle.continueToOriginalDestination())
                 {

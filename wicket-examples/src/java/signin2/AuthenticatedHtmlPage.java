@@ -35,7 +35,7 @@ public class AuthenticatedHtmlPage extends HtmlPage
      */
     protected boolean checkAccess(RequestCycle cycle)
     {
-        boolean signedIn = cycle.getSession().getProperty("user") != null;
+        boolean signedIn = cycle.getSession().getProperty("signin2.user") != null;
         if (!signedIn)
         {
             cycle.redirectToInterceptPage(SignIn2.class);
