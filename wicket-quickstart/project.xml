@@ -3,7 +3,7 @@
 <project>
   <id>wicket-quickstart</id>
   <name>Wicket QuickStart</name>
-  <currentVersion>0.9.17-beta</currentVersion>
+  <currentVersion>SNAPSHOT</currentVersion>
   <package>wicket</package>
   <description><![CDATA[
 	    Quickstart project for the Wicket framework. This project will get you up and running using Jetty as a]]><![CDATA[
@@ -148,7 +148,7 @@
     <dependency>
       <groupId>jetty</groupId>
       <artifactId>org.mortbay.jetty</artifactId>
-      <version>4.2.20</version>
+      <version>4.2.22</version>
       <type>jar</type>
       <url>http://www.mortbay.com</url>
       <properties>

@@ -96,9 +96,9 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>jta</groupId>
-      <artifactId>jta</artifactId>
-      <version>1.0</version>
+      <groupId>geronimo-spec</groupId>
+      <artifactId>geronimo-spec-jta</artifactId>
+      <version>1.0-M1</version>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
@@ -136,7 +136,6 @@
       	don't use 1.0-beta-8 or 9. It is uses an incompatible asm version.
       	Incompatible with cglib that is used by Hibernate
       -->
-      <jar>groovy-1.0-beta-7.jar</jar>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -146,7 +145,6 @@
       <groupId>asm</groupId>
       <artifactId>asm-util</artifactId>
       <version>1.4.3</version>
-      <jar>asm-util-1.4.3.jar</jar>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
@@ -156,7 +154,6 @@
       <groupId>asm</groupId>
       <artifactId>asm</artifactId>
       <version>1.4.3</version>
-      <jar>asm-1.4.3.jar</jar>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <classpath>
-  <classpathentry excluding="" kind="src" path="src\main\java">
+  <classpathentry excluding="" kind="src" path="src/main/java">
   </classpathentry>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
   </classpathentry>
@@ -23,12 +23,12 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/jetty/jars/org.mortbay.jetty-4.2.20.jar">
+  <classpathentry kind="var" path="MAVEN_REPO/jetty/jars/org.mortbay.jetty-4.2.22.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/tomcat/jars/jasper-runtime-4.1.30.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/tomcat/jars/jasper-compiler-4.1.30.jar">
   </classpathentry>
-  <classpathentry kind="output" path="build\classes">
+  <classpathentry kind="output" path="target/classes">
   </classpathentry>
 </classpath>
