@@ -57,7 +57,15 @@ public abstract class AbstractDynamicImage extends Image
 	{
 		super(name);
 	}
-
+	
+	/**
+	 * @return Returns the extension.
+	 */
+	public String getExtension()
+	{
+		return extension;
+	}
+	
 	/**
 	 * Sets the extension of this dynamic image
 	 * 

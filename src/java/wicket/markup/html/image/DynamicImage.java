@@ -57,22 +57,6 @@ public abstract class DynamicImage extends AbstractDynamicImage
 	}
 
 	/**
-	 * @return Returns the width.
-	 */
-	public int getWidth()
-	{
-		return width;
-	}
-
-	/**
-	 * @return Returns the height.
-	 */
-	public int getHeight()
-	{
-		return height;
-	}
-
-	/**
 	 * @return The image data for this dynamic image
 	 */
 	public byte[] getImageData()
