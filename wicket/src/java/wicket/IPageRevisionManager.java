@@ -18,18 +18,18 @@
 package wicket;
 
 /**
- * Interface to code that manages versions of a Page.
+ * Interface to code that manages revisions of a Page.
  * 
  * @author Jonathan Locke
  */
-public interface IPageVersionManager
+public interface IPageRevisionManager
 {
 	/**
-	 * A PageVersionManager that does nothing
+	 * A PageRevisionManager that does nothing
 	 */
-	public static final IPageVersionManager NULL = new IPageVersionManager()
+	public static final IPageRevisionManager NULL = new IPageRevisionManager()
 	{
-		public void beginVersion()
+		public void beginRevision()
 		{
 		}
 
@@ -45,27 +45,28 @@ public interface IPageVersionManager
 		{
 		}
 
-		public void endVersion()
+		public void endRevision()
 		{
 		}
 
-		public Page getVersion(int version)
+		public Page getRevision(int revision)
 		{
 			return null;
 		}
 
-		public int getVersion()
+		public int getNewestRevisionNumber()
 		{
+			// Revision -1 of a page is the original page (no revision yet)
 			return -1;
 		}
 	};
 
 	/**
 	 * Called when changes are immediately impending to the Page being managed
-	 * by this version manager. In requests where the Page is not changed at
+	 * by this revision manager. In requests where the Page is not changed at
 	 * all, none of the methods in this interface will ever be called.
 	 */
-	public void beginVersion();
+	public void beginRevision();
 
 	/**
 	 * Indicates that the given component was added.
@@ -94,20 +95,20 @@ public interface IPageVersionManager
 	/**
 	 * Called when changes to the page have ended.
 	 */
-	public void endVersion();
+	public void endRevision();
 
 	/**
-	 * Retrieves a page of the given version
+	 * Retrieves a given Page revision.
 	 * 
-	 * @param version
-	 *            The version to get
+	 * @param revision
+	 *            The revision to get
 	 * @return The page
 	 */
-	public Page getVersion(int version);
+	public Page getRevision(int revision);
 
 	/**
-	 * @return Returns the current (most recent) version being managed by this
-	 *         version manager.
+	 * @return Returns the current (most recent) revision being managed by this
+	 *         revision manager.
 	 */
-	public int getVersion();
+	public int getNewestRevisionNumber();
 }

@@ -242,27 +242,27 @@ public abstract class Session implements Serializable
 	 * 
 	 * @param path
 	 *            Component path
-	 * @param version
-	 *            The version of the page required
+	 * @param revisionNumber
+	 *            The revision of the page required
 	 * @return The page based on the first path component (the page id)
 	 */
-	public final Page getPage(final String path, final int version)
+	public final Page getPage(final String path, final int revisionNumber)
 	{
 		// Retrieve the page for the first path component from this session
 		Page page = getPage(Integer.parseInt(Strings.firstPathComponent(path,
 				componentPathSeparator)));
 
-		// Get the version of the page requested from the page
-		final Page pageVersion = page.getVersion(version);
+		// Get the revision of the page requested from the page
+		final Page revision = page.getRevision(revisionNumber);
 
 		// Need to update session with new page?
-		if (pageVersion != page)
+		if (revision != page)
 		{
 			// This is our new page
-			page = pageVersion;
+			page = revision;
 
 			// Replaces old page entry
-			getPageMap().put(new Integer(pageVersion.getId()), page);
+			getPageMap().put(new Integer(page.getId()), page);
 			pageChanged(page);
 		}
 

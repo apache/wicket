@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
-import wicket.version.undo.UndoPageVersionManager;
+import wicket.version.undo.UndoPageRevisionManager;
 
 /**
  * Abstract base class for pages. As a MarkupContainer subclass, a Page can
@@ -68,7 +68,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Used to create page-unique numbers */
 	private int autoIndex;
 
-	/** Number of changes that have occurred since beginVersion() was called */
+	/** Number of changes that have occurred since the request began */
 	private int changeCount;
 
 	/** Any feedback display for this page */
@@ -86,11 +86,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** The session that this page is in. */
 	private transient Session session = null;
 
-	/** True when changes to the Page should be tracked by versioning */
+	/** True when changes to the Page should be tracked by revision management */
 	private boolean trackChanges = false;
 
-	/** Version manager for this page */
-	private transient IPageVersionManager versionManager;
+	/** Revision manager for this page */
+	private transient IPageRevisionManager revisionManager;
 
 	/**
 	 * Constructor.
@@ -174,41 +174,45 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @return The version of this page.
+	 * @return The the revision of this page. If the page has been changed once,
+	 *         the return value will be 0. If the page has not yet been revised,
+	 *         the revision returned will be -1, indicating that the Page is in
+	 *         its original state.
 	 */
-	public final int getVersion()
+	public final int getRevisionNumber()
 	{
-		return getVersionManager().getVersion();
+		return getRevisionManager().getNewestRevisionNumber();
 	}
 
 	/**
-	 * Override this method to implement a custom way of producing a version of
+	 * Override this method to implement a custom way of producing a revision of
 	 * a Page when it cannot be found in the Session.
 	 * 
-	 * @param version
-	 *            The version required
+	 * @param revisionNumber
+	 *            The revision desired or -1 to get the original Page.
 	 * @return A Page object with the given component/model hierarchy that was
 	 *         attached to this page at the time represented by the requested
-	 *         version.
+	 *         revision.
 	 */
-	public Page getVersion(final int version)
+	public Page getRevision(final int revisionNumber)
 	{
 		// If we're still the original Page
-		if (versionManager == IPageVersionManager.NULL)
+		if (revisionManager == IPageRevisionManager.NULL)
 		{
 			// return self
 			return this;
 		}
-		
-		// Get page of desired version
-		final Page page = getVersionManager().getVersion(version);
-		
-		// If we went all the way back to the original page, remove version info
-		if (page.getVersion() == -1)
+
+		// Get page of desired revision
+		final Page page = getRevisionManager().getRevision(revisionNumber);
+
+		// If we went all the way back to the original page, remove revision
+		// info
+		if (page.getRevisionNumber() == -1)
 		{
-			page.versionManager = IPageVersionManager.NULL;
+			page.revisionManager = IPageRevisionManager.NULL;
 		}
-		
+
 		return page;
 	}
 
@@ -323,15 +327,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @return Gets any version manager for this Page
+	 * @return Gets any revision manager for this Page
 	 */
-	protected IPageVersionManager getVersionManager()
+	protected IPageRevisionManager getRevisionManager()
 	{
-		if (versionManager == null)
+		if (revisionManager == null)
 		{
-			versionManager = IPageVersionManager.NULL;
+			revisionManager = IPageRevisionManager.NULL;
 		}
-		return versionManager;
+		return revisionManager;
 	}
 
 	/**
@@ -344,12 +348,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @return Factory method that creates a version manager for this Page
+	 * @return Factory method that creates a revision manager for this Page
 	 */
-	protected IPageVersionManager newVersionManager()
+	protected IPageRevisionManager newRevisionManager()
 	{
-		return new UndoPageVersionManager(this, getSession().getApplication().getSettings()
-				.getMaxPageVersions());
+		return new UndoPageRevisionManager(this, getSession().getApplication().getSettings()
+				.getMaxPageRevisions());
 	}
 
 	/**
@@ -393,7 +397,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void componentAdded(Component component)
 	{
 		changed();
-		getVersionManager().componentAdded(component);
+		getRevisionManager().componentAdded(component);
 	}
 
 	/**
@@ -403,7 +407,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void componentModelChangeImpending(Component component)
 	{
 		changed();
-		getVersionManager().componentModelChangeImpending(component);
+		getRevisionManager().componentModelChangeImpending(component);
 	}
 
 	/**
@@ -413,7 +417,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	final void componentRemoved(Component component)
 	{
 		changed();
-		getVersionManager().componentRemoved(component);
+		getRevisionManager().componentRemoved(component);
 	}
 
 	/**
@@ -478,14 +482,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void onInternalEndRequest()
 	{
-		// Any changes to the page after this point will be versioned
+		// Any changes to the page after this point will be tracked by the
+		// Page's revision manager
 		trackChanges = true;
 
-		// If there have been changes to the page in this version
+		// If there have been changes to the page in this revision
 		if (changeCount > 0)
 		{
-			// We're done with this version
-			getVersionManager().endVersion();
+			// We're done with this revision
+			getRevisionManager().endRevision();
 		}
 	}
 
@@ -552,24 +557,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Install version manager if need be
+	 * Install revision manager if need be
 	 */
 	private final void changed()
 	{
 		// If we are creating a revision of the original Page
 		if (trackChanges)
 		{
-			// Install a real version manager now if we don't already have one
-			if (versionManager == IPageVersionManager.NULL)
+			// Install a real revision manager now if we don't already have one
+			if (revisionManager == IPageRevisionManager.NULL)
 			{
-				versionManager = newVersionManager();
+				revisionManager = newRevisionManager();
 			}
 
 			// If there have not been any changes yet
 			if (changeCount == 0)
 			{
-				// start a new version
-				getVersionManager().beginVersion();
+				// start a new revision
+				getRevisionManager().beginRevision();
 			}
 
 			// Increase number of changes
