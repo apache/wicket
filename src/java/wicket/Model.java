@@ -35,6 +35,13 @@ public class Model implements IModel
     private Serializable object;
 
     /**
+     * Construct the model without providing an object.
+     */
+    public Model()
+    {
+    }
+
+    /**
      * Construct the model, setting the given object as the wrapped object.
      * @param object de model object proper
      */
