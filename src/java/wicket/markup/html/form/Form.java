@@ -29,7 +29,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
-import wicket.markup.html.form.validation.IFormValidationDelegate;
+import wicket.markup.html.form.validation.IFormValidationStrategy;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.Strings;
@@ -78,20 +78,20 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * The default form validation delegate.
+	 * The default form validation strategy.
 	 */
-	private static final class DefaultFormValidationDelegate implements IFormValidationDelegate
+	private static final class DefaultFormValidationStrategy implements IFormValidationStrategy
 	{
-		/** Single instance of default form validation delegate */
-		private static final DefaultFormValidationDelegate instance = new DefaultFormValidationDelegate();
+		/** Single instance of default form validation strategy */
+		private static final DefaultFormValidationStrategy instance = new DefaultFormValidationStrategy();
 
 		/** Log. */
-		private static final Log log = LogFactory.getLog(DefaultFormValidationDelegate.class);
+		private static final Log log = LogFactory.getLog(DefaultFormValidationStrategy.class);
 
 		/**
-		 * @return Singleton instance of DefaultFormValidationDelegate
+		 * @return Singleton instance of DefaultFormValidationStrategy
 		 */
-		private static DefaultFormValidationDelegate getInstance()
+		private static DefaultFormValidationStrategy getInstance()
 		{
 			return instance;
 		}
@@ -171,13 +171,13 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * Gets the delegate to be used for execution of validation of this form.
+	 * Gets the strategy to be used for form validation
 	 * 
-	 * @return the delegate to be used for execution of validation of this form
+	 * @return The strategy to be used for validating this form
 	 */
-	public IFormValidationDelegate getValidationDelegate()
+	public IFormValidationStrategy getValidationStrategy()
 	{
-		return DefaultFormValidationDelegate.getInstance();
+		return DefaultFormValidationStrategy.getInstance();
 	}
 
 	/**
@@ -357,8 +357,8 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		// they can simply call setRedirect(false) in handleSubmit.
 		getRequestCycle().setRedirect(true);
 
-		// Validate model using validation delegate
-		getValidationDelegate().validate(this);
+		// Validate model using validation strategy
+		getValidationStrategy().validate(this);
 
 		// If a validation error occurred
 		if (hasError())
