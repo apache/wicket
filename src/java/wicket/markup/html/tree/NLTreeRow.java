@@ -32,7 +32,7 @@ import wicket.markup.html.panel.Panel;
 public final class NLTreeRow extends Panel
 {
 	/** reference to the tree component. */
-	private final Tree tree;
+	private final NLTree tree;
 
     /**
      * Construct.
@@ -40,7 +40,7 @@ public final class NLTreeRow extends Panel
      * @param tree reference to the holding tree component
      * @param nodeModel model for the current node
      */
-    public NLTreeRow(String componentName, Tree tree, TreeNodeModel nodeModel)
+    public NLTreeRow(String componentName, NLTree tree, TreeNodeModel nodeModel)
     {
         super(componentName);
         this.tree = tree;
@@ -50,7 +50,7 @@ public final class NLTreeRow extends Panel
 
                 public void linkClicked(RequestCycle cycle, TreeNodeModel node)
                 {
-                	NLTreeRow.this.nodeLinkClicked(cycle, node);
+                	NLTreeRow.this.tree.linkClicked(cycle, node);
                 }   
             };
             link.add(new Label("label", String.valueOf(nodeModel.getUserObject())));
@@ -62,16 +62,4 @@ public final class NLTreeRow extends Panel
             add(new HtmlContainer("link").add(new HtmlContainer("label")));
         }
     }
-
-	/**
-	 * Handler that is called when a node link is clicked; this implementation
-	 * sets the expanded state based on the given node.
-	 * Override this for custom behaviour.
-	 * @param cycle the current request cycle
-	 * @param node the tree node model
-	 */
-	protected void nodeLinkClicked(RequestCycle cycle, TreeNodeModel node)
-	{
-        tree.setExpandedState(node);
-	}
 }

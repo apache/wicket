@@ -26,6 +26,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import wicket.RequestCycle;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -105,6 +106,18 @@ public class NLTree extends Tree
     {
         super(componentName, treeState);
     }
+
+	/**
+	 * Handler that is called when a tree link is clicked; this implementation
+	 * sets the expanded state based on the given node.
+	 * Override this for custom behaviour.
+	 * @param cycle the current request cycle
+	 * @param node the tree node model
+	 */
+	protected void linkClicked(RequestCycle cycle, TreeNodeModel node)
+	{
+        setExpandedState(node);
+	}
 
     /**
      * Builds the structures needed to display the currently visible tree paths.
