@@ -7,7 +7,10 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-  	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+  	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1"> 
+      <action type="fix" dev="Eelco Hillenius" issue="1160518">
+        Support CheckBox / RadioChoice server-side actions.
+      </action>
   	  <action type="update" dev="Martijn Dashorst">
   	    Updated the error pages to have Wicket style error messages, made them HTML
   	    4.01 transitional.
