@@ -19,13 +19,13 @@
 package wicket.examples.navomatic;
 
 import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for hello world example.
  * @author Jonathan Locke
  */
-public class NavomaticApplication extends WebApplication
+public class NavomaticApplication extends WicketExampleApplication
 {
     /**
      * Constructor.

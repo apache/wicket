@@ -18,20 +18,16 @@
  */
 package wicket.examples.springframework;
 
-import wicket.util.time.Duration;
-
 /**
  * @author Juergen Donnerstag
  */
 public class SpringExampleApplication extends SpringApplication
 {
     /**
-     * 
      * @see wicket.examples.springframework.SpringApplication#initSettings()
      */
     public void initSettings()
     {
         getPages().setHomePage(Home.class);
-        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }

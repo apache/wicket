@@ -18,24 +18,20 @@
  */
 package wicket.examples.selecttag;
 
-import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * Forms example.
  * @author Jonathan Locke
  */
-public final class SelectTagApplication extends WebApplication
+public final class SelectTagApplication extends WicketExampleApplication
 {
     /**
      * Constructor.
      */
     public SelectTagApplication()
     {
-      ApplicationSettings settings = getSettings();
-      getPages().setHomePage(Home.class);
-      settings.setResourcePollFrequency(Duration.ONE_SECOND);
+    	getPages().setHomePage(Home.class);
     }
 }
 

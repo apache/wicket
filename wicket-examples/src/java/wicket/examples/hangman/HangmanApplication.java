@@ -19,7 +19,7 @@
 package wicket.examples.hangman;
 
 import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 import wicket.util.time.Duration;
 
 
@@ -29,7 +29,7 @@ import wicket.util.time.Duration;
  * @author Chris Turner
  * @version 1.0
  */
-public class HangmanApplication extends WebApplication
+public class HangmanApplication extends WicketExampleApplication
 {
     /**
      * Create the hangman application.

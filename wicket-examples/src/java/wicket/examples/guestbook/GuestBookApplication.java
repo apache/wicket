@@ -18,13 +18,13 @@
  */
 package wicket.examples.guestbook;
 
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * Guest book application.
  * @author Jonathan Locke
  */
-public class GuestBookApplication extends WebApplication
+public class GuestBookApplication extends WicketExampleApplication
 {
     /**
      * Constructor

@@ -18,23 +18,17 @@
  */
 package wicket.examples.images;
 
-import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
-
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
  * @author Jonathan Locke
  */
-public class ImagesApplication extends WebApplication
+public class ImagesApplication extends WicketExampleApplication
 {
     public ImagesApplication()
     {
         getPages().setHomePage(Home.class);
-
-        Duration pollFreq = Duration.ONE_SECOND;
-
-        getSettings().setResourcePollFrequency(pollFreq);
     }
 }
 

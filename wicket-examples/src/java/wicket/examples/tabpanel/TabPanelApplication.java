@@ -18,22 +18,19 @@
  */
 package wicket.examples.tabPanel;
 
-import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
-
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for hello world example.
  * @author Jonathan Locke
  */
-public class TabPanelApplication extends WebApplication
+public class TabPanelApplication extends WicketExampleApplication
 {
     /**
      * Constructor.
      */
     public TabPanelApplication()
     {
-        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
         getPages().setHomePage(Home.class);
     }
 }

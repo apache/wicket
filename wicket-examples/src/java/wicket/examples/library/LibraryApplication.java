@@ -18,13 +18,13 @@
  */
 package wicket.examples.library;
 
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for example.
  * @author Jonathan Locke
  */
-public final class LibraryApplication extends WebApplication
+public final class LibraryApplication extends WicketExampleApplication
 {
     /**
      * Constructor.

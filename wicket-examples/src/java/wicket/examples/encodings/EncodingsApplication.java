@@ -18,14 +18,14 @@
  */
 package wicket.examples.encodings;
 
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 import wicket.util.time.Duration;
 
 /**
  * WicketServlet class for hello world example.
  * @author Jonathan Locke
  */
-public class EncodingsApplication extends WebApplication
+public class EncodingsApplication extends WicketExampleApplication
 {
     /**
      * Constructor.

@@ -18,19 +18,17 @@
  */
 package wicket.examples.pub;
 
-import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for the linkomatic example.
  *
  * @author Jonathan Locke
  */
-public class PubApplication extends WebApplication
+public class PubApplication extends WicketExampleApplication
 {
     public PubApplication()
     {
         getPages().setHomePage(Home.class);
-        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }

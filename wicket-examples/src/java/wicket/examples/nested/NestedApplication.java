@@ -18,14 +18,14 @@
  */
 package wicket.examples.nested;
 
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for nested structure example.
  *
  * @author Eelco Hillenius
  */
-public class NestedApplication extends WebApplication
+public class NestedApplication extends WicketExampleApplication
 {
     /**
      * Constructor.

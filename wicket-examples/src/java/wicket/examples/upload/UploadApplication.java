@@ -18,15 +18,13 @@
  */
 package wicket.examples.upload;
 
-import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
-
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for wicket.examples.upload example.
  * @author Eelco Hillenius
  */
-public class UploadApplication extends WebApplication
+public class UploadApplication extends WicketExampleApplication
 {
     /**
      * Constructor.
@@ -34,7 +32,6 @@ public class UploadApplication extends WebApplication
     public UploadApplication()
     {
         getPages().setHomePage(UploadPage.class);
-        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }
 

@@ -20,14 +20,14 @@ package wicket.examples.groovy;
 
 import wicket.IClassResolver;
 import wicket.contrib.utils.groovy.GroovyClassResolver;
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 import wicket.util.time.Duration;
 
 /**
  * WicketServlet class for hello world example.
  * @author Jonathan Locke
  */
-public class GroovyApplication extends WebApplication
+public class GroovyApplication extends WicketExampleApplication
 {
     /**
      * Constructor.

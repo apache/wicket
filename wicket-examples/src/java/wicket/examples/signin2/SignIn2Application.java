@@ -18,14 +18,13 @@
  */
 package wicket.examples.signin2;
 
-import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * Forms example.
  * @author Jonathan Locke
  */
-public final class SignIn2Application extends WebApplication
+public final class SignIn2Application extends WicketExampleApplication
 {
     /**
      * Constructor.
@@ -33,7 +32,6 @@ public final class SignIn2Application extends WebApplication
     public SignIn2Application()
     {
         getPages().setHomePage(Home.class);
-        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }
 

@@ -18,15 +18,14 @@
  */
 package wicket.examples.hellomozilla;
 
-import wicket.protocol.http.WebApplication;
-
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for hello mozilla example.
  *
  * @author Eelco Hillenius
  */
-public class HelloMozillaApplication extends WebApplication
+public class HelloMozillaApplication extends WicketExampleApplication
 {
     /**
      * Constructor.

@@ -18,13 +18,13 @@
  */
 package wicket.examples.signin;
 
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * Forms example.
  * @author Jonathan Locke
  */
-public final class SignInApplication extends WebApplication
+public final class SignInApplication extends WicketExampleApplication
 {
     /**
      * Constructor.

@@ -34,7 +34,14 @@ public class WicketExampleApplication extends WebApplication
      */
     public WicketExampleApplication()
     {
-        getSettings().setSourcePath(new Path(new Folder("c:\\Projects\\wicket-examples\\src\\java")))
-                     .setResourcePollFrequency(Duration.ONE_SECOND);
+        try
+        {
+        	getSettings().setSourcePath(new Path(new Folder("c:\\Proects\\wicket-examples\\src\\java")));
+        }
+        catch (IllegalArgumentException e)
+        {  
+            // Ignore if folder cannot be found
+        }
+        getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }

@@ -18,13 +18,13 @@
  */
 package wicket.examples.linkomatic;
 
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
  * @author Jonathan Locke
  */
-public class LinkomaticApplication extends WebApplication
+public class LinkomaticApplication extends WicketExampleApplication
 {
     public LinkomaticApplication()
     {

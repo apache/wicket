@@ -19,7 +19,7 @@
 package wicket.examples.fvalidate;
 
 import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 import wicket.util.time.Duration;
 
 /**
@@ -27,7 +27,7 @@ import wicket.util.time.Duration;
  *
  * @author Eelco Hillenius
  */
-public class FValidateFormInputApplication extends WebApplication
+public class FValidateFormInputApplication extends WicketExampleApplication
 {
     /**
      * Constructor.

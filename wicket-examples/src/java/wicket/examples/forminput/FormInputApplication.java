@@ -19,7 +19,7 @@
 package wicket.examples.forminput;
 
 import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
 import wicket.util.time.Duration;
@@ -29,7 +29,7 @@ import wicket.util.time.Duration;
  *
  * @author Eelco Hillenius
  */
-public class FormInputApplication extends WebApplication
+public class FormInputApplication extends WicketExampleApplication
 {
 	/** converter factory. */
 	private final IConverterFactory converterFactory = new ConverterFactory();
