@@ -41,7 +41,7 @@ public class CryptTest extends TestCase
 	 */
 	public void testCrypt()
 	{
-		final ICrypt crypt = new Crypt();
+		final ICrypt crypt = new SunJceCrypt();
 
 		try
 		{
