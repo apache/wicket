@@ -37,16 +37,32 @@ import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.Strings;
 
 /**
- * Base class for HTML forms.
- * 
- * TODO elaborate documentation (validation, cookies, etc...)
+ * Base class for forms. To implement a form, subclass this class, add
+ * FormComponents (such as CheckBoxes, ListChoices or TextFields) to the form
+ * and provide an implementation of handleValidSubmit(). The handleValidSubmit()
+ * method will be called by validate() when the form passes validation. If your
+ * form has only one button, there is nothing else to do. However, if you want
+ * to have multiple buttons which submit the same form, simply put two or more
+ * button components somewhere in the hierarchy of components that are children
+ * of the form. Forms which have two or more buttons do not automatically
+ * validate themselves via validate(). Instead, they determine which Button
+ * submitted the form and call that Button's onSubmit() method. In any
+ * onSubmit() method where you want to attempt to validate the form and update
+ * models, simply call validate().
+ * <p>
+ * If you want to do something when validation errors occur you can override
+ * handleValidationErrors(), but if you do, you probably will want to call
+ * super.handleValidationErrors() to get the default handling to occur.
+ * <p>
+ * To get form components to persist their values for users via cookies, simply
+ * call setPersistent(true) on the form component.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
 public abstract class Form extends WebMarkupContainer implements IFormSubmitListener
-{ // TODO finalize javadoc
+{
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
 
