@@ -26,6 +26,8 @@ import wicket.examples.forminput.FormInputTest;
 import wicket.examples.groovy.GroovyTest;
 import wicket.examples.guestbook.GuestbookTest;
 import wicket.examples.helloworld.HelloWorldTest;
+import wicket.examples.linkomatic.LinkomaticTest;
+import wicket.examples.signin2.Signin2Test;
 import wicket.examples.springframework.SpringFrameworkTest;
 import wicket.examples.springframework2.SpringFramework2Test;
 
@@ -34,7 +36,6 @@ import wicket.examples.springframework2.SpringFramework2Test;
  */
 public final class AllTests extends TestSuite
 {
-
     /**
      * Construct.
      */
@@ -85,6 +86,8 @@ public final class AllTests extends TestSuite
 		suite.addTest(new SpringFramework2Test("testHomePage"));
 		suite.addTest(new GroovyTest("testHomePage"));
 		suite.addTest(new FormInputTest("testHelloWorld"));
+		suite.addTest(new LinkomaticTest("testHelloWorld"));
+		suite.addTest(new Signin2Test("testHelloWorld"));
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
 		deco.setWebappContextRoot("src/webapp");
