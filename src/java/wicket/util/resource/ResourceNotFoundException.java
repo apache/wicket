@@ -20,10 +20,11 @@ package wicket.util.resource;
 
 /**
  * Thrown if a required resource cannot be found.
+ * 
  * @author Jonathan Locke
  */
 public final class ResourceNotFoundException extends Exception
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID */
 	private static final long serialVersionUID = -2885564637243403116L;
 
@@ -37,7 +38,7 @@ public final class ResourceNotFoundException extends Exception
 
     /**
      * Constructor
-     * @param message
+     * @param message Description of the problem
      */
     public ResourceNotFoundException(final String message)
     {
@@ -46,7 +47,7 @@ public final class ResourceNotFoundException extends Exception
 
     /**
      * Constructor
-     * @param cause
+     * @param cause Nested stack trace
      */
     public ResourceNotFoundException(final Throwable cause)
     {
@@ -55,8 +56,8 @@ public final class ResourceNotFoundException extends Exception
 
     /**
      * Constructor
-     * @param message
-     * @param cause
+     * @param message Description of the problem
+     * @param cause Nested stack trace
      */
     public ResourceNotFoundException(final String message, final Throwable cause)
     {
