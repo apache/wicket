@@ -142,22 +142,6 @@ public class WebSession extends Session
 	}
 	
 	/**
-	 * @see wicket.Session#removeAttribute(java.lang.String)
-	 */
-	protected void removeAttribute(final String name)
-	{
-		httpSession.removeAttribute(sessionAttributeName + "-" + name);
-	}
-
-	/**
-	 * @see Session#setAttribute(String, Object)
-	 */
-	protected void setAttribute(final String name, final Object object)
-	{
-		httpSession.setAttribute(sessionAttributeName + "-" + name, object);
-	}
-	
-	/**
 	 * @see Session#getAttributeNames()
 	 */
 	protected List getAttributeNames()
@@ -174,5 +158,21 @@ public class WebSession extends Session
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * @see wicket.Session#removeAttribute(java.lang.String)
+	 */
+	protected void removeAttribute(final String name)
+	{
+		httpSession.removeAttribute(sessionAttributeName + "-" + name);
+	}
+
+	/**
+	 * @see Session#setAttribute(String, Object)
+	 */
+	protected void setAttribute(final String name, final Object object)
+	{
+		httpSession.setAttribute(sessionAttributeName + "-" + name, object);
 	}
 }

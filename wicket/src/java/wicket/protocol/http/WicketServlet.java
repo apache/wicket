@@ -175,6 +175,9 @@ public class WicketServlet extends HttpServlet
 		}
 		finally
 		{
+			// Replicate session if need be
+			session.updateCluster();
+
 			// Close response
 			response.close();
 		}
