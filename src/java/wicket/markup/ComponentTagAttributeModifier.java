@@ -41,6 +41,10 @@ import wicket.util.value.ValueMap;
  * expression that the existing value must match before the replacement can
  * be carried out.
  * <p>
+ * If an attribute is not in the markup, this modifier will add an attribute to the tag
+ * only if addAttributeIfNotPresent is true and the replacement value is not null.
+ * </p>
+ * <p>
  * Instances of this class should be added to components via the
  * {@link wicket.Component#add(ComponentTagAttributeModifier)}
  * method after the componet has been constucted.
@@ -48,7 +52,7 @@ import wicket.util.value.ValueMap;
  * @author Chris Turner
  */
 public class ComponentTagAttributeModifier implements Serializable
-{ // TODO finalize javadoc
+{
 	/** Attribute specification. */
 	private String attribute;
 
@@ -118,6 +122,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	 * @param attribute The attribute name to replace the value for
 	 * @param pattern The pattern of the current attribute value to match
 	 * @param addAttributeIfNotPresent Whether to add the attribute if it is not present
+	 * and the replacement value is not null
 	 * @param replaceModel The model to replace the value with
 	 */
 	public ComponentTagAttributeModifier(final String attribute, final String pattern,
@@ -140,7 +145,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	}
 
 	/**
-	 * Get the name of the attribute whose value is being replaced.
+	 * Gets the name of the attribute whose value is being replaced.
 	 *
 	 * @return The name of the attribute
 	 */
@@ -150,7 +155,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	}
 
 	/**
-	 * Get the pattern that the current value must match in order to be
+	 * Gets the pattern that the current value must match in order to be
 	 * replaced.
 	 *
 	 * @return The pattern
@@ -161,7 +166,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	}
 
 	/**
-	 * Check whether this attribute modifier is enabled or not.
+	 * Checks whether this attribute modifier is enabled or not.
 	 *
 	 * @return Whether enabled or not
 	 */
@@ -171,7 +176,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	}
 
 	/**
-	 * Set whether this attribute modifier is enabled or not.
+	 * Sets whether this attribute modifier is enabled or not.
 	 *
 	 * @param enabled Whether enabled or not
 	 */
@@ -181,8 +186,8 @@ public class ComponentTagAttributeModifier implements Serializable
 	}
 
 	/**
-	 * Check whether this modifier will add an attribute to the tag
-	 * if it is not present in the markup.
+	 * Checks whether this modifier will add an attribute to the tag
+	 * if it is not present in the markup and the replacement value is not null.
 	 *
 	 * @return Whether the attribute will be added if not present or not
 	 */
@@ -192,7 +197,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	}
 
 	/**
-	 * Get the model that the value will be replaced with.
+	 * Gets the model that the value will be replaced with.
 	 *
 	 * @return The model used for replacement
 	 */
@@ -206,7 +211,7 @@ public class ComponentTagAttributeModifier implements Serializable
 	}
 
 	/**
-	 * Check the given component tag for an instance of the attribute
+	 * Checks the given component tag for an instance of the attribute
 	 * to modify and if all criteria are met then replace the value of
 	 * this attribute with the value of the contained model object.
 	 *
