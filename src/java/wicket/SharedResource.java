@@ -107,6 +107,7 @@ public class SharedResource extends Resource
 	public final String getPath()
 	{
 		final StringBuffer buffer = new StringBuffer();
+		buffer.append("shared/");
 		buffer.append(scope.getName());
 		buffer.append('_');
 		buffer.append(name);

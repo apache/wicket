@@ -17,24 +17,43 @@
  */
 package wicket.markup.html.link;
 
-import wicket.markup.html.WebMarkupContainer;
+import wicket.SharedResource;
 
 /**
- * Handy class for holding markup to display when a link is disabled.
+ * A link to any SharedResource.
  * 
- * @see Link
  * @author Jonathan Locke
  */
-public final class DisabledLink extends WebMarkupContainer
+public class SharedResourceLink extends Link
 {
+	private final SharedResource sharedResource;
+
 	/**
-	 * Constructor.
+	 * Constructor
 	 * 
 	 * @param id
 	 *            See Component
+	 * @param sharedResource
+	 *            The shared resource to link to
 	 */
-	public DisabledLink(final String id)
+	public SharedResourceLink(final String id, final SharedResource sharedResource)
 	{
 		super(id);
+		this.sharedResource = sharedResource;
+	}
+	
+	/**
+	 * @see wicket.markup.html.link.Link#getURL()
+	 */
+	protected String getURL()
+	{
+		return getPage().urlFor(sharedResource.getPath());
+	}
+
+	/**
+	 * @see wicket.markup.html.link.Link#onClick()
+	 */
+	public void onClick()
+	{
 	}
 }
