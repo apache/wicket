@@ -117,23 +117,20 @@
 					 (roughly) of the removeLink method (which returns a Link that will remove any 
 					 given cell from its containing table).
 				</p>
-				<source><![CDATA[/**
-* Returns a link that will remove this cell from the table that holds it.
-* @param componentName Name of remove link component to create
-* @return The link component
-*/
-public Link removeLink(final String componentName)
+				<source><![CDATA[
+public final Link removeLink(final String componentName)
 {
-    return new Link(componentName)
-    {
-        public void linkClicked(final RequestCycle cycle)
-        {
-            // Remove cell and invalidate table
-            table.getList().remove(index);
-            table.invalidateModel();
-        }
-    };
-}]]></source>
+	return new Link(componentName)
+	{
+		public void onClick()
+		{
+			// Remove listItem and invalidate ListView
+			listView.getList().remove(index);
+			listView.invalidateModel();
+		}
+	};
+}
+]]></source>
 				<p>
 					 Notice that once the remove link changes its table's model by removing the 
 					 cell's model from the table list, it calls table.invalidateModel(). This method 
@@ -250,8 +247,38 @@ public class Home extends MyPage
 					return their this pointer for invocation chaining, you can put this all 
 					together into one statement:
 				</p>
-				<source><![CDATA[settings.setResourcePollFrequency(Duration.ONE_SECOND)
-    .setSourcePath(new Path(new Folder("c:\\MyWicketProject\\src\\java"))); ]]></source>
+				<source><![CDATA[
+settings.setResourcePollFrequency(Duration.ONE_SECOND);
+settings.setSourcePath(new Path(new Folder("c:\\MyWicketProject\\src\\java"))); 
+]]></source>
+			</answer>
+		</faq>
+		<faq id="how-hide-markup">
+			<question>How can I hide markup and/or components?</question>
+			<answer>
+			Any component - whether a simple label, form component or a whole panel - 
+			can be hidden with a call to setVisible(false).  A WebMarkupContainer is
+			a container component that can be attached to any tag.  Since 
+			WebMarkupContainer is a component, you can call setVisible(false) on it 
+			and it will hide whatever it contains, whether it's just markup or 
+			a whole tree of nested components.  For example:
+				<source><![CDATA[
+WebMarkupContainer hideme = new WebMarkupContainer("hideme");
+hideme.setVisible(false);
+
+<html>
+<body>
+	<table>
+		<tr id = "wicket-hideme">
+			<td>this row will be hidden</td>
+		</tr>
+		<tr>
+			<td>this row will not be hidden</td>
+		</tr>
+	</table>
+</body>
+</html>
+]]></source>
 			</answer>
 		</faq>
 	</part>
