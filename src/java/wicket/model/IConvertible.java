@@ -28,7 +28,7 @@ import wicket.util.convert.IConverter;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public interface IConvertable
+public interface IConvertible
 {
 	/**
 	 * Sets the converter.
