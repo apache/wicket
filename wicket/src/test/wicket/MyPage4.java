@@ -21,7 +21,7 @@ package wicket;
 import wicket.markup.html.WebPage;
 
 /**
- * Dummy Page with non-valid parameter
+ * Dummy Page with String parameter
  */
 public class MyPage4 extends WebPage
 {
