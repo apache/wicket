@@ -1,8 +1,10 @@
+#typeSelect {
+	margin-bottom: 2em;	
+}
+
 #tree ul {
 	margin: 0;
 	padding: 0;
-	background-image: url('vert.gif');
-	background-repeat: repeat-y;
 }
 
 #tree li {
@@ -16,11 +18,11 @@
 }
 
 #tree ul ul {
-	margin-left: 24px;
+	margin-left: 20px;
 }
 
 #tree ul ul li {
-	padding-left: 24px;
+	padding-left: 20px;
 }
 
 #tree #link {
@@ -31,22 +33,27 @@
 	background-color: white;
 }
 
+#spacers {
+	padding-left: 16px;
+	background-repeat: no-repeat;
+}
+
 #tree .tree-leaf-end {
-	background-image: url('end.gif');
+
 }
 
 #tree .tree-junction-expanded-siblings {
-	background-image: url('mcross.gif');
+	background-image: url('minus.gif');
 }
 
 #tree .tree-junction-closed-siblings {
-	background-image: url('pcross.gif');
+	background-image: url('plus.gif');
 }
 
 #tree .tree-junction-expanded-end {
-	background-image: url('mend.gif');
+	background-image: url('minus.gif');
 }
 
 #tree .tree-junction-closed-end {
-	background-image: url('pend.gif');
+	background-image: url('plus.gif');
 }

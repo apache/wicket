@@ -1,0 +1,50 @@
+<html>
+<head>
+	<title>Wicket - Filebrowser example</title>
+	<style type="text/css">
+		#tree .fill {
+			margin-left: 0px;
+			padding-left: 10px;
+		}
+		#tree .row {
+			display: block;
+		}
+		#tree .test {
+			margin-left: 0px;
+			padding-left: 10px;		
+		}
+		#tree .tree-root {
+			background-image: url('cross.gif');
+		}
+		#tree .tree-leaf-end {
+			background-image: url('end.gif');
+		}
+		#tree .tree-junction-expanded-siblings {
+			background-image: url('mcross.gif');
+			padding-left: 10px;
+			background-repeat: no-repeat;
+		}
+		#tree .tree-junction-closed-siblings {
+			background-image: url('pcross.gif');
+		}
+		#tree .tree-junction-expanded-end {
+			background-image: url('mend.gif');
+		}
+		#tree .tree-junction-closed-end {
+			background-image: url('pend.gif');
+		}
+	</style>
+</head>
+<body>
+
+<div id="tree">
+	<span class="row">
+		<span class="fill"/><span class="fill"/><img src="pend.gif"/><span>test2</span>
+	</span>
+	<span class="row">
+		<span class="fill"/><span class="fill"/><span class="fill"/><span class="fill"/><span>test1</span>
+	</span>
+</div>
+
+</body>
+</html>
