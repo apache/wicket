@@ -24,7 +24,7 @@ import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
-import wicket.markup.html.tree.NLTreeRowReplacementModel;
+import wicket.markup.html.tree.ListTreeRowReplacementModel;
 import wicket.markup.html.tree.TreeNodeModel;
 
 /**
@@ -33,10 +33,10 @@ import wicket.markup.html.tree.TreeNodeModel;
  *
  * @author Eelco Hillenius
  */
-public final class FileNLTreeRows extends Panel
+public final class CustomListTreeRows extends Panel
 {
     /** the holding tree component. */
-    private final FileNLTreeCustomRows tree;
+    private final CustomListTree tree;
 
     /**
      * Constructor.
@@ -44,7 +44,7 @@ public final class FileNLTreeRows extends Panel
      * @param list a list where each element is either a string or another list
      * @param tree the holding tree component
      */
-    public FileNLTreeRows(final String componentName, List list, FileNLTreeCustomRows tree)
+    public CustomListTreeRows(final String componentName, List list, CustomListTree tree)
     {
         super(componentName);
         this.tree = tree;
@@ -77,7 +77,7 @@ public final class FileNLTreeRows extends Panel
                 Panel row = getTreeRowPanel("row", null);
                 row.setVisible(false);
                 listItem.add(row);
-                FileNLTreeRows nested = new FileNLTreeRows("nested", (List)modelObject, tree);
+                CustomListTreeRows nested = new CustomListTreeRows("nested", (List)modelObject, tree);
                 listItem.add(nested);
             }
             else
@@ -85,7 +85,7 @@ public final class FileNLTreeRows extends Panel
                 TreeNodeModel nodeModel = (TreeNodeModel)modelObject;
                 Panel row = getTreeRowPanel("row", nodeModel);
                 listItem.add(row);
-                FileNLTreeRows nested = new FileNLTreeRows("nested", null, tree);
+                CustomListTreeRows nested = new CustomListTreeRows("nested", null, tree);
                 nested.setVisible(false);
                 listItem.add(nested);
             }
@@ -99,10 +99,10 @@ public final class FileNLTreeRows extends Panel
          */
         protected Panel getTreeRowPanel(String componentName, TreeNodeModel nodeModel)
         {
-            NLTreeRowReplacementModel replacementModel =
-                new NLTreeRowReplacementModel(nodeModel);
-            Panel rowPanel = new FileNLTreeRow(componentName,
-            		FileNLTreeRows.this.tree, nodeModel);
+            ListTreeRowReplacementModel replacementModel =
+                new ListTreeRowReplacementModel(nodeModel);
+            Panel rowPanel = new CustomListTreeRow(componentName,
+            		CustomListTreeRows.this.tree, nodeModel);
             rowPanel.add(new ComponentTagAttributeModifier(
                     "class", true, replacementModel));
             return rowPanel;

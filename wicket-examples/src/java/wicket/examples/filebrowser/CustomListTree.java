@@ -9,15 +9,15 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.RequestCycle;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.tree.NLTree;
+import wicket.markup.html.tree.ListTree;
 import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.TreeStateCache;
 
 /** Custom tree that provides our own rows panel. */
-public class FileNLTreeCustomRows extends NLTree
+public class CustomListTree extends ListTree
 {
     /** Log. */
-    private static Log log = LogFactory.getLog(FileIndentTree.class);
+    private static Log log = LogFactory.getLog(CustomIndentTree.class);
 
     /**
      * Constructor.
@@ -28,7 +28,7 @@ public class FileNLTreeCustomRows extends NLTree
      * they will have unique id's attached. If false, users must ensure that the
      * user objects are unique within the tree in order to have the tree working properly
      */
-    public FileNLTreeCustomRows(final String componentName, final TreeModel model,
+    public CustomListTree(final String componentName, final TreeModel model,
     		final boolean makeTreeModelUnique)
     {
         super(componentName, model, makeTreeModelUnique);
@@ -41,7 +41,7 @@ public class FileNLTreeCustomRows extends NLTree
      * @param treeState the tree state that holds the tree model and the currently visible
      * paths
      */
-    public FileNLTreeCustomRows(final String componentName, TreeStateCache treeState)
+    public CustomListTree(final String componentName, TreeStateCache treeState)
     {
         super(componentName, treeState);
     }
@@ -62,6 +62,6 @@ public class FileNLTreeCustomRows extends NLTree
      */
     protected Panel getTreeRowsPanel(String componentName, List nestedList)
     {
-        return new FileNLTreeRows(componentName, nestedList, this);
+        return new CustomListTreeRows(componentName, nestedList, this);
     } 
 }

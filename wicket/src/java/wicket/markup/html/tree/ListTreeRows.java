@@ -31,10 +31,10 @@ import wicket.markup.html.table.ListView;
  *
  * @author Eelco Hillenius
  */
-public final class NLTreeRows extends Panel
+public final class ListTreeRows extends Panel
 { // TODO finalize javadoc
     /** the holding tree component. */
-    private final NLTree tree;
+    private final ListTree tree;
 
     /**
      * Constructor.
@@ -42,7 +42,7 @@ public final class NLTreeRows extends Panel
      * @param list a list where each element is either a string or another list
      * @param tree the holding tree component
      */
-    public NLTreeRows(final String componentName, List list, NLTree tree)
+    public ListTreeRows(final String componentName, List list, ListTree tree)
     {
         super(componentName);
         this.tree = tree;
@@ -75,7 +75,7 @@ public final class NLTreeRows extends Panel
                 Panel row = tree.internalGetTreeRowPanel("row", null);
                 row.setVisible(false);
                 listItem.add(row);
-                NLTreeRows nested = new NLTreeRows("nested", (List)modelObject, tree);
+                ListTreeRows nested = new ListTreeRows("nested", (List)modelObject, tree);
                 listItem.add(nested);
             }
             else
@@ -83,7 +83,7 @@ public final class NLTreeRows extends Panel
                 TreeNodeModel nodeModel = (TreeNodeModel)modelObject;
                 Panel row = tree.internalGetTreeRowPanel("row", nodeModel);
                 listItem.add(row);
-                NLTreeRows nested = new NLTreeRows("nested", null, tree);
+                ListTreeRows nested = new ListTreeRows("nested", null, tree);
                 nested.setVisible(false);
                 listItem.add(nested);
             }

@@ -13,10 +13,10 @@ import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.TreeStateCache;
 
 /** indent tree implementation. */
-public class FileIndentTree extends IndentTree
+public class CustomIndentTree extends IndentTree
 {
     /** Log. */
-    private static Log log = LogFactory.getLog(FileIndentTree.class);
+    private static Log log = LogFactory.getLog(CustomIndentTree.class);
 
 	/**
 	 * Construct.
@@ -24,7 +24,7 @@ public class FileIndentTree extends IndentTree
 	 * @param model the tree model
 	 * @param makeTreeModelUnique whether to make the userObject nodes unique
 	 */
-	public FileIndentTree(String componentName, TreeModel model, boolean makeTreeModelUnique)
+	public CustomIndentTree(String componentName, TreeModel model, boolean makeTreeModelUnique)
 	{
 		super(componentName, model, makeTreeModelUnique);
 	}
@@ -36,7 +36,7 @@ public class FileIndentTree extends IndentTree
      * @param treeState the tree state that holds the tree model and the currently visible
      * paths
      */
-    public FileIndentTree(final String componentName, TreeStateCache treeState)
+    public CustomIndentTree(final String componentName, TreeStateCache treeState)
     {
         super(componentName, treeState);
     }

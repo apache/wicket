@@ -25,7 +25,7 @@ import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.tree.NLTreeRowReplacementModel;
+import wicket.markup.html.tree.ListTreeRowReplacementModel;
 import wicket.markup.html.tree.OnClickTreeNodeLink;
 import wicket.markup.html.tree.TreeNodeModel;
 
@@ -35,7 +35,7 @@ import wicket.markup.html.tree.TreeNodeModel;
  *
  * @author Eelco Hillenius
  */
-public final class FileNLTreeRow extends Panel
+public final class CustomListTreeRow extends Panel
 {
     /**
      * Construct.
@@ -43,7 +43,7 @@ public final class FileNLTreeRow extends Panel
      * @param tree
      * @param nodeModel the tree node for this row
      */
-    public FileNLTreeRow(String componentName, final FileNLTreeCustomRows tree,
+    public CustomListTreeRow(String componentName, final CustomListTree tree,
     		TreeNodeModel nodeModel)
     {
         super(componentName);
@@ -67,7 +67,7 @@ public final class FileNLTreeRow extends Panel
         	li = new HtmlContainer("li");
             li.add(new HtmlContainer("label"));
         }
-        NLTreeRowReplacementModel replacementModel = new NLTreeRowReplacementModel(nodeModel);
+        ListTreeRowReplacementModel replacementModel = new ListTreeRowReplacementModel(nodeModel);
         li.add(new ComponentTagAttributeModifier("class", true, replacementModel));
         add(li);
     }

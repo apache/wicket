@@ -34,7 +34,7 @@ import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.IOnChangeListener;
-import wicket.markup.html.tree.NLTree;
+import wicket.markup.html.tree.ListTree;
 import wicket.markup.html.tree.Tree;
 import wicket.markup.html.tree.TreeNodeModel;
 import wicket.model.IModel;
@@ -52,20 +52,19 @@ public class FileBrowser extends HtmlPage
 	/** the flat tree. */
 	private static final String TYPE_INDENT = "indent tree";
 
-	/** the default NLTree. */
-	private static final String TYPE_NL = "nested lists (NL) tree";
+	/** the default ListTree. */
+	private static final String TYPE_LIST = "list tree";
 
-	/** our override of the NLTree with a custom rows panel. */
-	private static final String TYPE_NL_CUSTOM_ROWS =
-		"nested lists (NL) tree with custom rows";
+	/** our override of the list with a custom rows panel. */
+	private static final String TYPE_LIST_CUSTOM_ROWS = "list tree with custom rows";
 
 	/** the types of lists that are available for selection. */
 	private static final List types;
 	static {
 		types = new ArrayList(3);
 		types.add(TYPE_INDENT);
-		types.add(TYPE_NL_CUSTOM_ROWS);
-		types.add(TYPE_NL);
+		types.add(TYPE_LIST_CUSTOM_ROWS);
+		types.add(TYPE_LIST);
 	}
 
 	/** property that holds the current selection of tree types. */
@@ -81,7 +80,8 @@ public class FileBrowser extends HtmlPage
     public FileBrowser(final PageParameters parameters)
     {
         TreeModel model = new FileModelProvider().getFileModel();
-        setTreeComponent(new FileNLTreeCustomRows("fileTree", model, true));
+        setTreeComponent(new CustomListTree("fileTree", model, true));
+        this.currentType = TYPE_LIST_CUSTOM_ROWS;
     }
 
 	/**
@@ -103,7 +103,7 @@ public class FileBrowser extends HtmlPage
 				{
 					return "flattree";
 				}
-				else if(TYPE_NL.equals(currentType))
+				else if(TYPE_LIST.equals(currentType))
 				{
 					return "nestedtree";
 				}
@@ -181,9 +181,9 @@ public class FileBrowser extends HtmlPage
 		private void setCurrentTree(String type)
 		{
 			final Tree tree;
-			if(TYPE_NL.equals(type)) // create NL with simple linkClicked override
+			if(TYPE_LIST.equals(type)) // create NL with simple linkClicked override
             {
-                tree = new NLTree("fileTree", currentTree.getTreeState()){
+                tree = new ListTree("fileTree", currentTree.getTreeState()){
 
                 	protected void linkClicked(RequestCycle cycle, TreeNodeModel node)
                 	{
@@ -195,11 +195,11 @@ public class FileBrowser extends HtmlPage
             }
             else if(TYPE_INDENT.equals(type)) // create indent tree
             {
-            	tree = new FileIndentTree("fileTree", currentTree.getTreeState());
+            	tree = new CustomIndentTree("fileTree", currentTree.getTreeState());
             }
-            else if(TYPE_NL_CUSTOM_ROWS.equals(type)) // create NL tree with custom panels
+            else if(TYPE_LIST_CUSTOM_ROWS.equals(type)) // create NL tree with custom panels
             {
-            	tree = new FileNLTreeCustomRows("fileTree", currentTree.getTreeState());
+            	tree = new CustomListTree("fileTree", currentTree.getTreeState());
             }
             else
             {

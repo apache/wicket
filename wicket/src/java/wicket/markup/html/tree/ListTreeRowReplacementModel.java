@@ -23,15 +23,15 @@ import wicket.model.IModel;
 /**
  * A replacement model for
  * {@link wicket.markup.ComponentTagAttributeModifier}s for tree row components
- * of {@link wicket.markup.html.tree.NLTree}.
+ * of {@link wicket.markup.html.tree.ListTree}.
  *
  * @see wicket.markup.ComponentTagAttributeModifier
- * @see wicket.markup.html.tree.NLTree
- * @see wicket.markup.html.tree.NLTreeRow
+ * @see wicket.markup.html.tree.ListTree
+ * @see wicket.markup.html.tree.ListTreeRow
  *
  * @author Eelco Hillenius
  */
-public class NLTreeRowReplacementModel implements IModel
+public class ListTreeRowReplacementModel implements IModel
 { // TODO finalize javadoc
     /** model of one tree node. */
     private final TreeNodeModel treeNodeModel;
@@ -40,7 +40,7 @@ public class NLTreeRowReplacementModel implements IModel
      * Construct.
      * @param treeNodeModel model of one tree node
      */
-    public NLTreeRowReplacementModel(TreeNodeModel treeNodeModel)
+    public ListTreeRowReplacementModel(TreeNodeModel treeNodeModel)
     {
         this.treeNodeModel = treeNodeModel;
     }
