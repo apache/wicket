@@ -139,6 +139,7 @@ public class DropDownChoice extends AbstractChoice
 			// If a user subclasses this class and implements IOnChangeListener
 			// an onChange scriptlet is added
 			final String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
+			
 			// NOTE: do not encode the url as that would give invalid JavaScript
 			tag.put("onChange", "location.href='" + url + "&" + getPath()
 					+ "=' + this.options[this.selectedIndex].value;");
