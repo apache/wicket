@@ -82,7 +82,7 @@ public class PageLink extends Link
                 }
             }
 
-            public Class getIdentity()
+            public Class getPageIdentity()
             {
                 return c;
             }
@@ -114,6 +114,6 @@ public class PageLink extends Link
      */
     public boolean linksTo(final Page page)
     {
-        return page.getClass() == pageLink.getIdentity();
+        return page.getClass() == pageLink.getPageIdentity();
     }
 }
