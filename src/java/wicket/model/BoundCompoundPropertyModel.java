@@ -64,22 +64,11 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 * Constructor
 	 * 
 	 * @param model
-	 *            Nested model
+	 *            The model object, which may or may not implement IModel
 	 */
-	public BoundCompoundPropertyModel(final IModel model)
+	public BoundCompoundPropertyModel(final Object model)
 	{
 		super(model);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param modelObject
-	 *            The model object
-	 */
-	public BoundCompoundPropertyModel(final Object modelObject)
-	{
-		super(modelObject);
 	}
 
 	/**

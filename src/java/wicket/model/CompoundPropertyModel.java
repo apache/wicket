@@ -37,12 +37,12 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	/**
 	 * Constructor
 	 * 
-	 * @param modelObject
-	 *            The model object
+	 * @param model
+	 *            The model object, which may or may not implement IModel
 	 */
-	public CompoundPropertyModel(final Object modelObject)
+	public CompoundPropertyModel(final Object model)
 	{
-		super(modelObject);
+		super(model);
 	}
 
 	/**
