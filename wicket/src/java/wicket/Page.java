@@ -54,6 +54,9 @@ public abstract class Page extends Container implements IRedirectListener
 
 	/** static for access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
+    
+    /** Feedback messages for this page */
+    private FeedbackMessages feedbackMessages;
 
 	/** This page's identifier. */
 	private int id = -1;
@@ -81,11 +84,22 @@ public abstract class Page extends Container implements IRedirectListener
 
 		// Get thread-local session and add this page. This ensures that
 		// all the nice attributes of a page, such as its session and
-		// application
-		// are accessible in the page constructor.
+		// application are accessible in the page constructor.
 		this.session = Session.get();
 		this.session.addPage(this);
 	}
+    
+    /**
+     * @return Returns the feedbackMessages.
+     */
+    public FeedbackMessages getFeedbackMessages()
+    {
+        if (feedbackMessages == null)
+        {
+            feedbackMessages = new FeedbackMessages();   
+        }
+        return feedbackMessages;
+    }
 
 	/**
 	 * Get the identifier for this page.
