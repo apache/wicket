@@ -35,7 +35,12 @@ import wicket.Page;
  * how to display the link (because links in a navigation which link to 
  * a page itself are not useful and generally should instead indicate 
  * where the user is in the navigation). 
+ * <p>
+ * To understand how getPageClass() is used in this way, take a look 
+ * at the Link.linksTo() method and its override in PageLink.
  * 
+ * @see Link#linksTo(Page)
+ * @see PageLink#linksTo(Page)
  * @author Jonathan Locke
  */
 public interface IPageLink extends Serializable
