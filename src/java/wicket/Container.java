@@ -810,6 +810,10 @@ public abstract class Container extends Component
 			throw new MarkupException(markupResource,
 					exceptionMessage("Unable to parse markup from " + markupResource), e);
 		}
+		catch (MarkupException e)
+		{
+			throw new MarkupException(markupResource, exceptionMessage(e.getMessage()));
+		}
 		catch (ResourceNotFoundException e)
 		{
 			throw new MarkupException(markupResource,

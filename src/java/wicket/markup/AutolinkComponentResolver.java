@@ -49,7 +49,7 @@ public class AutolinkComponentResolver implements IComponentResolver
     private static Log log = LogFactory.getLog(AutolinkComponentResolver.class);
     
     /**
-     * Automatically creates a ExternalPageLink component.
+     * Automatically creates a BookmarkablePageLink component.
      * 
      * @see wicket.markup.IComponentResolver#resolve(RequestCycle, MarkupStream, ComponentTag, Container)
      * @param cycle The current RequestCycle 

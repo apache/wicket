@@ -168,10 +168,9 @@ public class HtmlHandler implements IMarkupFilter
             }
             else
             {
-                throw new ParseException("Tag "
+                throw new MarkupException("Tag "
                         + tag.toUserDebugString() 
-                        + " does not have a matching open tag", 
-                        tag.getPos());
+                        + " does not have a matching open tag");
             }
         }
         else if (tag.isOpenClose())
