@@ -18,7 +18,9 @@
 package wicket.markup.html.image;
 
 import java.io.Serializable;
+import java.util.Locale;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.image.resource.ImageResource;
@@ -42,6 +44,9 @@ public class Image extends AbstractImage
 
 	/** The image resource this image component references */
 	private ImageResource imageResource;
+
+	/** The locale of the image resource */
+	private Locale locale;
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -95,6 +100,13 @@ public class Image extends AbstractImage
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		// If locale has changed from the initial locale used to attach image
+		// resource, then we need to reload the resource in the new locale
+		if (locale != null && locale != getLocale())
+		{
+			imageResource = null;
+		}
+
 		// Need to load image resource for this component?
 		if (imageResource == null)
 		{
@@ -112,6 +124,15 @@ public class Image extends AbstractImage
 			final Package basePackage = findParentWithAssociatedMarkup().getClass().getPackage();
 			this.imageResource = StaticImageResource.get(getClass().getClassLoader(), basePackage,
 					resourcePath, getLocale(), getStyle());
+
+			if (this.imageResource == null)
+			{
+				throw new WicketRuntimeException("Unable to find image resource [basePackage = "
+						+ basePackage + ", resourcePath = " + resourcePath + ", locale = "
+						+ getLocale() + ", style = " + getStyle() + "]");
+			}
+
+			this.locale = getLocale();
 		}
 
 		super.onComponentTag(tag);
