@@ -343,45 +343,44 @@ public final class Strings
 	 */
 	public static String replaceAll(final String s, final String searchFor, final String replaceWith)
 	{
-		// Go through the string
-		StringBuffer buffer = null;
-		final int searchForLength = searchFor.length();
-		int pos = 0;
-		for (int matchIndex; -1 != (matchIndex = s.indexOf(searchFor, pos)); pos = matchIndex
-				+ searchForLength)
+		// Look for first occurrence of searchFor
+		int matchIndex = s.indexOf(searchFor);
+		if (matchIndex == -1)
 		{
-			// Start a replace operation?
-			if (buffer == null)
-			{
-				// Determine a buffer size so we don't need to
-				// reallocate if there's just one replacement.
-				int size = s.length();
-				final int replaceWithLength = replaceWith.length();
-				if (replaceWithLength > searchForLength)
-				{
-					size += (replaceWithLength - searchForLength);
-				}
-				buffer = new StringBuffer(size + 16);
-			}
-
-			// Found a match. Append up to the match
-			buffer.append(s.substring(pos, matchIndex));
-
-			// Add replaceWith
-			buffer.append(replaceWith);
-		}
-
-		// If no replace was required
-		if (buffer == null)
-		{
-			// return original string
+			// No replace operation needs to happen
 			return s;
 		}
 		else
 		{
+			// Allocate a StringBuffer that will hold one replacement with a
+			// little extra room.
+			int size = s.length();
+			final int replaceWithLength = replaceWith.length();
+			final int searchForLength = searchFor.length();
+			if (replaceWithLength > searchForLength)
+			{
+				size += (replaceWithLength - searchForLength);
+			}
+			final StringBuffer buffer = new StringBuffer(size + 16);
+
+			int pos = 0;
+			do
+			{
+				// Append text up to the match
+				buffer.append(s.substring(pos, matchIndex));
+
+				// Add replaceWith text
+				buffer.append(replaceWith);
+
+				// Find next occurrence, if any
+				pos = matchIndex + searchForLength;
+				matchIndex = s.indexOf(searchFor, pos);
+			}
+			while (matchIndex != -1);
+
 			// add tail of s
 			buffer.append(s.substring(pos));
-			
+
 			// return processed buffer
 			return buffer.toString();
 		}
