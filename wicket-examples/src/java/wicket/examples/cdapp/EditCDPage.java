@@ -41,7 +41,7 @@ import wicket.markup.html.form.validation.LengthValidator;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.DetachableModel;
+import wicket.model.AbstractDetachableModel;
 import wicket.model.IModel;
 
 
@@ -60,29 +60,6 @@ public final class EditCDPage extends WicketExamplePage
 
 	/** search page to navigate back to. */
 	private final SearchCDPage searchCDPage;
-
-	/**
-	 * Constructor.
-	 * @param searchCDPage the search page to navigate back to
-	 * @param id the id of the cd to edit
-	 */
-	public EditCDPage(final SearchCDPage searchCDPage, Long id)
-	{
-		this.searchCDPage = searchCDPage;
-		cdModel = new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
-		add(new Label("cdTitle", new TitleModel(cdModel)));
-		FeedbackPanel feedback = new FeedbackPanel("feedback");
-		add(feedback);
-		add(new DetailForm("detailForm", feedback, cdModel));
-	}
-	
-	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		return cdModel;
-	}
 
 	/**
 	 * form for detail editing.
@@ -171,7 +148,7 @@ public final class EditCDPage extends WicketExamplePage
 	 * loaded object (when the id != null) or it returns a special string in case
 	 * there is no loaded object (if id == null).
 	 */
-	private static class TitleModel extends DetachableModel
+	private static class TitleModel extends AbstractDetachableModel
 	{
 		/** decorated model; provides the current id. */
 		private final PersistentObjectModel cdModel;
@@ -183,24 +160,7 @@ public final class EditCDPage extends WicketExamplePage
 		 */
 		public TitleModel(PersistentObjectModel cdModel)
 		{
-			super(null);
 			this.cdModel = cdModel;
-		}
-
-		/**
-		 * @see wicket.model.IModel#getObject()
-		 */
-		public Object getObject()
-		{
-			if (cdModel.getId() != null) // it is allready persistent
-			{
-				CD cd = (CD)cdModel.getObject();
-				return cd.getTitle();
-			}
-			else // it is a new cd
-			{
-				return "<NEW CD>";
-			}
 		}
 
 		/**
@@ -212,19 +172,58 @@ public final class EditCDPage extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.model.DetachableModel#onDetach()
+		 * @see AbstractDetachableModel#onAttach()
 		 */
-		public void onDetach()
+		protected void onAttach()
+		{
+			cdModel.attach();
+		}
+
+		/**
+		 * @see AbstractDetachableModel#onDetach()
+		 */
+		protected void onDetach()
 		{
 			cdModel.detach();
 		}
 
 		/**
-		 * @see wicket.model.DetachableModel#onAttach()
+		 * @see AbstractDetachableModel#onGetObject()
 		 */
-		public void onAttach()
+		protected Object onGetObject()
 		{
-			cdModel.attach();
+			if (cdModel.getId() != null) // it is allready persistent
+			{
+				CD cd = (CD)cdModel.getObject();
+				return cd.getTitle();
+			}
+			else // it is a new cd
+			{
+				return "<NEW CD>";
+			}
 		}
+	}
+
+	/**
+	 * Constructor.
+	 * @param searchCDPage the search page to navigate back to
+	 * @param id the id of the cd to edit
+	 */
+	public EditCDPage(final SearchCDPage searchCDPage, Long id)
+	{
+		this.searchCDPage = searchCDPage;
+		cdModel = new HibernateObjectModel(id, CD.class, new HibernateHelperSessionDelegate());
+		add(new Label("cdTitle", new TitleModel(cdModel)));
+		FeedbackPanel feedback = new FeedbackPanel("feedback");
+		add(feedback);
+		add(new DetailForm("detailForm", feedback, cdModel));
+	}
+	
+	/**
+	 * @see wicket.Component#initModel()
+	 */
+	protected IModel initModel()
+	{
+		return cdModel;
 	}
 }

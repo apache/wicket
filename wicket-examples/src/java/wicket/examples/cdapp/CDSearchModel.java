@@ -25,7 +25,7 @@ import net.sf.hibernate.Query;
 import wicket.contrib.data.model.PageableList;
 import wicket.contrib.data.model.hibernate.HibernateCountAndListAction;
 import wicket.contrib.data.util.hibernate.HibernateHelperSessionDelegate;
-import wicket.model.DetachableModel;
+import wicket.model.AbstractDetachableModel;
 
 /**
  * Model that keeps a (current) search argument, and uses a pageable list as
@@ -33,16 +33,44 @@ import wicket.model.DetachableModel;
  * 
  * @author Eelco Hillenius
  */
-public final class CDSearchModel extends DetachableModel
+public final class CDSearchModel extends AbstractDetachableModel
 {
-	/** zoek opdracht. */
-	private String searchString = null;
+	/** action used by the pageable list (has our order columns). */
+	private CountAndListAction countAndListAction = new CountAndListAction();	
+	
+	/** the list of matches */
+	private transient PageableList list;
 
 	/** number of rows on each page. */
 	private int rowsPerPage = 8;
+	
+	/** zoek opdracht. */
+	private String searchString = null;
 
-	/** action used by the pageable list (has our order columns). */
-	private CountAndListAction countAndListAction = new CountAndListAction();;
+	/** count and list action that works with this model. */
+	private final class CountAndListAction extends HibernateCountAndListAction
+	{
+		/**
+		 * Construct.
+		 */
+		public CountAndListAction()
+		{
+			super("wicket.examples.cdapp.model.SearchCD",
+					"wicket.examples.cdapp.model.SearchCD.count",
+					new HibernateHelperSessionDelegate());
+		}
+
+		/**
+		 * @see wicket.contrib.data.model.hibernate.HibernateCountAndListAction#setParameters(net.sf.hibernate.Query, java.lang.Object)
+		 */
+		protected void setParameters(Query query, Object queryObject) throws HibernateException
+		{
+			final String searchStringParameter = getSearchStringParameter();
+			query.setString("performers", searchStringParameter);
+			query.setString("title", searchStringParameter);
+			query.setString("label", searchStringParameter);
+		}
+	}
 
 	/**
 	 * Construct.
@@ -58,51 +86,6 @@ public final class CDSearchModel extends DetachableModel
 	public CDSearchModel(int rowsPerPage)
 	{
 		this.rowsPerPage = rowsPerPage;
-	}
-
-	/**
-	 * @see wicket.model.DetachableModel#getObject()
-	 */
-	public Object getObject()
-	{
-		attach(); // in case we are not calling this on a component
-		return super.getObject();
-	}
-
-	/**
-	 * @see wicket.model.DetachableModel#onAttach()
-	 */
-	protected void onAttach()
-	{
-		PageableList list = new PageableList(rowsPerPage, countAndListAction);
-		setObject(list);
-	}
-
-	/**
-	 * @see wicket.model.DetachableModel#onDetach()
-	 */
-	protected void onDetach()
-	{
-		setObject(null);
-	}
-
-	/**
-	 * Gets the searchString.
-	 * @return searchString
-	 */
-	public final String getSearchString()
-	{
-		return searchString;
-	}
-
-	/**
-	 * Sets the searchString.
-	 * @param searchString searchString
-	 */
-	public final void setSearchString(String searchString)
-	{
-		detach(); // force reload right away
-		this.searchString = searchString;
 	}
 
 	/**
@@ -131,6 +114,15 @@ public final class CDSearchModel extends DetachableModel
 	}
 
 	/**
+	 * Gets the searchString.
+	 * @return searchString
+	 */
+	public final String getSearchString()
+	{
+		return searchString;
+	}
+
+	/**
 	 * Convenience method to figure out if this model has any rows at all.
 	 * @return whether there are any rows found
 	 */
@@ -138,6 +130,40 @@ public final class CDSearchModel extends DetachableModel
 	{
 		List results = (List)getObject();
 		return (!results.isEmpty());
+	}
+
+	/**
+	 * Sets the searchString.
+	 * @param searchString searchString
+	 */
+	public final void setSearchString(String searchString)
+	{
+		detach(); // force reload right away
+		this.searchString = searchString;
+	}
+
+	/**
+	 * @see AbstractDetachableModel#onAttach()
+	 */
+	protected void onAttach()
+	{
+		list = new PageableList(rowsPerPage, countAndListAction);
+	}
+
+	/**
+	 * @see AbstractDetachableModel#onDetach()
+	 */
+	protected void onDetach()
+	{
+		list = null;
+	}
+
+	/**
+	 * @see wicket.model.AbstractDetachableModel#onGetObject()
+	 */
+	protected Object onGetObject()
+	{
+		return list;
 	}
 
 	/**
@@ -152,30 +178,5 @@ public final class CDSearchModel extends DetachableModel
 			return '%' + searchString.toUpperCase() + '%';
 		}
 		return null;
-	}
-
-	/** count and list action that works with this model. */
-	private final class CountAndListAction extends HibernateCountAndListAction
-	{
-		/**
-		 * Construct.
-		 */
-		public CountAndListAction()
-		{
-			super("wicket.examples.cdapp.model.SearchCD",
-					"wicket.examples.cdapp.model.SearchCD.count",
-					new HibernateHelperSessionDelegate());
-		}
-
-		/**
-		 * @see wicket.contrib.data.model.hibernate.HibernateCountAndListAction#setParameters(net.sf.hibernate.Query, java.lang.Object)
-		 */
-		protected void setParameters(Query query, Object queryObject) throws HibernateException
-		{
-			final String searchStringParameter = getSearchStringParameter();
-			query.setString("performers", searchStringParameter);
-			query.setString("title", searchStringParameter);
-			query.setString("label", searchStringParameter);
-		}
 	}
 }

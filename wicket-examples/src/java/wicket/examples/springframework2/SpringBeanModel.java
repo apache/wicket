@@ -25,8 +25,8 @@ import org.springframework.context.ApplicationContext;
 
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.model.AbstractDetachableModel;
 import wicket.model.AbstractModel;
-import wicket.model.DetachableModel;
 import wicket.model.IModel;
 
 /**
@@ -44,7 +44,7 @@ import wicket.model.IModel;
  * 
  * @author Martin Fey
  */
-public class SpringBeanModel extends DetachableModel
+public class SpringBeanModel extends AbstractDetachableModel
 {
     private transient ApplicationContext applicationContext = null;
 
@@ -72,8 +72,6 @@ public class SpringBeanModel extends DetachableModel
      */
     public SpringBeanModel(final String beanName)
     {
-        super(null);
-        
         if (beanName == null)
         {
             throw new IllegalArgumentException("beanName must not be null");
@@ -111,8 +109,6 @@ public class SpringBeanModel extends DetachableModel
      */
     public SpringBeanModel(Class beanClass)
     {
-        super(null);
-        
         if (beanClass == null)
         {
             throw new IllegalArgumentException("beanClass must not be null");
@@ -153,7 +149,7 @@ public class SpringBeanModel extends DetachableModel
     }
 
     /**
-     * @see wicket.model.DetachableModel#setObject(java.lang.Object)
+     * @see AbstractDetachableModel#setObject(Object)
      */
     public void setObject(Object object)
     {
@@ -161,11 +157,10 @@ public class SpringBeanModel extends DetachableModel
     }
 
     /**
-     * @see wicket.model.DetachableModel#getObject()
+     * @see AbstractDetachableModel#onGetObject()
      */
-    public Object getObject()
+    protected Object onGetObject()
     {
-    	attach();
         return this.model.getObject();
     }
 

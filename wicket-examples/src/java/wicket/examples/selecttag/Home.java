@@ -1,14 +1,12 @@
 package wicket.examples.selecttag;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.IDetachableChoiceList;
+import wicket.markup.html.form.model.DetachableChoiceList;
+import wicket.markup.html.form.model.IChoice;
 import wicket.model.AbstractModel;
 
 /**
@@ -21,29 +19,31 @@ public class Home extends WicketExamplePage
 	 * Constructor
 	 * 
 	 * @param parameters
-	 *          Page parameters (ignored since this is the home page)
+	 *            Page parameters (ignored since this is the home page)
 	 */
 	public Home(final PageParameters parameters)
 	{
 		add(new SelectForm("selectform"));
 	}
-	
+
 	class SelectForm extends Form
 	{
 		SelectModel model;
 		Label label;
-		
+
 		/**
 		 * Constructor
-		 * @param name Name of form
+		 * 
+		 * @param name
+		 *            Name of form
 		 */
 		public SelectForm(String name)
 		{
-			super(name,null);
+			super(name, null);
 			model = new SelectModel();
-			label = new Label("label",model,"name");
+			label = new Label("label", model, "name");
 			add(label);
-			DropDownChoice choice = new DropDownChoice("users",model,new UserIdList());
+			DropDownChoice choice = new DropDownChoice("users", model, new UserIdList());
 			add(choice);
 		}
 
@@ -55,11 +55,11 @@ public class Home extends WicketExamplePage
 			getRequestCycle().setPage(Home.this);
 		}
 	}
-	
+
 	class SelectModel extends AbstractModel
 	{
 		private Object selection;
-		
+
 		/**
 		 * @see wicket.model.IModel#getObject()
 		 */
@@ -76,62 +76,45 @@ public class Home extends WicketExamplePage
 			selection = object;
 		}
 	}
-	
-	class UserIdList extends ArrayList implements IDetachableChoiceList
+
+	class UserIdList extends DetachableChoiceList
 	{
 		/**
-		 * @see wicket.markup.html.form.IDetachableChoiceList#detach()
+		 * @see wicket.markup.html.form.model.DetachableChoiceList#onAttach()
 		 */
-		public void detach()
+		public void onAttach()
 		{
-			this.clear();
-		}
-
-		/**
-		 * @see wicket.markup.html.form.IDetachableChoiceList#attach()
-		 */
-		public void attach()
-		{
-			if(size() == 0)
+			if (size() == 0)
 			{
-				add(new User(new Long(1),"Foo"));
-				add(new User(new Long(2),"Bar"));
-				add(new User(new Long(3),"FooBar"));
+				add(new User(new Long(1), "Foo"));
+				add(new User(new Long(2), "Bar"));
+				add(new User(new Long(3), "FooBar"));
 			}
 		}
-
+		
 		/**
-		 * @see wicket.markup.html.form.IDetachableChoiceList#getDisplayValue(int)
+		 * @see wicket.markup.html.form.model.ChoiceList#newChoice(java.lang.Object, int)
 		 */
-		public String getDisplayValue(int row)
+		protected IChoice newChoice(final Object object, final int index)
 		{
-			return ((User)get(row)).getName();
-		}
-
-		/**
-		 * @see wicket.markup.html.form.IDetachableChoiceList#getId(int)
-		 */
-		public String getId(int row)
-		{
-			return ((User)get(row)).getId().toString();
-		}
-
-		/**
-		 * @see wicket.markup.html.form.IDetachableChoiceList#objectForId(java.lang.String)
-		 */
-		public Object objectForId(String id)
-		{
-			Long longId = new Long(id);
-			Iterator it = iterator();
-			while(it.hasNext())
+			final User user = (User)object;
+			return new IChoice()
 			{
-				User user = (User)it.next();
-				if(user.getId().equals(longId))
+				public String getDisplayValue()
 				{
-					return user;
+					return user.getName();
 				}
-			}
-			return null;
+
+				public String getId()
+				{
+					return user.getId().toString();
+				}
+
+				public Object getObject()
+				{
+					return object;
+				}				
+			};
 		}
 	}
 }
