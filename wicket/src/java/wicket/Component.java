@@ -429,6 +429,16 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * @return Lock object to synchronize on when reading or updating a model
+	 *         which might require synchronization, such as a list
+	 */
+	public final Object getModelLock()
+	{
+		final Object lock = getModelObject();
+        return lock == null ? this : lock;
+	}
+
+	/**
 	 * Gets the backing model object; this is shorthand for
 	 * getModel().getObject().
 	 * 
@@ -802,8 +812,13 @@ public abstract class Component implements Serializable
 			cycle.setResponse(NullResponse.getInstance());
 		}
 
-		// Call implementation to render component
-		handleRender();
+		// Synchronize on model lock while rendering to help ensure
+		// that the model doesn't change while its being read
+		synchronized (getModelLock())
+		{
+			// Call implementation to render component
+			handleRender();
+		}
 
 		// Restore original response
 		cycle.setResponse(originalResponse);
@@ -1158,7 +1173,7 @@ public abstract class Component implements Serializable
 	protected final void renderComponentTag(final MarkupStream markupStream)
 	{
 		renderComponentTag(markupStream.getTag());
-        markupStream.next();
+		markupStream.next();
 	}
 
 	/**
@@ -1334,7 +1349,7 @@ public abstract class Component implements Serializable
 
 				// Render the close tag
 				renderComponentTag(closeTag);
-                markupStream.next();
+				markupStream.next();
 			}
 			else
 			{

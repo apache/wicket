@@ -38,10 +38,10 @@ import wicket.markup.html.list.ListView;
  */
 public final class GuestBook extends WicketExamplePage
 {
-	/** A global list of all comments from all users */
+	/** A global list of all comments from all users across all sessions */
 	private static final List commentList = new ArrayList();
 
-	/** The commentListView of comments shown on this page */
+	/** The list view that shows comments */
 	private final ListView commentListView;
 
 	/**
@@ -103,7 +103,10 @@ public final class GuestBook extends WicketExamplePage
 			newComment.setDate(new Date());
 
 			// Add the component we edited to the list of comments
-			commentList.add(0, newComment);
+            synchronized (commentListView.getModelLock())
+            {
+    			commentList.add(0, newComment);
+            }
 
 			// Invalidate the commentListView's model since a structural change
 			// was made to the comment list (we added an entry)
