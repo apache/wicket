@@ -64,7 +64,7 @@ public final class Markup
      */
     MarkupElement get(final int index)
     {
-        return (MarkupElement) markup.get(index);
+        return (MarkupElement)markup.get(index);
     }
 
     /**
