@@ -146,7 +146,7 @@ public class ListMultipleChoice extends AbstractChoice
 		}
 
 		// Get indices selected from request
-		final String[] indicesOrIds = getRequestStrings();
+		final String[] indicesOrIds = inputAsStringArray();
 
 		// If one or more ids is selected
 		if (indicesOrIds != null && indicesOrIds.length > 0 && !Strings.isEmpty(indicesOrIds[0]))

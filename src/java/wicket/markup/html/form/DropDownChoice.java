@@ -172,7 +172,7 @@ public class DropDownChoice extends AbstractChoice
 	 */
 	private Object internalUpdateModel()
 	{
-		final String indexOrId = getRequestString();
+		final String indexOrId = getInput();
 		Object object = null;
 		final List list = getValues();
 		if (indexOrId == null || "".equals(indexOrId))

@@ -24,7 +24,6 @@ import org.apache.commons.fileupload.FileItem;
 import wicket.Request;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractValidator;
-import wicket.util.collections.MicroMap;
 
 /**
  * Textfield that can be used with upload forms.
@@ -76,7 +75,7 @@ public class UploadTextField extends TextField
 	{
 		UploadModel model = (UploadModel)getModel();
 		model.setFile(getFile());
-		model.setName(getRequestString());
+		model.setName(getInput());
 	}
 
 	/**

@@ -133,7 +133,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public String getInput()
 	{
-		return component.getRequestString();
+		return component.getInput();
 	}
 
 	/**

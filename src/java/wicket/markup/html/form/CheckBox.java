@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.util.string.Strings;
 
 /**
  * HTML checkbox input component.
@@ -116,6 +117,6 @@ public class CheckBox extends FormComponent
 	 */
 	protected void updateModel()
 	{
-		setModelObject(getRequestBoolean());
+		setModelObject(Boolean.valueOf(!Strings.isEmpty(getInput())));
 	}
 }
