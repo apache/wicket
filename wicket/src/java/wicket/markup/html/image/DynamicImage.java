@@ -34,13 +34,24 @@ public abstract class DynamicImage extends AbstractDynamicImage
 	private static final long serialVersionUID = 5934721258765771884L;
 
 	/** Height of image */
-	private final int height;
+	private int height = 100;
 
 	/** Width of image */
-	private final int width;
+	private int width = 100;
 
 	/**
-	 * Constructor.
+	 * @see wicket.Component#Component(String)
+	 * 
+	 * @param name
+	 *            Component name
+	 */
+	public DynamicImage(String name)
+	{
+		super(name);
+	}
+
+	/**
+	 * @see wicket.Component#Component(String)
 	 * 
 	 * @param name
 	 *            Component name
@@ -49,7 +60,7 @@ public abstract class DynamicImage extends AbstractDynamicImage
 	 * @param height
 	 *            Height of image
 	 */
-	public DynamicImage(String name, int width, int height)
+	public DynamicImage(final String name, final int width, final int height)
 	{
 		super(name);
 		this.width = width;
@@ -57,18 +68,54 @@ public abstract class DynamicImage extends AbstractDynamicImage
 	}
 
 	/**
+	 * @return Returns the height.
+	 */
+	public int getHeight()
+	{
+		return height;
+	}
+
+	/**
 	 * @return The image data for this dynamic image
 	 */
 	public byte[] getImageData()
-	{		
+	{
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		render((Graphics2D)image.getGraphics());
 		return toImageData(image);
 	}
 
 	/**
+	 * @return Returns the width.
+	 */
+	public int getWidth()
+	{
+		return width;
+	}
+
+	/**
+	 * @param height
+	 *            The height to set.
+	 */
+	public void setHeight(int height)
+	{
+		this.height = height;
+	}
+
+	/**
+	 * @param width
+	 *            The width to set.
+	 */
+	public void setWidth(int width)
+	{
+		this.width = width;
+	}
+
+	/**
 	 * Override this method to provide your rendering code
-	 * @param graphics The graphics context to render on
+	 * 
+	 * @param graphics
+	 *            The graphics context to render on
 	 */
 	protected abstract void render(Graphics2D graphics);
 }

@@ -20,6 +20,7 @@ package wicket.examples.images;
 import java.awt.Graphics2D;
 
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.image.ButtonImage;
 import wicket.markup.html.image.DynamicImage;
 import wicket.markup.html.image.Image;
 
@@ -51,5 +52,7 @@ public final class Home extends WicketExamplePage
 
 		// Dynamically created buffered image
 		add(((ImagesApplication)getApplication()).getImage5());
+		
+		add(new ButtonImage("image6", "Cancel"));
 	}
 }

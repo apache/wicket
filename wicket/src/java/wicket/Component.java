@@ -224,40 +224,10 @@ public abstract class Component implements Serializable
 	 * instance using the OGNL expression. This is the equivalent of:
 	 * 
 	 * <pre>
-	 * 
-	 *  
-	 *   
-	 *    
-	 *     
-	 *      
-	 *       
-	 *        
-	 *         
-	 *          
-	 *           
-	 *            
-	 *             
-	 *              
-	 *               
 	 *                IModel model;
 	 *                String expression;
 	 *                ...
 	 *                new MyComponent(name, new PropertyModel(model, expression));
-	 *                
-	 *               
-	 *              
-	 *             
-	 *            
-	 *           
-	 *          
-	 *         
-	 *        
-	 *       
-	 *      
-	 *     
-	 *    
-	 *   
-	 *  
 	 * </pre>
 	 * 
 	 * If the object is not an instance of PropertyModel or IModel, the object
@@ -266,40 +236,10 @@ public abstract class Component implements Serializable
 	 * expression. Thus, this is the equivalent of:
 	 * 
 	 * <pre>
-	 * 
-	 *  
-	 *   
-	 *    
-	 *     
-	 *      
-	 *       
-	 *        
-	 *         
-	 *          
-	 *           
-	 *            
-	 *             
-	 *              
-	 *               
 	 *                Serializable model;
 	 *                String expression;
 	 *                ...
 	 *                new MyComponent(name, new PropertyModel(new Model(model), expression));
-	 *                
-	 *               
-	 *              
-	 *             
-	 *            
-	 *           
-	 *          
-	 *         
-	 *        
-	 *       
-	 *      
-	 *     
-	 *    
-	 *   
-	 *  
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
