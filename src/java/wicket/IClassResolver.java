@@ -26,8 +26,8 @@ package wicket;
 public interface IClassResolver
 {
     /**
-     * Resolves a class by name (which may or may not involve loading it;
-     * thus the name class *resolver* not *loader*).
+     * Resolves a class by name (which may or may not involve loading it; thus
+     * the name class *resolver* not *loader*).
      * 
      * @param classname
      *            Fully qualified classname to find

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,7 +19,7 @@ package wicket;
 
 /**
  * Resolves a class by using the classloader that loaded this class.
- *
+ * 
  * @see ApplicationSettings
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -37,8 +37,7 @@ public class DefaultClassResolver implements IClassResolver
         }
         catch (ClassNotFoundException ex)
         {
-            throw new WicketRuntimeException("Unable to load class with name: "
-                    + classname);
+            throw new WicketRuntimeException("Unable to load class with name: " + classname);
         }
     }
 }

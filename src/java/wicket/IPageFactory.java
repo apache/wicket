@@ -19,8 +19,12 @@ package wicket;
 
 /**
  * A factory class that creates Pages. A Page can be created by Class, with or
- * without a PageParameters argument to pass to the constructor.
+ * without a PageParameters argument to pass to the Page's constructor. A Page
+ * can also be created with a Page argument, but this form is intended for
+ * internal use only.
  * 
+ * @see ApplicationSettings#setDefaultPageFactory(IPageFactory)
+ * @see Session#setPageFactory(IPageFactory)
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
@@ -33,29 +37,29 @@ public interface IPageFactory
      *            The page class to instantiate
      * @return The page
      * @throws WicketRuntimeException
-     *             Thrown if the page cannot be constructed with the default
-     *             constructor
+     *             Thrown if the page cannot be constructed
      */
     public Page newPage(final Class pageClass);
 
     /**
      * Creates a new Page, passing PageParameters to the Page constructor if
-     * such a constructor exists.
+     * such a constructor exists. If no such constructor exists and the
+     * parameters argument is null or empty, then any available default
+     * constructor will be used.
      * 
      * @param pageClass
-     *            The page class to create
+     *            The class of Page to create
      * @param parameters
-     *            The page parameters
+     *            Any parameters to pass to the Page's constructor
      * @return The new page
      * @throws WicketRuntimeException
-     *             Thrown if the page cannot be constructed with a
-     *             PageParameters constructor
+     *             Thrown if the page cannot be constructed
      */
     public Page newPage(final Class pageClass, final PageParameters parameters);
 
     /**
      * Creates a new Page, passing the given Page to the Page constructor if
-     * such a constructor exists.
+     * such a constructor exists. This method is intended for internal use only.
      * 
      * @param pageClass
      *            The page class to create
@@ -63,8 +67,7 @@ public interface IPageFactory
      *            The page
      * @return The new page
      * @throws WicketRuntimeException
-     *             Thrown if the page cannot be constructed with a Page
-     *             constructor
+     *             Thrown if the page cannot be constructed
      */
     public Page newPage(final Class pageClass, final Page page);
 }

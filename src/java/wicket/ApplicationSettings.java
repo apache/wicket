@@ -166,7 +166,7 @@ public class ApplicationSettings
     private IClassResolver defaultClassResolver = new DefaultClassResolver();
 
     /** Default factory to create new Page objects */
-    private IPageFactory defaultPageFactory;
+    private IPageFactory defaultPageFactory = new DefaultPageFactory();
 
     /** Encryption key used to encode/decode passwords e.g. */
     private String encryptionKey = "WiCkEt-FRAMEwork";
@@ -270,7 +270,6 @@ public class ApplicationSettings
         stringResourceLoaders.add(new ComponentStringResourceLoader());
         stringResourceLoaders.add(new ApplicationStringResourceLoader(
                 application));
-        defaultPageFactory = new DefaultPageFactory(application);
 
         componentResolvers = new ArrayList();
         componentResolvers.add(new AutolinkComponentResolver());
