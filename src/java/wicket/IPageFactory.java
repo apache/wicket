@@ -19,11 +19,12 @@ package wicket;
 
 /**
  * A factory class that creates Pages. A Page can be created by Class, with or
- * without a PageParameters argument to pass to the Page's constructor. A Page
- * can also be created with a Page argument, but this form is intended for
- * internal use only.
+ * without a PageParameters argument to pass to the Page's constructor. 
  *
  * @see ApplicationSettings#setDefaultPageFactory(IPageFactory)
+ * @see Session#getPageFactory()
+ * @see Session#getPageFactory(Page)
+ * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */

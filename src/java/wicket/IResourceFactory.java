@@ -26,6 +26,7 @@ import java.util.Locale;
  * might include settings relevant to buttons such as the width, height and
  * color of the button, as well as the text to draw on the button.
  * 
+ * @see wicket.markup.html.image.resource.LocalizedImageResource
  * @author Jonathan Locke
  */
 public interface IResourceFactory

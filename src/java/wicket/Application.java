@@ -29,6 +29,7 @@ import wicket.markup.MarkupParser;
 import wicket.markup.html.form.encryption.ICrypt;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
+import wicket.model.IModel;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
 import wicket.util.lang.Classes;
@@ -38,22 +39,69 @@ import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * Base class for all Wicket applications. An application has a name, settings,
- * a particular set of required pages and a variety of resources such as a
- * localizer, a markup parser factory method, a resource watcher and more.
- * <p>
- * To create a Wicket application, you generally do not want to directly
- * subclass this class. Instead, you want to subclass a subclass of Application,
- * like WebApplication, which is appropriate for the protocol and markup type
- * you are working with.
- * <p>
- * The application's settings specify how the application is to function.
- * <p>
- * The required pages returned by getPages() include a home page and pages for
- * handling common error conditions.
- * <p>
- * The getLocalizer() method returns an object encapsulating all of the
- * functionality required to access localized resources.
+ * Base class for all Wicket applications. To create a Wicket application, you
+ * generally should <i>not </i> directly subclass this class. Instead, you will
+ * want to subclass some subclass of Application, like WebApplication, which is
+ * appropriate for the protocol and markup type you are working with.
+ * 
+ * Application has the following interesting features / attributes:
+ * <ul>
+ * <li><b>Name</b> - The application's name, which is the same as its class name.
+ * 
+ * <li><b>Application Settings</b> - A variety of settings that control the behavior of
+ * the Wicket framework for a given application. It is not necessary to learn
+ * all the settings. Good defaults can be set for deployment and development by
+ * calling ApplicationSettings.configure("deployment") or
+ * ApplicationSettings.configure("development").
+ * 
+ * <li><b>Application Pages</b> - A particular set of required pages. The required
+ * pages returned by getPages() include a home page and pages for handling
+ * common error conditions. The only page you must supply to create a Wicket
+ * application is the application home page.
+ * 
+ * <li><b>Shared Resources</b> - Resources added to an application with any of the
+ * Application.addResource() methods have application-wide scope and can be
+ * referenced using a logical scope and a name with the SharedResource class.
+ * SharedResources can then be used by multiple components in the same
+ * application without additional overhead (beyond the SharedResource instance
+ * held by each referee) and will yield a stable URL, permitting efficient
+ * browser caching of the resource (even if the resource is dynamically
+ * generated). Resources shared in this manner may also be localized. See
+ * {@link wicket.SharedResource}for more details.
+ * 
+ * <li><b>A Converter Factory</b> - By overriding getConverterFactory(), you can
+ * provide your own factory which creates locale sensitive Converter instances.
+ * 
+ * <li><b>A ResourceLocator</b> - An Application's ResourceLocator is used to find
+ * resources such as images or markup files. You can supply your own
+ * ResourceLocator if your prefer to store your applicaiton's resources in a
+ * non-standard location (such as a different filesystem location, a particular
+ * JAR file or even a database) by overriding the getResourceLocator() method.
+ * 
+ * <li><b>Resource Factories</b> - Resource factories can be used to create resources
+ * dynamically from specially formatted HTML tag attribute values. For more
+ * details, see {@link IResourceFactory},
+ * {@link wicket.markup.html.image.resource.DefaultButtonImageResourceFactory}
+ * and especially
+ * {@link wicket.markup.html.image.resource.LocalizedImageResource}.
+ * 
+ * <li><b>A Localizer</b> - The getLocalizer() method returns an object encapsulating
+ * all of the functionality required to access localized resources. For many
+ * localization problems, even this will not be required, as there are
+ * convenience methods available to all components:
+ * {@link wicket.Component#getString(String key)}and
+ * {@link wicket.Component#getString(String key, IModel model)}.
+ * 
+ * <li><b>A Session Factory</b> - The Application subclass WebApplication supplies an
+ * implementation of getSessionFactory() which returns an implementation of
+ * ISessionFactory that creates WebSession Session objects appropriate for web
+ * applications. You can (and probably will want to) override
+ * getSessionFactory() to provide your own session factory that creates Session
+ * instances of your own application-specific subclass of WebSession.
+ * 
+ * <li><b>A Page Sets Factory</b> - Page sets are an experimental feature which will
+ * not be finished until Wicket 1.1.
+ * </ul>
  * 
  * @see wicket.protocol.http.WebApplication
  * @author Jonathan Locke
@@ -111,18 +159,18 @@ public abstract class Application
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
 	}
-	
+
 	/**
 	 * @param scope
-	 *            Scope of resource
+	 *			  Scope of resource
 	 * @param name
-	 *            Logical name of resource
+	 *			  Logical name of resource
 	 * @param locale
-	 *            The locale of the resource
+	 *			  The locale of the resource
 	 * @param style
-	 *            The resource style
+	 *			  The resource style
 	 * @param resource
-	 *            Resource to store
+	 *			  Resource to store
 	 */
 	public void addResource(final Class scope, final String name, final Locale locale,
 			final String style, final Resource resource)
@@ -135,11 +183,11 @@ public abstract class Application
 
 	/**
 	 * @param name
-	 *            Logical name of resource
+	 *			  Logical name of resource
 	 * @param locale
-	 *            The locale of the resource
+	 *			  The locale of the resource
 	 * @param resource
-	 *            Resource to store
+	 *			  Resource to store
 	 */
 	public void addResource(final String name, final Locale locale, final Resource resource)
 	{
@@ -148,9 +196,9 @@ public abstract class Application
 
 	/**
 	 * @param name
-	 *            Logical name of resource
+	 *			  Logical name of resource
 	 * @param resource
-	 *            Resource to store
+	 *			  Resource to store
 	 */
 	public void addResource(final String name, final Resource resource)
 	{
@@ -162,9 +210,9 @@ public abstract class Application
 	 * generating resources automatically
 	 * 
 	 * @param name
-	 *            The name to give to the factory
+	 *			  The name to give to the factory
 	 * @param resourceFactory
-	 *            The resource factory to add
+	 *			  The resource factory to add
 	 */
 	public void addResourceFactory(final String name, final IResourceFactory resourceFactory)
 	{
@@ -230,7 +278,7 @@ public abstract class Application
 	 * 
 	 * @return A new MarkupParser
 	 */
-	public MarkupParser getMarkupParser()
+	public final MarkupParser getMarkupParser()
 	{
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 		parser.configure(getSettings());
@@ -256,8 +304,10 @@ public abstract class Application
 	}
 
 	/**
+	 * THIS FEATURE IS CURRENTLY EXPERIMENTAL. DO NOT USE THIS METHOD.
+	 * 
 	 * @param page
-	 *            The Page for which a list of PageSets should be retrieved
+	 *			  The Page for which a list of PageSets should be retrieved
 	 * @return Sequence of PageSets for a given Page
 	 */
 	public Iterator getPageSets(final Page page)
@@ -283,7 +333,7 @@ public abstract class Application
 
 	/**
 	 * @param key
-	 *            Shared resource key
+	 *			  Shared resource key
 	 * @return The resource
 	 */
 	public final Resource getResource(final String key)
@@ -293,9 +343,9 @@ public abstract class Application
 
 	/**
 	 * @param scope
-	 *            The resource's scope
+	 *			  The resource's scope
 	 * @param name
-	 *            Name of resource to get
+	 *			  Name of resource to get
 	 * @return The logical resource
 	 */
 	public Resource getResource(final Class scope, final String name)
@@ -305,11 +355,11 @@ public abstract class Application
 
 	/**
 	 * @param scope
-	 *            The resource's scope
+	 *			  The resource's scope
 	 * @param name
-	 *            Name of resource to get
+	 *			  Name of resource to get
 	 * @param locale
-	 *            The locale of the resource
+	 *			  The locale of the resource
 	 * @return The logical resource
 	 */
 	public Resource getResource(final Class scope, final String name, final Locale locale)
@@ -319,13 +369,13 @@ public abstract class Application
 
 	/**
 	 * @param scope
-	 *            The resource's scope
+	 *			  The resource's scope
 	 * @param name
-	 *            Name of resource to get
+	 *			  Name of resource to get
 	 * @param locale
-	 *            The locale of the resource
+	 *			  The locale of the resource
 	 * @param style
-	 *            The resource style
+	 *			  The resource style
 	 * @return The logical resource
 	 */
 	public Resource getResource(final Class scope, final String name, final Locale locale,
@@ -373,7 +423,7 @@ public abstract class Application
 
 	/**
 	 * @param name
-	 *            Name of the factory to get
+	 *			  Name of the factory to get
 	 * @return The IResourceFactory with the given name.
 	 */
 	public IResourceFactory getResourceFactory(final String name)
@@ -397,9 +447,9 @@ public abstract class Application
 
 	/**
 	 * @return Resource watcher with polling frequency determined by setting, or
-	 *         null if no polling frequency has been set.
+	 *		   null if no polling frequency has been set.
 	 */
-	public ModificationWatcher getResourceWatcher()
+	public final ModificationWatcher getResourceWatcher()
 	{
 		if (resourceWatcher == null)
 		{
@@ -426,11 +476,11 @@ public abstract class Application
 
 	/**
 	 * @param scope
-	 *            Scope of resource
+	 *			  Scope of resource
 	 * @param name
-	 *            Logical name of resource
+	 *			  Logical name of resource
 	 * @param factory
-	 *            The factory for lazy-initializing the shared resource
+	 *			  The factory for lazy-initializing the shared resource
 	 * @return The shared resource
 	 */
 	public SharedResource getSharedResource(final Class scope, final String name,
@@ -441,13 +491,13 @@ public abstract class Application
 
 	/**
 	 * @param scope
-	 *            Scope of resource
+	 *			  Scope of resource
 	 * @param name
-	 *            Logical name of resource
+	 *			  Logical name of resource
 	 * @param locale
-	 *            The locale of the resource
+	 *			  The locale of the resource
 	 * @param factory
-	 *            The factory for lazy-initializing the shared resource
+	 *			  The factory for lazy-initializing the shared resource
 	 * @return The shared resource
 	 */
 	public SharedResource getSharedResource(final Class scope, final String name,
@@ -458,15 +508,15 @@ public abstract class Application
 
 	/**
 	 * @param scope
-	 *            Scope of resource
+	 *			  Scope of resource
 	 * @param name
-	 *            Logical name of resource
+	 *			  Logical name of resource
 	 * @param locale
-	 *            The locale of the resource
+	 *			  The locale of the resource
 	 * @param style
-	 *            The resource style
+	 *			  The resource style
 	 * @param factory
-	 *            The factory for lazy-initializing the shared resource
+	 *			  The factory for lazy-initializing the shared resource
 	 * @return The shared resource
 	 */
 	public SharedResource getSharedResource(final Class scope, final String name,
@@ -502,8 +552,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Change the resource locator which will be used to locate resources like
-	 * e.g. markup files.
+	 * Changes the resource locator which will be used to locate resources like
+	 * markup files.
 	 * 
 	 * @param locator
 	 */

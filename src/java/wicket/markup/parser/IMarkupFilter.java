@@ -34,13 +34,13 @@ import wicket.markup.MarkupElement;
 public interface IMarkupFilter
 {
 	/**
-	 * IMarkupFilters are usually chained with the last filter being a XML
-	 * parser. getParent() returns the next filter in the chain.
+	 * IMarkupFilters are usually chained with the last filter being an XML
+	 * parser. The getParent() method returns the next filter in the chain.
 	 * 
-	 * @return the next filter in the chain, or null if the last one.
+	 * @return The next filter in the chain, or null if the last one.
 	 */
 	public abstract IMarkupFilter getParent();
-    
+	
 	/**
 	 * Gets the next tag from the input string.
 	 * 

@@ -258,6 +258,18 @@ public final class ApplicationSettings
 		stringResourceLoaders.add(loader);
 		return this;
 	}
+	
+	/**
+	 * Configures application settings for a given configuration type.
+	 * 
+	 * @param configurationType
+	 *            The configuration type. Must currently be either "development"
+	 *            or "deployment".
+	 */
+	public final void configure(final String configurationType)
+	{
+		configure(configurationType, "src/java");
+	}
 
 	/**
 	 * Configures application settings for a given configuration type.

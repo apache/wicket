@@ -32,7 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Provide some simple means to encrypt and decrypt strings (e.g. passwords).
+ * Provide some simple means to encrypt and decrypt strings such as passwords.
  * The whole implementation is based around Sun's security providers and uses
  * the <a
  * href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES
@@ -69,9 +69,9 @@ public class SunJceCrypt extends AbstractCrypt implements ICrypt
 	 * Crypts the given byte array
 	 * 
 	 * @param input
-	 *            byte array to be crypted
+	 *			  byte array to be crypted
 	 * @param mode
-	 *            crypt mode
+	 *			  crypt mode
 	 * @return the input crypted. Null in case of an error
 	 * @throws GeneralSecurityException
 	 */
@@ -93,9 +93,9 @@ public class SunJceCrypt extends AbstractCrypt implements ICrypt
 	 * 
 	 * @return secretKey the security key generated
 	 * @throws NoSuchAlgorithmException
-	 *             unable to find encryption algorithm specified
+	 *			   unable to find encryption algorithm specified
 	 * @throws InvalidKeySpecException
-	 *             invalid encryption key
+	 *			   invalid encryption key
 	 */
 	private final SecretKey generateSecretKey() throws NoSuchAlgorithmException, InvalidKeySpecException
 	{

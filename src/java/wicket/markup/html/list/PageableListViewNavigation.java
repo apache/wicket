@@ -29,20 +29,20 @@ import wicket.markup.html.basic.Label;
  * 
  * <pre>
  * 
- *  			 &lt;td wicket:id=&quot;navigation&quot;&gt;
- *  				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- *  					&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- *  				 &lt;/a&gt;
- *  			 &lt;/td&gt;
- *  
+ *				 &lt;td wicket:id=&quot;navigation&quot;&gt;
+ *					 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *						&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ *					 &lt;/a&gt;
+ *				 &lt;/td&gt;
+ *	
  * </pre>
  * 
  * thus renders like:
  * 
  * <pre>
  * 
- *  			 1 |  2 |  3 |	4 |	 5 |  6 |  7 |	8 |	 9 |
- *  
+ *				 1 |  2 |  3 |	4 |	 5 |  6 |  7 |	8 |	 9 |
+ *	
  * </pre>
  * 
  * </p>
@@ -54,20 +54,20 @@ import wicket.markup.html.basic.Label;
  * 
  * protected void populateItem(ListItem listItem)
  * {
- * 	final int page = ((Integer)listItem.getModelObject()).intValue();
- * 	final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
- * 			pageableListView, page);
- * 	if (page &gt; 0)
- * 	{
- * 		listItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
- * 	}
- * 	else
- * 	{
- * 		listItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
- * 	}
- * 	link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
- * 	link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
- * 	listItem.add(link);
+ *	final int page = ((Integer)listItem.getModelObject()).intValue();
+ *	final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
+ *			pageableListView, page);
+ *	if (page &gt; 0)
+ *	{
+ *		listItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
+ *	}
+ *	else
+ *	{
+ *		listItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
+ *	}
+ *	link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
+ *	link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
+ *	listItem.add(link);
  * }
  * </pre>
  * 
@@ -75,13 +75,13 @@ import wicket.markup.html.basic.Label;
  * 
  * <pre>
  * 
- *  			 &lt;td wicket:id=&quot;navigation&quot;&gt;
- *  				 &lt;span wicket:id=&quot;separator&quot;/&gt;
- *  				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- *  				   &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- *  				 &lt;/a&gt;
- *  			 &lt;/td&gt;
- *  
+ *				 &lt;td wicket:id=&quot;navigation&quot;&gt;
+ *					 &lt;span wicket:id=&quot;separator&quot;/&gt;
+ *					 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ *					   &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ *					 &lt;/a&gt;
+ *				 &lt;/td&gt;
+ *	
  * </pre>
  * 
  * renders like:
@@ -107,7 +107,7 @@ import wicket.markup.html.basic.Label;
  * Please
  * 
  * @see PageableListViewNavigator for a ready made component which already
- *      includes links to the first, previous, next and last page.
+ *		includes links to the first, previous, next and last page.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -134,9 +134,9 @@ public class PageableListViewNavigation extends Loop
 	 * Constructor.
 	 * 
 	 * @param id
-	 *            See Component
+	 *			  See Component
 	 * @param pageableListView
-	 *            The underlying list view to navigate
+	 *			  The underlying list view to navigate
 	 */
 	public PageableListViewNavigation(final String id, final PageableListView pageableListView)
 	{
@@ -188,7 +188,7 @@ public class PageableListViewNavigation extends Loop
 	 * Sets the margin.
 	 * 
 	 * @param margin
-	 *            the margin
+	 *			  the margin
 	 */
 	public void setMargin(final int margin)
 	{
@@ -199,7 +199,7 @@ public class PageableListViewNavigation extends Loop
 	 * Sets the seperator. Null meaning, no separator at all.
 	 * 
 	 * @param separator
-	 *            the seperator
+	 *			  the seperator
 	 */
 	public void setSeparator(final String separator)
 	{
@@ -227,7 +227,7 @@ public class PageableListViewNavigation extends Loop
 	 * pointing to. Subclasses may provide there own implementation adding more
 	 * sophisticated page links.
 	 * 
-	 * @see wicket.markup.html.list.Loop#populateItem(LoopItem)
+	 * @see wicket.markup.html.list.Loop#populateItem(Loop.LoopItem)
 	 */
 	protected void populateItem(final Loop.LoopItem loopItem)
 	{
@@ -246,7 +246,7 @@ public class PageableListViewNavigation extends Loop
 	/**
 	 * Renders the page link. Add the separator if not the last page link
 	 * 
-	 * @see Loop#renderItem(LoopItem)
+	 * @see Loop#renderItem(Loop.LoopItem)
 	 */
 	protected void renderItem(final Loop.LoopItem loopItem)
 	{
