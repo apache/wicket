@@ -127,6 +127,8 @@ public abstract class OnClickLink extends AbstractLink
     {
         // Add simple javascript on click handler that links to this
         // link's linkClicked method
-        tag.put("onclick", "location.href='"+ getURL(cycle) + "';");
+        String url = getURL(cycle);
+        url = url.replaceAll("&", "&amp;");
+		tag.put("onclick", "location.href='"+ url + "';");
     }
 }

@@ -57,7 +57,7 @@ public class ExternalLink extends HtmlContainer
     {
         if (href != null)
         {
-            tag.put("href", href);
+            tag.put("href", href.replaceAll("&", "&amp;"));
         }
     }
 

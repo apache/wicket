@@ -186,7 +186,9 @@ public class Image extends HtmlComponent implements IResourceListener
             throw new RenderException("Could not find image resource " + resourceToLoad);
         }
 
-        tag.put("src", cycle.urlFor(this, IResourceListener.class));
+        String url = cycle.urlFor(this, IResourceListener.class);
+        url = url.replaceAll("&", "&amp;");
+		tag.put("src", url);
     }
 
     /**
