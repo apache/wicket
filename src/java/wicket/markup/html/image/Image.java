@@ -43,12 +43,17 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 /**
- * An image component represents a localizable image resource. The image name comes from
- * the src attribute of the image tag that the component is attached to.
+ * An image component represents a localizable image resource. The image name 
+ * comes from the src attribute of the image tag that the component is attached 
+ * to.  The image component responds to requests made via IResourceListener's
+ * resourceRequested method.  The image or subclass responds by returning an
+ * IResource from getImageResource(String), where String is the source attribute
+ * of the image tag.
+ * 
  * @author Jonathan Locke
  */
 public class Image extends HtmlComponent implements IResourceListener
-{ // TODO finalize javadoc
+{
     /** Serial Version ID */
 	private static final long serialVersionUID = 555385780092173403L;
 
@@ -57,12 +62,12 @@ public class Image extends HtmlComponent implements IResourceListener
         RequestCycle.registerListenerInterface(IResourceListener.class);
     }
 
-    /** loaded resource. */
-    private IResource resource;
+    /** The image resource. */
+    private IResource image;
 
     /**
-     * Constructor without a model; the src tag of the img will be used to find the image
-     * resource.
+     * Constructor without a model; the src tag of the img will be used to find 
+     * the image resource.
      * @param name The non-null name of this component
      */
     public Image(String name)
@@ -144,19 +149,25 @@ public class Image extends HtmlComponent implements IResourceListener
 
     /**
      * @param source The source attribute of the image tag
-     * @return Gets the image resource to attach to the component.
+     * @return Gets the image resource for the component.
      */
-    protected IResource getImageResource(final String source)
+    protected IResource getResource(final String source)
     {
-        if ((source.indexOf("..") != -1) || (source.indexOf("/") != -1))
+        if (source.indexOf("..") != -1 || source.indexOf("/") != -1)
         {
-            throw new RenderException("Source for resource image cannot contain a path");
+            throw new RenderException("Source for image resource cannot contain a path");
         }
 
         final String path = Classes.packageName(getPage().getClass()) + "." + source;
-
-        return Resource.locate(getApplicationSettings().getSourcePath(), getPage().getClass()
-                .getClassLoader(), path, getStyle(), getLocale(), null);
+        return Resource.locate
+        (
+            getApplicationSettings().getSourcePath(), 
+            getPage().getClass().getClassLoader(), 
+            path, 
+            getStyle(), 
+            getLocale(), 
+            null
+        );
     }
 
     /**
@@ -168,7 +179,7 @@ public class Image extends HtmlComponent implements IResourceListener
         super.handleComponentTag(cycle, tag);
 
         final String resourceToLoad;
-        String imageResource = (String) getModelObject();
+        final String imageResource = (String)getModelObject();
 
         if (imageResource != null)
         {
@@ -179,16 +190,15 @@ public class Image extends HtmlComponent implements IResourceListener
             resourceToLoad = tag.getString("src");
         }
 
-        this.resource = getImageResource(resourceToLoad);
+        this.image = getResource(resourceToLoad);
 
-        if (this.resource == null)
+        if (this.image == null)
         {
             throw new RenderException("Could not find image resource " + resourceToLoad);
         }
 
-        String url = cycle.urlFor(this, IResourceListener.class);
-        url = url.replaceAll("&", "&amp;");
-		tag.put("src", url);
+        final String url = cycle.urlFor(this, IResourceListener.class);
+		tag.put("src", url.replaceAll("&", "&amp;"));
     }
 
     /**
@@ -200,42 +210,39 @@ public class Image extends HtmlComponent implements IResourceListener
     }
 
     /**
+     * Implementation of IResourceListener.  Renders resource back to requester.
      * @see wicket.IResourceListener#resourceRequested(wicket.RequestCycle)
      */
     public void resourceRequested(final RequestCycle cycle)
     {
         // The cycle's page is set to null so that it won't be rendered back to
-        // the client
-        // since the resource being requested has nothing to do with pages
-        cycle.setPage((Page) null);
+        // the client since the resource being requested has nothing to do with pages
+        cycle.setPage((Page)null);
 
         // Respond with image
-        final HttpServletResponse response = ((HttpResponse) cycle.getResponse())
-                .getServletResponse();
-
-        response.setContentType("image/" + resource.getExtension());
+        final HttpServletResponse response = ((HttpResponse)cycle.getResponse()).getServletResponse();
+        response.setContentType("image/" + image.getExtension());
 
         try
         {
             final OutputStream out = new BufferedOutputStream(response.getOutputStream());
-
             try
             {
-                Streams.writeStream(new BufferedInputStream(resource.getInputStream()), out);
+                Streams.writeStream(new BufferedInputStream(image.getInputStream()), out);
             }
             finally
             {
-                resource.close();
+                image.close();
                 out.flush();
             }
         }
         catch (IOException e)
         {
-            throw new RenderException("Unable to render resource " + resource, e);
+            throw new RenderException("Unable to render resource " + image, e);
         }
         catch (ResourceNotFoundException e)
         {
-            throw new RenderException("Unable to render resource " + resource, e);
+            throw new RenderException("Unable to render resource " + image, e);
         }
     }
 }
