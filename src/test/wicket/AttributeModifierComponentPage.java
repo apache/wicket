@@ -58,13 +58,13 @@ public class AttributeModifierComponentPage extends HtmlPage
 		{
 			private String text = null;
 
-			public void detach(final Session session)
+			public void detach()
 			{
 				System.out.println("ComponentTagAttributeModifier model detached");
 				text = null;
 			}
 
-			public void attach(final Session session)
+			public void attach()
 			{
 				System.out.println("ComponentTagAttributeModifier model attached");
 				text = "insertLabel";
