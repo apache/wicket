@@ -4,7 +4,7 @@
   <extend>../Wicket/project.xml</extend>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>0.9.16-beta</currentVersion>
+  <currentVersion>0.9.15-beta</currentVersion>
   <package>wicket.examples</package>
   <inceptionYear>2004</inceptionYear>
   <description>Example for web framework Wicket.</description>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>0.9.16-beta</version>
+      <version>SNAPSHOT</version>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
