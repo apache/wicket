@@ -51,7 +51,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Juergen Donnerstag
  */
-public class AutolinkComponentResolver implements ÍComponentResolver
+public class AutolinkComponentResolver implements IComponentResolver
 {
     /** Logging */
     private static Log log = LogFactory.getLog(AutolinkComponentResolver.class);
@@ -89,7 +89,7 @@ public class AutolinkComponentResolver implements ÍComponentResolver
      * "[autolink:parameters]", where parameters can be a list of comma separated key
      * value pairs, such as "x=9,y=foo".
      * 
-     * @see wicket.markup.ÍComponentResolver#resolve(RequestCycle, MarkupStream, ComponentTag, Container)
+     * @see wicket.markup.IComponentResolver#resolve(RequestCycle, MarkupStream, ComponentTag, Container)
      * @param cycle The current RequestCycle 
      * @param markupStream The current markupStream
      * @param tag The current component tag while parsing the markup
