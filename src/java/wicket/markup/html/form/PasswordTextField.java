@@ -121,43 +121,6 @@ public class PasswordTextField extends FormComponent
     }
 
     /**
-	 * Processes the component tag.
-	 * @param tag Tag to modify
-     * @see wicket.Component#handleComponentTag(ComponentTag)
-     */
-    protected final void handleComponentTag(final ComponentTag tag)
-    {
-        checkTag(tag, "input");
-        checkAttribute(tag, "type", "password");
-        super.handleComponentTag(tag);
-		if (isResetPassword())
-		{
-			tag.put("value", "");
-		}
-		else
-		{
-			tag.put("value", getModelObjectAsString());
-		}
-    }
-
-    /**
-     * Updates this components' model from the request.
-     * @see FormComponent#updateModel()
-     */
-    public void updateModel()
-    {
-        setModelObject(getRequestString());
-    }
-
-    /**
-     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-     */
-    public final boolean supportsPersistence()
-    {
-        return true;
-    }
-
-    /**
      * @see wicket.markup.html.form.FormComponent#getValue()
      */
     public final String getValue()
@@ -173,25 +136,6 @@ public class PasswordTextField extends FormComponent
         }
         
         return value;
-    }
-
-    /**
-     * @see wicket.markup.html.form.FormComponent#setValue(java.lang.String)
-     */
-    public final void setValue(String value)
-    {
-        String decryptedValue;
-        try
-        {
-            decryptedValue = getApplication().getCrypt().decryptString(value);
-        } 
-        catch (Exception ex) 
-        {
-            decryptedValue = value;
-            log.error("Failed to instantiate encryption object. Continue without encryption");
-        }
-        
-        setModelObject(decryptedValue);
     }
 
     /**
@@ -224,4 +168,60 @@ public class PasswordTextField extends FormComponent
 		this.resetPassword = resetPassword;
 		return this;
 	}
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#setValue(java.lang.String)
+     */
+    public final void setValue(String value)
+    {
+        String decryptedValue;
+        try
+        {
+            decryptedValue = getApplication().getCrypt().decryptString(value);
+        } 
+        catch (Exception ex) 
+        {
+            decryptedValue = value;
+            log.error("Failed to instantiate encryption object. Continue without encryption");
+        }
+        
+        setModelObject(decryptedValue);
+    }
+
+    /**
+     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+     */
+    public final boolean supportsPersistence()
+    {
+        return true;
+    }
+
+    /**
+     * Updates this components' model from the request.
+     * @see FormComponent#updateModel()
+     */
+    public void updateModel()
+    {
+        setModelObject(getRequestString());
+    }
+
+    /**
+	 * Processes the component tag.
+	 * @param tag Tag to modify
+     * @see wicket.Component#handleComponentTag(ComponentTag)
+     */
+    protected final void handleComponentTag(final ComponentTag tag)
+    {
+        checkTag(tag, "input");
+        checkAttribute(tag, "type", "password");
+        super.handleComponentTag(tag);
+		if (isResetPassword())
+		{
+			tag.put("value", "");
+		}
+		else
+		{
+			tag.put("value", getModelObjectAsString());
+		}
+    }
 }
