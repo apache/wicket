@@ -21,9 +21,9 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlContainer;
 
 /**
- * A panel is a reusable componet that holds markup and other components.
+ * A panel is a reusable component that holds markup and other components.
  * <p>
- * Whereas HTMLContainer is an inline container like
+ * Whereas HtmlContainer is an inline container like
  * <pre>
  *  ...
  *  &lt;span id=&quot;wicket-xxx&quot;&gt;
@@ -32,7 +32,6 @@ import wicket.markup.html.HtmlContainer;
  *  &lt;/span&gt;
  *  ...
  * </pre>
- * 
  * a Panel has its own associated markup file and the container content is
  * taken from that file, like:
  * <pre>
