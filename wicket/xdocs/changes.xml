@@ -8,6 +8,31 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1"> 
+  	  <action type="update" dev="Eelco Hillenius" issue="">
+		We've got a new project: Wicket Stuff (aka Wicket Contrib) at: http://sourceforge.net/projects/wicket-stuff
+		Wicket stuff is the project that is meant for contribution components/ utility classes
+		that should not be in either core or extensions. In effect, these are the projects
+		that are specific for an external libraries (like Hibernate, Spring or Velocity) or
+		that are not generic enough to support in the core projects.
+
+        In future, Wicket stuff can accept more committers than the core project, and also
+        the rules of accepting components for this project can be more relaxed.
+
+		Most of what was in wicket-contrib moved over to seperate projects.
+
+		Currently these projects are in wicket stuff:
+		- wicket-contrib-data : generic data models & utilities like PageableList;
+		- wicket-contrib-data-hibernate-2.1 : implementations of wicket-contrib-data for hibernate 2.1;
+		- wicket-contrib-data-hibernate-3.0 : implementations of wicket-contrib-data for hibernate 3.0;
+		- wicket-contrib-examples : meant for examples that use more than one contrib projects, currently only cdapp;
+		- wicket-contrib-fvalidate : javascript validation based on the fvalidate lib (http://www.peterbailey.net/fValidate/);
+		- wicket-contrib-groovy : groovy integration and examples;
+		- wicket-contrib-spring : spring framework integration and examples;
+		- wicket-contrib-velocity : velocity integration and examples.
+
+		The normal wicket-examples project is trimmed a lot, and has no dependencies on
+		the soon to be removed wicket-contrib project anymore.
+  	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Removed Localizer methods that don't work with Components.  Added getString(String key)
       and getString(String key, IModel model) methods to Component for easy access to localized
