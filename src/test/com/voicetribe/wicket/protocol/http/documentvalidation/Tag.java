@@ -60,9 +60,11 @@ public class Tag implements DocumentElement {
      * in the order they are expected to appear.
      *
      * @param e The element to add
+     * @return This
      */
-    public void addExpectedChild(final DocumentElement e) {
+    public Tag addExpectedChild(final DocumentElement e) {
         expectedChildren.add(e);
+        return this;
     }
 
     /**
