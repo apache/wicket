@@ -74,11 +74,15 @@ public class WebPage extends Page
 	}	
 
 	/**
-	 * Gets the markup type for this component.
+	 * Gets the markup type for this component. Pages which return
+	 * XML, RSS or whatever may replace the markup type returned.
+	 * <p>
+	 * Note: The markup type must be equal to the extension of the
+	 *   markup file.
 	 * 
 	 * @return Markup type for HTML
 	 */
-	protected final String getMarkupType()
+	protected String getMarkupType()
 	{
 		return "html";
 	}
