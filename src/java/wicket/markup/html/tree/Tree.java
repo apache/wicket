@@ -317,11 +317,56 @@ public abstract class Tree extends Panel implements ILinkListener
     protected abstract void applySelectedPaths(TreeStateCache treeState);
 
     /**
+     * Refreshes the tree.
+     */
+    public void refresh()
+    {
+    	applySelectedPaths(getTreeState());
+    }
+
+    /**
      * Sets whether the tree node should be displayed.
      * @param rootVisible whether the tree node should be displayed
      */
     public final void setRootVisible(boolean rootVisible)
     {
     	treeState.setRootVisible(rootVisible);
+    }
+
+    /**
+     * Gives the current tree model as a string.
+     * @return the current tree model as a string
+     */
+    public final String getTreeModelAsDebugString()
+    {
+    	StringBuffer b = new StringBuffer("-- TREE MODEL --\n");
+    	TreeStateCache state = getTreeState();
+    	TreeModel treeModel = null;
+    	if(state != null)
+    	{
+    		treeModel = state.getModel();
+    	}
+    	if(treeModel != null)
+    	{
+	    	StringBuffer tabs = new StringBuffer();
+	        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) treeModel.getRoot();
+	        Enumeration e = rootNode.preorderEnumeration();
+	        while (e.hasMoreElements())
+	        {
+	            DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+	            tabs.delete(0, tabs.length());
+	            tabs.append("|");
+	            for (int i = 0; i < node.getLevel(); i++)
+	            {
+	                tabs.append("-");
+	            }
+	            b.append(tabs).append(node).append("\n");
+	        }
+    	}
+    	else
+    	{
+    		b.append("<EMPTY>");
+    	}
+        return b.toString();
     }
 }
