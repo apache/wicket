@@ -41,7 +41,7 @@ public class HelloMozilla extends HtmlPage
      */
     public HelloMozilla(final PageParameters parameters)
     {
-		add(new XulLabel("hellomessage", this, "message"));
+		add(new XulDescription("hellomessage", this, "message"));
 		add(new MessageForm("messageForm"));
     }
 
