@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.IApplication;
 import wicket.util.lang.Classes;
@@ -81,9 +82,7 @@ public abstract class HttpApplication extends HttpServlet
     }
 
     /**
-     * Gets the name of this application.
-     * 
-     * @return Returns the name.
+     * @see IApplication#getName()
      */
     public final String getName()
     {
@@ -91,11 +90,14 @@ public abstract class HttpApplication extends HttpServlet
     }
 
     /**
-     * Gets the application settings.
-     * 
-     * @return Returns the settings.
+     * @see IApplication#getSettings()
      */
     public abstract ApplicationSettings getSettings();
+
+    /**
+     * @see IApplication#getPages()
+     */
+    public abstract ApplicationPages getPages();
 
     /**
      * Calls doGet with arguments.
