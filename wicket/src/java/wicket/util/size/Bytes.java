@@ -18,7 +18,6 @@
  */
 package wicket.util.size;
 
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -31,17 +30,76 @@ import wicket.util.string.StringValueConversionException;
 import wicket.util.value.LongValue;
 
 /**
- * Immutable byte count value.
+ * Represents an immutable byte count.  These static factory methods 
+ * allow easy construction of value objects using either long values
+ * like bytes(2034) or megabytes(3):
+ * <p>
+ * <ul>
+ *   <li> bytes(long)
+ *   <li> kilobytes(long)
+ *   <li> megabytes(long)
+ *   <li> gigabytes(long)
+ *   <li> terabytes(long)
+ * </ul>
+ * <p>
+ *  or double precision floating point values like megabytes(3.2):
+ * <p>
+ * <ul>
+ *   <li> bytes(double)
+ *   <li> kilobytes(double)
+ *   <li> megabytes(double)
+ *   <li> gigabytes(double)
+ *   <li> terabytes(double)
+ * </ul>
+ * <p>
+ * In the case of bytes(double), the value will be rounded off to the
+ * nearest integer byte count using Math.round().
+ * <p>
+ * The precise number of bytes in a Bytes object can be retrieved by
+ * calling bytes().  Approximate values for different units can be
+ * retrieved as double precision values using these methods:
+ * <p>
+ * <ul>
+ *   <li> kilobytes()
+ *   <li> megabytes()
+ *   <li> gigabytes()
+ *   <li> terabytes()
+ * </ul>
+ * <p>
+ * Also, value objects can be constructed from strings, optionally
+ * using a Locale with valueOf(String) and valueOf(String,Locale).
+ * The string may contain a decimal or floating point number followed
+ * by optional whitespace followed by a unit (nothing for bytes, K for
+ * kilobyte, M for megabytes, G for gigabytes or T for terabytes) 
+ * optionally followed by a B (for bytes).  Any of these letters can
+ * be any case.  So, examples of permissible string values are: 
+ * <p>
+ * <ul>
+ *   <li>37 (37 bytes)
+ *   <li>2.3K (2.3 kilobytes)
+ *   <li> 2.5 kb (2.5 kilobytes)
+ *   <li>4k (4 kilobytes)
+ *   <li>35.2GB (35.2 gigabytes)
+ *   <li>1024M (1024 megabytes)
+ * </ul> 
+ * <p>
+ * Note that if the Locale was not US, the values might substitute "," 
+ * for "." as that is the custom in Euroland.
+ * <p>
+ * The toString() and toString(Locale) methods are smart enough to 
+ * convert a given value object to the most appropriate units for the
+ * given value.
+ * 
  * @author Jonathan Locke
  */
 public final class Bytes extends LongValue
-{ // TODO finalize javadoc
+{
 	/** serialVersionUID. */
 	private static final long serialVersionUID = -2131507164691475126L;
 	
 	/** Pattern for string parsing. */
-    private static final Pattern PATTERN = Pattern.compile(
-            "([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PATTERN = Pattern.compile
+        ("([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);
 
     /**
      * Private constructor forces use of static factory methods.
@@ -53,9 +111,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param bytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param bytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes bytes(final long bytes)
     {
@@ -63,9 +121,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param kilobytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param kilobytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes kilobytes(final long kilobytes)
     {
@@ -73,9 +131,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param megabytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param megabytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes megabytes(final long megabytes)
     {
@@ -83,9 +141,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param gigabytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param gigabytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes gigabytes(final long gigabytes)
     {
@@ -93,9 +151,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param terabytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param terabytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes terabytes(final long terabytes)
     {
@@ -103,9 +161,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param bytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param bytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes bytes(final double bytes)
     {
@@ -113,9 +171,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param kilobytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param kilobytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes kilobytes(final double kilobytes)
     {
@@ -123,9 +181,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param megabytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param megabytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes megabytes(final double megabytes)
     {
@@ -133,9 +191,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param gigabytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param gigabytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes gigabytes(final double gigabytes)
     {
@@ -143,9 +201,9 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Convert to Bytes object.
-     * @param terabytes to convert
-     * @return input as Bytes
+     * Instantiate immutable Bytes value object..
+     * @param terabytes Value to convert
+     * @return Input as Bytes
      */
     public static Bytes terabytes(final double terabytes)
     {
@@ -153,8 +211,8 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Gets the bytes.
-     * @return bytes
+     * Gets the byte count represented by this value object.
+     * @return Byte count
      */
     public final long bytes()
     {
@@ -162,8 +220,8 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Gets the kilobytes.
-     * @return the kilobytes
+     * Gets the byte count in kilobytes.
+     * @return The value in kilobytes
      */
     public final double kilobytes()
     {
@@ -171,8 +229,8 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Gets the megabytes.
-     * @return the megabytes
+     * Gets the byte count in megabytes.
+     * @return The value in megabytes
      */
     public final double megabytes()
     {
@@ -180,8 +238,8 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Gets the gigabytes.
-     * @return the gigabytes
+     * Gets the byte count in gigabytes.
+     * @return The value in gigabytes
      */
     public final double gigabytes()
     {
@@ -189,8 +247,8 @@ public final class Bytes extends LongValue
     }
 
     /**
-     * Gets the terabytes.
-     * @return the terabytes
+     * Gets the byte count in terabytes.
+     * @return The value in terabytes
      */
     public final double terabytes()
     {
@@ -211,12 +269,16 @@ public final class Bytes extends LongValue
     {
         final Matcher matcher = PATTERN.matcher(string);
 
+        // Valid input?
         if (matcher.matches())
         {
             try
             {
-                final double value = NumberFormat.getNumberInstance(locale).parse(matcher.group(1))
-                        .doubleValue();
+                // Get double precision value
+                final double value = NumberFormat.getNumberInstance(locale)
+                    .parse(matcher.group(1)).doubleValue();
+                
+                // Get units specified
                 final String units = matcher.group(3);
 
                 if (units.equalsIgnoreCase(""))
@@ -246,8 +308,7 @@ public final class Bytes extends LongValue
             }
             catch (ParseException e)
             {
-                throw new StringValueConversionException("Unable to parse numeric part: " + string,
-                        e);
+                throw new StringValueConversionException("Unable to parse numeric part: " + string, e);
             }
         }
         else
@@ -281,7 +342,7 @@ public final class Bytes extends LongValue
 
     /**
      * Converts this byte count to a string using the given locale.
-     * @param locale locale for conversion
+     * @param locale Locale to use for conversion
      * @return The string for this byte count
      */
     public String toString(final Locale locale)
