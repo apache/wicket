@@ -56,16 +56,15 @@ public class Home extends HtmlPage
 
         // Add table of existing comments
         add(table = new Table("comments", commentList)
+            {
+                public void populateCell(final Cell cell)
                 {
-                    public boolean populateCell(final Cell cell)
-                    {
-                        final Comment comment = (Comment) cell.getModelObject();
+                    final Comment comment = (Comment) cell.getModelObject();
 
-                        cell.add(new Label("date", comment.getDate()));
-                        cell.add(new MultiLineLabel("text", comment.getText()));
-                        return true;
-                    }
-                });
+                    cell.add(new Label("date", comment.getDate()));
+                    cell.add(new MultiLineLabel("text", comment.getText()));
+                }
+            });
     }
 
     /**

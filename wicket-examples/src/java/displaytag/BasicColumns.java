@@ -65,7 +65,6 @@ public class BasicColumns extends HtmlPage
             }
         };
 
-        table.setNumberOfCellsToDisplay(Integer.MAX_VALUE);
         add(table);
         
         final String[] headers = new String[] {"Id", "Name", "Email", "Status", "Description"};

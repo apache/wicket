@@ -51,9 +51,9 @@ public class ExampleSubsets extends HtmlPage
         add(new SimpleDisplaytagTableComponent("table2", data2));
 
         // Second alternativ
-        SimpleDisplaytagTableComponent table = new SimpleDisplaytagTableComponent("table3", data);
-        table.setStartIndex(3);
-        table.setNumberOfCellsToDisplay(8 - 3);
-        add(table);
+//        SimpleDisplaytagTableComponent table = new SimpleDisplaytagTableComponent("table3", data);
+//        table.setStartIndex(3);
+//        table.setNumberOfCellsToDisplay(8 - 3);
+//        add(table);
     }
 }

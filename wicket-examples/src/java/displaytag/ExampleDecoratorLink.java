@@ -52,7 +52,7 @@ public class ExampleDecoratorLink extends HtmlPage
         // Add table of existing comments
         add(new Table("rows", data)
         {
-            public boolean populateCell(final Cell cell)
+            public void populateCell(final Cell cell)
             {
                 final ListObject value = (ListObject) cell.getModelObject();
             
@@ -74,15 +74,13 @@ public class ExampleDecoratorLink extends HtmlPage
                 statusLink.setParameter("id", value.getId());
                 statusLink.add(new Label("status", value.getStatus()));
                 tagClass.add(statusLink);
-                
-                return true;
             }
         });
         
         // Add table of existing comments
         add(new Table("rows2", data)
         {
-            public boolean populateCell(final Cell cell)
+            public void populateCell(final Cell cell)
             {
                 final ListObject value = (ListObject) cell.getModelObject();
             
@@ -111,8 +109,6 @@ public class ExampleDecoratorLink extends HtmlPage
                         new ExternalPageLink("delete", Page3.class)
                         	.setParameter("id", value.getId())
                         	.setParameter("action", "delete"));
-                
-                return true;
             }
         });
     }

@@ -11,28 +11,26 @@ import java.util.List;
 import com.voicetribe.wicket.Container;
 import com.voicetribe.wicket.markup.html.style.CascadingStyleSheetStyle;
 import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.PagedTable;
+import com.voicetribe.wicket.markup.html.table.Table;
 
 /**
- * @author pz65n8
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Table with pages.
+ * @author Juergen
  */
-public abstract class MyPagedTable extends PagedTable
+public abstract class MyPagedTable extends Table
 {
-    public MyPagedTable(final String componentName, final List data)
+    public MyPagedTable(final String componentName, final List data, int pageSize)
     {
-        super(componentName, data);
+        super(componentName, data, pageSize);
     }
     
-    public boolean populateCell(final Cell cell)
+    public void populateCell(final Cell cell)
     {
         final CascadingStyleSheetStyle tagClass = new CascadingStyleSheetStyle("class", cell.isEvenIndex() ? "even" : "odd");
         tagClass.setEnable(true);
         cell.add(tagClass);
         
-        return populateCell(cell, tagClass);
+        populateCell(cell, tagClass);
     }
     
     protected abstract boolean populateCell(final Cell cell, final Container tagClass);

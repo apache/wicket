@@ -137,7 +137,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         });
 
         // Add table of existing comments
-        final MyPagedTable table = new MyPagedTable("rows", data)
+        final MyPagedTable table = new MyPagedTable("rows", data, 10)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
@@ -152,11 +152,10 @@ public class SortablePageableDisplaytagTableComponent extends Panel
                 return true;
             }
         };
-        
-        table.setNumberOfCellsToDisplay(10);
+
         add(table);
 
-        final TableNavigation tableNavigation = new TableNavigation("navigation", table, 5, 2);
+        final TableNavigation tableNavigation = new TableNavigation("navigation", table);
         add(tableNavigation);
             
         add(new Label("headline", null)
@@ -167,9 +166,9 @@ public class SortablePageableDisplaytagTableComponent extends Panel
                 String text = 
                     String.valueOf(data.size()) 
                     + " items found, displaying "
-                    + String.valueOf(table.getFirstCell() + 1)
+                    + String.valueOf(table.firstCell() + 1)
                     + " to "
-                    + String.valueOf(table.getFirstCell() + table.getNumberOfCellsToDisplay())
+                    + String.valueOf(table.firstCell() + table.getPageSizeInCells())
                     + ".";
                 
                 replaceBody(cycle, markupStream, openTag, text);

@@ -48,7 +48,7 @@ public class ExamplePaging extends HtmlPage
         final List data = new TestList(60, false);
         
         // Add table of existing comments
-        final MyPagedTable table = new MyPagedTable("rows", data)
+        final MyPagedTable table = new MyPagedTable("rows", data, 10)
         {
             public boolean populateCell(final Cell cell, final Container tagClass)
             {
@@ -63,8 +63,6 @@ public class ExamplePaging extends HtmlPage
                 return true;
             }
         };
-        
-        table.setNumberOfCellsToDisplay(10);
         add(table);
         
         add(new PagedTableNavigator("pageTableNav", table));

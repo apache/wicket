@@ -26,13 +26,13 @@ public abstract class MyTable extends Table
         super(componentName, data);
     }
     
-    public boolean populateCell(final Cell cell)
+    public void populateCell(final Cell cell)
     {
         final CascadingStyleSheetStyle tagClass = new CascadingStyleSheetStyle("class", cell.isEvenIndex() ? "even" : "odd");
         tagClass.setEnable(true);
         cell.add(tagClass);
         
-        return populateCell(cell, tagClass);
+        populateCell(cell, tagClass);
     }
     
     protected abstract boolean populateCell(final Cell cell, final Container tagClass);

@@ -66,14 +66,5 @@ public class SimpleDisplaytagTableComponent extends Panel
         
         add(table);
     }
-    
-    public void setNumberOfCellsToDisplay(int size)
-    {
-        table.setNumberOfCellsToDisplay(size);
-    }
-    
-    public void setStartIndex(int startIndex)
-    {
-        table.setStartIndex(startIndex);
-    }
+
 }

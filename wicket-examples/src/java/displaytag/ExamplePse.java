@@ -53,7 +53,7 @@ public class ExamplePse extends HtmlPage
         final ReportList data = new ReportList();
 
         // Add table of existing comments
-        final MyPagedTable table = new MyPagedTable("rows", data)
+        final MyPagedTable table = new MyPagedTable("rows", data, 10)
         {
             private ReportableListObject previousValue = null;
             public boolean populateCell(final Cell cell, final Container tagClass)
@@ -81,8 +81,7 @@ public class ExamplePse extends HtmlPage
                 return true;
             }
         };
-        
-        table.setNumberOfCellsToDisplay(10);
+
         add(table);
 
         add(new PagedTableNavigator("pageTableNav", table));

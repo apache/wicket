@@ -81,7 +81,7 @@ public class TableGeneratorComponent extends Panel
     {
         add(new Table("headers", headers)
         {
-            protected boolean populateCell(Cell cell)
+            protected void populateCell(Cell cell)
             {
                 Object header = headers.get(cell.getIndex());
                 if (populateHeader(cell, header) == false)
@@ -89,8 +89,6 @@ public class TableGeneratorComponent extends Panel
                     String value = (String)(header instanceof String ? header : ((IModel)header).getObject());
                     cell.add(new Label("header", value));
                 }
-                
-                return true;
             }
         });
         
@@ -100,7 +98,7 @@ public class TableGeneratorComponent extends Panel
             {
                 tagClass.add(new Table("columns", columns)
                 {
-                    protected boolean populateCell(final Cell colCell)
+                    protected void populateCell(final Cell colCell)
                     {
                         Object column = columns.get(colCell.getIndex());
                         if (populateColumn(colCell, column) == false)
@@ -108,8 +106,6 @@ public class TableGeneratorComponent extends Panel
                             String value = (String)(column instanceof String ? column : ((IModel)column).getObject());
                             colCell.add(new Label("column", rowCell.getModel(), value));
                         }
-                        
-                        return true;
                     }
                 });
                 
