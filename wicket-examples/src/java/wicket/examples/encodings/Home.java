@@ -42,7 +42,7 @@ public class Home extends HtmlPage
      */
     public Home(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Form Input Example"));
+        add(new NavigationPanel("mainNavigation", "Charset encoding Example"));
         add(new Label("message", "Hello world! Test: הצü"));
     }
     

@@ -46,6 +46,6 @@ public class DisplaytagIndex extends Displaytag
      */
     public DisplaytagIndex(final PageParameters parameters)
     {
-        add(new NavigationPanel("mainNavigation", "Helloworld example"));
+        add(new NavigationPanel("mainNavigation", "Displaytag like examples"));
     }
 }
