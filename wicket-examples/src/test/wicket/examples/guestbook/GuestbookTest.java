@@ -50,7 +50,16 @@ public class GuestbookTest extends WebTestCase
      * @throws InterruptedException
      */
     public void testHomePage() throws InterruptedException {
-        beginAt("/guestbook");
+        try
+        {
+            beginAt("/guestbook");
+        } 
+        catch (Throwable ex)
+        {
+            System.err.println(ex.getMessage());
+        }
+        
+        this.dumpResponse(System.out);
         assertTitleEquals("Wicket - Guestbook example");
         this.assertElementNotPresent("comments");
         

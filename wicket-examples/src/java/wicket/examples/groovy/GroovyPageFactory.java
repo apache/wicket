@@ -162,9 +162,6 @@ public class GroovyPageFactory extends PageFactory
         }
         finally
         {
-            // Remove the old contructor from cache
-            this.removeConstructor(classname);
-            
             if (clazz == null)
             {
                 // Groovy file not found; error while compiling etc.. 

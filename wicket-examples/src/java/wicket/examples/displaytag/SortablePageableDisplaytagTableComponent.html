@@ -1,7 +1,7 @@
 
-<html>
+<html xmlns:wicket>
 <body>
-	<span id="wicket-[panel]">
+	<wicket:region name=panel>
     <span id="wicket-headline">xxx items found, displaying yy to zz.</span><p/>
 	  [<a id="wicket-first">First</a>/<a id="wicket-prev">Prev</a>]
     <span id="wicket-navigation">
@@ -29,7 +29,7 @@
 				<td><span id="wicket-status">Test Status</span></td>
 				<td><span id="wicket-comments">Test Comments</span></td>
 			</tr>
-      <span id="wicket-[remove]">
+      <wicket:region name=remove>
 		    <tr class="odd">
 		      <td>Test ID</td>
 		      <td>Test Name</td>
@@ -37,9 +37,9 @@
 		      <td>Test Status</td>
 		      <td>Test Comments</td>
 		    </tr>
-      </span>
+      </wicket:region>
     </tbody>
   </table>
-	</span>
+	</wicket:region>
 </body>
 </html>

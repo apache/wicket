@@ -17,7 +17,7 @@
 <title>Paged Table Page</title>
 </head>
 <body><ul><li id = "table"><span id = "txt">three</span></li><li id = "table"><span id = "txt">four</span></li></ul>
-<span id="wicket-navigator"/><span wicket = "[panel]">
+<span id="wicket-navigator"/><wicket:region name=panel>
     <span id = "headline">8 items found, displaying 3 to 4.</span><p/>
 	  [<a href = "/MockHttpApplication/MockHttpApplication?component=0.navigator.first&rendering=6&interface=ILinkListener" id = "first">First</a>/<a href = "/MockHttpApplication/MockHttpApplication?component=0.navigator.prev&rendering=6&interface=ILinkListener" id = "prev">Prev</a>]
     <span id = "navigation">
@@ -38,6 +38,6 @@
       </a>
     </span>
 		[<a href = "/MockHttpApplication/MockHttpApplication?component=0.navigator.next&rendering=6&interface=ILinkListener" id = "next">Next</a>/<a href = "/MockHttpApplication/MockHttpApplication?component=0.navigator.last&rendering=6&interface=ILinkListener" id = "last">Last</a>]
-  </span>
+  </wicket:region>
 </body>
 </html>

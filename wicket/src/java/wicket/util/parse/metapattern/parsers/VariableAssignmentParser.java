@@ -20,6 +20,7 @@ package wicket.util.parse.metapattern.parsers;
 
 import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.MetaPattern;
+import wicket.util.parse.metapattern.OptionalMetaPattern;
 
 /**
  * Parses key value assignment statements like "foo=bar".
@@ -27,15 +28,23 @@ import wicket.util.parse.metapattern.MetaPattern;
  */
 public final class VariableAssignmentParser extends MetaPatternParser
 {
-    // Parse variable = 9 and variable = "string" syntaxes
-    private static final Group key = new Group(MetaPattern.VARIABLE_NAME);
+    // Parse variable = 9 and variable = "string" syntaxes 
+    // and variable (without =... like e.g. <html xmlns:wicket>)
+    private static final MetaPattern namespace = new OptionalMetaPattern(
+            new MetaPattern[] { MetaPattern.VARIABLE_NAME, MetaPattern.COLON });
+
+    private static final Group key = new Group(new MetaPattern(
+            new MetaPattern[] { namespace, MetaPattern.VARIABLE_NAME }));
 
     private static final Group value = new Group(MetaPattern.STRING);
 
+    private static final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {
+            MetaPattern.OPTIONAL_WHITESPACE,
+            MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE, value});
+
     private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {
-            MetaPattern.OPTIONAL_WHITESPACE, key, MetaPattern.OPTIONAL_WHITESPACE,
-            MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE, value,
-            MetaPattern.OPTIONAL_WHITESPACE,});
+            MetaPattern.OPTIONAL_WHITESPACE, key, 
+            new OptionalMetaPattern(variableAssignment), MetaPattern.OPTIONAL_WHITESPACE});
 
     /**
      * Construct.

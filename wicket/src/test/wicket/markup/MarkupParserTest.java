@@ -47,7 +47,7 @@ public final class MarkupParserTest extends TestCase
      */
     public final void testTagParsing() throws StringValueConversionException, ParseException
     {
-        final MarkupParser parser = new MarkupParser("componentName");
+        final MarkupParser parser = new MarkupParser("componentName", "wicket");
         final Markup markup = parser
                 .parse("This is a test <a componentName=\"a\" href=\"foo.html\"> <b componentName=\"b\">Bold!</b> "
                         + "<img componentName=\"img\" width=9 height=10 src=\"foo\"> <marker componentName=\"marker\"/> </a>");
@@ -111,7 +111,7 @@ public final class MarkupParserTest extends TestCase
      */
     public final void test() throws StringValueConversionException, ParseException
     {
-        final MarkupParser parser = new MarkupParser("componentName");
+        final MarkupParser parser = new MarkupParser("componentName", "wicket");
         final Markup tokens = parser
                 .parse("This is a test <a componentName=9> <b>bold</b> <b componentName=10/></a> of the emergency broadcasting system");
 
@@ -151,7 +151,7 @@ public final class MarkupParserTest extends TestCase
            "<head><title>Some Page</title></head>" +
            "<body><h1>XHTML Test</h1></body>" +
            "</html>";
-        final MarkupParser parser = new MarkupParser("componentName");
+        final MarkupParser parser = new MarkupParser("componentName", "wicket");
         final Markup tokens = parser.parse(docText);
 
         System.out.println("tok(0)=" + tokens.get(0));
@@ -164,8 +164,10 @@ public final class MarkupParserTest extends TestCase
      * @throws ResourceNotFoundException
      * @throws IOException
      */
-    public final void testFileDocument() throws ParseException, ResourceNotFoundException, IOException {
-        final MarkupParser parser = new MarkupParser("componentName");
+    public final void testFileDocument() throws ParseException,
+            ResourceNotFoundException, IOException
+    {
+        final MarkupParser parser = new MarkupParser("wcn", "wicket");
         Resource resource = Resource.locate(null, this.getClass(), "1", null, "html");
         Markup tokens = parser.read(resource);
         System.out.println("tok(0)=" + tokens.get(0));
@@ -191,7 +193,92 @@ public final class MarkupParserTest extends TestCase
         tokens = parser.read(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        resource = Resource.locate(null, this.getClass(), "5", null, "html");
+        tokens = parser.read(resource);
+        System.out.println("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        resource = Resource.locate(null, this.getClass(), "6", null, "html");
+        tokens = parser.read(resource);
+        System.out.println("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
     }
+
+    public final void testWicketTag() throws ParseException,
+    	ResourceNotFoundException, IOException
+   	{
+	    final MarkupParser parser = new MarkupParser("wicket", "wicket");
+	    
+	    parser.parse("<span wicket=\"test\"/>");
+
+	    parser.parse("<span wicket=\"test\">Body</span>");
+	    
+	    parser.parse("This is a test <span wicket=\"test\"/>");
+
+	    parser.parse("This is a test <span wicket=\"test\">Body</span>");
+	    
+	    parser.parse("<span id=\"wicket-test\"/>");
+
+	    parser.parse("<span id=\"wicket-test\">Body</span>");
+	    
+	    parser.parse("<a wicket=\"[autolink]\" href=\"test.html\">Home</a>");
+	    
+	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=value/>");
+	    
+	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=\"value\" />");
+	    
+	    try
+	    {
+	        parser.parse("<span id=\"wicket-test\"/>whatever<wicket:param key=\"value\" />");
+	        assertTrue("Should have thrown an exception", false);
+	    }
+	    catch (ParseException ex)
+	    {
+	        ; // ignore
+	    }
+	    
+	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
+	    
+	    parser.parse("<span id=\"wicket-test\"/>   <wicket:param key=\"value\" />   <wicket:param key2=\"value2\" />");
+	    
+	    parser.parse("<span id=\"wicket-test\"/> \n\r   <wicket:param key=\"value\" />\n\r\t   <wicket:param key2=\"value2\" />");
+	    
+	    //parser.parse("<span id=\"wicket-test\"/><wicket:param name=myParam>value</wicket>");
+	    
+	    parser.parse("<wicket:marker name=body/>");
+	    
+	    parser.parse("<wicket:region name=border/>");
+	    
+	    parser.parse("<wicket:region name=panel/>");
+
+	    try
+	    {
+	        parser.parse("<wicket:region name=remove/>");
+	        assertTrue("Should have thrown an exception", false);
+	    }
+	    catch (MarkupException ex)
+	    {
+	        ; // ignore
+	    }
+
+	    parser.parse("<wicket:region name=remove>  </wicket:region>");
+
+	    parser.parse("<wicket:region name=remove> <span id=\"test\"/> </wicket:region>");
+
+	    try
+	    {
+	        parser.parse("<wicket:region name=remove> <wicket:region name=remove> </wicket:region> </wicket:region>");
+	        assertTrue("Should have thrown an exception: remove regions must not contain wicket-components", false);
+	    }
+	    catch (MarkupException ex)
+	    {
+	        ; // ignore
+	    }
+	    
+
+	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
+   	}
 }
 
 ///////////////////////////////// End of File /////////////////////////////////

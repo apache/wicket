@@ -1,11 +1,11 @@
-<html>
+<html xmlns:wicket>
 <head>
     <title>Wicket - Aanmelden voorbeeld</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket="[panel]">
-	    <span wicket="feedback"/>
+  <wicket:region name=panel">
+    <span wicket="feedback"/>
 		<form wicket="signInForm">
 			<table>
 				<tr>
@@ -33,6 +33,6 @@
 				</tr>
 			</table>
 		</form>
-    </span>
+  </wicket:region>
 </body>
 </html>

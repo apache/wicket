@@ -1,5 +1,5 @@
 
-<html>
+<html xmlns:wicket>
 <head>
 	<title>Example No Columns</title>
 	<meta http-equiv="Expires" content="-1" />
@@ -22,11 +22,11 @@
  	    <tr id="wicket-entries" class="even">
 				<td><span id="wicket-entry">Test Eintrag</span></td>
 			</tr>
-      <span id="wicket-[remove]">
+      <wicket:region name=remove>
 		    <tr class="odd">
 					<td>Test Eintrag 2</td>
 				</tr>
-      </span>
+      </wicket:region>
     </tbody>
   </table>
 </body>

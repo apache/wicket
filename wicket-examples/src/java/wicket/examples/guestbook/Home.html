@@ -1,7 +1,7 @@
-<html>
+<html xmlns:wicket>
 <head>
 	<title>Wicket - Guestbook example</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
   <span id="wicket-mainNavigation"/>
@@ -18,13 +18,13 @@
     <p>
 	    <span id = "wicket-date">1/1/2004</span><br>
 	    <span id = "wicket-text">Comment text goes here.</span>
-	</p>
+	  </p>
   </span>
-  <span id = "wicket-[remove]">
+  <wicket:region name=remove>
     <p>
-	    1/2/2004<br>
+	    1/2/2004<br/>
 	    More comment text here.
-	</p>
-  </span>
+    </p>
+  </wicket:region>
 </body>
 </html>

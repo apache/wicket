@@ -1,23 +1,22 @@
-
-<html>
+<html xmlns:wicket>
 <body>
-	<span wicket="[panel]">
-  <table>
-    <thead>
-      <tr>
-				<span id="wicket-headers">
-					<th><span id="wicket-header">Header</span></th>
-				</span>
-      </tr>
-	</thead>
-    <tbody>
-			<tr id="wicket-rows" class="even">
-				<span id="wicket-columns">
-					<td><span id="wicket-column">Value</span></td>
-				</span>
-			</tr>
-    </tbody>
-  </table>
-	</span>
+	<wicket:region name=panel>
+    <table>
+      <thead>
+        <tr>
+          <span id="wicket-headers">
+            <th><span id="wicket-header">Header</span></th>
+          </span>
+        </tr>
+    </thead>
+      <tbody>
+        <tr id="wicket-rows" class="even">
+          <span id="wicket-columns">
+            <td><span id="wicket-column">Value</span></td>
+          </span>
+        </tr>
+      </tbody>
+    </table>
+	</wicket:region>
 </body>
 </html>

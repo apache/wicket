@@ -1,7 +1,7 @@
 
-<html>
+<html xmlns:wicket>
 <body>
-  <span wicket="[panel]">
+	<wicket:region name=panel>
   <table>
     <thead>
       <tr>
@@ -16,15 +16,15 @@
 				<td><span id="wicket-email">Test EMail</span></td>
 				<td><span id="wicket-status">Test Status</span></td>
 			</tr>
-      <span id="wicket-[remove]">
+      <wicket:region name=remove>
 		    <tr class="odd">
 		      <td>Test ID</td>
 		      <td>Test Email</td>
 		      <td>Test Status</td>
 		    </tr>
-      </span>
+      </wicket:region>
     </tbody>
   </table>
-	</span>
+	</wicket:region>
 </body>
 </html>

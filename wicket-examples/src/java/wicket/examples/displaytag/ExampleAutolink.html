@@ -1,5 +1,5 @@
 
-<html>
+<html xmlns:wicket>
 <head>
 	<title>Example Autolink</title>
 	<meta http-equiv="Expires" content="-1" />
@@ -27,13 +27,13 @@
 				<td><span id="wicket-email">Test EMail</span></td>
 				<td><span id="wicket-url">Test url</span></td>
 		  </tr>
-      <span id="wicket-[remove]">
+      <wicket:region name=remove>
 				<tr class="odd">
 					<td>Test ID</td>
 					<td>Test Email</td>
 					<td>Test Url</td>
 				</tr>
-      </span>
+      </wicket:region>
     </tbody>
   </table>
 </body>

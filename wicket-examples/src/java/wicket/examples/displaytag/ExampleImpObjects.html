@@ -1,5 +1,5 @@
 
-<html>
+<html xmlns:wicket>
 <head>
 	<title>Example Imp Objects</title>
 	<meta http-equiv="Expires" content="-1" />
@@ -31,7 +31,7 @@
 				<td><span id="wicket-rowNumber">Test row number</span></td>
 				<td><span id="wicket-money">Test money</span></td>
 		  </tr>
-      <span id="wicket-[remove]">
+      <wicket:region name=remove>
 		  <tr class="odd">
 		    <td>Test ID</td>
 		    <td>Test Name</td>
@@ -39,7 +39,7 @@
 		    <td>Test Status</td>
 		    <td>Test Comments</td>
 		  </tr>
-      </span>
+      </wicket:region>
     </tbody>
   </table>
 </body>

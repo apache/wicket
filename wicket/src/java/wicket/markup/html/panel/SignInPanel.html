@@ -1,8 +1,8 @@
-<html>
+<html xmlns:wicket>
 <body>
-    <span wicket = "[panel]">
-	    <span wicket = "feedback"/>
-	    <p>
+  <wicket:region name=panel>
+    <span wicket = "feedback"/>
+    <p>
 		<form wicket = "signInForm">
 			<table>
 				<tr>
@@ -25,6 +25,6 @@
 				</tr>
 			</table>	
 		</form>
-    </span>
+  </wicket:region>
 </body>
 </html>

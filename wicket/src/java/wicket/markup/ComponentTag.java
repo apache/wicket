@@ -34,7 +34,7 @@ import wicket.util.value.ValueMap;
  *
  * @author Jonathan Locke
  */
-public final class ComponentTag extends MarkupElement
+public class ComponentTag extends MarkupElement
 {
     /**
      * Standard component name attribute always available for components regardless of

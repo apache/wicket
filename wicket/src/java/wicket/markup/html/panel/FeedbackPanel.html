@@ -1,13 +1,11 @@
-<html>
+<html xmlns:wicket>
 <body>
-
-    <span wicket = "[panel]">
-      <ul>
-       <li id="wicket-messages" class="errorlevel">
-          <span id="wicket-message" class="errorlevel">A message</span>
-       </li>
-      </ul>
-    </span>
-        
+<wicket:region name=panel>
+  <ul>
+    <li id="wicket-messages" class="errorlevel">
+      <span id="wicket-message" class="errorlevel">A message</span>
+    </li>
+  </ul>
+</wicket:region>
 </body>
 </html>
