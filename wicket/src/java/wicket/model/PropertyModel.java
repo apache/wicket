@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,13 +19,12 @@ package wicket.model;
 
 import java.lang.reflect.Member;
 import java.util.Map;
-
 import ognl.DefaultTypeConverter;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
+import wicket.Component;
 import wicket.WicketRuntimeException;
-import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
 /**
@@ -33,43 +32,43 @@ import wicket.util.string.Strings;
  * href="www.ognl.org">Ognl expression </a>.
  * <p>
  * For example, take the following bean:
- * 
+ *
  * <pre>
  * public class Person
  * {
  * 	private String name;
- * 
+ *
  * 	public String getName()
  * 	{
  * 		return name;
  * 	}
- * 
+ *
  * 	public void setName(String name)
  * 	{
  * 		this.name = name;
  * 	}
  * }
  * </pre>
- * 
+ *
  * We could construct a label that dynamically fetches the name property of the
  * given person object like this:
- * 
+ *
  * <pre>
- * 
- *  
- *   
- *    
- *     
+ *
+ *
+ *
+ *
+ *
  *           Person person = getSomePerson();
  *           ...
  *           add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
- *      
- *     
- *    
- *   
- *  
+ *
+ *
+ *
+ *
+ *
  * </pre>
- * 
+ *
  * Where 'myLabel' is the name of the component, and 'name' is the Ognl
  * expression to get the name property.
  * </p>
@@ -77,21 +76,21 @@ import wicket.util.string.Strings;
  * In the same fashion, we can create form components that work dynamically on
  * the given model object. For instance, we could create a text field that
  * updates the name property of a person like this:
- * 
+ *
  * <pre>
- * 
- *  
- *   
- *    
- *     
+ *
+ *
+ *
+ *
+ *
  *           add(new TextField(&quot;myTextField&quot;, person, &quot;name&quot;);
- *      
- *     
- *    
- *   
- *  
+ *
+ *
+ *
+ *
+ *
  * </pre>
- * 
+ *
  * </p>
  * <p>
  * To force Ognl to convert to a specific type, you can provide constructor
@@ -103,11 +102,11 @@ import wicket.util.string.Strings;
  * bypass the converter. Hence, to force myProp being converted to and from and
  * integer, propertyType should be set to Integer.
  * </p>
- * 
+ *
  * @see wicket.model.IModel
  * @see wicket.model.Model
  * @see wicket.model.DetachableModel
- * 
+ *
  * @author Chris Turner
  * @author Eelco Hillenius
  */
@@ -119,8 +118,8 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	/** Ognl context wrapper object. It contains the type converter. */
 	private transient OgnlContext context;
 
-	/** The converter to be used by this model. */
-	private IConverter converter;
+	/** The converter provider to use to get converters to be used by this model. */
+	private Component converterProvider;
 
 	/** Ognl expression for property access. */
 	private final String expression;
@@ -156,7 +155,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 
 		/**
 		 * Converts the provided value to provided type using provided context.
-		 * 
+		 *
 		 * @param context
 		 *            Ognl context
 		 * @param value
@@ -183,14 +182,14 @@ public class PropertyModel extends DetachableModel implements IConvertible
 			{
 				return null;
 			}
-			return converter.convert(value, toType);
+			return converterProvider.getConverter().convert(value, toType);
 		}
 
 		/**
 		 * This method is only here to satisfy the interface. Method
 		 * convertValue(Map, Object, Class) is called, so parameters member and
 		 * propertyName are ignored.
-		 * 
+		 *
 		 * @param context
 		 *            The context
 		 * @param target
@@ -218,7 +217,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * Construct with an IModel object and a Ognl expression that works on the
 	 * given model. Additional formatting will be used depending on the
 	 * configuration setting.
-	 * 
+	 *
 	 * @param model
 	 *            the wrapper
 	 * @param expression
@@ -233,7 +232,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * Construct with an IModel object and a Ognl expression that works on the
 	 * given model. Additional formatting will be used depending on the
 	 * configuration setting.
-	 * 
+	 *
 	 * @param model
 	 *            the wrapper
 	 * @param expression
@@ -265,7 +264,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	/**
 	 * Gets the value that results when the given Ognl expression is applied to
 	 * the model object (Ognl.getValue).
-	 * 
+	 *
 	 * @return the value that results when the given Ognl expression is applied
 	 *         to the model object
 	 * @see wicket.model.IModel#getObject()
@@ -304,7 +303,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	/**
 	 * Gets the type to be used for conversion instead of the type that is
 	 * figured out by Ognl.
-	 * 
+	 *
 	 * @return the type to be used for conversion instead of the type that is
 	 *         figured out by Ognl
 	 */
@@ -314,25 +313,20 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	}
 
 	/**
-	 * The converter to be used by this property model.
-	 * 
-	 * @param converter
-	 *            the converter converter
-	 * @see wicket.model.IConvertible#setConverter(wicket.util.convert.IConverter)
+	 * Set the provider of the converter to be used by this
+	 * property model.
+     *
+	 * @param component the converter provider component
+	 * @see wicket.model.IConvertible#setConverterProvider(wicket.Component)
 	 */
-	public final void setConverter(IConverter converter)
-	{
-		if (converter == null)
-		{
-			throw new IllegalArgumentException("Converter cannot be null");
-		}
-		this.converter = converter;
+	public void setConverterProvider(final Component component) {
+		this.converterProvider = component;
 	}
 
 	/**
 	 * Applies the Ognl expression on the model object using the given object
 	 * argument (Ognl.setValue).
-	 * 
+	 *
 	 * @param object
 	 *            the object that will be used when applying Ognl.setValue on
 	 *            the model object
@@ -350,8 +344,8 @@ public class PropertyModel extends DetachableModel implements IConvertible
 			if (object != null && propertyType != null && (object instanceof String)
 					&& (!((String)object).trim().equals("")))
 			{
-				object = converter.convert(object, propertyType); // convert to
-				// set type
+				object = converterProvider.getConverter().convert(object, propertyType);
+				// convert to set type
 			}
 			OgnlContext ctx = getContext(); // get the ognl context instance
 			Ognl.setValue(expr, ctx, target, object); // let ognl set the value
@@ -366,7 +360,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * Initializes the instance variables of this property model, and in case
 	 * the wrapped model is a {@link IDetachableModel}, calls attach on the
 	 * wrapped model.
-	 * 
+	 *
 	 * @see wicket.model.DetachableModel#doAttach()
 	 */
 	protected final void doAttach()
@@ -380,7 +374,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	/**
 	 * Unsets this property model's instance variables and, in case the wrapped
 	 * model is a {@link IDetachableModel}, calls dettach on the wrapped model.
-	 * 
+	 *
 	 * @see wicket.model.DetachableModel#doDetach()
 	 */
 	protected final void doDetach()
@@ -398,7 +392,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * Gets the Ognl context that is used for evaluating expressions. It
 	 * contains the type converter that is used to access the converter
 	 * framework.
-	 * 
+	 *
 	 * @return the Ognl context that is used for evaluating expressions.
 	 */
 	protected final OgnlContext getContext()
@@ -420,7 +414,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * would be 'name'), but it can in principle contain any valid Ognl
 	 * expression that has meaning with both the Ognl.getValue and Ognl.setValue
 	 * operations.
-	 * 
+	 *
 	 * @return expression the Ognl expression that works on the model.
 	 */
 	protected final String getExpression()
@@ -433,7 +427,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * will actually not be applied on the instance of IModel, but (naturally)
 	 * on the wrapped model object or more accurate, the object that results
 	 * from calling getObject on the instance of IModel.
-	 * 
+	 *
 	 * @return The model on which the Ognl expressions are applied.
 	 */
 	protected final IModel getModel()
@@ -445,7 +439,7 @@ public class PropertyModel extends DetachableModel implements IConvertible
 	 * Sets the Ognl context that is used for evaluating expressions. It
 	 * contains the type converter that is used to access the converter
 	 * framework.
-	 * 
+	 *
 	 * @param context
 	 *            the Ognl context that is used for evaluating expressions
 	 */

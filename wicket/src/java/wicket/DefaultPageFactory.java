@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,7 +28,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
 
 /**
  * A factory that constructs Pages.
- * 
+ *
  * @see ApplicationSettings#setDefaultPageFactory(IPageFactory)
  * @see Session#setPageFactory(IPageFactory)
  * @see IPageFactory
@@ -41,7 +41,7 @@ public final class DefaultPageFactory implements IPageFactory
 	private final static Log log = LogFactory.getLog(DefaultPageFactory.class);
 
 	/** Map of Constructors for Page subclasses */
-	private final transient Map constructorForClass = new ConcurrentHashMap();
+	private final Map constructorForClass = new ConcurrentHashMap();
 
 	/**
 	 * @see IPageFactory#newPage(Class)
@@ -110,7 +110,7 @@ public final class DefaultPageFactory implements IPageFactory
 
 	/**
 	 * Looks up a one-arg Page constructor by class and argument type.
-	 * 
+	 *
 	 * @param pageClass
 	 *            The class of page
 	 * @param argumentType
@@ -145,7 +145,7 @@ public final class DefaultPageFactory implements IPageFactory
 
 	/**
 	 * Creates a new Page using the given constructor and argument.
-	 * 
+	 *
 	 * @param constructor
 	 *            The constructor to invoke
 	 * @param argument
