@@ -19,23 +19,22 @@ package wicket.model;
 
 
 /**
- * A IDetachableModel wraps the actual model objects of components and provides
- * a call back mechanism for reacting to the start/end of a request. Please use
- * the abstract class {@link wicket.model.DetachableModel} for implementations
- * instead of implementing this interface directely.
- * 
+ * A IDetachableModel wraps the actual model objects of components and provides a call
+ * back mechanism for reacting to the start/end of a request. Please use the abstract
+ * class {@link wicket.model.DetachableModel}for implementations instead of implementing
+ * this interface directely.
  * @author Chris Turner
  * @author Eelco Hillenius
  */
 public interface IDetachableModel extends IModel
 {
-    /**
-     * Attaches to a session
-     */
-    public void attach();
+	/**
+	 * Attaches to a session
+	 */
+	public void attach();
 
-    /**
-     * Detaches from a session
-     */
-    public void detach();
+	/**
+	 * Detaches from a session
+	 */
+	public void detach();
 }
