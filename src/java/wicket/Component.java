@@ -1358,6 +1358,11 @@ public abstract class Component implements Serializable, IConverterSource
 				}
 			}
 		}
+		else if (openTag.isOpenClose())
+		{
+			// Write synthetic close tag
+			getResponse().write(openTag.syntheticCloseTagString());
+		}
 	}
 
 	/**

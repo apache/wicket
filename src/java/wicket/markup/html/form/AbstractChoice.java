@@ -35,6 +35,7 @@ import wicket.markup.MarkupStream;
  */
 abstract class AbstractChoice extends FormComponent
 {
+	// TODO This string needs to be localized
 	/**
 	 * Default value to display when a null option is rendered. Initially set to
 	 * 'Choose One'.
@@ -226,7 +227,7 @@ abstract class AbstractChoice extends FormComponent
 				options.append("\n<option ");
 				if (currentOptionIsSelected)
                 {
-					options.append("selected ");
+					options.append("selected=\"selected\"");
                 }
 				options.append("value=\"");
 				options.append(id);

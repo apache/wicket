@@ -444,6 +444,14 @@ public class ComponentTag extends MarkupElement
 	{
 		xmlTag.setType(type);
 	}
+	
+	/**
+	 * @return A synthetic close tag for this tag
+	 */
+	public String syntheticCloseTagString()
+	{
+		return "</" + getName() + ">";
+	}
 
 	/**
 	 * Converts this object to a string representation.

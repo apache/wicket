@@ -87,8 +87,7 @@ public class Panel extends WebMarkupContainer
                 "Markup for a panel component must begin with '<wicket:panel>'");
         
         // Close the manually opened panel tag.
-        final String closeTag = "</" + markupStream.getTag().getName() + ">";
-        getResponse().write(closeTag);
+        getResponse().write(openTag.syntheticCloseTagString());
 		markupStream.next();
     }
 }
