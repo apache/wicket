@@ -1,7 +1,3 @@
-#typeSelect {
-	margin-bottom: 2em;	
-}
-
 .tree {
 	font-weight: bold;
 	margin: 0;
@@ -19,22 +15,28 @@
 	background-color: #E7E7FF;
 }
 
-#spacers {
+#wicket-spacers {
 	padding-left: 16px;
 }
 
-#junctionImg {
+#wicket-junctionImg {
 	padding-left: 4px;
 	padding-right: 4px;
 	padding-top: 0px;
 	padding-bottom: 0px;
+	margin: 1px;
 }
 
-#nodeImg {
+#wicket-nodeImg {
 	padding-left: 4px;
 	padding-right: 4px;
 	padding-top: 0px;
 	padding-bottom: 0px;
+	margin: 1px;
+}
+
+#wicket-label {
+	margin: 2px;
 }
 
 .customtree {
@@ -65,11 +67,11 @@
 	padding-left: 20px;
 }
 
-.customtree #link {
+.customtree #wicket-link {
 	background-color: white;
 }
 
-.customtree #label {
+.customtree #wicket-label {
 	background-color: white;
 }
 
