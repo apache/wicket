@@ -27,10 +27,10 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.contrib.markup.html.tree.IndentTree;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.AbstractImage;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.tree.IndentTree;
 import wicket.util.file.Path;
 import wicket.util.lang.Classes;
 import wicket.util.resource.IResource;
@@ -53,7 +53,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.contrib.markup.html.tree.IndentTree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected void junctionLinkClicked(DefaultMutableTreeNode node)
 	{
@@ -62,7 +62,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.contrib.markup.html.tree.IndentTree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected void nodeLinkClicked(DefaultMutableTreeNode node)
 	{
@@ -71,7 +71,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.contrib.markup.html.tree.IndentTree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected AbstractImage getNodeImage(final DefaultMutableTreeNode node)
 	{
@@ -96,7 +96,7 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.IndentTree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.contrib.markup.html.tree.IndentTree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected String getNodeLabel(DefaultMutableTreeNode node)
 	{
