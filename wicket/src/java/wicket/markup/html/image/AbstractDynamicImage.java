@@ -33,7 +33,7 @@ import java.io.InputStream;
 
 /**
  * An image subclass that allows easy rendering of dynamic images. An image can
- * be set with setImage(BufferedImage) and its extension can be specified with
+ * be set with setImage(BufferedImage) and its format can be specified with
  * setExtension(String). After this, the image will be cached as an input stream
  * and will render as would any other Image resource.
  * 
@@ -44,8 +44,8 @@ public abstract class AbstractDynamicImage extends Image
 	/** Serial Version ID */
 	private static final long serialVersionUID = 5934721258765771884L;
 
-	/** The image extension */
-	private String extension = "jpeg";
+	/** The image type */
+	private String format = "jpeg";
 
 	/**
 	 * Constructor.
@@ -59,22 +59,22 @@ public abstract class AbstractDynamicImage extends Image
 	}
 	
 	/**
-	 * @return Returns the extension.
+	 * @return Returns the image format.
 	 */
-	public String getExtension()
+	public String getFormat()
 	{
-		return extension;
+		return format;
 	}
 	
 	/**
-	 * Sets the extension of this dynamic image
+	 * Sets the format of this dynamic image, such as "jpeg" or "gif"
 	 * 
-	 * @param extension
-	 *            The extension to set.
+	 * @param format
+	 *            The image format to set.
 	 */
-	public void setExtension(String extension)
+	public void setFormat(String format)
 	{
-		this.extension = extension;
+		this.format = format;
 	}
 
 	/**
@@ -93,8 +93,8 @@ public abstract class AbstractDynamicImage extends Image
 			// Create output stream
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-			// Get image writer for extension
-			final ImageWriter writer = (ImageWriter)ImageIO.getImageWritersByFormatName(extension)
+			// Get image writer for format
+			final ImageWriter writer = (ImageWriter)ImageIO.getImageWritersByFormatName(format)
 					.next();
 
 			// Write out gif
@@ -127,9 +127,9 @@ public abstract class AbstractDynamicImage extends Image
                 }
 			}
 
-			public String getExtension()
+			public String getContentType()
 			{
-				return extension;
+				return "image/" + format;
 			}
 
 			public InputStream getInputStream() throws ResourceNotFoundException

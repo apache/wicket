@@ -23,7 +23,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,6 +64,13 @@ public final class Resource implements IResource, IModifiable
 
     /** Any resource location */
     private URL url;
+    
+    private static final Map extensionToMimeType = new HashMap();
+    static 
+    {
+    	extensionToMimeType.put("html", "text/html");
+    	extensionToMimeType.put("jpeg", "image/jpeg");
+    }
 
     /**
      * Locate a resource based on a class and an extension.
@@ -266,15 +276,15 @@ public final class Resource implements IResource, IModifiable
     /**
      * @return The extension of this resource, such as "jpeg" or "html"
      */
-    public String getExtension()
+    public String getContentType()
     {
         if (file != null)
         {
-            return Strings.lastPathComponent(file.getName(), '.');
+        	return URLConnection.getFileNameMap().getContentTypeFor(file.getName());
         }
         else
         {
-            return Strings.lastPathComponent(url.getPath(), '.');
+        	return URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
         }
     }
 
