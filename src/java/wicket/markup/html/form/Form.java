@@ -247,8 +247,10 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
             {
                 // Update model of form component
                 final FormComponent formComponent = (FormComponent)component;
-
-                formComponent.updateModel();
+                if(formComponent.isVisible()) // only update the component when it is visible
+                {
+                	formComponent.updateModel();
+                }
 
                 return CONTINUE_TRAVERSAL;
             }
