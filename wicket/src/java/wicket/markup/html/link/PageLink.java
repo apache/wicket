@@ -18,7 +18,7 @@
 package wicket.markup.html.link;
 
 import wicket.Page;
-import wicket.WicketRuntimeException;
+import wicket.Session;
 
 /**
  * Links to a given page via an object implementing the IPageLink delayed
@@ -73,18 +73,8 @@ public class PageLink extends Link
 
 			public Page getPage()
 			{
-				try
-				{
-					return (Page)c.newInstance();
-				}
-				catch (InstantiationException e)
-				{
-					throw new WicketRuntimeException("Cannot instantiate page class " + c, e);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new WicketRuntimeException("Cannot instantiate page class " + c, e);
-				}
+				// Create page using page factory
+				return Session.get().getPageFactory().newPage(c);
 			}
 
 			public Class getPageIdentity()
