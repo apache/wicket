@@ -72,17 +72,20 @@ import wicket.WicketRuntimeException;
  * </pre>
  * 
  * </p>
+ * In order to support frameworks like Spring, the class is none-final and the variable
+ * webApplication is protected instead of private. Thus subclasses may provide there
+ * own means of providing the application object.
  * 
  * @see wicket.RequestCycle
  * @author Jonathan Locke
  */
-public final class WicketServlet extends HttpServlet
+public class WicketServlet extends HttpServlet
 {
     /** Log. */
     private static final Log log = LogFactory.getLog(WicketServlet.class);
 
     /** The application this servlet is serving */
-    private WebApplication webApplication;
+    protected WebApplication webApplication;
 
     /**
      * Servlet initialization
