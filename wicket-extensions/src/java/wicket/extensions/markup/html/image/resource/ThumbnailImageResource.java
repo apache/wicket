@@ -91,7 +91,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 		try
 		{
 			// read original image
-			is = unscaledImageResource.getResource().getInputStream();
+			is = unscaledImageResource.getResourceStream().getInputStream();
 			originalImage = ImageIO.read(is);
 			if (originalImage == null)
 			{

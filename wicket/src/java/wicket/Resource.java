@@ -93,7 +93,7 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * @return Gets the resource to render to the requester
 	 */
-	protected abstract IResourceStream getResource();
+	protected abstract IResourceStream getResourceStream();
 
 	/**
 	 * Sets any loaded resource to null, thus forcing a reload on the next
@@ -111,7 +111,7 @@ public abstract class Resource implements IResourceListener
 	{
 		if (this.resource == null)
 		{
-			this.resource = getResource();
+			this.resource = getResourceStream();
 			if (this.resource == null)
 			{
 				throw new WicketRuntimeException("Could not get resource");
