@@ -502,7 +502,7 @@ public final class FeedbackMessages
 	}
 
 	/**
-	 * Adds a new ui message with level WARN to the current messages.
+	 * Adds a new ui message with level WARNING to the current messages.
 	 * 
 	 * @param reporter
 	 *            the reporting component
