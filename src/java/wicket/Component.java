@@ -99,7 +99,6 @@ import wicket.util.string.Strings;
  */
 public abstract class Component implements Serializable, IConverterSource
 {
-
 	/**
 	 * Designates a component being shared across all sessions within an
 	 * application. The shared component will be given a URL that is stable
@@ -121,6 +120,7 @@ public abstract class Component implements Serializable, IConverterSource
 
 	/** Designates a normal component that is not being shared */
 	public static final int UNSHARED = 0;
+	
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
