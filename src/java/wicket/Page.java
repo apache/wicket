@@ -201,7 +201,7 @@ public abstract class Page extends Container implements IRedirectListener
      */
     private void initUIMessages()
     {
-        if(this.messages != null) 
+        if (this.messages != null) 
         {
             // so, we are comming from a redirect;
             // these are the saved messages from the thread that issued 
