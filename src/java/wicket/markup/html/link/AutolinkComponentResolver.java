@@ -65,7 +65,7 @@ public class AutolinkComponentResolver implements IComponentResolver
 	 *            The current component tag while parsing the markup
 	 * @param container
 	 *            The container parsing its markup
-	 * @return true, if componentName was handle by the resolver. False,
+	 * @return true, if componentId was handle by the resolver. False,
 	 *         otherwise
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
@@ -75,8 +75,8 @@ public class AutolinkComponentResolver implements IComponentResolver
 		if (tag.isAutolinkEnabled())
 		{
 			// Try to find the Page matching the href
-			final String componentName = tag.getComponentId();
-			final Component link = resolveAutomaticLink(container, componentName, tag);
+			final String componentId = tag.getId();
+			final Component link = resolveAutomaticLink(container, componentId, tag);
 
 			// Add the link to the container
 			container.add(link);
@@ -88,11 +88,11 @@ public class AutolinkComponentResolver implements IComponentResolver
 			// Render the Link
 			link.render();
 
-			// Tell the container, we handled the componentName
+			// Tell the container, we handled the componentId
 			return true;
 		}
 
-		// We were not able to handle the componentName
+		// We were not able to handle the componentId
 		return false;
 	}
 
@@ -103,14 +103,14 @@ public class AutolinkComponentResolver implements IComponentResolver
 	 * 
 	 * @param container
 	 *            The container where the link is
-	 * @param componentName
+	 * @param componentId
 	 *            the name of the component
 	 * @param tag
 	 *            the component tag
 	 * @return A BookmarkablePageLink to handle the href
 	 */
 	private Component resolveAutomaticLink(final MarkupContainer container,
-			final String componentName, final ComponentTag tag)
+			final String componentId, final ComponentTag tag)
 	{
 		final Page page = container.getPage();
 		final String originalHref = tag.getAttributes().getString("href");
@@ -126,11 +126,11 @@ public class AutolinkComponentResolver implements IComponentResolver
 			pageParameters = new PageParameters(new ValueMap(queryString, "&"));
 		}
 
-		// Make the componentName (page-)unique
-		final String id = componentName + page.getAutoIndex();
+		// Make the componentId (page-)unique
+		final String id = componentId + page.getAutoIndex();
 
 		// The component name on the tag changed
-		tag.setComponentId(id);
+		tag.setId(id);
 
 		// Obviously a href like href="myPkg.MyLabel.html" will do as well.
 		// Wicket will not throw an exception. It accepts it.

@@ -258,10 +258,10 @@ public abstract class ListView extends WebMarkupContainer
 				int lastIndex = firstIndex + i;
 
 				// Get the name of the component for listItem i
-				final String componentName = Integer.toString(lastIndex);
+				final String componentId = Integer.toString(lastIndex);
 
 				// If this component does not already exist, populate it
-				ListItem listItem = (ListItem)get(componentName);
+				ListItem listItem = (ListItem)get(componentId);
 				if (listItem == null)
 				{
 					// Create listItem for index i of the list

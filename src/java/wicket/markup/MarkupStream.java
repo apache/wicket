@@ -86,14 +86,14 @@ public final class MarkupStream
 	}
 
 	/**
-	 * @param componentName
+	 * @param componentId
 	 *            Required component name attribute
 	 * @return True if the current markup element is an openclose tag with the
 	 *         given component name
 	 */
-	public boolean atOpenCloseTag(final String componentName)
+	public boolean atOpenCloseTag(final String componentId)
 	{
-		return atOpenCloseTag() && componentName.equals(getTag().getComponentId());
+		return atOpenCloseTag() && componentId.equals(getTag().getId());
 	}
 
 	/**
@@ -105,14 +105,14 @@ public final class MarkupStream
 	}
 
 	/**
-	 * @param componentName
+	 * @param componentId
 	 *            Required component name attribute
 	 * @return True if the current markup element is an open tag with the given
 	 *         component name
 	 */
-	public boolean atOpenTag(final String componentName)
+	public boolean atOpenTag(final String componentId)
 	{
-		return atOpenTag() && componentName.equals(getTag().getComponentId());
+		return atOpenTag() && componentId.equals(getTag().getId());
 	}
 
 	/**

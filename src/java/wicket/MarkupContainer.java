@@ -921,10 +921,10 @@ public abstract class MarkupContainer extends Component
 			final ComponentTag tag = (ComponentTag)element;
 
 			// Get component name
-			final String componentName = tag.getComponentId();
+			final String componentId = tag.getId();
 
 			// Get the component for the component name from the given container
-			final Component component = get(componentName);
+			final Component component = get(componentId);
 
 			// Failed to find it?
 			if (component != null)
@@ -959,7 +959,7 @@ public abstract class MarkupContainer extends Component
 
 				// No one was able to handle the component name
 				markupStream.throwMarkupException("Unable to find component named '"
-						+ componentName + "' in " + this);
+						+ componentId + "' in " + this);
 			}
 		}
 		else

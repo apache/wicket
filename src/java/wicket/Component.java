@@ -1203,12 +1203,12 @@ public abstract class Component implements Serializable, IConverterSource
 			}
 
 			// Strip component id attribute if desired
-			if (settings.getStripComponentNames())
+			if (settings.getStripComponentIds())
 			{
 				// Get mutable copy of tag and remove component id
 				tag = tag.mutable();
-				tag.removeComponentName(settings.getComponentNameAttribute(), settings
-						.getApplyDefaultComponentName());
+				tag.removeComponentId(settings.getComponentIdAttribute(), settings
+						.getApplyDefaultComponentId());
 			}
 
 			// Write the tag

@@ -50,8 +50,8 @@ import wicket.util.time.Duration;
  * partially rendered page.
  * <p>
  * <ul>
- * <i>componentNameAttribute </i> (defaults to "wicket") - The markup attribute
- * which denotes the names of components to be attached
+ * <i>componentIdAttribute </i> (defaults to "wicket") - The markup attribute
+ * which denotes the ids of components to be attached
  * <p>
  * <i>componentUseCheck </i> (defaults to true) - Causes the framework to do a
  * check after rendering each page to ensure that each component was used in
@@ -78,8 +78,8 @@ import wicket.util.time.Duration;
  * <i>stripComments </i> (defaults to false) - Set to true to strip HTML
  * comments during markup loading
  * <p>
- * <i>stripComponentNames </i> (defaults to false) - Set to true to strip
- * component name attributes during rendering
+ * <i>stripComponentIds </i> (defaults to false) - Set to true to strip
+ * component id attributes during rendering
  * <p>
  * <i>throwExceptionOnMissingResource </i> (defaults to true) - Set to true to
  * throw a runtime exception if a required string resource is not found. Set to
@@ -136,15 +136,15 @@ public final class ApplicationSettings
 	/** The application */
 	private Application application;
 
-	/** If true and if componentNameAttribute has been changed, than not only
-	 * use the new componentNameAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentNameAttribute and 
-	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
-     * If componentNameAttribute has not be changed, the system's behaviour
-     * is the same, not matter if applyDefaultComponentName is true or false.
+	/** If true and if componentIdAttribute has been changed, than not only
+	 * use the new componentIdAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentIdAttribute and 
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
+     * If componentIdAttribute has not be changed, the system's behaviour
+     * is the same, not matter if applyDefaultComponentId is true or false.
 	 */
-	private boolean applyDefaultComponentName = false;
+	private boolean applyDefaultComponentId = false;
 
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
@@ -152,8 +152,8 @@ public final class ApplicationSettings
 	/** True if the response should be buffered */
 	private boolean bufferResponse = true;
 
-	/** Component attribute name */
-	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
+	/** Component id attribute */
+	private String componentIdAttribute = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
 	
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
@@ -206,8 +206,8 @@ public final class ApplicationSettings
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
 
-	/** Should component names be stripped during rendering? */
-	private boolean stripComponentNames = false;
+	/** Should component ids be stripped during rendering? */
+	private boolean stripComponentIds = false;
 
 	/** If true, wicket tags ( <wicket ..>) shall be removed from output */
 	private boolean stripWicketTags = false;
@@ -270,18 +270,18 @@ public final class ApplicationSettings
 	}
 
 	/** 
-	 * If true and if componentNameAttribute has been changed, than not only
-	 * use the new componentNameAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentNameAttribute and 
-	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	 * If true and if componentIdAttribute has been changed, than not only
+	 * use the new componentIdAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentIdAttribute and 
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
 	 * 
 	 * @return true, if "wicket" will be used IN ADDITION to the changed
-	 *   value for the componentNameAttribute.
+	 *   value for the componentIdAttribute.
 	 */
-	public boolean getApplyDefaultComponentName()
+	public boolean getApplyDefaultComponentId()
 	{
-	    return applyDefaultComponentName;
+	    return applyDefaultComponentId;
 	}
 	
 	/**
@@ -303,16 +303,16 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Gets component name attribute in use in this application. Normally, this
+	 * Gets component id attribute in use in this application. Normally, this
 	 * is "wicket", but it can be changed in the unlikely event that tag
 	 * attribute naming conflicts arise.
 	 * 
-	 * @return The current component name attribute
-	 * @see ApplicationSettings#setComponentNameAttribute(String)
+	 * @return The current component id attribute
+	 * @see ApplicationSettings#setComponentIdAttribute(String)
 	 */
-	public final String getComponentNameAttribute()
+	public final String getComponentIdAttribute()
 	{
-		return componentNameAttribute;
+		return componentIdAttribute;
 	}
 
 	/**
@@ -456,15 +456,15 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Returns true if componentName attributes should be stripped from tags
+	 * Returns true if componentId attributes should be stripped from tags
 	 * when rendering.
 	 * 
-	 * @return Returns the stripComponentNames.
-	 * @see ApplicationSettings#setStripComponentNames(boolean)
+	 * @return Returns the stripComponentIds.
+	 * @see ApplicationSettings#setStripComponentIds(boolean)
 	 */
-	public final boolean getStripComponentNames()
+	public final boolean getStripComponentIds()
 	{
-		return stripComponentNames;
+		return stripComponentIds;
 	}
 
 	/**
@@ -513,18 +513,18 @@ public final class ApplicationSettings
 	}
 
 	/** 
-	 * If true and if componentNameAttribute has been changed, than not only
-	 * use the new componentNameAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentNameAttribute and 
-	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	 * If true and if componentIdAttribute has been changed, than not only
+	 * use the new componentIdAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentIdAttribute and 
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
 	 * 
 	 * @param applyDefault if true, "wicket" will be used IN ADDITION to the 
-	 *   changed value for the componentNameAttribute.
+	 *   changed value for the componentIdAttribute.
 	 */
-	public void setApplyDefaultComponentName(final boolean applyDefault)
+	public void setApplyDefaultComponentId(final boolean applyDefault)
 	{
-	    this.applyDefaultComponentName = applyDefault;
+	    this.applyDefaultComponentId = applyDefault;
 	}
 
 	/**
@@ -548,24 +548,24 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Sets component name attribute in use in this application. Normally, this
+	 * Sets component id attribute in use in this application. Normally, this
 	 * is "wicket", but it can be changed in the unlikely event that tag
 	 * attribute naming conflicts arise.
 	 * 
-	 * @param componentNameAttribute
-	 *            The componentNameAttribute to set.
+	 * @param componentIdAttribute
+	 *            The componentIdAttribute to set.
 	 * @return This
 	 */
-	public final ApplicationSettings setComponentNameAttribute(final String componentNameAttribute)
+	public final ApplicationSettings setComponentIdAttribute(final String componentIdAttribute)
 	{
-	    if (!MetaPattern.VARIABLE_NAME.matcher(componentNameAttribute).matches())
+	    if (!MetaPattern.VARIABLE_NAME.matcher(componentIdAttribute).matches())
 	    {
 	        throw new IllegalArgumentException(
-	                "Component name attribute must be a valid variable name ([a-z][a-z0-9_]*)");
+	                "Component id attribute must be a valid variable name ([a-z][a-z0-9_]*)");
 	    }
 	    
-	    this.applyDefaultComponentName = true;
-		this.componentNameAttribute = componentNameAttribute;
+	    this.applyDefaultComponentId = true;
+		this.componentIdAttribute = componentIdAttribute;
 		return this;
 	}
 
@@ -775,19 +775,19 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Determines if componentName attributes and "wicket-" from id attributes
-	 * should be stripped from tags when rendering. Component name attributes in
+	 * Determines if componentId attributes and "wicket-" from id attributes
+	 * should be stripped from tags when rendering. Component id attributes in
 	 * rendered pages can be a helpful debugging tool, but they are not helpful
 	 * to end-users and do not increase efficiency in delivering pages over any
 	 * protocol.
 	 * 
-	 * @param stripComponentNames
-	 *            The stripComponentNames to set.
+	 * @param stripComponentIds
+	 *            The stripComponentIds to set.
 	 * @return This
 	 */
-	public final ApplicationSettings setStripComponentNames(final boolean stripComponentNames)
+	public final ApplicationSettings setStripComponentIds(final boolean stripComponentIds)
 	{
-		this.stripComponentNames = stripComponentNames;
+		this.stripComponentIds = stripComponentIds;
 		return this;
 	}
 

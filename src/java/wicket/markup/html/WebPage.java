@@ -76,12 +76,12 @@ public class WebPage extends Page
 	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
 	 * 
-	 * @param componentName
+	 * @param componentId
 	 *            Name of link
 	 * @return Link to home page for this application
 	 */
-	protected final BookmarkablePageLink homePageLink(final String componentName)
+	protected final BookmarkablePageLink homePageLink(final String componentId)
 	{
-		return new BookmarkablePageLink(componentName, getApplicationPages().getHomePage());
+		return new BookmarkablePageLink(componentId, getApplicationPages().getHomePage());
 	}
 }

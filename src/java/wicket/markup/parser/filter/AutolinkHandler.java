@@ -98,7 +98,7 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 		// components like images or all other kind of Wicket Links will handle
 		// it themselves.
 		final String href = tag.getAttributes().getString("href");
-		if ((autolinking == true) && (tag.getComponentId() == null) && (href != null)
+		if ((autolinking == true) && (tag.getId() == null) && (href != null)
 				&& (href.endsWith(".html") || (href.indexOf(".html?") != -1))
 				&& (href.indexOf(":") == -1))
 		{
@@ -106,7 +106,7 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 			tag.enableAutolink(true);
 
 			// Just a dummy name. The ComponentTag will not be forwarded.
-			tag.setComponentId("_autolink_");
+			tag.setId("_autolink_");
 			return tag;
 		}
 

@@ -37,12 +37,12 @@ public class XmlTag extends MarkupElement
 	 */
 	public static final Type CLOSE = new Type("CLOSE");
 	/**
-	 * An open tag, like &lt;TAG componentName = "xyz"&gt;.
+	 * An open tag, like &lt;TAG componentId = "xyz"&gt;.
 	 */
 	public static final Type OPEN = new Type("OPEN");
 
 	/**
-	 * An open/close tag, like &lt;TAG componentName = "xyz"/&gt;.
+	 * An open/close tag, like &lt;TAG componentId = "xyz"/&gt;.
 	 */
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
@@ -264,18 +264,6 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets whether this tag is an open tag with the given component name.
-	 * 
-	 * @param componentName
-	 *            Required component name attribute
-	 * @return True if this tag is an open tag with the given component name
-	 */
-	public boolean isOpen(final String componentName)
-	{
-		return isOpen() && name.equals(componentName);
-	}
-
-	/**
 	 * Gets whether this tag is an open/ close tag.
 	 * 
 	 * @return True if this tag is an open and a close tag
@@ -283,19 +271,6 @@ public class XmlTag extends MarkupElement
 	public boolean isOpenClose()
 	{
 		return type == OPEN_CLOSE;
-	}
-
-	/**
-	 * Gets whether this tag is an openclose tag with the given component name.
-	 * 
-	 * @param componentName
-	 *            Required component name attribute
-	 * @return True if this tag is an openclose tag with the given component
-	 *         name
-	 */
-	public boolean isOpenClose(final String componentName)
-	{
-		return isOpenClose() && componentName.equals(componentName);
 	}
 
 	/**

@@ -47,19 +47,20 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	/** Logging */
 	private static final Log log = LogFactory.getLog(WicketComponentTagIdentifier.class);
 
-	/** Name of desired componentName tag attribute. */
-	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
+	/** Name of desired componentId tag attribute. */
+	private String componentIdAttribute = ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE;
 
-	/** if true, "wicket-" will be removed from id="wicket-xxx" */
+	/** If true, "wicket-" will be removed from id="wicket-xxx" */
 	private boolean stripWicketFromComponentTag = false;
 
-	/** If true and if componentNameAttribute has been changed, than not only
-	 * use the new componentNameAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentNameAttribute and 
-	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	/** 
+	 * If true and if componentIdAttribute has been changed, than not only
+	 * use the new componentIdAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentIdAttribute and 
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
 	 */
-	private boolean applyDefaultComponentName = false;
+	private boolean applyDefaultComponentId = false;
 
 	/**
 	 * Construct.
@@ -73,18 +74,18 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Name of the desired componentName tag attribute.
+	 * Name of the desired componentId tag attribute.
 	 * 
 	 * @param name
 	 *            component name
 	 */
-	public void setComponentNameAttribute(final String name)
+	public void setComponentIdAttribute(final String name)
 	{
-		this.componentNameAttribute = name;
+		this.componentIdAttribute = name;
 
-		if (!ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
+		if (!ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE.equals(componentIdAttribute))
 		{
-			log.info("You are using a non-standard component name: " + componentNameAttribute);
+			log.info("You are using a non-standard component name: " + componentIdAttribute);
 		}
 	}
 
@@ -101,18 +102,18 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	}
 
 	/** 
-	 * If true and if componentNameAttribute has been changed, than not only
-	 * use the new componentNameAttribute to identify wicket components, but
-	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
-	 * to default. Both the new componentNameAttribute and 
-	 * DEFAULT_COMPONENT_NAME_ATTRIBUTE would identify wicket components.
+	 * If true and if componentIdAttribute has been changed, than not only
+	 * use the new componentIdAttribute to identify wicket components, but
+	 * also the DEFAULT_COMPONENT_ID_ATTRIBUTE ("wicket"). Fall back
+	 * to default. Both the new componentIdAttribute and 
+	 * DEFAULT_COMPONENT_ID_ATTRIBUTE would identify wicket components.
 	 * 
 	 * @param applyDefault if true, "wicket" will be used IN ADDITION to the 
-	 *   changed value for the componentNameAttribute.
+	 *   changed value for the componentIdAttribute.
 	 */
-	public void setApplyDefaultComponentName(final boolean applyDefault)
+	public void setApplyDefaultComponentId(final boolean applyDefault)
 	{
-	    this.applyDefaultComponentName = applyDefault;
+	    this.applyDefaultComponentId = applyDefault;
 	}
 
 	/**
@@ -141,15 +142,15 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
-		if (componentNameAttribute.equalsIgnoreCase(xmlTag.getNamespace())
-				|| (applyDefaultComponentName && ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE
+		if (componentIdAttribute.equalsIgnoreCase(xmlTag.getNamespace())
+				|| (applyDefaultComponentId && ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE
 						.equalsIgnoreCase(xmlTag.getNamespace())))
 		{
 			// It is <wicket:...>
 			tag = new ComponentWicketTag(xmlTag);
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
-			tag.setComponentId(tag.getName());
+			tag.setId(tag.getName());
 		}
 		else
 		{
@@ -160,41 +161,41 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 		// If the form <tag id = "wicket-value"> is used
 		final String id = xmlTag.getAttributes().getString("id");
 
-		if ((id != null) && id.startsWith(componentNameAttribute + "-"))
+		if ((id != null) && id.startsWith(componentIdAttribute + "-"))
 		{
 			// extract component name from value
-			tag.setComponentId(id.substring(componentNameAttribute.length() + 1).trim());
+			tag.setId(id.substring(componentIdAttribute.length() + 1).trim());
 
 			// Depending on apps setting, "wicket-" will be removed or not
 			if (this.stripWicketFromComponentTag)
 			{
-				tag.put("id", tag.getComponentId());
+				tag.put("id", tag.getId());
 			}
 		}
-		else if ((id != null) && applyDefaultComponentName
-				&& id.startsWith(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
+		else if ((id != null) && applyDefaultComponentId
+				&& id.startsWith(ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE))
 		{
 			// extract component name from value
-			tag.setComponentId(id.substring(
-					ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.length() + 1).trim());
+			tag.setId(id.substring(
+					ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE.length() + 1).trim());
 
 			// Depending on apps setting, "wicket-" will be removed or not
 			if (this.stripWicketFromComponentTag)
 			{
-				tag.put("id", tag.getComponentId());
+				tag.put("id", tag.getId());
 			}
 		}
-		else if (tag.getAttributes().containsKey(componentNameAttribute))
+		else if (tag.getAttributes().containsKey(componentIdAttribute))
 		{
-			// Set componentName value on tag
-			tag.setComponentId(tag.getAttributes().getString(componentNameAttribute));
+			// Set componentId value on tag
+			tag.setId(tag.getAttributes().getString(componentIdAttribute));
 		}
-		else if (applyDefaultComponentName
-				&& tag.getAttributes().containsKey(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
+		else if (applyDefaultComponentId
+				&& tag.getAttributes().containsKey(ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE))
 		{
-			// Set componentName value on tag
-			tag.setComponentId(tag.getAttributes().getString(
-					ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE));
+			// Set componentId value on tag
+			tag.setId(tag.getAttributes().getString(
+					ComponentTag.DEFAULT_COMPONENT_ID_ATTRIBUTE));
 		}
 
 		return tag;

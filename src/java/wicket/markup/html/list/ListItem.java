@@ -134,13 +134,13 @@ public class ListItem extends WebMarkupContainer
 	 * Returns a link that will move the given listItem "down" (towards the end)
 	 * in the listView.
 	 * 
-	 * @param componentName
+	 * @param componentId
 	 *            Name of move-down link component to create
 	 * @return The link component
 	 */
-	public final Link moveDownLink(final String componentName)
+	public final Link moveDownLink(final String componentId)
 	{
-		final Link link = new Link(componentName)
+		final Link link = new Link(componentId)
 		{
 			public void onClick()
 			{
@@ -162,13 +162,13 @@ public class ListItem extends WebMarkupContainer
 	 * Returns a link that will move the given listItem "up" (towards the
 	 * beginning) in the listView.
 	 * 
-	 * @param componentName
+	 * @param componentId
 	 *            Name of move-up link component to create
 	 * @return The link component
 	 */
-	public final Link moveUpLink(final String componentName)
+	public final Link moveUpLink(final String componentId)
 	{
-		final Link link = new Link(componentName)
+		final Link link = new Link(componentId)
 		{
 			public void onClick()
 			{
@@ -190,13 +190,13 @@ public class ListItem extends WebMarkupContainer
 	 * Returns a link that will remove this ListItem from the ListView that
 	 * holds it.
 	 * 
-	 * @param componentName
+	 * @param componentId
 	 *            Name of remove link component to create
 	 * @return The link component
 	 */
-	public final Link removeLink(final String componentName)
+	public final Link removeLink(final String componentId)
 	{
-		return new Link(componentName)
+		return new Link(componentId)
 		{
 			public void onClick()
 			{
