@@ -25,7 +25,7 @@ import wicket.util.parse.metapattern.MetaPattern;
 /**
  * Parses integer variable assignments, such as "x = 9" or "x=9".
  * 
- * @author Jonathan Locke W. Locke
+ * @author Jonathan Locke
  */
 public final class IntegerVariableAssignmentParser extends MetaPatternParser
 {
