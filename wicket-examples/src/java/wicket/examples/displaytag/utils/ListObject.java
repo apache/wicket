@@ -294,7 +294,7 @@ public class ListObject implements Serializable
      * Inner class used in testing nested tables.
      * @author fgiust
      */
-    public class SubListItem
+    public class SubListItem implements Serializable
     {
 
         /**
