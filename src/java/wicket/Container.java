@@ -571,8 +571,8 @@ public abstract class Container extends Component
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!associatedMarkupStream.atOpenTag("[" + openTagName + "]")
-				&& !(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof ComponentWicketTag)))
+		if (!(associatedMarkupStream.atOpenTag(openTagName) 
+		        && (associatedMarkupOpenTag instanceof ComponentWicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
