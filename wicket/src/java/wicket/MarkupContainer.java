@@ -38,7 +38,8 @@ import wicket.markup.MarkupStream;
 import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
 import wicket.util.listener.IChangeListener;
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResource;
+import wicket.util.resource.ResourceLocator;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.Strings;
 import wicket.util.watch.ModificationWatcher;
@@ -591,13 +592,13 @@ public abstract class MarkupContainer extends Component
 			if (markup == null)
 			{
 				// Locate markup resource, searching up class hierarchy
-				Resource markupResource = null;
+				IResource markupResource = null;
 				Class containerClass = getClass();
 
 				while ((markupResource == null) && (containerClass != MarkupContainer.class))
 				{
 					// Look for markup resource for containerClass
-					markupResource = Resource.locate(getApplicationSettings().getSourcePath(),
+					markupResource = ResourceLocator.locate(getApplicationSettings().getSourcePath(),
 							containerClass, getStyle(), getLocale(), getMarkupType());
 					containerClass = containerClass.getSuperclass();
 				}
@@ -699,7 +700,7 @@ public abstract class MarkupContainer extends Component
 	 * @throws ResourceNotFoundException
 	 */
 	private Markup loadMarkup(final Application application, final String key,
-			final Resource markupResource) throws ParseException, IOException,
+			final IResource markupResource) throws ParseException, IOException,
 			ResourceNotFoundException
 	{
 		final Markup markup = application.getMarkupParser().readAndParse(markupResource);
@@ -716,7 +717,7 @@ public abstract class MarkupContainer extends Component
 	 *            The markup file to load and begin to watch
 	 * @return The markup in the file
 	 */
-	private Markup loadMarkupAndWatchForChanges(final String key, final Resource markupResource)
+	private Markup loadMarkupAndWatchForChanges(final String key, final IResource markupResource)
 	{
 		final Application application = getApplication();
 

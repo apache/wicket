@@ -26,7 +26,8 @@ import junit.framework.TestCase;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResource;
+import wicket.util.resource.ResourceLocator;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.StringValueConversionException;
 
@@ -165,38 +166,38 @@ public final class MarkupParserTest extends TestCase
             ResourceNotFoundException, IOException
     {
         final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
-        Resource resource = Resource.locate(null, this.getClass(), "1", null, "html");
+        IResource resource = ResourceLocator.locate(null, this.getClass(), "1", null, "html");
         Markup tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "2", null, "html");
+        resource = ResourceLocator.locate(null, this.getClass(), "2", null, "html");
         tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "3", null, "html");
+        resource = ResourceLocator.locate(null, this.getClass(), "3", null, "html");
         tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "4", null, "html");
+        resource = ResourceLocator.locate(null, this.getClass(), "4", null, "html");
         tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         // File from jar (URL resource)
-        resource = Resource.locate(null, PageExpiredErrorPage.class, null, null, "html");
+        resource = ResourceLocator.locate(null, PageExpiredErrorPage.class, null, null, "html");
         tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "5", null, "html");
+        resource = ResourceLocator.locate(null, this.getClass(), "5", null, "html");
         tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "6", null, "html");
+        resource = ResourceLocator.locate(null, this.getClass(), "6", null, "html");
         tokens = parser.readAndParse(resource);
         System.out.println("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());

@@ -20,7 +20,7 @@ package wicket.markup;
 
 import java.util.List;
 
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResource;
 
 /**
  * Holds markup as a resource (the stream that the markup came from) and 
@@ -37,7 +37,7 @@ public final class Markup
     private final List markup;
     
     /** The markup's resource stream for diagnostic purposes */
-    private final Resource resource;
+    private final IResource resource;
     
     /** Placeholder that indicates no markup */
     public static final Markup NO_MARKUP = new Markup(null, null);
@@ -47,7 +47,7 @@ public final class Markup
      * @param resource The resource where the markup was found
      * @param markup The markup elements
      */
-    Markup(final Resource resource, final List markup)
+    Markup(final IResource resource, final List markup)
     {
         this.resource = resource;
         this.markup = markup;
@@ -74,7 +74,7 @@ public final class Markup
      * Gets the resource that contains this markup
      * @return The resource where this markup came from
      */
-    Resource getResource()
+    IResource getResource()
     {
         return resource;
     }

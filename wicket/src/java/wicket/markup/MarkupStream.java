@@ -17,7 +17,7 @@
  */
 package wicket.markup;
 
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResource;
 import wicket.util.string.Strings;
 
 /**
@@ -142,7 +142,7 @@ public final class MarkupStream
 	/**
 	 * @return The resource where this markup stream came from
 	 */
-	public Resource getResource()
+	public IResource getResource()
 	{
 		return markup.getResource();
 	}

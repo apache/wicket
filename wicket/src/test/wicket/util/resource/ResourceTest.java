@@ -20,12 +20,10 @@ package wicket.util.resource;
 
 import java.util.Locale;
 
+import junit.framework.TestCase;
 import wicket.util.file.Folder;
 import wicket.util.file.Path;
-import wicket.util.resource.Resource;
 import wicket.util.string.Strings;
-
-import junit.framework.TestCase;
 
 
 /**
@@ -51,13 +49,13 @@ public class ResourceTest extends TestCase
     private Locale locale_fr_FR_WIN = new Locale("fr", "FR", "WIN");
     private Locale locale_fr_WIN = new Locale("fr", "", "WIN");
     
-    private void compareFilename(Resource resource, String name)
+    private void compareFilename(IResource resource, String name)
     {
         assertNotNull("Did not find resource: " + name, resource);
         
         String filename = Strings.replaceAll(this.getClass().getName(), ".", "/");
         filename += name + ".txt";
-        String resourcePath = Strings.replaceAll(resource.getFile().getAbsolutePath(), "\\", "/");
+        String resourcePath = Strings.replaceAll(((UrlResource)resource).getFile().getAbsolutePath(), "\\", "/");
         if (false == resourcePath.endsWith(filename))
         {
             filename = Strings.afterLast(filename, '/');
@@ -75,7 +73,7 @@ public class ResourceTest extends TestCase
      */
     public void createAndTestResource(Path sourcePath, String style, Locale locale, String extension)
     {
-        Resource resource = Resource.locate(sourcePath, this.getClass().getClassLoader(),
+        IResource resource = ResourceLocator.locate(sourcePath, this.getClass().getClassLoader(),
                 this.getClass().getName(), style, locale, "txt");
         compareFilename(resource, extension);
     }
@@ -123,9 +121,9 @@ public class ResourceTest extends TestCase
         executeMultiple(null);
 
         // Determine source path
-        Resource resource = Resource.locate(null, this.getClass().getClassLoader(),
+        IResource resource = ResourceLocator.locate(null, this.getClass().getClassLoader(),
                 this.getClass().getName(), null, null, "txt");
-        String path = Strings.replaceAll(resource.getFile().getAbsolutePath(), "\\", "/");
+        String path = Strings.replaceAll(((UrlResource)resource).getFile().getAbsolutePath(), "\\", "/");
         path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
         
         // and execute

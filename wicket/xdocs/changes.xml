@@ -9,6 +9,13 @@
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">
+		Changed methods taking Resource as a parameter to IResource for increased generality.
+		Then added IModifiable interface to IResource to ensure all resources have a last
+		modified time.  This will be key in getting browser caching to work correctly.
+		Finally, created AbstractResource and subclasses FileResource and UrlResource and
+		moved the static Resource.locate methods into ResourceLocator.  
+	  </action>
+      <action type="update" dev="Jonathan Locke" issue="">
 		Made Link.onLinkClicked() final and added an onClick() method that it calls.  This
 		avoids exposing the interface method to subclassing directly.  Did a similar thing 
 		to Form by making onFormSubmitted() final and exposing onValidate() as the overridable

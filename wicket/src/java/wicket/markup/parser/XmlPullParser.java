@@ -31,7 +31,7 @@ import wicket.markup.MarkupElement;
 import wicket.util.io.Streams;
 import wicket.util.parse.metapattern.parsers.TagNameParser;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.StringValue;
 
@@ -267,7 +267,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @throws IOException
 	 * @throws ResourceNotFoundException
 	 */
-	public void parse(final Resource resource) throws IOException, ResourceNotFoundException
+	public void parse(final IResource resource) throws IOException, ResourceNotFoundException
 	{
 		// reset: Must come from markup
 		this.encoding = null;

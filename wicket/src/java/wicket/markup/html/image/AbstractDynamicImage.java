@@ -23,6 +23,7 @@ import javax.imageio.ImageWriter;
 import wicket.WicketRuntimeException;
 import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.time.Time;
 
 import java.awt.image.BufferedImage;
 
@@ -139,6 +140,11 @@ public abstract class AbstractDynamicImage extends Image
 					inputStream = new ByteArrayInputStream(getImageData());
 				}
 				return inputStream;
+			}
+
+			public Time lastModifiedTime()
+			{
+				return Time.now();
 			}
 		};
 	}

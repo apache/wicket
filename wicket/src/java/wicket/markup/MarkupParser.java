@@ -36,7 +36,7 @@ import wicket.markup.parser.filter.HtmlHandler;
 import wicket.markup.parser.filter.PreviewComponentTagRemover;
 import wicket.markup.parser.filter.WicketComponentTagIdentifier;
 import wicket.markup.parser.filter.WicketParamTagHandler;
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
 
 
@@ -133,7 +133,7 @@ public final class MarkupParser
      * @throws IOException
      * @throws ResourceNotFoundException
      */
-    public Markup readAndParse(final Resource resource) throws ParseException, IOException,
+    public Markup readAndParse(final IResource resource) throws ParseException, IOException,
             ResourceNotFoundException
     {
         xmlParser.parse(resource);
