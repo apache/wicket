@@ -61,7 +61,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class LocalizedImageResource implements Serializable, IResourceListener
+public final class LocalizedImageResource implements Serializable, IResourceListener
 {
 	/** The component that is referencing this image resource */
 	private Component component;
@@ -150,7 +150,7 @@ public class LocalizedImageResource implements Serializable, IResourceListener
 	/**
 	 * @see wicket.IResourceListener#onResourceRequested()
 	 */
-	public void onResourceRequested()
+	public final void onResourceRequested()
 	{
 		resource.onResourceRequested();
 	}
@@ -159,9 +159,21 @@ public class LocalizedImageResource implements Serializable, IResourceListener
 	 * @param resource
 	 *            The resource to set.
 	 */
-	public void setResource(final Resource resource)
+	public final void setResource(final Resource resource)
 	{
 		this.resource = resource;
+	}
+
+	/**
+	 * Registers any shared resource with the Application. Called when a
+	 * component is deserialized as part of session replication.
+	 */
+	public final void sessionAttach()
+	{
+		if (resource instanceof SharedResource)
+		{
+			((SharedResource)resource).add(component.getApplication());
+		}
 	}
 
 	/**
@@ -172,7 +184,7 @@ public class LocalizedImageResource implements Serializable, IResourceListener
 	 *             Thrown if an image is required by the caller, but none can be
 	 *             found.
 	 */
-	public void setSrcAttribute(final ComponentTag tag)
+	public final void setSrcAttribute(final ComponentTag tag)
 	{
 		// If locale has changed from the initial locale used to attach image
 		// resource, then we need to reload the resource in the new locale
@@ -249,7 +261,7 @@ public class LocalizedImageResource implements Serializable, IResourceListener
 			// Create URL to component
 			url = component.urlFor(IResourceListener.class);
 		}
-		
+
 		// Set the SRC attribute to point to the component or shared resource
 		tag.put("src", component.getResponse().encodeURL(url).replaceAll("&", "&amp;"));
 	}

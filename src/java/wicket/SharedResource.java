@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,16 +30,16 @@ import wicket.util.resource.IResource;
  * @author Jonathan Locke
  */
 public final class SharedResource extends Resource
-{	
+{
 	/** The locale of the resource */
 	private Locale locale;
-	
+
 	/** The name of the resource */
 	private final String name;
 
 	/** The actual resource */
 	private transient Resource resource;
-	
+
 	/** The scope of the named resource */
 	private final Class scope;
 
@@ -70,7 +70,18 @@ public final class SharedResource extends Resource
 	{
 		this(Application.class, name);
 	}
-	
+
+	/**
+	 * Adds this shared resource to the given application
+	 * 
+	 * @param application
+	 *            The application
+	 */
+	public final void add(final Application application)
+	{
+		application.addResource(scope, name, locale, style, this);
+	}
+
 	/**
 	 * @return Path to this shared resource
 	 */
@@ -92,7 +103,7 @@ public final class SharedResource extends Resource
 		}
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * Sets any loaded resource to null, thus forcing a reload on the next
 	 * request.
@@ -103,16 +114,18 @@ public final class SharedResource extends Resource
 	}
 
 	/**
-	 * @param locale The locale to set.
+	 * @param locale
+	 *            The locale to set.
 	 */
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
 		invalidate();
 	}
-	
+
 	/**
-	 * @param style The style to set.
+	 * @param style
+	 *            The style to set.
 	 */
 	public void setStyle(String style)
 	{

@@ -109,4 +109,12 @@ public class ImageButton extends Button implements IResourceListener
 		super.onComponentTag(tag);
 		localizedImageResource.setSrcAttribute(tag);
 	}
+	
+	/**
+	 * @see wicket.Component#onSessionAttach()
+	 */
+	protected void onSessionAttach()
+	{
+		localizedImageResource.sessionAttach();
+	}
 }

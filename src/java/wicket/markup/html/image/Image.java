@@ -141,4 +141,12 @@ public class Image extends WebComponent implements IResourceListener
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 	}
+	
+	/**
+	 * @see wicket.Component#onSessionAttach()
+	 */
+	protected void onSessionAttach()
+	{
+		localizedImageResource.sessionAttach();
+	}
 }
