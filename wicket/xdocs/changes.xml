@@ -7,7 +7,7 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+  	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
       <action type="fix" dev="Jonathan Locke" issue="">
       Removed attach() method from IDetachable and added it to IChoiceList.
       </action>
@@ -89,9 +89,9 @@
       <action type="update" dev="Jonathan Locke" issue="">
       Removed constructor overloads taking OGNL expressions and Serializable objects, reducing parameters to (String name) and (String name, IModel model) in most places.  Made FormComponent and Component look in Form and Page, respectively, for models in their implementations of initModel().  This effectively gives any component missing a model either the parent form's model or the page's model.  Made setModel() public again since it's too inconvenient to pass models straight up the constructor chain.  So now Forms and Pages can have CompoundPropertyModels and BoundCompoundPropertyModels and their children will essentially inherit this compound model (which is parameterized by component).  Since Pages and Forms will typically hold CompoundPropertyModels, it was necessary to make a method getRootModel() which gets the rootmost nested model from the compound model.  This is convenient because it means that Forms do not have to have a separate instance variable to track the actual bean being edited.  If getRootModel() did not exist, getModelObject() on the Form or Page would fail because the model would be parameterized on the Form or Page itself.
       </action>
+  	</release>
+    <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
       <action type="update" dev="Martijn Dashorst" due-to="Cameron Braid">Updated all dependencies to be the same, and not to use proprietary Jars (JTA)</action>
-    </release>
-    <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">Changed IModel signature to allow models to be parameterized on the requesting Component.  Made minor enhancements to AbstractDetachableModel and invented AbstractReadOnlyDetachableModel.  Created an abstract base class, AbstractPropertyModel, for all property models dealing with OGNL expressions and type conversions.  Implemented the current PropertyModel functionality using this base class.  Implemented CompoundPropertyModel to take advantage of the Component parmeter in IModel.  Then implemented a fully bindable BoundCompoundPropertyModel class as a subclass of that.</action>
       <action type="update" dev="Jonathan Locke" issue="1153227">Generalized IValidationFeedback interface to IFeedback to deal with all kinds of feedback. Then added logic to Page, so that you can set a feedback for the page. If you do this, any messages added to the page using the usual error(), info() etc methods, will be displayed in this feedback.</action>
       <action type="fix" dev="Jonathan Locke" issue="1153916">Reworked RadioChoice as a much simpler subclass of AbstractChoice that is much more compatible with other choice components. Also fixed remaining bugs in form repopulation / validation and tested using Library application.</action>
@@ -114,6 +114,8 @@
       <action type="update" dev="Jonathan Locke" issue="">Simplified choices so they just have a single is/setNullValid() property. When null is valid, the [name].null string resource is loaded and used. When null is not valid and the selection is null, [name].null is loaded and used to display something like "Choose One", since a null selection is not valid.</action>
       <action type="update" dev="Jonathan Locke" issue="">Added relative and absolute path functionality to StaticImage, and in the process, factored out Packages from Classes in wicket.util.lang.</action>
       <action type="fix" dev="Jonathan Locke" issue="1145200">Refactored resource locator code, creating a new package wicket.util.resource.locator which contains an SPI interface, IResourceLocator, for implementing resource locators. Then created AbstractResourceLocator as a base class for IResourceLocator implementations, including the new PathResourceLocator and ClassLoaderResourceLocator. Finally, created a helper/wrapper class ResourceLocator which adds convenience methods and then extended that class with DefaultResourceLocator, which extends ResourceLocator and uses PathResourceLocator and ClassLoaderResourceLocator together to emulate the earlier resource location functionality.</action>
+    </release>
+    <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
       <action type="update" dev="Jonathan Locke" issue="">Enhanced WicketComponentTree and added this diagnostic to the bottom of the ExceptionErrorPage.</action>
       <action type="update" dev="Jonathan Locke" issue="">Reorganized components and examples for final 1.0 structure. This included moving sortable list view and sign in panel to wicket-contrib and SmartLinkLabel classes to wicket-extensions. Also moved ButtonImageResource to wicket-extensions. In the process, fixed a bug in localized images where they would not change when the session locale was changed. Added an early sketch of stylesheet stuff to sandbox. Trimmed down examples index to just the examples most relevant to wicket core and extensions.</action>
       <action type="fix" dev="Martijn Dashorst" issue="1123536">Added
