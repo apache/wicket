@@ -26,9 +26,11 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IModel;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.examples.util.NavigationPanel;
+import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.form.DropDownChoice;
@@ -80,12 +82,48 @@ public class FileBrowser extends HtmlPage
      */
     public FileBrowser(final PageParameters parameters)
     {
-        addDefaultComponents();
         TreeModel model = new FileModelProvider().getFileModel();
-        HtmlContainer treeContainer = new HtmlContainer("tree");
-        currentTree = new FileTreeCustomRow("fileTree", model, true);
-        add(currentTree);
+        setTreeComponent(new FileTreeCustomRow("fileTree", model, true));
     }
+
+	/**
+	 * Adds the tree component after removing all other components and adding the
+	 * default components.
+	 * @param tree the tree to set as the currently active
+	 */
+	private void setTreeComponent(AbstractTree tree)
+	{
+		removeAll();
+		addDefaultComponents();
+		currentTree = tree;
+		HtmlContainer treeContainer = new HtmlContainer("tree");
+		IModel idReplacementModel = new IModel() {
+
+			public Object getObject()
+			{
+				if(TYPE_FLAT.equals(currentType))
+				{
+					return "flattree";
+				}
+				else if(TYPE_NESTED.equals(currentType))
+				{
+					return "nestedtree";
+				}
+				else
+				{
+					return "tree";
+				}
+			}
+
+			public void setObject(Object object)
+			{
+			}
+		};
+		
+		treeContainer.add(tree);
+		treeContainer.add(new ComponentTagAttributeModifier("id", idReplacementModel));
+		add(treeContainer);
+	}
 
 	/**
 	 * Adds some default components.
@@ -133,8 +171,6 @@ public class FileBrowser extends HtmlPage
          */
         public void selectionChanged(RequestCycle cycle, Object newSelection)
         {
-        	FileBrowser.this.removeAll();
-        	addDefaultComponents();
             String type = (String)newSelection;
             final AbstractTree tree;
             if(TYPE_NESTED.equals(type))
@@ -153,8 +189,7 @@ public class FileBrowser extends HtmlPage
             {
             	throw new RuntimeException("invalid type selection");
             }
-            FileBrowser.this.add(tree);
-            FileBrowser.this.currentTree = tree;
+            FileBrowser.this.setTreeComponent(tree);
         }
     }
 
