@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.33 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -44,10 +44,10 @@ import wicket.util.string.Strings;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * A container holds a map of child components. Children can be added by calling
- * the add() method and they can be looked up using a dotted path. For example,
- * if a container called "a" held a nested container "b" which held a nested
- * component "c", then a.get("b.c") would return the component named "c".
+ * A markup container holds a map of child components. Children can be added by
+ * calling the add() method and they can be looked up using a dotted path. For
+ * example, if a container called "a" held a nested container "b" which held a
+ * nested component "c", then a.get("b.c") would return the component named "c".
  * <p>
  * The number of children in a container can be determined by calling size().
  * And the whole hierarchy of children held by a container can be traversed by
@@ -107,7 +107,7 @@ public abstract class MarkupContainer extends Component
 	private transient MarkupStream markupStream;
 
 	/**
-     * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(String)
 	 */
 	public MarkupContainer(final String name)
 	{
@@ -116,7 +116,7 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public MarkupContainer(String name, Serializable object)
 	{
@@ -125,7 +125,7 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public MarkupContainer(String name, Serializable object, String expression)
 	{
@@ -259,9 +259,10 @@ public abstract class MarkupContainer extends Component
 
 		if (child.getParent() != this)
 		{
-			// First reset the childs parent (can't set them at once with another)
+			// First reset the childs parent (can't set them at once with
+			// another)
 			child.setParent(null);
-			
+
 			// Set child's parent
 			child.setParent(this);
 
@@ -459,7 +460,8 @@ public abstract class MarkupContainer extends Component
 	 * @param openTag
 	 *            The open tag for the body
 	 */
-	protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void handleComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
 	{
 		renderComponentTagBody(markupStream, openTag);
 	}
@@ -502,7 +504,7 @@ public abstract class MarkupContainer extends Component
 		}
 
 		renderComponentTag(associatedMarkupOpenTag);
-        associatedMarkupStream.next();
+		associatedMarkupStream.next();
 		renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
 		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag);
 		setMarkupStream(originalMarkupStream);
@@ -519,7 +521,8 @@ public abstract class MarkupContainer extends Component
 	 * @param openTag
 	 *            The open tag
 	 */
-	protected final void renderComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void renderComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
 	{
 		// If the open tag requires a close tag
 		if (openTag.requiresCloseTag())
@@ -541,8 +544,9 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * The MarkupContainer was not able to resolve the component name. Subclasses may
-	 * augment the default strategy by subclassing resolveComponent().
+	 * The MarkupContainer was not able to resolve the component name.
+	 * Subclasses may augment the default strategy by subclassing
+	 * resolveComponent().
 	 * 
 	 * @see wicket.markup.html.border.Border for an example.
 	 *      <p>
@@ -552,8 +556,8 @@ public abstract class MarkupContainer extends Component
 	 *            The current markup stream
 	 * @param tag
 	 *            The current component tag
-	 * @return true, if MarkupContainer was able to resolve the component name and to
-	 *         render the component
+	 * @return true, if MarkupContainer was able to resolve the component name
+	 *         and to render the component
 	 */
 	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
 	{
