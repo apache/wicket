@@ -7,6 +7,10 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="TBD" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1116805">
+		Added BufferedHttpResponse class, along with ApplicationSettings.setBufferResponse
+		to enable response buffering.  Response buffering is on by default. 
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
 		Added ISessionFactory interface for creating sessions and added an abstract 
 		method getSessionFactory() to Application so applications can implement 

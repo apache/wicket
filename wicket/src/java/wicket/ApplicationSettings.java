@@ -42,6 +42,13 @@ import wicket.util.time.Duration;
  * Application settings properties:
  * <p>
  * <ul>
+ * <i>bufferResponse </i> (defaults to true) - True if the application should
+ * buffer responses.  This does require some additional memory, but helps keep
+ * exception displays accurate because the whole rendering process completes 
+ * before the page is sent to the user, thus avoiding the possibility of a 
+ * partially rendered page.
+ * <p>
+ * <ul>
  * <i>componentNameAttribute </i> (defaults to "wicket") - The markup attribute
  * which denotes the names of components to be attached
  * <p>
@@ -127,6 +134,9 @@ public final class ApplicationSettings
 
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
+    
+    /** True if the response should be buffered */
+    private boolean bufferResponse = true;
 
 	/** Component attribute name */
 	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
@@ -245,6 +255,14 @@ public final class ApplicationSettings
 		return automaticLinking;
 	}
 
+    /**
+	 * @return True if this application buffers its responses
+	 */
+	public boolean getBufferResponse()
+	{
+		return bufferResponse;
+	}
+    
 	/**
 	 * Gets component name attribute in use in this application. Normally, this
 	 * is "wicket", but it can be changed in the unlikely event that tag
@@ -441,7 +459,15 @@ public final class ApplicationSettings
 	{
 		this.automaticLinking = automaticLinking;
 	}
-
+    
+    /**
+     * @param bufferResponse True if this application should buffer responses.
+     */
+    public void setBufferResponse(boolean bufferResponse)
+    {
+    	this.bufferResponse = bufferResponse;
+    }
+    
 	/**
 	 * Sets component name attribute in use in this application. Normally, this
 	 * is "wicket", but it can be changed in the unlikely event that tag

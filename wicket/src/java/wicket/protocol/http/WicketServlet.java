@@ -154,7 +154,8 @@ public class WicketServlet extends HttpServlet
         // Get session for request
         final HttpSession session = HttpSession.getSession(webApplication, servletRequest);
         final HttpRequest request = new HttpRequest(servletRequest);
-        final HttpResponse response = new HttpResponse(servletResponse);
+        final HttpResponse response = webApplication.getSettings().getBufferResponse() ? 
+                new BufferedHttpResponse(servletResponse) : new HttpResponse(servletResponse);
         final HttpRequestCycle cycle = new HttpRequestCycle(webApplication, session, request,
                 response);
 
