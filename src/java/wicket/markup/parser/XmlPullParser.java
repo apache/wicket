@@ -391,8 +391,6 @@ public final class XmlPullParser implements IXmlPullParser
 		// Max one line
 		StringBuffer pushBack = new StringBuffer(readAheadSize);
 
-		// TODO could be improved if <?xml would be checked as well.
-
 		int value;
 		while ((value = in.read()) != -1)
 		{
@@ -431,8 +429,9 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @param tagText
 	 *            The text between tags
 	 * @return A new Tag object or null if the tag is invalid
+	 * @throws ParseException
 	 */
-	private XmlTag parseTagText(final String tagText)
+	private XmlTag parseTagText(final String tagText) throws ParseException
 	{
 		// Get the length of the tagtext
 		final int tagTextLength = tagText.length();
@@ -486,7 +485,11 @@ public final class XmlPullParser implements IXmlPullParser
 				final String key = attributeParser.getKey();
 
 				// Put the attribute in the attributes hash
-				tag.attributes.put(key, StringValue.valueOf(value));
+				if (null != tag.attributes.put(key, StringValue.valueOf(value)))
+				{
+				    throw new ParseException("Same attribute found twice: " 
+				            + key, this.inputPosition);
+				}
 
 				// The input has to match exactly (no left over junk after
 				// attributes)

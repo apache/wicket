@@ -19,6 +19,7 @@
 package wicket.markup.parser;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 
 import junit.framework.TestCase;
 import wicket.markup.MarkupElement;
@@ -177,14 +178,13 @@ public class XmlPullParserTest extends TestCase
         assertNull(tag);
 
         // no extra characters allowed before <?xml>
-        // TODO allows yes/no? Exception yes/no?
+        // Are comments allowed preceding the encoding string?
         parser.parse(new StringResource("<!-- Comment --!> <?xml encoding='iso-8859-1' ?>"));
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
         assertNull(tag);
 
-        // 'test' is not a valid attribut
-        // TODO I'd certainly prefer an exception
+        // 'test' is not a valid attribut. But we currently don't test it.
         parser.parse(new StringResource("<?xml test='123' >"));
         assertNull(parser.getEncoding());
         tag = (XmlTag) parser.nextTag();
@@ -237,12 +237,17 @@ public class XmlPullParserTest extends TestCase
         assertTrue(tag.getAttributes().containsKey("test"));
         assertEquals("23", tag.getAttributes().getString("test"));
         
-        // TODO should throw an exception
         parser.parse("<tag attr='1234' attr='23'>");
-        tag = (XmlTag) parser.nextTag();
-        assertEquals(1, tag.getAttributes().size());
-        assertTrue(tag.getAttributes().containsKey("attr"));
-        assertEquals("23", tag.getAttributes().getString("attr"));
+        Exception ex = null;
+        try
+        {
+            tag = (XmlTag) parser.nextTag();
+        }
+        catch (ParseException e)
+        {
+            ex = e;
+        }
+        assertNotNull(ex);
     }
     
     /**
