@@ -25,8 +25,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.FeedbackMessages;
 import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
@@ -34,7 +34,6 @@ import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationDelegate;
 import wicket.markup.html.form.validation.IValidationErrorHandler;
 import wicket.markup.html.form.validation.ValidationErrorMessage;
-import wicket.markup.html.form.validation.ValidationErrorModelDecorator;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
@@ -57,8 +56,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	private IValuePersister persister = null;
 
 	/** The delegate to be used for execution of validation of this form. */
-	private IFormValidationDelegate validationDelegate = DefaultFormValidationDelegate
-			.getInstance();
+	private IFormValidationDelegate validationDelegate = DefaultFormValidationDelegate.getInstance();
 
 	/** The validation error handling delegate. */
 	private final IValidationErrorHandler validationErrorHandler;
@@ -71,7 +69,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 
 		/** Single instance of default form validation delegate */
 		private static final DefaultFormValidationDelegate instance = new DefaultFormValidationDelegate();
-        
+
 		/** Log. */
 		private static final Log log = LogFactory.getLog(DefaultFormValidationDelegate.class);
 
@@ -87,8 +85,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 		 * Validates all children of this form, recording all messages that are
 		 * returned by the validators.
 		 * 
-		 * @param form
-		 *            the form that the validation is applied to
+		 * @param form the form that the validation is applied to
 		 * @return the list of validation messages that were recorded during
 		 *         validation
 		 */
@@ -99,7 +96,9 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 			{
 				public Object component(final Component component)
 				{
-					final ValidationErrorMessage message = ((FormComponent)component).validate();
+					FormComponent formComponent = (FormComponent)component;
+					final ValidationErrorMessage message = (formComponent).validate();
+
 					if (message != ValidationErrorMessage.NO_MESSAGE)
 					{
 						if (log.isDebugEnabled())
@@ -107,12 +106,13 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 							log.debug("validation error: " + message);
 						}
 						messages.add(message);
-
-						// Replace the model
-						// TODO examine any easy ways to avoid this
-						ValidationErrorModelDecorator deco = new ValidationErrorModelDecorator(
-								component, message.getInput());
-						component.setModel(deco);
+						formComponent.setValid(false);
+						formComponent.invalid();
+					}
+					else
+					{
+						formComponent.setValid(true);
+						// set explicitly to reset any old value
 					}
 
 					// Continue until the end
@@ -127,15 +127,12 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * Constructor that uses the provided {@link IModel}as its model. All
 	 * components have names. A component's name cannot be null.
 	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the model
-	 * @param validationErrorHandler
-	 *            Interface to a component that can handle/display validation
-	 *            errors
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @param name The non-null name of this component
+	 * @param model the model
+	 * @param validationErrorHandler Interface to a component that can
+	 *           handle/display validation errors
+	 * @throws WicketRuntimeException Thrown if the component has been given a
+	 *            null name.
 	 */
 	public Form(String name, IModel model, final IValidationErrorHandler validationErrorHandler)
 	{
@@ -144,10 +141,10 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a
-	 * dynamic model. This model will be wrapped in an instance of
-	 * {@link PropertyModel}using the provided expression. Thus, using this
-	 * constructor is a short-hand for:
+	 * Constructor that uses the provided instance of {@link IModel}as a dynamic
+	 * model. This model will be wrapped in an instance of {@link PropertyModel}
+	 * using the provided expression. Thus, using this constructor is a
+	 * short-hand for:
 	 * 
 	 * <pre>
 	 * new MyComponent(name, new PropertyModel(myIModel, expression));
@@ -155,18 +152,14 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * 
 	 * All components have names. A component's name cannot be null.
 	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param model
-	 *            the instance of {@link IModel}from which the model object
-	 *            will be used as the subject for the given expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @param validationErrorHandler
-	 *            Interface to a component that can handle/display validation
-	 *            errors
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @param name The non-null name of this component
+	 * @param model the instance of {@link IModel}from which the model object
+	 *           will be used as the subject for the given expression
+	 * @param expression the OGNL expression that works on the given object
+	 * @param validationErrorHandler Interface to a component that can
+	 *           handle/display validation errors
+	 * @throws WicketRuntimeException Thrown if the component has been given a
+	 *            null name.
 	 */
 	public Form(String name, IModel model, String expression,
 			final IValidationErrorHandler validationErrorHandler)
@@ -178,11 +171,9 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	/**
 	 * Constructor.
 	 * 
-	 * @param name
-	 *            Name of this form component
-	 * @param validationErrorHandler
-	 *            Interface to a component that can handle/display validation
-	 *            errors
+	 * @param name Name of this form component
+	 * @param validationErrorHandler Interface to a component that can
+	 *           handle/display validation errors
 	 */
 	public Form(final String name, final IValidationErrorHandler validationErrorHandler)
 	{
@@ -195,15 +186,12 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * will be wrapped in an instance of {@link Model}. All components have
 	 * names. A component's name cannot be null.
 	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as a simple model
-	 * @param validationErrorHandler
-	 *            Interface to a component that can handle/display validation
-	 *            errors
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @param name The non-null name of this component
+	 * @param object the object that will be used as a simple model
+	 * @param validationErrorHandler Interface to a component that can
+	 *           handle/display validation errors
+	 * @throws WicketRuntimeException Thrown if the component has been given a
+	 *            null name.
 	 */
 	public Form(String name, Serializable object,
 			final IValidationErrorHandler validationErrorHandler)
@@ -214,8 +202,8 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 
 	/**
 	 * Constructor that uses the provided object as a dynamic model. This object
-	 * will be wrapped in an instance of {@link Model}that will be wrapped in
-	 * an instance of {@link PropertyModel}using the provided expression. Thus,
+	 * will be wrapped in an instance of {@link Model}that will be wrapped in an
+	 * instance of {@link PropertyModel}using the provided expression. Thus,
 	 * using this constructor is a short-hand for:
 	 * 
 	 * <pre>
@@ -224,18 +212,14 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * 
 	 * All components have names. A component's name cannot be null.
 	 * 
-	 * @param name
-	 *            The non-null name of this component
-	 * @param object
-	 *            the object that will be used as the subject for the given
-	 *            expression
-	 * @param expression
-	 *            the OGNL expression that works on the given object
-	 * @param validationErrorHandler
-	 *            Interface to a component that can handle/display validation
-	 *            errors
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null name.
+	 * @param name The non-null name of this component
+	 * @param object the object that will be used as the subject for the given
+	 *           expression
+	 * @param expression the OGNL expression that works on the given object
+	 * @param validationErrorHandler Interface to a component that can
+	 *           handle/display validation errors
+	 * @throws WicketRuntimeException Thrown if the component has been given a
+	 *            null name.
 	 */
 	public Form(String name, Serializable object, String expression,
 			final IValidationErrorHandler validationErrorHandler)
@@ -291,8 +275,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * Convenience method in case there is one known (validation) error that is
 	 * to be registered with the form directly.
 	 * 
-	 * @param message
-	 *            the message
+	 * @param message the message
 	 */
 	public final void handleError(final ValidationErrorMessage message)
 	{
@@ -300,12 +283,11 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Sets error messages for form. First all childs (form components) are
-	 * asked to do their part of error handling, and after that, the registered
-	 * (if any) error handler of this form is called.
+	 * Sets error messages for form. First all childs (form components) are asked
+	 * to do their part of error handling, and after that, the registered (if
+	 * any) error handler of this form is called.
 	 * 
-	 * @param errors
-	 *            the recorded errors
+	 * @param errors the recorded errors
 	 */
 	public final void handleErrors(final FeedbackMessages errors)
 	{
@@ -341,9 +323,8 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	 * 
 	 * @see Page#removePersistedFormData(Class, boolean)
 	 * 
-	 * @param disablePersistence
-	 *            if true, disable persistence for all FormComponents on that
-	 *            page. If false, it will remain unchanged.
+	 * @param disablePersistence if true, disable persistence for all
+	 *           FormComponents on that page. If false, it will remain unchanged.
 	 */
 	public void removePersistedFormComponentData(final boolean disablePersistence)
 	{
@@ -372,10 +353,10 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Retrieves FormComponent values related to the page using the persister
-	 * and assign the values to the FormComponent. Thus initializing them. NOTE:
-	 * THIS METHOD IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY
-	 * FRAMEWORK CLIENTS. IT MAY BE REMOVED IN THE FUTURE.
+	 * Retrieves FormComponent values related to the page using the persister and
+	 * assign the values to the FormComponent. Thus initializing them. NOTE: THIS
+	 * METHOD IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY FRAMEWORK
+	 * CLIENTS. IT MAY BE REMOVED IN THE FUTURE.
 	 */
 	final public void setFormComponentValuesFromPersister()
 	{
@@ -408,9 +389,8 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	/**
 	 * Sets the delegate to be used for execution of validation of this form.
 	 * 
-	 * @param validationDelegate
-	 *            the delegate to be used for execution of validation of this
-	 *            form
+	 * @param validationDelegate the delegate to be used for execution of
+	 *           validation of this form
 	 */
 	public void setValidationDelegate(IFormValidationDelegate validationDelegate)
 	{
@@ -433,8 +413,7 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	/**
 	 * Sets the value persister for this form.
 	 * 
-	 * @param persister
-	 *            the CookieValuePersister
+	 * @param persister the CookieValuePersister
 	 */
 	protected void setFormComponentPersistenceManager(IValuePersister persister)
 	{
@@ -456,9 +435,9 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned
-	 * to the FormComponent automatically when the page is visited by the user
-	 * next time.
+	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned to
+	 * the FormComponent automatically when the page is visited by the user next
+	 * time.
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
@@ -511,13 +490,11 @@ public abstract class Form extends HtmlContainer implements IFormSubmitListener
 			{
 				// Update model of form component
 				final FormComponent formComponent = (FormComponent)component;
-
-				// Only update the component when it is visible
-				if (formComponent.isVisible())
+				// Only update the component when it is visible and valid
+				if (formComponent.isVisible() && formComponent.isValid())
 				{
 					formComponent.updateModel();
 				}
-
 				return CONTINUE_TRAVERSAL;
 			}
 		});
