@@ -156,7 +156,7 @@ public final class Converter implements IConverter
 		}
 
 		// Get type converter for class
-		ITypeConverter converter = get(c);
+		final ITypeConverter converter = get(c);
 		if (converter == null)
 		{
 			defaultConverter.setLocale(locale);

@@ -17,6 +17,7 @@
  */
 package wicket.util.convert;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import wicket.util.convert.converters.BooleanConverter;

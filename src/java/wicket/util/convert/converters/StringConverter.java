@@ -17,6 +17,7 @@
  */
 package wicket.util.convert.converters;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -41,7 +42,8 @@ public class StringConverter extends AbstractConverter
 	/** Maps value Classes to specific StringConverters. */
 	private final Map classToConverter = new HashMap();
 	{
-		set(Date.class, new DateToStringConverter());
+        set(Date.class, new DateToStringConverter());
+        set(Timestamp.class, new DateToStringConverter());
 		set(Byte.class, new NumberToStringConverter());
 		set(Short.class, new NumberToStringConverter());
 		set(Integer.class, new NumberToStringConverter());
