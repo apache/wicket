@@ -8,10 +8,27 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="update" dev="Jonathan Locke" issue="">
+      Major changes!  Added PageMap abstraction to Session to make it possible for multiple browser windows,
+      popups and frames to have their own page maps, avoiding the problem of pages going stale in one window
+      when the other window is used.  In the future, this will also allow us to implement a page stack for the
+      page map and using this a back() navigation method that always knows what the previous page was.  
+      Adding PageMap required a whole set of changes to the framework.
+      The various urlFor overloads moved from RequestCycle to Page (and they are implemented in WebPage).
+      The reason for this is that each Page belongs to a specific PageMap now and it will render differently
+      in that the url returned by urlFor will have the PageMap encoded in it (if it is not in the default 
+      page map).  A variety of other changes were necessary to support this abstraction, including changes to
+      state management and clustering code.  In addition, this checkin contains a very early implementation of
+      a concept I'm calling "PageSets".  The code will eventually apply to security, presentation and navigation,
+      but don't worry about all this just yet.  Also created newPage() methods in Component that make it easy
+      to create new pages using the Page's PageFactory.
+	  </action>
       <action type="fix" dev="Juergen Donnerstag" issue="">
       Replaced id="wicket-xxx" and wicket="xxx" with wicket:id="xxx". 
+      </action>
       <action type="fix" dev="Juergen Donnerstag" issue="1124299">
       Removed setStripComponentId(boolean). setStripWicketTags(boolean) now removes wicket:id="XX" as well.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Added Netherlands buttons to form input example to demo button factories.  Improved DefaultButtonImageResource so that it auto-resizes buttons with text that won't fit (as it most likely won't in Dutch).
 	  </action>

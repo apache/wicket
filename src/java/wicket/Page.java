@@ -18,6 +18,7 @@
 package wicket;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -124,6 +125,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** This page's identifier. */
 	private int id = -1;
 
+	/** The PageMap within the session that this page is stored in */
+	private transient PageMap pageMap;
+
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
 
@@ -156,6 +160,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		super(null, model);
 		init();
+	}
+
+	/**
+	 * Redirects to any intercept page previously specified by a call to
+	 * redirectToInterceptPage.
+	 * 
+	 * @return True if an original destination was redirected to
+	 * @see PageMap#redirectToInterceptPage(Page)
+	 */
+	public final boolean continueToOriginalDestination()
+	{
+		return getPageMap().continueToOriginalDestination();
 	}
 
 	/**
@@ -199,6 +215,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final String getId()
 	{
 		return Integer.toString(id);
+	}
+
+	/**
+	 * @return The list of PageSets to which this Page belongs.
+	 */
+	public final Iterator getPageSets()
+	{
+		return getSession().getApplication().getPageSets(this);
 	}
 
 	/**
@@ -298,6 +322,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * Redirects browser to an intermediate page such as a sign-in page.
+	 * 
+	 * @param page
+	 *            The sign in page
+	 */
+	public final void redirectToInterceptPage(final Page page)
+	{
+		getPageMap().redirectToInterceptPage(page);
+	}
+
+	/**
 	 * Convenience method. Search for children of type fromClass and invoke
 	 * their respective removePersistedFormData() methods.
 	 * 
@@ -348,6 +383,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * @param pageMapName
+	 *            Sets this page into the page map with the given name. If the
+	 *            page map does not yet exist, it is automatically created.
+	 */
+	public final void setPageMap(final String pageMapName)
+	{
+		final Session session = getSession();
+		PageMap pageMap = session.getPageMap(pageMapName);
+		if (pageMap == null)
+		{
+			pageMap = session.newPageMap(pageMapName);
+		}
+		setPageMap(pageMap);
+	}
+
+	/**
 	 * Get the string representation of this container.
 	 * 
 	 * @return String representation of this container
@@ -356,6 +407,42 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return "[Page class = " + getClass().getName() + ", id = " + id + "]";
 	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Gets the url for the given page class using the given parameters.
+	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public abstract String urlFor(final Class pageClass, final PageParameters parameters);
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Gets the url for the given component/ listener interface.
+	 * 
+	 * @param component
+	 *            Component that has listener interface
+	 * @param listenerInterface
+	 *            The listener interface
+	 * @return A URL that encodes a page, component and interface to call
+	 */
+	public abstract String urlFor(final Component component, final Class listenerInterface);
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * 
+	 * @param path
+	 *            The path
+	 * @return The url for the path
+	 */
+	public abstract String urlFor(final String path);
 
 	/**
 	 * Whether access is allowed to this page.
@@ -380,6 +467,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 		// Set response locale from session locale
 		response.setLocale(getSession().getLocale());
+	}
+
+	/**
+	 * @return Returns the pageMap.
+	 */
+	protected PageMap getPageMap()
+	{
+		return pageMap;
 	}
 
 	/**
@@ -608,6 +703,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * @param pageMap
+	 *            PageMap where this page resides
+	 */
+	final void setPageMap(final PageMap pageMap)
+	{
+		this.pageMap = pageMap;
+	}
+
+	/**
 	 * Throw an exception if not all components rendered.
 	 */
 	private final void checkRendering()
@@ -633,13 +737,28 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Adds page to session and sets default state.
+	 * Initializes Page by adding it to the Session and initializing it.
 	 */
 	private void init()
 	{
+		// Get session
 		final Session session = getSession();
-		session.addPage(this);
+
+		// Add page to session
+		session.add(this);
+
+		// Set versioning of page based on default
 		setVersioned(session.getApplication().getSettings().getVersionPagesByDefault());
+
+		// Loop through the PageSet objects for this Page
+		for (final Iterator iterator = getPageSets(); iterator.hasNext();)
+		{
+			// Get next PageSet
+			final PageSet pageSet = (PageSet)iterator.next();
+
+			// Let PageSet initialize the Page
+			pageSet.init(this);
+		}
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.5 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,29 +15,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.version.undo;
-
-import wicket.Component;
-import wicket.MarkupContainer;
+package wicket;
 
 /**
- * A remove change operation.
+ * A mapping from Page instance to PageSet. A given PageSetMap returns a PageSet
+ * for a given Page.
  * 
  * @author Jonathan Locke
  */
-class Remove extends Change
+public abstract class PageSetMap
 {
-	private final Component component;
-	private final MarkupContainer container;
+	/**
+	 * @param page
+	 *            The Page object
+	 * @return The PageSet for the Page.
+	 */
+	public abstract PageSet pageSet(final Page page);
 	
-	Remove(final Component component)
+	/**
+	 * @param pageClass The page class to check
+	 */
+	protected void checkPageClass(final Class pageClass)
 	{
-		this.component = component;
-		this.container = component.getParent();
-	}
-	
-	void undo()
-	{
-		container.add(component);
+		if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("Page class " + pageClass.getName()
+					+ " must be an instance of Page");
+		}
 	}
 }

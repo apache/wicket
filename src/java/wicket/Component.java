@@ -715,6 +715,32 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Creates a new page using the component's page factory
+	 * 
+	 * @param c
+	 *            The class of page to create
+	 * @param parameters
+	 *            Any parameters to pass to the constructor
+	 * @return The new page
+	 */
+	public final Page newPage(final Class c, final PageParameters parameters)
+	{
+		return getPageFactory().newPage(c, parameters);
+	}
+
+	/**
+	 * Creates a new page using the component's page factory
+	 * 
+	 * @param c
+	 *            The class of page to create
+	 * @return The new page
+	 */
+	public final Page newPage(final Class c)
+	{
+		return getPageFactory().newPage(c);
+	}
+
+	/**
 	 * Removes this component from its parent. It's important to remember that a
 	 * component that is removed cannot be referenced from the markup still.
 	 */
@@ -760,8 +786,8 @@ public abstract class Component implements Serializable
 				// Call implementation to render component
 				onRender();
 
-				// Tell the page that the component rendered
-				getPage().componentRendered(this);
+				// Component has been rendered
+				rendered();
 			}
 
 			// Restore original response
@@ -791,11 +817,33 @@ public abstract class Component implements Serializable
 			}
 			catch (RuntimeException e)
 			{
-				throw new WicketRuntimeException(
-						"Exception thrown while cleaning up from the following exception which was thrown during rendering: "
-								+ Strings.toString(renderException), e);
+				if (renderException != null)
+				{
+					throw new WicketRuntimeException(
+							"Exception thrown while cleaning up from the following exception which was thrown during rendering: "
+									+ Strings.toString(renderException), e);
+				}
+				else
+				{
+					throw e;
+				}
 			}
 		}
+	}
+
+	/**
+	 * Called to indicate that a component has been rendered. This method should
+	 * only very rarely be called at all. One usage is in ImageMap, which
+	 * renders its link children its own special way (without calling render()
+	 * on them). If ImageMap did not call rendered() to indicate that its child
+	 * components were actually rendered, the framework would think they had
+	 * never been rendered, and in development mode this would result in a
+	 * runtime exception.
+	 */
+	public void rendered()
+	{
+		// Tell the page that the component rendered
+		getPage().componentRendered(this);
 	}
 
 	/**

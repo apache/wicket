@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 
 import javax.servlet.ServletContext;
 
@@ -38,7 +37,6 @@ import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.util.io.Streams;
-import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
@@ -77,106 +75,19 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
+	 * @return Request as a WebRequest
 	 */
-	public String urlFor(final Class pageClass, final PageParameters parameters)
+	public WebRequest getWebRequest()
 	{
-		final StringBuffer buffer = urlPrefix();
-
-		buffer.append("?bookmarkablePage=");
-		buffer.append(pageClass.getName());
-
-		if (parameters != null)
-		{
-			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-			{
-				final String key = (String)iterator.next();
-				buffer.append('&');
-				buffer.append(key);
-				buffer.append('=');
-				buffer.append(parameters.getString(key));
-			}
-		}
-
-		return response.encodeURL(buffer.toString());
+		return (WebRequest)request;
 	}
 
 	/**
-	 * Returns a URL that references a given interface on a component. When the
-	 * URL is requested from the server at a later time, the interface will be
-	 * called. A URL returned by this method will not be stable across sessions
-	 * and cannot be bookmarked by a user.
-	 * 
-	 * @param component
-	 *            The component to reference
-	 * @param listenerInterface
-	 *            The listener interface on the component
-	 * @return A URL that encodes a page, component and interface to call
+	 * @return Response as a WebResponse
 	 */
-	public String urlFor(final Component component, final Class listenerInterface)
+	public WebResponse getWebResponse()
 	{
-		// Ensure that component instanceof listenerInterface
-		if (!listenerInterface.isAssignableFrom(component.getClass()))
-		{
-			throw new WicketRuntimeException("The component " + component + " of class "
-					+ component.getClass() + " does not implement " + listenerInterface);
-		}
-
-		// Buffer for composing URL
-		final StringBuffer buffer = urlPrefix();
-		buffer.append("?component=");
-		buffer.append(component.getPath());
-		buffer.append("&version=");
-		buffer.append(component.getPage().getCurrentVersionNumber());
-		buffer.append("&interface=");
-		buffer.append(Classes.name(listenerInterface));
-		return response.encodeURL(buffer.toString());
-	}
-
-	/**
-	 * @param path
-	 *            The path
-	 * @return The url for the path
-	 */
-	public String urlFor(final String path)
-	{
-		return urlPrefix() + "/" + path;
-	}
-
-	/**
-	 * @return Prefix for URLs including the context path, servlet path and
-	 *         application name (if servlet path is empty).
-	 */
-	public StringBuffer urlPrefix()
-	{
-		final StringBuffer buffer = new StringBuffer();
-
-		if (request != null)
-		{
-			buffer.append(((WebRequest)request).getContextPath());
-
-			final String servletPath = ((WebRequest)request).getServletPath();
-			if (servletPath.equals(""))
-			{
-				buffer.append('/');
-				buffer.append(application.getName());
-			}
-			else
-			{
-				buffer.append(servletPath);
-			}
-		}
-
-		return buffer;
+		return (WebResponse)response;
 	}
 
 	/**
@@ -226,7 +137,7 @@ public class WebRequestCycle extends RequestCycle
 	protected void redirectToPage(final Page page)
 	{
 		// Redirect to the url for the page
-		response.redirect(urlFor(page, IRedirectListener.class));
+		response.redirect(page.urlFor(page, IRedirectListener.class));
 	}
 
 	/**
@@ -260,15 +171,14 @@ public class WebRequestCycle extends RequestCycle
 	{
 		// Get any component parameter
 		final String pageClassName = request.getParameter("bookmarkablePage");
-
 		if (pageClassName != null)
 		{
-			final Class pageClass = getSession().getClassResolver().resolveClass(pageClassName);
-			setResponsePage(getPageFactory().newPage(pageClass,
+			final String pageMapName = request.getParameter("pageMap");
+			final Class pageClass = session.getClassResolver().resolveClass(pageClassName);
+			setResponsePage(session.getPageFactory().newPage(pageClass,
 					new PageParameters(getRequest().getParameterMap())));
 			return true;
 		}
-
 		return false;
 	}
 
@@ -287,6 +197,7 @@ public class WebRequestCycle extends RequestCycle
 	{
 		// Get any component parameter
 		final String path = request.getParameter("component");
+		final String pageMapName = request.getParameter("pageMap");
 		if (path != null)
 		{
 			// Get version number
@@ -295,7 +206,7 @@ public class WebRequestCycle extends RequestCycle
 					.parseInt(versionNumberString);
 
 			// Get page from path
-			final Page page = session.getPage(path, versionNumber);
+			final Page page = session.getPage(pageMapName, path, versionNumber);
 
 			// Does page exist?
 			if (page != null)
@@ -313,7 +224,7 @@ public class WebRequestCycle extends RequestCycle
 		else
 		{
 			// Get path info
-			final String pathInfo = ((WebRequest)request).getHttpServletRequest().getPathInfo();
+			final String pathInfo = getWebRequest().getHttpServletRequest().getPathInfo();
 			if (pathInfo != null)
 			{
 				// Get resource for path
@@ -337,8 +248,7 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	private boolean homePage()
 	{
-		final String pathInfo = ((WebRequest)request).getPathInfo();
-
+		final String pathInfo = getWebRequest().getPathInfo();
 		if (Strings.isEmpty(pathInfo) || "/".equals(pathInfo))
 		{
 			try
@@ -349,10 +259,8 @@ public class WebRequestCycle extends RequestCycle
 			{
 				throw new WicketRuntimeException("Could not create home page", e);
 			}
-
 			return true;
 		}
-
 		return false;
 	}
 
@@ -416,7 +324,7 @@ public class WebRequestCycle extends RequestCycle
 	private final Page newPage(final Class pageClass)
 	{
 		final PageParameters parameters = new PageParameters(getRequest().getParameterMap());
-		return getPageFactory().newPage(pageClass, parameters);
+		return session.getPageFactory().newPage(pageClass, parameters);
 	}
 
 	/**
@@ -431,7 +339,7 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	private final Page newPage(final Class pageClass, final Page page)
 	{
-		return getPageFactory().newPage(pageClass, page);
+		return session.getPageFactory().newPage(pageClass, page);
 	}
 
 	/**
@@ -453,7 +361,7 @@ public class WebRequestCycle extends RequestCycle
 		{
 			// Get the relative URL we need for loading the resource from
 			// the servlet context
-			final String url = ((WebRequest)getRequest()).getRelativeURL();
+			final String url = getWebRequest().getRelativeURL();
 
 			// Get servlet context
 			final ServletContext context = ((WebApplication)application).getWicketServlet()
@@ -469,7 +377,7 @@ public class WebRequestCycle extends RequestCycle
 				try
 				{
 					// Copy resource input stream to servlet output stream
-					Streams.writeStream(in, ((WebResponse)response).getHttpServletResponse()
+					Streams.writeStream(in, getWebResponse().getHttpServletResponse()
 							.getOutputStream());
 				}
 				finally

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.7 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,9 +17,18 @@
  */
 package wicket.markup.html;
 
+import java.util.Iterator;
+
+import wicket.Component;
 import wicket.Page;
+import wicket.PageMap;
+import wicket.PageParameters;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.model.IModel;
+import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.util.lang.Classes;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when
@@ -56,6 +65,83 @@ public class WebPage extends Page
 	}
 
 	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public String urlFor(final Class pageClass, final PageParameters parameters)
+	{
+		final WebRequestCycle cycle = getWebRequestCycle();
+		final StringBuffer buffer = urlPrefix(cycle);
+		appendPageMapName(buffer);
+		buffer.append("bookmarkablePage=");
+		buffer.append(pageClass.getName());
+		if (parameters != null)
+		{
+			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			{
+				final String key = (String)iterator.next();
+				buffer.append('&');
+				buffer.append(key);
+				buffer.append('=');
+				buffer.append(parameters.getString(key));
+			}
+		}
+		return cycle.getResponse().encodeURL(buffer.toString());
+	}
+
+	/**
+	 * Returns a URL that references a given interface on a component. When the
+	 * URL is requested from the server at a later time, the interface will be
+	 * called. A URL returned by this method will not be stable across sessions
+	 * and cannot be bookmarked by a user.
+	 * 
+	 * @param component
+	 *            The component to reference
+	 * @param listenerInterface
+	 *            The listener interface on the component
+	 * @return A URL that encodes a page, component and interface to call
+	 */
+	public String urlFor(final Component component, final Class listenerInterface)
+	{
+		// Ensure that component instanceof listenerInterface
+		if (!listenerInterface.isAssignableFrom(component.getClass()))
+		{
+			throw new WicketRuntimeException("The component " + component + " of class "
+					+ component.getClass() + " does not implement " + listenerInterface);
+		}
+
+		// Buffer for composing URL
+		final WebRequestCycle cycle = getWebRequestCycle();
+		final StringBuffer buffer = urlPrefix(cycle);
+		appendPageMapName(buffer);
+		buffer.append("component=");
+		buffer.append(component.getPath());
+		buffer.append("&version=");
+		buffer.append(component.getPage().getCurrentVersionNumber());
+		buffer.append("&interface=");
+		buffer.append(Classes.name(listenerInterface));
+		return cycle.getResponse().encodeURL(buffer.toString());
+	}
+
+	/**
+	 * @param path
+	 *            The path
+	 * @return The url for the path
+	 */
+	public String urlFor(final String path)
+	{
+		return urlPrefix(getWebRequestCycle()) + "/" + path;
+	}
+
+	/**
 	 * Gets the markup type for a WebPage, which is always "html" (and thus the
 	 * method is final here). Support for pages in another markup language, such
 	 * as VXML, would require the creation of a different Page subclass in an
@@ -74,14 +160,70 @@ public class WebPage extends Page
 	}
 
 	/**
+	 * @return The WebRequestCycle for this WebPage.
+	 */
+	protected final WebRequestCycle getWebRequestCycle()
+	{
+		return (WebRequestCycle)getRequestCycle();
+	}
+
+	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
 	 * 
-	 * @param componentId
+	 * @param id
 	 *            Name of link
 	 * @return Link to home page for this application
 	 */
-	protected final BookmarkablePageLink homePageLink(final String componentId)
+	protected final BookmarkablePageLink homePageLink(final String id)
 	{
-		return new BookmarkablePageLink(componentId, getApplicationPages().getHomePage());
+		return new BookmarkablePageLink(id, getApplicationPages().getHomePage());
+	}
+
+	/**
+	 * Appends any pagemap name to the buffer
+	 * 
+	 * @param buffer
+	 *            The string buffer to append to
+	 */
+	private void appendPageMapName(final StringBuffer buffer)
+	{
+		final PageMap pageMap = getPageMap();
+		if (!pageMap.isDefault())
+		{
+			buffer.append("?pagemap=");
+			buffer.append(pageMap.getName());
+			buffer.append('&');
+		}
+		buffer.append('?');
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param cycle
+	 *            The web request cycle
+	 * @return Prefix for URLs including the context path, servlet path and
+	 *         application name (if servlet path is empty).
+	 */
+	private StringBuffer urlPrefix(final WebRequestCycle cycle)
+	{
+		final StringBuffer buffer = new StringBuffer();
+		final WebRequest request = cycle.getWebRequest();
+		if (request != null)
+		{
+			buffer.append(request.getContextPath());
+			final String servletPath = ((WebRequest)request).getServletPath();
+			if (servletPath.equals(""))
+			{
+				buffer.append('/');
+				buffer.append(cycle.getApplication().getName());
+			}
+			else
+			{
+				buffer.append(servletPath);
+			}
+		}
+
+		return buffer;
 	}
 }

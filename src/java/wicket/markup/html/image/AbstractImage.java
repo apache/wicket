@@ -21,7 +21,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
 import wicket.model.IModel;
-import wicket.protocol.http.WebRequestCycle;
 
 /**
  * Abstract base class for image components.
@@ -56,7 +55,7 @@ public abstract class AbstractImage extends WebComponent
 	{
 		checkComponentTag(tag, "img");
 		super.onComponentTag(tag);
-		final String url = ((WebRequestCycle)getRequestCycle()).urlFor(getResourcePath());
+		final String url = getPage().urlFor(getResourcePath());
 		tag.put("src", getResponse().encodeURL(url).replaceAll("&", "&amp;"));
 	}
 

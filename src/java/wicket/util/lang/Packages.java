@@ -29,25 +29,6 @@ import wicket.util.string.Strings;
 public final class Packages
 {
 	/**
-	 * Instantiation not allowed
-	 */
-	private Packages()
-	{
-	}
-
-	/**
-	 * Gets the name of a given package
-	 * 
-	 * @param c
-	 *            The class
-	 * @return The class' package
-	 */
-	public static String name(final Class c)
-	{
-		return Strings.beforeLastPathComponent(c.getName(), '.');
-	}
-
-	/**
 	 * Takes a package and a relative path to a resource and returns an absolute
 	 * path to the resource. For example, if the given package was java.lang and
 	 * the relative path was "../util/List", then "java/util/List" would be
@@ -55,31 +36,31 @@ public final class Packages
 	 * 
 	 * @param p
 	 *            The package to start at
-	 * @param path
+	 * @param relativePath
 	 *            The relative path to the class
 	 * @return The absolute path
 	 */
-	public static String absolutePath(final Package p, final String path)
+	public static String absolutePath(final Package p, final String relativePath)
 	{
 		// Is path already absolute?
-		if (path.startsWith("/"))
+		if (relativePath.startsWith("/"))
 		{
-			return path;
+			return relativePath;
 		}
 		else
 		{
 			// Break package into list of package names
 			final StringList absolutePath = StringList.tokenize(p.getName(), ".");
-			
+
 			// Break path into folders
-			final StringList folders = StringList.tokenize(path, "/\\");
-		
+			final StringList folders = StringList.tokenize(relativePath, "/\\");
+
 			// Iterate through folders
 			for (final IStringIterator iterator = folders.iterator(); iterator.hasNext();)
 			{
 				// Get next folder
 				final String folder = iterator.next();
-	
+
 				// Up one?
 				if (folder.equals(".."))
 				{
@@ -90,7 +71,7 @@ public final class Packages
 					}
 					else
 					{
-						throw new IllegalArgumentException("Invalid path " + path);
+						throw new IllegalArgumentException("Invalid path " + relativePath);
 					}
 				}
 				else
@@ -99,9 +80,32 @@ public final class Packages
 					absolutePath.add(folder);
 				}
 			}
-	
+
 			// Return absolute path
 			return absolutePath.join("/");
 		}
+	}
+
+	/**
+	 * @param p
+	 *            The Package
+	 * @return The parent Package
+	 */
+	public static Package parent(final Package p)
+	{
+		final String packageName = p.getName();
+		if (packageName.indexOf('.') != -1)
+		{
+			final String parentPackageName = Strings.beforeLast(packageName, '.');
+			return Package.getPackage(parentPackageName);
+		}
+		return null;
+	}
+	
+	/**
+	 * Instantiation not allowed
+	 */
+	private Packages()
+	{
 	}
 }

@@ -67,7 +67,7 @@ import wicket.util.time.Duration;
  * <i>unexpectedExceptionDisplay </i> (defaults to SHOW_EXCEPTION_PAGE) -
  * Determines how exceptions are displayed to the developer or user
  * <p>
- * <i>maxSessionPages </i>- The maximum number of pages in the user's session
+ * <i>maxPages </i>- The maximum number of pages in the user's session
  * before old pages are expired.
  * <p>
  * <i>resourcePollFrequency </i> (defaults to no polling frequency) - Frequency
@@ -131,6 +131,7 @@ public final class ApplicationSettings
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
 			"SHOW_NO_EXCEPTION_PAGE");
+	
 	/** Log */
 	private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
@@ -180,7 +181,7 @@ public final class ApplicationSettings
 	private int maxPageVersions = 10;
 
 	/** The maximum number of pages in a session */
-	private int maxSessionPages = 10;
+	private int maxPages = 10;
 
 	/** True if string resource loaders have been overridden */
 	private boolean overriddenStringResourceLoaders = false;
@@ -426,12 +427,12 @@ public final class ApplicationSettings
 	/**
 	 * Gets the maximum number of pages held in a session.
 	 * 
-	 * @return Returns the maxSessionPages.
-	 * @see ApplicationSettings#setMaxSessionPages(int)
+	 * @return Returns the maxPages.
+	 * @see ApplicationSettings#setMaxPages(int)
 	 */
-	public final int getMaxSessionPages()
+	public final int getMaxPages()
 	{
-		return maxSessionPages;
+		return maxPages;
 	}
 
 	/**
@@ -695,13 +696,13 @@ public final class ApplicationSettings
 	 * will be expired. The primary purpose of setting a maximum number of pages
 	 * in a session is to limit the resources consumed by server-side state.
 	 * 
-	 * @param maxSessionPages
-	 *            The maxSessionPages to set.
+	 * @param maxPages
+	 *            The maxPages to set.
 	 * @return This
 	 */
-	public final ApplicationSettings setMaxSessionPages(final int maxSessionPages)
+	public final ApplicationSettings setMaxPages(final int maxPages)
 	{
-		this.maxSessionPages = maxSessionPages;
+		this.maxPages = maxPages;
 		return this;
 	}
 

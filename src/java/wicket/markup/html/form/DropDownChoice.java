@@ -93,7 +93,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 		
 		// If a user subclasses this class and implements IOnChangeListener
 		// an onChange scriptlet is added
-		final String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
+		final String url = getPage().urlFor(this, IOnChangeListener.class);
 		
 		// Should the form be resubmitted if the selection changes?
 		if (wantOnSelectionChangedNotifications())

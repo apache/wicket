@@ -33,44 +33,24 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	
 	/** Value most recently removed from map */
 	Object removedValue;
+	
+	/** Maximum number of entries allowed in this map */
+	private int maxEntries;
 
 	/**
 	 * Constructor
-	 */
-	public MostRecentlyUsedMap()
-	{
-		// First two parameters are defaults from HashMap for initial capacity
-		// and load factor. The third parameter specifies that this is an
-		// access-ordered map.
-		super(16, 0.75f, true);
-	}
-
-	/**
-	 * Gets instance of LRU map with given maximum limit on entries
-	 * 
+	 *  
 	 * @param maxEntries
 	 *            Maximum number of entries allowed in the map
-	 * @return MRU map instance
 	 */
-	public static MostRecentlyUsedMap newInstance(final int maxEntries)
+	public MostRecentlyUsedMap(final int maxEntries)
 	{
 		if (maxEntries <= 0)
 		{
 			throw new IllegalArgumentException("Must have at least one entry");
 		}
-
-		return new MostRecentlyUsedMap()
-		{
-			/** serialVersionUID */
-			private static final long serialVersionUID = -3137250910658864184L;
-
-			protected boolean removeEldestEntry(final Map.Entry eldest)
-			{
-				final boolean remove = size() > maxEntries;
-				this.removedValue = eldest.getValue();
-				return remove;
-			}
-		};
+		
+		this.maxEntries = maxEntries;
 	}
 	
 	/**
@@ -79,5 +59,15 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	public Object getRemovedValue()
 	{
 		return removedValue;
+	}
+	
+	/**
+	 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
+	 */
+	protected boolean removeEldestEntry(final Map.Entry eldest)
+	{
+		final boolean remove = size() > maxEntries;
+		this.removedValue = eldest.getValue();
+		return remove;
 	}
 }

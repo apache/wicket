@@ -25,7 +25,6 @@ import java.util.Map;
 import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.protocol.http.WebRequestCycle;
 import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.IntegerGroup;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -140,8 +139,7 @@ public class LocalizedImageResource implements Serializable
 			this.locale = component.getLocale();
 		}
 
-		final String url = ((WebRequestCycle)component.getRequestCycle()).urlFor(imageResource
-				.getPath());
+		final String url = component.getPage().urlFor(imageResource.getPath());
 		tag.put("src", component.getResponse().encodeURL(url).replaceAll("&", "&amp;"));
 	}
 

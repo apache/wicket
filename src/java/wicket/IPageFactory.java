@@ -24,7 +24,6 @@ package wicket;
  * internal use only.
  *
  * @see ApplicationSettings#setDefaultPageFactory(IPageFactory)
- * @see Session#setPageFactory(IPageFactory)
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
