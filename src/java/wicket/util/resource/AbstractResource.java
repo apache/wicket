@@ -32,7 +32,7 @@ import wicket.util.io.Streams;
 public abstract class AbstractResource implements IStringResource
 {
 	/** Charset for resource */
-	private Charset charset = Charset.defaultCharset();
+	private Charset charset;
 
 	/**
 	 * Sets the character set used for reading this resource.
@@ -52,7 +52,14 @@ public abstract class AbstractResource implements IStringResource
 	{
 		try
 		{
-			return Streams.readString(new InputStreamReader(getInputStream(), charset));
+			if (charset == null)
+			{
+				return Streams.readString(new InputStreamReader(getInputStream()));
+			}
+			else
+			{
+				return Streams.readString(new InputStreamReader(getInputStream(), charset));
+			}
 		}
 		catch (IOException e)
 		{
