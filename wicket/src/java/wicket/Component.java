@@ -282,7 +282,7 @@ public abstract class Component implements Serializable
      */
     public final void debug(final String message)
     {
-        FeedbackMessages.debug(this, message);   
+        FeedbackMessages.get().debug(this, message);   
     }
     
     /**
@@ -291,16 +291,16 @@ public abstract class Component implements Serializable
      */
     public final void error(final String message)
     {
-        FeedbackMessages.debug(this, message);   
+        FeedbackMessages.get().error(this, message);   
     }
     
     /**
-     * Registers an error message for this component
+     * Registers an fatal error message for this component
      * @param message The message
      */
     public final void fatal(final String message)
     {
-        FeedbackMessages.debug(this, message);   
+        FeedbackMessages.get().fatal(this, message);   
     }
 
 	/**
@@ -391,6 +391,14 @@ public abstract class Component implements Serializable
 	{
 		return getApplication().getLocalizer();
 	}
+    
+    /** 
+     * @return Any feedback message for this component
+     */
+    public FeedbackMessage getFeedbackMessage()
+    {
+        return FeedbackMessages.get().getMessageFor(this);   
+    }
 
 	/**
 	 * Gets the model. It returns the object that wraps the backing model.
@@ -725,12 +733,28 @@ public abstract class Component implements Serializable
 	}
     
     /**
+     * @return True if this component has an error message
+     */
+    public final boolean hasErrorMessage()
+    {
+    	return FeedbackMessages.get().hasErrorMessageFor(this);
+    }
+    
+    /**
+     * @return True if this component has some kind of feedback message
+     */
+    public final boolean hasFeedbackMessage()
+    {
+        return FeedbackMessages.get().hasMessageFor(this);    
+    }
+    
+    /**
      * Registers a info message for this component
      * @param message The message
      */
     public final void info(final String message)
     {
-        FeedbackMessages.info(this, message);   
+        FeedbackMessages.get().info(this, message);   
     }
 
 	/**
@@ -846,7 +870,7 @@ public abstract class Component implements Serializable
      */
     public final void warn(final String message)
     {
-        FeedbackMessages.debug(this, message);   
+        FeedbackMessages.get().warn(this, message);   
     }
 
 	/**
