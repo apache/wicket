@@ -18,8 +18,18 @@
  */
 package wicket.markup;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.net.URL;
+
 import junit.framework.TestCase;
+import wicket.markup.html.list.Diff;
+import wicket.markup.html.list.DiffPrint;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.io.Streams;
+import wicket.util.string.StringList;
 
 /**
  * Simple application that demonstrates the mock http application
@@ -54,6 +64,8 @@ public class ComponentCreateTagTest extends TestCase {
         // Validate the document
         String document = application.getServletResponse().getDocument();
         System.out.println(document);
+        
+        validatePage(document, "ComponentCreateTagExpectedResult.html");
     }
 
     /**
@@ -70,6 +82,8 @@ public class ComponentCreateTagTest extends TestCase {
         // Validate the document
         String document = application.getServletResponse().getDocument();
         System.out.println(document);
+        
+        validatePage(document, "ComponentCreateTagExpectedResult_2.html");
     }
 
     /**
@@ -86,6 +100,8 @@ public class ComponentCreateTagTest extends TestCase {
         // Validate the document
         String document = application.getServletResponse().getDocument();
         System.out.println(document);
+        
+        validatePage(document, "ComponentCreateTagExpectedResult_3.html");
     }
 
     /**
@@ -103,5 +119,71 @@ public class ComponentCreateTagTest extends TestCase {
         // Validate the document
         String document = application.getServletResponse().getDocument();
         System.out.println(document);
+        
+        validatePage(document, "ComponentCreateTagExpectedResult_4.html");
     }
+
+	/**
+	 * Validates page 1 of paged table.
+	 * @param document The document
+	 * @param file the file
+	 * @return The validation result
+	 * @throws IOException
+	 */
+	private boolean validatePage(final String document, final String file) throws IOException
+	{
+		String filename = this.getClass().getPackage().getName();
+		filename = filename.replace('.', '/');
+		filename += "/" + file;
+
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename);
+		if (in == null)
+		{
+			throw new IOException("File not found: " + filename);
+		}
+
+		String reference = Streams.readString(in);
+
+		boolean equals = document.equals(reference);
+		if (equals == false)
+		{
+		    // Change the condition to true, if you want to make the new output
+		    // the reference output for future tests. That is, it is regarded as 
+		    // correct. It'll replace the current reference files. Thus change
+		    // it only for one test-run.
+		    if (false)
+		    {
+		        in.close();
+		        in = null;
+
+		        final URL url = this.getClass().getClassLoader().getResource(filename);
+		        filename = url.getFile();
+		        filename = filename.replaceAll("/build/test-classes/", "/src/test/");
+		        PrintWriter out = new PrintWriter(new FileOutputStream(filename));
+		        out.print(document);
+		        out.close();
+		        return true;
+		    }
+		    
+			System.err.println("File name: " + file);
+			/*  */
+			System.err.println("===================");
+			System.err.println(document);
+			System.err.println("===================");
+
+			System.err.println(reference);
+			System.err.println("===================");
+			/* */
+
+			String[] test1 = StringList.tokenize(document, "\n").toArray();
+			String[] test2 = StringList.tokenize(reference, "\n").toArray();
+			Diff diff = new Diff(test1, test2);
+			Diff.change script = diff.diff_2(false);
+			DiffPrint.Base p = new DiffPrint.UnifiedPrint(test1, test2);
+			p.setOutput(new PrintWriter(System.err));
+			p.print_script(script);
+		}
+
+		return equals;
+	}
 }
