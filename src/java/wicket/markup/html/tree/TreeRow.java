@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.tree;
 
+import wicket.RequestCycle;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
@@ -29,7 +30,10 @@ import wicket.markup.html.panel.Panel;
  * @author Eelco Hillenius
  */
 public final class TreeRow extends Panel
-{ // TODO finalize javadoc
+{
+	/** reference to the tree component. */
+	private final AbstractTree tree;
+
     /**
      * Construct.
      * @param componentName name of the component
@@ -39,9 +43,16 @@ public final class TreeRow extends Panel
     public TreeRow(String componentName, AbstractTree tree, TreeNodeModel nodeModel)
     {
         super(componentName);
+        this.tree = tree;
         if(nodeModel != null)
         {
-            TreeNodeLink link = new TreeNodeLink("link", tree, nodeModel);
+            TreeNodeLink link = new TreeNodeLink("link", tree, nodeModel){
+
+                public void linkClicked(RequestCycle cycle, TreeNodeModel node)
+                {
+                	TreeRow.this.nodeLinkClicked(cycle, node);
+                }   
+            };
             link.add(new Label("label", String.valueOf(nodeModel.getUserObject())));
             add(link);
         }
@@ -51,4 +62,16 @@ public final class TreeRow extends Panel
             add(new HtmlContainer("link").add(new HtmlContainer("label")));
         }
     }
+
+	/**
+	 * Handler that is called when a node link is clicked; this implementation
+	 * sets the expanded state based on the given node.
+	 * Override this for custom behaviour.
+	 * @param cycle the current request cycle
+	 * @param node the tree node model
+	 */
+	protected void nodeLinkClicked(RequestCycle cycle, TreeNodeModel node)
+	{
+        tree.setExpandedState(node);
+	}
 }

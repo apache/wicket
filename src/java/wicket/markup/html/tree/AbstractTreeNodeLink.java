@@ -71,7 +71,7 @@ public abstract class AbstractTreeNodeLink extends AbstractLink
         // if a new link is added that actually points to the same userObject, it will
         // replace the old one thus allowing the old link to be GC-ed.
         // Te id is a combination of the 
-        String linkId = String.valueOf(userObject.hashCode());
+        String linkId = componentName + String.valueOf(userObject.hashCode());
         id = linkId;
 
         // add the link to the tree. By adding it to the tree instead of one of the tree's nested components,
@@ -102,16 +102,15 @@ public abstract class AbstractTreeNodeLink extends AbstractLink
      * Called when a link is clicked.
      * @see ILinkListener
      * @param cycle The cycle object
-     * @param node
+     * @param node the node model
      */
     public void linkClicked(RequestCycle cycle, TreeNodeModel node)
     {
-        // get the user object. WARNING: do not call node.getUserObject, as we want the
-        // wrapped user object in case it was made unique
-        Object userObject = node.getTreeNode().getUserObject();
-
         TreeStateCache state = tree.getTreeState();
-        TreePath selection = state.findTreePath(userObject);
+        // note: get the - possibly wrapped - user object from the tree node; if we would
+        // use node.getUserObject here, we would get the non-unique 'real' user object
+        Object toFind = node.getTreeNode().getUserObject();
+		TreePath selection = state.findTreePath(toFind);
         tree.setExpandedState(selection, (!node.isExpanded())); // inverse
     }
 

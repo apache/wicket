@@ -27,6 +27,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import wicket.RequestCycle;
 import wicket.markup.ComponentTagAttributeModifier;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
@@ -57,7 +58,7 @@ import wicket.model.Model;
  *		padding-left: 16px;
  *	}
  * </pre>
- * you have an indented tree.
+ * and you have an indented tree.
  * </p>
  *
  * @author Eelco Hillenius
@@ -108,13 +109,19 @@ public abstract class FlatTree extends AbstractTree
      * Builds the structures needed to display the currently visible tree paths.
      * @param treeState the current tree state
      */
-    protected void applySelectedPaths(TreeStateCache treeState)
+    protected final void applySelectedPaths(TreeStateCache treeState)
     {
         Enumeration e = treeState.getVisiblePathsFromRoot();
         List visiblePathsList = new ArrayList();
+        boolean skip = (!treeState.isRootVisible());
         while (e.hasMoreElements())
         {
-            TreePath path = (TreePath)e.nextElement();
+        	TreePath path = (TreePath)e.nextElement();
+        	if(skip) // skip root if not visible
+        	{
+        		skip = false;
+        		continue;
+        	}
             DefaultMutableTreeNode treeNode =
                 (DefaultMutableTreeNode)path.getLastPathComponent();
             TreeNodeModel treeNodeModel = new TreeNodeModel(treeNode, treeState, path);
@@ -145,19 +152,97 @@ public abstract class FlatTree extends AbstractTree
 		return new VisibleTreePathListView("tree", model);
 	}
 
+	/**
+	 * Creates a junction link.
+	 * @param node the model of the node
+	 * @return link for expanding/ collapsing the tree
+	 */
+	private final TreeNodeLink createJunctionLink(TreeNodeModel node)
+	{
+        TreeNodeLink junctionLink = new TreeNodeLink(
+        		"junctionLink", this, node){
+
+            public void linkClicked(RequestCycle cycle, TreeNodeModel node)
+            {
+            	junctionLinkClicked(cycle, node);
+            }   
+        };
+		HtmlContainer junctionImg = new HtmlContainer("junctionImg");
+		junctionImg.add(new ComponentTagAttributeModifier(
+        		"src", true, new Model(getJunctionImageName(node))));
+		junctionLink.add(junctionImg);
+		return junctionLink;
+	}
+
     /**
-     * Get image name for junction.
+     * Get image name for junction; used by method createExpandCollapseLink.
      * @param node the model with the current node
      * @return image name
      */
     protected abstract String getJunctionImageName(TreeNodeModel node);
 
+	/**
+	 * Handler that is called when a junction link is clicked; this implementation
+	 * sets the expanded state to one that corresponds with the node selection.
+	 * @param cycle the current request cycle
+	 * @param node the tree node model
+	 */
+	protected void junctionLinkClicked(RequestCycle cycle, TreeNodeModel node)
+	{
+        setExpandedState(node);
+	}
+
+	/**
+	 * Creates a node link.
+	 * @param node the model of the node
+	 * @return link for selection
+	 */
+	private final TreeNodeLink createNodeLink(TreeNodeModel node)
+	{
+		Object userObject = node.getTreeNode().getUserObject();
+        TreeNodeLink nodeLink = new TreeNodeLink("nodeLink", this, node){
+
+            public void linkClicked(RequestCycle cycle, TreeNodeModel node)
+            {
+            	nodeLinkClicked(cycle, node);
+            }   
+        };
+		HtmlContainer nodeImg = new HtmlContainer("nodeImg");
+		nodeImg.add(new ComponentTagAttributeModifier(
+        		"src", true, new Model(getNodeImageName(node))));
+		nodeLink.add(nodeImg);
+		String userObjectAsString = getNodeLabel(node);
+		nodeLink.add(new Label("label", userObjectAsString));
+		return nodeLink;
+	}
+
+	/**
+	 * Gets the label of the node that is used for the node link.
+	 * Defaults to treeNodeModel.getUserObject().toString(); override to provide
+	 * a custom label
+	 * @param node the tree node model
+	 * @return the label of the node that is used for the node link
+	 */
+	protected abstract String getNodeLabel(TreeNodeModel node);
+
     /**
-     * Get image name for node.
+     * Get image name for node; used by method createExpandCollapseLink.
      * @param node the model with the current node
      * @return image name
      */
     protected abstract String getNodeImageName(TreeNodeModel node);
+
+	/**
+	 * Handler that is called when a node link is clicked; this implementation
+	 * sets the expanded state just as a click on a junction would do.
+	 * Override this for custom behaviour.
+	 * @param cycle the current request cycle
+	 * @param node the tree node model
+	 */
+	protected void nodeLinkClicked(RequestCycle cycle, TreeNodeModel node)
+	{
+        setExpandedState(node);
+	}
 
     /**
      * Table for visible tree paths.
@@ -198,36 +283,13 @@ public abstract class FlatTree extends AbstractTree
             {
                 throw new RuntimeException("userObject == null");
             }
-            TreeNodeLink expandCollapsLink = new TreeNodeLink(
-            		"expandCollapsLink", FlatTree.this, treeNodeModel);
-
-            HtmlContainer junctionImg = new HtmlContainer("junctionImg");
-            junctionImg.add(new ComponentTagAttributeModifier(
-            		"src", true, new Model(getJunctionImageName(treeNodeModel))));
-			expandCollapsLink.add(junctionImg);
-            HtmlContainer nodeImg = new HtmlContainer("nodeImg");
-            nodeImg.add(new ComponentTagAttributeModifier(
-            		"src", true, new Model(getNodeImageName(treeNodeModel))));
-			expandCollapsLink.add(nodeImg);
+            TreeNodeLink expandCollapsLink = createJunctionLink(treeNodeModel);
             nodeContainer.add(expandCollapsLink);
 
-            TreeNodeLink selectLink = new TreeNodeLink(
-            		"selectLink", FlatTree.this, treeNodeModel);
-            selectLink.add(new Label("label", getUserObjectAsString(userObject)));
+            TreeNodeLink selectLink = createNodeLink(treeNodeModel);
             nodeContainer.add(selectLink);
             listItem.add(nodeContainer);
         }
-
-		/**
-		 * Gets the user object as a string. Clients should override this to provide
-		 * custom behaviour.
-		 * @param userObject the user object
-		 * @return the string representation of the user object
-		 */
-		protected String getUserObjectAsString(Serializable userObject)
-		{
-			return String.valueOf(userObject);
-		}
     }
 
     /**
