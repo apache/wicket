@@ -21,17 +21,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import wicket.Component;
-import wicket.IPageVersionManager;
+import wicket.IPageRevisionManager;
 import wicket.Page;
 
 /**
  * A version manager implemented by recording component changes as undo records
- * which can later be reversed to get back to a given version of the Page being
+ * which can later be reversed to get back to a given revision of the Page being
  * managed.
  * 
  * @author Jonathan Locke
  */
-public class UndoPageVersionManager implements IPageVersionManager
+public class UndoPageRevisionManager implements IPageRevisionManager
 {
 	/** The page being managed */
 	private final Page page;
@@ -40,7 +40,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	private final Map versions;
 
 	/** The current version */
-	private Version version;
+	private Revision version;
 
 	/** The next available version number. */
 	private int nextVersionNumber = 0;
@@ -54,7 +54,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 *            The maximum number of versions to maintain before expiring the
 	 *            old versions
 	 */
-	public UndoPageVersionManager(final Page page, final int maxVersions)
+	public UndoPageRevisionManager(final Page page, final int maxVersions)
 	{
 		this.page = page;
 		this.versions = new LinkedHashMap()
@@ -69,16 +69,16 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#beginVersion()
+	 * @see wicket.IPageRevisionManager#beginRevision()
 	 */
-	public void beginVersion()
+	public void beginRevision()
 	{
-		version = new Version();
+		version = new Revision();
 		nextVersionNumber++;
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentAdded(wicket.Component)
+	 * @see wicket.IPageRevisionManager#componentAdded(wicket.Component)
 	 */
 	public void componentAdded(Component component)
 	{
@@ -86,7 +86,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentModelChangeImpending(wicket.Component)
+	 * @see wicket.IPageRevisionManager#componentModelChangeImpending(wicket.Component)
 	 */
 	public void componentModelChangeImpending(Component component)
 	{
@@ -94,7 +94,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentRemoved(wicket.Component)
+	 * @see wicket.IPageRevisionManager#componentRemoved(wicket.Component)
 	 */
 	public void componentRemoved(Component component)
 	{
@@ -102,30 +102,30 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#endVersion()
+	 * @see wicket.IPageRevisionManager#endRevision()
 	 */
-	public void endVersion()
+	public void endRevision()
 	{
-		versions.put(new Integer(getVersion()), version);
+		versions.put(new Integer(getNewestRevisionNumber()), version);
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#getVersion(int)
+	 * @see wicket.IPageRevisionManager#getRevision(int)
 	 */
-	public Page getVersion(int versionNumber)
+	public Page getRevision(int versionNumber)
 	{
 		// Get version for version number
-		final Version version = (Version)versions.get(new Integer(versionNumber));
+		final Revision version = (Revision)versions.get(new Integer(versionNumber));
 
 		// Found it?
 		if (version != null)
 		{
 			// Undo each version from last to first up to our version number
-			while (getVersion() > versionNumber)
+			while (getNewestRevisionNumber() > versionNumber)
 			{
 				nextVersionNumber--;
 				final Integer key = new Integer(nextVersionNumber);
-				final Version versionToUndo = (Version)versions.get(key);
+				final Revision versionToUndo = (Revision)versions.get(key);
 				versionToUndo.undo();
 				versions.remove(key);
 			}
@@ -138,9 +138,9 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#getVersion()
+	 * @see wicket.IPageRevisionManager#getNewestRevisionNumber()
 	 */
-	public int getVersion()
+	public int getNewestRevisionNumber()
 	{
 		return nextVersionNumber - 1;
 	}

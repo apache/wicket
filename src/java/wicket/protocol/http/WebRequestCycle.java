@@ -135,8 +135,8 @@ public class WebRequestCycle extends RequestCycle
 		final StringBuffer buffer = urlPrefix();
 		buffer.append("?component=");
 		buffer.append(component.getPath());
-		buffer.append("&version=");
-		buffer.append(component.getPage().getVersion());
+		buffer.append("&revision=");
+		buffer.append(component.getPage().getRevisionNumber());
 		buffer.append("&interface=");
 		buffer.append(Classes.name(listenerInterface));
 		return response.encodeURL(buffer.toString());
@@ -290,13 +290,13 @@ public class WebRequestCycle extends RequestCycle
 		final String path = request.getParameter("component");
 		if (path != null)
 		{
-			// Grt version number
-			final String versionString = request.getParameter("version");
-			int version = Strings.isEmpty(versionString) ? 0 : Integer.parseInt(versionString);
+			// Get revision number
+			final String revisionNumberString = request.getParameter("revision");
+			final int revisionNumber = Strings.isEmpty(revisionNumberString) ? 0 : Integer.parseInt(revisionNumberString);
 			
 			// Get page from path
-			log.debug("Getting page [path = " + path + ", version = " + version + "]");
-			final Page page = session.getPage(path, version);
+			log.debug("Getting page [path = " + path + ", revisionNumber = " + revisionNumber + "]");
+			final Page page = session.getPage(path, revisionNumber);
 			
 			// Does page exist?
 			if (page != null)

@@ -23,11 +23,11 @@ import java.util.List;
 import wicket.Component;
 
 /**
- * A version is a sequence of changes to a Page that can be undone.
+ * A revision is a sequence of changes to a Page that can be undone.
  * 
  * @author Jonathan Locke
  */
-class Version
+class Revision
 {	
 	private List changes = new ArrayList();
 		
@@ -48,7 +48,7 @@ class Version
 	
 	void undo()
 	{
-		// Go through changes in reverse time order to undo the version
+		// Go through changes in reverse time order to undo the revisions.
 		for (int i = changes.size() - 1; i >= 0; i--)
 		{
 			((Change)changes.get(i)).undo();

@@ -78,6 +78,14 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	{
 		return width;
 	}
+	
+	/**
+	 * Causes the image to be redrawn the next time its requested.
+	 */
+	public void invalidate()
+	{
+		imageData = null;
+	}
 
 	/**
 	 * @param height
