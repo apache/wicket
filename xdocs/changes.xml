@@ -7,127 +7,31 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-  	<release version="0.9.19-beta" date="tbd" description="Pre release candidate?">
-  	  <action type="update" dev="Martijn Dashorst" due-to="Cameron Braid">Updated all dependencies to be the same, and not to use proprietary Jars (JTA)</action>
-  	</release>
+    <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="update" dev="Martijn Dashorst" due-to="Cameron Braid">Updated all dependencies to be the same, and not to use proprietary Jars (JTA)</action>
+    </release>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
-	  <action type="update" dev="Jonathan Locke" issue="1153227">
-		Generalized IValidationFeedback interface to IFeedback to deal with all kinds of feedback.  Then added logic to Page, so that you can set a feedback for the page.  If you do this, any messages added to the page using the usual error(), info() etc methods, will be displayed in this feedback.
-	  </action>
-	  <action type="fix" dev="Jonathan Locke" issue="1153916">
-		Reworked RadioChoice as a much simpler subclass of AbstractChoice that is much more compatible with other choice components.  Also fixed remaining bugs in form repopulation / validation and tested using Library application.
-	  </action>
-	  <action type="fix" dev="Jonathan Locke" issue="1153047">
-	  Finished working on invalid input problems and model problems in choices.  The result is a reworked choice model in a new model sub-package of form (which makes it a lot easier to read the form components in the form package).  In addition, this checkin includes significant fixes to the wicket.model package, the most important of which is the elimination of DetachableModel, in favor of typesafe and simple usage patterns in AbstractDetachableModel.	  
-	  </action>
-	  <action type="update" dev="Jonathan Locke" issue="">
-	  	Folded IDetachableModel methods into IModel to eliminate instanceof checks and
-	  	make models more automatic.
-	  </action>
-	  <action type="fix" dev="Jonathan Locke" issue="1153047">
-	  	Moved invalid input state logic up into FormComponent and changed form validation
-	  	logic so that updates to the model only occur when validation of the whole form
-	  	is successful.  This works for textfields now, but we may need to tweak other 
-	  	components so they track invalid state during failed validations.
-	  </action>
-	  <action type="update" dev="Jonathan Locke" issue="">
-		Factored out AbstractDetachableModel so that attach/detach logic is encapsulated here and DetachableModel extends it for models with a transient Object property and PropertyModel extends it for models with an OGNL nature which might have nested detachable models.
-	  </action>
-	  <action type="fix" dev="Eelco Hillenius" issue="1149610">
-		Removed all the convenience stuff in order to get a better
-		focus. Added FileInput that correspons to the HTML file input tag
-		and that updates it's model with the FileItem commons-fileupload provides.
-	  </action>
-	  <action type="update" dev="Eelco Hillenius" issue="1152615">
-	    Removed OnClickLink; onclick JS event handler generation is now supported
-	    for all link components. Also removed AbstractLink as there is no good
-	    reason to have that anymore, and Link seems the best base class.
-		When a link is attached to an anchor ('a' tag), we'll generate the href
-		attribute. In all other cases (e.g. if it is attached to a 'td' tag, we
-		will generate the onclick attribute).
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1151765">       
-		Changed DropDownChoice so that you simply return true from wantOnSelectionChangedNotifications() in your subclass and you get calls to onSelectionChanged() via the javascript.  The default implementation of wantOnSelectionChangedNotifications() returns false, so this eliminates round trips for dropdowns that don't explicitly enable this feature.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1152595">       
-        Added onRendered() method and reset() and onReset() methods to help with lifecycle problems that were causing problems with feedback panels not resetting properly.  This was a pretty intricate and difficult bug to fix because the obvious code to put in onReset to clear feedback messages would include calling modelChangedStructure() on the listview.  Unfortunately, this method does not work after rendering has finished because the staleness checks assume it is being called /before/ rendering (which it always is when users call it).  The solution was to call removeAll() in FeedbackPanel instead.  This causes the panel to repopulate, but without any staleness checking.  Also documented why WebPage.getMarkupType() is final and what you would do if you wanted to implement a new markup type.  Fixed a serious stack overflow error in setModel where modelChanged() was being called when the model hadn't changed.  And made the listview constructors typesafe (the Serializable ones are ambiguous and incorrect).
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1151982">       
-		Made setModel() private and added initModel() method for lazy initialization of models in components that cannot set a model in their constructor.  Used initModel to rework ListItem class and PageableListViewNavigation.  Other minor tweaks and major refactor of hangman example.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1151403">
-		Added modelChanged() method to Component which is called when setModel() or
-		setModelObject() are called.  This method calls onModelChanged() to allow 
-		subclasses to respond to model changes.  Changed Form to handle onModelChanged() 
-		by calling the onModelChanged() method of each contained FormComponent that
-		uses the same root model as the form, as determined by the new sameRootModel()
-		method in Component (which uses the INestedModel interface to look inside
-		compound models such as PropertyModel and StringResourceModel to find the
-		root model).  The call to FormComponent.onModelChanged() resets any invalid 
-		state information from user editing since the model must now be correct by 
-		definition.  For example, AbstractTextComponent overrides onModelChanged() 
-		and calls onValid() to reset its invalidInput memory.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1144885">
-		Added automatic image buttons (as demonstrated in FormInput example now)
-		as well as automatic images.  Each can generate an image using an image
-		factory based on the value of the component's tag's value attribute.
-		If the value is set to [factoryName].label, the given label will be drawn
-		with the given ImageResourceFactory.  The LocalizedImageResource class
-		handles all this as well as localization issues with images attached to
-		components.  By default, only DefaultButtonImageFactory() is registered
-		via LocalizedImageResource.add(ImageResourceFactory).  The default button
-		image factory has the name 'button', which means that any image or image 
-		button component that specifies a value of "button.[label]" will result in
-		a DefaultButtonImage with the given label drawn on it.  In addition to these
-		improvements, the ImageResourceFactory base class adds automatic caching
-		of images it creates via a WeakHashMap.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1150668">
-		Restructured form validation so that feedback is updated for the whole form
-		on success or failure.  Fixed additional bug where the form itself was not
-		being considered by the feedback messages model as a place that might be the
-		source of messages.  These two changes together fix the bug.
-      </action>
-	  <action type="update" dev="Jonathan Locke" issue="">
-		Refactored and simplified form validation.  Added CustomValidator and removed
-		a lot of unnecessary code and complexity.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1149604">
-		When core calls onClick() it automatically causes redirection to prevent
-		repeating of the action on browser refreshes.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1149566">
-		Refactored feedback messages code and added a Form parameter to 
-		IValidationFeedback which is used by FeedbackPanel to restrict its 
-		output to just the Form being validated.  This effectively gives us 
-		per-form feedback panels again.  
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1138665">
-      	Created MultipartWebRequest class and used that to rework AbstractUploadForm 
-      	and FileUploadForm so that validation will work on upload forms.
-      </action>
-	  <action type="update" dev="Jonathan Locke" issue="">
-		Simplified choices so they just have a single is/setNullValid() property.  When
-		null is valid, the [name].null string resource is loaded and used.  When null is
-		not valid and the selection is null, [name].null is loaded and used to display
-		something like "Choose One", since a null selection is not valid.
-	  </action>
-	  <action type="update" dev="Jonathan Locke" issue="">
-		Added relative and absolute path functionality to StaticImage, and in the 
-		process, factored out Packages from Classes in wicket.util.lang.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1145200">
-		Refactored resource locator code, creating a new package wicket.util.resource.locator 
-		which contains an SPI interface, IResourceLocator, for implementing resource 
-		locators.  Then created AbstractResourceLocator as a base class for 
-		IResourceLocator implementations, including the new PathResourceLocator and 
-		ClassLoaderResourceLocator.   Finally, created a helper/wrapper class 
-		ResourceLocator which adds convenience methods and then extended that class 
-		with DefaultResourceLocator, which extends ResourceLocator and uses 
-		PathResourceLocator and ClassLoaderResourceLocator together to emulate the 
-		earlier resource location functionality.  
-	  </action>
+      <action type="update" dev="Jonathan Locke" issue="1153227">Generalized IValidationFeedback interface to IFeedback to deal with all kinds of feedback. Then added logic to Page, so that you can set a feedback for the page. If you do this, any messages added to the page using the usual error(), info() etc methods, will be displayed in this feedback.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1153916">Reworked RadioChoice as a much simpler subclass of AbstractChoice that is much more compatible with other choice components. Also fixed remaining bugs in form repopulation / validation and tested using Library application.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1153047">Finished working on invalid input problems and model problems in choices. The result is a reworked choice model in a new model sub-package of form (which makes it a lot easier to read the form components in the form package). In addition, this checkin includes significant fixes to the wicket.model package, the most important of which is the elimination of DetachableModel, in favor of typesafe and simple usage patterns in AbstractDetachableModel.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Folded IDetachableModel methods into IModel to eliminate instanceof checks and make models more automatic.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1153047">Moved invalid input state logic up into FormComponent and changed form validation logic so that updates to the model only occur when validation of the whole form is successful. This works for textfields now, but we may need to tweak other components so they track invalid state during failed validations.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Factored out AbstractDetachableModel so that attach/detach logic is encapsulated here and DetachableModel extends it for models with a transient Object property and PropertyModel extends it for models with an OGNL nature which might have nested detachable models.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1149610">Removed all the convenience stuff in order to get a better focus. Added FileInput that correspons to the HTML file input tag and that updates it's model with the FileItem commons-fileupload provides.</action>
+      <action type="update" dev="Eelco Hillenius" issue="1152615">Removed OnClickLink; onclick JS event handler generation is now supported for all link components. Also removed AbstractLink as there is no good reason to have that anymore, and Link seems the best base class. When a link is attached to an anchor ('a' tag), we'll generate the href attribute. In all other cases (e.g. if it is attached to a 'td' tag, we will generate the onclick attribute).</action>
+      <action type="fix" dev="Jonathan Locke" issue="1151765">Changed DropDownChoice so that you simply return true from wantOnSelectionChangedNotifications() in your subclass and you get calls to onSelectionChanged() via the javascript. The default implementation of wantOnSelectionChangedNotifications() returns false, so this eliminates round trips for dropdowns that don't explicitly enable this feature.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1152595">Added onRendered() method and reset() and onReset() methods to help with lifecycle problems that were causing problems with feedback panels not resetting properly. This was a pretty intricate and difficult bug to fix because the obvious code to put in onReset to clear feedback messages would include calling modelChangedStructure() on the listview. Unfortunately, this method does not work after rendering has finished because the staleness checks assume it is being called /before/ rendering (which it always is when users call it). The solution was to call removeAll() in FeedbackPanel instead. This causes the panel to repopulate, but without any staleness checking. Also documented why WebPage.getMarkupType() is final and what you would do if you wanted to implement a new markup type. Fixed a serious stack overflow error in setModel where modelChanged() was being called when the model hadn't changed. And made the listview constructors typesafe (the Serializable ones are ambiguous and incorrect).</action>
+      <action type="fix" dev="Jonathan Locke" issue="1151982">Made setModel() private and added initModel() method for lazy initialization of models in components that cannot set a model in their constructor. Used initModel to rework ListItem class and PageableListViewNavigation. Other minor tweaks and major refactor of hangman example.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1151403">Added modelChanged() method to Component which is called when setModel() or setModelObject() are called. This method calls onModelChanged() to allow subclasses to respond to model changes. Changed Form to handle onModelChanged() by calling the onModelChanged() method of each contained FormComponent that uses the same root model as the form, as determined by the new sameRootModel() method in Component (which uses the INestedModel interface to look inside compound models such as PropertyModel and StringResourceModel to find the root model). The call to FormComponent.onModelChanged() resets any invalid state information from user editing since the model must now be correct by definition. For example, AbstractTextComponent overrides onModelChanged() and calls onValid() to reset its invalidInput memory.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1144885">Added automatic image buttons (as demonstrated in FormInput example now) as well as automatic images. Each can generate an image using an image factory based on the value of the component's tag's value attribute. If the value is set to [factoryName].label, the given label will be drawn with the given ImageResourceFactory. The LocalizedImageResource class handles all this as well as localization issues with images attached to components. By default, only DefaultButtonImageFactory() is registered via LocalizedImageResource.add(ImageResourceFactory). The default button image factory has the name 'button', which means that any image or image button component that specifies a value of "button.[label]" will result in a DefaultButtonImage with the given label drawn on it. In addition to these improvements, the ImageResourceFactory base class adds automatic caching of images it creates via a WeakHashMap.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1150668">Restructured form validation so that feedback is updated for the whole form on success or failure. Fixed additional bug where the form itself was not being considered by the feedback messages model as a place that might be the source of messages. These two changes together fix the bug.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Refactored and simplified form validation. Added CustomValidator and removed a lot of unnecessary code and complexity.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1149604">When core calls onClick() it automatically causes redirection to prevent repeating of the action on browser refreshes.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1149566">Refactored feedback messages code and added a Form parameter to IValidationFeedback which is used by FeedbackPanel to restrict its output to just the Form being validated. This effectively gives us per-form feedback panels again.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1138665">Created MultipartWebRequest class and used that to rework AbstractUploadForm and FileUploadForm so that validation will work on upload forms.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Simplified choices so they just have a single is/setNullValid() property. When null is valid, the [name].null string resource is loaded and used. When null is not valid and the selection is null, [name].null is loaded and used to display something like "Choose One", since a null selection is not valid.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added relative and absolute path functionality to StaticImage, and in the process, factored out Packages from Classes in wicket.util.lang.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1145200">Refactored resource locator code, creating a new package wicket.util.resource.locator which contains an SPI interface, IResourceLocator, for implementing resource locators. Then created AbstractResourceLocator as a base class for IResourceLocator implementations, including the new PathResourceLocator and ClassLoaderResourceLocator. Finally, created a helper/wrapper class ResourceLocator which adds convenience methods and then extended that class with DefaultResourceLocator, which extends ResourceLocator and uses PathResourceLocator and ClassLoaderResourceLocator together to emulate the earlier resource location functionality.</action>
       <action type="update" dev="Jonathan Locke" issue="">Enhanced WicketComponentTree and added this diagnostic to the bottom of the ExceptionErrorPage.</action>
       <action type="update" dev="Jonathan Locke" issue="">Reorganized components and examples for final 1.0 structure. This included moving sortable list view and sign in panel to wicket-contrib and SmartLinkLabel classes to wicket-extensions. Also moved ButtonImageResource to wicket-extensions. In the process, fixed a bug in localized images where they would not change when the session locale was changed. Added an early sketch of stylesheet stuff to sandbox. Trimmed down examples index to just the examples most relevant to wicket core and extensions.</action>
       <action type="fix" dev="Martijn Dashorst" issue="1123536">Added
