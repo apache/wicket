@@ -19,6 +19,7 @@
 
 package helloworld;
 
+import com.voicetribe.util.time.Duration;
 import com.voicetribe.wicket.WebApplication;
 
 /**
@@ -33,6 +34,8 @@ public class HelloWorldApplication extends WebApplication
     public HelloWorldApplication()
     {
         getSettings().setHomePage(HelloWorld.class);
+		Duration pollFreq = Duration.ONE_SECOND;
+		getSettings().setResourcePollFrequency(pollFreq);
     }
 }
 
