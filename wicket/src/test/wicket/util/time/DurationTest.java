@@ -47,10 +47,10 @@ public final class DurationTest extends TestCase
         Assert.assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
         Assert.assertEquals(Duration.days(9), Duration.valueOf("9 days"));
         Assert.assertEquals(Duration.hours(1), Duration.valueOf("1 hour"));
-        Assert.assertTrue(9 == Duration.days(9).getDays());
-        Assert.assertTrue(11 == Duration.hours(11).getHours());
-        Assert.assertTrue(21 == Duration.minutes(21).getMinutes());
-        Assert.assertTrue(51 == Duration.seconds(51).getSeconds());
+        Assert.assertTrue(9 == Duration.days(9).days());
+        Assert.assertTrue(11 == Duration.hours(11).hours());
+        Assert.assertTrue(21 == Duration.minutes(21).minutes());
+        Assert.assertTrue(51 == Duration.seconds(51).seconds());
     }
 
     /**

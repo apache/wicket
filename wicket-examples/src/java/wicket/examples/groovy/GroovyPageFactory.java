@@ -32,7 +32,7 @@ import wicket.PageFactory;
 import wicket.RenderException;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.Resource;
-import wicket.util.watch.Watcher;
+import wicket.util.watch.ModificationWatcher;
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -191,7 +191,7 @@ public class GroovyPageFactory extends PageFactory
         final ApplicationSettings settings = getApplication().getSettings();
 
         // Watch file in the future
-        final Watcher watcher = settings.getResourceWatcher();
+        final ModificationWatcher watcher = settings.getResourceWatcher();
 
         if (watcher != null)
         {
