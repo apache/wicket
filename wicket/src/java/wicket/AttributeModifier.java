@@ -228,7 +228,7 @@ public class AttributeModifier implements Serializable
 	 * 
 	 * @return Whether the attribute will be added if not present or not
 	 */
-	final boolean isAddAttributeIfNotPresent()
+	final boolean getAddAttributeIfNotPresent()
 	{
 		return addAttributeIfNotPresent;
 	}
