@@ -29,6 +29,7 @@ import com.voicetribe.wicket.markup.html.link.IPageLink;
 import com.voicetribe.wicket.markup.html.link.ImageMap;
 import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.link.PageLink;
+import com.voicetribe.wicket.markup.html.link.PopupSpecification;
 
 /**
  * Demonstrates different flavors of hyperlinks.
@@ -100,7 +101,8 @@ public class Home extends HtmlPage
                            new ExternalPageLink("page3", Page3.class)));
         
         // Popup example
-        add(new ExternalPageLink("popupLink", Page1.class).setPopupDimensions(100, 100));
+        PopupSpecification popupSpec = new PopupSpecification().setHeight(100).setWidth(100);
+        add(new ExternalPageLink("popupLink", Page1.class).setPopupSpecification(popupSpec));
      }
     
     /**
