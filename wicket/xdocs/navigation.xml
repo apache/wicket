@@ -18,14 +18,11 @@
 	        	<item name="Navomatic" href="/ExampleNavomatic.html"/>
 	        	<item name="GuestBook" href="/ExampleGuestBook.html"/>
 			</item>
-            <item name="Examples" href="/Examples.html"/>
-            <item name="Download" href="/Download.html"/>
             <item name="QuickStart" href="/QuickStart.html" collapse="true">
-                <item name="Summary" />
-                <item name="Setting Up" href="#Setting_up"/>
-                <item name="Running Eclipse" href="#Running_Eclipse" />
-                <item name="Next Steps" href="#Next_Steps"/>
+                <item name="Binary" href="/QuickStartBinary.html"/>
+                <item name="Source" href="/QuickStartSource.html"/>
             </item>
+            <item name="Download" href="/Download.html"/>
         </menu>
 	    <menu name="Project Info">
 	        <item name="News" href="/News.html"/>

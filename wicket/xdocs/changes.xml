@@ -8,6 +8,10 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+  	  <action type="fix" dev="Martijn Dashorst" issue="1167605">
+  	  	Documented running the examples using a binary or source distribution. Made it possible
+  	  	to run the examples using an embedded Jetty server.
+  	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Changed loop to use iterations rather than size, since this makes more sense.  Removed LoopItem so that Loop is less easily confused with ListView.
       </action>
