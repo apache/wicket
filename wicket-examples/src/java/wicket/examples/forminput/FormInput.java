@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.20 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,147 +17,103 @@
  */
 package wicket.examples.forminput;
 
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.form.ImageButton;
 import wicket.markup.html.form.RequiredTextField;
-import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.OnClickLink;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.model.PropertyModel;
 
 /**
  * Example for form input.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class FormInput extends WicketExamplePage
 {
-	/** the current locale. */
-	private Locale currentLocale;
-
-	/**
-	 * All available locales.
-	 */
-	private static final List ALL_LOCALES = Arrays.asList(Locale.getAvailableLocales());
-
 	/**
 	 * Constructor
-	 * 
-	 * @param parameters
-	 *            Page parameters
 	 */
-	public FormInput(final PageParameters parameters)
+	public FormInput()
 	{
-		FeedbackPanel feedback = new FeedbackPanel("feedback");
+		// Construct form and feedback panel and hook them up
+		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
 		add(new InputForm("inputForm", feedback));
-		currentLocale = getSession().getLocale();
-		add(new LocaleSelect("localeSelect", this, "currentLocale", ALL_LOCALES));
+
+		// Dropdown for selecting locale
+		add(new DropDownChoice("localeSelect", this, "locale", Arrays.asList(Locale
+				.getAvailableLocales())) 
+		{
+			public void onSelectionChanged(Object newSelection)
+			{
+				setLocale((Locale)newSelection);
+			}
+		});
+
+		// Link to return to default locale
 		add(new Link("defaultLocaleLink")
 		{
 			public void onClick()
 			{
-				// Get locale of request
-				final Locale requestLocale = getRequest().getLocale();
-
-				// Set current locale
-				FormInput.this.currentLocale = requestLocale;
-
-				// Change session locale
-				getSession().setLocale(requestLocale);
+				setLocale(Locale.getDefault());
 			}
 		});
 	}
 
 	/**
-	 * Gets currentLocale.
+	 * Sets locale for the user's session (getLocale() is inherited from
+	 * Component)
 	 * 
-	 * @return currentLocale
+	 * @param locale
+	 *            The new locale
 	 */
-	public Locale getCurrentLocale()
+	public void setLocale(Locale locale)
 	{
-		return currentLocale;
-	}
-
-	/**
-	 * Sets currentLocale.
-	 * 
-	 * @param currentLocale
-	 *            currentLocale
-	 */
-	public void setCurrentLocale(Locale currentLocale)
-	{
-		this.currentLocale = currentLocale;
+		getSession().setLocale(locale);
 	}
 
 	/** Form for input. */
 	private static class InputForm extends Form
 	{
-		/** object to apply input on. */
-		private TestInputObject testInputObject = new TestInputObject();
-
 		/**
 		 * Construct.
 		 * 
 		 * @param name
-		 *            componentnaam
-		 * @param validationErrorHandler
-		 *            error handler
+		 *            Component name
+		 * @param validationFeedback
+		 *            Feedback display for form
 		 */
-		public InputForm(String name, IValidationFeedback validationErrorHandler)
+		public InputForm(String name, IValidationFeedback validationFeedback)
 		{
-			super(name, validationErrorHandler);
+			super(name, new FormInputModel(), validationFeedback);
 
-			// model that allways gets the current input property so that can
-			// we change the property itself and have our other models still
-			// work
-			IModel inputModel = new Model()
-			{
-				public Object getObject()
-				{
-					return testInputObject;
-				}
-			};
+			add(new RequiredTextField("stringInput", getModel(), "stringProperty"));
+			add(new RequiredTextField("integerInput", getModel(), "integerProperty", Integer.class));
+			add(new RequiredTextField("doubleInput", getModel(), "doubleProperty", Double.class));
+			add(new RequiredTextField("dateInput", getModel(), "dateProperty", Date.class));
+			add(new RequiredTextField("integerInRangeInput", getModel(), "integerInRangeProperty")
+					.add(IntegerValidator.range(0, 100)));
 
-			add(new RequiredTextField("stringInput", inputModel, "stringProperty"));
-			add(new RequiredTextField("integerInput", inputModel, "integerProperty", Integer.class));
-			add(new RequiredTextField("doubleInput", inputModel, "doubleProperty", Double.class));
-			add(new RequiredTextField("dateInput", inputModel, "dateProperty", Date.class));
-
-			TextField integerInRangeInput = new TextField("integerInRangeInput", testInputObject,
-					"integerInRangeProperty");
-			integerInRangeInput.add(IntegerValidator.range(0, 100));            
-			add(integerInRangeInput);
-			
 			add(new ImageButton("saveButton"));
-            
-			OnClickLink link;
-			add(link = new OnClickLink("resetButtonLink")
+
+			add(new OnClickLink("resetButtonLink")
 			{
 				public void onClick()
 				{
-					testInputObject = new TestInputObject();
+					InputForm.this.getModel().setObject(new FormInputModel());
 				}
-			});
-			
-			link.add(new Image("resetButtonImage"));
+			}.add(new Image("resetButtonImage")));
 		}
 
 		/**
@@ -165,39 +121,8 @@ public class FormInput extends WicketExamplePage
 		 */
 		public void onSubmit()
 		{
-			// Everything went well; just display a message
-			info("Saved model " + testInputObject);
-		}
-	}
-
-	/**
-	 * Dropdown for selecting the locale.
-	 */
-	private static class LocaleSelect extends DropDownChoice implements IOnChangeListener
-	{
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *            componentname
-		 * @param object
-		 *            object
-		 * @param expression
-		 *            ognl expression
-		 * @param values
-		 *            list of values
-		 */
-		public LocaleSelect(String name, Serializable object, String expression, Collection values)
-		{
-			super(name, new PropertyModel(new Model(object), expression), values);
-		}
-
-		/**
-		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
-		 */
-		public void onSelectionChanged(Object newSelection)
-		{
-			getSession().setLocale((Locale)newSelection);
+			// Form validation successful. Display message showing edited model.
+			info("Saved model " + getModelObject());
 		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,9 +21,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Test object for various inputs.
+ * Simple model object for FormInput example. Has a number of simple properties
+ * that can be retrieved and set.
  */
-public final class TestInputObject implements Serializable
+public final class FormInputModel implements Serializable
 {
 	private String stringProperty = "test";
 	private Integer integerProperty = new Integer(100);

@@ -18,11 +18,7 @@
  */
 package wicket.examples.forminput;
 
-import wicket.ApplicationSettings;
 import wicket.examples.WicketExampleApplication;
-import wicket.util.convert.ConverterFactory;
-import wicket.util.convert.IConverterFactory;
-import wicket.util.time.Duration;
 
 /**
  * Application class for form input example.
@@ -31,29 +27,11 @@ import wicket.util.time.Duration;
  */
 public class FormInputApplication extends WicketExampleApplication
 {
-	/** converter factory. */
-	private final IConverterFactory converterFactory = new ConverterFactory();
-
     /**
      * Constructor.
      */
     public FormInputApplication()
     {
-        ApplicationSettings settings = getSettings();
         getPages().setHomePage(FormInput.class);
-        settings.setResourcePollFrequency(Duration.ONE_SECOND);
-
-        // show ?? markers when a message resource is not found
-        settings.setThrowExceptionOnMissingResource(false);
     }
-
-
- 	/**
- 	 * Provide a localized converter instead of the default non-localized.
- 	 * @see wicket.Application#getConverterFactory()
- 	 */
- 	public IConverterFactory getConverterFactory()
- 	{
- 		return converterFactory;
- 	}
 }

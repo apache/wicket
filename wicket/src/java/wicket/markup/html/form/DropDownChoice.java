@@ -34,7 +34,7 @@ import wicket.markup.ComponentTag;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public class DropDownChoice extends AbstractChoice
+public class DropDownChoice extends AbstractChoice implements IOnChangeListener
 {
 	/** serial UID. */
 	private static final long serialVersionUID = 122777360064586107L;
@@ -134,16 +134,14 @@ public class DropDownChoice extends AbstractChoice
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		if (this instanceof IOnChangeListener)
-		{
-			// If a user subclasses this class and implements IOnChangeListener
-			// an onChange scriptlet is added
-			final String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
-			
-			// NOTE: do not encode the url as that would give invalid JavaScript
-			tag.put("onChange", "location.href='" + url + "&" + getPath()
-					+ "=' + this.options[this.selectedIndex].value;");
-		}
+		// If a user subclasses this class and implements IOnChangeListener
+		// an onChange scriptlet is added
+		final String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
+		
+		// NOTE: do not encode the url as that would give invalid JavaScript
+		tag.put("onChange", "location.href='" + url + "&" + getPath()
+				+ "=' + this.options[this.selectedIndex].value;");
+		
 		super.onComponentTag(tag);
 	}
 
