@@ -65,7 +65,7 @@ import wicket.markup.html.table.ListView;
 public abstract class FlatTree extends AbstractTree
 {
     /** table for the current visible tree paths. */
-    private VisibleTreePathListView visibleTreePathTable;
+    private ListView visibleTreePathTable;
 
     /**
      * Constructor.
@@ -124,15 +124,26 @@ public abstract class FlatTree extends AbstractTree
 
         if (visibleTreePathTable == null)
         {
-            visibleTreePathTable = new VisibleTreePathListView("tree", model);
+        	visibleTreePathTable = newVisibleTreePathListView(model);
             add(visibleTreePathTable);
         }
         else
         {
-            visibleTreePathTable.reset();
+            visibleTreePathTable.removeAll();
             visibleTreePathTable.setModel(model);
         }
     }
+
+	/**
+	 * Creates a {@link ListView} to use for rendering the visible tree rows.
+	 * The model parameter should be used as the model for the <code>ListView</code>.
+	 * @param model a model that contains a list of {@link TreeNodeModel}s
+	 * @return a new <code>ListView</code> that uses the provided model
+	 */
+	protected final ListView newVisibleTreePathListView(Model model)
+	{
+		return new VisibleTreePathListView("tree", model);
+	}
 
     /**
      * Get image name for junction.
@@ -217,14 +228,6 @@ public abstract class FlatTree extends AbstractTree
 		{
 			return String.valueOf(userObject);
 		}
-
-        /**
-         * Remove all components without invalidating the model.
-         */
-        protected final void reset()
-        {
-            this.removeAll();
-        }
     }
 
     /**
