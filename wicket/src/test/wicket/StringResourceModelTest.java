@@ -39,241 +39,244 @@ import junit.framework.TestCase;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
- *
  * @author Chris Turner
  */
-public class StringResourceModelTest extends TestCase {
+public class StringResourceModelTest extends TestCase
+{
 
-    private MockHttpApplication application;
-    private HtmlPage page;
-    private WeatherStation ws;
-    private Model wsModel;
+	private MockHttpApplication application;
 
-    /**
-     * Create the test case.
-     *
-     * @param name The test name
-     */
-    public StringResourceModelTest(String name) {
-        super(name);
-    }
+	private HtmlPage page;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        application = new MockHttpApplication(null);
-        application.getSettings().addStringResourceLoader(
-            new BundleStringResourceLoader("wicket.StringResourceModelTest"));
-        page = new MockPage(null);
-        ws = new WeatherStation();
-        wsModel = new Model(ws);
-    }
+	private WeatherStation ws;
 
-    /**
-     * 
-     *
-     */
-    public void testGetSimpleResource() {
-        StringResourceModel model = new StringResourceModel("simple.text", page, null);
-        Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
-        Assert.assertEquals("Text should be as expected", "Simple text", model.getObject());
-        Assert.assertEquals("Text should be as expected", "Simple text", model.toString());
-    }
+	private Model wsModel;
 
-    /**
-     * 
-     *
-     */
-    public void testNullResourceKey() {
-        try {
-            new StringResourceModel(null, page, null);
-            Assert.fail("NullPointerException expected");
-        } catch (NullPointerException e) {
-            // Expected result
-        }
-    }
+	/**
+	 * Create the test case.
+	 * @param name The test name
+	 */
+	public StringResourceModelTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testGetSimpleResourceWithKeySubstitution() {
-        StringResourceModel model = new StringResourceModel("weather.${currentStatus}", page, wsModel);
-        Assert.assertEquals("Text should be as expected",
-                            "It's sunny, wear sunscreen",
-                            model.getString());
-        ws.setCurrentStatus("raining");
-        Assert.assertEquals("Text should be as expected",
-                            "It's raining, take an umberella",
-                            model.getString());
-    }
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		application = new MockHttpApplication(null);
+		application.getSettings().addStringResourceLoader(
+				new BundleStringResourceLoader("wicket.StringResourceModelTest"));
+		page = new MockPage(null);
+		ws = new WeatherStation();
+		wsModel = new Model(ws);
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testGetOGNLResource() {
-        StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
-        Assert.assertEquals("Text should be as expected",
-                            "Weather station reports that the temperature is 25.7 \u00B0C",
-                            model.getString());
-        ws.setCurrentTemperature(11.5);
-        Assert.assertEquals("Text should be as expected",
-                            "Weather station reports that the temperature is 11.5 \u00B0C",
-                            model.getString());
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testGetSimpleResource()
+	{
+		StringResourceModel model = new StringResourceModel("simple.text", page, null);
+		Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
+		Assert.assertEquals("Text should be as expected", "Simple text", model.getObject());
+		Assert.assertEquals("Text should be as expected", "Simple text", model.toString());
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testSubstitutionParametersResource() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2004, Calendar.OCTOBER, 15, 13, 21);
-        MessageFormat format = new MessageFormat("The report for {0,date,medium}, shows the temparature as {2,number,###.##} {3} and the weather to be {1}",
-                                                 page.getLocale());
-        StringResourceModel model = new StringResourceModel(
-                          "weather.detail", page, wsModel,
-                          new Object[] {
-                              cal.getTime(),
-                              "${currentStatus}",
-                              new PropertyModel(wsModel, "currentTemperature"),
-                              new PropertyModel(wsModel, "units")});
-        String expected = format.format(new Object[] {
-                                             cal.getTime(),
-                                             "sunny",
-                                             new Double(25.7),
-                                             "\u00B0C"});
-        Assert.assertEquals("Text should be as expected",
-                            expected,
-                            model.getString());
-        ws.setCurrentStatus("raining");
-        ws.setCurrentTemperature(11.568);
-        expected = format.format(new Object[] {
-                                     cal.getTime(),
-                                     "raining",
-                                     new Double(11.568),
-                                     "\u00B0C"});
-        Assert.assertEquals("Text should be as expected",
-                            expected,
-                            model.getString());
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testNullResourceKey()
+	{
+		try
+		{
+			new StringResourceModel(null, page, null);
+			Assert.fail("NullPointerException expected");
+		}
+		catch (NullPointerException e)
+		{
+			// Expected result
+		}
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testUninitialisedLocalizer() {
-        StringResourceModel model = new StringResourceModel("simple.text", null, null);
-        try {
-            model.getString();
-            Assert.fail("IllegalStateException expected");
-        } catch (IllegalStateException e) {
-            // Expected result
-        }
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testGetSimpleResourceWithKeySubstitution()
+	{
+		StringResourceModel model = new StringResourceModel("weather.${currentStatus}", page,
+				wsModel);
+		Assert.assertEquals("Text should be as expected", "It's sunny, wear sunscreen", model
+				.getString());
+		ws.setCurrentStatus("raining");
+		Assert.assertEquals("Text should be as expected", "It's raining, take an umberella", model
+				.getString());
+	}
 
-    /**
-     * 
-     *
-     */
-    public void testSetObject() {
-        StringResourceModel model = new StringResourceModel("simple.text", page, null);
-        model.setObject("Some value");
-        Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testGetOGNLResource()
+	{
+		StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
+		Assert.assertEquals("Text should be as expected",
+				"Weather station reports that the temperature is 25.7 \u00B0C", model.getString());
+		ws.setCurrentTemperature(11.5);
+		Assert.assertEquals("Text should be as expected",
+				"Weather station reports that the temperature is 11.5 \u00B0C", model.getString());
+	}
 
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testDetachAttachNormalModel() throws Exception {
-        StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
-        application.setupRequestAndResponse();
-        RequestCycle cycle = new HttpRequestCycle(application,
-                                                  application.getWicketSession(),
-                                                  application.getWicketRequest(),
-                                                  application.getWicketResponse());
-        model.attach(cycle);
-        Assert.assertNotNull(model.getLocalizer());
-        model.detach(cycle);
-        Assert.assertNull(model.getLocalizer());
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testSubstitutionParametersResource()
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.set(2004, Calendar.OCTOBER, 15, 13, 21);
+		MessageFormat format = new MessageFormat(
+				"The report for {0,date,medium}, shows the temparature as {2,number,###.##} {3} and the weather to be {1}",
+				page.getLocale());
+		StringResourceModel model = new StringResourceModel("weather.detail", page, wsModel,
+				new Object[] {cal.getTime(), "${currentStatus}",
+						new PropertyModel(wsModel, "currentTemperature"),
+						new PropertyModel(wsModel, "units")});
+		String expected = format.format(new Object[] {cal.getTime(), "sunny", new Double(25.7),
+				"\u00B0C"});
+		Assert.assertEquals("Text should be as expected", expected, model.getString());
+		ws.setCurrentStatus("raining");
+		ws.setCurrentTemperature(11.568);
+		expected = format.format(new Object[] {cal.getTime(), "raining", new Double(11.568),
+				"\u00B0C"});
+		Assert.assertEquals("Text should be as expected", expected, model.getString());
+	}
 
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testDetachAttachDetachableModel() throws Exception {
-        IModel wsDetachModel = new DetachableModel(wsModel) {
-            protected void doAttach(RequestCycle cycle) {
-                setObject(new WeatherStation());
-            }
+	/**
+	 * 
+	 *
+	 */
+	public void testUninitialisedLocalizer()
+	{
+		StringResourceModel model = new StringResourceModel("simple.text", null, null);
+		try
+		{
+			model.getString();
+			Assert.fail("IllegalStateException expected");
+		}
+		catch (IllegalStateException e)
+		{
+			// Expected result
+		}
+	}
 
-            protected void doDetach(RequestCycle cycle) {
-                setObject(null);
-            }
-        };
-        StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
-        application.setupRequestAndResponse();
-        RequestCycle cycle = new HttpRequestCycle(application,
-                                                  application.getWicketSession(),
-                                                  application.getWicketRequest(),
-                                                  application.getWicketResponse());
-        model.attach(cycle);
-        Assert.assertNotNull(model.getModel().getObject());
-        Assert.assertNotNull(model.getLocalizer());
-        model.detach(cycle);
-        Assert.assertNull(model.getModel().getObject());
-        Assert.assertNull(model.getLocalizer());
-    }
+	/**
+	 * 
+	 *
+	 */
+	public void testSetObject()
+	{
+		StringResourceModel model = new StringResourceModel("simple.text", page, null);
+		model.setObject("Some value");
+		Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
+	}
 
-    /**
-     * Inner class used for testing.
-     */
-    class WeatherStation implements Serializable {
+	/**
+	 * @throws Exception
+	 */
+	public void testDetachAttachNormalModel() throws Exception
+	{
+		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
+		application.setupRequestAndResponse();
+		RequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
+				application.getWicketRequest(), application.getWicketResponse());
+		model.attach(cycle);
+		Assert.assertNotNull(model.getLocalizer());
+		model.detach(cycle);
+		Assert.assertNull(model.getLocalizer());
+	}
 
-        private String currentStatus = "sunny";
-        private double currentTemperature = 25.7;
+	/**
+	 * @throws Exception
+	 */
+	public void testDetachAttachDetachableModel() throws Exception
+	{
+		IModel wsDetachModel = new DetachableModel(wsModel)
+		{
+			protected void doAttach(RequestCycle cycle)
+			{
+				setObject(new WeatherStation());
+			}
 
-        /**
-         * 
-         * @return status
-         */
-        public String getCurrentStatus() {
-            return currentStatus;
-        }
+			protected void doDetach(RequestCycle cycle)
+			{
+				setObject(null);
+			}
+		};
+		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
+		application.setupRequestAndResponse();
+		RequestCycle cycle = new HttpRequestCycle(application, application.getWicketSession(),
+				application.getWicketRequest(), application.getWicketResponse());
+		model.attach(cycle);
+		Assert.assertNotNull(model.getModel().getObject());
+		Assert.assertNotNull(model.getLocalizer());
+		model.detach(cycle);
+		Assert.assertNull(model.getModel().getObject());
+		Assert.assertNull(model.getLocalizer());
+	}
 
-        /**
-         * 
-         * @param currentStatus
-         */
-        public void setCurrentStatus(String currentStatus) {
-            this.currentStatus = currentStatus;
-        }
+	/**
+	 * Inner class used for testing.
+	 */
+	class WeatherStation implements Serializable
+	{
 
-        /**
-         * 
-         * @return current temp
-         */
-        public double getCurrentTemperature() {
-            return currentTemperature;
-        }
+		private String currentStatus = "sunny";
 
-        /**
-         * 
-         * @param currentTemperature
-         */
-        public void setCurrentTemperature(double currentTemperature) {
-            this.currentTemperature = currentTemperature;
-        }
+		private double currentTemperature = 25.7;
 
-        /**
-         * 
-         * @return units
-         */
-        public String getUnits() {
-            return "\u00B0C";
-        }
-    }
+		/**
+		 * @return status
+		 */
+		public String getCurrentStatus()
+		{
+			return currentStatus;
+		}
+
+		/**
+		 * @param currentStatus
+		 */
+		public void setCurrentStatus(String currentStatus)
+		{
+			this.currentStatus = currentStatus;
+		}
+
+		/**
+		 * @return current temp
+		 */
+		public double getCurrentTemperature()
+		{
+			return currentTemperature;
+		}
+
+		/**
+		 * @param currentTemperature
+		 */
+		public void setCurrentTemperature(double currentTemperature)
+		{
+			this.currentTemperature = currentTemperature;
+		}
+
+		/**
+		 * @return units
+		 */
+		public String getUnits()
+		{
+			return "\u00B0C";
+		}
+	}
 
 }

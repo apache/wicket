@@ -28,99 +28,105 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
- * Abstract base class providing common test functionality
- * to ensure that all loader implementations comply with
- * the contract of the loader interface.
- *
+ * Abstract base class providing common test functionality to ensure that all loader
+ * implementations comply with the contract of the loader interface.
  * @author Chris Turner
  */
-public abstract class StringResourceLoaderTestBase extends TestCase {
+public abstract class StringResourceLoaderTestBase extends TestCase
+{
 
-    // The loader to test
-    protected IStringResourceLoader loader;
+	// The loader to test
+	protected IStringResourceLoader loader;
 
-    // The dummy application
-    protected IApplication application;
+	// The dummy application
+	protected IApplication application;
 
-    // The dummy component
-    protected Component component;
+	// The dummy component
+	protected Component component;
 
-    /**
-     * Create the test case.
-     *
-     * @param message The name of the test
-     */
-    protected StringResourceLoaderTestBase(String message) {
-        super(message);
-    }
+	/**
+	 * Create the test case.
+	 * @param message The name of the test
+	 */
+	protected StringResourceLoaderTestBase(String message)
+	{
+		super(message);
+	}
 
-    /**
-     * Abstract method to create the loader instance to be tested.
-     *
-     * @return The loader instance to test
-     */
-    protected abstract IStringResourceLoader createLoader();
+	/**
+	 * Abstract method to create the loader instance to be tested.
+	 * @return The loader instance to test
+	 */
+	protected abstract IStringResourceLoader createLoader();
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.application = new DummyApplication();
-        Session.set(new Session(this.application) { });
-        this.component = new DummyComponent("test", this.application);
-        DummyPage page = new DummyPage();
-        page.add(this.component);
-        this.loader = createLoader();
+	protected void setUp() throws Exception
+	{
+		super.setUp();
+		this.application = new DummyApplication();
+		Session.set(new Session(this.application)
+		{
+		});
+		this.component = new DummyComponent("test", this.application);
+		DummyPage page = new DummyPage();
+		page.add(this.component);
+		this.loader = createLoader();
 
-    }
+	}
 
-    /**
-     * 
-     */
-    public void testLoaderValidKeyNoStyleDefaultLocale() {
-        String s = loader.get(component, "test.string", Locale.getDefault(), null);
-        Assert.assertEquals("Resource should be loaded", "This is a test", s);
+	/**
+	 * 
+	 */
+	public void testLoaderValidKeyNoStyleDefaultLocale()
+	{
+		String s = loader.get(component, "test.string", Locale.getDefault(), null);
+		Assert.assertEquals("Resource should be loaded", "This is a test", s);
 
-        // And do it again to ensure caching path is exercised
-        s = loader.get(component, "test.string", Locale.getDefault(), null);
-        Assert.assertEquals("Resource should be loaded", "This is a test", s);
-    }
+		// And do it again to ensure caching path is exercised
+		s = loader.get(component, "test.string", Locale.getDefault(), null);
+		Assert.assertEquals("Resource should be loaded", "This is a test", s);
+	}
 
-    /**
-     * 
-     */
-    public void testLoaderInvalidKeyNoStyleDefaultLocale() {
-        Assert.assertNull("Missing key should return null",
-                          loader.get(component, "unknown.string", Locale.getDefault(), null));
-    }
+	/**
+	 * 
+	 */
+	public void testLoaderInvalidKeyNoStyleDefaultLocale()
+	{
+		Assert.assertNull("Missing key should return null", loader.get(component, "unknown.string",
+				Locale.getDefault(), null));
+	}
 
-    /**
-     * 
-     */
-    public void testLoaderValidKeyNoStyleAlternativeLocale() {
-        String s = loader.get(component, "test.string", new Locale("zz"), null);
-        Assert.assertEquals("Resource should be loaded", "Flib flob", s);
-    }
+	/**
+	 * 
+	 */
+	public void testLoaderValidKeyNoStyleAlternativeLocale()
+	{
+		String s = loader.get(component, "test.string", new Locale("zz"), null);
+		Assert.assertEquals("Resource should be loaded", "Flib flob", s);
+	}
 
-    /**
-     * 
-     */
-    public void testLoaderInvalidKeyNoStyleAlternativeLocale() {
-        Assert.assertNull("Missing key should return null",
-                          loader.get(component, "unknown.string", new Locale("zz"), null));
-    }
+	/**
+	 * 
+	 */
+	public void testLoaderInvalidKeyNoStyleAlternativeLocale()
+	{
+		Assert.assertNull("Missing key should return null", loader.get(component, "unknown.string",
+				new Locale("zz"), null));
+	}
 
-    /**
-     * 
-     */
-    public void testLoaderValidKeyStyleNoLocale() {
-        String s = loader.get(component, "test.string", null, "alt");
-        Assert.assertEquals("Resource should be loaded", "Alt test string", s);
-    }
+	/**
+	 * 
+	 */
+	public void testLoaderValidKeyStyleNoLocale()
+	{
+		String s = loader.get(component, "test.string", null, "alt");
+		Assert.assertEquals("Resource should be loaded", "Alt test string", s);
+	}
 
-    /**
-     * 
-     */
-    public abstract void testLoaderUnknownResources();
+	/**
+	 * 
+	 */
+	public abstract void testLoaderUnknownResources();
 
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+// /////////////////////////////// End of File /////////////////////////////////

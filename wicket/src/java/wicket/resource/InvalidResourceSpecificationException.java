@@ -25,44 +25,48 @@ package wicket.resource;
  *
  * @author Chris Turner
  */
-public class InvalidResourceSpecificationException extends RuntimeException {
+public class InvalidResourceSpecificationException extends RuntimeException
+{
 
 	/** Serial Version ID */
 	private static final long serialVersionUID = 638223850328845976L;
 
 	/**
-     * Create the exception.
-     */
-    public InvalidResourceSpecificationException() {
-    }
+	 * Create the exception.
+	 */
+	public InvalidResourceSpecificationException()
+	{
+	}
 
-    /**
-     * Create the exception with the given message.
-     *
-     * @param message The message
-     */
-    public InvalidResourceSpecificationException(final String message) {
-        super(message);
-    }
+	/**
+	 * Create the exception with the given message.
+	 *
+	 * @param message The message
+	 */
+	public InvalidResourceSpecificationException(final String message)
+	{
+		super(message);
+	}
 
-    /**
-     * Create the exception, wrapping the given cause.
-     *
-     * @param cause The cause
-     */
-    public InvalidResourceSpecificationException(final Throwable cause) {
-        super(cause);
-    }
+	/**
+	 * Create the exception, wrapping the given cause.
+	 *
+	 * @param cause The cause
+	 */
+	public InvalidResourceSpecificationException(final Throwable cause)
+	{
+		super(cause);
+	}
 
-    /**
-     * Create the exception with the given message, wrapping the
-     * given cause.
-     *
-     * @param message The message
-     * @param cause The cause
-     */
-    public InvalidResourceSpecificationException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
+	/**
+	 * Create the exception with the given message, wrapping the
+	 * given cause.
+	 *
+	 * @param message The message
+	 * @param cause The cause
+	 */
+	public InvalidResourceSpecificationException(final String message, final Throwable cause)
+	{
+		super(message, cause);
+	}
 }

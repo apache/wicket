@@ -22,26 +22,26 @@ import wicket.util.ExceptionTestBase;
 
 /**
  * Unit tests for the <code>InvalidResourceSpecificationException</code>.
- *
  * @author Chris Turner
  */
-public class InvalidResourceSpecificationExceptionTest extends ExceptionTestBase {
+public class InvalidResourceSpecificationExceptionTest extends ExceptionTestBase
+{
 
-    /**
-     * Create the test.
-     *
-     * @param s The test name
-     */
-    public InvalidResourceSpecificationExceptionTest(String s) {
-        super(s);
-    }
+	/**
+	 * Create the test.
+	 * @param s The test name
+	 */
+	public InvalidResourceSpecificationExceptionTest(String s)
+	{
+		super(s);
+	}
 
-    /**
-     * Return the name of the exception class to be tested.
-     *
-     * @return The name of the exception class
-     */
-    protected String getExceptionClassName() {
-        return "wicket.resource.InvalidResourceSpecificationException";
-    }
+	/**
+	 * Return the name of the exception class to be tested.
+	 * @return The name of the exception class
+	 */
+	protected String getExceptionClassName()
+	{
+		return "wicket.resource.InvalidResourceSpecificationException";
+	}
 }

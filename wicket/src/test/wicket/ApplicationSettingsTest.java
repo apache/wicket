@@ -30,92 +30,97 @@ import junit.framework.Assert;
 
 /**
  * Test cases for the <code>ApplicationSettings</code> class.
- *
  * @author Chris Turner
  */
-public class ApplicationSettingsTest extends TestCase {
+public class ApplicationSettingsTest extends TestCase
+{
 
-    /**
-     * @param message The name of the test being run
-     */
-    public ApplicationSettingsTest(final String message) {
-        super(message);
-    }
+	/**
+	 * @param message The name of the test being run
+	 */
+	public ApplicationSettingsTest(final String message)
+	{
+		super(message);
+	}
 
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testExceptionOnMissingResourceDefaultValue() throws Exception {
-        ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-        Assert.assertTrue("exceptionOnMissingResource should default to true",
-                          settings.isExceptionOnMissingResource());
-    }
+	/**
+	 * @throws Exception
+	 */
+	public void testExceptionOnMissingResourceDefaultValue() throws Exception
+	{
+		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
+		Assert.assertTrue("exceptionOnMissingResource should default to true", settings
+				.isExceptionOnMissingResource());
+	}
 
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testExceptionOnMissingResourceSetsCorrectly() throws Exception {
-        ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-        Assert.assertSame(settings, settings.setExceptionOnMissingResource(false));
-        Assert.assertFalse("exceptionOnMissingResource should have been set to false",
-                          settings.isExceptionOnMissingResource());
-    }
+	/**
+	 * @throws Exception
+	 */
+	public void testExceptionOnMissingResourceSetsCorrectly() throws Exception
+	{
+		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
+		Assert.assertSame(settings, settings.setExceptionOnMissingResource(false));
+		Assert.assertFalse("exceptionOnMissingResource should have been set to false", settings
+				.isExceptionOnMissingResource());
+	}
 
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testUseDefaultOnMissingResourceDefaultValue() throws Exception {
-        ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-        Assert.assertTrue("useDefaultOnMissingResource should default to true",
-                          settings.isUseDefaultOnMissingResource());
-    }
+	/**
+	 * @throws Exception
+	 */
+	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
+	{
+		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
+		Assert.assertTrue("useDefaultOnMissingResource should default to true", settings
+				.isUseDefaultOnMissingResource());
+	}
 
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testUseDefaultOnMissingResourceSetsCorrectly() throws Exception {
-        ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-        Assert.assertSame(settings, settings.setUseDefaultOnMissingResource(false));
-        Assert.assertFalse("useDefaultOnMissingResource should have been set to false",
-                          settings.isUseDefaultOnMissingResource());
-    }
+	/**
+	 * @throws Exception
+	 */
+	public void testUseDefaultOnMissingResourceSetsCorrectly() throws Exception
+	{
+		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
+		Assert.assertSame(settings, settings.setUseDefaultOnMissingResource(false));
+		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", settings
+				.isUseDefaultOnMissingResource());
+	}
 
-    /**
-     */
-    public void testDefaultStringResourceLoaderSetup() {
-        ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-        List loaders = settings.getStringResourceLoaders();
-        Assert.assertEquals("There should be 2 default loaders", 2, loaders.size());
-        Assert.assertTrue("First loader one should be the component one",
-                          loaders.get(0) instanceof ComponentStringResourceLoader);
-        Assert.assertTrue("Second loader should be the application one",
-                          loaders.get(1) instanceof ApplicationStringResourceLoader);
-    }
+	/**
+	 */
+	public void testDefaultStringResourceLoaderSetup()
+	{
+		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
+		List loaders = settings.getStringResourceLoaders();
+		Assert.assertEquals("There should be 2 default loaders", 2, loaders.size());
+		Assert.assertTrue("First loader one should be the component one",
+				loaders.get(0) instanceof ComponentStringResourceLoader);
+		Assert.assertTrue("Second loader should be the application one",
+				loaders.get(1) instanceof ApplicationStringResourceLoader);
+	}
 
-    /**
-     */
-    public void testOverrideStringResourceLoaderSetup() {
-        ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-        settings.addStringResourceLoader(new BundleStringResourceLoader("wicket.resource.DummyResources"));
-        settings.addStringResourceLoader(new ComponentStringResourceLoader());
-        List loaders = settings.getStringResourceLoaders();
-        Assert.assertEquals("There should be 2 overridden loaders", 2, loaders.size());
-        Assert.assertTrue("First loader one should be the bundle one",
-                          loaders.get(0) instanceof BundleStringResourceLoader);
-        Assert.assertTrue("Second loader should be the component one",
-                          loaders.get(1) instanceof ComponentStringResourceLoader);
-    }
+	/**
+	 */
+	public void testOverrideStringResourceLoaderSetup()
+	{
+		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
+		settings.addStringResourceLoader(new BundleStringResourceLoader(
+				"wicket.resource.DummyResources"));
+		settings.addStringResourceLoader(new ComponentStringResourceLoader());
+		List loaders = settings.getStringResourceLoaders();
+		Assert.assertEquals("There should be 2 overridden loaders", 2, loaders.size());
+		Assert.assertTrue("First loader one should be the bundle one",
+				loaders.get(0) instanceof BundleStringResourceLoader);
+		Assert.assertTrue("Second loader should be the component one",
+				loaders.get(1) instanceof ComponentStringResourceLoader);
+	}
 
-    /**
-     */
-    public void testLocalizer() {
-        ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
-        Assert.assertNotNull("Localizer should be available", settings.getLocalizer());
-    }
+	/**
+	 */
+	public void testLocalizer()
+	{
+		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
+		Assert.assertNotNull("Localizer should be available", settings.getLocalizer());
+	}
 }
 
-///////////////////////////////// End of File /////////////////////////////////
+// /////////////////////////////// End of File /////////////////////////////////

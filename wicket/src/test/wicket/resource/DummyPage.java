@@ -22,18 +22,17 @@ import wicket.markup.html.HtmlPage;
 
 /**
  * Dummy page used for resource testing.
- *
  * @author Chris Turner
  */
-public class DummyPage extends HtmlPage {
+public class DummyPage extends HtmlPage
+{
 
-    /**
-     * Construct.
-     * 
-     */
-    public DummyPage() {
-        super();
-    }
-
+	/**
+	 * Construct.
+	 */
+	public DummyPage()
+	{
+		super();
+	}
 
 }

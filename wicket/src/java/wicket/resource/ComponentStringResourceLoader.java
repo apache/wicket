@@ -72,165 +72,177 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  *
  * @author Chris Turner
  */
-public class ComponentStringResourceLoader implements IStringResourceLoader {
+public class ComponentStringResourceLoader implements IStringResourceLoader
+{
+	/** Log. */
+	private static final Log log = LogFactory.getLog(Page.class);
 
-    // The cache of previously loaded resources
-    private Map resourceCache;
+	/** The cache of previously loaded resources. */
+	private Map resourceCache;
 
-    // Code broadcaster for reporting
-    private static final Log log = LogFactory.getLog(Page.class);
 
-    /**
-     * Create and initialise the resource loader.
-     */
-    public ComponentStringResourceLoader() {
-        this.resourceCache = new ConcurrentReaderHashMap();
-    }
+	/**
+	 * Create and initialise the resource loader.
+	 */
+	public ComponentStringResourceLoader()
+	{
+		this.resourceCache = new ConcurrentReaderHashMap();
+	}
 
-    /**
-     * Get the string resource for the given combination of key, locale and style.
-     * The information is obtained from a resource bundle associated with the
-     * provided component instance (or one of its parent containers). The supplied
-     * component may be null, which indicates that this loader should be skipped
-     * and a value of null will be returned. If the supplied component is not an
-     * instance of <code>Page</code> and has not been previously added to a
-     * <code>Page</code> then an exception will be thrown.
-     *
-     * @param component The component to use to find resources to be loaded
-     * @param key The key to obtain the string for
-     * @param locale The locale identifying the resource set to
-     *               select the strings from
-     * @param style The (optional) style identifying the resource
-     *              set to select the strings from
-     * @return The string resource value or null if resource not found
-     * @throws InvalidResourceSpecificationException If the component is not associated with a page
-     */
-    public final String get(final Component component, final String key, final Locale locale, final String style)
-    throws InvalidResourceSpecificationException {
-        // Check rules
-        if ( component == null ) return null;
-        if ( component.getPage() == null ) {
-            throw new InvalidResourceSpecificationException(
-                    "Components used for locating resources must be attached to pages: " +
-                    component.getClass().getName());
-        }
+	/**
+	 * Get the string resource for the given combination of key, locale and style.
+	 * The information is obtained from a resource bundle associated with the
+	 * provided component instance (or one of its parent containers). The supplied
+	 * component may be null, which indicates that this loader should be skipped
+	 * and a value of null will be returned. If the supplied component is not an
+	 * instance of <code>Page</code> and has not been previously added to a
+	 * <code>Page</code> then an exception will be thrown.
+	 *
+	 * @param component The component to use to find resources to be loaded
+	 * @param key The key to obtain the string for
+	 * @param locale The locale identifying the resource set to
+	 *               select the strings from
+	 * @param style The (optional) style identifying the resource
+	 *              set to select the strings from
+	 * @return The string resource value or null if resource not found
+	 * @throws InvalidResourceSpecificationException If the component is not associated with a page
+	 */
+	public final String get(final Component component, final String key, final Locale locale,
+			final String style) throws InvalidResourceSpecificationException
+	{
+		// Check rules
+		if (component == null)
+			return null;
+		if (component.getPage() == null)
+		{
+			throw new InvalidResourceSpecificationException(
+					"Components used for locating resources must be attached to pages: "
+							+ component.getClass().getName());
+		}
 
-        // Build search stack
-        Stack searchStack = new Stack();
-        searchStack.push(component);
-        if ( !(component instanceof Page) ) {
-            Container c = component.getParent();
-            while ( true ) {
-                searchStack.push(c);
-                if ( c instanceof Page ) break;
-                c = c.getParent();
-            }
-        }
+		// Build search stack
+		Stack searchStack = new Stack();
+		searchStack.push(component);
+		if (!(component instanceof Page))
+		{
+			Container c = component.getParent();
+			while (true)
+			{
+				searchStack.push(c);
+				if (c instanceof Page)
+					break;
+				c = c.getParent();
+			}
+		}
 
-        // Iterate through search stack
-        String value = null;
-        while ( !searchStack.isEmpty() ) {
-            Component c = (Component)searchStack.pop();
+		// Iterate through search stack
+		String value = null;
+		while (!searchStack.isEmpty())
+		{
+			Component c = (Component) searchStack.pop();
 
-            // Locate previously loaded resources from the cache
-            final String id = createCacheId(c, style, locale);
-            ValueMap strings = (ValueMap)resourceCache.get(id);
-            if ( strings == null ) {
-                // No resources previously loaded, attempt to load them
-                strings = loadResources(c, style, locale, id);
-            }
+			// Locate previously loaded resources from the cache
+			final String id = createCacheId(c, style, locale);
+			ValueMap strings = (ValueMap) resourceCache.get(id);
+			if (strings == null)
+			{
+				// No resources previously loaded, attempt to load them
+				strings = loadResources(c, style, locale, id);
+			}
 
-            value = strings.getString(key);
-            if ( value != null ) break;
-        }
+			value = strings.getString(key);
+			if (value != null)
+				break;
+		}
 
-        // Return the resource value (may be null if resource was not found)
-        return value;
-    }
+		// Return the resource value (may be null if resource was not found)
+		return value;
+	}
 
-    /**
-     * Helper method to do the actual loading of resources if required.
-     *
-     * @param component The component that the resources are being loaded for
-     * @param style The style to load resources for
-     * @param locale The locale to load reosurces for
-     * @param id The cache id to use
-     * @return The map of loaded resources
-     */
-    private synchronized ValueMap loadResources(final Component component, final String style,
-                                                final Locale locale, final String id) {
-        // Make sure someone else didn't load our resources while we were waiting
-        // for the synchronized lock on the method
-        ValueMap strings = (ValueMap)resourceCache.get(id);
-        if ( strings != null ) {
-            return strings;
-        }
+	/**
+	 * Helper method to do the actual loading of resources if required.
+	 *
+	 * @param component The component that the resources are being loaded for
+	 * @param style The style to load resources for
+	 * @param locale The locale to load reosurces for
+	 * @param id The cache id to use
+	 * @return The map of loaded resources
+	 */
+	private synchronized ValueMap loadResources(final Component component, final String style,
+			final Locale locale, final String id)
+	{
+		// Make sure someone else didn't load our resources while we were waiting
+		// for the synchronized lock on the method
+		ValueMap strings = (ValueMap) resourceCache.get(id);
+		if (strings != null)
+		{
+			return strings;
+		}
 
-        // Do the resource load
-        final Properties properties = new Properties();
-        final Resource resource = Resource.locate(component.getApplicationSettings().getSourcePath(),
-                                                  component.getClass(), style, locale, "properties");
-        if (resource != null)
-        {
-            try
-            {
-                try
-                {
-                    properties.load(new BufferedInputStream(resource.getInputStream()));
-                    strings = new ValueMap(properties);
-                }
-                finally
-                {
-                    resource.close();
-                }
-            }
-            catch (ResourceNotFoundException e)
-            {
-                log.warn("Unable to find resource " + resource, e);
-                strings = ValueMap.EMPTY_MAP;
-            }
-            catch (IOException e)
-            {
-                log.warn("Unable to access resource " + resource, e);
-                strings = ValueMap.EMPTY_MAP;
-            }
-        }
-        else
-        {
-            // Unable to load resources
-            strings = ValueMap.EMPTY_MAP;
-        }
+		// Do the resource load
+		final Properties properties = new Properties();
+		final Resource resource = Resource.locate(component.getApplicationSettings()
+				.getSourcePath(), component.getClass(), style, locale, "properties");
+		if (resource != null)
+		{
+			try
+			{
+				try
+				{
+					properties.load(new BufferedInputStream(resource.getInputStream()));
+					strings = new ValueMap(properties);
+				}
+				finally
+				{
+					resource.close();
+				}
+			}
+			catch (ResourceNotFoundException e)
+			{
+				log.warn("Unable to find resource " + resource, e);
+				strings = ValueMap.EMPTY_MAP;
+			}
+			catch (IOException e)
+			{
+				log.warn("Unable to access resource " + resource, e);
+				strings = ValueMap.EMPTY_MAP;
+			}
+		}
+		else
+		{
+			// Unable to load resources
+			strings = ValueMap.EMPTY_MAP;
+		}
 
-        resourceCache.put(id, strings);
-        return strings;
-    }
+		resourceCache.put(id, strings);
+		return strings;
+	}
 
-    /**
-     * Helper method to create a unique id for caching previously loaded
-     * resources.
-     *
-     * @param component The component that the resources are being loaded for
-     * @param style The style of the resources
-     * @param locale The locale of the resources
-     * @return The unique cache id
-     */
-    private String createCacheId(final Component component, final String style, final Locale locale) {
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append(component.getClass().getName());
-        if (style != null)
-        {
-            buffer.append('.');
-            buffer.append(style);
-        }
-        if (locale != null)
-        {
-            buffer.append('.');
-            buffer.append(locale.toString());
-        }
-        final String id = buffer.toString();
-        return id;
-    }
+	/**
+	 * Helper method to create a unique id for caching previously loaded
+	 * resources.
+	 *
+	 * @param component The component that the resources are being loaded for
+	 * @param style The style of the resources
+	 * @param locale The locale of the resources
+	 * @return The unique cache id
+	 */
+	private String createCacheId(final Component component, final String style, final Locale locale)
+	{
+		final StringBuffer buffer = new StringBuffer();
+		buffer.append(component.getClass().getName());
+		if (style != null)
+		{
+			buffer.append('.');
+			buffer.append(style);
+		}
+		if (locale != null)
+		{
+			buffer.append('.');
+			buffer.append(locale.toString());
+		}
+		final String id = buffer.toString();
+		return id;
+	}
 
 }
-
-///////////////////////////////// End of File /////////////////////////////////
