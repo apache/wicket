@@ -31,8 +31,6 @@ import java.util.Set;
  */
 public abstract class ListenerSet
 {
-    // TODO This class ought to be generified
-    
     /** Set of change listeners */
     private final Set listeners = new HashSet();
     
