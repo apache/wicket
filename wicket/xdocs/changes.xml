@@ -8,6 +8,17 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1145200">
+		Refactored resource locator code, creating a new package wicket.util.resource.locator 
+		which contains an SPI interface, IResourceLocator, for implementing resource 
+		locators.  Then created AbstractResourceLocator as a base class for 
+		IResourceLocator implementations, including the new PathResourceLocator and 
+		ClassLoaderResourceLocator.   Finally, created a helper/wrapper class 
+		ResourceLocator which adds convenience methods and then extended that class 
+		with DefaultResourceLocator, which extends ResourceLocator and uses 
+		PathResourceLocator and ClassLoaderResourceLocator together to emulate the 
+		earlier resource location functionality.  
+	  </action>
       <action type="update" dev="Jonathan Locke" issue="">Enhanced WicketComponentTree and added this diagnostic to the bottom of the ExceptionErrorPage.</action>
       <action type="update" dev="Jonathan Locke" issue="">Reorganized components and examples for final 1.0 structure. This included moving sortable list view and sign in panel to wicket-contrib and SmartLinkLabel classes to wicket-extensions. Also moved ButtonImageResource to wicket-extensions. In the process, fixed a bug in localized images where they would not change when the session locale was changed. Added an early sketch of stylesheet stuff to sandbox. Trimmed down examples index to just the examples most relevant to wicket core and extensions.</action>
       <action type="fix" dev="Martijn Dashorst" issue="1123536">Added

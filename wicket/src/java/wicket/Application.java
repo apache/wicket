@@ -27,6 +27,8 @@ import wicket.markup.parser.XmlPullParser;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
 import wicket.util.lang.Classes;
+import wicket.util.resource.locator.DefaultResourceLocator;
+import wicket.util.resource.locator.ResourceLocator;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
@@ -57,11 +59,11 @@ public abstract class Application
 	private List componentResolvers = new ArrayList();
 
 	/**
-	 * Factory for the converter instance; default to the non localized
-	 * factory {@link ConverterFactory}.
+	 * Factory for the converter instance; default to the non localized factory
+	 * {@link ConverterFactory}.
 	 */
 	private IConverterFactory converterFactory = new ConverterFactory();
-    
+
 	/** The single application-wide localization class */
 	private final Localizer localizer;
 
@@ -76,6 +78,9 @@ public abstract class Application
 
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
+
+	/** The default resource locator for this application */
+	private ResourceLocator resourceLocator;
 
 	/**
 	 * Constructor
@@ -105,6 +110,7 @@ public abstract class Application
 
 	/**
 	 * Gets the converter factory.
+	 * 
 	 * @return the converter factory
 	 */
 	public IConverterFactory getConverterFactory()
@@ -176,6 +182,19 @@ public abstract class Application
 	}
 
 	/**
+	 * @return Resource locator for this application
+	 */
+	public ResourceLocator getResourceLocator()
+	{
+		if (resourceLocator == null)
+		{
+			// Create compound resource locator using source path from application settings
+			resourceLocator = new DefaultResourceLocator(getSettings().getSourcePath());
+		}
+		return resourceLocator;
+	}
+
+	/**
 	 * @return Resource watcher with polling frequency determined by setting, or
 	 *         null if no polling frequency has been set.
 	 */
@@ -199,9 +218,19 @@ public abstract class Application
 	{
 		return settings;
 	}
-    
-    /**
-     * @return Factory for creating sessions
-     */
-    public abstract ISessionFactory getSessionFactory();
+
+	/**
+	 * @return Factory for creating sessions
+	 */
+	public abstract ISessionFactory getSessionFactory();
+
+	/**
+	 * Called by ApplicationSettings when source path property is changed. This
+	 * method sets the resourceLocator to null so it will get recreated the next
+	 * time it is accessed using the new source path.
+	 */
+	void sourcePathChanged()
+	{
+		this.resourceLocator = null;
+	}
 }

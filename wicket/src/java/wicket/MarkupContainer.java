@@ -39,7 +39,6 @@ import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceLocator;
 import wicket.util.resource.ResourceNotFoundException;
 import wicket.util.string.Strings;
 import wicket.util.watch.ModificationWatcher;
@@ -598,8 +597,8 @@ public abstract class MarkupContainer extends Component
 				while ((markupResource == null) && (containerClass != MarkupContainer.class))
 				{
 					// Look for markup resource for containerClass
-					markupResource = ResourceLocator.locate(getApplicationSettings().getSourcePath(),
-							containerClass, getStyle(), getLocale(), getMarkupType());
+					markupResource = getApplication().getResourceLocator().locate(containerClass,
+							getStyle(), getLocale(), getMarkupType());
 					containerClass = containerClass.getSuperclass();
 				}
 

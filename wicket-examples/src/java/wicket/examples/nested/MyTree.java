@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==================================================================== Licensed
@@ -31,10 +30,8 @@ import wicket.contrib.markup.html.tree.IndentTree;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.AbstractImage;
 import wicket.markup.html.image.Image;
-import wicket.util.file.Path;
 import wicket.util.lang.Classes;
 import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceLocator;
 
 /** indent tree implementation. */
 public class MyTree extends IndentTree
@@ -44,8 +41,11 @@ public class MyTree extends IndentTree
 
 	/**
 	 * Construct.
-	 * @param componentName The name of this container
-	 * @param model the tree model
+	 * 
+	 * @param componentName
+	 *            The name of this container
+	 * @param model
+	 *            the tree model
 	 */
 	public MyTree(String componentName, TreeModel model)
 	{
@@ -112,47 +112,42 @@ public class MyTree extends IndentTree
 	}
 
 	/**
-	 * Image that loads from this package (instead of Image's page)
-	 * without locale, style etc.
+	 * Image that loads from this package (instead of Image's page) without
+	 * locale, style etc.
 	 */
 	private static final class LocalImage extends Image
 	{
 		/**
 		 * Construct.
-		 * @param name component name
-		 * @param object model
+		 * 
+		 * @param name
+		 *            component name
+		 * @param object
+		 *            model
 		 */
 		public LocalImage(String name, Serializable object)
 		{
 			super(name, object);
 		}
 
-	    /**
-	     * @return Gets the image resource for the component.
-	     */
-	    protected IResource getResource()
-	    {
-	    	final String imageResource = getModelObjectAsString();
+		/**
+		 * @return Gets the image resource for the component.
+		 */
+		protected IResource getResource()
+		{
+			final String imageResource = getModelObjectAsString();
 			final String path = Classes.packageName(MyTree.class) + "." + imageResource;
-	        return ResourceLocator.locate
-	        (
-	            new Path(),
-	            MyTree.class.getClassLoader(),
-	            path,
-	            null,
-	            null,
-	            null
-	        );
-	    }
+			return getApplication().getResourceLocator().locate(path, null, null, null);
+		}
 
-	    /**
-	     * @see wicket.Component#onComponentTag(ComponentTag)
-	     */
-	    protected void onComponentTag(final ComponentTag tag)
-	    {
-	        checkComponentTag(tag, "img");
-	        final String url = getModelObjectAsString();
+		/**
+		 * @see wicket.Component#onComponentTag(ComponentTag)
+		 */
+		protected void onComponentTag(final ComponentTag tag)
+		{
+			checkComponentTag(tag, "img");
+			final String url = getModelObjectAsString();
 			tag.put("src", url.replaceAll("&", "&amp;"));
-	    }
+		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.27 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -24,7 +24,6 @@ import java.util.Map;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.util.resource.IResource;
-import wicket.util.resource.ResourceLocator;
 
 /**
  * An image component represents a localizable image resource. The image name
@@ -51,8 +50,6 @@ public class StaticImageResource extends ImageResource
 	 * Gets the image resource for a given set of criteria. Only one image
 	 * resource will be loaded for the same criteria.
 	 * 
-	 * @param classLoader
-	 *            The classloader for loading the image
 	 * @param basePackage
 	 *            The base package to search from
 	 * @param resourcePath
@@ -63,20 +60,18 @@ public class StaticImageResource extends ImageResource
 	 *            The style of the image
 	 * @return The image resource
 	 */
-	public static StaticImageResource get(final ClassLoader classLoader, final Package basePackage,
-			final String resourcePath, final Locale locale, final String style)
+	public static StaticImageResource get(final Package basePackage, final String resourcePath,
+			final Locale locale, final String style)
 	{
 		final String localeKeyPart = (locale != null) ? locale.toString() : "";
 		final String localeStylePart = (style != null) ? style : "";
-		final String key = classLoader.toString() + basePackage.getName() + resourcePath
-				+ localeKeyPart + localeStylePart;
+		final String key = basePackage.getName() + resourcePath + localeKeyPart + localeStylePart;
 		synchronized (imageResourceMap)
 		{
 			StaticImageResource imageResource = (StaticImageResource)imageResourceMap.get(key);
 			if (imageResource == null)
 			{
-				imageResource = new StaticImageResource(classLoader, basePackage, resourcePath, locale,
-						style);
+				imageResource = new StaticImageResource(basePackage, resourcePath, locale, style);
 				imageResourceMap.put(key, imageResource);
 			}
 			return imageResource;
@@ -86,8 +81,6 @@ public class StaticImageResource extends ImageResource
 	/**
 	 * Constructor
 	 * 
-	 * @param classLoader
-	 *            The classloader for loading the image
 	 * @param basePackage
 	 *            The base package to search from
 	 * @param resourcePath
@@ -97,8 +90,8 @@ public class StaticImageResource extends ImageResource
 	 * @param style
 	 *            The style of the image
 	 */
-	private StaticImageResource(final ClassLoader classLoader, final Package basePackage,
-			final String resourcePath, final Locale locale, final String style)
+	private StaticImageResource(final Package basePackage, final String resourcePath,
+			final Locale locale, final String style)
 	{
 		// TODO we might want to consider relaxing this in the future so people
 		// can stash images in subfolders and the like
@@ -108,8 +101,8 @@ public class StaticImageResource extends ImageResource
 		}
 
 		final String path = basePackage.getName() + "." + resourcePath;
-		this.resource = ResourceLocator.locate(RequestCycle.get().getApplication().getSettings()
-				.getSourcePath(), classLoader, path, style, locale, null);
+		this.resource = RequestCycle.get().getApplication().getResourceLocator().locate(path,
+				style, locale, null);
 	}
 
 	/**
