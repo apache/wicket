@@ -26,17 +26,10 @@ import wicket.markup.ComponentTag;
  * 
  * @author Jonathan Locke
  */
-public class TextField extends FormComponent
+public class TextField extends TextComponent
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -2913294206388017417L;
-
-	/**
-	 * When the user input does not validate, this is a temporary store for the
-	 * input he/she provided. We have to store it somewhere as we loose the
-	 * request parameter when redirecting.
-	 */
-	private String invalidInput;
 
 	/**
      * @see wicket.Component#Component(String, Serializable)
@@ -55,38 +48,28 @@ public class TextField extends FormComponent
 	}
 
 	/**
-	 * @see FormComponent#supportsPersistence()
-	 */
-	public final boolean supportsPersistence()
-	{
-		return true;
-	}
-
-	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public void updateModel()
-	{
-        // Component validated, so clear the input
-		invalidInput = null; 
-		setModelObject(getRequestString());
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
 	 *            Tag to modify
 	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected void handleComponentTag(final ComponentTag tag)
 	{
+        // Must be attached to an input tag
 		checkComponentTag(tag, "input");
-		checkComponentTagAttribute(tag, "type", "text");
+        
+        // If this is not a subclass (PasswordTextField)
+        if (getClass() == TextField.class)
+        {
+            // check for text type
+    		checkComponentTagAttribute(tag, "type", "text");
+        }
+        
+        // Default handling for component tag
 		super.handleComponentTag(tag);
-		if (invalidInput == null)
+        
+		if (getInvalidInput() == null)
 		{
 			// No validation errors
 			tag.put("value", getModelObjectAsString());
@@ -94,18 +77,7 @@ public class TextField extends FormComponent
 		else
 		{
 			// Invalid input detected
-			tag.put("value", invalidInput);
+			tag.put("value", getInvalidInput());
 		}
-	}
-
-	/**
-	 * Handle a validation error.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#invalid()
-	 */
-	protected void invalid()
-	{
-		// Store the user input
-		invalidInput = getRequestString();
 	}
 }
