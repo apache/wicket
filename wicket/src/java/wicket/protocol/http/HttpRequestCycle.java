@@ -158,7 +158,6 @@ public class HttpRequestCycle extends RequestCycle
 			buffer.append(((HttpRequest)request).getContextPath());
 
 			final String servletPath = ((HttpRequest)request).getServletPath();
-
 			if (servletPath.equals(""))
 			{
 				buffer.append('/');
@@ -215,9 +214,9 @@ public class HttpRequestCycle extends RequestCycle
 				{
 					// Render the page
 					page.render();
-                    
-                    // Clear all feedback messages
-                    page.getFeedbackMessages().clear();
+
+					// Clear all feedback messages
+					page.getFeedbackMessages().clear();
 				}
 			}
 		}
@@ -322,8 +321,8 @@ public class HttpRequestCycle extends RequestCycle
 				if (page.isStale())
 				{
 					// Page was marked stale because the data model for some
-					// component on the page is stale
-					// Find the most recent fresh page and send the user there
+					// component on the page is stale.  Find the most recent 
+                    // fresh page and send the user there.
 					final Page freshestPage = session.getFreshestPage();
 
 					if (freshestPage != null)
@@ -343,7 +342,6 @@ public class HttpRequestCycle extends RequestCycle
 					// Just a particular rendering of the page is stale, so send
 					// the user back to the page
 					setPage(newPage(application.getPages().getStaleDataErrorPage(), page));
-
 					return true;
 				}
 				else
@@ -360,9 +358,6 @@ public class HttpRequestCycle extends RequestCycle
 						// newer than the given page since they will no longer
 						// be accessible.
 						setPage(page);
-                        
-                        // TODO uncomment this when we've made it smart enough not to remove popup pages 
-						//session.removeNewerThan(page);
 
 						// Look up interface to call
 						final String interfaceName = request.getParameter("interface");
@@ -383,29 +378,27 @@ public class HttpRequestCycle extends RequestCycle
 							throw new WicketRuntimeException("Method " + method + " of interface "
 									+ interfaceName + " threw an exception", e);
 						}
+
 						// Set form component values from cookies
 						setFormComponentValuesFromCookies(page);
-						// Test if the current page is also the next page. Or if a redirect will happen. 
-						if(getPage() != page || getRedirect())
+
+						// If the current page is also the next page or we're redirecting
+						if (getPage() != page || getRedirect())
 						{
-							// if it is not the same or a redirect then do call deattach models to deattach 
-							// any models that can be loaded by the component listener
-							deattachModels(page);
+							// detach any models loaded by the component listener
+							page.detachModels();
 						}
 						return true;
 					}
 					else
 					{
 						// If the page is in the session and is not stale, then
-						// the
-						// component in question should exist. Therefore, we
-						// should not
-						// get here. So it must be an internal error of some
-						// kind or
-						// someone is hacking around with URLs in their browser.
+						// the component in question should exist. Therefore, we
+						// should not get here. So it must be an internal error
+						// of some kind or someone is hacking around with URLs 
+                        // in their browser.
 						log.error("No component found for " + path);
 						setPage(newPage(application.getPages().getInternalErrorPage()));
-
 						return true;
 					}
 				}
@@ -415,7 +408,6 @@ public class HttpRequestCycle extends RequestCycle
 				// Page was expired from session, probably because backtracking
 				// limit was reached
 				setPage(newPage(application.getPages().getPageExpiredErrorPage()));
-
 				return true;
 			}
 		}

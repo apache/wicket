@@ -17,12 +17,13 @@
  */
 package wicket;
 
+import java.util.Iterator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
-
 
 /**
  * Abstract base class for pages. As a Container subclass, a Page can contain a
@@ -93,6 +94,32 @@ public abstract class Page extends Container implements IRedirectListener
 		// application are accessible in the page constructor.
 		this.session = Session.get();
 		this.session.addPage(this);
+	}
+
+	/**
+	 * Detach models from this page, including any models used by component
+	 * attribute modifiers.
+	 */
+	public final void detachModels()
+	{
+		visitChildren(new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				component.detachModel();
+
+				// Also detach models from any contained attribute modifiers
+				if (component.attributeModifiers != null)
+				{
+					for (Iterator iterator = component.attributeModifiers.iterator(); iterator
+							.hasNext();)
+					{
+						((AttributeModifier)iterator.next()).detachModel();
+					}
+				}
+				return CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**
@@ -225,7 +252,7 @@ public abstract class Page extends Container implements IRedirectListener
 		finally
 		{
 			// Be sure to detach models
-			detachModels(this);
+			detachModels();
 		}
 	}
 

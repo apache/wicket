@@ -102,7 +102,7 @@ public abstract class Component implements Serializable
 	private static Log log = LogFactory.getLog(Component.class);
 
 	/** Collection of AttributeModifiers to be applied for this Component */
-	private List attributeModifiers = null;
+	List attributeModifiers = null;
 
 	/** The model for this component. */
 	private IModel model;
@@ -1267,34 +1267,6 @@ public abstract class Component implements Serializable
 					throw new WicketRuntimeException(component
 							.exceptionMessage("Component never rendered. You probably failed to "
 									+ "reference it in your markup."));
-				}
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-	}
-
-	/**
-	 * Detach all models that the components of this page have.
-	 * 
-	 * @param page
-	 *            the page
-	 */
-	final void detachModels(final Page page)
-	{
-		page.visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				component.detachModel();
-
-				// Also detach models from any contained attribute modifiers
-				if (component.attributeModifiers != null)
-				{
-					for (Iterator iterator = component.attributeModifiers.iterator(); iterator
-							.hasNext();)
-					{
-						((AttributeModifier)iterator.next()).detachModel();
-					}
 				}
 				return CONTINUE_TRAVERSAL;
 			}
