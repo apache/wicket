@@ -208,13 +208,16 @@ public class HttpRequestCycle extends RequestCycle
 				// Should page be redirected to?
 				if (getRedirect())
 				{
-					// redirect to the page
+					// Redirect to the page
 					redirectToPage(page);
 				}
 				else
 				{
-					// render the page
+					// Render the page
 					page.render();
+                    
+                    // Clear all feedback messages
+                    page.getFeedbackMessages().clear();
 				}
 			}
 		}
