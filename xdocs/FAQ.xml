@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Frequently Asked Questions</title>
+  </properties>
+
+  <meta name="keyword" content="wicket, web, j2ee, java"/>
+
+<body>
+<section name="Frequently Asked Questions">
+<p><author>Jonathan Locke</author></p>
+<p>
+<subsection name="Q: What design decisions were made regarding state management?">
+<p>
+A: One of the primary objectives was to make state management a Java thing 
+   that is abstracted away from implementation details like HttpSession.
+   In Wicket, state is stored in components that are nested in Pages which
+   are all contained in a map in the user's session.  All of this is very 
+   well defined and occurs "behind the scenes".  Such a style of coding
+   may be unfamiliar to people with experience using existing frameworks.
+   Typically Wicket code involves good OO design, use of nested and anonymous
+   classes and an overall awareness of components and their models as being 
+   the repositories of all state.  It will take time to adapt to this and
+   for people to set aside old functional models of programming where they
+   accomplish everything with query parameters, session state or their 
+   equivalent.
+</p>
+</subsection>
+
+<subsection name="Q: How does Wicket handle stale data and the back button?">
+<p>
+A: Because Wicket has a first class component object model where the state
+   for every page and nested component is available in the user's session,
+   it can trace through all that state when model information changes looking
+   for pages containing components with models that have changed in ways that
+   invalidate earlier renderings of those components and pages.  
+</p>
+<p>
+   This provides automatic handling for the back button, which has to do with 
+   stale <em>markup</em>, and can generally be divorced from the typical problems of 
+   stale data in a multi-user environment, which should be handled with the
+   usual (optimistic) locking techniques in the persistence layer.
+</p>
+<p>   
+   A good example of stale markup is this: If a table on a page is rendered 
+   when there are 20 rows in the table's model, a subsequent deletion of a 
+   row will invalidate the rendering of the table that is still cached in 
+   the user's browser.  When the user accesses the 20th row in the cached 
+   page by using their back button, the link will not be backed correctly.
+   What's more, a deletion of the first row means that all 19 rows are off 
+   by one in terms of the model they reference.
+</p>
+<p>   
+   In Wicket, stale markup caused by deleting a row in a table is automatically
+   handled by using the well-controlled server side state which exists in the
+   user's session.  If you look at the Cell class you will see this implementation
+   (roughly) of the removeLink method (which returns a Link that will remove
+   any given cell from its containing table).
+</p>
+<source><![CDATA[  
+    /**
+     * Returns a link that will remove this cell from the table that holds it.
+     * @param componentName Name of remove link component to create
+     * @return The link component
+     */
+    public Link removeLink(final String componentName)
+    {
+        return new Link(componentName)
+        {
+            public void linkClicked(final RequestCycle cycle)
+            {
+                // Remove cell and invalidate table
+                table.getList().remove(index);
+                table.invalidateModel();
+            }
+        };
+    }]]>
+</source>
+<p>
+   Notice that once the remove link changes its table's model by removing the
+   cell's model from the table list, it calls <tt>table.invalidateModel()</tt>.  This
+   method is implemented by Table, which inherits most of the functionality 
+   from Component.  If you look at the implementation of invalidateModel in 
+   Component, you will find that it looks through every component on every page
+   in the user's session.  Any page containing a component using the same model
+   is a stale markup rendering and is made stale with a call to setStale.  When
+   a user uses their back button to access the stale page at a later time, they
+   will receive an appropriate warning.
+</p>
+</subsection>
+
+<subsection name='Q: Why Wicket?'>
+<p>
+A: The name "wicket" was at first selected simply because it was unique, memorable 
+   and easy to say... and yet not used by a serious software project (the owner 
+   of the "dodgy IRC bot" called "wicket" which shows up in a Google search was 
+   kind enough to give his blessings to me via email to use the name).  It is 
+   surprisingly hard to find <em>any</em> short word that is not already used as 
+   the name of some software project or other!
+</p>
+<p>   
+   Although the name was selected for no particular reason, there are a couple
+   of interesting coincidences.  For one thing, web frameworks have been somewhat 
+   of a "sticky wicket".  For another, "wicket" sounds a bit like "wiki" which 
+   is Hawaiian for "quick" (you could even think of the name as "wik" "it" ;-)).  
+   And finally, the original meaning of wicket was that of a small door.  But,
+   especially a small door within a larger door.  I like this image quite a lot.  
+   It's modular ;-) and doors represent freedom (from the big J2EE door?).  A 
+   picture of a small door within another door might make a nice cover for the 
+   User's Guide when it's done.  Either that or a cute little squirrel staring 
+   back at the reader through a croquet wicket!
+</p>
+</subsection>
+</section>
+
+</body>
+</document>    
