@@ -28,17 +28,21 @@ import wicket.markup.html.basic.Label;
  * {@link Label}with the page number of that link (1..n).
  * 
  * <pre>
- * 			 &lt;td wicket:id=&quot;navigation&quot;&gt;
- * 				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- * 					&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- * 				 &lt;/a&gt;
- * 			 &lt;/td&gt;
+ * 
+ *  			 &lt;td wicket:id=&quot;navigation&quot;&gt;
+ *  				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *  					&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ *  				 &lt;/a&gt;
+ *  			 &lt;/td&gt;
+ *  
  * </pre>
  * 
  * thus renders like:
  * 
  * <pre>
- * 			 1 |  2 |  3 |	4 |	 5 |  6 |  7 |	8 |	 9 |
+ * 
+ *  			 1 |  2 |  3 |	4 |	 5 |  6 |  7 |	8 |	 9 |
+ *  
  * </pre>
  * 
  * </p>
@@ -70,18 +74,20 @@ import wicket.markup.html.basic.Label;
  * With:
  * 
  * <pre>
- * 			 &lt;td wicket:id=&quot;navigation&quot;&gt;
- * 				 &lt;span wicket:id=&quot;separator&quot;/&gt;
- * 				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- * 				   &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- * 				 &lt;/a&gt;
- * 			 &lt;/td&gt;
+ * 
+ *  			 &lt;td wicket:id=&quot;navigation&quot;&gt;
+ *  				 &lt;span wicket:id=&quot;separator&quot;/&gt;
+ *  				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ *  				   &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ *  				 &lt;/a&gt;
+ *  			 &lt;/td&gt;
+ *  
  * </pre>
  * 
  * renders like:
  * 
  * <pre>
- *        page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
+ * page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
  * </pre>
  * 
  * </p>
@@ -117,7 +123,7 @@ public class PageableListViewNavigation extends Loop
 
 	/** Offset for the Loop */
 	private int startIndex;
-	
+
 	/**
 	 * Number of links on the left and/or right to keep the current page link
 	 * somewhere near the middle.
@@ -161,7 +167,7 @@ public class PageableListViewNavigation extends Loop
 	{
 		return separator;
 	}
-	
+
 	/**
 	 * 
 	 * @return view size
@@ -178,9 +184,9 @@ public class PageableListViewNavigation extends Loop
 	 */
 	public void setViewSize(final int size)
 	{
-	    this.setModelObject(new Integer(size));
+		this.setModelObject(new Integer(size));
 	}
-	
+
 	/**
 	 * Sets the margin.
 	 * 
@@ -214,7 +220,7 @@ public class PageableListViewNavigation extends Loop
 		// The index of the first page link depends on the PageableListView's
 		// page currently printed.
 		this.setStartIndex();
-		
+
 		super.internalOnBeginRequest();
 	}
 
@@ -226,7 +232,7 @@ public class PageableListViewNavigation extends Loop
 	 * 
 	 * @see wicket.markup.html.list.Loop#populateItem(LoopItem)
 	 */
-	protected void populateItem(Loop.LoopItem loopItem)
+	protected void populateItem(final Loop.LoopItem loopItem)
 	{
 		// Get the index of page this link shall point to
 		final int pageIndex = this.startIndex + loopItem.getIteration();
@@ -236,8 +242,7 @@ public class PageableListViewNavigation extends Loop
 				pageableListView, pageIndex);
 		loopItem.add(link);
 
-		// Add a label (the page number) to the list which is enclosed by the
-		// link
+		// Add a page number label to the list which is enclosed by the link
 		link.add(new Label("pageNumber", String.valueOf(pageIndex + 1)));
 	}
 
@@ -295,19 +300,19 @@ public class PageableListViewNavigation extends Loop
 		{
 			firstListItem = 0;
 		}
-		
+
 		if ((viewSize != getIterations()) || (this.startIndex != firstListItem))
 		{
-		    this.modelChanging();
+			this.modelChanging();
 
 			// Tell the ListView what the new start index shall be
 			this.startIndex = firstListItem;
-		    this.setViewSize(viewSize);
-		    
-		    this.modelChanged();
-		    
-		    // force all children to be re-rendered
-		    removeAll();
+			this.setViewSize(viewSize);
+
+			this.modelChanged();
+
+			// force all children to be re-rendered
+			removeAll();
 		}
 	}
 }

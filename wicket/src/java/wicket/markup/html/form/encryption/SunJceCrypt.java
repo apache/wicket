@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 public class SunJceCrypt extends AbstractCrypt implements ICrypt
 {
 	/**
-	 * Item count used in combination with the salt to create the
+	 * Iteration count used in combination with the salt to create the
 	 * encryption key.
 	 */
 	private final static int count = 17;
