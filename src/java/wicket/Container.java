@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.24 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -91,7 +91,6 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Container extends Component
 {
-	// TODO finalize javadoc
 	/** Log for reporting. */
 	private static final Log log = LogFactory.getLog(Container.class);
 
@@ -114,7 +113,7 @@ public abstract class Container extends Component
 	 * Constructor.
 	 * 
 	 * @param name
-	 *           The name of this container
+	 *            The name of this container
 	 */
 	public Container(final String name)
 	{
@@ -127,11 +126,11 @@ public abstract class Container extends Component
 	 * components have names. A component's name cannot be null.
 	 * 
 	 * @param name
-	 *           The non-null name of this component
+	 *            The non-null name of this component
 	 * @param model
-	 *           the model
+	 *            the model
 	 * @throws WicketRuntimeException
-	 *            Thrown if the component has been given a null name.
+	 *             Thrown if the component has been given a null name.
 	 */
 	public Container(String name, IModel model)
 	{
@@ -140,10 +139,10 @@ public abstract class Container extends Component
 	}
 
 	/**
-	 * Constructor that uses the provided instance of {@link IModel}as a dynamic
-	 * model. This model will be wrapped in an instance of {@link PropertyModel}
-	 * using the provided expression. Thus, using this constructor is a
-	 * short-hand for:
+	 * Constructor that uses the provided instance of {@link IModel}as a
+	 * dynamic model. This model will be wrapped in an instance of
+	 * {@link PropertyModel}using the provided expression. Thus, using this
+	 * constructor is a short-hand for:
 	 * 
 	 * <pre>
 	 * new MyComponent(name, new PropertyModel(myIModel, expression));
@@ -152,14 +151,14 @@ public abstract class Container extends Component
 	 * All components have names. A component's name cannot be null.
 	 * 
 	 * @param name
-	 *           The non-null name of this component
+	 *            The non-null name of this component
 	 * @param model
-	 *           the instance of {@link IModel}from which the model object will
-	 *           be used as the subject for the given expression
+	 *            the instance of {@link IModel}from which the model object
+	 *            will be used as the subject for the given expression
 	 * @param expression
-	 *           the OGNL expression that works on the given object
+	 *            the OGNL expression that works on the given object
 	 * @throws WicketRuntimeException
-	 *            Thrown if the component has been given a null name.
+	 *             Thrown if the component has been given a null name.
 	 */
 	public Container(String name, IModel model, String expression)
 	{
@@ -173,11 +172,11 @@ public abstract class Container extends Component
 	 * names. A component's name cannot be null.
 	 * 
 	 * @param name
-	 *           The non-null name of this component
+	 *            The non-null name of this component
 	 * @param object
-	 *           the object that will be used as a simple model
+	 *            the object that will be used as a simple model
 	 * @throws WicketRuntimeException
-	 *            Thrown if the component has been given a null name.
+	 *             Thrown if the component has been given a null name.
 	 */
 	public Container(String name, Serializable object)
 	{
@@ -187,8 +186,8 @@ public abstract class Container extends Component
 
 	/**
 	 * Constructor that uses the provided object as a dynamic model. This object
-	 * will be wrapped in an instance of {@link Model}that will be wrapped in an
-	 * instance of {@link PropertyModel}using the provided expression. Thus,
+	 * will be wrapped in an instance of {@link Model}that will be wrapped in
+	 * an instance of {@link PropertyModel}using the provided expression. Thus,
 	 * using this constructor is a short-hand for:
 	 * 
 	 * <pre>
@@ -198,14 +197,14 @@ public abstract class Container extends Component
 	 * All components have names. A component's name cannot be null.
 	 * 
 	 * @param name
-	 *           The non-null name of this component
+	 *            The non-null name of this component
 	 * @param object
-	 *           the object that will be used as the subject for the given
-	 *           expression
+	 *            the object that will be used as the subject for the given
+	 *            expression
 	 * @param expression
-	 *           the OGNL expression that works on the given object
+	 *            the OGNL expression that works on the given object
 	 * @throws WicketRuntimeException
-	 *            Thrown if the component has been given a null name.
+	 *             Thrown if the component has been given a null name.
 	 */
 	public Container(String name, Serializable object, String expression)
 	{
@@ -217,15 +216,15 @@ public abstract class Container extends Component
 	 * Adds a child component to this container.
 	 * 
 	 * @param child
-	 *           The child
+	 *            The child
 	 * @throws IllegalArgumentException
-	 *            Thrown if a child with the same name is replaced by the add
-	 *            operation.
+	 *             Thrown if a child with the same name is replaced by the add
+	 *             operation.
 	 * @return This
 	 */
 	public Container add(final Component child)
 	{
-		if(child == this)
+		if (child == this)
 		{
 			throw new IllegalArgumentException("Component can't be added to itself");
 		}
@@ -272,7 +271,7 @@ public abstract class Container extends Component
 	 * Get a child component by looking it up with the given path.
 	 * 
 	 * @param path
-	 *           Path to component
+	 *            Path to component
 	 * @return The component at the path
 	 */
 	public final Component get(final String path)
@@ -322,9 +321,9 @@ public abstract class Container extends Component
 	 * Replaces a child component of this container with another
 	 * 
 	 * @param child
-	 *           The child
+	 *            The child
 	 * @throws IllegalArgumentException
-	 *            Thrown if there was no child with the same name.
+	 *             Thrown if there was no child with the same name.
 	 * @return This
 	 */
 	public Container replace(final Component child)
@@ -366,8 +365,9 @@ public abstract class Container extends Component
 			// Look up to make sure it was already in the map
 			if (replaced == null)
 			{
-				throw new IllegalArgumentException(exceptionMessage("A child component with the name '"
-						+ childName + "' didn't exists"));
+				throw new IllegalArgumentException(
+						exceptionMessage("A child component with the name '" + childName
+								+ "' didn't exists"));
 			}
 			((Component)replaced).setParent(null);
 		}
@@ -416,9 +416,9 @@ public abstract class Container extends Component
 	 * calling the visitor's visit method at each one.
 	 * 
 	 * @param c
-	 *           The class of child to visit, or null to visit all children
+	 *            The class of child to visit, or null to visit all children
 	 * @param visitor
-	 *           The visitor to call back to
+	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
@@ -465,7 +465,7 @@ public abstract class Container extends Component
 	 * visit method at each one.
 	 * 
 	 * @param visitor
-	 *           The visitor to call back to
+	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
@@ -532,9 +532,9 @@ public abstract class Container extends Component
 	 * Handle the container's body.
 	 * 
 	 * @param markupStream
-	 *           The markup stream
+	 *            The markup stream
 	 * @param openTag
-	 *           The open tag for the body
+	 *            The open tag for the body
 	 */
 	protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -553,9 +553,9 @@ public abstract class Container extends Component
 	 * Renders associated markup for a Border or Panel component.
 	 * 
 	 * @param openTagName
-	 *           the tag to render the associated markup for
+	 *            the tag to render the associated markup for
 	 * @param exceptionMessage
-	 *           message that will be used for exceptions
+	 *            message that will be used for exceptions
 	 */
 	protected final void renderAssociatedMarkup(final String openTagName,
 			final String exceptionMessage)
@@ -587,9 +587,9 @@ public abstract class Container extends Component
 	 * Renders markup until the closing tag for openTag is reached.
 	 * 
 	 * @param markupStream
-	 *           The markup stream
+	 *            The markup stream
 	 * @param openTag
-	 *           The open tag
+	 *            The open tag
 	 */
 	protected final void renderBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -623,9 +623,9 @@ public abstract class Container extends Component
 	 *      Note: resolveComponent must also render the components created
 	 * 
 	 * @param markupStream
-	 *           The current markup stream
+	 *            The current markup stream
 	 * @param tag
-	 *           The current component tag
+	 *            The current component tag
 	 * @return true, if Container was able to resolve the component name and to
 	 *         render the component
 	 */
@@ -638,7 +638,7 @@ public abstract class Container extends Component
 	 * Set markup stream for this container.
 	 * 
 	 * @param markupStream
-	 *           The markup stream
+	 *            The markup stream
 	 */
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
@@ -651,8 +651,8 @@ public abstract class Container extends Component
 	 * 
 	 * @return A stream of MarkupElement elements
 	 * @throws MarkupException
-	 *            Runtime exception that is thrown if markup cannot be found or
-	 *            parsed correctly
+	 *             Runtime exception that is thrown if markup cannot be found or
+	 *             parsed correctly
 	 */
 	final MarkupStream getAssociatedMarkupStream()
 	{
@@ -710,7 +710,7 @@ public abstract class Container extends Component
 	 * stream.
 	 * 
 	 * @param markupStream
-	 *           The markup stream
+	 *            The markup stream
 	 */
 	final void renderAll(final MarkupStream markupStream)
 	{
@@ -734,11 +734,11 @@ public abstract class Container extends Component
 	 * Loads markup.
 	 * 
 	 * @param application
-	 *           Application
+	 *            Application
 	 * @param key
-	 *           Key under which markup should be cached
+	 *            Key under which markup should be cached
 	 * @param markupResource
-	 *           The markup resource to load
+	 *            The markup resource to load
 	 * @return The markup
 	 * @throws ParseException
 	 * @throws IOException
@@ -757,9 +757,9 @@ public abstract class Container extends Component
 	 * Load markup and add a {@link ModificationWatcher}to the markup resource.
 	 * 
 	 * @param key
-	 *           The key for the resource
+	 *            The key for the resource
 	 * @param markupResource
-	 *           The markup file to load and begin to watch
+	 *            The markup file to load and begin to watch
 	 * @return The markup in the file
 	 */
 	private Markup loadMarkupAndWatchForChanges(final String key, final Resource markupResource)
@@ -807,18 +807,18 @@ public abstract class Container extends Component
 		}
 		catch (ParseException e)
 		{
-			throw new MarkupException(markupResource, exceptionMessage("Unable to parse markup from "
-					+ markupResource), e);
+			throw new MarkupException(markupResource,
+					exceptionMessage("Unable to parse markup from " + markupResource), e);
 		}
 		catch (ResourceNotFoundException e)
 		{
-			throw new MarkupException(markupResource, exceptionMessage("Unable to find markup from "
-					+ markupResource), e);
+			throw new MarkupException(markupResource,
+					exceptionMessage("Unable to find markup from " + markupResource), e);
 		}
 		catch (IOException e)
 		{
-			throw new MarkupException(markupResource, exceptionMessage("Unable to read markup from "
-					+ markupResource), e);
+			throw new MarkupException(markupResource,
+					exceptionMessage("Unable to read markup from " + markupResource), e);
 		}
 	}
 
@@ -841,7 +841,7 @@ public abstract class Container extends Component
 	 * Renders the next element of markup in the given markup stream.
 	 * 
 	 * @param markupStream
-	 *           The markup stream
+	 *            The markup stream
 	 */
 	private void renderNext(final MarkupStream markupStream)
 	{
@@ -902,8 +902,8 @@ public abstract class Container extends Component
 				}
 
 				// No one was able to handle the component name
-				markupStream.throwMarkupException("Unable to find component named '" + componentName
-						+ "' in " + this);
+				markupStream.throwMarkupException("Unable to find component named '"
+						+ componentName + "' in " + this);
 			}
 		}
 		else
