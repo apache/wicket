@@ -109,7 +109,7 @@ public abstract class Component implements Serializable
 	private AttributeModifier attributeModifiers = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private byte flags;
+	private byte flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED;
 
 	/** Component id. */
 	private String id;
@@ -707,13 +707,13 @@ public abstract class Component implements Serializable
 	/**
 	 * Called to indicate that the model for this component has been changed
 	 */
-	public final void modelChangeImpending()
+	public final void modelChanging()
 	{
 		// Tell the page that our model changed
 		final Page page = findPage();
 		if (page != null)
 		{
-			page.componentModelChangeImpending(this);
+			page.componentModelChanging(this);
 		}
 	}
 
@@ -778,8 +778,6 @@ public abstract class Component implements Serializable
 				originalResponse = null;
 
 				// Rendering is beginning
-				internalOnBeginRender();
-				onBeginRender();
 				if (log.isDebugEnabled())
 				{
 					log.debug("Begin render " + this);
@@ -812,6 +810,7 @@ public abstract class Component implements Serializable
 		{
 			// Remember exception in finally block
 			renderException = e;
+			e.printStackTrace();
 			throw e;
 		}
 		finally
@@ -825,10 +824,6 @@ public abstract class Component implements Serializable
 
 				try
 				{
-					// Rendering has completed
-					onEndRender();
-					internalOnEndRender();
-
 					// Detach models now that rendering is fully completed
 					detachModels();
 				}
@@ -913,7 +908,7 @@ public abstract class Component implements Serializable
 		// Change model
 		if (this.model != model)
 		{
-			modelChangeImpending();
+			modelChanging();
 			this.model = (IModel)model;
 			modelChanged();
 		}
@@ -933,7 +928,7 @@ public abstract class Component implements Serializable
 		{
 			if (model.getObject(this) != object)
 			{
-				modelChangeImpending();
+				modelChanging();
 				model.setObject(this, object);
 				modelChanged();
 			}
@@ -998,7 +993,19 @@ public abstract class Component implements Serializable
 	 */
 	public final Component setVisible(final boolean visible)
 	{
-		setFlag(FLAG_VISIBLE, visible);
+		// Is new visibility state a change?
+		if (visible != isVisible())
+		{
+			// Change visibility
+			setFlag(FLAG_VISIBLE, visible);
+			
+			// Tell the page that this component's visibility was changed
+			final Page page = findPage();
+			if (page != null)
+			{
+				page.componentVisibilityChanged(this);
+			}
+		}
 		return this;
 	}
 
@@ -1130,6 +1137,7 @@ public abstract class Component implements Serializable
 		// Search for page
 		return (Page)(this instanceof Page ? this : findParent(Page.class));
 	}
+	
 
 	/**
 	 * Called when a null model is about to be retrieved in order to allow a
@@ -1153,6 +1161,50 @@ public abstract class Component implements Serializable
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
 	 * 
+	 * Called when a request begins.
+	 */
+	protected void internalBeginRequest()
+	{
+		internalOnBeginRequest();
+		onBeginRequest();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * Called when a request ends.
+	 */
+	protected void internalEndRequest()
+	{
+		internalOnEndRequest();
+		onEndRequest();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * Called when a request begins.
+	 */
+	protected void internalOnBeginRequest()
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * Called when a request ends.
+	 */
+	protected void internalOnEndRequest()
+	{
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 */
 	protected void internalOnModelChanged()
@@ -1168,11 +1220,11 @@ public abstract class Component implements Serializable
 	protected void internalOnModelChanging()
 	{
 	}
-
+	
 	/**
-	 * This method is called immediately before a component is rendered
+	 * Called when a request begins.
 	 */
-	protected void onBeginRender()
+	protected void onBeginRequest()
 	{
 	}
 
@@ -1199,9 +1251,9 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * This method is called after rendering is completed
+	 * Called when a request ends.
 	 */
-	protected void onEndRender()
+	protected void onEndRequest()
 	{
 	}
 
@@ -1423,20 +1475,6 @@ public abstract class Component implements Serializable
 	final boolean getFlag(final int flag)
 	{
 		return (this.flags & flag) != 0;
-	}
-
-	/**
-	 * This method is called immediately before a component is rendered
-	 */
-	void internalOnBeginRender()
-	{
-	}
-
-	/**
-	 * This method is called after rendering is completed
-	 */
-	void internalOnEndRender()
-	{
 	}
 
 	/**

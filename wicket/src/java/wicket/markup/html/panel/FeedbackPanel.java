@@ -122,7 +122,7 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	public void addFeedbackMessages(final Component component, final boolean recurse)
 	{
 		// Force re-rendering of the list
-		messageListView.modelChangeImpending();
+		messageListView.modelChanging();
 		messageListView.getList().addAll(getPage().getFeedbackMessages().messages(component, recurse));
 	}
 
@@ -137,9 +137,9 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see Component#onEndRender()
+	 * @see Component#onEndRequest()
 	 */
-	protected void onEndRender()
+	protected void onEndRequest()
 	{
 		// Clear feedback
 		messageListView.getList().clear();

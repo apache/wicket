@@ -100,7 +100,7 @@ public final class GuestBook extends WicketExamplePage
 			newComment.setDate(new Date());
 
 			// Add the component we edited to the list of comments
-			commentListView.modelChangeImpending();
+			commentListView.modelChanging();
             synchronized (commentListView.getModelLock())
             {
     			commentList.add(0, newComment);

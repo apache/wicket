@@ -377,8 +377,8 @@ public abstract class RequestCycle
 							}
 							else
 							{
-								// Render the page
-								page.render();
+								// Make request to page
+								page.request();
 							}
 						}
 						finally
@@ -386,10 +386,6 @@ public abstract class RequestCycle
 							// Response is ending
 							internalOnEndRequest();
 							onEndRequest();
-
-							// The request is over
-							page.internalOnEndRequest();
-							page.onEndRequest();
 						}
 					}
 				}

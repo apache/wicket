@@ -94,7 +94,7 @@ public class UploadPage extends WicketExamplePage
 	 */
 	private void refreshFiles()
 	{
-		fileListView.modelChangeImpending();
+		fileListView.modelChanging();
 		files.clear();
 		files.addAll(Arrays.asList(uploadFolder.listFiles()));
 	}

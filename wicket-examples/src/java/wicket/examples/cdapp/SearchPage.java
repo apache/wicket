@@ -132,7 +132,7 @@ public class SearchPage extends CdAppBasePage
 		this.infoMessageForNextRendering = externalMessage;
 	}
 
-	protected void onBeginRender()
+	protected void onBeginRequest()
 	{
 		if (infoMessageForNextRendering != null)
 		{

@@ -107,6 +107,52 @@ public abstract class MarkupContainer extends Component
 	/** The markup stream for this container. */
 	private transient MarkupStream markupStream;
 
+	private class ComponentIterator implements Iterator
+	{
+		private Component component;
+		private Iterator iterator;
+
+		/**
+		 * @param iterator
+		 * 
+		 */
+		public ComponentIterator(Iterator iterator)
+		{
+			this.iterator = iterator;
+		}
+
+		/**
+		 * @see java.util.Iterator#hasNext()
+		 */
+		public boolean hasNext()
+		{
+			return iterator.hasNext();
+		}
+
+		/**
+		 * @see java.util.Iterator#next()
+		 */
+		public Object next()
+		{
+			component = (Component)iterator.next();
+			return component;
+		}
+
+		/**
+		 * @see java.util.Iterator#remove()
+		 */
+		public void remove()
+		{
+			iterator.remove();
+			// Notify Page
+			final Page page = findPage();
+			if (page != null)
+			{
+				page.componentRemoved(component);
+			}
+		}
+	}
+
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -129,10 +175,10 @@ public abstract class MarkupContainer extends Component
 	 * Adds a child component to this container.
 	 * 
 	 * @param child
-	 *			  The child
+	 *            The child
 	 * @throws IllegalArgumentException
-	 *			   Thrown if a child with the same name is replaced by the add
-	 *			   operation.
+	 *             Thrown if a child with the same name is replaced by the add
+	 *             operation.
 	 * @return This
 	 */
 	public MarkupContainer add(final Component child)
@@ -142,7 +188,7 @@ public abstract class MarkupContainer extends Component
 		{
 			throw new IllegalArgumentException("Component can't be added to itself");
 		}
-		
+
 		// Get child name
 		final String childName = child.getId();
 
@@ -190,56 +236,10 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Get a child component by looking it up with the given path.
-	 * 
-	 * @param path
-	 *			  Path to component
-	 * @return The component at the path
-	 */
-	public final Component get(final String path)
-	{
-		// Reference to this container
-		if (path == null || path.trim().equals(""))
-		{
-			return this;
-		}
-
-		// Get child's name, if any
-		final String childName = Strings.firstPathComponent(path, '.');
-
-		// Get child by name
-		final Component child = (Component)childForName.get(childName);
-
-		// Found child?
-		if (child != null)
-		{
-			// Recurse on latter part of path
-			return child.get(Strings.afterFirstPathComponent(path, '.'));
-		}
-
-		// No child by that name
-		return null;
-	}
-
-	/**
-	 * Get the Iterator that iterates through children in an undefined order.
-	 * 
-	 * @return Iterator that iterates through children in an undefined order
-	 */
-	public final Iterator iterator()
-	{
-		if (childForName == null)
-		{
-			childForName = Collections.EMPTY_MAP;
-		}
-		return new ComponentIterator(childForName.values().iterator());
-	}
-
-	/**
 	 * @param component
-	 *			  The component to check
+	 *            The component to check
 	 * @param recurse
-	 *			  True if all descendents should be considered
+	 *            True if all descendents should be considered
 	 * @return True if the component is contained in this container
 	 */
 	public final boolean contains(final Component component, final boolean recurse)
@@ -275,10 +275,94 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * Get a child component by looking it up with the given path.
+	 * 
+	 * @param path
+	 *            Path to component
+	 * @return The component at the path
+	 */
+	public final Component get(final String path)
+	{
+		// Reference to this container
+		if (path == null || path.trim().equals(""))
+		{
+			return this;
+		}
+
+		// Get child's name, if any
+		final String childName = Strings.firstPathComponent(path, '.');
+
+		// Get child by name
+		final Component child = (Component)childForName.get(childName);
+
+		// Found child?
+		if (child != null)
+		{
+			// Recurse on latter part of path
+			return child.get(Strings.afterFirstPathComponent(path, '.'));
+		}
+
+		// No child by that name
+		return null;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * Called when a request begins.
+	 */
+	public void internalBeginRequest()
+	{
+		// Handle begin request for the container itself
+		super.internalBeginRequest();
+
+		// Loop through child components
+		for (final Iterator iterator = childForName.values().iterator(); iterator.hasNext();)
+		{
+			// Call begin request on the child
+			((Component)iterator.next()).internalBeginRequest();
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * Called when a request ends.
+	 */
+	public void internalEndRequest()
+	{
+		// Handle end request for the container itself
+		super.internalEndRequest();
+
+		// Loop through child components
+		for (final Iterator iterator = childForName.values().iterator(); iterator.hasNext();)
+		{
+			// Call end request on the child
+			((Component)iterator.next()).internalEndRequest();
+		}
+	}
+
+	/**
+	 * Get the Iterator that iterates through children in an undefined order.
+	 * 
+	 * @return Iterator that iterates through children in an undefined order
+	 */
+	public final Iterator iterator()
+	{
+		if (childForName == null)
+		{
+			childForName = Collections.EMPTY_MAP;
+		}
+		return new ComponentIterator(childForName.values().iterator());
+	}
+
+	/**
 	 * Removes the named component
 	 * 
 	 * @param id
-	 *			  The id of the component to remove
+	 *            The id of the component to remove
 	 */
 	public void remove(final String id)
 	{
@@ -287,7 +371,7 @@ public abstract class MarkupContainer extends Component
 		{
 			// Remove from map
 			childForName.remove(id);
-			
+
 			// Notify Page
 			final Page page = findPage();
 			if (page != null)
@@ -307,13 +391,6 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void removeAll()
 	{
-//		MarkupContainer.java
-//		Undoable undoable = new RemoveAllUndoable(childForName);
-//		
-//		getPage().addUndoable(undoable);
-//		
-//		childForName.clear();
-
 		// Get page for efficiency
 		final Page page = findPage();
 
@@ -338,9 +415,9 @@ public abstract class MarkupContainer extends Component
 	 * Replaces a child component of this container with another
 	 * 
 	 * @param child
-	 *			  The child
+	 *            The child
 	 * @throws IllegalArgumentException
-	 *			   Thrown if there was no child with the same name.
+	 *             Thrown if there was no child with the same name.
 	 * @return This
 	 */
 	public MarkupContainer replace(final Component child)
@@ -387,7 +464,7 @@ public abstract class MarkupContainer extends Component
 						exceptionMessage("A child component with the name '" + childName
 								+ "' didn't exist"));
 			}
-			
+
 			replaced.setParent(null);
 
 			// Notify the page that the replace happened
@@ -444,11 +521,11 @@ public abstract class MarkupContainer extends Component
 	 * calling the visitor's visit method at each one.
 	 * 
 	 * @param c
-	 *			  The class of child to visit, or null to visit all children
+	 *            The class of child to visit, or null to visit all children
 	 * @param visitor
-	 *			  The visitor to call back to
+	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or
-	 *		   null if the entire traversal occurred
+	 *         null if the entire traversal occurred
 	 */
 	public final Object visitChildren(final Class c, final IVisitor visitor)
 	{
@@ -493,9 +570,9 @@ public abstract class MarkupContainer extends Component
 	 * visit method at each one.
 	 * 
 	 * @param visitor
-	 *			  The visitor to call back to
+	 *            The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or
-	 *		   null if the entire traversal occurred
+	 *         null if the entire traversal occurred
 	 */
 	public final Object visitChildren(final IVisitor visitor)
 	{
@@ -506,7 +583,7 @@ public abstract class MarkupContainer extends Component
 	 * Get the markup stream for this component.
 	 * 
 	 * @return The markup stream for this component, or if it doesn't have one,
-	 *		   the markup stream for the nearest parent which does have one
+	 *         the markup stream for the nearest parent which does have one
 	 */
 	protected final MarkupStream findMarkupStream()
 	{
@@ -544,11 +621,11 @@ public abstract class MarkupContainer extends Component
 	 * Get the type of associated markup for this component.
 	 * 
 	 * @return The type of associated markup for this component (for example,
-	 *		   "html", "wml" or "vxml"). The markup type for a component is
-	 *		   independent of whether or not the component actually has an
-	 *		   associated markup resource file (which is determined at runtime).
-	 *		   If there is no markup type for a component, null may be returned,
-	 *		   but this means that no markup can be loaded for the class.
+	 *         "html", "wml" or "vxml"). The markup type for a component is
+	 *         independent of whether or not the component actually has an
+	 *         associated markup resource file (which is determined at runtime).
+	 *         If there is no markup type for a component, null may be returned,
+	 *         but this means that no markup can be loaded for the class.
 	 */
 	protected String getMarkupType()
 	{
@@ -562,9 +639,9 @@ public abstract class MarkupContainer extends Component
 	 * exception will be thrown by the framework.
 	 * 
 	 * @param markupStream
-	 *			  The markup stream
+	 *            The markup stream
 	 * @param openTag
-	 *			  The open tag for the body
+	 *            The open tag for the body
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -585,9 +662,9 @@ public abstract class MarkupContainer extends Component
 	 * markup is skipped.
 	 * 
 	 * @param openTagName
-	 *			  the tag to render the associated markup for
+	 *            the tag to render the associated markup for
 	 * @param exceptionMessage
-	 *			  message that will be used for exceptions
+	 *            message that will be used for exceptions
 	 */
 	protected final void renderAssociatedMarkup(final String openTagName,
 			final String exceptionMessage)
@@ -622,9 +699,9 @@ public abstract class MarkupContainer extends Component
 	 * openTag is reached.
 	 * 
 	 * @param markupStream
-	 *			  The markup stream
+	 *            The markup stream
 	 * @param openTag
-	 *			  The open tag
+	 *            The open tag
 	 */
 	protected final void renderComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
@@ -654,15 +731,15 @@ public abstract class MarkupContainer extends Component
 	 * resolveComponent().
 	 * 
 	 * @see wicket.markup.html.border.Border for an example.
-	 *		<p>
-	 *		Note: resolveComponent must also render the components created
+	 *      <p>
+	 *      Note: resolveComponent must also render the components created
 	 * 
 	 * @param markupStream
-	 *			  The current markup stream
+	 *            The current markup stream
 	 * @param tag
-	 *			  The current component tag
+	 *            The current component tag
 	 * @return true, if MarkupContainer was able to resolve the component name
-	 *		   and to render the component
+	 *         and to render the component
 	 */
 	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
 	{
@@ -673,7 +750,7 @@ public abstract class MarkupContainer extends Component
 	 * Set markup stream for this container.
 	 * 
 	 * @param markupStream
-	 *			  The markup stream
+	 *            The markup stream
 	 */
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
@@ -772,7 +849,7 @@ public abstract class MarkupContainer extends Component
 	 * stream.
 	 * 
 	 * @param markupStream
-	 *			  The markup stream
+	 *            The markup stream
 	 */
 	final void renderAll(final MarkupStream markupStream)
 	{
@@ -794,11 +871,11 @@ public abstract class MarkupContainer extends Component
 	 * Loads markup.
 	 * 
 	 * @param application
-	 *			  Application
+	 *            Application
 	 * @param key
-	 *			  Key under which markup should be cached
+	 *            Key under which markup should be cached
 	 * @param markupResource
-	 *			  The markup resource to load
+	 *            The markup resource to load
 	 * @return The markup
 	 * @throws ParseException
 	 * @throws IOException
@@ -817,9 +894,9 @@ public abstract class MarkupContainer extends Component
 	 * Load markup and add a {@link ModificationWatcher}to the markup resource.
 	 * 
 	 * @param key
-	 *			  The key for the resource
+	 *            The key for the resource
 	 * @param markupResource
-	 *			  The markup file to load and begin to watch
+	 *            The markup file to load and begin to watch
 	 * @return The markup in the file
 	 */
 	private Markup loadMarkupAndWatchForChanges(final String key, final IResource markupResource)
@@ -888,7 +965,7 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * @return Key that uniquely identifies any markup that might be associated
-	 *		   with this markup container.
+	 *         with this markup container.
 	 */
 	private String markupKey()
 	{
@@ -914,7 +991,7 @@ public abstract class MarkupContainer extends Component
 	 * Renders the next element of markup in the given markup stream.
 	 * 
 	 * @param markupStream
-	 *			  The markup stream
+	 *            The markup stream
 	 */
 	private void renderNext(final MarkupStream markupStream)
 	{
@@ -965,8 +1042,8 @@ public abstract class MarkupContainer extends Component
 				}
 
 				// No one was able to handle the component name
-				markupStream.throwMarkupException("Unable to find component named '"
-						+ id + "' in " + this);
+				markupStream.throwMarkupException("Unable to find component named '" + id + "' in "
+						+ this);
 			}
 		}
 		else
@@ -975,52 +1052,6 @@ public abstract class MarkupContainer extends Component
 			log.debug("Rendering raw markup");
 			getResponse().write(element.toString());
 			markupStream.next();
-		}
-	}
-	
-	private class ComponentIterator implements Iterator
-	{
-		private Iterator iterator;
-		private Component component;
-		
-		/**
-		 * @param iterator 
-		 * 
-		 */
-		public ComponentIterator(Iterator iterator)
-		{
-			this.iterator = iterator;
-		}
-
-		/**
-		 * @see java.util.Iterator#hasNext()
-		 */
-		public boolean hasNext()
-		{
-			return iterator.hasNext();
-		}
-
-		/**
-		 * @see java.util.Iterator#next()
-		 */
-		public Object next()
-		{
-			component = (Component)iterator.next(); 
-			return component;
-		}
-
-		/**
-		 * @see java.util.Iterator#remove()
-		 */
-		public void remove()
-		{
-			iterator.remove();
-			// Notify Page
-			final Page page = findPage();
-			if (page != null)
-			{
-				page.componentRemoved(component);
-			}
 		}
 	}
 }

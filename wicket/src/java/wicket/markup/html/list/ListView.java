@@ -32,16 +32,16 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * A ListView holds ListItems of information. The listItem can be re-ordered and
- * deleted, either one at a time or many at a time.
+ * A ListView holds ListItem children. Items can be re-ordered and deleted,
+ * either one at a time or many at a time.
  * <p>
  * Example:
  * 
  * <pre>
- *       &lt;tbody&gt;
- *         &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
- *             &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *         ...    
+ *         &lt;tbody&gt;
+ *           &lt;tr id=&quot;wicket-rows&quot; class=&quot;even&quot;&gt;
+ *               &lt;td&gt;&lt;span id=&quot;wicket-id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *           ...    
  * </pre>
  * 
  * <p>
@@ -56,7 +56,7 @@ import wicket.model.Model;
  * 	public void populateItem(final ListItem item)
  * 	{
  * 		final UserDetails user = (UserDetails)item.getModelObject();
- * 		cell.add(new Label(&quot;id&quot;, user.getId()));
+ * 		item(new Label(&quot;id&quot;, user.getId()));
  * 	}
  * });
  * </pre>
@@ -69,7 +69,7 @@ public abstract class ListView extends WebMarkupContainer
 	/** Log. */
 	private static Log log = LogFactory.getLog(ListView.class);
 
-	/** Index of the first listItem to show */
+	/** Index of the first item to show */
 	private int firstIndex = 0;
 
 	/**
@@ -81,9 +81,9 @@ public abstract class ListView extends WebMarkupContainer
 	 * TODO this could go away if we were able to automatically detect changes
 	 * to the underlying list. May be a delegate List could do?
 	 */
-	private boolean optimizeRenderProcess = false;
+	private boolean optimizeItemRemoval = false;
 
-	/** Max number (not index) of listItems to show */
+	/** Max number (not index) of items to show */
 	private int viewSize = Integer.MAX_VALUE;
 
 	/**
@@ -134,6 +134,19 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
+	 * If true re-rendering the list view is more efficient if the windows
+	 * doesn't get changed at all or if it gets scrolled (compared to paging).
+	 * But if you modify the listView model object, than you must manually call
+	 * listView.removeAll() in order to rebuild the ListItems.
+	 * 
+	 * @return Returns the optimizeItemRemoval.
+	 */
+	public boolean getOptimizeItemRemoval()
+	{
+		return optimizeItemRemoval;
+	}
+
+	/**
 	 * Get index of first cell in page. Default is: 0.
 	 * 
 	 * @return Index of first cell in page. Default is: 0
@@ -150,7 +163,7 @@ public abstract class ListView extends WebMarkupContainer
 	 * has 10 elements, the value returned by getViewSize() will be 10 if
 	 * startIndex = 0.
 	 * 
-	 * @return The number of listItems to be populated and rendered.
+	 * @return The number of items to be populated and rendered.
 	 */
 	public int getViewSize()
 	{
@@ -185,21 +198,8 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging).
-	 * But if you modify the listView model object, than you must manually call
-	 * listView.removeAll() in order to rebuild the ListItems.
-	 * 
-	 * @return Returns the optimizeRenderProcess.
-	 */
-	public boolean getOptimizeRenderProcess()
-	{
-		return optimizeRenderProcess;
-	}
-
-	/**
-	 * Returns a link that will move the given listItem "down" (towards the end)
-	 * in the listView.
+	 * Returns a link that will move the given item "down" (towards the end) in
+	 * the listView.
 	 * 
 	 * @param id
 	 *            Name of move-down link component to create
@@ -230,8 +230,8 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns a link that will move the given listItem "up" (towards the
-	 * beginning) in the listView.
+	 * Returns a link that will move the given item "up" (towards the beginning)
+	 * in the listView.
 	 * 
 	 * @param id
 	 *            Name of move-up link component to create
@@ -245,7 +245,7 @@ public abstract class ListView extends WebMarkupContainer
 		{
 			public void onClick()
 			{
-				// Swap listItems and invalidate listView
+				// Swap items and invalidate listView
 				Collections.swap(getList(), index, index - 1);
 
 				// Make sure you re-render the list properly
@@ -276,7 +276,7 @@ public abstract class ListView extends WebMarkupContainer
 		{
 			public void onClick()
 			{
-				// Remove listItem and invalidate listView
+				// Remove item and invalidate listView
 				getList().remove(item.getModelObject());
 
 				// Make sure you re-render the list properly
@@ -286,17 +286,17 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * @see #getOptimizeRenderProcess()
-	 * @param optimizeRenderProcess
-	 *            The optimizeRenderProcess to set.
+	 * @see #getOptimizeItemRemoval()
+	 * @param optimizeItemRemoval
+	 *            The optimizeItemRemoval to set.
 	 */
-	public void setOptimizeRenderProcess(boolean optimizeRenderProcess)
+	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
-		this.optimizeRenderProcess = optimizeRenderProcess;
+		this.optimizeItemRemoval = optimizeItemRemoval;
 	}
 
 	/**
-	 * Set the index of the first listItem to render
+	 * Set the index of the first item to render
 	 * 
 	 * @param startIndex
 	 *            First index of model object's list to display
@@ -319,10 +319,10 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * Define the maximum number of listItems to render. Default: render all.
+	 * Define the maximum number of items to render. Default: render all.
 	 * 
 	 * @param size
-	 *            Number of listItems to display
+	 *            Number of items to display
 	 * @return This
 	 */
 	public ListView setViewSize(final int size)
@@ -366,49 +366,15 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * Create a new ListItem for list item at index.
-	 * 
-	 * @param index
-	 * @return ListItem
+	 * @see wicket.MarkupContainer#internalOnBeginRequest()
 	 */
-	protected ListItem newItem(final int index)
+	protected void internalOnBeginRequest()
 	{
-		return new ListItem(index, getListItemModel(getModel(), index));
-	}
-
-	/**
-	 * Comes handy for ready made ListView based components which must implement
-	 * populateItem() but you don't want to lose compile time error checking
-	 * reminding the user to implement abstract populateItem().
-	 * 
-	 * @param listItem
-	 */
-	protected void onBeginPopulateItem(final ListItem listItem)
-	{
-	}
-
-	/**
-	 * Renders this ListView (container).
-	 */
-	protected void onRender()
-	{
-		// Ask parents for markup stream to use
-		final MarkupStream markupStream = findMarkupStream();
-
-		// Save position in markup stream
-		final int markupStart = markupStream.getCurrentIndex();
-
-		// Get number of listItems to be displayed
+		// Get number of items to be displayed
 		final int size = getViewSize();
 		if (size > 0)
 		{
-			if (optimizeRenderProcess == false)
-			{
-				// Automatically rebuild all ListItems before rendering the
-				// list view
-				removeAll();
-			}
-			else
+			if (optimizeItemRemoval)
 			{
 				// Remove all ListItems no longer required
 				final int maxIndex = firstIndex + size;
@@ -426,33 +392,92 @@ public abstract class ListView extends WebMarkupContainer
 					}
 				}
 			}
+			else
+			{
+				// Automatically rebuild all ListItems before rendering the
+				// list view
+				removeAll();
+			}
 
-			// Loop through the markup in this container for each item 
+			// Loop through the markup in this container for each item
 			for (int i = 0; i < size; i++)
 			{
 				// Get index
 				final int index = firstIndex + i;
 
 				// If this component does not already exist, populate it
-				ListItem listItem = (ListItem)get(Integer.toString(index));
-				if (listItem == null)
+				ListItem item = (ListItem)get(Integer.toString(index));
+				if (item == null)
 				{
-					// Create listItem for index
-					listItem = newItem(index);
-
-					// Populate the list item
-					onBeginPopulateItem(listItem);
-					populateItem(listItem);
+					// Create item for index
+					item = newItem(index);
 
 					// Add list item
-					add(listItem);
+					add(item);
+
+					// Populate the list item
+					onBeginPopulateItem(item);
+					populateItem(item);
 				}
+			}
+		}
+		else
+		{
+			removeAll();
+		}
+	}
+
+	/**
+	 * Create a new ListItem for list item at index.
+	 * 
+	 * @param index
+	 * @return ListItem
+	 */
+	protected ListItem newItem(final int index)
+	{
+		return new ListItem(index, getListItemModel(getModel(), index));
+	}
+
+	/**
+	 * Comes handy for ready made ListView based components which must implement
+	 * populateItem() but you don't want to lose compile time error checking
+	 * reminding the user to implement abstract populateItem().
+	 * 
+	 * @param item
+	 */
+	protected void onBeginPopulateItem(final ListItem item)
+	{
+	}
+
+	/**
+	 * Renders this ListView (container).
+	 */
+	protected void onRender()
+	{
+		// Ask parents for markup stream to use
+		final MarkupStream markupStream = findMarkupStream();
+
+		// Save position in markup stream
+		final int markupStart = markupStream.getCurrentIndex();
+
+		// Get number of items to be displayed
+		final int size = getViewSize();
+		if (size > 0)
+		{
+			// Loop through the markup in this container for each item
+			for (int i = 0; i < size; i++)
+			{
+				// Get index
+				final int index = firstIndex + i;
+
+				// If this component does not already exist, populate it
+				ListItem item = (ListItem)get(Integer.toString(index));
 
 				// Rewind to start of markup for kids
 				markupStream.setCurrentIndex(markupStart);
 
 				// Render
-				renderItem(listItem, i >= (size - 1));
+				renderItem(item);
 			}
 		}
 		else
@@ -463,25 +488,21 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * Populate a given listItem.
+	 * Populate a given item.
 	 * 
-	 * @param listItem
-	 *            The listItem to populate
+	 * @param item
+	 *            The item to populate
 	 */
-	protected abstract void populateItem(final ListItem listItem);
+	protected abstract void populateItem(final ListItem item);
 
-	// TODO Remove lastItem boolean?
-	
 	/**
-	 * Render a single listItem.
+	 * Render a single item.
 	 * 
-	 * @param listItem
-	 *            The listItem to be rendered
-	 * @param lastItem
-	 *            True, if item is last listItem in listView
+	 * @param item
+	 *            The item to be rendered
 	 */
-	protected void renderItem(final ListItem listItem, final boolean lastItem)
+	protected void renderItem(final ListItem item)
 	{
-		listItem.render();
+		item.render();
 	}
 }

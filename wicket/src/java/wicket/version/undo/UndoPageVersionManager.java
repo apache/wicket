@@ -96,11 +96,11 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentModelChangeImpending(wicket.Component)
+	 * @see wicket.IPageVersionManager#componentModelChanging(wicket.Component)
 	 */
-	public void componentModelChangeImpending(Component component)
+	public void componentModelChanging(Component component)
 	{
-		changeList.componentModelChangeImpending(component);
+		changeList.componentModelChanging(component);
 	}
 
 	/**
@@ -183,5 +183,13 @@ public class UndoPageVersionManager implements IPageVersionManager
 		// One less version around
 		versionNumber--;
 		return true;
+	}
+
+	/**
+	 * @see wicket.IPageVersionManager#componentVisibilityChanged(wicket.Component)
+	 */
+	public void componentVisibilityChanged(Component component)
+	{
+		changeList.componentVisibilityChanged(component);
 	}
 }

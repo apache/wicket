@@ -37,7 +37,7 @@ class ChangeList implements Serializable
 		changes.add(new Add(component));
 	}
 
-	void componentModelChangeImpending(Component component)
+	void componentModelChanging(Component component)
 	{
 		changes.add(new ModelChange(component));
 	}
@@ -45,6 +45,11 @@ class ChangeList implements Serializable
 	void componentRemoved(Component component)
 	{
 		changes.add(new Remove(component));
+	}
+
+	void componentVisibilityChanged(Component component)
+	{
+		changes.add(new VisibilityChange(component));
 	}
 
 	void undo()
