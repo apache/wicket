@@ -28,7 +28,6 @@ import wicket.protocol.http.HttpRequest;
 import wicket.protocol.http.HttpResponse;
 import wicket.util.time.Time;
 
-
 /**
  * THIS CLASS IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY FRAMEWORK
  * CLIENTS.<br/>
@@ -62,110 +61,21 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	}
 
 	/**
-	 * Persister defaults are maintained centrally by the Application.
-	 * 
-	 * @return Persister default value
-	 */
-	private FormComponentPersistenceDefaults getDefaults()
-	{
-		return RequestCycle.get().getApplication().getSettings()
-				.getFormComponentPersistenceDefaults();
-	}
-
-	/**
-	 * Convenience method to get the http request.
-	 * 
-	 * @return HttpRequest related to the RequestCycle
-	 */
-	private HttpRequest getRequest()
-	{
-		return (HttpRequest)RequestCycle.get().getRequest();
-	}
-
-	/**
-	 * Convinience method to get the http response.
-	 * 
-	 * @return HttpResponse related to the RequestCycle
-	 */
-	private HttpResponse getResponse()
-	{
-		return (HttpResponse)RequestCycle.get().getResponse();
-	}
-
-	/**
-	 * Convenience method.
+	 * Remove data related to a FormComponent
 	 * 
 	 * @param name
-	 *           The FormComponent's name
-	 * @param value
-	 *           The FormComponent's value
-	 * @return The cookie created, based on defaults and the params provided
+	 *           The "primary key" of the data to be deleted
+	 * @return the cookie that was removed or null if none was found.
 	 */
-	public Cookie save(String name, String value)
+	public Cookie remove(String name)
 	{
-		return save(name, value, getRequest().getContextPath());
-	}
-
-	/**
-	 * Convenience method.
-	 * 
-	 * @param name
-	 *           The FormComponent's name
-	 * @param value
-	 *           The FormComponent's value
-	 * @param path
-	 * @see javax.servlet.http.Cookie#setPath(java.lang.String) for details
-	 * @return The cookie created, based on defaults and the params provided
-	 */
-	public Cookie save(String name, String value, String path)
-	{
-		if (value == null)
+		Cookie cookie = retrieve(name);
+		if (cookie != null)
 		{
-			value = "";
+			remove(cookie);
+			if (log.isDebugEnabled())
+				log.debug("cookie " + name + " removed");
 		}
-
-		Cookie cookie = new Cookie(name, value);
-		cookie.setSecure(false);
-		cookie.setPath(path);
-		cookie.setMaxAge(getDefaults().getMaxAge());
-
-		return save(cookie);
-	}
-
-	/**
-	 * Persist/save the data using Cookies.
-	 * 
-	 * @param cookie
-	 *           The Cookie to be persisted.
-	 * @return The cookie provided
-	 */
-	private Cookie save(Cookie cookie)
-	{
-		if (cookie == null)
-		{
-			return null;
-		}
-
-		if (getDefaults().getComment() != null)
-		{
-			cookie.setComment(getDefaults().getComment());
-		}
-
-		if (getDefaults().getDomain() != null)
-		{
-			cookie.setDomain(getDefaults().getDomain());
-		}
-
-		cookie.setVersion(getDefaults().getVersion());
-		cookie.setSecure(getDefaults().isSecure());
-
-		getResponse().addCookie(cookie);
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("saved: " + getCookieDebugString(cookie));
-		}
-
 		return cookie;
 	}
 
@@ -239,22 +149,89 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	}
 
 	/**
-	 * Remove data related to a FormComponent
+	 * Convenience method.
 	 * 
 	 * @param name
-	 *           The "primary key" of the data to be deleted
-	 * @return the cookie that was removed or null if none was found.
+	 *           The FormComponent's name
+	 * @param value
+	 *           The FormComponent's value
+	 * @return The cookie created, based on defaults and the params provided
 	 */
-	public Cookie remove(String name)
+	public Cookie save(String name, String value)
 	{
-		Cookie cookie = retrieve(name);
-		if (cookie != null)
+		return save(name, value, getRequest().getContextPath());
+	}
+
+	/**
+	 * Convenience method.
+	 * 
+	 * @param name
+	 *           The FormComponent's name
+	 * @param value
+	 *           The FormComponent's value
+	 * @param path
+	 * @see javax.servlet.http.Cookie#setPath(java.lang.String) for details
+	 * @return The cookie created, based on defaults and the params provided
+	 */
+	public Cookie save(String name, String value, String path)
+	{
+		if (value == null)
 		{
-			remove(cookie);
-			if (log.isDebugEnabled())
-				log.debug("cookie " + name + " removed");
+			value = "";
 		}
-		return cookie;
+
+		Cookie cookie = new Cookie(name, value);
+		cookie.setSecure(false);
+		cookie.setPath(path);
+		cookie.setMaxAge(getDefaults().getMaxAge());
+
+		return save(cookie);
+	}
+
+	/**
+	 * Gets debug info as a string for the given cookie.
+	 * 
+	 * @param cookie
+	 *           the cookie to debug.
+	 * @return a string that represents the internals of the cookie.
+	 */
+	private String getCookieDebugString(Cookie cookie)
+	{
+		return "cookie{" + "name=" + cookie.getName() + ",value=" + cookie.getValue() + ",domain="
+				+ cookie.getDomain() + ",path=" + cookie.getPath() + ",maxAge="
+				+ Time.valueOf(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")"
+				+ "}";
+	}
+
+	/**
+	 * Persister defaults are maintained centrally by the Application.
+	 * 
+	 * @return Persister default value
+	 */
+	private FormComponentPersistenceDefaults getDefaults()
+	{
+		return RequestCycle.get().getApplication().getSettings()
+				.getFormComponentPersistenceDefaults();
+	}
+
+	/**
+	 * Convenience method to get the http request.
+	 * 
+	 * @return HttpRequest related to the RequestCycle
+	 */
+	private HttpRequest getRequest()
+	{
+		return (HttpRequest)RequestCycle.get().getRequest();
+	}
+
+	/**
+	 * Convinience method to get the http response.
+	 * 
+	 * @return HttpResponse related to the RequestCycle
+	 */
+	private HttpResponse getResponse()
+	{
+		return (HttpResponse)RequestCycle.get().getResponse();
 	}
 
 	/**
@@ -277,17 +254,39 @@ public class FormComponentPersistenceManager implements IFormComponentPersistenc
 	}
 
 	/**
-	 * Gets debug info as a string for the given cookie.
+	 * Persist/save the data using Cookies.
 	 * 
 	 * @param cookie
-	 *           the cookie to debug.
-	 * @return a string that represents the internals of the cookie.
+	 *           The Cookie to be persisted.
+	 * @return The cookie provided
 	 */
-	private String getCookieDebugString(Cookie cookie)
+	private Cookie save(Cookie cookie)
 	{
-		return "cookie{" + "name=" + cookie.getName() + ",value=" + cookie.getValue() + ",domain="
-				+ cookie.getDomain() + ",path=" + cookie.getPath() + ",maxAge="
-				+ Time.valueOf(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")"
-				+ "}";
+		if (cookie == null)
+		{
+			return null;
+		}
+
+		if (getDefaults().getComment() != null)
+		{
+			cookie.setComment(getDefaults().getComment());
+		}
+
+		if (getDefaults().getDomain() != null)
+		{
+			cookie.setDomain(getDefaults().getDomain());
+		}
+
+		cookie.setVersion(getDefaults().getVersion());
+		cookie.setSecure(getDefaults().isSecure());
+
+		getResponse().addCookie(cookie);
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("saved: " + getCookieDebugString(cookie));
+		}
+
+		return cookie;
 	}
 }
