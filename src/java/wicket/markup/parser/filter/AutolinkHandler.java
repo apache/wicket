@@ -24,6 +24,7 @@ import java.util.Stack;
 import wicket.markup.ComponentTag;
 import wicket.markup.ComponentWicketTag;
 import wicket.markup.MarkupElement;
+import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 
 /**
@@ -42,11 +43,8 @@ import wicket.markup.parser.IMarkupFilter;
  * 
  * @author Juergen Donnerstag
  */
-public class AutolinkHandler implements IMarkupFilter
+public final class AutolinkHandler extends AbstractMarkupFilter
 {
-	/** The next MarkupFilter in the chain */
-	private final IMarkupFilter parent;
-
 	/** Allow to have link regions within link regions */
 	private Stack autolinkStatus;
 
@@ -56,20 +54,12 @@ public class AutolinkHandler implements IMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param nextInChain
+	 * @param parent
 	 *           The next element in the chain.
 	 */
-	public AutolinkHandler(final IMarkupFilter nextInChain)
+	public AutolinkHandler(final IMarkupFilter parent)
 	{
-		parent = nextInChain;
-	}
-
-	/**
-	 * @return The next MarkupFilter in the chain
-	 */
-	public final IMarkupFilter getParent()
-	{
-		return parent;
+		super(parent);
 	}
 
 	/**
@@ -95,7 +85,7 @@ public class AutolinkHandler implements IMarkupFilter
 	public MarkupElement nextTag() throws ParseException
 	{
 		// Get next tag. Null, if no more tag available
-		final ComponentTag tag = (ComponentTag)parent.nextTag();
+		final ComponentTag tag = (ComponentTag)getParent().nextTag();
 		if (tag == null)
 		{
 			return tag;

@@ -165,32 +165,31 @@ public final class MarkupParser
         // List to return
         final List list = new ArrayList();
 
+        // Chain together all the different markup filters
         final WicketComponentTagIdentifier detectWicketComponents = new WicketComponentTagIdentifier(xmlParser);
         detectWicketComponents.setComponentNameAttribute(this.componentNameAttribute);
         detectWicketComponents.setStripWicketFromComponentTag(this.stripWicketFromComponentTag);
-
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
                 new HtmlHandler(detectWicketComponents));
         wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
-
         final PreviewComponentTagRemover previewComponentTagRemover = new PreviewComponentTagRemover(wicketParamTagHandler);
-
         final AutolinkHandler autolinkHandler = new AutolinkHandler(previewComponentTagRemover);
         autolinkHandler.setAutomaticLinking(this.automaticLinking);
 
-        final IMarkupFilter parser = autolinkHandler;
+        // Markup filter chain starts with auto link handler
+        final IMarkupFilter markupFilterChain = autolinkHandler;
 
         // Loop through tags
-        for (ComponentTag tag; null != (tag = (ComponentTag)parser.nextTag());)
+        for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
         {
             boolean add = (tag.getComponentName() != null);
-            if ((add == false) && tag.getXmlTag().isClose())
+            if (!add && tag.getXmlTag().isClose())
             {
                 add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getComponentName() != null));
             }
 
             // Add tag to list?
-            if (add == true)
+            if (add)
             {
                 final CharSequence text =
                     	xmlParser.getInputFromPositionMarker(tag.getPos());
@@ -214,7 +213,8 @@ public final class MarkupParser
                     list.add(new RawMarkup(rawMarkup));
                 }
 
-                if (!"_ignore_".equals(tag.getComponentName()))
+                // Add to list unless preview component tag remover flagged as removed
+                if (!PreviewComponentTagRemover.IGNORE.equals(tag.getComponentName()))
                 {
 	                list.add(tag);
                 }
