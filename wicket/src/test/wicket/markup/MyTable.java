@@ -21,6 +21,7 @@ package wicket.markup;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.Page;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
@@ -65,7 +66,7 @@ public class MyTable extends ListView
         
         this.setModelObject(list);
         
-        if (getPage() != null)
+        if (this.findParent(Page.class) != null)
         {
             this.invalidateModel();
         }
