@@ -34,30 +34,43 @@ import wicket.protocol.http.HttpApplication;
  * can override these values and/or modify other application settings in their
  * respective constructors by calling getSettings() to retrieve a mutable
  * ApplicationSettings object.
+ * </p>
+ * <p>
+ * If you want to use servlet specific configuration, e.g. using init parameters from
+ * the {@link javax.servlet.ServletConfig} object, you should override the init() method
+ * of {@link javax.servlet.GenericServlet}. For example:
+ * <pre>
+ *  public void init() throws ServletException
+ *  {
+ *    ServletConfig config = getServletConfig();
+ *    String webXMLParameter = config.getInitParameter("myWebXMLParameter");
+ *    ...
+ * </pre>
+ * </p>
  *
  * @author Jonathan Locke
  * @author Chris Turner
  * @see ApplicationSettings
  */
 public class WebApplication extends HttpApplication
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = 1152456333052646498L;
 
-	// Settings for application
+	/** Settings for application. */
     private final ApplicationSettings settings;
 
     /**
-     * Trivial default web application
+     * Trivial default web application.
      */
     public static final WebApplication DEFAULT = new WebApplication() 
 	{
-        /** Serial Version ID */
+        /** Serial Version ID. */
 		private static final long serialVersionUID = 4094024481329675018L; 
 	};
 
     /**
-     * Constructor
+     * Constructor.
      */
     public WebApplication()
     {
@@ -70,6 +83,7 @@ public class WebApplication extends HttpApplication
     }
 
     /**
+     * Gets the application settings.
      * @return Returns the settings for this web application
      */
     public ApplicationSettings getSettings()
@@ -78,5 +92,3 @@ public class WebApplication extends HttpApplication
     }
 
 }
-
-///////////////////////////////// End of File /////////////////////////////////

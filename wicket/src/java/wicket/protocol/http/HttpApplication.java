@@ -40,15 +40,29 @@ import wicket.util.lang.Classes;
  * initialized in the subclass constructor. When GET/POST requests are made via HTTP, a
  * RequestCycle object is created from the request, wicket.response and session objects. The
  * RequestCycle's render() method is called to produce a wicket.response to the HTTP request.
+ * </p>
+ * <p>
+ * If you want to use servlet specific configuration, e.g. using init parameters from
+ * the {@link javax.servlet.ServletConfig} object, you should override the init() method
+ * of {@link javax.servlet.GenericServlet}. For example:
+ * <pre>
+ *  public void init() throws ServletException
+ *  {
+ *    ServletConfig config = getServletConfig();
+ *    String webXMLParameter = config.getInitParameter("myWebXMLParameter");
+ *    ...
+ * </pre>
+ * </p>
+ *
  * @see wicket.RequestCycle
  * @author Jonathan Locke
  */
 public abstract class HttpApplication extends HttpServlet implements IApplication
-{ // TODO finalize javadoc
-    // Code broadcaster for reporting
-    private static final Log code = LogFactory.getLog(HttpApplication.class);
+{
+    /** Log. */
+    private static final Log log = LogFactory.getLog(HttpApplication.class);
 
-    // Name of application subclass
+    /** Name of application subclass. */
     private final String name;
 
     /**
@@ -56,7 +70,7 @@ public abstract class HttpApplication extends HttpServlet implements IApplicatio
      */
     public HttpApplication()
     {
-        code.info("Constructed HttpApplication " + getClass());
+        log.info("Constructed HttpApplication " + getClass());
         this.name = Classes.name(getClass());
     }
 
@@ -70,6 +84,7 @@ public abstract class HttpApplication extends HttpServlet implements IApplicatio
     }
 
     /**
+     * Gets the application settings.
      * @return Returns the settings.
      */
     public abstract ApplicationSettings getSettings();
@@ -112,5 +127,3 @@ public abstract class HttpApplication extends HttpServlet implements IApplicatio
         HttpSession.set(null);
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////
