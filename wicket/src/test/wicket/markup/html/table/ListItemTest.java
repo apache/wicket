@@ -26,7 +26,7 @@ import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
 import wicket.model.Model;
 import wicket.protocol.http.HttpRequestCycle;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.MockPage;
 
 import junit.framework.TestCase;
@@ -40,7 +40,7 @@ import junit.framework.TestCase;
 public class ListItemTest extends TestCase
 {
     /** Use a mock application to handle Link-clicked event */
-    private static MockHttpApplication application; // = new MockHttpApplication(null);
+    private static MockWebApplication application; // = new MockWebApplication(null);
 
     protected void setUp() throws Exception
     {
@@ -48,7 +48,7 @@ public class ListItemTest extends TestCase
         
         if (application == null)
         {
-            application = new MockHttpApplication(null);
+            application = new MockWebApplication(null);
         }
     }
     

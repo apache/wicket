@@ -20,7 +20,7 @@ package wicket.markup.html.link;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
@@ -33,7 +33,7 @@ import wicket.protocol.http.documentvalidation.TextContent;
  */
 public class AutolinkTest extends TestCase 
 {
-    private MockHttpApplication application;
+    private MockWebApplication application;
 
     /**
      * Create the test.
@@ -48,7 +48,7 @@ public class AutolinkTest extends TestCase
      * @throws Exception
      */
     public void testRenderHomePage() throws Exception {
-        application = new MockHttpApplication(null);
+        application = new MockWebApplication(null);
         application.getPages().setHomePage(AutolinkPage.class);
         application.getSettings().setAutomaticLinking(true);
         
@@ -90,7 +90,7 @@ public class AutolinkTest extends TestCase
 		html.addExpectedChild(body);
 	
 		Tag anchor1 = new Tag("a");
-		anchor1.addExpectedAttribute("href", ".*MockHttpApplication.*");
+		anchor1.addExpectedAttribute("href", ".*MockWebApplication.*");
 		anchor1.addExpectedChild(new TextContent("Home"));
 		body.addExpectedChild(anchor1);
 		
@@ -99,7 +99,7 @@ public class AutolinkTest extends TestCase
 		link1.addExpectedChild(new TextContent(".*"));
 		
 		Tag anchor2 = new Tag("a");
-		anchor2.addExpectedAttribute("href", ".*MockHttpApplication.*");
+		anchor2.addExpectedAttribute("href", ".*MockWebApplication.*");
 		anchor2.addExpectedChild(new TextContent("Home"));
 		link1.addExpectedChild(anchor2);
 		
@@ -117,7 +117,7 @@ public class AutolinkTest extends TestCase
 		link3.addExpectedChild(new TextContent(".*"));
 		
 		Tag anchor4 = new Tag("a");
-		anchor4.addExpectedAttribute("href", ".*MockHttpApplication.*");
+		anchor4.addExpectedAttribute("href", ".*MockWebApplication.*");
 		anchor4.addExpectedChild(new TextContent("Home"));
 		link3.addExpectedChild(anchor4);
 		
@@ -137,7 +137,7 @@ public class AutolinkTest extends TestCase
 		link5.addExpectedChild(new TextContent(".*"));
 		
 		Tag anchor6 = new Tag("a");
-		anchor6.addExpectedAttribute("href", ".*MockHttpApplication.*name=test&id=123");
+		anchor6.addExpectedAttribute("href", ".*MockWebApplication.*name=test&id=123");
 		anchor6.addExpectedChild(new TextContent("Home"));
 		link5.addExpectedChild(anchor6);
 		link5.addExpectedChild(new TextContent(".*"));

@@ -32,22 +32,22 @@ import junit.framework.TestCase;
  *
  * @author Chris Turner
  */
-public class MockHttpApplicationTest extends TestCase {
+public class MockWebApplicationTest extends TestCase {
 
-    private MockHttpApplication application;
+    private MockWebApplication application;
 
     /**
      * Create the test.
      *
      * @param name The test name
      */
-    public MockHttpApplicationTest(String name) {
+    public MockWebApplicationTest(String name) {
         super(name);
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        application = new MockHttpApplication(null);
+        application = new MockWebApplication(null);
         application.getPages().setHomePage(MockPage.class);
     }
 
@@ -119,7 +119,7 @@ public class MockHttpApplicationTest extends TestCase {
         Tag body = new Tag("body");
         html.addExpectedChild(body);
         Tag a = new Tag("a");
-        a.addExpectedAttribute("href", "/MockHttpApplication/MockHttpApplication\\?component=[0-9]*.actionLink&amp;rendering=[0-9]*&amp;interface=ILinkListener");
+        a.addExpectedAttribute("href", "/MockWebApplication/MockWebApplication\\?component=[0-9]*.actionLink&amp;rendering=[0-9]*&amp;interface=ILinkListener");
         a.addExpectedAttribute("id", "actionLink");
         body.addExpectedChild(a);
         a.addExpectedChild(new TextContent("Action link clicked "));

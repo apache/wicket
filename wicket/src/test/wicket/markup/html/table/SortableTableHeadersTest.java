@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import wicket.markup.html.link.Link;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.util.io.Streams;
 import wicket.util.string.StringList;
 
@@ -59,7 +59,7 @@ public class SortableTableHeadersTest extends TestCase
      */
     public void testPagedTable() throws Exception
     {
-        MockHttpApplication application = new MockHttpApplication(null);
+        MockWebApplication application = new MockWebApplication(null);
         application.getPages().setHomePage(SortableTableHeadersPage.class);
         application.setupRequestAndResponse();
         application.processRequestCycle();

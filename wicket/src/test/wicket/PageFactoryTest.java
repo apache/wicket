@@ -21,7 +21,7 @@ package wicket;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.MockPage;
 import wicket.resource.DummyApplication;
 
@@ -30,7 +30,7 @@ import wicket.resource.DummyApplication;
  */
 public class PageFactoryTest extends TestCase
 {
-    private MockHttpApplication application;
+    private MockWebApplication application;
     private DefaultPageFactory factory;
 
     /**

@@ -19,7 +19,7 @@
 package wicket.markup;
 
 import junit.framework.TestCase;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 
 /**
  * Simple application that demonstrates the mock http application
@@ -29,7 +29,7 @@ import wicket.protocol.http.MockHttpApplication;
  */
 public class ComponentCreateTagTest extends TestCase {
 
-    private MockHttpApplication application;
+    private MockWebApplication application;
 
     /**
      * Create the test.
@@ -44,7 +44,7 @@ public class ComponentCreateTagTest extends TestCase {
      * @throws Exception
      */
     public void testRenderHomePage() throws Exception {
-        application = new MockHttpApplication(null);
+        application = new MockWebApplication(null);
         application.getPages().setHomePage(ComponentCreateTag.class);
         
         // Do the processing
@@ -60,7 +60,7 @@ public class ComponentCreateTagTest extends TestCase {
      * @throws Exception
      */
     public void testRenderHomePage_2() throws Exception {
-        application = new MockHttpApplication(null);
+        application = new MockWebApplication(null);
         application.getPages().setHomePage(ComponentCreateTag_2.class);
         
         // Do the processing

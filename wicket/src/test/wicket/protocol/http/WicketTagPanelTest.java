@@ -28,7 +28,7 @@ import junit.framework.TestCase;
  */
 public class WicketTagPanelTest extends TestCase {
 
-    private MockHttpApplication application;
+    private MockWebApplication application;
 
     /**
      * Create the test.
@@ -41,7 +41,7 @@ public class WicketTagPanelTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        application = new MockHttpApplication(null);
+        application = new MockWebApplication(null);
         application.getPages().setHomePage(WicketPanelPage.class);
     }
 

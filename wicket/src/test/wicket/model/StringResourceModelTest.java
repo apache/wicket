@@ -30,7 +30,7 @@ import wicket.model.Model;
 import wicket.model.PropertyModel;
 import wicket.model.StringResourceModel;
 import wicket.protocol.http.HttpRequestCycle;
-import wicket.protocol.http.MockHttpApplication;
+import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.MockPage;
 import wicket.resource.BundleStringResourceLoader;
 
@@ -44,7 +44,7 @@ import junit.framework.TestCase;
 public class StringResourceModelTest extends TestCase
 {
 
-	private MockHttpApplication application;
+	private MockWebApplication application;
 
 	private HtmlPage page;
 
@@ -64,7 +64,7 @@ public class StringResourceModelTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockHttpApplication(null);
+		application = new MockWebApplication(null);
 		application.getSettings().addStringResourceLoader(
 				new BundleStringResourceLoader("wicket.model.StringResourceModelTest"));
 		page = new MockPage(null);
