@@ -220,9 +220,6 @@ public class WebRequestCycle extends RequestCycle
 				{
 					// Render the page
 					page.render();
-
-					// Clear all feedback messages
-					page.getFeedbackMessages().clear();
 				}
 			}
 		}
@@ -425,13 +422,6 @@ public class WebRequestCycle extends RequestCycle
 
 			// Set form component values from cookies
 			setFormComponentValuesFromCookies(page);
-
-			// If the current page is also the next page or we're redirecting
-			if (getPage() != page || getRedirect())
-			{
-				// detach any models loaded by the component listener
-				page.detachModels();
-			}
 		}
 		else
 		{

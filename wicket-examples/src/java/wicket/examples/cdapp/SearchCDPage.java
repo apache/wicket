@@ -18,8 +18,6 @@
  */
 package wicket.examples.cdapp;
 
-import java.io.Serializable;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
@@ -45,6 +43,7 @@ import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListViewNavigationLink;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.IModel;
 
 
 /**
@@ -173,7 +172,7 @@ public class SearchCDPage extends WicketExamplePage
 		 * @param pageSizeInCells page size
 		 */
 		public SearchCDResultsListView(String componentName,
-				Serializable model, int pageSizeInCells)
+				IModel model, int pageSizeInCells)
 		{
 			super(componentName, model, pageSizeInCells);
 		}

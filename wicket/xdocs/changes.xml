@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1152595">       
+        Added onRendered() method and reset() and onReset() methods to help with lifecycle problems that were causing problems with feedback panels not resetting properly.  This was a pretty intricate and difficult bug to fix because the obvious code to put in onReset to clear feedback messages would include calling modelChangedStructure() on the listview.  Unfortunately, this method does not work after rendering has finished because the staleness checks assume it is being called /before/ rendering (which it always is when users call it).  The solution was to call removeAll() in FeedbackPanel instead.  This causes the panel to repopulate, but without any staleness checking.  Also documented why WebPage.getMarkupType() is final and what you would do if you wanted to implement a new markup type.  Fixed a serious stack overflow error in setModel where modelChanged() was being called when the model hadn't changed.  And made the listview constructors typesafe (the Serializable ones are ambiguous and incorrect).
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1151982">       
 		Made setModel() private and added initModel() method for lazy initialization of models in components that cannot set a model in their constructor.  Used initModel to rework ListItem class and PageableListViewNavigation.  Other minor tweaks and major refactor of hangman example.
       </action>

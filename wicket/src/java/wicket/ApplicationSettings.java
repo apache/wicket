@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.encryption.Crypt;
+import wicket.markup.html.form.encryption.SunJceCrypt;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
@@ -154,7 +154,7 @@ public final class ApplicationSettings
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
 
 	/** Class of type ICrypt to implement encryption */
-	private Class cryptClass = Crypt.class;
+	private Class cryptClass = SunJceCrypt.class;
 
 	/** Default markup for after a disabled link */
 	private String defaultAfterDisabledLink = "</i>";

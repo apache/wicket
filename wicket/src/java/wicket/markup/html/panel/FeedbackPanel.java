@@ -17,7 +17,8 @@
  */
 package wicket.markup.html.panel;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 import wicket.AttributeModifier;
 import wicket.FeedbackMessage;
@@ -56,7 +57,7 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 		 */
 		public MessageListView(final String name)
 		{
-			super(name, Collections.EMPTY_LIST);
+			super(name, (List)new ArrayList());
 		}
 
 		/**
@@ -106,6 +107,19 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	}
 
 	/**
+	 * Sets the model for the list view of feedback messages based on the
+	 * messages set on components in a given form.
+	 * 
+	 * @see IValidationFeedback#addValidationFeedback(Form)
+	 */
+	public void addValidationFeedback(final Form form)
+	{
+		// Force re-rendering of the list
+		messageListView.getList().addAll(getPage().getFeedbackMessages().messages(form));
+		messageListView.modelChangedStructure();
+	}
+
+	/**
 	 * @param maxMessages
 	 *            The maximum number of feedback messages that this feedback
 	 *            panel should show at one time
@@ -116,14 +130,19 @@ public final class FeedbackPanel extends Panel implements IValidationFeedback
 	}
 
 	/**
-	 * Sets an error message to be displayed by this feedback panel.
-	 * 
-	 * @see IValidationFeedback#updateValidationFeedback(Form)
+	 * @see wicket.MarkupContainer#onReset()
 	 */
-	public void updateValidationFeedback(final Form form)
+	protected void onReset()
 	{
-		// Force re-rendering of the list
-		messageListView.setModelObject(getPage().getFeedbackMessages().messages(form));
-		messageListView.modelChangedStructure();
+		// Reset container
+		super.onReset();
+
+		// Clear feedback
+		messageListView.getList().clear();
+
+		// We use removeAll() here because the usual modelChangedStructure()
+		// call only works correctly if it's called before rendering has begun
+		// due to issues with stale data detection and the rendering cycle.
+		messageListView.removeAll();
 	}
 }

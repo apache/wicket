@@ -105,7 +105,7 @@ public abstract class Component implements Serializable, IConverterSource
 	private static Log log = LogFactory.getLog(Component.class);
 
 	/** Collection of AttributeModifiers to be applied for this Component */
-	List attributeModifiers = null;
+	private List attributeModifiers = null;
 
 	/** The model for this component. */
 	private IModel model;
@@ -223,10 +223,10 @@ public abstract class Component implements Serializable, IConverterSource
 	 * instance using the OGNL expression. This is the equivalent of:
 	 * 
 	 * <pre>
-	 *                           IModel model;
-	 *                           String expression;
-	 *                           ...
-	 *                           new MyComponent(name, new PropertyModel(model, expression));
+	 *                             IModel model;
+	 *                             String expression;
+	 *                             ...
+	 *                             new MyComponent(name, new PropertyModel(model, expression));
 	 * </pre>
 	 * 
 	 * If the object is not an instance of PropertyModel or IModel, the object
@@ -235,10 +235,10 @@ public abstract class Component implements Serializable, IConverterSource
 	 * expression. Thus, this is the equivalent of:
 	 * 
 	 * <pre>
-	 *                           Serializable model;
-	 *                           String expression;
-	 *                           ...
-	 *                           new MyComponent(name, new PropertyModel(new Model(model), expression));
+	 *                             Serializable model;
+	 *                             String expression;
+	 *                             ...
+	 *                             new MyComponent(name, new PropertyModel(new Model(model), expression));
 	 * </pre>
 	 * 
 	 * All components have names. A component's name cannot be null.
@@ -829,8 +829,16 @@ public abstract class Component implements Serializable, IConverterSource
 		// Restore original response
 		cycle.setResponse(originalResponse);
 
-		// Increase render count for component
-		rendering++;
+		// Reset component since rendering is finished
+		onRendered();
+	}
+
+	/**
+	 * Resets component for future requests
+	 */
+	public void reset()
+	{
+		onReset();
 	}
 
 	/**
@@ -1088,9 +1096,37 @@ public abstract class Component implements Serializable, IConverterSource
 	}
 
 	/**
-	 * Renders this component.
+	 * Implementation that renders this component.
 	 */
 	protected abstract void onRender();
+
+	/**
+	 * Called when this component is finished rendering.
+	 */
+	protected void onRendered()
+	{	
+		// Increase render count for component
+		rendering++;
+
+		// Detach any detachable model from this component
+		detachModel();
+
+		// Also detach models from any contained attribute modifiers
+		if (attributeModifiers != null)
+		{
+			for (Iterator iterator = attributeModifiers.iterator(); iterator.hasNext();)
+			{
+				((AttributeModifier)iterator.next()).detachModel();
+			}
+		}
+	}
+
+	/**
+	 * Called when component is being reset for future use.
+	 */
+	protected void onReset()
+	{
+	}
 
 	/**
 	 * Renders the component at the current position in the given markup stream.
@@ -1386,9 +1422,8 @@ public abstract class Component implements Serializable, IConverterSource
 	 * 
 	 * @param model
 	 *            the model
-	 * @return This
 	 */
-	private final Component setModel(final IModel model)
+	private final void setModel(final IModel model)
 	{
 		// Detach current model if it's an IDetachableModel
 		if (this.model != null && this.model instanceof IDetachableModel)
@@ -1403,9 +1438,11 @@ public abstract class Component implements Serializable, IConverterSource
 		}
 
 		// Change model
-		this.model = (IModel)model;
-		modelChanged();
-		return this;
+		if (this.model != model)
+		{
+			this.model = (IModel)model;
+			modelChanged();
+		}
 	}
 
 	/**

@@ -36,11 +36,11 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -7070716217601930304L;
 
-	/** The error indicator child which should be shown if an error occurs. */
-	private final WebMarkupContainer errorIndicator;
-
 	/** The child to border; is used to get whether there is an error for it. */
 	private final FormComponent child;
+
+	/** The error indicator child which should be shown if an error occurs. */
+	private final WebMarkupContainer errorIndicator;
 
 	/**
 	 * Constructor.
@@ -68,10 +68,22 @@ public final class FormComponentFeedbackBorder extends Border implements IValida
 	 * Handles validation errors. If any errors were registered, the decorated
 	 * error indicator will be set to invisible.
 	 * 
-	 * @see IValidationFeedback#updateValidationFeedback(Form)
+	 * @see IValidationFeedback#addValidationFeedback(Form)
 	 */
-	public void updateValidationFeedback(final Form form)
+	public void addValidationFeedback(final Form form)
 	{
 		errorIndicator.setVisible(child.hasErrorMessage());
+	}
+	
+	/**
+	 * @see wicket.MarkupContainer#onReset()
+	 */
+	protected void onReset()
+	{
+		// Reset container
+		super.onReset();
+		
+		// Clear feedback
+		errorIndicator.setVisible(false);
 	}
 }

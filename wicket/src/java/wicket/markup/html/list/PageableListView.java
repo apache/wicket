@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,6 +20,8 @@ package wicket.markup.html.list;
 import java.io.Serializable;
 import java.util.List;
 
+import wicket.model.IModel;
+
 /**
  * PageableListView is similar to ListView but provides in addition pageable
  * views. A PageableListView holds pageable rows of information. The rows can be
@@ -36,53 +38,52 @@ public abstract class PageableListView extends ListView
 	private final int rowsPerPage;
 
 	/**
-     * Creates a pagable list view having the given number of rows per page that
-     * uses the provided object as a simple model.
-     * 
-     * @see wicket.Component#Component(String, Serializable)
-     * @param name
-     *            See Component constructor
-     * @param object
-     *            See Component constructor
-     * @param rowsPerPage
-     *            Number of rows to show on a page
+	 * Constructor
+	 * 
+	 * @param name
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param rowsPerPage
+	 *            Number of rows to show on a page
 	 */
-	public PageableListView(String name, List object, int rowsPerPage)
+	public PageableListView(final String name, final IModel model, int rowsPerPage)
 	{
-		this(name, (Serializable)object, rowsPerPage);
+		super(name, model);
+		this.rowsPerPage = rowsPerPage;
 	}
 
 	/**
 	 * Creates a pagable list view having the given number of rows per page that
 	 * uses the provided object as a simple model.
 	 * 
-	 * @see wicket.Component#Component(String, Serializable)
 	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
+	 *            See Component
+	 * @param list
+	 *            See Component
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
+	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(String name, Serializable object, int rowsPerPage)
+	public PageableListView(final String name, final List list, final int rowsPerPage)
 	{
-		super(name, object);
+		super(name, list);
 		this.rowsPerPage = rowsPerPage;
 	}
 
 	/**
-     * Creates a pagable list view having the given number of rows per page that
-     * uses the provided object as a simple model.
-     * 
-     * @see wicket.Component#Component(String, Serializable)
-     * @param name
-     *            See Component constructor
-     * @param object
-     *            See Component constructor
+	 * Creates a pagable list view having the given number of rows per page that
+	 * uses the provided object as a simple model.
+	 * 
+	 * @param name
+	 *            See Component constructor
+	 * @param object
+	 *            See Component constructor
 	 * @param expression
-     *            See Component constructor
-     * @param rowsPerPage
-     *            Number of rows to show on a page
+	 *            See Component constructor
+	 * @param rowsPerPage
+	 *            Number of rows to show on a page
+	 * @see wicket.Component#Component(String, Serializable)
 	 */
 	public PageableListView(String name, Serializable object, String expression, int rowsPerPage)
 	{

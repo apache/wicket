@@ -99,14 +99,6 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, Serializable)
-	 */
-	public ListView(String name, Serializable object)
-	{
-		super(name, object);
-	}
-
-	/**
 	 * @see wicket.Component#Component(String, Serializable, String)
 	 */
 	public ListView(String name, Serializable object, String expression)
