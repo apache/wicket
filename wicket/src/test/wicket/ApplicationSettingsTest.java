@@ -50,7 +50,7 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
 		Assert.assertTrue("exceptionOnMissingResource should default to true", settings
-				.isExceptionOnMissingResource());
+				.getExceptionOnMissingResource());
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class ApplicationSettingsTest extends TestCase
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
 		Assert.assertSame(settings, settings.setExceptionOnMissingResource(false));
 		Assert.assertFalse("exceptionOnMissingResource should have been set to false", settings
-				.isExceptionOnMissingResource());
+				.getExceptionOnMissingResource());
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
 		Assert.assertTrue("useDefaultOnMissingResource should default to true", settings
-				.isUseDefaultOnMissingResource());
+				.getUseDefaultOnMissingResource());
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class ApplicationSettingsTest extends TestCase
 		ApplicationSettings settings = new ApplicationSettings(new DummyApplication());
 		Assert.assertSame(settings, settings.setUseDefaultOnMissingResource(false));
 		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", settings
-				.isUseDefaultOnMissingResource());
+				.getUseDefaultOnMissingResource());
 	}
 
 	/**

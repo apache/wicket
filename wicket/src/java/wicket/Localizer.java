@@ -84,12 +84,12 @@ public class Localizer
 
 		// Resource not found, so handle missing resources based on application
 		// configuration
-		if (settings.isUseDefaultOnMissingResource() && defaultValue != null)
+		if (settings.getUseDefaultOnMissingResource() && defaultValue != null)
 		{
 			return defaultValue;
 		}
 
-		if (settings.isExceptionOnMissingResource())
+		if (settings.getExceptionOnMissingResource())
 		{
 			throw new MissingResourceException("Unable to find resource: " + key, getClass()
 					.getName(), key);

@@ -131,7 +131,7 @@ public final class MarkupParser implements IMarkupParser
     {
         this.componentNameAttribute = name;
         
-        if (!ComponentTag.WICKET_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
+        if (!ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE.equals(componentNameAttribute))
         {
             log.info("You are using a non-standard component name: " 
                     + componentNameAttribute);
@@ -900,7 +900,7 @@ public final class MarkupParser implements IMarkupParser
                 // standard name ("wicket") is used
                 if (wicketId
                         || key.equalsIgnoreCase(componentNameAttribute)
-                        || key.equalsIgnoreCase(ComponentTag.WICKET_COMPONENT_NAME_ATTRIBUTE))
+                        || key.equalsIgnoreCase(ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE))
                 {
                     // Set componentName value on tag
                     tag.componentName = value;
