@@ -1,0 +1,83 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ *
+ * ================================================================================
+ * Copyright (c)
+ * All rechten voorbehouden.
+ */
+package com.voicetribe.wicket.markup.html.table;
+
+import junit.framework.TestCase;
+
+import com.voicetribe.wicket.protocol.http.MockHttpApplication;
+import com.voicetribe.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
+import com.voicetribe.wicket.protocol.http.documentvalidation.Tag;
+import com.voicetribe.wicket.protocol.http.documentvalidation.TextContent;
+
+/**
+ * Test for simple table behaviour.
+ */
+public class SimpleTableTest extends TestCase
+{
+
+    /**
+     * Construct.
+     * 
+     */
+    public SimpleTableTest()
+    {
+        super();
+    }
+
+    /**
+     * Construct.
+     * @param arg0
+     */
+    public SimpleTableTest(String arg0)
+    {
+        super(arg0);
+    }
+
+    /**
+     * Test simple table behaviour.
+     * @throws Exception
+     */
+    public void testSimpleTable() throws Exception
+    {
+        MockHttpApplication application = new MockHttpApplication(null);
+        application.getSettings().setHomePage(SimpleTablePage.class);
+        application.setupRequestAndResponse();
+        application.processRequestCycle();
+        SimpleTablePage page = (SimpleTablePage)application.getLastRenderedPage();
+        String document = application.getServletResponse().getDocument();
+        assertTrue(validateDocument(document));
+    }
+
+    /**
+     * Helper method to validate the returned XML document.
+     *
+     * @param document The document
+     * @return The validation result
+     */
+    private boolean validateDocument(String document) {
+        HtmlDocumentValidator validator = new HtmlDocumentValidator();
+        Tag html = new Tag("html");
+        Tag head = new Tag("head");
+        html.addExpectedChild(head);
+        Tag title = new Tag("title");
+        head.addExpectedChild(title);
+        title.addExpectedChild(new TextContent("Test Page"));
+        Tag body = new Tag("body");
+        html.addExpectedChild(body);
+        Tag ul = new Tag("ul");
+        ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("one"))));
+        ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("two"))));
+        ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("three"))));
+        body.addExpectedChild(ul);
+        validator.addRootElement(html);
+
+        return validator.isDocumentValid(document);
+    }
+}
