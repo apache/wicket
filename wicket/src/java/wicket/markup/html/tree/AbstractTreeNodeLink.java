@@ -70,8 +70,16 @@ public abstract class AbstractTreeNodeLink extends AbstractLink
         // links can change, but the target user object should be the same, so
         // if a new link is added that actually points to the same userObject, it will
         // replace the old one thus allowing the old link to be GC-ed.
-        // Te id is a combination of the 
-        String linkId = componentName + String.valueOf(userObject.hashCode());
+        // Te id is a combination of the
+        final String linkId;
+        if(userObject instanceof IdWrappedUserObject)
+        {
+        	linkId = componentName + ((IdWrappedUserObject)userObject).getUid();
+        }
+        else
+        {
+        	linkId = componentName + String.valueOf(userObject.hashCode());	
+        }
         id = linkId;
 
         // add the link to the tree. By adding it to the tree instead of one of the tree's nested components,

@@ -27,28 +27,39 @@ import java.rmi.server.UID;
  * @author Eelco Hillenius
  */
 public final class IdWrappedUserObject implements Serializable
-{ // TODO finalize javadoc
+{
 	/** the wrapped tree node's user object. */
 	private final Serializable userObject;
 
 	/** the unique id. */
-	private final UID uid;
+	private final Serializable uid;
 
 	/**
-	 * Construct.
+	 * Construct; uses an instance of {@link UID} for the unique id.
 	 * @param userObject the user object to wrap
 	 */
 	public IdWrappedUserObject(Serializable userObject)
 	{
 		this.userObject = userObject;
-		uid = new UID();
+		this.uid = new UID();
+	}
+
+	/**
+	 * Construct; uses the provided uid for the unique id.
+	 * @param userObject the user object to wrap
+	 * @param uid the unique id
+	 */
+	public IdWrappedUserObject(Serializable userObject, Serializable uid)
+	{
+		this.userObject = userObject;
+		this.uid = uid;
 	}
 
 	/**
 	 * Gets uid.
 	 * @return uid
 	 */
-	public UID getUid()
+	public Serializable getUid()
 	{
 		return uid;
 	}
