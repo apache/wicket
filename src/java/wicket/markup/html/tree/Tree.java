@@ -31,6 +31,38 @@ import wicket.markup.html.panel.Panel;
 /**
  * A component that represents a tree. It renders using nested lists that in turn
  * use panels.
+ * <p>
+ * This type of tree is best used when you want to display your tree using nested
+ * &lt;ul&gt; and &lt;li&gt; tags.
+ * </p>
+ * <p>
+ * For example, this could be the rendering result of a tree: (it will actually look
+ * a bit different as we are using panels as well, but you'll get the idea)
+ * <pre>
+ * &lt;ul id="nested"&gt;
+ *   &lt;li id="row"&gt;
+ *     &lt;span id="label"&gt;foo&lt;/span&gt;
+ *   &lt;/li&gt;
+ *   &lt;ul id="nested"&gt;
+ *     &lt;li id="row"&gt;
+ *       &lt;span id="label"&gt;bar&lt;/span&gt;
+ *     &lt;/li&gt;
+ *   &lt;/ul&gt;
+ *   &lt;li id="row"&gt;
+ *     &lt;span id="label"&gt;suck&lt;/span&gt;
+ *   &lt;/li&gt;
+ * &lt;/ul&gt;
+ * </pre>
+ * </p>
+ * Override the getXXXPanel methods to provide your own customized rendering.
+ * Look at the filebrowser example of the wicket-examples project for an example
+ * </p>
+ *
+ * @see wicket.markup.html.tree.AbstractTree
+ * @see wicket.markup.html.tree.TreeNodeModel
+ * @see wicket.markup.html.tree.TreeRows
+ * @see wicket.markup.html.tree.TreeRow
+ * @see wicket.markup.html.tree.TreeRowReplacementModel
  *
  * @author Eelco Hillenius
  */
