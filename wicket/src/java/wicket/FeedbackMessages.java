@@ -84,8 +84,8 @@ public final class FeedbackMessages implements Serializable
 					// Get next message
 					final FeedbackMessage message = (FeedbackMessage)iterator.next();
 
-					// If the reporter is inside the given form (recursively)
-					if (form.contains(message.getReporter(), true))
+					// If the reporter is the form itself of the report is contained by the form
+					if (form == message.getReporter() || form.contains(message.getReporter(), true))
 					{
 						// add the message to the list
 						list.add(message);

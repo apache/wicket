@@ -8,6 +8,12 @@
   </properties>
   <body>
     <release version="0.9.18-beta" date="2005-02-20" description="Still more refactorings, documentation upgrades and bug fixes">
+      <action type="fix" dev="Jonathan Locke" issue="1150668">
+		Restructured form validation so that feedback is updated for the whole form
+		on success or failure.  Fixed additional bug where the form itself was not
+		being considered by the feedback messages model as a place that might be the
+		source of messages.  These two changes together fix the bug.
+      </action>
 	  <action type="update" dev="Jonathan Locke" issue="">
 		Refactored and simplified form validation.  Added CustomValidator and removed
 		a lot of unnecessary code and complexity.
