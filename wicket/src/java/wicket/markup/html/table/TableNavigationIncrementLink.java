@@ -24,36 +24,42 @@ import wicket.markup.html.link.PageLink;
 
 
 /**
- * An incremental link to a page of a table. Let say your table navigation
+ * An incremental link to a page of a table. Assuming your table navigation
  * looks like
  * <pre>
  * [first / << / <] 1 | 2 | 3 [> / >> /last]
  * </pre><p>
  * and "&lt;" meaning the previous and "&lt;&lt;" goto the "current page
- * - 5". Than this kind of incremental paged table link can easily be constructed.
+ * - 5", than it is this kind of incremental page links which can easily be 
+ * created.
  * 
  * @author Juergen Donnerstag
  */
 public class TableNavigationIncrementLink extends PageLink
-{ // TODO finalize javadoc
-    /** The page of the table this link is for */
+{
+    /** The increment */
     private final int increment;
 
-    /** The table */
+    /** The table the page links are referring to */
     private final Table table;
 
     /**
      * Constructor.
      * @param componentName The name of this component
-     * @param table The table for this page link
+     * @param table The table the page links are referring to
      * @param increment increment by
      */
     public TableNavigationIncrementLink(final String componentName, final Table table, final int increment)
     {
         super(componentName, new IPageLink()
         {
+            /**
+             * @see wicket.markup.html.link.IPageLink#getPage()
+             */
             public Page getPage()
             {
+                // Determine the page number based on the current table page
+                // and the increment
                 int idx = table.getCurrentPage() + increment;
                 if (idx < 0)
                 {
@@ -64,10 +70,16 @@ public class TableNavigationIncrementLink extends PageLink
                     idx = table.getList().size() - 1;
                 }
                 
+                // Tell the table which page to print next 
                 table.setCurrentPage(idx);
+                
+                // Return the table page the link is referring to
                 return table.getPage();
             }
 
+            /**
+             * @see wicket.markup.html.link.IPageLink#getPageClass()
+             */
             public Class getPageClass()
             {
                 return table.getPage().getClass();
@@ -79,9 +91,9 @@ public class TableNavigationIncrementLink extends PageLink
     }
 
     /**
-     * Returns true if this table navigation link links to the given page.
+     * Returns true if the page link links to the given page.
      * 
-     * @param page The page
+     * @param page The page to test
      * @return True if this link links to the given page
      * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
      */
@@ -98,7 +110,8 @@ public class TableNavigationIncrementLink extends PageLink
     }
 
     /**
-     * @return True if this page is the first page of the containing table
+     * @return True if it is referring to the first page of the
+     *     underlying table.
      */
     public boolean isFirst()
     {
@@ -106,12 +119,11 @@ public class TableNavigationIncrementLink extends PageLink
     }
 
     /**
-     * @return True if this page is the last page of the containing table
+     * @return True if it is referring to the last page of the
+     *     underlying table.
      */
     public boolean isLast()
     {
         return table.getCurrentPage() >= (table.getPageCount() - 1);
     }
 }
-
-
