@@ -137,6 +137,10 @@
       <name>Gili Tzabari</name>
       <email>cowwoc at users.sourceforge.net</email>
     </contributor>
+    <contributor>
+      <name>Martin Fey</name>
+      <email>-</email>
+    </contributor>
   </contributors>
   <dependencies>
     <dependency>
