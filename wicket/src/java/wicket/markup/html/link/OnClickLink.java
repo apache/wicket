@@ -129,11 +129,11 @@ public abstract class OnClickLink extends AbstractLink
         // Add simple javascript on click handler that links to this
         // link's linkClicked method
         final String url = getURL().replaceAll("&", "&amp;");
-        PopupSpecification popupSpecification = getPopupSpecification();
-        if (popupSpecification != null)
+        PopupSettings popupSettings = getPopupSettings();
+        if (popupSettings != null)
         {
-        	popupSpecification.setTarget("'" + url + "'");
-            String popupScript = popupSpecification.getPopupJavaScript();
+        	popupSettings.setTarget("'" + url + "'");
+            String popupScript = popupSettings.getPopupJavaScript();
             popupScript = popupScript.replaceAll("&", "&amp;");
             tag.put("onclick", popupScript);
         }

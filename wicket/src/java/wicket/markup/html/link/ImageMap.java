@@ -168,12 +168,12 @@ public final class ImageMap extends HtmlComponent
          */
         public String toString()
         {
-            //Add any popup script
+            // Add any popup script
             final String popupJavaScript;
 
-            if (link.getPopupSpecification() != null)
+            if (link.getPopupSettings() != null)
             {
-                popupJavaScript = link.getPopupSpecification().getPopupJavaScript();
+                popupJavaScript = link.getPopupSettings().getPopupJavaScript();
             }
             else
             {
@@ -193,7 +193,7 @@ public final class ImageMap extends HtmlComponent
      */
     private static final class PolygonLink extends ShapeLink
     {
-        /** it's coordinates. */
+        /** Its coordinates. */
         private final int[] coordinates;
 
         /**
