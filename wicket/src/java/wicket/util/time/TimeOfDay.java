@@ -64,11 +64,12 @@ public final class TimeOfDay extends AbstractTime
 	/** Constant for midnight. */
 	public static final TimeOfDay MIDNIGHT = time(12, 0, AM);
 
-	/** Constant for noon. */
-	public static final TimeOfDay NOON = time(12, 0, PM);
-
 	/** Constant for PM time. */
 	public static final Meridian PM = new Meridian("PM");
+
+	/** Constant for noon. */
+	public static final TimeOfDay NOON = time(12, 0, PM);
+	
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 981684175051766950L;
 
