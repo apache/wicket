@@ -18,7 +18,6 @@
 package wicket;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -102,7 +101,7 @@ public final class FeedbackMessages
 	private class Model implements IModel
 	{
 		/**
-		 * level to narrow the model to. If undefined (the default), it is not
+		 * Level to narrow the model to. If undefined (the default), it is not
 		 * used.
 		 */
 		private int level = FeedbackMessage.UNDEFINED;
@@ -154,17 +153,6 @@ public final class FeedbackMessages
 			{
 				setMessages((List)object);
 			}
-			else if (object instanceof FeedbackMessage[])
-			{
-				if (object != null)
-				{
-					setMessages(Arrays.asList((FeedbackMessage[])object));
-				}
-				else
-				{
-					setMessages(null);
-				}
-			}
 			else
 			{
 				throw new WicketRuntimeException("Invalid model type for FeedbackMessages");
@@ -196,7 +184,7 @@ public final class FeedbackMessages
 	 * level ERROR or up. This is the same as calling
 	 * 'hasMessages(FeedbackMessage.ERROR)'.
 	 * 
-	 * @return whether this list contains any messages with level ERROR or up
+	 * @return Whether this list contains any messages with level ERROR or up
 	 */
 	public boolean hasError()
 	{
@@ -208,7 +196,7 @@ public final class FeedbackMessages
 	 * 
 	 * @param level
 	 *            the level
-	 * @return whether this list contains any messages with the given level or
+	 * @return Whether this list contains any messages with the given level or
 	 *         up
 	 */
 	public boolean hasMessage(final int level)
@@ -232,7 +220,7 @@ public final class FeedbackMessages
 	/**
 	 * Gets whether this list contains any messages.
 	 * 
-	 * @return whether this list contains any messages
+	 * @return Whether this list contains any messages
 	 */
 	public boolean isEmpty()
 	{
@@ -243,7 +231,7 @@ public final class FeedbackMessages
 	 * Convenience method to get the iterator for the currently registered
 	 * messages.
 	 * 
-	 * @return the iterator for the currently registered messages
+	 * @return The iterator for the currently registered messages
 	 */
 	public Iterator iterator()
 	{
@@ -255,7 +243,7 @@ public final class FeedbackMessages
 	 * Gets the list with messages (not sorted; the same ordering as they were
 	 * added).
 	 * 
-	 * @return the list with messages
+	 * @return The list with messages
 	 */
 	public List messages()
 	{
@@ -269,29 +257,29 @@ public final class FeedbackMessages
 	 * above.
 	 * 
 	 * @param level
-	 *            the level to get the messages for
-	 * @return the sub list of message with messages that are of the given level
+	 *            The level to get the messages for
+	 * @return The sub list of message with messages that are of the given level
 	 *         or above, or an empty list
 	 */
-	public FeedbackMessages messages(int level)
+	public List messages(int level)
 	{
+		List list = null;
 		if (messages != null)
 		{
-			final List sublist = new ArrayList();
 			for (final Iterator i = messages.iterator(); i.hasNext();)
 			{
 				final FeedbackMessage message = (FeedbackMessage)i.next();
 				if (message.isLevel(level))
 				{
-					sublist.add(message);
+					if (list == null)
+					{
+						list = new ArrayList();
+					}
+					list.add(message);
 				}
 			}
-			return new FeedbackMessages().setMessages(sublist);
 		}
-		else
-		{
-			return new FeedbackMessages();
-		}
+		return list != null ? Collections.unmodifiableList(list) : Collections.EMPTY_LIST;
 	}
 
 	/**
