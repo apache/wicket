@@ -38,7 +38,7 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	 *            Maximum number of entries allowed in the map
 	 * @return MRU map instance
 	 */
-	public static MostRecentlyUsedMap newInstance(final int maxEntries)
+	public static Map newInstance(final int maxEntries)
 	{
 		if (maxEntries <= 0)
 		{
