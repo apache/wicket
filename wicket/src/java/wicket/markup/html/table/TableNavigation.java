@@ -110,7 +110,7 @@ import wicket.model.Model;
  * @author Juergen Donnerstag
  */
 public class TableNavigation extends ListView
-{ // TODO finalize javadoc
+{
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 8591577491410447609L;
 
@@ -119,39 +119,44 @@ public class TableNavigation extends ListView
 
     /**
      * Constructor.
-     * @param componentName The name of this component
-     * @param table The table to navigate
+     * @param componentName The name of the component
+     * @param table The underlying table to navigate
      */
     public TableNavigation(final String componentName, final Table table)
     {
         super(componentName, new Model(null));
+
         this.table = table;
-        
         this.setStartIndex(0);
     }
 
     /**
-     * Adds a {@link TableNavigationLink}to the cell. Override this to add custom
-     * components for your navigation. Use (TableNavigationLink)cell.getModel() to get the
-     * current link.
+     * Populate the current cell with a page link (TableNavigationLink) enclosing
+     * the page number the link is pointing to. Subclasses may provide there own
+     * implementation adding more sophisticated page links.
+     * 
      * @param listItem the list item to populate
      * @see wicket.markup.html.table.Table#populateItem(wicket.markup.html.table.ListItem)
      */
     protected void populateItem(final ListItem listItem)
     {
-        // Get link
-        final int page = ((Integer) listItem.getModelObject()).intValue();
-        final TableNavigationLink link = new TableNavigationLink("pageLink", table, page);
-
-        // Add pagenumber label (1..n) to the navigation link
-        link.add(new Label("pageNumber", String.valueOf(page + 1)));
-
-        // Add the navigation link to the cell
+        // Get the index of page this link shall point to
+        final int pageIndex = ((Integer) listItem.getModelObject()).intValue();
+        
+        // Add a page link pointing to the page
+        final TableNavigationLink link = new TableNavigationLink("pageLink", table, pageIndex);
         listItem.add(link);
+
+        // Add a label (the page number) to the list which is enclosed by the link
+        link.add(new Label("pageNumber", String.valueOf(pageIndex + 1)));
     }
    
     /**
-     * Creates a new listItem  for the given listItem index of this listView.
+     * Provide the ListItem for the index given.<p>
+     * TableNavigation actually does not have an underlying model like most
+     * other ListViews. It doesn't have to, because the model is simply
+     * the index of the table's page. Thus we create a model based on the
+     * table's page index.
      * 
      * @param index ListItem index
      * @return The new ListItem
@@ -162,7 +167,8 @@ public class TableNavigation extends ListView
     }
 
     /**
-     * Gets the table that is used to get the number of pages.
+     * Get the table which the navigation bar is navigating.
+     * 
      * @return the table that is used to get the number of pages
      */
     public Table getTable()
@@ -171,7 +177,8 @@ public class TableNavigation extends ListView
     }
 
     /**
-     * Sets the table that is used to get the number of pages.
+     * Set the table which the navigation bar is navigating.
+     * 
      * @param table the table that is used to get the number of pages
      */
     public void setTable(Table table)
@@ -180,7 +187,11 @@ public class TableNavigation extends ListView
     }
 
     /**
-     * @see wicket.markup.html.table.ListView#getViewSize()
+     * Get the number of page links per "window".
+     * 
+     * @see wicket.markup.html.table.ListView#setViewSize(int)
+     * @return The overall number of page links (= number of table pages). 
+     *      0, if no underlying table is available.
      */
     public int getViewSize()
     {
@@ -194,5 +205,3 @@ public class TableNavigation extends ListView
         }
     }
 }
-
-
