@@ -22,15 +22,16 @@ import wicket.PageParameters;
 
 /**
  * Page expired error page.
+ *
  * @author Jonathan Locke
  */
 public class PageExpiredErrorPage extends HtmlPage
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = -4566588225634687534L;
 
 	/**
-     * Constructor
+     * Constructor.
      * @param parameters
      */
     public PageExpiredErrorPage(final PageParameters parameters)
@@ -38,5 +39,3 @@ public class PageExpiredErrorPage extends HtmlPage
         add(homePageLink("homePageLink"));
     }
 }
-
-

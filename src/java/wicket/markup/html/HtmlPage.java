@@ -24,11 +24,12 @@ import wicket.markup.html.link.BookmarkablePageLink;
 
 /**
  * Base class for HTML pages.
+ *
  * @author Jonathan Locke
  */
 public class HtmlPage extends Page
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = 3986701406378811908L;
 
 	/**
@@ -49,6 +50,7 @@ public class HtmlPage extends Page
     }
 
     /**
+     * Creates and returns a bookmarkable link to this application's home page.
      * @param componentName Name of link
      * @return Link to home page for this application
      */
@@ -57,5 +59,3 @@ public class HtmlPage extends Page
         return new BookmarkablePageLink(componentName, getApplicationSettings().getHomePage());
     }
 }
-
-

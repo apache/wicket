@@ -26,11 +26,12 @@ import wicket.model.IModel;
 /**
  * Base class for simple HTML components which do not hold nested components. If you need
  * to support nested components, see HtmlContainer.
+ *
  * @see wicket.markup.html.HtmlContainer
  * @author Jonathan Locke
  */
 public abstract class HtmlComponent extends Component
-{ // TODO finalize javadoc
+{
     /**
      * Constructor.
      * @param name Component name
@@ -115,5 +116,3 @@ public abstract class HtmlComponent extends Component
         renderComponent(findMarkupStream());
     }
 }
-
-
