@@ -30,8 +30,7 @@ import java.util.List;
  */
 public interface IIdList extends List, Serializable
 {
-    // TODO should not extend List interface
-    // TODO is this interface useful enough to exist?
+    // TODO This interface should go away. See comment in IdListAdapter
     /**
      * Detach from a request.
      */
