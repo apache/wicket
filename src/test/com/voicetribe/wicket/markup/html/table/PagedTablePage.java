@@ -40,7 +40,10 @@ public class PagedTablePage extends HtmlPage {
         list.add("one");
         list.add("two");
         list.add("three");
-        add(new SimplePagedTable("table", list));
+        SimplePagedTable simplePagedTable = new SimplePagedTable("table", list);
+        add(simplePagedTable);
+        TableNavigation navigation = new TableNavigation("navigation", simplePagedTable);
+        add(navigation);
     }
 
     /** simple table. */

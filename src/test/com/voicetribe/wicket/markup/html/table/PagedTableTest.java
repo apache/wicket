@@ -3,9 +3,18 @@
  * $Revision$
  * $Date$
  *
- * ================================================================================
- * Copyright (c)
- * All rechten voorbehouden.
+ * ====================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.voicetribe.wicket.markup.html.table;
 
@@ -44,7 +53,7 @@ public class PagedTableTest extends TestCase
      * Test simple table behaviour.
      * @throws Exception
      */
-    public void testSimpleTable() throws Exception
+    public void testPagedTable() throws Exception
     {
         MockHttpApplication application = new MockHttpApplication(null);
         application.getSettings().setHomePage(PagedTablePage.class);
@@ -52,7 +61,7 @@ public class PagedTableTest extends TestCase
         application.processRequestCycle();
         PagedTablePage page = (PagedTablePage)application.getLastRenderedPage();
         String document = application.getServletResponse().getDocument();
-        assertTrue(validateDocument(document));
+        assertTrue(validatePage1(document));
     }
 
     /**
@@ -61,7 +70,7 @@ public class PagedTableTest extends TestCase
      * @param document The document
      * @return The validation result
      */
-    private boolean validateDocument(String document) {
+    private boolean validatePage1(String document) {
         HtmlDocumentValidator validator = new HtmlDocumentValidator();
         Tag html = new Tag("html");
         Tag head = new Tag("head");
@@ -71,11 +80,32 @@ public class PagedTableTest extends TestCase
         title.addExpectedChild(new TextContent("Paged Table Page"));
         Tag body = new Tag("body");
         html.addExpectedChild(body);
-        Tag ul = new Tag("ul");
-        ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("one"))));
-        ul.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span").addExpectedChild(new TextContent("two"))));
+
+        Tag ulTable = new Tag("ul");
+        ulTable.addExpectedChild(new Tag("li")
+                .addExpectedChild(new Tag("span")
+                .addExpectedChild(new TextContent("one"))));
+        ulTable.addExpectedChild(new Tag("li")
+                .addExpectedChild(new Tag("span")
+                .addExpectedChild(new TextContent("two"))));
         // note that we DO NOT expect the third element as this is not on the current page
-        body.addExpectedChild(ul);
+        body.addExpectedChild(ulTable);
+
+        Tag ulNav = new Tag("ul");
+        ulNav.addExpectedChild(new Tag("li")
+               .addExpectedChild(new Tag("span")
+                .addExpectedChild(new Tag("i")
+                 .addExpectedChild(new Tag("span")
+                  .addExpectedChild(new TextContent("1")
+        )))));
+        ulNav.addExpectedChild(new Tag("li")
+                .addExpectedChild(new Tag("a")
+                 .addExpectedChild(new Tag("span")
+                  .addExpectedChild(new TextContent("2")
+         ))));
+
+        body.addExpectedChild(ulNav);
+
         validator.addRootElement(html);
 
         return validator.isDocumentValid(document);
