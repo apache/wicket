@@ -108,6 +108,12 @@
       <email>jdonnerstag at users.sourceforge.net</email>
       <roles/>
     </developer>
+    <developer>
+      <name>Gwyn Evans</name>
+      <id>gwynevans</id>
+      <email>gwynevans at users.sourceforge.net</email>
+      <roles/>
+    </developer>    
   </developers>
   <contributors>
     <contributor>
@@ -117,6 +123,10 @@
     <contributor>
       <name>Peter Veenendaal</name>
       <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Gili Tzabari</name>
+      <email>cowwoc at users.sourceforge.net</email>
     </contributor>
   </contributors>
   <dependencies>
