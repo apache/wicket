@@ -40,6 +40,14 @@ public interface IXmlPullParser extends IMarkupFilter
 	public abstract String getEncoding();
 
 	/**
+	 * Return the XML declaration string, in case if found in the
+	 * markup.
+	 * 
+	 * @return Null, if not found.
+	 */
+	public String getXmlDeclaration();
+
+	/**
 	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
 	 * which is not further analysed by Wicket. getInputFromPositionMarker() is
 	 * used to access the raw markup.

@@ -122,6 +122,17 @@ public final class MarkupParser
         return xmlParser.getEncoding();
     }
 
+	/**
+	 * Return the XML declaration string, in case if found in the
+	 * markup.
+	 * 
+	 * @return Null, if not found.
+	 */
+    public String getXmlDeclaration()
+    {
+        return xmlParser.getXmlDeclaration();
+    }
+    
     /**
      * Reads and parses markup from a file.
      * @param resource The file
@@ -134,7 +145,7 @@ public final class MarkupParser
             ResourceNotFoundException
     {
         xmlParser.parse(resource);
-        return new Markup(resource, parseMarkup());
+        return new Markup(resource, parseMarkup(), getXmlDeclaration(), getEncoding());
     }
 
     /**
@@ -149,7 +160,7 @@ public final class MarkupParser
     	ResourceNotFoundException
     {
         xmlParser.parse(string);
-        return new Markup(null, parseMarkup());
+        return new Markup(null, parseMarkup(), getXmlDeclaration(), getEncoding());
     }
 
     /**

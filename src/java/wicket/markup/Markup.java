@@ -39,18 +39,28 @@ public final class Markup
     /** The markup's resource stream for diagnostic purposes */
     private final IResource resource;
     
+    /** If found in the markup, the <?xml ...?> string */
+    private final String xmlDeclaration;
+    
+    /** The encoding as found in <?xml ... encoding="" ?>.  Null, else */
+    private final String encoding;
+    
     /** Placeholder that indicates no markup */
-    public static final Markup NO_MARKUP = new Markup(null, null);
+    public static final Markup NO_MARKUP = new Markup(null, null, null, null);
 
     /**
      * Constructor
      * @param resource The resource where the markup was found
      * @param markup The markup elements
+     * @param xmlDeclaration The <?xml ...?> string from markup, if avaiable
+     * @param encoding The encoding of the markup file read taken from <?xml ..encoding=".." ?>
      */
-    Markup(final IResource resource, final List markup)
+    Markup(final IResource resource, final List markup, final String xmlDeclaration, final String encoding)
     {
         this.resource = resource;
         this.markup = markup;
+        this.xmlDeclaration = xmlDeclaration;
+        this.encoding = encoding;
     }
 
     /**
@@ -86,6 +96,25 @@ public final class Markup
     {
         return markup.size();
     }
+
+	/**
+	 * Return the XML declaration string, in case if found in the
+	 * markup.
+	 * 
+	 * @return Null, if not found.
+	 */
+    public String getXmlDeclaration()
+    {
+        return xmlDeclaration;
+    }
+
+    /**
+    /* The encoding as found in <?xml ... encoding="" ?>
+     *
+     * @return Null, if not found
+     */
+    public String getEncoding()
+    {
+        return encoding;
+    }
 }
-
-

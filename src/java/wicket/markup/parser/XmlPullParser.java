@@ -58,6 +58,9 @@ public final class XmlPullParser implements IXmlPullParser
 	/** Null, if JVM default. Else from <?xml encoding=""> */
 	private String encoding;
 
+	/** Null or if found in the markup, the whole <?xml ...?> string */
+	private String xmlDeclarationString;
+	
 	/** Input to parse. */
 	private String input;
 
@@ -92,6 +95,17 @@ public final class XmlPullParser implements IXmlPullParser
 		return encoding;
 	}
 
+	/**
+	 * Return the XML declaration string, in case if found in the
+	 * markup.
+	 * 
+	 * @return Null, if not found.
+	 */
+	public String getXmlDeclaration()
+	{
+	    return this.xmlDeclarationString;
+	}
+	
 	/**
 	 * Get the character sequence from the position marker to toPos.
 	 *
@@ -283,12 +297,10 @@ public final class XmlPullParser implements IXmlPullParser
 			final int readAheadSize = 80;
 			bin.mark(readAheadSize);
 
-			// read-ahead the input stream, if it starts with <?xml
-			// encoding=".."?>.
-			// If yes, set this.encoding and return the character which follows
-			// it.
+			// read-ahead the input stream if it starts with <?xml
+			// encoding=".."?>. If yes, set this.encoding.
 			// If no, return the whole line. determineEncoding will read-ahead
-			// at max. the very first line of the markup
+			// at max. the very first line of the markup.
 			this.encoding = determineEncoding(bin, readAheadSize);
 
 			// Depending on the encoding determined from the markup-file, read
@@ -412,6 +424,9 @@ public final class XmlPullParser implements IXmlPullParser
 			return null;
 		}
 
+		// Save the whole <?xml ..> string for later
+		this.xmlDeclarationString = pushBack.toString().trim();
+		
 		// Extract the encoding
 		String encoding = matcher.group(3);
 		if ((encoding == null) || (encoding.length() == 0))

@@ -61,9 +61,9 @@ public final class Streams
 	 * @return The string
 	 * @throws IOException
 	 */
-	public static String readString(final InputStream in, final String encoding) throws IOException
+	public static String readString(final InputStream in, final CharSequence encoding) throws IOException
 	{
-		return readString(new BufferedReader(new InputStreamReader(in, encoding)));
+		return readString(new BufferedReader(new InputStreamReader(in, encoding.toString())));
 	}
 
 	/**
