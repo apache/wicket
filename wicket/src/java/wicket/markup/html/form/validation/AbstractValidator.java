@@ -19,21 +19,27 @@
 package wicket.markup.html.form.validation;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import wicket.Component;
+import wicket.Localizer;
 import wicket.RenderException;
 import wicket.RequestCycle;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
+import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.util.lang.Classes;
-
 
 /**
  * Base class for form component validators.
+ *
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public abstract class AbstractValidator implements IValidator
-{ // TODO finalize javadoc
+{
     /**
      * Implemented by subclass to validate an html form component.
      * @param input the input to validate
@@ -56,12 +62,23 @@ public abstract class AbstractValidator implements IValidator
     /**
      * Returns a formatted validation error message for a given component. The error
      * message is retrieved from a message bundle associated with the page in which this
-     * validator is contained. The property name must be of the form:
+     * validator is contained. The resource key must be of the form:
      * [form-name].[component-name].[validator-class]. For example, in the SignIn page's
      * SignIn.properties file, you might find an entry:
      * signInForm.password.RequiredValidator=A password is required Entries can contain
      * optional ognl variable interpolations from the component, such as:
-     * editBook.name.LengthValidator='${model.name}' is too short a name.
+     * editBook.name.LengthValidator='${input}' is too short a name.
+     * <p>
+     * Available variables for interpolation are:
+     * <ul>
+     *   <li>
+     * 		${input}: the user's input
+     *   </li>
+     *   <li>
+     *   	${name}: the name of the component
+     *   </li>
+     * </ul>
+     * </p>
      * @param input the input (that caused the error)
      * @param component The component where the error occurred
      * @return The validation error message
@@ -69,17 +86,13 @@ public abstract class AbstractValidator implements IValidator
     public final ValidationErrorMessage errorMessage(
             final Serializable input, final FormComponent component)
     {
-        // Property name must be <form-name>.<component-name>.<validator-class>
+        // Resource key must be <form-name>.<component-name>.<validator-class>
         final Component parentForm = component.findParent(Form.class);
-
         if (parentForm != null)
         {
-            final String propertyName = parentForm.getName()
+            final String resourceKey = parentForm.getName()
                     + "." + component.getName() + "." + Classes.name(getClass());
-
-            // Return formatted error message
-            String message = component.getLocalizer().getString(propertyName, component);
-            return new ValidationErrorMessage(input, component, message);
+            return errorMessage(resourceKey, input, component);
         }
         else
         {
@@ -87,6 +100,83 @@ public abstract class AbstractValidator implements IValidator
                     "Unable to find Form parent for FormComponent " + component);
         }
     }
-}
 
-///////////////////////////////// End of File /////////////////////////////////
+    /**
+     * Returns a formatted validation error message for a given component. The error
+     * message is retrieved from a message bundle associated with the page in which this
+     * validator is contained using the given resource key.
+     * <p>
+     * Available variables for interpolation are:
+     * <ul>
+     *   <li>
+     * 		${input}: the user's input
+     *   </li>
+     *   <li>
+     *   	${name}: the name of the component
+     *   </li>
+     * </ul>
+     * </p>
+     * @param resourceKey the resource key to be used for the message
+     * @param input the input (that caused the error)
+     * @param component The component where the error occurred
+     * @return The validation error message
+     */
+    public final ValidationErrorMessage errorMessage(
+    		final String resourceKey,
+            final Serializable input, final FormComponent component)
+    {
+        Map resourceModel = new HashMap(2);
+        resourceModel.put("input", input);
+        resourceModel.put("name", component.getName());
+		return errorMessage(resourceKey, resourceModel, input, component);
+    }
+
+    /**
+     * Returns a formatted validation error message for a given component. The error
+     * message is retrieved from a message bundle associated with the page in which this
+     * validator is contained using the given resource key. The resourceModel is used
+     * for variable interpolation.
+     * @param resourceKey the resource key to be used for the message
+     * @param resourceModel the model for variable interpolation
+     * @param input the input (that caused the error)
+     * @param component The component where the error occurred
+     * @return The validation error message
+     */
+    public final ValidationErrorMessage errorMessage(
+    		final String resourceKey, final Map resourceModel,
+            final Serializable input, final FormComponent component)
+    {
+    	final IModel model;
+    	if(resourceModel instanceof Serializable)
+    	{
+    		model = new Model((Serializable)resourceModel);
+    	}
+    	else
+    	{
+    		model = new Model(new HashMap(resourceModel));
+    	}
+    	return errorMessage(resourceKey, model, input, component);
+    }
+
+
+    /**
+     * Returns a formatted validation error message for a given component. The error
+     * message is retrieved from a message bundle associated with the page in which this
+     * validator is contained using the given resource key. The resourceModel is used
+     * for variable interpolation.
+     * @param resourceKey the resource key to be used for the message
+     * @param resourceModel the model for variable interpolation
+     * @param input the input (that caused the error)
+     * @param component The component where the error occurred
+     * @return The validation error message
+     */
+    public final ValidationErrorMessage errorMessage(
+    		final String resourceKey, final IModel resourceModel,
+            final Serializable input, final FormComponent component)
+    {
+        // Return formatted error message
+        Localizer localizer = component.getLocalizer();
+		String message = localizer.getString(resourceKey, component, resourceModel);
+        return new ValidationErrorMessage(input, component, message);
+    }
+}
