@@ -20,7 +20,6 @@ package wicket.examples.hellomozilla;
 
 import wicket.ApplicationSettings;
 import wicket.WebApplication;
-import wicket.util.time.Duration;
 
 
 /**
@@ -37,8 +36,5 @@ public class HelloMozillaApplication extends WebApplication
     {
         ApplicationSettings settings = getSettings();
         settings.setHomePage(HelloMozilla.class);
-        settings.setResourcePollFrequency(Duration.ONE_SECOND);
     }
 }
-
-///////////////////////////////// End of File /////////////////////////////////
