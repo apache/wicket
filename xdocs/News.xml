@@ -11,6 +11,38 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="April 3, 2005 - 1.0 RC1 is released!">
+				<p>
+					The Wicket team is proud to release the first 1.0 release candidate. This is
+					probably the most important milestone in our history. From now on the feature
+					list has been frozen, and the bug list will shrink. Please take a look at the
+					<a href="http://wicket.sourceforge.net/changes-report.html#1_0-rc1">
+						changelog
+					</a>
+					for this release.
+				</p>
+				<p>A list of the most note worthy changes:</p>
+				<ul>
+					<li>
+						Addition of Wicket namespace for identifying components: instead of
+						<code>id="wcn:foo"</code>
+						we now use
+						<code>wicket:id="foo"</code>
+						.
+					</li>
+					<li>Support for clustering</li>
+					<li>
+						<a href="/apidocs/wicket/model/CompoundPropertyModel.html"><code>CompoundPropertyModel</code></a>
+						makes development of forms much easier and less verbose
+					</li>
+					<li>
+						Added factories for creating your own Session, RequestCycle, etc. objects. Many things are configurable in Wicket using factories.
+					</li>
+					<li>
+						Moved non-core stuff to the <a href="http://wicket-stuff.sf.net">Wicket Stuff</a> project.
+					</li>
+				</ul>
+			</subsection>
 			<subsection name="April 3, 2005 - Live Examples">
 				<p>
 					Juergen Donnerstag has created a

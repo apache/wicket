@@ -40,6 +40,38 @@
 			</ul>
 		</section>
 		<section name="Latest News">
+			<subsection name="April 3, 2005 - 1.0 RC1 is released!">
+				<p>
+					The Wicket team is proud to release the first 1.0 release candidate. This is
+					probably the most important milestone in our history. From now on the feature
+					list has been frozen, and the bug list will shrink. Please take a look at the
+					<a href="http://wicket.sourceforge.net/changes-report.html#1_0-rc1">
+						changelog
+					</a>
+					for this release.
+				</p>
+				<p>A list of the most note worthy changes:</p>
+				<ul>
+					<li>
+						Addition of Wicket namespace for identifying components: instead of
+						<code>id="wcn:foo"</code>
+						we now use
+						<code>wicket:id="foo"</code>
+						.
+					</li>
+					<li>Support for clustering</li>
+					<li>
+						<a href="/apidocs/wicket/model/CompoundPropertyModel.html"><code>CompoundPropertyModel</code></a>
+						makes development of forms much easier and less verbose
+					</li>
+					<li>
+						Added factories for creating your own Session, RequestCycle, etc. objects. Many things are configurable in Wicket using factories.
+					</li>
+					<li>
+						Moved non-core stuff to the <a href="http://wicket-stuff.sf.net">Wicket Stuff</a> project.
+					</li>
+				</ul>
+			</subsection>
 			<subsection name="April 3, 2005 - Live Examples">
 				<p>
 					Juergen Donnerstag has created a
@@ -98,50 +130,6 @@
 				</ul>
 				<p>Releases of these projects will come available as Wicket 1.0 RC1 ships.</p>
 			</subsection>
-			<subsection name="March 4, 2005 - 0.9.19-beta released">
-				<p>
-					The releases are getting smaller, so it is nearly that special time for RC1. The
-					current release marks the work done between 0.9.18-beta and now. An issue
-					regarding dependencies of Wicket has been resolved. Wicket doesn't depend any
-					more on difficult to distribute libraries.
-				</p>
-			</subsection>
-			<subsection name="Februari 20, 2005 - 0.9.18-beta released">
-				<p>
-					The Wicket team has worked really hard to make this beta release possible. The
-					march to the big 1.0 is on, and the first release candidate will surface in the
-					next few weeks.
-				</p>
-				<p>
-					A lot has changed in this release, so you will receive some compile time errors
-					if you are coming from a previous release. Among the changes are the following:
-					<ul>
-						<li>
-							Added a
-							<a href="faqs.html" title="Frequently Asked Questions">FAQ</a>
-							section to our site
-						</li>
-						<li>
-							Renamed handleX() methods and other events to conform to the onX()
-							pattern.
-						</li>
-						<li>
-							Added Button class and Form buttons support. When it has two or more
-							buttons, the onSubmit() handler is called on the button which submitted
-							the Form.
-						</li>
-						<li>
-							Changed HtmlPage to WebPage, HtmlContainer to WebContainer and
-							HtmlComponent to WebComponent
-						</li>
-						<li>Reorganized components and examples for final 1.0 structure.</li>
-					</ul>
-					<a href="changes-report.html">Check out</a>
-					all modifications on our
-					<a href="changes-report.html">release history page</a>
-					.
-				</p>
-			</subsection>
 			<p>
 				See
 				<a href="News.html">the news archive</a>
@@ -170,10 +158,12 @@
 			<script language="JavaScript" type="text/javascript"
 				src="http://m1.nedstatbasic.net/basic.js">
 			</script>
- <script type="text/javascript">
- //<![CDATA[
+			<script type="text/javascript">
+				//
+				<![CDATA[
  					nedstatbasic("ADUqkAqz13yUdWzu82RZ+ob42qQg", 0);
-					//]]> -->
+					//]]>
+				-->
 			</script>
 			<noscript>
 				<a target="_blank"
