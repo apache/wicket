@@ -20,6 +20,7 @@ package wicket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -135,15 +136,6 @@ public final class ApplicationSettings
 	/** The application */
 	private Application application;
 
-	/** Application default for automatically resolving hrefs */
-	private boolean automaticLinking = false;
-
-	/** True if the response should be buffered */
-	private boolean bufferResponse = true;
-
-	/** Component attribute name */
-	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
-
 	/** If true and if componentNameAttribute has been changed, than not only
 	 * use the new componentNameAttribute to identify wicket components, but
 	 * also the DEFAULT_COMPONENT_NAME_ATTRIBUTE ("wicket"). Fall back
@@ -153,6 +145,15 @@ public final class ApplicationSettings
      * is the same, not matter if applyDefaultComponentName is true or false.
 	 */
 	private boolean applyDefaultComponentName = false;
+
+	/** Application default for automatically resolving hrefs */
+	private boolean automaticLinking = false;
+
+	/** True if the response should be buffered */
+	private boolean bufferResponse = true;
+
+	/** Component attribute name */
+	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
 	
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
@@ -174,6 +175,9 @@ public final class ApplicationSettings
 
 	/** Default class resolver to find classes */
 	private IClassResolver defaultClassResolver = new DefaultClassResolver();
+	
+	/** The default locale to use */
+	private Locale defaultLocale = Locale.getDefault();
 
 	/** Default factory to create new Page objects */
 	private IPageFactory defaultPageFactory = new DefaultPageFactory();
@@ -373,6 +377,14 @@ public final class ApplicationSettings
 	public final IClassResolver getDefaultClassResolver()
 	{
 		return defaultClassResolver;
+	}
+
+	/**
+	 * @return Returns the defaultLocale.
+	 */
+	public Locale getDefaultLocale()
+	{
+		return defaultLocale;
 	}
 
 	/**
@@ -652,6 +664,14 @@ public final class ApplicationSettings
 	{
 		this.defaultClassResolver = defaultClassResolver;
 		return this;
+	}
+	
+	/**
+	 * @param defaultLocale The defaultLocale to set.
+	 */
+	public void setDefaultLocale(Locale defaultLocale)
+	{
+		this.defaultLocale = defaultLocale;
 	}
 
 	/**
