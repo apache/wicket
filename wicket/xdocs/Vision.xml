@@ -10,6 +10,12 @@
 <section name="The Wicket Vision">
 <p><author>Jonathan Locke</author></p>
 <p>
+    <b>This document was contributed by the original developer
+       halfway september 2004. It does *not* necesarily display the current state
+       of the project!
+    </b>
+</p>
+<p>
 Even though Wicket has just barely been born and is nowhere near maturity 
 (or even stability), I am moving on from the Wicket project to pursue other 
 opportunities, and so I will not be available to work or comment on Wicket 
@@ -204,40 +210,5 @@ A: VoiceTribe was the name of the company I was founding with a friend when I
 </subsection>
 </section>
 
-<section name="Future Directions">
-<p>
-I would like to see:
-</p>
-<ul>
-<li>Issues with resource localization settled in a way that is as minimally 
-   complex and intrusive as possible.</li>
-<li>Something like the detachable model idea which Christopher Turner suggested
-   to make clustering more lightweight.</li>
-<li>Some unknown solution to the problem of taking advantage of existing J2EE
-   application server clustering features.</li>
-<li>Use of OGNL minimized.</li>
-</ul>
-</section>
-
-<section name="Open Issues">
-<ul>
-<li>Table navigation is broken and needs to be re-thought</li>
- 
-<li>Christopher Turner is writing a specification for resource searching and
-   localization.  When complete, this needs to be peer reviewed and implemented.</li>
-   
-<li>The bind-time of OGNL during page rendering needs to be figured out.  Currently,
-   it is too static for some needs.  But this issue is very subtle and needs to be
-   thought through over a period of days by several smart people.  Ideally a solution
-   will keep the performance and simplicity of the current static binding of models,
-   while allowing people to make bindings late/dynamic when it is necessary.
-</li>
-<li>The various bugs in JIRA need to be addressed</li>
-
-<li>The User's Guide needs to be finished (and perhaps ideally published on CafePress)
-   I would like to see some of any proceeds from this go to CodeHaus for sponsoring 
-   Wicket (or to whoever sponsors it in the future).</li>
-</ul>
-</section>
 </body>
 </document>    

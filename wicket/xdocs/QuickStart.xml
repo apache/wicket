@@ -11,23 +11,23 @@
 <section name="QuickStart">
 <subsection name="How to build and run the examples under Jetty">
 <ol>
-<li>Install Java 1.4.x, Ant 1.6 and <a href="http://sourceforge.net/project/showfiles.php?group_id=7322">Jetty</a></li>
-<li>Go to WICKET_HOME and type "ant"</li>
+<li>Install Java 1.4.x or up, Ant 1.6 or Maven 1.x and
+<a href="http://jetty.mortbay.org/jetty/index.html">Jetty</a></li>
+<li>Go to WICKET_HOME and type "ant" or - if you use Maven </li>
 <li>Copy WICKET_HOME/build/examples/*.war to JETTY_HOME/webapps</li>
 <li>Go to JETTY_HOME and type "java -jar start.jar"</li>
-<li>Next, try the <a href="http://localhost:8080/HelloWorld/">HelloWorld</a> application</li>
-<li>Then try the other examples like so:<br/><blockquote>http://localhost:8080/example-name/</blockquote></li>
+<li>Next, try the <a href="http://localhost:8080/wicket-examples/">example applications</a>
+
 </ol>
 </subsection>
 
 <subsection name="How to build and run the examples under Tomcat">
 <ol>
-<li>Install Java 1.4.x, Ant 1.6 and <a href="http://jakarta.apache.org/tomcat/">Tomcat 5.0</a></li>
+<li>Install Java 1.4.x or up, Ant 1.6 or Maven and <a href="http://jakarta.apache.org/tomcat/">Tomcat 5.0</a></li>
 <li>Go to WICKET_HOME and type "ant"</li>
 <li>Start Tomcat 5.0</li>
 <li>Copy WICKET_HOME/build/examples/*.war to TOMCAT_HOME/webapps</li>
-<li>Next, try the <a href="http://localhost:8080/HelloWorld/">HelloWorld</a> application</li>
-<li>Then try the other examples like so:<br/><blockquote>http://localhost:8080/example-name/</blockquote></li>
+<li>Next, try the <a href="http://localhost:8080/wicket-examples/">example applications</a>
 </ol>
 </subsection>
 </section>
