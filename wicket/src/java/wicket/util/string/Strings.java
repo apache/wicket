@@ -343,22 +343,6 @@ public final class Strings
 	 */
 	public static String replaceAll(final String s, final String searchFor, final String replaceWith)
 	{
-		// Check arguments
-		if (s == null)
-		{
-			throw new IllegalArgumentException("Cannot pass null target string to replaceAll");
-		}
-
-		if (searchFor == null)
-		{
-			throw new IllegalArgumentException("Cannot pass null searchFor string to replaceAll");
-		}
-
-		if (replaceWith == null)
-		{
-			throw new IllegalArgumentException("Cannot pass null replaceWith string to replaceAll");
-		}
-
 		// Go through the string
 		StringBuffer buffer = null;
 		final int searchForLength = searchFor.length();
