@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
+ *
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
  * file except in compliance with the License. You may obtain a copy of the
  * License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,11 +33,11 @@ import wicket.util.string.StringList;
 /**
  * Structure for recording {@link wicket.FeedbackMessage}s; wraps a list and
  * acts as a {@link wicket.model.IModel}.
- * 
+ *
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FeedbackMessages
+public final class FeedbackMessages implements Serializable
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(FeedbackMessages.class);
@@ -59,7 +60,7 @@ public final class FeedbackMessages
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param ascending
 		 *            whether to sort ascending (otherwise, it sorts descending)
 		 */
@@ -73,7 +74,7 @@ public final class FeedbackMessages
 		 * zero, or a positive integer as the first argument is less than, equal
 		 * to, or greater than the second.
 		 * <p>
-		 * 
+		 *
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 		 */
 		public int compare(Object o1, Object o2)
@@ -115,7 +116,7 @@ public final class FeedbackMessages
 
 		/**
 		 * Construct and narrow to the given level.
-		 * 
+		 *
 		 * @param level
 		 *            the level to narrow to
 		 */
@@ -126,7 +127,7 @@ public final class FeedbackMessages
 
 		/**
 		 * Gets the messages.
-		 * 
+		 *
 		 * @see wicket.model.IModel#getObject()
 		 */
 		public Object getObject()
@@ -144,7 +145,7 @@ public final class FeedbackMessages
 		/**
 		 * Sets the messages; the object should either be of type
 		 * {@link java.util.List}or an array of {@link FeedbackMessage}s.
-		 * 
+		 *
 		 * @see wicket.model.IModel#setObject(java.lang.Object)
 		 */
 		public void setObject(Object object)
@@ -183,7 +184,7 @@ public final class FeedbackMessages
 	 * Convenience method that gets whether this list contains any messages with
 	 * level ERROR or up. This is the same as calling
 	 * 'hasMessages(FeedbackMessage.ERROR)'.
-	 * 
+	 *
 	 * @return Whether this list contains any messages with level ERROR or up
 	 */
 	public boolean hasError()
@@ -193,7 +194,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Gets whether this list contains any messages with the given level or up.
-	 * 
+	 *
 	 * @param level
 	 *            the level
 	 * @return Whether this list contains any messages with the given level or
@@ -219,7 +220,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Gets whether this list contains any messages.
-	 * 
+	 *
 	 * @return Whether this list contains any messages
 	 */
 	public boolean isEmpty()
@@ -230,7 +231,7 @@ public final class FeedbackMessages
 	/**
 	 * Convenience method to get the iterator for the currently registered
 	 * messages.
-	 * 
+	 *
 	 * @return The iterator for the currently registered messages
 	 */
 	public Iterator iterator()
@@ -242,7 +243,7 @@ public final class FeedbackMessages
 	/**
 	 * Gets the list with messages (not sorted; the same ordering as they were
 	 * added).
-	 * 
+	 *
 	 * @return The list with messages
 	 */
 	public List messages()
@@ -255,7 +256,7 @@ public final class FeedbackMessages
 	/**
 	 * Gets a sub list of messages with messages that are of the given level or
 	 * above.
-	 * 
+	 *
 	 * @param level
 	 *            The level to get the messages for
 	 * @return The sub list of message with messages that are of the given level
@@ -285,7 +286,7 @@ public final class FeedbackMessages
 	/**
 	 * Gets the list with messages sorted on level ascending (from UNDEFINED/
 	 * DEBUG up to FATAL).
-	 * 
+	 *
 	 * @return the list with messages
 	 */
 	public List messagesAscending()
@@ -296,7 +297,7 @@ public final class FeedbackMessages
 	/**
 	 * Gets the list with messages sorted on level descending (from FATAL down
 	 * to UNDEFINED/ DEBUG).
-	 * 
+	 *
 	 * @return the list with messages
 	 */
 	public List messagesDescending()
@@ -306,7 +307,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Gets the FeedbackMessages as an instance of {@link IModel}.
-	 * 
+	 *
 	 * @return the FeedbackMessages as an instance of {@link IModel}
 	 */
 	public IModel model()
@@ -317,7 +318,7 @@ public final class FeedbackMessages
 	/**
 	 * Gets the FeedbackMessages as an instance of {@link IModel}, narrowed
 	 * down to the given level.
-	 * 
+	 *
 	 * @param level
 	 *            the level to narrow down to
 	 * @return tthe FeedbackMessages as an instance of {@link IModel}, narrowed
@@ -338,7 +339,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Adds a message.
-	 * 
+	 *
 	 * @param message
 	 *            the message
 	 * @return This
@@ -359,7 +360,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Adds a new ui message with level DEBUG to the current messages.
-	 * 
+	 *
 	 * @param reporter
 	 *            the reporting component
 	 * @param message
@@ -372,7 +373,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Adds a new ui message with level ERROR to the current messages.
-	 * 
+	 *
 	 * @param reporter
 	 *            the reporting component
 	 * @param message
@@ -385,7 +386,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Adds a new ui message with level FATAL to the current messages.
-	 * 
+	 *
 	 * @param reporter
 	 *            the reporting component
 	 * @param message
@@ -399,7 +400,7 @@ public final class FeedbackMessages
 	/**
 	 * Convenience method that looks up whether the given component registered a
 	 * message with this list with the level ERROR.
-	 * 
+	 *
 	 * @param component
 	 *            the component to look up whether it registered a message
 	 * @return whether the given component registered a message with this list
@@ -412,7 +413,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Looks up whether the given component registered a message with this list.
-	 * 
+	 *
 	 * @param component
 	 *            the component to look up whether it registered a message
 	 * @return whether the given component registered a message with this list
@@ -425,7 +426,7 @@ public final class FeedbackMessages
 	/**
 	 * Looks up whether the given component registered a message with this list
 	 * with the given level.
-	 * 
+	 *
 	 * @param component
 	 *            the component to look up whether it registered a message
 	 * @param level
@@ -448,7 +449,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Adds a new ui message with level INFO to the current messages.
-	 * 
+	 *
 	 * @param reporter
 	 *            the reporting component
 	 * @param message
@@ -461,7 +462,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Looks up a message for the given component.
-	 * 
+	 *
 	 * @param component
 	 *            the component to look up the message for
 	 * @return the message that is found for the given component (first match)
@@ -491,7 +492,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Adds a new ui message with level WARNING to the current messages.
-	 * 
+	 *
 	 * @param reporter
 	 *            the reporting component
 	 * @param message
@@ -504,7 +505,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Gets the messages sorted.
-	 * 
+	 *
 	 * @param ascending
 	 *            Whether to sort ascending (true) or descending (false)
 	 * @return sorted list
@@ -525,7 +526,7 @@ public final class FeedbackMessages
 
 	/**
 	 * Sets the list with messages.
-	 * 
+	 *
 	 * @param messages
 	 *            the messages
 	 * @return This
