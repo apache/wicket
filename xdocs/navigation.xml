@@ -14,10 +14,10 @@
 	    </menu>
         <menu name="Getting Started">
 	        <item name="Examples" href="/Examples.html" collapse="true">
-	        	<item name="Hello World!" href="/ExampleHelloworld.html"/>
+	        	<item name="Hello World!" href="/ExampleHelloWorld.html"/>
 	        	<item name="Navomatic" href="/ExampleNavomatic.html"/>
 	        	<item name="Images" href="/ExampleImages.html"/>
-	        	<item name="Tables" href="/ExampleTables.html"/>
+	        	<item name="GuestBook" href="/ExampleGuestBook.html"/>
 			</item>
             <item name="Download" 
                 href="http://sourceforge.net/projects/wicket/files"/>
