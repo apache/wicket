@@ -299,7 +299,7 @@ public abstract class ListView extends WebMarkupContainer
 				if (listItem == null)
 				{
 					// Create listItem for index i of the list
-					listItem = getNewListItem(index);
+					listItem = newItem(index);
 
 				    onBeginPopulateItem(listItem);
 					populateItem(listItem);
@@ -328,7 +328,7 @@ public abstract class ListView extends WebMarkupContainer
 	 * @param index
 	 * @return ListItem
 	 */
-	protected ListItem getNewListItem(final int index)
+	protected ListItem newItem(final int index)
 	{
 		return new ListItem(index, getListItemModel(getModel(), index));
 	}
