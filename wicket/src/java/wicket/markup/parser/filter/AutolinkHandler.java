@@ -99,19 +99,16 @@ public class AutolinkHandler implements IMarkupFilter
         // for autolinking. This is because it is assumed that Wicket components
         // like images, or all other kind of Wicket Links will handle it
         // themselves.
+        final String href = tag.getAttributes().getString("href");
         if ((autolinking == true) && (tag.getComponentName() == null) 
-                && tag.getAttributes().containsKey("href"))
+                && (href != null) && (href.endsWith(".html") || href.contains(".html?")) 
+                && !href.startsWith("/") && (href.indexOf(":") == -1))
         {
-            final int pos = tag.getAttributes().getString("href").indexOf(".html");
-            if (pos > 0)
-            {
-                // Mark it as autolink enabled
-	            tag.enableAutolink(true);
+            // Mark it as autolink enabled
+            tag.enableAutolink(true);
 
-	            // Just a dummy name. The ComponentTag will not be forwarded.
-	            tag.setComponentName("_autolink_");
-            }
-            
+            // Just a dummy name. The ComponentTag will not be forwarded.
+            tag.setComponentName("_autolink_");
             return tag;
         }
         
@@ -123,16 +120,19 @@ public class AutolinkHandler implements IMarkupFilter
             if (wtag.isLinkTag())
             {
                 // Beginning of the region
-    	        if (tag.isOpen())
+    	        if (tag.isOpen() || tag.isOpenClose())
     	        {
-    	            if (autolinkStatus == null)
+    	            if (tag.isOpen())
     	            {
-    	                autolinkStatus = new Stack();
+	    	            if (autolinkStatus == null)
+	    	            {
+	    	                autolinkStatus = new Stack();
+	    	            }
+	    	            
+	    		        // remember the current setting to be reset after the region
+	    		        autolinkStatus.push(new Boolean(autolinking));
     	            }
     	            
-    		        // remember the current setting to be reset after the region
-    		        autolinkStatus.push(new Boolean(autolinking));
-    		        
     		        // html allows to represent true in different ways
     		        final String autolink = tag.getAttributes().getString("autolink");
 		            if ((autolink == null) 
@@ -151,12 +151,6 @@ public class AutolinkHandler implements IMarkupFilter
     	        {
     	            // restore the autolink setting from before the region
     	            autolinking = ((Boolean)autolinkStatus.pop()).booleanValue();
-    	        }
-    	        else
-    	        {
-                    throw new ParseException(
-                            "<wicket:link> can not be a open-close tag", 
-                            tag.getPos());
     	        }
     	        
     	        return nextTag();

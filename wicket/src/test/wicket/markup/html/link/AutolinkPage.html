@@ -37,13 +37,13 @@
     <a href="Page1.html?id=123&name=test">Home</a>
   </wicket:link>
 </wicket:link>
-<!--
-    TODO
-    <img href="Page1.gif"> ...   if autolink == true then resolve Page relativ
-    <img href="/Page1.gif"> ...   if autolink == true then resolve servlet context absolut
-    <link href="*.css"> ...      if autolink == true then replace in <head> as well
-    <a href="subdir/Home.html">  if autolink == true then resolve Page relativ
-    <a href="/rootDir/Home.html"> if autolink == true then resolve servlet absolut
--->
+<!-- valid till the end of the document or the next link tag -->
+<wicket:link autolink=false/>
+<a href="Page1.html">Home</a>
+<wicket:link autolink=true/>
+<a href="subdir/Page1.html">Home</a>
+<link href="test.css"/>
+<a href="/root/test.html">Home</a>
+<a href="http://www.google.com">Google</a>
 </body>
 </html>
