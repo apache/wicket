@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 /**
  * Implementation of the actual hangman game model. The model holds the word
- * generator, the current word, retries remaining and the letters that have been
+ * generator, the current word, retries remaining and the correctLetters that have been
  * guessed. It also answers questions such as whether all retries have been
  * used.
  * 
@@ -32,107 +32,33 @@ public class Hangman implements Serializable
 {
 	/** Serial version UID */
 	private static final long serialVersionUID = 1L;
-	private WordGenerator wordGenerator;
-	private String currentWord;
-	private char[] letters;
+
+	/** Correct correctLetters */
+	private char[] correctLetters;
+	
+	/** Letters guessed by the user */
 	private boolean[] guessedLetters;
-	private int guessesRemaining;
+	
+	/** Number of guesses allowed */
 	private int guessesAllowed;
+	
+	/** Number of guesses remaining */
+	private int guessesRemaining;
+	
+	/** The word being guessed by the user */
+	private String word;
+	
+	/** Word generator */
+	private WordGenerator wordGenerator;
 
 	/**
-	 * Initialise the hangman read for a new game.
+	 * Get the state of the guessed correctLetters for the word.
 	 * 
-	 * @param guessesAllowed
-	 *            Number of guesses allowed
-	 * 
-	 * @param word
-	 *            The word to use or null to pick randomly
+	 * @return The guessed correctLetters
 	 */
-	public void newGame(final int guessesAllowed, final String word)
+	public String getCorrectLetters()
 	{
-		if (word != null)
-		{
-			wordGenerator = new WordGenerator(new String[] { word });
-		}
-		else
-		{
-			wordGenerator = new WordGenerator();
-		}
-
-		currentWord = wordGenerator.nextWord().toLowerCase();
-		letters = new char[currentWord.length()];
-		for (int i = 0; i < letters.length; i++)
-			letters[i] = '_';
-		guessedLetters = new boolean[26];
-		for (int i = 0; i < guessedLetters.length; i++)
-			guessedLetters[i] = false;
-		this.guessesAllowed = guessesAllowed;
-		guessesRemaining = guessesAllowed;
-	}
-
-	/**
-	 * Play again with same settings
-	 */
-	public void newGame()
-	{
-		newGame(guessesAllowed, null);
-	}
-
-	/**
-	 * Guess the given letter for the current word. If the letter matches then
-	 * the word is updated otherwise the guesses remaining counter is reduced.
-	 * The letter guessed is also recorded.
-	 * 
-	 * @param letter
-	 *            The letter being guessed
-	 * @return Whether the letter was in the word or not
-	 */
-	public boolean guessLetter(char letter)
-	{
-		letter = Character.toLowerCase(letter);
-		boolean correctGuess = false;
-		for (int i = 0; i < currentWord.length(); i++)
-		{
-			if (currentWord.charAt(i) == letter)
-			{
-				correctGuess = true;
-				letters[i] = letter;
-			}
-		}
-		if (!correctGuess && guessedLetters[letter - 'a'] == false)
-		{
-			guessesRemaining--;
-		}
-		guessedLetters[letter - 'a'] = true;
-		return correctGuess;
-	}
-
-	/**
-	 * Check whether the user has successfully guessed all of the letters in the
-	 * word.
-	 * 
-	 * @return Whether all of the letters have been guessed or not
-	 */
-	public boolean isWon()
-	{
-		for (int i = 0; i < letters.length; i++)
-		{
-			if (letters[i] == '_')
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Check whether the user has used up all of their guesses.
-	 * 
-	 * @return Whether all of the user's guesses have been used
-	 */
-	public boolean isLost()
-	{
-		return guessesRemaining == 0;
+		return new String(correctLetters);
 	}
 
 	/**
@@ -146,13 +72,42 @@ public class Hangman implements Serializable
 	}
 
 	/**
-	 * Get the state of the guessed letters for the word.
+	 * Get the current word that is being guessed or has been guessed.
 	 * 
-	 * @return The guessed letters
+	 * @return The current word
 	 */
-	public String getLetters()
+	public String getWord()
 	{
-		return new String(letters);
+		return word;
+	}
+
+	/**
+	 * Guess the given letter for the current word. If the letter matches then
+	 * the word is updated otherwise the guesses remaining counter is reduced.
+	 * The letter guessed is also recorded.
+	 * 
+	 * @param letter
+	 *            The letter being guessed
+	 * @return Whether the letter was in the word or not
+	 */
+	public boolean guess(char letter)
+	{
+		letter = Character.toLowerCase(letter);
+		boolean correctGuess = false;
+		for (int i = 0; i < word.length(); i++)
+		{
+			if (word.charAt(i) == letter)
+			{
+				correctGuess = true;
+				correctLetters[i] = letter;
+			}
+		}
+		if (!correctGuess && guessedLetters[letter - 'a'] == false)
+		{
+			guessesRemaining--;
+		}
+		guessedLetters[letter - 'a'] = true;
+		return correctGuess;
 	}
 
 	/**
@@ -169,12 +124,73 @@ public class Hangman implements Serializable
 	}
 
 	/**
-	 * Get the current word that is being guessed or has been guessed.
+	 * Check whether the user has used up all of their guesses.
 	 * 
-	 * @return The current word
+	 * @return Whether all of the user's guesses have been used
 	 */
-	public String getCurrentWord()
+	public boolean isLost()
 	{
-		return currentWord;
+		return guessesRemaining == 0;
+	}
+
+	/**
+	 * Check whether the user has successfully guessed all of the correctLetters in the
+	 * word.
+	 * 
+	 * @return Whether all of the correctLetters have been guessed or not
+	 */
+	public boolean isWon()
+	{
+		for (int i = 0; i < correctLetters.length; i++)
+		{
+			if (correctLetters[i] == '_')
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Play again with same settings
+	 */
+	public void newGame()
+	{
+		newGame(guessesAllowed, new WordGenerator());
+	}
+
+	/**
+	 * Initialise the hangman read for a new game.
+	 * 
+	 * @param guessesAllowed
+	 *            Number of guesses allowed
+	 * @param word
+	 *            The word to use or null to pick randomly
+	 */
+	public void newGame(final int guessesAllowed, final String word)
+	{
+		newGame(guessesAllowed, new WordGenerator(new String[] { word }));
+	}
+	
+
+	/**
+	 * Initialise the hangman read for a new game.
+	 * 
+	 * @param guessesAllowed
+	 *            Number of guesses allowed
+	 * @param wordGenerator
+	 *            The word generator
+	 */
+	public void newGame(final int guessesAllowed, final WordGenerator wordGenerator)
+	{
+		this.guessesAllowed = guessesAllowed;
+		this.word = wordGenerator.nextWord().toLowerCase();
+		correctLetters = new char[this.word.length()];
+		for (int i = 0; i < correctLetters.length; i++)
+		{
+			correctLetters[i] = '_';
+		}
+		guessedLetters = new boolean[26];
+		guessesRemaining = guessesAllowed;
 	}
 }

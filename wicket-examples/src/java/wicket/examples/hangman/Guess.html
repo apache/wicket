@@ -6,49 +6,15 @@
 
 <body>
 	<span wicket:id="mainNavigation"/>
-
 	<p><span wicket:id="guessesRemaining">3</span> guesses remaining</p>
-
-	<p>Current Word: <span wicket:id="letters">_U__E_</span></p>
-
-	<table>
-		<tr>
-			<td><a wicket:id="letter_a" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_b" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_c" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_d" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_e" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_f" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-		</tr>
-		<tr>
-			<td><a wicket:id="letter_g" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_h" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_i" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_j" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_k" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_l" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-		</tr>
-		<tr>
-			<td><a wicket:id="letter_m" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_n" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_o" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_p" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_q" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_r" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-		</tr>
-		<tr>
-			<td><a wicket:id="letter_s" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_t" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_u" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_v" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_w" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_x" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-		</tr>
-		<tr>
-			<td><a wicket:id="letter_y" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-			<td><a wicket:id="letter_z" href="#"><img type="image" wicket:id="enabled"/><img type="image" wicket:id="disabled"/></a></td>
-		</tr>
-	</table>
-
+	<p>Current Word: <span wicket:id="correctLetters">WIC_ET</span></p>
+	<div width="300">
+		<span wicket:id="letters">
+			<a wicket:id="letter" href="#">
+				<img type="image" wicket:id="enabled"/>
+				<img type="image" wicket:id="disabled"/>
+			</a>
+		</span>
+	</div>
 </body>
 </html>

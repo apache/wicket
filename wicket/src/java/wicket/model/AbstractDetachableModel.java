@@ -41,8 +41,6 @@ public abstract class AbstractDetachableModel extends AbstractModel
 
 	/**
 	 * Attaches to the current session
-	 * 
-	 * @see IModel#attach()
 	 */
 	public final void attach()
 	{

@@ -36,7 +36,7 @@ public class Lose extends HangmanPage
 	 */
 	public Lose(final Guess guessPage)
 	{
-		add(new Label("currentWord", getHangman().getCurrentWord()));
+		add(new Label("currentWord", getHangman().getWord()));
 		add(new Link("playAgain")
 		{
 			public void onClick()

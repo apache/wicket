@@ -504,8 +504,8 @@ public abstract class Session implements Serializable
 		if (state != null)
 		{
 			// Copy state into Session
-			this.state = state;
 			state.attach();
+			this.state = state;
 		}
 
 		// Get PageStates from session attributes

@@ -63,7 +63,7 @@ public class HangManTest extends WebTestCase
 		Assert.assertFalse(hangman.isWon());
 		Assert.assertFalse(hangman.isLost());
 
-		hangman.guessLetter('a');
+		hangman.guess('a');
 		Assert.assertEquals(4, hangman.getGuessesRemaining());
 		Assert.assertFalse(hangman.isWon());
 		Assert.assertFalse(hangman.isLost());
@@ -202,7 +202,7 @@ public class HangManTest extends WebTestCase
 	private void doGuessTest(Hangman hangman, char c, boolean expected)
 	{
 		Assert.assertFalse(hangman.isGuessed(c));
-		Assert.assertEquals(expected, hangman.guessLetter(c));
+		Assert.assertEquals(expected, hangman.guess(c));
 		Assert.assertTrue(hangman.isGuessed(c));
 	}
 

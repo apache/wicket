@@ -18,6 +18,8 @@
 package wicket.examples.hangman;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +28,8 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.model.PropertyModel;
 
 /**
@@ -49,13 +53,21 @@ public class Guess extends HangmanPage
 		add(new Label("guessesRemaining", new PropertyModel(getHangman(), "guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label("letters", new PropertyModel(getHangman(), "letters")));
+		add(new Label("correctLetters", new PropertyModel(getHangman(), "correctLetters")));
 
 		// Components for displaying the letters that can be selected
+		final List letters = new ArrayList();
 		for (char c = 'a'; c <= 'z'; c++)
 		{
-			add(new SelectableLetterLink(c));
-		}
+			letters.add(new Character(c));
+		}		
+		add(new ListView("letters", letters)
+		{
+			protected void populateItem(ListItem listItem)
+			{
+				listItem.add(new SelectableLetterLink((Character)listItem.getModelObject()));
+			}
+		});
 	}
 
 	/**
@@ -84,24 +96,23 @@ public class Guess extends HangmanPage
 		 * @param letter
 		 *            The letter that this link represents
 		 */
-		public SelectableLetterLink(final char letter)
+		public SelectableLetterLink(final Character letter)
 		{
-			// Name component after letter
-			super("letter_" + letter);
+			super("letter");
 			
 			// Save letter
-			this.letter = letter;
+			this.letter = letter.charValue();
 			
 			// We want this link to be manually enabled
 			setEnabled(true);
 			setAutoEnable(false);
 			
 			// Install enabled button image
-			DefaultButtonImageResource enabled = new DefaultButtonImageResource(30, 30, Character.toString(letter));
+			DefaultButtonImageResource enabled = new DefaultButtonImageResource(30, 30, letter.toString());
 			add(new Image("enabled", enabled));
 			
 			// Add disabled image
-			DefaultButtonImageResource disabled = new DefaultButtonImageResource(30, 30, Character.toString(letter));
+			DefaultButtonImageResource disabled = new DefaultButtonImageResource(30, 30, letter.toString());
 			disabled.setColor(Color.GRAY);
 			add(new Image("disabled", disabled));
 		}
@@ -114,7 +125,7 @@ public class Guess extends HangmanPage
 		{
 			log.error("Linked clicked for letter: " + letter);
 			setEnabled(false);
-			getHangman().guessLetter(letter);
+			getHangman().guess(letter);
 			if (getHangman().isWon())
 			{
 				// Redirect to win page

@@ -65,7 +65,7 @@ public abstract class DetachableChoiceList extends ChoiceList
 	}
 
 	/**
-	 * @see wicket.model.IDetachable#attach()
+	 * @see IChoiceList#attach()
 	 */
 	public final void attach()
 	{

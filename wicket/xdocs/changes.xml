@@ -8,6 +8,9 @@
   </properties>
   <body>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
+      <action type="fix" dev="Jonathan Locke" issue="">
+      Removed attach() method from IDetachable and added it to IChoiceList.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1165955">
       Changed popup settings to use flags instead of booleans.
       </action>
