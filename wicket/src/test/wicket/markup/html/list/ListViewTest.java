@@ -129,6 +129,6 @@ public class ListViewTest extends TestCase
 		lv.setStartIndex(5);
 		lv.setViewSize(10);
 		assertEquals(0, lv.getStartIndex());
-		assertEquals(0, lv.getViewSize());
+		assertEquals(10, lv.getViewSize());
 	}
 }

@@ -66,7 +66,6 @@ public class ListItemModel extends AbstractDetachableModel
 	{
 	    // re-attach the model object based on index and listView model object
 		this.object = ((List)listViewModel.getObject(null)).get(index);
-		
 	}
 
 	/**

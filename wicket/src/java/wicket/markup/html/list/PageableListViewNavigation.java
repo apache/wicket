@@ -17,13 +17,7 @@
  */
 package wicket.markup.html.list;
 
-import java.util.AbstractList;
-import java.util.List;
-
-import wicket.Component;
 import wicket.markup.html.basic.Label;
-import wicket.model.AbstractReadOnlyDetachableModel;
-import wicket.model.IModel;
 
 /**
  * A navigation for a PageableListView that holds links to other pages of the
@@ -34,17 +28,17 @@ import wicket.model.IModel;
  * {@link Label}with the page number of that link (1..n).
  * 
  * <pre>
- *			 &lt;td wicket:id=&quot;navigation&quot;&gt;
- *				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- *					&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- *				 &lt;/a&gt;
- *			 &lt;/td&gt;
+ * 			 &lt;td wicket:id=&quot;navigation&quot;&gt;
+ * 				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ * 					&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ * 				 &lt;/a&gt;
+ * 			 &lt;/td&gt;
  * </pre>
  * 
  * thus renders like:
  * 
  * <pre>
- *			 1 |  2 |  3 |	4 |	 5 |  6 |  7 |	8 |	 9 |
+ * 			 1 |  2 |  3 |	4 |	 5 |  6 |  7 |	8 |	 9 |
  * </pre>
  * 
  * </p>
@@ -56,38 +50,38 @@ import wicket.model.IModel;
  * 
  * protected void populateItem(ListItem listItem)
  * {
- *	final int page = ((Integer)listItem.getModelObject()).intValue();
- *	final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
- *			pageableListView, page);
- *	if (page &gt; 0)
- *	{
- *		listItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
- *	}
- *	else
- *	{
- *		listItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
- *	}
- *	link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
- *	link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
- *	listItem.add(link);
+ * 	final int page = ((Integer)listItem.getModelObject()).intValue();
+ * 	final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
+ * 			pageableListView, page);
+ * 	if (page &gt; 0)
+ * 	{
+ * 		listItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
+ * 	}
+ * 	else
+ * 	{
+ * 		listItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
+ * 	}
+ * 	link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
+ * 	link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
+ * 	listItem.add(link);
  * }
  * </pre>
  * 
  * With:
  * 
  * <pre>
- *			 &lt;td wicket:id=&quot;navigation&quot;&gt;
- *				 &lt;span wicket:id=&quot;separator&quot;/&gt;
- *				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- *				   &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- *				 &lt;/a&gt;
- *			 &lt;/td&gt;
+ * 			 &lt;td wicket:id=&quot;navigation&quot;&gt;
+ * 				 &lt;span wicket:id=&quot;separator&quot;/&gt;
+ * 				 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ * 				   &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ * 				 &lt;/a&gt;
+ * 			 &lt;/td&gt;
  * </pre>
  * 
  * renders like:
  * 
  * <pre>
- * page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
+ *        page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
  * </pre>
  * 
  * </p>
@@ -107,13 +101,13 @@ import wicket.model.IModel;
  * Please
  * 
  * @see PageableListViewNavigator for a ready made component which already
- *		includes links to the first, previous, next and last page.
+ *      includes links to the first, previous, next and last page.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  */
-public class PageableListViewNavigation extends ListView
+public class PageableListViewNavigation extends Loop
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = 8591577491410447609L;
@@ -121,6 +115,9 @@ public class PageableListViewNavigation extends ListView
 	/** The PageableListView this navigation is navigating. */
 	protected PageableListView pageableListView;
 
+	/** Offset for the Loop */
+	private int startIndex;
+	
 	/**
 	 * Number of links on the left and/or right to keep the current page link
 	 * somewhere near the middle.
@@ -134,16 +131,16 @@ public class PageableListViewNavigation extends ListView
 	 * Constructor.
 	 * 
 	 * @param id
-	 *			  See Component
+	 *            See Component
 	 * @param pageableListView
-	 *			  The underlying list view to navigate
+	 *            The underlying list view to navigate
 	 */
 	public PageableListViewNavigation(final String id, final PageableListView pageableListView)
 	{
-		super(id, (IModel)null);
+		super(id, Integer.MAX_VALUE);
 
 		this.pageableListView = pageableListView;
-		this.setStartIndex(0);
+		startIndex = 0;
 	}
 
 	/**
@@ -165,24 +162,31 @@ public class PageableListViewNavigation extends ListView
 	{
 		return separator;
 	}
-
+	
 	/**
-	 * Get the number of page links per "window".
 	 * 
-	 * @see wicket.markup.html.list.ListView#setViewSize(int)
-	 * @return The overall number of page links (number of PageableListView
-	 *		   pages)
+	 * @return view size
 	 */
 	public int getViewSize()
 	{
-		return Math.min(pageableListView.getPageCount(), super.getViewSize());
+		return Math.min(pageableListView.getPageCount(), super.getSize());
 	}
 
+	/**
+	 * view size of the navigation bar
+	 * 
+	 * @param size
+	 */
+	public void setViewSize(final int size)
+	{
+	    this.setModelObject(new Integer(size));
+	}
+	
 	/**
 	 * Sets the margin.
 	 * 
 	 * @param margin
-	 *			  the margin
+	 *            the margin
 	 */
 	public void setMargin(final int margin)
 	{
@@ -193,53 +197,11 @@ public class PageableListViewNavigation extends ListView
 	 * Sets the seperator. Null meaning, no separator at all.
 	 * 
 	 * @param separator
-	 *			  the seperator
+	 *            the seperator
 	 */
 	public void setSeparator(final String separator)
 	{
 		this.separator = separator;
-	}
-
-	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		return new AbstractReadOnlyDetachableModel()
-		{
-			private transient List list;
-
-			public Object getNestedModel()
-			{
-				return list;
-			}
-
-			protected void onAttach()
-			{
-				this.list = new AbstractList()
-				{
-					public Object get(final int index)
-					{
-						return new Integer(index);
-					}
-
-					public int size()
-					{
-						return pageableListView.getPageCount();
-					}
-				};
-			}
-
-			protected void onDetach()
-			{
-				this.list = null;
-			}
-
-			protected Object onGetObject(final Component component)
-			{
-				return list;
-			}
-		};
 	}
 
 	/**
@@ -263,19 +225,19 @@ public class PageableListViewNavigation extends ListView
 	 * pointing to. Subclasses may provide there own implementation adding more
 	 * sophisticated page links.
 	 * 
-	 * @param listItem
-	 *			  the list item to populate
-	 * @see wicket.markup.html.list.PageableListView#populateItem(wicket.markup.html.list.ListItem)
+	 * @param loopItem
+	 *            the loop item to populate
+	 * @see wicket.markup.html.list.Loop#populateItem(LoopItem)
 	 */
-	protected void populateItem(final ListItem listItem)
+	protected void populateItem(final LoopItem loopItem)
 	{
 		// Get the index of page this link shall point to
-		final int pageIndex = ((Integer)listItem.getModelObject()).intValue();
+		final int pageIndex = this.startIndex + loopItem.getIndex();
 
 		// Add a page link pointing to the page
 		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
 				pageableListView, pageIndex);
-		listItem.add(link);
+		loopItem.add(link);
 
 		// Add a label (the page number) to the list which is enclosed by the
 		// link
@@ -285,15 +247,15 @@ public class PageableListViewNavigation extends ListView
 	/**
 	 * Renders the page link. Add the separator if not the last page link
 	 * 
-	 * @param listItem
-	 *			  The current page link to render
+	 * @param loopItem
+	 *            The current page link to render
 	 * @param lastItem
-	 *			  True, if last page link to render
+	 *            True, if last page link to render
 	 */
-	protected void renderItem(final ListItem listItem, final boolean lastItem)
+	protected void renderItem(final LoopItem loopItem, final boolean lastItem)
 	{
 		// call default implementation
-		super.renderItem(listItem, lastItem);
+		super.renderItem(loopItem, lastItem);
 
 		// add separator if not last page
 		if ((separator != null) && !lastItem)
@@ -309,7 +271,7 @@ public class PageableListViewNavigation extends ListView
 	private void setStartIndex()
 	{
 		// Which startIndex are we currently using
-		int firstListItem = this.getStartIndex();
+		int firstListItem = this.startIndex;
 
 		// How many page links shall be displayed
 		int viewSize = this.getViewSize();
@@ -339,8 +301,19 @@ public class PageableListViewNavigation extends ListView
 		{
 			firstListItem = 0;
 		}
+		
+		if ((viewSize != getSize()) || (this.startIndex != firstListItem))
+		{
+		    this.modelChangeImpending();
 
-		// Tell the ListView what the new start index shall be
-		this.setStartIndex(firstListItem);
+			// Tell the ListView what the new start index shall be
+			this.startIndex = firstListItem;
+		    this.setViewSize(viewSize);
+		    
+		    this.modelChanged();
+		    
+		    // force all children to be re-rendered
+		    removeAll();
+		}
 	}
 }
