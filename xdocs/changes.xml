@@ -1,13 +1,19 @@
 <?xml version="1.0"?>
 <document>
 	<properties>
-		<title>jWebUnit changes</title>
+		<title>Wicket changes</title>
 		<author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
 	</properties>
 	<body>
 		<release version="1.0" date="t.b.d." description="First release">
 			<action type="add" dev="Martijn Dashorst">
 				Converted confluence documentation to xdocs.
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				Model for PasswordTextField will now be encrypted for persistence (cookie)
+			</action>
+			<action type="add" dev="Juergen Donnerstag">
+				Fixed autoIndex bug. AutoIndex numbers are now unique across a whole page.
 			</action>
 		</release>
 	</body>
