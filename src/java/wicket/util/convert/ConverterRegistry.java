@@ -20,8 +20,6 @@ package wicket.util.convert;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,13 +62,13 @@ public final class ConverterRegistry
      * The set of {@link Converter}s that can be used to convert Strings into objects of
      * a specified Class, keyed by the destination Class.
      */
-    private Map converters = new HashMap();
+    private final Map converters = new HashMap();
 
     /**
      * The set of {@link Converter}s that can be used to convert Strings into objects of
      * a specified Class, keyed by the destination Class and locale.
      */
-    private Map localizedConverters = new HashMap();
+    private final Map localizedConverters = new HashMap();
 
     /**
      * when true, a noopConverter is returned as a fallback. When false, null is returned.
@@ -115,9 +113,9 @@ public final class ConverterRegistry
         register(new LongLocaleConverter(), Long.class);
         register(new ShortLocaleConverter(), Short.TYPE);
         register(new ShortLocaleConverter(), Short.class);
-        register(new DateLocaleConverter(), Date.class);
+        register(new DateLocaleConverter(), java.util.Date.class);
         register(new DateLocaleConverter(), java.sql.Date.class);
-        register(new DateLocaleConverter(), Timestamp.class);
+        register(new DateLocaleConverter(), java.sql.Timestamp.class);
     }
 
     /**
@@ -418,7 +416,7 @@ public final class ConverterRegistry
             // first try registration for specific locale
             converter = (LocaleConverter) localizedConverters.get(lockey);
 
-            if (converter == null) // not found, try generic localized// registration
+            if (converter == null) // not found, try generic localized registration
             {
                 LocaleConverter _converter = (LocaleConverter) localizedConverters.get(clazz);
 
@@ -452,13 +450,12 @@ public final class ConverterRegistry
         }
 
         // else // get without locale right away
-        if (converter == null) // (still) not found, try generic non-localized//
-                               // registration
+        if (converter == null) // (still) not found, try generic non-localized registration
         {
             converter = (Converter) converters.get(clazz);
         }
 
-        if ((converter == null) && useNoopConverter) // STILL not found; return// no-op
+        if ((converter == null) && useNoopConverter) // STILL not found; return no-op
         {
             converter = NOOP_CONVERTER;
         }
@@ -500,7 +497,7 @@ public final class ConverterRegistry
             // first try registration for specific locale
             formatter = (LocaleFormatter) localizedConverters.get(lockey);
 
-            if (formatter == null) // not found, try generic localized// registration
+            if (formatter == null) // not found, try generic localized registration
             {
                 String globLocKey = getLocKey(key);
                 LocaleFormatter _formatter = (LocaleFormatter) localizedConverters.get(globLocKey);
@@ -520,9 +517,8 @@ public final class ConverterRegistry
             }
         }
 
-        // else // get without locale right away
-        if (formatter == null) // (still) not found, try generic non-localized//
-                               // registration
+        // else get without locale right away
+        if (formatter == null) // (still) not found, try generic non-localized registration
         {
             formatter = (Formatter) converters.get(getLocKey(key));
         }
@@ -544,10 +540,12 @@ public final class ConverterRegistry
                 + ((locale.getVariant() != null) ? locale.getVariant() : "_");
     }
 
-    /*
-     * get key for localized formatters @param key key @param locale locale @return String
-     * key
-     */
+    /**
+	 * get key for localized formatters
+	 * @param key key
+	 * @param locale locale
+	 * @return String key
+	 */
     private String getLocKey(String key, Locale locale)
     {
         return "_fmt"
@@ -556,9 +554,11 @@ public final class ConverterRegistry
                 + ((locale.getVariant() != null) ? locale.getVariant() : "_");
     }
 
-    /*
-     * get key for localized formatters @param key key @return String key
-     */
+    /**
+	 * get key for localized formatters
+	 * @param key key
+	 * @return String key
+	 */
     private String getLocKey(String key)
     {
         return "_fmt" + key;
