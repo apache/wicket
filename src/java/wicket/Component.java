@@ -708,6 +708,8 @@ public abstract class Component implements Serializable, IConverterSource
 		onInternalBeginRender();
 		onBeginRender();
 
+		RuntimeException exception = null;
+		
 		try
 		{
 			// Get request cycle to render to
@@ -736,14 +738,38 @@ public abstract class Component implements Serializable, IConverterSource
 			// Restore original response
 			cycle.setResponse(originalResponse);
 		}
+		catch (RuntimeException e)
+		{
+		    // Remember the exception until finally block is
+		    // done and then re-throw it.
+		    exception = e;    
+		}
 		finally
 		{
-			// Rendering has completed
-			onEndRender();
-			onInternalEndRender();
-
-			// Detach models now that rendering is fully completed
-			detachModels();
+		    try
+		    {
+				// Rendering has completed
+				onEndRender();
+				onInternalEndRender();
+	
+				// Detach models now that rendering is fully completed
+				detachModels();
+		    }
+		    catch (RuntimeException ex)
+		    {
+		        // Prepare for re-throw only if another exception
+		        // is not yet registered
+		        if (exception == null)
+		        {
+		            exception = ex;
+		        }
+		    }
+		}
+		
+		// Ret-throw the exception
+		if (exception != null)
+		{
+		    throw exception;
 		}
 	}
 
