@@ -47,18 +47,6 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	border-width: thin;
 }
 
-.tree {
-	font-weight: bold;
-	margin: 0;
-	padding: 0;
-	text-decoration: none;
-	white-space: nowrap;
-}
-
-.treerow {
-	display: block;
-}
-
 h2 {
 	font-size: 1.25em;
 }

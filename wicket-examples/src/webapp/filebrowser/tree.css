@@ -2,6 +2,36 @@
 	margin-bottom: 2em;	
 }
 
+.tree {
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.treerow {
+	display: block;
+}
+
+#spacers {
+	padding-left: 16px;
+}
+
+#junctionImg {
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#nodeImg {
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
 .customtree {
 	width: 1px;
 }
@@ -56,15 +86,4 @@
 
 .customtree .tree-junction-closed-end {
 	background-image: url('plus.gif');
-}
-
-#spacers {
-	padding-left: 16px;
-}
-
-#junctionImg {
-	padding-left: 4px;
-	padding-right: 4px;
-	padding-top: 0px;
-	padding-bottom: 0px;
 }
