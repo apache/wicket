@@ -35,21 +35,21 @@ import wicket.util.value.LongValue;
  * like bytes(2034) or megabytes(3):
  * <p>
  * <ul>
- *   <li> bytes(long)
- *   <li> kilobytes(long)
- *   <li> megabytes(long)
- *   <li> gigabytes(long)
- *   <li> terabytes(long)
+ *   <li>Bytes.bytes(long)
+ *   <li>Bytes.kilobytes(long)
+ *   <li>Bytes.megabytes(long)
+ *   <li>Bytes.gigabytes(long)
+ *   <li>Bytes.terabytes(long)
  * </ul>
  * <p>
  *  or double precision floating point values like megabytes(3.2):
  * <p>
  * <ul>
- *   <li> bytes(double)
- *   <li> kilobytes(double)
- *   <li> megabytes(double)
- *   <li> gigabytes(double)
- *   <li> terabytes(double)
+ *   <li>Bytes.bytes(double)
+ *   <li>Bytes.kilobytes(double)
+ *   <li>Bytes.megabytes(double)
+ *   <li>Bytes.gigabytes(double)
+ *   <li>Bytes.terabytes(double)
  * </ul>
  * <p>
  * In the case of bytes(double), the value will be rounded off to the
@@ -60,10 +60,10 @@ import wicket.util.value.LongValue;
  * retrieved as double precision values using these methods:
  * <p>
  * <ul>
- *   <li> kilobytes()
- *   <li> megabytes()
- *   <li> gigabytes()
- *   <li> terabytes()
+ *   <li>kilobytes()
+ *   <li>megabytes()
+ *   <li>gigabytes()
+ *   <li>terabytes()
  * </ul>
  * <p>
  * Also, value objects can be constructed from strings, optionally
@@ -77,7 +77,7 @@ import wicket.util.value.LongValue;
  * <ul>
  *   <li>37 (37 bytes)
  *   <li>2.3K (2.3 kilobytes)
- *   <li> 2.5 kb (2.5 kilobytes)
+ *   <li>2.5 kb (2.5 kilobytes)
  *   <li>4k (4 kilobytes)
  *   <li>35.2GB (35.2 gigabytes)
  *   <li>1024M (1024 megabytes)
