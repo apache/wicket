@@ -64,6 +64,18 @@ public class StringBufferResource extends AbstractStringResource
 	}
 
 	/**
+	 * Prepends to this string buffer resource
+	 * 
+	 * @param s
+	 *            The string to prepend
+	 */
+	public void prepend(final String s)
+	{
+		buffer.insert(0, s);
+		setLastModified(Time.now());
+	}
+
+	/**
 	 * @see wicket.util.resource.AbstractStringResource#getString()
 	 */
 	protected String getString()
