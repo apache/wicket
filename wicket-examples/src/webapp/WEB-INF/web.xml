@@ -6,7 +6,16 @@
 <web-app>
 
     <display-name>Wicket Examples</display-name>
-
+    
+    <!-- only available with servlet spec. 2.4 
+	<locale-encoding-mapping-list>
+		<locale-encoding-mapping>
+			<locale>de</locale>
+			<encoding>UTF-8</encoding>
+		</locale-encoding-mapping>
+	</locale-encoding-mapping-list>
+    -->	
+		
     <servlet>
         <servlet-name>GuestBookApplication</servlet-name>
         <servlet-class>guestbook.GuestBookApplication</servlet-class>
@@ -85,6 +94,12 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>EncodingsApplication</servlet-name>
+        <servlet-class>encodings.EncodingsApplication</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
     <!-- servlet>
         <servlet-name>Wicket-Appfuse</servlet-name>
         <servlet-class>appfuse.AppfuseApplication</servlet-class>
@@ -154,6 +169,11 @@
     <servlet-mapping>
         <servlet-name>DisplaytagApplication</servlet-name>
         <url-pattern>/displaytag</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EncodingsApplication</servlet-name>
+        <url-pattern>/encodings</url-pattern>
     </servlet-mapping>
 
     <!-- servlet-mapping>
