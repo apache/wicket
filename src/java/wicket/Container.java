@@ -537,7 +537,7 @@ public abstract class Container extends Component
 	 * 
 	 * @return Iterator that iterates through children in an undefined order
 	 */
-	protected final Iterator iterator()
+	public final Iterator iterator()
 	{
 		return childForName.values().iterator();
 	}
