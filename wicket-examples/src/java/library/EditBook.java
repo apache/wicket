@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.voicetribe.util.lang.EnumeratedType;
+import com.voicetribe.wicket.Model;
 import com.voicetribe.wicket.Page;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.form.CheckBox;
@@ -78,7 +79,7 @@ public final class EditBook extends AuthenticatedHtmlPage
 
             // Set model
             this.book = book;
-            setModel(book);
+            setModel(new Model(book));
 
             // Create a required text field that edits the book's author
             final TextField author = new TextField("author", book);
