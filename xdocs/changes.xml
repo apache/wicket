@@ -8,6 +8,10 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+  	  <action type="update" dev="Martijn Dashorst">
+  	    Updated the error pages to have Wicket style error messages, made them HTML
+  	    4.01 transitional.
+  	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1166432">
       Fixed lookahead code which was swallowing ?xml encoding header tag.
       </action>
