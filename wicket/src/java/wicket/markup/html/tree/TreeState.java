@@ -94,7 +94,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Expands the selected path and set selection to currently selected path.
 	 * 
 	 * @param selection
-	 *            the new selection.
+	 *			  the new selection.
 	 */
 	public void setSelectedPath(TreePath selection)
 	{
@@ -131,7 +131,6 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Returns true if the root node of the tree is displayed.
 	 * 
 	 * @return true if the root node of the tree is displayed
-	 * @see #rootVisible
 	 */
 	public boolean isRootVisible()
 	{
@@ -143,7 +142,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * to new LSM.
 	 * 
 	 * @param newLSM
-	 *            the new <code>TreeSelectionModel</code>
+	 *			  the new <code>TreeSelectionModel</code>
 	 */
 	public void setSelectionModel(TreeSelectionModel newLSM)
 	{
@@ -180,11 +179,11 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * the array should be set to -1.
 	 * 
 	 * @param paths
-	 *            the array of <code>TreePath</code> s being queried
+	 *			  the array of <code>TreePath</code> s being queried
 	 * @return an array of the same length that is passed in containing the rows
-	 *         that each corresponding where each <code>TreePath</code> is
-	 *         displayed; if <code>paths</code> is <code>null</code>,
-	 *         <code>null</code> is returned
+	 *		   that each corresponding where each <code>TreePath</code> is
+	 *		   displayed; if <code>paths</code> is <code>null</code>,
+	 *		   <code>null</code> is returned
 	 */
 	public int[] getRowsForPaths(TreePath[] paths)
 	{
@@ -207,7 +206,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Sets the TreeModel that will provide the data.
 	 * 
 	 * @param newModel
-	 *            the TreeModel that is to provide the data
+	 *			  the TreeModel that is to provide the data
 	 */
 	public void setModel(TreeModel newModel)
 	{
@@ -219,8 +218,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Determines whether or not the root node from the TreeModel is visible.
 	 * 
 	 * @param rootVisible
-	 *            true if the root node of the tree is to be displayed
-	 * @see #rootVisible
+	 *			  true if the root node of the tree is to be displayed
 	 */
 	public void setRootVisible(boolean rootVisible)
 	{
@@ -258,7 +256,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Returns true if the value identified by row is currently expanded.
 	 * 
 	 * @param path
-	 *            the row
+	 *			  the row
 	 * @return true if the value identified by row is currently expanded
 	 */
 	public boolean isExpanded(TreePath path)
@@ -276,7 +274,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * returned.
 	 * 
 	 * @param row
-	 *            the row
+	 *			  the row
 	 * @return the path for passed in row
 	 */
 	public TreePath getPathForRow(int row)
@@ -296,7 +294,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * return -1 if any of the elements in path are not currently visible.
 	 * 
 	 * @param path
-	 *            the path
+	 *			  the path
 	 * @return the row that the last item identified in path is visible at
 	 */
 	public int getRowForPath(TreePath path)
@@ -328,7 +326,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Returns the number of visible children for row.
 	 * 
 	 * @param path
-	 *            the path
+	 *			  the path
 	 * @return the number of visible children for row
 	 */
 	public int getVisibleChildCount(TreePath path)
@@ -347,7 +345,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * the paths are displayed.
 	 * 
 	 * @param path
-	 *            the path
+	 *			  the path
 	 * @return an Enumerator that increments over the visible paths
 	 */
 	public Enumeration getVisiblePathsFrom(TreePath path)
@@ -377,9 +375,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * <code>isExpanded</code>.
 	 * 
 	 * @param path
-	 *            the path
+	 *			  the path
 	 * @param isExpanded
-	 *            whether the path is expanded
+	 *			  whether the path is expanded
 	 */
 	public void setExpandedState(TreePath path, boolean isExpanded)
 	{
@@ -414,7 +412,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Returns true if the path is expanded, and visible.
 	 * 
 	 * @param path
-	 *            the path
+	 *			  the path
 	 * @return true if the path is expanded, and visible
 	 */
 	public boolean getExpandedState(TreePath path)
@@ -443,7 +441,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * </p>
 	 * 
 	 * @param e
-	 *            the tree model event
+	 *			  the tree model event
 	 */
 	public void treeNodesChanged(TreeModelEvent e)
 	{
@@ -499,7 +497,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * e.childIndices() returns the indices of the new nodes in ascending order.
 	 * 
 	 * @param e
-	 *            the tree model event
+	 *			  the tree model event
 	 */
 	public void treeNodesInserted(TreeModelEvent e)
 	{
@@ -550,7 +548,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * </p>
 	 * 
 	 * @param e
-	 *            the tree model event
+	 *			  the tree model event
 	 */
 	public void treeNodesRemoved(TreeModelEvent e)
 	{
@@ -609,7 +607,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * </p>
 	 * 
 	 * @param e
-	 *            the tree model event
+	 *			  the tree model event
 	 */
 	public void treeStructureChanged(TreeModelEvent e)
 	{
@@ -669,7 +667,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Adjust the large row count.
 	 * 
 	 * @param change
-	 *            the change for the row count
+	 *			  the change for the row count
 	 */
 	private void adjustRowCountBy(int change)
 	{
@@ -680,7 +678,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Adds a mapping for node.
 	 * 
 	 * @param node
-	 *            the node to map
+	 *			  the node to map
 	 */
 	private void addMapping(TreeStateNode node)
 	{
@@ -691,7 +689,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Removes the mapping for a previously added node.
 	 * 
 	 * @param node
-	 *            the node to remove the mapping for
+	 *			  the node to remove the mapping for
 	 */
 	private void removeMapping(TreeStateNode node)
 	{
@@ -703,7 +701,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * return null, if you to create a node use getNodeForPath.
 	 * 
 	 * @param path
-	 *            the path
+	 *			  the path
 	 * @return the state node
 	 */
 	private TreeStateNode getMapping(TreePath path)
@@ -715,7 +713,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Sent to completely rebuild the visible tree. All nodes are collapsed.
 	 * 
 	 * @param clearSelection
-	 *            whether to clear the selection
+	 *			  whether to clear the selection
 	 */
 	private void rebuild(boolean clearSelection)
 	{
@@ -757,9 +755,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * true if succesful in finding the path.
 	 * 
 	 * @param aPath
-	 *            the path
+	 *			  the path
 	 * @param expandLast
-	 *            whether to expand the last element
+	 *			  whether to expand the last element
 	 * @return true if succesful in finding the path
 	 */
 	private boolean ensurePathIsExpanded(TreePath aPath, boolean expandLast)
@@ -792,9 +790,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Creates and returns an instance of TreeStateNode.
 	 * 
 	 * @param userObject
-	 *            the user object
+	 *			  the user object
 	 * @param childIndex
-	 *            the index relative to the parent
+	 *			  the index relative to the parent
 	 * @return the tree state node
 	 */
 	private TreeStateNode createNodeForValue(Object userObject, int childIndex)
@@ -808,7 +806,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * returns null.
 	 * 
 	 * @param path
-	 *            the path
+	 *			  the path
 	 * @param onlyIfVisible
 	 * @param shouldCreate
 	 * @return the tree state node
@@ -921,7 +919,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * a mapping from path to this node.
 		 * 
 		 * @param parent
-		 *            the parent
+		 *			  the parent
 		 */
 		public void setParent(MutableTreeNode parent)
 		{
@@ -939,7 +937,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * <code>removedFromMapping</code> to remove all the children.
 		 * 
 		 * @param childIndex
-		 *            the index of this node relative to its parent
+		 *			  the index of this node relative to its parent
 		 */
 		public void remove(int childIndex)
 		{
@@ -953,7 +951,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * Messaged to set the user object. This resets the path.
 		 * 
 		 * @param o
-		 *            the user object
+		 *			  the user object
 		 */
 		public void setUserObject(Object o)
 		{
@@ -998,7 +996,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * been created (expanded).
 		 * 
 		 * @param index
-		 *            the childs index
+		 *			  the childs index
 		 * @return the tree state node
 		 */
 		public TreeStateNode getChildAtModelIndex(int index)
@@ -1039,7 +1037,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * Returns the row of the child with a model index of <code>index</code>.
 		 * 
 		 * @param index
-		 *            the model index
+		 *			  the model index
 		 * @return the row of the child with a model index of <code>index</code>
 		 */
 		public int getRowToModelIndex(int index)
@@ -1070,7 +1068,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * expanded nodes and messaging them with getTotalChildCount.
 		 * 
 		 * @return the number of children in the receiver by descending all
-		 *         expanded nodes and messaging them with getTotalChildCount
+		 *		   expanded nodes and messaging them with getTotalChildCount
 		 */
 		public int getTotalChildCount()
 		{
@@ -1135,7 +1133,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * Recreates the receivers path, and all its childrens paths.
 		 * 
 		 * @param parentPath
-		 *            the parent of the path to recreate
+		 *			  the parent of the path to recreate
 		 */
 		private void resetChildrenPaths(TreePath parentPath)
 		{
@@ -1168,7 +1166,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * <code>userObject</code>.
 		 * 
 		 * @param userObject
-		 *            the user object of the new node
+		 *			  the user object of the new node
 		 * @return the new node
 		 */
 		private TreeStateNode createChildFor(Object userObject)
@@ -1209,7 +1207,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * <code>adjust</code>.
 		 * 
 		 * @param adjust
-		 *            adjustement
+		 *			  adjustement
 		 */
 		private void adjustRowBy(int adjust)
 		{
@@ -1406,7 +1404,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * rows of nodes after the receiver are adjusted.
 		 * 
 		 * @param adjustRows
-		 *            whether to adjust the rows of the receiver
+		 *			  whether to adjust the rows of the receiver
 		 */
 		private void collapse(boolean adjustRows)
 		{
@@ -1447,7 +1445,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * location is determined from the childIndex of newChild.
 		 * 
 		 * @param newChild
-		 *            the node to add
+		 *			  the node to add
 		 */
 		private void addNode(TreeStateNode newChild)
 		{
@@ -1550,7 +1548,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * by one.
 		 * 
 		 * @param index
-		 *            the insertion index
+		 *			  the insertion index
 		 * @param isExpandedAndVisible
 		 */
 		private void childInsertedAtModelIndex(int index, boolean isExpandedAndVisible)
@@ -1598,7 +1596,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * @param row
 		 * @param nextRow
 		 * @param info
-		 *            search info object
+		 *			  search info object
 		 * @return true if there is a row for <code>row</code>
 		 */
 		private boolean getPathForRow(int row, int nextRow, SearchInfo info)
@@ -1685,7 +1683,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * returns this value (plus stopIndex).
 		 * 
 		 * @param stopIndex
-		 *            index to stop on
+		 *			  index to stop on
 		 * @return childcount of all children of the receiver
 		 */
 		private int getCountTo(int stopIndex)
@@ -1714,9 +1712,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * children that the child at <code>stopIndex</code> might have.
 		 * 
 		 * @param stopIndex
-		 *            index to stop on
+		 *			  index to stop on
 		 * @return the number of children that are expanded to
-		 *         <code>stopIndex</code>
+		 *		   <code>stopIndex</code>
 		 */
 		private int getNumExpandedChildrenTo(int stopIndex)
 		{

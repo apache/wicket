@@ -44,23 +44,24 @@ import wicket.util.string.Strings;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * A markup container holds a map of child components. Children can be added by
- * calling the add() method and they can be looked up using a dotted path. For
- * example, if a container called "a" held a nested container "b" which held a
- * nested component "c", then a.get("b.c") would return the component with id
- * "c".
+ * A MarkupContainer holds a map of child components.
+ * <ul>
+ * <li><b>Children</b> - Children can be added by calling the add() method, and they
+ * can be looked up using a dotted path. For example, if a container called "a"
+ * held a nested container "b" which held a nested component "c", then
+ * a.get("b.c") would return the Component with id "c". The number of children
+ * in a MarkupContainer can be determined by calling size(), and the whole
+ * hierarchy of children held by a MarkupContainer can be traversed by calling
+ * visitChildren(), passing in an implementation of Component.IVisitor.
+ * 
+ * <li><b>Markup Rendering</b> - A MarkupContainer also holds/references associated
+ * markup which is used to render the container. As the markup stream for a
+ * container is rendered, component references in the markup are resolved by
+ * using the container to look up Components in the container's component map by
+ * id. Each component referenced by the markup stream is given an opportunity to
+ * render itself using the markup stream.
  * <p>
- * The number of children in a container can be determined by calling size().
- * And the whole hierarchy of children held by a container can be traversed by
- * calling visitChildren(), passing in an implementation of Component.IVisitor.
- * <p>
- * A container also holds markup information which is used to render the
- * container. As the markup stream for a container is rendered, component
- * references in the markup are resolved by using the container to look up
- * components by id. Each component referenced by the markup stream is given an
- * opportunity to render itself using the markup stream.
- * <p>
- * Components may alter the referring tag, replace the tag's body or insert
+ * Components may alter their referring tag, replace the tag's body or insert
  * markup after the tag. But components cannot remove tags from the markup
  * stream. This is an important guarantee because graphic designers may be
  * setting attributes on component tags that affect visual presentation.
@@ -127,10 +128,10 @@ public abstract class MarkupContainer extends Component
 	 * Adds a child component to this container.
 	 * 
 	 * @param child
-	 *            The child
+	 *			  The child
 	 * @throws IllegalArgumentException
-	 *             Thrown if a child with the same id is replaced by the add
-	 *             operation.
+	 *			   Thrown if a child with the same id is replaced by the add
+	 *			   operation.
 	 * @return This
 	 */
 	public MarkupContainer add(final Component child)
@@ -153,9 +154,9 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * @param component
-	 *            The component to check
+	 *			  The component to check
 	 * @param recurse
-	 *            True if all descendents should be considered
+	 *			  True if all descendents should be considered
 	 * @return True if the component is contained in this container
 	 */
 	public final boolean contains(final Component component, final boolean recurse)
@@ -194,7 +195,7 @@ public abstract class MarkupContainer extends Component
 	 * Get a child component by looking it up with the given path.
 	 * 
 	 * @param path
-	 *            Path to component
+	 *			  Path to component
 	 * @return The component at the path
 	 */
 	public final Component get(final String path)
@@ -306,7 +307,7 @@ public abstract class MarkupContainer extends Component
 	 * Removes the given component
 	 * 
 	 * @param id
-	 *            The id of the component to remove
+	 *			  The id of the component to remove
 	 */
 	public void remove(final String id)
 	{
@@ -339,9 +340,9 @@ public abstract class MarkupContainer extends Component
 	 * Replaces a child component of this container with another
 	 * 
 	 * @param child
-	 *            The child
+	 *			  The child
 	 * @throws IllegalArgumentException
-	 *             Thrown if there was no child with the same id.
+	 *			   Thrown if there was no child with the same id.
 	 * @return This
 	 */
 	public MarkupContainer replace(final Component child)
@@ -390,7 +391,7 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * @param detailed
-	 *            True if a detailed string is desired
+	 *			  True if a detailed string is desired
 	 * @return String representation of this container
 	 */
 	public String toString(final boolean detailed)
@@ -419,11 +420,11 @@ public abstract class MarkupContainer extends Component
 	 * calling the visitor's visit method at each one.
 	 * 
 	 * @param c
-	 *            The class of child to visit, or null to visit all children
+	 *			  The class of child to visit, or null to visit all children
 	 * @param visitor
-	 *            The visitor to call back to
+	 *			  The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or
-	 *         null if the entire traversal occurred
+	 *		   null if the entire traversal occurred
 	 */
 	public final Object visitChildren(final Class c, final IVisitor visitor)
 	{
@@ -468,9 +469,9 @@ public abstract class MarkupContainer extends Component
 	 * visit method at each one.
 	 * 
 	 * @param visitor
-	 *            The visitor to call back to
+	 *			  The visitor to call back to
 	 * @return The return value from a visitor which halted the traversal, or
-	 *         null if the entire traversal occurred
+	 *		   null if the entire traversal occurred
 	 */
 	public final Object visitChildren(final IVisitor visitor)
 	{
@@ -481,7 +482,7 @@ public abstract class MarkupContainer extends Component
 	 * Get the markup stream for this component.
 	 * 
 	 * @return The markup stream for this component, or if it doesn't have one,
-	 *         the markup stream for the nearest parent which does have one
+	 *		   the markup stream for the nearest parent which does have one
 	 */
 	protected final MarkupStream findMarkupStream()
 	{
@@ -519,11 +520,11 @@ public abstract class MarkupContainer extends Component
 	 * Get the type of associated markup for this component.
 	 * 
 	 * @return The type of associated markup for this component (for example,
-	 *         "html", "wml" or "vxml"). The markup type for a component is
-	 *         independent of whether or not the component actually has an
-	 *         associated markup resource file (which is determined at runtime).
-	 *         If there is no markup type for a component, null may be returned,
-	 *         but this means that no markup can be loaded for the class.
+	 *		   "html", "wml" or "vxml"). The markup type for a component is
+	 *		   independent of whether or not the component actually has an
+	 *		   associated markup resource file (which is determined at runtime).
+	 *		   If there is no markup type for a component, null may be returned,
+	 *		   but this means that no markup can be loaded for the class.
 	 */
 	protected String getMarkupType()
 	{
@@ -537,9 +538,9 @@ public abstract class MarkupContainer extends Component
 	 * exception will be thrown by the framework.
 	 * 
 	 * @param markupStream
-	 *            The markup stream
+	 *			  The markup stream
 	 * @param openTag
-	 *            The open tag for the body
+	 *			  The open tag for the body
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -560,9 +561,9 @@ public abstract class MarkupContainer extends Component
 	 * markup is skipped.
 	 * 
 	 * @param openTagName
-	 *            the tag to render the associated markup for
+	 *			  the tag to render the associated markup for
 	 * @param exceptionMessage
-	 *            message that will be used for exceptions
+	 *			  message that will be used for exceptions
 	 */
 	protected final void renderAssociatedMarkup(final String openTagName,
 			final String exceptionMessage)
@@ -597,9 +598,9 @@ public abstract class MarkupContainer extends Component
 	 * openTag is reached.
 	 * 
 	 * @param markupStream
-	 *            The markup stream
+	 *			  The markup stream
 	 * @param openTag
-	 *            The open tag
+	 *			  The open tag
 	 */
 	protected final void renderComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
@@ -627,7 +628,7 @@ public abstract class MarkupContainer extends Component
 	 * Set markup stream for this container.
 	 * 
 	 * @param markupStream
-	 *            The markup stream
+	 *			  The markup stream
 	 */
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
@@ -649,7 +650,7 @@ public abstract class MarkupContainer extends Component
 	 * modified during rendering.
 	 * 
 	 * @param component
-	 *            The component to add
+	 *			  The component to add
 	 */
 	public final void autoAdd(final Component component)
 	{
@@ -751,7 +752,7 @@ public abstract class MarkupContainer extends Component
 	 * stream.
 	 * 
 	 * @param markupStream
-	 *            The markup stream
+	 *			  The markup stream
 	 */
 	final void renderAll(final MarkupStream markupStream)
 	{
@@ -773,11 +774,11 @@ public abstract class MarkupContainer extends Component
 	 * Loads markup.
 	 * 
 	 * @param application
-	 *            Application
+	 *			  Application
 	 * @param key
-	 *            Key under which markup should be cached
+	 *			  Key under which markup should be cached
 	 * @param markupResource
-	 *            The markup resource to load
+	 *			  The markup resource to load
 	 * @return The markup
 	 * @throws ParseException
 	 * @throws IOException
@@ -796,9 +797,9 @@ public abstract class MarkupContainer extends Component
 	 * Load markup and add a {@link ModificationWatcher}to the markup resource.
 	 * 
 	 * @param key
-	 *            The key for the resource
+	 *			  The key for the resource
 	 * @param markupResource
-	 *            The markup file to load and begin to watch
+	 *			  The markup file to load and begin to watch
 	 * @return The markup in the file
 	 */
 	private Markup loadMarkupAndWatchForChanges(final String key, final IResource markupResource)
@@ -867,7 +868,7 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * @return Key that uniquely identifies any markup that might be associated
-	 *         with this markup container.
+	 *		   with this markup container.
 	 */
 	private String markupKey()
 	{
@@ -878,7 +879,7 @@ public abstract class MarkupContainer extends Component
 	 * Renders the next element of markup in the given markup stream.
 	 * 
 	 * @param markupStream
-	 *            The markup stream
+	 *			  The markup stream
 	 */
 	private void renderNext(final MarkupStream markupStream)
 	{
@@ -948,7 +949,7 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * @param component
-	 *            Component being removed
+	 *			  Component being removed
 	 */
 	private static final void removedComponent(final Component component)
 	{
@@ -968,7 +969,7 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * @param component
-	 *            Component being added
+	 *			  Component being added
 	 */
 	private final void addedComponent(final Component component)
 	{
@@ -994,7 +995,7 @@ public abstract class MarkupContainer extends Component
 	 * adding it.
 	 * 
 	 * @param child
-	 *            The child to put into the map
+	 *			  The child to put into the map
 	 * @return Any component that was replaced
 	 */
 	private final Component put(final Component child)

@@ -48,25 +48,25 @@ public interface IXmlPullParser extends IMarkupFilter
 	public String getXmlDeclaration();
 
 	/**
-	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
-	 * which is not further analysed by Wicket. getInputFromPositionMarker() is
-	 * used to access the raw markup.
-	 * 
+	 * Wicket dissects the markup into Wicket relevant tags and raw markup, which 
+	 * is not further analysed by Wicket. The method getInputFromPositionMarker() 
+	 * is used to access the raw markup. 
+	 *
 	 * @param toPos
-	 *            To position
-	 * @return The raw markup in between the position marker and toPos
+	 *			  To position 
+	 * @return The raw markup in between the position marker and toPos 
 	 */
 	public abstract CharSequence getInputFromPositionMarker(int toPos);
 
 	/**
 	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
-	 * which is not further analysed by Wicket. getInputSubsequence() is used to
-	 * access the raw markup.
+	 * which is not further analysed by Wicket. The getInputSubsequence()
+	 * method is used to access the raw markup.
 	 * 
 	 * @param fromPos
-	 *            From position
+	 *			  From position
 	 * @param toPos
-	 *            To position
+	 *			  To position
 	 * @return The raw markup in between fromPos and toPos
 	 */
 	public abstract CharSequence getInputSubsequence(final int fromPos, final int toPos);
@@ -79,11 +79,11 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * provided does have the correct encoding already.
 	 * 
 	 * @param string
-	 *            The markup to be parsed
+	 *			  The markup to be parsed
 	 * @throws IOException
-	 *             Error while reading the resource
+	 *			   Error while reading the resource
 	 * @throws ResourceNotFoundException
-	 *             Resource not found
+	 *			   Resource not found
 	 */
 	public abstract void parse(final CharSequence string) throws IOException,
 		ResourceNotFoundException;
@@ -93,11 +93,11 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * access the tags contained, one after another.
 	 * 
 	 * @param resource
-	 *            A resource like e.g. a file
+	 *			  A resource like e.g. a file
 	 * @throws IOException
-	 *             Error while reading the resource
+	 *			   Error while reading the resource
 	 * @throws ResourceNotFoundException
-	 *             Resource not found
+	 *			   Resource not found
 	 */
 	public abstract void parse(final IResource resource) throws IOException,
 			ResourceNotFoundException;
@@ -111,7 +111,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * Set whether to strip components.
 	 * 
 	 * @param stripComments
-	 *            if true, comments will be stripped
+	 *			  if true, comments will be stripped
 	 */
 	public abstract void setStripComments(boolean stripComments);
 }

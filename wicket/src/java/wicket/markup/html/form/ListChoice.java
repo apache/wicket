@@ -34,7 +34,7 @@ public class ListChoice extends DropDownChoice
 {
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
-    
+	
 	/** The maximum number of rows to display. */
 	private int maxRows;
 
@@ -52,7 +52,7 @@ public class ListChoice extends DropDownChoice
 	 * Sets the default maximum number of rows to display.
 	 * 
 	 * @param defaultMaxRows
-	 *            The defaultMaxRows to set.
+	 *			  The defaultMaxRows to set.
 	 */
 	protected static void setDefaultMaxRows(final int defaultMaxRows)
 	{
@@ -60,7 +60,7 @@ public class ListChoice extends DropDownChoice
 	}
 	
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
 	 */
 	public ListChoice(final String id, final Collection values)
 	{
@@ -69,11 +69,11 @@ public class ListChoice extends DropDownChoice
 
 	/**
 	 * @param id
-	 *            See Component
+	 *			  See Component
 	 * @param model
-	 *            See Component
+	 *			  See Component
 	 * @param values
-	 *            The collection of values in the list
+	 *			  The collection of values in the list
 	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
 	 */
 	public ListChoice(final String id, final IModel model, final Collection values)
@@ -83,13 +83,13 @@ public class ListChoice extends DropDownChoice
 
 	/**
 	 * @param id
-	 *            See Component
+	 *			  See Component
 	 * @param model
-	 *            See Component
+	 *			  See Component
 	 * @param values
-	 *            The collection of values in the list
+	 *			  The collection of values in the list
 	 * @param maxRows
-	 *            Maximum number of rows to show
+	 *			  Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
 	 */
 	public ListChoice(final String id, final IModel model, final Collection values, final int maxRows)
@@ -112,7 +112,7 @@ public class ListChoice extends DropDownChoice
 	 * Sets the maximum number of rows to display.
 	 * 
 	 * @param maxRows
-	 *            the maximum number of rows to display
+	 *			  the maximum number of rows to display
 	 * @return This
 	 */
 	public final ListChoice setMaxRows(int maxRows)
@@ -130,11 +130,11 @@ public class ListChoice extends DropDownChoice
 		tag.put("size", Math.min(maxRows, getChoices().size()));
 	}
 
-    /**
-     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-     */
-    protected final boolean supportsPersistence()
-    {
-        return true;
-    }
+	/**
+	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
+	{
+		return true;
+	}
 }

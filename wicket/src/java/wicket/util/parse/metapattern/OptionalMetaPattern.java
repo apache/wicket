@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * Makes any MetaPattern optional by enclosing the pattern in an optionality
- * expression like this: (?:&lt;pattern&gt;)?
+ * expression.	The expression will be something equivalent to "(?:&lt;pattern&gt;)?".
  * 
  * @author Jonathan Locke
  */
@@ -41,7 +41,7 @@ public final class OptionalMetaPattern extends MetaPattern
 	 * Constructor
 	 * 
 	 * @param pattern
-	 *            MetaPattern to make optional
+	 *			  MetaPattern to make optional
 	 */
 	public OptionalMetaPattern(final MetaPattern pattern)
 	{

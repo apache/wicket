@@ -20,7 +20,7 @@ package wicket;
 import java.io.Serializable;
 
 /**
- * A factory class for applications that creates Sessions.
+ * A factory interface used by Applications to create Sessions.
  * 
  * @author Jonathan Locke
  */

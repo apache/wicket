@@ -33,7 +33,7 @@ import wicket.model.IModel;
 public class RadioChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
 	 */
 	public RadioChoice(final String id, final Collection choices)
 	{
@@ -41,7 +41,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
 	public RadioChoice(final String id, final IChoiceList choices)
 	{
@@ -49,7 +49,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
 	public RadioChoice(final String id, IModel model, final Collection choices)
 	{
@@ -57,7 +57,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
 	public RadioChoice(final String id, IModel model, final IChoiceList choices)
 	{
@@ -83,9 +83,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is
-	 *            the same as you would get by calling getModelObject() if the
-	 *            new selection were current
+	 *			  The newly selected object of the backing model NOTE this is
+	 *			  the same as you would get by calling getModelObject() if the
+	 *			  new selection were current
 	 */
 	protected void onSelectionChanged(Object newSelection)
 	{
@@ -93,7 +93,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 	/**
 	 * @return True if this component's onSelectionChanged event handler should
-	 * 			called using javascript if the selection changes
+	 *			called using javascript if the selection changes
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{

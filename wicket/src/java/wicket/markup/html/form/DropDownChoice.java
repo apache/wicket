@@ -37,7 +37,7 @@ import wicket.model.IModel;
 public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
 	 */
 	public DropDownChoice(final String id, final Collection choices)
 	{
@@ -45,7 +45,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
 	public DropDownChoice(final String id, final IChoiceList choices)
 	{
@@ -53,7 +53,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
 	public DropDownChoice(final String id, IModel model, final Collection choices)
 	{
@@ -61,7 +61,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 	
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
 	public DropDownChoice(final String id, IModel model, final IChoiceList choices)
 	{
@@ -81,7 +81,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 * Processes the component tag.
 	 * 
 	 * @param tag
-	 *            Tag to modify
+	 *			  Tag to modify
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
 	protected void onComponentTag(final ComponentTag tag)
@@ -112,9 +112,9 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is
-	 *            the same as you would get by calling getModelObject() if the
-	 *            new selection were current
+	 *			  The newly selected object of the backing model NOTE this is
+	 *			  the same as you would get by calling getModelObject() if the
+	 *			  new selection were current
 	 */
 	protected void onSelectionChanged(final Object newSelection)
 	{
@@ -122,7 +122,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 
 	/**
 	 * @return True if this component's onSelectionChanged event handler should
-	 * 			called using javascript if the selection changes
+	 *			called using javascript if the selection changes
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{

@@ -46,7 +46,7 @@ public final class IntegerGroup extends Group
 	 * pattern in base 10.
 	 * 
 	 * @param pattern
-	 *            The capturing pattern
+	 *			  The capturing pattern
 	 */
 	public IntegerGroup(final MetaPattern pattern)
 	{
@@ -58,18 +58,19 @@ public final class IntegerGroup extends Group
 	 * pattern in the given radix.
 	 * 
 	 * @param pattern
-	 *            The capturing pattern
+	 *			  The capturing pattern
 	 * @param radix
-	 *            The radix to use when parsing captured Strings
+	 *			  The radix to use when parsing captured Strings
 	 */
 	public IntegerGroup(final MetaPattern pattern, final int radix)
 	{
 		super(pattern);
 		this.radix = radix;
 	}
-	
+
 	/**
-	 * @param matcher The matcher
+	 * @param matcher
+	 *			  The matcher
 	 * @return The value
 	 * @see IntegerGroup#getInt(Matcher, int)
 	 */
@@ -83,10 +84,10 @@ public final class IntegerGroup extends Group
 	 * IntegerGroup's radix is used in the conversion.
 	 * 
 	 * @param matcher
-	 *            The matcher
+	 *			  The matcher
 	 * @param defaultValue
-	 *            The default value to use if this group is omitted because it
-	 *            is optional
+	 *			  The default value to use if this group is omitted because it
+	 *			  is optional
 	 * @return The parsed int value
 	 */
 	public int getInt(final Matcher matcher, final int defaultValue)
@@ -94,11 +95,12 @@ public final class IntegerGroup extends Group
 		final String value = get(matcher);
 		return value == null ? defaultValue : Integer.parseInt(value, radix);
 	}
-	
+
 	/**
-	 * @param matcher The matcher
+	 * @param matcher
+	 *			  The matcher
 	 * @return The value
-	 * @see IntegerGroup#getLong(Matcher, int)
+	 * @see IntegerGroup#getLong(Matcher)
 	 */
 	public long getLong(final Matcher matcher)
 	{
@@ -110,10 +112,10 @@ public final class IntegerGroup extends Group
 	 * IntegerGroup's radix is used in the conversion. parsing radix.
 	 * 
 	 * @param defaultValue
-	 *            The default value to use if this group is omitted because it
-	 *            is optional
+	 *			  The default value to use if this group is omitted because it
+	 *			  is optional
 	 * @param matcher
-	 *            The matcher
+	 *			  The matcher
 	 * @return The parsed long value
 	 */
 	public long getLong(final Matcher matcher, final long defaultValue)

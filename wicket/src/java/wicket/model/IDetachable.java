@@ -20,7 +20,10 @@ package wicket.model;
 import java.io.Serializable;
 
 /**
- * Interface to detachable things
+ * Interface to logic for detaching transient information from a detachable
+ * model. Detachable models are desirable because they reduce the amount of
+ * state required by a model, which makes the model cheaper to replicate in a
+ * clustered environment.
  * 
  * @author Jonathan Locke
  */

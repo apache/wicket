@@ -57,7 +57,7 @@ public final class MarkupStream
 	 * Constructor
 	 * 
 	 * @param markup
-	 *            List of markup elements
+	 *			  List of markup elements
 	 */
 	public MarkupStream(final Markup markup)
 	{
@@ -87,9 +87,9 @@ public final class MarkupStream
 
 	/**
 	 * @param componentId
-	 *            Required component name attribute
+	 *			  Required component name attribute
 	 * @return True if the current markup element is an openclose tag with the
-	 *         given component name
+	 *		   given component name
 	 */
 	public boolean atOpenCloseTag(final String componentId)
 	{
@@ -106,9 +106,9 @@ public final class MarkupStream
 
 	/**
 	 * @param componentId
-	 *            Required component name attribute
+	 *			  Required component name attribute
 	 * @return True if the current markup element is an open tag with the given
-	 *         component name
+	 *		   component name
 	 */
 	public boolean atOpenTag(final String componentId)
 	{
@@ -185,7 +185,7 @@ public final class MarkupStream
 
 	/**
 	 * @param currentIndex
-	 *            New current index in the stream
+	 *			  New current index in the stream
 	 */
 	public void setCurrentIndex(final int currentIndex)
 	{
@@ -239,7 +239,7 @@ public final class MarkupStream
 	 * Throws a new markup exception
 	 * 
 	 * @param message
-	 *            The exception message
+	 *			  The exception message
 	 * @throws MarkupException
 	 */
 	public void throwMarkupException(final String message)
@@ -249,7 +249,7 @@ public final class MarkupStream
 
 	/**
 	 * @return An HTML string highlighting the current position in the markup
-	 *         stream
+	 *		   stream
 	 */
 	public String toHtmlDebugString()
 	{
@@ -286,7 +286,7 @@ public final class MarkupStream
 
 	/**
 	 * @param index
-	 *            The index of a markup element
+	 *			  The index of a markup element
 	 * @return The MarkupElement element
 	 */
 	private MarkupElement get(final int index)
@@ -298,7 +298,7 @@ public final class MarkupStream
 	 * Renders markup until a closing tag for openTag is reached.
 	 * 
 	 * @param openTag
-	 *            The open tag
+	 *			  The open tag
 	 */
 	private void skipToMatchingCloseTag(final ComponentTag openTag)
 	{
@@ -323,18 +323,20 @@ public final class MarkupStream
 	 * 
 	 * @return Null, if not found.
 	 */
-    public String getXmlDeclaration()
-    {
-        return markup.getXmlDeclaration();
-    }
+	public String getXmlDeclaration()
+	{
+		return markup.getXmlDeclaration();
+	}
 
-    /**
-    /* The encoding as found in <?xml ... encoding="" ?>
-     *
-     * @return Null, if not found
-     */
-    public String getEncoding()
-    {
-        return markup.getEncoding();
-    }
+	/**
+	 * Gets the markup encoding.  A markup encoding may be specified in
+	 * a markup file with an XML encoding specifier of the form
+	 * &lt;?xml ... encoding="..." ?&gt;.
+	 *
+	 * @return The encoding, or null if not found
+	 */
+	public String getEncoding()
+	{
+		return markup.getEncoding();
+	}
 }

@@ -22,10 +22,10 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
- * Simple &lt;a href="..."&gt; pointing to any URL. Usually this is used for
- * links to destinations outside of Wicket.
- * 
- * @author Juergen Donnerstag
+ * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL. 
+ * Usually this is used for links to destinations outside of Wicket. 
+ *
+ * @author Juergen Donnerstag 
  */
 public class ExternalLink extends WebMarkupContainer
 {
@@ -39,11 +39,11 @@ public class ExternalLink extends WebMarkupContainer
 	 * Constructor.
 	 * 
 	 * @param id
-	 *            See Component
+	 *			  See Component
 	 * @param href
-	 *            the href attribute to set
+	 *			  the href attribute to set
 	 * @param label
-	 *            the label (body)
+	 *			  the label (body)
 	 */
 	public ExternalLink(final String id, final String href, final String label)
 	{
@@ -57,9 +57,9 @@ public class ExternalLink extends WebMarkupContainer
 	 * Constructor.
 	 * 
 	 * @param id
-	 *            The name of this component
+	 *			  The name of this component
 	 * @param href
-	 *            the href attribute to set
+	 *			  the href attribute to set
 	 */
 	public ExternalLink(final String id, final String href)
 	{
@@ -70,7 +70,7 @@ public class ExternalLink extends WebMarkupContainer
 	 * Processes the component tag.
 	 * 
 	 * @param tag
-	 *            Tag to modify
+	 *			  Tag to modify
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
 	protected void onComponentTag(ComponentTag tag)
@@ -85,11 +85,11 @@ public class ExternalLink extends WebMarkupContainer
 	 * Handle the container's body.
 	 * 
 	 * @param markupStream
-	 *            The markup stream
+	 *			  The markup stream
 	 * @param openTag
-	 *            The open tag for the body
+	 *			  The open tag for the body
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
-	 *      wicket.markup.ComponentTag)
+	 *		wicket.markup.ComponentTag)
 	 */
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{

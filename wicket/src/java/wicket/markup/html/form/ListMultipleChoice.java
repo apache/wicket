@@ -37,7 +37,7 @@ import wicket.util.string.Strings;
 public class ListMultipleChoice extends AbstractChoice
 {
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
 	 */
 	public ListMultipleChoice(final String id, final Collection choices)
 	{
@@ -45,7 +45,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceList)
 	 */
 	public ListMultipleChoice(final String id, final IChoiceList choices)
 	{
@@ -53,7 +53,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, Collection)
 	 */
 	public ListMultipleChoice(final String id, IModel object, final Collection choices)
 	{
@@ -61,7 +61,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
 	 */
 	public ListMultipleChoice(final String id, IModel object, final IChoiceList choices)
 	{
@@ -113,7 +113,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see AbstractChoice#isSelected(IChoice)
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(IChoice)
 	 */
 	protected final boolean isSelected(IChoice choice)
 	{
