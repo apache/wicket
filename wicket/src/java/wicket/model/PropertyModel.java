@@ -111,7 +111,7 @@ import wicket.util.string.Strings;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class PropertyModel extends DetachableModel implements IConvertable
+public class PropertyModel extends DetachableModel implements IConvertible
 {
 	/** Serial Version ID. */
 	private static final long serialVersionUID = -3136339624173288385L;
@@ -318,7 +318,7 @@ public class PropertyModel extends DetachableModel implements IConvertable
 	 * 
 	 * @param converter
 	 *            the converter converter
-	 * @see wicket.model.IConvertable#setConverter(wicket.util.convert.IConverter)
+	 * @see wicket.model.IConvertible#setConverter(wicket.util.convert.IConverter)
 	 */
 	public final void setConverter(IConverter converter)
 	{
