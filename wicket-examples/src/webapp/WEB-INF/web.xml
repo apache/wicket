@@ -95,12 +95,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>FileBrowserApplication</servlet-name>
-        <servlet-class>wicket.examples.filebrowser.FileBrowserApplication</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
         <servlet-name>UploadApplication</servlet-name>
         <servlet-class>wicket.examples.upload.UploadApplication</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -214,11 +208,6 @@
     <servlet-mapping>
         <servlet-name>GuestBookApplication</servlet-name>
         <url-pattern>/guestbook</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FileBrowserApplication</servlet-name>
-        <url-pattern>/filebrowser</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

@@ -1,6 +1,6 @@
-package wicket.examples.filebrowser;
+package wicket.examples.nested;
 
-import java.io.File;
+import java.util.List;
 
 import javax.swing.tree.TreeModel;
 
@@ -13,10 +13,10 @@ import wicket.markup.html.tree.TreeNodeModel;
 import wicket.markup.html.tree.TreeStateCache;
 
 /** indent tree implementation. */
-public class CustomIndentTree extends IndentTree
+public class MyTree extends IndentTree
 {
     /** Log. */
-    private static Log log = LogFactory.getLog(CustomIndentTree.class);
+    private static Log log = LogFactory.getLog(MyTree.class);
 
 	/**
 	 * Construct.
@@ -24,7 +24,7 @@ public class CustomIndentTree extends IndentTree
 	 * @param model the tree model
 	 * @param makeTreeModelUnique whether to make the userObject nodes unique
 	 */
-	public CustomIndentTree(String componentName, TreeModel model, boolean makeTreeModelUnique)
+	public MyTree(String componentName, TreeModel model, boolean makeTreeModelUnique)
 	{
 		super(componentName, model, makeTreeModelUnique);
 	}
@@ -36,7 +36,7 @@ public class CustomIndentTree extends IndentTree
      * @param treeState the tree state that holds the tree model and the currently visible
      * paths
      */
-    public CustomIndentTree(final String componentName, TreeStateCache treeState)
+    public MyTree(final String componentName, TreeStateCache treeState)
     {
         super(componentName, treeState);
     }
@@ -72,16 +72,16 @@ public class CustomIndentTree extends IndentTree
         {
             if (node.isExpanded())
             {
-                img = "filebrowser/minus.gif";
+                img = "nested/minus.gif";
             }
             else
             {
-                img = "filebrowser/plus.gif";
+                img = "nested/plus.gif";
             }
         }
         else
         {
-        	img = "filebrowser/blank.gif";
+        	img = "nested/blank.gif";
         }
 
         return img;
@@ -98,17 +98,17 @@ public class CustomIndentTree extends IndentTree
 
         if (node.isLeaf())
         {
-            img = "filebrowser/node.gif";
+            img = "nested/node.gif";
         }
         else
         {
             if (node.isExpanded())
             {
-                img = "filebrowser/folderopen.gif";
+                img = "nested/folderopen.gif";
             }
             else
             {
-                img = "filebrowser/folder.gif";
+                img = "nested/folder.gif";
             }
         }
 
@@ -120,7 +120,14 @@ public class CustomIndentTree extends IndentTree
 	 */
 	protected String getNodeLabel(TreeNodeModel node)
 	{
-		File file = (File)node.getUserObject();
-		return file.getName();
+		Object userObject = node.getUserObject();
+		if(userObject instanceof List)
+		{
+			return "<sub>";
+		}
+		else
+		{
+			return String.valueOf(node.getUserObject());
+		}
 	}
 }

@@ -19,7 +19,12 @@
 package wicket.examples.nested;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 
 import wicket.PageParameters;
 import wicket.examples.util.NavigationPanel;
@@ -27,7 +32,7 @@ import wicket.markup.html.HtmlPage;
 
 /**
  * Examples that shows how you can display a tree like structure (in this case
- * nested lists with string elements) using nested panels.
+ * nested lists with string elements) using nested panels and using a tree component.
  *
  * @author Eelco Hillenius
  */
@@ -58,5 +63,52 @@ public class Home extends HtmlPage
 
         // construct the panel
         add(new NestedList("nestedList", l1));
+
+        // create a tree
+        TreeModel treeModel = convertToTreeModel(l1);
+        MyTree tree = new MyTree("tree", treeModel, false);
+        // NOTE: it is important that the user objects are unique within the tree, as
+        // otherwise the links won't work properly. There a several convenience methods
+        // and classes in the tree package to help you do this. For this example, we
+        // don't need it as the objects are unique
+		add(tree);
+    }
+
+    /**
+     * Convert the nested lists to a tree model
+     * @param list the list
+     * @return tree model
+     */
+    private TreeModel convertToTreeModel(List list)
+    {
+    	TreeModel model = null;
+    	DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
+    	add(rootNode, list);
+    	model = new DefaultTreeModel(rootNode);
+    	return model;
+    }
+
+    /**
+     * Add a sublist to the parent.
+     * @param parent the parent
+     * @param sub the sub list
+     */
+    private void add(DefaultMutableTreeNode parent, List sub)
+    {
+    	for(Iterator i = sub.iterator(); i.hasNext();)
+    	{
+    		Object o = i.next();
+    		if(o instanceof List)
+    		{
+    			DefaultMutableTreeNode child = new DefaultMutableTreeNode(o);
+    			parent.add(child);
+    			add(child, (List)o);
+    		}
+    		else
+    		{
+    			DefaultMutableTreeNode child = new DefaultMutableTreeNode(o);
+    			parent.add(child);
+    		}
+    	}
     }
 }
