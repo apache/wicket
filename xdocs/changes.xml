@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0-RC1" date="t.b.d." description="1.0 release candidate 1">
+      <action type="fix" dev="Jonathan Locke" issue="1166432">
+      Fixed lookahead code which was swallowing ?xml encoding header tag.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
 		Added two convenient ways of constructing shared resources.  The first by calling
 		getShared() on an existing Resource.  The second by using an implementation of
