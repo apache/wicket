@@ -45,6 +45,15 @@ public class DummyComponent extends Component
             public void invalidate()
             {
             }
+
+			protected Object getAttribute(String name)
+			{
+				return null;
+			}
+
+			protected void setAttribute(String name, Object object)
+			{
+			}
 		};
 	}
 

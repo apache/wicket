@@ -68,6 +68,15 @@ public abstract class StringResourceLoaderTestBase extends TestCase
             public void invalidate()
             {
             }
+
+			protected Object getAttribute(String name)
+			{
+				return null;
+			}
+
+			protected void setAttribute(String name, Object object)
+			{
+			}
 		});
 		this.component = new DummyComponent("test", this.application);
 		DummyPage page = new DummyPage();

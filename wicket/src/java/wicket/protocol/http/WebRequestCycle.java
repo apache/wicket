@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -141,16 +141,17 @@ public class WebRequestCycle extends RequestCycle
 		buffer.append(Classes.name(listenerInterface));
 		return response.encodeURL(buffer.toString());
 	}
-	
+
 	/**
-	 * @param path The path
+	 * @param path
+	 *            The path
 	 * @return The url for the path
 	 */
 	public String urlFor(final String path)
 	{
-        return urlPrefix() + "/" + path;		
+		return urlPrefix() + "/" + path;
 	}
-	
+
 	/**
 	 * @return Prefix for URLs including the context path, servlet path and
 	 *         application name (if servlet path is empty).
@@ -179,8 +180,7 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * Renders a response for the current request. The following four steps are
-	 * followed in rendering a response:
+	 * Parses a request.  The following four steps are followed:
 	 * <p>
 	 * 1. If the URL requested is in the form of a component listener
 	 * invocation, then that invocation will occur and is expected to generate a
@@ -196,41 +196,24 @@ public class WebRequestCycle extends RequestCycle
 	 * content, available through the servlet context.
 	 * <p>
 	 * If all four steps are executed and content cannot be found to satisfy the
-	 * request, then the request is considered invalid and a response is written
-	 * detailing the problem.
+	 * request, then false is returned.
+	 * 
+	 * @return True if a Page should be rendered back to the user
 	 */
-	protected void onRender()
+	protected boolean onRespond()
 	{
 		// Try different methods of parsing and dispatching the request
 		if (callComponentListener() || bookmarkablePage() || homePage())
 		{
-			// Get page set by handler
-			final Page page = getPage();
-
-			// Is there a page to render?
-			if (page != null)
-			{
-				// Should page be redirected to?
-				if (getRedirect())
-				{
-					// Redirect to the page
-					redirectToPage(page);
-				}
-				else
-				{
-					// Render the page
-					page.render();
-				}
-			}
+			return true;
 		}
 		else
 		{
-			// Try to respond with static content
 			if (!renderStaticContent())
 			{
-				// No static content could be found
-				response.write("<pre>Invalid request: " + request + "</pre>");
+				throw new WicketRuntimeException("Unable to parse request " + request);
 			}
+			return false;
 		}
 	}
 

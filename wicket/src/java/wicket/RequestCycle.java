@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -153,7 +153,7 @@ import wicket.util.lang.Classes;
  * methods could also be useful in "interstitial" advertising or other kinds of
  * "intercepts".
  * <p>
- *
+ * 
  * @author Jonathan Locke
  */
 public abstract class RequestCycle
@@ -200,7 +200,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets request cycle for calling thread.
-	 *
+	 * 
 	 * @return Request cycle for calling thread
 	 */
 	public final static RequestCycle get()
@@ -209,12 +209,12 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Adds an interface to the map of interfaces that can be invoked by
 	 * outsiders. The interface must have a single method with the signature
-	 * methodName(RequestCycle). 
-	 *
+	 * methodName(RequestCycle).
+	 * 
 	 * @param i
 	 *            The interface class, which must extend IRequestListener.
 	 */
@@ -252,7 +252,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param application
 	 *            The application
 	 * @param session
@@ -277,7 +277,7 @@ public abstract class RequestCycle
 	/**
 	 * Redirects to any intercept page previously specified by a call to
 	 * redirectToInterceptPage.
-	 *
+	 * 
 	 * @return True if an original destination was redirected to
 	 * @see RequestCycle#redirectToInterceptPage(Class)
 	 * @see RequestCycle#redirectToInterceptPage(Page)
@@ -302,7 +302,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the application object.
-	 *
+	 * 
 	 * @return Application interface
 	 */
 	public final Application getApplication()
@@ -312,7 +312,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the current page.
-	 *
+	 * 
 	 * @return The page
 	 */
 	public final Page getPage()
@@ -322,7 +322,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Convinience method to get the Page factory
-	 *
+	 * 
 	 * @return DefaultPageFactory from application settings
 	 */
 	public final IPageFactory getPageFactory()
@@ -332,7 +332,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets whether the page for this request should be redirected.
-	 *
+	 * 
 	 * @return whether the page for this request should be redirected
 	 */
 	public final boolean getRedirect()
@@ -342,7 +342,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the request.
-	 *
+	 * 
 	 * @return Request object
 	 */
 	public final Request getRequest()
@@ -352,7 +352,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the response.
-	 *
+	 * 
 	 * @return Response object
 	 */
 	public final Response getResponse()
@@ -362,7 +362,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the session.
-	 *
+	 * 
 	 * @return Session object
 	 */
 	public final Session getSession()
@@ -372,7 +372,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
-	 *
+	 * 
 	 * @param c
 	 *            The sign in page class
 	 */
@@ -383,7 +383,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
-	 *
+	 * 
 	 * @param c
 	 *            The sign in page class
 	 * @param parameters
@@ -396,7 +396,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
-	 *
+	 * 
 	 * @param page
 	 *            The sign in page
 	 */
@@ -408,13 +408,13 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Renders response for request.
-	 *
+	 * Responds to a request.
+	 * 
 	 * @throws ServletException
 	 */
-	public final void render() throws ServletException
+	public final void respond() throws ServletException
 	{
 		// Serialize renderings on the session object so that only one page
 		// can be rendered at a time for a given session.
@@ -425,8 +425,31 @@ public abstract class RequestCycle
 
 			try
 			{
-				// Render response for request cycle
-				onRender();
+				// Handle request 
+				final boolean renderPage = onRespond();
+
+				// Replicate session if need be
+				session.updateCluster();
+
+				// Is there a page to render?
+				if (renderPage)
+				{
+					final Page page = getPage();
+					if (page != null)
+					{
+						// Should page be redirected to?
+						if (getRedirect())
+						{
+							// Redirect to the page
+							redirectToPage(page);
+						}
+						else
+						{
+							// Render the page
+							page.render();
+						}
+					}
+				}
 			}
 			catch (RuntimeException e)
 			{
@@ -443,7 +466,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Convenience method that sets page on response object.
-	 *
+	 * 
 	 * @param page
 	 *            The page to render as a response
 	 */
@@ -454,7 +477,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets whether the page for this request should be redirected.
-	 *
+	 * 
 	 * @param redirect
 	 *            True if the page for this request cycle should be redirected
 	 *            to rather than directly rendered.
@@ -463,9 +486,10 @@ public abstract class RequestCycle
 	{
 		this.redirect = redirect;
 	}
-	
+
 	/**
-	 * @param request The request to set.
+	 * @param request
+	 *            The request to set.
 	 */
 	public void setRequest(Request request)
 	{
@@ -474,7 +498,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets response.
-	 *
+	 * 
 	 * @param response
 	 *            The response
 	 */
@@ -484,10 +508,10 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Gets the url for the given page class using the given parameters. 
-	 *
+	 * Gets the url for the given page class using the given parameters.
+	 * 
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -497,10 +521,10 @@ public abstract class RequestCycle
 	public abstract String urlFor(final Class pageClass, final PageParameters parameters);
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Gets the url for the given component/ listener interface. 
-	 *
+	 * Gets the url for the given component/ listener interface.
+	 * 
 	 * @param component
 	 *            Component that has listener interface
 	 * @param listenerInterface
@@ -511,7 +535,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Looks up an interface method by name.
-	 *
+	 * 
 	 * @param name
 	 *            The interface
 	 * @return The method
@@ -528,13 +552,15 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Renders response for request.
+	 * Parses a request when this request cycle is asked to respond.
+	 * 
+	 * @return True if a Page should be rendered back to the user
 	 */
-	protected abstract void onRender();
+	protected abstract boolean onRespond();
 
 	/**
 	 * Redirects browser to the given page.
-	 *
+	 * 
 	 * @param page
 	 *            The page to redirect to
 	 */
@@ -542,10 +568,11 @@ public abstract class RequestCycle
 
 	/**
 	 * Sets up to handle a runtime exception thrown during rendering
-	 *
+	 * 
 	 * @param e
 	 *            The exception
-	 * @throws ServletException The exception rethrown for the servlet container
+	 * @throws ServletException
+	 *             The exception rethrown for the servlet container
 	 */
 	private final void onRuntimeException(final RuntimeException e) throws ServletException
 	{
@@ -565,7 +592,7 @@ public abstract class RequestCycle
 					// otherwise show full details
 					setPage(new ExceptionErrorPage(e, getPage()));
 				}
-				
+
 				// We generally want to redirect the response because we were
 				// in the middle of rendering and the page may end up looking
 				// like spaghetti otherwise
@@ -582,12 +609,12 @@ public abstract class RequestCycle
 			// will not want to be distracted by any internal problems rendering
 			// a runtime exception error display page.
 		}
-		
+
 		// Reset page for re-rendering after exception
 		final Page currentPage = getPage();
-                        
-        // Could be null when it expired
-		if (currentPage != null) 
+
+		// Could be null when it expired
+		if (currentPage != null)
 		{
 			currentPage.resetMarkupStreams();
 		}
@@ -603,7 +630,7 @@ public abstract class RequestCycle
 	{
 		// Restore the transient application association with the session
 		session.setApplication(application);
-		
+
 		// Set this request cycle as the active request cycle for the
 		// session for easy access by the page being rendered and any
 		// components on that page
@@ -613,14 +640,11 @@ public abstract class RequestCycle
 	/**
 	 * Releases the current thread local related resources. The threadlocal of
 	 * this request cycle is reset. If we are in a 'redirect' state, we do not
-	 * want to loose our messages as - e.g. when handling a form - there's a fat
-	 * change we are comming back for the rendering of it.
+	 * want to lose our messages as - e.g. when handling a form - there's a fat
+	 * chance we are coming back for the rendering of it.
 	 */
 	private void threadDetach()
 	{
-		// Close the response
-		response.close();
-		
 		if (getRedirect())
 		{
 			// Since we are explicitly redirecting to a page already, we do not
@@ -634,5 +658,8 @@ public abstract class RequestCycle
 		// Set the active request cycle back to null since we are
 		// done rendering the requested page
 		session.setRequestCycle(null);
+		        
+        // This thread is no longer attached to a Session
+        Session.set(null);
 	}
 }

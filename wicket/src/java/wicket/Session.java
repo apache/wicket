@@ -1,14 +1,14 @@
 /*
- * $Id$ $Revision$
- * $Date$
- *
+ * $Id$ $Revision:
+ * 1.25 $ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,8 +18,9 @@
 package wicket;
 
 import java.io.Serializable;
-
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -81,10 +82,10 @@ import wicket.util.string.Strings;
  * Although public, the removeNewerThan(Page) and getFreshestPage() methods are
  * intended for internal use only and may not be supported in the future.
  * Framework clients should not call these methods.
- *
+ * 
  * @author Jonathan Locke
  */
-public abstract class Session implements Serializable
+public abstract class Session
 {
 	/** Separator for component paths. */
 	private static final char componentPathSeparator = '.';
@@ -98,40 +99,56 @@ public abstract class Session implements Serializable
 	/** Resolver for finding classes for this Session */
 	private transient IClassResolver classResolver;
 
-	/** Active request cycle */
-	private transient RequestCycle cycle;
-
-	/** URL to continue to after a given page. */
-	private String interceptContinuationURL;
-
-	/** The locale to use when loading resources for this session. */
-	private Locale locale = Locale.getDefault();
-
 	/** The converter instance. */
 	private transient IConverter converter;
+
+	/** Active request cycle */
+	private transient RequestCycle cycle;
 
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** Next available page identifier. */
-	private int pageId = 0;
-
 	/** The still-live pages for this user session. */
-	private final Map pages;
+	private transient final Map pages;
 
-	/** Any special "skin" style to use when loading resources. */
-	private String style;
+	/** Session state that can be replicated when dirty */
+	private transient State state = new State();
+
+	/**
+	 * Record for a page which changed that can be added to changedPages in
+	 * order to replicate page changes across a cluster. The object implementing
+	 * this interface is simply responsible for using its internal details to
+	 * produce the page. It may simply wrap a Page object (which is
+	 * Serializable) or it may create one on the fly and configure it using
+	 * implementation specific information. This allows for efficient clustering
+	 * of pages.
+	 * 
+	 * @author Jonathan Locke
+	 */
+	protected static interface IPage extends Serializable
+	{
+		/**
+		 * @return The Page.
+		 */
+		public Page getPage();
+
+		/**
+		 * @return True if this object is the original clustered page object
+		 *         (and not a replicated copy)
+		 */
+		public boolean isMaster();
+	}
 
 	/**
 	 * Interface called when visiting session pages.
-	 *
+	 * 
 	 * @author Jonathan Locke
 	 */
 	static interface IPageVisitor
 	{
 		/**
 		 * Visit method.
-		 *
+		 * 
 		 * @param page
 		 *            the page
 		 */
@@ -139,8 +156,34 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Clusterable session state.
+	 * 
+	 * @author Jonathan Locke
+	 */
+	private static class State implements Serializable
+	{
+		/** Any changed pages */
+		private List changedPages = new ArrayList();
+
+		/** True if any of this state has changed */
+		private boolean dirty = false;
+
+		/** URL to continue to after a given page. */
+		private String interceptContinuationURL;
+
+		/** The locale to use when loading resources for this session. */
+		private Locale locale = Locale.getDefault();
+
+		/** Next available page identifier. */
+		private int pageId = 0;
+
+		/** Any special "skin" style to use when loading resources. */
+		private String style;
+	}
+
+	/**
 	 * Get the session for the calling thread.
-	 *
+	 * 
 	 * @return Session for calling thread
 	 */
 	public static Session get()
@@ -149,10 +192,10 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Sets session for calling thread.
-	 *
+	 * 
 	 * @param session
 	 *            The session
 	 */
@@ -163,7 +206,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param application
 	 *            The application that this is a session of
 	 */
@@ -178,7 +221,7 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get the application that is currently working with this session.
-	 *
+	 * 
 	 * @return Returns the application.
 	 */
 	public final Application getApplication()
@@ -191,13 +234,13 @@ public abstract class Session implements Serializable
 	 */
 	public final IClassResolver getClassResolver()
 	{
-		if ( classResolver == null ) return application.getSettings().getDefaultClassResolver();
-		else return classResolver;
+		return classResolver != null ? classResolver : application.getSettings()
+				.getDefaultClassResolver();
 	}
 
 	/**
 	 * Gets the converter instance.
-	 *
+	 * 
 	 * @return the converter
 	 */
 	public final IConverter getConverter()
@@ -205,16 +248,16 @@ public abstract class Session implements Serializable
 		if (converter == null)
 		{
 			// Let the factory create a new converter
-			converter = getApplication().getConverterFactory().newConverter(locale);
+			converter = getApplication().getConverterFactory().newConverter(state.locale);
 		}
 		return converter;
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Get the freshest page in the session.
-	 *
+	 * 
 	 * @return The freshest page in the session
 	 */
 	public final Page getFreshestPage()
@@ -246,17 +289,17 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get this session's locale.
-	 *
+	 * 
 	 * @return This session's locale
 	 */
 	public final Locale getLocale()
 	{
-		return this.locale;
+		return this.state.locale;
 	}
 
 	/**
 	 * Get the page for the given path.
-	 *
+	 * 
 	 * @param path
 	 *            Component path
 	 * @return The page based on the first path component (the page id)
@@ -272,13 +315,13 @@ public abstract class Session implements Serializable
 	 */
 	public final IPageFactory getPageFactory()
 	{
-		if ( pageFactory == null ) return application.getSettings().getDefaultPageFactory();
-		else return pageFactory;
+		return pageFactory != null ? pageFactory : application.getSettings()
+				.getDefaultPageFactory();
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
-	 *
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
 	 * @return The currently active request cycle for this session
 	 */
 	public final RequestCycle getRequestCycle()
@@ -288,12 +331,12 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Get the style.
-	 *
+	 * 
 	 * @return Returns the style.
 	 */
 	public final String getStyle()
 	{
-		return style;
+		return state.style;
 	}
 
 	/**
@@ -302,30 +345,37 @@ public abstract class Session implements Serializable
 	public abstract void invalidate();
 
 	/**
-	 * Removes the given page from the cache. This method may be useful if you
-	 * have special knowledge that a given page cannot be accessed again. For
-	 * example, the user may have closed a popup window.
-	 *
+	 * Called when an IPage record should be added to the replicated state
+	 * 
 	 * @param page
-	 *            The page to remove
 	 */
-	public final void remove(final Page page)
+	public final void pageChanged(final Page page)
 	{
-		pages.remove(new Integer(page.getId()));
+		// Add IPage for this page to the list of changed pages
+		// that need to be replicated
+		final IPage changedPage = onPageChanged(page);
+		synchronized (state.changedPages)
+		{
+			state.changedPages.add(changedPage);
+		}
 	}
 
 	/**
-	 * Removes all pages from the session. Although this method should rarely be
-	 * needed, it is available (possibly for security reasons).
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Sets the application that this session is associated with.
+	 * 
+	 * @param application
+	 *            The application
 	 */
-	public final void removeAll()
+	public final void setApplication(final Application application)
 	{
-		pages.clear();
+		this.application = application;
 	}
 
 	/**
 	 * Set class resolver for this session
-	 *
+	 * 
 	 * @param classResolver
 	 *            The class resolver
 	 */
@@ -336,19 +386,20 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Set the locale.
-	 *
+	 * 
 	 * @param locale
 	 *            New locale
 	 */
 	public final void setLocale(final Locale locale)
 	{
-		this.locale = locale;
-        this.converter = null;
+		this.state.locale = locale;
+		this.state.dirty = true;
+		this.converter = null;
 	}
 
 	/**
 	 * Set page factory for this session
-	 *
+	 * 
 	 * @param pageFactory
 	 *            The page factory
 	 */
@@ -358,10 +409,10 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Sets the currently active request cycle for this session.
-	 *
+	 * 
 	 * @param cycle
 	 *            The request cycle
 	 */
@@ -371,56 +422,144 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
-	 * <p>
-	 * Sets the application that this session is associated with.
-	 *
-	 * @param application The application
-	 */
-	public final void setApplication(final Application application)
-	{
-		this.application = application;
-	}
-
-	/**
 	 * Set the style.
-	 *
+	 * 
 	 * @param style
 	 *            The style to set.
 	 */
 	public final void setStyle(final String style)
 	{
-		this.style = style;
+		this.state.style = style;
+		this.state.dirty = true;
+	}
+
+	/**
+	 * Replicates any changed data to the cluser.
+	 */
+	public final void updateCluster()
+	{
+		setAttribute("state", state);
+	}
+
+	/**
+	 * Updates this session using changed state information that may have been
+	 * replicated to this node on a cluster.
+	 */
+	public final void updateSession()
+	{
+		// Get any replicated state from the session
+		final State state = (State)getAttribute("state");
+		if (state != null)
+		{
+			// Copy state into Session
+			this.state = state;
+			
+			// Lock changed pages
+			synchronized (state.changedPages)
+			{
+				// Copy any changed pages into our (transient) Session
+				for (final Iterator iterator = state.changedPages.iterator(); iterator.hasNext();)
+				{
+					// Get next change
+					final IPage changedPage = (IPage)iterator.next();
+	
+					// If its not the master copy, we need to add it since it was
+					// replicated over here
+					if (!changedPage.isMaster())
+					{
+						// Get page
+						final Page page = changedPage.getPage();
+	
+						// Add to page map
+						pages.put(new Integer(page.getId()), page);
+					}
+	
+					iterator.remove();
+				}
+			}
+		}
 	}
 
 	/**
 	 * Adds page to session if not already added.
-	 *
+	 * 
 	 * @param page
 	 *            Page to add to this session
 	 */
-	final void addPage(final Page page)
+	protected void addPage(final Page page)
 	{
 		// Set session and identifier
-		page.setId(pageId++);
+		page.setId(this.state.pageId++);
+		state.dirty = true;
 
-		// Add to page map
+		// Add to page local transient page map
 		pages.put(new Integer(page.getId()), page);
+
+		// Add IChangedPage entry to list of changed pages
+		pageChanged(page);
 	}
 
 	/**
+	 * @param name
+	 *            The name of the replicated session object to retrieve
+	 * @return The session object
+	 */
+	protected abstract Object getAttribute(final String name);
+
+	/**
+	 * @param page
+	 *            The page
+	 * @return The change record
+	 */
+	protected IPage onPageChanged(final Page page)
+	{
+		// Add to list of pages to replicate
+		return new IPage()
+		{
+			// NOTE: Since this is an anonymous class referencing the final
+			// parameter "final Page page", the anonymous class implementation
+			// that Java creates on the fly will contain a field with this
+			// value in it. Since IChangedPage is Serializable, this anonymous
+			// subclass is actually a fully clusterable IChangedPage record
+			// which simply references (and therefore copies) the entire Page.
+
+			// This value will be true when the page is added and false on
+			// whatever server this object is replicated to
+			private transient boolean isMaster = true;
+
+			public Page getPage()
+			{
+				return page;
+			}
+
+			public boolean isMaster()
+			{
+				return isMaster;
+			}
+		};
+	}
+
+	/**
+	 * @param name
+	 *            The name of the replicated session object to store
+	 * @param object
+	 *            The object to replicate across the cluster
+	 */
+	protected abstract void setAttribute(final String name, final Object object);
+
+	/**
 	 * Get the interceptContinuationURL.
-	 *
+	 * 
 	 * @return Returns the interceptContinuationURL.
 	 */
 	final String getInterceptContinuationURL()
 	{
-		return interceptContinuationURL;
+		return state.interceptContinuationURL;
 	}
 
 	/**
 	 * Get the page with the given id.
-	 *
+	 * 
 	 * @param id
 	 *            Page id
 	 * @return Page with the given id
@@ -432,18 +571,19 @@ public abstract class Session implements Serializable
 
 	/**
 	 * Set the interceptContinuationURL.
-	 *
+	 * 
 	 * @param interceptContinuationURL
 	 *            The interceptContinuationURL to set.
 	 */
 	final void setInterceptContinuationURL(final String interceptContinuationURL)
 	{
-		this.interceptContinuationURL = interceptContinuationURL;
+		this.state.interceptContinuationURL = interceptContinuationURL;
+		this.state.dirty = true;
 	}
 
 	/**
 	 * Visits the pages in this session.
-	 *
+	 * 
 	 * @param visitor
 	 *            The visitor to call
 	 */
@@ -457,5 +597,3 @@ public abstract class Session implements Serializable
 		}
 	}
 }
-
-
