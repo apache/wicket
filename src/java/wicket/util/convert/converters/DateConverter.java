@@ -20,67 +20,66 @@ package wicket.util.convert.converters;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
 
 /**
  * Converts from Object to Date.
- *
+ * 
  * @author Eelco Hillenius
  */
 public final class DateConverter extends AbstractConverter
 {
-	/** The date format to use */
-    private DateFormat dateFormat;
+	/** The date format to use; allway this for converting dates. */
+	private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT);
 
 	/**
 	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
 	 */
 	public Object convert(final Object value)
 	{
-        final String stringValue = value.toString();
-        try
-        {
-            if (dateFormat != null)
-            {
-                return dateFormat.parse(stringValue);
-            }
-            return new Date(stringValue);
-        }
-        catch (ParseException e)
-        {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Date", e);
-        }
-        catch (NumberFormatException e)
-        {
-            throw new ConversionException("Cannot convert '" + stringValue + "' to Date", e);
-        }
+		final String stringValue = value.toString();
+		try
+		{
+			return dateFormat.parse(stringValue);
+		}
+		catch (ParseException e)
+		{
+			throw new ConversionException("Cannot convert '" + stringValue + "' to Date", e);
+		}
+		catch (NumberFormatException e)
+		{
+			throw new ConversionException("Cannot convert '" + stringValue + "' to Date", e);
+		}
 	}
-    
-    /**
+
+	/**
 	 * @return Returns the dateFormat.
 	 */
 	public DateFormat getDateFormat()
 	{
 		return dateFormat;
 	}
-    
-    /**
+
+	/**
 	 * @param dateFormat The dateFormat to set.
 	 */
 	public void setDateFormat(final DateFormat dateFormat)
 	{
+		if (dateFormat == null)
+		{
+			throw new IllegalArgumentException("a non null date format must be provided");
+		}
 		this.dateFormat = dateFormat;
 	}
-    
-    /**
-     * @see wicket.util.convert.ILocalizable#setLocale(java.util.Locale)
-     */
-    public void setLocale(final Locale locale)
-    {
-        super.setLocale(locale);
-        this.dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-    }
+
+	/**
+	 * @see wicket.util.convert.ILocalizable#setLocale(java.util.Locale)
+	 */
+	public void setLocale(final Locale locale)
+	{
+		super.setLocale(locale);
+		this.dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+	}
 }
