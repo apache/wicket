@@ -87,7 +87,7 @@ public class ListItem extends WebMarkupContainer
 	}
 
 	/**
-	 * Convinience method for ListViews with alternating style for colouring.
+	 * Convenience method for ListViews with alternating style for colouring.
 	 * 
 	 * @return True, if index is even index % 2 == 0
 	 */
