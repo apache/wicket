@@ -1,5 +1,5 @@
 /*
- * $Id: WicketComponentTagIdentifier.java,v 1.4 2005/02/04 07:22:53 jdonnerstag
+ * $Id: WicketTagIdentifier.java,v 1.4 2005/02/04 07:22:53 jdonnerstag
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
+import wicket.markup.WicketTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
@@ -42,10 +42,10 @@ import wicket.markup.parser.XmlTag;
  * 
  * @author Juergen Donnerstag
  */
-public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
+public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(WicketComponentTagIdentifier.class);
+	private static final Log log = LogFactory.getLog(WicketTagIdentifier.class);
 
 	/** Wicket namespace */
 	private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
@@ -56,7 +56,7 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public WicketComponentTagIdentifier(final IMarkupFilter parent)
+	public WicketTagIdentifier(final IMarkupFilter parent)
 	{
 		super(parent);
 	}
@@ -106,7 +106,7 @@ public final class WicketComponentTagIdentifier extends AbstractMarkupFilter
 		if (wicketNamespace.equalsIgnoreCase(xmlTag.getNamespace()))
 		{
 			// It is <wicket:...>
-			tag = new ComponentWicketTag(xmlTag);
+			tag = new WicketTag(xmlTag);
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
 			tag.setId(tag.getName());

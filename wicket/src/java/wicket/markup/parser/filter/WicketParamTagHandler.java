@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
+import wicket.markup.WicketTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.parser.AbstractMarkupFilter;
@@ -154,7 +154,7 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 
 		// By now we know it is a wicket component tag. If it is no
 		// wicket param tag, than remember it and we are done.
-		if (!(tag instanceof ComponentWicketTag) || !((ComponentWicketTag)tag).isParamTag())
+		if (!(tag instanceof WicketTag) || !((WicketTag)tag).isParamTag())
 		{
 			componentTag = tag;
 			return tag;

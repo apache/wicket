@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
+import wicket.markup.WicketTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
@@ -93,6 +93,9 @@ import wicket.util.string.Strings;
  */
 public abstract class Component implements Serializable
 {
+	/** True when a component is being auto-added */
+	static final byte FLAG_AUTO = 0x08;
+	
 	/** Flag for escaping HTML in model strings */
 	private static final byte FLAG_ESCAPE_MODEL_STRINGS = 0x04;
 
@@ -1347,7 +1350,7 @@ public abstract class Component implements Serializable
 	protected final void renderComponentTag(ComponentTag tag)
 	{
 		final ApplicationSettings settings = getApplication().getSettings();
-		if (!(tag instanceof ComponentWicketTag) || !settings.getStripWicketTags())
+		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
 		{
 			// Apply attribute modifiers
 			if (attributeModifiers != null && tag.getType() != XmlTag.CLOSE)
@@ -1557,6 +1560,30 @@ public abstract class Component implements Serializable
 		this.parent = parent;
 	}
 
+	/**
+	 * @return True if this component or any of its parents is in auto-add mode
+	 */
+	final boolean isAuto()
+	{
+		// Search up hierarchy for FLAG_AUTO
+		for (Component current = this; current != null; current = current.getParent())
+		{
+			if (current.getFlag(FLAG_AUTO))
+			{
+				return true;
+			}
+		}		
+		return false;
+	}
+
+	/**
+	 * @param auto True to put component into auto-add mode
+	 */
+	final void setAuto(final boolean auto)
+	{
+		setFlag(FLAG_AUTO, auto);
+	}
+	
 	/**
 	 * Detaches all models
 	 */

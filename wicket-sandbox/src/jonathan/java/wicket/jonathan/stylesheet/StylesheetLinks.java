@@ -24,7 +24,7 @@ import java.util.Set;
 import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
+import wicket.markup.WicketTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
 
@@ -94,7 +94,7 @@ public abstract class StylesheetLinks extends WebComponent
 		final ComponentTag tag = markupStream.getTag();
 
 		// Must be <wicket:stylesheet/>
-		if (tag instanceof ComponentWicketTag && tag.isOpenClose("wicket:stylesheet"))
+		if (tag instanceof WicketTag && tag.isOpenClose("wicket:stylesheet"))
 		{
 			// Skip tag entirely, removing it from output
 			markupStream.next();

@@ -19,7 +19,7 @@ package wicket.markup.html.border;
 
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
+import wicket.markup.WicketTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -118,7 +118,7 @@ public abstract class Border extends WebMarkupContainer
 	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// Determine if tag is a <wicket:body> tag
-		final boolean isBodyTag = (tag instanceof ComponentWicketTag && markupStream.atOpenCloseTag("body"));
+		final boolean isBodyTag = (tag instanceof WicketTag && markupStream.atOpenCloseTag("body"));
 
 		// If we're being asked to resolve a component for a <wicket:body> tag
 		if (!isBodyTag)

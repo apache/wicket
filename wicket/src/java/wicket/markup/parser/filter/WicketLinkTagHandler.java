@@ -22,7 +22,7 @@ import java.util.Stack;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
+import wicket.markup.WicketTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
@@ -45,7 +45,7 @@ import wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public final class AutolinkHandler extends AbstractMarkupFilter
+public final class WicketLinkTagHandler extends AbstractMarkupFilter
 {
 	/** Allow to have link regions within link regions */
 	private Stack autolinkStatus;
@@ -59,7 +59,7 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 	 * @param parent
 	 *            The next element in the chain.
 	 */
-	public AutolinkHandler(final IMarkupFilter parent)
+	public WicketLinkTagHandler(final IMarkupFilter parent)
 	{
 		super(parent);
 	}
@@ -112,9 +112,9 @@ public final class AutolinkHandler extends AbstractMarkupFilter
 
 		// For all <wicket:link ..> tags which probably change the
 		// current autolink status.
-		if (tag instanceof ComponentWicketTag)
+		if (tag instanceof WicketTag)
 		{
-			final ComponentWicketTag wtag = (ComponentWicketTag)tag;
+			final WicketTag wtag = (WicketTag)tag;
 			if (wtag.isLinkTag())
 			{
 				// Beginning of the region

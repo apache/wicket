@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
+import wicket.AutoLinkResolver;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.link.AutolinkComponentResolver;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 
@@ -99,7 +99,7 @@ public abstract class WebApplication extends Application
 				InternalErrorPage.class);
 
 		// Add resolver for automatically resolving HTML links
-		getComponentResolvers().add(new AutolinkComponentResolver());
+		getComponentResolvers().add(new AutoLinkResolver());
 	}
 
 	/**

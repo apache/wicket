@@ -29,8 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
-import wicket.markup.IComponentResolver;
+import wicket.markup.WicketTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
@@ -48,7 +47,8 @@ import wicket.util.watch.ModificationWatcher;
  * A markup container holds a map of child components. Children can be added by
  * calling the add() method and they can be looked up using a dotted path. For
  * example, if a container called "a" held a nested container "b" which held a
- * nested component "c", then a.get("b.c") would return the component named "c".
+ * nested component "c", then a.get("b.c") would return the component with id
+ * "c".
  * <p>
  * The number of children in a container can be determined by calling size().
  * And the whole hierarchy of children held by a container can be traversed by
@@ -57,8 +57,8 @@ import wicket.util.watch.ModificationWatcher;
  * A container also holds markup information which is used to render the
  * container. As the markup stream for a container is rendered, component
  * references in the markup are resolved by using the container to look up
- * components by name. Each component referenced by the markup stream is given
- * an opportunity to render itself using the markup stream.
+ * components by id. Each component referenced by the markup stream is given an
+ * opportunity to render itself using the markup stream.
  * <p>
  * Components may alter the referring tag, replace the tag's body or insert
  * markup after the tag. But components cannot remove tags from the markup
@@ -101,8 +101,8 @@ public abstract class MarkupContainer extends Component
 	/** Whether to optimize maps of children with MicroMap and MiniMap. */
 	private static final boolean optimizeChildMapsForSpace = false;
 
-	/** Map of children by name. */
-	private Map childForName = Collections.EMPTY_MAP;
+	/** Map of children by id. */
+	private Map childForId = Collections.EMPTY_MAP;
 
 	/** The markup stream for this container. */
 	private transient MarkupStream markupStream;
@@ -177,7 +177,7 @@ public abstract class MarkupContainer extends Component
 	 * @param child
 	 *            The child
 	 * @throws IllegalArgumentException
-	 *             Thrown if a child with the same name is replaced by the add
+	 *             Thrown if a child with the same id is replaced by the add
 	 *             operation.
 	 * @return This
 	 */
@@ -189,12 +189,9 @@ public abstract class MarkupContainer extends Component
 			throw new IllegalArgumentException("Component can't be added to itself");
 		}
 
-		// Get child name
-		final String childName = child.getId();
-
 		if (log.isDebugEnabled())
 		{
-			log.debug("Add " + childName + " to " + this);
+			log.debug("Add " + child.getId() + " to " + this);
 		}
 
 		// Set child's parent
@@ -203,26 +200,26 @@ public abstract class MarkupContainer extends Component
 		// Are we using MicroMap optimization?
 		if (optimizeChildMapsForSpace)
 		{
-			if (childForName.size() == MicroMap.MAX_ENTRIES)
+			if (childForId.size() == MicroMap.MAX_ENTRIES)
 			{
 				// Reallocate MicroMap as MiniMap
-				childForName = new MiniMap(childForName, MINIMAP_MAX_ENTRIES);
+				childForId = new MiniMap(childForId, MINIMAP_MAX_ENTRIES);
 			}
-			else if (childForName.size() == MINIMAP_MAX_ENTRIES)
+			else if (childForId.size() == MINIMAP_MAX_ENTRIES)
 			{
 				// Reallocate MiniMap as full HashMap
-				childForName = new HashMap(childForName);
+				childForId = new HashMap(childForId);
 			}
 		}
 
 		// Add to map
-		final Object replaced = childForName.put(childName, child);
+		final Object replaced = childForId.put(child.getId(), child);
 
 		// Look up to make sure it's not already in the map
 		if (replaced != null)
 		{
-			throw new IllegalArgumentException(exceptionMessage("A child component with the name '"
-					+ childName + "' already exists"));
+			throw new IllegalArgumentException(exceptionMessage("A child component with the id '"
+					+ child.getId() + "' already exists"));
 		}
 
 		// Tell the page a component was added
@@ -289,11 +286,11 @@ public abstract class MarkupContainer extends Component
 			return this;
 		}
 
-		// Get child's name, if any
-		final String childName = Strings.firstPathComponent(path, '.');
+		// Get child's id, if any
+		final String id = Strings.firstPathComponent(path, '.');
 
-		// Get child by name
-		final Component child = (Component)childForName.get(childName);
+		// Get child by id
+		final Component child = (Component)childForId.get(id);
 
 		// Found child?
 		if (child != null)
@@ -302,7 +299,7 @@ public abstract class MarkupContainer extends Component
 			return child.get(Strings.afterFirstPathComponent(path, '.'));
 		}
 
-		// No child by that name
+		// No child with the given id
 		return null;
 	}
 
@@ -318,7 +315,7 @@ public abstract class MarkupContainer extends Component
 		super.internalBeginRequest();
 
 		// Loop through child components
-		for (final Iterator iterator = childForName.values().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = childForId.values().iterator(); iterator.hasNext();)
 		{
 			// Call begin request on the child
 			((Component)iterator.next()).internalBeginRequest();
@@ -337,7 +334,7 @@ public abstract class MarkupContainer extends Component
 		super.internalEndRequest();
 
 		// Loop through child components
-		for (final Iterator iterator = childForName.values().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = childForId.values().iterator(); iterator.hasNext();)
 		{
 			// Call end request on the child
 			((Component)iterator.next()).internalEndRequest();
@@ -351,15 +348,15 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final Iterator iterator()
 	{
-		if (childForName == null)
+		if (childForId == null)
 		{
-			childForName = Collections.EMPTY_MAP;
+			childForId = Collections.EMPTY_MAP;
 		}
-		return new ComponentIterator(childForName.values().iterator());
+		return new ComponentIterator(childForId.values().iterator());
 	}
 
 	/**
-	 * Removes the named component
+	 * Removes the given component
 	 * 
 	 * @param id
 	 *            The id of the component to remove
@@ -370,7 +367,7 @@ public abstract class MarkupContainer extends Component
 		if (component != null)
 		{
 			// Remove from map
-			childForName.remove(id);
+			childForId.remove(id);
 
 			// Notify Page
 			final Page page = findPage();
@@ -395,7 +392,7 @@ public abstract class MarkupContainer extends Component
 		final Page page = findPage();
 
 		// Loop through child components
-		for (final Iterator iterator = childForName.values().iterator(); iterator.hasNext();)
+		for (final Iterator iterator = childForId.values().iterator(); iterator.hasNext();)
 		{
 			// Get next child
 			final Component component = (Component)iterator.next();
@@ -417,17 +414,14 @@ public abstract class MarkupContainer extends Component
 	 * @param child
 	 *            The child
 	 * @throws IllegalArgumentException
-	 *             Thrown if there was no child with the same name.
+	 *             Thrown if there was no child with the same id.
 	 * @return This
 	 */
 	public MarkupContainer replace(final Component child)
 	{
-		// Get child name
-		final String childName = child.getId();
-
 		if (log.isDebugEnabled())
 		{
-			log.debug("Add " + childName + " to " + this);
+			log.debug("Replacing " + child.getId() + " in " + this);
 		}
 
 		if (child.getParent() != this)
@@ -442,26 +436,26 @@ public abstract class MarkupContainer extends Component
 			// Are we using MicroMap optimization?
 			if (optimizeChildMapsForSpace)
 			{
-				if (childForName.size() == MicroMap.MAX_ENTRIES)
+				if (childForId.size() == MicroMap.MAX_ENTRIES)
 				{
 					// Reallocate MicroMap as MiniMap
-					childForName = new MiniMap(childForName, MINIMAP_MAX_ENTRIES);
+					childForId = new MiniMap(childForId, MINIMAP_MAX_ENTRIES);
 				}
-				else if (childForName.size() == MINIMAP_MAX_ENTRIES)
+				else if (childForId.size() == MINIMAP_MAX_ENTRIES)
 				{
 					// Reallocate MiniMap as full HashMap
-					childForName = new HashMap(childForName);
+					childForId = new HashMap(childForId);
 				}
 			}
 
 			// Add to map
-			final Component replaced = (Component)childForName.put(childName, child);
+			final Component replaced = (Component)childForId.put(child.getId(), child);
 
 			// Look up to make sure it was already in the map
 			if (replaced == null)
 			{
 				throw new IllegalArgumentException(
-						exceptionMessage("A child component with the name '" + childName
+						exceptionMessage("A child component with the id '" + child.getId()
 								+ "' didn't exist"));
 			}
 
@@ -486,7 +480,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final int size()
 	{
-		return childForName.size();
+		return childForId.size();
 	}
 
 	/**
@@ -506,9 +500,9 @@ public abstract class MarkupContainer extends Component
 			buffer.append(", markupStream = " + markupStream);
 		}
 
-		if (childForName != null && childForName.size() != 0)
+		if (childForId != null && childForId.size() != 0)
 		{
-			buffer.append(", children = " + childForName.values());
+			buffer.append(", children = " + childForId.values());
 		}
 
 		buffer.append(']');
@@ -680,7 +674,7 @@ public abstract class MarkupContainer extends Component
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof ComponentWicketTag)))
+		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -726,9 +720,8 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * The MarkupContainer was not able to resolve the component name.
-	 * Subclasses may augment the default strategy by subclassing
-	 * resolveComponent().
+	 * The MarkupContainer was not able to resolve the component id. Subclasses
+	 * may augment the default strategy by subclassing resolveComponent().
 	 * 
 	 * @see wicket.markup.html.border.Border for an example.
 	 *      <p>
@@ -738,8 +731,8 @@ public abstract class MarkupContainer extends Component
 	 *            The current markup stream
 	 * @param tag
 	 *            The current component tag
-	 * @return true, if MarkupContainer was able to resolve the component name
-	 *         and to render the component
+	 * @return True, if MarkupContainer was able to resolve the component id and
+	 *         render the component
 	 */
 	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
 	{
@@ -755,6 +748,32 @@ public abstract class MarkupContainer extends Component
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
 		this.markupStream = markupStream;
+	}
+
+	/**
+	 * This method allows a component to be added by an auto-resolver such as
+	 * AutoComponentResolver or AutoLinkResolver. While the component is being
+	 * added, the component's FLAG_AUTO boolean is set. The isAuto() method of
+	 * Component returns true if a component or any of its parents has this bit
+	 * set. When a component is added via autoAdd(), the logic in Page that
+	 * normally (a) checks for modifications during the rendering process, and
+	 * (b) versions components, is bypassed if Component.isAuto() returns true.
+	 * <p>
+	 * The result of all this is that components added with autoAdd() are free
+	 * from versioning and can add their own children without the usual
+	 * exception that would normally be thrown when the component hierarchy is
+	 * modified during rendering.
+	 * 
+	 * @param component
+	 *            The component to add
+	 */
+	final void autoAdd(final Component component)
+	{
+		component.setAuto(true);
+		add(component);
+		component.internalBeginRequest();
+		component.render();
+		component.setAuto(false);
 	}
 
 	/**
@@ -973,17 +992,17 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Optimize child name mapping.
+	 * Optimize child id mapping.
 	 */
 	private void optimize()
 	{
 		if (optimizeChildMapsForSpace)
 		{
-			childForName = new MicroMap();
+			childForId = new MicroMap();
 		}
 		else
 		{
-			childForName = new HashMap();
+			childForId = new HashMap();
 		}
 	}
 
@@ -1017,7 +1036,7 @@ public abstract class MarkupContainer extends Component
 			}
 			else
 			{
-				// 2nd try: all static name resolvers
+				// 2nd try: all static id resolvers
 				final List componentResolvers = this.getApplication().getComponentResolvers();
 				final Iterator iter = componentResolvers.iterator();
 				while (iter.hasNext())
@@ -1041,9 +1060,9 @@ public abstract class MarkupContainer extends Component
 					container = container.findParent(MarkupContainer.class);
 				}
 
-				// No one was able to handle the component name
-				markupStream.throwMarkupException("Unable to find component named '" + id + "' in "
-						+ this);
+				// No one was able to handle the component id
+				markupStream.throwMarkupException("Unable to find component with id '" + id
+						+ "' in " + this);
 			}
 		}
 		else

@@ -1,5 +1,5 @@
 /*
- * $Id: PreviewComponentTagRemover.java,v 1.4 2005/01/23 17:45:03 jdonnerstag
+ * $Id: WicketRemoveTagHandler.java,v 1.4 2005/01/23 17:45:03 jdonnerstag
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -20,7 +20,7 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.ComponentWicketTag;
+import wicket.markup.WicketTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.parser.AbstractMarkupFilter;
@@ -34,10 +34,10 @@ import wicket.markup.parser.IMarkupFilter;
  * 
  * @author Juergen Donnerstag
  */
-public final class PreviewComponentTagRemover extends AbstractMarkupFilter
+public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 {
 	/** Flag value to use as component name for ignored components */
-	public static final String IGNORE = "<<Removed by PreviewComponentTagRemover>>";
+	public static final String IGNORE = "<<Removed by WicketRemoveTagHandler>>";
 	
 	/**
 	 * Construct.
@@ -45,7 +45,7 @@ public final class PreviewComponentTagRemover extends AbstractMarkupFilter
 	 * @param parent
 	 *            The next MarkupFilter in the processing chain
 	 */
-	public PreviewComponentTagRemover(final IMarkupFilter parent)
+	public WicketRemoveTagHandler(final IMarkupFilter parent)
 	{
 		super(parent);
 	}
@@ -69,8 +69,8 @@ public final class PreviewComponentTagRemover extends AbstractMarkupFilter
 		}
 
 		// If it is not a remove tag, than we are finished
-		if (!(openTag instanceof ComponentWicketTag)
-				|| !((ComponentWicketTag)openTag).isRemoveTag())
+		if (!(openTag instanceof WicketTag)
+				|| !((WicketTag)openTag).isRemoveTag())
 		{
 			return openTag;
 		}

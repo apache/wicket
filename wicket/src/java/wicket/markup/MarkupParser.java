@@ -31,10 +31,10 @@ import wicket.ApplicationSettings;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.XmlPullParser;
-import wicket.markup.parser.filter.AutolinkHandler;
+import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.markup.parser.filter.HtmlHandler;
-import wicket.markup.parser.filter.PreviewComponentTagRemover;
-import wicket.markup.parser.filter.WicketComponentTagIdentifier;
+import wicket.markup.parser.filter.WicketRemoveTagHandler;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.util.resource.IResource;
 import wicket.util.resource.ResourceNotFoundException;
@@ -68,7 +68,7 @@ public final class MarkupParser
     /** if true, <wicket:param ..> tags will be removed from markup */
     private boolean stripWicketTag;
 
-    /** If true, MarkupParser will automatically create a ComponentWicketTag for
+    /** If true, MarkupParser will automatically create a WicketTag for
      * all tags surrounding a href attribute with a relative path to a
      * html file. E.g. &lt;a href="Home.html"&gt;
      */
@@ -163,16 +163,16 @@ public final class MarkupParser
         final List list = new ArrayList();
 
         // Chain together all the different markup filters
-        final WicketComponentTagIdentifier detectWicketComponents = new WicketComponentTagIdentifier(xmlParser);
+        final WicketTagIdentifier detectWicketComponents = new WicketTagIdentifier(xmlParser);
         detectWicketComponents.setWicketNamespace(this.wicketNamespace);
         
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
                 new HtmlHandler(detectWicketComponents));
         wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
         
-        final PreviewComponentTagRemover previewComponentTagRemover = new PreviewComponentTagRemover(wicketParamTagHandler);
+        final WicketRemoveTagHandler previewComponentTagRemover = new WicketRemoveTagHandler(wicketParamTagHandler);
         
-        final AutolinkHandler autolinkHandler = new AutolinkHandler(previewComponentTagRemover);
+        final WicketLinkTagHandler autolinkHandler = new WicketLinkTagHandler(previewComponentTagRemover);
         autolinkHandler.setAutomaticLinking(this.automaticLinking);
 
         // Markup filter chain starts with auto link handler
@@ -213,7 +213,7 @@ public final class MarkupParser
                 }
 
                 // Add to list unless preview component tag remover flagged as removed
-                if (!PreviewComponentTagRemover.IGNORE.equals(tag.getId()))
+                if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
                 {
 	                list.add(tag);
                 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AutolinkComponentResolver.java,v 1.2 2005/02/10 18:01:32 jonathanlocke
+ * $Id: AutoLinkResolver.java,v 1.2 2005/02/10 18:01:32 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,23 +15,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.link;
+package wicket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Component;
-import wicket.MarkupContainer;
-import wicket.Page;
-import wicket.PageParameters;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.IComponentResolver;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.html.link.ExternalLink;
 import wicket.util.value.ValueMap;
 
 /**
- * The AutolinkComponentResolver is responsible to handle automatic link
+ * The AutoLinkResolver is responsible to handle automatic link
  * resolution. Autolink components are automatically created by MarkupParser for
  * anchor tags with no explicit wicket component. E.g. &lt;a
  * href="Home.html"&gt;
@@ -46,18 +42,18 @@ import wicket.util.value.ValueMap;
  * exception is thrown if no Page class was found.
  * <p>
  * 
- * @see wicket.markup.parser.filter.AutolinkHandler
+ * @see wicket.markup.parser.filter.WicketLinkTagHandler
  * @author Juergen Donnerstag
  */
-public class AutolinkComponentResolver implements IComponentResolver
+public class AutoLinkResolver implements IComponentResolver
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(AutolinkComponentResolver.class);
+	private static Log log = LogFactory.getLog(AutoLinkResolver.class);
 
 	/**
 	 * Automatically creates a BookmarkablePageLink component.
 	 * 
-	 * @see wicket.markup.IComponentResolver#resolve(MarkupContainer,
+	 * @see wicket.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)
 	 * @param markupStream
 	 *            The current markupStream
@@ -75,24 +71,20 @@ public class AutolinkComponentResolver implements IComponentResolver
 		if (tag.isAutolinkEnabled())
 		{
 			// Try to find the Page matching the href
-			final String componentId = tag.getId();
-			final Component link = resolveAutomaticLink(container, componentId, tag);
+			final Component link = resolveAutomaticLink(container, tag.getId(), tag);
 
 			// Add the link to the container
-			container.add(link);
+			container.autoAdd(link);
 			if (log.isDebugEnabled())
 			{
 				log.debug("Added autolink " + link);
 			}
 
-			// Render the Link
-			link.render();
-
-			// Tell the container, we handled the componentId
+			// Tell the container, we resolved the id
 			return true;
 		}
 
-		// We were not able to handle the componentId
+		// We were not able to resolve the id
 		return false;
 	}
 

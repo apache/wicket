@@ -1,5 +1,5 @@
 /*
- * $Id: WicketTagComponentResolver.java,v 1.4 2005/01/18 08:04:29 jonathanlocke
+ * $Id: AutoComponentResolver.java,v 1.4 2005/01/18 08:04:29 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -20,6 +20,7 @@ package wicket.markup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 
 /**
@@ -36,7 +37,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
     private static Log log = LogFactory.getLog(MarkupInheritanceResolver.class);
 
     /**
-     * @see wicket.markup.IComponentResolver#resolve(MarkupContainer, MarkupStream,
+     * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
      *      ComponentTag)
      * @param container
      *            The container parsing its markup
@@ -51,10 +52,10 @@ public class MarkupInheritanceResolver implements IComponentResolver
             final ComponentTag tag)
     {
         // It must be <wicket:...>
-        if (tag instanceof ComponentWicketTag)
+        if (tag instanceof WicketTag)
         {
             // It must be <wicket:component...>
-            final ComponentWicketTag wicketTag = (ComponentWicketTag)tag;
+            final WicketTag wicketTag = (WicketTag)tag;
             if (wicketTag.isExtendTag())
             {
                 markupStream.next();
@@ -96,7 +97,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof ComponentWicketTag)))
+		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -121,7 +122,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	protected boolean resolveComponent(final MarkupStream markupStream, final ComponentTag tag)
 	{
 		// Determine if tag is a <wicket:body> tag
-		final boolean isBodyTag = (tag instanceof ComponentWicketTag && markupStream.atOpenCloseTag("body"));
+		final boolean isBodyTag = (tag instanceof WicketTag && markupStream.atOpenCloseTag("body"));
 
 		// If we're being asked to resolve a component for a <wicket:body> tag
 		if (!isBodyTag)
