@@ -52,7 +52,7 @@ public class CheckBox extends FormComponent
 	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
-	public final boolean supportsPersistence()
+	protected final boolean supportsPersistence()
 	{
 		return true;
 	}
@@ -69,7 +69,7 @@ public class CheckBox extends FormComponent
 	 * Updates this components' model from the request.
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void updateModel()
+	protected void updateModel()
 	{
 		setModelObject(getRequestBoolean());
 	}

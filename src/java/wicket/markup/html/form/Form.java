@@ -26,6 +26,7 @@ import wicket.Component;
 import wicket.FeedbackMessages;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
@@ -33,6 +34,7 @@ import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationDelegate;
 import wicket.markup.html.form.validation.IValidationFeedback;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.string.Strings;
 
 /**
  * Base class for HTML forms.
@@ -48,15 +50,18 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
 
-	/** Manager responsible to persist and retrieve FormComponent data. */
-	private IValuePersister persister = null;
-
-	/** The delegate to be used for execution of validation of this form. */
-	private IFormValidationDelegate validationDelegate = DefaultFormValidationDelegate
-			.getInstance();
-
 	/** The validation error handling delegate. */
 	private final IValidationFeedback validationFeedback;
+
+	/**
+	 * Trivial class for holding button count while counting buttons
+	 * 
+	 * @author Jonathan Locke
+	 */
+	private static class Count
+	{
+		int count;
+	}
 
 	/**
 	 * The default form validation delegate.
@@ -106,11 +111,11 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 						// tell component to deal with invalidity
 						formComponent.handleInvalid();
 					}
-                    else
-                    {
-                        // tell component that it is valid now
-                    	formComponent.handleValid();
-                    }
+					else
+					{
+						// tell component that it is valid now
+						formComponent.handleValid();
+					}
 
 					// Continue until the end
 					return IVisitor.CONTINUE_TRAVERSAL;
@@ -145,14 +150,14 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
-     * @param name
-     *            See Component constructor
-     * @param object
-     *            See Component constructor
-     * @param validationFeedback
-     *            Interface to a component that can handle/display validation
-     *            errors
+	 * @see wicket.Component#Component(String, Serializable)
+	 * @param name
+	 *            See Component constructor
+	 * @param object
+	 *            See Component constructor
+	 * @param validationFeedback
+	 *            Interface to a component that can handle/display validation
+	 *            errors
 	 */
 	public Form(String name, Serializable object, final IValidationFeedback validationFeedback)
 	{
@@ -161,13 +166,13 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
-     * @param name
-     *            See Component constructor
-     * @param object
-     *            See Component constructor
-     * @param expression
-     *            See Component constructor
+	 * @see wicket.Component#Component(String, Serializable)
+	 * @param name
+	 *            See Component constructor
+	 * @param object
+	 *            See Component constructor
+	 * @param expression
+	 *            See Component constructor
 	 * @param validationFeedback
 	 *            Interface to a component that can handle/display validation
 	 *            errors
@@ -180,35 +185,21 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * Handles form submissions.
+	 * Handles form submissions. By default, this method simply calls validate()
+	 * to validate the form and update the model.
+	 * 
+	 * @see Form#validate()
 	 */
-	public final void formSubmitted()
+	public void formSubmitted()
 	{
-		// Redirect back to result to avoid postback warnings. But we turn
-		// redirecting on as the first thing because the user's handleSubmit
-		// implementation may wish to redirect somewhere else. In that case,
-		// they can simply call setRedirect(false) in handleSubmit.
-		getRequestCycle().setRedirect(true);
-
-		// Validate model using validation delegate
-		validationDelegate.validate(this);
-
-		// Update model using form data
-		updateFormComponentModels();
-
-		// Persist FormComponents if requested
-		persistFormComponentData();
-
-		// If validation or update caused error message(s) to appear
-		if (hasError())
+		final int buttons = countButtons();
+		if (buttons <= 1)
 		{
-			// handle those errors
-			handleErrors();
+			validate();
 		}
-		else
+		else if (buttons > 1)
 		{
-			// Model was successfully updated with valid data
-			handleSubmit();
+			invokeButtonClicked();
 		}
 	}
 
@@ -219,52 +210,15 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 */
 	public IFormValidationDelegate getValidationDelegate()
 	{
-		return validationDelegate;
+		return DefaultFormValidationDelegate.getInstance();
 	}
 
 	/**
-	 * Removes already persisted data for all FormComponent childs and disable
-	 * persistence for the same components.
-	 * 
-	 * @see Page#removePersistedFormData(Class, boolean)
-	 * 
-	 * @param disablePersistence
-	 *            if true, disable persistence for all FormComponents on that
-	 *            page. If false, it will remain unchanged.
-	 */
-	public void removePersistedFormComponentData(final boolean disablePersistence)
-	{
-		// The persistence manager responsible to persist and retrieve
-		// FormComponent data
-		final IValuePersister persister = getValuePersister();
-
-		// Search for FormComponents like TextField etc.
-		visitChildren(FormComponent.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// remove the FormComponents persisted data
-				final FormComponent formComponent = (FormComponent)component;
-				persister.clear(formComponent);
-
-				// Disable persistence if requested. Leave unchanged otherwise.
-				if (formComponent.isPersistent() && disablePersistence)
-				{
-					formComponent.setPersistent(false);
-				}
-
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-	}
-
-	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * Retrieves FormComponent values related to the page using the persister
-	 * and assign the values to the FormComponent. Thus initializing them. NOTE:
-	 * THIS METHOD IS FOR INTERNAL USE ONLY AND IS NOT MEANT TO BE USED BY
-	 * FRAMEWORK CLIENTS. IT MAY BE REMOVED IN THE FUTURE.
+	 * and assign the values to the FormComponent. Thus initializing them.
 	 */
-	final public void setFormComponentValuesFromPersister()
+	public final void loadPersistentFormComponentValues()
 	{
 		// Visit all FormComponent contained in the page
 		visitChildren(FormComponent.class, new Component.IVisitor()
@@ -293,15 +247,49 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	}
 
 	/**
-	 * Sets the delegate to be used for execution of validation of this form.
+	 * Removes already persisted data for all FormComponent childs and disable
+	 * persistence for the same components.
 	 * 
-	 * @param validationDelegate
-	 *            the delegate to be used for execution of validation of this
-	 *            form
+	 * @see Page#removePersistedFormData(Class, boolean)
+	 * 
+	 * @param disablePersistence
+	 *            if true, disable persistence for all FormComponents on that
+	 *            page. If false, it will remain unchanged.
 	 */
-	public void setValidationDelegate(IFormValidationDelegate validationDelegate)
+	public void removePersistentFormComponentValues(final boolean disablePersistence)
 	{
-		this.validationDelegate = validationDelegate;
+		// The persistence manager responsible to persist and retrieve
+		// FormComponent data
+		final IValuePersister persister = getValuePersister();
+
+		// Search for FormComponents like TextField etc.
+		visitChildren(FormComponent.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// remove the FormComponents persisted data
+				final FormComponent formComponent = (FormComponent)component;
+				persister.clear(formComponent);
+
+				// Disable persistence if requested. Leave unchanged otherwise.
+				if (formComponent.isPersistent() && disablePersistence)
+				{
+					formComponent.setPersistent(false);
+				}
+
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+
+	/**
+	 * Gets the form component persistence manager; it is lazy loaded.
+	 * 
+	 * @return The form component value persister
+	 */
+	protected IValuePersister getValuePersister()
+	{
+		return new CookieValuePersister();
 	}
 
 	/**
@@ -322,7 +310,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 * asked to do their part of error handling, and after that, the registered
 	 * (if any) error handler of this form is called.
 	 */
-	protected final void handleErrors()
+	protected void handleValidationErrors()
 	{
 		// Traverse children of this form, calling validationError() on any
 		// components implementing IValidationFeedback.
@@ -348,31 +336,78 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	/**
 	 * Implemented by subclasses to deal with form submits.
 	 */
-	protected abstract void handleSubmit();
+	protected abstract void handleValidSubmit();
 
 	/**
-	 * Sets the value persister for this form.
+	 * Validates the form and updates the models of form components. If the form
+	 * validates successfully, handleValidSubmit() is called. If not,
+	 * handleErrors() is called.
 	 * 
-	 * @param persister
-	 *            the CookieValuePersister
+	 * @see Form#handleValidSubmit()
+	 * @see Form#handleValidationErrors()
 	 */
-	protected void setFormComponentPersistenceManager(IValuePersister persister)
+	protected final void validate()
 	{
-		this.persister = persister;
+		// Redirect back to result to avoid postback warnings. But we turn
+		// redirecting on as the first thing because the user's handleSubmit
+		// implementation may wish to redirect somewhere else. In that case,
+		// they can simply call setRedirect(false) in handleSubmit.
+		getRequestCycle().setRedirect(true);
+
+		// Validate model using validation delegate
+		getValidationDelegate().validate(this);
+
+		// Update model using form data
+		updateFormComponentModels();
+
+		// Persist FormComponents if requested
+		persistFormComponentData();
+
+		// If validation or update caused error message(s) to appear
+		if (hasError())
+		{
+			// handle those errors
+			handleValidationErrors();
+		}
+		else
+		{
+			// Model was successfully updated with valid data
+			handleValidSubmit();
+		}
 	}
 
-	/**
-	 * Gets the form component persistence manager; it is lazy loaded.
-	 * 
-	 * @return The form component value persister
-	 */
-	private IValuePersister getValuePersister()
+	private int countButtons()
 	{
-		if (persister == null)
+		final Count count = new Count();
+		visitChildren(Button.class, new IVisitor()
 		{
-			persister = new CookieValuePersister();
-		}
-		return persister;
+			public Object component(final Component component)
+			{
+				count.count++;
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+		return count.count;
+	}
+
+	private Button findSubmittingButton()
+	{
+		return (Button)visitChildren(Button.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Get button
+				final Button button = (Button)component;
+
+				// Check for button-name or button-name.x request string
+				if (!Strings.isEmpty(button.getRequestString())
+						|| !Strings.isEmpty(getRequest().getParameter(button.getPath() + ".x")))
+				{
+					return button;
+				}
+				return CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**
@@ -395,6 +430,19 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		});
 
 		return value == IVisitor.STOP_TRAVERSAL ? true : false;
+	}
+
+	private void invokeButtonClicked()
+	{
+		final Button button = findSubmittingButton();
+		if (button == null)
+		{
+			throw new WicketRuntimeException("Unable to find submitting button");
+		}
+		else
+		{
+			button.onSubmit();
+		}
 	}
 
 	/**

@@ -123,7 +123,7 @@ public class CookieTest extends TestCase
     public void testSetCookieOnForm() throws IOException, ServletException
     {
     	// initialize 
-		this.form.setFormComponentValuesFromPersister();
+		this.form.loadPersistentFormComponentValues();
 		
 		// validate
         FormComponent username = (FormComponent)panel.get("signInForm.username");

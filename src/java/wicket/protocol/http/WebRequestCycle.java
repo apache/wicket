@@ -281,7 +281,7 @@ public class WebRequestCycle extends RequestCycle
 			// For each FormComponent found on the Page (not Form)
 			public Object component(final Component component)
 			{
-				((Form)component).setFormComponentValuesFromPersister();
+				((Form)component).loadPersistentFormComponentValues();
 				return CONTINUE_TRAVERSAL;
 			}
 		});

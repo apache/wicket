@@ -78,7 +78,7 @@ public class RadioChoice extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
-	public final boolean supportsPersistence()
+	protected final boolean supportsPersistence()
 	{
 		return true;
 	}

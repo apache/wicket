@@ -320,7 +320,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * @return True if this type of FormComponent can be persisted.
 	 */
-	public boolean supportsPersistence()
+	protected boolean supportsPersistence()
 	{
 		return false;
 	}
@@ -329,12 +329,12 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * Implemented by form component subclass to update the form component's
 	 * model.
 	 */
-	public abstract void updateModel();
+	protected abstract void updateModel();
 
 	/**
 	 * Validates this component using the component's validator.
 	 */
-	public final void validate()
+	protected final void validate()
 	{
 		validator.validate(this);
 	}

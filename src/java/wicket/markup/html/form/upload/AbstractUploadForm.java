@@ -63,9 +63,9 @@ public abstract class AbstractUploadForm extends Form
 	/**
 	 * Handles an upload.
 	 * 
-	 * @see wicket.markup.html.form.Form#handleSubmit()
+	 * @see wicket.markup.html.form.Form#handleValidSubmit()
 	 */
-	public void handleSubmit()
+	public void handleValidSubmit()
 	{
 		try
 		{

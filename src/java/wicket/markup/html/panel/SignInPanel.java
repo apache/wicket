@@ -189,9 +189,9 @@ public abstract class SignInPanel extends Panel
 		}
 
 		/**
-		 * @see wicket.markup.html.form.Form#handleSubmit()
+		 * @see wicket.markup.html.form.Form#handleValidSubmit()
 		 */
-		public final void handleSubmit()
+		public final void handleValidSubmit()
 		{
 			if (signIn(getUsername(), getPassword()))
 			{

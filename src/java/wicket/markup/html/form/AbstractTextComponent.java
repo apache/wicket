@@ -55,7 +55,7 @@ public abstract class AbstractTextComponent extends FormComponent
     /**
      * @see FormComponent#supportsPersistence()
      */
-    public final boolean supportsPersistence()
+    protected final boolean supportsPersistence()
     {
         return true;
     }
@@ -65,7 +65,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void updateModel()
+    protected void updateModel()
 	{
 		setModelObject(getRequestString());
 	}
