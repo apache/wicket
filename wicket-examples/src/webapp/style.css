@@ -1,26 +1,36 @@
-.clear, br, #projectLogo, #organizationLogo, #poweredBy {
-    display : none;
-}                  
-
 body {
     background-color : white;
-    background-repeat : repeat-x;
-    background-position : bottom;
-    background-attachment : fixed;
-                 
+	background-image: url('wicket-logo.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: 96% 96%;
     color : #6F6F6F;
     font-family : 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';
     font-size : 9pt;
     line-height : 1.8em;
-    height : 99%;
-    padding : 10;
-    margin : 10;
+    padding: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
 }
 
 h1, h2, h3, h4, h5, h6, h7, h8 {
     color : #E9601A;
 }
-
+#extitle {
+	font-size : 12pt;
+	font-weight: bold;
+	color : #E9601A;
+	padding: 10px 10px 10px 10px;
+}
+#hellomessage {
+	font-size: 30pt;
+}
+#titleblock {
+    background : #DEDEDE;
+    color : white;
+    font-weight : bold;
+	border-bottom: solid #E9601A;
+	border-width: thin
+}
 h2 {
     font-size : 1.25em;
 }

@@ -34,7 +34,7 @@ public class HelloWorld extends HtmlPage
      */
     public HelloWorld(final PageParameters parameters)
     {
-        add(new Label("message", "Hello world!"));
+        add(new Label("hellomessage", "Hello world!"));
     }
 }
 
