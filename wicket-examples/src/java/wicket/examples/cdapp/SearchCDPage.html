@@ -1,93 +1,67 @@
 <html>
-  <head>
-      <title>Wicket Examples - cdapp</title>
-      <link rel="stylesheet" type="text/css" href="style.css"/>
-      <link rel="stylesheet" type="text/css" href="cdapp/style.css"/>
-  </head>
-  <body>
+<head>
+<title>Wicket Examples - cdapp</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="cdapp/style.css" />
+</head>
+<body>
 
-	<span id="wicket-mainNavigation"/>
+<span id="wicket-mainNavigation" />
 
-    <form id="wicket-searchForm">
-      <fieldset>
-        <legend>Search</legend>
-          <input id="wicket-search" type="text" size="20"/>
-          <input type="submit" value="search" class="mediumButton"/>
-      </fieldset>
-     </form>
+<form id="wicket-searchForm">
+<fieldset><legend>Search</legend> <input id="wicket-search" type="text"
+	size="20" /> <input type="submit" value="search" class="mediumButton" />
+</fieldset>
+</form>
 
-     <div>
-      <table id="resultstable">
-        <thead id="wicket-resultsHeader">
-          <tr>
-            <!--
+<div>
+<table id="resultstable">
+	<thead id="wicket-resultsHeader">
+		<tr>
+			<!--
             	note: we could do the rollovers with CSS, but IE doesn't support
             	them on other elements than anchors without providing a .htc hack
              -->
-            <th id="wicket-sortOnArtist" class="litupColumn"
-          		onmouseover="this.className='litupColumnOver';"
-          		onmouseout="this.className='litupColumn';">
-                Artist
-            </th>
-            <th id="wicket-sortOnTitle" class="litupColumn"
-          		onmouseover="this.className='litupColumnOver';"
-          		onmouseout="this.className='litupColumn';">
-                Title
-            </th>
-            <th id="wicket-sortOnLabel" class="litupColumn"
-          		onmouseover="this.className='litupColumnOver';"
-          		onmouseout="this.className='litupColumn';">
-                Label
-            </th>
-            <th id="wicket-sortOnYear" class="number litupColumn"
-          		onmouseover="this.className='number litupColumnOver';"
-          		onmouseout="this.className='number litupColumn';">
-                Year
-            </th>
-            <th class="delete"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr id="wicket-results" class="litupRow"
-          		onmouseover="this.className='litupRowOver';"
-          		onmouseout="this.className='litupRow';"
-          	>
-            <td id="wicket-performers">
-                <span id="wicket-performers">(performers)</span>
-            </td>
-            <td id="wicket-title">
-                <span id="wicket-title">(title)</span>
-            </td>
-            <td id="wicket-label">
-                <span id="wicket-label">(label)</span>
-            </td>
-            <td id="wicket-year" class="number">
-                <span id="wicket-year">(year)</span>
-            </td>
-            <td>
-                <a href="#" class="delete" id="wicket-delete">
-                    <img src="cdapp/delete.gif" border="0"/>
-                </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-     </div>
+			<th id="wicket-sortOnArtist" class="litupColumn"
+				onmouseover="this.className='litupColumnOver';"
+				onmouseout="this.className='litupColumn';">Artist</th>
+			<th id="wicket-sortOnTitle" class="litupColumn"
+				onmouseover="this.className='litupColumnOver';"
+				onmouseout="this.className='litupColumn';">Title</th>
+			<th id="wicket-sortOnLabel" class="litupColumn"
+				onmouseover="this.className='litupColumnOver';"
+				onmouseout="this.className='litupColumn';">Label</th>
+			<th id="wicket-sortOnYear" class="number litupColumn"
+				onmouseover="this.className='number litupColumnOver';"
+				onmouseout="this.className='number litupColumn';">Year</th>
+			<th class="delete"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr id="wicket-results" class="litupRow"
+			onmouseover="this.className='litupRowOver';"
+			onmouseout="this.className='litupRow';">
+			<td id="wicket-performers"><span id="wicket-performers">(performers)</span>
+			</td>
+			<td id="wicket-title"><span id="wicket-title">(title)</span></td>
+			<td id="wicket-label"><span id="wicket-label">(label)</span></td>
+			<td id="wicket-year" class="number"><span id="wicket-year">(year)</span>
+			</td>
+			<td><a href="#" class="delete" id="wicket-delete"> <img
+				src="cdapp/delete.gif" border="0" /> </a></td>
+		</tr>
+	</tbody>
+</table>
+</div>
 
-	 <div id="resultsNavigation">
-		<ul>
-          <li id="wicket-navigation">
-            <span id="wicket-separator"/>
-            <a id="wicket-pageLink" href="#">
-              <span id="wicket-pageLabel"/><span id="wicket-pageNumber"/>
-            </a>
-          </li>
-        </ul>
-     </div>
+<div id="resultsNavigation">
+<ul>
+	<li id="wicket-navigation"><span id="wicket-separator" />
+		<a id="wicket-pageLink" href="#"><span id="wicket-pageLabel" /><span id="wicket-pageNumber" /></a>
+	</li>
+</ul>
+</div>
 
-	<div>
-		<span id="wicket-feedback"/>
-    </div>
-
-  </body>
+<div><span id="wicket-feedback" /></div>
+</body>
 </html>

@@ -61,8 +61,18 @@ public class SearchCDPage extends WicketExamplePage
 	/** list view for search results. */
 	private SearchCDResultsListView resultsListView;
 
+	/** search form. */
+	private final SearchForm searchForm;
+
 	/** model for searching. */
 	private final CDSearchModel searchModel;
+
+	/**
+	 * Refers to a possible message set from the outside (details page).
+	 * To be checked on each rendering: when there is a message, add it to the current
+	 * queue and set this variable to null.
+	 */
+	private String infoMessageForNextRendering = null;
 
 	/**
 	 * Construct.
@@ -82,7 +92,8 @@ public class SearchCDPage extends WicketExamplePage
 		final int rowsPerPage = 8;
 		searchModel = new CDSearchModel(rowsPerPage);
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
-		add(new SearchForm("searchForm", feedback));
+		searchForm = new SearchForm("searchForm", feedback);
+		add(searchForm);
 		add(feedback);
 		resultsListView = new SearchCDResultsListView("results", searchModel, rowsPerPage);
 		add(resultsListView);
@@ -128,6 +139,27 @@ public class SearchCDPage extends WicketExamplePage
 	private void setCurrentResultPageToFirst()
 	{
 		resultsListView.setCurrentPage(0);
+	}
+
+	/**
+	 * Sets a message for next rendering.
+	 * @param externalMessage message set from the outside (details page).
+	 * 		To be checked on each rendering: when there is a message, add it to
+	 * 		the current queue and set this variable to null
+	 */
+	public final void setInfoMessageForNextRendering(String externalMessage)
+	{
+		this.infoMessageForNextRendering = externalMessage;
+	}
+
+	protected void onRender()
+	{
+		if(infoMessageForNextRendering != null)
+		{
+			searchForm.info(infoMessageForNextRendering);
+			infoMessageForNextRendering = null;
+		}
+		super.onRender();
 	}
 
 	/**

@@ -1,69 +1,48 @@
 <html>
-  <head>
-      <title>Wicket Examples - cdapp</title>
-      <link rel="stylesheet" type="text/css" href="style.css"/>
-      <link rel="stylesheet" type="text/css" href="cdapp/style.css"/>
-  </head>
-  <body>
+<head>
+<title>Wicket Examples - cdapp</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="cdapp/style.css" />
+</head>
+<body>
 
-	<span id="wicket-mainNavigation"/>
+<span id="wicket-mainNavigation" />
 
-      <fieldset>
-        <legend>Edit <span id="wicket-cdTitle">(cd title)</span></legend>
+<fieldset><legend>Edit <span id="wicket-cdTitle">(cd title)</span></legend>
 
-		<table>
-		  <tbody>
-		    <form id="wicket-detailForm">
-		      <tr>
-		        <td>
-		          <label for="title">Title</label>
-		        </td>
-		        <td>
-		          <input class="plain" id="wicket-title" type="text" size="40"/>
-		        </td>
-		       </tr>
-		       <tr>
-		        <td>
-		          <label for="performers">Performers</label>
-		        </td>
-		        <td>
-		          <input class="plain" id="wicket-performers" type="text" size="40"/>
-		        </td>
-		       </tr>
-		       <tr>
-		         <td>
-		          <label for="label">Label</label>
-		         </td>
-		         <td>
-		          <input class="plain" id="wicket-label" type="text" size="40"/>
-		         </td>
-		       </tr>
-		       <tr>
-		         <td>
-		          <label for="year">Year</label>
-		         </td>
-		         <td>
-		          <input class="plain" id="wicket-year" type="text" size="6"/>
-		         </td>
-		        </tr>
-		        <tr>
-		          <td colspan="2">
-		           <div class="buttons">
-		        	<input type="button" id="wicket-cancelButton"
-		        		value="cancel" class="mediumButton"/>
-		        	<input type="submit" value="save" class="mediumButton"/>
-		           </div>
-		          </td>
-		        </tr>
-		    </form>
-		  </tbody>
-		</table>
+<table>
+	<tbody>
+		<form id="wicket-detailForm">
+		<tr>
+			<td><label for="title">Title</label></td>
+			<td><input class="plain" id="wicket-title" type="text" size="40" /></td>
+		</tr>
+		<tr>
+			<td><label for="performers">Performers</label></td>
+			<td><input class="plain" id="wicket-performers" type="text" size="40" />
+			</td>
+		</tr>
+		<tr>
+			<td><label for="label">Label</label></td>
+			<td><input class="plain" id="wicket-label" type="text" size="40" /></td>
+		</tr>
+		<tr>
+			<td><label for="year">Year</label></td>
+			<td><input class="plain" id="wicket-year" type="text" size="6" /></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<div class="buttons"><input type="button" id="wicket-cancelButton"
+				value="cancel" class="mediumButton" /> <input type="submit"
+				value="save" class="mediumButton" /></div>
+			</td>
+		</tr>
+		</form>
+	</tbody>
+</table>
 
-    </fieldset>
+</fieldset>
 
-	<div>
-		<span id="wicket-feedback"/>
-    </div>
-
-  </body>
+<div><span id="wicket-feedback" /></div>
+</body>
 </html>

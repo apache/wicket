@@ -140,8 +140,10 @@ public final class EditCDPage extends WicketExamplePage
 				tx = session.beginTransaction();
 				session.saveOrUpdate(cd);
 				tx.commit();
-				info("cd saved");
-				getRequestCycle().setPage(searchCDPage);
+				// set message for search page to display on next rendering
+				searchCDPage.setInfoMessageForNextRendering("cd " + cd.getTitle() + " saved");
+				searchCDPage.modelChangedStructure(); // force reload of data
+				getRequestCycle().setPage(searchCDPage); // navigate back to search page
 			}
 			catch (HibernateException e)
 			{
