@@ -34,7 +34,9 @@ import javax.swing.tree.TreeSelectionModel;
 import wicket.IModel;
 import wicket.Model;
 import wicket.RequestCycle;
+import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.HtmlComponent;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.link.ILinkListener;
 import wicket.markup.html.table.ListItem;
@@ -43,10 +45,9 @@ import wicket.protocol.http.HttpRequest;
 
 
 /**
- * WARNING: THIS IS AN EXPERIMENTAL COMPONENT. ITS INTERFACE AND IMPLEMENTATION CAN
- * BE ALTERED DRASTIC IN FUTURE VERSIONS
  * A component that represents a tree.
- * TODO elaborate docs when tree design is stable.
+ *
+ * @author Eelco Hillenius
  */
 public abstract class Tree extends HtmlContainer implements ILinkListener
 {
@@ -73,7 +74,7 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
     }
 
     /**
-     * Register link to this tree.
+     * Registers a link with this tree.
      * @param link the link to register
      */
     void addLink(TreeNodeLink link)
@@ -82,13 +83,11 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
         Serializable userObject = node.getUserObject();
 
         // links can change, but the target user object should be the same, so
-        // if a new
-        // link is added that actually points to the same userObject, it will
-        // replace the old
-        // one thus allowing the old link to be GC-ed. We need the creator hash
-        // to be able
-        // to have more trees in the same page with the same link names
-        String linkId = link.getName() + "." + userObject.hashCode() + "." + link.creatorHash;
+        // if a new link is added that actually points to the same userObject, it will
+        // replace the old one thus allowing the old link to be GC-ed. We need the creator hash
+        // to be able to have more trees in the same page with the same link names
+        String linkId = link.getName() + "."
+            + userObject.hashCode() + "." + link.creatorHash;
 
         link.setId(linkId);
         links.put(linkId, link);
@@ -199,12 +198,6 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
     }
 
     /**
-     * Called to allow a subclass to populate a given spacer of the tree with components.
-     * @param filler filler component
-     */
-    protected abstract void populateFiller(Filler filler);
-
-    /**
      * Called to allow a subclass to populate a given node of the tree with components.
      * @param node The node
      */
@@ -237,12 +230,8 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
             int row = getList().indexOf(path);
             NodeModel nodeModel = new NodeModel(mutableTreeNode, treeState, path);
 
-            // add spacer component
-            listItem.add(new FillerList("filler", nodeModel));
-
             // Create node
             Node node = new Node("node", nodeModel);
-
             populateNode(node);
 
             // add node component
@@ -258,65 +247,34 @@ public abstract class Tree extends HtmlContainer implements ILinkListener
         }
     }
 
-    /**
-     * Renders a series of {@link Filler}s.
-     */
-    private class FillerList extends HtmlContainer
+    private static class UL extends HtmlComponent
     {
         /**
          * Construct.
-         * @param componentName name of the component
-         * @param nodeModel the model for this node
+         * @param name component name
+         * @param src body
          */
-        public FillerList(String componentName, NodeModel nodeModel)
+        public UL(String name, String src)
         {
-            super(componentName, nodeModel);
+            super(name, src);
         }
 
         /**
-         * Renders this container.
-         * @param cycle The request cycle
+         * @see wicket.Component#handleComponentTag(RequestCycle, ComponentTag)
          */
-        protected void handleRender(final RequestCycle cycle)
+        protected void handleComponentTag(RequestCycle cycle, ComponentTag tag)
         {
-            // Ask parents for markup stream to use
-            final MarkupStream markupStream = findMarkupStream();
+            checkTag(tag, "img");
+            super.handleComponentTag(cycle, tag);
+            tag.put("src", (String) getModelObject());
+        }
 
-            // Save position in markup stream
-            final int markupStart = markupStream.getCurrentIndex();
-
-            NodeModel model = (NodeModel) getModel();
-            int level = model.getTreeNode().getLevel();
-
-            // Loop through the markup in this container for each child
-            // container
-            if (level > 0)
-            {
-                for (int i = 0; i < level; i++)
-                {
-                    // Get name of component for filler i
-                    final String componentName = Integer.toString(i);
-                    Filler filler = (Filler) get(componentName);
-
-                    if (filler == null)
-                    {
-                        filler = new Filler(i);
-                        populateFiller(filler);
-                        add(filler);
-                    }
-
-                    // Rewind to start of markup for kids
-                    markupStream.setCurrentIndex(markupStart);
-
-                    // add sub
-                    // Render cell
-                    filler.render(cycle);
-                }
-            }
-            else
-            {
-                markupStream.skipComponent();
-            }
+        /**
+         * @see wicket.Component#handleBody(RequestCycle, MarkupStream, ComponentTag)
+         */
+        protected void handleBody(RequestCycle cycle,
+            MarkupStream markupStream, ComponentTag openTag)
+        {
         }
     }
 }

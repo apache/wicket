@@ -29,6 +29,7 @@ import wicket.markup.html.link.Link;
 /**
  * Special link for working with trees. Using these links enables working with server-side
  * trees without back-button issues.
+ *
  * @author Eelco Hillenius
  */
 public abstract class TreeNodeLink extends HtmlContainer implements ILinkListener

@@ -19,6 +19,12 @@
 package wicket.examples.filebrowser;
 
 
+import java.io.File;
+import java.io.Serializable;
+
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,25 +36,14 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
 import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.tree.Filler;
 import wicket.markup.html.tree.Node;
 import wicket.markup.html.tree.Tree;
 import wicket.markup.html.tree.TreeNodeLink;
 import wicket.markup.html.tree.TreeStateCache;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.Serializable;
-
-import java.util.Enumeration;
-
 /**
  * Tree example that uses the user-home dirs to populate the tree.
+ *
  * @author Eelco Hillenius
  */
 public class FileBrowser extends HtmlPage
@@ -59,6 +54,9 @@ public class FileBrowser extends HtmlPage
     /** tree component. */
     private FileTree fileTree = null;
 
+    /** module that provides the file model. */
+    private FileModelProvider fileModelProvider = new FileModelProvider();
+
     /**
      * Constructor.
      * @param parameters Page parameters
@@ -66,115 +64,9 @@ public class FileBrowser extends HtmlPage
     public FileBrowser(final PageParameters parameters)
     {
         add(new NavigationPanel("mainNavigation", "Filebrowser example"));
-        TreeModel model = buildTree();
+        TreeModel model = fileModelProvider.getFileModel();
         fileTree = new FileTree("fileTree", model);
         add(fileTree);
-    }
-
-    /**
-     * Build the tree.
-     * @return the tree
-     */
-    protected TreeModel buildTree()
-    {
-        TreeModel model = buildTreeModel();
-        //debugTree((DefaultTreeModel)model);
-        return model;
-    }
-
-    /**
-     * Build the tree model.
-     * @return the tree model
-     */
-    protected TreeModel buildTreeModel()
-    {
-        TreeModel model = null;
-
-        // build directory tree, starting with root dir
-        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
-        String userHomeDir = System.getProperty("user.dir");
-        File d = new File(userHomeDir);
-
-        rootNode.setUserObject(d);
-
-        String currentPath = userHomeDir;
-
-        addChildDirsRecursively(currentPath, rootNode);
-        model = new DefaultTreeModel(rootNode);
-
-        return model;
-    }
-
-    /**
-     * Add childs recursively.
-     * @param currentPath current path
-     * @param currentNode current node
-     */
-    private void addChildDirsRecursively(String currentPath,
-        DefaultMutableTreeNode currentNode)
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug("scan path " + currentPath);
-        }
-
-        File d = new File(currentPath);
-        String[] c = d.list(new FilenameFilter(){
-
-            public boolean accept(File dir, String name)
-            {
-                return dir.isDirectory();
-            }
-            
-        }); // get list of directories
-
-        if (c != null)
-        {
-            for (int i = 0; i < c.length; i++)
-            { // for all directories
-
-                File dchild = new File(d, c[i]);
-                DefaultMutableTreeNode childNode = new DefaultMutableTreeNode();
-
-                childNode.setUserObject(dchild);
-                currentNode.add(childNode); // add child to the current node		
-
-                if (log.isDebugEnabled())
-                {
-                    log.debug("add " + childNode + " to " + currentNode);
-                }
-
-                addChildDirsRecursively((currentPath + "/" + c[i]), childNode);
-            }
-        }
-    }
-
-    /**
-     * Debug tree to logger.
-     * @param treeModel tree model
-     */
-    private void debugTree(DefaultTreeModel treeModel)
-    {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeModel
-            .getRoot();
-        Enumeration e = node.breadthFirstEnumeration();
-
-        e = node.preorderEnumeration();
-        log.info("-- DUMPING TREE --");
-
-        while (e.hasMoreElements())
-        {
-            DefaultMutableTreeNode nd = (DefaultMutableTreeNode) e
-                .nextElement();
-            String tabs = "|";
-
-            for (int i = 0; i < nd.getLevel(); i++)
-            {
-                tabs += "-";
-            }
-
-            log.info(tabs + nd);
-        }
     }
 
     /**
@@ -232,14 +124,6 @@ public class FileBrowser extends HtmlPage
 
             selectLink.add(new Label("fileName", file.getName()));
             node.add(selectLink);
-        }
-
-        /**
-         * @see wicket.markup.html.tree.Tree#populateFiller(wicket.markup.html.tree.Filler)
-         */
-        protected void populateFiller(Filler filler)
-        {
-            filler.add(new SimpleImage("fillImg", "filebrowser/vert.gif"));
         }
 
         /**

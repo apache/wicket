@@ -38,6 +38,14 @@ public class FileBrowserApplication extends WebApplication
         Duration pollFreq = Duration.ONE_SECOND;
 
         getSettings().setResourcePollFrequency(pollFreq);
+
+        // pre-load tree in a separate thread
+        new Thread() {
+            public void run()
+            {
+                new FileModelProvider().getFileModel();      
+            }
+        }.start();
     }
 }
 

@@ -30,6 +30,7 @@ import java.util.List;
 
 /**
  * Holder and handler for tree state.
+ *
  * @author Eelco Hillenius
  */
 public final class TreeStateCache extends VariableHeightLayoutCache implements Serializable
