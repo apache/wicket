@@ -32,14 +32,15 @@ import wicket.model.PropertyModel;
 /**
  * A password text field component. As you type, characters show up as asterisks or some
  * other such character so that nobody can look over your shoulder and read your password.
+ *
  * @author Jonathan Locke
  */
 public final class PasswordTextField extends FormComponent implements FormComponent.ICookieValue
-{ // TODO finalize javadoc
-    // Code broadcaster for reporting
+{
+    /** log. */
     private static final Log log = LogFactory.getLog(PasswordTextField.class);
 
-    /** Serial Version ID */
+    /** Serial Version ID. */
 	private static final long serialVersionUID = 1776665507834380353L;
 
 
@@ -120,6 +121,8 @@ public final class PasswordTextField extends FormComponent implements FormCompon
     }
 
     /**
+	 * Processes the component tag.
+	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(ComponentTag)
      */
     protected void handleComponentTag(final ComponentTag tag)
@@ -138,6 +141,7 @@ public final class PasswordTextField extends FormComponent implements FormCompon
     }
 
     /**
+     * Updates this components' model from the request.
      * @see FormComponent#updateModel()
      */
     public void updateModel()
@@ -146,6 +150,8 @@ public final class PasswordTextField extends FormComponent implements FormCompon
     }
 
     /**
+	 * Gets the cookie value for this component.
+	 * @return the cookie value for this component
      * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
      */
     public String getCookieValue()
@@ -164,6 +170,8 @@ public final class PasswordTextField extends FormComponent implements FormCompon
     }
 
     /**
+	 * Sets the cookie value for this component
+	 * @param value the cookie value for this component
      * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
      */
     public void setCookieValue(String value)
@@ -213,5 +221,3 @@ public final class PasswordTextField extends FormComponent implements FormCompon
 		return this;
 	}
 }
-
-

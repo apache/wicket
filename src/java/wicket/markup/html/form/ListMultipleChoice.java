@@ -33,21 +33,18 @@ import wicket.model.Model;
  * A multiple choice list component.
  * 
  * @author Jonathan Locke
+ * @author Johan Compagner
  */
 public final class ListMultipleChoice extends AbstractDropDownChoice
-{ // TODO finalize javadoc
-	/** Serial Version ID */
+{
+	/** Serial Version ID. */
 	private static final long serialVersionUID = -1000324612688307682L;
 
 	/**
 	 * Convenience constructor; wraps the given model in a {@link Model}object.
-	 * 
-	 * @param componentName
-	 *           the name of the component
-	 * @param model
-	 *           the component model; will be wraped in a {@link Model}object
-	 * @param values
-	 *           the values to choose from
+	 * @param componentName the name of the component
+	 * @param model the component model; will be wraped in a {@link Model}object
+	 * @param values the values to choose from
 	 */
 	public ListMultipleChoice(final String componentName, final Serializable model, final List values)
 	{
@@ -57,12 +54,9 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
-	 *           the name of the component
-	 * @param model
-	 *           the component model
-	 * @param values
-	 *           the values to choose from
+	 * @param componentName the name of the component
+	 * @param model the component model
+	 * @param values the values to choose from
 	 */
 	public ListMultipleChoice(final String componentName, final IModel model, final List values)
 	{
@@ -71,6 +65,8 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 	}
 
 	/**
+	 * Processes the component tag.
+	 * @param tag Tag to modify
 	 * @see wicket.Component#handleComponentTag(ComponentTag)
 	 */
 	protected void handleComponentTag(final ComponentTag tag)
@@ -79,7 +75,10 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 		tag.put("multiple", true);
 	}
 
-	/*
+	/**
+     * Gets whether the given value represents the current selection.
+     * @param currentValue the current list value
+     * @return whether the given value represents the current selection
 	 * @see wicket.markup.html.form.AbstractDropDownChoice#isSelected(java.lang.Object)
 	 */
 	protected boolean isSelected(Object currentValue)
@@ -90,6 +89,7 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 	}
 
 	/**
+	 * Updates this forms model from the request.
      * @see FormComponent#updateModel()
 	 */
 	public final void updateModel()
@@ -133,12 +133,13 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 	}
 
 	/**
+	 * Gets the cookie value for this component.
+	 * @return the cookie value for this component
 	 * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
 	 */
 	public final String getCookieValue()
 	{
 		// Get the list of selected values
-		
 		final Collection selectedValues = (Collection) getModelObject();
 		final StringBuffer cookieValue = new StringBuffer();
 		if(selectedValues != null)
@@ -164,6 +165,8 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 	}
 
 	/**
+	 * Sets the cookie value for this component.
+	 * @param value the cookie value for this component
 	 * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
 	 */
 	public final void setCookieValue(final String value)
@@ -195,5 +198,3 @@ public final class ListMultipleChoice extends AbstractDropDownChoice
 		}
 	}
 }
-
-// 

@@ -38,7 +38,8 @@ import wicket.model.IModel;
  * @author Johan Compagner
  */
 public class DropDownChoice extends AbstractDropDownChoice
-{ // TODO finalize javadoc
+{
+	/** serial UID. */
 	private static final long serialVersionUID = 122777360064586107L;
 
     static
@@ -121,6 +122,8 @@ public class DropDownChoice extends AbstractDropDownChoice
     }
 
     /**
+	 * Processes the component tag.
+	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
     protected void handleComponentTag(final ComponentTag tag)
@@ -135,11 +138,11 @@ public class DropDownChoice extends AbstractDropDownChoice
                     + url + "&amp;" + getPath() +
                     "=' + this.options[this.selectedIndex].value;");
         }
-
         super.handleComponentTag(tag);
     }
 
 	/**
+	 * Updates this components' model from the request.
 	 * @see wicket.markup.html.form.AbstractDropDownChoice#updateModel()
 	 */
 	public final void updateModel()
@@ -178,6 +181,8 @@ public class DropDownChoice extends AbstractDropDownChoice
     }
 
 	/**
+	 * Gets the cookie value for this component.
+	 * @return the cookie value for this component
 	 * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
 	 */
 	public final String getCookieValue()
@@ -199,6 +204,8 @@ public class DropDownChoice extends AbstractDropDownChoice
 	}
 
 	/**
+	 * Sets the cookie value for this component
+	 * @param value the cookie value for this component
 	 * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
 	 */
 	public final void setCookieValue(final String value)

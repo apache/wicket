@@ -42,8 +42,8 @@ import wicket.model.IModel;
  */
 public abstract class AbstractDropDownChoice extends FormComponent implements
         FormComponent.ICookieValue
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
     private static final long serialVersionUID = -8334966481181600604L;
 
     /** default value to display when a null option is rendered; value == 'Choose One'. */
@@ -136,7 +136,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     }
 
     /**
-     * Set values.
+     * Sets the values to use for the dropdown.
      * @param values values to set
      * @return dropdown choice
      */
@@ -171,11 +171,14 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     }
 
     /**
+     * Updates the model of this component from the request.
      * @see wicket.markup.html.form.FormComponent#updateModel()
      */
     public abstract void updateModel();
 
     /**
+	 * Processes the component tag.
+	 * @param tag Tag to modify
      * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
      */
     protected void handleComponentTag(final ComponentTag tag)
@@ -185,6 +188,9 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     }
 
     /**
+	 * Handle the container's body.
+	 * @param markupStream The markup stream
+	 * @param openTag The open tag for the body
      * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
     protected final void handleBody(final MarkupStream markupStream,
@@ -251,7 +257,7 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     }
 
     /**
-     * Whether the given value represents the current selection.
+     * Gets whether the given value represents the current selection.
      * @param currentValue the current list value
      * @return whether the given value represents the current selection
      */
@@ -268,7 +274,8 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     }
 
     /**
-     * Should a null value be rendered if the selection is null like "Choose One".
+     * Gets whether the null option must be rendered if current
+     * selection == null.
      * The default is true.
      * @return boolean
      */
@@ -278,8 +285,10 @@ public abstract class AbstractDropDownChoice extends FormComponent implements
     }
 
     /**
-     * Should a null value be rendered if the selection is null like "Choose One".
-     * @param renderNullOption boolean
+     * Sets whether the null option must be rendered if current
+     * selection == null.
+     * @param renderNullOption whether the null option must be
+     * rendered if current selection == null.
      */
     public void setRenderNullOption(boolean renderNullOption)
     {

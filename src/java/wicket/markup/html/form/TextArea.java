@@ -27,11 +27,12 @@ import wicket.model.IModel;
 
 /**
  * Multi-row text editing component.
+ *
  * @author Jonathan Locke
  */
 public final class TextArea extends FormComponent implements FormComponent.ICookieValue
-{ // TODO finalize javadoc
-    /** Serial Version ID */
+{
+    /** Serial Version ID. */
 	private static final long serialVersionUID = -1323747673401786242L;
 
 	/**
@@ -106,6 +107,9 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
     }
 
     /**
+	 * Handle the container's body.
+	 * @param markupStream The markup stream
+	 * @param openTag The open tag for the body
      * @see wicket.Component#handleBody(MarkupStream, ComponentTag)
      */
     protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
@@ -114,6 +118,7 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
     }
 
     /**
+     * Updates this components' model from the request.
      * @see wicket.markup.html.form.FormComponent#updateModel()
      */
     public void updateModel()
@@ -122,6 +127,8 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
     }
 
     /**
+	 * Gets the cookie value for this component.
+	 * @return the cookie value for this component
      * @see wicket.markup.html.form.FormComponent.ICookieValue#getCookieValue()
      */
     public String getCookieValue()
@@ -130,6 +137,8 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
     }
 
     /**
+	 * Sets the cookie value for this component
+	 * @param value the cookie value for this component
      * @see wicket.markup.html.form.FormComponent.ICookieValue#setCookieValue(java.lang.String)
      */
     public void setCookieValue(String value)
@@ -137,5 +146,3 @@ public final class TextArea extends FormComponent implements FormComponent.ICook
         setModelObject(value);
     }
 }
-
-
