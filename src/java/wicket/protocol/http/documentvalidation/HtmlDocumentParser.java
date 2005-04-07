@@ -79,9 +79,10 @@ public class HtmlDocumentParser
 	 */
 	public HtmlDocumentParser(final String document)
 	{
-		this.document = Strings.replaceAll(document, "\n", "");
-		this.document = Strings.replaceAll(document, "\r", "");
-		this.document = Strings.replaceAll(document, "\t", " ");
+	    this.document = document;
+		this.document = Strings.replaceAll(this.document, "\n", "");
+		this.document = Strings.replaceAll(this.document, "\r", "");
+		this.document = Strings.replaceAll(this.document, "\t", " ");
 		pos = 0;
 	}
 
