@@ -26,7 +26,7 @@ import wicket.PageParameters;
  * 
  * @author Jonathan Locke
  */
-public final class BookmarkablePageLink extends Link
+public class BookmarkablePageLink extends Link
 {
 	/** The page class that this link links to. */
 	private final Class pageClass;
