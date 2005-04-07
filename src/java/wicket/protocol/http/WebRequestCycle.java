@@ -56,7 +56,7 @@ public class WebRequestCycle extends RequestCycle
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
 	/** Path prefix for shared resources */
-	private static final String resourceReferencePrefix = "/resource/";
+	public static final String resourceReferencePrefix = "/resource/";
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
