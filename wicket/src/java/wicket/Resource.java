@@ -53,7 +53,7 @@ import wicket.util.resource.IResourceStream;
 public abstract class Resource implements IResourceListener
 {
 	/** The actual raw resource this class is rendering */
-	private IResourceStream resource;
+	private IResourceStream resourceStream;
 
 	/**
 	 * Constructor
@@ -84,12 +84,12 @@ public abstract class Resource implements IResourceListener
 		final Response response = cycle.getResponse();
 
 		// Configure response with content type of resource
-		response.setContentType(resource.getContentType());
-		response.setContentLength((int)resource.length());
+		response.setContentType(resourceStream.getContentType());
+		response.setContentLength((int)resourceStream.length());
 
 		// Don't set this above setContentLength call above. 
 		// The call above could create and set the last modified time.  
-		response.setLastModifiedTime(resource.lastModifiedTime());
+		response.setLastModifiedTime(resourceStream.lastModifiedTime());
 
 		// Respond with resource
 		respond(response);
@@ -106,7 +106,7 @@ public abstract class Resource implements IResourceListener
 	 */
 	protected void invalidate()
 	{
-		this.resource = null;
+		this.resourceStream = null;
 	}
 
 	/**
@@ -114,12 +114,12 @@ public abstract class Resource implements IResourceListener
 	 */
 	private void init()
 	{
-		if (this.resource == null)
+		if (this.resourceStream == null)
 		{
-			this.resource = getResourceStream();
-			if (this.resource == null)
+			this.resourceStream = getResourceStream();
+			if (this.resourceStream == null)
 			{
-				throw new WicketRuntimeException("Could not get resource");
+				throw new WicketRuntimeException("Could not get resource stream");
 			}
 		}
 	}
@@ -137,17 +137,17 @@ public abstract class Resource implements IResourceListener
 			final OutputStream out = new BufferedOutputStream(response.getOutputStream());
 			try
 			{
-				Streams.writeStream(new BufferedInputStream(resource.getInputStream()), out);
+				Streams.writeStream(new BufferedInputStream(resourceStream.getInputStream()), out);
 			}
 			finally
 			{
-				resource.close();
+				resourceStream.close();
 				out.flush();
 			}
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Unable to render resource " + resource, e);
+			throw new WicketRuntimeException("Unable to render resource stream " + resourceStream, e);
 		}
 	}
 
