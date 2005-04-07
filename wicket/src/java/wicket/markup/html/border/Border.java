@@ -82,6 +82,9 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	/** The open tag for this border component. */
 	private transient ComponentTag openTag;
 
+	/** Will be true, once the first <wicket:body> has been seen */
+	private transient boolean haveSeenBodyTag = false;
+	
 	/**
      * @see wicket.Component#Component(String)
 	 */
@@ -110,6 +113,13 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		// Render the associated markup
 		renderAssociatedMarkup("border",
 				"Markup for a border component must begin a tag like '<wicket:border>'");
+
+        // There exactly only one body tag per border
+        if (haveSeenBodyTag == false)
+        {
+			markupStream.throwMarkupException(
+			        "There must be exactly one <wicket:body> tag for each border compoment.");
+        }
 	}
 
 	/**
@@ -172,6 +182,15 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			markupStream.throwMarkupException("A <wicket:body> tag must be an open or open-close tag.");
         }
 
+        // There exactly only one body tag per border
+        if (haveSeenBodyTag == true)
+        {
+			markupStream.throwMarkupException(
+			        "There must be exactly one <wicket:body> tag for each border compoment.");
+        }
+        
+        haveSeenBodyTag = true;
+        
 		// Render the body tag
 		renderComponentTag(bodyTag);
 
