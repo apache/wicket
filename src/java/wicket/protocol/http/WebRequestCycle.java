@@ -56,7 +56,7 @@ public class WebRequestCycle extends RequestCycle
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
 	/** Path prefix for shared resources */
-	private static final String sharedResourcePrefix = "/shared/";
+	private static final String resourceReferencePrefix = "/resource/";
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
@@ -115,7 +115,7 @@ public class WebRequestCycle extends RequestCycle
 	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
-		if (callComponentListener() || bookmarkablePage() || homePage() || sharedResource())
+		if (callComponentListener() || bookmarkablePage() || homePage() || resourceReference())
 		{
 			return true;
 		}
@@ -396,16 +396,16 @@ public class WebRequestCycle extends RequestCycle
 	 * @return Returns shared resource to user if URL matches shared resource
 	 *         pattern
 	 */
-	private boolean sharedResource()
+	private boolean resourceReference()
 	{
 		final String pathInfo = getWebRequest().getPathInfo();
-		if (pathInfo.startsWith(sharedResourcePrefix))
+		if (pathInfo.startsWith(resourceReferencePrefix))
 		{
-			final String sharedResourceKey = pathInfo.substring(sharedResourcePrefix.length());
-			final Resource resource = getApplication().getResource(sharedResourceKey);
+			final String resourceReferenceKey = pathInfo.substring(resourceReferencePrefix.length());
+			final Resource resource = getApplication().getResource(resourceReferenceKey);
 			if (resource == null)
 			{
-				throw new WicketRuntimeException("Could not find shared resource under key " + sharedResourceKey);
+				throw new WicketRuntimeException("Could not find shared resource under key " + resourceReferenceKey);
 			}
 			else
 			{

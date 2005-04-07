@@ -30,12 +30,11 @@ import javax.swing.tree.TreePath;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.Resource;
-import wicket.SharedResource;
+import wicket.ResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.image.resource.StaticImageResource;
+import wicket.markup.html.image.resource.StaticImageResourceReference;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -58,16 +57,25 @@ import wicket.model.Model;
  */
 public abstract class Tree extends AbstractTree implements TreeModelListener
 {
-	/** name of the junction image component; value = 'junctionImage'. */
+	/** Name of the junction image component; value = 'junctionImage'. */
 	public static final String JUNCTION_IMAGE_NAME = "junctionImage";
 
-	/** name of the node image component; value = 'nodeImage'. */
+	/** Name of the node image component; value = 'nodeImage'. */
 	public static final String NODE_IMAGE_NAME = "nodeImage";
+	
+	/** Blank image */
+	private static final ResourceReference blank = new StaticImageResourceReference(Tree.class, "blank.gif");
+	
+	/** Minus sign image */
+	private static final ResourceReference minus = new StaticImageResourceReference(Tree.class, "minus.gif");
+	
+	/** Plus sign image */
+	private static final ResourceReference plus = new StaticImageResourceReference(Tree.class, "plus.gif");
 
-	/** list with tree paths. */
+	/** List with tree paths. */
 	private List treePathList;
 
-	/** list view for tree paths. */
+	/** List view for tree paths. */
 	private final TreePathsListView treePathsListView;
 
 	/**
@@ -326,26 +334,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * Gets the CSS class attribute value for a normal (not-selected) row.
-	 * 
-	 * @return the CSS class attribute value for a normal (not-selected) row
-	 */
-	private String getCssClassForRow()
-	{
-		return "treerow";
-	}
-
-	/**
-	 * Gets the CSS class attribute value for the selected row.
-	 * 
-	 * @return the CSS class attribute value for the selected row
-	 */
-	private String getCssClassForSelectedRow()
-	{
-		return "treerow-selected";
-	}
-
-	/**
 	 * Get image for a junction; used by method createExpandCollapseLink. If you
 	 * use the packaged panel (Tree.html), you must name the component
 	 * using JUNCTION_IMAGE_NAME.
@@ -359,24 +347,24 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		if (!node.isLeaf())
 		{
 			// we want the image to be dynamically, yet resolving to a static image.
-			return new Image(JUNCTION_IMAGE_NAME, (SharedResource)null)
+			return new Image(JUNCTION_IMAGE_NAME)
 			{
-				protected Resource getImageResource()
+				protected ResourceReference getImageResourceReference()
 				{
 					if (isExpanded(node))
 					{
-						return getImage("minus.gif");
+						return minus;
 					}
 					else
 					{
-						return getImage("plus.gif");
+						return plus;
 					}
 				}
 			};
 		}
 		else
 		{
-			return new Image(JUNCTION_IMAGE_NAME, getImage("blank.gif"));
+			return new Image(JUNCTION_IMAGE_NAME, blank);
 		}
 	}
 
@@ -391,7 +379,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected Image getNodeImage(final DefaultMutableTreeNode node)
 	{
-		return new Image(JUNCTION_IMAGE_NAME, getImage("blank.gif"));
+		return new Image(JUNCTION_IMAGE_NAME, blank);
 	}
 
 	/**
@@ -432,23 +420,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	protected void nodeLinkClicked(final DefaultMutableTreeNode node)
 	{
 		setSelected(node);
-	}
-
-	/**
-	 * Gets the shared image resource with the given name from this package.
-	 * @param name the name of the image resource; must match the name of the image in the
-	 * package.
-	 * @return the shared image resource
-	 */
-	private SharedResource getImage(final String name)
-	{
-		return new SharedResource(Tree.class, name)
-		{
-			public Resource newResource()
-			{
-				return StaticImageResource.get(Tree.class.getPackage(), name, null, null);
-			}
-		};
 	}
 
 	/**
@@ -506,5 +477,25 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		nodeLink.add(getNodeImage(node));
 		nodeLink.add(new Label("label", getNodeLabel(node)));
 		return nodeLink;
+	}
+
+	/**
+	 * Gets the CSS class attribute value for a normal (not-selected) row.
+	 * 
+	 * @return the CSS class attribute value for a normal (not-selected) row
+	 */
+	private String getCssClassForRow()
+	{
+		return "treerow";
+	}
+
+	/**
+	 * Gets the CSS class attribute value for the selected row.
+	 * 
+	 * @return the CSS class attribute value for the selected row
+	 */
+	private String getCssClassForSelectedRow()
+	{
+		return "treerow-selected";
 	}
 }

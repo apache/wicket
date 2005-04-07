@@ -8,6 +8,13 @@
   </properties>
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	
+      <action type="update" dev="Jonathan Locke" issue="">      
+      Changed SharedResource to ResourceReference.  ResourceReference does not inherit
+      from Resource since it is a reference to a resource and not an actual resource now.
+      Added StaticImageResourceReference to make it easy to create references to static 
+      image resources.  See the Tree class for an example usage.  SharedResourceLink 
+      was changed to ResourceLink.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Fixed problem where error pages failing could cause recursive redirection.
       In doing this, added Page.isErrorPage() method that returns false by default.

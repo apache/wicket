@@ -18,7 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.IResourceListener;
-import wicket.SharedResource;
+import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.markup.html.image.resource.ImageResource;
@@ -65,13 +65,13 @@ public class ImageButton extends Button implements IResourceListener
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param namedResource
+	 * @param resourceReference
 	 *            The shared image resource
 	 */
-	public ImageButton(final String id, final SharedResource namedResource)
+	public ImageButton(final String id, final ResourceReference resourceReference)
 	{
 		super(id);
-		localizedImageResource.setResource(namedResource);
+		localizedImageResource.setResourceReference(resourceReference);
 	}
 
 	/**

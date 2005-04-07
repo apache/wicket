@@ -19,7 +19,7 @@ package wicket.markup.html.image;
 
 import wicket.IResourceListener;
 import wicket.Resource;
-import wicket.SharedResource;
+import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
@@ -54,13 +54,13 @@ public class Image extends WebComponent implements IResourceListener
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param namedResource
+	 * @param resourceReference
 	 *            The shared image resource
 	 */
-	public Image(final String id, final SharedResource namedResource)
+	public Image(final String id, final ResourceReference resourceReference)
 	{
 		super(id);
-		localizedImageResource.setResource(namedResource);
+		localizedImageResource.setResourceReference(resourceReference);
 	}
 
 	/**
@@ -116,18 +116,26 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
-	 * @param sharedResource
+	 * @param resourceReference
 	 *            The shared ImageResource to set.
 	 */
-	public void setImageResource(final SharedResource sharedResource)
+	public void setImageResourceReference(final ResourceReference resourceReference)
 	{
-		this.localizedImageResource.setResource(sharedResource);
+		this.localizedImageResource.setResourceReference(resourceReference);
 	}
 
 	/**
 	 * @return Resource returned from subclass
 	 */
 	protected Resource getImageResource()
+	{
+		return null;
+	}
+
+	/**
+	 * @return ResourceReference returned from subclass
+	 */	
+	protected ResourceReference getImageResourceReference()
 	{
 		return null;
 	}
@@ -154,6 +162,11 @@ public class Image extends WebComponent implements IResourceListener
 		if (resource != null)
 		{
 			localizedImageResource.setResource(resource);
+		}
+		final ResourceReference resourceReference = getImageResourceReference();
+		if (resourceReference != null)
+		{
+			localizedImageResource.setResourceReference(resourceReference);
 		}
 		localizedImageResource.setSrcAttribute(tag);
 	}

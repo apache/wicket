@@ -17,29 +17,30 @@
  */
 package wicket.markup.html.link;
 
-import wicket.SharedResource;
+import wicket.ResourceReference;
 
 /**
- * A link to any SharedResource.
+ * A link to any ResourceReference.
  * 
  * @author Jonathan Locke
  */
-public class SharedResourceLink extends Link
+public class ResourceLink extends Link
 {
-	private final SharedResource sharedResource;
+	/** Resource reference */
+	private final ResourceReference resourceReference;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param sharedResource
+	 * @param resourceReference
 	 *            The shared resource to link to
 	 */
-	public SharedResourceLink(final String id, final SharedResource sharedResource)
+	public ResourceLink(final String id, final ResourceReference resourceReference)
 	{
 		super(id);
-		this.sharedResource = sharedResource;
+		this.resourceReference = resourceReference;
 	}
 	
 	/**
@@ -47,7 +48,7 @@ public class SharedResourceLink extends Link
 	 */
 	protected String getURL()
 	{
-		return getPage().urlFor(sharedResource.getPath());
+		return getPage().urlFor(resourceReference.getPath());
 	}
 
 	/**
