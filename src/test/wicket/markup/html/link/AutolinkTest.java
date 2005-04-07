@@ -64,7 +64,6 @@ public class AutolinkTest extends TestCase
 
         // Validate the document
         String document = application.getServletResponse().getDocument();
-        log.info(document);
     	Assert.assertTrue(validateDocument(document));
     }
 
@@ -75,6 +74,7 @@ public class AutolinkTest extends TestCase
 	 */
 	private boolean validateDocument(String document)
 	{
+	    System.out.println(document);
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
 		Tag head = new Tag("head");
@@ -114,7 +114,9 @@ public class AutolinkTest extends TestCase
 		
 		Tag anchor4 = new Tag("a");
 		anchor4.addExpectedAttribute("href", ".*MockWebApplication.*");
-		anchor4.addExpectedChild(new TextContent("Home"));
+		Tag span = new Tag("span");
+		anchor4.addExpectedChild(span);
+		span.addExpectedChild(new TextContent("Home"));
 		link3.addExpectedChild(anchor4);
 		
 		Tag link4 = new Tag("wicket:link");
