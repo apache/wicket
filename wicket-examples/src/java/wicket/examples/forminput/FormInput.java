@@ -125,7 +125,8 @@ public class FormInput extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					InputForm.this.setModelObject(new FormInputModel());
+					InputForm.this.setModel(
+					        new CompoundPropertyModel(new FormInputModel()));
 				}
 			}.add(new Image("resetButtonImage")));
 		}
