@@ -31,11 +31,39 @@ import java.io.Reader;
  */
 public final class Streams
 {
+
 	/**
-	 * Private to prevent instantiation.
+	 * Writes the input stream to the output stream. Input is done without a
+	 * Reader object, meaning that the input is copied in its raw form.
+	 * 
+	 * @param in
+	 *            The input stream
+	 * @param out
+	 *            The output stream
+	 * @throws IOException
 	 */
-	private Streams()
+	public static void copy(final InputStream in, final OutputStream out) throws IOException
 	{
+		final byte[] buffer = new byte[1024];
+		while (true)
+		{
+			final int available = in.available(); 
+			if (available > 0)
+			{
+				final int length = Math.min(available, buffer.length);
+				in.read(buffer, 0, length);
+				out.write(buffer, 0, length);
+			}
+			else
+			{
+				final int c = in.read();
+				if (c == -1)
+				{
+					break;
+				}
+				out.write(c);
+			}
+		}
 	}
 
 	/**
@@ -86,38 +114,10 @@ public final class Streams
 
 		return buffer.toString();
 	}
-
 	/**
-	 * Writes the input stream to the output stream. Input is done without a
-	 * Reader object, meaning that the input is copied in its raw form.
-	 * 
-	 * @param in
-	 *            The input stream
-	 * @param out
-	 *            The output stream
-	 * @throws IOException
+	 * Private to prevent instantiation.
 	 */
-	public static void writeStream(final InputStream in, final OutputStream out) throws IOException
+	private Streams()
 	{
-		final byte[] buffer = new byte[1024];
-		while (true)
-		{
-			final int available = in.available(); 
-			if (available > 0)
-			{
-				final int length = Math.min(available, buffer.length);
-				in.read(buffer, 0, length);
-				out.write(buffer, 0, length);
-			}
-			else
-			{
-				final int c = in.read();
-				if (c == -1)
-				{
-					break;
-				}
-				out.write(c);
-			}
-		}
 	}
 }

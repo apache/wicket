@@ -369,7 +369,7 @@ public class WebRequestCycle extends RequestCycle
 				try
 				{
 					// Copy resource input stream to servlet output stream
-					Streams.writeStream(in, getWebResponse().getHttpServletResponse()
+					Streams.copy(in, getWebResponse().getHttpServletResponse()
 							.getOutputStream());
 				}
 				finally
