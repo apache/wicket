@@ -54,6 +54,21 @@ public class StaticImageResource extends ImageResource
 	final String style;
 
 	/**
+	 * Gets a non-localized image resource for a given set of criteria. Only one
+	 * image resource will be loaded for the same criteria.
+	 * 
+	 * @param basePackage
+	 *            The base package to search from
+	 * @param path
+	 *            The path to the resource
+	 * @return The image resource
+	 */
+	public static StaticImageResource get(final Package basePackage, final String path)
+	{
+		return get(basePackage, path, null, null);
+	}
+
+	/**
 	 * Gets the image resource for a given set of criteria. Only one image
 	 * resource will be loaded for the same criteria.
 	 * 
@@ -116,11 +131,12 @@ public class StaticImageResource extends ImageResource
 			// Locate resource
 			this.resource = RequestCycle.get().getApplication().getResourceStreamLocator().locate(
 					absolutePath, style, locale, null);
-			
+
 			// Check that resource was found
 			if (this.resource == null)
 			{
-				throw new WicketRuntimeException("Unable to find static image resource [path = " + absolutePath + ", style = " + style + ", locale = " + locale + "]");
+				throw new WicketRuntimeException("Unable to find static image resource [path = "
+						+ absolutePath + ", style = " + style + ", locale = " + locale + "]");
 			}
 		}
 		return resource;

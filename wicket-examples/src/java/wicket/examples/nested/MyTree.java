@@ -25,10 +25,9 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Resource;
-import wicket.SharedResource;
+import wicket.ResourceReference;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.image.resource.StaticImageResource;
+import wicket.markup.html.image.resource.StaticImageResourceReference;
 import wicket.markup.html.tree.Tree;
 
 /**
@@ -38,6 +37,10 @@ import wicket.markup.html.tree.Tree;
  */
 public class MyTree extends Tree
 {
+	private static final ResourceReference folderOpen = new StaticImageResourceReference(MyTree.class, "folderopen.gif");
+	private static final ResourceReference folder = new StaticImageResourceReference(MyTree.class, "folder.gif");
+	private static final ResourceReference nodeImage = new StaticImageResourceReference(MyTree.class, "node.gif");
+	
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
 
@@ -79,44 +82,27 @@ public class MyTree extends Tree
 	{
 		if (node.isLeaf())
 		{
-			Image img = new Image(NODE_IMAGE_NAME, getImage("node.gif"));
+			Image img = new Image(NODE_IMAGE_NAME, nodeImage);
 			return img;
 		}
 		else
 		{
-			// we want the image to be dynamically, yet resolving to a static image.
-			return new Image(NODE_IMAGE_NAME, (SharedResource)null)
+			// we want the image to be dynamic, yet resolve to a static image.
+			return new Image(NODE_IMAGE_NAME)
 			{
-				protected Resource getImageResource()
+				protected ResourceReference getImageResourceReference()
 				{
 					if (isExpanded(node))
 					{
-						return getImage("folderopen.gif");
+						return folderOpen;
 					}
 					else
 					{
-						return getImage("folder.gif");
+						return folder;
 					}
 				}
 			};
 		}
-	}
-
-	/**
-	 * Gets the shared image resource with the given name from this package.
-	 * @param name the name of the image resource; must match the name of the image in the
-	 * package.
-	 * @return the shared image resource
-	 */
-	private SharedResource getImage(final String name)
-	{
-		return new SharedResource(MyTree.class, name)
-		{
-			public Resource newResource()
-			{
-				return StaticImageResource.get(MyTree.class.getPackage(), name, null, null);
-			}
-		};
 	}
 
 	/**

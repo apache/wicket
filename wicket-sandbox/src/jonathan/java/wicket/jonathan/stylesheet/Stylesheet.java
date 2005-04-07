@@ -85,6 +85,11 @@ public class Stylesheet extends WebResource
 			public Time lastModifiedTime()
 			{
 				return lastModified;
+			}
+
+			public long length()
+			{
+				return buffer.length();
 			}			
 		};
 	}

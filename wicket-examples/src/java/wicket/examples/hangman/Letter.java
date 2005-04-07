@@ -21,7 +21,7 @@ import java.awt.Color;
 import java.io.Serializable;
 
 import wicket.Resource;
-import wicket.SharedResource;
+import wicket.ResourceReference;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.util.lang.Primitives;
 
@@ -74,11 +74,11 @@ public class Letter implements Serializable
 	 * @param enabled
 	 *            True to get the enabled resource, false to get the disabled
 	 *            resource
-	 * @return SharedResource token for this letter
+	 * @return ResourceReference token for this letter
 	 */
-	public SharedResource getSharedImageResource(final boolean enabled)
+	public ResourceReference getSharedImageResource(final boolean enabled)
 	{
-		return new SharedResource(Letter.class, asString() + (enabled ? "_enabled" : "_disabled"))
+		return new ResourceReference(Letter.class, asString() + (enabled ? "_enabled" : "_disabled"))
 		{
 			protected Resource newResource()
 			{

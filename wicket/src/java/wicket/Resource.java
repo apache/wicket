@@ -36,14 +36,14 @@ import wicket.util.resource.IResourceStream;
  * Application with addResource(Class scope, String name) or addResource(String
  * name). A resource added in such a way is a named resource and is accessible
  * throughout the application via Application.getResource(Class scope, String
- * name) or Application.getResource(String name). The SharedResource class
+ * name) or Application.getResource(String name). The ResourceReference class
  * enables easy access to such resources in a way that is light on clusters.
  * <p>
  * While resources can be shared between components, it is important to
  * emphasize that components <i>cannot </i> be shared among containers. For
  * example, you can create a button image resource with new
  * DefaultButtonImageResource(...) and store that in the Application with
- * addResource(). You can then assign that logical resource via SharedResource
+ * addResource(). You can then assign that logical resource via ResourceReference
  * to several ImageButton components. While the button image resource can be
  * shared between components like this, the ImageButton components in this
  * example are like all other components in Wicket and cannot be shared.

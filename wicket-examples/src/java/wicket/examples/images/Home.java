@@ -23,7 +23,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import wicket.Resource;
-import wicket.SharedResource;
+import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.resource.BufferedDynamicImageResource;
@@ -70,12 +70,12 @@ public final class Home extends WicketExamplePage
 		add(new Image("okButton", getOkButtonImage()));
 
 		// Add cancel button image
-		add(new Image("cancelButton", new SharedResource("cancelButton")));
+		add(new Image("cancelButton", new ResourceReference("cancelButton")));
 	}
 
-	final SharedResource getOkButtonImage()
+	final ResourceReference getOkButtonImage()
 	{
-		return new SharedResource("okButton")
+		return new ResourceReference("okButton")
 		{
 			protected Resource newResource()
 			{
@@ -87,9 +87,9 @@ public final class Home extends WicketExamplePage
 	/**
 	 * @return Gets shared image component
 	 */
-	public SharedResource getImage5Resource()
+	public ResourceReference getImage5Resource()
 	{
-		return new SharedResource(Home.class, "image5")
+		return new ResourceReference(Home.class, "image5")
 		{
 			public Resource newResource()
 			{

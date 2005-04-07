@@ -19,28 +19,26 @@ package wicket;
 
 import java.util.Locale;
 
-import wicket.util.resource.IResourceStream;
-
 /**
- * SharedResource is essentially a reference to an actual resource which is
- * shared through Application. A SharedResource has a name and a scope (within
- * which the name must be unique). It may also have a locale or style.
+ * ResourceReference is essentially a reference to an actual resource which is
+ * shared through Application. A ResourceReference has a name and a scope
+ * (within which the name must be unique). It may also have a locale or style.
  * <p>
- * SharedResources may be added to the Application when the Application is
- * constructed using
+ * Resources may be added to the Application when the Application is constructed
+ * using
  * {@link Application#addResource(Class, String, Locale, String, Resource)},
  * {@link Application#addResource(String, Locale, Resource)}or
  * {@link Application#addResource(String, Resource)}.
  * <p>
  * If a component has its own shared resource which should not be added to the
  * application construction logic in this way, it can lazy-initialize the
- * resource by overriding the {@link SharedResource#newResource()}method. In
+ * resource by overriding the {@link ResourceReference#newResource()}method. In
  * this method, the component should supply logic that creates the shared
  * resource.
  * 
  * @author Jonathan Locke
  */
-public class SharedResource extends Resource
+public class ResourceReference
 {
 	/** The locale of the resource */
 	private Locale locale;
@@ -65,7 +63,7 @@ public class SharedResource extends Resource
 	 * @param name
 	 *            The name of the resource
 	 */
-	public SharedResource(final Class scope, final String name)
+	public ResourceReference(final Class scope, final String name)
 	{
 		this.scope = scope;
 		this.name = name;
@@ -77,9 +75,39 @@ public class SharedResource extends Resource
 	 * @param name
 	 *            The name of the resource
 	 */
-	public SharedResource(final String name)
+	public ResourceReference(final String name)
 	{
 		this(Application.class, name);
+	}
+
+	/**
+	 * Binds this shared resource to the given application
+	 * 
+	 * @param application
+	 *            The application which holds the shared resource
+	 */
+	public final void bind(final Application application)
+	{
+		// Try to resolve resource
+		if (resource == null)
+		{
+			// Try to get resource from Application repository
+			resource = application.getResource(scope, name, locale, style);
+
+			// Not available yet?
+			if (resource == null)
+			{
+				// Create resource using lazy-init factory method
+				resource = newResource();
+				if (resource == null)
+				{
+					throw new WicketRuntimeException("Unable to resolve shared resource " + this);
+				}
+
+				// Share through application
+				application.addResource(scope, name, locale, style, resource);
+			}
+		}
 	}
 
 	/**
@@ -89,14 +117,22 @@ public class SharedResource extends Resource
 	{
 		return locale;
 	}
+	
+	/**
+	 * @return Name
+	 */
+	public final String getName()
+	{
+		return name;
+	}
 
 	/**
-	 * @return Path to this shared resource
+	 * @return Path for this resource reference.
 	 */
 	public final String getPath()
 	{
 		final StringBuffer buffer = new StringBuffer();
-		buffer.append("shared/");
+		buffer.append("resource/");
 		buffer.append(scope.getName());
 		buffer.append('_');
 		buffer.append(name);
@@ -111,6 +147,27 @@ public class SharedResource extends Resource
 			buffer.append(style);
 		}
 		return buffer.toString();
+	}
+
+	/**
+	 * Gets the resource for this resource reference. If the ResourceReference
+	 * has not yet been bound to the application via
+	 * {@link ResourceReference#bind(Application)}this method may return null.
+	 * 
+	 * @return The resource, or null if the ResourceReference has not yet been
+	 *         bound.
+	 */
+	public final Resource getResource()
+	{
+		return resource;
+	}
+	
+	/**
+	 * @return Scope
+	 */
+	public final Class getScope()
+	{
+		return scope;
 	}
 
 	/**
@@ -155,46 +212,8 @@ public class SharedResource extends Resource
 	 */
 	public String toString()
 	{
-		return "[SharedResource name = " + name + ", scope = " + scope + ", locale = " + locale
+		return "[ResourceReference name = " + name + ", scope = " + scope + ", locale = " + locale
 				+ ", style = " + style + "]";
-	}
-
-	/**
-	 * Binds this shared resource to the given application
-	 * 
-	 * @param application
-	 *            The application which holds the shared resource
-	 */
-	public final void bind(final Application application)
-	{
-		// Try to resolve resource
-		if (resource == null)
-		{
-			// Try to get resource from Application repository
-			resource = application.getResource(scope, name, locale, style);
-
-			// Not available yet?
-			if (resource == null)
-			{
-				// Create resource using lazy-init factory method
-				resource = newResource();
-				if (resource == null)
-				{
-					throw new WicketRuntimeException("Unable to resolve shared resource " + this);
-				}
-
-				// Share through application
-				application.addResource(scope, name, locale, style, resource);
-			}
-		}
-	}
-
-	/**
-	 * @see wicket.SharedResource#getResourceStream()
-	 */
-	protected final IResourceStream getResourceStream()
-	{
-		return resource.getResourceStream();
 	}
 
 	/**

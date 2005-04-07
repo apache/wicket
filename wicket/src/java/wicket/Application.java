@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -62,13 +62,13 @@ import wicket.util.watch.ModificationWatcher;
  * 
  * <li><b>Shared Resources </b>- Resources added to an application with any of
  * the Application.addResource() methods have application-wide scope and can be
- * referenced using a logical scope and a name with the SharedResource class.
- * SharedResources can then be used by multiple components in the same
- * application without additional overhead (beyond the SharedResource instance
- * held by each referee) and will yield a stable URL, permitting efficient
- * browser caching of the resource (even if the resource is dynamically
- * generated). Resources shared in this manner may also be localized. See
- * {@link wicket.SharedResource}for more details.
+ * referenced using a logical scope and a name with the ResourceReference class.
+ * resourceReferences can then be used by multiple components in the same
+ * application without additional overhead (beyond the ResourceReference
+ * instance held by each referee) and will yield a stable URL, permitting
+ * efficient browser caching of the resource (even if the resource is
+ * dynamically generated). Resources shared in this manner may also be
+ * localized. See {@link wicket.ResourceReference}for more details.
  * 
  * <li><b>A Converter Factory </b>- By overriding getConverterFactory(), you
  * can provide your own factory which creates locale sensitive Converter
@@ -102,8 +102,8 @@ import wicket.util.watch.ModificationWatcher;
  * override getSessionFactory() to provide your own session factory that creates
  * Session instances of your own application-specific subclass of WebSession.
  * 
- * <li><b>A Page Sets Factory </b>- Page sets are an experimental feature
- * which will not be finished until Wicket 1.1.
+ * <li><b>A Page Sets Factory </b>- Page sets are an experimental feature which
+ * will not be finished until Wicket 1.1.
  * </ul>
  * 
  * @see wicket.protocol.http.WebApplication
@@ -178,18 +178,10 @@ public abstract class Application
 	public void addResource(final Class scope, final String name, final Locale locale,
 			final String style, final Resource resource)
 	{
+		// Save resource
 		final String key = scope.getName() + "_" + name
 				+ (locale == null ? "" : "_" + locale.toString())
 				+ (style == null ? "" : "_" + style);
-
-		// Check type
-		if (resource instanceof SharedResource)
-		{
-			throw new WicketRuntimeException(
-					"Cannot add a SharedResource.  SharedResource is a reference to a resource, not an actual resource.");
-		}
-
-		// Save resource
 		resourceMap.put(key, resource);
 	}
 
