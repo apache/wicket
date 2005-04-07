@@ -99,10 +99,25 @@ public final class Streams
 	 */
 	public static void writeStream(final InputStream in, final OutputStream out) throws IOException
 	{
-		int c;
-		while ((c = in.read()) != -1)
+		final byte[] buffer = new byte[1024];
+		while (true)
 		{
-			out.write(c);
+			final int available = in.available(); 
+			if (available > 0)
+			{
+				final int length = Math.min(available, buffer.length);
+				in.read(buffer, 0, length);
+				out.write(buffer, 0, length);
+			}
+			else
+			{
+				final int c = in.read();
+				if (c == -1)
+				{
+					break;
+				}
+				out.write(c);
+			}
 		}
 	}
 }
