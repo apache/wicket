@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import wicket.Application;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.util.lang.Packages;
@@ -41,9 +42,6 @@ public class StaticImageResource extends ImageResource
 	/** Map from key to resource */
 	private static Map imageResourceMap = new HashMap();
 
-	/** The image resource */
-	private transient IResourceStream resource;
-
 	/** The path to the resource */
 	final String absolutePath;
 
@@ -52,6 +50,9 @@ public class StaticImageResource extends ImageResource
 
 	/** The resource's style */
 	final String style;
+
+	/** the application to use for getting the resource stream */
+	final private Application application;
 
 	/**
 	 * Gets a non-localized image resource for a given set of criteria. Only one
@@ -119,6 +120,7 @@ public class StaticImageResource extends ImageResource
 		this.absolutePath = Packages.absolutePath(basePackage, path);
 		this.locale = locale;
 		this.style = style;
+		this.application = RequestCycle.get().getApplication();
 	}
 
 	/**
@@ -126,19 +128,19 @@ public class StaticImageResource extends ImageResource
 	 */
 	public IResourceStream getResourceStream()
 	{
-		if (resource == null)
+		if (resourceStream == null)
 		{
 			// Locate resource
-			this.resource = RequestCycle.get().getApplication().getResourceStreamLocator().locate(
+			this.resourceStream = application.getResourceStreamLocator().locate(
 					absolutePath, style, locale, null);
 
 			// Check that resource was found
-			if (this.resource == null)
+			if (this.resourceStream == null)
 			{
 				throw new WicketRuntimeException("Unable to find static image resource [path = "
 						+ absolutePath + ", style = " + style + ", locale = " + locale + "]");
 			}
 		}
-		return resource;
+		return resourceStream;
 	}
 }
