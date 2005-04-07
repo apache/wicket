@@ -190,7 +190,7 @@ public class WebResponse extends Response
 		if (time != null)
 		{
 			// If time is set also set cache headers.
-			httpServletResponse.setDateHeader("Expires", time.getMilliseconds() + (3600 * 1000));
+			httpServletResponse.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
 			httpServletResponse.setHeader("Cache-Control", "max-age=" + 3600);
 			httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
 		}
