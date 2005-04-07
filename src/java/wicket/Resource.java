@@ -51,13 +51,17 @@ import wicket.util.resource.IResourceStream;
 public abstract class Resource implements IResourceListener
 {
 	/** The actual raw resource this class is rendering */
-	private IResourceStream resourceStream;
+	protected IResourceStream resourceStream;
 
+	private boolean cacheable;
+	
 	/**
 	 * Constructor
 	 */
 	protected Resource()
 	{
+		// default nothing is cacheable
+		cacheable = false;
 	}
 
 	/**
@@ -85,9 +89,12 @@ public abstract class Resource implements IResourceListener
 		response.setContentType(resourceStream.getContentType());
 		response.setContentLength((int)resourceStream.length());
 
-		// Don't set this above setContentLength call above. 
-		// The call above could create and set the last modified time.  
-		response.setLastModifiedTime(resourceStream.lastModifiedTime());
+		if(cacheable)
+		{
+			// Don't set this above setContentLength call above. 
+			// The call above could create and set the last modified time.  
+			response.setLastModifiedTime(resourceStream.lastModifiedTime());
+		}
 
 		// Respond with resource
 		respond(response);
@@ -96,7 +103,7 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * @return Gets the resource to render to the requester
 	 */
-	protected abstract IResourceStream getResourceStream();
+	public abstract IResourceStream getResourceStream();
 
 	/**
 	 * Sets any loaded resource to null, thus forcing a reload on the next
@@ -152,5 +159,23 @@ public abstract class Resource implements IResourceListener
 	static
 	{
 		RequestCycle.registerRequestListenerInterface(IResourceListener.class);
+	}
+
+	/**
+	 * @return boolean True or False if this resource is cacheable
+	 */
+	public boolean isCacheable()
+	{
+		return cacheable;
+	}
+
+	/**
+	 * Should this resource be cacheable, so will it set the last modified and the some cache headers in the response.
+	 * @param cacheable
+	 * 			boolean if the lastmodified and cache headers must be set.
+	 */
+	public void setCacheable(boolean cacheable)
+	{
+		this.cacheable = cacheable;
 	}
 }
