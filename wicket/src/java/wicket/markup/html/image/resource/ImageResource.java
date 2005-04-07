@@ -18,7 +18,6 @@
 package wicket.markup.html.image.resource;
 
 import wicket.markup.html.WebResource;
-import wicket.util.resource.IResourceStream;
 
 /**
  * Base class for image resources. See the base class {@link wicket.Resource}
@@ -30,8 +29,4 @@ import wicket.util.resource.IResourceStream;
  */
 public abstract class ImageResource extends WebResource
 {
-	/**
-	 * @return Gets the image resource to attach to the component.
-	 */
-	public abstract IResourceStream getResourceStream();
 }
