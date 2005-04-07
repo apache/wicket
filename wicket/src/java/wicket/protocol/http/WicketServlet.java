@@ -27,7 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.RequestCycle;
+import wicket.Resource;
 import wicket.WicketRuntimeException;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Servlet class for all wicket applications. The specific application class to
@@ -136,6 +139,24 @@ public class WicketServlet extends HttpServlet
 			throw new WicketRuntimeException("Unable to create application of class "
 					+ applicationClassName, e);
 		}
+	}
+	
+	protected long getLastModified(HttpServletRequest servletRequest)
+	{
+		final String pathInfo = servletRequest.getPathInfo();
+		if (pathInfo != null && pathInfo.startsWith(WebRequestCycle.resourceReferencePrefix))
+		{
+			final String resourceReferenceKey = pathInfo.substring(WebRequestCycle.resourceReferencePrefix.length());
+			final Resource resource = webApplication.getResource(resourceReferenceKey);
+			if (resource != null)
+			{
+				IResourceStream stream = resource.getResourceStream();
+				// first ask the length so the content is created/accessed
+				stream.length();
+				return stream.lastModifiedTime().getMilliseconds();
+			}
+		}
+		return -1;
 	}
 
 	/**
