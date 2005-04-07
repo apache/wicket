@@ -17,8 +17,6 @@
  */
 package wicket;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 
 import wicket.util.io.Streams;
@@ -134,10 +132,10 @@ public abstract class Resource implements IResourceListener
 	{
 		try
 		{
-			final OutputStream out = new BufferedOutputStream(response.getOutputStream());
+			final OutputStream out = response.getOutputStream();
 			try
 			{
-				Streams.writeStream(new BufferedInputStream(resourceStream.getInputStream()), out);
+				Streams.writeStream(resourceStream.getInputStream(), out);
 			}
 			finally
 			{
