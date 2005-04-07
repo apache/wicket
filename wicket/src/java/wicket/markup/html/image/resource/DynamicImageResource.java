@@ -111,8 +111,6 @@ public abstract class DynamicImageResource extends ImageResource
 				if (inputStream == null)
 				{
 					inputStream = new ByteArrayInputStream(getImageData());
-					// This shouldn't be done here but the getImageData implementation should do it when it is regenerated..
-					//lastModifiedTime = Time.now();
 				}
 				return inputStream;
 			}
@@ -152,6 +150,10 @@ public abstract class DynamicImageResource extends ImageResource
 	}
 
 	/**
+	 * Get image data for our dynamic image resource. If the subclass
+	 * regenerates the data, it should set the lastModifiedTime when it does so.
+	 * This ensures that image caching works correctly.
+	 * 
 	 * @return The image data for this dynamic image
 	 */
 	protected abstract byte[] getImageData();

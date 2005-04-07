@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.2 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,10 +46,13 @@ public final class UrlResourceStream extends AbstractResourceStream
 	/** The URL to this resource */
 	private URL url;
 
+	/** Length of stream */
 	private int contentLength;
 
+	/** Content type for stream */
 	private String contentType;
 
+	/** Time the stream was last modified */
 	private long lastModified;
 
 	/**
@@ -68,7 +71,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 			contentLength = connection.getContentLength();
 			contentType = connection.getContentType();
 			lastModified = connection.getLastModified();
-			if(connection instanceof HttpURLConnection)
+			if (connection instanceof HttpURLConnection)
 			{
 				((HttpURLConnection)connection).disconnect();
 			}
@@ -105,7 +108,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public String getContentType()
 	{
-		if(contentType == null)
+		if (contentType == null)
 		{
 			return URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
 		}
@@ -126,7 +129,8 @@ public final class UrlResourceStream extends AbstractResourceStream
 			}
 			catch (IOException e)
 			{
-				throw new ResourceStreamNotFoundException("Resource " + url + " could not be opened", e);
+				throw new ResourceStreamNotFoundException("Resource " + url
+						+ " could not be opened", e);
 			}
 		}
 
@@ -147,7 +151,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public Time lastModifiedTime()
 	{
-		return Time.milliseconds(lastModified); 
+		return Time.milliseconds(lastModified);
 	}
 
 	/**
@@ -157,12 +161,12 @@ public final class UrlResourceStream extends AbstractResourceStream
 	{
 		return url.toString();
 	}
-	
+
 	/**
 	 * @see wicket.util.resource.IResourceStream#length()
 	 */
 	public long length()
 	{
 		return contentLength;
-	}	
+	}
 }
