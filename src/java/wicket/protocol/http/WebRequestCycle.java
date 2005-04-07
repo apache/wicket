@@ -393,8 +393,7 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * @return Returns shared resource to user if URL matches shared resource
-	 *         pattern
+	 * @return Returns resource to user if URL matches resource pattern
 	 */
 	private boolean resourceReference()
 	{
