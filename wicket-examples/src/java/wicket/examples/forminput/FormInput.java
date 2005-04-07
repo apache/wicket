@@ -46,7 +46,7 @@ public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
 	private static final List LOCALES = Arrays.asList(new Locale[] 
-	        { Locale.US, new Locale("nl"), new Locale("de") });
+	        { Locale.US, new Locale("nl_NL"), Locale.GERMANY });
 
 	/**
 	 * Constructor
