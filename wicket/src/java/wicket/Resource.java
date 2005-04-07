@@ -135,7 +135,7 @@ public abstract class Resource implements IResourceListener
 			final OutputStream out = response.getOutputStream();
 			try
 			{
-				Streams.writeStream(resourceStream.getInputStream(), out);
+				Streams.copy(resourceStream.getInputStream(), out);
 			}
 			finally
 			{

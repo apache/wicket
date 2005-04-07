@@ -48,7 +48,7 @@ public class Files
 	 */
 	public static final void writeTo(final java.io.File file, final InputStream input) throws IOException
 	{
-		Streams.writeStream(input, new FileOutputStream(file));
+		Streams.copy(input, new FileOutputStream(file));
 	}
 
 	/**
