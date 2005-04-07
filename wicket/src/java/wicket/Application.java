@@ -183,6 +183,8 @@ public abstract class Application
 				+ (locale == null ? "" : "_" + locale.toString())
 				+ (style == null ? "" : "_" + style);
 		resourceMap.put(key, resource);
+		// shared resources are cacheable.
+		resource.setCacheable(true);
 	}
 
 	/**
