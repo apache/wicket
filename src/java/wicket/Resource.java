@@ -86,8 +86,9 @@ public abstract class Resource implements IResourceListener
 		// Configure response with content type of resource
 		response.setContentType(resource.getContentType());
 		response.setContentLength((int)resource.length());
-		// don't set this above setContentLength call above. 
-		// the call above could create and set the lastmodified.  
+
+		// Don't set this above setContentLength call above. 
+		// The call above could create and set the last modified time.  
 		response.setLastModifiedTime(resource.lastModifiedTime());
 
 		// Respond with resource
