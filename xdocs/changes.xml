@@ -9,6 +9,15 @@
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	
       <action type="update" dev="Jonathan Locke" issue="">
+      Changed my mind about defaulting resources that are not lazy-inited.  If a
+      resource like "plus-sign.gif" is requested in the netherlands (locale nl_nl),
+      first an attempt is made to load "plus-sign_nl_nl.gif", then the lazy init
+      code is given a chance to create a resource for the nl_nl locale.  Then if
+      /that/ doesn't create a resource, we default it to "plus-sign.gif".  This 
+      kind of defaulting behavior is important in supporting non-localized static
+      resource references (which would not really be possible without this change).
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Fixed a bunch of unreported problems with image resources.  The new method
       Application.localizedPath(name, locale, style) constructs more reasonable paths
       for images by inserting the locale just before the extension (instead of after
