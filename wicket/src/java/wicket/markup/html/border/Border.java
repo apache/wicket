@@ -79,9 +79,9 @@ import wicket.model.IModel;
  */
 public abstract class Border extends WebMarkupContainer implements IComponentResolver
 {
-
 	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
+	
 	/** The open tag for this border component. */
 	private transient ComponentTag openTag;
 	
