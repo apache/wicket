@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	
+      <action type="fix" dev="Jonathan Locke" issue="1176169"> 
+      Javadoc enhancement for ResouceReference.     
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Changed my mind about defaulting resources that are not lazy-inited.  If a
       resource like "plus-sign.gif" is requested in the netherlands (locale nl_nl),
