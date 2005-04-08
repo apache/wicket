@@ -134,14 +134,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Access denied flag (value == false). */
 	protected static final boolean ACCESS_DENIED = false;
 
+	/** True if this page is dirty. */
+	private static final short FLAG_IS_DIRTY = 0x0100;
+
 	/** True if this page is currently rendering. */
-	private static final byte FLAG_IS_RENDERING = 0x10;
+	private static final short FLAG_IS_RENDERING = 0x0200;
 
 	/** True if a new version was created for this request. */
-	private static final byte FLAG_NEW_VERSION = 0x20;
+	private static final short FLAG_NEW_VERSION = 0x0400;
 
 	/** True if component changes are being tracked. */
-	private static final byte FLAG_TRACK_CHANGES = 0x40;
+	private static final short FLAG_TRACK_CHANGES = 0x0800;
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
@@ -356,6 +359,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 	
 	/**
+	 * @return True if this Page is dirty and needs to be replicated
+	 */
+	public boolean isDirty()
+	{
+		return getFlag(FLAG_IS_DIRTY);
+	}
+	
+	/**
 	 * @return True if this page is intended to display an error to the end user.
 	 */
 	public boolean isErrorPage()
@@ -459,6 +470,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// The request is over
 			internalEndRequest();
 		}
+	}
+	
+	/**
+	 * @param dirty True to make this page dirty, false to make it clean.
+	 */
+	public final void setDirty(final boolean dirty)
+	{
+		setFlag(FLAG_IS_DIRTY, dirty);
 	}
 
 	/**
@@ -719,6 +738,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentAdded(final Component component)
 	{
+		setDirty(true);
 		if (isVersioned(component))
 		{
 			versionManager.componentAdded(component);
@@ -731,6 +751,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentModelChanging(final Component component)
 	{
+		setDirty(true);
 		if (isVersioned(component))
 		{
 			versionManager.componentModelChanging(component);
@@ -743,6 +764,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentRemoved(final Component component)
 	{
+		setDirty(true);
 		if (isVersioned(component))
 		{
 			versionManager.componentRemoved(component);
@@ -778,6 +800,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void componentVisibilityChanged(final Component component)
 	{
+		setDirty(true);
 		if (isVersioned(component))
 		{
 			versionManager.componentVisibilityChanged(component);
@@ -881,6 +904,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	private final void init()
 	{
+		// All Pages are born dirty so they get clustered right away
+		setDirty(true);
+		
 		// Get session
 		final Session session = getSession();
 
