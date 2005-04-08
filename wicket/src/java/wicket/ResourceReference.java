@@ -101,7 +101,14 @@ public class ResourceReference
 				resource = newResource();
 				if (resource == null)
 				{
-					throw new WicketRuntimeException("Unable to resolve shared resource " + this);
+					// If lazy-init did not create resource with correct locale
+					// and style then we should default the resource
+					resource = application.getResource(scope, name, null, null);
+					if (resource == null)
+					{
+						throw new WicketRuntimeException("Unable to resolve shared resource "
+								+ this);
+					}
 				}
 
 				// Share through application
