@@ -117,7 +117,7 @@ public class ResourceReference
 	{
 		return locale;
 	}
-	
+
 	/**
 	 * @return Name
 	 */
@@ -132,20 +132,10 @@ public class ResourceReference
 	public final String getPath()
 	{
 		final StringBuffer buffer = new StringBuffer();
-		buffer.append("resource/");
+		buffer.append("resources/");
 		buffer.append(scope.getName());
 		buffer.append('_');
-		buffer.append(name);
-		if (locale != null)
-		{
-			buffer.append('_');
-			buffer.append(locale.toString());
-		}
-		if (style != null)
-		{
-			buffer.append('_');
-			buffer.append(style);
-		}
+		buffer.append(Application.localizedPath(name, locale, style));
 		return buffer.toString();
 	}
 
@@ -161,7 +151,7 @@ public class ResourceReference
 	{
 		return resource;
 	}
-	
+
 	/**
 	 * @return Scope
 	 */

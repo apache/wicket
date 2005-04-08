@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,6 +32,7 @@ import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
+import wicket.util.file.Files;
 import wicket.util.lang.Classes;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;
@@ -132,17 +133,56 @@ public abstract class Application
 	/** Pages for application */
 	private final ApplicationPages pages = new ApplicationPages();
 
-	/** The default resource locator for this application */
-	private ResourceStreamLocator resourceStreamLocator;
-
 	/** Map of shared resources */
 	private final Map resourceMap = new HashMap();
+
+	/** The default resource locator for this application */
+	private ResourceStreamLocator resourceStreamLocator;
 
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
 
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
+
+	/**
+	 * Inserts _[locale] and _[style] into path just before any extension that
+	 * might exist.
+	 * 
+	 * @param path
+	 *            The resource path
+	 * @param locale
+	 *            The locale
+	 * @param style
+	 *            The style
+	 * @return The localized path
+	 */
+	static String localizedPath(final String path, final Locale locale, final String style)
+	{
+		final StringBuffer buffer = new StringBuffer();
+		final String extension = Files.extension(path);
+		final String basePath = Files.basePath(path, extension);
+		buffer.append(basePath);
+		if (locale != null)
+		{
+			if (!locale.equals(Locale.getDefault()))
+			{
+				buffer.append('_');
+				buffer.append(locale.toString());
+			}
+		}
+		if (style != null)
+		{
+			buffer.append('_');
+			buffer.append(style);
+		}
+		if (extension != null)
+		{
+			buffer.append('.');
+			buffer.append(extension);
+		}
+		return buffer.toString();
+	}
 
 	/**
 	 * Constructor
@@ -178,12 +218,11 @@ public abstract class Application
 	public void addResource(final Class scope, final String name, final Locale locale,
 			final String style, final Resource resource)
 	{
-		// Save resource
-		final String key = scope.getName() + "_" + name
-				+ (locale == null ? "" : "_" + locale.toString())
-				+ (style == null ? "" : "_" + style);
+		// Store resource
+		final String key = scope.getName() + "_" + localizedPath(name, locale, style);
 		resourceMap.put(key, resource);
-		// shared resources are cacheable.
+
+		// Application shared resources are cacheable.
 		resource.setCacheable(true);
 	}
 
@@ -338,16 +377,6 @@ public abstract class Application
 	}
 
 	/**
-	 * @param key
-	 *            Shared resource key
-	 * @return The resource
-	 */
-	public final Resource getResource(final String key)
-	{
-		return (Resource)resourceMap.get(key);
-	}
-
-	/**
 	 * @param scope
 	 *            The resource's scope
 	 * @param name
@@ -361,13 +390,10 @@ public abstract class Application
 	public Resource getResource(final Class scope, final String name, final Locale locale,
 			final String style)
 	{
-		// Base name for resource
-		final String baseName = scope.getName() + "_" + name;
-
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
 		{
-			final String key = baseName + "_" + locale + "_" + style;
+			final String key = scope.getName() + "_" + localizedPath(name, locale, style);
 			final Resource resource = getResource(key);
 			if (resource != null)
 			{
@@ -378,7 +404,7 @@ public abstract class Application
 		// 2. Look for entry without style
 		if (locale != null)
 		{
-			final String key = baseName + "_" + locale;
+			final String key = scope.getName() + "_" + localizedPath(name, locale, null);
 			final Resource resource = getResource(key);
 			if (resource != null)
 			{
@@ -389,7 +415,7 @@ public abstract class Application
 		// 3. Look for entry without locale
 		if (style != null)
 		{
-			final String key = baseName + "_" + style;
+			final String key = scope.getName() + "_" + localizedPath(name, null, style);
 			final Resource resource = getResource(key);
 			if (resource != null)
 			{
@@ -397,8 +423,25 @@ public abstract class Application
 			}
 		}
 
-		// 4. Look for base name
-		return getResource(baseName);
+		// 4. Look for base name with no locale or style
+		if (locale == null && style == null)
+		{
+			final String key = scope.getName() + "_" + name;
+			return getResource(key);
+		}
+
+		// Resource not found!
+		return null;
+	}
+
+	/**
+	 * @param key
+	 *            Shared resource key
+	 * @return The resource
+	 */
+	public final Resource getResource(final String key)
+	{
+		return (Resource)resourceMap.get(key);
 	}
 
 	/**

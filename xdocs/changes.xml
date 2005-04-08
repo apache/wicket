@@ -8,6 +8,24 @@
   </properties>
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	
+      <action type="update" dev="Jonathan Locke" issue="">
+      Fixed a bunch of unreported problems with image resources.  The new method
+      Application.localizedPath(name, locale, style) constructs more reasonable paths
+      for images by inserting the locale just before the extension (instead of after
+      it, which looks wrong and confusing).  This method will omit the locale if it
+      is equal to Locale.getDefault(), which means foo_en_US.gif and foo.gif are the
+      same resource in the US.  Updated Application.getResource() methods to use 
+      this method when searching for a resource in the shared resource cache.
+      The new getResource() method will actually fail if it cannot find a resource 
+      that matches the locale (as opposed to defaulting to the default locale).  This
+      will help keep localization problems to a minimum and also ensures that lazy
+      initialization will work (which it did not, before).  Undid a change that Johan
+      made to InputForm since we do not search for anything other than Locale.toString(),
+      meaning nl and nl_nl are not equal in Wicket at this time (which is really a bug
+      if anyone wants to report it).  Finally, made changes to the static image resolution
+      code so that it automatically creates shared resources! This means that the code 
+      for the Pub example did not have to change in order to be efficient /and/ localized.
+	  </action>
       <action type="fix" dev="Jonathan Locke" issue="1177942">      
       Changed SharedResource to ResourceReference.  ResourceReference does not inherit
       from Resource since it is a reference to a resource and not an actual resource now.

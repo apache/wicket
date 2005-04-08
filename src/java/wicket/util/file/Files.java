@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import wicket.util.io.Streams;
+import wicket.util.string.Strings;
 
 /**
  * File utility methods.
@@ -38,6 +39,53 @@ public class Files
 	}
 
 	/**
+	 * Gets extension from path
+	 * 
+	 * @param path
+	 *            The path
+	 * @return The extension, like "bmp" or "html", or null if none can be found
+	 */
+	public static String extension(final String path)
+	{
+		if (path.indexOf('.') != -1)
+		{
+			return Strings.lastPathComponent(path, '.');
+		}
+		return null;
+	}
+
+	/**
+	 * Strips off the given extension (probably returned from Files.extension())
+	 * from the path, yielding a base pathname.
+	 * 
+	 * @param path
+	 *            The path, possibly with an extension to strip
+	 * @param extension
+	 *            The extension to strip, or null if no extension exists
+	 * @return The path without any extension
+	 */
+	public static String basePath(final String path, final String extension)
+	{
+		if (extension != null)
+		{
+			return path.substring(0, path.length() - extension.length() - 1);
+		}
+		return path;
+	}
+
+	/**
+	 * Gets filename from path
+	 * 
+	 * @param path
+	 *            The path
+	 * @return The filename
+	 */
+	public static String filename(final String path)
+	{
+		return Strings.lastPathComponent(path.replace('/', File.separatorChar), File.separatorChar);
+	}
+
+	/**
 	 * Writes the given input stream to the given file
 	 * 
 	 * @param file
@@ -46,7 +94,8 @@ public class Files
 	 *            The input
 	 * @throws IOException
 	 */
-	public static final void writeTo(final java.io.File file, final InputStream input) throws IOException
+	public static final void writeTo(final java.io.File file, final InputStream input)
+			throws IOException
 	{
 		Streams.copy(input, new FileOutputStream(file));
 	}
