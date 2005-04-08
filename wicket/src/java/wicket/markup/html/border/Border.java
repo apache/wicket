@@ -79,11 +79,11 @@ import wicket.model.IModel;
  */
 public abstract class Border extends WebMarkupContainer implements IComponentResolver
 {
-	/** The open tag for this border component. */
-	private transient ComponentTag openTag;
 
 	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
+	/** The open tag for this border component. */
+	private transient ComponentTag openTag;
 	
 	/**
      * @see wicket.Component#Component(String)
@@ -100,27 +100,6 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		super(id, model);
 	}	
-
-	/**
-	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
-	 *      wicket.markup.ComponentTag)
-	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		// Save open tag for callback later to render body
-		this.openTag = openTag;
-
-		// Render the associated markup
-		renderAssociatedMarkup("border",
-				"Markup for a border component must begin a tag like '<wicket:border>'");
-
-        // There exactly only one body tag per border
-        if (haveSeenBodyTag == false)
-        {
-			markupStream.throwMarkupException(
-			        "There must be exactly one <wicket:body> tag for each border compoment.");
-        }
-	}
 
 	/**
 	 * Border makes use of a &lt;wicket:body&gt; tag to indentify the position
@@ -232,5 +211,26 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		}
 		
 		return true;
+	}
+
+	/**
+	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
+	 *      wicket.markup.ComponentTag)
+	 */
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		// Save open tag for callback later to render body
+		this.openTag = openTag;
+
+		// Render the associated markup
+		renderAssociatedMarkup("border",
+				"Markup for a border component must begin a tag like '<wicket:border>'");
+
+        // There exactly only one body tag per border
+        if (haveSeenBodyTag == false)
+        {
+			markupStream.throwMarkupException(
+			        "There must be exactly one <wicket:body> tag for each border compoment.");
+        }
 	}
 }
