@@ -201,6 +201,18 @@ import wicket.util.string.Strings;
  */
 public abstract class Component implements Serializable
 {
+	
+	/** User definable flag bit */
+	protected static final short FLAG_USER1 = 0x0100;
+	
+	/** User definable flag bit */
+	protected static final short FLAG_USER2 = 0x0200;
+	
+	/** User definable flag bit */
+	protected static final short FLAG_USER3 = 0x0400;
+	
+	/** User definable flag bit */
+	protected static final short FLAG_USER4 = 0x0800;	
 	/** True when a component is being auto-added */
 	private static final short FLAG_AUTO = 0x0001;
 
@@ -641,14 +653,6 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * @return The shared resource for this component
-	 */
-	public Resource getResource()
-	{
-		return getApplication().getResource(Application.class, getId(), getLocale(), getStyle());
-	}
-
-	/**
 	 * @return The request for this component's active request cycle
 	 */
 	public final Request getRequest()
@@ -664,6 +668,14 @@ public abstract class Component implements Serializable
 	public final RequestCycle getRequestCycle()
 	{
 		return getSession().getRequestCycle();
+	}
+
+	/**
+	 * @return The shared resource for this component
+	 */
+	public Resource getResource()
+	{
+		return getApplication().getResource(Application.class, getId(), getLocale(), getStyle());
 	}
 
 	/**
@@ -1140,6 +1152,16 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Gets the string representation of this component.
+	 * 
+	 * @return The path to this component
+	 */
+	public String toString()
+	{
+		return toString(true);
+	}
+
+	/**
 	 * @param detailed
 	 *            True if a detailed string is desired
 	 * @return The string
@@ -1158,16 +1180,6 @@ public abstract class Component implements Serializable
 		{
 			return "[Component id = " + getId() + "]";
 		}
-	}
-
-	/**
-	 * Gets the string representation of this component.
-	 * 
-	 * @return The path to this component
-	 */
-	public String toString()
-	{
-		return toString(true);
 	}
 
 	/**
@@ -1296,6 +1308,16 @@ public abstract class Component implements Serializable
 	{
 		// Search for page
 		return (Page)(this instanceof Page ? this : findParent(Page.class));
+	}
+
+	/**
+	 * @param flag
+	 *            The flag to test
+	 * @return True if the flag is set
+	 */
+	protected final boolean getFlag(final short flag)
+	{
+		return (this.flags & flag) != 0;
 	}
 
 
@@ -1584,6 +1606,24 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * @param flag
+	 *            The flag to set
+	 * @param set
+	 *            True to turn the flag on, false to turn it off
+	 */
+	protected final void setFlag(final short flag, final boolean set)
+	{
+		if (set)
+		{
+			this.flags |= flag;
+		}
+		else
+		{
+			this.flags &= ~flag;
+		}
+	}
+
+	/**
 	 * Visits the parents of this component.
 	 * 
 	 * @param c
@@ -1636,13 +1676,19 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * @param flag
-	 *            The flag to test
-	 * @return True if the flag is set
+	 * @return True if this component or any of its parents is in auto-add mode
 	 */
-	final boolean getFlag(final short flag)
+	final boolean isAuto()
 	{
-		return (this.flags & flag) != 0;
+		// Search up hierarchy for FLAG_AUTO
+		for (Component current = this; current != null; current = current.getParent())
+		{
+			if (current.getFlag(FLAG_AUTO))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -1693,21 +1739,12 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * @param flag
-	 *            The flag to set
-	 * @param set
-	 *            True to turn the flag on, false to turn it off
+	 * @param auto
+	 *            True to put component into auto-add mode
 	 */
-	final void setFlag(final short flag, final boolean set)
+	final void setAuto(final boolean auto)
 	{
-		if (set)
-		{
-			this.flags |= flag;
-		}
-		else
-		{
-			this.flags &= ~flag;
-		}
+		setFlag(FLAG_AUTO, auto);
 	}
 
 	/**
@@ -1723,31 +1760,6 @@ public abstract class Component implements Serializable
 			log.debug("replacing parent " + this.parent + " with " + parent);
 		}
 		this.parent = parent;
-	}
-
-	/**
-	 * @return True if this component or any of its parents is in auto-add mode
-	 */
-	final boolean isAuto()
-	{
-		// Search up hierarchy for FLAG_AUTO
-		for (Component current = this; current != null; current = current.getParent())
-		{
-			if (current.getFlag(FLAG_AUTO))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * @param auto
-	 *            True to put component into auto-add mode
-	 */
-	final void setAuto(final boolean auto)
-	{
-		setFlag(FLAG_AUTO, auto);
 	}
 
 	/**
