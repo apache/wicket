@@ -30,7 +30,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Component.IVisitor;
 import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
@@ -144,19 +143,17 @@ public abstract class Session implements Serializable
 	private String style;
 
 	/**
-	 * Interface called when visiting session pages.
+	 * Visitor interface for visiting page maps
 	 * 
 	 * @author Jonathan Locke
 	 */
-	static interface IPageVisitor
+	static interface IVisitor
 	{
 		/**
-		 * Visit method.
-		 * 
-		 * @param page
-		 *            the page
+		 * @param pageMap
+		 *            The page map
 		 */
-		public void page(final Page page);
+		public void pageMap(final PageMap pageMap);
 	}
 
 	/**
@@ -284,7 +281,6 @@ public abstract class Session implements Serializable
 
 					// Replaces old page entry
 					page.getPageMap().put(page);
-					pageChanged(page);
 				}
 				return page;
 			}
@@ -346,7 +342,7 @@ public abstract class Session implements Serializable
 	/**
 	 * Get the style (see {@link wicket.Session}).
 	 * 
-	 * @return Returns the style  (see {@link wicket.Session})
+	 * @return Returns the style (see {@link wicket.Session})
 	 */
 	public final String getStyle()
 	{
@@ -390,22 +386,6 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Called when an PageState record should be added to the replicated state
-	 * 
-	 * @param page
-	 */
-	public final void pageChanged(final Page page)
-	{
-		// Create PageState for page
-		final PageState pageState = newPageState(page);
-		pageState.addedToSession = true;
-		pageState.pageMapName = page.getPageMap().getName();
-
-		// Set HttpSession attribute for new PageState
-		setAttribute(page.getId(), pageState);
-	}
-
-	/**
 	 * Removes the given page from the cache. This method may be useful if you
 	 * have special knowledge that a given page cannot be accessed again. For
 	 * example, the user may have closed a popup window.
@@ -424,12 +404,13 @@ public abstract class Session implements Serializable
 	 */
 	public final void removeAll()
 	{
-		// Go through each page map in the session
-		for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
+		visitPageMaps(new IVisitor()
 		{
-			// Remove all pages from the current page map
-			((PageMap)iterator.next()).removeAll();
-		}
+			public void pageMap(PageMap pageMap)
+			{
+				pageMap.removeAll();
+			}
+		});
 	}
 
 	/**
@@ -503,6 +484,24 @@ public abstract class Session implements Serializable
 		{
 			log.debug("updateCluster(): Session not dirty.");
 		}
+
+		// Go through all pages in all page maps, replicating any dirty pages
+		visitPageMaps(new IVisitor()
+		{
+			public void pageMap(PageMap pageMap)
+			{
+				pageMap.visitPages(new PageMap.IVisitor()
+				{
+					public void page(Page page)
+					{
+						if (page.isDirty())
+						{
+							replicate(page);
+						}
+					}
+				});
+			}
+		});
 	}
 
 	/**
@@ -513,14 +512,14 @@ public abstract class Session implements Serializable
 	{
 		// Go through each page map in the session
 		log.debug("updateSession(): Updating session.");
-		for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
+		visitPageMaps(new IVisitor()
 		{
-			// Remove all pages from the current page map
-			final PageMap pageMap = ((PageMap)iterator.next());
-			pageMap.setSession(this);
-
-			log.debug("updateSession(): Attaching session to PageMap " + pageMap);
-		}
+			public void pageMap(PageMap pageMap)
+			{
+				log.debug("updateSession(): Attaching session to PageMap " + pageMap);
+				pageMap.setSession(Session.this);
+			}
+		});
 
 		// Get PageStates from session attributes
 		log.debug("updateSession(): Getting PageState attributes.");
@@ -557,9 +556,6 @@ public abstract class Session implements Serializable
 		{
 			removeAttribute(removedPage.getId());
 		}
-
-		// Add PageState entry to list of changed pages
-		pageChanged(page);
 	}
 
 	/**
@@ -627,6 +623,7 @@ public abstract class Session implements Serializable
 	 */
 	final Page getPage(final String pageMapName, final String id)
 	{
+		// This call will always mark the Page dirty
 		return (Page)getPageMap(pageMapName).get(id);
 	}
 
@@ -637,6 +634,18 @@ public abstract class Session implements Serializable
 	{
 		dirty();
 		return this.pageStateSequenceNumber++;
+	}
+
+	/**
+	 * @param visitor
+	 *            The visitor to call at each Page in this PageMap.
+	 */
+	final void visitPageMaps(final IVisitor visitor)
+	{
+		for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
+		{
+			visitor.pageMap((PageMap)iterator.next());
+		}
 	}
 
 	/**
@@ -674,12 +683,12 @@ public abstract class Session implements Serializable
 	 */
 	private void attach(Page page)
 	{
-		page.visitChildren(new IVisitor()
+		page.visitChildren(new Component.IVisitor()
 		{
 			public Object component(Component component)
 			{
 				component.onSessionAttach();
-				return IVisitor.CONTINUE_TRAVERSAL;
+				return Component.IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
 	}
@@ -703,6 +712,23 @@ public abstract class Session implements Serializable
 			}
 		}
 		return pageStates;
+	}
+
+	/**
+	 * Called when an PageState record should be added to the replicated state
+	 * 
+	 * @param page
+	 *            The page to replicate
+	 */
+	private final void replicate(final Page page)
+	{
+		// Create PageState for page
+		final PageState pageState = newPageState(page);
+		pageState.addedToSession = true;
+		pageState.pageMapName = page.getPageMap().getName();
+
+		// Set HttpSession attribute for new PageState
+		setAttribute(page.getId(), pageState);
 	}
 
 	/**

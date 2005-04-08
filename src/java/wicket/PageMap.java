@@ -18,6 +18,7 @@
 package wicket;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 import wicket.util.collections.MostRecentlyUsedMap;
 
@@ -32,7 +33,7 @@ public final class PageMap implements Serializable
 {
 	/** Default page map name */
 	public static final String defaultName = "main";
-	
+
 	/** URL to continue to after a given page. */
 	private String interceptContinuationURL;
 
@@ -47,6 +48,20 @@ public final class PageMap implements Serializable
 
 	/** The session where this PageMap resides */
 	private transient Session session;
+
+	/**
+	 * Visitor interface for visiting pages
+	 * 
+	 * @author Jonathan Locke
+	 */
+	static interface IVisitor
+	{
+		/**
+		 * @param page
+		 *            The page
+		 */
+		public void page(final Page page);
+	}
 
 	/**
 	 * Constructor
@@ -88,7 +103,7 @@ public final class PageMap implements Serializable
 	{
 		// Get request cycle
 		final RequestCycle cycle = session.getRequestCycle();
-		
+
 		// If there's a place to go to
 		if (interceptContinuationURL != null)
 		{
@@ -114,7 +129,9 @@ public final class PageMap implements Serializable
 	 */
 	public final Page get(final String id)
 	{
-		return (Page)getPages().get(id);
+		final Page page = (Page)getPages().get(id);
+		page.setDirty(true);
+		return page;
 	}
 
 	/**
@@ -124,13 +141,13 @@ public final class PageMap implements Serializable
 	{
 		return name;
 	}
-	
+
 	/**
 	 * @return True if this is the default page map
 	 */
 	public final boolean isDefault()
 	{
-		return name.equals(defaultName);	
+		return name.equals(defaultName);
 	}
 
 	/**
@@ -174,15 +191,28 @@ public final class PageMap implements Serializable
 	{
 		getPages().clear();
 	}
-	
+
 	/**
-	 * @param session Session to set
+	 * @param session
+	 *            Session to set
 	 */
 	final void setSession(final Session session)
 	{
 		this.session = session;
 	}
-	
+
+	/**
+	 * @param visitor
+	 *            The visitor to call at each Page in this PageMap.
+	 */
+	final void visitPages(final IVisitor visitor)
+	{
+		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+		{
+			visitor.page((Page)iterator.next());
+		}
+	}
+
 	/**
 	 * @return MRU map of pages
 	 */
@@ -190,7 +220,8 @@ public final class PageMap implements Serializable
 	{
 		if (this.pages == null)
 		{
-			this.pages = new MostRecentlyUsedMap(session.getApplication().getSettings().getMaxPages());
+			this.pages = new MostRecentlyUsedMap(session.getApplication().getSettings()
+					.getMaxPages());
 		}
 		return this.pages;
 	}

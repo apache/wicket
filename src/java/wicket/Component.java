@@ -202,19 +202,19 @@ import wicket.util.string.Strings;
 public abstract class Component implements Serializable
 {
 	/** True when a component is being auto-added */
-	static final byte FLAG_AUTO = 0x08;
+	private static final short FLAG_AUTO = 0x0001;
 
 	/** Flag for escaping HTML in model strings */
-	private static final byte FLAG_ESCAPE_MODEL_STRINGS = 0x04;
-
-	/** Versioning boolean */
-	private static final byte FLAG_VERSIONED = 0x02;
-
-	/** Visibility boolean */
-	private static final byte FLAG_VISIBLE = 0x01;
+	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
 	/** Flag for Component holding root compound model */
-	private static final byte FLAG_HAS_ROOT_MODEL = 0x08;
+	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+	
+	/** Versioning boolean */
+	private static final short FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final short FLAG_VISIBLE = 0x0010;
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
@@ -223,7 +223,7 @@ public abstract class Component implements Serializable
 	private AttributeModifier attributeModifiers = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private byte flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED;
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED;
 
 	/** Component id. */
 	private String id;
@@ -1640,7 +1640,7 @@ public abstract class Component implements Serializable
 	 *            The flag to test
 	 * @return True if the flag is set
 	 */
-	final boolean getFlag(final int flag)
+	final boolean getFlag(final short flag)
 	{
 		return (this.flags & flag) != 0;
 	}
@@ -1698,7 +1698,7 @@ public abstract class Component implements Serializable
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	final void setFlag(final byte flag, final boolean set)
+	final void setFlag(final short flag, final boolean set)
 	{
 		if (set)
 		{
