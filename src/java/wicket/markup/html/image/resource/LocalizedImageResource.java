@@ -28,6 +28,7 @@ import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.util.file.Files;
 import wicket.util.lang.Objects;
 import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -303,9 +304,8 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		final Class scope = component.findParentWithAssociatedMarkup().getClass();
 		final Package basePackage = scope.getPackage();
-		// TODO windows...
-		final String name = Strings.lastPathComponent(path, '/');
-		this.resourceReference = new ResourceReference(scope, name)
+		final String filename = Files.filename(path);
+		this.resourceReference = new ResourceReference(scope, filename)
 		{
 			/**
 			 * @see wicket.ResourceReference#newResource()

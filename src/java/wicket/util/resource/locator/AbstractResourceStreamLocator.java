@@ -25,8 +25,9 @@ import wicket.util.string.Strings;
 /**
  * Base class for implementing IResourceLocators.
  * <p>
- * Contains the logic to locate a resource based on a path, a style, a locale
- * and an extension string. The full filename will be built like:
+ * Contains the logic to locate a resource based on a path, a style (see
+ * {@link wicket.Session}), a locale and an extension string. The full filename
+ * will be built like:
  * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
@@ -63,7 +64,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 	 * @param path
 	 *            The path of the resource without extension
 	 * @param style
-	 *            A theme or style
+	 *            A theme or style (see {@link wicket.Session})
 	 * @param locale
 	 *            The Locale to apply
 	 * @param extension
@@ -150,7 +151,8 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		// 2. If country and language are available
 		if (!Strings.isEmpty(language) && !Strings.isEmpty(country))
 		{
-			final IResourceStream resource = locate(path + "_" + language + "_" + country + extension);
+			final IResourceStream resource = locate(path + "_" + language + "_" + country
+					+ extension);
 			if (resource != null)
 			{
 				return resource;

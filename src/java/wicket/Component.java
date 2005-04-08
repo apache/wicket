@@ -750,9 +750,11 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Gets the (skin) style of this component.
+	 * Gets the style of this component (see {@link wicket.Session}).
 	 * 
-	 * @return The (skin) style of this component
+	 * @return The style of this component.
+	 * 
+	 * @see wicket.Session
 	 * @see wicket.Session#getStyle()
 	 */
 	public final String getStyle()

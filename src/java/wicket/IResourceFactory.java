@@ -37,7 +37,7 @@ public interface IResourceFactory
 	 * @param locale
 	 *            The locale for the resource
 	 * @param style
-	 *            The style of the resource
+	 *            The style of the resource (see {@link wicket.Session})
 	 * @return The resource
 	 */
 	public Resource newResource(final String specification, final Locale locale, final String style);

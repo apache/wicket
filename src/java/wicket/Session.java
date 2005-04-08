@@ -344,9 +344,9 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Get the style.
+	 * Get the style (see {@link wicket.Session}).
 	 * 
-	 * @return Returns the style.
+	 * @return Returns the style  (see {@link wicket.Session})
 	 */
 	public final String getStyle()
 	{
@@ -472,7 +472,7 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Set the style.
+	 * Set the style (see {@link wicket.Session}).
 	 * 
 	 * @param style
 	 *            The style to set.

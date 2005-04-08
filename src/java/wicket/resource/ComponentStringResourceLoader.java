@@ -103,7 +103,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 *            from
 	 * @param style
 	 *            The (optional) style identifying the resource set to select
-	 *            the strings from
+	 *            the strings from (see {@link wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
 	public final String loadStringResource(final Component component, final String key,
@@ -159,7 +159,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * @param component
 	 *            The component that the resources are being loaded for
 	 * @param style
-	 *            The style to load resources for
+	 *            The style to load resources for (see {@link wicket.Session})
 	 * @param locale
 	 *            The locale to load reosurces for
 	 * @param id
@@ -224,7 +224,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * @param component
 	 *            The component that the resources are being loaded for
 	 * @param style
-	 *            The style of the resources
+	 *            The style of the resources (see {@link wicket.Session})
 	 * @param locale
 	 *            The locale of the resources
 	 * @return The unique cache id

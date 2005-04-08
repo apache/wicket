@@ -61,7 +61,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
      *            The locale identifying the resource set to select the strings
      *            from
      * @param style
-     *            Not used for this implementation
+     *            Not used for this implementation (see {@link wicket.Session})
      * @return The string resource value or null if resource not found
      */
     public final String loadStringResource(final Component component, final String key,

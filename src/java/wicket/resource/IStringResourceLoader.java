@@ -65,7 +65,7 @@ public interface IStringResourceLoader
      *            from
      * @param style
      *            The (optional) style identifying the resource set to select
-     *            the strings from
+     *            the strings from (see {@link wicket.Session})
      * @return The string resource value or null if the resource could not be
      *         loaded by this loader
      */
