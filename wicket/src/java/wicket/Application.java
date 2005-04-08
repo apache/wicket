@@ -154,7 +154,7 @@ public abstract class Application
 	 * @param locale
 	 *            The locale
 	 * @param style
-	 *            The style
+	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
 	static String localizedPath(final String path, final Locale locale, final String style)
@@ -211,7 +211,7 @@ public abstract class Application
 	 * @param locale
 	 *            The locale of the resource
 	 * @param style
-	 *            The resource style
+	 *            The resource style (see {@link wicket.Session})
 	 * @param resource
 	 *            Resource to store
 	 */
@@ -384,7 +384,7 @@ public abstract class Application
 	 * @param locale
 	 *            The locale of the resource
 	 * @param style
-	 *            The resource style
+	 *            The resource style (see {@link wicket.Session})
 	 * @return The logical resource
 	 */
 	public Resource getResource(final Class scope, final String name, final Locale locale,

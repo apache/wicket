@@ -70,7 +70,7 @@ public class ResourceStreamLocator
 	 * @param c
 	 *            Class next to which the resource should be found
 	 * @param style
-	 *            Any resource style, such as a skin style
+	 *            Any resource style, such as a skin style (see {@link wicket.Session})
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension
@@ -91,7 +91,7 @@ public class ResourceStreamLocator
 	 * @param path
 	 *            The path of the resource
 	 * @param style
-	 *            Any resource style, such as a skin style
+	 *            Any resource style, such as a skin style (see {@link wicket.Session})
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension

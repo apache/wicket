@@ -105,7 +105,7 @@ public class Localizer
 	 * @param locale
 	 *            The locale to get the resource for (optional)
 	 * @param style
-	 *            The style to get the resource for (optional)
+	 *            The style to get the resource for (optional) (see {@link wicket.Session})
 	 * @param defaultValue
 	 *            The default value (optional)
 	 * @return The string resource

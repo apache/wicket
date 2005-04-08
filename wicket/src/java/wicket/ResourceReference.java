@@ -21,8 +21,17 @@ import java.util.Locale;
 
 /**
  * ResourceReference is essentially a reference to an actual resource which is
- * shared through Application. A ResourceReference has a name and a scope
+ * shared through the Application. A ResourceReference has a name and a scope
  * (within which the name must be unique). It may also have a locale or style.
+ * The locale and/or style do not need to be set on a resource reference because
+ * those values will automatically be determined based on the context in which
+ * the resource is being used. For example, if a ResourceReference is attached
+ * to an Image component, when the locale for the page switches, the Image
+ * component will notice this and automatically change the locale for the
+ * referenced resource as appropriate. It's for this reason that there are no
+ * constructor overloads taking a Locale or style (these details are essentially
+ * internal and so the framework uses setLocale/setStyle internally so you don't
+ * have to worry about it).
  * <p>
  * Resources may be added to the Application when the Application is constructed
  * using
@@ -168,7 +177,7 @@ public class ResourceReference
 	}
 
 	/**
-	 * @return Returns the style.
+	 * @return Returns the style. (see {@link wicket.Session})
 	 */
 	public final String getStyle()
 	{
@@ -196,7 +205,7 @@ public class ResourceReference
 
 	/**
 	 * @param style
-	 *            The style to set.
+	 *            The style to set (see {@link wicket.Session}).
 	 */
 	public final void setStyle(String style)
 	{

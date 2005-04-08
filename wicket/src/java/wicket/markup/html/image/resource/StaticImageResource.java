@@ -80,7 +80,7 @@ public class StaticImageResource extends ImageResource
 	 * @param locale
 	 *            The locale of the image
 	 * @param style
-	 *            The style of the image
+	 *            The style of the image (see {@link wicket.Session})
 	 * @return The image resource
 	 */
 	public static StaticImageResource get(final Package basePackage, final String path,
