@@ -57,7 +57,7 @@ public class Stylesheet extends WebResource
 	/**
 	 * @see WebResource#getResourceStream()
 	 */
-	protected IResourceStream getResourceStream()
+	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()
 		{

@@ -42,7 +42,7 @@ public class OldStylesheet extends WebResource
 	/**
 	 * @see WebResource#getResourceStream()
 	 */
-	protected IResourceStream getResourceStream()
+	public IResourceStream getResourceStream()
 	{
 		return resource;
 	}
