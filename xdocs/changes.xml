@@ -7,7 +7,20 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-  	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	
+  	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
+      <action type="fix" dev="Jonathan Locke" issue="1177751"> 
+      Added Page.setDirty/isDirty and changed Session to replicate each dirty page
+      in the session based on this flag.  Then added code that sets the flag when
+      a Page is modified (in case someone changes some random page), but also set 
+      flag on by default and each time a Page object is pulled out of a Session
+      PageMap.  This will cause the default replication behavior described in this
+      bug.  Unfortunately, even though the change seems to work fine, there appears
+      to be a problem with one of the test cases.  It looks like MockWebApplication
+      was subtly dependent on something I changed and I suspect the test case rather
+      than the code since all the examples seem to work fine.  So I'm checking in
+      and hoping someone can take a look at the test since I can't make time for
+      a few days.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1176169"> 
       Javadoc enhancement for ResouceReference.     
       </action>
