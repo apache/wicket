@@ -56,7 +56,7 @@ public class WebRequestCycle extends RequestCycle
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
 	/** Path prefix for shared resources */
-	public static final String resourceReferencePrefix = "/resource/";
+	public static final String resourceReferencePrefix = "/resources/";
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
@@ -404,7 +404,7 @@ public class WebRequestCycle extends RequestCycle
 			final Resource resource = getApplication().getResource(resourceReferenceKey);
 			if (resource == null)
 			{
-				throw new WicketRuntimeException("Could not find shared resource under key " + resourceReferenceKey);
+				throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey);
 			}
 			else
 			{

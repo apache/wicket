@@ -38,6 +38,30 @@ public abstract class Objects
 	}
 
 	/**
+	 * Returns true if a and b are equal. Either object may be null.
+	 * 
+	 * @param a
+	 *            Object a
+	 * @param b
+	 *            Object b
+	 * @return True if the objects are equal
+	 */
+	public static boolean equal(final Object a, final Object b)
+	{
+		if (a == b)
+		{
+			return true;
+		}
+
+		if (a != null && b != null && a.equals(b))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Makes a deep clone of an object by serializing and deserializing it. The
 	 * object must be fully serializable to be cloned.
 	 * 
@@ -57,7 +81,8 @@ public abstract class Objects
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream();
 				new ObjectOutputStream(out).writeObject(object);
-				return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
+				return new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()))
+						.readObject();
 			}
 			catch (ClassNotFoundException e)
 			{

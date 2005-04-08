@@ -329,7 +329,7 @@ public final class Strings
 
 		return path.substring(index + 1);
 	}
-
+	
 	/**
 	 * Replace all occurrences of one string replaceWith another string
 	 * 
