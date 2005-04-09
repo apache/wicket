@@ -160,15 +160,6 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
         {
 			markupStream.throwMarkupException("A <wicket:body> tag must be an open or open-close tag.");
         }
-
-        // There exactly only one body tag per border
-        if (haveSeenBodyTag == true)
-        {
-			markupStream.throwMarkupException(
-			        "There must be exactly one <wicket:body> tag for each border compoment.");
-        }
-        
-        haveSeenBodyTag = true;
         
 		// Render the body tag
 		renderComponentTag(bodyTag);
@@ -209,6 +200,15 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		    bodyTag.setType(XmlTag.CLOSE);
 			renderComponentTag(bodyTag);
 		}
+
+        // There shall exactly only one body tag per border
+        if (border.haveSeenBodyTag == true)
+        {
+			markupStream.throwMarkupException(
+			        "There must be exactly one <wicket:body> tag for each border compoment.");
+        }
+        
+        border.haveSeenBodyTag = true;
 		
 		return true;
 	}
@@ -221,12 +221,15 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		// Save open tag for callback later to render body
 		this.openTag = openTag;
+		
+		// initialize
+        this.haveSeenBodyTag = false;
 
 		// Render the associated markup
 		renderAssociatedMarkup("border",
 				"Markup for a border component must begin a tag like '<wicket:border>'");
 
-        // There exactly only one body tag per border
+        // There shall exactly only one body tag per border
         if (haveSeenBodyTag == false)
         {
 			markupStream.throwMarkupException(
