@@ -1186,6 +1186,7 @@ public abstract class Component implements Serializable
 	 * @param listenerInterface
 	 *            The listener interface that the URL should call
 	 * @return The URL
+	 * @see Page#urlFor(Component, Class)
 	 */
 	public final String urlFor(final Class listenerInterface)
 	{
