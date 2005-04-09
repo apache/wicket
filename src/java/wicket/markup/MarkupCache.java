@@ -187,12 +187,12 @@ public class MarkupCache
 	{
 		try
 		{
+			final Markup markup = application.newMarkupParser().readAndParse(markupResource);
 			synchronized (markupCache)
 			{
-				final Markup markup = application.newMarkupParser().readAndParse(markupResource);
 				markupCache.put(key, markup);
-				return markup;
 			}
+			return markup;
 		}
 		catch (ParseException e)
 		{
