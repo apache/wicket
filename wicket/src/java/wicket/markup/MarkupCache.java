@@ -20,6 +20,7 @@ package wicket.markup;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -247,8 +248,22 @@ public class MarkupCache
 	 */
 	private String markupKey(final MarkupContainer container, final Class clazz)
 	{
-		return clazz.getName() + container.getLocale() + container.getStyle()
-				+ container.getMarkupType();
+		final String classname = clazz.getName();
+		final Locale locale = container.getLocale();
+		final String style = container.getStyle();
+		final String markupType = container.getMarkupType();
+		final StringBuffer buffer = new StringBuffer(classname.length() + 32);
+		buffer.append(classname);
+		if (locale != null)
+		{
+			buffer.append(locale.toString());
+		}
+		if (style != null)
+		{
+			buffer.append(style);
+		}
+		buffer.append(markupType);
+		return buffer.toString();
 	}
 
 	/**
