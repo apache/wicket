@@ -130,6 +130,7 @@ public class MultipartWebRequest extends WebRequest
 	 */
 	public String[] getParameters(final String key)
 	{
-		return getParameter(key).split(",");
+		String val = getParameter(key);
+		return (val != null) ? val.split(",") : null;
 	}
 }
