@@ -210,33 +210,35 @@ public class MarkupCache
 	}
 
 	/**
-	 * Load markup and add a {@link ModificationWatcher}to the markup resource.
+	 * Load markup from an IResourceStream and add an {@link IChangeListener}to
+	 * the {@link ModificationWatcher} so that if the resource changes, we can
+	 * reload it automatically.
 	 * 
 	 * @param key
 	 *            The key for the resource
-	 * @param markupResource
-	 *            The markup file to load and begin to watch
-	 * @return The markup in the file
+	 * @param markupResourceStream
+	 *            The markup stream to load and begin to watch
+	 * @return The markup in the stream
 	 */
 	private Markup loadMarkupAndWatchForChanges(final String key,
-			final IResourceStream markupResource)
+			final IResourceStream markupResourceStream)
 	{
 		// Watch file in the future
 		final ModificationWatcher watcher = application.getResourceWatcher();
 		if (watcher != null)
 		{
-			watcher.add(markupResource, new IChangeListener()
+			watcher.add(markupResourceStream, new IChangeListener()
 			{
 				public void onChange()
 				{
-					log.info("Reloading markup from " + markupResource);
-					loadMarkup(key, markupResource);
+					log.info("Reloading markup from " + markupResourceStream);
+					loadMarkup(key, markupResourceStream);
 				}
 			});
 		}
 
-		log.info("Loading markup from " + markupResource);
-		return loadMarkup(key, markupResource);
+		log.info("Loading markup from " + markupResourceStream);
+		return loadMarkup(key, markupResourceStream);
 	}
 
 	/**
