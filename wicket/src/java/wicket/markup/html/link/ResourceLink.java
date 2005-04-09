@@ -42,6 +42,13 @@ public class ResourceLink extends Link
 		super(id);
 		this.resourceReference = resourceReference;
 	}
+
+	/**
+	 * @see wicket.markup.html.link.Link#onClick()
+	 */
+	public void onClick()
+	{
+	}
 	
 	/**
 	 * @see wicket.markup.html.link.Link#getURL()
@@ -49,12 +56,5 @@ public class ResourceLink extends Link
 	protected String getURL()
 	{
 		return getPage().urlFor(resourceReference.getPath());
-	}
-
-	/**
-	 * @see wicket.markup.html.link.Link#onClick()
-	 */
-	public void onClick()
-	{
 	}
 }
