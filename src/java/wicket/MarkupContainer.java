@@ -85,9 +85,6 @@ public abstract class MarkupContainer extends Component
 	/** Log for reporting. */
 	private static final Log log = LogFactory.getLog(MarkupContainer.class);
 
-	/** Map of markup tags by class. */
-	private static final Map markupCache = new HashMap();
-
 	/** Size of MiniMaps. */
 	private static final int MINIMAP_MAX_ENTRIES = 6;
 
@@ -142,6 +139,31 @@ public abstract class MarkupContainer extends Component
 		}
 
 		return this;
+	}
+
+	/**
+	 * This method allows a component to be added by an auto-resolver such as
+	 * AutoComponentResolver or AutoLinkResolver. While the component is being
+	 * added, the component's FLAG_AUTO boolean is set. The isAuto() method of
+	 * Component returns true if a component or any of its parents has this bit
+	 * set. When a component is added via autoAdd(), the logic in Page that
+	 * normally (a) checks for modifications during the rendering process, and
+	 * (b) versions components, is bypassed if Component.isAuto() returns true.
+	 * <p>
+	 * The result of all this is that components added with autoAdd() are free
+	 * from versioning and can add their own children without the usual
+	 * exception that would normally be thrown when the component hierarchy is
+	 * modified during rendering.
+	 * 
+	 * @param component
+	 *            The component to add
+	 */
+	public final void autoAdd(final Component component)
+	{
+		component.setAuto(true);
+		add(component);
+		component.internalBeginRequest();
+		component.render();
 	}
 
 	/**
@@ -213,6 +235,22 @@ public abstract class MarkupContainer extends Component
 
 		// No child with the given id
 		return null;
+	}
+
+	/**
+	 * Get the type of associated markup for this component.
+	 * 
+	 * @return The type of associated markup for this component (for example,
+	 *         "html", "wml" or "vxml"). The markup type for a component is
+	 *         independent of whether or not the component actually has an
+	 *         associated markup resource file (which is determined at runtime).
+	 *         If there is no markup type for a component, null may be returned,
+	 *         but this means that no markup can be loaded for the class.
+	 */
+	public String getMarkupType()
+	{
+		throw new IllegalStateException(
+				exceptionMessage("You cannot directly subclass Page or MarkupContainer.	 Instead, subclass a markup-specific class, such as WebPage or WebMarkupContainer"));
 	}
 
 	/**
@@ -509,22 +547,6 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Get the type of associated markup for this component.
-	 * 
-	 * @return The type of associated markup for this component (for example,
-	 *         "html", "wml" or "vxml"). The markup type for a component is
-	 *         independent of whether or not the component actually has an
-	 *         associated markup resource file (which is determined at runtime).
-	 *         If there is no markup type for a component, null may be returned,
-	 *         but this means that no markup can be loaded for the class.
-	 */
-	public String getMarkupType()
-	{
-		throw new IllegalStateException(
-				exceptionMessage("You cannot directly subclass Page or MarkupContainer.	 Instead, subclass a markup-specific class, such as WebPage or WebMarkupContainer"));
-	}
-
-	/**
 	 * Handle the container's body. If your override of this method does not
 	 * advance the markup stream to the close tag for the openTag, a runtime
 	 * exception will be thrown by the framework.
@@ -628,31 +650,6 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * This method allows a component to be added by an auto-resolver such as
-	 * AutoComponentResolver or AutoLinkResolver. While the component is being
-	 * added, the component's FLAG_AUTO boolean is set. The isAuto() method of
-	 * Component returns true if a component or any of its parents has this bit
-	 * set. When a component is added via autoAdd(), the logic in Page that
-	 * normally (a) checks for modifications during the rendering process, and
-	 * (b) versions components, is bypassed if Component.isAuto() returns true.
-	 * <p>
-	 * The result of all this is that components added with autoAdd() are free
-	 * from versioning and can add their own children without the usual
-	 * exception that would normally be thrown when the component hierarchy is
-	 * modified during rendering.
-	 * 
-	 * @param component
-	 *            The component to add
-	 */
-	public final void autoAdd(final Component component)
-	{
-		component.setAuto(true);
-		add(component);
-		component.internalBeginRequest();
-		component.render();
-	}
-
-	/**
 	 * Gets a fresh markup stream that contains the (immutable) markup resource
 	 * for this class.
 	 * 
@@ -706,6 +703,67 @@ public abstract class MarkupContainer extends Component
 						+ " failed to advance the markup stream");
 			}
 		}
+	}
+
+	/**
+	 * @param component
+	 *            Component being added
+	 */
+	private final void addedComponent(final Component component)
+	{
+		// Check for degenerate case
+		if (component == this)
+		{
+			throw new IllegalArgumentException("Component can't be added to itself");
+		}
+
+		// Set child's parent
+		component.setParent(this);
+
+		// Tell the page a component was added
+		final Page page = findPage();
+		if (page != null)
+		{
+			page.componentAdded(component);
+		}
+	}
+
+	/**
+	 * Ensure that there is space in childForId map for a new entry before
+	 * adding it.
+	 * 
+	 * @param child
+	 *            The child to put into the map
+	 * @return Any component that was replaced
+	 */
+	private final Component put(final Component child)
+	{
+		if (optimizeChildMapsForSpace)
+		{
+			if (childForId == Collections.EMPTY_MAP)
+			{
+				childForId = new MicroMap();
+			}
+			else if (childForId.size() == MicroMap.MAX_ENTRIES)
+			{
+				// Reallocate MicroMap as MiniMap
+				childForId = new MiniMap(childForId, MINIMAP_MAX_ENTRIES);
+			}
+			else if (childForId.size() == MINIMAP_MAX_ENTRIES)
+			{
+				// Reallocate MiniMap as full HashMap
+				childForId = new HashMap(childForId);
+			}
+		}
+		else
+		{
+			if (childForId == Collections.EMPTY_MAP)
+			{
+				childForId = new HashMap();
+			}
+		}
+
+		return (Component)childForId.put(child.getId(), child);
 	}
 
 	/**
@@ -798,66 +856,5 @@ public abstract class MarkupContainer extends Component
 
 		// Component is removed
 		component.setParent(null);
-	}
-
-	/**
-	 * @param component
-	 *            Component being added
-	 */
-	private final void addedComponent(final Component component)
-	{
-		// Check for degenerate case
-		if (component == this)
-		{
-			throw new IllegalArgumentException("Component can't be added to itself");
-		}
-
-		// Set child's parent
-		component.setParent(this);
-
-		// Tell the page a component was added
-		final Page page = findPage();
-		if (page != null)
-		{
-			page.componentAdded(component);
-		}
-	}
-
-	/**
-	 * Ensure that there is space in childForId map for a new entry before
-	 * adding it.
-	 * 
-	 * @param child
-	 *            The child to put into the map
-	 * @return Any component that was replaced
-	 */
-	private final Component put(final Component child)
-	{
-		if (optimizeChildMapsForSpace)
-		{
-			if (childForId == Collections.EMPTY_MAP)
-			{
-				childForId = new MicroMap();
-			}
-			else if (childForId.size() == MicroMap.MAX_ENTRIES)
-			{
-				// Reallocate MicroMap as MiniMap
-				childForId = new MiniMap(childForId, MINIMAP_MAX_ENTRIES);
-			}
-			else if (childForId.size() == MINIMAP_MAX_ENTRIES)
-			{
-				// Reallocate MiniMap as full HashMap
-				childForId = new HashMap(childForId);
-			}
-		}
-		else
-		{
-			if (childForId == Collections.EMPTY_MAP)
-			{
-				childForId = new HashMap();
-			}
-		}
-
-		return (Component)childForId.put(child.getId(), child);
 	}
 }
