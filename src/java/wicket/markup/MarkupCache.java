@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
+ * $Revision$ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup;
 
@@ -35,8 +34,8 @@ import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.watch.ModificationWatcher;
 
 /**
- * Load markup and cache it for fast retrieval. If markup file changes, it'll
- * be automatically reloaded.
+ * Load markup and cache it for fast retrieval. If markup file changes, it'll be
+ * automatically reloaded.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -182,16 +181,31 @@ public class MarkupCache
 	 * @param markupResource
 	 *            The markup resource to load
 	 * @return The markup
-	 * @throws ParseException
-	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
 	 */
 	private Markup loadMarkup(final String key, final IResourceStream markupResource)
-			throws ParseException, IOException, ResourceStreamNotFoundException
 	{
-		final Markup markup = application.getMarkupParser().readAndParse(markupResource);
-		markupCache.put(key, markup);
-		return markup;
+		try
+		{
+			synchronized (markupCache)
+			{
+				final Markup markup = application.getMarkupParser().readAndParse(markupResource);
+				markupCache.put(key, markup);
+				return markup;
+			}
+		}
+		catch (ParseException e)
+		{
+			log.error("Unable to parse markup from " + markupResource, e);
+		}
+		catch (ResourceStreamNotFoundException e)
+		{
+			log.error("Unable to find markup from " + markupResource, e);
+		}
+		catch (IOException e)
+		{
+			log.error("Unable to read markup from " + markupResource, e);
+		}
+		return Markup.NO_MARKUP;
 	}
 
 	/**
@@ -203,65 +217,25 @@ public class MarkupCache
 	 *            The markup file to load and begin to watch
 	 * @return The markup in the file
 	 */
-	private Markup loadMarkupAndWatchForChanges(final String key, final IResourceStream markupResource)
+	private Markup loadMarkupAndWatchForChanges(final String key,
+			final IResourceStream markupResource)
 	{
-		try
+		// Watch file in the future
+		final ModificationWatcher watcher = application.getResourceWatcher();
+		if (watcher != null)
 		{
-			// Watch file in the future
-			final ModificationWatcher watcher = application.getResourceWatcher();
-
-			if (watcher != null)
+			watcher.add(markupResource, new IChangeListener()
 			{
-				watcher.add(markupResource, new IChangeListener()
+				public void onChange()
 				{
-					public void onChange()
-					{
-						synchronized (markupCache)
-						{
-							try
-							{
-								log.info("Reloading markup from " + markupResource);
-								loadMarkup(key, markupResource);
-							}
-							catch (ParseException e)
-							{
-								log.error("Unable to parse markup from " + markupResource, e);
-							}
-							catch (ResourceStreamNotFoundException e)
-							{
-								log.error("Unable to find markup from " + markupResource, e);
-							}
-							catch (IOException e)
-							{
-								log.error("Unable to read markup from " + markupResource, e);
-							}
-						}
-					}
-				});
-			}
-
-			log.info("Loading markup from " + markupResource);
-
-			return loadMarkup(key, markupResource);
-		}
-		catch (ParseException e)
-		{
-			throwException(e, markupResource, "Unable to parse markup from ");
-		}
-		catch (MarkupException e)
-		{
-			throwException(e, markupResource, e.getMessage());
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			throwException(e, markupResource, "Unable to find markup from ");
-		}
-		catch (IOException e)
-		{
-			throwException(e, markupResource, "Unable to read markup from ");
+					log.info("Reloading markup from " + markupResource);
+					loadMarkup(key, markupResource);
+				}
+			});
 		}
 
-		return Markup.NO_MARKUP;
+		log.info("Loading markup from " + markupResource);
+		return loadMarkup(key, markupResource);
 	}
 
 	/**
@@ -284,8 +258,8 @@ public class MarkupCache
 	 * @param message
 	 * @throws MarkupException
 	 */
-	private void throwException(final Exception e, final IResourceStream resource, final String message)
-			throws MarkupException
+	private void throwException(final Exception e, final IResourceStream resource,
+			final String message) throws MarkupException
 	{
 		throw new MarkupException(resource, message + resource, e);
 	}
