@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.43 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -124,6 +124,9 @@ public abstract class Application
 	/** The single application-wide localization class */
 	private final Localizer localizer;
 
+	/** Markup cache for this application */
+	private final MarkupCache markupCache;
+
 	/** Name of application subclass. */
 	private final String name;
 
@@ -145,8 +148,6 @@ public abstract class Application
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
 
-	private final MarkupCache markupCache;
-	
 	/**
 	 * Inserts _[locale] and _[style] into path just before any extension that
 	 * might exist.
@@ -196,7 +197,7 @@ public abstract class Application
 
 		// Construct markup cache fot this application
 		this.markupCache = new MarkupCache(this);
-		
+
 		// Construct localizer for this application
 		this.localizer = new Localizer(this);
 
@@ -219,7 +220,7 @@ public abstract class Application
 	 * @param resource
 	 *            Resource to store
 	 */
-	public void addResource(final Class scope, final String name, final Locale locale,
+	public final void addResource(final Class scope, final String name, final Locale locale,
 			final String style, final Resource resource)
 	{
 		// Store resource
@@ -238,7 +239,7 @@ public abstract class Application
 	 * @param resource
 	 *            Resource to store
 	 */
-	public void addResource(final String name, final Locale locale, final Resource resource)
+	public final void addResource(final String name, final Locale locale, final Resource resource)
 	{
 		addResource(Application.class, name, locale, null, resource);
 	}
@@ -249,7 +250,7 @@ public abstract class Application
 	 * @param resource
 	 *            Resource to store
 	 */
-	public void addResource(final String name, final Resource resource)
+	public final void addResource(final String name, final Resource resource)
 	{
 		addResource(Application.class, name, null, null, resource);
 	}
@@ -263,7 +264,7 @@ public abstract class Application
 	 * @param resourceFactory
 	 *            The resource factory to add
 	 */
-	public void addResourceFactory(final String name, final IResourceFactory resourceFactory)
+	public final void addResourceFactory(final String name, final IResourceFactory resourceFactory)
 	{
 		nameToResourceFactory.put(name, resourceFactory);
 	}
@@ -290,31 +291,6 @@ public abstract class Application
 	}
 
 	/**
-	 * Get instance of de-/encryption class.
-	 * 
-	 * @return instance of de-/encryption class
-	 */
-	public ICrypt getCrypt()
-	{
-		try
-		{
-			final ICrypt crypt = (ICrypt)getSettings().getCryptClass().newInstance();
-			crypt.setKey(getSettings().getEncryptionKey());
-			return crypt;
-		}
-		catch (InstantiationException e)
-		{
-			throw new WicketRuntimeException(
-					"Encryption/decryption object can not be instantiated", e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new WicketRuntimeException(
-					"Encryption/decryption object can not be instantiated", e);
-		}
-	}
-
-	/**
 	 * @return The application wide localizer instance
 	 */
 	public Localizer getLocalizer()
@@ -323,15 +299,13 @@ public abstract class Application
 	}
 
 	/**
-	 * Get and initialize a markup parser.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
-	 * @return A new MarkupParser
+	 * @return Returns the markup cache associated with the application
 	 */
-	public final MarkupParser getMarkupParser()
+	public final MarkupCache getMarkupCache()
 	{
-		final MarkupParser parser = new MarkupParser(new XmlPullParser());
-		parser.configure(getSettings());
-		return parser;
+		return this.markupCache;
 	}
 
 	/**
@@ -339,7 +313,7 @@ public abstract class Application
 	 * 
 	 * @return The application name.
 	 */
-	public String getName()
+	public final String getName()
 	{
 		return name;
 	}
@@ -347,7 +321,7 @@ public abstract class Application
 	/**
 	 * @return Application's common pages
 	 */
-	public ApplicationPages getPages()
+	public final ApplicationPages getPages()
 	{
 		return pages;
 	}
@@ -359,11 +333,10 @@ public abstract class Application
 	 *            The Page for which a list of PageSets should be retrieved
 	 * @return Sequence of PageSets for a given Page
 	 */
-	public Iterator getPageSets(final Page page)
+	public final Iterator getPageSets(final Page page)
 	{
 		return new Iterator()
 		{
-
 			public boolean hasNext()
 			{
 				return false;
@@ -391,7 +364,7 @@ public abstract class Application
 	 *            The resource style (see {@link wicket.Session})
 	 * @return The logical resource
 	 */
-	public Resource getResource(final Class scope, final String name, final Locale locale,
+	public final Resource getResource(final Class scope, final String name, final Locale locale,
 			final String style)
 	{
 		// 1. Look for fully qualified entry with locale and style
@@ -453,7 +426,7 @@ public abstract class Application
 	 *            Name of the factory to get
 	 * @return The IResourceFactory with the given name.
 	 */
-	public IResourceFactory getResourceFactory(final String name)
+	public final IResourceFactory getResourceFactory(final String name)
 	{
 		return (IResourceFactory)nameToResourceFactory.get(name);
 	}
@@ -467,7 +440,8 @@ public abstract class Application
 		{
 			// Create compound resource locator using source path from
 			// application settings
-			resourceStreamLocator = new DefaultResourceStreamLocator(getSettings().getSourcePath());
+			resourceStreamLocator = new DefaultResourceStreamLocator(getSettings()
+					.getResourcePath());
 		}
 		return resourceStreamLocator;
 	}
@@ -494,11 +468,44 @@ public abstract class Application
 	 */
 	public ApplicationSettings getSettings()
 	{
-		if (settings == null)
-		{
-			throw new IllegalStateException("Application settings not found");
-		}
 		return settings;
+	}
+
+	/**
+	 * Factory method that creates an instance of de-/encryption class.
+	 * 
+	 * @return Instance of de-/encryption class
+	 */
+	public final ICrypt newCrypt()
+	{
+		try
+		{
+			final ICrypt crypt = (ICrypt)getSettings().getCryptClass().newInstance();
+			crypt.setKey(getSettings().getEncryptionKey());
+			return crypt;
+		}
+		catch (InstantiationException e)
+		{
+			throw new WicketRuntimeException(
+					"Encryption/decryption object can not be instantiated", e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new WicketRuntimeException(
+					"Encryption/decryption object can not be instantiated", e);
+		}
+	}
+
+	/**
+	 * Factory method that creates a markup parser.
+	 * 
+	 * @return A new MarkupParser
+	 */
+	public final MarkupParser newMarkupParser()
+	{
+		final MarkupParser parser = new MarkupParser(new XmlPullParser());
+		parser.configure(getSettings());
+		return parser;
 	}
 
 	/**
@@ -524,35 +531,12 @@ public abstract class Application
 	}
 
 	/**
-	 * Changes the resource locator which will be used to locate resources like
-	 * markup files.
-	 * 
-	 * @param resourceStreamLocator
-	 *            The new resource stream locator
-	 */
-	protected void setResourceStreamLocator(final ResourceStreamLocator resourceStreamLocator)
-	{
-		this.resourceStreamLocator = resourceStreamLocator;
-	}
-
-	/**
 	 * Called by ApplicationSettings when source path property is changed. This
 	 * method sets the resourceStreamLocator to null so it will get recreated
 	 * the next time it is accessed using the new source path.
 	 */
-	void sourcePathChanged()
+	final void resourcePathChanged()
 	{
 		this.resourceStreamLocator = null;
-	}
-	
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
-	 * CALL.
-	 * 
-	 * @return Returns the markup cache associated with the application
-	 */
-	public MarkupCache getMarkupCache()
-	{
-	    return this.markupCache;
 	}
 }

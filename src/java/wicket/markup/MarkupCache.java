@@ -189,7 +189,7 @@ public class MarkupCache
 		{
 			synchronized (markupCache)
 			{
-				final Markup markup = application.getMarkupParser().readAndParse(markupResource);
+				final Markup markup = application.newMarkupParser().readAndParse(markupResource);
 				markupCache.put(key, markup);
 				return markup;
 			}

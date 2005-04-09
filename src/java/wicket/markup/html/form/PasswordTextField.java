@@ -84,7 +84,7 @@ public class PasswordTextField extends TextField
 		final String value = getModelObjectAsString();
 		try
 		{
-			return getApplication().getCrypt().encryptString(value);
+			return getApplication().newCrypt().encryptString(value);
 		}
 		catch (Exception ex)
 		{
@@ -120,7 +120,7 @@ public class PasswordTextField extends TextField
 		String decryptedValue;
 		try
 		{
-			decryptedValue = getApplication().getCrypt().decryptString(value);
+			decryptedValue = getApplication().newCrypt().decryptString(value);
 		}
 		catch (Exception ex)
 		{
