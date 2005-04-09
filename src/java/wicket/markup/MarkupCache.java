@@ -175,19 +175,19 @@ public class MarkupCache
 	}
 
 	/**
-	 * Loads markup.
+	 * Loads markup from a resource stream.
 	 * 
 	 * @param key
 	 *            Key under which markup should be cached
-	 * @param markupResource
-	 *            The markup resource to load
+	 * @param markupResourceStream
+	 *            The markup resource stream to load
 	 * @return The markup
 	 */
-	private Markup loadMarkup(final String key, final IResourceStream markupResource)
+	private final Markup loadMarkup(final String key, final IResourceStream markupResourceStream)
 	{
 		try
 		{
-			final Markup markup = application.newMarkupParser().readAndParse(markupResource);
+			final Markup markup = application.newMarkupParser().readAndParse(markupResourceStream);
 			synchronized (markupCache)
 			{
 				markupCache.put(key, markup);
@@ -196,22 +196,22 @@ public class MarkupCache
 		}
 		catch (ParseException e)
 		{
-			log.error("Unable to parse markup from " + markupResource, e);
+			log.error("Unable to parse markup from " + markupResourceStream, e);
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			log.error("Unable to find markup from " + markupResource, e);
+			log.error("Unable to find markup from " + markupResourceStream, e);
 		}
 		catch (IOException e)
 		{
-			log.error("Unable to read markup from " + markupResource, e);
+			log.error("Unable to read markup from " + markupResourceStream, e);
 		}
 		return Markup.NO_MARKUP;
 	}
 
 	/**
 	 * Load markup from an IResourceStream and add an {@link IChangeListener}to
-	 * the {@link ModificationWatcher} so that if the resource changes, we can
+	 * the {@link ModificationWatcher}so that if the resource changes, we can
 	 * reload it automatically.
 	 * 
 	 * @param key
@@ -220,7 +220,7 @@ public class MarkupCache
 	 *            The markup stream to load and begin to watch
 	 * @return The markup in the stream
 	 */
-	private Markup loadMarkupAndWatchForChanges(final String key,
+	private final Markup loadMarkupAndWatchForChanges(final String key,
 			final IResourceStream markupResourceStream)
 	{
 		// Watch file in the future
@@ -248,7 +248,7 @@ public class MarkupCache
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private String markupKey(final MarkupContainer container, final Class clazz)
+	private final String markupKey(final MarkupContainer container, final Class clazz)
 	{
 		final String classname = clazz.getName();
 		final Locale locale = container.getLocale();
@@ -266,18 +266,5 @@ public class MarkupCache
 		}
 		buffer.append(markupType);
 		return buffer.toString();
-	}
-
-	/**
-	 * 
-	 * @param e
-	 * @param resource
-	 * @param message
-	 * @throws MarkupException
-	 */
-	private void throwException(final Exception e, final IResourceStream resource,
-			final String message) throws MarkupException
-	{
-		throw new MarkupException(resource, message + resource, e);
 	}
 }
