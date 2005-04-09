@@ -117,7 +117,7 @@ public class MarkupCache
 	 *            container as well.
 	 * @return Markup resource
 	 */
-	// This is class is already prepared for markup inheritance
+	// This method is already prepared for markup inheritance
 	private final Markup getMarkup(final MarkupContainer container, Class clazz)
 	{
 		if (clazz == null)
