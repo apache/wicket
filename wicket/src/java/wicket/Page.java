@@ -41,42 +41,43 @@ import wicket.version.undo.UndoPageVersionManager;
  * Instead they should subclass a subclass of Page that is appropriate to the
  * markup type they are using, such as WebPage (for HTML markup).
  * <ul>
- * <li><b>Construction</b> - When a page is constructed, it is automatically added to
- * the current PageMap in the Session. When a Page is added to the Session's
- * PageMap, the PageMap assigns the Page an id. A PageMap is roughly equivalent
- * to a browser window and encapsulates a set of pages accessible through that
- * window. When a popup window is created, a new PageMap is created for the
- * popup.
+ * <li><b>Construction </b>- When a page is constructed, it is automatically
+ * added to the current PageMap in the Session. When a Page is added to the
+ * Session's PageMap, the PageMap assigns the Page an id. A PageMap is roughly
+ * equivalent to a browser window and encapsulates a set of pages accessible
+ * through that window. When a popup window is created, a new PageMap is created
+ * for the popup.
  * 
- * <li><b>Identity</b> - The Session that a Page is contained in can be retrieved by
- * calling Page.getSession(). Page identifiers start at 0 for each PageMap in
- * the Session and increment as new pages are added to the map. The PageMap-(and
- * Session)-unique identifier assigned to a given Page can be retrieved by
- * calling getId(). So, the first Page added to a new user Session will always
- * be named "0".
+ * <li><b>Identity </b>- The Session that a Page is contained in can be
+ * retrieved by calling Page.getSession(). Page identifiers start at 0 for each
+ * PageMap in the Session and increment as new pages are added to the map. The
+ * PageMap-(and Session)-unique identifier assigned to a given Page can be
+ * retrieved by calling getId(). So, the first Page added to a new user Session
+ * will always be named "0".
  * 
- * <li><b>LifeCycle</b> - Subclasses of Page which are interested in lifecycle events
- * can override onBeginRequest, onEndRequest() and onModelChanged(). The
+ * <li><b>LifeCycle </b>- Subclasses of Page which are interested in lifecycle
+ * events can override onBeginRequest, onEndRequest() and onModelChanged(). The
  * onBeginRequest() method is inherited from Component. A call to
  * onBeginRequest() is made for every Component on a Page before page rendering
  * begins. At the end of a request (when rendering has completed) to a Page, the
  * onEndRequest() method is called for every Component on the Page.
  * 
- * <li><b>Nested Component Hierarchy</b> - The Page class is a subclass of
+ * <li><b>Nested Component Hierarchy </b>- The Page class is a subclass of
  * MarkupContainer. All MarkupContainers can have "associated markup", which
  * resides alongside the Java code by default. All MarkupContainers are also
  * Component containers. Through nesting, of containers, a Page can contain any
  * arbitrary tree of Components. For more details on MarkupContainers, see
  * {@link wicket.MarkupContainer}.
  * 
- * <li><b>Bookmarkable Pages</b> - Pages can be constructed with any constructor when
- * they are being used in a Wicket session, but if you wish to link to a Page
- * using a URL that is "bookmarkable" (which implies that the URL will not have
- * any session information encoded in it), you need to implement your Page with
- * a no-arg constructor or with a constructor that accepts a PageParameters
- * argument (which wraps any query string parameters for a request).
+ * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any
+ * constructor when they are being used in a Wicket session, but if you wish to
+ * link to a Page using a URL that is "bookmarkable" (which implies that the URL
+ * will not have any session information encoded in it), you need to implement
+ * your Page with a no-arg constructor or with a constructor that accepts a
+ * PageParameters argument (which wraps any query string parameters for a
+ * request).
  * 
- * <li><b>Models</b> - Pages, like other Components, can have models (see
+ * <li><b>Models </b>- Pages, like other Components, can have models (see
  * {@link IModel}). A Page can be assigned a model by passing one to the Page's
  * constructor, by overriding initModel() or with an explicit invocation of
  * setModel(). If the model is a {@link wicket.model.CompoundPropertyModel},
@@ -90,20 +91,20 @@ import wicket.version.undo.UndoPageVersionManager;
  * OGNL expression other than the component's name for retrieving the model
  * object), BoundCompoundPropertyModel can be used.
  * 
- * <li><b>Back Button</b> - Pages can support the back button by enabling versioning
- * with a call to setVersioned(boolean). If a Page is versioned and changes
- * occur to it which need to be tracked, a verison manager will be installed
- * using the overridable factory method newVersionManager(). The default version
- * manager returned by the base implementation of this method is an instance of
- * UndoPageVersionManager, which manages versions of a page by keeping change
- * records that can be reversed at a later time.
+ * <li><b>Back Button </b>- Pages can support the back button by enabling
+ * versioning with a call to setVersioned(boolean). If a Page is versioned and
+ * changes occur to it which need to be tracked, a verison manager will be
+ * installed using the overridable factory method newVersionManager(). The
+ * default version manager returned by the base implementation of this method is
+ * an instance of UndoPageVersionManager, which manages versions of a page by
+ * keeping change records that can be reversed at a later time.
  * 
- * <li><b>User Feedback</b> - A page can have one or more feedback messages and it can
- * specify a feedback component implementing IFeedback for displaying these
- * messages. An easy and useful implementation of IFeedback is the FeedbackPanel
- * component which displays feedback messages in a list view.
+ * <li><b>User Feedback </b>- A page can have one or more feedback messages and
+ * it can specify a feedback component implementing IFeedback for displaying
+ * these messages. An easy and useful implementation of IFeedback is the
+ * FeedbackPanel component which displays feedback messages in a list view.
  * 
- * <li><b>Security</b> - Pages can be secured by overriding checkAccess(). If
+ * <li><b>Security </b>- Pages can be secured by overriding checkAccess(). If
  * checkAccess() returns ACCESS_ALLOWED (true), then onRender() will render the
  * page. If it returns false (ACCESS_DENIED), then onRender() will not render
  * the page. Besides returning true or false, an implementation of checkAccess()
@@ -111,9 +112,9 @@ import wicket.version.undo.UndoPageVersionManager;
  * Component.setResponsePage() or Page.redirectToInterceptPage(). This can be
  * used to allow a user to authenticate themselves if they were denied access.
  * 
- * <li><b>Clustering</b> - The newPageState() method provides a convenient way for a
- * Page to create a {@link PageState}record that reconstitutes the Page when
- * replicated in a cluster.
+ * <li><b>Clustering </b>- The newPageState() method provides a convenient way
+ * for a Page to create a {@link PageState}record that reconstitutes the Page
+ * when replicated in a cluster.
  * 
  * @see wicket.markup.html.WebPage
  * @see wicket.MarkupContainer
@@ -189,7 +190,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * @param model
-	 *			  See Component
+	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
 	protected Page(final IModel model)
@@ -224,9 +225,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * @return The current version number of this page. If the page has been
-	 *		   changed once, the return value will be 1. If the page has not yet
-	 *		   been revised, the version returned will be 0, indicating that the
-	 *		   page is still in its original state.
+	 *         changed once, the return value will be 1. If the page has not yet
+	 *         been revised, the version returned will be 0, indicating that the
+	 *         page is still in its original state.
 	 */
 	public final int getCurrentVersionNumber()
 	{
@@ -282,10 +283,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * a Page when it cannot be found in the Session.
 	 * 
 	 * @param versionNumber
-	 *			  The version desired
+	 *            The version desired
 	 * @return A Page object with the component/model hierarchy that was
-	 *		   attached to this page at the time represented by the requested
-	 *		   version.
+	 *         attached to this page at the time represented by the requested
+	 *         version.
 	 */
 	public Page getVersion(final int versionNumber)
 	{
@@ -357,7 +358,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		});
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * @return True if this Page is dirty and needs to be replicated
 	 */
@@ -365,9 +366,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		return getFlag(FLAG_IS_DIRTY);
 	}
-	
+
 	/**
-	 * @return True if this page is intended to display an error to the end user.
+	 * @return True if this page is intended to display an error to the end
+	 *         user.
 	 */
 	public boolean isErrorPage()
 	{
@@ -403,7 +405,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * Redirects browser to an intermediate page such as a sign-in page.
 	 * 
 	 * @param page
-	 *			  The sign in page
+	 *            The sign in page
 	 */
 	public final void redirectToInterceptPage(final Page page)
 	{
@@ -417,10 +419,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * @see Form#removePersistentFormComponentValues(boolean)
 	 * 
 	 * @param formClass
-	 *			  Form to be selected. Pages may have more than one Form.
+	 *            Form to be selected. Pages may have more than one Form.
 	 * @param disablePersistence
-	 *			  if true, disable persistence for all FormComponents on that
-	 *			  page. If false, it will remain unchanged.
+	 *            if true, disable persistence for all FormComponents on that
+	 *            page. If false, it will remain unchanged.
 	 */
 	public final void removePersistedFormData(final Class formClass,
 			final boolean disablePersistence)
@@ -471,9 +473,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			internalEndRequest();
 		}
 	}
-	
+
 	/**
-	 * @param dirty True to make this page dirty, false to make it clean.
+	 * @param dirty
+	 *            True to make this page dirty, false to make it clean.
 	 */
 	public final void setDirty(final boolean dirty)
 	{
@@ -484,7 +487,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * Sets the feedback display for this page
 	 * 
 	 * @param feedback
-	 *			  The feedback
+	 *            The feedback
 	 */
 	public void setFeedback(final IFeedback feedback)
 	{
@@ -495,8 +498,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @param pageMapName
-	 *			  Sets this page into the page map with the given name. If the
-	 *			  page map does not yet exist, it is automatically created.
+	 *            Sets this page into the page map with the given name. If the
+	 *            page map does not yet exist, it is automatically created.
 	 */
 	public final void setPageMap(final String pageMapName)
 	{
@@ -527,13 +530,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Gets the url for the given component/ listener interface.
+	 * Gets a url that invokes the given listener interface on the given
+	 * component. The listener interface can be any interface with a single
+	 * method taking no arguments which has been registered with a call to
+	 * {@link RequestCycle#registerRequestListenerInterface(Class)}. The
+	 * component must implement the given interface.
 	 * 
 	 * @param component
-	 *			  Component that has listener interface
+	 *            Component implementing listener interface
 	 * @param listenerInterface
-	 *			  The listener interface
-	 * @return A URL that encodes a page, component and interface to call
+	 *            The listener interface to invoke when the URL is requested
+	 * @return A URL that encodes an interface to call on a given component
 	 */
 	public abstract String urlFor(final Component component, final Class listenerInterface);
 
@@ -542,7 +549,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * <p>
 	 * 
 	 * @param path
-	 *			  The path
+	 *            The path
 	 * @return The url for the path
 	 */
 	public abstract String urlFor(final String path);
@@ -553,11 +560,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * Gets the url for the given page class using the given parameters.
 	 * 
 	 * @param pageMapName
-	 *			  Name of pagemap to use
+	 *            Name of pagemap to use
 	 * @param pageClass
-	 *			  Class of page
+	 *            Class of page
 	 * @param parameters
-	 *			  Parameters to page
+	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
 	public abstract String urlFor(final String pageMapName, final Class pageClass,
@@ -734,7 +741,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * @param component
-	 *			  The component that was added
+	 *            The component that was added
 	 */
 	final void componentAdded(final Component component)
 	{
@@ -747,7 +754,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * @param component
-	 *			  The component whose model is about to change
+	 *            The component whose model is about to change
 	 */
 	final void componentModelChanging(final Component component)
 	{
@@ -760,7 +767,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * @param component
-	 *			  The component that was removed
+	 *            The component that was removed
 	 */
 	final void componentRemoved(final Component component)
 	{
@@ -775,7 +782,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * Adds a component to the set of rendered components
 	 * 
 	 * @param component
-	 *			  The component that was rendered
+	 *            The component that was rendered
 	 */
 	final void componentRendered(final Component component)
 	{
@@ -796,7 +803,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * @param component
-	 *			  The component that was removed
+	 *            The component that was removed
 	 */
 	final void componentVisibilityChanged(final Component component)
 	{
@@ -831,7 +838,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * Set the id.
 	 * 
 	 * @param id
-	 *			  The id to set.
+	 *            The id to set.
 	 */
 	final void setId(final int id)
 	{
@@ -906,7 +913,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// All Pages are born dirty so they get clustered right away
 		setDirty(true);
-		
+
 		// Get session
 		final Session session = getSession();
 
@@ -929,7 +936,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/**
 	 * @param component
-	 *			  The component which is affected
+	 *            The component which is affected
 	 * @return True if the change is okay to report
 	 */
 	private final boolean isVersioned(final Component component)
