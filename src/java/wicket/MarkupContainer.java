@@ -17,8 +17,6 @@
  */
 package wicket;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,19 +27,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.model.IModel;
 import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
-import wicket.util.listener.IChangeListener;
-import wicket.util.resource.IResourceStream;
-import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.Strings;
-import wicket.util.watch.ModificationWatcher;
 
 /**
  * A MarkupContainer holds a map of child components.
@@ -526,7 +518,7 @@ public abstract class MarkupContainer extends Component
 	 *         If there is no markup type for a component, null may be returned,
 	 *         but this means that no markup can be loaded for the class.
 	 */
-	protected String getMarkupType()
+	public String getMarkupType()
 	{
 		throw new IllegalStateException(
 				exceptionMessage("You cannot directly subclass Page or MarkupContainer.	 Instead, subclass a markup-specific class, such as WebPage or WebMarkupContainer"));
@@ -661,54 +653,6 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Gets any (immutable) markup resource for this class.
-	 * 
-	 * @return Markup resource
-	 */
-	final Markup getAssociatedMarkup()
-	{
-		synchronized (markupCache)
-		{
-			// Look up markup tag list by class, locale, style and markup type
-			final String key = markupKey();
-			Markup markup = (Markup)markupCache.get(key);
-
-			// If no markup in map
-			if (markup == null)
-			{
-				// Locate markup resource, searching up class hierarchy
-				IResourceStream markupResourceStream = null;
-				Class containerClass = getClass();
-				while ((markupResourceStream == null) && (containerClass != MarkupContainer.class))
-				{
-					// Look for markup resource for containerClass
-					markupResourceStream = getApplication().getResourceStreamLocator().locate(
-							containerClass, getStyle(), getLocale(), getMarkupType());
-					containerClass = containerClass.getSuperclass();
-				}
-
-				// Found markup?
-				if (markupResourceStream != null)
-				{
-					// load the markup and watch for changes
-					markup = loadMarkupAndWatchForChanges(key, markupResourceStream);
-				}
-				else
-				{
-					// flag markup as non-existent (as opposed to null, which
-					// might mean that it's simply not loaded into the cache)
-					markup = Markup.NO_MARKUP;
-				}
-
-				// Save any markup list (or absence of one) for next time
-				markupCache.put(key, markup);
-			}
-
-			return markup;
-		}
-	}
-
-	/**
 	 * Gets a fresh markup stream that contains the (immutable) markup resource
 	 * for this class.
 	 * 
@@ -716,16 +660,11 @@ public abstract class MarkupContainer extends Component
 	 */
 	final MarkupStream getAssociatedMarkupStream()
 	{
-		// Look for associated markup
-		final Markup markup = getAssociatedMarkup();
-
-		// If we found markup for this container
-		if (markup != Markup.NO_MARKUP)
-		{
-			// return a MarkupStream for the markup
-			return new MarkupStream(markup);
-		}
-		else
+	    try
+	    {
+	        return getApplication().getMarkupCache().getMarkupStream(this, null);
+	    }
+	    catch (WicketRuntimeException ex)
 		{
 			// throw exception since there is no associated markup
 			throw new WicketRuntimeException(
@@ -743,7 +682,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	final boolean hasAssociatedMarkup()
 	{
-		return getAssociatedMarkup() != Markup.NO_MARKUP;
+        return getApplication().getMarkupCache().hasAssociatedMarkup(this, null);
 	}
 
 	/**
@@ -767,112 +706,6 @@ public abstract class MarkupContainer extends Component
 						+ " failed to advance the markup stream");
 			}
 		}
-	}
-
-	/**
-	 * Loads markup.
-	 * 
-	 * @param application
-	 *            Application
-	 * @param key
-	 *            Key under which markup should be cached
-	 * @param markupResource
-	 *            The markup resource to load
-	 * @return The markup
-	 * @throws ParseException
-	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
-	 */
-	private Markup loadMarkup(final Application application, final String key,
-			IResourceStream markupResource) throws ParseException, IOException,
-			ResourceStreamNotFoundException
-	{
-		final Markup markup = application.getMarkupParser().readAndParse(markupResource);
-		markupCache.put(key, markup);
-		return markup;
-	}
-
-	/**
-	 * Load markup and add a {@link ModificationWatcher}to the markup resource.
-	 * 
-	 * @param key
-	 *            The key for the resource
-	 * @param markupResource
-	 *            The markup file to load and begin to watch
-	 * @return The markup in the file
-	 */
-	private Markup loadMarkupAndWatchForChanges(final String key,
-			final IResourceStream markupResource)
-	{
-		final Application application = getApplication();
-
-		try
-		{
-			// Watch file in the future
-			final ModificationWatcher watcher = application.getResourceWatcher();
-
-			if (watcher != null)
-			{
-				watcher.add(markupResource, new IChangeListener()
-				{
-					public void onChange()
-					{
-						synchronized (markupCache)
-						{
-							try
-							{
-								log.info("Reloading markup from " + markupResource);
-								loadMarkup(application, key, markupResource);
-							}
-							catch (ParseException e)
-							{
-								log.error("Unable to parse markup from " + markupResource, e);
-							}
-							catch (ResourceStreamNotFoundException e)
-							{
-								log.error("Unable to find markup from " + markupResource, e);
-							}
-							catch (IOException e)
-							{
-								log.error("Unable to read markup from " + markupResource, e);
-							}
-						}
-					}
-				});
-			}
-
-			log.info("Loading markup from " + markupResource);
-
-			return loadMarkup(application, key, markupResource);
-		}
-		catch (ParseException e)
-		{
-			throw new MarkupException(markupResource,
-					exceptionMessage("Unable to parse markup from " + markupResource), e);
-		}
-		catch (MarkupException e)
-		{
-			throw new MarkupException(markupResource, exceptionMessage(e.getMessage()));
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			throw new MarkupException(markupResource,
-					exceptionMessage("Unable to find markup from " + markupResource), e);
-		}
-		catch (IOException e)
-		{
-			throw new MarkupException(markupResource,
-					exceptionMessage("Unable to read markup from " + markupResource), e);
-		}
-	}
-
-	/**
-	 * @return Key that uniquely identifies any markup that might be associated
-	 *         with this markup container.
-	 */
-	private String markupKey()
-	{
-		return getClass().getName() + getLocale() + getStyle() + getMarkupType();
 	}
 
 	/**
