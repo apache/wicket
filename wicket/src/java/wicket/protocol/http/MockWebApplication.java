@@ -18,15 +18,11 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import wicket.ApplicationSettings;
 import wicket.Page;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebRequestCycle;
-import wicket.protocol.http.WebResponse;
-import wicket.protocol.http.WebSession;
 
 /**
  * This class provides a mock implementation of a Wicket HTTP based application
@@ -83,9 +79,6 @@ public class MockWebApplication extends WebApplication
     /** Mock http servlet session. */
     private final MockHttpSession servletSession;
 
-    /** Application settings. */
-    private final ApplicationSettings settings;
-
     /** Request. */
     private WebRequest wicketRequest;
 
@@ -105,7 +98,6 @@ public class MockWebApplication extends WebApplication
      */
     public MockWebApplication(final String path)
     {
-        settings = new ApplicationSettings(this);
         context = new MockServletContext(this, path);
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
@@ -164,16 +156,6 @@ public class MockWebApplication extends WebApplication
     public MockHttpSession getServletSession()
     {
         return servletSession;
-    }
-
-    /**
-     * Get the application settings.
-     * 
-     * @return The application settings.
-     */
-    public ApplicationSettings getSettings()
-    {
-        return settings;
     }
 
     /**

@@ -73,7 +73,7 @@ import wicket.util.time.Duration;
  * <i>resourcePollFrequency </i> (defaults to no polling frequency) - Frequency
  * at which resources should be polled for changes.
  * <p>
- * <i>sourcePath </i> (no default) - Set this to enable polling of resources on
+ * <i>resourcePath </i> (no default) - Set this to enable polling of resources on
  * your source path
  * <p>
  * <i>stripComments </i> (defaults to false) - Set to true to strip HTML
@@ -189,8 +189,8 @@ public final class ApplicationSettings
 	/** Frequency at which files should be polled */
 	private Duration resourcePollFrequency = null;
 
-	/** Source path */
-	private Path sourcePath = new Path();
+	/** Filesystem Path to search for resources */
+	private Path resourcePath = new Path();
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(2);
@@ -290,7 +290,7 @@ public final class ApplicationSettings
 				final Folder folder = new Folder(sourceFolder);
 				if (folder.exists())
 				{
-					setSourcePath(new Path(folder));
+					setResourcePath(new Path(folder));
 				}
 				else
 				{
@@ -465,14 +465,14 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Gets any source code path to use when searching for resources.
+	 * Gets any filesystem path to use when searching for resources.
 	 * 
-	 * @return Returns the sourcePath.
-	 * @see ApplicationSettings#setSourcePath(Path)
+	 * @return Returns the resourcePath.
+	 * @see ApplicationSettings#setResourcePath(Path)
 	 */
-	public final Path getSourcePath()
+	public final Path getResourcePath()
 	{
-		return sourcePath;
+		return resourcePath;
 	}
 
 	/**
@@ -735,7 +735,7 @@ public final class ApplicationSettings
 	 * @param resourcePollFrequency
 	 *            Frequency at which to poll resources
 	 * @return This
-	 * @see ApplicationSettings#setSourcePath(Path)
+	 * @see ApplicationSettings#setResourcePath(Path)
 	 */
 	public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
 	{
@@ -748,16 +748,16 @@ public final class ApplicationSettings
 	 * source path can allow developers to "hot update" pages by simply changing
 	 * markup on the fly and hitting refresh in their browser.
 	 * 
-	 * @param sourcePath
-	 *            The sourcePath to set
+	 * @param resourcePath
+	 *            The resourcePath to set
 	 * @return This
 	 */
-	public final ApplicationSettings setSourcePath(final Path sourcePath)
+	public final ApplicationSettings setResourcePath(final Path resourcePath)
 	{
-		this.sourcePath = sourcePath;
+		this.resourcePath = resourcePath;
 
 		// Cause resource locator to get recreated
-		application.sourcePathChanged();
+		application.resourcePathChanged();
 
 		return this;
 	}

@@ -92,7 +92,7 @@ public class CookieTest extends TestCase
 		this.panel.setPersistent(true);
 		this.form = (Form)panel.get("signInForm");
 
-        final ICrypt crypt = application.getCrypt();
+        final ICrypt crypt = application.newCrypt();
         final String encryptedPassword = crypt.encryptString("test");
         assertNotNull(encryptedPassword);
         this.cookieUsername = new Cookie("panel.signInForm.username", "juergen");

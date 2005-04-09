@@ -9,6 +9,17 @@
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
       <action type="update" dev="Jonathan Locke" issue="">
+      Minor refactoring in Application and ApplicationSettings.  Changed
+      Application.sourcePath property to resourcePath since that's what it
+      really is.  Changed getCrypt() and getMarkupParser() to newCrypt()
+      and newMarkupParser() since these are really factory methods and they
+      should indicate that.  Made a bunch of methods final that should be
+      and reformatted some stuff.  Would like to make getSettings() final
+      too so that hotspot will inline accesses.  Unfortunately, some Spring
+      related subclass has already overridden the method and so now we cannot
+      make it final...
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Added FLAG_USER* bits to Component and made setFlag/getFlag protected. 
       This will help avoid flag bit conflicts and will also make it possible to
       reduce the space needs of Components other than Page (which already uses
