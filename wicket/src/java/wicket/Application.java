@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import wicket.markup.MarkupInheritanceResolver;
+import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
 import wicket.markup.html.form.encryption.ICrypt;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -145,6 +145,8 @@ public abstract class Application
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
 
+	private final MarkupCache markupCache;
+	
 	/**
 	 * Inserts _[locale] and _[style] into path just before any extension that
 	 * might exist.
@@ -192,12 +194,14 @@ public abstract class Application
 		// Create name from subclass
 		this.name = Classes.name(getClass());
 
+		// Construct markup cache fot this application
+		this.markupCache = new MarkupCache(this);
+		
 		// Construct localizer for this application
 		this.localizer = new Localizer(this);
 
 		// Install default component resolvers
 		componentResolvers.add(new AutoComponentResolver());
-		componentResolvers.add(new MarkupInheritanceResolver());
 
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
@@ -539,5 +543,16 @@ public abstract class Application
 	void sourcePathChanged()
 	{
 		this.resourceStreamLocator = null;
+	}
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
+	 * CALL.
+	 * 
+	 * @return Returns the markup cache associated with the application
+	 */
+	public MarkupCache getMarkupCache()
+	{
+	    return this.markupCache;
 	}
 }

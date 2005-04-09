@@ -169,7 +169,7 @@ public class WebPage extends Page
 	 * 
 	 * @return Markup type for HTML
 	 */
-	protected String getMarkupType()
+	public String getMarkupType()
 	{
 		return "html";
 	}
