@@ -63,6 +63,50 @@ public class MarkupCache
 	}
 
 	/**
+	 * Gets a fresh markup stream that contains the (immutable) markup resource
+	 * for this class.
+	 * 
+	 * @param container
+	 *            The container the markup should be associated with
+	 * @param clazz
+	 *            The class to get the associated markup for. If null, the the
+	 *            container's class is used, but it can be a parent class of
+	 *            container as well.
+	 * 
+	 * @return A stream of MarkupElement elements
+	 */
+	public final MarkupStream getMarkupStream(final MarkupContainer container, final Class clazz)
+	{
+		// Look for associated markup
+		final Markup markup = getMarkup(container, clazz);
+
+		// If we found markup for this container
+		if (markup != Markup.NO_MARKUP)
+		{
+			// return a MarkupStream for the markup
+			return new MarkupStream(markup);
+		}
+		else
+		{
+			// throw exception since there is no associated markup
+			throw new WicketRuntimeException(
+					"Markup not found. Component class: "
+							+ clazz.getName()
+							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
+		}
+	}
+
+	/**
+	 * @param container
+	 * @param clazz
+	 * @return True if this markup container has associated markup
+	 */
+	public final boolean hasAssociatedMarkup(final MarkupContainer container, final Class clazz)
+	{
+		return getMarkup(container, clazz) != Markup.NO_MARKUP;
+	}
+
+	/**
 	 * Gets any (immutable) markup resource for this class.
 	 * 
 	 * @param container
@@ -128,50 +172,6 @@ public class MarkupCache
 
 			return markup;
 		}
-	}
-
-	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class.
-	 * 
-	 * @param container
-	 *            The container the markup should be associated with
-	 * @param clazz
-	 *            The class to get the associated markup for. If null, the the
-	 *            container's class is used, but it can be a parent class of
-	 *            container as well.
-	 * 
-	 * @return A stream of MarkupElement elements
-	 */
-	public final MarkupStream getMarkupStream(final MarkupContainer container, final Class clazz)
-	{
-		// Look for associated markup
-		final Markup markup = getMarkup(container, clazz);
-
-		// If we found markup for this container
-		if (markup != Markup.NO_MARKUP)
-		{
-			// return a MarkupStream for the markup
-			return new MarkupStream(markup);
-		}
-		else
-		{
-			// throw exception since there is no associated markup
-			throw new WicketRuntimeException(
-					"Markup not found. Component class: "
-							+ clazz.getName()
-							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
-		}
-	}
-
-	/**
-	 * @param container
-	 * @param clazz
-	 * @return True if this markup container has associated markup
-	 */
-	public final boolean hasAssociatedMarkup(final MarkupContainer container, final Class clazz)
-	{
-		return getMarkup(container, clazz) != Markup.NO_MARKUP;
 	}
 
 	/**
@@ -265,19 +265,6 @@ public class MarkupCache
 	}
 
 	/**
-	 * 
-	 * @param e
-	 * @param resource
-	 * @param message
-	 * @throws MarkupException
-	 */
-	private void throwException(final Exception e, final IResourceStream resource, final String message)
-			throws MarkupException
-	{
-		throw new MarkupException(resource, message + resource, e);
-	}
-
-	/**
 	 * @param container
 	 * @param clazz
 	 *            The clazz to get the key for
@@ -288,5 +275,18 @@ public class MarkupCache
 	{
 		return clazz.getName() + container.getLocale() + container.getStyle()
 				+ container.getMarkupType();
+	}
+
+	/**
+	 * 
+	 * @param e
+	 * @param resource
+	 * @param message
+	 * @throws MarkupException
+	 */
+	private void throwException(final Exception e, final IResourceStream resource, final String message)
+			throws MarkupException
+	{
+		throw new MarkupException(resource, message + resource, e);
 	}
 }
