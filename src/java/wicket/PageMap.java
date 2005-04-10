@@ -130,7 +130,10 @@ public final class PageMap implements Serializable
 	public final Page get(final String id)
 	{
 		final Page page = (Page)getPages().get(id);
-		page.setDirty(true);
+		if (page != null)
+		{
+			page.setDirty(true);
+		}
 		return page;
 	}
 
