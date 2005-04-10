@@ -43,7 +43,7 @@ import wicket.util.lang.Bytes;
 public abstract class UploadForm extends Form
 {
 	/** Maximum size of an upload in bytes */
-	Bytes maxSize;
+	Bytes maxSize = Bytes.MAX;
 
 	/**
 	 * @see wicket.Component#Component(String)
