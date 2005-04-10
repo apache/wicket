@@ -94,6 +94,9 @@ public final class Bytes extends LongValue
 	/** Pattern for string parsing. */
 	private static final Pattern valuePattern = Pattern.compile(
 			"([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);
+	
+	/** Maximum bytes value */
+	public static Bytes MAX = bytes(Long.MAX_VALUE);
 
 	/**
 	 * Private constructor forces use of static factory methods.
