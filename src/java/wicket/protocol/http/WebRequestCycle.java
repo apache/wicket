@@ -353,7 +353,10 @@ public class WebRequestCycle extends RequestCycle
 		{
 			// Get the relative URL we need for loading the resource from
 			// the servlet context
-			final String url = getWebRequest().getRelativeURL();
+			final String url = '/' + getWebRequest().getRelativeURL();
+			// NOTE: we NEED to put the '/' in front as otherwise some versions of
+			// appliction servers (e.g. Jetty 5.1.x) will fail for requests like
+			// '/mysubdir/myfile.css'
 
 			// Get servlet context
 			final ServletContext context = ((WebApplication)application).getWicketServlet()
