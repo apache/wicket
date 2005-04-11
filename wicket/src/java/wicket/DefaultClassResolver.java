@@ -24,12 +24,12 @@ package wicket;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class DefaultClassResolver implements IClassResolver
+public final class DefaultClassResolver implements IClassResolver
 {
 	/**
 	 * @see wicket.IClassResolver#resolveClass(java.lang.String)
 	 */
-	public Class resolveClass(String classname)
+	public final Class resolveClass(String classname)
 	{
 		try
 		{

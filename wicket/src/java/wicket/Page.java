@@ -217,7 +217,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * 
 	 * @return A page unique number
 	 */
-	public int getAutoIndex()
+	public final int getAutoIndex()
 	{
 		return this.autoIndex++;
 	}
@@ -236,7 +236,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * @return Returns the feedbackMessages.
 	 */
-	public FeedbackMessages getFeedbackMessages()
+	public final FeedbackMessages getFeedbackMessages()
 	{
 		if (feedbackMessages == null)
 		{
@@ -339,12 +339,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * @return True if this Page is dirty and needs to be replicated
 	 */
-	public boolean isDirty()
+	public final boolean isDirty()
 	{
 		return getFlag(FLAG_IS_DIRTY);
 	}
 
 	/**
+	 * Override this method and return true if your page is used to display
+	 * Wicket errors. This can help the framework prevent infinite failure
+	 * loops.
+	 * 
 	 * @return True if this page is intended to display an error to the end
 	 *         user.
 	 */
@@ -466,7 +470,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * @param feedback
 	 *            The feedback
 	 */
-	public void setFeedback(final IFeedback feedback)
+	public final void setFeedback(final IFeedback feedback)
 	{
 		this.feedback = feedback;
 	}
@@ -598,7 +602,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * @return Returns the pageMap.
 	 */
-	protected PageMap getPageMap()
+	protected final PageMap getPageMap()
 	{
 		if (pageMap == null)
 		{
@@ -831,10 +835,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Set the id.
+	 * Set the id for this Page. This method is called by PageMap when a Page is
+	 * added because the id, which is assigned by PageMap, is not known until
+	 * this time.
 	 * 
 	 * @param id
-	 *            The id to set.
+	 *            The id
 	 */
 	final void setId(final int id)
 	{
