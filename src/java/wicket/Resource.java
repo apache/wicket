@@ -53,6 +53,7 @@ public abstract class Resource implements IResourceListener
 	/** The actual raw resource this class is rendering */
 	protected IResourceStream resourceStream;
 
+	/** True if this resource can be cached */
 	private boolean cacheable;
 	
 	/**
@@ -60,8 +61,21 @@ public abstract class Resource implements IResourceListener
 	 */
 	protected Resource()
 	{
-		// default nothing is cacheable
+		// By default, nothing is cacheable
 		cacheable = false;
+	}
+
+	/**
+	 * @return Gets the resource to render to the requester
+	 */
+	public abstract IResourceStream getResourceStream();
+
+	/**
+	 * @return boolean True or False if this resource is cacheable
+	 */
+	public boolean isCacheable()
+	{
+		return cacheable;
 	}
 
 	/**
@@ -101,9 +115,14 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * @return Gets the resource to render to the requester
+	 * Should this resource be cacheable, so will it set the last modified and the some cache headers in the response.
+	 * @param cacheable
+	 * 			boolean if the lastmodified and cache headers must be set.
 	 */
-	public abstract IResourceStream getResourceStream();
+	public final void setCacheable(boolean cacheable)
+	{
+		this.cacheable = cacheable;
+	}
 
 	/**
 	 * Sets any loaded resource to null, thus forcing a reload on the next
@@ -117,7 +136,7 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * Set resource field by calling subclass
 	 */
-	private void init()
+	private final void init()
 	{
 		if (this.resourceStream == null)
 		{
@@ -159,23 +178,5 @@ public abstract class Resource implements IResourceListener
 	static
 	{
 		RequestCycle.registerRequestListenerInterface(IResourceListener.class);
-	}
-
-	/**
-	 * @return boolean True or False if this resource is cacheable
-	 */
-	public boolean isCacheable()
-	{
-		return cacheable;
-	}
-
-	/**
-	 * Should this resource be cacheable, so will it set the last modified and the some cache headers in the response.
-	 * @param cacheable
-	 * 			boolean if the lastmodified and cache headers must be set.
-	 */
-	public void setCacheable(boolean cacheable)
-	{
-		this.cacheable = cacheable;
 	}
 }

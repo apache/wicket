@@ -56,7 +56,7 @@ public final class FeedbackMessages implements Serializable
 	/**
 	 * Clears any existing messages
 	 */
-	public void clear()
+	public final void clear()
 	{
 		if (messages != null)
 		{
@@ -75,7 +75,7 @@ public final class FeedbackMessages implements Serializable
 	 *            True if children of the component should be considered
 	 * @return The messages
 	 */
-	public List messages(final Component component, boolean recurse)
+	public final List messages(final Component component, boolean recurse)
 	{
 		if (messages != null)
 		{
@@ -118,7 +118,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the message
 	 */
-	void add(FeedbackMessage message)
+	final void add(FeedbackMessage message)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -139,7 +139,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	void debug(Component reporter, String message)
+	final void debug(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
 	}
@@ -152,7 +152,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	void error(Component reporter, String message)
+	final void error(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR));
 	}
@@ -165,7 +165,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	void fatal(Component reporter, String message)
+	final void fatal(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL));
 	}
@@ -179,7 +179,7 @@ public final class FeedbackMessages implements Serializable
 	 * @return whether the given component registered a message with this list
 	 *         with level ERROR
 	 */
-	boolean hasErrorMessageFor(Component component)
+	final boolean hasErrorMessageFor(Component component)
 	{
 		return hasMessageFor(component, FeedbackMessage.ERROR);
 	}
@@ -191,7 +191,7 @@ public final class FeedbackMessages implements Serializable
 	 *            the component to look up whether it registered a message
 	 * @return whether the given component registered a message with this list
 	 */
-	boolean hasMessageFor(Component component)
+	final boolean hasMessageFor(Component component)
 	{
 		return messageForComponent(component) != null;
 	}
@@ -207,7 +207,7 @@ public final class FeedbackMessages implements Serializable
 	 * @return Whether the given component registered a message with this list
 	 *         with the given level
 	 */
-	boolean hasMessageFor(Component component, int level)
+	final boolean hasMessageFor(Component component, int level)
 	{
 		final FeedbackMessage message = messageForComponent(component);
 		return message != null && message.isLevel(level);
@@ -221,7 +221,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            The actual message
 	 */
-	void info(Component reporter, String message)
+	final void info(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
 	}
@@ -234,7 +234,7 @@ public final class FeedbackMessages implements Serializable
 	 * @return the message that is found for the given component (first match)
 	 *         or null if none was found
 	 */
-	FeedbackMessage messageForComponent(final Component component)
+	final FeedbackMessage messageForComponent(final Component component)
 	{
 		if (messages != null)
 		{
@@ -258,7 +258,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	void warn(Component reporter, String message)
+	final void warn(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}

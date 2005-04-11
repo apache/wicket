@@ -90,7 +90,7 @@ public class ResourceReference
 	}
 
 	/**
-	 * Binds this shared resource to the given application
+	 * Binds this shared resource to the given application.
 	 * 
 	 * @param application
 	 *            The application which holds the shared resource

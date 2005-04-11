@@ -394,7 +394,7 @@ public abstract class RequestCycle
 	 * @param request
 	 *            The request to set.
 	 */
-	public void setRequest(Request request)
+	public final void setRequest(Request request)
 	{
 		this.request = request;
 	}
@@ -405,7 +405,7 @@ public abstract class RequestCycle
 	 * @param response
 	 *            The response
 	 */
-	public void setResponse(final Response response)
+	public final void setResponse(final Response response)
 	{
 		this.response = response;
 	}
@@ -445,7 +445,7 @@ public abstract class RequestCycle
 	 * 
 	 * Called when the request cycle object is beginning its response
 	 */
-	protected void internalOnBeginRequest()
+	protected final void internalOnBeginRequest()
 	{
 		// Before the beginning of the response, we need to update
 		// our session based on any information that might be in
@@ -459,7 +459,7 @@ public abstract class RequestCycle
 	 * 
 	 * Called when the request cycle object has finished its response
 	 */
-	protected void internalOnEndRequest()
+	protected final void internalOnEndRequest()
 	{
 		// At the end of our response, we need to set any session
 		// attributes that might be required to update the cluster
@@ -543,7 +543,7 @@ public abstract class RequestCycle
 	 * @param e
 	 *            The exception that was thrown
 	 */
-	private void redirectToExceptionErrorPage(final Page page, final RuntimeException e)
+	private final void redirectToExceptionErrorPage(final Page page, final RuntimeException e)
 	{
 		// If application doesn't want debug info showing up for users
 		final ApplicationSettings settings = application.getSettings();
@@ -573,7 +573,7 @@ public abstract class RequestCycle
 	 * 
 	 * @throws ServletException
 	 */
-	private void respond() throws ServletException
+	private final void respond() throws ServletException
 	{
 		// Get any page that is to be used to respond to the request
 		final Page page = getResponsePage();
@@ -604,7 +604,7 @@ public abstract class RequestCycle
 	/**
 	 * Attach thread
 	 */
-	private void threadAttach()
+	private final void threadAttach()
 	{
 		// Set this request cycle as the active request cycle for the
 		// session for easy access by the page being rendered and any
@@ -618,7 +618,7 @@ public abstract class RequestCycle
 	 * want to lose our messages as - e.g. when handling a form - there's a fat
 	 * chance we are coming back for the rendering of it.
 	 */
-	private void threadDetach()
+	private final void threadDetach()
 	{
 		if (getRedirect())
 		{
