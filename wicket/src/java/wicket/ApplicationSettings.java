@@ -707,6 +707,10 @@ public final class ApplicationSettings
 	 */
 	public void setMaxPageVersions(int maxPageVersions)
 	{
+		if (maxPageVersions < 0)
+		{
+			throw new IllegalArgumentException("Value for maxPages must be >= 0");
+		}
 		this.maxPageVersions = maxPageVersions;
 	}
 
@@ -722,6 +726,10 @@ public final class ApplicationSettings
 	 */
 	public final ApplicationSettings setMaxPages(final int maxPages)
 	{
+		if (maxPages < 1)
+		{
+			throw new IllegalArgumentException("Value for maxPages must be >= 1");
+		}
 		this.maxPages = maxPages;
 		return this;
 	}
