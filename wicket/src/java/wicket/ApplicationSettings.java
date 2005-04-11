@@ -709,7 +709,7 @@ public final class ApplicationSettings
 	{
 		if (maxPageVersions < 0)
 		{
-			throw new IllegalArgumentException("Value for maxPages must be >= 0");
+			throw new IllegalArgumentException("Value for maxPageVersions must be >= 0");
 		}
 		this.maxPageVersions = maxPageVersions;
 	}
