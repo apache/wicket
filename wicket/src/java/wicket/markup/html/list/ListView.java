@@ -504,7 +504,6 @@ public abstract class ListView extends WebMarkupContainer
 		}
 		else
 		{
-			removeAll();
 			markupStream.skipComponent();
 		}
 	}
