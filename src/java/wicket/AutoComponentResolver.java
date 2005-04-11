@@ -46,7 +46,7 @@ import wicket.util.string.StringValueConversionException;
  * 
  * @author Juergen Donnerstag
  */
-public class AutoComponentResolver implements IComponentResolver
+public final class AutoComponentResolver implements IComponentResolver
 {
     /** Logging */
     private static Log log = LogFactory.getLog(AutoComponentResolver.class);
@@ -58,7 +58,7 @@ public class AutoComponentResolver implements IComponentResolver
      * inside <wicket:component>, their respective Java components are not.
      * They must be added to the parent container of <wicket:component>.
      */ 
-    private Map nestedComponents = new HashMap();
+    private final Map nestedComponents = new HashMap();
     
     /**
      * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
@@ -72,7 +72,7 @@ public class AutoComponentResolver implements IComponentResolver
      * @return true, if componentId was handle by the resolver. False,
      *         otherwise
      */
-    public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+    public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
             final ComponentTag tag)
     {
         // It must be <wicket:...>
@@ -140,7 +140,7 @@ public class AutoComponentResolver implements IComponentResolver
      * @throws WicketRuntimeException in case the component could not be created
      */
     // Wicket is current not using any bean util jar, which is why ...
-    private Component createComponent(final MarkupContainer container, final WicketTag tag)
+    private final Component createComponent(final MarkupContainer container, final WicketTag tag)
     {
         // If no component name is given, create a page-unique one yourself.
         String componentId = tag.getNameAttribute();
