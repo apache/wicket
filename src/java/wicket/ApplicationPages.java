@@ -35,96 +35,112 @@ package wicket;
  */
 public class ApplicationPages
 {
-    /** Home page class */
-    private Class homePageClass;
+	/** Home page class */
+	private Class homePage;
 
-    /** Class of internal error page */
-    private Class internalErrorPageClass;
+	/** Class of internal error page */
+	private Class internalErrorPage;
 
-    /** The error page displayed when an expired page is accessed */
-    private Class pageExpiredErrorPageClass;
+	/** The error page displayed when an expired page is accessed */
+	private Class pageExpiredErrorPage;
 
-    /**
-     * Gets home page class.
-     * 
-     * @return Returns the homePage.
-     * @see ApplicationPages#setHomePage(Class)
-     */
-    public final Class getHomePage()
-    {
-        // If no home page is available
-        if (homePageClass == null)
-        {
-            // give up with an exception
-            throw new IllegalStateException("No home page was specified in application settings");
-        }
+	/**
+	 * Gets home page class.
+	 * 
+	 * @return Returns the homePage.
+	 * @see ApplicationPages#setHomePage(Class)
+	 */
+	public final Class getHomePage()
+	{
+		// If no home page is available
+		if (homePage == null)
+		{
+			// give up with an exception
+			throw new IllegalStateException("No home page class was specified in ApplicationSettings");
+		}
 
-        return homePageClass;
-    }
+		return homePage;
+	}
 
-    /**
-     * Gets internal error page class.
-     * 
-     * @return Returns the internalErrorPage.
-     * @see ApplicationPages#setInternalErrorPage(Class)
-     */
-    public final Class getInternalErrorPage()
-    {
-        return internalErrorPageClass;
-    }
+	/**
+	 * Gets internal error page class.
+	 * 
+	 * @return Returns the internalErrorPage.
+	 * @see ApplicationPages#setInternalErrorPage(Class)
+	 */
+	public final Class getInternalErrorPage()
+	{
+		return internalErrorPage;
+	}
 
-    /**
-     * Gets the page expired page class.
-     * 
-     * @return Returns the pageExpiredErrorPage.
-     * @see ApplicationPages#setPageExpiredErrorPage(Class)
-     */
-    public final Class getPageExpiredErrorPage()
-    {
-        return pageExpiredErrorPageClass;
-    }
+	/**
+	 * Gets the page expired page class.
+	 * 
+	 * @return Returns the pageExpiredErrorPage.
+	 * @see ApplicationPages#setPageExpiredErrorPage(Class)
+	 */
+	public final Class getPageExpiredErrorPage()
+	{
+		return pageExpiredErrorPage;
+	}
 
-    /**
-     * Sets home page class. The class must be external / bookmarkable and
-     * therefore must extend Page.
-     * 
-     * @param homePage
-     *            The home page class
-     * @return This
-     */
-    public final ApplicationPages setHomePage(final Class homePage)
-    {
-        this.homePageClass = homePage;
-        return this;
-    }
+	/**
+	 * Sets home page class. The class must be bookmarkable and must extend
+	 * Page.
+	 * 
+	 * @param homePage
+	 *            The home page class
+	 * @return This
+	 */
+	public final ApplicationPages setHomePage(final Class homePage)
+	{
+		checkPageClass(homePage);
+		this.homePage = homePage;
+		return this;
+	}
 
-    /**
-     * Sets internal error page class. The class must be external / bookmarkable
-     * and therefore must extend Page and must be able to construct from
-     * PageParameters.
-     * 
-     * @param internalErrorPage
-     *            The internalErrorPage to set.
-     * @return This
-     */
-    public final ApplicationPages setInternalErrorPage(final Class internalErrorPage)
-    {
-        this.internalErrorPageClass = internalErrorPage;
-        return this;
-    }
+	/**
+	 * Sets internal error page class. The class must be bookmarkable and must
+	 * extend Page.
+	 * 
+	 * @param internalErrorPage
+	 *            The internalErrorPage to set.
+	 * @return This
+	 */
+	public final ApplicationPages setInternalErrorPage(final Class internalErrorPage)
+	{
+		checkPageClass(internalErrorPage);
+		this.internalErrorPage = internalErrorPage;
+		return this;
+	}
 
-    /**
-     * Sets the page expired page class. The class must be external /
-     * bookmarkable and therefore must extend Page and must be able to construct
-     * from PageParameters.
-     * 
-     * @param pageExpiredErrorPage
-     *            The pageExpiredErrorPage to set.
-     * @return This
-     */
-    public final ApplicationPages setPageExpiredErrorPage(final Class pageExpiredErrorPage)
-    {
-        this.pageExpiredErrorPageClass = pageExpiredErrorPage;
-        return this;
-    }
+	/**
+	 * Sets the page expired page class. The class must be bookmarkable and must
+	 * extend Page.
+	 * 
+	 * @param pageExpiredErrorPage
+	 *            The pageExpiredErrorPage to set.
+	 * @return This
+	 */
+	public final ApplicationPages setPageExpiredErrorPage(final Class pageExpiredErrorPage)
+	{
+		checkPageClass(pageExpiredErrorPage);
+		this.pageExpiredErrorPage = pageExpiredErrorPage;
+		return this;
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given class is not a subclass
+	 * of Page.
+	 * 
+	 * @param pageClass
+	 *            The page class to check
+	 */
+	private final void checkPageClass(final Class pageClass)
+	{
+		if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("Class must be a subclass of Page");
+		}
+	}
 }
