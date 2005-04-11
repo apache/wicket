@@ -213,7 +213,9 @@ public class MockWebApplication extends WebApplication
                 	(MockHttpServletRequest)cycle.getWebRequest().getHttpServletRequest();
             
             httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
-            cycle.request();
+            wicketSession = getSession(servletRequest);
+            new WebRequestCycle(wicketSession, wicketRequest,
+                    wicketResponse).request();
         }
         lastRenderedPage = cycle.getResponsePage();
     }
