@@ -318,7 +318,7 @@ public final class ApplicationSettings
 	 * 
 	 * @return Returns the automaticLinking.
 	 */
-	public boolean getAutomaticLinking()
+	public final boolean getAutomaticLinking()
 	{
 		return automaticLinking;
 	}
@@ -326,7 +326,7 @@ public final class ApplicationSettings
 	/**
 	 * @return True if this application buffers its responses
 	 */
-	public boolean getBufferResponse()
+	public final boolean getBufferResponse()
 	{
 		return bufferResponse;
 	}
@@ -411,7 +411,7 @@ public final class ApplicationSettings
 	/**
 	 * @return Returns the defaultLocale.
 	 */
-	public Locale getDefaultLocale()
+	public final Locale getDefaultLocale()
 	{
 		return defaultLocale;
 	}
@@ -439,7 +439,7 @@ public final class ApplicationSettings
 	/**
 	 * @return Returns the maxPageVersions.
 	 */
-	public int getMaxPageVersions()
+	public final int getMaxPageVersions()
 	{
 		return maxPageVersions;
 	}
@@ -524,7 +524,7 @@ public final class ApplicationSettings
 	/**
 	 * @return Returns the pagesVersionedByDefault.
 	 */
-	public boolean getVersionPagesByDefault()
+	public final boolean getVersionPagesByDefault()
 	{
 		return versionPagesByDefault;
 	}
@@ -535,7 +535,7 @@ public final class ApplicationSettings
 	 * @param automaticLinking
 	 *            The automaticLinking to set.
 	 */
-	public void setAutomaticLinking(boolean automaticLinking)
+	public final void setAutomaticLinking(boolean automaticLinking)
 	{
 		this.automaticLinking = automaticLinking;
 	}
@@ -544,7 +544,7 @@ public final class ApplicationSettings
 	 * @param bufferResponse
 	 *            True if this application should buffer responses.
 	 */
-	public void setBufferResponse(boolean bufferResponse)
+	public final void setBufferResponse(boolean bufferResponse)
 	{
 		this.bufferResponse = bufferResponse;
 	}
@@ -612,7 +612,7 @@ public final class ApplicationSettings
 	 * @param cookieValuePersisterSettings
 	 *            The cookieValuePersisterSettings to set.
 	 */
-	public void setCookieValuePersisterSettings(
+	public final void setCookieValuePersisterSettings(
 			CookieValuePersisterSettings cookieValuePersisterSettings)
 	{
 		this.cookieValuePersisterSettings = cookieValuePersisterSettings;
@@ -671,7 +671,7 @@ public final class ApplicationSettings
 	 * @param defaultLocale
 	 *            The defaultLocale to set.
 	 */
-	public void setDefaultLocale(Locale defaultLocale)
+	public final void setDefaultLocale(Locale defaultLocale)
 	{
 		this.defaultLocale = defaultLocale;
 	}
@@ -705,7 +705,7 @@ public final class ApplicationSettings
 	 * @param maxPageVersions
 	 *            The maxPageVersion to set.
 	 */
-	public void setMaxPageVersions(int maxPageVersions)
+	public final void setMaxPageVersions(int maxPageVersions)
 	{
 		if (maxPageVersions < 0)
 		{
@@ -857,7 +857,7 @@ public final class ApplicationSettings
 	 * @param pagesVersionedByDefault
 	 *            The pagesVersionedByDefault to set.
 	 */
-	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
+	public final void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		this.versionPagesByDefault = pagesVersionedByDefault;
 	}
@@ -868,7 +868,7 @@ public final class ApplicationSettings
 	 * 
 	 * @return The string resource loaders
 	 */
-	List getStringResourceLoaders()
+	final List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
 	}
