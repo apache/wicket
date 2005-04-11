@@ -46,7 +46,7 @@ import wicket.util.value.ValueMap;
  * @see wicket.markup.parser.filter.WicketLinkTagHandler
  * @author Juergen Donnerstag
  */
-public class AutoLinkResolver implements IComponentResolver
+public final class AutoLinkResolver implements IComponentResolver
 {
 	/** Logging */
 	private static Log log = LogFactory.getLog(AutoLinkResolver.class);
@@ -65,7 +65,7 @@ public class AutoLinkResolver implements IComponentResolver
 	 * @return true, if componentId was handle by the resolver. False,
 	 *         otherwise
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
 		// Must be marked as autolink tag
@@ -102,7 +102,7 @@ public class AutoLinkResolver implements IComponentResolver
 	 *            the component tag
 	 * @return A BookmarkablePageLink to handle the href
 	 */
-	private Component resolveAutomaticLink(final MarkupContainer container,
+	private final Component resolveAutomaticLink(final MarkupContainer container,
 			final String id, final ComponentTag tag)
 	{
 		final Page page = container.getPage();
@@ -168,7 +168,7 @@ public class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	public class AutolinkBookmarkablePageLink extends BookmarkablePageLink implements IComponentResolver
+	public final class AutolinkBookmarkablePageLink extends BookmarkablePageLink implements IComponentResolver
 	{
 	    /**
 	     * Construct
@@ -196,7 +196,7 @@ public class AutoLinkResolver implements IComponentResolver
 		 *            The current component tag while parsing the markup
 		 * @return True if componentId was handled by the resolver, false otherwise.
 		 */
-		public boolean resolve(final MarkupContainer container, 
+		public final boolean resolve(final MarkupContainer container, 
 		        final MarkupStream markupStream, final ComponentTag tag)
 		{
 		    // Delegate the request to the parent component
@@ -218,7 +218,7 @@ public class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	public class AutolinkExternalLink extends ExternalLink implements IComponentResolver
+	public final class AutolinkExternalLink extends ExternalLink implements IComponentResolver
 	{
 	    /**
 	     * Construct
@@ -244,7 +244,7 @@ public class AutoLinkResolver implements IComponentResolver
 		 *            The current component tag while parsing the markup
 		 * @return True if componentId was handled by the resolver, false otherwise.
 		 */
-		public boolean resolve(final MarkupContainer container, 
+		public final boolean resolve(final MarkupContainer container, 
 		        final MarkupStream markupStream, final ComponentTag tag)
 		{
 		    // Delegate the request to the parent component
