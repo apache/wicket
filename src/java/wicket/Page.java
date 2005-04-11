@@ -159,9 +159,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
 
-	/** This page's identifier. */
-	private int id = -1;
-
 	/** The PageMap within the session that this page is stored in */
 	private transient PageMap pageMap;
 
@@ -182,8 +179,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected Page()
 	{
-		// A page's componentId is its id, which is not determined until
-		// setId is called when the page is added to the session
+		// A Page's id is not determined until setId is called when the Page is
+		// added to a PageMap in the Session.
 		super(null);
 		init();
 	}
@@ -195,6 +192,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected Page(final IModel model)
 	{
+		// A Page's id is not determined until setId is called when the Page is
+		// added to a PageMap in the Session.
 		super(null, model);
 		init();
 	}
@@ -247,14 +246,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * @see wicket.Component#getId()
-	 */
-	public final String getId()
-	{
-		return Integer.toString(id);
-	}
-
-	/**
 	 * THIS FEATURE IS CURRENTLY EXPERIMENTAL. DO NOT USE THIS METHOD.
 	 * 
 	 * @return The list of PageSets to which this Page belongs.
@@ -262,20 +253,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	public final Iterator getPageSets()
 	{
 		return getSession().getApplication().getPageSets(this);
-	}
-
-	/**
-	 * Get the session for this page.
-	 * 
-	 * @return Returns the session for this page.
-	 */
-	public final Session getSession()
-	{
-		if (session == null)
-		{
-			session = Session.get();
-		}
-		return session;
 	}
 
 	/**
@@ -524,7 +501,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public String toString()
 	{
-		return "[Page class = " + getClass().getName() + ", id = " + id + "]";
+		return "[Page class = " + getClass().getName() + ", id = " + getId() + "]";
 	}
 
 	/**
@@ -815,6 +792,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * This method is not called getSession() because we want to ensure that
+	 * getSession() is final in Component.
+	 * 
+	 * @return Session for this page
+	 */
+	final Session getSessionInternal()
+	{
+		if (this.session == null)
+		{
+			this.session = Session.get();
+			if (this.session == null)
+			{
+				throw new IllegalStateException("Internal Error: Page not attached to session");
+			}
+		}
+		return this.session;
+	}
+
+	/**
 	 * Reset this page. Called if rendering is interrupted by an exception to
 	 * put the page back into a state where it can function again.
 	 */
@@ -842,7 +838,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	final void setId(final int id)
 	{
-		this.id = id;
+		setId(Integer.toString(id));
 	}
 
 	/**

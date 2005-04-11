@@ -72,11 +72,11 @@ import wicket.util.string.Strings;
  * clustered environment, it may need to initialize transient state. This is
  * possible by overriding the {@link Component#onSessionAttach()}method.
  * 
- * <li><b>Request Handling </b>- An incoming request is processed by a
- * protocol request handler such as WicketServlet. An associated Application
- * object creates Session, Request and Response objects for use by a given
- * Component in updating its model and rendering a response. These objects are
- * stored inside a container called {@link RequestCycle}which is accessible via
+ * <li><b>Request Handling </b>- An incoming request is processed by a protocol
+ * request handler such as WicketServlet. An associated Application object
+ * creates Session, Request and Response objects for use by a given Component in
+ * updating its model and rendering a response. These objects are stored inside
+ * a container called {@link RequestCycle}which is accessible via
  * {@link Component#getRequestCycle()}. The convenience methods
  * {@link Component#getRequest()},{@link Component#getResponse()}and
  * {@link Component#getSession()}provide easy access to the contents of this
@@ -98,11 +98,11 @@ import wicket.util.string.Strings;
  * onValidate(), onSubmit() and onError() (although only the latter two are
  * likely to be overridden in practice).
  * 
- * <li><b>onBeginRequest </b>- The {@link Component#onBeginRequest()}method
- * is called.
+ * <li><b>onBeginRequest </b>- The {@link Component#onBeginRequest()}method is
+ * called.
  * 
- * <li><b>Form Submit </b>- If a Form has been submitted and the Component is
- * a FormComponent, the component's model is validated by a call to
+ * <li><b>Form Submit </b>- If a Form has been submitted and the Component is a
+ * FormComponent, the component's model is validated by a call to
  * FormComponent.validate().
  * 
  * <li><b>Form Model Update </b>- If a valid Form has been submitted and the
@@ -201,18 +201,18 @@ import wicket.util.string.Strings;
  */
 public abstract class Component implements Serializable
 {
-	
+
 	/** User definable flag bit */
 	protected static final short FLAG_USER1 = 0x0100;
-	
+
 	/** User definable flag bit */
 	protected static final short FLAG_USER2 = 0x0200;
-	
+
 	/** User definable flag bit */
 	protected static final short FLAG_USER3 = 0x0400;
-	
+
 	/** User definable flag bit */
-	protected static final short FLAG_USER4 = 0x0800;	
+	protected static final short FLAG_USER4 = 0x0800;
 	/** True when a component is being auto-added */
 	private static final short FLAG_AUTO = 0x0001;
 
@@ -221,7 +221,7 @@ public abstract class Component implements Serializable
 
 	/** Flag for Component holding root compound model */
 	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
-	
+
 	/** Versioning boolean */
 	private static final short FLAG_VERSIONED = 0x0008;
 
@@ -482,7 +482,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return The id of this component
 	 */
-	public String getId()
+	public final String getId()
 	{
 		return id;
 	}
@@ -673,7 +673,7 @@ public abstract class Component implements Serializable
 	/**
 	 * @return The shared resource for this component
 	 */
-	public Resource getResource()
+	public final Resource getResource()
 	{
 		return getApplication().getResource(Application.class, getId(), getLocale(), getStyle());
 	}
@@ -693,31 +693,22 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return The session that this component is in
 	 */
-	public Session getSession()
+	public final Session getSession()
 	{
-		// Fetch page if possible
+		// Fetch page, if possible
 		final Page page = findPage();
 
 		// If this component is attached to a page
 		if (page != null)
 		{
-			// Get Session from Page object for this component
-			final Session session = page.getSession();
-
-			// Did we find the session?
-			if (session != null)
-			{
-				return session;
-			}
-			else
-			{
-				// This should NEVER happen. But if it does, we'll want a nice
-				// error message.
-				throw new IllegalStateException(exceptionMessage("Page not attached to session"));
-			}
+			// Get Session from Page (which should generally be
+			// faster than a thread local lookup via Session.get())
+			return page.getSessionInternal();
 		}
 		else
 		{
+			// Use ThreadLocal storage to get Session since this
+			// component is apparently not yet attached to a Page.
 			return Session.get();
 		}
 	}
@@ -808,7 +799,7 @@ public abstract class Component implements Serializable
 	 *            The component to check
 	 * @return True if the given component has this component as an ancestor
 	 */
-	public boolean isAncestorOf(final Component component)
+	public final boolean isAncestorOf(final Component component)
 	{
 		// Walk up containment hierarchy
 		for (MarkupContainer current = component.parent; current != null; current = current
@@ -918,7 +909,7 @@ public abstract class Component implements Serializable
 	 * Removes this component from its parent. It's important to remember that a
 	 * component that is removed cannot be referenced from the markup still.
 	 */
-	public void remove()
+	public final void remove()
 	{
 		parent.remove(getId());
 	}
@@ -988,7 +979,7 @@ public abstract class Component implements Serializable
 	 * never been rendered, and in development mode this would result in a
 	 * runtime exception.
 	 */
-	public void rendered()
+	public final void rendered()
 	{
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
@@ -1749,6 +1740,22 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Sets the id of this component. This method is private because the only
+	 * time a component's id can be set is in its constructor.
+	 * 
+	 * @param id
+	 *            The non-null id of this component
+	 */
+	final void setId(final String id)
+	{
+		if (id == null && !(this instanceof Page))
+		{
+			throw new WicketRuntimeException("Null component id is not allowed.");
+		}
+		this.id = id;
+	}
+
+	/**
 	 * Sets the parent of a component.
 	 * 
 	 * @param parent
@@ -1788,7 +1795,7 @@ public abstract class Component implements Serializable
 	 *            The model
 	 * @return The root object
 	 */
-	private Object getRootModel(final IModel model)
+	private final Object getRootModel(final IModel model)
 	{
 		Object nestedModelObject = model.getNestedModel();
 		while (nestedModelObject instanceof IModel)
@@ -1802,21 +1809,5 @@ public abstract class Component implements Serializable
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
-	}
-
-	/**
-	 * Sets the id of this component. This method is private because the only
-	 * time a component's id can be set is in its constructor.
-	 * 
-	 * @param id
-	 *            The non-null id of this component
-	 */
-	private final void setId(final String id)
-	{
-		if (id == null && !(this instanceof Page))
-		{
-			throw new WicketRuntimeException("Null component id is not allowed.");
-		}
-		this.id = id;
 	}
 }
