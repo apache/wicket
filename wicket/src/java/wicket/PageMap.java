@@ -219,7 +219,7 @@ public final class PageMap implements Serializable
 	/**
 	 * @return MRU map of pages
 	 */
-	private MostRecentlyUsedMap getPages()
+	private final MostRecentlyUsedMap getPages()
 	{
 		if (this.pages == null)
 		{

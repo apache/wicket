@@ -306,7 +306,7 @@ public abstract class Session implements Serializable
 	 * @return The page factory for the page, or the default page factory if
 	 *         page was null
 	 */
-	public IPageFactory getPageFactory(final Page page)
+	public final IPageFactory getPageFactory(final Page page)
 	{
 		if (page != null)
 		{
@@ -681,7 +681,7 @@ public abstract class Session implements Serializable
 	 * @param page
 	 *            The page to traverse
 	 */
-	private void attach(Page page)
+	private final void attach(Page page)
 	{
 		page.visitChildren(new Component.IVisitor()
 		{

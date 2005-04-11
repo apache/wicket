@@ -33,5 +33,5 @@ public interface IClassResolver
      *            Fully qualified classname to find
      * @return Class
      */
-    public abstract Class resolveClass(final String classname);
+    public Class resolveClass(final String classname);
 }

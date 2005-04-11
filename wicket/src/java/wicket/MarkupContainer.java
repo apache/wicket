@@ -772,7 +772,7 @@ public abstract class MarkupContainer extends Component
 	 * @param markupStream
 	 *            The markup stream
 	 */
-	private void renderNext(final MarkupStream markupStream)
+	private final void renderNext(final MarkupStream markupStream)
 	{
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();
