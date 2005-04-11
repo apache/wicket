@@ -9,6 +9,14 @@
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
       <action type="update" dev="Jonathan Locke" issue="">
+      Added some parameter validation and finalized some methods that should 
+      not be overridden.  In particular, Component.getSession() is now final
+      as well as Component.getId().  The change to Component.getId() also
+      eliminated a field in Page that is really not necessary.  The result of
+      these changes is a tighter API.  There will be more changes of this 
+      nature as we lock down the API for 1.0 final.
+      </action>
+      <action type="update" dev="Jonathan Locke" issue="">
       Minor refactoring in Application and ApplicationSettings.  Changed
       Application.sourcePath property to resourcePath since that's what it
       really is.  Changed getCrypt() and getMarkupParser() to newCrypt()
