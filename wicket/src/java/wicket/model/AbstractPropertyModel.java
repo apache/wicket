@@ -141,7 +141,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 			}
 			catch (OgnlException e)
 			{
-				throw new WicketRuntimeException(e);
+				throw new WicketRuntimeException("OGNL Exception: expression='" + expression + "'; component='" + component.getPath() + "'", e);
 			}
 		}
 		return null;
