@@ -18,6 +18,7 @@
  */
 package wicket.examples.displaytag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import wicket.PageParameters;
@@ -37,9 +38,11 @@ public class ExampleTwoTables extends Displaytag
      */
     public ExampleTwoTables(final PageParameters parameters)
     {
-        final List data = new TestList(60, false);
+        final List data1 = new TestList(60, false);
+        final List data2 = new ArrayList();
+        data2.addAll(data1);
 
-        add(new SortablePageableDisplaytagTableComponent("table1", data));
-        add(new SortablePageableDisplaytagTableComponent("table2", data));
+        add(new SortablePageableDisplaytagTableComponent("table1", data1));
+        add(new SortablePageableDisplaytagTableComponent("table2", data2));
     }
 }

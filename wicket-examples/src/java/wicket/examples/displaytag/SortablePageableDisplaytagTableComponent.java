@@ -80,7 +80,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
         // Add a sortable header to the table
         add(new SortableListViewHeaders("header", table)
         {
-	        protected int compare(SortableListViewHeader header, Object o1, Object o2)
+	        protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
 	        {
 	            if (header.getId().equals("id"))
 	            {
