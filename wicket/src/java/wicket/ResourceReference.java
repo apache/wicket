@@ -150,7 +150,7 @@ public class ResourceReference
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("resources/");
 		buffer.append(scope.getName());
-		buffer.append('_');
+		buffer.append('/');
 		buffer.append(Application.localizedPath(name, locale, style));
 		return buffer.toString();
 	}

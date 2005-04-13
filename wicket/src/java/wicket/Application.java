@@ -149,6 +149,8 @@ public abstract class Application
 	private final ApplicationSettings settings = new ApplicationSettings(this);
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
+	 * 
 	 * Inserts _[locale] and _[style] into path just before any extension that
 	 * might exist.
 	 * 
@@ -160,7 +162,7 @@ public abstract class Application
 	 *            The style (see {@link wicket.Session})
 	 * @return The localized path
 	 */
-	static String localizedPath(final String path, final Locale locale, final String style)
+	public static String localizedPath(final String path, final Locale locale, final String style)
 	{
 		final StringBuffer buffer = new StringBuffer();
 		final String extension = Files.extension(path);
@@ -224,7 +226,7 @@ public abstract class Application
 			final String style, final Resource resource)
 	{
 		// Store resource
-		final String key = scope.getName() + "_" + localizedPath(name, locale, style);
+		final String key = scope.getName() + '/' + localizedPath(name, locale, style);
 		resourceMap.put(key, resource);
 
 		// Application shared resources are cacheable.
@@ -370,7 +372,7 @@ public abstract class Application
 		// 1. Look for fully qualified entry with locale and style
 		if (locale != null && style != null)
 		{
-			final String key = scope.getName() + "_" + localizedPath(name, locale, style);
+			final String key = scope.getName() + '/' + localizedPath(name, locale, style);
 			final Resource resource = getResource(key);
 			if (resource != null)
 			{
@@ -381,7 +383,7 @@ public abstract class Application
 		// 2. Look for entry without style
 		if (locale != null)
 		{
-			final String key = scope.getName() + "_" + localizedPath(name, locale, null);
+			final String key = scope.getName() + '/' + localizedPath(name, locale, null);
 			final Resource resource = getResource(key);
 			if (resource != null)
 			{
@@ -392,7 +394,7 @@ public abstract class Application
 		// 3. Look for entry without locale
 		if (style != null)
 		{
-			final String key = scope.getName() + "_" + localizedPath(name, null, style);
+			final String key = scope.getName() + '/' + localizedPath(name, null, style);
 			final Resource resource = getResource(key);
 			if (resource != null)
 			{
@@ -403,7 +405,7 @@ public abstract class Application
 		// 4. Look for base name with no locale or style
 		if (locale == null && style == null)
 		{
-			final String key = scope.getName() + "_" + name;
+			final String key = scope.getName() + '/' + name;
 			return getResource(key);
 		}
 

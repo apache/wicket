@@ -77,7 +77,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		// 1. Try style, locale and extension
 		if (style != null && locale != null)
 		{
-			final IResourceStream resource = locate(path + "_" + style, locale, extension);
+			final IResourceStream resource = locate(path + '_' + style, locale, extension);
 			if (resource != null)
 			{
 				return resource;
@@ -97,7 +97,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		// 3. Try style and extension
 		if (style != null)
 		{
-			final IResourceStream resource = locate(path + "_" + style + extension);
+			final IResourceStream resource = locate(path + '_' + style + extension);
 			if (resource != null)
 			{
 				return resource;
@@ -137,7 +137,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 	{
 		// 1. Apply Locale default toString() implementation. See Locale.
 		{
-			final IResourceStream resource = locate(path + "_" + locale.toString() + extension);
+			final IResourceStream resource = locate(path + '_' + locale.toString() + extension);
 			if (resource != null)
 			{
 				return resource;
@@ -151,7 +151,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		// 2. If country and language are available
 		if (!Strings.isEmpty(language) && !Strings.isEmpty(country))
 		{
-			final IResourceStream resource = locate(path + "_" + language + "_" + country
+			final IResourceStream resource = locate(path + '_' + language + '_' + country
 					+ extension);
 			if (resource != null)
 			{
@@ -162,7 +162,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		// 3. If language is available
 		if (!Strings.isEmpty(language))
 		{
-			final IResourceStream resource = locate(path + "_" + language + extension);
+			final IResourceStream resource = locate(path + '_' + language + extension);
 			if (resource != null)
 			{
 				return resource;

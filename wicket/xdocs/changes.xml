@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
+      <action type="fix" dev="Jonathan Locke" issue="1181983">
+      Any image path is now part of the resource key for shared images.
+      </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Added some parameter validation and finalized some methods that should 
       not be overridden.  In particular, Component.getSession() is now final
