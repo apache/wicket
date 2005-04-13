@@ -1,14 +1,14 @@
 /*
  * $Id: AutoLinkResolver.java,v 1.2 2005/02/10 18:01:32 jonathanlocke
  * Exp $ $Revision$ $Date$
- * 
+ *
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -42,7 +42,7 @@ import wicket.util.value.ValueMap;
  * URL must be relative to the package containing the associated page. An
  * exception is thrown if no Page class was found.
  * <p>
- * 
+ *
  * @see wicket.markup.parser.filter.WicketLinkTagHandler
  * @author Juergen Donnerstag
  */
@@ -53,7 +53,7 @@ public final class AutoLinkResolver implements IComponentResolver
 
 	/**
 	 * Automatically creates a BookmarkablePageLink component.
-	 * 
+	 *
 	 * @see wicket.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)
 	 * @param markupStream
@@ -93,7 +93,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * Resolves the given tag's page class and page parameters by parsing the
 	 * tag component name and then searching for a page class at the absolute or
 	 * relative URL specified by the href attribute of the tag.
-	 * 
+	 *
 	 * @param container
 	 *            The container where the link is
 	 * @param id
@@ -160,34 +160,34 @@ public final class AutoLinkResolver implements IComponentResolver
 		// Don't change the href. Did not find a proper Wicket page
 		return new AutolinkExternalLink(autoId, originalHref);
 	}
-	
+
 	/**
-	 * Autolink components delegate component resolution to their parent components. 
+	 * Autolink components delegate component resolution to their parent components.
 	 * Reason: autolink tags don't have wicket:id and users wouldn't know where to
 	 * add the component to.
-	 * 
+	 *
 	 * @author Juergen Donnerstag
 	 */
-	public final class AutolinkBookmarkablePageLink extends BookmarkablePageLink implements IComponentResolver
+	public static final class AutolinkBookmarkablePageLink extends BookmarkablePageLink implements IComponentResolver
 	{
 	    /**
 	     * Construct
 	     * @see BookmarkablePageLink#BookmarkablePageLink(String, Class, PageParameters)
-	     * 
+	     *
 	     * @param id
 	     * @param pageClass
 	     * @param parameters
 	     */
-	    public AutolinkBookmarkablePageLink(final String id, 
+	    public AutolinkBookmarkablePageLink(final String id,
 	            final Class pageClass, final PageParameters parameters)
 	    {
 	        super(id, pageClass, parameters);
 	    }
-	    
+
 		/**
-		 * Because the autolink component is not able to resolve any inner 
+		 * Because the autolink component is not able to resolve any inner
 		 * component, it'll passed it down to its parent.
-		 * 
+		 *
 		 * @param container
 		 *            The container parsing its markup
 		 * @param markupStream
@@ -196,7 +196,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 *            The current component tag while parsing the markup
 		 * @return True if componentId was handled by the resolver, false otherwise.
 		 */
-		public final boolean resolve(final MarkupContainer container, 
+		public final boolean resolve(final MarkupContainer container,
 		        final MarkupStream markupStream, final ComponentTag tag)
 		{
 		    // Delegate the request to the parent component
@@ -205,25 +205,25 @@ public final class AutoLinkResolver implements IComponentResolver
 		    {
 		        return false;
 		    }
-		    
+
 		    component.render();
 		    return true;
 		}
 	}
-	
+
 	/**
-	 * Autolink component delegate component resolution to their parent components. 
+	 * Autolink component delegate component resolution to their parent components.
 	 * Reason: autolink tags don't have wicket:id and users wouldn't know where to
 	 * add the component to.
-	 * 
+	 *
 	 * @author Juergen Donnerstag
 	 */
-	public final class AutolinkExternalLink extends ExternalLink implements IComponentResolver
+	public static final class AutolinkExternalLink extends ExternalLink implements IComponentResolver
 	{
 	    /**
 	     * Construct
 	     * @see ExternalLink#ExternalLink(String, String)
-	     * 
+	     *
 	     * @param id
 	     * @param href
 	     */
@@ -231,11 +231,11 @@ public final class AutoLinkResolver implements IComponentResolver
 	    {
 	        super(id, href);
 	    }
-	    
+
 		/**
-		 * Because the autolink component is not able to resolve any inner 
+		 * Because the autolink component is not able to resolve any inner
 		 * component, it'll passed it down to its parent.
-		 * 
+		 *
 		 * @param container
 		 *            The container parsing its markup
 		 * @param markupStream
@@ -244,7 +244,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 *            The current component tag while parsing the markup
 		 * @return True if componentId was handled by the resolver, false otherwise.
 		 */
-		public final boolean resolve(final MarkupContainer container, 
+		public final boolean resolve(final MarkupContainer container,
 		        final MarkupStream markupStream, final ComponentTag tag)
 		{
 		    // Delegate the request to the parent component
@@ -253,7 +253,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		    {
 		        return false;
 		    }
-		    
+
 		    component.render();
 		    return true;
 		}
