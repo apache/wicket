@@ -47,7 +47,7 @@ public class MarkupCache
 	private static final Log log = LogFactory.getLog(MarkupCache.class);
 
 	/** Map of markup tags by class. */
-	private static final Map markupCache = new HashMap();
+	private final Map markupCache = new HashMap();
 
 	/** the Wicket application */
 	private final Application application;
@@ -266,5 +266,13 @@ public class MarkupCache
 		}
 		buffer.append(markupType);
 		return buffer.toString();
+	}
+	
+	/**
+	 * Clear markup cache and force reload of all markup data
+	 */
+	public void clear()
+	{
+	    this.markupCache.clear();
 	}
 }
