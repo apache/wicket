@@ -66,8 +66,10 @@ public class ResourceReference implements Serializable
 	private String style;
 
 	/**
-	 * Constructor
-	 *
+	 * Constructs a ResourceReference with the given scope and name. The scope
+	 * is used as a namespace and the scope together with the name must uniquely
+	 * identify the reference.
+	 * 
 	 * @param scope
 	 *            The scope of the name
 	 * @param name
@@ -80,8 +82,10 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
-	 * Constructor
-	 *
+	 * Contructs a resource reference with Application.class scope and the given
+	 * name. All resource references constructed with this constructor must have
+	 * unique names since they all have the same Application-wide scope.
+	 * 
 	 * @param name
 	 *            The name of the resource
 	 */
