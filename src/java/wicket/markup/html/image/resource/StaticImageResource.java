@@ -86,9 +86,7 @@ public class StaticImageResource extends ImageResource
 	public static StaticImageResource get(final Package basePackage, final String path,
 			final Locale locale, final String style)
 	{
-		final String localePart = (locale != null) ? locale.toString() : "";
-		final String stylePart = (style != null) ? style : "";
-		final String key = basePackage.getName() + path + localePart + stylePart;
+		final String key = basePackage.getName() + '_' + Application.localizedPath(path, locale, style);
 		synchronized (imageResourceMap)
 		{
 			StaticImageResource imageResource = (StaticImageResource)imageResourceMap.get(key);
