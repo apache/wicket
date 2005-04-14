@@ -24,6 +24,9 @@ import java.util.Map;
 import wicket.util.file.Files;
 
 /**
+ * Class which holds shared resources. Resources can be shared by name. An
+ * optional scope can be given to prevent naming conflicts and a locale and/or
+ * style can be given as well.
  * 
  * @author Jonathan Locke
  */
