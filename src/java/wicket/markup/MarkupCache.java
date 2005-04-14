@@ -91,7 +91,7 @@ public class MarkupCache
 			// throw exception since there is no associated markup
 			throw new WicketRuntimeException(
 					"Markup not found. Component class: "
-							+ clazz.getName()
+							+ (clazz != null ? clazz.getName() : container.getClass().getName())
 							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
 		}
 	}
