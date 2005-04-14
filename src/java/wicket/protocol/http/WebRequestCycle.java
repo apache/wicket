@@ -404,7 +404,7 @@ public class WebRequestCycle extends RequestCycle
 		if (pathInfo.startsWith(resourceReferencePrefix))
 		{
 			final String resourceReferenceKey = pathInfo.substring(resourceReferencePrefix.length());
-			final Resource resource = getApplication().getResource(resourceReferenceKey);
+			final Resource resource = getApplication().getSharedResources().get(resourceReferenceKey);
 			if (resource == null)
 			{
 				throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey);

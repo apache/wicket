@@ -675,7 +675,7 @@ public abstract class Component implements Serializable
 	 */
 	public final Resource getResource()
 	{
-		return getApplication().getResource(Application.class, getId(), getLocale(), getStyle());
+		return getApplication().getSharedResources().get(Application.class, getId(), getLocale(), getStyle());
 	}
 
 	/**

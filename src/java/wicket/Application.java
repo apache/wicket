@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import wicket.markup.MarkupCache;
@@ -32,7 +31,6 @@ import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
-import wicket.util.file.Files;
 import wicket.util.lang.Classes;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;
@@ -136,9 +134,6 @@ public abstract class Application
 	/** Pages for application */
 	private final ApplicationPages pages = new ApplicationPages();
 
-	/** Map of shared resources */
-	private final Map resourceMap = new HashMap();
-
 	/** The default resource locator for this application */
 	private ResourceStreamLocator resourceStreamLocator;
 
@@ -147,47 +142,9 @@ public abstract class Application
 
 	/** Settings for application. */
 	private final ApplicationSettings settings = new ApplicationSettings(this);
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT CALL IT.
-	 * 
-	 * Inserts _[locale] and _[style] into path just before any extension that
-	 * might exist.
-	 * 
-	 * @param path
-	 *            The resource path
-	 * @param locale
-	 *            The locale
-	 * @param style
-	 *            The style (see {@link wicket.Session})
-	 * @return The localized path
-	 */
-	public static String localizedPath(final String path, final Locale locale, final String style)
-	{
-		final StringBuffer buffer = new StringBuffer();
-		final String extension = Files.extension(path);
-		final String basePath = Files.basePath(path, extension);
-		buffer.append(basePath);
-		if (locale != null)
-		{
-			if (!locale.equals(Locale.getDefault()))
-			{
-				buffer.append('_');
-				buffer.append(locale.toString());
-			}
-		}
-		if (style != null)
-		{
-			buffer.append('_');
-			buffer.append(style);
-		}
-		if (extension != null)
-		{
-			buffer.append('.');
-			buffer.append(extension);
-		}
-		return buffer.toString();
-	}
+	
+	/** Shared resources for the application */
+	private final SharedResources sharedResources = new SharedResources();
 
 	/**
 	 * Constructor
@@ -208,53 +165,6 @@ public abstract class Application
 
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
-	}
-
-	/**
-	 * @param scope
-	 *            Scope of resource
-	 * @param name
-	 *            Logical name of resource
-	 * @param locale
-	 *            The locale of the resource
-	 * @param style
-	 *            The resource style (see {@link wicket.Session})
-	 * @param resource
-	 *            Resource to store
-	 */
-	public final void addResource(final Class scope, final String name, final Locale locale,
-			final String style, final Resource resource)
-	{
-		// Store resource
-		final String key = scope.getName() + '/' + localizedPath(name, locale, style);
-		resourceMap.put(key, resource);
-
-		// Application shared resources are cacheable.
-		resource.setCacheable(true);
-	}
-
-	/**
-	 * @param name
-	 *            Logical name of resource
-	 * @param locale
-	 *            The locale of the resource
-	 * @param resource
-	 *            Resource to store
-	 */
-	public final void addResource(final String name, final Locale locale, final Resource resource)
-	{
-		addResource(Application.class, name, locale, null, resource);
-	}
-
-	/**
-	 * @param name
-	 *            Logical name of resource
-	 * @param resource
-	 *            Resource to store
-	 */
-	public final void addResource(final String name, final Resource resource)
-	{
-		addResource(Application.class, name, null, null, resource);
 	}
 
 	/**
@@ -356,74 +266,6 @@ public abstract class Application
 	}
 
 	/**
-	 * @param scope
-	 *            The resource's scope
-	 * @param name
-	 *            Name of resource to get
-	 * @param locale
-	 *            The locale of the resource
-	 * @param style
-	 *            The resource style (see {@link wicket.Session})
-	 * @return The logical resource
-	 */
-	public final Resource getResource(final Class scope, final String name, final Locale locale,
-			final String style)
-	{
-		// 1. Look for fully qualified entry with locale and style
-		if (locale != null && style != null)
-		{
-			final String key = scope.getName() + '/' + localizedPath(name, locale, style);
-			final Resource resource = getResource(key);
-			if (resource != null)
-			{
-				return resource;
-			}
-		}
-
-		// 2. Look for entry without style
-		if (locale != null)
-		{
-			final String key = scope.getName() + '/' + localizedPath(name, locale, null);
-			final Resource resource = getResource(key);
-			if (resource != null)
-			{
-				return resource;
-			}
-		}
-
-		// 3. Look for entry without locale
-		if (style != null)
-		{
-			final String key = scope.getName() + '/' + localizedPath(name, null, style);
-			final Resource resource = getResource(key);
-			if (resource != null)
-			{
-				return resource;
-			}
-		}
-
-		// 4. Look for base name with no locale or style
-		if (locale == null && style == null)
-		{
-			final String key = scope.getName() + '/' + name;
-			return getResource(key);
-		}
-
-		// Resource not found!
-		return null;
-	}
-
-	/**
-	 * @param key
-	 *            Shared resource key
-	 * @return The resource
-	 */
-	public final Resource getResource(final String key)
-	{
-		return (Resource)resourceMap.get(key);
-	}
-
-	/**
 	 * @param name
 	 *            Name of the factory to get
 	 * @return The IResourceFactory with the given name.
@@ -471,6 +313,14 @@ public abstract class Application
 	public ApplicationSettings getSettings()
 	{
 		return settings;
+	}
+	
+	/**
+	 * @return Returns the sharedResources.
+	 */
+	public final SharedResources getSharedResources()
+	{
+		return sharedResources;
 	}
 
 	/**
