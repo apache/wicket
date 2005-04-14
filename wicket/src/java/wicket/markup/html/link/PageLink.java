@@ -37,7 +37,8 @@ public class PageLink extends Link
 	private final IPageLink pageLink;
 
 	/**
-	 * Constructor.
+	 * Constructs a link that instantiates the given Page class when the link is
+	 * clicked. The instantiated Page is used to render a response to the user.
 	 * 
 	 * @param id
 	 *            See Component
@@ -47,6 +48,12 @@ public class PageLink extends Link
 	public PageLink(final String id, final Class c)
 	{
 		super(id);
+
+		// Ensure that c is a subclass of Page
+		if (!Page.class.isAssignableFrom(c))
+		{
+			throw new IllegalArgumentException("Class " + c + " is not a subclass of Page");
+		}
 
 		this.pageLink = new IPageLink()
 		{
@@ -61,16 +68,12 @@ public class PageLink extends Link
 				return c;
 			}
 		};
-
-		// Ensure that c is a subclass of Page
-		if (!Page.class.isAssignableFrom(c))
-		{
-			throw new IllegalArgumentException("Class " + c + " is not a subclass of Page");
-		}
 	}
 
 	/**
-	 * Constructor.
+	 * Constructs a link which invokes the getPage() method of the IPageLink
+	 * interface when the link is clicked. Whatever Page objects is returned by
+	 * this method will be rendered back to the user.
 	 * 
 	 * @param id
 	 *            See Component
