@@ -33,6 +33,6 @@ public class ImagesApplication extends WicketExampleApplication
 	public ImagesApplication()
 	{
 		getPages().setHomePage(Home.class);
-		addResource("cancelButton", new DefaultButtonImageResource("Cancel"));
+		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 	}
 }

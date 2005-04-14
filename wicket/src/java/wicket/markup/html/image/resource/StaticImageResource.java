@@ -23,6 +23,7 @@ import java.util.Map;
 
 import wicket.Application;
 import wicket.RequestCycle;
+import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
@@ -86,7 +87,7 @@ public class StaticImageResource extends ImageResource
 	public static StaticImageResource get(final Package basePackage, final String path,
 			final Locale locale, final String style)
 	{
-		final String key = basePackage.getName() + '_' + Application.localizedPath(path, locale, style);
+		final String key = basePackage.getName() + '/' + SharedResources.path(path, locale, style);
 		synchronized (imageResourceMap)
 		{
 			StaticImageResource imageResource = (StaticImageResource)imageResourceMap.get(key);

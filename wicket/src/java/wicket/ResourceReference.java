@@ -36,9 +36,10 @@ import java.io.Serializable;
  * <p>
  * Resources may be added to the Application when the Application is constructed
  * using
- * {@link Application#addResource(Class, String, Locale, String, Resource)},
- * {@link Application#addResource(String, Locale, Resource)}or
- * {@link Application#addResource(String, Resource)}.
+ * {@link Application#getSharedResources()} followed by 
+ * {@link SharedResources#add(Class, String, Locale, String, Resource)},
+ * {@link SharedResources#add(String, Locale, Resource)}or
+ * {@link SharedResources#add(String, Resource)}.
  * <p>
  * If a component has its own shared resource which should not be added to the
  * application construction logic in this way, it can lazy-initialize the
@@ -106,7 +107,7 @@ public class ResourceReference implements Serializable
 		if (resource == null)
 		{
 			// Try to get resource from Application repository
-			resource = application.getResource(scope, name, locale, style);
+			resource = application.getSharedResources().get(scope, name, locale, style);
 
 			// Not available yet?
 			if (resource == null)
@@ -117,7 +118,7 @@ public class ResourceReference implements Serializable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = application.getResource(scope, name, null, null);
+					resource = application.getSharedResources().get(scope, name, null, null);
 					if (resource == null)
 					{
 						throw new WicketRuntimeException("Unable to resolve shared resource "
@@ -126,7 +127,7 @@ public class ResourceReference implements Serializable
 				}
 
 				// Share through application
-				application.addResource(scope, name, locale, style, resource);
+				application.getSharedResources().add(scope, name, locale, style, resource);
 			}
 		}
 	}
@@ -154,9 +155,7 @@ public class ResourceReference implements Serializable
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("resources/");
-		buffer.append(scope.getName());
-		buffer.append('/');
-		buffer.append(Application.localizedPath(name, locale, style));
+		buffer.append(SharedResources.path(scope, name, locale, style));
 		return buffer.toString();
 	}
 

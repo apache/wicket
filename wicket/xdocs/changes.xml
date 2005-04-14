@@ -8,6 +8,13 @@
   </properties>
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
+      <action type="update" dev="Jonathan Locke" issue="">
+      Factored out SharedResources class from Application and made some minor
+      improvements to the static path() methods.  This will clear the way to
+      make Session relative SharedResources in the future.  It also will enable
+      us to make changes to the SharedResources class without having to add
+      more methods to Application, which is already complex enough.
+      </action>
       <action type="fix" dev="Jonathan Locke" issue="1181983">
       Any image path is now part of the resource key for shared images.
       </action>
