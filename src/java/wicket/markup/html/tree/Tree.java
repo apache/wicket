@@ -221,9 +221,22 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public Tree(final String componentName, final TreeModel model)
 	{
 		super(componentName, model);
-		treePathsListView = createTreePathsListView();
-		add(treePathsListView);
-		model.addTreeModelListener(this);
+		add(treePathsListView = createTreePathsListView());
+	}
+
+	/**
+	 * Construct using the given tree state that holds the model to be
+	 * used as the tree model.
+	 * 
+	 * @param componentName
+	 *            The name of this container
+	 * @param treeState
+	 *            treeState that holds the underlying tree model
+	 */
+	public Tree(String componentName, TreeState treeState)
+	{
+		super(componentName, treeState);
+		add(treePathsListView = createTreePathsListView());
 	}
 
 	/**
