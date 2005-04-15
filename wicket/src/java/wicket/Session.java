@@ -128,7 +128,7 @@ public abstract class Session implements Serializable
 	private transient RequestCycle cycle;
 
 	/** True if session state has been changed */
-	private boolean dirty = false;
+	private transient boolean dirty = false;
 
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
