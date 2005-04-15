@@ -177,6 +177,14 @@ public final class PageMap implements Serializable
 		page.redirectTo(page);
 		session.dirty();
 	}
+	
+	/**
+	 * Removes this PageMap from the Session.
+	 */
+	public final void remove()
+	{
+		session.removePageMap(this);
+	}
 
 	/**
 	 * @param page

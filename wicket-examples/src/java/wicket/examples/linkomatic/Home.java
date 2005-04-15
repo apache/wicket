@@ -116,7 +116,7 @@ public class Home extends WicketExamplePage
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings().setHeight(500).setWidth(500);
-		add(new BookmarkablePageLink("popupLink", Page1.class).setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
