@@ -52,9 +52,9 @@ import wicket.util.string.Strings;
  */
 public class WebRequestCycle extends RequestCycle
 {
-
 	/** Path prefix for shared resources */
 	public static final String resourceReferencePrefix = "/resources/";
+	
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
