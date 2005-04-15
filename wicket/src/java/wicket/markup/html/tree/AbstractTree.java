@@ -55,6 +55,21 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
+	 * Construct using the given tree state that holds the model to be
+	 * used as the tree model.
+	 * 
+	 * @param componentName
+	 *            The name of this container
+	 * @param treeState
+	 *            treeState that holds the underlying tree model
+	 */
+	public AbstractTree(final String componentName, final TreeState treeState)
+	{
+		super(componentName);
+		this.treeState = treeState;
+	}
+
+	/**
 	 * Gets the current tree state.
 	 * 
 	 * @return the tree current tree state
@@ -219,21 +234,21 @@ public abstract class AbstractTree extends Panel
 	 * which is then set as the current tree state, creating a new
 	 * {@link TreeSelectionModel}and then calling setTreeModel with this
 	 * 
-	 * @param model
+	 * @param treeModel
 	 *            the model that the new tree state applies to
 	 * @param rootVisible
 	 *            whether the tree node should be displayed
 	 * @return the tree state
 	 */
-	protected final TreeState newTreeState(final TreeModel model, final boolean rootVisible)
+	protected final TreeState newTreeState(final TreeModel treeModel, final boolean rootVisible)
 	{
-		final TreeState treeStateCache = new TreeState();
-		final TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
-		selectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		treeStateCache.setModel(model);
-		treeStateCache.setSelectionModel(selectionModel);
-		treeStateCache.setRootVisible(rootVisible);
-		model.addTreeModelListener(treeStateCache);
-		return treeStateCache;
+		final TreeState treeState = new TreeState();
+		final TreeSelectionModel treeSelectionModel = new DefaultTreeSelectionModel();
+		treeSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		treeState.setModel(treeModel);
+		treeState.setSelectionModel(treeSelectionModel);
+		treeState.setRootVisible(rootVisible);
+		treeModel.addTreeModelListener(treeState);
+		return treeState;
 	}
 }
