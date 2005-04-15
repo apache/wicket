@@ -198,6 +198,9 @@ public abstract class RequestCycle
 
 	/** The page to render to the user. */
 	private Page responsePage;
+	
+	/** True if the cluster should be updated */
+	private boolean updateCluster;
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -422,6 +425,16 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT USE IT.
+	 * 
+	 * @param updateCluster The updateCluster to set.
+	 */
+	public void setUpdateCluster(boolean updateCluster)
+	{
+		this.updateCluster = updateCluster;
+	}
+	
+	/**
 	 * Looks up an interface method by name.
 	 * 
 	 * @param interfaceName
@@ -461,9 +474,12 @@ public abstract class RequestCycle
 	 */
 	protected final void internalOnEndRequest()
 	{
-		// At the end of our response, we need to set any session
-		// attributes that might be required to update the cluster
-		session.updateCluster();
+		if (updateCluster)
+		{
+			// At the end of our response, we need to set any session
+			// attributes that might be required to update the cluster
+			session.updateCluster();
+		}
 	}
 
 	/**

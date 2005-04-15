@@ -52,11 +52,11 @@ import wicket.util.string.Strings;
  */
 public class WebRequestCycle extends RequestCycle
 {
-	/** Logging object */
-	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
 	/** Path prefix for shared resources */
 	public static final String resourceReferencePrefix = "/resources/";
+	/** Logging object */
+	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
@@ -115,16 +115,23 @@ public class WebRequestCycle extends RequestCycle
 	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
-		if (callComponentListener() || bookmarkablePage() || homePage() || resourceReference())
+		if (callComponentListener() || bookmarkablePage() || homePage())
 		{
+			// Returning a page
 			return true;
 		}
 		else
 		{
-			if (!renderStaticContent())
+			// If it's not a resource reference or static content
+			if (!resourceReference() && !staticContent())
 			{
+				// then we cannot process the request
 				throw new WicketRuntimeException("Unable to parse request " + request);
 			}
+			
+			// Don't update the cluster, not returning a page
+			setUpdateCluster(false);
+			setResponsePage(null);
 			return false;
 		}
 	}
@@ -179,6 +186,7 @@ public class WebRequestCycle extends RequestCycle
 				final Class pageClass = session.getClassResolver().resolveClass(pageClassName);
 				setResponsePage(session.getPageFactory().newPage(pageClass,
 						new PageParameters(getRequest().getParameterMap())));
+				setUpdateCluster(true);
 				return true;
 		    }
 		    catch (RuntimeException e)
@@ -215,10 +223,14 @@ public class WebRequestCycle extends RequestCycle
 
 			// Get page from path
 			final Page page = session.getPage(pageMapName, path, versionNumber);
-
+			
 			// Does page exist?
 			if (page != null)
 			{
+				// Assume cluster needs to be updated now, unless listener invocation
+				// change this (for example, with a simple page redirect)
+				setUpdateCluster(true);
+
 				// Execute the user's code
 				invokeInterface(page, path, request.getParameter("interface"));
 				return true;
@@ -246,6 +258,7 @@ public class WebRequestCycle extends RequestCycle
 			try
 			{
 				setResponsePage(newPage(application.getPages().getHomePage()));
+				setUpdateCluster(true);
 			}
 			catch (WicketRuntimeException e)
 			{
@@ -345,9 +358,34 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * Renders resource to user if URL matches resource pattern
+	 * 
+	 * @return True if the resource was found 
+	 */
+	private boolean resourceReference()
+	{
+		final String pathInfo = getWebRequest().getPathInfo();
+		if (pathInfo.startsWith(resourceReferencePrefix))
+		{
+			final String resourceReferenceKey = pathInfo.substring(resourceReferencePrefix.length());
+			final Resource resource = getApplication().getSharedResources().get(resourceReferenceKey);
+			if (resource == null)
+			{
+				throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey);
+			}
+			else
+			{
+				resource.onResourceRequested();
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * @return True if static content was returned
 	 */
-	private boolean renderStaticContent()
+	private boolean staticContent()
 	{
 		try
 		{
@@ -393,28 +431,5 @@ public class WebRequestCycle extends RequestCycle
 		{
 			throw new WicketRuntimeException("Cannot load static content for request " + request, e);
 		}
-	}
-
-	/**
-	 * @return Returns resource to user if URL matches resource pattern
-	 */
-	private boolean resourceReference()
-	{
-		final String pathInfo = getWebRequest().getPathInfo();
-		if (pathInfo.startsWith(resourceReferencePrefix))
-		{
-			final String resourceReferenceKey = pathInfo.substring(resourceReferencePrefix.length());
-			final Resource resource = getApplication().getSharedResources().get(resourceReferenceKey);
-			if (resource == null)
-			{
-				throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey);
-			}
-			else
-			{
-				resource.onResourceRequested();
-			}
-			return true;
-		}
-		return false;
 	}
 }

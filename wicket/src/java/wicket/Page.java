@@ -390,8 +390,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	public final void onRedirect()
 	{
+		final RequestCycle cycle = getRequestCycle();
+	
+		// Do not need to update cluster when redirecting to a page
+		cycle.setUpdateCluster(false);
+		
 		// This method is used when redirecting to a page
-		getRequestCycle().setResponsePage(this);
+		cycle.setResponsePage(this);
 	}
 
 	/**
