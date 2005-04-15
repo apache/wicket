@@ -1494,38 +1494,27 @@ public abstract class Component implements Serializable
 
 		// If we're an openclose tag
 		final XmlTag.Type type = tag.getType();
-		final boolean isImageTag = tag.getName().equalsIgnoreCase("img");
-		if (tag.isOpenClose())
+		if (!tag.isOpenClose() && !tag.isOpen())
 		{
-			// Change type to open tag
-			if (!isImageTag)
-			{
-				tag.setType(XmlTag.OPEN);
-			}
-		}
-		else
-		{
-			// Must be an open tag
-			if (!tag.isOpen())
-			{
-				// We were something other than <tag> or <tag/>
-				markupStream
-						.throwMarkupException("Method renderComponent called on bad markup element "
-								+ tag);
-			}
+			// We were something other than <tag> or <tag/>
+			markupStream
+					.throwMarkupException("Method renderComponent called on bad markup element "
+							+ tag);
 		}
 
 		// Render open tag
 		renderComponentTag(tag);
 		markupStream.next();
 
-		// Render body using original tag type so implementors of
-		// onComponentTagBody will know if the tag has a body or not
-		tag.setType(type);
-		onComponentTagBody(markupStream, tag);
+        // Render the body only if open-body-close. Do not render if open-close.
+		if (tag.isOpen())
+		{
+		    // Render the body
+		    onComponentTagBody(markupStream, tag);
+		}
 
 		// Render close tag
-		if (!isImageTag)
+		if (tag.isOpen())
 		{
 			renderClosingComponentTag(markupStream, tag);
 		}
