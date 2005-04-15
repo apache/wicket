@@ -227,11 +227,12 @@ public abstract class ListView extends WebMarkupContainer
 				final int index = getList().indexOf(item.getModelObject());
 				if (index != -1)
 				{
+					ListView.this.modelChanging();
+
 					// Swap list items and invalidate listView
 					Collections.swap(getList(), index, index + 1);
 
-					// Make sure you re-render the list properly
-					ListView.this.removeAll();
+					ListView.this.modelChanged();
 				}
 			}
 		};
@@ -270,11 +271,12 @@ public abstract class ListView extends WebMarkupContainer
 				final int index = getList().indexOf(item.getModelObject());
 				if (index != -1)
 				{
+					ListView.this.modelChanging();
+
 					// Swap items and invalidate listView
 					Collections.swap(getList(), index, index - 1);
 
-					// Make sure you re-render the list properly
-					ListView.this.removeAll();
+					ListView.this.modelChanged();
 				}
 			}
 		};
@@ -298,11 +300,12 @@ public abstract class ListView extends WebMarkupContainer
 			 */
 			public void onClick()
 			{
+				item.modelChanging();
+
 				// Remove item and invalidate listView
 				getList().remove(item.getModelObject());
 
-				// Make sure you re-render the list properly
-				ListView.this.removeAll();
+				item.modelChanged();
 			}
 		};
 	}
