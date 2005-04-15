@@ -246,6 +246,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * @return Returns the PageMap that this Page is stored in.
+	 */
+	public final PageMap getPageMap()
+	{
+		if (pageMap == null)
+		{
+			setPageMap(pageMapName);
+		}
+		return pageMap;
+	}
+
+	/**
 	 * THIS FEATURE IS CURRENTLY EXPERIMENTAL. DO NOT USE THIS METHOD.
 	 * 
 	 * @return The list of PageSets to which this Page belongs.
@@ -597,18 +609,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 		// Set response locale from session locale
 		response.setLocale(getSession().getLocale());
-	}
-
-	/**
-	 * @return Returns the pageMap.
-	 */
-	protected final PageMap getPageMap()
-	{
-		if (pageMap == null)
-		{
-			setPageMap(pageMapName);
-		}
-		return pageMap;
 	}
 
 	/**

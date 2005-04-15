@@ -637,6 +637,15 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * @param pageMap
+	 *            Page map to remove
+	 */
+	final void removePageMap(final PageMap pageMap)
+	{
+		pageMapForName.remove(pageMap);
+	}
+
+	/**
 	 * @param visitor
 	 *            The visitor to call at each Page in this PageMap.
 	 */

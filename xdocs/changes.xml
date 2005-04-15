@@ -8,6 +8,15 @@
   </properties>
   <body>
   	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
+      <action type="fix" dev="Jonathan Locke" issue="1182728">
+ 		Added PageMap.remove() method and PopupCloseLink class, which calls
+ 		this method on Page.getPageMap(), which is now public.  A little 
+ 		trick was necessary to invoke the java code AND close the window.
+ 		When PopupCloseLink is clicked, the page map is removed and then
+ 		the response page is set to a nested class with markup found in 
+ 		PopupCloseLink$1.  This markup contains javascript that closes the
+ 		window when it is loaded.
+	  </action>
       <action type="update" dev="Jonathan Locke" issue="">
       Factored out SharedResources class from Application and made some minor
       improvements to the static path() methods.  This will clear the way to
