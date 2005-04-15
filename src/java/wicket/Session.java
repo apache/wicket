@@ -496,6 +496,7 @@ public abstract class Session implements Serializable
 					{
 						if (page.isDirty())
 						{
+							page.setDirty(false);
 							replicate(page);
 						}
 					}
