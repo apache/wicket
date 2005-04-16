@@ -7,7 +7,7 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-  	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
+  	<release version="1.0.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
 	  <action type="fix" dev="Jonathan Locke" issue="1182158">
 	  Added updateCluster boolean to RequestCycle.  As a request is parsed, 
 	  this boolean is set in order to determine if the end of the request 
