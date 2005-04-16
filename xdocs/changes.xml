@@ -7,7 +7,36 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-  	<release version="1.0.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
+  	<release version="1.0.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">  	
+	  <action type="update" dev="Eelco Hillenius">
+	  Tree can be extended by providing a custom panel for a node. This way
+	  the tree can be used to nest arbitrairy components, like input fields and
+	  (more) images.
+	  </action>
+	  <action type="fix" dev="Eelco Hillenius" issue="1183947">
+	  modelChanging and modelChanged were never called in the link handlers
+	  of the delete and moveUp/Down listview links
+	  </action>
+	  <action type="fix" dev="Eelco Hillenius">
+	  Tree is not a listener for tree events by default, as registering the tree
+	  as a listener by default can lead to memory leaks
+	  </action>
+	  <action type="fix" dev="Johan Compagner">
+	  Wrap catched exception so that we not only get the 'markup not found exception',
+	  but also what caused the problem in the first place.
+	  </action>
+	  <action type="fix" dev="Eelco Hillenius">
+	  Removed 'removeAll' from the render method in ListView
+	  </action>
+	  <action type="fix" dev="Eelco Hillenius">
+	  Added extra null pointer check in MultipartWebRequest
+	  </action>
+	  <action type="fix" dev="Eelco Hillenius">
+	  Resources were requested from the servlet context by relative path. This
+	  gives problems on some containers (like Jetty 5.1.x) 
+	  with a paths like 'mysubdir/foo.css'.
+	  The change is: final String url = '/' + getWebRequest().getRelativeURL();
+	  </action>	 
 	  <action type="fix" dev="Jonathan Locke" issue="1182158">
 	  Added updateCluster boolean to RequestCycle.  As a request is parsed, 
 	  this boolean is set in order to determine if the end of the request 
