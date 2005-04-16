@@ -7,12 +7,14 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
+  	<release version="1.0.0-RC3" date="t.b.d." description="1.0 Release Candidate 3">
+  	</release>
   	<release version="1.0.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">
 	  <action type="fix" dev="Eelco Hillenius" issue="1178309">
 	  tree does not need versioning by default.
 	  </action>
 	  <action type="fix" dev="Juergen Donnerstag" issue="1161111">
-	  Wickets mistakes <a .../> for an open-tag.
+	  Wickets mistakes &lt;a .../&gt; for an open-tag.
 	  </action>	
 	  <action type="update" dev="Eelco Hillenius">
 	  Tree can be extended by providing a custom panel for a node. This way
