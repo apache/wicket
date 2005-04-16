@@ -31,6 +31,7 @@
 	        <item name="SourceForge" href="/SourceForge.html"/>
             <item name="Issue Tracker" href="http://sourceforge.net/tracker/?group_id=119783"/>
 	        <item name="Release History" href="/changes-report.html"/>
+	        <item name="RSS" img="/images/rss.png" href="/news.rss" />
         </menu>
         <menu name="Documentation">
 	        <item name="Vision" href="/Vision.html"/>

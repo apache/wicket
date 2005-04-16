@@ -9,6 +9,10 @@
             <fileset dir="${maven.build.dir}/docs/style" 
                 includes="**/maven*.css"/>
         </ant:delete>
+        <ant:style
+        	force="true"
+    		style="src/xdocs/news.xsl" 
+    		in="${maven.docs.src}/index.xml" out="${maven.docs.dest}/news.rss"/>
     </postGoal>
     <goal name="createDependenciesPage" 
         description="Generates the dependencies document">
