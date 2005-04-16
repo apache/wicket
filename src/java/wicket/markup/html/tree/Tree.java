@@ -31,7 +31,6 @@ import javax.swing.tree.TreePath;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.resource.StaticImageResourceReference;
@@ -39,11 +38,12 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.list.Loop;
+import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * An AbstractTree that renders as a flat (not-nested) list, using spacers for
+ * An tree that renders as a flat (not-nested) list, using spacers for
  * indentation and nodes at the end of one row.
  * <p>
  * The visible tree rows are put in one flat list. For each row, a list is
@@ -64,13 +64,13 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 	
 	/** Blank image */
-	private static final ResourceReference blank = new StaticImageResourceReference(Tree.class, "blank.gif");
+	private static final ResourceReference BLANK = new StaticImageResourceReference(Tree.class, "blank.gif");
 	
 	/** Minus sign image */
-	private static final ResourceReference minus = new StaticImageResourceReference(Tree.class, "minus.gif");
+	private static final ResourceReference MINUS = new StaticImageResourceReference(Tree.class, "minus.gif");
 	
 	/** Plus sign image */
-	private static final ResourceReference plus = new StaticImageResourceReference(Tree.class, "plus.gif");
+	private static final ResourceReference PLUS = new StaticImageResourceReference(Tree.class, "plus.gif");
 
 	/** List with tree paths. */
 	private List treePathList;
@@ -150,15 +150,11 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final class TreePathsListView extends ListView
 	{
-		private transient TreeState treeState;
-
 		/**
 		 * Construct.
 		 * 
-		 * @param name
-		 *            name of the component
-		 * @param model
-		 *            the model
+		 * @param name name of the component
+		 * @param model the model
 		 */
 		public TreePathsListView(String name, IModel model)
 		{
@@ -166,37 +162,28 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		}
 
 		/**
-		 * Begin rendering the tree paths.
-		 */
-		protected void onBeginRequest()
-		{
-			treeState = getTreeState();
-		}
-
-		/**
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
 		protected void populateItem(ListItem listItem)
 		{
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) listItem
-					.getModelObject();
+			// get the tree state
+			TreeState treeState = getTreeState();
+
+			// get the model object which is a tree node
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) listItem.getModelObject();
 
 			// add spacers
 			int level = node.getLevel();
 			listItem.add(new SpacerList("spacers", level));
 
-			// add node
-			WebMarkupContainer nodeContainer = new WebMarkupContainer("node");
-			Link expandCollapsLink = Tree.this.createJunctionLink(node);
-			nodeContainer.add(expandCollapsLink);
+			// add node panel
+			listItem.add(newNodePanel("node", node));
 
-			Link selectLink = Tree.this.createNodeLink(node);
-			nodeContainer.add(selectLink);
-			listItem.add(nodeContainer);
-
+			// add attr modifier for highlighting the selection
 			listItem.add(new AttributeModifier("class", true,
 					new SelectedPathReplacementModel(node)));
 
+			// check whether to current item is part of the visible path
 			final TreePath path = new TreePath(node.getPath());
 			final int row = treeState.getRowForPath(path);
 			if (row != -1)
@@ -207,6 +194,33 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 			{
 				listItem.setVisible(false);
 			}
+		}
+	}
+
+	/**
+	 * The default panel for a tree node.
+	 * <p>
+	 * You can provide an alternative panel by overriding Tree.newNodePanel
+	 * </p>
+	 */
+	private final class NodePanel extends Panel
+	{
+		/**
+		 * Construct.
+		 * @param id component id
+		 * @param node the tree node
+		 */
+		public NodePanel(final String id, final DefaultMutableTreeNode node)
+		{
+			super(id);
+
+			// create a link for expanding and collapsing the node
+			Link expandCollapsLink = Tree.this.createJunctionLink(node);
+			add(expandCollapsLink);
+
+			// create a link for selecting a node
+			Link selectLink = Tree.this.createNodeLink(node);
+			add(selectLink);
 		}
 	}
 
@@ -240,11 +254,29 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
+	 * Create a new panel for a tree node. This method can be overriden to provide
+	 * a custom panel. This way, you can effectively nest anything you want in
+	 * the tree, like input fields, images, etc.
+	 * <p><strong>
+	 * you must use the provide panelId as the id of your custom panel
+	 * </strong><br>
+	 * for example, do: <pre>return new MyNodePanel(panelId, node);</pre>
+	 * </p> 
+	 * @param panelId the id that the panel MUST use
+	 * @param node the tree node for the panel
+	 * @return a new Panel
+	 */
+	protected NodePanel newNodePanel(String panelId, DefaultMutableTreeNode node)
+	{
+		return new NodePanel(panelId, node);
+	}
+
+	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesChanged(javax.swing.event.TreeModelEvent)
 	 */
 	public void treeNodesChanged(TreeModelEvent e)
 	{
-		// nothing to do hereS
+		// nothing to do here
 	}
 
 	/**
@@ -366,18 +398,18 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 				{
 					if (isExpanded(node))
 					{
-						return minus;
+						return MINUS;
 					}
 					else
 					{
-						return plus;
+						return PLUS;
 					}
 				}
 			};
 		}
 		else
 		{
-			return new Image(JUNCTION_IMAGE_NAME, blank);
+			return new Image(JUNCTION_IMAGE_NAME, BLANK);
 		}
 	}
 
@@ -392,7 +424,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected Image getNodeImage(final DefaultMutableTreeNode node)
 	{
-		return new Image(JUNCTION_IMAGE_NAME, blank);
+		return new Image(JUNCTION_IMAGE_NAME, BLANK);
 	}
 
 	/**
