@@ -40,12 +40,24 @@
 			</ul>
 		</section>
 		<section name="Latest News">
+			<subsection name="April 16, 2005 - 1.0 RC2 is out!">
+				<p>
+					We are getting close to a final 1.0 release in the near future. This RC2 release
+					marks the next milestone on the journey to the first production ready release of
+					Wicket. Many of the problems found by RC1 users have been solved and this release
+					should be a much smoother ride for all.
+				</p>
+				<p>
+					See the <a href="changes-report.html#1_0_0-RC2">changes report</a> for more
+					information on the solved bugs in this release.
+				</p>
+			</subsection>
 			<subsection name="April 3, 2005 - 1.0 RC1 is released!">
 				<p>
 					The Wicket team is proud to release the first 1.0 release candidate. This is
 					probably the most important milestone in our history. From now on the feature
 					list has been frozen, and the bug list will shrink. Please take a look at the
-					<a href="http://wicket.sourceforge.net/changes-report.html#1_0-rc1">
+					<a href="changes-report.html#1_0_0-rc1">
 						changelog
 					</a>
 					for this release.
@@ -88,47 +100,6 @@
 					<strong>the</strong>
 					marketplace for (third party) Wicket components.
 				</p>
-			</subsection>
-			<subsection name="March 30, 2005 - Two articles on the wiki">
-				<p>Jonathan Locke has written two articles on using Wicket:</p>
-				<ul>
-					<li>
-						<a href="/wiki/doku.php?id=models">Working with Wicket Models</a>
-					</li>
-					<li>
-						<a href="/wiki/doku.php?id=lifecycle">
-							The Lifecycle of a Wicket Application
-						</a>
-					</li>
-				</ul>
-			</subsection>
-			<subsection name="March 19, 2005 - A new Wicket project is born: Wicket Stuff">
-				<p>
-					We have registered a
-					<a href="http://www.sf.net/projects/wicket-stuff">seperate project</a>
-					for hosting non-core components:
-					<a href="http://www.sf.net/projects/wicket-stuff">Wicket Stuff</a>
-					. If your component has a dependency other than the
-					<a href="Dependencies.html">Wicket dependencies</a>
-					, for example a
-					<a href="http://www.hibernate.org">Hibernate</a>
-					component, then
-					<a href="http://wicket-stuff.sf.net">Wicket Stuff</a>
-					is the place to find it.
-				</p>
-				<p>The initial list of components hosted there is:</p>
-				<ul>
-					<li>
-						<a href="http://wicket-stuff.sourceforge.net/wicket-velocity-panel">
-							Velocity Panel
-						</a>
-					</li>
-					<li>Hibernate components and helpers</li>
-					<li>Groovy integration</li>
-					<li>Spring Framework integration</li>
-					<li>fValidate integration</li>
-				</ul>
-				<p>Releases of these projects will come available as Wicket 1.0 RC1 ships.</p>
 			</subsection>
 			<p>
 				See

@@ -11,6 +11,18 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="April 16, 2005 - 1.0 RC2 is out!">
+				<p>
+					We are getting close to a final 1.0 release in the near future. This RC2 release
+					marks the next milestone on the journey to the first production ready release of
+					Wicket. Many of the problems found by RC1 users have been solved and this release
+					should be a much smoother ride for all.
+				</p>
+				<p>
+					See the <a href="changes-report.html#1_0_0-RC2">changes report</a> for more
+					information on the solved bugs in this release.
+				</p>
+			</subsection>
 			<subsection name="April 3, 2005 - 1.0 RC1 is released!">
 				<p>
 					The Wicket team is proud to release the first 1.0 release candidate. This is
