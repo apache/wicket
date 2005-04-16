@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+  <properties>
+    <title>Wicket Kick Start changes</title>
+    <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
+  </properties>
+  <body>
+  	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
+      <action type="update" dev="Martijn Dashorst">Moved quick start project to Wicket Stuff.</action>
+    </release>
+  </body>
+</document>
