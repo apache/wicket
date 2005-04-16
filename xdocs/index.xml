@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <document>
 	<properties>
 		<title>Home</title>
@@ -46,6 +47,10 @@
 					marks the next milestone on the journey to the first production ready release of
 					Wicket. Many of the problems found by RC1 users have been solved and this release
 					should be a much smoother ride for all.
+				</p>
+				<p>
+					We also added an RSS feed to the website in order to provide you with the latest 
+					news through your favorite RSS reader. Check <a href="news.rss">this</a> out!
 				</p>
 				<p>
 					See the <a href="changes-report.html#1_0_0-RC2">changes report</a> for more
