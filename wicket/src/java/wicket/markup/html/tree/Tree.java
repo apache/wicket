@@ -468,6 +468,14 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false; // the tree does not need to be versioned
+	}
+
+	/**
 	 * Add the nodes to the backing tree paths list.
 	 */
 	private final void addNodesToTreePathList()
