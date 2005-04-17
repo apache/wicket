@@ -1,142 +1,142 @@
 cbody{ 
-	background-color: #fff; padding:0 0 0 0; margin:0 0 0 0;
+    background-color: #fff; padding:0 0 0 0; margin:0 0 0 0;
 }
 body, input, select, td, textarea{ 
-	font-family:Verdana, Geneva, Arial, Helvetica, sans-serif; 
-	font-size: 11px;
+    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif; 
+    font-size: 11px;
 }
 h1, h2, h3, h4, h5, h6, p, strong, div, form, acronym, label, table, td, th, span, a, hr, code, pre, hr {
-	font-size: 1em;
-	background-repeat:no-repeat;
-	list-style-type:none;
+    font-size: 1em;
+    background-repeat:no-repeat;
+    list-style-type:none;
 }
 a, a:visited, a:hover { 
-	color:#666; text-decoration:none; 
+    color:#666; text-decoration:none; 
 }
 a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 img{ 
-	border:none;
+    border:none;
 }
 hr {
-	height: 1px;
-	color: #000;
-	clear:both;
+    height: 1px;
+    color: #000;
+    clear:both;
 }
 
 dt {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .clear {
-	clear: both;
+    clear: both;
 }
 h1 {
-	font-size: 2em;
+    font-size: 2em;
 }
 h1 a{
-	color: #000;
+    color: #000;
 }
 div#header {
-	background-color: #fea;
-	border-top: 1px solid #000;
-	border-bottom: 1px solid #000;
-	padding: 20px 10px 30px 15px;
-	margin: 10px 5% 20px 5%;
+    background-color: #fea;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding: 20px 10px 30px 15px;
+    margin: 10px 5% 20px 5%;
 }
 div#header ul{
-	margin: 10px 0 0 0;
+    margin: 10px 0 0 0;
 }
 div#header ul li{
-	list-style-type: none;
-	float: left;
-	padding: 0 10px 0 0;
-	font-weight: bold;
+    list-style-type: none;
+    float: left;
+    padding: 0 10px 0 0;
+    font-weight: bold;
 }
 div#header ul li a{
-	display: block;
-	color: #f00;
-	border-left: 1px solid red;
-	padding-left: 5px;
+    display: block;
+    color: #f00;
+    border-left: 1px solid red;
+    padding-left: 5px;
 }
 div#header ul li a:hover{
-	border-left: 1px solid #000;
+    border-left: 1px solid #000;
 }
 
 h2 {
-	font-size: 1.2em;
-	margin: 10px 0 10px 0;
+    font-size: 1.2em;
+    margin: 10px 0 10px 0;
 }
 
 h2 {
-	font-size: 1.1em;
-	margin: 10px 0 5px 0;
+    font-size: 1.1em;
+    margin: 10px 0 5px 0;
 }
 
 p {
-	margin: 0 0 10px 0;
+    margin: 0 0 10px 0;
 }
 
 acronym {
-	border-bottom: 1px dashed #000;
-	cursor: help;
+    border-bottom: 1px dashed #000;
+    cursor: help;
 }
 
 div#body {
-	margin: 0 5% 20px 5%;
-	padding: 20px 20px 20px 20px;
-	border: 1px dashed #666;
+    margin: 0 5% 20px 5%;
+    padding: 20px 20px 20px 20px;
+    border: 1px dashed #666;
 }
 
 div#validxhtml {
-	float: right;
-	background-color: #eee;
-	border: 1px dotted #999;
-	padding: 2px;
-	margin: 5px;
-	width:100px;
-	text-align: center;
+    float: right;
+    background-color: #eee;
+    border: 1px dotted #999;
+    padding: 2px;
+    margin: 5px;
+    width:100px;
+    text-align: center;
 }
 div#footer {
-	border-top: 1px solid #666;
-	padding: 5px 5px 5px 5px;
-	text-align:right;
+    border-top: 1px solid #666;
+    padding: 5px 5px 5px 5px;
+    text-align:right;
 }
 
 div#footer span {
-	float: left;
+    float: left;
 }
 
 /*.changed {
-	background-color: #ee0;
-	border: 1px solid #ccc;
-	padding: 10px;
-	margin: 10px;
+    background-color: #ee0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
 }*/
 ul#stylelist {
-	margin:0 0 30px 0;
+    margin:0 0 30px 0;
 }
 
 ul#stylelist li {
-	list-style-type: none;
-	float:left;
-	width:100px;
-	border: 1px solid #ccc;
-	background-color: #eee;
-	padding:2px;
-	margin-right: 2px;
+    list-style-type: none;
+    float:left;
+    width:100px;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    padding:2px;
+    margin-right: 2px;
 }
 table {
-	border: 1px solid #666;
+    border: 1px solid #666;
 
-	width: 80%;
-	margin: 20px 0 20px 0;
+    width: 80%;
+    margin: 20px 0 20px 0;
 }
 th, td {
-	padding: 2px 4px 2px 4px;
-	text-align: left;
-	vertical-align: top;
+    padding: 2px 4px 2px 4px;
+    text-align: left;
+    vertical-align: top;
 }
 thead tr {
   background-color: #fc0;
@@ -152,17 +152,17 @@ th a:hover {
   color: black;
 }
 th.sorted a, th.sortable a {
-	background-position: right;
-	display: block;
+    background-position: right;
+    display: block;
 }
 th.sortable a {
-	background-image: url(../img/arrow_off.png);
+    background-image: url(../img/arrow_off.png);
 }
 th.order1 a {
-	background-image: url(../img/arrow_down.png);
+    background-image: url(../img/arrow_down.png);
 }
 th.order2 a {
-	background-image: url(../img/arrow_up.png);
+    background-image: url(../img/arrow_up.png);
 }
 tr.odd {
   background-color: #fff
@@ -172,13 +172,13 @@ tr.tableRowEven, tr.even {
 }
 
 ul#showsource {
-	float: right;
-	background-color: #eee;
-	border: 1px dotted #999;
-	padding: 2px 4px 2px 4px;
-	margin: 5px;
-	width:100px;
-	list-style-type: none;
+    float: right;
+    background-color: #eee;
+    border: 1px dotted #999;
+    padding: 2px 4px 2px 4px;
+    margin: 5px;
+    width:100px;
+    list-style-type: none;
 }
 
 
@@ -200,7 +200,39 @@ table.mars tr.odd {
   background-color: #eec;
 }
 
+/* report */
+table.report td, table.report th {
+    font:         menu;
+}
+table.report th {
+    background:   buttonface;
+    border-width: 1px;
+    border-style: solid;
+    border-color: threedhighlight threedshadow threedshadow threedhighlight;
+    cursor:       hand;
+}
+table.report idcol {
+    background: buttonface;
+}
 
+table.report tr.even{
+    background-color: #399;
+}
+table.report tbody {
+    height: 100px;
+    overflow: auto;
+}
+
+table.report {
+    height: 120px;
+    overflow: auto;
+}
+
+table.report tbody tr{
+    height: 10px;
+}
+
+/* simple */
 table.simple thead tr {
   background-color: #eee;
 }
@@ -208,50 +240,16 @@ table.simple tr.even {
   background-color: #fff;
 }
 table.simple {
-	border: 1px solid #ccc;
-	border-collapse: collapse;
+    border: 1px solid #ccc;
+    border-collapse: collapse;
 }
 table.simple td,table.simple th{
-	border: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 table.nocol tbody td,table.nocol tbody th{
-	border-left: none;
-	border-right: none;
-}
-
-
-
-
-table.report td, table.report th{
-	font:         menu;
-}
-table.report th{
-	background:   buttonface;
-	border-width: 1px;
-	border-style: solid;
-	border-color: threedhighlight threedshadow threedshadow threedhighlight;
-	cursor:       hand;
-}
-table.report idcol {
-	background: buttonface;
-}
-
-table.report tr.even{
-	background-color: #399;
-}
-table.report tbody {
-	height: 100px;
-	overflow: auto;
-}
-
-table.report {
-	height: 120px;
-	overflow: auto;
-}
-
-table.report tbody tr{
-	height: 10px;
+    border-left: none;
+    border-right: none;
 }
 
 
@@ -259,58 +257,58 @@ table.report tbody tr{
 
 
 table.mark td.tableCellError {
-	background-color: #d00;
-	color: #fff;
+    background-color: #d00;
+    color: #fff;
 }
 
 table.sublist {
-	margin: 0 0 0 0;
-	width: 100%;
+    margin: 0 0 0 0;
+    width: 100%;
 }
 table.sublist td, table.sublist th {
-	width: 50%;
+    width: 50%;
 }
 
 div.exportlinks {
-	background-color: #eee;
-	border: 1px dotted #999;
-	padding: 2px 4px 2px 4px;
-	margin: -10px 0 10px 0;
-	width: 79%;
+    background-color: #eee;
+    border: 1px dotted #999;
+    padding: 2px 4px 2px 4px;
+    margin: -10px 0 10px 0;
+    width: 79%;
 }
 
 span.export {
-	padding: 0 4px 1px 20px;
-	display:inline; display:inline-block;
-	cursor: pointer;
+    padding: 0 4px 1px 20px;
+    display:inline; display:inline-block;
+    cursor: pointer;
 }
 
 span.excel {
-	background-image: url(../img/ico_file_excel.png);
+    background-image: url(../img/ico_file_excel.png);
 }
 span.csv {
-	background-image: url(../img/ico_file_csv.png);
+    background-image: url(../img/ico_file_csv.png);
 }
 span.xml {
-	background-image: url(../img/ico_file_xml.png);
+    background-image: url(../img/ico_file_xml.png);
 }
 
 span.pagebanner {
-	background-color: #eee;
-	border: 1px dotted #999;
-	padding: 2px 4px 2px 4px;
-	width: 79%;
-	margin-top: 10px;
-	display:block;
-	border-bottom: none;
+    background-color: #eee;
+    border: 1px dotted #999;
+    padding: 2px 4px 2px 4px;
+    width: 79%;
+    margin-top: 10px;
+    display:block;
+    border-bottom: none;
 }
 
 span.pagelinks {
-	background-color: #eee;
-	border: 1px dotted #999;
-	padding: 2px 4px 2px 4px;
-	width: 79%;
-	display:block;
-	border-top: none;
-	margin-bottom: -5px;
+    background-color: #eee;
+    border: 1px dotted #999;
+    padding: 2px 4px 2px 4px;
+    width: 79%;
+    display:block;
+    border-top: none;
+    margin-bottom: -5px;
 }

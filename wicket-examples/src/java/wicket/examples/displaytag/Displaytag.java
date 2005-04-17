@@ -20,7 +20,6 @@ package wicket.examples.displaytag;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
-import wicket.examples.displaytag.utils.AbsoluteHref;
 
 /**
  * Start page for different wicket.examples.wicket.examples.displaytag pages
@@ -44,6 +43,5 @@ public class Displaytag extends WicketExamplePage
      */
     public Displaytag(final PageParameters parameters)
     {
-        add(new AbsoluteHref("styleLink"));
     }
 }
