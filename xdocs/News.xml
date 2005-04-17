@@ -11,6 +11,14 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="April 17, 2005 - Kick Start Your Wicket Development!">
+				<p>
+					The <a href="http://wicket-stuff.sourceforge.net/wicket-kickstart/index.html">Kick Start</a> 
+					project gives you a head start when you want to begin your own 
+					<a href="http://wicket.sf.net">Wicket</a> web application. We currently only kick start you 
+					in Eclipse, but NetBeans and IntelliJ support will arrive in the near future.
+				</p>
+			</subsection>
 			<subsection name="April 16, 2005 - 1.0 RC2 is out!">
 				<p>
 					We are getting close to a final 1.0 release in the near future. This RC2 release
