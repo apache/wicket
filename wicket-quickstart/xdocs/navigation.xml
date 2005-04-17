@@ -22,7 +22,7 @@
 				<item name="Next Steps" href="#Next_Steps" />
 			</item>
 			<item name="Netbeans" href="/netbeans.html"/>
-<!-- 		<item name="IntelliJ IDEA" href="/intellij.html"/> -->
+	 		<item name="IntelliJ IDEA" href="/intellij.html"/>
 		</menu>
 
 		<menu name="Download">

@@ -14,13 +14,9 @@
 			</p>
 			<p>This project has guides to the major three IDE's available:</p>
 			<ul>
-				<li>
-					<a href="eclipse.html">Eclipse</a>
-				</li>
-				<li>
-					<a href="netbeans.html">Netbeans</a>
-				</li>
-				<li>IntelliJ IDEA (coming soon)</li>
+				<li><a href="eclipse.html">Eclipse</a></li>
+				<li><a href="netbeans.html">Netbeans</a> (coming soon)</li>
+				<li><a href="intellij.html">IntelliJ IDEA</a> (coming soon)</li>
 			</ul>
 			<p>
 				These kick start guides assume you have some knowlegde of developing Java web
