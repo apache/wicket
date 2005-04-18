@@ -8,6 +8,18 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+	  <action type="update" dev="Eelco Hillenius">
+	  Made constructor of ListItem public as class ListItem is public, and
+	  ListView.newItem is overrideable while returning ListItem.
+	  </action>
+	  <action type="fix" dev="Eelco Hillenius">
+	  as in ListView accessor getOptimizeItemRemoval() is overrideable,
+	  the field should never be used directly. Fixed that.
+	  </action>
+	  <action type="update" dev="Eelco Hillenius">
+	  Introduced property optimizeItemRemoval for tree as well. Many internal improvements
+	  that fixed some unreported issues. Tree is versioned again.
+	  </action>
   	</release>
   	<release version="1.0.0-rc2" date="2005-04-16" description="1.0 Release Candidate 2">
 	  <action type="fix" dev="Eelco Hillenius" issue="1178309">
