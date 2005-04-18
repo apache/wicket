@@ -399,7 +399,7 @@ public abstract class ListView extends WebMarkupContainer
 		final int size = getViewSize();
 		if (size > 0)
 		{
-			if (optimizeItemRemoval)
+			if (getOptimizeItemRemoval())
 			{
 				// Remove all ListItems no longer required
 				final int maxIndex = firstIndex + size;
