@@ -24,6 +24,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Utilities methods for working with input and output streams.
  * 
@@ -31,6 +34,8 @@ import java.io.Reader;
  */
 public final class Streams
 {
+	/** Logging */
+	private static Log log = LogFactory.getLog(Streams.class);
 
 	/**
 	 * Writes the input stream to the output stream. Input is done without a
@@ -44,25 +49,15 @@ public final class Streams
 	 */
 	public static void copy(final InputStream in, final OutputStream out) throws IOException
 	{
-		final byte[] buffer = new byte[1024];
+		final byte[] buffer = new byte[4096];
 		while (true)
 		{
-			final int available = in.available(); 
-			if (available > 0)
-			{
-				final int length = Math.min(available, buffer.length);
-				in.read(buffer, 0, length);
-				out.write(buffer, 0, length);
-			}
-			else
-			{
-				final int c = in.read();
-				if (c == -1)
-				{
-					break;
-				}
-				out.write(c);
-			}
+		    int byteCount = in.read(buffer, 0, buffer.length);
+		    if (byteCount <= 0)
+		    {
+		        break;
+		    }
+			out.write(buffer, 0, byteCount);
 		}
 	}
 
