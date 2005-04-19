@@ -8,6 +8,10 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="update" dev="Eelco Hillenius">
+  	    removed final from getLocale to enable users to pin a locale
+  	    (or use another algorithm) for custom sessions.
+  	  </action>
   	  <action type="add" dev="Martijn Dashorst">
   	  	Added additional constructor for MultiLineLabel for it to work with
   	  	CompoundPropertyModels.
