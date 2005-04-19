@@ -8,6 +8,10 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="add" dev="Martijn Dashorst">
+  	  	Added additional constructor for MultiLineLabel for it to work with
+  	  	CompoundPropertyModels.
+  	  </action>
 	  <action type="update" dev="Eelco Hillenius">
 	  Made constructor of ListItem public as class ListItem is public, and
 	  ListView.newItem is overrideable while returning ListItem.

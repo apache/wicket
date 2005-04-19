@@ -37,7 +37,19 @@ import wicket.util.string.Strings;
 public class MultiLineLabel extends WebComponent
 { 
 	/**
-	 * Convenience constructor. Same as Label(String, new Model(String))
+	 * Constructor. Same as Label(String).
+	 * 
+	 * @param id
+	 *            See Component
+	 * @see Label#Label(String)
+	 */
+	public MultiLineLabel(final String id)
+	{
+		super(id);
+	}
+	
+	/**
+	 * Convenience constructor. Same as MultiLineLabel(String, new Model(String))
 	 * 
 	 * @param id
 	 *            See Component
