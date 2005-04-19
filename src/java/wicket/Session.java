@@ -225,7 +225,7 @@ public abstract class Session implements Serializable
 		if (converter == null)
 		{
 			// Let the factory create a new converter
-			converter = getApplication().getConverterFactory().newConverter(locale);
+			converter = getApplication().getConverterFactory().newConverter(getLocale());
 		}
 		return converter;
 	}
@@ -235,7 +235,7 @@ public abstract class Session implements Serializable
 	 * 
 	 * @return This session's locale
 	 */
-	public final Locale getLocale()
+	public Locale getLocale()
 	{
 		return locale;
 	}
