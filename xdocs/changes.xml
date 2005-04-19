@@ -8,6 +8,11 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+	  <action type="fix" dev="Jonathan Locke" issue="1186293">
+	  Fixed problem with check in add() when undoing a remove operation.
+	  Added internalAdd() method to MarkupContainer and used it from Remove.undo()
+	  in the undo version manager.
+	  </action>
   	  <action type="update" dev="Eelco Hillenius">
   	    removed final from getLocale to enable users to pin a locale
   	    (or use another algorithm) for custom sessions.

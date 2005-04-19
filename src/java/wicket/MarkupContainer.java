@@ -254,6 +254,29 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT USE IT.
+	 * 
+	 * Adds a child component to this container.
+	 * 
+	 * @param child
+	 *            The child
+	 * @throws IllegalArgumentException
+	 *             Thrown if a child with the same id is replaced by the add
+	 *             operation.
+	 */
+	public void internalAdd(final Component child)
+	{
+		if (log.isDebugEnabled())
+		{
+			log.debug("internalAdd " + child.getId() + " to " + this);
+		}
+
+		// Add to map
+		addedComponent(child);
+		put(child);
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
 	 * 
