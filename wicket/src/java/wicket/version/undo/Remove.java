@@ -38,6 +38,6 @@ class Remove extends Change
 	
 	void undo()
 	{
-		container.add(component);
+		container.internalAdd(component);
 	}
 }
