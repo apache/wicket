@@ -17,6 +17,7 @@
  */
 package wicket.examples.forminput;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -29,12 +30,14 @@ import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ImageButton;
 import wicket.markup.html.form.RequiredTextField;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.PropertyModel;
+import wicket.util.convert.IConverter;
 
 /**
  * Example for form input.
@@ -97,7 +100,7 @@ public class FormInput extends WicketExamplePage
 	/**
 	 * Form for collecting input. 
 	 */
-	private static class InputForm extends Form
+	static class InputForm extends Form
 	{
 		/**
 		 * Construct.
@@ -118,6 +121,15 @@ public class FormInput extends WicketExamplePage
 			add(new RequiredTextField("integerInRangeProperty", Integer.class)
 					.add(IntegerValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
+
+			// as an example, we use a custom converter here. This
+			add(new TextField("urlProperty", URL.class)
+			{
+				public IConverter getConverter()
+				{
+					return new URLConverter();
+				}
+			});
 
 			add(new ImageButton("saveButton"));
 

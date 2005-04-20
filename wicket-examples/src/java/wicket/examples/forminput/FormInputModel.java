@@ -18,6 +18,8 @@
 package wicket.examples.forminput;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 /**
@@ -32,6 +34,22 @@ public final class FormInputModel implements Serializable
 	private Date dateProperty = new Date();
 	private Integer integerInRangeProperty = new Integer(50);
 	private Boolean booleanProperty;
+	private URL urlProperty;
+
+	/**
+	 * Construct.
+	 */
+	public FormInputModel()
+	{
+		try
+		{
+			urlProperty = new URL("http://wicket.sourceforge.net");
+		}
+		catch (MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Gets dateProperty.
@@ -157,6 +175,24 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
+	 * Gets the urlProperty.
+	 * @return urlProperty
+	 */
+	public URL getUrlProperty()
+	{
+		return urlProperty;
+	}
+
+	/**
+	 * Sets the urlProperty.
+	 * @param urlProperty urlProperty
+	 */
+	public void setUrlProperty(URL urlProperty)
+	{
+		this.urlProperty = urlProperty;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
@@ -164,6 +200,8 @@ public final class FormInputModel implements Serializable
 		return "[TestInputObject stringProperty = '" + stringProperty + "', integerProperty = "
 				+ integerProperty + ", doubleProperty = " + doubleProperty + ", dateProperty = "
 				+ dateProperty + ", booleanProperty = " + booleanProperty
-				+ ", integerInRangeProperty = " + integerInRangeProperty + "]";
+				+ ", integerInRangeProperty = " + integerInRangeProperty
+				+ ", urlProperty = " + urlProperty +
+				"]";
 	}
 }
