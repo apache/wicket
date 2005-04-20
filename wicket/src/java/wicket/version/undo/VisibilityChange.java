@@ -35,7 +35,10 @@ class VisibilityChange extends Change
 		this.isVisible = component.isVisible();
 	}
 	
-	void undo()
+	/**
+	 * @see wicket.version.undo.Change#undo()
+	 */
+	public void undo()
 	{
 		component.setVisible(!isVisible);
 	}

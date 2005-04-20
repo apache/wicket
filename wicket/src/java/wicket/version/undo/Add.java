@@ -33,7 +33,10 @@ class Add extends Change
 		this.component = component;
 	}
 	
-	void undo()
+	/**
+	 * @see wicket.version.undo.Change#undo()
+	 */
+	public void undo()
 	{
 		component.remove();
 	}

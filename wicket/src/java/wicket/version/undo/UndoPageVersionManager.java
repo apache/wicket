@@ -104,6 +104,14 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
+	 * @see wicket.IPageVersionManager#componentStateChanging(wicket.version.undo.Change)
+	 */
+	public void componentStateChanging(Change change)
+	{
+		changeList.componentStateChanging(change);
+	}
+	
+	/**
 	 * @see wicket.IPageVersionManager#componentRemoved(wicket.Component)
 	 */
 	public void componentRemoved(Component component)
@@ -192,4 +200,5 @@ public class UndoPageVersionManager implements IPageVersionManager
 	{
 		changeList.componentVisibilityChanged(component);
 	}
+
 }

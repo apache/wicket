@@ -77,7 +77,10 @@ class ModelChange extends Change
 		}
 	}
 
-	void undo()
+	/**
+	 * @see wicket.version.undo.Change#undo()
+	 */
+	public void undo()
 	{
 		component.setModel(originalModel);
 	}

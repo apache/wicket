@@ -19,6 +19,8 @@ package wicket;
 
 import java.io.Serializable;
 
+import wicket.version.undo.Change;
+
 /**
  * Interface to code that manages versions of a Page. Initially a page has a
  * version number of 0, indicating that it is in its original state. When one or
@@ -76,6 +78,13 @@ public interface IPageVersionManager extends Serializable
 	 */
 	public void componentModelChanging(Component component);
 
+	/**
+	 * Indicates an internal state for the given component is about to change.
+	 * @param change 
+	 * 			  The change which represents the internal state
+	 */
+	public void componentStateChanging(Change change);
+	
 	/**
 	 * Indicates that the given component was removed.
 	 * 

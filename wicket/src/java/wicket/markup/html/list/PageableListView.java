@@ -20,6 +20,7 @@ package wicket.markup.html.list;
 import java.util.List;
 
 import wicket.model.IModel;
+import wicket.version.undo.Change;
 
 /**
  * PageableListView is similar to ListView but provides in addition pageable
@@ -139,9 +140,10 @@ public abstract class PageableListView extends ListView
 			throw new IllegalArgumentException("Cannot set current page to " + currentPage
 					+ " because this pageable list view only has " + pageCount + " pages");
 		}
-
+		addStateChange(new CurrentPageChange(this.currentPage));
 		this.currentPage = currentPage;
 	}
+
 
 	/**
 	 * Prevent users from accidentially using it. Throw an
@@ -169,5 +171,23 @@ public abstract class PageableListView extends ListView
 	{
 		throw new UnsupportedOperationException(
 				"You must not use setViewSize() with PageableListView");
+	}
+	
+
+	private class CurrentPageChange extends Change
+	{
+		private int currentPage;
+		
+		CurrentPageChange(int currentPage)
+		{
+			this.currentPage = currentPage;
+		}
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setCurrentPage(currentPage);
+		}
 	}
 }
