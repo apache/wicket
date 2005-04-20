@@ -84,6 +84,14 @@ public abstract class ListView extends WebMarkupContainer
 	private int viewSize = Integer.MAX_VALUE;
 
 	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public ListView(final String id)
+	{
+		super(id);
+	}
+
+	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public ListView(final String id, final IModel model)
@@ -380,14 +388,6 @@ public abstract class ListView extends WebMarkupContainer
 	protected IModel getListItemModel(final IModel listViewModel, final int index)
 	{
 		return new ListItemModel(listViewModel, index);
-	}
-
-	/**
-	 * @see wicket.Component#initModel()
-	 */
-	protected IModel initModel()
-	{
-		return new Model();
 	}
 
 	/**
