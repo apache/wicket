@@ -26,9 +26,9 @@
 		</menu>
 
 		<menu name="Download">
-			<item name="Eclipse Kick Start" href="http://sourceforge.net/project/showfiles.php?group_id=134391&package_id=150054"/>
-			<item name="Netbeans Kick Start (soon)" href="http://sourceforge.net/project/showfiles.php?group_id=134391&package_id=150054"/>
-			<item name="IntelliJ Kick Start (soon)" href="http://sourceforge.net/project/showfiles.php?group_id=134391&package_id=150054"/>
+			<item name="Eclipse Kick Start" href="http://sourceforge.net/project/showfiles.php?group_id=134391&amp;package_id=150054"/>
+			<item name="Netbeans Kick Start (soon)" href="http://sourceforge.net/project/showfiles.php?group_id=134391&amp;package_id=150054"/>
+			<item name="IntelliJ Kick Start (soon)" href="http://sourceforge.net/project/showfiles.php?group_id=134391&amp;package_id=150054"/>
 		</menu>
 
 	    <menu name="Related projects">
