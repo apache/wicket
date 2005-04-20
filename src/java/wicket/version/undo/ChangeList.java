@@ -42,6 +42,11 @@ class ChangeList implements Serializable
 		changes.add(new ModelChange(component));
 	}
 
+	void componentStateChanging(Change change)
+	{
+		changes.add(change);
+	}
+	
 	void componentRemoved(Component component)
 	{
 		changes.add(new Remove(component));

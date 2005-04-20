@@ -32,6 +32,7 @@ import wicket.model.IModel;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringValue;
 import wicket.util.value.Count;
+import wicket.version.undo.Change;
 import wicket.version.undo.UndoPageVersionManager;
 
 /**
@@ -748,6 +749,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		if (isVersioned(component))
 		{
 			versionManager.componentModelChanging(component);
+		}
+	}
+	
+	final void componentStateChanging(final Component component, Change change)
+	{
+		setDirty(true);
+		if (isVersioned(component))
+		{
+			versionManager.componentStateChanging(change);
 		}
 	}
 

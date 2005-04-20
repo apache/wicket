@@ -36,7 +36,10 @@ class Remove extends Change
 		this.container = component.getParent();
 	}
 	
-	void undo()
+	/**
+	 * @see wicket.version.undo.Change#undo()
+	 */
+	public void undo()
 	{
 		container.internalAdd(component);
 	}

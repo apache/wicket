@@ -34,6 +34,7 @@ import wicket.response.NullResponse;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
+import wicket.version.undo.Change;
 
 /**
  * Component serves as the highest level abstract base class for all components.
@@ -321,6 +322,15 @@ public abstract class Component implements Serializable
 		return this;
 	}
 
+	protected final void addStateChange(Change change)
+	{
+		Page page = findPage();
+		if(page != null)
+		{
+			page.componentStateChanging(this, change);
+		}
+	}
+	
 	/**
 	 * Registers a debug message for this component
 	 * 
