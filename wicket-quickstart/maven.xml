@@ -16,10 +16,11 @@
 		</fileset>
 	</ant:copy>
 </postGoal>
-  
+
 <postGoal name="dist:prepare-src-filesystem" >
     <ant:mkdir dir="${maven.dist.src.assembly.dir}/lib" />
     <attainGoal name="eclipse-classpath"/>
+    <attainGoal name="idea-classpath"/>
 
     <j:forEach var="lib" items="${pom.artifacts}">
 		<j:set var="dep" value="${lib.dependency}" />
@@ -64,10 +65,21 @@
 -->
 </postGoal>
 
-<goal name="eclipse-classpath" description="Generates the dependencies document">
-    <ant:echo>Creating ${maven.dist.src.assembly.dir}/.classpath ...</ant:echo>                
+<goal name="eclipse-classpath" description="Generates the dependencies for Eclipse">
+    <ant:echo>[ECLIPSE] Creating ${maven.dist.src.assembly.dir}/.classpath ...</ant:echo>                
     <j:file name="${maven.dist.src.assembly.dir}/.classpath" prettyPrint="true" outputMode="xml" xmlns="dummy">
       <j:import file="src/main/resources/eclipse-classpath.xml" inherit="true"/>    
+    </j:file>
+</goal>
+
+<goal name="idea-classpath" description="Generates the dependencies for IDEA">
+    <ant:echo>[IDEA] Creating ${maven.dist.src.assembly.dir}/wicket-kickstart.iml ...</ant:echo>                
+    <j:file name="${maven.dist.src.assembly.dir}/wicket-kickstart.iml" prettyPrint="true" outputMode="xml" xmlns="dummy">
+      <j:import file="src/main/resources/wicket-kickstart.iml.xml" inherit="true"/>    
+    </j:file>
+    <ant:echo>[IDEA] Creating ${maven.dist.src.assembly.dir}/wicket-kickstart.ipr ...</ant:echo>                
+    <j:file name="${maven.dist.src.assembly.dir}/wicket-kickstart.ipr" prettyPrint="true" outputMode="xml" xmlns="dummy">
+      <j:import file="src/main/resources/wicket-kickstart.ipr.xml" inherit="true"/>    
     </j:file>
 </goal>
 
