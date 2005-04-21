@@ -183,7 +183,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$$PROJECT_DIR$$/wicket-kickstart.iml" filepath="$$PROJECT_DIR$$/wicket-kickstart.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wicket-kickstart.iml" filepath="$PROJECT_DIR$/wicket-kickstart.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="false" jdk-15="false" project-jdk-name="java version &quot;1.4.2_05&quot;" />
