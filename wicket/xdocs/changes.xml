@@ -8,6 +8,13 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Martijn Dashorst" issue="1188128">
+		In a search form containing textfields, the input value is set to the empty 
+		string when no value is in the textfield. This should be configurable, so 
+		the user has the option to override this behaviour.
+		
+		Default usage should be that the value becomes NULL instead of empty string.
+  	  </action>
   	  <action type="add" dev="Martijn Dashorst" issue="1186504">
   	  	added support for CompoundPropertyModels to ListView, thus making it possible
   	  	to add a ListView to a Form with a list property as the model without having
