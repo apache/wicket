@@ -16,6 +16,11 @@
  		CompoundPropertyModel.propertyType()).  If no TypeValidator has been 
  		assigned, the default OGNL conversion will still occur.
 	  </action>
+	  <action type="fix" dev="Jonathan Locke" issue="1186293">
+	  Fixed problem with check in add() when undoing a remove operation.
+	  Added internalAdd() method to MarkupContainer and used it from Remove.undo()
+	  in the undo version manager.
+	  </action>
   	  <action type="fix" dev="Martijn Dashorst" issue="1188128">
 		In a search form containing textfields, the input value is set to the empty 
 		string when no value is in the textfield. This should be configurable, so 
