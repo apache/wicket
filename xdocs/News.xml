@@ -11,6 +11,24 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="April 22, 2005 - Last Call for Wicket 1.0!">
+				<p>Wicket needs your input!</p>
+				<p>
+					The Wicket team is preparing the final Wicket 1.0 release candidate. Therefore
+					we need your help. If you have things that are hard for you to accomplish using
+					Wicket, if there is something you posted to the mailinglist and it didn't get
+					resolved, if you have a killer idea that absolutely must be in 1.0 or else...
+				</p>
+				<p>Send it to the mailinglist or create a bug report!</p>
+				<p>
+					The Wicket team want the RC3 to be the final release for Wicket 1.0. After this,
+					development will focus on creating 1.1 with full support for AJAX, JavaScript,
+					CSS and more.
+				</p>
+				<p>This is the final call for changes to Wicket 1.0.</p>
+				<p>With regards,</p>
+				<p>The Wicket Team</p>
+			</subsection>
 			<subsection name="April 17, 2005 - Kick Start Your Wicket Development!">
 				<p>
 					The <a href="http://wicket-stuff.sourceforge.net/wicket-kickstart/index.html">Kick Start</a> 
