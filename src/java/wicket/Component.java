@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.137 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -322,15 +322,6 @@ public abstract class Component implements Serializable
 		return this;
 	}
 
-	protected final void addStateChange(Change change)
-	{
-		Page page = findPage();
-		if (page != null)
-		{
-			page.componentStateChanging(this, change);
-		}
-	}
-
 	/**
 	 * Registers a debug message for this component
 	 * 
@@ -468,7 +459,7 @@ public abstract class Component implements Serializable
 	{
 		return getSession().getConverter();
 	}
-	
+
 	/**
 	 * Gets whether model strings should be escaped.
 	 * 
@@ -1204,6 +1195,21 @@ public abstract class Component implements Serializable
 	public final void warn(final String message)
 	{
 		getPage().getFeedbackMessages().warn(this, message);
+	}
+
+	/**
+	 * Adds state change to page
+	 * 
+	 * @param change
+	 *            The change
+	 */
+	protected final void addStateChange(Change change)
+	{
+		Page page = findPage();
+		if (page != null)
+		{
+			page.componentStateChanging(this, change);
+		}
 	}
 
 	/**
