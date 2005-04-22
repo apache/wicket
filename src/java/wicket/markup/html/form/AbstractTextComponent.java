@@ -32,31 +32,61 @@ abstract class AbstractTextComponent extends FormComponent
 	public AbstractTextComponent(String id)
 	{
 		super(id);
+		setIsInputNullOnEmptyString(true);
 	}
 
 	/**
-     * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
 	AbstractTextComponent(final String id, final IModel model)
 	{
 		super(id, model);
 	}
 
-    /**
-     * @see FormComponent#supportsPersistence()
-     */
-    protected final boolean supportsPersistence()
-    {
-        return true;
-    }
+	/**
+	 * @see FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
+	{
+		return true;
+	}
+
+	/**
+	 * Should the bound object become <code>null</code> when the input is
+	 * empty?
+	 * 
+	 * @return <code>true</code> when the value will be set to
+	 *         <code>null</code> when the input is empty.
+	 */
+	protected final boolean isInputNullOnEmptyString()
+	{
+		return getFlag(FLAG_EMPTY_STRING_TO_NULL);
+	}
+
+	/**
+	 * Should the bound object become <code>null</code> when the input is
+	 * empty?
+	 * 
+	 * @param flag
+	 *            the value to set this flag.
+	 * @return this
+	 */
+	public final AbstractTextComponent setIsInputNullOnEmptyString(boolean flag)
+	{
+		setFlag(FLAG_EMPTY_STRING_TO_NULL, flag);
+		return this;
+	}
 
 	/**
 	 * Updates this components' model from the request.
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-    protected void updateModel()
+	protected void updateModel()
 	{
-		setModelObject(getInput());
+		String input = getInput();
+		if (isInputNullOnEmptyString() && "".equals(input))
+			input = null;
+		setModelObject(input);
 	}
 }
