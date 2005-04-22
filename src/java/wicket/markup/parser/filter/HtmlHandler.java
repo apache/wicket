@@ -62,6 +62,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 		doesNotRequireCloseTag.put("input", Boolean.TRUE);
 		doesNotRequireCloseTag.put("hr", Boolean.TRUE);
 		doesNotRequireCloseTag.put("link", Boolean.TRUE);
+		doesNotRequireCloseTag.put("meta", Boolean.TRUE);
 	}
 
 	/**
