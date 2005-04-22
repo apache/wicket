@@ -50,13 +50,16 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected static final String NO_INVALID_INPUT = "[No invalid input]";
 	
+	/** Make empty strings null values boolean */
+	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_USER1;
+
 	/**
 	 * When the user input does not validate, this is a temporary store for the
 	 * input he/she provided. We have to store it somewhere as we loose the
 	 * request parameter when redirecting.
 	 */
 	private String invalidInput = NO_INVALID_INPUT;
-
+	
 	/**
 	 * Whether this form component should save and restore state between
 	 * sessions. This is false by default.

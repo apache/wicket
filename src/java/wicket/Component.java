@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.137 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -202,7 +202,6 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable
 {
-
 	/** User definable flag bit */
 	protected static final short FLAG_USER1 = 0x0100;
 
@@ -214,6 +213,7 @@ public abstract class Component implements Serializable
 
 	/** User definable flag bit */
 	protected static final short FLAG_USER4 = 0x0800;
+
 	/** True when a component is being auto-added */
 	private static final short FLAG_AUTO = 0x0001;
 
@@ -229,9 +229,6 @@ public abstract class Component implements Serializable
 	/** Visibility boolean */
 	private static final short FLAG_VISIBLE = 0x0010;
 
-	/** Make empty strings null values boolean */
-	protected static final short FLAG_CONVERT_EMPTY_STRING_TO_NULL = 0x0020;
-	
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
 
@@ -328,12 +325,12 @@ public abstract class Component implements Serializable
 	protected final void addStateChange(Change change)
 	{
 		Page page = findPage();
-		if(page != null)
+		if (page != null)
 		{
 			page.componentStateChanging(this, change);
 		}
 	}
-	
+
 	/**
 	 * Registers a debug message for this component
 	 * 
@@ -471,7 +468,7 @@ public abstract class Component implements Serializable
 	{
 		return getSession().getConverter();
 	}
-
+	
 	/**
 	 * Gets whether model strings should be escaped.
 	 * 
@@ -688,7 +685,8 @@ public abstract class Component implements Serializable
 	 */
 	public final Resource getResource()
 	{
-		return getApplication().getSharedResources().get(Application.class, getId(), getLocale(), getStyle());
+		return getApplication().getSharedResources().get(Application.class, getId(), getLocale(),
+				getStyle());
 	}
 
 	/**
@@ -1519,11 +1517,11 @@ public abstract class Component implements Serializable
 		renderComponentTag(tag);
 		markupStream.next();
 
-        // Render the body only if open-body-close. Do not render if open-close.
+		// Render the body only if open-body-close. Do not render if open-close.
 		if (tag.isOpen())
 		{
-		    // Render the body
-		    onComponentTagBody(markupStream, tag);
+			// Render the body
+			onComponentTagBody(markupStream, tag);
 		}
 
 		// Render close tag

@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.model.IModel;
+import wicket.util.string.Strings;
 
 /**
  * Abstract base class for TextArea and TextField.
@@ -32,7 +33,7 @@ abstract class AbstractTextComponent extends FormComponent
 	public AbstractTextComponent(String id)
 	{
 		super(id);
-		setConvertEmptyStringToNull(true);
+		setConvertEmptyInputStringToNull(true);
 	}
 
 	/**
@@ -41,6 +42,33 @@ abstract class AbstractTextComponent extends FormComponent
 	AbstractTextComponent(final String id, final IModel model)
 	{
 		super(id, model);
+		setConvertEmptyInputStringToNull(true);
+	}
+
+	/**
+	 * Should the bound object become <code>null</code> when the input is
+	 * empty?
+	 * 
+	 * @return <code>true</code> when the value will be set to
+	 *         <code>null</code> when the input is empty.
+	 */
+	public final boolean getConvertEmptyInputStringToNull()
+	{
+		return getFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL);
+	}
+	
+	/**
+	 * Should the bound object become <code>null</code> when the input is
+	 * empty?
+	 * 
+	 * @param flag
+	 *            the value to set this flag.
+	 * @return this
+	 */
+	public final FormComponent setConvertEmptyInputStringToNull(boolean flag)
+	{
+		setFlag(FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL, flag);
+		return this;
 	}
 
 	/**
@@ -52,32 +80,6 @@ abstract class AbstractTextComponent extends FormComponent
 	}
 
 	/**
-	 * Should the bound object become <code>null</code> when the input is
-	 * empty?
-	 * 
-	 * @return <code>true</code> when the value will be set to
-	 *         <code>null</code> when the input is empty.
-	 */
-	protected final boolean getConvertEmptyStringToNull()
-	{
-		return getFlag(FLAG_CONVERT_EMPTY_STRING_TO_NULL);
-	}
-
-	/**
-	 * Should the bound object become <code>null</code> when the input is
-	 * empty?
-	 * 
-	 * @param flag
-	 *            the value to set this flag.
-	 * @return this
-	 */
-	public final AbstractTextComponent setConvertEmptyStringToNull(boolean flag)
-	{
-		setFlag(FLAG_CONVERT_EMPTY_STRING_TO_NULL, flag);
-		return this;
-	}
-
-	/**
 	 * Updates this components' model from the request.
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
@@ -85,8 +87,10 @@ abstract class AbstractTextComponent extends FormComponent
 	protected void updateModel()
 	{
 		String input = getInput();
-		if (getConvertEmptyStringToNull() && "".equals(input))
+		if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+		{
 			input = null;
+		}
 		setModelObject(input);
 	}
 }
