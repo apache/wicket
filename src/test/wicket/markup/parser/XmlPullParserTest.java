@@ -223,6 +223,12 @@ public class XmlPullParserTest extends TestCase
         assertTrue(tag.getAttributes().containsKey("attr"));
         assertEquals("1234", tag.getAttributes().getString("attr"));
         
+        parser.parse("<tag attr-withHypen=1234 >");
+        tag = (XmlTag) parser.nextTag();
+        assertEquals(1, tag.getAttributes().size());
+        assertTrue(tag.getAttributes().containsKey("attr-withHypen"));
+        assertEquals("1234", tag.getAttributes().getString("attr-withHypen"));
+        
         parser.parse("<tag attr=\"1234\">");
         tag = (XmlTag) parser.nextTag();
         assertEquals(1, tag.getAttributes().size());

@@ -62,6 +62,7 @@ public class MetaPattern
 			+ _SINGLE_QUOTED_STRING + ")";
 	private static final String _OPTIONAL_STRING = _STRING + "?";
 	private static final String _VARIABLE_NAME = "[A-Za-z_][A-Za-z0-9_]*";
+	private static final String _XML_ATTRIBUTE_NAME = "[A-Za-z_][A-Za-z0-9_-]*";
 
 	// Delimiters and punctuation
 	/** Constant for whitespace. */
@@ -183,6 +184,9 @@ public class MetaPattern
 
 	/** Constant for a variable name. */
 	public static final MetaPattern VARIABLE_NAME = new MetaPattern(_VARIABLE_NAME);
+
+	/** Constant for a xml attribute name. */
+	public static final MetaPattern XML_ATTRIBUTE_NAME = new MetaPattern(_XML_ATTRIBUTE_NAME);
 
 	/** Constant for perl interpolation. */
 	public static final MetaPattern PERL_INTERPOLATION = new MetaPattern("$\\{" + _VARIABLE_NAME
