@@ -142,7 +142,7 @@ public class Home extends WicketExamplePage
 	private final class RedirectForm extends Form
 	{
 		/** receives form input. */
-		private String redirectUrl;
+		private String redirectUrl = "http://www.theserverside.com";
 
 		/**
 		 * Construct.
