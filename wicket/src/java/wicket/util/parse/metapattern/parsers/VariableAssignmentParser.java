@@ -36,7 +36,7 @@ public final class VariableAssignmentParser extends MetaPatternParser
 
 	/** The key (lvalue) like "name" or "namespace:name" */
 	private static final Group key = new Group(new MetaPattern(new MetaPattern[] { namespace,
-			MetaPattern.VARIABLE_NAME }));
+			MetaPattern.XML_ATTRIBUTE_NAME }));
 
 	/** The rvalue of the assignment */
 	private static final Group value = new Group(MetaPattern.STRING);
