@@ -48,6 +48,7 @@ public class TextField extends AbstractTextComponent
 	public TextField(final String id, final Class type)
 	{
 		super(id);
+		this.type = type;
 		add(new TypeValidator(type));
 	}
 
