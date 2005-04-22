@@ -32,7 +32,7 @@ abstract class AbstractTextComponent extends FormComponent
 	public AbstractTextComponent(String id)
 	{
 		super(id);
-		setIsInputNullOnEmptyString(true);
+		setConvertEmptyStringToNull(true);
 	}
 
 	/**
@@ -58,9 +58,9 @@ abstract class AbstractTextComponent extends FormComponent
 	 * @return <code>true</code> when the value will be set to
 	 *         <code>null</code> when the input is empty.
 	 */
-	protected final boolean isInputNullOnEmptyString()
+	protected final boolean getConvertEmptyStringToNull()
 	{
-		return getFlag(FLAG_EMPTY_STRING_TO_NULL);
+		return getFlag(FLAG_CONVERT_EMPTY_STRING_TO_NULL);
 	}
 
 	/**
@@ -71,9 +71,9 @@ abstract class AbstractTextComponent extends FormComponent
 	 *            the value to set this flag.
 	 * @return this
 	 */
-	public final AbstractTextComponent setIsInputNullOnEmptyString(boolean flag)
+	public final AbstractTextComponent setConvertEmptyStringToNull(boolean flag)
 	{
-		setFlag(FLAG_EMPTY_STRING_TO_NULL, flag);
+		setFlag(FLAG_CONVERT_EMPTY_STRING_TO_NULL, flag);
 		return this;
 	}
 
@@ -85,7 +85,7 @@ abstract class AbstractTextComponent extends FormComponent
 	protected void updateModel()
 	{
 		String input = getInput();
-		if (isInputNullOnEmptyString() && "".equals(input))
+		if (getConvertEmptyStringToNull() && "".equals(input))
 			input = null;
 		setModelObject(input);
 	}

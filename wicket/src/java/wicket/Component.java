@@ -230,7 +230,7 @@ public abstract class Component implements Serializable
 	private static final short FLAG_VISIBLE = 0x0010;
 
 	/** Make empty strings null values boolean */
-	protected static final short FLAG_EMPTY_STRING_TO_NULL = 0x0020;
+	protected static final short FLAG_CONVERT_EMPTY_STRING_TO_NULL = 0x0020;
 	
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
