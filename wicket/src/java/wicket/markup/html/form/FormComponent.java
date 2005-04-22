@@ -53,7 +53,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	protected static final String NO_INVALID_INPUT = "[No invalid input]";
 
 	/** Make empty strings null values boolean */
-	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_USER1;
+	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
 
 	/**
 	 * When the user input does not validate, this is a temporary store for the
