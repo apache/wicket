@@ -28,9 +28,6 @@ import wicket.model.IModel;
  */
 public class TextField extends AbstractTextComponent
 {
-	/** Model type for conversions */
-	private Class type;
-
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -48,7 +45,6 @@ public class TextField extends AbstractTextComponent
 	public TextField(final String id, final Class type)
 	{
 		super(id);
-		this.type = type;
 		add(new TypeValidator(type));
 	}
 
@@ -72,7 +68,6 @@ public class TextField extends AbstractTextComponent
 	public TextField(final String id, IModel model, Class type)
 	{
 		super(id, model);
-		this.type = type;
 		add(new TypeValidator(type));
 	}
 
@@ -107,6 +102,8 @@ public class TextField extends AbstractTextComponent
 	 */
 	protected void updateModel()
 	{
+		// Get any validation type
+		final Class type = getValidationType();
 		if (type != null)
 		{
 			// Set model to request string converted to the appropriate type

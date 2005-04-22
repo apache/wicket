@@ -8,6 +8,14 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Jonathan Locke" issue="1186940">
+ 		Enhanced CompoundPropertyModel's propertyType method to use the value
+ 		from any TypeValidator attached to the FormComponent.  Also, removed type
+ 		field from TextField in favor of using the more space-efficient 
+ 		FormComponent.getValidationType() method (which was added to implement 
+ 		CompoundPropertyModel.propertyType()).  If no TypeValidator has been 
+ 		assigned, the default OGNL conversion will still occur.
+	  </action>
   	  <action type="fix" dev="Martijn Dashorst" issue="1188128">
 		In a search form containing textfields, the input value is set to the empty 
 		string when no value is in the textfield. This should be configurable, so 
