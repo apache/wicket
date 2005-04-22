@@ -8,6 +8,13 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Juergen Donnerstag" issue="1187903">
+ 		'-' in a attributes are parsed good now.
+	  </action>
+  	  <action type="add" dev="Eelco">
+  	  	added support for redirecting to external url's (e.g. Google) directly by
+  	  	introducing RedirectPage. Also added an example of this in the link-o-matic example.
+  	  </action>
   	  <action type="update" dev="Jonathan Locke">
   	  Form validation now occurs for every form submit in Form.onValidate().
   	  If the form validates, Form.onSubmit is called unconditionally.  If
