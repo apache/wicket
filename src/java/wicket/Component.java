@@ -202,17 +202,17 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable
 {
-	/** User definable flag bit */
-	protected static final short FLAG_USER1 = 0x0100;
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED1 = 0x0100;
 
-	/** User definable flag bit */
-	protected static final short FLAG_USER2 = 0x0200;
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED2 = 0x0200;
 
-	/** User definable flag bit */
-	protected static final short FLAG_USER3 = 0x0400;
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED3 = 0x0400;
 
-	/** User definable flag bit */
-	protected static final short FLAG_USER4 = 0x0800;
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED4 = 0x0800;
 
 	/** True when a component is being auto-added */
 	private static final short FLAG_AUTO = 0x0001;
@@ -1320,6 +1320,8 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT USE IT!
+	 * 
 	 * @param flag
 	 *            The flag to test
 	 * @return True if the flag is set
@@ -1604,6 +1606,8 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.  DO NOT USE IT!
+	 * 
 	 * @param flag
 	 *            The flag to set
 	 * @param set
