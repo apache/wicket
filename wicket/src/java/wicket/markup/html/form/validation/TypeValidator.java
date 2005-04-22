@@ -83,7 +83,6 @@ public class TypeValidator extends StringValidator
 		return type;
 	}
 
-
 	/**
 	 * Validates input by trying it to convert to the given type using the
 	 * {@link wicket.util.convert.IConverter}instance of the component doing

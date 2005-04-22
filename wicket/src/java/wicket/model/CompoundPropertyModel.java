@@ -18,6 +18,7 @@
 package wicket.model;
 
 import wicket.Component;
+import wicket.markup.html.form.FormComponent;
 
 /**
  * A simple compound model which uses the component's name as the OGNL
@@ -55,6 +56,10 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	 */
 	protected Class propertyType(final Component component)
 	{
+		if (component instanceof FormComponent)
+		{
+			return ((FormComponent)component).getValidationType();
+		}
 		return null;
 	}
 }

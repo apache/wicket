@@ -19,12 +19,14 @@ package wicket.markup.html.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
+import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
 import wicket.util.string.StringList;
@@ -35,9 +37,9 @@ import wicket.util.string.StringList;
  * the order they were added and the first Validator that returns an error
  * message determines the error message returned by the component.
  * <p>
- * FormComponents are not versioned by default.  If you need versioning for
- * your FormComponents, you will need to call Form.setVersioned(true), which
- * will set versioning on for the form and all form component children.
+ * FormComponents are not versioned by default. If you need versioning for your
+ * FormComponents, you will need to call Form.setVersioned(true), which will set
+ * versioning on for the form and all form component children.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -49,7 +51,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * is a valid value!
 	 */
 	protected static final String NO_INVALID_INPUT = "[No invalid input]";
-	
+
 	/** Make empty strings null values boolean */
 	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_USER1;
 
@@ -59,7 +61,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * request parameter when redirecting.
 	 */
 	private String invalidInput = NO_INVALID_INPUT;
-	
+
 	/**
 	 * Whether this form component should save and restore state between
 	 * sessions. This is false by default.
@@ -276,6 +278,29 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * Gets the type for any TypeValidator assigned to this component.
+	 * 
+	 * @return Any type assigned to this component via type validation, or null
+	 *         if no TypeValidator has been added.
+	 */
+	public final Class getValidationType()
+	{
+		// Loop through validators
+		final List validators = getValidators();
+		for (final Iterator iterator = validators.iterator(); iterator.hasNext();)
+		{
+			// If validator is a TypeValidator
+			final IValidator validator = (IValidator)iterator.next();
+			if (validator instanceof TypeValidator)
+			{
+				// Return the type validator's type
+				return ((TypeValidator)validator).getType();
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Gets the registered validators as a list.
 	 * 
 	 * @return the validators as a list
@@ -387,15 +412,15 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		onValid();
 	}
-	
+
 	/**
 	 * @return Value to return when model value is needed
 	 */
 	protected String getModelValue()
 	{
-		return getModelObjectAsString(); 
+		return getModelObjectAsString();
 	}
-	
+
 	/**
 	 * Gets the request parameter for this component as an int.
 	 * 
@@ -495,16 +520,16 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		// Get input as String array
 		final String[] input = inputAsStringArray();
-		
+
 		// If there is any input
 		if (input != null)
 		{
 			// join the values together with ";", for example, "id1;id2;id3"
-			invalidInput = StringList.valueOf(input).join(";");		
+			invalidInput = StringList.valueOf(input).join(";");
 		}
 		else
 		{
-			// no input 
+			// no input
 			invalidInput = null;
 		}
 	}
