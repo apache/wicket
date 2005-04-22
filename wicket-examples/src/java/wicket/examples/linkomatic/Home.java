@@ -17,10 +17,13 @@
  */
 package wicket.examples.linkomatic;
 
+import wicket.IFeedback;
 import wicket.Page;
 import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
 import wicket.markup.html.link.IPageLink;
@@ -29,6 +32,9 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.link.PopupSettings;
 import wicket.markup.html.link.ResourceLink;
+import wicket.markup.html.pages.RedirectPage;
+import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.CompoundPropertyModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -123,6 +129,58 @@ public class Home extends WicketExamplePage
 		
 		// Shared resource link
 		add(new ResourceLink("cancelButtonLink", new ResourceReference("cancelButton")));
+
+		// redirect to external url form
+		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		add(feedbackPanel);
+		add(new RedirectForm("redirectForm", feedbackPanel));
+	}
+
+	/**
+	 * Form that handles a redirect.
+	 */
+	private final class RedirectForm extends Form
+	{
+		/** receives form input. */
+		private String redirectUrl;
+
+		/**
+		 * Construct.
+		 * @param id component id
+		 * @param feedback feedback receiver
+		 */
+		public RedirectForm(String id, IFeedback feedback)
+		{
+			super(id, feedback);
+			setModel(new CompoundPropertyModel(this));
+			add(new TextField("redirectUrl"));
+		}
+
+		/**
+		 * @see wicket.markup.html.form.Form#onSubmit()
+		 */
+		protected void onSubmit()
+		{
+			setResponsePage(new RedirectPage(redirectUrl));
+		}
+
+		/**
+		 * Gets the redirectUrl.
+		 * @return redirectUrl
+		 */
+		public String getRedirectUrl()
+		{
+			return redirectUrl;
+		}
+
+		/**
+		 * Sets the redirectUrl.
+		 * @param redirectUrl redirectUrl
+		 */
+		public void setRedirectUrl(String redirectUrl)
+		{
+			this.redirectUrl = redirectUrl;
+		}
 	}
 
 	/**
