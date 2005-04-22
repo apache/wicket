@@ -259,14 +259,14 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 			}
 		});
 	}
-	
+
 	/**
 	 * @see wicket.Component#setVersioned(boolean)
 	 */
 	public void setVersioned(final boolean isVersioned)
 	{
 		super.setVersioned(isVersioned);
-		
+
 		// Search for FormComponents like TextField etc.
 		visitFormComponents(new FormComponent.IVisitor()
 		{
@@ -295,7 +295,7 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
 		tag.put("method", "POST");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class),"&", "&amp;"));
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
 	}
 
 	/**
@@ -328,28 +328,31 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	/**
 	 * Implemented by subclasses to deal with form submits.
 	 */
-	protected abstract void onSubmit();
+	protected void onSubmit()
+	{
+	}
 
 	/**
 	 * Called when a form that has been submitted needs to be validated.
 	 */
 	protected void onValidate()
 	{
-		final int buttons = countButtons();
-		if (buttons <= 1)
+		// Validate the form
+		if (validate())
 		{
-			validate();
-		}
-		else if (buttons > 1)
-		{
-			final Button button = findSubmittingButton();
-			if (button == null)
+			// If there is more than one button, we also call the Button's
+			// onSubmit() handler
+			if (countButtons() > 1)
 			{
-				throw new WicketRuntimeException("Unable to find submitting button");
-			}
-			else
-			{
-				button.onSubmit();
+				final Button button = findSubmittingButton();
+				if (button == null)
+				{
+					throw new WicketRuntimeException("Unable to find submitting button");
+				}
+				else
+				{
+					button.onSubmit();
+				}
 			}
 		}
 	}
@@ -359,10 +362,12 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 * validates successfully, handleValidSubmit() is called. If not,
 	 * handleErrors() is called.
 	 * 
+	 * @return True if the form validated
+	 * 
 	 * @see Form#onSubmit()
 	 * @see Form#onError()
 	 */
-	protected final void validate()
+	protected final boolean validate()
 	{
 		// Redirect back to result to avoid postback warnings. But we turn
 		// redirecting on as the first thing because the user's handleSubmit
@@ -381,6 +386,9 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 
 			// let subclass handle error
 			onError();
+			
+			// Form failed to validate
+			return false;
 		}
 		else
 		{
@@ -392,6 +400,9 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 
 			// Model was successfully updated with valid data
 			onSubmit();
+			
+			// Form validated
+			return true;
 		}
 	}
 

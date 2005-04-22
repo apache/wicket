@@ -8,6 +8,14 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="update" dev="Jonathan Locke">
+  	  Form validation now occurs for every form submit in Form.onValidate().
+  	  If the form validates, Form.onSubmit is called unconditionally.  If
+  	  there is more than one button on the form and the form validates, then
+  	  Button.onSubmit() is also called.  Since multi-button forms (which are
+  	  a common case) are unlikely to want to override Form.onSubmit(), made 
+  	  this method non-abstract.
+  	  </action>
   	  <action type="fix" dev="Jonathan Locke" issue="1186940">
  		Enhanced CompoundPropertyModel's propertyType method to use the value
  		from any TypeValidator attached to the FormComponent.  Also, removed type
