@@ -18,7 +18,7 @@
   
 <!--  With wicket examples this is the means to configure deployment
       resp. a development configuration.  
-      Uncomment the following lines to for "development" 
+      Comment the following lines for "development" (reloading when templates change) 
 -->
 
 		<context-param>
