@@ -8,6 +8,10 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="add" dev="Eelco Hillenius" issue="1185624">
+  	  Added RadioChoice and multiple select lists to the form input example.
+  	  Also fixes issue 1185624
+  	  </action>
   	  <action type="fix" dev="Juergen Donnerstag" issue="1187903">
  		'-' in a attributes are parsed good now.
 	  </action>
