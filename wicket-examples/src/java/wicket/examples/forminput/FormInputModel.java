@@ -21,6 +21,9 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Simple model object for FormInput example. Has a number of simple properties
@@ -35,6 +38,8 @@ public final class FormInputModel implements Serializable
 	private Integer integerInRangeProperty = new Integer(50);
 	private Boolean booleanProperty;
 	private URL urlProperty;
+	private String numberRadioChoice;
+	private Set siteSelection = new HashSet();
 
 	/**
 	 * Construct.
@@ -193,15 +198,63 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
+	 * Gets the favoriteColor.
+	 * @return favoriteColor
+	 */
+	public String getNumberRadioChoice()
+	{
+		return numberRadioChoice;
+	}
+
+	/**
+	 * Sets the favoriteColor.
+	 * @param favoriteColor favoriteColor
+	 */
+	public void setNumberRadioChoice(String favoriteColor)
+	{
+		this.numberRadioChoice = favoriteColor;
+	}
+
+	/**
+	 * Gets the selectedSites.
+	 * @return selectedSites
+	 */
+	public Set getSiteSelection()
+	{
+		return siteSelection;
+	}
+
+	/**
+	 * Sets the selectedSites.
+	 * @param selectedSites selectedSites
+	 */
+	public void setSiteSelection(Set selectedSites)
+	{
+		this.siteSelection = selectedSites;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		return "[TestInputObject stringProperty = '" + stringProperty + "', integerProperty = "
-				+ integerProperty + ", doubleProperty = " + doubleProperty + ", dateProperty = "
-				+ dateProperty + ", booleanProperty = " + booleanProperty
-				+ ", integerInRangeProperty = " + integerInRangeProperty
-				+ ", urlProperty = " + urlProperty +
-				"]";
+		StringBuffer b = new StringBuffer();
+		b.append("[TestInputObject stringProperty = '").append(stringProperty)
+		 .append("', integerProperty = ").append(integerProperty)
+		 .append(", doubleProperty = ").append(doubleProperty)
+		 .append(", dateProperty = ").append(dateProperty)
+		 .append(", booleanProperty = ").append(booleanProperty)
+		 .append(", integerInRangeProperty = ").append(integerInRangeProperty)
+		 .append(", urlProperty = ").append(urlProperty)
+		 .append(", numberRadioChoice = ").append(numberRadioChoice);
+		b.append(",selected sites {");
+		for(Iterator i = siteSelection.iterator(); i.hasNext();)
+		{
+			b.append(i.next());
+			if(i.hasNext()) b.append(",");
+		}
+		b.append("}");
+		b.append("]");
+		return b.toString();
 	}
 }

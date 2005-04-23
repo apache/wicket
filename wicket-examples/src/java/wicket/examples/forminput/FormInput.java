@@ -29,6 +29,8 @@ import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ImageButton;
+import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IntegerValidator;
@@ -37,6 +39,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.PropertyModel;
+import wicket.protocol.http.WebRequest;
 import wicket.util.convert.IConverter;
 
 /**
@@ -49,13 +52,22 @@ public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
 	private static final List LOCALES = Arrays.asList(new Locale[] 
-	        { Locale.US, new Locale("nl_NL"), Locale.GERMANY });
+	        { Locale.US, new Locale("nl"), Locale.GERMANY });
+
+	/** available numbers for the radio selection. */
+	private static final List NUMBERS = Arrays.asList(new String[]{"1", "2", "3"});
+
+	/** available sites for the multiple select. */
+	private static final List SITES = Arrays.asList(
+			new String[]{"The Server Side", "Java Lobby", "Java.Net"});
 
 	/**
 	 * Constructor
 	 */
 	public FormInput()
 	{
+		Locale locale = getLocale();
+
 		// Construct form and feedback panel and hook them up
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
@@ -80,7 +92,8 @@ public class FormInput extends WicketExamplePage
 		{
 			public void onClick()
 			{
-				setLocale(Locale.getDefault());
+				WebRequest request = (WebRequest)getRequest();
+				setLocale(request.getLocale());
 			}
 		});
 	}
@@ -118,11 +131,19 @@ public class FormInput extends WicketExamplePage
 			add(new RequiredTextField("integerProperty", Integer.class));
 			add(new RequiredTextField("doubleProperty", Double.class));
 			add(new RequiredTextField("dateProperty", Date.class));
-			add(new RequiredTextField("integerInRangeProperty", Integer.class)
-					.add(IntegerValidator.range(0, 100)));
+			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(IntegerValidator
+					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
+			add(new RadioChoice("numberRadioChoice", NUMBERS)
+			{
+				protected String getSuffix()
+				{
+					return "";
+				}
+			});
+			add(new ListMultipleChoice("siteSelection", SITES));
 
-			// as an example, we use a custom converter here. This
+			// as an example, we use a custom converter here.
 			add(new TextField("urlProperty", URL.class)
 			{
 				public IConverter getConverter()
