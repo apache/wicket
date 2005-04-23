@@ -24,7 +24,6 @@ import javax.swing.tree.TreeModel;
 
 import wicket.ApplicationSettings;
 import wicket.protocol.http.WebApplication;
-import wicket.util.time.Duration;
 
 /**
  * WicketServlet class for nested structure example.
@@ -39,9 +38,8 @@ public class MenuApplication extends WebApplication
     public MenuApplication()
     {
         getPages().setHomePage(Home.class);
-        ApplicationSettings settings = getSettings();
-		Duration pollFreq = Duration.ONE_SECOND;
-		settings.setResourcePollFrequency(pollFreq);
+		ApplicationSettings settings = getSettings();
+		settings.configure("development", "src/java");
 		settings.setStripWicketTags(true);
     }
 
