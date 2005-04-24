@@ -272,7 +272,7 @@
       </includes>
       <resources>
         <resource>
-          <directory>src/test</directory>
+          <directory>${basedir}/src/test</directory>
           <includes>
             <include>**</include>
           </includes>
