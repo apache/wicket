@@ -52,7 +52,7 @@ public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
 	private static final List LOCALES = Arrays.asList(new Locale[] 
-	        { Locale.US, new Locale("nl"), Locale.GERMANY });
+	        { Locale.US, new Locale("nl"), Locale.GERMANY , Locale.SIMPLIFIED_CHINESE });
 
 	/** available numbers for the radio selection. */
 	private static final List NUMBERS = Arrays.asList(new String[]{"1", "2", "3"});

@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>Wicket Examples - forminput</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<div>
+		&#20351;&#29992;&#22320;&#28857;: 
+		<select wicket:id="localeSelect">
+			<option>locale1</option>
+			<option>locale2</option>
+		</select>
+		<a href="#" wicket:id="defaultLocaleLink">[&#32570;&#30465;]</a>
+    </div>
+	<p>
+    <form wicket:id="inputForm" id="inputForm">
+      <fieldset>
+        <legend>&#36755;&#20837;</legend>
+         <table id="inputFormTable">
+          <tr>
+          <td>
+	          <label for="stringProperty">&#20018;</label>
+	          <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
+	          <label for="integerProperty">&#25972;&#25968;</label>
+	          <input wicket:id="integerProperty" id="integerProperty" type="text" size="40"/>
+	          <label for="doubleProperty">&#25968;&#23383;</label>
+	          <input wicket:id="doubleProperty" id="doubleProperty" type="text" size="40"/>
+	          <label for="dateProperty">&#26085;&#26399;</label>
+	          <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
+	          <label for="booleanProperty">&#24067;&#23572;</label>
+	          <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
+
+	      </td>
+	      <td>
+
+	          <label for="integerInRangeProperty">&#20215;&#20540;&#22312; 0 &#21644; 100 ??</label>
+	          <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
+	          <label for="urlProperty">URL (&#24517;&#39035;&#26159;&#21512;&#27861;&#30340;URL)</label>
+	          <input wicket:id="urlProperty" id="urlProperty" type="text" size="40"/>
+			  <label for="numberRadioChoice">&#36873;&#25321;&#19968;&#20010;&#25968;&#23383;</label>
+			  <span valign="top" wicket:id="numberRadioChoice" id="numberRadioChoice">
+	    		<input type="radio">foo</input>
+				<input type="radio">bar</input>
+			  </span>
+			  <label for="siteSelection">&#24744;&#21916;&#29233;&#30340;&#32593;&#31449;</label>
+			  <select wicket:id="siteSelection" id="siteSelection">
+			  	<option>foo</option>
+			  	<option>bar</option>
+			  </select>
+		  </td>
+		  </tr>
+		  <tr>
+		  <td colspan="2">
+			  <input wicket:id="saveButton" type="image" value="buttonFactory:save:\u4E4B\u5916"/>
+			  <a wicket:id="resetButtonLink" src="">
+			      <img wicket:id="resetButtonImage" value="buttonFactory:reset:\u53D6\u6D88"/> 
+			  </a>
+		  </td>
+		  </tr>
+		 </table>
+      </fieldset>
+     </form>
+
+	<div id="feedbackPanel">
+		<span wicket:id="feedback"/>
+    </div>
+
+</body>
+</html>
