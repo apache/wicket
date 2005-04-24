@@ -860,7 +860,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param value
 	 *			  The value
 	 */
-	public void setParmeter(final String name, final String value)
+	public void setParameter(final String name, final String value)
 	{
 		parameters.put(name, value);
 	}

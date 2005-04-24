@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.encryption;
+package wicket.util.crypt;
 
 /**
  * Encryption and decryption implementations are accessed through this
@@ -34,14 +34,14 @@ public interface ICrypt
 	 *            the text to decrypt
 	 * @return the decrypted string.
 	 */
-	public String decryptString(final String text);
+	public String decrypt(final String text);
 	/**
 	 * Encrypts a string.
 	 * 
 	 * @param plainText
 	 * @return encrypted string
 	 */
-	public String encryptString(final String plainText);
+	public String encrypt(final String plainText);
 
 	/**
 	 * Sets private encryption key. It depends on the implementation if a

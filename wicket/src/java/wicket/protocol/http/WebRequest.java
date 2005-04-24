@@ -126,7 +126,7 @@ public class WebRequest extends Request
 	 * 
 	 * @return Any servlet path info
 	 */
-	public String getPathInfo()
+	public String getPath()
 	{
 		return httpServletRequest.getPathInfo();
 	}

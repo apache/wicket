@@ -8,6 +8,18 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="update" dev="Jonathan Locke">
+  	  Made a number of small refactoring changes to support url path encryption.
+  	  The code is not that far from working, but the feature is turned off.  Added
+  	  a method Session.getPathCrypt() to get an instance of ICrypt for encrypting
+  	  url paths for a given session (it's probably not a good idea in general to
+  	  encrypt all paths for an application with the same key).  Moved ICrypt and
+  	  related implementations to wicket.util.crypt since the usage is more general
+  	  now.  Made a first pass at url encoding that doesn't work when path encryption
+  	  is enabled.  Also made a first pass at url decoding/reparsing that doesn't 
+  	  quite work either.  If someone out there has the time to fix my implementation 
+  	  (I don't think it's too far off), we could probably ship this with 1.0.  
+  	  </action>
   	  <action type="add" dev="Eelco Hillenius" issue="1185624">
   	  Added RadioChoice and multiple select lists to the form input example.
   	  Also fixes issue 1185624

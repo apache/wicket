@@ -25,12 +25,12 @@ import java.util.Map;
 
 import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
-import wicket.markup.html.form.encryption.ICrypt;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
+import wicket.util.crypt.ICrypt;
 import wicket.util.lang.Classes;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;

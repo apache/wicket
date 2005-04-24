@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.encryption;
+package wicket.util.crypt;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -59,7 +59,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 *            text to decript
 	 * @return the decrypted text
 	 */
-	public final String decryptString(final String text)
+	public final String decrypt(final String text)
 	{
 		return new String(decryptStringToByteArray(text));
 	}
@@ -71,7 +71,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 *            text to encrypt
 	 * @return encrypted string
 	 */
-	public final String encryptString(final String plainText)
+	public final String encrypt(final String plainText)
 	{
 		try
 		{
