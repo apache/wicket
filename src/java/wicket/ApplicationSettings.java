@@ -26,11 +26,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.encryption.SunJceCrypt;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
+import wicket.util.crypt.SunJceCrypt;
 import wicket.util.file.Folder;
 import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;

@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.util.Locale;
 
 import wicket.markup.ComponentTag;
+import wicket.util.crypt.ICrypt;
 import wicket.util.time.Time;
 
 /**
@@ -34,6 +35,9 @@ import wicket.util.time.Time;
  */
 public abstract class Response
 {
+	/** The path en/decrypter */
+	private ICrypt pathCrypt;
+	
 	/**
 	 * Closes the response output stream
 	 */
@@ -52,6 +56,10 @@ public abstract class Response
 	 */
 	public String encodeURL(final String url)
 	{
+		if (pathCrypt != null)
+		{
+			return "secure/" + pathCrypt.encrypt(url);
+		}
 		return url;
 	}
 
@@ -87,17 +95,6 @@ public abstract class Response
 	}
 
 	/**
-	 * Set the content type on the response, if appropriate in the subclass.
-	 * This default implementation does nothing.
-	 * 
-	 * @param mimeType
-	 *            The mime type
-	 */
-	public void setContentType(final String mimeType)
-	{
-	}
-
-	/**
 	 * Set the content length on the response, if appropriate in the subclass.
 	 * This default implementation does nothing.
 	 * 
@@ -105,6 +102,17 @@ public abstract class Response
 	 *            The length of the content
 	 */
 	public void setContentLength(final long length)
+	{
+	}
+
+	/**
+	 * Set the content type on the response, if appropriate in the subclass.
+	 * This default implementation does nothing.
+	 * 
+	 * @param mimeType
+	 *            The mime type
+	 */
+	public void setContentType(final String mimeType)
 	{
 	}
 	
@@ -124,6 +132,14 @@ public abstract class Response
 	 */
 	public void setLocale(final Locale locale)
 	{
+	}
+	
+	/**
+	 * @param pathCrypt The Crypt object to use for encoding urls
+	 */
+	public final void setPathCrypt(final ICrypt pathCrypt)
+	{
+		this.pathCrypt = pathCrypt;
 	}
 
 	/**

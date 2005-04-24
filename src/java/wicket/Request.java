@@ -68,6 +68,9 @@ public abstract class Request
 	 * @return The full original request URL
 	 */
 	public abstract String getURL();
+	
+	/**
+	 * @return Path info for request
+	 */
+	public abstract String getPath();
 }
-
-

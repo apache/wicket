@@ -17,10 +17,12 @@
  */
 package wicket.util.string;
 
-import org.dom4j.Node;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.dom4j.Node;
 
 /**
  * A variety of static String utility methods.
@@ -305,6 +307,49 @@ public final class Strings
 	}
 
 	/**
+	 * @param s
+	 *            String
+	 * @return Boolean value
+	 * @throws StringValueConversionException
+	 */
+	public static boolean isTrue(final String s) throws StringValueConversionException
+	{
+		if (s != null)
+		{
+			if (s.equalsIgnoreCase("true"))
+			{
+				return true;
+			}
+
+			if (s.equalsIgnoreCase("false"))
+			{
+				return false;
+			}
+
+			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y")
+					|| s.equalsIgnoreCase("1"))
+			{
+				return true;
+			}
+
+			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n")
+					|| s.equalsIgnoreCase("0"))
+			{
+				return false;
+			}
+
+			if (isEmpty(s))
+			{
+				return false;
+			}
+
+			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
+		}
+
+		return false;
+	}
+
+	/**
 	 * Gets the last path component of a path using a given separator. If the
 	 * separator cannot be found, the path itself is returned.
 	 * <p>
@@ -329,7 +374,7 @@ public final class Strings
 
 		return path.substring(index + 1);
 	}
-	
+
 	/**
 	 * Replace all occurrences of one string replaceWith another string
 	 * 
@@ -387,6 +432,39 @@ public final class Strings
 	}
 
 	/**
+	 * Simpler, faster version of String.split() for splitting on a simple
+	 * character
+	 * 
+	 * @param s
+	 *            The string to split
+	 * @param c
+	 *            The character to split on
+	 * @return The array of strings
+	 */
+	public static String[] split(final String s, final char c)
+	{
+		final List strings = new ArrayList();
+		int pos = 0;
+		while (true)
+		{
+			int next = s.indexOf(c, pos);
+			if (next == -1)
+			{
+				strings.add(s.substring(pos));
+				break;
+			}
+			else
+			{
+				strings.add(s.substring(pos, next));
+			}
+			pos = next + 1;
+		}
+		final String[] result = new String[strings.size()];
+		strings.toArray(result);
+		return result;
+	}
+
+	/**
 	 * @param s
 	 *            The string to strip
 	 * @param ending
@@ -417,49 +495,6 @@ public final class Strings
 	public static Boolean toBoolean(final String s) throws StringValueConversionException
 	{
 		return Boolean.valueOf(isTrue(s));
-	}
-
-	/**
-	 * @param s
-	 *            String
-	 * @return Boolean value
-	 * @throws StringValueConversionException
-	 */
-	public static boolean isTrue(final String s) throws StringValueConversionException
-	{
-		if (s != null)
-		{
-			if (s.equalsIgnoreCase("true"))
-			{
-				return true;
-			}
-
-			if (s.equalsIgnoreCase("false"))
-			{
-				return false;
-			}
-
-			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y")
-					|| s.equalsIgnoreCase("1"))
-			{
-				return true;
-			}
-
-			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n")
-					|| s.equalsIgnoreCase("0"))
-			{
-				return false;
-			}
-
-			if (isEmpty(s))
-			{
-				return false;
-			}
-
-			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
-		}
-
-		return false;
 	}
 
 	/**
@@ -574,7 +609,7 @@ public final class Strings
 		{
 			final StringWriter stringWriter = new StringWriter();
 			throwable.printStackTrace(new PrintWriter(stringWriter));
-			return Strings.replaceAll(stringWriter.toString(),"\t", "    ");
+			return Strings.replaceAll(stringWriter.toString(), "\t", "    ");
 		}
 		else
 		{

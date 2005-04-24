@@ -72,9 +72,9 @@ class NullWebRequest extends WebRequest
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebRequest#getPathInfo()
+	 * @see wicket.protocol.http.WebRequest#getPath()
 	 */
-	public String getPathInfo()
+	public String getPath()
 	{
 		return "[No path info]";
 	}

@@ -17,6 +17,9 @@
  */
 package wicket.markup.html.form.encryption;
 
+import wicket.util.crypt.ICrypt;
+import wicket.util.crypt.NoCrypt;
+import wicket.util.crypt.SunJceCrypt;
 import junit.framework.TestCase;
 
 /**
@@ -32,8 +35,8 @@ public class CryptTest extends TestCase
 		// The NoCrypt implementation does not modify the string at all
 		final ICrypt crypt = new NoCrypt();
 
-		assertEquals("test", crypt.encryptString("test"));
-		assertEquals("test", crypt.decryptString("test"));
+		assertEquals("test", crypt.encrypt("test"));
+		assertEquals("test", crypt.decrypt("test"));
 	}
 
 	/**
@@ -45,10 +48,10 @@ public class CryptTest extends TestCase
 
 		try
 		{
-			if (crypt.encryptString("test") != null)
+			if (crypt.encrypt("test") != null)
 			{
-				assertEquals("KxMxhk6i4Us=", crypt.encryptString("test"));
-				assertEquals("test", crypt.decryptString("KxMxhk6i4Us="));
+				assertEquals("KxMxhk6i4Us=", crypt.encrypt("test"));
+				assertEquals("test", crypt.decrypt("KxMxhk6i4Us="));
 			}
 		}
 		catch (Exception ex)
