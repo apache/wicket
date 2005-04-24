@@ -69,6 +69,24 @@
 			<question>What design decisions were made regarding state management?</question>
 			<answer>
 				<p>
+					There are probably only a small percentage (perhaps 20%-30%) of all web
+					applications written that have to scale up to large clusters of machines with 
+					hundreds of concurrent users. Unfortunately, many web application frameworks
+					are built around the assumption that everyone wants to build web applications 
+					of this size. The result being that people with the skills and resources available 
+					to build such applications are happy, while the other 80% of people are forced to 
+					jump through many hoops and do loads of manual state management that is not really 
+					necessary for the size of application they are building.
+				</p>
+				<p>
+					Wicket adopts an alternative approach. What we have tried to do is build a framework 
+					where out of the box (and for perhaps 50%+) of applications the developers do not need 
+					to worry about state management at all. No need to directly access the session, no need 
+					to enlist the help of second level caches or to manually reconstruct object state for each 
+					request and so on. Application developers can be more productive and the learning 
+					curve for Wicket is far lower.
+				</p>
+				<p>
 					One of the primary objectives was to make state management a Java thing that is 
 					abstracted away from implementation details like HttpSession. In Wicket, state is 
 					stored in components that are nested in Pages which are all contained in a map in 
@@ -81,6 +99,64 @@
 					the repositories of all state. It will take time to adapt to this and for people to 
 					set aside old functional models of programming where they accomplish everything 
 					with query parameters, session state or their equivalent.
+				</p>
+				<p>
+					That said, we also recognise the need to build large, highly scalable web applications
+					using Wicket. Therefore, Wicket has a number of interfaces where we have adopted the 
+					strategy design pattern and where people needing to build large, scalable applications 
+					can take control and implement their own alternative approaches. As Wicket develops 
+					further we will probably provide our own implementations of the most common alternative 
+					approaches.
+				</p>
+			</answer>
+		</faq>
+		
+		<faq id="how-state-management">
+			<question>Can I control how Wicket managed its session state?</question>
+			<answer>
+				<p>
+					The default Wicket behaviour is to use the HttpSession object to hold a Wicket WebSession 
+					object and object hierarchies for each of the current active pages for any session (you 
+					can control how many in the settings). When new pages are created they are added to the s
+					ession, when pages are no longer needed they are expired (removed) from the session. 
+					When an event arrives in a request for a particular page it is retrieved from the session 
+					and the event passed to the appropriate component listener. At the end of the request, any 
+					pages that have been accessed are marked as dirty and readded to the session to force cluster 
+					replication to occur. This approach provides transparent state management and enables near 
+					transparent support of the browser back button. However, we would agree that this approach 
+					does store a reasonable volume of objects in the session and causes some amount of cluster 
+					replication (but this may be fine for many applications, where the saving in development 
+					time far outweighs the cost of some extra processor or memory).
+				</p>
+				<p>
+					When such use of the session is prohibitive, Wicket offers a range of options for tuning 
+					the session usage:
+				</p>
+				<ol>
+				<li>
+					Detachable models can be used behind each component so that the model objects only hold an 
+					id value (or even nothing if you wish) and the actual business objects can be detached at 
+					the end of one request and reattached at the start of the next. You can then implement any 
+					second level approach that you wish in the attach/detach methods.
+				</li>
+				<li>
+					Developers can manually override the page dirty state if they know that the event listener 
+					that was just invoked for a page did not cause any alterations to the page or model objects. 
+					This can be particularly useful to reduce unnecessary cluster replication.
+				</li>
+				<li>
+					It is possible to override the PageState mechanism so that each page (or a base class for 
+					a group of pages) can control its own state replication. Thus instead of the entire page 
+					hierarchy of objects being added to the session, the custom PageState can hold just a minimum 
+					of state data and then reinstantiate the page again for the next request, or adopt some 
+					alternative approach - the choices are endless (and probably different for each application 
+					or group of pages within an application).
+				</li>
+				</ol>
+				<p>
+					Longer term (Wicket 1.1) we are planning to add some additional approaches such as externalizing 
+					state to the client, stateless pages and allowing listeners that are not attached to pages for 
+					handling requests that do not require existing page state.
 				</p>
 			</answer>
 		</faq>
