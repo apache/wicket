@@ -5,7 +5,6 @@
 </head>
 <body>
     <span wicket:id="mainNavigation"/>
-
 	<div>
 		Gebruik locale: 
 		<select wicket:id="localeSelect">
@@ -20,7 +19,7 @@
         <legend>Invoer</legend>
          <table id="inputFormTable">
           <tr>
-          <td>
+          <td valign="top">
 	          <label for="stringProperty">String</label>
 	          <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
 	          <label for="integerProperty">Integer</label>
@@ -33,7 +32,7 @@
 	          <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
 
 	      </td>
-	      <td>
+	      <td valign="top">
 
 	          <label for="integerInRangeProperty">Waarde tussen 0 en 100</label>
 	          <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
