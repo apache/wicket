@@ -35,6 +35,6 @@ public class ObjectEditApplication extends WebApplication
     {
         getPages().setHomePage(Home.class);
         ApplicationSettings settings = getSettings();
-		settings.configure("development", "src/java");
+		settings.configure("development", "src/eelco/java");
 	}
 }

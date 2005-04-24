@@ -18,6 +18,10 @@
  */
 package objectedit;
 
+import java.io.Serializable;
+
+import objectedit.beans.Person;
+
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
@@ -26,6 +30,8 @@ import wicket.markup.html.WebPage;
  */
 public class Home extends WebPage
 {
+	private Serializable currentObject = new Person("Fritz", "Fritzl");
+
 	/**
 	 * Constructor.
 	 * @param parameters Page parameters
@@ -33,5 +39,24 @@ public class Home extends WebPage
 	public Home(final PageParameters parameters)
 	{
 		super();
+		add(new BeanPanel("beanPanel", currentObject));
+	}
+
+	/**
+	 * Gets the currentObject.
+	 * @return currentObject
+	 */
+	public Serializable getCurrentObject()
+	{
+		return currentObject;
+	}
+
+	/**
+	 * Sets the currentObject.
+	 * @param currentObject currentObject
+	 */
+	public void setCurrentObject(Serializable currentObject)
+	{
+		this.currentObject = currentObject;
 	}
 }

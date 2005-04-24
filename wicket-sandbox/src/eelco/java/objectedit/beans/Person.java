@@ -7,7 +7,7 @@
  * Copyright (c)
  * All rechten voorbehouden.
  */
-package objectedit;
+package objectedit.beans;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,7 +26,17 @@ public class Person implements Serializable
 	 */
 	public Person()
 	{
-		super();
+	}
+
+	/**
+	 * Construct.
+	 * @param name name
+	 * @param lastName last name
+	 */
+	public Person(String name, String lastName)
+	{
+		this.name = name;
+		this.lastName = lastName;
 	}
 
 	/**
@@ -83,4 +93,12 @@ public class Person implements Serializable
 		this.name = name;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Person{name=" + name + ",lastName=" + lastName +
+			",dateOfBirth=" + dateOfBirth + "}";
+	}
 }
