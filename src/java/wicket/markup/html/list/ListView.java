@@ -513,7 +513,16 @@ public abstract class ListView extends WebMarkupContainer
 
 	/**
 	 * Populate a given item.
-	 * 
+	 * <p>
+	 * <b>be carefull</b> to add any components to the list item. So, don't do:
+	 * <pre>
+	 *  add(new Label("foo", "bar"));
+	 * </pre>
+	 * but:
+	 * <pre>
+	 *  item.add(new Label("foo", "bar"));
+	 * </pre>
+	 * </p>
 	 * @param item
 	 *            The item to populate
 	 */
