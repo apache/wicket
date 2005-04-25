@@ -17,6 +17,7 @@
  */
 package wicket.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import wicket.Component;
@@ -43,7 +44,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 * 
 	 * @author Jonathan Locke
 	 */
-	private class Binding
+	private class Binding implements Serializable
 	{
 		private final Component component;
 		private final String ognlExpression;

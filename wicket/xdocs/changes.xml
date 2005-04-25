@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Martijn Dashorst" issue="1189444">
+  	  Fixes that BoundCompoundPropertyModel.Binding doesn't implement Serializable.
+  	  </action>
   	  <action type="update" dev="Jonathan Locke">
   	  Made a number of small refactoring changes to support url path encryption.
   	  The code is not that far from working, but the feature is turned off.  Added
