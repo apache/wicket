@@ -333,10 +333,10 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		if (valueParser.matches())
 		{
 			final String imageReferenceName = valueParser.getImageReferenceName();
-			final String specification = valueParser.getSpecification();
+			final String specification = Strings.replaceHtmlEscapeNumber(valueParser.getSpecification());
 			final String factoryName = valueParser.getFactoryName();
 			final Application application = component.getApplication();
-
+			
 			// Do we have a reference?
 			if (!Strings.isEmpty(imageReferenceName))
 			{
