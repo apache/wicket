@@ -21,6 +21,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.dom4j.Node;
 
@@ -49,6 +51,8 @@ import org.dom4j.Node;
  */
 public final class Strings
 {
+    private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+
 	/**
 	 * @param s
 	 *            The string
@@ -268,6 +272,28 @@ public final class Strings
 
 			return buffer.toString();
 		}
+	}
+
+	/**
+	 * Replace HTML numbers like &#20540 by the appropriate character.
+	 * 
+	 * @param str The text to be evaluated
+	 * @return The text with "numbers" replaced
+	 */
+	public static String replaceHtmlEscapeNumber(String str)
+	{
+		Matcher matcher = htmlNumber.matcher(str);
+		while (matcher.find())
+		{
+		    int pos = matcher.start();
+		    int end = matcher.end();
+		    int number = Integer.parseInt(str.substring(pos+2, end-1));
+		    char ch = (char)number;
+		    str = str.substring(0, pos) + ch + str.substring(end);
+			matcher = htmlNumber.matcher(str);
+		}
+		
+	    return str;
 	}
 
 	/**
