@@ -69,4 +69,13 @@ public class PageableListViewNavigator extends Panel
 	{
 		return new PageableListViewNavigation("navigation", pageableListView);
 	}
+
+	/**
+	 * Gets the pageable navigation component for configuration purposes.
+	 * @return the associated pageable navigation.
+	 */
+	public final PageableListViewNavigation getPageableListViewNavigation()
+	{
+		return pageableListViewNavigation;
+	}
 }

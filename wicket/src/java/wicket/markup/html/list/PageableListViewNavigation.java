@@ -18,6 +18,7 @@
 package wicket.markup.html.list;
 
 import wicket.markup.html.basic.Label;
+import wicket.version.undo.Change;
 
 /**
  * A navigation for a PageableListView that holds links to other pages of the
@@ -115,6 +116,32 @@ import wicket.markup.html.basic.Label;
  */
 public class PageableListViewNavigation extends Loop
 {
+	/**
+	 * Undo change for navigation start index. Makes certain that back button works
+	 * with paging in the navigator.
+	 */
+	private final class StartIndexChange extends Change
+	{
+		private int startIndex;
+		
+		/**
+		 * Constructor, remembers the startIndex.
+		 * @param startIndex the startIndex to remember.
+		 */
+		private StartIndexChange(int startIndex)
+		{
+			this.startIndex = startIndex;
+		}
+		
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public final void undo()
+		{
+			PageableListViewNavigation.this.startIndex = startIndex;
+		}
+	}
+
 	/** The PageableListView this navigation is navigating. */
 	protected PageableListView pageableListView;
 
@@ -125,10 +152,15 @@ public class PageableListViewNavigation extends Loop
 	 * Number of links on the left and/or right to keep the current page link
 	 * somewhere near the middle.
 	 */
-	private int margin;
+	private int margin = -1;
 
 	/** Default separator between page numbers. Null: no separator. */
 	private String separator = null;
+
+	/**
+	 * The maximum number of page links to show.
+	 */
+	private int viewSize = 10;
 
 	/**
 	 * Constructor.
@@ -146,12 +178,16 @@ public class PageableListViewNavigation extends Loop
 	}
 
 	/**
-	 * Gets the margin.
+	 * Gets the margin, default value is half the view size, unless explicitly set.
 	 * 
 	 * @return the margin
 	 */
 	public int getMargin()
 	{
+		if(margin == -1 && viewSize !=0)
+		{			
+			return viewSize/2;
+		}
 		return margin;
 	}
 
@@ -166,22 +202,22 @@ public class PageableListViewNavigation extends Loop
 	}
 
 	/**
-	 * 
+	 * Gets the view size (is fixed by user).
 	 * @return view size
 	 */
 	public int getViewSize()
 	{
-		return Math.min(pageableListView.getPageCount(), super.getIterations());
+		return viewSize;
 	}
 
 	/**
-	 * view size of the navigation bar
+	 * view size of the navigation bar.
 	 * 
 	 * @param size
 	 */
 	public void setViewSize(final int size)
 	{
-		this.setModelObject(new Integer(size));
+		this.viewSize = size;
 	}
 
 	/**
@@ -270,20 +306,22 @@ public class PageableListViewNavigation extends Loop
 		int firstListItem = this.startIndex;
 
 		// How many page links shall be displayed
-		int viewSize = this.getViewSize();
+		int viewSize = getViewSize();
+		int margin = getMargin();
 
 		// What is the PageableListView's page index to be displayed
 		int currentPage = pageableListView.getCurrentPage();
 
 		// Make sure the current page link index is within the current
 		// window taking the left and right margin into account
-		if (currentPage < (firstListItem + this.margin))
-		{
-			firstListItem = currentPage - viewSize + margin;
-		}
-		else if (currentPage >= (firstListItem + viewSize - this.margin))
+		if (currentPage < (firstListItem + margin))
 		{
 			firstListItem = currentPage - margin;
+		}
+		else if((currentPage >= (firstListItem + viewSize - margin)))
+		{
+
+			firstListItem = (currentPage + margin + 1) - viewSize;
 		}
 
 		// Make sure the first index is >= 0 and the last index is <=
@@ -303,13 +341,20 @@ public class PageableListViewNavigation extends Loop
 			this.modelChanging();
 
 			// Tell the ListView what the new start index shall be
+			addStateChange(new StartIndexChange(this.startIndex));
 			this.startIndex = firstListItem;
-			this.setViewSize(viewSize);
+			
+			this.setIterations(Math.min(viewSize,pageableListView.getPageCount()));
 
 			this.modelChanged();
 
 			// force all children to be re-rendered
 			removeAll();
 		}
+	}
+
+	private void setIterations(int i)
+	{
+		setModelObject(new Integer(i));
 	}
 }

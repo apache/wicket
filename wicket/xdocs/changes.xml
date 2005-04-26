@@ -8,6 +8,11 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Johan Compagner" issue="1190208">
+		PageableListviewNavigation number of pages shrinks when
+		the number of listview items gets smaller. This becomes
+		a problem when the number of listitems gets bigger again.
+  	  </action>
   	  <action type="fix" dev="Johan Compagner" issue="1190148">
   	   setModel triggers a model clone. It shouldn't as in fact it is a component state change.
   	  </action>
