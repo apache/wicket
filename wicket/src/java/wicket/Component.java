@@ -202,6 +202,32 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable
 {
+	/**
+	 * 
+	 */
+	public class ComponentModelChange extends Change
+	{
+		private IModel model;
+		/**
+		 * Construct.
+		 * @param model 
+		 */
+		public ComponentModelChange(IModel model)
+		{
+			super();
+			this.model = model;
+		}
+
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setModel(this.model);
+		}
+
+	}
+
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;
 
@@ -1043,9 +1069,8 @@ public abstract class Component implements Serializable
 		// Change model
 		if (this.model != model)
 		{
-			modelChanging();
+			addStateChange(new ComponentModelChange(this.model));
 			this.model = (IModel)model;
-			modelChanged();
 		}
 	}
 
