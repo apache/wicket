@@ -569,7 +569,12 @@ public abstract class Component implements Serializable
 			{
 				// we need to return the root model and not a property of the
 				// model
-				return getRootModel(model);
+				Object result = getRootModel(model);
+				if( (result instanceof IModel))
+				{
+					result = ((IModel)result).getObject(this);
+				}
+				return result;
 			}
 
 			// Get model value for this component
@@ -1836,6 +1841,7 @@ public abstract class Component implements Serializable
 		while (nestedModelObject instanceof IModel)
 		{
 			final Object next = ((IModel)nestedModelObject).getNestedModel();
+			if(next == null) break;
 			if (nestedModelObject == next)
 			{
 				throw new WicketRuntimeException("Model for " + nestedModelObject
