@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Johan Compagner" issue="1190148">
+  	   setModel triggers a model clone. It shouldn't as in fact it is a component state change.
+  	  </action>
   	  <action type="fix" dev="Martijn Dashorst" issue="1189444">
   	  Fixes that BoundCompoundPropertyModel.Binding doesn't implement Serializable.
   	  </action>
