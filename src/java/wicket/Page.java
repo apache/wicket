@@ -652,18 +652,29 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			// first request to a page completes.
 			setFlag(FLAG_TRACK_CHANGES, true);
 
-			// If a new version was created
-			if (getFlag(FLAG_NEW_VERSION))
-			{
-				// We're done with this version
-				if (versionManager != null)
-				{
-					versionManager.endVersion();
-				}
+			endVersion();
+		}
+	}
 
-				// Reset boolean for next request
-				setFlag(FLAG_NEW_VERSION, false);
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 */
+	public final void endVersion()
+	{
+		// If a new version was created
+		if (getFlag(FLAG_NEW_VERSION))
+		{
+			// We're done with this version
+			if (versionManager != null)
+			{
+				versionManager.endVersion();
 			}
+
+			// Reset boolean for next request
+			setFlag(FLAG_NEW_VERSION, false);
 		}
 	}
 
@@ -749,6 +760,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		if (isVersioned(component))
 		{
 			versionManager.componentModelChanging(component);
+		}
+		else
+		{
+			// do a detach of the model so that changes are read back in
+			component.getModel().detach();
 		}
 	}
 	
