@@ -12,9 +12,12 @@ package objectedit;
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
@@ -25,18 +28,17 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * 
+ * Panel for generic bean displaying/ editing.
+ *
+ * @author Eelco Hillenius
  */
 public class BeanPanel extends Panel
 {
-	/** Mode that indicates the panel is in read only mode. */
-	public static final int MODE_READ_ONLY = 0;
+	/** cache for editors. */
+	private static Map cachedEditors = new HashMap();
 
-	/** Mode that indicates the panel is in edit mode. */
-	public static final int MODE_EDIT = 1;
-
-	/** the current mode; MODE_READ_ONLY, MODE_EDIT or a custom mode. */
-	private int mode = MODE_EDIT;
+	/** edit mode. */
+	private EditMode editMode = new EditMode(EditMode.MODE_READ_ONLY);
 
 	/**
 	 * Construct.
@@ -68,34 +70,87 @@ public class BeanPanel extends Panel
 	 */
 	protected Panel getPropertyEditor(String panelId, PropertyDescriptor descriptor)
 	{
-		if(descriptor instanceof IndexedPropertyDescriptor)
+		Class type = descriptor.getPropertyType();
+		PropertyEditor editor = (PropertyEditor)cachedEditors.get(type);
+		if (editor != null)
 		{
-			throw new WicketRuntimeException("index properties not supported yet ");
+			return editor;
 		}
-		else
+
+		editor = findCustomEditor(panelId, descriptor);
+
+		if (editor == null)
 		{
-			return new SimplePropertyPanel(panelId, getModel(), descriptor);
+			if (descriptor instanceof IndexedPropertyDescriptor)
+			{
+				throw new WicketRuntimeException("index properties not supported yet ");
+			}
+			else
+			{
+				editor = new SimplePropertyPanel(panelId, getModel(), descriptor);
+			}
 		}
+
+		cachedEditors.put(type, editor);
+
+		return editor;
 	}
 
 	/**
-	 * Gets the current mode.
-	 * @return mode
+	 * Finds a possible custom editor by looking for the type name + 'PropertyEditor'
+	 * (e.g. mypackage.MyBean has editor mypackage.MyBeanEditor).
+	 * @param panelId id of panel; must be used for constructing any panel
+	 * @param descriptor property descriptor
+	 * @return PropertyEditor if found or null
 	 */
-	public int getMode()
+	private PropertyEditor findCustomEditor(String panelId, PropertyDescriptor descriptor)
 	{
-		return mode;
-	}
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		if (classLoader == null)
+		{
+			classLoader = getClass().getClassLoader();
+		}
 
-	/**
-	 * Sets the current mode.
-	 * @param mode the mode
-	 * @return This
-	 */
-	public BeanPanel setMode(int mode)
-	{
-		this.mode = mode;
-		return this;
+		Class type = descriptor.getPropertyType();
+		String editorTypeName = type.getName() + "PropertyEditor";
+		try
+		{
+			Class editorClass = classLoader.loadClass(editorTypeName);
+			try
+			{
+				Constructor constructor = editorClass.getConstructor(
+						new Class[]{String.class, IModel.class, PropertyDescriptor.class});
+				Object[] args = new Object[]{panelId, BeanPanel.this.getModel(), descriptor};
+				PropertyEditor editor = (PropertyEditor)constructor.newInstance(args);
+				return editor;
+			}
+			catch (SecurityException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+			catch (NoSuchMethodException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+			catch (InvocationTargetException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
+		catch(ClassNotFoundException e)
+		{
+			// ignore; there just is no custom editor
+		}
+
+		return null;
 	}
 
 	/**
@@ -128,31 +183,22 @@ public class BeanPanel extends Panel
 	/**
 	 * Default panel for a simple property.
 	 */
-	private final class SimplePropertyPanel extends Panel
+	private final class SimplePropertyPanel extends PropertyEditor
 	{
 		/**
 		 * Construct.
-		 * @param id
-		 * @param beanModel 
-		 * @param descriptor
+		 * @param id component id
+		 * @param beanModel model with the target bean
+		 * @param descriptor property descriptor
 		 */
 		public SimplePropertyPanel(String id, IModel beanModel, final PropertyDescriptor descriptor)
 		{
-			super(id, beanModel);
+			super(id, beanModel, descriptor);
 			Class type = descriptor.getPropertyType();
 			TextField valueTextField = new TextField("value",
 					new PropertyDescriptorModel(beanModel, descriptor), type);
-			Model replacementModel = new Model()
-			{
-				public Object getObject(Component component)
-				{
-					if(mode == MODE_READ_ONLY || descriptor.getWriteMethod() == null)
-					{
-						return "disabled";
-					}
-					return null;
-				}
-			};
+			EditModeReplacementModel replacementModel =
+				new EditModeReplacementModel(editMode, descriptor);
 			valueTextField.add(new AttributeModifier("disabled", false, replacementModel));
 			add(valueTextField);
 		}

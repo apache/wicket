@@ -13,13 +13,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Simple person object.
+ * A person.
  */
 public class Person implements Serializable
 {
 	private String name;
 	private String lastName;
 	private Date dateOfBirth;
+	private Address address;
 	
 	/**
 	 * Construct.
@@ -91,6 +92,24 @@ public class Person implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	/**
+	 * Gets the address.
+	 * @return address
+	 */
+	public Address getAddress()
+	{
+		return address;
+	}
+
+	/**
+	 * Sets the address.
+	 * @param address address
+	 */
+	public void setAddress(Address address)
+	{
+		this.address = address;
 	}
 
 	/**
