@@ -401,6 +401,13 @@ public class WebRequestCycle extends RequestCycle
 			// Invoke interface on component
 			invokeInterface(component, interfaceName);
 
+			// If we are doing a redirect, and the page is versioned
+			if (page != getResponsePage())
+			{
+				// commit the version
+				page.endVersion();
+			}
+
 			// Set form component values from cookies
 			setFormComponentValuesFromCookies(page);
 		}
