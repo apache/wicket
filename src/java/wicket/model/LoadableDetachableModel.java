@@ -102,8 +102,8 @@ public abstract class LoadableDetachableModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public final Object getNestedModel()
+	public final IModel getNestedModel()
 	{
-		return tempModelObject;
+		return null;
 	}
 }

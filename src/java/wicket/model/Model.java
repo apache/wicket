@@ -81,9 +81,9 @@ public class Model extends AbstractModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public Object getNestedModel()
+	public IModel getNestedModel()
 	{
-		return object;
+		return null;
 	}
 
 	/**

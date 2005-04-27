@@ -85,9 +85,10 @@ public final class FeedbackPanel extends Panel implements IFeedback
 				{
 				}
 
-				public Object getNestedModel()
+				public IModel getNestedModel()
 				{
-					return message;
+					// TODO check calls to getNestedModel(), returned message
+					return null;
 				}
 			};
 

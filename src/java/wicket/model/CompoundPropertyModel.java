@@ -48,6 +48,7 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 	 */
 	protected String ognlExpression(final Component component)
 	{
+		if(component == null) return null;
 		return component.getId();
 	}
 

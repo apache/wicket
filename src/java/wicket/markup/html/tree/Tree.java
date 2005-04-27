@@ -298,9 +298,10 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
 		 */
-		public Object getNestedModel()
+		public IModel getNestedModel()
 		{
-			return paths;
+			//TODO check calls to this method; original: return paths;
+			return null;
 		}
 	}
 
