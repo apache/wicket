@@ -287,7 +287,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	 * 
 	 * @return The model
 	 */
-	public final Object getNestedModel()
+	public final IModel getNestedModel()
 	{
 		return model;
 	}

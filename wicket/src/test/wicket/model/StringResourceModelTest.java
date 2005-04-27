@@ -224,9 +224,10 @@ public class StringResourceModelTest extends TestCase
 				return station;
 			}
 
-			public Object getNestedModel()
+			public IModel getNestedModel()
 			{
-				return station;
+				// TODO remove: return station;
+				return null;
 			}
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);

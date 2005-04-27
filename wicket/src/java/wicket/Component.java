@@ -572,7 +572,7 @@ public abstract class Component implements Serializable
 				Object result = getRootModel(model);
 				if( (result instanceof IModel))
 				{
-					result = ((IModel)result).getObject(this);
+					result = ((IModel)result).getObject(null);
 				}
 				return result;
 			}
@@ -1837,7 +1837,7 @@ public abstract class Component implements Serializable
 	 */
 	private final Object getRootModel(final IModel model)
 	{
-		Object nestedModelObject = model.getNestedModel();
+		Object nestedModelObject = model;
 		while (nestedModelObject instanceof IModel)
 		{
 			final Object next = ((IModel)nestedModelObject).getNestedModel();

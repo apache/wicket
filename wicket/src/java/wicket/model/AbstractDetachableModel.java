@@ -66,7 +66,7 @@ public abstract class AbstractDetachableModel implements IModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public abstract Object getNestedModel();
+	public abstract IModel getNestedModel();
 
 	/**
 	 * @see wicket.model.IModel#getObject(Component)

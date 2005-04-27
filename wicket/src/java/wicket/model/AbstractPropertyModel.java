@@ -62,11 +62,17 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	}
 
 	/**
-	 * @return The nested model object
+	 * Gets the nested model.
+	 * @return The nested model, <code>null</code> when this is the 
+	 *         final model in the hierarchy
 	 */
-	public final Object getNestedModel()
+	public final IModel getNestedModel()
 	{
-		return nestedModel;
+		if (nestedModel instanceof IModel)
+		{
+			return ((IModel)nestedModel);
+		}
+		return null;
 	}
 
 	/**
@@ -76,12 +82,11 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 */
 	protected Object modelObject(final Component component)
 	{
-		final Object modelObject = getNestedModel();
-		if (modelObject instanceof IModel)
+		if (nestedModel instanceof IModel)
 		{
-			return ((IModel)modelObject).getObject(component);
+			return ((IModel)nestedModel).getObject(component);
 		}
-		return modelObject;
+		return nestedModel;
 	}
 
 	/**
