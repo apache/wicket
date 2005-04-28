@@ -81,7 +81,7 @@ public abstract class BeanModel implements IModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public Object getNestedModel()
+	public IModel getNestedModel()
 	{
 		return nestedModel;
 	}
