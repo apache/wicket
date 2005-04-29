@@ -643,6 +643,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Clear all feedback messages
 		getFeedbackMessages().clear();
 
+		// visit all this page's children to detach the models
 		visitChildren(new IVisitor()
 		{
 			public Object component(Component component)
@@ -660,9 +661,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
+
+		if (isVersioned())
+		{
+			// end the version
+			endVersion();
+		}
 	}
 
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
@@ -766,11 +773,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		if (isVersioned(component))
 		{
 			versionManager.componentModelChanging(component);
-		}
-		else
-		{
-			// do a detach of the model so that changes are read back in
-			component.getModel().detach();
 		}
 	}
 	

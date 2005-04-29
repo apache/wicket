@@ -1376,6 +1376,12 @@ public abstract class Component implements Serializable
 			final IModel model = current.getModel();
 			if (model instanceof CompoundPropertyModel)
 			{
+				// we turn off versioning as we share the model with another component
+				// that is the owner of the model (that component has to decide
+				// whether to version or not
+				setVersioned(false);
+
+				// return the shared compound model
 				return model;
 			}
 		}
