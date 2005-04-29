@@ -404,8 +404,8 @@ public class WebRequestCycle extends RequestCycle
 			// If we are doing a redirect, and the page is versioned
 			if (page != getResponsePage())
 			{
-				// commit the version
-				page.endVersion();
+				// relieve resources used by the page, as this page will not be rendered
+				page.internalEndRequest();
 			}
 
 			// Set form component values from cookies
