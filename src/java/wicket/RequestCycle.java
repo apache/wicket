@@ -687,4 +687,13 @@ public abstract class RequestCycle
 		// This thread is no longer attached to a Session
 		Session.set(null);
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) +
+				"{thread=" + Thread.currentThread().getName() + "}";
+	}
 }

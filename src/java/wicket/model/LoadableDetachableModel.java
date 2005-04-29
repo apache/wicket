@@ -18,7 +18,11 @@
  */
 package wicket.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
+import wicket.RequestCycle;
 
 /**
  * Model that makes working with detachable models a breeze.
@@ -41,6 +45,9 @@ import wicket.Component;
  */
 public abstract class LoadableDetachableModel extends AbstractDetachableModel
 {
+	/** Logger. */
+	private static final Log log = LogFactory.getLog(LoadableDetachableModel.class);
+
 	/** temporary, transient object. */
 	private transient Object tempModelObject;
 
@@ -57,7 +64,14 @@ public abstract class LoadableDetachableModel extends AbstractDetachableModel
 	 */
 	protected final void onAttach()
 	{
-		this.setObject(load());
+		Object loadedObject = load();
+		this.setObject(loadedObject);
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("loaded transient object " + loadedObject + " for " + this +
+					", requestCycle " + RequestCycle.get());
+		}
 	}
 
 	/**
@@ -72,6 +86,12 @@ public abstract class LoadableDetachableModel extends AbstractDetachableModel
 	protected final void onDetach()
 	{
 		tempModelObject = null;
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("removed transient object for " + this +
+					", requestCycle " + RequestCycle.get());
+		}
 	}
 
 	/**
