@@ -986,9 +986,6 @@ public abstract class Component implements Serializable
 		// Component has been rendered
 		rendered();
 
-		// Detach models now that rendering is fully completed
-		detachModels();
-
 		// Restore original response if any
 		if (isVisible)
 		{
@@ -1813,7 +1810,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Detaches all models
 	 */
-	private final void detachModels()
+	final void detachModels()
 	{
 		// Detach any detachable model from this component
 		detachModel();
