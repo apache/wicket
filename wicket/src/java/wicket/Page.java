@@ -642,6 +642,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		// Clear all feedback messages
 		getFeedbackMessages().clear();
+
+		visitChildren(new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				try
+				{
+					// detach any models of the component
+					component.detachModels();
+				}
+				catch (Exception e) // catch anything; we MUST detach all models
+				{
+					//TODO collect any exceptions and log/ output the bulk
+					e.printStackTrace();
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	
