@@ -165,7 +165,7 @@ public final class XmlPullParser implements IXmlPullParser
 			countLinesTo(input, openBracketIndex);
 
 			// Get index of closing tag and advance past the tag
-			final int closeBracketIndex = input.indexOf('>', openBracketIndex);
+			int closeBracketIndex = input.indexOf('>', openBracketIndex);
 
 			if (closeBracketIndex == -1)
 			{
@@ -190,7 +190,27 @@ public final class XmlPullParser implements IXmlPullParser
 
 				return nextTag();
 			}
-			else
+			
+			// CDATA sections might contain "<" which is not part of an XML tag.
+			// Make sure escaped "<" are treated right
+			final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
+			if (startText.toUpperCase().equals("![CDATA["))
+			{
+
+				// Get index of closing tag and advance past the tag
+				closeBracketIndex = findCloseBracket(input, '>', openBracketIndex);
+
+				if (closeBracketIndex == -1)
+				{
+					throw new ParseException("No matching close bracket at position "
+							+ openBracketIndex, this.inputPosition);
+				}
+
+				// Get the tagtext between open and close brackets
+				tagText = input.substring(openBracketIndex + 1, closeBracketIndex);
+			    
+			}
+			
 			{
 				// Type of tag
 				XmlTag.Type type = XmlTag.OPEN;
@@ -251,6 +271,41 @@ public final class XmlPullParser implements IXmlPullParser
 
 		// There is no next matching tag
 		return null;
+	}
+
+	/**
+	 * Find the char but ignore any text within ".." and '..'
+	 * 
+	 * @param input The markup string
+	 * @param ch The character to search
+	 * @param startIndex Start index
+	 * @return -1 if not found, else the index
+	 */
+	private int findCloseBracket(final String input, final char ch, int startIndex)
+	{
+	    char quote = 0;
+	    
+	    for(; startIndex < input.length(); startIndex++)
+	    {
+	        char charAt = input.charAt(startIndex);
+	        if (quote != 0)
+	        {
+	            if (quote == charAt)
+	            {
+	                quote = 0;
+	            }
+	        }
+	        else if ((charAt == '"') || (charAt == '\''))
+	        {
+	            quote = charAt;
+	        }
+	        else if (charAt == ch)
+	        {
+	            return startIndex;
+	        }
+	    }
+		
+	    return -1;
 	}
 
 	/**
