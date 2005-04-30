@@ -95,10 +95,10 @@ public final class DiffUtil
 			log.error("File name: " + file);
 			/*  */
 			log.error("===================");
-			log.error(document);
+			log.error(reference);
 			log.error("===================");
 
-			log.error(reference);
+			log.error(document);
 			log.error("===================");
 			/* */
 
@@ -134,7 +134,7 @@ public final class DiffUtil
 
 		final URL url = clazz.getClassLoader().getResource(filename);
 		filename = url.getFile();
-		filename = filename.replaceAll("/build/test-classes/", "/src/test/");
+		filename = filename.replaceAll("/target/test-classes/", "/src/test/");
 		PrintWriter out = new PrintWriter(new FileOutputStream(filename));
 		out.print(document);
 		out.close();
