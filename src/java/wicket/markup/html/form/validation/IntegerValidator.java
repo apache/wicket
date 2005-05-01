@@ -19,6 +19,8 @@ package wicket.markup.html.form.validation;
 
 import java.util.Map;
 
+import wicket.util.string.Strings;
+
 /**
  * Ensures that the form component has a numeric value in a given range. The
  * range static factory method constructs a IntegerValidator with minimum and
@@ -116,8 +118,8 @@ public class IntegerValidator extends StringValidator
 	 */
 	public void onValidate(String value)
 	{
-		// Don't test emtpy/null values that should required validator do.
-		if (value != null && !"".equals(value))
+		// If value is non-empty
+		if (!Strings.isEmpty(value))
 		{
 			try
 			{

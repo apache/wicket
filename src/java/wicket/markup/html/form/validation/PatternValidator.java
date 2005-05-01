@@ -20,6 +20,7 @@ package wicket.markup.html.form.validation;
 import java.util.regex.Pattern;
 
 import wicket.util.parse.metapattern.MetaPattern;
+import wicket.util.string.Strings;
 
 /**
  * Validates component by matching the component's value against a regular
@@ -97,10 +98,14 @@ public class PatternValidator extends StringValidator
 	 */
 	public void onValidate(String value)
 	{
-		// Check value against pattern
-		if (!pattern.matcher(value).matches())
+		// If value is non-empty
+		if (!Strings.isEmpty(value))
 		{
-			error();
+			// Check value against pattern
+			if (!pattern.matcher(value).matches())
+			{
+				error();
+			}
 		}
 	}
 
