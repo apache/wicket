@@ -8,6 +8,13 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Juergen Donnerstag" issue="1192572">
+  	    Fixed JavaScript parsing bug as reported on the user list by Andrew de Torres.
+  	  </action>
+  	  <action type="fix" dev="Eelco Hillenius">
+  	    Validators (LengthValidator, IntegerValidator and PatternValidator) now
+  	    only check non empty values.
+  	  </action>
   	  <action type="update" dev="Martijn Dashorst" issue="1190287">
   	    Made a clear seperation between IModel.getModel(), IModel.getNestedModel() and
   	    IModel.getObject(). getNestedModel()/getRootModel() semantics getNestedModel() 
