@@ -403,8 +403,6 @@ public class WebRequestCycle extends RequestCycle
 		// Set the page for the component as the response page
 		setResponsePage(page);
 
-		page.internalBeginRequest();
-
 		try
 		{
 			// Invoke interface on the component at the given path on the page
@@ -427,6 +425,10 @@ public class WebRequestCycle extends RequestCycle
 		}
 		finally
 		{
+			//TODO strange to do that here huh? Yep, we definitively need a tighter cycle
+			// See RFE 1193700 (http://sourceforge.net/tracker/index.php?func=detail&aid=1193700&group_id=119783&atid=684978)
+			page.internalBeginRequest();
+
 			if(getRedirect())
 			{
 				// as the rendering will be done by redirecting, we need to end
