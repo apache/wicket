@@ -264,9 +264,14 @@ public class WebRequestCycle extends RequestCycle
 		    try
 		    {
 				final Class pageClass = session.getClassResolver().resolveClass(pageClassName);
-				setResponsePage(session.getPageFactory().newPage(pageClass,
-						new PageParameters(getRequest().getParameterMap())));
+				Page newPage = session.getPageFactory().newPage(pageClass,
+						new PageParameters(getRequest().getParameterMap()));
+				setResponsePage(newPage);
 				setUpdateCluster(true);
+
+				// we have to initialize the page's request now
+				newPage.internalBeginRequest();
+
 				return true;
 		    }
 		    catch (RuntimeException e)
@@ -337,8 +342,12 @@ public class WebRequestCycle extends RequestCycle
 		{
 			try
 			{
-				setResponsePage(newPage(application.getPages().getHomePage()));
+				Page newPage = newPage(application.getPages().getHomePage());
+				setResponsePage(newPage);
 				setUpdateCluster(true);
+
+				// we have to initialize the page's request now
+				newPage.internalBeginRequest();
 			}
 			catch (WicketRuntimeException e)
 			{
@@ -394,29 +403,36 @@ public class WebRequestCycle extends RequestCycle
 		// Set the page for the component as the response page
 		setResponsePage(page);
 
-		// Invoke interface on the component at the given path on the page
-		final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
-		if (component != null)
-		{
-			// Invoke interface on component
-			invokeInterface(component, interfaceName);
+		page.internalBeginRequest();
 
-			// If we are doing a redirect, and the page is versioned
-			if (page != getResponsePage())
+		try
+		{
+			// Invoke interface on the component at the given path on the page
+			final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
+			if (component != null)
 			{
-				// relieve resources used by the page, as this page will not be rendered
+				// Invoke interface on component
+				invokeInterface(component, interfaceName);
+	
+				// Set form component values from cookies
+				setFormComponentValuesFromCookies(page);
+			}
+			else
+			{
+				// Must be an internal error of some kind or someone is hacking
+				// around with URLs in their browser.
+				log.error("No component found for " + path);
+				setResponsePage(newPage(application.getPages().getInternalErrorPage()));
+			}
+		}
+		finally
+		{
+			if(getRedirect())
+			{
+				// as the rendering will be done by redirecting, we need to end
+				// this page's request here
 				page.internalEndRequest();
 			}
-
-			// Set form component values from cookies
-			setFormComponentValuesFromCookies(page);
-		}
-		else
-		{
-			// Must be an internal error of some kind or someone is hacking
-			// around with URLs in their browser.
-			log.error("No component found for " + path);
-			setResponsePage(newPage(application.getPages().getInternalErrorPage()));
 		}
 	}
 

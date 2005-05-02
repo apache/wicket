@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 
 /**
@@ -161,8 +162,10 @@ public class WicketServlet extends HttpServlet
 
 		try
 		{
+			// create a new request cycle
+			RequestCycle cycle = session.newRequestCycle(request, response);
 			// Process request
-			session.newRequestCycle(request, response).request();
+			cycle.request();
 		}
 		finally
 		{
