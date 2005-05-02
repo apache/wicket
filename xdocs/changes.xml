@@ -8,6 +8,15 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Eelco Hillenius">
+		Fixed the beginning/ending callbacks of pages. This was not done properly for
+		listener interface calls: internalBeginRequest was called to late, or in case
+		the listener set another page to render, not at all. The same problem applied
+		to internalEndRequest. As this method is where the component models must be
+		detached (see earlier fix), this had the effect that models were often not
+		detached. Which in turn gave problems - besides a temporary memory leak -
+		with lazy Hibernate initialization etc.
+  	  </action>
   	  <action type="fix" dev="Juergen Donnerstag" issue="1192572">
   	    Fixed JavaScript parsing bug as reported on the user list by Andrew de Torres.
   	  </action>
