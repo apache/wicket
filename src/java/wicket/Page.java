@@ -453,12 +453,22 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
-	public final void request()
+	public final void doRender()
 	{
 		try
 		{
-			// Start of request to page
-			internalBeginRequest();
+			//TODO calling internalBeginRequest here was wrong, as it is too late for
+			// calls to IRequestListeners. For now, we call page.internalBeginRequest
+			// in WebRequestCycle's 'parseRequest' method, but in future, we should have
+			// a better defined cycle.
+			// Also, make some UML diagrams of it; that would probably have avoided this
+			// in the first place.
+			// IMO, for 1.1. we should make a better seperation of the determining what a
+			// request should do, the actual handling of the 'action' part of the request
+			// and the rendering of that request. This method (was: Page.request) actually is
+			// only the handling of the rendering of this page. That's why I renamed
+			// it to doRender.
+			//internalBeginRequest();
 
 			// Handle request by rendering page
 			render();
@@ -625,6 +635,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected final void internalOnBeginRequest()
 	{
+		if(log.isDebugEnabled())
+		{
+			log.debug("beginning request for page " + this + ", request " + getRequest());
+		}
 		// Adds any feedback messages on this page to the given component
 		if (feedback != null)
 		{
@@ -640,6 +654,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 */
 	protected final void internalOnEndRequest()
 	{
+		if(log.isDebugEnabled())
+		{
+			log.debug("ending request for page " + this + ", request " + getRequest());
+		}
 		// Clear all feedback messages
 		getFeedbackMessages().clear();
 

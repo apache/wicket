@@ -636,8 +636,8 @@ public abstract class RequestCycle
 				}
 				else
 				{
-					// Make request to page
-					page.request();
+					// Let page render itself
+					page.doRender();
 				}
 			}
 			catch (RuntimeException e)
