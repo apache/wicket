@@ -655,8 +655,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				}
 				catch (Exception e) // catch anything; we MUST detach all models
 				{
-					//TODO collect any exceptions and log/ output the bulk
-					e.printStackTrace();
+					log.error("detaching models of component " + component + " failed:", e);
 				}
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
