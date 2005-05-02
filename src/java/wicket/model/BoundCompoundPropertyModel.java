@@ -134,7 +134,15 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	protected String ognlExpression(final Component component)
 	{
 		final Binding binding = getBinding(component);
-		return binding != null ? binding.ognlExpression : component.getId();
+		if (binding != null)
+		{
+			return binding.ognlExpression;
+		}
+		else if(component != null)
+		{
+			return component.getId();
+		}
+		return null;
 	}
 
 	/**
@@ -143,7 +151,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	protected Class propertyType(final Component component)
 	{
 		final Binding binding = getBinding(component);
-		return binding != null ? binding.type : null;
+		return (binding != null) ? binding.type : null;
 	}
 
 	/**
