@@ -17,6 +17,7 @@
  */
 package wicket;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -279,7 +280,8 @@ public final class ApplicationSettings
 	 *            or "deployment".
 	 * @param sourceFolder
 	 *            If configurationType is "development", then this folder will
-	 *            be polled for resource changes
+	 *            be polled for resource changes, use the system path separator to separate folders
+	 * @see File#pathSeparator
 	 */
 	public final void configure(final String configurationType, final String sourceFolder)
 	{
@@ -287,15 +289,19 @@ public final class ApplicationSettings
 		{
 			if (sourceFolder != null)
 			{
-				final Folder folder = new Folder(sourceFolder);
-				if (folder.exists())
+				String[] paths = sourceFolder.split(File.pathSeparator);
+				Path path = new Path();
+				for (int i = 0; i < paths.length; i++)
 				{
-					setResourcePath(new Path(folder));
+					Folder folder = new Folder(paths[i]);
+					if (!folder.exists())
+					{
+						log.warn("Source folder " + folder.getAbsolutePath() + " does not exist.");
+					}
+					else
+						path.add(folder);
 				}
-				else
-				{
-					log.warn("Source folder " + folder.getAbsolutePath() + " does not exist.");
-				}
+				setResourcePath(path);
 				setResourcePollFrequency(Duration.ONE_SECOND);
 			}
 			setComponentUseCheck(true);
