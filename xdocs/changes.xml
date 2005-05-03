@@ -8,6 +8,13 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Martijn Dashorst" issue="1194460">
+  	  	RequestCycle.onEndRequest not called after Exception. When an exception occurs, onEndRequest is not always
+		called. This results in open database connections etc.
+		when these are allocated and deallocated using a custom
+		RequestCycle. Fixed by moving the endRequest method calls into the finally block
+		of RequestCycle.request().
+  	  </action>
   	  <action type="fix" dev="Eelco Hillenius">
 		Fixed the beginning/ending callbacks of pages. This was not done properly for
 		listener interface calls: internalBeginRequest was called to late, or in case
