@@ -133,8 +133,6 @@ public class ResourceTest extends TestCase
 		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/");
 		filename += name + ".txt";
 		String resourcePath = getPath(resource);
-
-		System.err.println("\ncompare " + filename + " with\n\t" + resourcePath);
 		
 		if (!resourcePath.endsWith(filename))
 		{
