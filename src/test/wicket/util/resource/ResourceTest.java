@@ -17,6 +17,10 @@
  */
 package wicket.util.resource;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Locale;
 
 import junit.framework.TestCase;
@@ -50,21 +54,6 @@ public class ResourceTest extends TestCase
 	private Locale locale_fr_FR = new Locale("fr", "FR");
 	private Locale locale_fr_FR_WIN = new Locale("fr", "FR", "WIN");
 	private Locale locale_fr_WIN = new Locale("fr", "", "WIN");
-
-	private void compareFilename(IResourceStream resource, String name)
-	{
-		assertNotNull("Did not find resource: " + name, resource);
-
-		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/");
-		filename += name + ".txt";
-		String resourcePath = Strings.replaceAll(((UrlResourceStream)resource).getURL().getFile(), "\\", "/");
-		if (false == resourcePath.endsWith(filename))
-		{
-			filename = Strings.afterLast(filename, '/');
-			resourcePath = Strings.afterLast(resourcePath, '/');
-			assertEquals("Did not find resource", filename, resourcePath);
-		}
-	}
 
 	/**
 	 * 
@@ -115,7 +104,7 @@ public class ResourceTest extends TestCase
 	}
 
 	/**
-	 * 
+	 * Test locating a resource.
 	 */
 	public void testLocate()
 	{
@@ -125,10 +114,54 @@ public class ResourceTest extends TestCase
 		// Determine source path
 		ResourceStreamLocator locator = new ResourceStreamLocator(new ClassLoaderResourceStreamLocator());
 		IResourceStream resource = locator.locate(getClass(), null, null, "txt");
-		String path = Strings.replaceAll(((UrlResourceStream)resource).getURL().getFile(), "\\","/");
+		String path = getPath(resource);
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
 
 		// and execute
 		executeMultiple(new Path(new Folder(path)));
+	}
+
+	/**
+	 * Compares the given name with the resource.
+	 * @param resource
+	 * @param name
+	 */
+	private void compareFilename(IResourceStream resource, String name)
+	{
+		assertNotNull("Did not find resource: " + name, resource);
+
+		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/");
+		filename += name + ".txt";
+		String resourcePath = getPath(resource);
+
+		System.err.println("\ncompare " + filename + " with\n\t" + resourcePath);
+		
+		if (!resourcePath.endsWith(filename))
+		{
+			
+			filename = Strings.afterLast(filename, '/');
+			resourcePath = Strings.afterLast(resourcePath, '/');
+			assertEquals("Did not find resource", filename, resourcePath);
+		}
+	}
+
+	/**
+	 * Gets the path of the resource as a string.
+	 * @param resource the resource
+	 * @return the path of the resource as a string
+	 */
+	private String getPath(IResourceStream resource)
+	{
+		try
+		{
+			URL url = ((UrlResourceStream)resource).getURL();
+			String path = new File(new URI(url.toString())).getPath();
+			path = Strings.replaceAll(path, "\\", "/");
+			return path;
+		}
+		catch (URISyntaxException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 }
