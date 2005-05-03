@@ -387,7 +387,7 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected IModel getListItemModel(final IModel listViewModel, final int index)
 	{
-		return new ListItemModel(listViewModel, index);
+		return new ListItemModel(this, index);
 	}
 
 	/**

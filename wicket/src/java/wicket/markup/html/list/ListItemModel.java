@@ -33,7 +33,7 @@ public class ListItemModel extends AbstractDetachableModel
 	private transient Object object;
 
 	/** The ListView's list model */
-	private final IModel listModel;
+	private final ListView listView;
 
 	/* The list item's index */
 	private final int index;
@@ -41,14 +41,14 @@ public class ListItemModel extends AbstractDetachableModel
 	/**
 	 * Construct
 	 * 
-	 * @param listModel
-	 *            The ListView's model
+	 * @param listView
+	 *            The ListView
 	 * @param index
 	 *            The index of this model
 	 */
-	public ListItemModel(final IModel listModel, final int index)
+	public ListItemModel(final ListView listView, final int index)
 	{
-		this.listModel = listModel;
+		this.listView = listView;
 		this.index = index;
 		attach();
 	}
@@ -67,7 +67,7 @@ public class ListItemModel extends AbstractDetachableModel
 	protected void onAttach()
 	{
 		// Re-attach the model object based on index and ListView model object
-		this.object = ((List)listModel.getObject(null)).get(index);
+		this.object = ((List)listView.getModelObject()).get(index);
 	}
 
 	/**
