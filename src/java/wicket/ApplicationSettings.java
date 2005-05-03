@@ -294,7 +294,7 @@ public final class ApplicationSettings
 				}
 				else
 				{
-					log.warn("Source folder " + sourceFolder + " does not exist.");
+					log.warn("Source folder " + folder.getAbsolutePath() + " does not exist.");
 				}
 				setResourcePollFrequency(Duration.ONE_SECOND);
 			}
