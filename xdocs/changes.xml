@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Eelco Hillenius">
+		In ResourceTest URL.getFile() was used while it should use a URI to construct a file.
+  	  </action>
   	  <action type="fix" dev="Martijn Dashorst" issue="1194464">
   	  	ClassCastException on ListItem.onAttach using CompoundPropertyModel. When using a 
   	  	CompoundPropertyModel to bind a list to a listview, the ListItem.onAttach throws a
