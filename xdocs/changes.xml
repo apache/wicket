@@ -8,6 +8,14 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Martijn Dashorst" issue="1194464">
+  	  	ClassCastException on ListItem.onAttach using CompoundPropertyModel. When using a 
+  	  	CompoundPropertyModel to bind a list to a listview, the ListItem.onAttach throws a
+		ClassCastException. This is because the model of the ListView is not used
+		to cast to an element, but the root model. Fixed by using ListView.getModelObject()
+		instead of having the ListItemModel try to retrieve the model itself. The ListItem 
+		now takes a ListView instead of a ListModel, and requests the model on the listview.
+  	  </action>
   	  <action type="fix" dev="Martijn Dashorst" issue="1194460">
   	  	RequestCycle.onEndRequest not called after Exception. When an exception occurs, onEndRequest is not always
 		called. This results in open database connections etc.
