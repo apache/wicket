@@ -33,6 +33,13 @@ public final class NumberToStringConverter extends AbstractConverter
 	private Map numberFormats = new HashMap();
 
 	/**
+	 * Construct.
+	 */
+	public NumberToStringConverter()
+	{
+	}
+
+	/**
 	 * @param locale 
 	 * @return Returns the numberFormat.
 	 */

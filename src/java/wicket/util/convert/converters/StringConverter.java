@@ -65,6 +65,13 @@ public class StringConverter extends AbstractConverter
 	};
 
 	/**
+	 * Construct.
+	 */
+	public StringConverter()
+	{
+	}
+
+	/**
 	 * Removes all registered string converters.
 	 */
 	public void clear()
