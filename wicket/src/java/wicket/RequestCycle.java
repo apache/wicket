@@ -370,9 +370,6 @@ public abstract class RequestCycle
 					respond();
 				}
 
-				// Response is ending
-				internalOnEndRequest();
-				onEndRequest();
 			}
 			catch (RuntimeException e)
 			{
@@ -381,6 +378,17 @@ public abstract class RequestCycle
 			}
 			finally
 			{
+				// Response is ending
+				try {
+					internalOnEndRequest();
+				} catch (RuntimeException e) {
+					log.error("Exception occurred during internalOnEndRequest", e);
+				}
+				try {
+					onEndRequest();
+				} catch (RuntimeException e) {
+					log.error("Exception occurred during onEndRequest", e);
+				}
 				// Release thread local resources
 				threadDetach();
 			}
