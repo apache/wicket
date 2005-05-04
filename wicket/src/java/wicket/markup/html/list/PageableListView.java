@@ -127,18 +127,17 @@ public abstract class PageableListView extends ListView
 	 * @param currentPage
 	 *            The currentPage to set.
 	 */
-	public final void setCurrentPage(final int currentPage)
+	public final void setCurrentPage(int currentPage)
 	{
 		if (currentPage < 0)
 		{
-			throw new IllegalArgumentException("Cannot set current page to " + currentPage);
+			currentPage = 0;
 		}
 
 		int pageCount = getPageCount();
 		if (currentPage > 0 && (currentPage >= pageCount))
 		{
-			throw new IllegalArgumentException("Cannot set current page to " + currentPage
-					+ " because this pageable list view only has " + pageCount + " pages");
+			currentPage = pageCount-1;
 		}
 		addStateChange(new CurrentPageChange(this.currentPage));
 		this.currentPage = currentPage;
