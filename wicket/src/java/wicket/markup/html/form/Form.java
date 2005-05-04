@@ -30,7 +30,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationStrategy;
-import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.Strings;
