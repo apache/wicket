@@ -41,6 +41,15 @@
 			</ul>
 		</section>
 		<section name="Latest News">
+			<subsection name="May 4, 2005 - Eclipse Live Demo available">
+				<p>
+					Using <a href="http://www.debugmode.com/wink/" title="Wink">Wink</a> we have
+					put together a live 
+					<a href="http://wicket-stuff.sourceforge.net/wicket-kickstart/demos/EclipseDemo.html" target="_new">Eclipse Demo</a>
+					showing how to get started developing your first 
+					<a href="/">Wicket</a> application.
+				</p>
+			</subsection>
 			<subsection name="April 22, 2005 - Last Call for Wicket 1.0!">
 				<p>Wicket needs your input!</p>
 				<p>
