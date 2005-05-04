@@ -20,6 +20,8 @@ package wicket;
 import java.io.Serializable;
 import java.util.Locale;
 
+import javax.servlet.ServletException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -1524,7 +1526,14 @@ public abstract class Component implements Serializable
 	 */
 	protected void redirectTo(final Page page)
 	{
-		getRequestCycle().redirectTo(page);
+		try
+		{
+			getRequestCycle().redirectTo(page);
+		}
+		catch (ServletException ex)
+		{
+			throw new WicketRuntimeException(ex);
+		}
 	}
 
 	/**
