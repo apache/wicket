@@ -204,6 +204,7 @@ public abstract class RequestCycle
 
 	/** True if the cluster should be updated */
 	private boolean updateCluster;
+	private Page invokePage;
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -329,6 +330,16 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Gets the page that was used for invoking and interface.
+	 * 
+	 * @return The page
+	 */
+	protected final Page getInvokePage()
+	{
+		return invokePage;
+	}
+
+	/**
 	 * Gets the session.
 	 * 
 	 * @return Session object
@@ -378,6 +389,13 @@ public abstract class RequestCycle
 			}
 			finally
 			{
+				// make sure the invokerPage is ended correctly.
+				try {
+					if(invokePage != null) invokePage.internalEndRequest();
+				} catch (RuntimeException e) {
+					log.error("Exception occurred during invokerPage.internalEndRequest", e);
+				}
+
 				// Response is ending
 				try {
 					internalOnEndRequest();
@@ -436,6 +454,11 @@ public abstract class RequestCycle
 	public final void setResponsePage(final Page page)
 	{
 		this.responsePage = page;
+	}
+	
+	protected final void setInvokePage(final Page page)
+	{
+		this.invokePage = page;
 	}
 
 	/**
@@ -534,8 +557,9 @@ public abstract class RequestCycle
 	 * 
 	 * @param page
 	 *            The page to redirect to
+	 * @throws ServletException 
 	 */
-	protected abstract void redirectTo(final Page page);
+	protected abstract void redirectTo(final Page page) throws ServletException;
 
 	/**
 	 * Decrypts request from special url format if necessary
@@ -560,7 +584,7 @@ public abstract class RequestCycle
 	 * @throws ServletException
 	 *             The exception rethrown for the servlet container
 	 */
-	private final void onRuntimeException(final Page page, final RuntimeException e)
+	protected final void onRuntimeException(final Page page, final RuntimeException e)
 			throws ServletException
 	{
 		log.error("Unexpected runtime exception [page = " + page + "]", e);
@@ -597,8 +621,9 @@ public abstract class RequestCycle
 	 *            The page that went wrong
 	 * @param e
 	 *            The exception that was thrown
+	 * @throws ServletException 
 	 */
-	private final void redirectToExceptionErrorPage(final Page page, final RuntimeException e)
+	private final void redirectToExceptionErrorPage(final Page page, final RuntimeException e) throws ServletException
 	{
 		// If application doesn't want debug info showing up for users
 		final ApplicationSettings settings = application.getSettings();
@@ -644,6 +669,12 @@ public abstract class RequestCycle
 				}
 				else
 				{
+					// test if the invoker page was the same as the page that is going to be renderd
+					if(getInvokePage() == getResponsePage())
+					{
+						// set it to null because it is already ended inthe page.doRender()
+						setInvokePage(null);
+					}
 					// Let page render itself
 					page.doRender();
 				}
