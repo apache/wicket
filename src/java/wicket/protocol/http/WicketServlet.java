@@ -18,6 +18,8 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,7 +30,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.RequestCycle;
+import wicket.Resource;
 import wicket.WicketRuntimeException;
+import wicket.response.RedirectResponse;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Servlet class for all wicket applications. The specific application class to
@@ -139,6 +144,24 @@ public class WicketServlet extends HttpServlet
 		}
 	}
 
+	protected long getLastModified(HttpServletRequest servletRequest)
+	{
+		final String pathInfo = servletRequest.getPathInfo();
+		if (pathInfo != null && pathInfo.startsWith(WebRequestCycle.resourceReferencePrefix))
+		{
+			final String resourceReferenceKey = pathInfo.substring(WebRequestCycle.resourceReferencePrefix.length());
+			final Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
+			if (resource != null)
+			{
+				IResourceStream stream = resource.getResourceStream();
+				// first ask the length so the content is created/accessed
+				stream.length();
+				return stream.lastModifiedTime().getMilliseconds();
+			}
+		}
+		return -1;
+	}
+
 	/**
 	 * Handles servlet page requests.
 	 * 
@@ -153,6 +176,21 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
+		// try to see if this is a redirect that is already stored in the wicket-redirect map of its session.
+		Map redirectMap = (Map)servletRequest.getSession(true).getAttribute("wicket-redirect");
+		if(redirectMap != null)
+		{
+			RedirectResponse rr = (RedirectResponse)redirectMap.remove(servletRequest.getRequestURI() + "?" + servletRequest.getQueryString());
+			if(rr != null)
+			{
+				PrintWriter pw = servletResponse.getWriter();
+				servletResponse.setContentLength(rr.getContentLength());
+				servletResponse.setContentType(rr.getContentType());
+				pw.write(rr.toString());
+				pw.close();
+				return;
+			}
+		}
 		// Get session for request
 		final WebSession session = webApplication.getSession(servletRequest);
 		final WebRequest request = new WebRequest(servletRequest);
