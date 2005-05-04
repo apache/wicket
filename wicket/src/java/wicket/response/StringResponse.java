@@ -29,10 +29,10 @@ import wicket.Response;
  * 
  * @author Jonathan Locke
  */
-public final class StringResponse extends Response
+public class StringResponse extends Response
 {
 	/** StringWriter to write to */
-	private final StringWriter out;
+	protected final StringWriter out;
 
 	/**
 	 * Constructor
