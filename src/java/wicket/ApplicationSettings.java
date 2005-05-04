@@ -216,6 +216,14 @@ public final class ApplicationSettings
 	private boolean versionPagesByDefault = true;
 
 	/**
+	 * What kind of response should be used<br>
+	 * <1> default clientside, but overriden by developer for specific pages<br>
+	 * <2> default serverside, but overriden by developer for specific pages<br>
+	 * <3> clientside but with serverside handling<br>
+	 */
+	private int responseType = 1;
+
+	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
 	 */
 	public static final class UnexpectedExceptionDisplay extends EnumeratedType
@@ -883,5 +891,20 @@ public final class ApplicationSettings
 	final List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
+	}
+
+	/**
+	 * @return Returns the responseType.
+	 */
+	public int getResponseType()
+	{
+		return responseType;
+}
+	/**
+	 * @param responseType The responseType to set.
+	 */
+	public void setResponseType(int responseType)
+	{
+		this.responseType = responseType;
 	}
 }
