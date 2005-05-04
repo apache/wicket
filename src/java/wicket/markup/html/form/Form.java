@@ -30,6 +30,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationStrategy;
+import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.Strings;
@@ -430,6 +431,10 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 */
 	private void addFeedback()
 	{
+		if(feedback != null)
+		{
+			feedback.clearFeedbackMessages();
+		}
 		// Traverse children of this form, calling validationError() on any
 		// components implementing IFeedback.
 		visitChildren(IFeedback.class, new IVisitor()

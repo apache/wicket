@@ -47,4 +47,9 @@ public interface IFeedback
 	 *            given component
 	 */
 	public void addFeedbackMessages(Component component, boolean recurse);
+	
+	/**
+	 * Called to clear the current messages
+	 */
+	public void clearFeedbackMessages();
 }
