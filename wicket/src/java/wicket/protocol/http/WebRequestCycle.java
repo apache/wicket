@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +41,7 @@ import wicket.Resource;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
+import wicket.response.RedirectResponse;
 import wicket.util.io.Streams;
 import wicket.util.string.Strings;
 
@@ -221,11 +223,43 @@ public class WebRequestCycle extends RequestCycle
 	 * 
 	 * @param page
 	 *            The page to redirect to
+	 * @throws ServletException 
 	 */
-	protected void redirectTo(final Page page)
+	protected void redirectTo(final Page page) throws ServletException
 	{
+		String redirectUrl = page.urlFor(page, IRedirectListener.class);
+		// Check if use serverside response for client side redirects
+		if(application.getSettings().getResponseType() == 3)
+		{
+			// create the redirect response.
+			try
+			{
+				Response previous = getResponse();
+				RedirectResponse rr = new RedirectResponse(redirectUrl);
+				setResponse(rr);
+				// test if the invoker page was the same as the page that is going to be renderd
+				if(getInvokePage() == getResponsePage())
+				{
+					// set it to null because it is already ended in the page.doRender()
+					setInvokePage(null);
+				}
+				page.doRender();
+				setResponse(previous);
+				Map map = (Map)getWebRequest().getHttpServletRequest().getSession(true).getAttribute("wicket-redirect");
+				if(map == null)
+				{
+					map = new HashMap(3);
+					getWebRequest().getHttpServletRequest().getSession(true).setAttribute("wicket-redirect",map);	
+				}
+				map.put(redirectUrl,rr);
+			}
+			catch (RuntimeException ex)
+			{
+				onRuntimeException(page, ex);
+			}
+		}
 		// Redirect to the url for the page
-		response.redirect(page.urlFor(page, IRedirectListener.class));
+		response.redirect(redirectUrl);
 	}
 
 	/**
@@ -268,10 +302,6 @@ public class WebRequestCycle extends RequestCycle
 						new PageParameters(getRequest().getParameterMap()));
 				setResponsePage(newPage);
 				setUpdateCluster(true);
-
-				// we have to initialize the page's request now
-				newPage.internalBeginRequest();
-
 				return true;
 		    }
 		    catch (RuntimeException e)
@@ -345,9 +375,6 @@ public class WebRequestCycle extends RequestCycle
 				Page newPage = newPage(application.getPages().getHomePage());
 				setResponsePage(newPage);
 				setUpdateCluster(true);
-
-				// we have to initialize the page's request now
-				newPage.internalBeginRequest();
 			}
 			catch (WicketRuntimeException e)
 			{
@@ -402,39 +429,23 @@ public class WebRequestCycle extends RequestCycle
 	{
 		// Set the page for the component as the response page
 		setResponsePage(page);
-
-		try
+		setInvokePage(page);
+		// Invoke interface on the component at the given path on the page
+		final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
+		if (component != null)
 		{
-			// Invoke interface on the component at the given path on the page
-			final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
-			if (component != null)
-			{
-				// Invoke interface on component
-				invokeInterface(component, interfaceName);
-	
-				// Set form component values from cookies
-				setFormComponentValuesFromCookies(page);
-			}
-			else
-			{
-				// Must be an internal error of some kind or someone is hacking
-				// around with URLs in their browser.
-				log.error("No component found for " + path);
-				setResponsePage(newPage(application.getPages().getInternalErrorPage()));
-			}
+			// Invoke interface on component
+			invokeInterface(component, interfaceName);
+
+			// Set form component values from cookies
+			setFormComponentValuesFromCookies(page);
 		}
-		finally
+		else
 		{
-			//TODO strange to do that here huh? Yep, we definitively need a tighter cycle
-			// See RFE 1193700 (http://sourceforge.net/tracker/index.php?func=detail&aid=1193700&group_id=119783&atid=684978)
-			page.internalBeginRequest();
-
-			if(getRedirect())
-			{
-				// as the rendering will be done by redirecting, we need to end
-				// this page's request here
-				page.internalEndRequest();
-			}
+			// Must be an internal error of some kind or someone is hacking
+			// around with URLs in their browser.
+			log.error("No component found for " + path);
+			setResponsePage(newPage(application.getPages().getInternalErrorPage()));
 		}
 	}
 
