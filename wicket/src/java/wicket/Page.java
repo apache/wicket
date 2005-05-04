@@ -633,6 +633,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		// Adds any feedback messages on this page to the given component
 		if (feedback != null)
 		{
+			feedback.clearFeedbackMessages();
 			feedback.addFeedbackMessages(this, false);
 		}
 	}
@@ -649,9 +650,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 		{
 			log.debug("ending request for page " + this + ", request " + getRequest());
 		}
-		// Clear all feedback messages
-		getFeedbackMessages().clear();
-
 		// visit all this page's children to detach the models
 		visitChildren(new IVisitor()
 		{

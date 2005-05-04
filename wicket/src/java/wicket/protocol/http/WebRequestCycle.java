@@ -434,6 +434,12 @@ public class WebRequestCycle extends RequestCycle
 		final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
 		if (component != null)
 		{
+			if(!interfaceName.equals("IRedirectListener"))
+			{
+				// Clear all feedback messages if it isn't a redirect
+				page.getFeedbackMessages().clear();
+			}
+
 			// Invoke interface on component
 			invokeInterface(component, interfaceName);
 

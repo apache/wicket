@@ -66,11 +66,10 @@ public final class FormComponentFeedbackBorder extends Border implements IFeedba
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#onEndRequest()
+	 * @see wicket.IFeedback#clearFeedbackMessages()
 	 */
-	protected void onEndRequest()
+	public void clearFeedbackMessages()
 	{
-		// Clear feedback
 		errorIndicator.setVisible(false);
 	}
 }

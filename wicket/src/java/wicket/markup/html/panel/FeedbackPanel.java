@@ -135,11 +135,10 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see Component#onEndRequest()
+	 * @see wicket.IFeedback#clearFeedbackMessages()
 	 */
-	protected void onEndRequest()
+	public void clearFeedbackMessages()
 	{
-		// Clear feedback
 		messageListView.getList().clear();
 	}
 }
