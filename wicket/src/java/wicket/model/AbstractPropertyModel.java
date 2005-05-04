@@ -43,7 +43,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	private transient OgnlContext context;
 
 	/** Any model object (which may or may not implement IModel) */
-	private final Object nestedModel;
+	private Object nestedModel;
 
 	/**
 	 * Constructor
@@ -165,28 +165,45 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	{
 		try
 		{
-			// Get the real object
-			Object modelObject = modelObject(component);
-
-			// If the object is a String
-			if (object instanceof String)
+			final String expression = ognlExpression(component);
+			if (Strings.isEmpty(expression))
 			{
-				// and that String is not empty
-				final String string = (String)object;
-				if (!Strings.isEmpty(string))
+				// No expression will cause OGNL to throw an exception. The OGNL
+				// expression to set the current object is "#this".
+				if(nestedModel instanceof IModel)
 				{
-					// and there is a non-null property type for the component
-					final Class propertyType = propertyType(component);
-					if (propertyType != null)
-					{
-						// convert the String to the right type
-						object = component.getConverter().convert(string, propertyType);
-					}
+					((IModel)nestedModel).setObject(null, object);
+				}
+				else
+				{
+					nestedModel = object;
 				}
 			}
-
-			// Let OGNL set the value
-			Ognl.setValue(ognlExpression(component), getContext(component), modelObject, object);
+			else
+			{
+				// Get the real object
+				Object modelObject = modelObject(component);
+	
+				// If the object is a String
+				if (object instanceof String)
+				{
+					// and that String is not empty
+					final String string = (String)object;
+					if (!Strings.isEmpty(string))
+					{
+						// and there is a non-null property type for the component
+						final Class propertyType = propertyType(component);
+						if (propertyType != null)
+						{
+							// convert the String to the right type
+							object = component.getConverter().convert(string, propertyType);
+						}
+					}
+				}
+	
+				// Let OGNL set the value
+				Ognl.setValue(ognlExpression(component), getContext(component), modelObject, object);
+			}
 		}
 		catch (OgnlException e)
 		{
