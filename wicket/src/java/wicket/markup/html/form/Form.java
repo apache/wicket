@@ -373,7 +373,8 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		// redirecting on as the first thing because the user's handleSubmit
 		// implementation may wish to redirect somewhere else. In that case,
 		// they can simply call setRedirect(false) in handleSubmit.
-		setRedirect(true);
+		int responseType = getApplicationSettings().getResponseType();
+		setRedirect(responseType == 1 || responseType == 3);
 
 		// Validate model using validation strategy
 		getValidationStrategy().validate(this);
