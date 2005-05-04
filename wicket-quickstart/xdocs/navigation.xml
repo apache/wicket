@@ -14,6 +14,10 @@
 	        <item name="Dependencies" href="/dependencies.html"/>
 	    </menu>
 
+		<menu name="IDE Demos">
+			<item name="Eclipse Live!" href="demos/EclipseDemo.html"/>
+		</menu>
+		
 		<menu name="IDE Guides">
 			<item name="Eclipse" href="/eclipse.html" collapse="true">
 				<item name="Introduction" href="#Eclipse_Kick_Start_Guide" />
