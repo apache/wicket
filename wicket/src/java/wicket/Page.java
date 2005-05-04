@@ -457,18 +457,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	{
 		try
 		{
-			//TODO calling internalBeginRequest here was wrong, as it is too late for
-			// calls to IRequestListeners. For now, we call page.internalBeginRequest
-			// in WebRequestCycle's 'parseRequest' method, but in future, we should have
-			// a better defined cycle.
-			// Also, make some UML diagrams of it; that would probably have avoided this
-			// in the first place.
-			// IMO, for 1.1. we should make a better seperation of the determining what a
-			// request should do, the actual handling of the 'action' part of the request
-			// and the rendering of that request. This method (was: Page.request) actually is
-			// only the handling of the rendering of this page. That's why I renamed
-			// it to doRender.
-			//internalBeginRequest();
+			// we have to initialize the page's request now
+			internalBeginRequest();
+		
 
 			// Handle request by rendering page
 			render();
@@ -692,7 +683,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	 * OVERRIDE.
 	 * 
 	 */
-	public final void endVersion()
+	private final void endVersion()
 	{
 		// If a new version was created
 		if (getFlag(FLAG_NEW_VERSION))
