@@ -341,7 +341,7 @@ public abstract class Application
 	 * 
 	 * @return Instance of de-/encryption class
 	 */
-	public synchronized final ICrypt newCrypt()
+	public synchronized ICrypt newCrypt()
 	{
 		if(crypt == null)
 		{
