@@ -8,6 +8,14 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Eelco Hillenius" issue="1196140">
+  	   This bug prevented running Wicket on VM's that don't use SUN's security implementation
+  	   classes. Don Ledford reported it for Blackdown 1.4.2 j2sdk. Removed SunJceCrypt's
+  	   static initializer and put it in it's constructor. Application now reuses the ICrypt
+  	   instance once it is created, so that it is easier to provide a dummy one. The current
+  	   ICrypt instances seem to be thread safe, so that shouldn't give any problems, and users
+  	   can override the factory method if they want to use non-thread safe instances.
+  	  </action>
   	  <action type="fix" dev="Eelco Hillenius">
 		In ResourceTest URL.getFile() was used while it should use a URI to construct a file.
   	  </action>
