@@ -43,7 +43,7 @@ import wicket.WicketRuntimeException;
  * 
  * @author Juergen Donnerstag
  */
-public class SunJceCrypt extends AbstractCrypt implements ICrypt
+public class SunJceCrypt extends AbstractCrypt
 {
 	/**
 	 * Iteration count used in combination with the salt to create the
@@ -66,6 +66,25 @@ public class SunJceCrypt extends AbstractCrypt implements ICrypt
 	 */
 	public SunJceCrypt()
 	{
+	    try
+	    {
+			// Initialize and add a security provider required for encryption
+			//Security.addProvider(new com.sun.crypto.provider.SunJCE());
+	        final Class clazz = Class.forName("com.sun.crypto.provider.SunJCE");
+	        Security.addProvider((Provider)clazz.newInstance());
+	    }
+	    catch (ClassNotFoundException ex)
+	    {
+	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+	    }
+	    catch (IllegalAccessException ex)
+	    {
+	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+	    }
+	    catch (InstantiationException ex)
+	    {
+	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
+	    }
 	}
 
 	/**
@@ -104,28 +123,5 @@ public class SunJceCrypt extends AbstractCrypt implements ICrypt
 	{
 		final PBEKeySpec spec = new PBEKeySpec(getKey().toCharArray());
 		return SecretKeyFactory.getInstance(CRYPT_METHOD).generateSecret(spec);
-	}
-
-	static
-	{
-	    try
-	    {
-			// Initialize and add a security provider required for encryption
-			//Security.addProvider(new com.sun.crypto.provider.SunJCE());
-	        final Class clazz = Class.forName("com.sun.crypto.provider.SunJCE");
-	        Security.addProvider((Provider)clazz.newInstance());
-	    }
-	    catch (ClassNotFoundException ex)
-	    {
-	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
-	    }
-	    catch (IllegalAccessException ex)
-	    {
-	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
-	    }
-	    catch (InstantiationException ex)
-	    {
-	        throw new WicketRuntimeException("Unable to load SunJCE service provider", ex);
-	    }
 	}
 }

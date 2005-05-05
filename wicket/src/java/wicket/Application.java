@@ -23,6 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -31,6 +34,7 @@ import wicket.model.IModel;
 import wicket.util.convert.ConverterFactory;
 import wicket.util.convert.IConverterFactory;
 import wicket.util.crypt.ICrypt;
+import wicket.util.crypt.NoCrypt;
 import wicket.util.lang.Classes;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;
@@ -110,6 +114,9 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class Application
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(Application.class);
+
 	/** List of (static) ComponentResolvers */
 	private List componentResolvers = new ArrayList();
 
@@ -145,6 +152,9 @@ public abstract class Application
 	
 	/** Shared resources for the application */
 	private final SharedResources sharedResources = new SharedResources();
+
+	/** cached encryption/decryption object. */
+	private ICrypt crypt;
 
 	/**
 	 * Constructor
@@ -325,27 +335,52 @@ public abstract class Application
 
 	/**
 	 * Factory method that creates an instance of de-/encryption class.
+	 * NOTE: this implementation caches the crypt instance, so it has
+	 * to be Threadsafe. If you want other behaviour, or want to provide
+	 * a custom crypt class, you should override this method.
 	 * 
 	 * @return Instance of de-/encryption class
 	 */
-	public final ICrypt newCrypt()
+	public synchronized final ICrypt newCrypt()
 	{
-		try
+		if(crypt == null)
 		{
-			final ICrypt crypt = (ICrypt)getSettings().getCryptClass().newInstance();
-			crypt.setKey(getSettings().getEncryptionKey());
-			return crypt;
+			Class cryptClass = getSettings().getCryptClass();
+			try
+			{
+				crypt = (ICrypt)cryptClass.newInstance();
+				log.info("using encryption/decryption object " + crypt);
+				crypt.setKey(getSettings().getEncryptionKey());
+				return crypt;
+			}
+			catch (Exception e)
+			{
+				log.warn("************************** WARNING **************************");
+				log.warn("As the instantion of encryption/decryption class:");
+				log.warn("\t" + cryptClass);
+				log.warn("failed, Wicket will fallback on a dummy implementation");
+				log.warn("\t(" + NoCrypt.class.getName() + ")");
+				log.warn("This is not recommended for production systems.");
+				log.warn("Please override method wicket.Application.newCrypt()");
+				log.warn("to provide a custom encryption/decryption implementation");
+				log.warn("The cause of the instantion failure: ");
+				log.warn("\t" + e.getMessage());
+				if(log.isDebugEnabled())
+				{
+					log.debug("exception: ", e);
+				}
+				else
+				{
+					log.warn("set log level to DEBUG to display the stack trace.");
+				}
+				log.warn("*************************************************************");
+
+				// assign the dummy crypt implementation
+				crypt = new NoCrypt();
+			}
 		}
-		catch (InstantiationException e)
-		{
-			throw new WicketRuntimeException(
-					"Encryption/decryption object can not be instantiated", e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new WicketRuntimeException(
-					"Encryption/decryption object can not be instantiated", e);
-		}
+
+		return crypt;
 	}
 
 	/**
