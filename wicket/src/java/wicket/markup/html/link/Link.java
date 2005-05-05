@@ -38,7 +38,7 @@ import wicket.util.string.Strings;
  * <pre>
  *       add(new Link(&quot;myLink&quot;){
  *      
- *         public void linkClicked(RequestCycle cycle)
+ *         public void onClick(RequestCycle cycle)
  *         {
  *            // do something here...  
  *         }
