@@ -668,6 +668,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 			}
 		});
 
+		detachModel();
+		
 		if (isVersioned())
 		{
 			// end the version
