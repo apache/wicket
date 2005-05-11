@@ -888,7 +888,7 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Called to indicate that the model for this component has been changed
+	 * Called to indicate that the model content for this component has been changed
 	 */
 	public final void modelChanged()
 	{
@@ -898,7 +898,7 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Called to indicate that the model for this component is about to change
+	 * Called to indicate that the model content for this component is about to change
 	 */
 	public final void modelChanging()
 	{
@@ -1055,15 +1055,8 @@ public abstract class Component implements Serializable
 	 * @param model
 	 *            the model
 	 */
-	public final void setModel(final IModel model)
+	public void setModel(final IModel model)
 	{
-		// If a compound model is explicitly set on this component
-		if (model instanceof CompoundPropertyModel)
-		{
-			// we need to remember this for getModelObject()
-			setFlag(FLAG_HAS_ROOT_MODEL, true);
-		}
-
 		// Detach current model
 		if (this.model != null)
 		{
@@ -1076,6 +1069,16 @@ public abstract class Component implements Serializable
 			addStateChange(new ComponentModelChange(this.model));
 			this.model = (IModel)model;
 		}
+		// If a compound model is explicitly set on this component
+		if (model instanceof CompoundPropertyModel)
+		{
+			// we need to remember this for getModelObject()
+			setFlag(FLAG_HAS_ROOT_MODEL, true);
+			
+			
+		}
+		
+		modelChanged();
 	}
 
 	/**

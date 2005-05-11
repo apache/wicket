@@ -30,6 +30,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.collections.MicroMap;
 import wicket.util.collections.MiniMap;
@@ -660,7 +661,38 @@ public abstract class MarkupContainer extends Component
 			}
 		}
 	}
-
+	
+	/**
+	 * @see wicket.Component#setModel(wicket.model.IModel)
+	 */
+	public void setModel(final IModel model)
+	{
+		final IModel previous = getModel();
+		super.setModel(model);
+		if(previous instanceof CompoundPropertyModel)
+		{
+			visitChildren(new IVisitor()
+			{
+			
+				public Object component(Component component)
+				{
+					IModel compModel = component.getModel();
+					if(compModel == previous)
+					{
+						component.setModel(null);
+					}
+					else if(compModel == model)
+					{
+						component.modelChanged();
+					}
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			
+			});
+		}
+	}
+	
+	
 	/**
 	 * Set markup stream for this container.
 	 * 
