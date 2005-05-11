@@ -258,6 +258,11 @@ public class WebRequestCycle extends RequestCycle
 				onRuntimeException(page, ex);
 			}
 		}
+		else
+		{
+			// redirect page can touch its models already (via for example the constructors) 
+			page.internalEndRequest();
+		}
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}

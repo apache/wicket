@@ -76,6 +76,12 @@ public abstract class AbstractDetachableModel implements IModel
 			attached = false;
 			onDetach();
 		}
+		else if(getNestedModel() != null)
+		{
+			// do detach the nested model because this one could be attached 
+			// if the model is used not through this compound model
+			getNestedModel().detach();
+		}
 	}
 	
 	/**
