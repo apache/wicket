@@ -158,8 +158,10 @@ public class FormInput extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					InputForm.this.setModel(
-					        new CompoundPropertyModel(new FormInputModel()));
+					// just call modelChanged so that any invalid input is cleared.
+					InputForm.this.modelChanged();
+//					InputForm.this.setModel(
+//					        new CompoundPropertyModel(new FormInputModel()));
 				}
 			}.add(new Image("resetButtonImage")));
 		}
