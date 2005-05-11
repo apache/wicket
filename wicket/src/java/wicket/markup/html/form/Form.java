@@ -220,6 +220,8 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 		// Maurice pointed out that onValidate() calls user code in onSubmit()
 		// which may do something like replace the whole form with something
 		// else!
+		// TODO is this really true? The form can be gone yes. But the feedbackpanel still could have a page!!
+		// The feedback panel itself should handle this gracefully not the form here.
 		if (findPage() != null)
 		{
 			// Update validation feedback no matter how the form was validated
@@ -305,7 +307,11 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	protected void onError()
 	{
 	}
-
+	
+	protected void onBeginRequest()
+	{
+		addFeedback();
+	}
 	/**
 	 * @see wicket.Component#internalOnModelChanged()
 	 */
