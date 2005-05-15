@@ -43,7 +43,7 @@ public class CookieValuePersisterTestPage extends WebPage
 	    
 	    // Create and add feedback panel to page
 	    final FeedbackPanel feedback = new FeedbackPanel("feedback");
-	 
+		add(feedback);
 	    add(new TestForm("form", feedback));
 	}
 	

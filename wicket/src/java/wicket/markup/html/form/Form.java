@@ -307,11 +307,15 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	protected void onError()
 	{
 	}
-	
+
+	/**
+	 * @see wicket.Component#onBeginRequest()
+	 */
 	protected void onBeginRequest()
 	{
 		addFeedback();
 	}
+
 	/**
 	 * @see wicket.Component#internalOnModelChanged()
 	 */
@@ -375,13 +379,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 */
 	protected final boolean validate()
 	{
-		// Redirect back to result to avoid postback warnings. But we turn
-		// redirecting on as the first thing because the user's handleSubmit
-		// implementation may wish to redirect somewhere else. In that case,
-		// they can simply call setRedirect(false) in handleSubmit.
-		int responseType = getApplicationSettings().getResponseType();
-		setRedirect(responseType == 1 || responseType == 3);
-
 		// Validate model using validation strategy
 		getValidationStrategy().validate(this);
 

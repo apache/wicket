@@ -669,7 +669,7 @@ public abstract class RequestCycle
 				}
 				else
 				{
-					// test if the invoker page was the same as the page that is going to be renderd
+					// test if the invoker page was the same as the page that is going to be rendered
 					if(getInvokePage() == getResponsePage())
 					{
 						// set it to null because it is already ended inthe page.doRender()

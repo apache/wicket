@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
-import wicket.response.RedirectResponse;
+import wicket.response.BufferedResponse;
 import wicket.util.resource.IResourceStream;
 
 /**
@@ -180,7 +180,7 @@ public class WicketServlet extends HttpServlet
 		Map redirectMap = (Map)servletRequest.getSession(true).getAttribute("wicket-redirect");
 		if(redirectMap != null)
 		{
-			RedirectResponse rr = (RedirectResponse)redirectMap.remove(servletRequest.getRequestURI() + "?" + servletRequest.getQueryString());
+			BufferedResponse rr = (BufferedResponse)redirectMap.remove(servletRequest.getRequestURI() + "?" + servletRequest.getQueryString());
 			if(rr != null)
 			{
 				PrintWriter pw = servletResponse.getWriter();

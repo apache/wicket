@@ -177,13 +177,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	public final void onLinkClicked()
 	{
-		// Since the invocation of onLinkClicked occurred through a URL that
-		// would repeat the action if the user refreshed the page, we redirect
-		// to our resulting page so this won't happen.
-		int responseType = getApplicationSettings().getResponseType();
-		setRedirect(responseType == 1 || responseType == 3);
-
-
 		// Invoke subclass handler
 		onClick();
 	}
