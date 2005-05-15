@@ -31,6 +31,7 @@ import javax.servlet.ServletException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.Page;
@@ -41,7 +42,7 @@ import wicket.Resource;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
-import wicket.response.RedirectResponse;
+import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;
 import wicket.util.string.Strings;
 
@@ -229,14 +230,15 @@ public class WebRequestCycle extends RequestCycle
 	{
 		String redirectUrl = page.urlFor(page, IRedirectListener.class);
 		// Check if use serverside response for client side redirects
-		if(application.getSettings().getResponseType() == 3)
+		ApplicationSettings settings = application.getSettings();
+		if(settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
 		{
 			// create the redirect response.
 			try
 			{
-				Response previous = getResponse();
-				RedirectResponse rr = new RedirectResponse(redirectUrl);
-				setResponse(rr);
+				Response currentResponse = getResponse();
+				BufferedResponse redirectResponse = new BufferedResponse(redirectUrl);
+				setResponse(redirectResponse);
 				// test if the invoker page was the same as the page that is going to be renderd
 				if(getInvokePage() == getResponsePage())
 				{
@@ -244,14 +246,14 @@ public class WebRequestCycle extends RequestCycle
 					setInvokePage(null);
 				}
 				page.doRender();
-				setResponse(previous);
+				setResponse(currentResponse);
 				Map map = (Map)getWebRequest().getHttpServletRequest().getSession(true).getAttribute("wicket-redirect");
 				if(map == null)
 				{
 					map = new HashMap(3);
 					getWebRequest().getHttpServletRequest().getSession(true).setAttribute("wicket-redirect",map);	
 				}
-				map.put(redirectUrl,rr);
+				map.put(redirectUrl,redirectResponse);
 			}
 			catch (RuntimeException ex)
 			{
@@ -352,7 +354,8 @@ public class WebRequestCycle extends RequestCycle
 				setUpdateCluster(true);
 
 				// Execute the user's code
-				invokeInterface(page, path, request.getParameter("interface"));
+				String interfaceName = request.getParameter("interface");
+				invokeInterface(page, path, interfaceName);
 				return true;
 			}
 			else
@@ -443,6 +446,14 @@ public class WebRequestCycle extends RequestCycle
 			{
 				// Clear all feedback messages if it isn't a redirect
 				page.getFeedbackMessages().clear();
+
+				// and see if we have to redirect the render part by default
+				ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
+						.getSettings().getRenderStrategy();
+				boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
+						|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
+
+				setRedirect(issueRedirect);
 			}
 
 			// Invoke interface on component

@@ -23,7 +23,9 @@ import java.util.List;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.FeedbackMessage;
+import wicket.FeedbackMessages;
 import wicket.IFeedback;
+import wicket.Page;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -121,7 +123,10 @@ public final class FeedbackPanel extends Panel implements IFeedback
 	{
 		// Force re-rendering of the list
 		messageListView.modelChanging();
-		messageListView.getList().addAll(getPage().getFeedbackMessages().messages(component, recurse));
+		Page page = getPage();
+		FeedbackMessages feedbackMessages = page.getFeedbackMessages();
+		List messages = feedbackMessages.messages(component, recurse);
+		messageListView.getList().addAll(messages);
 	}
 
 	/**

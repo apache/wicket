@@ -109,6 +109,8 @@ import wicket.util.time.Duration;
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
+ * @author Juergen Donnerstag
+ * @author Johan Compagner
  */
 public final class ApplicationSettings
 {
@@ -132,12 +134,72 @@ public final class ApplicationSettings
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
 			"SHOW_NO_EXCEPTION_PAGE");
+
+	/**
+	 * The render part of a request (opposed to the 'action part' which is either the
+	 * construction of a bookmarkable page or the execution of a IRequestListener handler)
+	 * is handled by a seperate request by issueing a redirect request to the browser.
+	 * This is commonly known as the 'redirect after submit' pattern, though in our case,
+	 * we use it for GET and POST requests instead of just the POST requests.
+	 * To cancel the client side redirect for a request, users can set the
+	 * 'redirect' property of {@link RequestCycle} to false (getRequestCycle.setRedirect(false)).
+	 * <p>
+	 * This pattern solves the 'refresh' problem. While it is a common feature of browsers
+	 * to refresh/ reload a web page, this results in problems in many dynamic web applications.
+	 * For example, when you have a link with an event handler that e.g. deletes a row from a list,
+	 * you usually want to ignore refresh requests after that link is clicked on. By using
+	 * this strategy, the refresh request only results in the re-rendering of the page without
+	 * executing the event handler again.
+	 * </p>
+	 * <p>
+	 * Though it solves the refresh problem, it introduces potential problems, as the request
+	 * that is logically one, are actually two seperate request. Not only is this less efficient,
+	 * but this also can mean that within the same request attachement/ detachement of
+	 * models is done twice (in case you use models in the bookmarkable page constructors
+	 * and IRequestListener handlers). If you use this strategy, you should be aware of
+	 * this possibily, and should also be aware that for one logical request, actually two
+	 * instances of RequestCycle are created and processed.
+	 * </p>
+	 */
+	public static final RenderStrategy REDIRECT_TO_RENDER = new RenderStrategy("CLIENT_SIDE_REDIRECT");
+
+	/**
+	 * All logical parts of a request (the action and render part) are handled within the
+	 * same request. To enable a the client side redirect for a request, users can set the
+	 * 'redirect' property of {@link RequestCycle} to true (getRequestCycle.setRedirect(true)),
+	 * after which the behaviour will be like RenderStragegy 'REDIRECT_TO_RENDER'.
+	 * <p>
+	 * Though this strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy,
+	 * and doesn't have some of the potential problems of it, it also does not solve the
+	 * refresh problem (see javadoc of 'REDIRECT_TO_RENDER' strategy).
+	 * </p>
+	 */
+	public static final RenderStrategy ONE_PASS_RENDER = new RenderStrategy("ONE_PASS_RENDER");
+
+	/**
+	 * All logical parts of a request (the action and render part) are handled within the
+	 * same request, but instead of streaming the render result to the browser directly,
+	 * the result is cached on the server. A client side redirect command is issued to the
+	 * browser specifically to render this request.
+	 * </p>
+	 *  TODO: explain the advantages/ disadvantages.
+	 * </p>
+	 */
+	public static final RenderStrategy REDIRECT_TO_BUFFER = new RenderStrategy("REDIRECT_BUFFER");
 	
 	/** Log */
 	private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
 	/** The application */
 	private Application application;
+
+	/**
+	 * The render strategy, defaults to 'REDIRECT_TO_RENDER'.
+	 * This property influences the default way in how a logical request that consists
+	 * of an 'action' and a 'render' part is handled, and is mainly used to have a means
+	 * to circumvent the 'refresh' problem.
+	 */
+	private RenderStrategy renderStrategy = REDIRECT_TO_RENDER;
 
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
@@ -216,19 +278,22 @@ public final class ApplicationSettings
 	private boolean versionPagesByDefault = true;
 
 	/**
-	 * What kind of response should be used<br>
-	 * <1> default clientside, but overriden by developer for specific pages<br>
-	 * <2> default serverside, but overriden by developer for specific pages<br>
-	 * <3> clientside but with serverside handling<br>
-	 */
-	private int responseType = 1;
-
-	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
 	 */
 	public static final class UnexpectedExceptionDisplay extends EnumeratedType
 	{
 		UnexpectedExceptionDisplay(final String name)
+		{
+			super(name);
+		}
+	}
+
+	/**
+	 * Enumerated type for different ways of handling the render part of requests.
+	 */
+	public static final class RenderStrategy extends EnumeratedType
+	{
+		RenderStrategy(final String name)
 		{
 			super(name);
 		}
@@ -325,6 +390,30 @@ public final class ApplicationSettings
 			throw new IllegalArgumentException(
 					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
 		}
+	}
+
+	/**
+	 * Gets the renderStrategy.
+	 * This property influences the default way in how a logical request that consists
+	 * of an 'action' and a 'render' part is handled, and is mainly used to have a means
+	 * to circumvent the 'refresh' problem.
+	 * @return the render strategy
+	 */
+	public final RenderStrategy getRenderStrategy()
+	{
+		return renderStrategy;
+	}
+
+	/**
+	 * Sets the renderStrategy.
+	 * This property influences the default way in how a logical request that consists
+	 * of an 'action' and a 'render' part is handled, and is mainly used to have a means
+	 * to circumvent the 'refresh' problem.
+	 * @param renderStrategy the render strategy
+	 */
+	public final void setRenderStrategy(RenderStrategy renderStrategy)
+	{
+		this.renderStrategy = renderStrategy;
 	}
 
 	/**
@@ -891,20 +980,5 @@ public final class ApplicationSettings
 	final List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
-	}
-
-	/**
-	 * @return Returns the responseType.
-	 */
-	public int getResponseType()
-	{
-		return responseType;
-}
-	/**
-	 * @param responseType The responseType to set.
-	 */
-	public void setResponseType(int responseType)
-	{
-		this.responseType = responseType;
 	}
 }
