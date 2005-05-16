@@ -42,7 +42,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class FeedbackPanel extends Panel implements IFeedback
+public class FeedbackPanel extends Panel implements IFeedback
 {
 	/** Message view */
 	private final MessageListView messageListView;
