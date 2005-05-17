@@ -153,8 +153,6 @@ public class UploadPage extends WicketExamplePage
 			final FileUpload upload = fileUploadField.getFileUpload();
 			if (upload != null)
 			{
-				log.info("Uploaded file: " + upload.getFile());
-
 				// Create a new file
 				File newFile = new File(uploadFolder, upload.getFile().getName());
 
@@ -164,7 +162,9 @@ public class UploadPage extends WicketExamplePage
 				{
 					// Save to new file
 					newFile.createNewFile(); 
-					upload.writeTo(newFile); 
+					upload.writeTo(newFile);
+
+					UploadPage.this.info("saved file: " + upload.getFile());
 				}
 				catch (Exception e)
 				{
@@ -226,9 +226,9 @@ public class UploadPage extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					log.info("Deleting " + file);
 					Files.remove(file);
 					refreshFiles();
+					UploadPage.this.info("Deleted " + file);
 				}
 			});
 		}
