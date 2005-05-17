@@ -84,6 +84,9 @@ public abstract class UploadForm extends Form
 		{
 			final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(this, request);
 			getRequestCycle().setRequest(multipartWebRequest);
+
+			// Now do normal form submit validation processing
+			super.onFormSubmitted();
 		}
 		catch (FileUploadException e)
 		{
@@ -105,9 +108,6 @@ public abstract class UploadForm extends Form
 				error(getString(getId() + ".uploadFailed", Model.valueOf(model), defaultValue));
 			}
 		}
-
-		// Now do normal form submit validation processing
-		super.onFormSubmitted();
 	}
 
 	/**
