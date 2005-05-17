@@ -264,6 +264,18 @@ public final class Strings
 						buffer.append("&gt;");
 						break;
 
+					case '&':
+					    buffer.append("&amp;");
+					    break;
+
+					case '"':
+					    buffer.append("&quot;");
+					    break;
+
+					case '\'':
+					    buffer.append("&#039;");
+					    break;
+
 					default :
 						buffer.append(c);
 						break;
