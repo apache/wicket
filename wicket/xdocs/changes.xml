@@ -9,6 +9,10 @@
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
   	  <action type="update" dev="Eelco Hillenius">
+  	  	It is now possible to set a Comparator for sorting messages on both FeedbackPanel
+  	  	and FeedbackMessagesModel.
+  	  </action>
+  	  <action type="update" dev="Eelco Hillenius">
 		Refactored feedback message handling to be independent (using pull models) of the flow
 		of execution of a page again. This makes it easier to use, and results in less spagethi
 		code. Introduced IFeedbackBoundary that is a tagging interface to implement message
