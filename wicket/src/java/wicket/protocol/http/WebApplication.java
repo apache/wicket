@@ -17,7 +17,10 @@
  */
 package wicket.protocol.http;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
@@ -45,13 +48,13 @@ import wicket.markup.html.pages.PageExpiredErrorPage;
  * init() method. For example:
  * 
  * <pre>
- *                        public void init()
- *                        {
- *                          String webXMLParameter = getWicketServlet()
- *                          			.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                          URL schedulersConfig = getWicketServlet().getServletContext()
- *                          			.getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                          ...
+ *      public void init()
+ *      {
+ *          String webXMLParameter = getWicketServlet()
+ *              .getInitParameter(&quot;myWebXMLParameter&quot;);
+ *          URL schedulersConfig = getWicketServlet().getServletContext()
+ *              .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *          ...
  * </pre>
  * 
  * @see WicketServlet
@@ -212,5 +215,36 @@ public abstract class WebApplication extends Application
 		webSession.init(httpSession, sessionAttributePrefix);
 
 		return webSession;
+	}
+	
+	/**
+	 * Create a new WebRequest. Subclasses of WebRequest could e.g.
+	 * decode and obfuscated URL which has been encoded by an
+	 * appropriate WebResponse.
+	 * 
+	 * @param servletRequest
+	 * @return a WebRequest object
+	 */
+	protected WebRequest newWebRequest(final HttpServletRequest servletRequest)
+	{
+		return new WebRequest(servletRequest);
+	}
+	
+	/**
+	 * Create a WebResponse. Subclasses of WebRequest could e.g.
+	 * encode wicket's default URL and hide the details from the user.
+	 * A appropriate WebRequest must be implemented and configured to
+	 * decode the encoded URL.
+	 * 
+	 * @param servletResponse
+	 * @return a WebResponse object
+	 * @throws IOException
+	 */
+	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
+		throws IOException
+	{
+		return (getSettings().getBufferResponse()
+					? new BufferedWebResponse(servletResponse)
+			        : new WebResponse(servletResponse));
 	}
 }

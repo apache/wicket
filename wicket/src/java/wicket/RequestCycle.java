@@ -159,9 +159,6 @@ import wicket.util.string.Strings;
  */
 public abstract class RequestCycle
 {
-
-	/** Path prefix for secure url paths */
-	public static final String securePathPrefix = "/secure/";
 	/** Map from class name to Constructor. */
 	private static final Map constructors = new HashMap();
 
@@ -371,9 +368,6 @@ public abstract class RequestCycle
 				internalOnBeginRequest();
 				onBeginRequest();
 
-				// Decrypt request if need be
-				decryptRequest();
-
 				// If request is parsed successfully
 				if (parseRequest())
 				{
@@ -519,17 +513,6 @@ public abstract class RequestCycle
 			session.updateCluster();
 		}
 	}
-	
-	/**
-	 * Constructs a new request for the given path
-	 * 
-	 * @param request
-	 *            The request
-	 * @param path
-	 *            The new path
-	 * @return The request
-	 */
-	protected abstract Request newRequest(final Request request, final String path);
 
 	/**
 	 * Called when the request cycle object is beginning its response
@@ -561,18 +544,6 @@ public abstract class RequestCycle
 	 */
 	protected abstract void redirectTo(final Page page) throws ServletException;
 
-	/**
-	 * Decrypts request from special url format if necessary
-	 */
-	private final void decryptRequest()
-	{
-		final String path = request.getPath();
-		if (path != null && path.startsWith(securePathPrefix))
-		{
-			final String encryptedPath = path.substring(securePathPrefix.length());
-			this.request = newRequest(this.request, session.getPathCrypt().decrypt(encryptedPath));
-		}
-	}
 
 	/**
 	 * Sets up to handle a runtime exception thrown during rendering
@@ -696,9 +667,6 @@ public abstract class RequestCycle
 		// session for easy access by the page being rendered and any
 		// components on that page
 		session.setRequestCycle(this);
-		
-		// Set up any encryption for response urls
-		response.setPathCrypt(session.getPathCrypt());
 	}
 
 	/**

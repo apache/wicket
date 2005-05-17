@@ -179,8 +179,9 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		// try to see if this is a redirect that is already stored in the wicket-redirect map of its session.
-		// first, are any redirects stored?
+		// try to see if this is a redirect that is already stored in the wicket-redirect 
+	    // map of its session.
+		// First, are any redirects stored?
 		Map redirectMap = (Map)servletRequest.getSession(true).getAttribute("wicket-redirect");
 		if(redirectMap != null)
 		{
@@ -205,17 +206,16 @@ public class WicketServlet extends HttpServlet
 		final WebSession session = webApplication.getSession(servletRequest);
 
 		// create a new webrequest
-		final WebRequest request = new WebRequest(servletRequest);
+		final WebRequest request = webApplication.newWebRequest(servletRequest);
 
 		// create a response object
-		final WebResponse response = webApplication.getSettings().getBufferResponse()
-				? new BufferedWebResponse(servletResponse)
-				: new WebResponse(servletResponse);
+		final WebResponse response = webApplication.newWebResponse(servletResponse);
 
 		try
 		{
 			// create a new request cycle
 			RequestCycle cycle = session.newRequestCycle(request, response);
+			
 			// Process request
 			cycle.request();
 		}
