@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.panel;
 
+import java.util.Comparator;
+
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.FeedbackMessage;
@@ -68,7 +70,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		protected void populateItem(final ListItem listItem)
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
-			IModel replacementModel = new Model()
+			final IModel replacementModel = new Model()
 			{
 				/**
 				 * Returns feedbackPanel + the message level, eg
@@ -123,6 +125,17 @@ public class FeedbackPanel extends Panel implements IFeedback
 		FeedbackMessagesModel feedbackMessagesModel =
 			(FeedbackMessagesModel)messageListView.getModel();
 		feedbackMessagesModel.setCollectingComponent(collectingComponent);
+	}
+
+	/**
+	 * Sets the comparator used for sorting the messages.
+	 * @param sortingComparator comparator used for sorting the messages.
+	 */
+	public void setSortingComparator(Comparator sortingComparator)
+	{
+		FeedbackMessagesModel feedbackMessagesModel =
+			(FeedbackMessagesModel)messageListView.getModel();
+		feedbackMessagesModel.setSortingComparator(sortingComparator);
 	}
 
 	/**

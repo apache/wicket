@@ -19,6 +19,7 @@
 package wicket;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import wicket.model.AbstractDetachableModel;
@@ -43,8 +44,24 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	 */
 	private Component collectingComponent;
 
+	/**
+	 * Comparator used for sorting the messages.
+	 */
+	private Comparator sortingComparator;
+
 	/** lazy loaded, temporary list. */
 	private transient List current;
+
+	/**
+	 * Construct. The first occurence of {@link IFeedbackBoundary}
+	 * 	will be searched for higher up in the run-time hierarchy for collecting messages
+	 * @param includeNestedComponents
+	 * 		Whether to include the messages of any nested component
+	 */
+	public FeedbackMessagesModel(boolean includeNestedComponents)
+	{
+		this(includeNestedComponents, null, null);
+	}
 
 	/**
 	 * Construct.
@@ -56,8 +73,24 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	 */
 	public FeedbackMessagesModel(boolean includeNestedComponents, Component collectingComponent)
 	{
+		this(includeNestedComponents, collectingComponent, null);
+	}
+
+	/**
+	 * Construct.
+	 * @param includeNestedComponents
+	 * 		Whether to include the messages of any nested component
+	 * @param collectingComponent Optional collecting component.
+	 * 	When this is not set explicitly, the first occurence of {@link IFeedbackBoundary}
+	 * 	will be searched for higher up in the run-time hierarchy.
+	 * @param sortingComparator 
+	 */
+	public FeedbackMessagesModel(boolean includeNestedComponents,
+			Component collectingComponent, Comparator sortingComparator)
+	{
 		this.includeNestedComponents = includeNestedComponents;
 		this.collectingComponent = collectingComponent;
+		this.sortingComparator = sortingComparator;
 	}
 
 	/**
@@ -100,7 +133,23 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 					true, FeedbackMessage.DEBUG);
 		}
 
+		// sort the list before returning it
+		sort(current);
+
 		return current;
+	}
+
+	/**
+	 * Sorts the list if property sortingComparator was set, otherwise it
+	 * doesn't do any sorting.
+	 * @param list list to sort; contains elements of {@link FeedbackMessage}.
+	 */
+	protected void sort(List list)
+	{
+		if(sortingComparator != null);
+		{
+			Collections.sort(list, sortingComparator);
+		}
 	}
 
 	/**
@@ -144,5 +193,14 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	public void setCollectingComponent(Component collectingComponent)
 	{
 		this.collectingComponent = collectingComponent;
+	}
+
+	/**
+	 * Sets the comparator used for sorting the messages.
+	 * @param sortingComparator comparator used for sorting the messages
+	 */
+	public void setSortingComparator(Comparator sortingComparator)
+	{
+		this.sortingComparator = sortingComparator;
 	}
 }
