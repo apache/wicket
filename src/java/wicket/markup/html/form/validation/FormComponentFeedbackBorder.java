@@ -18,12 +18,13 @@
 package wicket.markup.html.form.validation;
 
 import wicket.Component;
+import wicket.FeedbackMessages;
 import wicket.IFeedback;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 
 /**
- * A border that can be placed around a form bordered to indicate when the
+ * A border that can be placed around a form component to indicate when the
  * bordered child has a validation error. A child of the border named
  * "errorIndicator" will be shown and hidden depending on whether the child has
  * an error. A typical error indicator might be a little red asterisk.
@@ -31,10 +32,16 @@ import wicket.markup.html.border.Border;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class FormComponentFeedbackBorder extends Border implements IFeedback
+public class FormComponentFeedbackBorder extends Border implements IFeedback
 {
 	/** The error indicator child which should be shown if an error occurs. */
-	private final WebMarkupContainer errorIndicator;
+	private final ErrorIndicator errorIndicator;
+
+	/**
+	 * Optional collecting component. When this is not set explicitly, the children of
+	 * this border will be used for searching for components.
+	 */
+	private Component collectingComponent;
 
 	/**
 	 * Constructor.
@@ -45,31 +52,80 @@ public final class FormComponentFeedbackBorder extends Border implements IFeedba
 	public FormComponentFeedbackBorder(final String id)
 	{
 		super(id);
-
-		// Create invisible error indicator bordered that will be shown when a
-		// validation error occurs
-		errorIndicator = new WebMarkupContainer("errorIndicator");
-		errorIndicator.setVisible(false);
-		add(errorIndicator);
+		add(errorIndicator = new ErrorIndicator("errorIndicator"));
 	}
 
 	/**
-	 * Handles feedback. If any errors were registered on child components of
-	 * this feedback border, the decorated error indicator will be set to
-	 * visible.
-	 * 
-	 * @see IFeedback#addFeedbackMessages(Component, boolean)
+	 * @see wicket.IFeedback#setCollectingComponent(wicket.Component)
 	 */
-	public void addFeedbackMessages(final Component component, final boolean recurse)
+	public void setCollectingComponent(Component collectingComponent)
 	{
-		errorIndicator.setVisible(getPage().getFeedbackMessages().messages(this, true).size() > 0);
+		this.collectingComponent = collectingComponent;
 	}
 
 	/**
-	 * @see wicket.IFeedback#clearFeedbackMessages()
+	 * Error indicator that will be shown whenever there is an error-level message
+	 * for the collecting component.
 	 */
-	public void clearFeedbackMessages()
+	private final class ErrorIndicator extends WebMarkupContainer
 	{
-		errorIndicator.setVisible(false);
+		/**
+		 * Construct.
+		 * @param id component id
+		 */
+		public ErrorIndicator(String id)
+		{
+			super(id);
+		}
+
+		/**
+		 * @see wicket.Component#isVisible()
+		 */
+		public boolean isVisible()
+		{
+			// get the messages for the current page
+			final FeedbackMessages feedbackMessages = getPage().getFeedbackMessages();
+			if(collectingComponent != null)
+			{
+				// use the one that was explicitly set
+				return feedbackMessages.hasErrorMessageFor(collectingComponent);
+			}
+			// search through all children (typically this will be one and will be
+			// a form component, but it is possible to group components) for an error message
+			ErrorMessageVisitor errorMessageVisitor = new ErrorMessageVisitor(feedbackMessages);
+			FormComponentFeedbackBorder.this.visitChildren(errorMessageVisitor);
+			return errorMessageVisitor.foundErrorMessage;
+		}
+	}
+
+	/**
+	 * Visits all childs to look for any registered error messages.
+	 */
+	private static final class ErrorMessageVisitor implements IVisitor
+	{
+		final FeedbackMessages feedbackMessages;
+		boolean foundErrorMessage = false;
+
+		/**
+		 * Construct.
+		 * @param feedbackMessages
+		 */
+		public ErrorMessageVisitor(FeedbackMessages feedbackMessages)
+		{
+			this.feedbackMessages = feedbackMessages;
+		}
+
+		/**
+		 * @see wicket.Component.IVisitor#component(wicket.Component)
+		 */
+		public Object component(Component component)
+		{
+			if(feedbackMessages.hasErrorMessageFor(component))
+			{
+				foundErrorMessage = true;
+				return IVisitor.STOP_TRAVERSAL;
+			}
+			return IVisitor.CONTINUE_TRAVERSAL;
+		}
 	}
 }
