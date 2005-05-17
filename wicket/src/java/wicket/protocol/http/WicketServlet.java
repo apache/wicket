@@ -144,6 +144,9 @@ public class WicketServlet extends HttpServlet
 		}
 	}
 
+	/**
+	 * @see javax.servlet.http.HttpServlet#getLastModified(javax.servlet.http.HttpServletRequest)
+	 */
 	protected long getLastModified(HttpServletRequest servletRequest)
 	{
 		final String pathInfo = servletRequest.getPathInfo();
@@ -177,23 +180,34 @@ public class WicketServlet extends HttpServlet
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
 		// try to see if this is a redirect that is already stored in the wicket-redirect map of its session.
+		// first, are any redirects stored?
 		Map redirectMap = (Map)servletRequest.getSession(true).getAttribute("wicket-redirect");
 		if(redirectMap != null)
 		{
-			BufferedResponse rr = (BufferedResponse)redirectMap.remove(servletRequest.getRequestURI() + "?" + servletRequest.getQueryString());
-			if(rr != null)
+			// there are requests stored, so try to get the one based on this URL
+			// (when you work with frames/ popups, there might actually be more temporary
+			// buffered requests)
+			String requestUri = servletRequest.getRequestURI() + "?" + servletRequest.getQueryString();
+			BufferedResponse bufferedResponse = (BufferedResponse)redirectMap.remove(requestUri);
+			if(bufferedResponse != null)
 			{
-				PrintWriter pw = servletResponse.getWriter();
-				servletResponse.setContentLength(rr.getContentLength());
-				servletResponse.setContentType(rr.getContentType());
-				pw.write(rr.toString());
-				pw.close();
+				// got a buffered response; now write it
+				PrintWriter writer = servletResponse.getWriter();
+				servletResponse.setContentLength(bufferedResponse.getContentLength());
+				servletResponse.setContentType(bufferedResponse.getContentType());
+				writer.write(bufferedResponse.toString());
+				writer.close();
 				return;
 			}
 		}
+
 		// Get session for request
 		final WebSession session = webApplication.getSession(servletRequest);
+
+		// create a new webrequest
 		final WebRequest request = new WebRequest(servletRequest);
+
+		// create a response object
 		final WebResponse response = webApplication.getSettings().getBufferResponse()
 				? new BufferedWebResponse(servletResponse)
 				: new WebResponse(servletResponse);
