@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -208,8 +209,19 @@ public class WebRequestCycle extends RequestCycle
 			// If it's not a resource reference or static content
 			if (!resourceReference() && !staticContent())
 			{
-				// then we cannot process the request
-				throw new WicketRuntimeException("Unable to parse request " + request);
+				// not found... send 404 to client indicating that no resource was found
+				// for the request uri
+				WebResponse webResponse = (WebResponse)getResponse();
+				HttpServletResponse httpServletResponse = webResponse.getHttpServletResponse();
+				try
+				{
+					httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
+				}
+				catch (IOException e)
+				{
+					// that seems unlikely... anyway, log exception and forget about it
+					log.error("unable to send 404 for " + getRequest() + ", cause: " + e.getMessage(), e);
+				}
 			}
 			
 			// Don't update the cluster, not returning a page
