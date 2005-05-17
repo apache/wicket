@@ -38,10 +38,10 @@ import wicket.util.value.ValueMap;
  */
 public class MultipartWebRequest extends WebRequest
 {
-	/** Map of file items */
+	/** Map of file items. */
 	private final ValueMap files = new ValueMap();
 
-	/** Map of parameters */
+	/** Map of parameters. */
 	private final ValueMap parameters = new ValueMap();
 
 	/**
