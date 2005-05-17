@@ -201,15 +201,18 @@ import wicket.version.undo.Change;
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
+ * @author Johan Compagner
  */
 public abstract class Component implements Serializable
 {
 	/**
-	 * 
+	 * Change record of a model.
 	 */
 	public class ComponentModelChange extends Change
 	{
+		/** former model. */
 		private IModel model;
+
 		/**
 		 * Construct.
 		 * @param model 
@@ -227,7 +230,6 @@ public abstract class Component implements Serializable
 		{
 			setModel(this.model);
 		}
-
 	}
 
 	/** Reserved subclass-definable flag bit */
@@ -283,12 +285,12 @@ public abstract class Component implements Serializable
 		/**
 		 * Value to return to continue a traversal.
 		 */
-		public static Object CONTINUE_TRAVERSAL = null;
+		public static final Object CONTINUE_TRAVERSAL = null;
 
 		/**
 		 * A generic value to return to stop a traversal.
 		 */
-		public static Object STOP_TRAVERSAL = new Object();
+		public static final Object STOP_TRAVERSAL = new Object();
 
 		/**
 		 * Called at each component in a traversal.
