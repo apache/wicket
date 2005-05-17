@@ -387,11 +387,11 @@ public abstract class Form extends WebMarkupContainer
 		}
 		else
 		{
-			// Persist FormComponents if requested
-			persistFormComponentData();
-
 			// Update model using form data
 			updateFormComponentModels();
+
+			// Persist FormComponents if requested
+			persistFormComponentData();
 
 			// Model was successfully updated with valid data
 			onSubmit();
