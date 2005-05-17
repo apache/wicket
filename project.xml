@@ -185,6 +185,10 @@
       <name>Dan Gould</name>
       <email>-</email>
     </contributor>
+    <contributor>
+      <name>Francois Denommee</name>
+      <email>-</email>
+    </contributor>    
   </contributors>
   <dependencies>
     <dependency>
