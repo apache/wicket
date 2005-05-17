@@ -9,6 +9,9 @@
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
   	  <action type="fix" dev="Eelco Hillenius">
+  	    in Form: Form components were persisted before the form was updated.
+  	  </action>
+  	  <action type="fix" dev="Eelco Hillenius">
   	    When the upload does not validate, super.onSubmit will now not be called anymore.
   	  </action>
   	  <action type="update" dev="Eelco Hillenius">
