@@ -100,11 +100,6 @@ import wicket.version.undo.UndoPageVersionManager;
  * an instance of UndoPageVersionManager, which manages versions of a page by
  * keeping change records that can be reversed at a later time.
  * 
- * <li><b>User Feedback </b>- A page can have one or more feedback messages and
- * it can specify a feedback component implementing IFeedback for displaying
- * these messages. An easy and useful implementation of IFeedback is the
- * FeedbackPanel component which displays feedback messages in a list view.
- * 
  * <li><b>Security </b>- Pages can be secured by overriding checkAccess(). If
  * checkAccess() returns ACCESS_ALLOWED (true), then onRender() will render the
  * page. If it returns false (ACCESS_DENIED), then onRender() will not render
@@ -127,8 +122,11 @@ import wicket.version.undo.UndoPageVersionManager;
  * 
  * @author Jonathan Locke
  * @author Chris Turner
+ * @author Eelco Hillenius
+ * @author Johan Compagner
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener
+public abstract class Page extends MarkupContainer
+	implements IRedirectListener, IFeedbackBoundary
 {
 	/** Access allowed flag (value == true). */
 	protected static final boolean ACCESS_ALLOWED = true;
@@ -153,9 +151,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 	/** Used to create page-unique numbers */
 	private int autoIndex;
-
-	/** Any feedback display for this page */
-	private IFeedback feedback;
 
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
@@ -269,14 +264,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Override this method to implement a custom way of producing a version of
-	 * a Page when it cannot be found in the Session.
-	 * 
-	 * @param versionNumber
-	 *            The version desired
-	 * @return A Page object with the component/model hierarchy that was
-	 *         attached to this page at the time represented by the requested
-	 *         version.
+	 * Override this method to implement a custom way of producing a version of a Page
+	 * when it cannot be found in the Session.
+	 * @param versionNumber The version desired
+	 * @return A Page object with the component/model hierarchy that was attached to this
+	 *         page at the time represented by the requested version.
 	 */
 	public Page getVersion(final int versionNumber)
 	{
@@ -484,17 +476,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
-	 * Sets the feedback display for this page
-	 * 
-	 * @param feedback
-	 *            The feedback
-	 */
-	public final void setFeedback(final IFeedback feedback)
-	{
-		this.feedback = feedback;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @param pageMapName
@@ -616,26 +597,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 
 		// Set response locale from session locale
 		response.setLocale(getSession().getLocale());
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * @see wicket.Component#internalOnBeginRequest()
-	 */
-	protected final void internalOnBeginRequest()
-	{
-		if(log.isDebugEnabled())
-		{
-			log.debug("beginning request for page " + this + ", request " + getRequest());
-		}
-		// Adds any feedback messages on this page to the given component
-		if (feedback != null)
-		{
-			feedback.clearFeedbackMessages();
-			feedback.addFeedbackMessages(this, false);
-		}
 	}
 
 	/**

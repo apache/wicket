@@ -17,15 +17,12 @@
  */
 package wicket.markup.html.panel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.FeedbackMessage;
-import wicket.FeedbackMessages;
+import wicket.FeedbackMessagesModel;
 import wicket.IFeedback;
-import wicket.Page;
+import wicket.IFeedbackBoundary;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -38,7 +35,6 @@ import wicket.model.IModel;
  * 
  * @see wicket.FeedbackMessage
  * @see wicket.FeedbackMessages
- * @see wicket.IFeedback
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
@@ -46,6 +42,12 @@ public class FeedbackPanel extends Panel implements IFeedback
 {
 	/** Message view */
 	private final MessageListView messageListView;
+
+	/**
+	 * Optional collecting component. When this is not set explicitly, the first occurence
+	 * of {@link IFeedbackBoundary} will be searched for higher up in the run-time
+	 * hierarchy.
+	 */
 
 	/**
 	 * List for messages.
@@ -57,7 +59,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		 */
 		public MessageListView(final String id)
 		{
-			super(id, (List)new ArrayList());
+			super(id, new FeedbackMessagesModel(true, null));
 		}
 
 		/**
@@ -114,22 +116,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Sets the model for the list view of feedback messages based on the
-	 * messages set on components in a given form.
-	 * 
-	 * @see IFeedback#addFeedbackMessages(Component, boolean)
-	 */
-	public void addFeedbackMessages(final Component component, final boolean recurse)
-	{
-		// Force re-rendering of the list
-		messageListView.modelChanging();
-		Page page = getPage();
-		FeedbackMessages feedbackMessages = page.getFeedbackMessages();
-		List messages = feedbackMessages.messages(component, recurse);
-		messageListView.getList().addAll(messages);
-	}
-
-	/**
 	 * @param maxMessages
 	 *            The maximum number of feedback messages that this feedback
 	 *            panel should show at one time
@@ -140,10 +126,15 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see wicket.IFeedback#clearFeedbackMessages()
+	 * Sets the optional collecting component. When this is not set explicitly, the first occurence
+	 * of {@link IFeedbackBoundary} will be searched for higher up in the run-time
+	 * hierarchy.
+	 * @param collectingComponent the collecting component
 	 */
-	public void clearFeedbackMessages()
+	public void setCollectingComponent(Component collectingComponent)
 	{
-		messageListView.getList().clear();
+		FeedbackMessagesModel feedbackMessagesModel =
+			(FeedbackMessagesModel)messageListView.getModel();
+		feedbackMessagesModel.setCollectingComponent(collectingComponent);
 	}
 }

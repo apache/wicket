@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,18 +19,17 @@
 package wicket;
 
 /**
- * TODO docme
- * 
- * @author Jonathan Locke
+ * Tagging interface to be able to create different levels of feedback message
+ * collection.
+ * <p>
+ * For example, when you have a page with a form, and seperate feedbackpanels for the page level
+ * messages and form level messages, you want the collecting of messages for the page to
+ * stop with the form component, because otherwise you will see duplicates.
+ * </p>
+ *
  * @author Eelco Hillenius
  */
-public interface IFeedback
+public interface IFeedbackBoundary
 {
-	/**
-	 * Sets the optional collecting component. When this is not set explicitly, the first occurence
-	 * of {@link IFeedbackBoundary} will be searched for higher up in the run-time
-	 * hierarchy.
-	 * @param collectingComponent the collecting component
-	 */
-	void setCollectingComponent(Component collectingComponent);
+
 }

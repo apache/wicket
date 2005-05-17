@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.IFeedback;
+import wicket.IFeedbackBoundary;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
@@ -60,7 +61,8 @@ import wicket.util.value.Count;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public abstract class Form extends WebMarkupContainer implements IFormSubmitListener
+public abstract class Form extends WebMarkupContainer
+	implements IFormSubmitListener, IFeedbackBoundary
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
@@ -143,6 +145,10 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	{
 		super(id);
 		this.feedback = feedback;
+		if(feedback != null)
+		{
+			feedback.setCollectingComponent(this);
+		}
 	}
 
 	/**
@@ -159,6 +165,10 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	{
 		super(id, model);
 		this.feedback = feedback;
+		if(feedback != null)
+		{
+			feedback.setCollectingComponent(this);
+		}
 	}
 
 	/**
@@ -216,17 +226,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	{
 		// Validate form
 		onValidate();
-
-		// Maurice pointed out that onValidate() calls user code in onSubmit()
-		// which may do something like replace the whole form with something
-		// else!
-		// TODO is this really true? The form can be gone yes. But the feedbackpanel still could have a page!!
-		// The feedback panel itself should handle this gracefully not the form here.
-		if (findPage() != null)
-		{
-			// Update validation feedback no matter how the form was validated
-			addFeedback();
-		}
 	}
 
 	/**
@@ -306,14 +305,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 	 */
 	protected void onError()
 	{
-	}
-
-	/**
-	 * @see wicket.Component#onBeginRequest()
-	 */
-	protected void onBeginRequest()
-	{
-		addFeedback();
 	}
 
 	/**
@@ -426,37 +417,6 @@ public abstract class Form extends WebMarkupContainer implements IFormSubmitList
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
-
-	/**
-	 * Updates feedback on each feedback component on or attached to the form.
-	 */
-	private void addFeedback()
-	{
-		if(feedback != null)
-		{
-			feedback.clearFeedbackMessages();
-		}
-		// Traverse children of this form, calling validationError() on any
-		// components implementing IFeedback.
-		visitChildren(IFeedback.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Call validation error handler
-				((IFeedback)component).addFeedbackMessages(Form.this, true);
-
-				// Traverse all children
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-
-		// Add feedback messages to the feedback display that is registered with
-		// this form, if any
-		if (feedback != null)
-		{
-			feedback.addFeedbackMessages(this, true);
-		}
 	}
 
 	/**
