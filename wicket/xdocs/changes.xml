@@ -8,6 +8,14 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Eelco Hillenius" issue="1197005">
+  	   Nesting of message receivers should work without any problems due to the recent
+  	   feedback message refactorings.
+  	  </action>
+  	  <action type="fix" dev="Eelco Hillenius" issue="1198740">
+  	   Instead of throwing an exception when a request could not be processed, Wicket
+  	   now sends a 404.
+  	  </action>
   	  <action type="fix" dev="Eelco Hillenius">
   	    in Form: Form components were persisted before the form was updated.
   	  </action>
