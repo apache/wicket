@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Eelco Hillenius">
+  	  Added escapes for &, " and ' in Strings utilities class.
+  	  </action>
   	  <action type="fix" dev="Eelco Hillenius" issue="1196140">
   	   This bug prevented running Wicket on VM's that don't use SUN's security implementation
   	   classes. Don Ledford reported it for Blackdown 1.4.2 j2sdk. Removed SunJceCrypt's
