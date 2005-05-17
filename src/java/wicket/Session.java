@@ -31,7 +31,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.util.convert.IConverter;
-import wicket.util.crypt.ICrypt;
 import wicket.util.string.Strings;
 
 /**
@@ -349,21 +348,6 @@ public abstract class Session implements Serializable
 	{
 		return style;
 	}
-	
-	/**
-	 * @return Any crypt instance to encrypt url paths for this session
-	 */
-	public final ICrypt getPathCrypt()
-	{
-		if (crypt == null)
-		{
-			// crypt = application.newCrypt();
-		}
-		return crypt;
-	}
-	
-	// TODO Path encryption is not finished.  Do not attempt to use this feature!!
-	private ICrypt crypt = null; // new TrivialCrypt();
 	
 	/**
 	 * Invalidates this session

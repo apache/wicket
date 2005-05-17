@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -37,7 +36,6 @@ import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Response;
@@ -97,82 +95,6 @@ public class WebRequestCycle extends RequestCycle
 	public WebResponse getWebResponse()
 	{
 		return (WebResponse)response;
-	}
-	
-	/**
-	 * @see wicket.RequestCycle#newRequest(wicket.Request, java.lang.String)
-	 */
-	protected Request newRequest(final Request request, final String path)
-	{
-		final WebRequest webRequest = (WebRequest)request;
-		final int parametersIndex = path.indexOf('?');
-		final String pathInfo = parametersIndex == -1 ? path : path.substring(0, parametersIndex);
-		final Map parameterMap = new HashMap(); 
-		
-		// TODO This parsing code and url path encryption do not work yet
-		
-		if (parametersIndex != -1)
-		{
-			final String parametersString = path.substring(parametersIndex + 1);
-			final String[] parameters = Strings.split(parametersString, '&');
-			for (int i = 0; i < parameters.length; i++)
-			{
-				final String[] s = Strings.split(parameters[i], '=');
-				parameterMap.put(s[0], s[1]);
-			}
-		}
-		
-		return new WebRequest(null)
-		{
-			public String getContextPath()
-			{
-				return webRequest.getContextPath();
-			}
-			public Locale getLocale()
-			{
-				return request.getLocale();
-			}
-
-			public String getParameter(String key)
-			{
-				return (String)parameterMap.get(key.toLowerCase());
-			}
-
-			public Map getParameterMap()
-			{
-				return parameterMap;
-			}
-
-			public String[] getParameters(String key)
-			{
-				final String parameter = getParameter(key);
-				if (parameter != null)
-				{
-					return Strings.split(parameter, ';');
-				}
-				return null;
-			}
-			
-			public String getPath()
-			{
-				return pathInfo;
-			}
-			
-			public String getRelativeURL()
-			{
-				return webRequest.getRelativeURL();
-			}
-			
-			public String getServletPath()
-			{
-				return webRequest.getServletPath();
-			}
-
-			public String getURL()
-			{
-				return request.getURL();
-			}
-		};
 	}
 
 	/**
@@ -393,6 +315,7 @@ public class WebRequestCycle extends RequestCycle
 			try
 			{
 				Page newPage = newPage(application.getPages().getHomePage());
+				
 				setResponsePage(newPage);
 				setUpdateCluster(true);
 			}
@@ -543,7 +466,7 @@ public class WebRequestCycle extends RequestCycle
 			// the servlet context
 			final String url = '/' + getWebRequest().getRelativeURL();
 			// NOTE: we NEED to put the '/' in front as otherwise some versions of
-			// appliction servers (e.g. Jetty 5.1.x) will fail for requests like
+			// application servers (e.g. Jetty 5.1.x) will fail for requests like
 			// '/mysubdir/myfile.css'
 
 			// Get servlet context

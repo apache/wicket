@@ -87,11 +87,11 @@ public class WebResponse extends Response
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
-	public final String encodeURL(String url)
+	public String encodeURL(String url)
 	{
 		if (httpServletResponse != null)
 		{
-			return httpServletResponse.encodeURL(super.encodeURL(url));
+			return httpServletResponse.encodeURL(url);
 		}
 		return url;
 	}
