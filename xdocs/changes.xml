@@ -8,6 +8,19 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="update" dev="Eelco Hillenius">
+		Refactored feedback message handling to be independent (using pull models) of the flow
+		of execution of a page again. This makes it easier to use, and results in less spagethi
+		code. Introduced IFeedbackBoundary that is a tagging interface to implement message
+		hierarchy blocks. Currently it is implemented by Page and Form. IFeedback now has one
+		method that can be used by implementing classes to set (override) the actual component
+		from where messages are collected. Form uses this to set the collection point when a
+		IFeedback instance is provided. The add/remove methods of IFeedback are removed.
+		Made both FeedbackPanel and FormComponentFeedbackBorder non-final, so users can
+		provide their own markup. Also, FeedbackMessagesModel that is used by FeedbackPanel
+		is public, so that it can be used for custom implementations without having to know
+		too much about the internals of message collecting.
+  	  </action>
   	  <action type="fix" dev="Eelco Hillenius">
   	  Added escapes for &, " and ' in Strings utilities class.
   	  </action>
