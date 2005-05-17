@@ -26,8 +26,8 @@ import wicket.IFeedbackBoundary;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
-import wicket.model.AbstractModel;
 import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * A simple panel that displays {@link wicket.FeedbackMessage}s in a list view.
@@ -52,7 +52,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	/**
 	 * List for messages.
 	 */
-	private static final class MessageListView extends ListView
+	private final class MessageListView extends ListView
 	{
 		/**
 		 * @see wicket.Component#Component(String)
@@ -68,7 +68,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		protected void populateItem(final ListItem listItem)
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
-			IModel replacementModel = new AbstractModel()
+			IModel replacementModel = new Model()
 			{
 				/**
 				 * Returns feedbackPanel + the message level, eg
@@ -79,20 +79,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				 */
 				public Object getObject(final Component component)
 				{
-					return "feedbackPanel" + message.getLevelAsString();
-				}
-
-				/**
-				 * @see wicket.model.IModel#setObject(Component, Object)
-				 */
-				public void setObject(final Component component, final Object object)
-				{
-				}
-
-				public IModel getNestedModel()
-				{
-					// TODO check calls to getNestedModel(), returned message
-					return null;
+					return getCSSClass(message);
 				}
 			};
 
@@ -136,5 +123,16 @@ public class FeedbackPanel extends Panel implements IFeedback
 		FeedbackMessagesModel feedbackMessagesModel =
 			(FeedbackMessagesModel)messageListView.getModel();
 		feedbackMessagesModel.setCollectingComponent(collectingComponent);
+	}
+
+	/**
+	 * Gets the css class for the given message.
+	 * @param message the message
+	 * @return the css class; by default, this returns feedbackPanel + the message level, eg
+	 *		'feedbackPanelERROR', but you can override this method to provide your own
+	 */
+	protected String getCSSClass(final FeedbackMessage message)
+	{
+		return "feedbackPanel" + message.getLevelAsString();
 	}
 }
