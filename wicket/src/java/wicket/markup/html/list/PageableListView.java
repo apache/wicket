@@ -172,11 +172,18 @@ public abstract class PageableListView extends ListView
 				"You must not use setViewSize() with PageableListView");
 	}
 	
-
+	/**
+	 * Records the changing of the current page.
+	 */
 	private class CurrentPageChange extends Change
 	{
+		/** the former 'current' page. */
 		private int currentPage;
-		
+
+		/**
+		 * Construct.
+		 * @param currentPage the former 'current' page
+		 */
 		CurrentPageChange(int currentPage)
 		{
 			this.currentPage = currentPage;

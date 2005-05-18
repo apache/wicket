@@ -232,6 +232,36 @@ public abstract class Component implements Serializable
 		}
 	}
 
+	/**
+	 * A visibility change operation.
+	 */
+	protected class VisibilityChange extends Change
+	{
+		/** subject. */
+		private final Component component;
+
+		/** former value. */
+		private final boolean isVisible;
+
+		/**
+		 * Construct.
+		 * @param component
+		 */
+		VisibilityChange(final Component component)
+		{
+			this.component = component;
+			this.isVisible = component.isVisible();
+		}
+		
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			component.setVisible(!isVisible);
+		}
+	}
+
 	/** Reserved subclass-definable flag bit */
 	protected static final short FLAG_RESERVED1 = 0x0100;
 
@@ -1172,7 +1202,7 @@ public abstract class Component implements Serializable
 			final Page page = findPage();
 			if (page != null)
 			{
-				page.componentVisibilityChanged(this);
+				addStateChange(new VisibilityChange(this));
 			}
 		}
 		return this;
@@ -1221,7 +1251,7 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Registers a warning message for this component
+	 * Registers a warning message for this component.
 	 * 
 	 * @param message
 	 *            The message
@@ -1232,7 +1262,7 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Adds state change to page
+	 * Adds state change to page.
 	 * 
 	 * @param change
 	 *            The change
@@ -1295,7 +1325,7 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Detaches the model for this component if it is detachable
+	 * Detaches the model for this component if it is detachable.
 	 */
 	protected void detachModel()
 	{
@@ -1316,7 +1346,7 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Prefixes an exception message with useful information about this
+	 * Prefixes an exception message with useful information about this.
 	 * component.
 	 * 
 	 * @param message
@@ -1343,7 +1373,7 @@ public abstract class Component implements Serializable
 	/**
 	 * If this Component is a Page, returns self. Otherwise, searches for the
 	 * nearest Page parent in the component hierarchy. If no Page parent can be
-	 * found, null is returned
+	 * found, null is returned.
 	 * 
 	 * @return The Page or null if none can be found
 	 */

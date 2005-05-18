@@ -791,19 +791,6 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * @param component
-	 *            The component that was removed
-	 */
-	final void componentVisibilityChanged(final Component component)
-	{
-		setDirty(true);
-		if (isVersioned(component))
-		{
-			versionManager.componentVisibilityChanged(component);
-		}
-	}
-
-	/**
 	 * This method is not called getSession() because we want to ensure that
 	 * getSession() is final in Component.
 	 * 

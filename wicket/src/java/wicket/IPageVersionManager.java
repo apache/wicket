@@ -63,14 +63,6 @@ public interface IPageVersionManager extends Serializable
 	public void componentAdded(Component component);
 
 	/**
-	 * Indicates that the given component was hidden or shown
-	 * 
-	 * @param component
-	 *            The component whose visibility state was changed.
-	 */
-	public void componentVisibilityChanged(Component component);
-
-	/**
 	 * Indicates that the model for the given component is about to change.
 	 * 
 	 * @param component

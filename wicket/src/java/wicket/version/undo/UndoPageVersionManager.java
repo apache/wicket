@@ -192,13 +192,4 @@ public class UndoPageVersionManager implements IPageVersionManager
 		versionNumber--;
 		return true;
 	}
-
-	/**
-	 * @see wicket.IPageVersionManager#componentVisibilityChanged(wicket.Component)
-	 */
-	public void componentVisibilityChanged(Component component)
-	{
-		changeList.componentVisibilityChanged(component);
-	}
-
 }
