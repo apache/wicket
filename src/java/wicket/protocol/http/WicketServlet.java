@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
+import wicket.markup.html.image.resource.StaticResource;
 import wicket.response.BufferedResponse;
 import wicket.util.resource.IResourceStream;
 
@@ -156,6 +157,10 @@ public class WicketServlet extends HttpServlet
 			final Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
 			if (resource != null)
 			{
+				if(resource instanceof StaticResource)
+				{
+					((StaticResource)resource).setApplication(webApplication);
+				}
 				IResourceStream stream = resource.getResourceStream();
 				// first ask the length so the content is created/accessed
 				stream.length();
