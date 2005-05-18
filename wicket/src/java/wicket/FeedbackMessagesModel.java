@@ -146,7 +146,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	 */
 	protected void sort(List list)
 	{
-		if(sortingComparator != null);
+		if(sortingComparator != null)
 		{
 			Collections.sort(list, sortingComparator);
 		}
