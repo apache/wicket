@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -165,7 +163,7 @@ public class WebRequestCycle extends RequestCycle
 		String redirectUrl = page.urlFor(page, IRedirectListener.class);
 		// Check if use serverside response for client side redirects
 		ApplicationSettings settings = application.getSettings();
-		if(settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
+		if(settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER && application instanceof WebApplication)
 		{
 			// create the redirect response.
 			try
@@ -181,13 +179,7 @@ public class WebRequestCycle extends RequestCycle
 				}
 				page.doRender();
 				setResponse(currentResponse);
-				Map map = (Map)getWebRequest().getHttpServletRequest().getSession(true).getAttribute("wicket-redirect");
-				if(map == null)
-				{
-					map = new HashMap(3);
-					getWebRequest().getHttpServletRequest().getSession(true).setAttribute("wicket-redirect",map);	
-				}
-				map.put(redirectUrl,redirectResponse);
+				((WebApplication)application).addRedirect(getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
 			}
 			catch (RuntimeException ex)
 			{

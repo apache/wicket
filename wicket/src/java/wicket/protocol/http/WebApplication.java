@@ -18,6 +18,11 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +35,7 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
+import wicket.response.BufferedResponse;
 
 /**
  * A web application is a subclass of Application which associates with an
@@ -76,6 +82,8 @@ public abstract class WebApplication extends Application
 
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
+
+	private Map redirectMap = Collections.synchronizedMap(new HashMap());
 
 	/**
 	 * Constructor.
@@ -246,5 +254,55 @@ public abstract class WebApplication extends Application
 		return (getSettings().getBufferResponse()
 					? new BufferedWebResponse(servletResponse)
 			        : new WebResponse(servletResponse));
+	}
+
+	/**
+	 * Returns the redirect map where the buffered render pages are stored in.
+	 * @param request
+	 * @param requestUri 
+	 * @return The Redirect map or null when there are no redirects.
+	 */
+	public BufferedResponse getBufferedResponse(HttpServletRequest request, String requestUri)
+	{
+		String sessionId = request.getSession(true).getId();
+		Map sessionMap = (Map)redirectMap.get(sessionId);
+		if(sessionMap != null)
+		{
+			sessionMap.put("last-time-used", new Long(System.currentTimeMillis()));
+			return (BufferedResponse)sessionMap.remove(requestUri);
+		}
+		return null;
+	}
+	
+	/**
+	 * @param request 
+	 * @param requestUri 
+	 * @param renderedResponse
+	 */
+	public void addRedirect(HttpServletRequest request, String requestUri, BufferedResponse renderedResponse)
+	{
+		String sessionId = request.getSession(true).getId();
+		Map sessionMap = (Map)redirectMap.get(sessionId);
+		if(sessionMap == null)
+		{
+			long currentTime = System.currentTimeMillis();
+			sessionMap = new HashMap(4);
+			sessionMap.put("last-time-used", new Long(currentTime));
+			synchronized (redirectMap)
+			{
+				Iterator it = redirectMap.entrySet().iterator();
+				while(it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					Long time = (Long)((Map)entry.getValue()).get("last-time-used");
+					if( (currentTime - time.longValue()) > 5*60*1000) // 5 minutes
+					{
+						it.remove();
+					}
+				}
+				redirectMap.put(sessionId, sessionMap);
+			}
+		}
+		sessionMap.put(requestUri, renderedResponse);
 	}
 }
