@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="add" dev="Eelco Hillenius" due-to="Jonathan Carlson">
+  	   Added method setChoices and some np checks to AbstractChoice
+  	  </action>
   	  <action type="add" dev="Juergen Donnerstag" issue="1169374">
   	   Implemented support for obfuscating URLs
   	  </action>
