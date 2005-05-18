@@ -353,7 +353,7 @@ public abstract class Application
 				crypt.setKey(getSettings().getEncryptionKey());
 				return crypt;
 			}
-			catch (Exception e)
+			catch (Throwable e)
 			{
 				log.warn("************************** WARNING **************************");
 				log.warn("As the instantion of encryption/decryption class:");
