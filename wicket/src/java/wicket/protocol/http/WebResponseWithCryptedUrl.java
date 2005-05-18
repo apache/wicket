@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Session;
 import wicket.util.crypt.ICrypt;
-import wicket.util.crypt.SunJceCrypt;
 import wicket.util.string.Strings;
 
 /**
@@ -40,9 +40,6 @@ public class WebResponseWithCryptedUrl extends WebResponse
 {
     /** Logger */
     private static Log log = LogFactory.getLog(WebResponseWithCryptedUrl.class);
-    
-    /** Encoding/decoding algorithm */
-    public static final ICrypt urlCrypt = new SunJceCrypt();
 
 	/**
 	 * Constructor.
@@ -65,7 +62,8 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 */
 	public String encodeURL(String url)
 	{
-	    // The crypt implementation must be known
+	    // Get the crypt implementation from the application
+		ICrypt urlCrypt = Session.get().getApplication().newCrypt();
 		if (urlCrypt != null)
 		{
 		    // The url must have a query string, otherwise keep the url unchanged
@@ -90,6 +88,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 				    queryString = shortenUrl(queryString);
 				    
 				    // encrypt the query string
+					
 					final String encryptedQueryString = urlCrypt.encrypt(queryString);
 					
 					// build the new complete url
