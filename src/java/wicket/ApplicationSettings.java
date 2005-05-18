@@ -194,12 +194,12 @@ public final class ApplicationSettings
 	private Application application;
 
 	/**
-	 * The render strategy, defaults to 'REDIRECT_TO_RENDER'.
+	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'.
 	 * This property influences the default way in how a logical request that consists
 	 * of an 'action' and a 'render' part is handled, and is mainly used to have a means
 	 * to circumvent the 'refresh' problem.
 	 */
-	private RenderStrategy renderStrategy = REDIRECT_TO_RENDER;
+	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
