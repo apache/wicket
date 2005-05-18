@@ -63,4 +63,13 @@ public class PagedTableNavigatorPage extends WebPage
 		add(table);
 		add(new PageableListViewNavigator("navigator", table));
 	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		// for testing we set versioning off, because it gets too difficult to maintain otherwise
+		return false;
+	}
 }
