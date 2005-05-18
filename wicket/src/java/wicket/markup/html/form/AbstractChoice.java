@@ -25,6 +25,7 @@ import wicket.markup.html.form.model.ChoiceList;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
+import wicket.version.undo.Change;
 
 /**
  * Abstract base class for all choice (html select) options.
@@ -99,8 +100,33 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public IChoiceList getChoices()
 	{
-		choices.attach();
+		if(choices != null) choices.attach();
 		return this.choices;
+	}
+
+	/**
+	 * Sets the list of choices.
+	 *
+	 * @param choices the list of choices
+	 */
+	public final void setChoices(IChoiceList choices)
+	{
+		if(this.choices != null && (this.choices != choices))
+		{
+			if (isVersioned())
+			{
+				addStateChange(new Change()
+				{
+					final IChoiceList oldList = AbstractChoice.this.choices;
+
+					public void undo()
+					{
+						AbstractChoice.this.choices = oldList;
+					}
+				});
+			}
+		}
+		this.choices = choices;
 	}
 
 	/**
@@ -109,7 +135,7 @@ abstract class AbstractChoice extends FormComponent
 	protected void detachModel()
 	{
 		super.detachModel();
-		choices.detach();
+		if(choices != null) choices.detach();
 	}
 
 	/**
