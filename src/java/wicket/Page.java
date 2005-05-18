@@ -633,7 +633,12 @@ public abstract class Page extends MarkupContainer
 		
 		if (isVersioned())
 		{
-			// end the version
+			// Any changes to the page after this point will be tracked by the
+			// page's version manager. Since trackChanges is never set to false,
+			// this effectively means that change tracking begins after the
+			// first request to a page completes.
+			setFlag(FLAG_TRACK_CHANGES, true);
+
 			endVersion();
 		}
 	}
