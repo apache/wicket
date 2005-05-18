@@ -19,7 +19,6 @@ package wicket.protocol.http;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
@@ -184,17 +184,13 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		// try to see if this is a redirect that is already stored in the wicket-redirect 
-	    // map of its session.
-		// First, are any redirects stored?
-		Map redirectMap = (Map)servletRequest.getSession(true).getAttribute("wicket-redirect");
-		if(redirectMap != null)
+		// try to see if there is a redirect stored 
+		if(webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
 		{
-			// there are requests stored, so try to get the one based on this URL
-			// (when you work with frames/ popups, there might actually be more temporary
-			// buffered requests)
+			// TODO should we test here for queryString.indexOf("IRedirectListener") ?
+			// only such urls should have a bufferedresponse. 
 			String requestUri = servletRequest.getRequestURI() + "?" + servletRequest.getQueryString();
-			BufferedResponse bufferedResponse = (BufferedResponse)redirectMap.remove(requestUri);
+			BufferedResponse bufferedResponse = (BufferedResponse)webApplication.getBufferedResponse(servletRequest, requestUri);
 			if(bufferedResponse != null)
 			{
 				// got a buffered response; now write it
