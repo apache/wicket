@@ -20,8 +20,8 @@ package wicket.markup.html.form;
 import wicket.IResourceListener;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
+import wicket.markup.html.WebResource;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.markup.html.image.resource.ImageResource;
 import wicket.markup.html.image.resource.LocalizedImageResource;
 
 /**
@@ -54,7 +54,7 @@ public class ImageButton extends Button implements IResourceListener
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public ImageButton(final String id, final ImageResource imageResource)
+	public ImageButton(final String id, final WebResource imageResource)
 	{
 		super(id);
 		this.localizedImageResource.setResource(imageResource);

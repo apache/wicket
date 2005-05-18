@@ -8,6 +8,24 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="update" dev="Johan Compagner, Eelco Hillenius">
+  	   Refactored resources and fixed some issues along the way. The major change is that
+  	   we removed ImageResource from the inheritance tree. So, if you have compile problems,
+  	   replace any reference to ImageResource with wicket.markup.html.WebResource.
+  	   Furthermore, StaticImageResource and StaticImageResourceReference are renamed to
+  	   StaticResource and StaticResourceReference, as it is perfectly acceptable to reference
+  	   e.g. a PDF (we did some testing with this as well). Also, as we fixed a localization
+  	   bug in this, you could for example package resources like 'mydoc.pdf' and 'mydoc_nl.pdf'
+  	   and reference them with a StaticResource(Reference), and let Wicket find out which
+  	   one should be loaded.
+  	  </action>
+  	  <action type="fix" dev="Eelco Hillenius" issue="1188417">
+  	   ResourceLinks were not binded for static resources.
+  	  </action>
+  	  <action type="fix" dev="Johan Compagner" issue="1192671">
+  	   Application is not serializable. Application in StaticImageResource is now transient
+  	   and is set just before it is needed.
+  	  </action>
   	  <action type="fix" dev="Eelco Hillenius" issue="1197005">
   	   Nesting of message receivers should work without any problems due to the recent
   	   feedback message refactorings.

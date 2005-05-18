@@ -25,6 +25,8 @@ import wicket.Application;
 import wicket.RequestCycle;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
+import wicket.markup.html.WebResource;
+import wicket.protocol.http.WebApplication;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
 
@@ -38,7 +40,7 @@ import wicket.util.resource.IResourceStream;
  * 
  * @author Jonathan Locke
  */
-public class StaticImageResource extends ImageResource
+public class StaticResource extends WebResource
 {
 	/** Map from key to resource */
 	private static Map imageResourceMap = new HashMap();
@@ -53,7 +55,7 @@ public class StaticImageResource extends ImageResource
 	final String style;
 
 	/** the application to use for getting the resource stream */
-	final private Application application;
+	private transient Application application;
 
 	/**
 	 * Gets a non-localized image resource for a given set of criteria. Only one
@@ -65,7 +67,7 @@ public class StaticImageResource extends ImageResource
 	 *            The path to the resource
 	 * @return The image resource
 	 */
-	public static StaticImageResource get(final Package basePackage, final String path)
+	public static StaticResource get(final Package basePackage, final String path)
 	{
 		return get(basePackage, path, null, null);
 	}
@@ -84,16 +86,16 @@ public class StaticImageResource extends ImageResource
 	 *            The style of the image (see {@link wicket.Session})
 	 * @return The image resource
 	 */
-	public static StaticImageResource get(final Package basePackage, final String path,
+	public static StaticResource get(final Package basePackage, final String path,
 			final Locale locale, final String style)
 	{
 		final String key = basePackage.getName() + '/' + SharedResources.path(path, locale, style);
 		synchronized (imageResourceMap)
 		{
-			StaticImageResource imageResource = (StaticImageResource)imageResourceMap.get(key);
+			StaticResource imageResource = (StaticResource)imageResourceMap.get(key);
 			if (imageResource == null)
 			{
-				imageResource = new StaticImageResource(basePackage, path, locale, style);
+				imageResource = new StaticResource(basePackage, path, locale, style);
 				imageResourceMap.put(key, imageResource);
 			}
 			return imageResource;
@@ -112,7 +114,7 @@ public class StaticImageResource extends ImageResource
 	 * @param style
 	 *            The style of the image
 	 */
-	private StaticImageResource(final Package basePackage, final String path, final Locale locale,
+	private StaticResource(final Package basePackage, final String path, final Locale locale,
 			final String style)
 	{
 		// Convert resource path to absolute path relative to base package
@@ -141,5 +143,14 @@ public class StaticImageResource extends ImageResource
 			}
 		}
 		return resourceStream;
+	}
+
+	/**
+	 * set the application object on this ImageResource.
+	 * @param webApplication
+	 */
+	public void setApplication(WebApplication webApplication)
+	{
+		this.application = webApplication;
 	}
 }

@@ -49,12 +49,22 @@ public class ResourceLink extends Link
 	public void onClick()
 	{
 	}
+
+	/**
+	 * @see wicket.Component#onSessionAttach()
+	 */
+	protected void onSessionAttach()
+	{
+	}
 	
 	/**
 	 * @see wicket.markup.html.link.Link#getURL()
 	 */
 	protected String getURL()
 	{
+		resourceReference.setLocale(getLocale());
+		resourceReference.setStyle(getStyle());
+		resourceReference.bind(getApplication());
 		return getPage().urlFor(resourceReference.getPath());
 	}
 }

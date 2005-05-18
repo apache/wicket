@@ -734,7 +734,7 @@ public abstract class Session implements Serializable
 	{
 		// Create PageState for page
 		final PageState pageState = newPageState(page);
-		pageState.addedToSession = true;
+		//pageState.addedToSession = true;
 		pageState.pageMapName = page.getPageMap().getName();
 
 		// Set HttpSession attribute for new PageState
