@@ -84,4 +84,13 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
             }
         });
 	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		// for testing we set versioning off, because it gets too difficult to maintain otherwise
+		return false;
+	}
 }
