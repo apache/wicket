@@ -27,9 +27,16 @@ import wicket.MarkupContainer;
  */
 class Remove extends Change
 {
+	/** subject. */
 	private final Component component;
+
+	/** parent. */
 	private final MarkupContainer container;
-	
+
+	/**
+	 * Construct.
+	 * @param component subject component
+	 */
 	Remove(final Component component)
 	{
 		this.component = component;

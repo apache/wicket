@@ -30,9 +30,16 @@ import wicket.util.lang.Objects;
  */
 class ModelChange extends Change
 {
+	/** subject. */
 	private final Component component;
+
+	/** original model. */
 	private IModel originalModel;
 
+	/**
+	 * Construct.
+	 * @param component subject of the change
+	 */
 	ModelChange(final Component component)
 	{
 		// Save component

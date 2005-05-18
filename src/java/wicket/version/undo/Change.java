@@ -27,7 +27,7 @@ import java.io.Serializable;
 public abstract class Change implements Serializable
 {
 	/**
-	 * Undoes the given change
+	 * Undoes the given change.
 	 */
 	public abstract void undo();
 }
