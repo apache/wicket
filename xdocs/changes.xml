@@ -64,7 +64,7 @@
 		too much about the internals of message collecting.
   	  </action>
   	  <action type="fix" dev="Eelco Hillenius">
-  	  Added escapes for &, " and ' in Strings utilities class.
+  	  Added escapes for &amp;, " and ' in Strings utilities class.
   	  </action>
   	  <action type="fix" dev="Eelco Hillenius" issue="1196140">
   	   This bug prevented running Wicket on VM's that don't use SUN's security implementation
