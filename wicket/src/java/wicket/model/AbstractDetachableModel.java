@@ -24,8 +24,8 @@ import wicket.Component;
 import wicket.RequestCycle;
 
 /**
- * This provide a base class to work with detachable {@link wicket.model.IModel}
- * 's. It encapsulates the logic for attaching and detaching models. The
+ * This provide a base class to work with detachable {@link wicket.model.IModel}s.
+ * It encapsulates the logic for attaching and detaching models. The
  * onAttach() abstract method will be called at the first access to the model
  * within a request and - if the model was attached earlier, onDetach() will be
  * called at the end of the request. In effect, attachment and detachment is
@@ -47,7 +47,7 @@ public abstract class AbstractDetachableModel implements IModel
 	private transient boolean attached = false;
 
 	/**
-	 * Attaches this model object
+	 * Attaches the model.
 	 */
 	public final void attach()
 	{
@@ -118,19 +118,19 @@ public abstract class AbstractDetachableModel implements IModel
 	}
 	
 	/**
-	 * Attaches to the given session. Implement this method with custom
+	 * Attaches to the current request. Implement this method with custom
 	 * behaviour, such as loading the model object.
 	 */
 	protected abstract void onAttach();
 
 	/**
-	 * Detaches from the given session. Implement this method with custom
+	 * Detaches from the current request. Implement this method with custom
 	 * behaviour, such as setting the model object to null.
 	 */
 	protected abstract void onDetach();
 
 	/**
-	 * Called when getObject() is called in order to retrieve the detachable
+	 * Called when getObject is called in order to retrieve the detachable
 	 * object. Before this method is called, getObject() always calls attach()
 	 * to ensure that the object is attached.
 	 * 
@@ -141,16 +141,14 @@ public abstract class AbstractDetachableModel implements IModel
 	protected abstract Object onGetObject(final Component component);
 
 	/**
-	 * This default implementation of onSetObject throws an
-	 * UnsupportedOperationException to indicate that the subclass has not
-	 * implemented onSetObject() and therefore does not implement setObject().
-	 * If the subclass does not override this method, the model is effectively
-	 * read-only.
+	 * Called when setObject is called in order to change the detachable
+	 * object. Before this method is called, setObject() always calls attach()
+	 * to ensure that the object is attached.
 	 * 
 	 * @param component
-	 *            The component wanting to set the object
+	 *			The component asking for replacement of the model object
 	 * @param object
-	 *            The object to set into the model
+	 * 			The new model object
 	 */
 	protected abstract void onSetObject(final Component component, final Object object);
 }
