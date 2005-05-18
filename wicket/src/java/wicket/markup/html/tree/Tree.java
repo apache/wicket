@@ -32,7 +32,7 @@ import wicket.Component;
 import wicket.ResourceReference;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.image.resource.StaticImageResourceReference;
+import wicket.markup.html.image.resource.StaticResourceReference;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -64,15 +64,15 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 
 	/** Blank image. */
 	private static final ResourceReference BLANK =
-		new StaticImageResourceReference(Tree.class, "blank.gif");
+		new StaticResourceReference(Tree.class, "blank.gif");
 
 	/** Minus sign image. */
 	private static final ResourceReference MINUS =
-		new StaticImageResourceReference(Tree.class, "minus.gif");
+		new StaticResourceReference(Tree.class, "minus.gif");
 
 	/** Plus sign image. */
 	private static final ResourceReference PLUS =
-		new StaticImageResourceReference(Tree.class, "plus.gif");
+		new StaticResourceReference(Tree.class, "plus.gif");
 
 	/**
 	 * If true, re-rendering the tree is more efficient if the tree model doesn't get

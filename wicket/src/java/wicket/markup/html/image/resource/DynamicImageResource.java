@@ -27,6 +27,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 
 import wicket.WicketRuntimeException;
+import wicket.markup.html.WebResource;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
@@ -57,7 +58,7 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public abstract class DynamicImageResource extends ImageResource
+public abstract class DynamicImageResource extends WebResource
 {
 	/** The image type */
 	private String format = "png";

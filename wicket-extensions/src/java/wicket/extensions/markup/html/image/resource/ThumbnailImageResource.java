@@ -29,8 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketRuntimeException;
+import wicket.markup.html.WebResource;
 import wicket.markup.html.image.resource.DynamicImageResource;
-import wicket.markup.html.image.resource.ImageResource;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
 
@@ -48,7 +48,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	private static Log log = LogFactory.getLog(ThumbnailImageResource.class);
 
 	/** the unscaled, original image resource. */
-	private final ImageResource unscaledImageResource;
+	private final WebResource unscaledImageResource;
 
 
 	/** maximum size (width or height) for resize operation. */
@@ -65,7 +65,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * @param unscaledImageResource the unscaled, original image resource. Must be not null
 	 * @param maxSize maximum size (width or height) for resize operation
 	 */
-	public ThumbnailImageResource(ImageResource unscaledImageResource, int maxSize)
+	public ThumbnailImageResource(WebResource unscaledImageResource, int maxSize)
 	{
 		super();
 		if(unscaledImageResource == null)

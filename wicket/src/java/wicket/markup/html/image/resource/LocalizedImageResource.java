@@ -28,6 +28,7 @@ import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.markup.html.WebResource;
 import wicket.util.lang.Objects;
 import wicket.util.parse.metapattern.Group;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -276,7 +277,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 * @throws WicketRuntimeException
 	 *             Thrown if factory cannot be found
 	 */
-	private IResourceFactory getImageResourceFactory(final Application application,
+	private IResourceFactory getResourceFactory(final Application application,
 			final String factoryName)
 	{
 		final IResourceFactory factory = application.getResourceFactory(factoryName);
@@ -310,7 +311,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			 */
 			protected Resource newResource()
 			{
-				return StaticImageResource.get(basePackage, path, locale, style);
+				return StaticResource.get(basePackage, path, locale, style);
 			}
 		};
 		resourceReference.setLocale(locale);
@@ -345,7 +346,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application
-					final Resource imageResource = getImageResourceFactory(application, factoryName)
+					final Resource imageResource = getResourceFactory(application, factoryName)
 							.newResource(specification, locale, style);
 					application.getSharedResources().add(Application.class, imageReferenceName, locale, style,
 							imageResource);
@@ -359,7 +360,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			}
 			else
 			{
-				this.resource = (ImageResource)getImageResourceFactory(application, factoryName)
+				this.resource = (WebResource)getResourceFactory(application, factoryName)
 						.newResource(specification, locale, style);
 			}
 		}

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,16 +17,38 @@
  */
 package wicket.markup.html.image.resource;
 
-import wicket.markup.html.WebResource;
+import wicket.Resource;
+import wicket.ResourceReference;
 
 /**
- * Base class for image resources. See the base class {@link wicket.Resource}
- * for details on resources in general, including how they can be shared in an
- * application. 
+ * A convenience class for creating resource references to static resources.
  * 
- * @see wicket.Resource
  * @author Jonathan Locke
  */
-public abstract class ImageResource extends WebResource
+public class StaticResourceReference extends ResourceReference
 {
+	/**
+	 * @see ResourceReference#ResourceReference(Class, String)
+	 */
+	public StaticResourceReference(Class scope, String name)
+	{
+		super(scope, name);
+	}
+
+	/**
+	 * @see ResourceReference#ResourceReference(String)
+	 */
+	public StaticResourceReference(String name)
+	{
+		super(name);
+	}
+	
+	/**
+	 * @see wicket.ResourceReference#newResource()
+	 */
+	protected Resource newResource()
+	{
+		return StaticResource.get(getScope().getPackage(), getName(),getLocale(),getStyle());
+	}
 }
+
