@@ -8,6 +8,12 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="add" dev="Juergen Donnerstag" issue="1169374">
+  	   Implemented support for obfuscating URLs
+  	  </action>
+  	  <action type="fix" dev="Juergen Donnerstag" issue="1192572">
+  	   Fixed Javascript parse error. CDATA section are properly handled now.
+  	  </action>
   	  <action type="update" dev="Johan Compagner, Eelco Hillenius">
   	   Refactored resources and fixed some issues along the way. The major change is that
   	   we removed ImageResource from the inheritance tree. So, if you have compile problems,
