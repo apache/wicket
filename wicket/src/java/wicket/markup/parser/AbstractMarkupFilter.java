@@ -25,7 +25,7 @@ package wicket.markup.parser;
 public abstract class AbstractMarkupFilter implements IMarkupFilter
 {
 	/** The next MarkupFilter in the chain */
-	private final IMarkupFilter parent;
+	private IMarkupFilter parent;
 
 	/**
 	 * Construct.
@@ -44,5 +44,14 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	public final IMarkupFilter getParent()
 	{
 		return parent;
+	}
+	
+	/**
+	 * Set new parent.
+	 * @param parent The next element in the chain
+	 */
+	public final void setParent(final IMarkupFilter parent)
+	{
+	    this.parent = parent;
 	}
 }
