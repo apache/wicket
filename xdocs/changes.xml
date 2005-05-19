@@ -8,6 +8,11 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Eelco Hillenius">
+  	   Fixed a bug that made MostRecentlyUsedMap (used to store page in the session)
+  	   behave like a MostRecentlyAddedToMap. Fixes lots of frames/ popup problems
+  	   in one strike.
+  	  </action>
   	  <action type="add" dev="Eelco Hillenius" due-to="Jonathan Carlson">
   	   Added method setChoices and some np checks to AbstractChoice
   	  </action>
