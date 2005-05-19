@@ -18,9 +18,7 @@
 				of this document some hints are given to speed up your development even further.
 			</p>
 			<p>
-				Currently only the project setup for
-				<a href="http://www.eclipse.org">Eclipse</a>
-				is supported, but if you have another IDE you'd like to see quickstart support for,
+				If you have another IDE you'd like to see quickstart support for,
 				don't hesitate to contribute!
 			</p>
 			<subsection name="Summary">
