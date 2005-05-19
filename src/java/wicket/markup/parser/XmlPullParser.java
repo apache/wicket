@@ -43,7 +43,7 @@ import wicket.util.resource.StringResourceStream;
  *
  * @author Jonathan Locke
  */
-public final class XmlPullParser implements IXmlPullParser
+public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPullParser
 {
 	/** Regex to find <?xml encoding ... ?> */
 	private static final Pattern encodingPattern = Pattern
@@ -83,6 +83,8 @@ public final class XmlPullParser implements IXmlPullParser
 	 */
 	public XmlPullParser()
 	{
+	    // The xml parser does not have a parent filter
+	    super(null);
 	}
 
 	/**
@@ -134,17 +136,6 @@ public final class XmlPullParser implements IXmlPullParser
 	public final CharSequence getInputSubsequence(final int fromPos, final int toPos)
 	{
 		return this.input.subSequence(fromPos, toPos);
-	}
-
-	/**
-	 * As the xml parser will always be the last element on the chain, it will
-	 * always return null.
-	 *
-	 * @return always null.
-	 */
-	public final IMarkupFilter getParent()
-	{
-		return null;
 	}
 
 	/**

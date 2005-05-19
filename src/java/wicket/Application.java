@@ -388,7 +388,7 @@ public abstract class Application
 	 * 
 	 * @return A new MarkupParser
 	 */
-	public final MarkupParser newMarkupParser()
+	public MarkupParser newMarkupParser()
 	{
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 		parser.configure(getSettings());

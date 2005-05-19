@@ -50,7 +50,7 @@ import wicket.util.resource.ResourceStreamNotFoundException;
  *
  * @author Jonathan Locke
  */
-public final class MarkupParser
+public class MarkupParser
 {
     /** Logging */
     private static final Log log = LogFactory.getLog(MarkupParser.class);
@@ -76,6 +76,9 @@ public final class MarkupParser
 
     /** The XML parser to use */
     private IXmlPullParser xmlParser = new XmlPullParser();
+
+    /** The markup handler chain: each filter has a specific task */
+    private IMarkupFilter markupFilterChain;
 
     /**
      * Constructor.
@@ -109,7 +112,53 @@ public final class MarkupParser
         this.compressWhitespace = settings.getCompressWhitespace();
         this.automaticLinking = settings.getAutomaticLinking();
 	}
+	
+	/**
+	 * Create a new markup filter chain and initialize with all default
+	 * filters required.
+	 * 
+	 * @return a preconfigured markup filter chain
+	 */
+	private IMarkupFilter newFilterChain()
+	{
+        // Chain together all the different markup filters and configure them
+        final WicketTagIdentifier detectWicketComponents = new WicketTagIdentifier(xmlParser);
+        detectWicketComponents.setWicketNamespace(this.wicketNamespace);
+        
+        final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
+                new HtmlHandler(detectWicketComponents));
+        wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
+        
+        final WicketRemoveTagHandler previewComponentTagRemover = new WicketRemoveTagHandler(wicketParamTagHandler);
+        
+        final WicketLinkTagHandler autolinkHandler = new WicketLinkTagHandler(previewComponentTagRemover);
+        autolinkHandler.setAutomaticLinking(this.automaticLinking);
 
+        // Markup filter chain starts with auto link handler
+        return autolinkHandler;
+	}
+
+	/**
+	 * By default don't do anything. Subclasses may append additional markup
+	 * filter if required.
+	 */
+	protected void initFilterChain()
+	{
+	    ;
+	}
+
+	/**
+	 * Append a new filter to the list of already pre-configured markup
+	 * filters.
+	 * 
+	 * @param filter The filter to be appended
+	 */
+	public void appendMarkupFilter(final IMarkupFilter filter)
+	{
+	    filter.setParent(markupFilterChain);
+	    markupFilterChain = filter;
+	}
+	
     /**
      * Return the encoding used while reading the markup file.
      * You need to call @see #read(Resource) first to initialise
@@ -170,24 +219,11 @@ public final class MarkupParser
      */
     private List parseMarkup() throws ParseException
     {
+        this.markupFilterChain = newFilterChain();
+        initFilterChain();
+        
         // List to return
         final List list = new ArrayList();
-
-        // Chain together all the different markup filters
-        final WicketTagIdentifier detectWicketComponents = new WicketTagIdentifier(xmlParser);
-        detectWicketComponents.setWicketNamespace(this.wicketNamespace);
-        
-        final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
-                new HtmlHandler(detectWicketComponents));
-        wicketParamTagHandler.setStripWicketTag(this.stripWicketTag);
-        
-        final WicketRemoveTagHandler previewComponentTagRemover = new WicketRemoveTagHandler(wicketParamTagHandler);
-        
-        final WicketLinkTagHandler autolinkHandler = new WicketLinkTagHandler(previewComponentTagRemover);
-        autolinkHandler.setAutomaticLinking(this.automaticLinking);
-
-        // Markup filter chain starts with auto link handler
-        final IMarkupFilter markupFilterChain = autolinkHandler;
 
         // Loop through tags
         for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
