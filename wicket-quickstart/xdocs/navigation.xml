@@ -26,14 +26,11 @@
 				<item name="Next Steps" href="#Next_Steps" />
 			</item>
 	 		<item name="IntelliJ IDEA" href="/intellij.html"/>
-			<item name="NetBeans (soon)" href="/netbeans.html"/>
+			<item name="NetBeans" href="/netbeans.html"/>
 		</menu>
 
 		<menu name="Download">
 			<item name="Kick Start Project" href="http://sourceforge.net/project/showfiles.php?group_id=134391&amp;package_id=150054"/>
-<!--		<item name="Netbeans Kick Start (soon)" href="http://sourceforge.net/project/showfiles.php?group_id=134391&amp;package_id=150054"/>
-			<item name="IntelliJ Kick Start (soon)" href="http://sourceforge.net/project/showfiles.php?group_id=134391&amp;package_id=150054"/>
- -->
  		</menu>
 
 	    <menu name="Related projects">
