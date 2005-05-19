@@ -42,6 +42,8 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	 */
 	public MostRecentlyUsedMap(final int maxEntries)
 	{
+		super(16, 0.7f, true);
+
 		if (maxEntries <= 0)
 		{
 			throw new IllegalArgumentException("Must have at least one entry");
