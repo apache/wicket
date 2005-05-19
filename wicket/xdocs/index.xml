@@ -160,6 +160,9 @@
 				The Wicket development team would like to thank the following partners for
 				supporting Open Source in general and Wicket in particular.
 			</p>
+			<a href="http://www.topicus.nl" target="_blank" class="logoLink">
+				<img alt="Topicus B.V." src="images/topicus.gif" />
+			</a>
 			<a href="http://www.yourkit.com" target="_blank" class="logoLink">
 				<img alt="YourKit" src="images/yip_logo.gif" />
 			</a>
