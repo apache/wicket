@@ -42,7 +42,7 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	 */
 	public MostRecentlyUsedMap(final int maxEntries)
 	{
-		super(16, 0.7f, true);
+		super(10, 0.75f, true);
 
 		if (maxEntries <= 0)
 		{
