@@ -450,6 +450,19 @@ public abstract class Page extends MarkupContainer
 		try
 		{
 			// we have to initialize the page's request now
+
+			// first, give priority to IFeedback instances, as they have to collect their
+			// message before components like ListViews remove any child components
+			visitChildren(IFeedback.class, new IVisitor()
+			{
+				public Object component(Component component)
+				{
+					component.internalBeginRequest();
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+			
+			// now, do the initialization for the other components
 			internalBeginRequest();
 		
 

@@ -291,8 +291,12 @@ public abstract class MarkupContainer extends Component
 		// Loop through child components
 		for (final Iterator iterator = childForId.values().iterator(); iterator.hasNext();)
 		{
-			// Call begin request on the child
-			((Component)iterator.next()).internalBeginRequest();
+			Component child = (Component)iterator.next();
+			if(!(child instanceof IFeedback)) // ignore feedback as that was done in Page
+			{
+				// Call begin request on the child
+				(child).internalBeginRequest();
+			}
 		}
 	}
 
