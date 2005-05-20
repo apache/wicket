@@ -43,6 +43,9 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	 */
 	private Component collectingComponent;
 
+	/** visible property cache. */
+	private boolean visible;
+
 	/**
 	 * Constructor.
 	 * 
@@ -61,6 +64,29 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	public void setCollectingComponent(Component collectingComponent)
 	{
 		this.collectingComponent = collectingComponent;
+	}
+
+	/**
+	 * @see wicket.Component#onBeginRequest()
+	 */
+	protected void onBeginRequest()
+	{
+		// get the messages for the current page
+		final FeedbackMessages feedbackMessages = getPage().getFeedbackMessages();
+
+		if(collectingComponent != null)
+		{
+			// use the one that was explicitly set
+			visible = feedbackMessages.hasErrorMessageFor(collectingComponent);
+		}
+		else
+		{
+			// search through all children (typically this will be one and will be
+			// a form component, but it is possible to group components) for an error message
+			ErrorMessageVisitor errorMessageVisitor = new ErrorMessageVisitor(feedbackMessages);
+			FormComponentFeedbackBorder.this.visitChildren(errorMessageVisitor);
+			visible = errorMessageVisitor.foundErrorMessage;
+		}
 	}
 
 	/**
@@ -83,18 +109,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		 */
 		public boolean isVisible()
 		{
-			// get the messages for the current page
-			final FeedbackMessages feedbackMessages = getPage().getFeedbackMessages();
-			if(collectingComponent != null)
-			{
-				// use the one that was explicitly set
-				return feedbackMessages.hasErrorMessageFor(collectingComponent);
-			}
-			// search through all children (typically this will be one and will be
-			// a form component, but it is possible to group components) for an error message
-			ErrorMessageVisitor errorMessageVisitor = new ErrorMessageVisitor(feedbackMessages);
-			FormComponentFeedbackBorder.this.visitChildren(errorMessageVisitor);
-			return errorMessageVisitor.foundErrorMessage;
+			return visible;
 		}
 	}
 

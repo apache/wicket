@@ -139,6 +139,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
+	 * @see wicket.Component#onBeginRequest()
+	 */
+	protected void onBeginRequest()
+	{
+		messageListView.getModelObject(); // force loading of model
+	}
+
+	/**
 	 * Gets the css class for the given message.
 	 * @param message the message
 	 * @return the css class; by default, this returns feedbackPanel + the message level, eg

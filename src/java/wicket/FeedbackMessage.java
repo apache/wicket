@@ -61,10 +61,10 @@ public final class FeedbackMessage implements Serializable
 	private final int level;
 
 	/** The actual message. */
-	private String message;
+	private final String message;
 
 	/** The reporting component. */
-	private Component reporter;
+	private final Component reporter;
 
 	/**
 	 * Construct using fields.

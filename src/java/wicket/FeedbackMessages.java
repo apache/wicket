@@ -185,7 +185,8 @@ public final class FeedbackMessages implements Serializable
 		for (Iterator iterator = messages.iterator(); iterator.hasNext();)
 		{
 			FeedbackMessage message = (FeedbackMessage)iterator.next();
-			if (message.getReporter() == component && message.isLevel(fromLevel))
+			Component reporter = message.getReporter();
+			if (reporter == component && message.isLevel(fromLevel))
 			{
 				list.add(message);
 			}
