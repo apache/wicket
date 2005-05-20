@@ -67,9 +67,6 @@ public abstract class Form extends WebMarkupContainer
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
 
-	/** The validation error handling delegate. */
-	private final IFeedback feedback;
-
 	/**
 	 * The default form validation strategy.
 	 */
@@ -144,7 +141,6 @@ public abstract class Form extends WebMarkupContainer
 	public Form(final String id, final IFeedback feedback)
 	{
 		super(id);
-		this.feedback = feedback;
 		if(feedback != null)
 		{
 			feedback.setCollectingComponent(this);
@@ -164,7 +160,6 @@ public abstract class Form extends WebMarkupContainer
 	public Form(final String id, IModel model, final IFeedback feedback)
 	{
 		super(id, model);
-		this.feedback = feedback;
 		if(feedback != null)
 		{
 			feedback.setCollectingComponent(this);
