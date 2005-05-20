@@ -101,9 +101,16 @@ public class TypeValidator extends StringValidator
 			{
 				converter.convert(value, type);
 			}
-			catch (ConversionException e)
+			catch (Exception e)
 			{
-				error(messageModel(e));
+				if(e instanceof ConversionException)
+				{
+					error(messageModel((ConversionException)e));
+				}
+				else
+				{
+					error(messageModel(new ConversionException(e)));
+				}
 			}
 		}
 	}
