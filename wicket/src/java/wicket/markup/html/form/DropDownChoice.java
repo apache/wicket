@@ -40,6 +40,14 @@ import wicket.model.IModel;
 public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
 	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
+	 */
+	public DropDownChoice(final String id)
+	{
+		super(id);
+	}
+
+	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
 	 */
 	public DropDownChoice(final String id, final Collection choices)

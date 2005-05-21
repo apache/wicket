@@ -58,7 +58,15 @@ public class ListChoice extends DropDownChoice
 	{
 		ListChoice.defaultMaxRows = defaultMaxRows;
 	}
-	
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
+	 */
+	public ListChoice(final String id)
+	{
+		super(id);
+	}
+
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
 	 */
