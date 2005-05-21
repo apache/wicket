@@ -217,6 +217,27 @@ public final class Strings
 	 */
 	public static String escapeMarkup(final String s, final boolean escapeSpaces)
 	{
+		return escapeMarkup(s, escapeSpaces, false);
+	}
+
+	/**
+	 * Converts a Java String to an HTML markup String by replacing illegal
+	 * characters with HTML entities where appropriate. Spaces are converted to
+	 * non-breaking spaces (&lt;nbsp&gt;) if escapeSpaces is true, tabs are
+	 * converted to four non-breaking spaces, less than signs are converted to
+	 * &amp;lt; entities and greater than signs to &amp;gt; entities.
+	 * 
+	 * @param s
+	 *            The string to escape
+	 * @param escapeSpaces
+	 *            True to replace ' ' with nonbreaking space
+	 * @param convertToHtmlUnicodeEscapes
+	 *            True to convert non-7 bit characters to unicode HTML (&#...)
+	 * @return The escaped string
+	 */
+	public static String escapeMarkup(final String s,
+			final boolean escapeSpaces, final boolean convertToHtmlUnicodeEscapes)
+	{
 		if (s == null)
 		{
 			return null;
@@ -225,7 +246,8 @@ public final class Strings
 		{
 			final StringBuffer buffer = new StringBuffer();
 
-			for (int i = 0; i < s.length(); i++)
+			int len = s.length();
+			for (int i = 0; i < len; i++)
 			{
 				final char c = s.charAt(i);
 
@@ -265,7 +287,18 @@ public final class Strings
 						break;
 
 					case '&':
-					    buffer.append("&amp;");
+
+						// if this is an entity (&#), then do not convert
+						if ( (i < len - 1) && (s.charAt(i + 1) == '#') )
+					    {
+							buffer.append(c);
+							
+					    }
+						else
+						{
+							// it is not an entity, so convert it to &amp;
+							buffer.append("&amp;");
+						}
 					    break;
 
 					case '"':
@@ -278,19 +311,26 @@ public final class Strings
 
 					default :
 
-		                int ci = 0xffff & c;
-		                if (ci < 160 )
-						{   
-							// nothing special only 7 Bit
-							buffer.append(c);
+						if(convertToHtmlUnicodeEscapes)
+						{
+			                int ci = 0xffff & c;
+			                if (ci < 160 )
+							{   
+								// nothing special only 7 Bit
+								buffer.append(c);
+							}
+							else
+							{
+			                    // Not 7 Bit use the unicode system
+								buffer.append("&#");
+								buffer.append(new Integer(ci).toString());
+								buffer.append(';');
+			                }
 						}
 						else
 						{
-		                    // Not 7 Bit use the unicode system
-							buffer.append("&#");
-							buffer.append(new Integer(ci).toString());
-							buffer.append(';');
-		                }
+							buffer.append(c);
+						}
 
 						break;
 				}
