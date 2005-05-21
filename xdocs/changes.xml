@@ -8,6 +8,9 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="fix" dev="Eelco Hillenius">
+  	   Strings.escapeMarkup now properly escapes unicode.
+  	  </action>
 	  <action type="update" dev="Johan Compagner, Eelco Hillenius" due-to="Martijn Dashorst">
 	  Made the rendering strategy pluggable. From javadoc of ApplicationSettings:
 		<i>renderStrategy</i>- Sets in what way the render part of a request is handled.
