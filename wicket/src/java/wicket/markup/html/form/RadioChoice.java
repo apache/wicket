@@ -184,7 +184,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 				// Add label for radio button
 				String display = getLocalizer().getString(getId() + "." + label, this, label);
-				String escaped = Strings.escapeMarkup(display);
+				String escaped = Strings.escapeMarkup(display, false, true);
 				buffer.append(escaped);
 
 				// Append option suffix
