@@ -33,6 +33,8 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.model.ChoiceList;
+import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
@@ -74,18 +76,7 @@ public class FormInput extends WicketExamplePage
 		add(new InputForm("inputForm", feedback));
 
 		// Dropdown for selecting locale
-		add(new DropDownChoice("localeSelect", new PropertyModel(this, "locale"), LOCALES) 
-		{
-			protected boolean wantOnSelectionChangedNotifications()
-			{
-				return true;
-			}
-
-			public void onSelectionChanged(Object newSelection)
-			{
-				setLocale((Locale)newSelection);
-			}
-		});
+		add(new LocaleDropDownChoice("localeSelect"));
 
 		// Link to return to default locale
 		add(new Link("defaultLocaleLink")
@@ -113,7 +104,7 @@ public class FormInput extends WicketExamplePage
 	/**
 	 * Form for collecting input. 
 	 */
-	static class InputForm extends Form
+	private static class InputForm extends Form
 	{
 		/**
 		 * Construct.
@@ -171,6 +162,103 @@ public class FormInput extends WicketExamplePage
 		{
 			// Form validation successful. Display message showing edited model.
 			info("Saved model " + getModelObject());
+		}
+	}
+
+	/**
+	 * Dropdown with Locales.
+	 */
+	private final class LocaleDropDownChoice extends DropDownChoice
+	{
+		/**
+		 * Construct.
+		 * @param id component id
+		 */
+		public LocaleDropDownChoice(String id)
+		{
+			super(id);
+
+			// set the model that gets the current locale, and that is used for updating
+			// the current locale to property 'locale' of FormInput
+			setModel(new PropertyModel(FormInput.this, "locale"));
+
+			// use a custom implementation of choices, as we want to display
+			// the choices localized
+			ChoiceList locales = new ChoiceList(LOCALES)
+			{
+				protected IChoice newChoice(Object object, int index)
+				{
+					return new LocaleChoice((Locale)object, index);
+				}
+			};
+			setChoices(locales);
+		}
+
+		/**
+		 * @see wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
+		 */
+		protected boolean wantOnSelectionChangedNotifications()
+		{
+			// we want roundtrips when a the user selects another item
+			return true;
+		}
+
+		/**
+		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
+		 */
+		public void onSelectionChanged(Object newSelection)
+		{
+			// note that we don't have to do anything here, as our property model allready
+			// calls FormInput.setLocale when the model is updated
+			// setLocale((Locale)newSelection); // so we don't need to do this
+		}
+	}
+
+	/**
+	 * Choice for a locale.
+	 */
+	private final class LocaleChoice implements IChoice
+	{
+		/** The index of the choice. */
+		private final int index;
+
+		/** The choice model object. */
+		private final Locale locale;
+
+		/**
+		 * Constructor.
+		 * @param locale The locale
+		 * @param index The index of the object in the choice list
+		 */
+		public LocaleChoice(final Locale locale, final int index)
+		{
+			this.locale = locale;
+			this.index = index;
+		}
+
+		/**
+		 * @see wicket.markup.html.form.model.IChoice#getDisplayValue()
+		 */
+		public String getDisplayValue()
+		{
+			String display = locale.getDisplayName(getLocale());
+			return display;
+		}
+
+		/**
+		 * @see wicket.markup.html.form.model.IChoice#getId()
+		 */
+		public String getId()
+		{
+			return Integer.toString(index);
+		}
+
+		/**
+		 * @see wicket.markup.html.form.model.IChoice#getObject()
+		 */
+		public Object getObject()
+		{
+			return locale;
 		}
 	}
 }
