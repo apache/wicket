@@ -215,9 +215,10 @@ public final class ApplicationSettings
 	 * 'redirect' property of {@link RequestCycle} to true (getRequestCycle.setRedirect(true)),
 	 * after which the behaviour will be like RenderStragegy 'REDIRECT_TO_RENDER'.
 	 * <p>
-	 * Though this strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy,
+	 * This strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy,
 	 * and doesn't have some of the potential problems of it, it also does not solve the
-	 * refresh problem (see javadoc of 'REDIRECT_TO_RENDER' strategy).
+	 * double submit problem. It is however the best option to use when you want to do
+	 * sophisticated (non-sticky session) clustering.
 	 * </p>
 	 */
 	public static final RenderStrategy ONE_PASS_RENDER = new RenderStrategy("ONE_PASS_RENDER");
@@ -227,9 +228,6 @@ public final class ApplicationSettings
 	 * same request, but instead of streaming the render result to the browser directly,
 	 * the result is cached on the server. A client side redirect command is issued to the
 	 * browser specifically to render this request.
-	 * </p>
-	 *  TODO: explain the advantages/ disadvantages.
-	 * </p>
 	 */
 	public static final RenderStrategy REDIRECT_TO_BUFFER = new RenderStrategy("REDIRECT_BUFFER");
 	
