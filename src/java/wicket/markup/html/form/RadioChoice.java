@@ -27,6 +27,12 @@ import wicket.model.IModel;
 
 /**
  * A choice subclass that shows choices in radio style.
+ * TODO elaborate with an example
+ * 
+ * <p>
+ * You can can extend this class and override method wantOnSelectionChangedNotifications()
+ * to force server roundtrips on each selection change.
+ * </p>
  * 
  * @author Jonathan Locke
  */
@@ -92,6 +98,10 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
+	 * Whether this component's onSelectionChanged event handler should called using
+	 * javascript if the selection changes. If true, a roundtrip will be generated with
+	 * each selection change, resulting in the model being updated (of just this component)
+	 * and onSelectionChanged being called. This method returns false by default.
 	 * @return True if this component's onSelectionChanged event handler should
 	 *			called using javascript if the selection changes
 	 */

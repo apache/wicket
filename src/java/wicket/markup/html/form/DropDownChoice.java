@@ -25,10 +25,13 @@ import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
 
 /**
- * A choice implemented as a dropdown menu/list. Framework users can extend this
- * class and optionally implement interface
- * {@link wicket.markup.html.form.IOnChangeListener}to implement onChange
- * behaviour of the HTML select element.
+ * A choice implemented as a dropdown menu/list.
+ * TODO elaborate with an example
+ * 
+ * <p>
+ * You can can extend this class and override method wantOnSelectionChangedNotifications()
+ * to force server roundtrips on each selection change.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -121,6 +124,10 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
+	 * Whether this component's onSelectionChanged event handler should called using
+	 * javascript if the selection changes. If true, a roundtrip will be generated with
+	 * each selection change, resulting in the model being updated (of just this component)
+	 * and onSelectionChanged being called. This method returns false by default.
 	 * @return True if this component's onSelectionChanged event handler should
 	 *			called using javascript if the selection changes
 	 */
