@@ -61,7 +61,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 		 */
 		public MessageListView(final String id)
 		{
-			super(id, new FeedbackMessagesModel(true, null));
+			super(id);
+			setModel(getFeedbackMessagesModel());
 		}
 
 		/**
@@ -155,5 +156,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 	protected String getCSSClass(final FeedbackMessage message)
 	{
 		return "feedbackPanel" + message.getLevelAsString();
+	}
+
+	/**
+	 * Gets the instance of FeedbackMessagesModel to use.
+	 * @return instance of FeedbackMessagesModel to use
+	 */
+	protected FeedbackMessagesModel getFeedbackMessagesModel()
+	{
+		return new FeedbackMessagesModel(true, null);
 	}
 }
