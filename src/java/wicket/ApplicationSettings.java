@@ -140,14 +140,14 @@ import wicket.util.time.Duration;
  *     detachable models.
  *    </li>
  *   </ul>
+ *  </li>
+ * </ul>
  *   Note that this parameter sets the default behaviour, but that you can manually set
  *   whether any redirecting is done by calling method RequestCycle.setRedirect. Setting
  *   the redirect flag when the application is configured to use ONE_PASS_RENDER, will result
  *   in a redirect of type REDIRECT_TO_RENDER. When the application is configured to use
  *   REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to false, will
  *   result in that request begin rendered and streamed in one pass.
- *  </li>
- * </ul>
  * </p>
  * More documentation is available about each setting in the setter method for
  * the property.
