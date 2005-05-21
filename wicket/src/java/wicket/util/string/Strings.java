@@ -277,7 +277,21 @@ public final class Strings
 					    break;
 
 					default :
-						buffer.append(c);
+
+		                int ci = 0xffff & c;
+		                if (ci < 160 )
+						{   
+							// nothing special only 7 Bit
+							buffer.append(c);
+						}
+						else
+						{
+		                    // Not 7 Bit use the unicode system
+							buffer.append("&#");
+							buffer.append(new Integer(ci).toString());
+							buffer.append(';');
+		                }
+
 						break;
 				}
 			}
