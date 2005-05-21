@@ -140,8 +140,12 @@ import wicket.util.time.Duration;
  *     detachable models.
  *    </li>
  *   </ul>
- *   Note that allthough this parameter is called a strategy, it is not a strategy in the
- *   sense that alternatives can be plugged in.
+ *   Note that this parameter sets the default behaviour, but that you can manually set
+ *   whether any redirecting is done by calling method RequestCycle.setRedirect. Setting
+ *   the redirect flag when the application is configured to use ONE_PASS_RENDER, will result
+ *   in a redirect of type REDIRECT_TO_RENDER. When the application is configured to use
+ *   REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to false, will
+ *   result in that request begin rendered and streamed in one pass.
  *  </li>
  * </ul>
  * </p>
@@ -474,13 +478,13 @@ public final class ApplicationSettings
 	 * submit problem, while being more efficient and less error prone regarding to
 	 * detachable models. </li>
 	 * </ul>
-	 * Note that allthough this parameter is called a strategy, it is not a strategy in
-	 * the sense that alternatives can be plugged in. </li>
-	 * </ul>
-	 * This property influences the default way in how a logical request that consists of
-	 * an 'action' and a 'render' part is handled, and is mainly used to have a means to
-	 * circumvent the 'refresh' problem.
-	 * @param renderStrategy the render strategy
+	 * Note that this parameter sets the default behaviour, but that you can manually set
+	 * whether any redirecting is done by calling method RequestCycle.setRedirect. Setting
+	 * the redirect flag when the application is configured to use ONE_PASS_RENDER, will
+	 * result in a redirect of type REDIRECT_TO_RENDER. When the application is configured
+	 * to use REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to
+	 * false, will result in that request begin rendered and streamed in one pass.
+	 * @param renderStrategy the render strategy that should be used by default.
 	 */
 	public final void setRenderStrategy(RenderStrategy renderStrategy)
 	{
