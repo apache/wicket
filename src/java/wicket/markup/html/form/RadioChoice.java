@@ -24,6 +24,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
+import wicket.util.string.Strings;
 
 /**
  * A choice subclass that shows choices in radio style.
@@ -182,7 +183,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				buffer.append(">");
 
 				// Add label for radio button
-				buffer.append(getLocalizer().getString(getId() + "." + label, this, label));
+				String display = getLocalizer().getString(getId() + "." + label, this, label);
+				String escaped = Strings.escapeMarkup(display);
+				buffer.append(escaped);
 
 				// Append option suffix
 				buffer.append(getSuffix());
