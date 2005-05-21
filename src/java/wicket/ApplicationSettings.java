@@ -103,6 +103,48 @@ import wicket.util.time.Duration;
  * <i>defaultPageFactory </i>- the factory class that is used for constructing
  * page instances.
  * <p>
+ * <p>
+ * <i>renderStrategy</i>- Sets in what way the render part of a request is handled.
+ * Basically, there are two different options:
+ * <ul>
+ *  <li>
+ *   Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one fysical
+ *   request. This is efficient, and is the best option if you want to do sophisticated
+ *   clustering. It does not however, shield you from what is commonly known as the
+ *   <i>Double submit problem</i>
+ *  </li>
+ *  <li>
+ *   Using a redirect. This follows the pattern <a href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost"
+ *   	>as described at the serverside</a> and that is commonly known as Redirect after post.
+ *   Wicket takes it one step further to do any rendering after a redirect, so that not only
+ *   form submits are shielded from the double submit problem, but also the IRequestListener
+ *   handlers (that could be e.g. a link that deletes a row).
+ *   With this pattern, you have two options to choose from:
+ *   <ul>
+ *    <li>
+ *     ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the 'action' part
+ *     of the request, which is either page construction (bookmarkable pages or the home page)
+ *     or calling a IRequestListener handler, such as Link.onClick. When that part is done,
+ *     a redirect is issued to the render part, which does all the rendering of the page
+ *     and its components. <strong>Be aware</strong> that this may mean, depending on whether
+ *     you access any models in the action part of the request, that attachement and detachement
+ *     of some models is done twice for a request.
+ *    </li>
+ *    <li>
+ *     ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action- and the
+ *     render part of the request in one physical request, but instead of streaming the
+ *     result to the browser directly, it is kept in memory, and a redirect is issue to
+ *     get this buffered result (after which it is immediately removed).
+ *     This option currently is the default render strategy, as it shields you from the
+ *     double submit problem, while being more efficient and less error prone regarding to
+ *     detachable models.
+ *    </li>
+ *   </ul>
+ *   Note that allthough this parameter is called a strategy, it is not a strategy in the
+ *   sense that alternatives can be plugged in.
+ *  </li>
+ * </ul>
+ * </p>
  * More documentation is available about each setting in the setter method for
  * the property.
  * 
@@ -393,10 +435,7 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Gets the renderStrategy.
-	 * This property influences the default way in how a logical request that consists
-	 * of an 'action' and a 'render' part is handled, and is mainly used to have a means
-	 * to circumvent the 'refresh' problem.
+	 * Gets in what way the render part of a request is handled.
 	 * @return the render strategy
 	 */
 	public final RenderStrategy getRenderStrategy()
@@ -405,10 +444,42 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Sets the renderStrategy.
-	 * This property influences the default way in how a logical request that consists
-	 * of an 'action' and a 'render' part is handled, and is mainly used to have a means
-	 * to circumvent the 'refresh' problem.
+	 * Sets in what way the render part of a request is handled. Basically, there are two
+	 * different options:
+	 * <ul>
+	 * <li> Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one
+	 * fysical request. This is efficient, and is the best option if you want to do
+	 * sophisticated clustering. It does not however, shield you from what is commonly
+	 * known as the <i>Double submit problem</i> </li>
+	 * <li> Using a redirect. This follows the pattern <a
+	 * href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost" >as
+	 * described at the serverside</a> and that is commonly known as Redirect after post.
+	 * Wicket takes it one step further to do any rendering after a redirect, so that not
+	 * only form submits are shielded from the double submit problem, but also the
+	 * IRequestListener handlers (that could be e.g. a link that deletes a row). With this
+	 * pattern, you have two options to choose from:
+	 * <ul>
+	 * <li> ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the 'action'
+	 * part of the request, which is either page construction (bookmarkable pages or the
+	 * home page) or calling a IRequestListener handler, such as Link.onClick. When that
+	 * part is done, a redirect is issued to the render part, which does all the rendering
+	 * of the page and its components. <strong>Be aware</strong> that this may mean,
+	 * depending on whether you access any models in the action part of the request, that
+	 * attachement and detachement of some models is done twice for a request. </li>
+	 * <li> ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action-
+	 * and the render part of the request in one physical request, but instead of
+	 * streaming the result to the browser directly, it is kept in memory, and a redirect
+	 * is issue to get this buffered result (after which it is immediately removed). This
+	 * option currently is the default render strategy, as it shields you from the double
+	 * submit problem, while being more efficient and less error prone regarding to
+	 * detachable models. </li>
+	 * </ul>
+	 * Note that allthough this parameter is called a strategy, it is not a strategy in
+	 * the sense that alternatives can be plugged in. </li>
+	 * </ul>
+	 * This property influences the default way in how a logical request that consists of
+	 * an 'action' and a 'render' part is handled, and is mainly used to have a means to
+	 * circumvent the 'refresh' problem.
 	 * @param renderStrategy the render strategy
 	 */
 	public final void setRenderStrategy(RenderStrategy renderStrategy)
