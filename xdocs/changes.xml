@@ -8,6 +8,53 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+	  <action type="update" dev="Johan Compagner, Eelco Hillenius" due-to="Martijn Dashorst">
+	  Made the rendering strategy pluggable. From javadoc of ApplicationSettings:
+		<i>renderStrategy</i>- Sets in what way the render part of a request is handled.
+		Basically, there are two different options:
+		<ul>
+		 <li>
+		  Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one fysical
+		  request. This is efficient, and is the best option if you want to do sophisticated
+		  clustering. It does not however, shield you from what is commonly known as the
+		  <i>Double submit problem</i>
+		 </li>
+		 <li>
+		  Using a redirect. This follows the pattern <a href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost"
+		  	>as described at the serverside</a> and that is commonly known as Redirect after post.
+		  Wicket takes it one step further to do any rendering after a redirect, so that not only
+		  form submits are shielded from the double submit problem, but also the IRequestListener
+		  handlers (that could be e.g. a link that deletes a row).
+		  With this pattern, you have two options to choose from:
+		  <ul>
+		   <li>
+		    ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the 'action' part
+		    of the request, which is either page construction (bookmarkable pages or the home page)
+		    or calling a IRequestListener handler, such as Link.onClick. When that part is done,
+		    a redirect is issued to the render part, which does all the rendering of the page
+		    and its components. <strong>Be aware</strong> that this may mean, depending on whether
+		    you access any models in the action part of the request, that attachement and detachement
+		    of some models is done twice for a request.
+		   </li>
+		   <li>
+		    ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action- and the
+		    render part of the request in one physical request, but instead of streaming the
+		    result to the browser directly, it is kept in memory, and a redirect is issue to
+		    get this buffered result (after which it is immediately removed).
+		    This option currently is the default render strategy, as it shields you from the
+		    double submit problem, while being more efficient and less error prone regarding to
+		    detachable models.
+		   </li>
+		  </ul>
+		 </li>
+		</ul>
+		  Note that this parameter sets the default behaviour, but that you can manually set
+		  whether any redirecting is done by calling method RequestCycle.setRedirect. Setting
+		  the redirect flag when the application is configured to use ONE_PASS_RENDER, will result
+		  in a redirect of type REDIRECT_TO_RENDER. When the application is configured to use
+		  REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to false, will
+		  result in that request begin rendered and streamed in one pass.
+	  </action>
   	  <action type="fix" dev="Eelco Hillenius">
   	   Fixed a bug that made MostRecentlyUsedMap (used to store page in the session)
   	   behave like a MostRecentlyAddedToMap. Fixes lots of frames/ popup problems
