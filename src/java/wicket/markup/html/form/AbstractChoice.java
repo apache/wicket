@@ -25,6 +25,7 @@ import wicket.markup.html.form.model.ChoiceList;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
+import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
 /**
@@ -38,6 +39,16 @@ abstract class AbstractChoice extends FormComponent
 {
 	/** The list of choices. */
 	private IChoiceList choices;
+
+	/**
+	 * @param id
+	 *            See Component
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(final String id)
+	{
+		super(id);
+	}
 
 	/**
 	 * @param id
@@ -190,8 +201,10 @@ abstract class AbstractChoice extends FormComponent
 				buffer.append("value=\"");
 				buffer.append(choice.getId());
 				buffer.append("\">");
-				buffer.append(getLocalizer().getString(getId() + "." + displayValue, this,
-						displayValue));
+				String display = getLocalizer().getString(
+						getId() + "." + displayValue, this, displayValue);
+				String escaped = Strings.escapeMarkup(display);
+				buffer.append(escaped);
 				buffer.append("</option>");
 			}
 			else

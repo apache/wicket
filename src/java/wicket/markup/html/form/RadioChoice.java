@@ -39,6 +39,14 @@ import wicket.model.IModel;
 public class RadioChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
 	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
+	 */
+	public RadioChoice(final String id)
+	{
+		super(id);
+	}
+
+	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
 	 */
 	public RadioChoice(final String id, final Collection choices)

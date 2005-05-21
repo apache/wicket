@@ -40,6 +40,14 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	private boolean nullValid = false;
 
 	/**
+	 * @see AbstractChoice#AbstractChoice(String)
+	 */
+	public AbstractSingleSelectChoice(final String id)
+	{
+		super(id);
+	}
+
+	/**
 	 * @see AbstractChoice#AbstractChoice(String, Collection)
 	 */
 	public AbstractSingleSelectChoice(final String id, final Collection choices)

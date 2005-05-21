@@ -37,6 +37,14 @@ import wicket.util.string.Strings;
 public class ListMultipleChoice extends AbstractChoice
 {
 	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
+	 */
+	public ListMultipleChoice(final String id)
+	{
+		super(id);
+	}
+
+	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
 	 */
 	public ListMultipleChoice(final String id, final Collection choices)
