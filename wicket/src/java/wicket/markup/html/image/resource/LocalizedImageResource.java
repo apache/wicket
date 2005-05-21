@@ -28,6 +28,7 @@ import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.markup.html.StaticResource;
 import wicket.markup.html.WebResource;
 import wicket.util.lang.Objects;
 import wicket.util.parse.metapattern.Group;

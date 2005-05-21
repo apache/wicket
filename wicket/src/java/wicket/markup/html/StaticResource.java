@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.image.resource;
+package wicket.markup.html;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -25,25 +26,28 @@ import wicket.Application;
 import wicket.RequestCycle;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.WebResource;
 import wicket.protocol.http.WebApplication;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
 
 /**
- * An image component represents a localizable image resource. The image name
- * comes from the src attribute of the image tag that the component is attached
- * to. The image component responds to requests made via IResourceListener's
- * resourceRequested method. The image or subclass responds by returning an
- * IResource from getImageResource(String), where String is the source attribute
- * of the image tag.
+ * Represents a localizable static resource.
+ * <p>
+ * Use like eg:
+ * <pre>
+ * private static final StaticResource IMG_UNKNOWN =
+ * 		StaticResource.get(EditPage.class.getPackage(), "questionmark.gif");
+ * </pre>
+ * where the static resource references image 'questionmark.gif' from the
+ * the package that EditPage is in. 
+ * </p>
  * 
  * @author Jonathan Locke
  */
 public class StaticResource extends WebResource
 {
 	/** Map from key to resource */
-	private static Map imageResourceMap = new HashMap();
+	private static Map resourceMap = new HashMap();
 
 	/** The path to the resource */
 	final String absolutePath;
@@ -58,14 +62,14 @@ public class StaticResource extends WebResource
 	private transient Application application;
 
 	/**
-	 * Gets a non-localized image resource for a given set of criteria. Only one
-	 * image resource will be loaded for the same criteria.
+	 * Gets a non-localized resource for a given set of criteria. Only one resource
+	 * will be loaded for the same criteria.
 	 * 
 	 * @param basePackage
 	 *            The base package to search from
 	 * @param path
 	 *            The path to the resource
-	 * @return The image resource
+	 * @return The resource
 	 */
 	public static StaticResource get(final Package basePackage, final String path)
 	{
@@ -73,32 +77,32 @@ public class StaticResource extends WebResource
 	}
 
 	/**
-	 * Gets the image resource for a given set of criteria. Only one image
-	 * resource will be loaded for the same criteria.
+	 * Gets the resource for a given set of criteria. Only one resource will be
+	 * loaded for the same criteria.
 	 * 
 	 * @param basePackage
 	 *            The base package to search from
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
-	 *            The locale of the image
+	 *            The locale of the resource
 	 * @param style
-	 *            The style of the image (see {@link wicket.Session})
-	 * @return The image resource
+	 *            The style of the resource (see {@link wicket.Session})
+	 * @return The resource
 	 */
 	public static StaticResource get(final Package basePackage, final String path,
 			final Locale locale, final String style)
 	{
 		final String key = basePackage.getName() + '/' + SharedResources.path(path, locale, style);
-		synchronized (imageResourceMap)
+		synchronized (resourceMap)
 		{
-			StaticResource imageResource = (StaticResource)imageResourceMap.get(key);
-			if (imageResource == null)
+			StaticResource resource = (StaticResource)resourceMap.get(key);
+			if (resource == null)
 			{
-				imageResource = new StaticResource(basePackage, path, locale, style);
-				imageResourceMap.put(key, imageResource);
+				resource = new StaticResource(basePackage, path, locale, style);
+				resourceMap.put(key, resource);
 			}
-			return imageResource;
+			return resource;
 		}
 	}
 
@@ -110,9 +114,9 @@ public class StaticResource extends WebResource
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
-	 *            The locale of the image
+	 *            The locale of the resource
 	 * @param style
-	 *            The style of the image
+	 *            The style of the resource
 	 */
 	private StaticResource(final Package basePackage, final String path, final Locale locale,
 			final String style)
@@ -125,7 +129,7 @@ public class StaticResource extends WebResource
 	}
 
 	/**
-	 * @return Gets the image resource for the component.
+	 * @return Gets the resource for the component.
 	 */
 	public IResourceStream getResourceStream()
 	{
@@ -138,7 +142,7 @@ public class StaticResource extends WebResource
 			// Check that resource was found
 			if (this.resourceStream == null)
 			{
-				throw new WicketRuntimeException("Unable to find static image resource [path = "
+				throw new WicketRuntimeException("Unable to find static resource [path = "
 						+ absolutePath + ", style = " + style + ", locale = " + locale + "]");
 			}
 		}
@@ -146,7 +150,7 @@ public class StaticResource extends WebResource
 	}
 
 	/**
-	 * set the application object on this ImageResource.
+	 * set the application object on this resource.
 	 * @param webApplication
 	 */
 	public void setApplication(WebApplication webApplication)
