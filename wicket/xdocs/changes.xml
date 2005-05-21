@@ -8,6 +8,10 @@
   </properties>
   <body>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+  	  <action type="update" dev="Eelco Hillenius">
+  	  	Added constructors with just the id to the Choice component to be consistent
+  	  	with other Wicket components.
+  	  </action>
   	  <action type="fix" dev="Eelco Hillenius">
   	   Strings.escapeMarkup now properly escapes unicode.
   	  </action>
