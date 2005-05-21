@@ -20,7 +20,7 @@ package wicket.markup.html;
 import wicket.Resource;
 
 /**
- * Base class for web resources. See the base class {@link wicket.Resource}for
+ * Base class for web resources. See the base class {@link wicket.Resource} for
  * details on resources in general, including how they can be shared in an
  * application.
  * 

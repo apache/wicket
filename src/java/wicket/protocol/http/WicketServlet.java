@@ -32,7 +32,7 @@ import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.image.resource.StaticResource;
+import wicket.markup.html.StaticResource;
 import wicket.response.BufferedResponse;
 import wicket.util.resource.IResourceStream;
 

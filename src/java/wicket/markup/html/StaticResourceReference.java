@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.image.resource;
+package wicket.markup.html;
 
 import wicket.Resource;
 import wicket.ResourceReference;
@@ -51,4 +52,3 @@ public class StaticResourceReference extends ResourceReference
 		return StaticResource.get(getScope().getPackage(), getName(),getLocale(),getStyle());
 	}
 }
-
