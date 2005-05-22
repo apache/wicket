@@ -108,7 +108,7 @@ import wicket.util.time.Duration;
  * Basically, there are two different options:
  * <ul>
  *  <li>
- *   Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one fysical
+ *   Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one physical
  *   request. This is efficient, and is the best option if you want to do sophisticated
  *   clustering. It does not however, shield you from what is commonly known as the
  *   <i>Double submit problem</i>
@@ -450,7 +450,7 @@ public final class ApplicationSettings
 	 * different options:
 	 * <ul>
 	 * <li> Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one
-	 * fysical request. This is efficient, and is the best option if you want to do
+	 * physical request. This is efficient, and is the best option if you want to do
 	 * sophisticated clustering. It does not however, shield you from what is commonly
 	 * known as the <i>Double submit problem</i> </li>
 	 * <li> Using a redirect. This follows the pattern <a
