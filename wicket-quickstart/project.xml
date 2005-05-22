@@ -29,7 +29,7 @@
 			scm:cvs:pserver:anoncvs@cvs.sourceforge.net:/cvsroot/wicket-stuff:wicket-quickstart
 		</connection>
 		<developerConnection>
-			scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket-quickstart
+			scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket-stuff:wicket-quickstart
 		</developerConnection>
 		<url>http://cvs.sourceforge.net/viewcvs.py/wicket/wicket-quickstart</url>
 	</repository>
