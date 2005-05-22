@@ -1,0 +1,20 @@
+
+#wizard {
+ border-color: blue;
+ border-style: solid;
+ border-width: 1px;
+ padding: 4px;
+}
+
+#wizardNavigation ul {
+ list-style: none;
+}
+
+#wizardNavigation li {
+ display: inline;
+ padding: 2px;
+}
+
+#wizardEditor {
+ margin: 10px;
+}

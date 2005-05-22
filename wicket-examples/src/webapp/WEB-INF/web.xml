@@ -21,10 +21,10 @@
       Comment the following lines for "development" (reloading when templates change) 
 -->
 
-		<context-param>
+		<!-- context-param>
 		  <param-name>deployment</param-name>
 		  <param-value>true</param-value>
-		</context-param>
+		</context-param-->
 
 	<servlet>
 		<servlet-name>HelloWorldApplication</servlet-name>
@@ -176,6 +176,16 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>WizardApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.wizard.WizardApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>SignInApplication</servlet-name>
 		<url-pattern>/signin/*</url-pattern>
@@ -249,6 +259,11 @@
 	<servlet-mapping>
 		<servlet-name>EncodingsApplication</servlet-name>
 		<url-pattern>/encodings/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>WizardApplication</servlet-name>
+		<url-pattern>/wizard/*</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>
