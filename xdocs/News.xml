@@ -11,6 +11,29 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="May 21, 2005 - 1.0 RC3 is out!">
+				<p>
+					Finally, after a month of some silence, we have produced our last release
+					candidate before we deploy 1.0. If all goes well, you will see the final
+					release within a week or two. The bug list now only contains an issue
+					relating to clustering. As such we advise you currently to not deploy your
+					application on a cluster, until the issues are resolved, or to be very thorough
+					in your clustering tests.
+				</p>
+				<p>
+					In this release you won't see major API changes, however the internals have
+					improved significantly. The request cycle has now correct semantics, we have
+					improved the redirect after post pattern, which now performs significantly
+					better than before, and allows you to do your request handling and rendering
+					in one pass, and then redirect to the rendered page. CompoundModel support has
+					improved and works with more components than before. We added support for 
+					redirecting to external url's (e.g. Google) directly by introducing RedirectPage.
+				</p>
+				<p>
+					For the complete list of fixes, updates and changes please see the 
+					<a href="/changes-report.html" title="Release History">release history</a>.
+				</p>
+			</subsection>
 			<subsection name="May 4, 2005 - Eclipse Live Demo available">
 				<p>
 					Using <a href="http://www.debugmode.com/wink/" title="Wink">Wink</a> we have
