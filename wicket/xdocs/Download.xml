@@ -9,21 +9,76 @@
 	<body>
 		<section name="Download">
 			<p>
-				The Wicket project is divided into several CVS projects which are built into
-				separate JAR files.  These JAR files are available on the 
-				<a href="http://sourceforge.net/projects/wicket/files">download</a> page.
+				The Wicket project is divided into several CVS projects
+				which are built into separate JAR files. These JAR files
+				are available on the
+				<a
+					href="http://sourceforge.net/projects/wicket/files">
+					download
+				</a>
+				page.
 			</p>
 			<p>
-			<table>
-			<tr><th>Project</th><th>Description</th></tr>
-			<tr><td><a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=130482">wicket</a></td><td>The core Wicket API.</td></tr>
-			<tr><td>wicket-extensions</td><td>Official reusable components which extend the core.</td></tr>
-			<tr><td><a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">wicket-examples</a></td><td>Examples that demonstrate how to use the core and wicket-extensions</td></tr>
-			<tr><td><a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138753">wicket-contrib</a></td><td>Contributed code from Wicket users.</td></tr>
-			<tr><td>wicket-quickstart</td><td>A template Wicket project to help you get started</td></tr>
-			<tr><td>wicket-sandbox</td><td>An area for the Wicket team to share experimental code</td></tr>
-			<tr><td>wicket-userdocs</td><td>Files used to build user documentation.</td></tr>
-			</table>
+				If you are looking for Wicket components for other
+				projects, such as Spring, Hibernate or Velocity, please
+				go to
+				<a href="http://wicket-stuff.sourceforge.net"
+					title="Wicket Stuff">
+					Wicket Stuff
+				</a>
+				.
+			</p>
+			<p>
+				<table>
+					<tr>
+						<th>Project</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>
+							<a
+								href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=130482">
+								wicket
+							</a>
+						</td>
+						<td>The core Wicket API.</td>
+					</tr>
+					<tr>
+						<td>
+							<a
+								href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138753">
+								wicket-extensions
+							</a>
+						</td>
+						<td>
+							Official reusable components which extend
+							the core.
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a
+								href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">
+								wicket-examples
+							</a>
+						</td>
+						<td>
+							Examples that demonstrate how to use the
+							core and wicket-extensions
+						</td>
+					</tr>
+					<tr>
+						<td>wicket-sandbox</td>
+						<td>
+							An area for the Wicket team to share
+							experimental code
+						</td>
+					</tr>
+					<tr>
+						<td>wicket-userdocs</td>
+						<td>Files used to build user documentation.</td>
+					</tr>
+				</table>
 			</p>
 		</section>
 	</body>
