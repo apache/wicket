@@ -172,6 +172,7 @@ public abstract class Application
 
 		// Install default component resolvers
 		componentResolvers.add(new AutoComponentResolver());
+		componentResolvers.add(new MarkupInheritanceResolver());
 
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());

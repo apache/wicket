@@ -225,6 +225,10 @@ public class MarkupParser
         // List to return
         final List list = new ArrayList();
 
+        // If remaining tags after <wicket:extend/> shall be ignored
+        // TODO remove <wicket:extend> specific code from MarkupParser
+        int stripRemainingElements = -1;
+
         // Loop through tags
         for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
         {
@@ -259,6 +263,34 @@ public class MarkupParser
                     list.add(new RawMarkup(rawMarkup));
                 }
 
+                // Strip raw markup preceding <wicket:extend> and following </wicket:extend>
+                // Make sure no wicket components get removed
+                if (tag instanceof WicketTag)
+                {
+                    final WicketTag wtag = (WicketTag) tag;
+                    if (wtag.isExtendTag())
+                    {
+                        if (wtag.isOpen())
+                        {
+                            // TODO check if only RawMarkup
+                            list.clear();
+                        }
+                        else if (wtag.isClose())
+                        {
+                            if (stripRemainingElements != -1)
+                            {
+                                throw new MarkupException("Have already seen a <wicket:extend> tag");
+                            }
+                            
+                            stripRemainingElements = list.size() + 1;
+                        }
+                        else
+                        {
+                            throw new MarkupException("Unmatched open close tags for <wicket:extend>");
+                        }
+                    }
+                }
+
                 // Add to list unless preview component tag remover flagged as removed
                 if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
                 {
@@ -275,6 +307,16 @@ public class MarkupParser
         if (text.length() > 0)
         {
             list.add(new RawMarkup(text));
+        }
+        
+        // Remove raw markup following </wicket:extend>
+        if (stripRemainingElements != -1)
+        {
+            for (int i = list.size() - 1; i >= stripRemainingElements; i--)
+            {
+                // TODO check if only RawMarkup
+                list.remove(i);
+            }
         }
 
         // Make all tags immutable. Note: We can not make tag immutable 

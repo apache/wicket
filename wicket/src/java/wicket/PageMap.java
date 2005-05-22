@@ -218,10 +218,13 @@ public final class PageMap implements Serializable
 	 */
 	final void visitPages(final IVisitor visitor)
 	{
-		for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
-		{
-			visitor.page((Page)iterator.next());
-		}
+	    if (pages != null)
+	    {
+			for (final Iterator iterator = pages.values().iterator(); iterator.hasNext();)
+			{
+				visitor.page((Page)iterator.next());
+			}
+	    }
 	}
 
 	/**
