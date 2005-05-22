@@ -42,7 +42,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public final class MarkupStream
+public class MarkupStream
 {
 	/** Element at currentIndex */
 	private MarkupElement current;
@@ -52,6 +52,15 @@ public final class MarkupStream
 
 	/** The markup element list */
 	private final Markup markup;
+
+	/**
+	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN
+	 * THE NEAR FUTURE.
+	 */
+	protected MarkupStream()
+	{
+	    markup = null;
+	}
 
 	/**
 	 * Constructor

@@ -573,6 +573,19 @@ public abstract class MarkupContainer extends Component
 	{
 		return markupStream;
 	}
+	
+	/**
+	 * Get the base class' markup stream
+	 * 
+	 * @return Returns the markup stream set on inherited component
+	 */
+	protected final MarkupStream getInheritedMarkupStream()
+	{
+		// TODO this is not necessarily just super.getClass().
+	    return getApplication().getMarkupCache().getMarkupStream(
+	            this, 
+	            this.getClass().getSuperclass());
+	}
 
 	/**
 	 * Handle the container's body. If your override of this method does not
