@@ -28,7 +28,7 @@ import wicket.markup.parser.XmlTag;
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
  * Note 2: The namespace name is configurable through ApplicationSettings.
- * 
+ *
  * @see wicket.ApplicationSettings#setWicketNamespace(String)
  * 
  * @author Juergen Donnerstag
@@ -47,8 +47,22 @@ public final class WicketTag extends ComponentTag
 	}
 
 	/**
+	 * @see wicket.markup.ComponentTag#setId(java.lang.String)
+	 */
+	public void setId(String id)
+	{
+		if ("extend".equals(id))
+		{
+			setId("_autoadd_Extend");
+		}
+		else
+		{
+			super.setId(id);
+		}
+	}
+
+	/**
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
-	 * 
 	 * @return The tag's name attribute
 	 */
 	public final String getNameAttribute()

@@ -65,7 +65,8 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			    }
 
 			    // wicket:extend regions are handled by MarkupInheritanceContainer
-		        final MarkupInheritanceContainer inherit = new MarkupInheritanceContainer();
+		        final MarkupInheritanceContainer inherit =
+		        	new MarkupInheritanceContainer(wicketTag.getId());
 		        container.autoAdd(inherit);
 		        
 			    return true;

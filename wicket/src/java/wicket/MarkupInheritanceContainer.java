@@ -51,12 +51,13 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	
 	/**
      * Construct.
+     * @param id component id
 	 */
-	public MarkupInheritanceContainer()
+	public MarkupInheritanceContainer(String id)
 	{
 	    // Default name for the container. The component is represented by
 	    // the <wicket:extend>...</wicket:extend> tag.
-		super("_extend");
+		super(id);
 	}
 	
 	/**
