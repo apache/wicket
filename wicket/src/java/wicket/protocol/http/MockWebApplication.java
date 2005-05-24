@@ -22,6 +22,7 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import wicket.ApplicationSettings;
 import wicket.Page;
 
 /**
@@ -103,6 +104,8 @@ public class MockWebApplication extends WebApplication
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
         servletResponse = new MockHttpServletResponse();
         wicketSession = getSession(servletRequest);
+        ApplicationSettings settings = getSettings();
+        settings.setRenderStrategy(ApplicationSettings.ONE_PASS_RENDER);
     }
 
     /**
