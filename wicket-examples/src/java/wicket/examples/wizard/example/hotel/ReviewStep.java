@@ -27,7 +27,7 @@ import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
 
 /**
- * Step 2, Room Selection, of the hotel preferences wizard.
+ * Step 4, Review, of the hotel preferences wizard.
  *
  * @author Eelco Hillenius
  */

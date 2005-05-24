@@ -177,6 +177,16 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>CustomComponentsApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.customcomponents.CustomComponentsApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>WizardApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
@@ -259,6 +269,11 @@
 	<servlet-mapping>
 		<servlet-name>EncodingsApplication</servlet-name>
 		<url-pattern>/encodings/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>CustomComponentsApplication</servlet-name>
+		<url-pattern>/customcomponents/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
