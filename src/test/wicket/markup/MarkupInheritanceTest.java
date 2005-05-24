@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 
@@ -67,7 +68,7 @@ public class MarkupInheritanceTest extends TestCase
 	public void testRenderHomePage_3() throws Exception
 	{
 	    // Inherit from a inherited component is currently not supported
-	    //executeTest(MarkupInheritanceExtension_3.class, "MarkupInheritanceExpectedResult_3.html");
+	    // executeTest(MarkupInheritanceExtension_3.class, "MarkupInheritanceExpectedResult_3.html");
 	}
 
 	/**
@@ -91,5 +92,36 @@ public class MarkupInheritanceTest extends TestCase
 		System.out.println(document);
 
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_4() throws Exception
+	{
+		System.out.println("=== " + MarkupInheritanceExtension_4.class.getName() + " ===");
+		
+		application = new MockWebApplication(null);
+		application.getPages().setHomePage(MarkupInheritanceExtension_4.class);
+
+		// Do the processing
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
+
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		System.out.println(document);
+
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4.html"));
+
+		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)application.getLastRenderedPage();
+
+		Link link = (Link)page.get("link");
+		application.setupRequestAndResponse();
+		application.getServletRequest().setRequestToComponent(link);
+		application.processRequestCycle();
+		document = application.getServletResponse().getDocument();
+
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4.html"));
 	}
 }
