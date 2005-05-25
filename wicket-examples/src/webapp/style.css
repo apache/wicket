@@ -39,6 +39,12 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	padding: 10px;
 }
 
+.blockWithBorder {
+	border-width: thin;
+	border-style: dotted;
+	border-color: #E9601A;
+}
+
 #hellomessage {
 	font-size: 30pt;
 }

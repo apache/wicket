@@ -48,5 +48,8 @@ public class Home extends WicketExamplePage
 				return book.getTitle() + " by " + book.getAuthor();
 			};
 		}));
+
+		add(new ImportPanel("importHeader", "cust/header.html"));
+		add(new ImportPanel("importFooter", "cust/footer.html"));
 	}
 }
