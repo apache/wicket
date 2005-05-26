@@ -35,11 +35,13 @@ import wicket.util.lang.Classes;
  * asked for its markup type. It also has a method which subclasses can use to
  * retrieve a bookmarkable link to the application's home page.
  * <p>
- * Pages can be constructed with any constructor when they are being used in a
- * Wicket session, but if you wish to link to a Page using a URL that is
- * bookmarkable (doesn't have session information encoded into it), you need to
- * implement your Page with a constructor that accepts a single PageParameters
- * argument.
+ * WebPages can be constructed with any
+ * constructor when they are being used in a Wicket session, but if you wish to
+ * link to a Page using a URL that is "bookmarkable" (which implies that the URL
+ * will not have any session information encoded in it), you need to implement
+ * your Page with a no-arg constructor or with a constructor that accepts a
+ * PageParameters argument (which wraps any query string parameters for a
+ * request).
  * 
  * @author Jonathan Locke
  */
