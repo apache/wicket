@@ -43,14 +43,14 @@ public abstract class AbstractTree extends Panel
 	 * Construct using the given model as the tree model to use. A new tree
 	 * state will be constructed by calling newTreeState.
 	 * 
-	 * @param componentName
-	 *            The name of this container
+	 * @param id
+	 *            The id of this component
 	 * @param model
 	 *            the underlying tree model
 	 */
-	public AbstractTree(final String componentName, final TreeModel model)
+	public AbstractTree(final String id, final TreeModel model)
 	{
-		super(componentName);
+		super(id);
 		this.treeState = newTreeState(model);
 	}
 
@@ -58,14 +58,14 @@ public abstract class AbstractTree extends Panel
 	 * Construct using the given tree state that holds the model to be
 	 * used as the tree model.
 	 * 
-	 * @param componentName
-	 *            The name of this container
+	 * @param id
+	 *            The id of this component
 	 * @param treeState
 	 *            treeState that holds the underlying tree model
 	 */
-	public AbstractTree(final String componentName, final TreeState treeState)
+	public AbstractTree(final String id, final TreeState treeState)
 	{
-		super(componentName);
+		super(id);
 		this.treeState = treeState;
 	}
 

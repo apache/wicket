@@ -369,7 +369,7 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * Set the component's id. The value is usually taken from the tag's id
-	 * attribute, e.g. wicket:id="componentName".
+	 * attribute, e.g. wicket:id="componentId".
 	 * 
 	 * @param id
 	 *			  The component's id assigned to the tag.
