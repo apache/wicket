@@ -307,6 +307,9 @@ public abstract class Component implements Serializable
 	/** Any parent container. */
 	private MarkupContainer parent;
 
+	/** If false, the component's tag will not be rendered. Only the body */
+	private boolean renderComponentTag = true;
+	
 	/**
 	 * Generic component visitor interface for component traversals.
 	 */
@@ -1149,6 +1152,18 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * If enabled (renderTag == true) the component's tag will be printed,
+	 * which is default. The body will still be printed. If disabled only 
+	 * the body will be printed.
+	 * 
+	 * @param renderTag if disabled, the component tag will not be printed
+	 */
+	public final void setRenderComponentTag(final boolean renderTag)
+	{
+	    this.renderComponentTag = renderTag;
+	}
+	
+	/**
 	 * Sets the page that will respond to this request
 	 * 
 	 * @param page
@@ -1626,11 +1641,17 @@ public abstract class Component implements Serializable
 	 */
 	protected final void renderComponentTag(ComponentTag tag)
 	{
+	    if (this.renderComponentTag == false)
+	    {
+	        // Do nothing
+	        return;
+	    }
+
 		final ApplicationSettings settings = getApplication().getSettings();
 		if (!(tag instanceof WicketTag) || !settings.getStripWicketTags())
 		{
 			// Apply attribute modifiers
-			if (attributeModifiers != null && tag.getType() != XmlTag.CLOSE)
+			if ((attributeModifiers != null) && (tag.getType() != XmlTag.CLOSE))
 			{
 				tag = tag.mutable();
 				for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
@@ -1812,8 +1833,12 @@ public abstract class Component implements Serializable
 		}
 		else if (openTag.isOpenClose())
 		{
-			// Write synthetic close tag
-			getResponse().write(openTag.syntheticCloseTagString());
+		    if (this.renderComponentTag == false)
+		    {
+				// Write synthetic close tag
+				getResponse().write(openTag.syntheticCloseTagString());
+		    }
+		    
 		}
 	}
 
