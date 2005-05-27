@@ -7,6 +7,9 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
+    <release version="1.1.0-rc1" date="2005-05-27" description="1.1.0 Release Candidate 1">
+      <action type="add" dev="Juergen Donnerstag">By means of Component.setRenderComponentTag(boolean) it is now easily possible to disable writing a component's tag. This is e.g. necessary with &lt;span&gt; tags and Panels where in cases where you want to be strictly HTML compliant the &lt;span&gt; tag must be removed. The (tag's) body is not affected by this setting.</action>
+    </release>
     <release version="1.0.0-rc3" date="2005-05-22" description="1.0 Release Candidate 3">
       <action type="update" dev="Eelco Hillenius">Added constructors with just the id to the Choice component to be consistent with other Wicket components.</action>
       <action type="fix" dev="Eelco Hillenius">Strings.escapeMarkup now properly escapes unicode.</action>
