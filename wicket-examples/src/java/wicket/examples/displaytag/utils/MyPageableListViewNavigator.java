@@ -31,13 +31,13 @@ public class MyPageableListViewNavigator extends PageableListViewNavigator
 {
     /**
      * 
-     * @param componentName
+     * @param id
      * @param pageableListView
      */
-    public MyPageableListViewNavigator(final String componentName,
+    public MyPageableListViewNavigator(final String id,
 		final PageableListView pageableListView)
     {
-        super(componentName, pageableListView);
+        super(id, pageableListView);
 
 		// model = null; the headline test will be auto-generated during
 		// handleBody.

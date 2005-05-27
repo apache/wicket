@@ -29,11 +29,11 @@ public class LibraryApplicationBorder extends Border
 {
     /**
      * Constructor
-     * @param componentName The name of this component
+     * @param id The id of this component
      */
-    public LibraryApplicationBorder(final String componentName)
+    public LibraryApplicationBorder(final String id)
     {
-        super(componentName);
+        super(id);
         add(new BoxBorder("boxBorder"));
     }
 }

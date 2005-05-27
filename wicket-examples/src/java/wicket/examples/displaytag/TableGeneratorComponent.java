@@ -40,14 +40,14 @@ public class TableGeneratorComponent extends Panel
     /**
      * Constructor
      * 
-     * @param componentName
+     * @param id
      * @param data
      * @param headers
      * @param columns
      */
-    public TableGeneratorComponent(final String componentName, final List data, final String[] headers, final String[] columns)
+    public TableGeneratorComponent(final String id, final List data, final String[] headers, final String[] columns)
     {
-        super(componentName);
+        super(id);
 
         final List headerList = new ArrayList(headers.length);
         for (int i=0; i < headers.length; i++)
@@ -71,14 +71,14 @@ public class TableGeneratorComponent extends Panel
     /**
      * Constructor
      * 
-     * @param componentName The component name; must not be null
+     * @param id The component name; must not be null
      * @param data The tables underlying model object list
      * @param headers The table headers
      * @param columns The table columns
      */
-    public TableGeneratorComponent(final String componentName, final List data, final List headers, final List columns)
+    public TableGeneratorComponent(final String id, final List data, final List headers, final List columns)
     {
-        super(componentName);
+        super(id);
         
         init(data, headers, columns);
     }

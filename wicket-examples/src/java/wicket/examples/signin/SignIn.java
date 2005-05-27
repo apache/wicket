@@ -67,13 +67,13 @@ public final class SignIn extends WicketExamplePage
 
         /**
          * Constructor
-         * @param componentName Name of the form component
+         * @param id id of the form component
          * @param feedback The feedback panel to update
          */
-        public SignInForm(final String componentName,
+        public SignInForm(final String id,
             final FeedbackPanel feedback)
         {
-            super(componentName, feedback);
+            super(id, feedback);
 
             // Attach textfield components that edit properties map model
             add(new TextField("username", new PropertyModel(properties, "username")));

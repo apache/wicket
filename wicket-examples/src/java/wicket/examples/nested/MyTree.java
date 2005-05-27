@@ -47,14 +47,14 @@ public class MyTree extends Tree
 	/**
 	 * Construct.
 	 * 
-	 * @param componentName
-	 *            The name of this container
+	 * @param id
+	 *            The id of this component
 	 * @param model
 	 *            the tree model
 	 */
-	public MyTree(String componentName, TreeModel model)
+	public MyTree(String id, TreeModel model)
 	{
-		super(componentName, model);
+		super(id, model);
 	}
 
 	/**

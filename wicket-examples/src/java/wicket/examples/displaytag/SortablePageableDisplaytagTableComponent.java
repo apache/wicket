@@ -48,12 +48,12 @@ public class SortablePageableDisplaytagTableComponent extends Panel
     /**
      * Constructor.
      * 
-     * @param componentName Name of component
+     * @param id Name of component
      * @param list List of data to display
      */
-    public SortablePageableDisplaytagTableComponent(final String componentName, final List list)
+    public SortablePageableDisplaytagTableComponent(final String id, final List list)
     {
-        super(componentName);
+        super(id);
         
         // Get an internal copy of the model data
         this.data = new ArrayList();

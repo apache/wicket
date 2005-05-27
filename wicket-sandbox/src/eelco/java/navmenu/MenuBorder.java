@@ -46,11 +46,11 @@ public class MenuBorder extends Border
 {
 	/**
 	 * Construct.
-	 * @param componentName
+	 * @param id
 	 */
-	public MenuBorder(String componentName)
+	public MenuBorder(String id)
 	{
-		super(componentName);
+		super(id);
 		TreeModel model = MenuApplication.getMenu();
 		ULTree tree = new ULTree("tree", model);
 		add(tree);
@@ -69,12 +69,12 @@ public class MenuBorder extends Border
 
 		/**
 		 * Construct.
-		 * @param componentName The name of this container
+		 * @param id The id of this container
 		 * @param model the tree model
 		 */
-		public ULTree(String componentName, TreeModel model)
+		public ULTree(String id, TreeModel model)
 		{
-			super(componentName, model);
+			super(id, model);
 			setRootVisible(false);
 			buildNestedListModel(model);
 			UL treeRowsListView = new UL("rows", nestedList, 0);
@@ -135,13 +135,13 @@ public class MenuBorder extends Border
 
 	    /**
 	     * Constructor.
-	     * @param componentName The name of this component
+	     * @param id The id of this component
 	     * @param list a list where each element is either a string or another list
 	     * @param level the level this view is on (from 0..n-1)
 	     */
-	    public UL(String componentName, List list, int level)
+	    public UL(String id, List list, int level)
 	    {
-	        super(componentName);
+	        super(id);
 	        this.level = level;
 	        WebMarkupContainer ul = new WebMarkupContainer("ul");
 	        ul.add(new AttributeModifier("id", true, new Model(getLevelAsString())));
@@ -216,15 +216,15 @@ public class MenuBorder extends Border
 
 	    /**
 	     * Constructor.
-	     * @param componentName The name of this component
+	     * @param id The id of this component
 	     * @param node tree node
 	     * @param level the level this view is on (from 0..n-1)
 	     * @param index the sibling index
 	     */
-	    public LI(final String componentName, final DefaultMutableTreeNode node,
+	    public LI(final String id, final DefaultMutableTreeNode node,
 	    		final int level, final int index)
 	    {
-	        super(componentName);
+	        super(id);
 	        this.level = level;
 	        // add the row (with the LI element attached, and the label with the
 	        // row's actual value to display

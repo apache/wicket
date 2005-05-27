@@ -100,17 +100,17 @@ public final class EditBook extends AuthenticatedWebPage
 		/**
 		 * Constructor
 		 * 
-		 * @param componentName
-		 *            Name of form
+		 * @param id
+		 *            id of form
 		 * @param book
 		 *            Book model
 		 * @param feedback
 		 *            Feedback component that shows errors
 		 */
-		public EditBookForm(final String componentName, final Book book,
+		public EditBookForm(final String id, final Book book,
 				final FeedbackPanel feedback)
 		{
-			super(componentName, new CompoundPropertyModel(book), feedback);
+			super(id, new CompoundPropertyModel(book), feedback);
 
 			// Create a required text field with a max length of 30 characters
 			// that edits the book's title

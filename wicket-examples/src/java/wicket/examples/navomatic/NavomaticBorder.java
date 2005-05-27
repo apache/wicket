@@ -29,11 +29,11 @@ public class NavomaticBorder extends Border
 {
     /**
      * Constructor
-     * @param componentName The name of this component
+     * @param id The id of this component
      */
-    public NavomaticBorder(final String componentName)
+    public NavomaticBorder(final String id)
     {
-        super(componentName);
+        super(id);
         add(new BoxBorder("navigationBorder"));
         add(new BoxBorder("bodyBorder"));
     }

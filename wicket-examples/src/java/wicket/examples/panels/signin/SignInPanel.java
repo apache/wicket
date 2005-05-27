@@ -66,14 +66,14 @@ public abstract class SignInPanel extends Panel
 		/**
 		 * Constructor.
 		 * 
-		 * @param componentName
-		 *            Name of the form component
+		 * @param id
+		 *            id of the form component
 		 * @param feedback
 		 *            The feedback panel to update
 		 */
-		public SignInForm(final String componentName, final IFeedback feedback)
+		public SignInForm(final String id, final IFeedback feedback)
 		{
-			super(componentName, feedback);
+			super(id, feedback);
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
@@ -135,21 +135,21 @@ public abstract class SignInPanel extends Panel
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public SignInPanel(final String componentName)
+	public SignInPanel(final String id)
 	{
-		this(componentName, true);
+		this(id, true);
 	}
 
 	/**
-	 * @param componentName
+	 * @param id
 	 *            See Component constructor
 	 * @param includeRememberMe
 	 *            True if form should include a remember-me checkbox
 	 * @see wicket.Component#Component(String)
 	 */
-	public SignInPanel(final String componentName, final boolean includeRememberMe)
+	public SignInPanel(final String id, final boolean includeRememberMe)
 	{
-		super(componentName);
+		super(id);
 
 		this.includeRememberMe = includeRememberMe;
 

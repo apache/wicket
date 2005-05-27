@@ -36,12 +36,12 @@ public final class NestedList extends Panel
 {
     /**
      * Constructor.
-     * @param componentName The name of this component
+     * @param id The id of this component
      * @param list a list where each element is either a string or another list
      */
-    public NestedList(final String componentName, List list)
+    public NestedList(final String id, List list)
     {
-        super(componentName);
+        super(id);
         add(new Rows("rows", list));
     }
 
