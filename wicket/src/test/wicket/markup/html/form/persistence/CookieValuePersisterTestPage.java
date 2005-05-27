@@ -55,12 +55,12 @@ public class CookieValuePersisterTestPage extends WebPage
 	{
 	    /**
 	     * Constructor
-	     * @param componentName Name of form
+	     * @param id Name of form
 	     * @param feedback Feedback component that shows errors
 	     */
-	    public TestForm(final String componentName, final FeedbackPanel feedback)
+	    public TestForm(final String id, final FeedbackPanel feedback)
 	    {
-	        super(componentName, feedback);
+	        super(id, feedback);
 	        
 	        add(new TextField("input", new Model("test")));
 	    }

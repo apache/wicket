@@ -37,11 +37,11 @@ public class MyTable extends ListView
     
     /**
      * Construct.
-     * @param componentName
+     * @param id
      */
-    public MyTable(final String componentName)
+    public MyTable(final String id)
     {
-        super(componentName, new Model(null));
+        super(id, new Model(null));
     }
 
     protected void populateItem(ListItem listItem)

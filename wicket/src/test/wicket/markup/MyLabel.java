@@ -31,11 +31,11 @@ public class MyLabel extends WebComponent
     
     /**
      * Construct.
-     * @param componentName
+     * @param id
      */
-    public MyLabel(final String componentName)
+    public MyLabel(final String id)
     {
-        super(componentName);
+        super(id);
     }
 
     /**
