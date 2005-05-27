@@ -559,7 +559,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected Image getNodeImage(final DefaultMutableTreeNode node)
 	{
-		return new Image(JUNCTION_IMAGE_NAME, BLANK);
+		return new Image(NODE_IMAGE_NAME, BLANK);
 	}
 
 	/**
