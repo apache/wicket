@@ -97,6 +97,25 @@ public class MarkupCache
 	}
 
 	/**
+	 * Gets a fresh markup stream that contains the (immutable) markup resource
+	 * for this class its head markup
+	 * 
+	 * @param container
+	 *            The container the head markup should be associated with
+	 * @param clazz
+	 *            The class to get the associated head markup for. If null, the the
+	 *            container's class is used, but it can be a parent class of
+	 *            container as well.
+	 * 
+	 * @return A stream of MarkupElement elements
+	 */
+	public final MarkupStream getHeadMarkupStream(final MarkupContainer container, final Class clazz)
+	{
+		// TODO IMPL
+		return null;
+	}
+	
+	/**
 	 * @param container
 	 * @param clazz
 	 * @return True if this markup container has associated markup
