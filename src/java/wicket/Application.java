@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.markup.HeadComponentCache;
 import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -132,6 +133,9 @@ public abstract class Application
 	/** Markup cache for this application */
 	private final MarkupCache markupCache;
 
+	/** Markup cache for this application */
+	private final HeadComponentCache headComponentCache;
+
 	/** Name of application subclass. */
 	private final String name;
 
@@ -166,6 +170,7 @@ public abstract class Application
 
 		// Construct markup cache fot this application
 		this.markupCache = new MarkupCache(this);
+		this.headComponentCache = new HeadComponentCache();
 
 		// Construct localizer for this application
 		this.localizer = new Localizer(this);
@@ -229,6 +234,16 @@ public abstract class Application
 	public final MarkupCache getMarkupCache()
 	{
 		return this.markupCache;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * @return Returns the header component cache associated with the application
+	 */
+	public HeadComponentCache getHeadComponentCache()
+	{
+		return this.headComponentCache;
 	}
 
 	/**
@@ -427,4 +442,5 @@ public abstract class Application
 	{
 		this.resourceStreamLocator = null;
 	}
+
 }
