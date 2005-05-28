@@ -9,7 +9,7 @@
 			<p>
 				Currently there is no (finished) up to date User's Guide. In this document we
 				describe places where you can find any documentation that is available.
-				<a href="/wiki/doku.php?id=newuserguide">Work is in progress</a>
+				<a href="/wiki/index.php/Newuserguide">Work is in progress</a>
 				to build a new, up to date user's guide.
 			</p>
 			<p>You could consult the following places for information on using Wicket:</p>
@@ -25,15 +25,15 @@
 					.
 				</li>
 				<li>
-					<a href="/wiki/doku.php?id=models">Working with Wicket Models</a>
+					<a href="/wiki/index.php/Models">Working with Wicket Models</a>
 				</li>
 				<li>
-					<a href="/wiki/doku.php?id=lifecycle">The Lifecycle of a Wicket Application</a>
+					<a href="/wiki/index.php/Lifecycle">The Lifecycle of a Wicket Application</a>
 				</li>
 				<li>
-					<a href="/wiki/doku.php?id=newuserguide">The new User's Guide</a>
+					<a href="/wiki/index.php/Newuserguide">The new User's Guide</a>
 					Please consult the
-					<a href="/wiki/doku.php?id=newuserguide">Wiki</a>
+					<a href="/wiki/index.php/Newuserguide">Wiki</a>
 					effort for creating a new, up to date user's guide. It is still in its infancy,
 					but you will find accurate documentation there.
 				</li>
