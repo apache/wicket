@@ -459,9 +459,9 @@ public abstract class MarkupContainer extends Component
 		buffer.append(super.toString(true));
 		if (detailed)
 		{
-			if (markupStream != null)
+			if (getMarkupStream() != null)
 			{
-				buffer.append(", markupStream = " + markupStream);
+				buffer.append(", markupStream = " + getMarkupStream());
 			}
 
 			if (childForId != null && childForId.size() != 0)
@@ -548,7 +548,7 @@ public abstract class MarkupContainer extends Component
 		MarkupContainer c = this;
 
 		// Walk up hierarchy until markup found
-		while (c.markupStream == null)
+		while (c.getMarkupStream() == null)
 		{
 			// Check parent
 			c = c.getParent();
@@ -561,7 +561,7 @@ public abstract class MarkupContainer extends Component
 			}
 		}
 
-		return c.markupStream;
+		return c.getMarkupStream();
 	}
 
 	/**
@@ -569,7 +569,7 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @return Returns the markup stream set on this container.
 	 */
-	protected final MarkupStream getMarkupStream()
+	protected MarkupStream getMarkupStream()
 	{
 		return markupStream;
 	}
