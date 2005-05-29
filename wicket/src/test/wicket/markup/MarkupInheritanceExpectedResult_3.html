@@ -1,10 +1,10 @@
-<wicket:extend>  base: before
-  <!-- note: extension AND base have ids = "label". Wicket separates them -->
-  extension: 1 <span wicket:id="label1">base label 1</span> extension: 2
-  <wicket:child/>
-  <!-- note: extension AND base have ids = "label". Wicket separates them -->
-  extension: 1 <span wicket:id="label3">extension label</span> extension: 2
+<wicket:extend><wicket:extend>  baseBase: before
+  <wicket:child>
+  base before
+  <wicket:child>
+  extension
 </wicket:child>
-  extension: 1 <span wicket:id="label2">base label 2</span> extension: 2
-  base: after
-</wicket:extend>
+  base after
+</wicket:child>
+  baseBase: after
+</wicket:extend></wicket:extend>

@@ -573,19 +573,6 @@ public abstract class MarkupContainer extends Component
 	{
 		return markupStream;
 	}
-	
-	/**
-	 * Get the base class' markup stream
-	 * 
-	 * @return Returns the markup stream set on inherited component
-	 */
-	protected final MarkupStream getInheritedMarkupStream()
-	{
-		// TODO this is not necessarily just super.getClass().
-	    return getApplication().getMarkupCache().getMarkupStream(
-	            this, 
-	            this.getClass().getSuperclass());
-	}
 
 	/**
 	 * Handle the container's body. If your override of this method does not
@@ -894,7 +881,7 @@ public abstract class MarkupContainer extends Component
 		final MarkupElement element = markupStream.get();
 
 		// If it a tag like <wicket..> or <span wicket:id="..." >
-		if (element instanceof ComponentTag && !markupStream.atCloseTag())
+		if ((element instanceof ComponentTag) && !markupStream.atCloseTag())
 		{
 			// Get element as tag
 			final ComponentTag tag = (ComponentTag)element;
