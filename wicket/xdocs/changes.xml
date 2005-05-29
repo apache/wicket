@@ -7,7 +7,8 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="1.0.0" date="2005-05-27" description="1.0 Final Release">
+    <release version="1.0.0" date="tbd" description="1.0.0 final">
+      <action type="fix" dev="Eelco Hillenius" issue="1209027">The UploadForm now considers the encoding</action>
       <action type="add" dev="Juergen Donnerstag">By means of Component.setRenderBodyOnly(boolean) it is now easily possible to print the tag's body only. This is e.g. necessary with &lt;span&gt; tags and Panels where in cases you want to be strictly HTML compliant the &lt;span&gt; tag itself must be removed. The (tag's) body will always be printed.</action>
     </release>
   	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
