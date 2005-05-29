@@ -19,6 +19,7 @@ package wicket.markup.html.panel;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.HeaderPart;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
@@ -88,7 +89,7 @@ public class Panel extends WebMarkupContainer
 
         // Render the associated markup
         renderAssociatedMarkup("panel",
-                "Markup for a panel component must begin with '<wicket:panel>'");
+                "Markup for a panel component has to contain part '<wicket:panel>'");
         
         // Close the manually opened panel tag.
         getResponse().write(openTag.syntheticCloseTagString());
@@ -114,5 +115,13 @@ public class Panel extends WebMarkupContainer
 	        // Skip closing tag
 			markupStream.next();
         }
+    }
+
+    /**
+     * @see wicket.markup.html.WebMarkupContainer#getHeaderPart(int)
+     */
+    public HeaderPart getHeaderPart(int index)
+    {
+    	return new HeaderPart(this, index);
     }
 }

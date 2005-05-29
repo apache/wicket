@@ -620,14 +620,15 @@ public abstract class MarkupContainer extends Component
 	 * @param exceptionMessage
 	 *            message that will be used for exceptions
 	 */
-	protected final void renderAssociatedMarkup(final String openTagName,
+	public final void renderAssociatedMarkup(final String openTagName,
 			final String exceptionMessage)
 	{
 		// Get markup associated with Border or Panel component
 		final MarkupStream originalMarkupStream = getMarkupStream();
 		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
 
-		associatedMarkupStream.skipRawMarkup();
+		// skip until the targetted tag is found
+		associatedMarkupStream.skipUntil(openTagName);
 		setMarkupStream(associatedMarkupStream);
 
 		// Get open tag in associated markup of border component
@@ -637,6 +638,48 @@ public abstract class MarkupContainer extends Component
 		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
+		}
+
+		renderComponentTag(associatedMarkupOpenTag);
+		associatedMarkupStream.next();
+		renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
+		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag);
+		setMarkupStream(originalMarkupStream);
+	}
+
+	/**
+	 * Renders the entire associated markup stream for a container but with a silent
+	 * fail.
+	 * 
+	 * @param openTagName
+	 *            the tag to render the associated markup for
+	 */
+	public final void tryRenderAssociatedMarkup(final String openTagName)
+	{
+		// Get markup associated with Border or Panel component
+		final MarkupStream originalMarkupStream = getMarkupStream();
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
+
+		// skip until the targetted tag is found
+		associatedMarkupStream.skipUntil(openTagName);
+		setMarkupStream(associatedMarkupStream);
+
+		if (!associatedMarkupStream.atTag())
+		{
+			associatedMarkupStream.next();
+			setMarkupStream(originalMarkupStream);
+			return;
+		}
+
+		// Get open tag in associated markup of border component
+		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
+
+		// Check for required open tag name
+		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof WicketTag)))
+		{
+			// default to resetting the original stream and return silently
+			setMarkupStream(originalMarkupStream);
+			return;
 		}
 
 		renderComponentTag(associatedMarkupOpenTag);
@@ -762,7 +805,7 @@ public abstract class MarkupContainer extends Component
 	 * @param markupStream
 	 *            The markup stream
 	 */
-	final void renderAll(final MarkupStream markupStream)
+	protected void renderAll(final MarkupStream markupStream)
 	{
 		// Loop through the markup in this container
 		while (markupStream.hasMore())
