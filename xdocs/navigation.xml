@@ -5,7 +5,7 @@
 	    <menu name="Wicket">
 	        <item name="Home" href="/index.html"/>
 	        <item name="Features" href="/Features.html"/>
-        	<item name="Buzz" href="/Buzz.html"/>
+			<item name="Buzz" href="/Buzz.html"/>
 	        <item name="Introduction" href="/Introduction.html" collapse="true">
 	        	<item name="Why Wicket?" href="#Why_Wicket"/>
 	        	<item name="Motivations" href="#Motivations"/>
@@ -25,6 +25,11 @@
             </item>
             <item name="Download" href="/Download.html"/>
         </menu>
+        <menu name="Blogs">
+            <item name="A Wicket Diary" href="http://www.jroller.com/page/dashorst" />
+            <item name="Eelco's Blog" href="http://www.jroller.com/page/eelco12" />
+            <item name="Jonathan Locke's Blog" href="http://www.jroller.com/page/JonathanLocke" />
+        </menu>
 	    <menu name="Project Info">
 	        <item name="News" href="/News.html"/>
 	        <item name="Mailing Lists" href="/mail-lists.html" />
@@ -38,8 +43,8 @@
 	        <item name="FAQ" href="/faqs.html"/>
 	        <item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow"/>
 	        <item name="User's Guide" href="/manual.html" collapse="true">
-	        	<item name="Working with Wicket Models" href="/wiki/doku.php?id=models" />
-	        	<item name="The Lifecycle of a Wicket Application" href="/wiki/doku.php?id=lifecycle" />
+	        	<item name="Working with Wicket Models" href="/wiki/index.php/Models" />
+	        	<item name="The Lifecycle of a Wicket Application" href="/wiki/index.php/Lifecycle" />
 	        </item>
             <item name="Wiki" href="/wiki" />
 	        <item name="Dependencies" href="/dependencies.html"/>
