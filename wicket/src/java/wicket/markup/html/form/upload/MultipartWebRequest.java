@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.upload;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
 
+import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.util.value.ValueMap;
 
@@ -35,6 +37,7 @@ import wicket.util.value.ValueMap;
  * WebRequest subclass for multipart content uploads.
  * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public class MultipartWebRequest extends WebRequest
 {
@@ -64,8 +67,20 @@ public class MultipartWebRequest extends WebRequest
 			throw new IllegalStateException("Request does not contain multipart content");
 		}
 
+        // The encoding that will be used to decode the string parameters
+        // It should NOT be null at this point, but it may be 
+        // if the older Servlet API 2.2 is used
+        String encoding = httpServletRequest.getCharacterEncoding();
+
 		// Parse multipart request into items
 		final DiskFileUpload diskFileUpload = new DiskFileUpload();
+
+		// set encoding specifically when we found it
+		if (encoding != null)
+		{
+			diskFileUpload.setHeaderEncoding(encoding);
+		}
+
 		diskFileUpload.setSizeMax(uploadForm.maxSize.bytes());
 		final List items = diskFileUpload.parseRequest(httpServletRequest);
 
@@ -79,7 +94,23 @@ public class MultipartWebRequest extends WebRequest
 			if (item.isFormField())
 			{
 				// Set parameter value
-				parameters.put(item.getFieldName(), item.getString());
+				final String value;
+				if (encoding != null)
+				{
+					try
+					{
+						value = item.getString(encoding);
+					}
+					catch (UnsupportedEncodingException e)
+					{
+						throw new WicketRuntimeException(e);
+					}
+				}
+				else
+				{
+					value = item.getString();
+				}
+				parameters.put(item.getFieldName(), value);
 			}
 			else
 			{
