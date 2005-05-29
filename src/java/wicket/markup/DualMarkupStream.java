@@ -17,6 +17,8 @@
  */
 package wicket.markup;
 
+import java.util.Stack;
+
 import wicket.util.resource.IResourceStream;
 
 
@@ -26,45 +28,122 @@ import wicket.util.resource.IResourceStream;
  * This markup stream read markup from two different source markup stream
  * with a switch to swap the current reader stream.
  * 
+ * How does this markup stream support nested inheritance of markup streams.
+ * Assuming you have three classes derived from each other: A => B => C. "C"
+ * being subclass of "B" and "B" being derived from "A". The output generated
+ * must be like shown below, with additional comments added to better when and
+ * why to switch between the different markup stream involved.
+ * 
+ * "output"                    "active stream"   "comment"
+ * class C (pre-text ignored)  Class C           init => push
+ * <wicket:extend>             Class B           extend => push
+ *   <wicket:extend>           Class A           extend => push
+ *     class A                 Class A
+ *     <wicket:child>          Class A           child => current -= 1
+ *       class B               Class B
+ *       <wicket:child>        Class B           child => current -= 1
+ *         class C             Class C
+ *       </wicket:child>       Class B           /child => current += 1
+ *       class B end           Class B
+ *     </wicket:child>         Class B           /child => current += 1
+ *     class A end             Class A
+ *   </wicket:extend>          Class A           /extend => pop
+ * </wicket:extend>            Class B           /extend => pop
+ * 
+ * "current" being and index pointing to a stream relativ to the 
+ * top (last added) one.
+ * 
  * @author Juergen Donnerstag
  */
 public class DualMarkupStream extends MarkupStream
 {
     /** Array of markup source streams */
-	private final MarkupStream[] markupStreams = new MarkupStream[2];
+	private final Stack markupStreams = new Stack();
 
 	/** The current markup stream used */
-	private MarkupStream current;
+	private MarkupStream activeMarkupStream;
 
+	/** relative index from the top of the stack, pointing to the 
+	 * active markup stream
+	 */
+	private int index = 0;
+	
 	/**
 	 * Construct.
 	 * 
-	 * @param stream1 Source stream 1
-	 * @param stream2 Source stream 2
+	 * @param stream Source stream
 	 */
-	public DualMarkupStream(final MarkupStream stream1, final MarkupStream stream2)
+	public DualMarkupStream(final MarkupStream stream)
 	{
-		markupStreams[0] = stream1;
-		markupStreams[1] = stream2;
-
-		current = stream1;
+		push(stream);
 	}
 
 	/**
-	 * Swap the current markup source stream
+	 * Set the active markup stream depending on size of stack and 
+	 * a relative index.
 	 */
-	public void swapCurrentMarkupStream()
+	private void setActiveMarkupStream()
 	{
-		if (current == markupStreams[0])
-		{
-			current = markupStreams[1];
-		}
-		else
-		{
-			current = markupStreams[0];
-		}
+		activeMarkupStream = (MarkupStream)markupStreams.elementAt(markupStreams.size() - this.index - 1);
+	}
+	
+	/**
+	 * Get the index pointing to the currently active markup stream
+	 * @return index
+	 */
+	public int getMarkupStreamIndex()
+	{
+	    return this.index;
+	}
+	
+	/**
+	 * Add another markup stream on top of the stack. Depending on the 
+	 * "index" the new active markup stream will be selected.
+	 * 
+	 * @param stream A markup stream
+	 */
+	public void push(final MarkupStream stream)
+	{
+	    markupStreams.push(stream);
+	    setActiveMarkupStream();
 	}
 
+	/**
+	 * Remove a markup stream from the top of the stack. Depending on the 
+	 * "index" the new active markup stream will be selected.
+	 */
+	public void pop()
+	{
+	    markupStreams.pop();
+	    setActiveMarkupStream();
+	}
+
+	/**
+	 * Increment the index determining the active markup stream.
+	 */
+	public void incrementMarkupStreamIndex()
+	{
+	    index += 1;
+	    if (index > markupStreams.size())
+	    {
+	        throw new MarkupException("index can not be larger than number of markup streams on the stack");
+	    }
+	    setActiveMarkupStream();
+	}
+
+	/**
+	 * Decrement the index determining the active markup stream.
+	 */
+	public void decrementMarkupStreamIndex()
+	{
+	    index -= 1;
+	    if (index < 0)
+	    {
+	        throw new MarkupException("index can not be less than 0");
+	    }
+	    setActiveMarkupStream();
+	}
+	
 	/**
 	 * Get the current markup source stream
 	 * 
@@ -72,7 +151,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public MarkupStream getCurrentMarkupStream()
 	{
-	    return current;
+	    return activeMarkupStream;
 	}
 	
 	/**
@@ -80,7 +159,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public boolean atCloseTag()
 	{
-		return current.atCloseTag();
+		return activeMarkupStream.atCloseTag();
 	}
 
 	/**
@@ -88,7 +167,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public boolean atOpenCloseTag()
 	{
-		return current.atOpenCloseTag();
+		return activeMarkupStream.atOpenCloseTag();
 	}
 
 	/**
@@ -96,7 +175,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public boolean atOpenCloseTag(String componentId)
 	{
-		return current.atOpenCloseTag(componentId);
+		return activeMarkupStream.atOpenCloseTag(componentId);
 	}
 
 	/**
@@ -104,7 +183,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public boolean atOpenTag()
 	{
-		return current.atOpenTag();
+		return activeMarkupStream.atOpenTag();
 	}
 
 	/**
@@ -112,7 +191,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public boolean atOpenTag(String componentId)
 	{
-		return current.atOpenTag(componentId);
+		return activeMarkupStream.atOpenTag(componentId);
 	}
 
 	/**
@@ -120,7 +199,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public boolean atTag()
 	{
-		return current.atTag();
+		return activeMarkupStream.atTag();
 	}
 
 	/**
@@ -128,7 +207,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public boolean equals(Object arg0)
 	{
-		return current.equals(arg0);
+		return activeMarkupStream.equals(arg0);
 	}
 
 	/**
@@ -136,7 +215,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public MarkupElement get()
 	{
-		return current.get();
+		return activeMarkupStream.get();
 	}
 
 	/**
@@ -144,7 +223,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public int getCurrentIndex()
 	{
-		return current.getCurrentIndex();
+		return activeMarkupStream.getCurrentIndex();
 	}
 
 	/**
@@ -152,7 +231,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public IResourceStream getResource()
 	{
-		return current.getResource();
+		return activeMarkupStream.getResource();
 	}
 
 	/**
@@ -160,7 +239,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public ComponentTag getTag()
 	{
-		return current.getTag();
+		return activeMarkupStream.getTag();
 	}
 
 	/**
@@ -168,7 +247,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public int hashCode()
 	{
-		return current.hashCode();
+		return activeMarkupStream.hashCode();
 	}
 
 	/**
@@ -176,7 +255,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public boolean hasMore()
 	{
-		return current.hasMore();
+		return activeMarkupStream.hasMore();
 	}
 
 	/**
@@ -184,7 +263,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public MarkupElement next()
 	{
-		return current.next();
+		return activeMarkupStream.next();
 	}
 
 	/**
@@ -192,7 +271,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public void setCurrentIndex(int currentIndex)
 	{
-		current.setCurrentIndex(currentIndex);
+		activeMarkupStream.setCurrentIndex(currentIndex);
 	}
 
 	/**
@@ -200,7 +279,18 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public void skipRawMarkup()
 	{
-		current.skipRawMarkup();
+		activeMarkupStream.skipRawMarkup();
+	}
+	
+	/**
+	 * Get the component/container's Class which is directly associated with 
+	 * the stream.
+	 * 
+	 * @return The component's class
+	 */
+	public Class getContainerClass()
+	{
+	    return activeMarkupStream.getContainerClass();
 	}
 
 	/**
@@ -208,7 +298,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public void throwMarkupException(String message)
 	{
-		current.throwMarkupException(message);
+		activeMarkupStream.throwMarkupException(message);
 	}
 
 	/**
@@ -216,7 +306,7 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public String toHtmlDebugString()
 	{
-		return current.toHtmlDebugString();
+		return activeMarkupStream.toHtmlDebugString();
 	}
 
 	/**
@@ -224,6 +314,6 @@ public class DualMarkupStream extends MarkupStream
 	 */
 	public String toString()
 	{
-		return current.toString();
+		return activeMarkupStream.toString();
 	}
 }

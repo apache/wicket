@@ -45,6 +45,9 @@ public final class Markup
 	/** The encoding as found in <?xml ... encoding="" ?>.	Null, else */
 	private final String encoding;
 	
+	/** The Class of the directly associated component/container */
+	private Class containerClass;
+	
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup(null, null, null, null);
 
@@ -63,6 +66,26 @@ public final class Markup
 		this.encoding = encoding;
 	}
 
+	/**
+	 * Set the component/container's class directly associated with the markup
+	 * 
+	 * @param containerClass
+	 */
+	void setContainerClass(final Class containerClass)
+	{
+	    this.containerClass = containerClass;
+	}
+
+	/**
+	 * Get the component/container's class directly associated with the markup
+	 * 
+	 * @return The component's class
+	 */
+	Class getContainerClass()
+	{
+	    return this.containerClass;
+	}
+	
 	/**
 	 * @return String representation of markup list
 	 */

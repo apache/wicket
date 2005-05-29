@@ -369,4 +369,15 @@ public class MarkupStream
 	{
 		return markup.getEncoding();
 	}
+	
+	/**
+	 * Get the component/container's Class which is directly associated with 
+	 * the stream.
+	 * 
+	 * @return The component's class
+	 */
+	public Class getContainerClass()
+	{
+	    return markup.getContainerClass();
+	}
 }

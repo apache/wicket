@@ -17,6 +17,9 @@
  */
 package wicket;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.markup.ComponentTag;
 import wicket.markup.DualMarkupStream;
 import wicket.markup.MarkupException;
@@ -41,23 +44,46 @@ import wicket.markup.parser.XmlTag;
  */
 public class MarkupInheritanceContainer extends WebMarkupContainer implements IComponentResolver
 {
+    /** Logger */
+    private final static Log log = LogFactory.getLog(MarkupInheritanceContainer.class);
+    
 	/** The open tag for this container. */
 	private transient ComponentTag openTag;
 	
 	/** Special markup stream able to switch between the base class' markup
-	 * and the base class' markup.
+	 * and the class' markup.
 	 */
-	private transient DualMarkupStream dual;
+	transient DualMarkupStream dual;
+
+	/** true, if <wicket:child/> has been processed */
+	private transient boolean resolved;
 	
 	/**
      * Construct.
-     * @param id component id
 	 */
-	public MarkupInheritanceContainer(String id)
+	public MarkupInheritanceContainer()
 	{
 	    // Default name for the container. The component is represented by
 	    // the <wicket:extend>...</wicket:extend> tag.
-		super(id);
+		super("extend");
+	}
+	
+	/**
+	 * Get the base class' markup stream
+	 * 
+	 * @param parent Not the inheritance container but its parent component
+	 * @return Returns the markup stream set on inherited component
+	 */
+	private MarkupStream getInheritedMarkupStream(MarkupContainer parent)
+	{
+	    while (parent instanceof MarkupInheritanceContainer)
+	    {
+	        parent = parent.getParent();
+	    }
+	    
+	    return getApplication().getMarkupCache().getMarkupStream(
+	            parent, 
+	            parent.getMarkupStream().getContainerClass().getSuperclass());
 	}
 	
 	/**
@@ -71,25 +97,40 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 	    this.openTag = openTag;
+	    this.resolved = false;
 
+	    // Get the real component
+	    final MarkupContainer parent = this.getParent();
+	    
 		// Get the inherited markup stream
-	    MarkupStream parentMarkupStream = this.getParent().getInheritedMarkupStream();
+	    final MarkupStream parentMarkupStream = getInheritedMarkupStream(parent);
 		if (parentMarkupStream == null)
 		{
 		    throw new MarkupException("Did not find parent markup (inheritance) for Class: " + super.getClass().getName());
 		}
 
-		// Create the "merged" markup stream. And because the parent stream is first, the base
-		// class' markup will be rendered first.
-		this.dual = new DualMarkupStream(parentMarkupStream, markupStream);
-		this.setMarkupStream(this.dual);
+	    if (!(parent instanceof MarkupInheritanceContainer))
+	    {
+	        this.dual = new DualMarkupStream(markupStream);
+			
+			// Important: set the parent component's markup as well
+			parent.setMarkupStream(this.dual);
+	    }
+	    else
+	    {
+	        this.dual = (DualMarkupStream) parent.getMarkupStream();
+	    }
+
+		this.dual.push(parentMarkupStream);
+	    this.setMarkupStream(this.dual);
 		
-		// Important: set the parent component's markup as well
-		this.getParent().setMarkupStream(this.dual);
-		
-		// go one rendering the component
+		// go on rendering the component
+	    log.debug("inherit: onComponentTagBody: " + dual.getCurrentMarkupStream().toString());
 		super.onComponentTagBody(this.dual, openTag);
+		this.dual.pop();
+	    log.debug("inherit: back from onComponentTagBody: " + dual.getCurrentMarkupStream().toString());
 	}
+	
 	/**
 	 * Try to resolve the component name, then create a component, add it to the
 	 * container and render the component.
@@ -111,14 +152,23 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	        return false;
 	    }
 	    
+	    log.debug("inherit: resolve: " + markupStream.toString());
+	    
 	    // I'm currently only interested in <wicket:...> tags
 		if (!(tag instanceof WicketTag))
         {
+		    MarkupContainer parent = this.getParent();
+		    while (parent instanceof MarkupInheritanceContainer)
+		    {
+		        parent = parent.getParent();
+		    }
+		    
 		    // resolve inherited components
 		    final String name = tag.getId();
-		    final Component component = this.getParent().get(name);
+		    final Component component = parent.get(name);
 		    if (component != null)
 		    {
+			    log.debug("inherit: render component: " + component.getId());
 		        component.render();
 		        return true;
 		    }
@@ -126,11 +176,18 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
             return false;
         }
 		
+
+	    // It is the wrong inheritance container (nested inheritance)
+	    if (this.resolved == true)
+	    {
+	        return false;
+	    }
+	    this.resolved = true;
+	    
 		final WicketTag wtag = (WicketTag) tag;
 
         // The current markup stream must be the parent's one.
         // Thus, watch out for <wicket:child>
-        
         if (!wtag.isChildTag())
         {
             return false;
@@ -159,14 +216,17 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
         }
 
         // render <wicket:child> tag
+	    log.debug("inherit: render child tag: " + markupStream.toString());
 		renderComponentTag(bodyTag);
 		markupStream.next();
 		
 		// swap temporarily back to original markup and render the body 
 		// of <wicket:extend> and switch back the to parents markup.
-		dual.swapCurrentMarkupStream();
+		this.dual.incrementMarkupStreamIndex();
+	    log.debug("inherit: render body (<wicket:child>): " + dual.getCurrentMarkupStream().toString());
 		super.onComponentTagBody(this.dual, openTag);
-		dual.swapCurrentMarkupStream();
+		this.dual.decrementMarkupStreamIndex();
+	    log.debug("inherit: back from render </wicket:child>: " + dual.getCurrentMarkupStream().toString());
 		
 		// Render </wicket:child>
 		if (tag.isOpenClose())

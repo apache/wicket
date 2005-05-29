@@ -47,21 +47,6 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @see wicket.markup.ComponentTag#setId(java.lang.String)
-	 */
-	public void setId(String id)
-	{
-		if ("extend".equals(id))
-		{
-			setId("_autoadd_Extend");
-		}
-		else
-		{
-			super.setId(id);
-		}
-	}
-
-	/**
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
 	 * @return The tag's name attribute
 	 */

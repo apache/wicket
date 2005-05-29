@@ -166,6 +166,8 @@ public class MarkupCache
 
 				while ((markupResource == null) && (containerClass != MarkupContainer.class))
 				{
+				    clazz = containerClass;
+				    
 					// Look for markup resource for containerClass
 					markupResource = application.getResourceStreamLocator().locate(containerClass,
 							container.getStyle(), container.getLocale(), container.getMarkupType());
@@ -176,7 +178,7 @@ public class MarkupCache
 				if (markupResource != null)
 				{
 					// load the markup and watch for changes
-					markup = loadMarkupAndWatchForChanges(key, markupResource);
+					markup = loadMarkupAndWatchForChanges(key, markupResource, clazz);
 				}
 				else
 				{
@@ -200,13 +202,17 @@ public class MarkupCache
 	 *            Key under which markup should be cached
 	 * @param markupResourceStream
 	 *            The markup resource stream to load
+	 * @param containerClass
+	 *            The Class the associated stream is directly associated
 	 * @return The markup
 	 */
-	private final Markup loadMarkup(final String key, final IResourceStream markupResourceStream)
+	private final Markup loadMarkup(final String key, final IResourceStream markupResourceStream,
+	        final Class containerClass)
 	{
 		try
 		{
 			final Markup markup = application.newMarkupParser().readAndParse(markupResourceStream);
+			markup.setContainerClass(containerClass);
 			synchronized (markupCache)
 			{
 				markupCache.put(key, markup);
@@ -237,10 +243,12 @@ public class MarkupCache
 	 *            The key for the resource
 	 * @param markupResourceStream
 	 *            The markup stream to load and begin to watch
+	 * @param containerClass
+	 *            The Class the associated stream is directly associated
 	 * @return The markup in the stream
 	 */
 	private final Markup loadMarkupAndWatchForChanges(final String key,
-			final IResourceStream markupResourceStream)
+			final IResourceStream markupResourceStream, final Class containerClass)
 	{
 		// Watch file in the future
 		final ModificationWatcher watcher = application.getResourceWatcher();
@@ -251,13 +259,13 @@ public class MarkupCache
 				public void onChange()
 				{
 					log.info("Reloading markup from " + markupResourceStream);
-					loadMarkup(key, markupResourceStream);
+					loadMarkup(key, markupResourceStream, containerClass);
 				}
 			});
 		}
 
 		log.info("Loading markup from " + markupResourceStream);
-		return loadMarkup(key, markupResourceStream);
+		return loadMarkup(key, markupResourceStream, containerClass);
 	}
 
 	/**
