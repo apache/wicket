@@ -20,6 +20,7 @@ package wicket;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebPage;
 
 /**
  * THIS IS PART OF JS AND CSS SUPPORT AND IT IS CURRENTLY EXPERIMENTAL ONLY.
@@ -44,19 +45,72 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 	}
 	
 	/**
+     * Construct.
+     * 
+     * @param associatedMarkupStream
+	 */
+	public HtmlHeaderContainer(final MarkupStream associatedMarkupStream)
+	{
+	    this();
+	    setMarkupStream(associatedMarkupStream);
+	}
+
+	/**
+	 * 
+	 */
+	public final void renderHeadSections()
+	{
+		// TODO
+		// We probably have to embed our magical head part children in a seperate container,
+		// so that we can remove and re-add them on each render
+		// Also, we have to somehow dynamically insert that component into the markup stream
+		// just as we have to generate a head part in any HTML/Web markup when it doesn't
+		// exist yet.
+		// The problem is when and where to do it. Juergen, any idea how to go on from this
+		// point? I think I have got the markup part going ok. Now it has to all add up...
+		
+		// collect all header parts and render them
+		getParent().visitChildren(WebMarkupContainer.class, new IVisitor()
+        {
+		    private int nbrOfContributions;
+		    
+			/**
+			 * @see wicket.Component.IVisitor#component(wicket.Component)
+			 */
+			public Object component(Component component)
+			{
+				if (component.isVisible())
+				{
+					WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
+					WebMarkupContainer headerPart = webMarkupContainer.getHeaderPart(nbrOfContributions);
+
+					if (headerPart != null)
+					{
+						autoAdd(headerPart);
+						nbrOfContributions++;
+					}
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+        });
+	}
+	
+	/**
 	 * Render the body of &lt;wicket:extend&gt; First get both markups involved
 	 * and switch between both if &lt;wicket:child&gt; is found in the 
 	 * base class' markup.
 	 * 
-	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
-	 *      wicket.markup.ComponentTag)
+	 * @see wicket.Component#onRender()
 	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onRender()
 	{
-	    this.openTag = openTag;
-
 		// go one rendering the component
-		super.onComponentTagBody(markupStream, openTag);
+		super.onRender();
+		
+		if (getParent() instanceof WebPage)
+		{
+		    renderHeadSections();
+		}
 	}
 
 	/**

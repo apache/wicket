@@ -78,7 +78,7 @@ public class HeaderSectionTest extends TestCase
 	 */
 	public void testRenderHomePage_4() throws Exception
 	{
-	    //executeTest(HeaderSectionPage_4.class, "HeaderSectionPageExpectedResult_4.html");
+	    executeTest(HeaderSectionPage_4.class, "HeaderSectionPageExpectedResult_4.html");
 	}
 
 	/**

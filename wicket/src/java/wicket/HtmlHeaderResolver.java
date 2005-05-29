@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.WebPage;
 
 /**
  * THIS IS PART OF JS AND CSS SUPPPORT AND IS CURRENTLY EXPERIMENTAL ONLY.
@@ -61,12 +60,6 @@ public class HtmlHeaderResolver implements IComponentResolver
 			{
 			    HtmlHeaderContainer header = new HtmlHeaderContainer();
 			    container.autoAdd(header);
-	
-			    Page page = container.getPage();
-			    if (!(page instanceof WebPage))
-			    {
-			        throw new WicketRuntimeException("Page must be WebPage: " + page.toString());
-			    }
 			    
 			    return true;
 			}
