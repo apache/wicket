@@ -18,10 +18,6 @@
  */
 package wicket.markup.html.basic;
 
-import wicket.PageParameters;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.WebPage;
-import wicket.markup.html.border.Border;
 import wicket.markup.html.panel.Panel;
 
 
@@ -30,23 +26,15 @@ import wicket.markup.html.panel.Panel;
  *
  * @author Chris Turner
  */
-public class SimplePage extends WebPage 
+public class SimplePanel extends Panel
 {
 	/**
 	 * Construct.
-	 * @param parameters
+	 * @param id
 	 */
-	public SimplePage(final PageParameters parameters) 
+	public SimplePanel(final String id) 
 	{
-	    WebMarkupContainer container = new WebMarkupContainer("test");
-	    container.setRenderBodyOnly(true);
-	    add(container);
-
-	    Panel panel = new SimplePanel("myPanel");
-	    panel.setRenderBodyOnly(true);
-	    add(panel);
-
-	    Border border = new SimpleBorder("myBorder");
-	    add(border);
+	    super(id);
+	    setRenderBodyOnly(true);
     }
 }

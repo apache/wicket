@@ -54,8 +54,7 @@ public class SimplePageTest extends TestCase
 	 */
 	public void testRenderHomePage() throws Exception
 	{
-	    // TODO disable until code from 1_0_0_0 has been merged
-	    //executeTest(SimplePage.class, "SimplePageExpectedResult.html");
+	    executeTest(SimplePage.class, "SimplePageExpectedResult.html");
 	}
 
 	/**
