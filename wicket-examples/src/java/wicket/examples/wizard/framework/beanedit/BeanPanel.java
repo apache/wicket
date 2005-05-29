@@ -255,7 +255,7 @@ public class BeanPanel extends Panel
 					new BeanPropertyModel(beanModel, descriptor), type);
 			EditModeReplacementModel replacementModel =
 				new EditModeReplacementModel(editMode, descriptor);
-			valueTextField.add(new AttributeModifier("disabled", false, replacementModel));
+			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
 			add(valueTextField);
 		}
 	}
@@ -281,7 +281,7 @@ public class BeanPanel extends Panel
 					new BeanPropertyModel(beanModel, descriptor));
 			EditModeReplacementModel replacementModel =
 				new EditModeReplacementModel(editMode, descriptor);
-			valueTextField.add(new AttributeModifier("disabled", false, replacementModel));
+			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
 			add(valueTextField);
 		}
 	}

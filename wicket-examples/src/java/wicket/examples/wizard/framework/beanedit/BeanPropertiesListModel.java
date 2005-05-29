@@ -49,19 +49,22 @@ public final class BeanPropertiesListModel extends ReadOnlyModel
 	public Object getObject(Component component)
 	{
 		BeanInfo beanInfo = getBeanInfo(component);
-		PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
-		if(descriptors != null)
+		if(beanInfo != null)
 		{
-			List all = new ArrayList();
-			int len = descriptors.length;
-			for(int i = 0; i < len; i++)
+			PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
+			if(descriptors != null)
 			{
-				if(shouldAdd(descriptors[i]))
+				List all = new ArrayList();
+				int len = descriptors.length;
+				for(int i = 0; i < len; i++)
 				{
-					all.add(descriptors[i]);
+					if(shouldAdd(descriptors[i]))
+					{
+						all.add(descriptors[i]);
+					}
 				}
+				return all;
 			}
-			return all;
 		}
 		return Collections.EMPTY_LIST;
 	}
