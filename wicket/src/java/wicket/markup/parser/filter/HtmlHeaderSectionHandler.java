@@ -25,13 +25,18 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
+import wicket.markup.MarkupException;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
-import wicket.markup.parser.XmlTag;
 
 /**
- * This is a markup inline filter. 
+ * This is a markup inline filter. It assumes that WicketTagIdentifier has been 
+ * called first and that <wicket:head> tags have been detected. This filter checks
+ * that <wicket:head> occur only within <head> sections.<p>
+ * 
+ * Note: it is currently commented out, but it may also add <head> components
+ * in case they are not found in the markup file.
  * 
  * @author Juergen Donnerstag
  */
@@ -40,6 +45,9 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	/** Logging */
 	private static final Log log = LogFactory.getLog(HtmlHeaderSectionHandler.class);
 
+	/** If true, we have seen <head> but not </head> yet. */
+	private boolean withinHead; 
+	
 	/**
 	 * Only if false, it will watch for head tags.
 	 */
@@ -94,28 +102,28 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			return tag;
 		}
 		
-		if (tag instanceof WicketTag)
-		{
-		    return tag;
-		}
-
 		if (done == true)
 		{
 		    return tag;
 		}
-		
-		if ("head".equalsIgnoreCase(tag.getName()))
+
+		if (!(tag instanceof WicketTag) && "head".equalsIgnoreCase(tag.getName()))
         {
-		    if (tag.isClose())
+		    withinHead = !withinHead;
+		    if (tag.isClose() == true)
 		    {
 		        done = true;
 		    }
-		    tag.setId("_header");
+		    
+		    return tag;
         }
-		else if ("body".equalsIgnoreCase(tag.getName()))
+		
+		if ("body".equalsIgnoreCase(tag.getName()))
         {
 		    done = true;
 
+			// TODO remove comment, to activate
+/*		    
 			final XmlTag headOpenTag = new XmlTag();
 			headOpenTag.setName("head");
 			headOpenTag.setType(XmlTag.OPEN);
@@ -129,10 +137,22 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			closeTag.setOpenTag(openTag);
 			closeTag.setId("_header");
 
-			// TODO remove comment, to activate
-			//tagList.add(openTag);
-			//tagList.add(closeTag);
+			tagList.add(openTag);
+			tagList.add(closeTag);
+*/		
+		    return tag;
         }
+		
+		if (!(tag instanceof WicketTag))
+		{
+		    return tag;
+		}
+
+		final WicketTag wtag = (WicketTag) tag;
+		if ((withinHead == false) && (wtag.isHeadTag() == true))
+		{
+		    throw new MarkupException("<wicket:head> is only allow within <head> section.");
+		}
 		
 		return tag;
 	}

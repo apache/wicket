@@ -127,6 +127,14 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
+	 * @return True, if tag name equals 'wicket:extend'
+	 */
+	public final boolean isHeadTag()
+	{
+		return "head".equalsIgnoreCase(getName());
+	}
+
+	/**
 	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
 	 * it is immutable.
 	 * 

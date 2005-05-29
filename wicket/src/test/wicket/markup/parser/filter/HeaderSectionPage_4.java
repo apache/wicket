@@ -27,13 +27,14 @@ import wicket.markup.html.WebPage;
  *
  * @author Chris Turner
  */
-public class HeaderSectionPage_3 extends WebPage 
+public class HeaderSectionPage_4 extends WebPage 
 {
 	/**
 	 * Construct.
 	 * @param parameters
 	 */
-	public HeaderSectionPage_3(final PageParameters parameters) 
+	public HeaderSectionPage_4(final PageParameters parameters) 
 	{
+	    add(new HeaderSectionPanel("panel"));
     }
 }

@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.WicketTag;
 import wicket.markup.html.WebPage;
 
 /**
@@ -50,11 +51,14 @@ public class HtmlHeaderResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <head>
-		if ("_header".equals(tag.getId()))
+		// It must be <wicket:...>
+		if (tag instanceof WicketTag)
 		{
-		    if (container.get(tag.getId()) == null)
-		    {
+			final WicketTag wicketTag = (WicketTag)tag;
+			
+			// It must be <wicket:extend...>
+			if (wicketTag.isHeadTag())
+			{
 			    HtmlHeaderContainer header = new HtmlHeaderContainer();
 			    container.autoAdd(header);
 	
@@ -63,11 +67,11 @@ public class HtmlHeaderResolver implements IComponentResolver
 			    {
 			        throw new WicketRuntimeException("Page must be WebPage: " + page.toString());
 			    }
-		    }
-		    
-		    return true;
+			    
+			    return true;
+			}
 		}
-			
+
 		// We were not able to handle the componentId
 		return false;
 	}
