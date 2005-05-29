@@ -17,9 +17,11 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.HtmlHeaderContainer;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HeaderPart;
+import wicket.markup.WicketTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
@@ -126,8 +128,24 @@ public class Panel extends WebMarkupContainer
     /**
      * @see wicket.markup.html.WebMarkupContainer#getHeaderPart(int)
      */
-    public HeaderPart getHeaderPart(int index)
+    public WebMarkupContainer getHeaderPart(int index)
     {
-    	return new HeaderPart(this, index);
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
+		do
+		{
+		    final MarkupElement element = associatedMarkupStream.get();
+		    if (element instanceof WicketTag)
+		    {
+		        final WicketTag wTag = (WicketTag) element;
+		        if (wTag.isHeadTag() == true)
+		        {
+		            HtmlHeaderContainer head = new HtmlHeaderContainer(associatedMarkupStream);
+		            return head;
+		        }
+		    }
+		} 
+		while (associatedMarkupStream.next() != null);
+
+    	return null;
     }
 }

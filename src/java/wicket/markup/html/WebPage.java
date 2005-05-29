@@ -17,16 +17,13 @@
  */
 package wicket.markup.html;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import wicket.Component;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
-import wicket.markup.MarkupStream;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequest;
@@ -51,60 +48,6 @@ import wicket.util.lang.Classes;
  */
 public class WebPage extends Page
 {
-	/** counter for contributions. */
-	private int nbrOfContributions;
-
-	/** Visitor for collecting any header parts that components might contribute. */
-	private final class HeaderPartCollector implements IVisitor
-	{
-		/** keeps the collected components (can't add them right away when visiting). */
-		List collected = null;
-
-		/**
-		 * Construct.
-		 */
-		public HeaderPartCollector()
-		{
-			nbrOfContributions = 0; // start fresh
-		}
-
-		/**
-		 * @see wicket.Component.IVisitor#component(wicket.Component)
-		 */
-		public Object component(Component component)
-		{
-			if (component.isVisible())
-			{
-				WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
-				HeaderPart headerPart = webMarkupContainer.getHeaderPart(nbrOfContributions);
-
-				if (headerPart != null)
-				{
-					if (collected == null)
-					{
-						collected = new ArrayList(); // lazy construct
-					}
-
-					collected.add(headerPart);
-					nbrOfContributions++;
-				}
-			}
-			return IVisitor.CONTINUE_TRAVERSAL;
-		}
-	}
-
-	private final class HeaderComponents extends WebMarkupContainer
-	{
-		/**
-		 * Construct.
-		 * @param id component id
-		 */
-		public HeaderComponents(String id)
-		{
-			super(id);
-		}
-	}
-
 	/**
 	 * Constructor.
 	 */
@@ -119,64 +62,6 @@ public class WebPage extends Page
 	protected WebPage(final IModel model)
 	{
 		super(model);
-	}
-
-	/**
-	 * @see wicket.MarkupContainer#internalOnBeginRequest()
-	 */
-	protected void internalOnBeginRequest()
-	{
-		// TODO
-		// We probably have to embed our magical head part children in a seperate container,
-		// so that we can remove and re-add them on each render
-		// Also, we have to somehow dynamically insert that component into the markup stream
-		// just as we have to generate a head part in any HTML/Web markup when it doesn't
-		// exist yet.
-		// The problem is when and where to do it. Juergen, any idea how to go on from this
-		// point? I think I have got the markup part going ok. Now it has to all add up...
-		
-//		// collect all header parts that components might contribute
-//		HeaderPartCollector headerPartCollector = new HeaderPartCollector();
-//		visitChildren(WebMarkupContainer.class, headerPartCollector);
-//
-//		List collected = headerPartCollector.collected;
-//		if (collected != null)
-//		{
-//			for (Iterator i = collected.iterator(); i.hasNext();)
-//			{
-//				HeaderPart part = (HeaderPart)i.next();
-//				add(part);
-//			}
-//		}
-	}
-
-	/**
-	 * Render all header contribution parts.
-	 * @see wicket.MarkupContainer#renderAll(wicket.markup.MarkupStream)
-	 */
-	protected void renderAll(MarkupStream markupStream)
-	{
-//		// Save position in markup stream
-//		final int markupStart = markupStream.getCurrentIndex();
-//
-//		if (nbrOfContributions > 0)
-//		{
-//			// Loop through the markup in this container for each item
-//			for (int i = 0; i < nbrOfContributions; i++)
-//			{
-//				// If this component does not already exist, populate it
-//				HeaderPart headerPart = (HeaderPart)get(Integer.toString(i));
-//
-//				// Rewind to start of markup for kids
-//				markupStream.setCurrentIndex(markupStart);
-//
-//				// Render
-//				headerPart.render();
-//			}
-//		}
-
-		// process normal rendering
-		super.renderAll(markupStream);
 	}
 
 	/**

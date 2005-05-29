@@ -633,7 +633,7 @@ public abstract class MarkupContainer extends Component
 		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
 		setMarkupStream(originalMarkupStream);
 	}
-
+	
 	/**
 	 * Renders the entire associated markup stream for a container but with a silent
 	 * fail.
@@ -757,7 +757,7 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @return A stream of MarkupElement elements
 	 */
-	final MarkupStream getAssociatedMarkupStream()
+	protected final MarkupStream getAssociatedMarkupStream()
 	{
 	    try
 	    {

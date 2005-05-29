@@ -71,7 +71,7 @@ public class WebMarkupContainer extends MarkupContainer
 	 * @return the header part for this markup container or null
 	 * 	if it doesn't contribute anything.
 	 */
-	public HeaderPart getHeaderPart(int index)
+	public WebMarkupContainer getHeaderPart(int index)
 	{
 		
 //		// get the component from the cache by its class
