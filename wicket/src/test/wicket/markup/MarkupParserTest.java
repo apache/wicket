@@ -161,7 +161,11 @@ public final class MarkupParserTest extends TestCase
         final Markup tokens = parser.parse(docText);
 
         log.info("tok(0)=" + tokens.get(0));
-        Assert.assertEquals(docText.substring(44), tokens.get(0).toString());
+        
+        // without HtmlHeaderSectionHandler
+        //Assert.assertEquals(docText.substring(44, 147), tokens.get(0).toString());
+        // with HtmlHeaderSectionHandler
+        Assert.assertEquals(docText.substring(44, 147), tokens.get(0).toString());
     }
 
     /**

@@ -63,8 +63,6 @@ public class HtmlHeaderResolver implements IComponentResolver
 			    {
 			        throw new WicketRuntimeException("Page must be WebPage: " + page.toString());
 			    }
-			    
-			    //((WebPage)page).headerComponents.add(header);
 		    }
 		    
 		    return true;
