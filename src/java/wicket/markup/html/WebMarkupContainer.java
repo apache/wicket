@@ -19,7 +19,6 @@ package wicket.markup.html;
 
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.markup.MarkupStream;
 import wicket.model.IModel;
 
 /**
@@ -66,55 +65,44 @@ public class WebMarkupContainer extends MarkupContainer
 	
 	
 	/**
-	 * @return the header component for this markup container.
+	 * Gets the header part for this markup container. Returns null if it doesn't contribute
+	 * a header part.
+	 * @param index TODO
+	 * @return the header part for this markup container or null
+	 * 	if it doesn't contribute anything.
 	 */
-	public MarkupContainer getHeaderComponent()
+	public HeaderPart getHeaderPart(int index)
 	{
-		// get the component from the cache by its class
-		MarkupContainer comp = getApplication().getHeadComponentCache().get(this, getClass());
-		// if the component is not found create it:
-		if(comp == null)
-		{
-			// create new panel
-			final MarkupStream ms = getApplication().getMarkupCache().getHeadMarkupStream(this, getClass());
-			if(ms != null)
-			{
-				// get the header markup portion of the component markup file and set it as the components markup:
-				comp = new MarkupContainer("header:" + getClass()) 
-				{
-					/* (non-Javadoc)
-					 * @see wicket.MarkupContainer#getMarkupStream()
-					 */
-					protected MarkupStream getMarkupStream()
-					{
-						return ms;
-					}
-				};
-			}
-			else
-			{
-				comp = emptyHeader;
-			}
-			getApplication().getHeadComponentCache().put(this,getClass(), comp);
-		}
-		return comp;
+		
+//		// get the component from the cache by its class
+//		MarkupContainer comp = getApplication().getHeadComponentCache().get(this, getClass());
+//		// if the component is not found create it:
+//		if(comp == null)
+//		{
+//			// create new panel
+//			final MarkupStream ms = getApplication().getMarkupCache().getHeadMarkupStream(this, getClass());
+//			if(ms != null)
+//			{
+//				// get the header markup portion of the component markup file and set it as the components markup:
+//				comp = new MarkupContainer("header:" + getClass()) 
+//				{
+//					/* (non-Javadoc)
+//					 * @see wicket.MarkupContainer#getMarkupStream()
+//					 */
+//					protected MarkupStream getMarkupStream()
+//					{
+//						return ms;
+//					}
+//				};
+//			}
+//			else
+//			{
+//				comp = emptyHeader;
+//			}
+//			getApplication().getHeadComponentCache().put(this,getClass(), comp);
+//		}
+//		return comp;
+		
+		return null;
 	}
-	
-	final static MarkupContainer emptyHeader = new MarkupContainer("emptyheader")
-	{
-		/* (non-Javadoc)
-		 * @see wicket.Component#isVisible()
-		 */
-		public boolean isVisible()
-		{
-			return false;
-		}
-		/* (non-Javadoc)
-		 * @see wicket.Component#onRender()
-		 */
-		protected void onRender()
-		{
-			// don't do anything.
-		}
-	};
 }

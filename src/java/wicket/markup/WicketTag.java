@@ -20,7 +20,7 @@ package wicket.markup;
 import wicket.markup.parser.XmlTag;
 
 /**
- * WicketTag extends ComponentTag and will be createtd by a MarkupParser
+ * WicketTag extends ComponentTag and will be created by a MarkupParser
  * whenever it parses a tag in the wicket namespace. By default, this namespace
  * is "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
  * <p>

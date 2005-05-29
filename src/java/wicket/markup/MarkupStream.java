@@ -245,6 +245,27 @@ public class MarkupStream
 	}
 
 	/**
+	 * Skips any markup at the current position until the wicket tag name is found.
+	 * @param wicketTagName wicket tag name to seek
+	 */
+	public void skipUntil(final String wicketTagName)
+	{
+		while (true)
+		{
+			if ((current instanceof WicketTag) && ((WicketTag)current).getName().equals(wicketTagName))
+			{
+				return;
+			}
+
+			// go on until we reach the end
+			if ( next() == null )
+			{
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Throws a new markup exception
 	 * 
 	 * @param message
