@@ -1,0 +1,25 @@
+<html>
+ <head>
+ </head>
+ <body>
+
+    <wicket:panel>
+
+		<input type="text" wicket:id="dateInput" id="dateInput" />
+		<button wicket:id="trigger" id="trigger">...</button>
+
+		<!-- note that the script body will be replaced -->
+		<script wicket:id="script" type="text/javascript">
+		  Calendar.setup(
+		    {
+		      inputField  : "dateInput",         // ID of the input field
+		      ifFormat    : "%m %d, %Y",    // the date format
+		      button      : "trigger"       // ID of the button
+		    }
+		  );
+		</script>
+
+    </wicket:panel>
+
+ </body>
+</html>

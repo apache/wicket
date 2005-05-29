@@ -18,6 +18,8 @@
  */
 package wicket.examples.customcomponents;
 
+import java.util.Date;
+
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.model.BoundCompoundPropertyModel;
@@ -31,7 +33,7 @@ import wicket.model.Model;
 public class Home extends WicketExamplePage
 {
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public Home()
 	{
@@ -49,7 +51,6 @@ public class Home extends WicketExamplePage
 			};
 		}));
 
-		add(new ImportPanel("importHeader", "cust/header.html"));
-		add(new ImportPanel("importFooter", "cust/footer.html"));
+		add(new DatePicker("datePicker", new Model(new Date())));
 	}
 }
