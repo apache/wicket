@@ -85,15 +85,21 @@ public class Panel extends WebMarkupContainer
         // later.
         final ComponentTag openTag = markupStream.getTag().mutable();
         openTag.setType(XmlTag.OPEN);
-		renderComponentTag(openTag);
+        if (getRenderBodyOnly() == false)
+        {
+            renderComponentTag(openTag);
+        }
 
         // Render the associated markup
         renderAssociatedMarkup("panel",
                 "Markup for a panel component has to contain part '<wicket:panel>'");
         
-        // Close the manually opened panel tag.
-        getResponse().write(openTag.syntheticCloseTagString());
-                
+        if (getRenderBodyOnly() == false)
+        {
+	        // Close the manually opened panel tag.
+	        getResponse().write(openTag.syntheticCloseTagString());
+        }
+        
         // Skip opening tag
 		markupStream.next();
 		
