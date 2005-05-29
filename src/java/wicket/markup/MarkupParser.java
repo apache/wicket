@@ -300,8 +300,11 @@ public class MarkupParser
 	                list.add(tag);
                 }
 
-                // Position is after tag
-                xmlParser.setPositionMarker();
+                if (!(tag instanceof DynamicWicketTag))
+                {
+	                // Position is after tag
+	                xmlParser.setPositionMarker();
+                }
             }
         }
 

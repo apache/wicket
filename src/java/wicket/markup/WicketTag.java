@@ -33,7 +33,7 @@ import wicket.markup.parser.XmlTag;
  * 
  * @author Juergen Donnerstag
  */
-public final class WicketTag extends ComponentTag
+public class WicketTag extends ComponentTag
 {
 	/**
 	 * Constructor

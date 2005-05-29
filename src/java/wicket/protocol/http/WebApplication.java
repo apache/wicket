@@ -33,8 +33,11 @@ import wicket.AutoLinkResolver;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.markup.MarkupParser;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
+import wicket.markup.parser.XmlPullParser;
+import wicket.markup.parser.filter.HtmlHeadTagHandler;
 import wicket.response.BufferedResponse;
 
 /**
@@ -304,5 +307,21 @@ public abstract class WebApplication extends Application
 			}
 		}
 		sessionMap.put(requestUri, renderedResponse);
+	}
+
+	/**
+	 * @see wicket.Application#newMarkupParser()
+	 */
+	public MarkupParser newMarkupParser()
+	{
+		final MarkupParser parser = new MarkupParser(new XmlPullParser())
+		{
+			public void initFilterChain()
+			{
+				appendMarkupFilter(new HtmlHeadTagHandler());
+			}
+		};
+		parser.configure(getSettings());
+		return parser;
 	}
 }
