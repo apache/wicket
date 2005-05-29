@@ -38,6 +38,9 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 	public HtmlHeaderContainer()
 	{
 		super("_header");
+		
+		// TODO if you wish to remove <wicket:head> from output 
+		//setRenderComponentTag(false);
 	}
 	
 	/**
