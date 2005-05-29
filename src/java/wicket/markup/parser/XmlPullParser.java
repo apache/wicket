@@ -117,10 +117,14 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 */
 	public final CharSequence getInputFromPositionMarker(int toPos)
 	{
-		if (toPos < 0)
-		{
-			toPos = this.input.length();
-		}
+	    if (toPos < 0)
+	    {
+	        toPos = this.input.length();
+	    }
+	    else if (toPos < this.positionMarker)
+	    {
+	        return "";
+	    }
 		return this.input.subSequence(this.positionMarker, toPos);
 	}
 
@@ -380,6 +384,16 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	public final void setPositionMarker()
 	{
 		this.positionMarker = this.inputPosition;
+	}
+
+	/**
+	 * Remember the current position in markup
+	 * 
+	 * @param pos
+	 */
+	public final void setPositionMarker(final int pos)
+	{
+		this.positionMarker = pos;
 	}
 
 	/**

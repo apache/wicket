@@ -18,6 +18,7 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +28,7 @@ import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
+import wicket.markup.parser.XmlTag;
 
 /**
  * This is a markup inline filter. 
@@ -38,8 +40,15 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	/** Logging */
 	private static final Log log = LogFactory.getLog(HtmlHeaderSectionHandler.class);
 
-	/** True, if either <head> or <body> has been seen. All remaining tags are ignored */
-	private boolean ignore = false;
+	/**
+	 * Only if false, it will watch for head tags.
+	 */
+	private boolean done;
+	
+	/** In case you want to add extra Component to the markup, just add them
+	 * to the list. MarkupParser will handle it.
+	 */
+	private List tagList;
 	
 	/**
 	 * Construct.
@@ -50,6 +59,15 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	public HtmlHeaderSectionHandler(final IMarkupFilter parent)
 	{
 		super(parent);
+	}
+	
+	/**
+	 * In order to add ComponentTags which are NOT from markup file.
+	 * @param tagList
+	 */
+	public void setTagList(final List tagList)
+	{
+	    this.tagList = tagList;
 	}
 
 	/**
@@ -75,29 +93,45 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		{
 			return tag;
 		}
-
-		if (ignore == true)
+		
+		if (tag instanceof WicketTag)
 		{
 		    return tag;
 		}
-		
-		if (tag instanceof WicketTag)
+
+		if (done == true)
 		{
 		    return tag;
 		}
 		
 		if ("head".equalsIgnoreCase(tag.getName()))
         {
-		    tag.setId("_header");
-
 		    if (tag.isClose())
 		    {
-		        ignore = true;
+		        done = true;
 		    }
+		    tag.setId("_header");
         }
 		else if ("body".equalsIgnoreCase(tag.getName()))
         {
-		    ignore= true;
+		    done = true;
+
+			final XmlTag headOpenTag = new XmlTag();
+			headOpenTag.setName("head");
+			headOpenTag.setType(XmlTag.OPEN);
+			final ComponentTag openTag = new ComponentTag(headOpenTag);
+			openTag.setId("_header");
+				
+			final XmlTag headCloseTag = new XmlTag();
+			headCloseTag.setName("head");
+			headCloseTag.setType(XmlTag.CLOSE);
+			final ComponentTag closeTag = new ComponentTag(headCloseTag);
+			closeTag.setOpenTag(openTag);
+			closeTag.setId("_header");
+
+			// TODO remove comment, to activate
+			//tagList.add(openTag);
+			//tagList.add(closeTag);
         }
 		
 		return tag;

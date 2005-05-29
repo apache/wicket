@@ -118,9 +118,10 @@ public class MarkupParser
 	 * Create a new markup filter chain and initialize with all default
 	 * filters required.
 	 * 
+	 * @param tagList
 	 * @return a preconfigured markup filter chain
 	 */
-	private IMarkupFilter newFilterChain()
+	private IMarkupFilter newFilterChain(final List tagList)
 	{
         // Chain together all the different markup filters and configure them
         final WicketTagIdentifier detectWicketComponents = new WicketTagIdentifier(xmlParser);
@@ -136,6 +137,7 @@ public class MarkupParser
         autolinkHandler.setAutomaticLinking(this.automaticLinking);
 
         final HtmlHeaderSectionHandler headerHandler = new HtmlHeaderSectionHandler(autolinkHandler);
+        headerHandler.setTagList(tagList);
         
         // Markup filter chain starts with auto link handler
         return headerHandler;
@@ -222,7 +224,9 @@ public class MarkupParser
      */
     private List parseMarkup() throws ParseException
     {
-        this.markupFilterChain = newFilterChain();
+        final List autoAddList = new ArrayList();
+        
+        this.markupFilterChain = newFilterChain(autoAddList);
         initFilterChain();
         
         // List to return
@@ -242,7 +246,7 @@ public class MarkupParser
             }
 
             // Add tag to list?
-            if (add)
+            if (add || (autoAddList.size() > 0))
             {
                 final CharSequence text =
                     	xmlParser.getInputFromPositionMarker(tag.getPos());
@@ -294,17 +298,23 @@ public class MarkupParser
                     }
                 }
 
+                if ((add == false) && (autoAddList.size() > 0))
+                {
+                    xmlParser.setPositionMarker(tag.getPos());
+                }
+                list.addAll(autoAddList);
+                autoAddList.clear();
+            }
+            
+            if (add)
+            {
                 // Add to list unless preview component tag remover flagged as removed
                 if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
                 {
 	                list.add(tag);
                 }
-
-                if (!(tag instanceof DynamicWicketTag))
-                {
-	                // Position is after tag
-	                xmlParser.setPositionMarker();
-                }
+                
+                xmlParser.setPositionMarker();
             }
         }
 
