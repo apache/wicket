@@ -119,7 +119,12 @@ public class ResourceStreamLocator
 				extensionString = "." + extension;
 			}
 		}
+		int index = path.indexOf("/");
+		if(index == -1)
+		{
+			path = path.replace('.', '/');
+		}
 
-		return locator.locate(path.replace('.', '/'), style, locale, extensionString);
+		return locator.locate(path, style, locale, extensionString);
 	}
 }
