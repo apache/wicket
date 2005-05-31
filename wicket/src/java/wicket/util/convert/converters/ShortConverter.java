@@ -41,6 +41,12 @@ public final class ShortConverter extends AbstractIntegerConverter
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
 				Short.MIN_VALUE, Short.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
 		return new Short(number.shortValue());
 	}
 

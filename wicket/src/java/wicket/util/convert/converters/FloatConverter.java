@@ -41,6 +41,12 @@ public final class FloatConverter extends AbstractDecimalConverter
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
 				Float.MIN_VALUE, Float.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
 		return new Float(number.floatValue());
 	}
 
