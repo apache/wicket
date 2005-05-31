@@ -33,6 +33,7 @@ import wicket.util.convert.converters.IntegerConverter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.ShortConverter;
 import wicket.util.convert.converters.StringConverter;
+import wicket.util.string.Strings;
 
 /**
  * Implementation of IConverter interface, which converts objects from one class
@@ -71,6 +72,9 @@ public final class Converter implements IConverter
 {
 	/** Maps Classes to ITypeConverters. */
 	private final Map classToConverter = new HashMap();
+
+	/** whether the incomming value should be converted to null if it is an empty string. */
+	private boolean convertEmptyInputStringToNull = true;
 
 	/**
 	 * Converter that is to be used when no registered converter is found.
@@ -162,6 +166,12 @@ public final class Converter implements IConverter
 	{
 		// Null is always converted to null
 		if (value == null)
+		{
+			return null;
+		}
+
+		// should the incomming value be converted to null if it is a 
+		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(value.toString()))
 		{
 			return null;
 		}
@@ -286,12 +296,6 @@ public final class Converter implements IConverter
 	{
 		this.locale = locale;
 
-//		// Set locale on each string type converter
-//		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
-//		{
-//			((ITypeConverter)iterator.next()).setLocale(locale);
-//		}
-
 		// Set locale on default converter
 		defaultConverter.setLocale(locale);
 	}
@@ -304,5 +308,24 @@ public final class Converter implements IConverter
 	public String toString(Object value)
 	{
 		return (String)convert(value, String.class);
+	}
+
+	/**
+	 * Gets whether the incomming value should be converted to null if it is an empty string.
+	 * @return whether the incomming value should be converted to null if it is an empty string
+	 */
+	public boolean getConvertEmptyInputStringToNull()
+	{
+		return convertEmptyInputStringToNull;
+	}
+
+	/**
+	 * Sets whether the incomming value should be converted to null if it is an empty string.
+	 * @param convertEmptyInputStringToNull whether the incomming value should be
+	 * 		converted to null if it is an empty string
+	 */
+	public void setConvertEmptyInputStringToNull(boolean convertEmptyInputStringToNull)
+	{
+		this.convertEmptyInputStringToNull = convertEmptyInputStringToNull;
 	}
 }
