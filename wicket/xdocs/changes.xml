@@ -11,7 +11,6 @@
 	  <action type="add" dev="Eelco Hillenius">Added component wicket.markup.html.include.Include for including content from non-Wicket resources.</action>
     </release>
     <release version="1.0.0" date="tbd" description="1.0.0 final">
-      <action type="fix" dev="Eelco Hillenius" issue="1211663" due-to="Martijn Dashorst">A TypeConverter gave a NPE when the input string is empty during validation. Fixed by introducing extra parameter in toplevel Converter that defaults to converting any incomming empty string to null without further trying to convert.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1209027">The UploadForm now considers the encoding</action>
       <action type="add" dev="Juergen Donnerstag">By means of Component.setRenderBodyOnly(boolean) it is now easily possible to print the tag's body only. This is e.g. necessary with &lt;span&gt; tags and Panels where in cases you want to be strictly HTML compliant the &lt;span&gt; tag itself must be removed. The (tag's) body will always be printed.</action>
     </release>
