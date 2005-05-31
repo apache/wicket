@@ -41,6 +41,12 @@ public final class IntegerConverter extends AbstractIntegerConverter
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
 				Integer.MIN_VALUE, Integer.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
 		return new Integer(number.intValue());
 	}
 
