@@ -82,6 +82,46 @@ public class HeaderSectionTest extends TestCase
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_5() throws Exception
+	{
+	    executeTest(HeaderSectionPage_5.class, "HeaderSectionPageExpectedResult_5.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_6() throws Exception
+	{
+	    executeTest(HeaderSectionPage_6.class, "HeaderSectionPageExpectedResult_6.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_7() throws Exception
+	{
+	    executeTest(HeaderSectionPage_7.class, "HeaderSectionPageExpectedResult_7.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_8() throws Exception
+	{
+	    executeTest(HeaderSectionPage_8.class, "HeaderSectionPageExpectedResult_8.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_9() throws Exception
+	{
+	    executeTest(HeaderSectionPage_9.class, "HeaderSectionPageExpectedResult_9.html");
+	}
+
+	/**
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception
