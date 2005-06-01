@@ -47,11 +47,12 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 	/**
      * Construct.
      * 
+     * @param id
      * @param associatedMarkupStream
 	 */
-	public HtmlHeaderContainer(final MarkupStream associatedMarkupStream)
+	public HtmlHeaderContainer(final String id, final MarkupStream associatedMarkupStream)
 	{
-	    this();
+	    super(id);
 	    setMarkupStream(associatedMarkupStream);
 	}
 
@@ -84,7 +85,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 					WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
 					WebMarkupContainer headerPart = webMarkupContainer.getHeaderPart(nbrOfContributions);
 
-					if (headerPart != null)
+					if ((headerPart != null) && (get(headerPart.getId()) == null))
 					{
 						autoAdd(headerPart);
 						nbrOfContributions++;

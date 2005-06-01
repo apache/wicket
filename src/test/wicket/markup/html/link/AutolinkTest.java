@@ -155,7 +155,7 @@ public class AutolinkTest extends TestCase
 		body.addExpectedChild(anchor8);
 
 		Tag link8 = new Tag("link");
-		link8.addExpectedAttribute("href", "test.css");
+		link8.addExpectedAttribute("href", "wicket/markup/html/link/test.css");
 		body.addExpectedChild(link8);
 
 		Tag anchor9 = new Tag("a");

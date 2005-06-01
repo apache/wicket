@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import java.util.Iterator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,8 +35,8 @@ import wicket.util.value.ValueMap;
  * anchor tags with no explicit wicket component. E.g. &lt;a
  * href="Home.html"&gt;
  * <p>
- * For each such tag a BookmarkablePageLink will be automatically created, with
- * one exception. An ExternalLink is created is if the URL is absolute (starts
+ * For each such tag a BookmarkablePageLink will automatically be created, with
+ * one exception. An ExternalLink is created if the URL is absolute (starts
  * with "/") and does not reference a valid Page class.
  * <p>
  * It resolves the given URL by searching for a page class, either relative or
@@ -105,55 +107,103 @@ public final class AutoLinkResolver implements IComponentResolver
 	private final Component resolveAutomaticLink(final MarkupContainer container,
 			final String id, final ComponentTag tag)
 	{
+	    // Init
 		final Page page = container.getPage();
 		final String originalHref = tag.getAttributes().getString("href");
-		final int pos = originalHref.indexOf(".html");
-
-		String classPath = originalHref.substring(0, pos);
+		
 		PageParameters pageParameters = null;
-
-		// ".html?" => 6 chars
-		if ((classPath.length() + 6) < originalHref.length())
+		String classPath = originalHref;
+		
+		// get query string 
+		int pos = originalHref.indexOf("?");
+		if (pos != -1)
 		{
-			final String queryString = originalHref.substring(classPath.length() + 6);
+			final String queryString = originalHref.substring(pos + 1);
 			pageParameters = new PageParameters(new ValueMap(queryString, "&"));
+			classPath = originalHref.substring(0, pos);
 		}
 
 		// Make the id (page-)unique
 		final String autoId = id + Integer.toString(page.getAutoIndex());
 
-		// The component name on the tag changed
+		// By setting the component name, the tag becomes a Wicket component 
+		// tag, which needs a Component attached to it.
 		tag.setId(autoId);
 
-		// Obviously a href like href="myPkg.MyLabel.html" will do as well.
-		// Wicket will not throw an exception. It accepts it.
-		classPath = Strings.replaceAll(classPath,"/", ".");
-
-		if (!classPath.startsWith("."))
+		// remove the file extension, but remember it
+		String extension = null;
+		pos = classPath.lastIndexOf(".");
+		if (pos != -1)
 		{
-			// Href is relative. Resolve the url given relative to the current
-			// page
-			final String className = page.getClass().getPackage().getName() + "." + classPath;
-			final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
-					.resolveClass(className);
-
-			return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
+		    extension = classPath.substring(pos + 1);
+		    classPath = classPath.substring(0, pos);
 		}
-		else
-		{
-			// href is absolute. If class with the same absolute path exists,
-			// use it. Else don't change the href.
-			final String className = classPath.substring(1);
-			try
+
+		// HTML hrefs are validated differently
+		if ("html".equalsIgnoreCase(extension))
+        {
+			// Obviously a href like href="myPkg.MyLabel.html" will do as well.
+			// Wicket will not throw an exception. It accepts it.
+			classPath = Strings.replaceAll(classPath,"/", ".");
+			
+		    if (!classPath.startsWith("."))
 			{
+				// Href is relative. Resolve the url given relative to the current
+				// page
+				final String className = page.getClass().getPackage().getName() + "." + classPath;
 				final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
 						.resolveClass(className);
-
+	
 				return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
 			}
-			catch (WicketRuntimeException ex)
+			else
 			{
-				; // fall through
+				// href is absolute. If class with the same absolute path exists,
+				// use it. Else don't change the href.
+				final String className = classPath.substring(1);
+				try
+				{
+					final Class clazz = page.getApplicationSettings().getDefaultClassResolver()
+							.resolveClass(className);
+	
+					return new AutolinkBookmarkablePageLink(autoId, clazz, pageParameters);
+				}
+				catch (WicketRuntimeException ex)
+				{
+					; // fall through
+				}
+			}
+        }
+		// Validate all other hrefs
+		else
+		{
+		    if (classPath.startsWith("/") || classPath.startsWith("\\"))
+			{
+				// href is absolute. Don't change it at all.
+			}
+		    else
+		    {
+				// Href is relative, prepend the package name. Thus we keep
+		        // pre-view capabilities in Dreamweaver etc. and creat a proper
+		        // href at runtime.
+		        
+		        // <wicket:head> component are handled differently. We can not use
+		        // the container, because it is the container the header has been
+		        // added to (e.g. the Page). What we need however, is the component
+		        // (e.g. a Panel) which contributed it.
+		        Component relevantContainer = container;
+		        if (container instanceof HtmlHeaderContainer)
+		        {
+		            relevantContainer = findPanelComponent(container);
+		        }
+		        
+		        // Create the runtime href which has the proper package name
+		        // prepended.
+		        String href = relevantContainer.getClass().getPackage().getName();
+		        href = Strings.replaceAll(href, ".", "/") + "/" + originalHref;
+		        
+		        // Create the component implementing the link
+				return new AutolinkExternalLink(autoId, href);
 			}
 		}
 
@@ -161,6 +211,29 @@ public final class AutoLinkResolver implements IComponentResolver
 		return new AutolinkExternalLink(autoId, originalHref);
 	}
 
+	private Component findPanelComponent(MarkupContainer container)
+	{
+        final Component relatedContainer;
+        final Class panelClass = container.getMarkupStream().getContainerClass(); 
+        
+        while (container instanceof HtmlHeaderContainer)
+        {
+            container = container.getParent();
+        }
+        
+        Iterator iter = container.iterator();
+        while (iter.hasNext())
+        {
+            final Component panelComponent = (Component) iter.next();
+            if (panelComponent.getClass().equals(panelClass))
+            {
+                return panelComponent;
+            }
+        }
+        
+        throw new WicketRuntimeException("programming error: did not find panel or border component with class name: " + panelClass);
+	}
+	
 	/**
 	 * Autolink components delegate component resolution to their parent components.
 	 * Reason: autolink tags don't have wicket:id and users wouldn't know where to

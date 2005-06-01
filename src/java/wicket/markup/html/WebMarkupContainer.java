@@ -17,9 +17,19 @@
  */
 package wicket.markup.html;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import wicket.Component;
+import wicket.HtmlHeaderContainer;
 import wicket.MarkupContainer;
+import wicket.markup.MarkupElement;
+import wicket.markup.MarkupException;
+import wicket.markup.MarkupStream;
+import wicket.markup.WicketTag;
 import wicket.model.IModel;
+import wicket.util.lang.Classes;
 
 /**
  * A container of HTML markup and components. It is very similar to the base
@@ -29,6 +39,8 @@ import wicket.model.IModel;
  */
 public class WebMarkupContainer extends MarkupContainer
 {
+    private transient List headerComponents;
+    
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -73,36 +85,61 @@ public class WebMarkupContainer extends MarkupContainer
 	 */
 	public WebMarkupContainer getHeaderPart(int index)
 	{
+	    // gracefull getAssociateMarkupStream. Throws no exception in case
+	    // markup is not found
+		final MarkupStream associatedMarkupStream = 
+		    	getApplication().getMarkupCache().getMarkupStream(this, null, false);
 		
-//		// get the component from the cache by its class
-//		MarkupContainer comp = getApplication().getHeadComponentCache().get(this, getClass());
-//		// if the component is not found create it:
-//		if(comp == null)
-//		{
-//			// create new panel
-//			final MarkupStream ms = getApplication().getMarkupCache().getHeadMarkupStream(this, getClass());
-//			if(ms != null)
-//			{
-//				// get the header markup portion of the component markup file and set it as the components markup:
-//				comp = new MarkupContainer("header:" + getClass()) 
-//				{
-//					/* (non-Javadoc)
-//					 * @see wicket.MarkupContainer#getMarkupStream()
-//					 */
-//					protected MarkupStream getMarkupStream()
-//					{
-//						return ms;
-//					}
-//				};
-//			}
-//			else
-//			{
-//				comp = emptyHeader;
-//			}
-//			getApplication().getHeadComponentCache().put(this,getClass(), comp);
-//		}
-//		return comp;
-		
-		return null;
+		if (associatedMarkupStream == null)
+		{
+		    return null;
+		}
+
+		do
+		{
+		    final MarkupElement element = associatedMarkupStream.get();
+		    if (element instanceof WicketTag)
+		    {
+		        final WicketTag wTag = (WicketTag) element;
+		        if (wTag.isHeadTag() == true)
+		        {
+		            final String headerId = "_" + Classes.name(this.getClass()) + "Header";
+		            WebMarkupContainer headerContainer = new HtmlHeaderContainer(headerId, associatedMarkupStream);
+		            if (this.headerComponents != null)
+		            {
+		                for (Iterator iter = headerComponents.iterator(); iter.hasNext(); )
+		                {
+		                    headerContainer.add((Component) iter.next());
+		                }
+		                
+		                // Cleanup; no longer needed.
+		                this.headerComponents = null;
+		            }
+		            return headerContainer;
+		        }
+		    }
+		} 
+		while (associatedMarkupStream.next() != null);
+
+		if (this.headerComponents == null)
+		{
+		    throw new MarkupException("You have added header components but did not specific a <wicket:head> region in your markup");
+		}
+    	return null;
+	}
+	
+	/**
+	 * Add component to &lt;wicket:head&gt; instead of panel region. 
+	 * 
+	 * @param child
+	 */
+	public void addToHeader(final Component child)
+	{
+	    if (this.headerComponents == null)
+	    {
+	        this.headerComponents = new ArrayList();
+	    }
+	    
+	    this.headerComponents.add(child);
 	}
 }
