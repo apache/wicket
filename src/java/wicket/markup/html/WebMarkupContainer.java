@@ -25,7 +25,6 @@ import wicket.Component;
 import wicket.HtmlHeaderContainer;
 import wicket.MarkupContainer;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.model.IModel;
@@ -121,10 +120,6 @@ public class WebMarkupContainer extends MarkupContainer
 		} 
 		while (associatedMarkupStream.next() != null);
 
-		if (this.headerComponents == null)
-		{
-		    throw new MarkupException("You have added header components but did not specific a <wicket:head> region in your markup");
-		}
     	return null;
 	}
 	
