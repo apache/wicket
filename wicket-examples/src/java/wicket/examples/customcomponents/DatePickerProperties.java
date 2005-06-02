@@ -211,6 +211,9 @@ public class DatePickerProperties implements Serializable
 	 */
 	protected String getDatePattern()
 	{
+		// TODO this is a very shallow implementation; see if there is anything smarter
+		// to do with the date pattern
+
 		Locale locale = Session.get().getLocale();
 
 		// now, just try a few that I know of
@@ -220,8 +223,7 @@ public class DatePickerProperties implements Serializable
 			return "%d.%m.%Y";
 		}
 
-
-		if (new Locale("nl").equals(locale))
+		if ("nl".equals(locale.getLanguage()))
 		{
 			return "%d-%m-%Y";
 		}

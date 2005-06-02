@@ -22,6 +22,7 @@ import java.util.Date;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
@@ -82,7 +83,6 @@ public class DatePicker extends Panel
 	 */
 	private final static class DatePickerTextField extends TextField
 	{
-
 		/** model for substituting the id attribute of the text field. */
 		private final class IdModel extends Model
 		{
@@ -116,6 +116,28 @@ public class DatePicker extends Panel
 		{
 			super(id, model, type);
 			add(new IdAttributeModifier(this));
+		}
+
+		/**
+		 * @see wicket.Component#initModel()
+		 */
+		protected IModel initModel()
+		{
+			return new Model()
+			{
+				public Object getObject(Component component)
+				{
+					MarkupContainer parent = getParent();
+					return parent.getModel().getObject(parent);
+				};
+
+				public void setObject(Component component, Object object)
+				{
+					MarkupContainer parent = getParent();
+					parent.getModel().setObject(parent, object);
+				};
+
+			};
 		}
 	}
 
