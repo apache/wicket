@@ -1,14 +1,16 @@
 <html>
  <head>
-	<wicket:header><!-- header will be contributed to the page's header -->
+	<wicket:head><!-- header will be contributed to the page's header -->
 
 	  	<!-- 
 	  		the css tag (comparable to autolink) inserts a CSS component (StaticResource) that
 	  		modifies the href attribute to reference the tree.css resource in this package
 	  	-->
-	    <link rel="stylesheet" type="text/css" href="tree.css"/>
+	  <wicket:link autolink="true">
+	    <link rel="StyleSheet" type="text/css" href="tree.css"/>
+	  </wicket:link>
 
-	</wicket:header>
+	</wicket:head>
  </head>
  <body>	
 	<wicket:panel>
