@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.HeadComponentCache;
 import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
+import wicket.markup.html.HtmlHeaderResolver;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
 import wicket.model.IModel;
