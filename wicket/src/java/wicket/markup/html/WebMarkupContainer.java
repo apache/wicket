@@ -22,9 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.Component;
-import wicket.HtmlHeaderContainer;
 import wicket.MarkupContainer;
 import wicket.markup.MarkupElement;
+import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.model.IModel;
@@ -82,7 +82,7 @@ public class WebMarkupContainer extends MarkupContainer
 	 * @return the header part for this markup container or null
 	 * 	if it doesn't contribute anything.
 	 */
-	public WebMarkupContainer getHeaderPart(int index)
+	public final WebMarkupContainer getHeaderPart(int index)
 	{
 	    // gracefull getAssociateMarkupStream. Throws no exception in case
 	    // markup is not found
@@ -120,6 +120,10 @@ public class WebMarkupContainer extends MarkupContainer
 		} 
 		while (associatedMarkupStream.next() != null);
 
+		if (this.headerComponents == null)
+		{
+		    throw new MarkupException("You have added header components but did not specific a <wicket:head> region in your markup");
+		}
     	return null;
 	}
 	
@@ -128,7 +132,7 @@ public class WebMarkupContainer extends MarkupContainer
 	 * 
 	 * @param child
 	 */
-	public void addToHeader(final Component child)
+	public final void addToHeader(final Component child)
 	{
 	    if (this.headerComponents == null)
 	    {
