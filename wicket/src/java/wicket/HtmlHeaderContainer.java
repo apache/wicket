@@ -61,15 +61,6 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 	 */
 	public final void renderHeadSections()
 	{
-		// TODO
-		// We probably have to embed our magical head part children in a seperate container,
-		// so that we can remove and re-add them on each render
-		// Also, we have to somehow dynamically insert that component into the markup stream
-		// just as we have to generate a head part in any HTML/Web markup when it doesn't
-		// exist yet.
-		// The problem is when and where to do it. Juergen, any idea how to go on from this
-		// point? I think I have got the markup part going ok. Now it has to all add up...
-		
 		// collect all header parts and render them
 		getParent().visitChildren(WebMarkupContainer.class, new IVisitor()
         {
