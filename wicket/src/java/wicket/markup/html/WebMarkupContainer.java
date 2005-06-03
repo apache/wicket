@@ -120,9 +120,10 @@ public class WebMarkupContainer extends MarkupContainer
 		} 
 		while (associatedMarkupStream.next() != null);
 
-		if (this.headerComponents == null)
+		if (this.headerComponents != null)
 		{
-		    throw new MarkupException("You have added header components but did not specific a <wicket:head> region in your markup");
+		    throw new MarkupException("You have added header components but did not specify a <wicket:head> region in your Page markup: " 
+		            + this.toString());
 		}
     	return null;
 	}
