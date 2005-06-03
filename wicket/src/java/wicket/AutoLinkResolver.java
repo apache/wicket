@@ -212,6 +212,11 @@ public final class AutoLinkResolver implements IComponentResolver
 		return new AutolinkExternalLink(autoId, originalHref);
 	}
 
+	/**
+	 * 
+	 * @param container
+	 * @return the Component found
+	 */
 	private Component findPanelComponent(MarkupContainer container)
 	{
         final Component relatedContainer;
@@ -226,13 +231,14 @@ public final class AutoLinkResolver implements IComponentResolver
         while (iter.hasNext())
         {
             final Component panelComponent = (Component) iter.next();
-            if (panelComponent.getClass().equals(panelClass))
+            if (panelClass.isInstance(panelComponent))
             {
                 return panelComponent;
             }
         }
         
-        throw new WicketRuntimeException("programming error: did not find panel or border component with class name: " + panelClass);
+        throw new WicketRuntimeException("programming error: did not find panel or border component with class name: " 
+                + panelClass);
 	}
 	
 	/**
