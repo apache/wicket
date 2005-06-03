@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.0.0" date="tbd" description="1.0.0 final">
+  	  <action type="fix" dev="Martijn Dashorst" issue="1275631">Fixed negative numbers in PageParameters.</action>
   	  <action type="update" dev="Eelco Hillenius">added PageableListView.setRowsPerPage</action>
       <action type="fix" dev="Eelco Hillenius" issue="1211663" due-to="Martijn Dashorst">Fixed converters once and for all. Null check results so that e.g., empty strings for numbers (e.g.) now return null instead of throwing a NPE</action>
       <action type="fix" dev="Eelco Hillenius" issue="1209027">The UploadForm now considers the encoding</action>
