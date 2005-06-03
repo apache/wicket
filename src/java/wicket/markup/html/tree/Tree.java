@@ -31,6 +31,7 @@ import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
 import wicket.markup.html.StaticResourceReference;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
@@ -73,6 +74,12 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	/** Plus sign image. */
 	private static final ResourceReference PLUS =
 		new StaticResourceReference(Tree.class, "plus.gif");
+
+	/**
+	 * Reference to the css file.
+	 */
+	private static final StaticResourceReference CSS =
+		new StaticResourceReference(Tree.class, "tree.css");
 
 	/**
 	 * If true, re-rendering the tree is more efficient if the tree model doesn't get
@@ -342,6 +349,8 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		super(id, model);
 		this.treePathsModel = new TreePathsModel();
 		add(treePathsListView = createTreePathsListView());
+
+		addCSS();
 	}
 
 	/**
@@ -355,6 +364,27 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		super(id, treeState);
 		this.treePathsModel = new TreePathsModel();
 		add(treePathsListView = createTreePathsListView());
+
+		addCSS();
+	}
+
+	/**
+	 * Add stylesheet to header.
+	 */
+	private void addCSS()
+	{
+		IModel hrefReplacement = new Model()
+		{
+			public Object getObject(Component component)
+			{
+				CSS.bind(getApplication());
+				String url = getPage().urlFor(CSS.getPath());
+				return url;
+			};
+		};
+		WebMarkupContainer css = new WebMarkupContainer("css");
+		css.add(new AttributeModifier("href", true, hrefReplacement));
+		addToHeader(css);
 	}
 
 	/**
