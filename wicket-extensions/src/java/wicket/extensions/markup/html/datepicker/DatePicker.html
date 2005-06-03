@@ -1,12 +1,18 @@
 <html>
  <head>
+	<wicket:head>
+		<script wicket:id="calendarMain" type="text/javascript" src="calendar.js"></script>
+		<script wicket:id="calendarSetup" type="text/javascript" src="calendar-setup.js"></script>
+		<script wicket:id="calendarLanguage" type="text/javascript" src="lang/calendar-en.js"></script>
+		<link wicket:id="calendarStyle" rel="stylesheet" type="text/css" href="style/calendar-blue.css"/>
+	</wicket:head>
  </head>
  <body>
 
     <wicket:panel>
 
 		<input type="text" wicket:id="dateInput" id="dateInput" />
-		<button wicket:id="trigger" id="trigger">...</button>
+		<input type="image" wicket:id="trigger" id="trigger" src="calendar_icon_2.jpg" />
 
 		<!-- note that the script body will be replaced -->
 		<script wicket:id="script" type="text/javascript">

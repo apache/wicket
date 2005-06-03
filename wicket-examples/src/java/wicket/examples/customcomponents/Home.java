@@ -21,6 +21,7 @@ package wicket.examples.customcomponents;
 import java.util.Date;
 
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.markup.html.basic.Label;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.Model;

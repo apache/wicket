@@ -16,15 +16,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.customcomponents;
+package wicket.extensions.markup.html.datepicker;
 
 import java.util.Date;
 
+import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.StaticResourceReference;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.TextField;
@@ -45,7 +47,6 @@ import wicket.model.Model;
  */
 public class DatePicker extends Panel
 {
-
 	/**
 	 * Attribute modifier that modifies/ adds an id attribute with value of the
 	 * given component's path.
@@ -174,11 +175,22 @@ public class DatePicker extends Panel
 		/**
 		 * Construct.
 		 * @param id component id
+		 * @param resourceReference button icon reference
 		 */
-		public TriggerButton(String id)
+		public TriggerButton(final String id, final wicket.ResourceReference resourceReference)
 		{
 			super(id);
 			add(new IdAttributeModifier(this));
+			IModel srcReplacement = new Model()
+			{
+				public Object getObject(Component component)
+				{
+					resourceReference.bind(getApplication());
+					String url = getPage().urlFor(resourceReference.getPath());
+					return url;
+				};
+			};
+			add(new AttributeModifier("src", true, srcReplacement));
 		}
 	}
 
@@ -205,11 +217,20 @@ public class DatePicker extends Panel
 		}
 	}
 
+	private static final StaticResourceReference CALENDAR_ICON_1 =
+		new StaticResourceReference(DatePicker.class, "calendar_icon_1.jpg");
+
+	private static final StaticResourceReference CALENDAR_ICON_2 =
+		new StaticResourceReference(DatePicker.class, "calendar_icon_2.jpg");
+
+	private static final StaticResourceReference CALENDAR_ICON_3 =
+		new StaticResourceReference(DatePicker.class, "calendar_icon_3.jpg");
+
 	/** the text field. */
 	private final DatePickerTextField datePickerTextField;
 
 	/** the button that triggers the popup. */
-	private final TriggerButton triggerButton;
+	private TriggerButton triggerButton;
 
 	/** properties for the javascript datepicker component. */
 	private DatePickerProperties datePickerProperties;
@@ -222,8 +243,7 @@ public class DatePicker extends Panel
 	{
 		super(id);
 		add(datePickerTextField = new DatePickerTextField("dateInput", Date.class));
-		add(triggerButton = new TriggerButton("trigger"));
-		add(new InitScript("script"));
+		init();
 	}
 
 	/**
@@ -235,8 +255,33 @@ public class DatePicker extends Panel
 	{
 		super(id, model);
 		add(datePickerTextField = new DatePickerTextField("dateInput", model, Date.class));
-		add(triggerButton = new TriggerButton("trigger"));
+		init();
+	}
+
+	/**
+	 * Add common components.
+	 */
+	private void init()
+	{
+		add(triggerButton = new TriggerButton("trigger", CALENDAR_ICON_1));
 		add(new InitScript("script"));
+		addToHeader(new ResourceReference("calendarMain", "calendar.js", "src"));
+		addToHeader(new ResourceReference("calendarSetup", "calendar-setup.js", "src"));
+		addToHeader(new ResourceReference("calendarLanguage", "lang/calendar-en.js", "src"));
+		addToHeader(new ResourceReference("calendarStyle", "style/aqua/theme.css", "href"));
+
+		// register packaged images as static available resources
+		Application application = getApplication();
+
+		new StaticResourceReference(DatePicker.class, "style/aqua/active-bg.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/dark-bg.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/hover-bg.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/menuarrow.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/normal-bg.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/rowhover-bg.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/status-bg.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/title-bg.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/today-bg.gif").bind(application);
 	}
 
 	/**
@@ -278,5 +323,36 @@ public class DatePicker extends Panel
 	{
 		this.datePickerProperties = datePickerProperties;
 		return this;
+	}
+
+	/**
+	 * Reference to a packaged script file.
+	 */
+	private final static class ResourceReference extends WebMarkupContainer
+	{
+		/**
+		 * Construct.
+		 * @param id
+		 * @param file relative location of the packaged file
+		 * @param attributeToReplace the attribute to replace of the target tag
+		 */
+		public ResourceReference(String id, String file, String attributeToReplace)
+		{
+			super(id);
+
+			final StaticResourceReference ref = new StaticResourceReference(
+					DatePicker.class, file);
+
+			IModel srcReplacement = new Model()
+			{
+				public Object getObject(Component component)
+				{
+					ref.bind(getApplication());
+					String url = getPage().urlFor(ref.getPath());
+					return url;
+				};
+			};
+			add(new AttributeModifier(attributeToReplace, true, srcReplacement));
+		}
 	}
 }
