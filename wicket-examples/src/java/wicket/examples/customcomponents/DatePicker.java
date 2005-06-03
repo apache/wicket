@@ -34,6 +34,7 @@ import wicket.model.Model;
 
 /**
  * Datepicker component.
+ * TODO doc more
  * <p>
  * This component is based on Dynarch's JSCalendar component, which can be found
  * at <a href="http://www.dynarch.com/">the Dynarch site</a>.
@@ -123,18 +124,42 @@ public class DatePicker extends Panel
 		 */
 		protected IModel initModel()
 		{
+			// do not use our own model, but use the model of DatePicker instead.
+			// We need to do a little trick though, as the parent model may be a
+			// CompoundPropertyModel. In that case, setObject would be called with THIS
+			// component, resulting in Ognl trying to resolve expression 'dateInput'
+			// on the model. If we dispatch get/setObject to the parent alltogether, we
+			// will never have that kind of issues
+
 			return new Model()
 			{
+				/**
+				 * Returns the model object of the parent.
+				 * @see wicket.model.IModel#getObject(wicket.Component)
+				 */
 				public Object getObject(Component component)
 				{
 					MarkupContainer parent = getParent();
-					return parent.getModel().getObject(parent);
+					IModel parentModel = parent.getModel();
+					if (parentModel != null)
+					{
+						return parentModel.getObject(parent);
+					}
+					return null;
 				};
 
+				/**
+				 * Sets the object on the parents' model.
+				 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+				 */
 				public void setObject(Component component, Object object)
 				{
 					MarkupContainer parent = getParent();
-					parent.getModel().setObject(parent, object);
+					IModel parentModel = parent.getModel();
+					if (parentModel != null)
+					{
+						parentModel.setObject(parent, object);						
+					}
 				};
 
 			};
@@ -146,7 +171,6 @@ public class DatePicker extends Panel
 	 */
 	private final static class TriggerButton extends WebMarkupContainer
 	{
-
 		/**
 		 * Construct.
 		 * @param id component id
