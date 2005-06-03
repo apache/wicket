@@ -160,7 +160,6 @@ import wicket.util.time.Duration;
  */
 public final class ApplicationSettings
 {
-
 	/**
 	 * All logical parts of a request (the action and render part) are handled within the
 	 * same request. To enable a the client side redirect for a request, users can set the
@@ -210,6 +209,7 @@ public final class ApplicationSettings
 	 * </p>
 	 */
 	public static final RenderStrategy REDIRECT_TO_RENDER = new RenderStrategy("CLIENT_SIDE_REDIRECT");
+	
 	/**
 	 * Indicates that an exception page appropriate to development should be
 	 * shown when an unexpected exception is thrown.
