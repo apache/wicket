@@ -11,6 +11,20 @@ Calendar._DN = new Array
 
 Calendar._SDN_len = 2;
 
+Calendar._SDN = new Array
+("Zo",
+ "Ma",
+ "Di",
+ "Wo",
+ "Do",
+ "Vr",
+ "Za",
+ "Zo");
+ 
+ // First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 0;
+
 Calendar._MN = new Array
 ("Januari",
  "Februari",
@@ -24,13 +38,28 @@ Calendar._MN = new Array
  "Oktober",
  "November",
  "December");
+ 
+ // short month names
+Calendar._SMN = new Array
+("Jan",
+ "Feb",
+ "Mrt",
+ "Apr",
+ "Mei",
+ "Jun",
+ "Jul",
+ "Aug",
+ "Sep",
+ "Okt",
+ "Nov",
+ "Dec");
 
 // tooltips
 Calendar._TT = {};
-Calendar._TT["INFO"] = "Info";
+Calendar._TT["INFO"] = "Over de kalender";
 
 Calendar._TT["ABOUT"] =
-"DHTML Datum/Tijd Selector\n" +
+"DHTML Datum/Tijd Selectie\n" +
 "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
 "Ga voor de meest recente versie naar: http://www.dynarch.com/projects/calendar/\n" +
 "Verspreid onder de GNU LGPL. Zie http://gnu.org/licenses/lgpl.html voor details." +
