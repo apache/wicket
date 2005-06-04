@@ -218,12 +218,10 @@ public class WebPage extends Page
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
+	 * Creates a prefix for a url.
 	 * @param cycle
 	 *            The web request cycle
-	 * @return Prefix for URLs including the context path, servlet path and
-	 *         application name (if servlet path is empty).
+	 * @return Prefix for URLs including the context path and servlet path.
 	 */
 	private StringBuffer urlPrefix(final WebRequestCycle cycle)
 	{
@@ -231,17 +229,9 @@ public class WebPage extends Page
 		final WebRequest request = cycle.getWebRequest();
 		if (request != null)
 		{
-			buffer.append(request.getContextPath());
-			final String servletPath = ((WebRequest)request).getServletPath();
-			if (servletPath.equals(""))
-			{
-				buffer.append('/');
-				buffer.append(cycle.getApplication().getName());
-			}
-			else
-			{
-				buffer.append(servletPath);
-			}
+			final String contextPath = request.getContextPath();
+			buffer.append(contextPath);
+			buffer.append(((WebRequest)request).getServletPath());
 		}
 
 		return buffer;
