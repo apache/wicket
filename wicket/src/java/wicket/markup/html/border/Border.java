@@ -22,6 +22,8 @@ import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.HtmlHeaderContainer;
+import wicket.markup.html.IHeaderRenderer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
@@ -77,7 +79,7 @@ import wicket.model.IModel;
  *
  * @author Jonathan Locke
  */
-public abstract class Border extends WebMarkupContainer implements IComponentResolver
+public abstract class Border extends WebMarkupContainer implements IComponentResolver, IHeaderRenderer
 {
 	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
@@ -235,5 +237,22 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			markupStream.throwMarkupException(
 			        "There must be exactly one <wicket:body> tag for each border compoment.");
         }
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE PUBLIC API.
+	 *
+	 * Render the header section.
+	 * TODO bad javadoc
+	 * 
+	 * @param container
+	 */
+	public final void renderHeadSections(final HtmlHeaderContainer container)
+	{
+		MarkupContainer parent = getParent();
+		if (parent instanceof IHeaderRenderer)
+		{
+		    ((IHeaderRenderer)parent).renderHeadSections(container);
+		}
 	}
 }

@@ -46,7 +46,7 @@ import wicket.util.lang.Classes;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class WebPage extends Page
+public class WebPage extends Page implements IHeaderRenderer
 {
 	/**
 	 * Constructor.
@@ -232,5 +232,42 @@ public class WebPage extends Page
 		}
 
 		return buffer;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE PUBLIC API.
+	 *
+	 * Render the header container component.
+	 * 
+	 * @param container
+	 */
+	public final void renderHeadSections(final HtmlHeaderContainer container)
+	{
+		// collect all header parts and render them
+		visitChildren(WebMarkupContainer.class, new IVisitor()
+        {
+		    private int nbrOfContributions;
+		    
+			/**
+			 * @see wicket.Component.IVisitor#component(wicket.Component)
+			 */
+			public Object component(Component component)
+			{
+				if (component.isVisible())
+				{
+					WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
+					WebMarkupContainer headerPart = webMarkupContainer.getHeaderPart(nbrOfContributions);
+
+					// In case a Component with header has been added to the page 
+					// multiple times, the header must only be added once.
+					if ((headerPart != null) && (container.get(headerPart.getId()) == null))
+					{
+						container.autoAdd(headerPart);
+						nbrOfContributions++;
+					}
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+        });
 	}
 }

@@ -65,4 +65,12 @@ public abstract class BorderedPage extends WebPage
 	{
 		return border.replace(child);
 	}
+	
+	/**
+	 * @see wicket.MarkupContainer#autoAdd(Component)
+	 */
+	public boolean autoAdd(final Component component)
+	{
+	    return border.autoAdd(component);
+	}
 }

@@ -160,7 +160,7 @@ public abstract class MarkupContainer extends Component
 	 *            The component to add
 	 * @return True, if component has been added
 	 */
-	public final boolean autoAdd(final Component component)
+	public boolean autoAdd(final Component component)
 	{
 /* Replace strategy */
 		if (get(component.getId()) != null)
