@@ -31,7 +31,7 @@ import wicket.util.string.Strings;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class ResourceStreamLocator
+public class ResourceStreamLocator implements IResourceStreamLocator
 {
 	/** Logging */
 	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
@@ -80,7 +80,7 @@ public class ResourceStreamLocator
 	public IResourceStream locate(final Class c, final String style, final Locale locale,
 			final String extension)
 	{
-		return locate(c.getName(), style, locale, extension);
+		return locate(c.getName().replace('.','/'), style, locale, extension);
 	}
 
 	/**
@@ -118,11 +118,6 @@ public class ResourceStreamLocator
 			{
 				extensionString = "." + extension;
 			}
-		}
-		int index = path.indexOf("/");
-		if(index == -1)
-		{
-			path = path.replace('.', '/');
 		}
 
 		return locator.locate(path, style, locale, extensionString);
