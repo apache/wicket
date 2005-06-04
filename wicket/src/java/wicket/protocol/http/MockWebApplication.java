@@ -24,6 +24,8 @@ import javax.servlet.ServletException;
 
 import wicket.ApplicationSettings;
 import wicket.Page;
+import wicket.util.file.IResourceFinder;
+import wicket.util.file.WebApplicationPath;
 
 /**
  * This class provides a mock implementation of a Wicket HTTP based application
@@ -106,6 +108,20 @@ public class MockWebApplication extends WebApplication
         wicketSession = getSession(servletRequest);
         ApplicationSettings settings = getSettings();
         settings.setRenderStrategy(ApplicationSettings.ONE_PASS_RENDER);
+    }
+    
+    /**
+     * @see wicket.protocol.http.WebApplication#createApplicationSettings()
+     */
+    public ApplicationSettings createApplicationSettings()
+    {
+    	return new ApplicationSettings(this)
+    	{
+    		public IResourceFinder createResourceFinder()
+    		{
+    			return new WebApplicationPath(context);
+    		}
+    	};
     }
 
     /**
