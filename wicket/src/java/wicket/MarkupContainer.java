@@ -629,7 +629,7 @@ public abstract class MarkupContainer extends Component
 		renderComponentTag(associatedMarkupOpenTag);
 		associatedMarkupStream.next();
 		renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
-		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag);
+		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
 		setMarkupStream(originalMarkupStream);
 	}
 

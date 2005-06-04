@@ -19,6 +19,7 @@
 package wicket.markup.html.list;
 
 import java.io.IOException;
+import java.util.List;
 
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
@@ -186,6 +187,19 @@ public class PagedTableNavigatorTest extends TestCase
 
 		link = (Link)page.get("navigator.last");
 		assertTrue(link.isEnabled());
+		
+		// add entries to the model list.
+		List modelData = (List)page.get("table").getModelObject();
+		modelData.add("add-1");
+		modelData.add("add-2");
+		modelData.add("add-3");
+		
+		link = (Link)page.get("navigator.first");
+		application.setupRequestAndResponse();
+		application.getServletRequest().setRequestToComponent(link);
+		application.processRequestCycle();
+		document = application.getServletResponse().getDocument();
+		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_8.html"));
 	}
 	
 	private boolean validatePage(final String document, final String file) throws IOException

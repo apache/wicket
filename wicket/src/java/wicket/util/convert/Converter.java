@@ -286,12 +286,6 @@ public final class Converter implements IConverter
 	{
 		this.locale = locale;
 
-//		// Set locale on each string type converter
-//		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
-//		{
-//			((ITypeConverter)iterator.next()).setLocale(locale);
-//		}
-
 		// Set locale on default converter
 		defaultConverter.setLocale(locale);
 	}

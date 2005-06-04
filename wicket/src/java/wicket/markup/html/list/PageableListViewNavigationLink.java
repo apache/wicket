@@ -34,7 +34,7 @@ public final class PageableListViewNavigationLink extends PageLink
 
 	/** The page of the PageableListView this link is for. */
 	private final int pageNumber;
-
+	    
 	/**
 	 * Constructor.
 	 * 
@@ -44,7 +44,7 @@ public final class PageableListViewNavigationLink extends PageLink
 	 *            The list view for this page link
 	 * @param pageNumber
 	 *            The page number in the PageableListView that this link links
-	 *            to
+	 *            to. Negative pageNumbers are relative to the end of the list.
 	 */
 	public PageableListViewNavigationLink(final String id,
 			final PageableListView pageableListView, final int pageNumber)
@@ -56,11 +56,17 @@ public final class PageableListViewNavigationLink extends PageLink
 			    int idx = pageNumber;
 				if (idx < 0)
 				{
-					idx = 0;
+					idx = pageableListView.getPageCount() + idx;
 				}
-				else if (idx > (pageableListView.getList().size() - 1))
+				
+				if (idx > (pageableListView.getList().size() - 1))
 				{
 					idx = pageableListView.getList().size() - 1;
+				}
+
+				if (idx < 0)
+				{
+					idx = 0;
 				}
 			    
 				pageableListView.setCurrentPage(idx);
@@ -74,7 +80,7 @@ public final class PageableListViewNavigationLink extends PageLink
 			}
 		});
 
-		this.pageNumber = (pageNumber < 0 ? 0 : pageNumber);
+		this.pageNumber = pageNumber;
 		this.pageableListView = pageableListView;
 	}
 
@@ -98,7 +104,23 @@ public final class PageableListViewNavigationLink extends PageLink
 	 */
 	public final int getPageNumber()
 	{
-		return pageNumber;
+	    int idx = pageNumber;
+		if (idx < 0)
+		{
+			idx = pageableListView.getPageCount() + idx;
+		}
+		
+		if (idx > (pageableListView.getList().size() - 1))
+		{
+			idx = pageableListView.getList().size() - 1;
+		}
+
+		if (idx < 0)
+		{
+			idx = 0;
+		}
+		
+		return idx;
 	}
 
 	/**
@@ -107,7 +129,7 @@ public final class PageableListViewNavigationLink extends PageLink
 	 */
 	public boolean isFirst()
 	{
-		return pageNumber == 0;
+		return getPageNumber() == 0;
 	}
 
 	/**
@@ -116,7 +138,7 @@ public final class PageableListViewNavigationLink extends PageLink
 	 */
 	public boolean isLast()
 	{
-		return pageNumber == (pageableListView.size() - 1);
+		return getPageNumber() == (pageableListView.size() - 1);
 	}
 
 	/**
@@ -130,6 +152,6 @@ public final class PageableListViewNavigationLink extends PageLink
 	 */
 	public boolean linksTo(final Page page)
 	{
-		return pageNumber == pageableListView.getCurrentPage();
+		return getPageNumber() == pageableListView.getCurrentPage();
 	}
 }
