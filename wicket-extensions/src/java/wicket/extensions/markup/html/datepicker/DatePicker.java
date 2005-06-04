@@ -43,10 +43,40 @@ import wicket.model.Model;
  * </p>
  *
  * @author Eelco Hillenius
- * @author Mihai Bazon (he created the JSCalendar component)
+ * @author Mihai Bazon (creator of the JSCalendar component)
  */
 public class DatePicker extends Panel
 {
+	/**
+	 * Reference to a packaged script file.
+	 */
+	private final static class ResourceReference extends WebMarkupContainer
+	{
+		/**
+		 * Construct.
+		 * @param id
+		 * @param file relative location of the packaged file
+		 * @param attributeToReplace the attribute to replace of the target tag
+		 */
+		public ResourceReference(String id, String file, String attributeToReplace)
+		{
+			super(id);
+
+			final StaticResourceReference ref = new StaticResourceReference(
+					DatePicker.class, file);
+
+			IModel srcReplacement = new Model()
+			{
+				public Object getObject(Component component)
+				{
+					String url = getPage().urlFor(ref.getPath());
+					return url;
+				};
+			};
+			add(new AttributeModifier(attributeToReplace, true, srcReplacement));
+		}
+	}
+
 	/**
 	 * Attribute modifier that modifies/ adds an id attribute with value of the
 	 * given component's path.
@@ -185,7 +215,6 @@ public class DatePicker extends Panel
 			{
 				public Object getObject(Component component)
 				{
-					resourceReference.bind(getApplication());
 					String url = getPage().urlFor(resourceReference.getPath());
 					return url;
 				};
@@ -217,12 +246,15 @@ public class DatePicker extends Panel
 		}
 	}
 
+	/** button icon for the date picker; refers to 'calendar_icon_1.jpg' in this package. */
 	private static final StaticResourceReference CALENDAR_ICON_1 =
 		new StaticResourceReference(DatePicker.class, "calendar_icon_1.jpg");
 
+	/** button icon for the date picker; refers to 'calendar_icon_2.jpg' in this package. */
 	private static final StaticResourceReference CALENDAR_ICON_2 =
 		new StaticResourceReference(DatePicker.class, "calendar_icon_2.jpg");
 
+	/** button icon for the date picker; refers to 'calendar_icon_3.jpg' in this package. */
 	private static final StaticResourceReference CALENDAR_ICON_3 =
 		new StaticResourceReference(DatePicker.class, "calendar_icon_3.jpg");
 
@@ -273,15 +305,15 @@ public class DatePicker extends Panel
 		// register packaged images as static available resources
 		Application application = getApplication();
 
-		new StaticResourceReference(DatePicker.class, "style/aqua/active-bg.gif").bind(application);
-		new StaticResourceReference(DatePicker.class, "style/aqua/dark-bg.gif").bind(application);
-		new StaticResourceReference(DatePicker.class, "style/aqua/hover-bg.gif").bind(application);
-		new StaticResourceReference(DatePicker.class, "style/aqua/menuarrow.gif").bind(application);
-		new StaticResourceReference(DatePicker.class, "style/aqua/normal-bg.gif").bind(application);
-		new StaticResourceReference(DatePicker.class, "style/aqua/rowhover-bg.gif").bind(application);
-		new StaticResourceReference(DatePicker.class, "style/aqua/status-bg.gif").bind(application);
-		new StaticResourceReference(DatePicker.class, "style/aqua/title-bg.gif").bind(application);
-		new StaticResourceReference(DatePicker.class, "style/aqua/today-bg.gif").bind(application);
+		new StaticResourceReference(DatePicker.class, "style/aqua/active-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/dark-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/hover-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/menuarrow.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/normal-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/rowhover-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/status-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/title-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/today-bg.gif");
 	}
 
 	/**
@@ -323,36 +355,5 @@ public class DatePicker extends Panel
 	{
 		this.datePickerProperties = datePickerProperties;
 		return this;
-	}
-
-	/**
-	 * Reference to a packaged script file.
-	 */
-	private final static class ResourceReference extends WebMarkupContainer
-	{
-		/**
-		 * Construct.
-		 * @param id
-		 * @param file relative location of the packaged file
-		 * @param attributeToReplace the attribute to replace of the target tag
-		 */
-		public ResourceReference(String id, String file, String attributeToReplace)
-		{
-			super(id);
-
-			final StaticResourceReference ref = new StaticResourceReference(
-					DatePicker.class, file);
-
-			IModel srcReplacement = new Model()
-			{
-				public Object getObject(Component component)
-				{
-					ref.bind(getApplication());
-					String url = getPage().urlFor(ref.getPath());
-					return url;
-				};
-			};
-			add(new AttributeModifier(attributeToReplace, true, srcReplacement));
-		}
 	}
 }
