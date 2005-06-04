@@ -49,7 +49,7 @@ public class ExamplePaging extends Displaytag
     public ExamplePaging(final PageParameters parameters)
     {
         // Test data
-        final List data = new TestList(60, false);
+        final List data = new TestList(55, false);
         
         // Add pageable table with alternating row styles
         final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
