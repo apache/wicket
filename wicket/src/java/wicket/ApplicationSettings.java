@@ -599,6 +599,10 @@ public class ApplicationSettings
 	 */
 	public final IResourceFinder getResourcePath()
 	{
+		if(resourcePath == null)
+		{
+			resourcePath = createResourceFinder();
+		}
 		return resourcePath;
 	}
 
