@@ -67,7 +67,7 @@ public abstract class WicketExampleApplication extends WebApplication
 	    else
 	    {
 	        // Use development settings 
-	        getSettings().configure(getWicketServlet().getServletContext(),"development", "c:/temp/;WEB-INF/classes");
+	        getSettings().configure(getWicketServlet().getServletContext(),"development", "WEB-INF/classes");
 	    }
 	}
     
