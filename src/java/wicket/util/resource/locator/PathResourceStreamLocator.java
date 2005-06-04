@@ -17,13 +17,14 @@
  */
 package wicket.util.resource.locator;
 
+import java.net.URL;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.file.File;
 import wicket.util.file.Path;
-import wicket.util.resource.FileResourceStream;
 import wicket.util.resource.IResourceStream;
+import wicket.util.resource.UrlResourceStream;
 
 /**
  * IResourceStreamLocator implementation that locates resources along a filesystem
@@ -60,13 +61,13 @@ public final class PathResourceStreamLocator extends AbstractResourceStreamLocat
 		log.debug("Attempting to locate resource '" + path + "' on path " + searchPath);
 
 		// Try to find file resource on the path supplied
-		final File file = searchPath.find(path);
+		final URL url = searchPath.find(path);
 
 		// Found resource?
-		if (file != null)
+		if (url != null)
 		{
 			// Return file resource
-			return new FileResourceStream(file);
+			return new UrlResourceStream(url);
 		}
 		return null;
 	}
