@@ -18,8 +18,6 @@
 package wicket.markup.html;
 
 import wicket.Component;
-import wicket.IComponentResolver;
-import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 
@@ -29,7 +27,7 @@ import wicket.markup.MarkupStream;
  *  
  * @author Juergen Donnerstag
  */
-public class HtmlHeaderContainer extends WebMarkupContainer implements IComponentResolver
+public class HtmlHeaderContainer extends WebMarkupContainer
 {
 	/** The open tag for this container. */
 	private transient ComponentTag openTag;
@@ -91,37 +89,21 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 	}
 	
 	/**
-	 * Render the body of &lt;wicket:extend&gt; First get both markups involved
-	 * and switch between both if &lt;wicket:child&gt; is found in the 
-	 * base class' markup.
+	 * First render the body of component. And if it is the header component 
+	 * of a Page (compared to a Panel or Border), than get the header sections
+	 * from all component in the hierachie and append them.
 	 * 
-	 * @see wicket.Component#onRender()
+	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
 	 */
-	protected final void onRender()
+	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		// go one rendering the component
-		super.onRender();
-	
+		super.onComponentTagBody(markupStream, openTag);
+		
 		// render the header section only, if we are on a Page
 		// Panels and Border do not need to render the header section
 		if (getParent() instanceof WebPage)
 		{
 		    renderHeadSections();
 		}
-	}
-
-	/**
-	 * @see wicket.IComponentResolver#resolve(wicket.MarkupContainer, wicket.markup.MarkupStream, wicket.markup.ComponentTag)
-	 */
-	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
-	{
-		Component parent = getParent().get(tag.getId());
-		if (parent != null)
-		{
-		    parent.render();
-		    return true;
-		}
-		
-		return false;
 	}
 }
