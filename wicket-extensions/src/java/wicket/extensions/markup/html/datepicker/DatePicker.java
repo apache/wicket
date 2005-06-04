@@ -18,12 +18,9 @@
  */
 package wicket.extensions.markup.html.datepicker;
 
-import java.util.Date;
-
-import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.MarkupContainer;
+import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.StaticResourceReference;
@@ -47,18 +44,100 @@ import wicket.model.Model;
  */
 public class DatePicker extends Panel
 {
+
+	// the packaged icon images
+
+	/** button icon for the date picker; refers to 'calendar_icon_1.jpg' in this package. */
+	public static final StaticResourceReference BUTTON_ICON_1 =
+		new StaticResourceReference(DatePicker.class, "calendar_icon_1.jpg");
+
+	/** button icon for the date picker; refers to 'calendar_icon_2.jpg' in this package. */
+	public static final StaticResourceReference BUTTON_ICON_2 =
+		new StaticResourceReference(DatePicker.class, "calendar_icon_2.jpg");
+
+	/** button icon for the date picker; refers to 'calendar_icon_3.jpg' in this package. */
+	public static final StaticResourceReference BUTTON_ICON_3 =
+		new StaticResourceReference(DatePicker.class, "calendar_icon_3.jpg");
+
+	// the packages styles (comes with the date picker javascript widget)
+	
+	/** date picker style aqua. */
+	public static final StaticResourceReference STYLE_AQUA =
+		new StaticResourceReference(DatePicker.class, "style/aqua/theme.css");
+
+	/** date picker style winter. */
+	public static final StaticResourceReference STYLE_WINTER =
+		new StaticResourceReference(DatePicker.class, "style/calendar-blue.css");
+
+	/** date picker style blue2. */
+	public static final StaticResourceReference STYLE_BLUE =
+		new StaticResourceReference(DatePicker.class, "style/calendar-blue2.css");
+
+	/** date picker style summer. */
+	public static final StaticResourceReference STYLE_SUMMER =
+		new StaticResourceReference(DatePicker.class, "style/calendar-brown.css");
+
+	/** date picker style green. */
+	public static final StaticResourceReference STYLE_GREEN =
+		new StaticResourceReference(DatePicker.class, "style/calendar-green.css");
+
+	/** date picker style system. */
+	public static final StaticResourceReference STYLE_SYSTEM =
+		new StaticResourceReference(DatePicker.class, "style/calendar-system.css");
+
+	/** date picker style tas. */
+	public static final StaticResourceReference STYLE_TAS =
+		new StaticResourceReference(DatePicker.class, "style/calendar-tas.css");
+
+	/** date picker style win2k. */
+	public static final StaticResourceReference STYLE_WIN2K =
+		new StaticResourceReference(DatePicker.class, "style/calendar-win2k.css");
+
+	/** date picker style win2k-1. */
+	public static final StaticResourceReference STYLE_WIN2K_1 =
+		new StaticResourceReference(DatePicker.class, "style/calendar-win2k-1.css");
+
+	/** date picker style win2k-2. */
+	public static final StaticResourceReference STYLE_WIN2K_2 =
+		new StaticResourceReference(DatePicker.class, "style/calendar-win2k-2.css");
+
+	/** date picker style win2k-cold-1. */
+	public static final StaticResourceReference STYLE_WIN2K_COLD_1 =
+		new StaticResourceReference(DatePicker.class, "style/calendar-win2k-cold-1.css");
+
+	/** date picker style win2k-cold-2. */
+	public static final StaticResourceReference STYLE_WIN2K_COLD_2 =
+		new StaticResourceReference(DatePicker.class, "style/calendar-win2k-cold-2.css");
+
+	// register dependent images so that they can be loaded by the css files
+
+	static
+	{
+		new StaticResourceReference(DatePicker.class, "style/menuarrow.gif");
+		new StaticResourceReference(DatePicker.class, "style/menuarrow2.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/active-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/dark-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/hover-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/menuarrow.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/normal-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/rowhover-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/status-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/title-bg.gif");
+		new StaticResourceReference(DatePicker.class, "style/aqua/today-bg.gif");
+	}
+
 	/**
 	 * Reference to a packaged script file.
 	 */
-	private final static class ResourceReference extends WebMarkupContainer
+	private final static class DatePickerResourceReference extends WebMarkupContainer
 	{
 		/**
 		 * Construct.
-		 * @param id
+		 * @param id component id
 		 * @param file relative location of the packaged file
 		 * @param attributeToReplace the attribute to replace of the target tag
 		 */
-		public ResourceReference(String id, String file, String attributeToReplace)
+		public DatePickerResourceReference(String id, String file, String attributeToReplace)
 		{
 			super(id);
 
@@ -70,6 +149,29 @@ public class DatePicker extends Panel
 				public Object getObject(Component component)
 				{
 					String url = getPage().urlFor(ref.getPath());
+					return url;
+				};
+			};
+			add(new AttributeModifier(attributeToReplace, true, srcReplacement));
+		}
+
+		/**
+		 * Construct.
+		 * @param id component id
+		 * @param resourceReference the reference to the resource
+		 * @param attributeToReplace the attribute to replace of the target tag
+		 */
+		public DatePickerResourceReference(String id,
+				final ResourceReference resourceReference,
+				String attributeToReplace)
+		{
+			super(id);
+
+			IModel srcReplacement = new Model()
+			{
+				public Object getObject(Component component)
+				{
+					String url = getPage().urlFor(resourceReference.getPath());
 					return url;
 				};
 			};
@@ -107,93 +209,6 @@ public class DatePicker extends Panel
 		{
 			super("id", true, new IdModel());
 			this.component = component;
-		}
-	}
-
-	/**
-	 * Textfield for the date picker.
-	 */
-	private final static class DatePickerTextField extends TextField
-	{
-		/** model for substituting the id attribute of the text field. */
-		private final class IdModel extends Model
-		{
-			/**
-			 * @see wicket.model.IModel#getObject(wicket.Component)
-			 */
-			public Object getObject(Component component)
-			{
-				return DatePickerTextField.this.getPath();
-			}
-		}
-
-		/**
-		 * Construct.
-		 * @param id component id
-		 * @param type type for field validation and conversion
-		 */
-		public DatePickerTextField(String id, Class type)
-		{
-			super(id, type);
-			add(new IdAttributeModifier(this));
-		}
-
-		/**
-		 * Construct.
-		 * @param id component id
-		 * @param model the model
-		 * @param type type for field validation and conversion
-		 */
-		public DatePickerTextField(String id, IModel model, Class type)
-		{
-			super(id, model, type);
-			add(new IdAttributeModifier(this));
-		}
-
-		/**
-		 * @see wicket.Component#initModel()
-		 */
-		protected IModel initModel()
-		{
-			// do not use our own model, but use the model of DatePicker instead.
-			// We need to do a little trick though, as the parent model may be a
-			// CompoundPropertyModel. In that case, setObject would be called with THIS
-			// component, resulting in Ognl trying to resolve expression 'dateInput'
-			// on the model. If we dispatch get/setObject to the parent alltogether, we
-			// will never have that kind of issues
-
-			return new Model()
-			{
-				/**
-				 * Returns the model object of the parent.
-				 * @see wicket.model.IModel#getObject(wicket.Component)
-				 */
-				public Object getObject(Component component)
-				{
-					MarkupContainer parent = getParent();
-					IModel parentModel = parent.getModel();
-					if (parentModel != null)
-					{
-						return parentModel.getObject(parent);
-					}
-					return null;
-				};
-
-				/**
-				 * Sets the object on the parents' model.
-				 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
-				 */
-				public void setObject(Component component, Object object)
-				{
-					MarkupContainer parent = getParent();
-					IModel parentModel = parent.getModel();
-					if (parentModel != null)
-					{
-						parentModel.setObject(parent, object);						
-					}
-				};
-
-			};
 		}
 	}
 
@@ -246,20 +261,8 @@ public class DatePicker extends Panel
 		}
 	}
 
-	/** button icon for the date picker; refers to 'calendar_icon_1.jpg' in this package. */
-	private static final StaticResourceReference CALENDAR_ICON_1 =
-		new StaticResourceReference(DatePicker.class, "calendar_icon_1.jpg");
-
-	/** button icon for the date picker; refers to 'calendar_icon_2.jpg' in this package. */
-	private static final StaticResourceReference CALENDAR_ICON_2 =
-		new StaticResourceReference(DatePicker.class, "calendar_icon_2.jpg");
-
-	/** button icon for the date picker; refers to 'calendar_icon_3.jpg' in this package. */
-	private static final StaticResourceReference CALENDAR_ICON_3 =
-		new StaticResourceReference(DatePicker.class, "calendar_icon_3.jpg");
-
-	/** the text field. */
-	private final DatePickerTextField datePickerTextField;
+	/** the receiving text field. */
+	private final TextField targetTextField;
 
 	/** the button that triggers the popup. */
 	private TriggerButton triggerButton;
@@ -268,42 +271,52 @@ public class DatePicker extends Panel
 	private DatePickerProperties datePickerProperties;
 
 	/**
+	 * Construct with a default button and style.
+	 * @param id the component id
+	 * @param targetTextField the receiving text field
+	 */
+	public DatePicker(String id, TextField targetTextField)
+	{
+		this(id, targetTextField, BUTTON_ICON_1, STYLE_AQUA);
+	}
+
+	/**
+	 * Construct with a default style.
+	 * @param id the component id
+	 * @param targetTextField the receiving text field
+	 * @param buttonIcon icon image
+	 */
+	public DatePicker(String id, TextField targetTextField, ResourceReference buttonIcon)
+	{
+		this(id, targetTextField, buttonIcon, STYLE_AQUA);
+	}
+
+	/**
 	 * Construct.
 	 * @param id the component id
+	 * @param targetTextField the receiving text field
+	 * @param buttonIcon icon image
+	 * @param style style of this date picker
 	 */
-	public DatePicker(String id)
+	public DatePicker(String id, TextField targetTextField,
+			ResourceReference buttonIcon, ResourceReference style)
 	{
 		super(id);
-		add(datePickerTextField = new DatePickerTextField("dateInput", Date.class));
-		init();
-	}
 
-	/**
-	 * Construct.
-	 * @param id the component id
-	 * @param model the model
-	 */
-	public DatePicker(String id, IModel model)
-	{
-		super(id, model);
-		add(datePickerTextField = new DatePickerTextField("dateInput", model, Date.class));
-		init();
-	}
+		if (targetTextField == null)
+		{
+			throw new NullPointerException("targetTextField must be not null");
+		}
 
-	/**
-	 * Add common components.
-	 */
-	private void init()
-	{
-		add(triggerButton = new TriggerButton("trigger", CALENDAR_ICON_1));
+		targetTextField.add(new IdAttributeModifier(targetTextField));
+		this.targetTextField = targetTextField;
+
+		add(triggerButton = new TriggerButton("trigger", buttonIcon));
 		add(new InitScript("script"));
-		addToHeader(new ResourceReference("calendarMain", "calendar.js", "src"));
-		addToHeader(new ResourceReference("calendarSetup", "calendar-setup.js", "src"));
-		addToHeader(new ResourceReference("calendarLanguage", "lang/calendar-en.js", "src"));
-		addToHeader(new ResourceReference("calendarStyle", "style/aqua/theme.css", "href"));
-
-		// register packaged images as static available resources
-		Application application = getApplication();
+		addToHeader(new DatePickerResourceReference("calendarMain", "calendar.js", "src"));
+		addToHeader(new DatePickerResourceReference("calendarSetup", "calendar-setup.js", "src"));
+		addToHeader(new DatePickerResourceReference("calendarLanguage", "lang/calendar-en.js", "src"));
+		addToHeader(new DatePickerResourceReference("calendarStyle", style, "href"));
 
 		new StaticResourceReference(DatePicker.class, "style/aqua/active-bg.gif");
 		new StaticResourceReference(DatePicker.class, "style/aqua/dark-bg.gif");
@@ -323,7 +336,7 @@ public class DatePicker extends Panel
 	private String getInitScript()
 	{
 		StringBuffer b = new StringBuffer("\nCalendar.setup(\n{");
-		b.append("\n\t\tinputField : \"").append(datePickerTextField.getPath()).append("\",");
+		b.append("\n\t\tinputField : \"").append(targetTextField.getPath()).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
 		DatePickerProperties properties = getDatePickerProperties();
 		b.append(properties.toScript());

@@ -23,6 +23,7 @@ import java.util.Date;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.TextField;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.Model;
 
@@ -52,6 +53,16 @@ public class Home extends WicketExamplePage
 			};
 		}));
 
-		add(new DatePicker("datePicker", new Model(new Date())));
+		TextField dateField1 = new TextField("date1", new Model(new Date()), Date.class);
+		add(dateField1);
+		add(new DatePicker("datePicker1", dateField1));
+
+		TextField dateField2 = new TextField("date2", new Model(new Date()), Date.class);
+		add(dateField2);
+		add(new DatePicker("datePicker2", dateField2, DatePicker.BUTTON_ICON_2));
+
+		TextField dateField3 = new TextField("date3", new Model(new Date()), Date.class);
+		add(dateField3);
+		add(new DatePicker("datePicker3", dateField2, DatePicker.BUTTON_ICON_3));
 	}
 }
