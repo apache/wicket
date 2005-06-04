@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,7 +35,7 @@ import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
 import wicket.util.crypt.SunJceCrypt;
 import wicket.util.file.Folder;
-import wicket.util.file.Path;
+import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.time.Duration;
@@ -291,7 +293,7 @@ public final class ApplicationSettings
 	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
 	/** Filesystem Path to search for resources */
-	private Path resourcePath = new Path();
+	private WebApplicationPath resourcePath = null;
 
 	/** Frequency at which files should be polled */
 	private Duration resourcePollFrequency = null;
@@ -379,19 +381,21 @@ public final class ApplicationSettings
 	
 	/**
 	 * Configures application settings for a given configuration type.
-	 * 
+	 * @param servletContext 
+	 * 			  The servlet context what is the start of all the relative paths inside the webapp itself.
 	 * @param configurationType
 	 *            The configuration type. Must currently be either "development"
 	 *            or "deployment".
 	 */
-	public final void configure(final String configurationType)
+	public final void configure(final ServletContext servletContext, final String configurationType)
 	{
-		configure(configurationType, "src/java");
+		configure(servletContext,configurationType, "src/java");
 	}
 
 	/**
 	 * Configures application settings for a given configuration type.
-	 * 
+	 * @param servletContext 
+	 * 			  The servlet context what is the start of all the relative paths inside the webapp itself.
 	 * @param configurationType
 	 *            The configuration type. Must currently be either "development"
 	 *            or "deployment".
@@ -400,20 +404,21 @@ public final class ApplicationSettings
 	 *            be polled for resource changes, use the system path separator to separate folders
 	 * @see File#pathSeparator
 	 */
-	public final void configure(final String configurationType, final String sourceFolder)
+	public final void configure(final ServletContext servletContext, final String configurationType, final String sourceFolder)
 	{
 		if ("development".equalsIgnoreCase(configurationType))
 		{
 			if (sourceFolder != null)
 			{
 				String[] paths = sourceFolder.split(File.pathSeparator);
-				Path path = new Path();
+				WebApplicationPath path = new WebApplicationPath(servletContext);
 				for (int i = 0; i < paths.length; i++)
 				{
 					Folder folder = new Folder(paths[i]);
 					if (!folder.exists())
 					{
-						log.warn("Source folder " + folder.getAbsolutePath() + " does not exist.");
+						log.info("Source folder " + folder.getAbsolutePath() + " does not exist adding this as an web app resource");
+						path.add(paths[i]);
 					}
 					else
 						path.add(folder);
@@ -578,12 +583,12 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Gets any filesystem path to use when searching for resources.
+	 * Gets any filesystem path or webapplication path to use when searching for resources.
 	 * 
 	 * @return Returns the resourcePath.
-	 * @see ApplicationSettings#setResourcePath(Path)
+	 * @see ApplicationSettings#setResourcePath(WebApplicationPath)
 	 */
-	public final Path getResourcePath()
+	public final WebApplicationPath getResourcePath()
 	{
 		return resourcePath;
 	}
@@ -904,7 +909,7 @@ public final class ApplicationSettings
 	 *            The resourcePath to set
 	 * @return This
 	 */
-	public final ApplicationSettings setResourcePath(final Path resourcePath)
+	public final ApplicationSettings setResourcePath(final WebApplicationPath resourcePath)
 	{
 		this.resourcePath = resourcePath;
 
@@ -923,7 +928,7 @@ public final class ApplicationSettings
 	 * @param resourcePollFrequency
 	 *            Frequency at which to poll resources
 	 * @return This
-	 * @see ApplicationSettings#setResourcePath(Path)
+	 * @see ApplicationSettings#setResourcePath(WebApplicationPath)
 	 */
 	public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
 	{
