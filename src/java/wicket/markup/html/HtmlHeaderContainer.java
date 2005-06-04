@@ -77,7 +77,9 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 					WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
 					WebMarkupContainer headerPart = webMarkupContainer.getHeaderPart(nbrOfContributions);
 
-					if (headerPart != null)
+					// In case a Component with header has been added to the page 
+					// multiple times, the header must only be added once.
+					if ((headerPart != null) && (get(headerPart.getId()) == null))
 					{
 						autoAdd(headerPart);
 						nbrOfContributions++;
