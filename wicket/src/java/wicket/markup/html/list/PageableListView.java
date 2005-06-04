@@ -151,10 +151,11 @@ public abstract class PageableListView extends ListView
 		}
 
 		int pageCount = getPageCount();
-		if (currentPage > 0 && (currentPage >= pageCount))
+		if ((currentPage > 0) && (currentPage >= pageCount))
 		{
-			currentPage = pageCount-1;
+			currentPage = pageCount - 1;
 		}
+		
 		addStateChange(new CurrentPageChange(this.currentPage));
 		this.currentPage = currentPage;
 	}
