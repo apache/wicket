@@ -32,7 +32,7 @@ import wicket.util.string.StringList;
  * 
  * @author Jonathan Locke
  */
-public final class WebApplicationPath
+public final class WebApplicationPath implements IResourceFinder
 {
 	/** The list of urls in the path */
 	private final List webappPaths = new ArrayList();
@@ -55,7 +55,7 @@ public final class WebApplicationPath
 	 *            add a path that is lookup through the servlet context
 	 * @return The path, for invocation chaining
 	 */
-	public WebApplicationPath add(String path)
+	public IResourceFinder add(String path)
 	{
 		if(!path.startsWith("/")) path = "/" + path;
 		if(!path.endsWith("/")) path += "/";
@@ -68,10 +68,9 @@ public final class WebApplicationPath
 	 * @param folder
 	 * @return The WebApplicationResources, for invocation chaining
 	 */
-	public WebApplicationPath add(final Folder folder)
+	public IResourceFinder add(final Folder folder)
 	{
 		folders.add(folder);
-
 		return this;
 	}
 
