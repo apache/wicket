@@ -377,7 +377,6 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		{
 			public Object getObject(Component component)
 			{
-				CSS.bind(getApplication());
 				String url = getPage().urlFor(CSS.getPath());
 				return url;
 			};
