@@ -176,7 +176,7 @@ public abstract class WebApplication extends Application
 		final String configuration = wicketServlet.getInitParameter("configuration");
 		if (configuration != null)
 		{
-			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
+			getSettings().configure(wicketServlet.getServletContext(),configuration, wicketServlet.getInitParameter("sourceFolder"));
 		}
 	}
 
