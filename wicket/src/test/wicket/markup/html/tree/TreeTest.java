@@ -27,7 +27,11 @@ import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 
 /**
- * @author Chris Turner
+ * Test for the Tree component. Also tests header insertion as that is what the Tree
+ * component uses.
+ *
+ * @author Juergen Donnerstag
+ * @author Eelco Hillenius
  */
 public class TreeTest extends TestCase
 {
@@ -47,18 +51,10 @@ public class TreeTest extends TestCase
 	}
 
 	/**
+	 * Test Tree put on a plain page. Tests first render, and render after a node click.
 	 * @throws Exception
 	 */
-/*	
-	public void testRenderHomePage_1() throws Exception
-	{
-	    executeTest(TreePage_1.class, "TreePageExpectedResult_1.html");
-	}
-*/
-	/**
-	 * @throws Exception
-	 */
-	public void testRenderHomePage_1() throws Exception
+	public void testRenderTreePage_1() throws Exception
 	{
 		System.out.println("=== " + TreePage.class.getName() + " ===");
 		
@@ -82,6 +78,36 @@ public class TreeTest extends TestCase
 		document = application.getServletResponse().getDocument();
 
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "TreePageExpectedResult_1-1.html"));
+	}
+
+	/**
+	 * Test Tree put on a page with a border. Tests first render, and render after a node click.
+	 * @throws Exception
+	 */
+	public void testRenderTreePageWithBorder_1() throws Exception
+	{
+		System.out.println("=== " + TreePageWithBorder.class.getName() + " ===");
+		
+		application = new MockWebApplication(null);
+		application.getPages().setHomePage(TreePageWithBorder.class);
+
+		// Do the processing
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
+
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		//System.out.println(document);
+
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "TreePageWithBorderExpectedResult_1.html"));
+
+		TreePage page = (TreePage)application.getLastRenderedPage();
+		application.setupRequestAndResponse();
+		application.getServletRequest().setRequestToRedirectString("?component=0.tree.tree.3.node.junctionLink&version=0&interface=ILinkListener");
+		application.processRequestCycle();
+		document = application.getServletResponse().getDocument();
+
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "TreePageWithBorderExpectedResult_1-1.html"));
 	}
 
 	/**
