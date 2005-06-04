@@ -19,8 +19,7 @@ package wicket.util.resource.locator;
 
 import java.util.Locale;
 
-import wicket.util.file.Path;
-import wicket.util.file.WebApplicationPath;
+import wicket.util.file.IResourceFinder;
 import wicket.util.resource.IResourceStream;
 
 /**
@@ -37,11 +36,11 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 	 * @param path
 	 *            The path to search
 	 */
-	public DefaultResourceStreamLocator(final WebApplicationPath path)
+	public DefaultResourceStreamLocator(final IResourceFinder path)
 	{
 		super(new IResourceStreamLocator()
 		{
-			private final WebAppPathResourceStreamLocator pathLocator = new WebAppPathResourceStreamLocator(path);
+			private final ResourceFinderStreamLocator pathLocator = new ResourceFinderStreamLocator(path);
 			private final ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
 
 			public IResourceStream locate(String path, String style, Locale locale, String extension)
@@ -55,31 +54,4 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 			}
 		});
 	}
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param path
-	 *            The path to search
-	 */
-	public DefaultResourceStreamLocator(final Path path)
-	{
-		super(new IResourceStreamLocator()
-		{
-			private final PathResourceStreamLocator pathLocator = new PathResourceStreamLocator(path);
-			private final ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
-
-			public IResourceStream locate(String path, String style, Locale locale, String extension)
-			{
-				IResourceStream resource = pathLocator.locate(path, style, locale, extension);
-				if (resource != null)
-				{
-					return resource;
-				}
-				return classLoaderLocator.locate(path, style, locale, extension);
-			}
-		});
-	}
-	
-	
 }
