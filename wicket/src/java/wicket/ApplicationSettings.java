@@ -33,7 +33,9 @@ import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
 import wicket.util.crypt.SunJceCrypt;
 import wicket.util.file.Folder;
+import wicket.util.file.IResourceFinder;
 import wicket.util.file.Path;
+import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.time.Duration;
@@ -158,28 +160,29 @@ import wicket.util.time.Duration;
  * @author Juergen Donnerstag
  * @author Johan Compagner
  */
-public final class ApplicationSettings
+public class ApplicationSettings
 {
 	/**
-	 * Indicates that an exception page appropriate to development should be
-	 * shown when an unexpected exception is thrown.
+	 * All logical parts of a request (the action and render part) are handled within the
+	 * same request. To enable a the client side redirect for a request, users can set the
+	 * 'redirect' property of {@link RequestCycle} to true (getRequestCycle.setRedirect(true)),
+	 * after which the behaviour will be like RenderStragegy 'REDIRECT_TO_RENDER'.
+	 * <p>
+	 * This strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy,
+	 * and doesn't have some of the potential problems of it, it also does not solve the
+	 * double submit problem. It is however the best option to use when you want to do
+	 * sophisticated (non-sticky session) clustering.
+	 * </p>
 	 */
-	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_EXCEPTION_PAGE");
+	public static final RenderStrategy ONE_PASS_RENDER = new RenderStrategy("ONE_PASS_RENDER");
 
 	/**
-	 * Indicates a generic internal error page should be shown when an
-	 * unexpected exception is thrown.
+	 * All logical parts of a request (the action and render part) are handled within the
+	 * same request, but instead of streaming the render result to the browser directly,
+	 * the result is cached on the server. A client side redirect command is issued to the
+	 * browser specifically to render this request.
 	 */
-	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_INTERNAL_ERROR_PAGE");
-
-	/**
-	 * Indicates that no exception page should be shown when an unexpected
-	 * exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_NO_EXCEPTION_PAGE");
+	public static final RenderStrategy REDIRECT_TO_BUFFER = new RenderStrategy("REDIRECT_BUFFER");
 
 	/**
 	 * The render part of a request (opposed to the 'action part' which is either the
@@ -208,28 +211,27 @@ public final class ApplicationSettings
 	 * </p>
 	 */
 	public static final RenderStrategy REDIRECT_TO_RENDER = new RenderStrategy("CLIENT_SIDE_REDIRECT");
+	
+	/**
+	 * Indicates that an exception page appropriate to development should be
+	 * shown when an unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_EXCEPTION_PAGE");
 
 	/**
-	 * All logical parts of a request (the action and render part) are handled within the
-	 * same request. To enable a the client side redirect for a request, users can set the
-	 * 'redirect' property of {@link RequestCycle} to true (getRequestCycle.setRedirect(true)),
-	 * after which the behaviour will be like RenderStragegy 'REDIRECT_TO_RENDER'.
-	 * <p>
-	 * This strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy,
-	 * and doesn't have some of the potential problems of it, it also does not solve the
-	 * double submit problem. It is however the best option to use when you want to do
-	 * sophisticated (non-sticky session) clustering.
-	 * </p>
+	 * Indicates a generic internal error page should be shown when an
+	 * unexpected exception is thrown.
 	 */
-	public static final RenderStrategy ONE_PASS_RENDER = new RenderStrategy("ONE_PASS_RENDER");
+	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_INTERNAL_ERROR_PAGE");
 
 	/**
-	 * All logical parts of a request (the action and render part) are handled within the
-	 * same request, but instead of streaming the render result to the browser directly,
-	 * the result is cached on the server. A client side redirect command is issued to the
-	 * browser specifically to render this request.
+	 * Indicates that no exception page should be shown when an unexpected
+	 * exception is thrown.
 	 */
-	public static final RenderStrategy REDIRECT_TO_BUFFER = new RenderStrategy("REDIRECT_BUFFER");
+	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_NO_EXCEPTION_PAGE");
 	
 	/** Log */
 	private static final Log log = LogFactory.getLog(ApplicationSettings.class);
@@ -237,22 +239,11 @@ public final class ApplicationSettings
 	/** The application */
 	private Application application;
 
-	/**
-	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'.
-	 * This property influences the default way in how a logical request that consists
-	 * of an 'action' and a 'render' part is handled, and is mainly used to have a means
-	 * to circumvent the 'refresh' problem.
-	 */
-	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
-
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
 
 	/** True if the response should be buffered */
 	private boolean bufferResponse = true;
-
-	/** Wicket namespace to identify wicket components */
-	private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
 
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
@@ -284,20 +275,28 @@ public final class ApplicationSettings
 	/** Encryption key used to encode/decode passwords e.g. */
 	private String encryptionKey = "WiCkEt-FRAMEwork";
 
-	/** The maximum number of versions of a page to track */
-	private int maxPageVersions = 10;
-
 	/** The maximum number of pages in a session */
 	private int maxPages = 10;
+
+	/** The maximum number of versions of a page to track */
+	private int maxPageVersions = 10;
 
 	/** True if string resource loaders have been overridden */
 	private boolean overriddenStringResourceLoaders = false;
 
-	/** Frequency at which files should be polled */
-	private Duration resourcePollFrequency = null;
+	/**
+	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'.
+	 * This property influences the default way in how a logical request that consists
+	 * of an 'action' and a 'render' part is handled, and is mainly used to have a means
+	 * to circumvent the 'refresh' problem.
+	 */
+	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
 	/** Filesystem Path to search for resources */
-	private Path resourcePath = new Path();
+	private IResourceFinder resourcePath = null;
+
+	/** Frequency at which files should be polled */
+	private Duration resourcePollFrequency = null;
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(2);
@@ -321,16 +320,8 @@ public final class ApplicationSettings
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
 
-	/**
-	 * Enumerated type for different ways of displaying unexpected exceptions.
-	 */
-	public static final class UnexpectedExceptionDisplay extends EnumeratedType
-	{
-		UnexpectedExceptionDisplay(final String name)
-		{
-			super(name);
-		}
-	}
+	/** Wicket namespace to identify wicket components */
+	private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
 
 	/**
 	 * Enumerated type for different ways of handling the render part of requests.
@@ -338,6 +329,17 @@ public final class ApplicationSettings
 	public static final class RenderStrategy extends EnumeratedType
 	{
 		RenderStrategy(final String name)
+		{
+			super(name);
+		}
+	}
+
+	/**
+	 * Enumerated type for different ways of displaying unexpected exceptions.
+	 */
+	public static final class UnexpectedExceptionDisplay extends EnumeratedType
+	{
+		UnexpectedExceptionDisplay(final String name)
 		{
 			super(name);
 		}
@@ -379,7 +381,6 @@ public final class ApplicationSettings
 	
 	/**
 	 * Configures application settings for a given configuration type.
-	 * 
 	 * @param configurationType
 	 *            The configuration type. Must currently be either "development"
 	 *            or "deployment".
@@ -391,7 +392,6 @@ public final class ApplicationSettings
 
 	/**
 	 * Configures application settings for a given configuration type.
-	 * 
 	 * @param configurationType
 	 *            The configuration type. Must currently be either "development"
 	 *            or "deployment".
@@ -407,16 +407,19 @@ public final class ApplicationSettings
 			if (sourceFolder != null)
 			{
 				String[] paths = sourceFolder.split(File.pathSeparator);
-				Path path = new Path();
+				IResourceFinder path = createResourceFinder();
 				for (int i = 0; i < paths.length; i++)
 				{
 					Folder folder = new Folder(paths[i]);
 					if (!folder.exists())
 					{
-						log.warn("Source folder " + folder.getAbsolutePath() + " does not exist.");
+						log.info("Source folder " + folder.getAbsolutePath() + " does not exist adding this as an web app resource");
+						path.add(paths[i]);
 					}
 					else
+					{
 						path.add(folder);
+					}
 				}
 				setResourcePath(path);
 				setResourcePollFrequency(Duration.ONE_SECOND);
@@ -435,58 +438,16 @@ public final class ApplicationSettings
 					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
 		}
 	}
-
+	
+	
 	/**
-	 * Gets in what way the render part of a request is handled.
-	 * @return the render strategy
+	 * This method returns a default Path object
+	 * Sub classes should override this implementation to return there special ResourceFinders 
+	 * @return IResourceFinder implementation
 	 */
-	public final RenderStrategy getRenderStrategy()
+	public IResourceFinder createResourceFinder()
 	{
-		return renderStrategy;
-	}
-
-	/**
-	 * Sets in what way the render part of a request is handled. Basically, there are two
-	 * different options:
-	 * <ul>
-	 * <li> Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one
-	 * physical request. This is efficient, and is the best option if you want to do
-	 * sophisticated clustering. It does not however, shield you from what is commonly
-	 * known as the <i>Double submit problem</i> </li>
-	 * <li> Using a redirect. This follows the pattern <a
-	 * href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost" >as
-	 * described at the serverside</a> and that is commonly known as Redirect after post.
-	 * Wicket takes it one step further to do any rendering after a redirect, so that not
-	 * only form submits are shielded from the double submit problem, but also the
-	 * IRequestListener handlers (that could be e.g. a link that deletes a row). With this
-	 * pattern, you have two options to choose from:
-	 * <ul>
-	 * <li> ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the 'action'
-	 * part of the request, which is either page construction (bookmarkable pages or the
-	 * home page) or calling a IRequestListener handler, such as Link.onClick. When that
-	 * part is done, a redirect is issued to the render part, which does all the rendering
-	 * of the page and its components. <strong>Be aware</strong> that this may mean,
-	 * depending on whether you access any models in the action part of the request, that
-	 * attachement and detachement of some models is done twice for a request. </li>
-	 * <li> ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action-
-	 * and the render part of the request in one physical request, but instead of
-	 * streaming the result to the browser directly, it is kept in memory, and a redirect
-	 * is issue to get this buffered result (after which it is immediately removed). This
-	 * option currently is the default render strategy, as it shields you from the double
-	 * submit problem, while being more efficient and less error prone regarding to
-	 * detachable models. </li>
-	 * </ul>
-	 * Note that this parameter sets the default behaviour, but that you can manually set
-	 * whether any redirecting is done by calling method RequestCycle.setRedirect. Setting
-	 * the redirect flag when the application is configured to use ONE_PASS_RENDER, will
-	 * result in a redirect of type REDIRECT_TO_RENDER. When the application is configured
-	 * to use REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to
-	 * false, will result in that request begin rendered and streamed in one pass.
-	 * @param renderStrategy the render strategy that should be used by default.
-	 */
-	public final void setRenderStrategy(RenderStrategy renderStrategy)
-	{
-		this.renderStrategy = renderStrategy;
+		return new Path();
 	}
 
 	/**
@@ -508,19 +469,6 @@ public final class ApplicationSettings
 	public final boolean getBufferResponse()
 	{
 		return bufferResponse;
-	}
-
-	/**
-	 * Gets wicket namespace in use in this application. Normally, this is
-	 * "wicket", but it can be changed in the unlikely event of nameing 
-	 * conflicts or for use by of pre-processors e.g. 
-	 * 
-	 * @return The current wicket namespace
-	 * @see ApplicationSettings#setWicketNamespace(String)
-	 */
-	public final String getWicketNamespace()
-	{
-		return wicketNamespace;
 	}
 
 	/**
@@ -616,14 +564,6 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * @return Returns the maxPageVersions.
-	 */
-	public final int getMaxPageVersions()
-	{
-		return maxPageVersions;
-	}
-
-	/**
 	 * Gets the maximum number of pages held in a session.
 	 * 
 	 * @return Returns the maxPages.
@@ -635,23 +575,44 @@ public final class ApplicationSettings
 	}
 
 	/**
+	 * @return Returns the maxPageVersions.
+	 */
+	public final int getMaxPageVersions()
+	{
+		return maxPageVersions;
+	}
+
+	/**
+	 * Gets in what way the render part of a request is handled.
+	 * @return the render strategy
+	 */
+	public final RenderStrategy getRenderStrategy()
+	{
+		return renderStrategy;
+	}
+
+	/**
+	 * Gets any filesystem path or webapplication path to use when searching for resources.
+	 * 
+	 * @return Returns the resourcePath.
+	 * @see ApplicationSettings#setResourcePath(WebApplicationPath)
+	 */
+	public final IResourceFinder getResourcePath()
+	{
+		if(resourcePath == null)
+		{
+			resourcePath = createResourceFinder();
+		}
+		return resourcePath;
+	}
+
+	/**
 	 * @return Returns the resourcePollFrequency.
 	 * @see ApplicationSettings#setResourcePollFrequency(Duration)
 	 */
 	public final Duration getResourcePollFrequency()
 	{
 		return resourcePollFrequency;
-	}
-
-	/**
-	 * Gets any filesystem path to use when searching for resources.
-	 * 
-	 * @return Returns the resourcePath.
-	 * @see ApplicationSettings#setResourcePath(Path)
-	 */
-	public final Path getResourcePath()
-	{
-		return resourcePath;
 	}
 
 	/**
@@ -709,6 +670,19 @@ public final class ApplicationSettings
 	}
 
 	/**
+	 * Gets wicket namespace in use in this application. Normally, this is
+	 * "wicket", but it can be changed in the unlikely event of nameing 
+	 * conflicts or for use by of pre-processors e.g. 
+	 * 
+	 * @return The current wicket namespace
+	 * @see ApplicationSettings#setWicketNamespace(String)
+	 */
+	public final String getWicketNamespace()
+	{
+		return wicketNamespace;
+	}
+
+	/**
 	 * Application default for automatic link resolution.
 	 * Please @see wicket.AutoLinkResolver and
 	 * @see wicket.markup.parser.filter.WicketLinkTagHandler
@@ -729,27 +703,6 @@ public final class ApplicationSettings
 	public final void setBufferResponse(boolean bufferResponse)
 	{
 		this.bufferResponse = bufferResponse;
-	}
-
-	/**
-	 * Sets wicket namespace in use in this application. Normally, this is
-	 * "wicket", but it can be changed in the unlikely event of
-	 * nameing conflicts.
-	 * 
-	 * @param namespace
-	 *            The wicket namespace to set.
-	 * @return This
-	 */
-	public final ApplicationSettings setWicketNamespace(final String namespace)
-	{
-		if (!MetaPattern.VARIABLE_NAME.matcher(namespace).matches())
-		{
-			throw new IllegalArgumentException(
-					"Wicket namespace must be a valid variable name ([a-z][a-z0-9_]*)");
-		}
-
-		this.wicketNamespace = namespace;
-		return this;
 	}
 
 	/**
@@ -884,19 +837,6 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * @param maxPageVersions
-	 *            The maxPageVersion to set.
-	 */
-	public final void setMaxPageVersions(int maxPageVersions)
-	{
-		if (maxPageVersions < 0)
-		{
-			throw new IllegalArgumentException("Value for maxPageVersions must be >= 0");
-		}
-		this.maxPageVersions = maxPageVersions;
-	}
-
-	/**
 	 * Sets the maximum number of pages held in a session. If a page is added to
 	 * a user's session when the session is full, the oldest page in the session
 	 * will be expired. The primary purpose of setting a maximum number of pages
@@ -917,20 +857,60 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Sets the resource polling frequency. This is the duration of time between
-	 * checks of resource modification times. If a resource, such as an HTML
-	 * file, has changed, it will be reloaded. Default is for no resource
-	 * polling to occur.
-	 * 
-	 * @param resourcePollFrequency
-	 *            Frequency at which to poll resources
-	 * @return This
-	 * @see ApplicationSettings#setResourcePath(Path)
+	 * @param maxPageVersions
+	 *            The maxPageVersion to set.
 	 */
-	public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
+	public final void setMaxPageVersions(int maxPageVersions)
 	{
-		this.resourcePollFrequency = resourcePollFrequency;
-		return this;
+		if (maxPageVersions < 0)
+		{
+			throw new IllegalArgumentException("Value for maxPageVersions must be >= 0");
+		}
+		this.maxPageVersions = maxPageVersions;
+	}
+
+	/**
+	 * Sets in what way the render part of a request is handled. Basically, there are two
+	 * different options:
+	 * <ul>
+	 * <li> Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one
+	 * physical request. This is efficient, and is the best option if you want to do
+	 * sophisticated clustering. It does not however, shield you from what is commonly
+	 * known as the <i>Double submit problem</i> </li>
+	 * <li> Using a redirect. This follows the pattern <a
+	 * href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost" >as
+	 * described at the serverside</a> and that is commonly known as Redirect after post.
+	 * Wicket takes it one step further to do any rendering after a redirect, so that not
+	 * only form submits are shielded from the double submit problem, but also the
+	 * IRequestListener handlers (that could be e.g. a link that deletes a row). With this
+	 * pattern, you have two options to choose from:
+	 * <ul>
+	 * <li> ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the 'action'
+	 * part of the request, which is either page construction (bookmarkable pages or the
+	 * home page) or calling a IRequestListener handler, such as Link.onClick. When that
+	 * part is done, a redirect is issued to the render part, which does all the rendering
+	 * of the page and its components. <strong>Be aware</strong> that this may mean,
+	 * depending on whether you access any models in the action part of the request, that
+	 * attachement and detachement of some models is done twice for a request. </li>
+	 * <li> ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action-
+	 * and the render part of the request in one physical request, but instead of
+	 * streaming the result to the browser directly, it is kept in memory, and a redirect
+	 * is issue to get this buffered result (after which it is immediately removed). This
+	 * option currently is the default render strategy, as it shields you from the double
+	 * submit problem, while being more efficient and less error prone regarding to
+	 * detachable models. </li>
+	 * </ul>
+	 * Note that this parameter sets the default behaviour, but that you can manually set
+	 * whether any redirecting is done by calling method RequestCycle.setRedirect. Setting
+	 * the redirect flag when the application is configured to use ONE_PASS_RENDER, will
+	 * result in a redirect of type REDIRECT_TO_RENDER. When the application is configured
+	 * to use REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to
+	 * false, will result in that request begin rendered and streamed in one pass.
+	 * @param renderStrategy the render strategy that should be used by default.
+	 */
+	public final void setRenderStrategy(RenderStrategy renderStrategy)
+	{
+		this.renderStrategy = renderStrategy;
 	}
 
 	/**
@@ -942,13 +922,30 @@ public final class ApplicationSettings
 	 *            The resourcePath to set
 	 * @return This
 	 */
-	public final ApplicationSettings setResourcePath(final Path resourcePath)
+	public final ApplicationSettings setResourcePath(final IResourceFinder resourcePath)
 	{
 		this.resourcePath = resourcePath;
 
 		// Cause resource locator to get recreated
 		application.resourcePathChanged();
 
+		return this;
+	}
+
+	/**
+	 * Sets the resource polling frequency. This is the duration of time between
+	 * checks of resource modification times. If a resource, such as an HTML
+	 * file, has changed, it will be reloaded. Default is for no resource
+	 * polling to occur.
+	 * 
+	 * @param resourcePollFrequency
+	 *            Frequency at which to poll resources
+	 * @return This
+	 * @see ApplicationSettings#setResourcePath(WebApplicationPath)
+	 */
+	public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
+	{
+		this.resourcePollFrequency = resourcePollFrequency;
 		return this;
 	}
 
@@ -1042,6 +1039,27 @@ public final class ApplicationSettings
 	public final void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		this.versionPagesByDefault = pagesVersionedByDefault;
+	}
+
+	/**
+	 * Sets wicket namespace in use in this application. Normally, this is
+	 * "wicket", but it can be changed in the unlikely event of
+	 * nameing conflicts.
+	 * 
+	 * @param namespace
+	 *            The wicket namespace to set.
+	 * @return This
+	 */
+	public final ApplicationSettings setWicketNamespace(final String namespace)
+	{
+		if (!MetaPattern.VARIABLE_NAME.matcher(namespace).matches())
+		{
+			throw new IllegalArgumentException(
+					"Wicket namespace must be a valid variable name ([a-z][a-z0-9_]*)");
+		}
+
+		this.wicketNamespace = namespace;
+		return this;
 	}
 
 	/**

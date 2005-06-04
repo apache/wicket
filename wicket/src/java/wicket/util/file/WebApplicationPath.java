@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import wicket.util.string.StringList;
 
 /**
@@ -30,66 +32,45 @@ import wicket.util.string.StringList;
  * 
  * @author Jonathan Locke
  */
-public final class Path implements IResourceFinder
+public final class WebApplicationPath implements IResourceFinder
 {
+	/** The list of urls in the path */
+	private final List webappPaths = new ArrayList();
 	/** The list of folders in the path */
 	private final List folders = new ArrayList();
 
+	private final ServletContext servletContext;
 	/**
 	 * Constructor
+	 * @param servletContext 
+	 * 					The webapplication context where the resources must be loaded from
 	 */
-	public Path()
+	public WebApplicationPath(ServletContext servletContext)
 	{
+		this.servletContext = servletContext;
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param folder
-	 *            A single folder to add to the path
-	 */
-	public Path(final Folder folder)
-	{
-		add(folder);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param folders
-	 *            An array of folders to add to the path
-	 */
-	public Path(final Folder[] folders)
-	{
-		for (int i = 0; i < folders.length; i++)
-		{
-			add(folders[i]);
-		}
-	}
-
-	/**
-	 * @param folder
-	 *            Folder to add to path
+	 * @param path
+	 *            add a path that is lookup through the servlet context
 	 * @return The path, for invocation chaining
-	 */
-	public IResourceFinder add(final Folder folder)
-	{
-		if (!folder.exists())
-		{
-			throw new IllegalArgumentException("Folder " + folder + " does not exist");
-		}
-
-		folders.add(folder);
-
-		return this;
-	}
-	
-	/**
-	 * @see wicket.util.file.IResourceFinder#add(java.lang.String)
 	 */
 	public IResourceFinder add(String path)
 	{
-		// These paths are ignored in this IResourceFinder implementation
+		if(!path.startsWith("/")) path = "/" + path;
+		if(!path.endsWith("/")) path += "/";
+		webappPaths.add(path);
+
+		return this;
+	}
+
+	/**
+	 * @param folder
+	 * @return The WebApplicationResources, for invocation chaining
+	 */
+	public IResourceFinder add(final Folder folder)
+	{
+		folders.add(folder);
 		return this;
 	}
 
@@ -98,16 +79,15 @@ public final class Path implements IResourceFinder
 	 * 
 	 * @param pathname
 	 *            The filename with possible path
-	 * @return The url located on the path
+	 * @return The file located on the path
 	 */
 	public URL find(final String pathname)
 	{
 		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
 		{
-			final Folder folder = (Folder)iterator.next();
-			final File file = new File(folder, pathname);
-
-			if (file.exists())
+			Folder folder = (Folder)iterator.next();
+			File file = new File(folder,pathname);
+			if(file.exists())
 			{
 				try
 				{
@@ -119,24 +99,24 @@ public final class Path implements IResourceFinder
 				}
 			}
 		}
+		for (final Iterator iterator = webappPaths.iterator(); iterator.hasNext();)
+		{
+			final String path = (String)iterator.next();
+			try
+			{
+				final URL file = servletContext.getResource(path + pathname);
+				if (file != null)
+				{
+					return file;
+				}
+			}
+			catch (Exception ex)
+			{
+				// ignore, file couldn't be found
+			}
+		}
 
 		return null;
-	}
-
-	/**
-	 * @return Returns the folders.
-	 */
-	public List getFolders()
-	{
-		return folders;
-	}
-
-	/**
-	 * @return Number of folders on the path.
-	 */
-	public int size()
-	{
-		return folders.size();
 	}
 
 	/**
@@ -144,6 +124,6 @@ public final class Path implements IResourceFinder
 	 */
 	public String toString()
 	{
-		return "[folders = " + StringList.valueOf(folders) + "]";
+		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: " + StringList.valueOf(webappPaths)+ "]";
 	}
 }
