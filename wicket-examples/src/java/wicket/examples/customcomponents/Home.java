@@ -63,6 +63,6 @@ public class Home extends WicketExamplePage
 
 		TextField dateField3 = new TextField("date3", new Model(new Date()), Date.class);
 		add(dateField3);
-		add(new DatePicker("datePicker3", dateField2, DatePicker.BUTTON_ICON_3));
+		add(new DatePicker("datePicker3", dateField3, DatePicker.BUTTON_ICON_3));
 	}
 }
