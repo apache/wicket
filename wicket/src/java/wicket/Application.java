@@ -153,7 +153,7 @@ public abstract class Application
 	private ModificationWatcher resourceWatcher;
 
 	/** Settings for application. */
-	private final ApplicationSettings settings = new ApplicationSettings(this);
+	private ApplicationSettings settings;
 	
 	/** Shared resources for the application */
 	private final SharedResources sharedResources = new SharedResources();
@@ -340,7 +340,20 @@ public abstract class Application
 	 */
 	public ApplicationSettings getSettings()
 	{
+		if(settings == null)
+		{
+			settings = createApplicationSettings();
+		}
 		return settings;
+	}
+	
+	/**
+	 * Subclasses could override this to give there own implementation of ApplicaitonSettings
+	 * @return An instanceof an ApplicaitonSettings class.
+	 */
+	public ApplicationSettings createApplicationSettings()
+	{
+		return new ApplicationSettings(this);
 	}
 	
 	/**
