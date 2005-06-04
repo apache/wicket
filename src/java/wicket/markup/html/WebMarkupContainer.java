@@ -110,9 +110,6 @@ public class WebMarkupContainer extends MarkupContainer
 		                {
 		                    headerContainer.add((Component) iter.next());
 		                }
-		                
-		                // Cleanup; no longer needed.
-		                this.headerComponents = null;
 		            }
 		            return headerContainer;
 		        }
