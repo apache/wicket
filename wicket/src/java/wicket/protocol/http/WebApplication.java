@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
+import wicket.ApplicationSettings;
 import wicket.AutoLinkResolver;
 import wicket.ISessionFactory;
 import wicket.Session;
@@ -36,6 +37,8 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.response.BufferedResponse;
+import wicket.util.file.IResourceFinder;
+import wicket.util.file.WebApplicationPath;
 import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
@@ -176,7 +179,7 @@ public abstract class WebApplication extends Application
 		final String configuration = wicketServlet.getInitParameter("configuration");
 		if (configuration != null)
 		{
-			getSettings().configure(wicketServlet.getServletContext(),configuration, wicketServlet.getInitParameter("sourceFolder"));
+			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
 		}
 	}
 
@@ -312,5 +315,23 @@ public abstract class WebApplication extends Application
 			}
 		}
 		sessionMap.put(requestUri, renderedResponse);
+	}
+	
+	
+	/**
+	 * @see wicket.Application#createApplicationSettings()
+	 */
+	public ApplicationSettings createApplicationSettings()
+	{
+		return new ApplicationSettings(this) {
+			
+			/**
+			 * @see wicket.ApplicationSettings#createResourceFinder()
+			 */
+			public IResourceFinder createResourceFinder()
+			{
+				return new WebApplicationPath(getWicketServlet().getServletContext());
+			}
+		};
 	}
 }
