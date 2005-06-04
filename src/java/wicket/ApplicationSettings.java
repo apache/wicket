@@ -23,8 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,6 +33,8 @@ import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
 import wicket.util.crypt.SunJceCrypt;
 import wicket.util.file.Folder;
+import wicket.util.file.IResourceFinder;
+import wicket.util.file.Path;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.parse.metapattern.MetaPattern;
@@ -160,7 +160,7 @@ import wicket.util.time.Duration;
  * @author Juergen Donnerstag
  * @author Johan Compagner
  */
-public final class ApplicationSettings
+public class ApplicationSettings
 {
 	/**
 	 * All logical parts of a request (the action and render part) are handled within the
@@ -293,7 +293,7 @@ public final class ApplicationSettings
 	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
 	/** Filesystem Path to search for resources */
-	private WebApplicationPath resourcePath = null;
+	private IResourceFinder resourcePath = null;
 
 	/** Frequency at which files should be polled */
 	private Duration resourcePollFrequency = null;
@@ -381,21 +381,17 @@ public final class ApplicationSettings
 	
 	/**
 	 * Configures application settings for a given configuration type.
-	 * @param servletContext 
-	 * 			  The servlet context what is the start of all the relative paths inside the webapp itself.
 	 * @param configurationType
 	 *            The configuration type. Must currently be either "development"
 	 *            or "deployment".
 	 */
-	public final void configure(final ServletContext servletContext, final String configurationType)
+	public final void configure(final String configurationType)
 	{
-		configure(servletContext,configurationType, "src/java");
+		configure(configurationType, "src/java");
 	}
 
 	/**
 	 * Configures application settings for a given configuration type.
-	 * @param servletContext 
-	 * 			  The servlet context what is the start of all the relative paths inside the webapp itself.
 	 * @param configurationType
 	 *            The configuration type. Must currently be either "development"
 	 *            or "deployment".
@@ -404,14 +400,14 @@ public final class ApplicationSettings
 	 *            be polled for resource changes, use the system path separator to separate folders
 	 * @see File#pathSeparator
 	 */
-	public final void configure(final ServletContext servletContext, final String configurationType, final String sourceFolder)
+	public final void configure(final String configurationType, final String sourceFolder)
 	{
 		if ("development".equalsIgnoreCase(configurationType))
 		{
 			if (sourceFolder != null)
 			{
 				String[] paths = sourceFolder.split(File.pathSeparator);
-				WebApplicationPath path = new WebApplicationPath(servletContext);
+				IResourceFinder path = createResourceFinder();
 				for (int i = 0; i < paths.length; i++)
 				{
 					Folder folder = new Folder(paths[i]);
@@ -421,7 +417,9 @@ public final class ApplicationSettings
 						path.add(paths[i]);
 					}
 					else
+					{
 						path.add(folder);
+					}
 				}
 				setResourcePath(path);
 				setResourcePollFrequency(Duration.ONE_SECOND);
@@ -439,6 +437,17 @@ public final class ApplicationSettings
 			throw new IllegalArgumentException(
 					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
 		}
+	}
+	
+	
+	/**
+	 * This method returns a default Path object
+	 * Sub classes should override this implementation to return there special ResourceFinders 
+	 * @return IResourceFinder implementation
+	 */
+	public IResourceFinder createResourceFinder()
+	{
+		return new Path();
 	}
 
 	/**
@@ -588,7 +597,7 @@ public final class ApplicationSettings
 	 * @return Returns the resourcePath.
 	 * @see ApplicationSettings#setResourcePath(WebApplicationPath)
 	 */
-	public final WebApplicationPath getResourcePath()
+	public final IResourceFinder getResourcePath()
 	{
 		return resourcePath;
 	}
@@ -909,7 +918,7 @@ public final class ApplicationSettings
 	 *            The resourcePath to set
 	 * @return This
 	 */
-	public final ApplicationSettings setResourcePath(final WebApplicationPath resourcePath)
+	public final ApplicationSettings setResourcePath(final IResourceFinder resourcePath)
 	{
 		this.resourcePath = resourcePath;
 
