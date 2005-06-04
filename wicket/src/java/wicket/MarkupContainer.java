@@ -158,13 +158,32 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @param component
 	 *            The component to add
+	 * @return True, if component has been added
 	 */
-	public final void autoAdd(final Component component)
+	public final boolean autoAdd(final Component component)
 	{
+/* Replace strategy */
+		if (get(component.getId()) != null)
+		{
+		    this.remove(component.getId());
+		}
 		component.setAuto(true);
-		add(component);
+	    add(component);
 		component.internalBeginRequest();
 		component.render();
+		return true;
+/* */
+/* re-use strategy 
+		if (get(component.getId()) == null)
+		{
+			component.setAuto(true);
+		    add(component);
+			component.internalBeginRequest();
+			component.render();
+			return true;
+		}
+		return false;
+*/
 	}
 
 	/**
