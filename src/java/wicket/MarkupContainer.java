@@ -652,48 +652,6 @@ public abstract class MarkupContainer extends Component
 		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
 		setMarkupStream(originalMarkupStream);
 	}
-	
-	/**
-	 * Renders the entire associated markup stream for a container but with a silent
-	 * fail.
-	 * 
-	 * @param openTagName
-	 *            the tag to render the associated markup for
-	 */
-	public final void tryRenderAssociatedMarkup(final String openTagName)
-	{
-		// Get markup associated with Border or Panel component
-		final MarkupStream originalMarkupStream = getMarkupStream();
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream();
-
-		// skip until the targetted tag is found
-		associatedMarkupStream.skipUntil(openTagName);
-		setMarkupStream(associatedMarkupStream);
-
-		if (!associatedMarkupStream.atTag())
-		{
-			associatedMarkupStream.next();
-			setMarkupStream(originalMarkupStream);
-			return;
-		}
-
-		// Get open tag in associated markup of border component
-		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
-
-		// Check for required open tag name
-		if (!(associatedMarkupStream.atOpenTag(openTagName) && (associatedMarkupOpenTag instanceof WicketTag)))
-		{
-			// default to resetting the original stream and return silently
-			setMarkupStream(originalMarkupStream);
-			return;
-		}
-
-		renderComponentTag(associatedMarkupOpenTag);
-		associatedMarkupStream.next();
-		renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
-		renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
-		setMarkupStream(originalMarkupStream);
-	}
 
 	/**
 	 * Renders markup for the body of a ComponentTag from the current position
