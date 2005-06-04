@@ -320,7 +320,7 @@ public abstract class Application
 	/**
 	 * @return Application settings
 	 */
-	public ApplicationSettings getSettings()
+	public final ApplicationSettings getSettings()
 	{
 		if(settings == null)
 		{
