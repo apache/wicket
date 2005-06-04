@@ -17,7 +17,7 @@
  */
 package wicket.markup.html;
 
-import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 
@@ -52,39 +52,6 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	    super(id);
 	    setMarkupStream(associatedMarkupStream);
 	}
-
-	/**
-	 * Render the header container component.
-	 */
-	private void renderHeadSections()
-	{
-		// collect all header parts and render them
-		getParent().visitChildren(WebMarkupContainer.class, new IVisitor()
-        {
-		    private int nbrOfContributions;
-		    
-			/**
-			 * @see wicket.Component.IVisitor#component(wicket.Component)
-			 */
-			public Object component(Component component)
-			{
-				if (component.isVisible())
-				{
-					WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
-					WebMarkupContainer headerPart = webMarkupContainer.getHeaderPart(nbrOfContributions);
-
-					// In case a Component with header has been added to the page 
-					// multiple times, the header must only be added once.
-					if ((headerPart != null) && (get(headerPart.getId()) == null))
-					{
-						autoAdd(headerPart);
-						nbrOfContributions++;
-					}
-				}
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-        });
-	}
 	
 	/**
 	 * First render the body of component. And if it is the header component 
@@ -99,9 +66,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		
 		// render the header section only, if we are on a Page
 		// Panels and Border do not need to render the header section
-		if (getParent() instanceof WebPage)
+		MarkupContainer parent = getParent();
+		if (parent instanceof IHeaderRenderer)
 		{
-		    renderHeadSections();
+		    ((IHeaderRenderer)parent).renderHeadSections(this);
 		}
 	}
 }
