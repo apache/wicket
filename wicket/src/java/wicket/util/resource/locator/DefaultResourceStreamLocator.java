@@ -20,6 +20,7 @@ package wicket.util.resource.locator;
 import java.util.Locale;
 
 import wicket.util.file.Path;
+import wicket.util.file.WebApplicationPath;
 import wicket.util.resource.IResourceStream;
 
 /**
@@ -30,6 +31,31 @@ import wicket.util.resource.IResourceStream;
  */
 public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 {
+	/**
+	 * Constructor
+	 * 
+	 * @param path
+	 *            The path to search
+	 */
+	public DefaultResourceStreamLocator(final WebApplicationPath path)
+	{
+		super(new IResourceStreamLocator()
+		{
+			private final WebAppPathResourceStreamLocator pathLocator = new WebAppPathResourceStreamLocator(path);
+			private final ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
+
+			public IResourceStream locate(String path, String style, Locale locale, String extension)
+			{
+				IResourceStream resource = pathLocator.locate(path, style, locale, extension);
+				if (resource != null)
+				{
+					return resource;
+				}
+				return classLoaderLocator.locate(path, style, locale, extension);
+			}
+		});
+	}
+	
 	/**
 	 * Constructor
 	 * 
@@ -54,4 +80,6 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 			}
 		});
 	}
+	
+	
 }
