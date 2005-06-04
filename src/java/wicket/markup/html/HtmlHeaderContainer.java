@@ -38,9 +38,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	public HtmlHeaderContainer()
 	{
 		super("_header");
-		
-		// TODO if you wish to remove <wicket:head> from output 
-		//setRenderComponentTag(false);
+		setRenderBodyOnly(true);
 	}
 	
 	/**
