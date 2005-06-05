@@ -91,7 +91,7 @@ public final class WebApplicationPath implements IResourceFinder
 			{
 				try
 				{
-					return file.toURL();
+					return file.toURI().toURL();
 				}
 				catch (MalformedURLException ex)
 				{

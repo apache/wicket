@@ -111,7 +111,7 @@ public final class Path implements IResourceFinder
 			{
 				try
 				{
-					return file.toURL();
+					return file.toURI().toURL();
 				}
 				catch (MalformedURLException ex)
 				{
