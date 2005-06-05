@@ -17,6 +17,7 @@
  */
 package wicket.util.file;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -91,7 +92,7 @@ public final class WebApplicationPath implements IResourceFinder
 			{
 				try
 				{
-					return file.toURL();
+					return file.toURI().toURL();
 				}
 				catch (MalformedURLException ex)
 				{
