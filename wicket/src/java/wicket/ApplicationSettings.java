@@ -378,12 +378,12 @@ public class ApplicationSettings
 		stringResourceLoaders.add(loader);
 		return this;
 	}
-	
+
 	/**
 	 * Configures application settings for a given configuration type.
-	 * @param configurationType
-	 *            The configuration type. Must currently be either "development"
-	 *            or "deployment".
+	 * @param configurationType The configuration type. Must currently be either
+	 *            "development" or "deployment". If the type is 'development',
+	 *            the classpath is polled for changes
 	 */
 	public final void configure(final String configurationType)
 	{
@@ -392,36 +392,51 @@ public class ApplicationSettings
 
 	/**
 	 * Configures application settings for a given configuration type.
-	 * @param configurationType
-	 *            The configuration type. Must currently be either "development"
-	 *            or "deployment".
-	 * @param sourceFolder
-	 *            If configurationType is "development", then this folder will
-	 *            be polled for resource changes, use the system path separator to separate folders
+	 * @param configurationType The configuration type. Must currently be either
+	 *            "development" or "deployment". If the type is 'development',
+	 *            the given resourcePath is polled for changes
+	 * @param resourcePath path for looking up resources
 	 * @see File#pathSeparator
 	 */
-	public final void configure(final String configurationType, final String sourceFolder)
+	public final void configure(final String configurationType, final String resourcePath)
 	{
+		IResourceFinder path = null;
+		if (resourcePath != null)
+		{
+			path = createResourceFinder();
+			Folder folder = new Folder(resourcePath);
+			if (!folder.exists())
+			{
+				log.info("Source folder " + folder.getAbsolutePath()
+						+ " does not exist adding this as an web app resource");
+				path.add(resourcePath);
+			}
+			else
+			{
+				path.add(folder);
+			}
+		}
+		configure(configurationType, path);
+	}
+
+	/**
+	 * Configures application settings for a given configuration type.
+	 * @param configurationType The configuration type. Must currently be either
+	 *            "development" or "deployment". If the type is 'development',
+	 *            the given resourcePath is polled for changes
+	 * @param resourcePath path for looking up resources
+	 * @see File#pathSeparator
+	 */
+	public final void configure(final String configurationType, final IResourceFinder resourcePath)
+	{
+		if (resourcePath != null)
+		{
+			setResourcePath(resourcePath);
+		}
 		if ("development".equalsIgnoreCase(configurationType))
 		{
-			if (sourceFolder != null)
+			if (resourcePath != null)
 			{
-				String[] paths = sourceFolder.split(File.pathSeparator);
-				IResourceFinder path = createResourceFinder();
-				for (int i = 0; i < paths.length; i++)
-				{
-					Folder folder = new Folder(paths[i]);
-					if (!folder.exists())
-					{
-						log.info("Source folder " + folder.getAbsolutePath() + " does not exist adding this as an web app resource");
-						path.add(paths[i]);
-					}
-					else
-					{
-						path.add(folder);
-					}
-				}
-				setResourcePath(path);
 				setResourcePollFrequency(Duration.ONE_SECOND);
 			}
 			setComponentUseCheck(true);
@@ -438,11 +453,10 @@ public class ApplicationSettings
 					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
 		}
 	}
-	
-	
+
 	/**
-	 * This method returns a default Path object
-	 * Sub classes should override this implementation to return there special ResourceFinders 
+	 * This method returns a default Path object Sub classes should override this
+	 * implementation to return there special ResourceFinders
 	 * @return IResourceFinder implementation
 	 */
 	public IResourceFinder createResourceFinder()
