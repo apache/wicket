@@ -37,22 +37,22 @@ import wicket.util.time.Time;
  */
 public final class UrlResourceStream extends AbstractResourceStream
 {
-	/** Logging */
+	/** Logging. */
 	private static Log log = LogFactory.getLog(UrlResourceStream.class);
 
-	/** Resource stream */
+	/** Resource stream. */
 	private transient InputStream inputStream;
 
-	/** The URL to this resource */
+	/** The URL to this resource. */
 	private URL url;
 
-	/** Length of stream */
+	/** Length of stream. */
 	private int contentLength;
 
-	/** Content type for stream */
+	/** Content type for stream. */
 	private String contentType;
 
-	/** Time the stream was last modified */
+	/** Last known time the stream was last modified. */
 	private long lastModified;
 
 	/**
@@ -151,6 +151,27 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public Time lastModifiedTime()
 	{
+		URLConnection urlConnection = null;
+		try
+		{
+			urlConnection = url.openConnection();
+
+			// update the last modified time.
+			lastModified = urlConnection.getLastModified();
+		}
+		catch (IOException e)
+		{
+			log.error("getLastModified for " + url + " failed: " + e.getMessage());
+		}
+		finally
+		{
+			// if applicable, disconnect
+			if (urlConnection != null && urlConnection instanceof HttpURLConnection) 
+	        { 
+	             ((HttpURLConnection)urlConnection).disconnect();
+	        }
+		}
+
 		return Time.milliseconds(lastModified);
 	}
 
