@@ -76,8 +76,8 @@ import wicket.util.time.Duration;
  * <i>resourcePollFrequency </i> (defaults to no polling frequency) - Frequency
  * at which resources should be polled for changes.
  * <p>
- * <i>resourcePath </i> (no default) - Set this to enable polling of resources on
- * your source path
+ * <i>resourcePath </i> (classpath) - Set this to alter the search path for
+ * resources.
  * <p>
  * <i>stripComments </i> (defaults to false) - Set to true to strip HTML
  * comments during markup loading
@@ -378,7 +378,7 @@ public class ApplicationSettings
 		stringResourceLoaders.add(loader);
 		return this;
 	}
-
+	
 	/**
 	 * Configures application settings for a given configuration type.
 	 * @param configurationType The configuration type. Must currently be either
@@ -404,17 +404,7 @@ public class ApplicationSettings
 		if (resourcePath != null)
 		{
 			path = createResourceFinder();
-			Folder folder = new Folder(resourcePath);
-			if (!folder.exists())
-			{
-				log.info("Source folder " + folder.getAbsolutePath()
-						+ " does not exist adding this as an web app resource");
-				path.add(resourcePath);
-			}
-			else
-			{
-				path.add(folder);
-			}
+			addToPath(resourcePath, path);
 		}
 		configure(configurationType, path);
 	}
@@ -465,11 +455,9 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * If true, automatic link resolution is enabled.
-	 * Please @see wicket.AutoLinkResolver and
-	 * @see wicket.markup.parser.filter.WicketLinkTagHandler
-	 * for more details.
-	 * 
+	 * If true, automatic link resolution is enabled. Please
+	 * @see wicket.AutoLinkResolver and
+	 * @see wicket.markup.parser.filter.WicketLinkTagHandler for more details.
 	 * @return Returns the automaticLinking.
 	 */
 	public final boolean getAutomaticLinking()
@@ -928,9 +916,9 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Sets a source code path to use when searching for resources. Setting a
-	 * source path can allow developers to "hot update" pages by simply changing
-	 * markup on the fly and hitting refresh in their browser.
+	 * Sets the path to use when searching for resources. By default, the
+	 * resources are location in the classpath. If you want to configure
+	 * other, additional, search paths, you can use this method
 	 * 
 	 * @param resourcePath
 	 *            The resourcePath to set
@@ -944,6 +932,22 @@ public class ApplicationSettings
 		application.resourcePathChanged();
 
 		return this;
+	}
+
+	/**
+	 * Sets the path to use when searching for resources. By default, the
+	 * resources are location in the classpath. If you want to configure
+	 * other, additional, search paths, you can use this method
+	 * 
+	 * @param resourcePath
+	 *            The resourcePath to set
+	 * @return This
+	 */
+	public final ApplicationSettings setResourcePath(final String resourcePath)
+	{
+		IResourceFinder path = createResourceFinder();
+		addToPath(resourcePath, path);
+		return setResourcePath(path);
 	}
 
 	/**
@@ -1085,5 +1089,25 @@ public class ApplicationSettings
 	final List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
+	}
+
+	/**
+	 * Adds the given resourcePath to the given path.
+	 * @param resourcePath
+	 * @param path
+	 */
+	private void addToPath(final String resourcePath, IResourceFinder path)
+	{
+		Folder folder = new Folder(resourcePath);
+		if (!folder.exists())
+		{
+			log.info("Source folder " + folder.getAbsolutePath()
+					+ " does not exist adding this as an web app resource");
+			path.add(resourcePath);
+		}
+		else
+		{
+			path.add(folder);
+		}
 	}
 }
