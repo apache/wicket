@@ -17,21 +17,16 @@
  */
 package wicket.util.file;
 
-import java.net.URL;
-
 /**
- * Knows how to find resources.
+ * Knows how to manage paths and folders, and how to find resources in them.
  *
  * @author jcompagner
  */
-public interface IResourceFinder
+public interface IResourcePath extends IResourceFinder
 {
 	/**
-	 * Looks for a given pathname along this path
-	 * 
-	 * @param pathname
-	 *            The filename with possible path
-	 * @return The url located on the path
+	 * @param folder
+	 *            Adds a folder to the path
 	 */
-	public URL find(final String pathname);
+	public void add(String folder);
 }

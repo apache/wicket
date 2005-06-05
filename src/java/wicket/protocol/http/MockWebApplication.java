@@ -117,7 +117,7 @@ public class MockWebApplication extends WebApplication
     {
     	return new ApplicationSettings(this)
     	{
-    		public IResourceFinder createResourceFinder()
+    		public IResourceFinder newResourceFinder()
     		{
     			return new WebApplicationPath(context);
     		}
