@@ -20,8 +20,9 @@ package wicket.util.file;
 import java.net.URL;
 
 /**
- * @author jcompagner
+ * Knows how to manage paths and folders, and how to find resources in them.
  *
+ * @author jcompagner
  */
 public interface IResourceFinder
 {
