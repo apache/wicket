@@ -23,6 +23,7 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
@@ -38,8 +39,8 @@ import wicket.util.lang.Classes;
  */
 public class WebMarkupContainer extends MarkupContainer
 {
-    private transient List headerComponents;
-    
+	private transient List headerComponents;
+
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -47,7 +48,7 @@ public class WebMarkupContainer extends MarkupContainer
 	{
 		super(id);
 	}
-	
+
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
@@ -73,70 +74,121 @@ public class WebMarkupContainer extends MarkupContainer
 	{
 		renderComponent(findMarkupStream());
 	}
-	
-	
+
+
 	/**
-	 * Gets the header part for this markup container. Returns null if it doesn't contribute
-	 * a header part.
-	 * @param index TODO
-	 * @return the header part for this markup container or null
-	 * 	if it doesn't contribute anything.
+	 * Gets the header part for the markup container. Returns null if it doesn't
+	 * contribute to a header.
+	 * 
+	 * @return the header part for this markup container or null if it doesn't
+	 *         contribute anything.
 	 */
-	public final WebMarkupContainer getHeaderPart(int index)
+	public final WebMarkupContainer getHeaderPart()
 	{
-	    // gracefull getAssociateMarkupStream. Throws no exception in case
-	    // markup is not found
-		final MarkupStream associatedMarkupStream = 
-		    	getApplication().getMarkupCache().getMarkupStream(this, null, false);
-		
+		// gracefull getAssociateMarkupStream. Throws no exception in case
+		// markup is not found
+		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
+				.getMarkupStream(this, null, false);
+
+		// No associated markup => no header section
 		if (associatedMarkupStream == null)
 		{
-		    return null;
+			return null;
 		}
 
-		do
+		int index = -1;
+		if (associatedMarkupStream.getHeaderIndex() == Markup.HEADER_NOT_YET_EVALUATED)
 		{
-		    final MarkupElement element = associatedMarkupStream.get();
-		    if (element instanceof WicketTag)
-		    {
-		        final WicketTag wTag = (WicketTag) element;
-		        if (wTag.isHeadTag() == true)
-		        {
-		            final String headerId = "_" + Classes.name(this.getClass()) + "Header";
-		            WebMarkupContainer headerContainer = new HtmlHeaderContainer(headerId, associatedMarkupStream);
-		            if (this.headerComponents != null)
-		            {
-		                for (Iterator iter = headerComponents.iterator(); iter.hasNext(); )
-		                {
-		                    headerContainer.add((Component) iter.next());
-		                }
-		            }
-		            return headerContainer;
-		        }
-		    }
-		} 
-		while (associatedMarkupStream.next() != null);
+			// Iterate of the markup and find <wicket:head>
+			do
+			{
+				final MarkupElement element = associatedMarkupStream.get();
+				if (element instanceof WicketTag)
+				{
+					final WicketTag wTag = (WicketTag)element;
+					if (wTag.isHeadTag() == true)
+					{
+					    index = associatedMarkupStream.getCurrentIndex();
+					    break;
+					}
+				}
+			}
+			while (associatedMarkupStream.next() != null);
+		}
+		else if (associatedMarkupStream.getHeaderIndex() == Markup.HEADER_NO_HEADER_FOUND)
+		{
+		    ; // Don't do anything
+		}
+		else
+		{
+		    index = associatedMarkupStream.getHeaderIndex();
+		}
+		
+		// If markup contains a header section, handle it now.
+		if (index >= 0)
+		{
+		    associatedMarkupStream.setCurrentIndex(index);
+		    
+			final MarkupElement element = associatedMarkupStream.get();
+			if (element instanceof WicketTag)
+			{
+				final WicketTag wTag = (WicketTag)element;
+				if (wTag.isHeadTag() == true)
+				{
+				    associatedMarkupStream.setHeaderIndex(index);
+				    
+				    // found <wicket:head>
+				    // create a unique id for the HtmlHeaderContainer to be created
+					final String headerId = "_" + Classes.name(this.getClass()) + "Header";
+					
+					// Create the header container and associate the markup with it
+					WebMarkupContainer headerContainer = new HtmlHeaderContainer(headerId,
+							associatedMarkupStream);
+					
+					// In case components are part of the region, the user must 
+					// have provided the component objects by means of addToHeader().
+					// All the component provided by the user, must now be added
+					// to the newly created header container.
+					if (this.headerComponents != null)
+					{
+						for (Iterator iter = headerComponents.iterator(); iter.hasNext();)
+						{
+							headerContainer.add((Component)iter.next());
+						}
+					}
+					
+					// The container does have a header component
+					return headerContainer;
+				}
+			}
+		}
 
 		if (this.headerComponents != null)
 		{
-		    throw new MarkupException("You have added header components but did not specify a <wicket:head> region in your Page markup: " 
-		            + this.toString());
+			throw new MarkupException(
+					"You have added header components but did not specify a <wicket:head> region in your Page markup: "
+							+ this.toString());
 		}
-    	return null;
+		
+		// Though the container does have markup, it does not have a 
+		// <wicket:head> region.
+		return null;
 	}
-	
+
 	/**
-	 * Add component to &lt;wicket:head&gt; instead of panel region. 
+	 * Components which are part of a wicket header region, must be added by
+	 * means of addToHeader() instead of add().
 	 * 
 	 * @param child
+	 *            The component to be added to the header region.
 	 */
 	public final void addToHeader(final Component child)
 	{
-	    if (this.headerComponents == null)
-	    {
-	        this.headerComponents = new ArrayList();
-	    }
-	    
-	    this.headerComponents.add(child);
+		if (this.headerComponents == null)
+		{
+			this.headerComponents = new ArrayList();
+		}
+
+		this.headerComponents.add(child);
 	}
 }
