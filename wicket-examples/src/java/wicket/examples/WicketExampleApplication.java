@@ -20,6 +20,8 @@ package wicket.examples;
 
 import java.net.URL;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
@@ -59,15 +61,15 @@ public abstract class WicketExampleApplication extends WebApplication
      */
 	protected void init()
 	{
-	    if (this.getWicketServlet().getServletContext().getInitParameter("deployment") != null)
+	    ServletContext servletContext = this.getWicketServlet().getServletContext();
+		if (servletContext.getInitParameter("deployment") != null)
 	    {
 	    	// Use deployment settings
 	        getSettings().configure("deployment");
 	    }
 	    else
 	    {
-	        // Use development settings 
-	        getSettings().configure("development", "WEB-INF/classes");
+	        getSettings().configure("development");
 	    }
 	}
     
