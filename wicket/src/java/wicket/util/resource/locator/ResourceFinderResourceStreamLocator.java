@@ -33,23 +33,23 @@ import wicket.util.resource.UrlResourceStream;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public final class ResourceFinderStreamLocator extends AbstractResourceStreamLocator
+public final class ResourceFinderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
 	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
 
-	/** The path to search along */
-	private IResourceFinder searchPath;
+	/** The finder to use to locate the resource stream */
+	private IResourceFinder finder;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param searchPath
+	 * @param finder
 	 *            The path to search
 	 */
-	public ResourceFinderStreamLocator(final IResourceFinder searchPath)
+	public ResourceFinderResourceStreamLocator(final IResourceFinder finder)
 	{
-		this.searchPath = searchPath;
+		this.finder = finder;
 	}
 
 	/**
@@ -58,10 +58,10 @@ public final class ResourceFinderStreamLocator extends AbstractResourceStreamLoc
 	protected IResourceStream locate(final String path)
 	{
 		// Log attempt
-		log.debug("Attempting to locate resource '" + path + "' on path " + searchPath);
+		log.debug("Attempting to locate resource '" + path + "' on path " + finder);
 
 		// Try to find file resource on the path supplied
-		final URL file = searchPath.find(path);
+		final URL file = finder.find(path);
 
 		// Found resource?
 		if (file != null)

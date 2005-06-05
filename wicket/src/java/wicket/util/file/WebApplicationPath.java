@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,7 +32,7 @@ import wicket.util.string.StringList;
  * 
  * @author Johan Compagner
  */
-public final class WebApplicationPath implements IResourceFinder
+public final class WebApplicationPath implements IResourcePath
 {
 	/** The list of urls in the path */
 	private final List webappPaths = new ArrayList();
@@ -42,10 +41,13 @@ public final class WebApplicationPath implements IResourceFinder
 	private final List folders = new ArrayList();
 
 	private final ServletContext servletContext;
+
 	/**
 	 * Constructor
-	 * @param servletContext 
-	 * 					The webapplication context where the resources must be loaded from
+	 * 
+	 * @param servletContext
+	 *            The webapplication context where the resources must be loaded
+	 *            from
 	 */
 	public WebApplicationPath(ServletContext servletContext)
 	{
@@ -53,27 +55,28 @@ public final class WebApplicationPath implements IResourceFinder
 	}
 
 	/**
-	 * @param path
-	 *            add a path that is lookup through the servlet context
-	 * @return The path, for invocation chaining
-	 */
-	public IResourceFinder add(String path)
-	{
-		if(!path.startsWith("/")) path = "/" + path;
-		if(!path.endsWith("/")) path += "/";
-		webappPaths.add(path);
-
-		return this;
-	}
-
-	/**
 	 * @param folder
-	 * @return The WebApplicationResources, for invocation chaining
+	 *            add a path that is lookup through the servlet context
 	 */
-	public IResourceFinder add(final Folder folder)
+	public void add(String folder)
 	{
-		folders.add(folder);
-		return this;
+		final Folder f = new Folder(folder);
+		if (f.exists())
+		{
+			folders.add(f);			
+		}
+		else
+		{
+			if (!folder.startsWith("/"))
+			{
+				folder = "/" + folder;
+			}
+			if (!folder.endsWith("/"))
+			{
+				folder += "/";
+			}
+			webappPaths.add(folder);
+		}
 	}
 
 	/**
@@ -88,8 +91,8 @@ public final class WebApplicationPath implements IResourceFinder
 		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
 		{
 			Folder folder = (Folder)iterator.next();
-			File file = new File(folder,pathname);
-			if(file.exists())
+			File file = new File(folder, pathname);
+			if (file.exists())
 			{
 				try
 				{
@@ -126,6 +129,7 @@ public final class WebApplicationPath implements IResourceFinder
 	 */
 	public String toString()
 	{
-		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: " + StringList.valueOf(webappPaths)+ "]";
+		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: "
+				+ StringList.valueOf(webappPaths) + "]";
 	}
 }

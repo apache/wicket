@@ -30,7 +30,7 @@ import wicket.util.string.StringList;
  * 
  * @author Jonathan Locke
  */
-public final class Path implements IResourceFinder
+public final class Path implements IResourcePath
 {
 	/** The list of folders in the path */
 	private final List folders = new ArrayList();
@@ -70,9 +70,8 @@ public final class Path implements IResourceFinder
 	/**
 	 * @param folder
 	 *            Folder to add to path
-	 * @return The path, for invocation chaining
 	 */
-	public IResourceFinder add(final Folder folder)
+	public void add(final Folder folder)
 	{
 		if (!folder.exists())
 		{
@@ -80,17 +79,16 @@ public final class Path implements IResourceFinder
 		}
 
 		folders.add(folder);
-
-		return this;
 	}
-	
+
 	/**
-	 * @see wicket.util.file.IResourceFinder#add(java.lang.String)
+	 * @param path
+	 *            Folder to add to path
+	 * @see wicket.util.file.IResourcePath#add(java.lang.String)
 	 */
-	public IResourceFinder add(String path)
+	public void add(final String path)
 	{
-		// These paths are ignored in this IResourceFinder implementation
-		return this;
+		add(new Folder(path));
 	}
 
 	/**
