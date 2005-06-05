@@ -40,7 +40,46 @@
 				</li>
 			</ul>
 		</section>
+		<section name="Wicket on JavaOne 2005 / San Francisco">
+			<p>
+				Come see Wicket on JavaOne this summer. Wicket is featured in two events:
+				<ul>
+				<li><a href="https://www28.cplan.com/javaone05_93_1/session_details.jsp?isid=271617&amp;ilocation_id=93-1&amp;ilanguage=english" title="TS-8617">TS-8617 POJO Web Development With Wicket</a> - 
+				    hosted by <a href="http://www.miko.com">Miko Matsumura</a> and 
+				    <a href="http://www.jroller.com/page/dashorst">Martijn Dashorst</a></li>
+				<li><a href="https://www28.cplan.com/javaone05_93_1/session_details.jsp?isid=271642&amp;ilocation_id=93-1&amp;ilanguage=english">TS-7642 Web Framework Smackdown</a> - 
+				    fought out by 
+				    		<a href="http://weblogs.java.net/blog/edburns/">Ed Burns</a>, 
+				    		<a href="http://howardlewisship.com/blog/">Howard Lewis Ship</a> and 
+				    		<a href="http://www.jroller.com/page/eelco12">Eelco Hillenius</a></li>
+				</ul>
+				We look forward to see you at JavaOne!
+			</p>
+		</section>
 		<section name="Latest News">
+			<subsection name="May 28, 2005 - Wicket on JavaOne 2005 / San Francisco">
+				<p>
+					Come see Wicket on JavaOne this summer. Wicket is featured in two events:
+					<ul>
+					<li><a href="https://www28.cplan.com/javaone05_93_1/session_details.jsp?isid=271617&amp;ilocation_id=93-1&amp;ilanguage=english" title="TS-8617">TS-8617 POJO Web Development With Wicket</a> - 
+					    hosted by <a href="http://www.miko.com">Miko Matsumura</a> and 
+					    <a href="http://www.jroller.com/page/dashorst">Martijn Dashorst</a></li>
+					<li><a href="https://www28.cplan.com/javaone05_93_1/session_details.jsp?isid=271642&amp;ilocation_id=93-1&amp;ilanguage=english">TS-7642 Web Framework Smackdown</a> - 
+					    fought out by 
+					    		<a href="http://weblogs.java.net/blog/edburns/">Ed Burns</a>, 
+					    		<a href="http://howardlewisship.com/blog/">Howard Lewis Ship</a> and 
+					    		<a href="http://www.jroller.com/page/eelco12">Eelco Hillenius</a></li>
+					</ul>
+					We look forward to see you at JavaOne!
+				</p>
+			</subsection>
+			<subsection name="June 5, 2005 - Wicket 1.0 released">
+				<p>
+					The Wicket development team is proud to announce the launch of Wicket 1.0.
+					Wicket is a component based, Java web application framework which seeks to
+					ease and simplify web application development.
+				</p>
+			</subsection>
 			<subsection name="May 21, 2005 - 1.0 RC3 is out!">
 				<p>
 					Finally, after a month of some silence, we have produced our last release
