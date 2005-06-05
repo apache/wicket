@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,10 +41,13 @@ public final class WebApplicationPath implements IResourceFinder
 	private final List folders = new ArrayList();
 
 	private final ServletContext servletContext;
+
 	/**
 	 * Constructor
-	 * @param servletContext 
-	 * 					The webapplication context where the resources must be loaded from
+	 * 
+	 * @param servletContext
+	 *            The webapplication context where the resources must be loaded
+	 *            from
 	 */
 	public WebApplicationPath(ServletContext servletContext)
 	{
@@ -59,10 +61,15 @@ public final class WebApplicationPath implements IResourceFinder
 	 */
 	public IResourceFinder add(String path)
 	{
-		if(!path.startsWith("/")) path = "/" + path;
-		if(!path.endsWith("/")) path += "/";
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
+		}
+		if (!path.endsWith("/"))
+		{
+			path += "/";
+		}
 		webappPaths.add(path);
-
 		return this;
 	}
 
@@ -88,8 +95,8 @@ public final class WebApplicationPath implements IResourceFinder
 		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
 		{
 			Folder folder = (Folder)iterator.next();
-			File file = new File(folder,pathname);
-			if(file.exists())
+			File file = new File(folder, pathname);
+			if (file.exists())
 			{
 				try
 				{
@@ -126,6 +133,7 @@ public final class WebApplicationPath implements IResourceFinder
 	 */
 	public String toString()
 	{
-		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: " + StringList.valueOf(webappPaths)+ "]";
+		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: "
+				+ StringList.valueOf(webappPaths) + "]";
 	}
 }
