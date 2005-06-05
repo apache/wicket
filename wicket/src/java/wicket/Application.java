@@ -313,7 +313,7 @@ public abstract class Application
 			// Create compound resource locator using source path from
 			// application settings
 			resourceStreamLocator = new DefaultResourceStreamLocator(getSettings()
-					.getResourcePath());
+					.getResourceFinder());
 		}
 		return resourceStreamLocator;
 	}
@@ -453,7 +453,7 @@ public abstract class Application
 	 * method sets the resourceStreamLocator to null so it will get recreated
 	 * the next time it is accessed using the new source path.
 	 */
-	final void resourcePathChanged()
+	final void resourceFinderChanged()
 	{
 		this.resourceStreamLocator = null;
 	}

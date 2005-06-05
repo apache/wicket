@@ -332,9 +332,9 @@ public abstract class WebApplication extends Application
 		return new ApplicationSettings(this) {
 			
 			/**
-			 * @see wicket.ApplicationSettings#createResourceFinder()
+			 * @see wicket.ApplicationSettings#newResourceFinder()
 			 */
-			public IResourceFinder createResourceFinder()
+			public IResourceFinder newResourceFinder()
 			{
 				return new WebApplicationPath(getWicketServlet().getServletContext());
 			}
