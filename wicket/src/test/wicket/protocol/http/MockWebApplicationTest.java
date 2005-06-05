@@ -83,12 +83,13 @@ public class MockWebApplicationTest extends TestCase {
 		application.processRequestCycle();
 
 		// Check that redirect was set as expected and invoke it
+/*		
 		Assert.assertTrue("Response should be a redirect", application.getServletResponse().isRedirect());
 		String redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToRedirectString(redirect);
 		application.processRequestCycle();
-
+*/
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
 		Assert.assertTrue(validateDocument(document, 1));

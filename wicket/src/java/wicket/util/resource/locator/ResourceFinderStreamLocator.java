@@ -22,7 +22,7 @@ import java.net.URL;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.file.Path;
+import wicket.util.file.IResourceFinder;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
 
@@ -33,13 +33,13 @@ import wicket.util.resource.UrlResourceStream;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public final class PathResourceStreamLocator extends AbstractResourceStreamLocator
+public final class ResourceFinderStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
 	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
 
 	/** The path to search along */
-	private Path searchPath;
+	private IResourceFinder searchPath;
 
 	/**
 	 * Constructor
@@ -47,7 +47,7 @@ public final class PathResourceStreamLocator extends AbstractResourceStreamLocat
 	 * @param searchPath
 	 *            The path to search
 	 */
-	public PathResourceStreamLocator(final Path searchPath)
+	public ResourceFinderStreamLocator(final IResourceFinder searchPath)
 	{
 		this.searchPath = searchPath;
 	}
@@ -61,13 +61,13 @@ public final class PathResourceStreamLocator extends AbstractResourceStreamLocat
 		log.debug("Attempting to locate resource '" + path + "' on path " + searchPath);
 
 		// Try to find file resource on the path supplied
-		final URL url = searchPath.find(path);
+		final URL file = searchPath.find(path);
 
 		// Found resource?
-		if (url != null)
+		if (file != null)
 		{
 			// Return file resource
-			return new UrlResourceStream(url);
+			return new UrlResourceStream(file);
 		}
 		return null;
 	}

@@ -67,7 +67,7 @@ public abstract class WicketExampleApplication extends WebApplication
 	    else
 	    {
 	        // Use development settings 
-	        getSettings().configure("development", "src/java");
+	        getSettings().configure("development");
 	    }
 	}
     

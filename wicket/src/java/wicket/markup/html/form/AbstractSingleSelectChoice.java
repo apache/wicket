@@ -106,12 +106,11 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * Is the <code>null</code> value a valid value?
 	 * 
-	 * @param emptyAllowed
-	 *            The emptyAllowed to set.
+	 * @param nullValid whether null is a valid value
 	 */
-	public void setNullValid(boolean emptyAllowed)
+	public void setNullValid(boolean nullValid)
 	{
-		this.nullValid = emptyAllowed;
+		this.nullValid = nullValid;
 	}
 
 	/**
@@ -131,7 +130,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		final StringBuffer buffer = new StringBuffer();
 		
 		// Is null a valid selection value?
-		if (nullValid)
+		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
 			final String option = getLocalizer().getString(getId() + ".null", this, "");

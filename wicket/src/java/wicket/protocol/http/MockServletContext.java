@@ -306,9 +306,13 @@ public class MockServletContext implements ServletContext
 			name = name.substring(1);
 		File f = new File(webappRoot, name);
 		if (!f.exists())
+		{
 			return null;
+		}
 		else
-			return f.toURL();
+		{
+			return f.toURI().toURL();
+		}
 	}
 
 	/**
