@@ -17,6 +17,7 @@
  */
 package wicket.util.file;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,12 +31,13 @@ import wicket.util.string.StringList;
 /**
  * Mantains a list of folders as a path.
  * 
- * @author Jonathan Locke
+ * @author Johan Compagner
  */
 public final class WebApplicationPath implements IResourceFinder
 {
 	/** The list of urls in the path */
 	private final List webappPaths = new ArrayList();
+
 	/** The list of folders in the path */
 	private final List folders = new ArrayList();
 
