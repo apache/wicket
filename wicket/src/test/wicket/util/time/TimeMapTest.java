@@ -19,15 +19,12 @@
 package wicket.util.time;
 
 
+import java.text.ParseException;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
-import java.text.ParseException;
-
-import wicket.util.time.Time;
-import wicket.util.time.TimeFrame;
-import wicket.util.time.TimeMap;
-import wicket.util.time.TimeOfDay;
 
 /**
  * Test cases for this object
@@ -42,15 +39,13 @@ public final class TimeMapTest extends TestCase
     public void testSimpleStaticTimeFrame() throws ParseException
     {
         final TimeMap map = new TimeMap();
-        final Time start = Time.valueOf(TimeOfDay.valueOf("3.14pm"));
-        final Time end = Time.valueOf(TimeOfDay.valueOf("3.20pm"));
+        final Time start = Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH), "3.14pm"));
+        final Time end = Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH), "3.20pm"));
         final String value = "test";
 
         map.put(TimeFrame.valueOf(start, end), value);
-        Assert.assertEquals(value, map.get(Time.valueOf(TimeOfDay.valueOf("3.15pm"))));
-        Assert.assertNull(map.get(Time.valueOf(TimeOfDay.valueOf("3.21pm"))));
-        Assert.assertNull(map.get(Time.valueOf(TimeOfDay.valueOf("3.13pm"))));
+        Assert.assertEquals(value, map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH), "3.15pm"))));
+        Assert.assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH), "3.21pm"))));
+        Assert.assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH), "3.13pm"))));
     }
 }
-
-
