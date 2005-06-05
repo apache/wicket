@@ -235,19 +235,21 @@ public class WebPage extends Page implements IHeaderRenderer
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE PUBLIC API.
-	 *
-	 * Render the header container component.
+	 * Invoked from HtmlHeaderContainer it'll ask all child components of the 
+	 * Page if they have something to contribute to the &lt;head&gt; section 
+	 * of the HTML output. If they have, child components will return a 
+	 * WebMarkupContainer which is (auto) added to the component hierarchie 
+	 * and immediately rendered.
 	 * 
 	 * @param container
 	 */
 	public final void renderHeadSections(final HtmlHeaderContainer container)
 	{
-		// collect all header parts and render them
+		// collect all header parts and render them.
+	    // Only MarkupContainer have associated markup files which
+	    // may contain <wicket:head> regions.
 		visitChildren(WebMarkupContainer.class, new IVisitor()
         {
-		    private int nbrOfContributions;
-		    
 			/**
 			 * @see wicket.Component.IVisitor#component(wicket.Component)
 			 */
@@ -255,15 +257,20 @@ public class WebPage extends Page implements IHeaderRenderer
 			{
 				if (component.isVisible())
 				{
+				    // The child component 
 					WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
-					WebMarkupContainer headerPart = webMarkupContainer.getHeaderPart(nbrOfContributions);
+					
+					// Ask the child component if it has something to contribute
+					WebMarkupContainer headerPart = webMarkupContainer.getHeaderPart();
 
-					// In case a Component with header has been added to the page 
-					// multiple times, the header must only be added once.
+					// If the child component has something to contribute to 
+					// the header and in case the very same Component has not 
+					// contributed to the page, than ...
+					// A component's header section must only be added once, 
+					// no matter how often the same Component has been added.
 					if ((headerPart != null) && (container.get(headerPart.getId()) == null))
 					{
 						container.autoAdd(headerPart);
-						nbrOfContributions++;
 					}
 				}
 				return IVisitor.CONTINUE_TRAVERSAL;

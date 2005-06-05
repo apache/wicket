@@ -19,8 +19,8 @@ package wicket.markup.html;
 
 
 /**
- * An interface to be implemented by Components which are able to render
- * header sections. Usually this is only Page. Borders implement it
+ * An interface to be implemented by components which are able to render
+ * header sections. Usually this is only Page. However, Border implements it
  * as well to handle bordered pages (common page layout).
  * 
  * @author Juergen Donnerstag
@@ -28,9 +28,13 @@ package wicket.markup.html;
 public interface IHeaderRenderer
 {
 	/**
-	 * Render all header components
+	 * Visit all components of the component hierarchie and ask if they have
+	 * something to contribute to the header section of the page. If yes, child
+	 * components will return a MarkupContainer of there header section which
+	 * gets (auto) added to the component hierarchie and immediately rendered.
 	 * 
-	 * @param container The current html header container
+	 * @param container
+	 *            The current html header container
 	 */
 	public void renderHeadSections(final HtmlHeaderContainer container);
 }

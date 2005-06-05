@@ -52,7 +52,7 @@ public class MarkupStream
 
 	/** The markup element list */
 	private final Markup markup;
-
+	
 	/**
 	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN
 	 * THE NEAR FUTURE.
@@ -379,5 +379,26 @@ public class MarkupStream
 	public Class getContainerClass()
 	{
 	    return markup.getContainerClass();
+	}
+	
+	/**
+	 * Get the current index pointing to the start element of the 
+	 * header section.
+	 * 
+	 * @return index
+	 */
+	public final int getHeaderIndex()
+	{
+	    return markup.getHeaderIndex();
+	}
+	
+	/**
+	 * Set the index pointing to the header element of the markup
+	 * 
+	 * @param index
+	 */
+	public final void setHeaderIndex(final int index)
+	{
+	    markup.setHeaderIndex(index);
 	}
 }

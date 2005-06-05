@@ -48,6 +48,17 @@ public final class Markup
 	/** The Class of the directly associated component/container */
 	private Class containerClass;
 	
+    /** Default value: The markup has not been search for the header */ 
+    public final static int HEADER_NOT_YET_EVALUATED = -1;
+    
+    /** Markup have been searched for the header, but it doesn't contain any */
+    public final static int HEADER_NO_HEADER_FOUND = -2;
+
+	/** If the markup contains a header section, the index will point to
+	 * the MarkupElement.
+	 */
+	private int headerIndex = HEADER_NOT_YET_EVALUATED;
+	
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup(null, null, null, null);
 
@@ -141,5 +152,26 @@ public final class Markup
 	public String getEncoding()
 	{
 		return encoding;
+	}
+	
+	/**
+	 * Get the current index pointing to the start element of the 
+	 * header section.
+	 * 
+	 * @return index
+	 */
+	public int getHeaderIndex()
+	{
+	    return this.headerIndex;
+	}
+	
+	/**
+	 * Set the index pointing to the header element of the markup
+	 * 
+	 * @param index
+	 */
+	public void setHeaderIndex(final int index)
+	{
+	    this.headerIndex = index;
 	}
 }

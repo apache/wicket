@@ -27,9 +27,14 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 
 /**
- * THIS IS PART OF JS AND CSS SUPPPORT AND IS CURRENTLY EXPERIMENTAL ONLY.
- * 
- * Handle HTML &lt;head&gt; section detected by markup parser.
+ * This is tag resolver which handles &lt;wicket:head&gt; tags. It must be
+ * registered (with the application) and assumes that a WicketTag has already
+ * been created (see WicketTagIdentifier).
+ * <p>
+ * Provided the current tag is a &lt;wicket:head&gt;, a HtmlHeaderContainer
+ * component is created, (auto) added to the component hierarchie and
+ * immediately rendered. Please see the javadoc for HtmlHeaderContainer on how
+ * it treats the tag.
  * 
  * @author Juergen Donnerstag
  */
@@ -39,8 +44,12 @@ public class HtmlHeaderResolver implements IComponentResolver
 	private static Log log = LogFactory.getLog(HtmlHeaderResolver.class);
 
 	/**
-	 * @see wicket.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
+	 * Try to resolve the tag, then create a component, add it to the container
+	 * and render it.
+	 * 
+	 * @see wicket.IComponentResolver#resolve(MarkupContainer, MarkupStream,
+	 *      ComponentTag)
+	 * 
 	 * @param container
 	 *            The container parsing its markup
 	 * @param markupStream
@@ -56,18 +65,20 @@ public class HtmlHeaderResolver implements IComponentResolver
 		if (tag instanceof WicketTag)
 		{
 			final WicketTag wicketTag = (WicketTag)tag;
-			
-			// It must be <wicket:extend...>
+
+			// It must be <wicket:head...>
 			if (wicketTag.isHeadTag())
 			{
-			    HtmlHeaderContainer header = new HtmlHeaderContainer();
-			    container.autoAdd(header);
-			    
-			    return true;
+				// Create, add and render the component
+				HtmlHeaderContainer header = new HtmlHeaderContainer();
+				container.autoAdd(header);
+
+				// Yes, we handled the tag
+				return true;
 			}
 		}
 
-		// We were not able to handle the componentId
+		// We were not able to handle the tag
 		return false;
 	}
 }
