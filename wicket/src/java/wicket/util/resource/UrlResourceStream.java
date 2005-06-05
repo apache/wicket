@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -84,9 +83,9 @@ public final class UrlResourceStream extends AbstractResourceStream
 			{
 				file = new File(new URI(url.toExternalForm()));
 			}
-			catch (URISyntaxException ex)
+			catch (Exception ex)
 			{
-				log.info("couldn't convert url: " + url + " to file");
+				log.debug("couldn't convert url: " + url + " to file");
 			}
 			if(file != null && !file.exists())
 			{
