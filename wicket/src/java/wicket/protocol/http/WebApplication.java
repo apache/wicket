@@ -329,8 +329,8 @@ public abstract class WebApplication extends Application
 	 */
 	public ApplicationSettings createApplicationSettings()
 	{
-		return new ApplicationSettings(this) {
-			
+		return new ApplicationSettings(this) 
+		{	
 			/**
 			 * @see wicket.ApplicationSettings#newResourceFinder()
 			 */
