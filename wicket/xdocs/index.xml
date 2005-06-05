@@ -57,6 +57,26 @@
 			</p>
 		</section>
 		<section name="Latest News">
+			<subsection name="June 7, 2005 - Wicket Team Announces Launch of Wicket 1.0">
+				<p><em>Open Source, component-oriented Java web framework seeks to ease and simplify development.</em></p>
+				<p>
+					The <a href="team-list.html" title="Wicket development team">Wicket development team</a>, responsible
+					for the open source development of the Wicket Java web framework
+					(<a href="index.html" title="Wicket">http://wicket.sourceforge.net</a>) under the
+					Apache Software License, today announced the launch of Wicket 1.0. Wicket reduces the complexity of 
+					Java web development under current frameworks and allows both web designers and Java developers to 
+					work with unprecedented ease and productivity, and without expensive, specialized development tools
+					or vendor lock-in.  Beyond making web application development easy, Wicket enables developers to 
+					create and package advanced, reusable web components without hassle.
+				</p>
+				<p>
+					Wicket splits the problem of creating dynamic web pages into two separate, well-defined portions.
+					This division allows coders and designers more freedom to work in parallel and without stepping on
+					each other’s toes. The design of web pages in wicket is kept in ordinary XHTML web pages which can
+					be edited with standard web development tools such as 
+					[<a href="PressRelease1_0.html" title="continue reading">... read more ...</a>]
+				</p>
+			</subsection>
 			<subsection name="May 28, 2005 - Wicket on JavaOne 2005 / San Francisco">
 				<p>
 					Come see Wicket on JavaOne this summer. Wicket is featured in two events:

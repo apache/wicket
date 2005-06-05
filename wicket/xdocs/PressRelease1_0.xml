@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Wicket 1.0 Announcement</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+
+	<body>
+		<section name="Wicket Development Team Announces Launch of Wicket 1.0">
+		<subsection name="Open Source, component-oriented Java web framework seeks to ease and simplify development.">
+			<p>
+				<strong>June 7, 2005 -</strong>
+				The <a href="/team-list.html" title="Wicket development team">Wicket development team</a>, responsible
+				for the open source development of the Wicket Java web framework
+				(<a href="http://wicket.sourceforge.net" title="Wicket">http://wicket.sourceforge.net</a>) under the
+				Apache Software License, today announced the launch of Wicket 1.0. Wicket reduces the complexity of 
+				Java web development under current frameworks and allows both web designers and Java developers to 
+				work with unprecedented ease and productivity, and without expensive, specialized development tools
+				or vendor lock-in.  Beyond making web application development easy, Wicket enables developers to 
+				create and package advanced, reusable web components without hassle.
+			</p>
+			<p>
+				Wicket splits the problem of creating dynamic web pages into two separate, well-defined portions.
+				This division allows coders and designers more freedom to work in parallel and without stepping on
+				each other’s toes. The design of web pages in wicket is kept in ordinary XHTML web pages which can
+				be edited with standard web development tools such as Macromedia DreamWeaver or Adobe Go Live.
+				These pages are then made dynamic in an object-oriented fashion by associating components coded 
+				in Java. Wicket components are extensible within the Java language much like Swing components and
+				can be backed by POJO (Plain Old Java Object) model objects that can be persisted using an ORM tool
+				such as Hibernate or JDO.
+			</p>
+			<p>
+				"Wicket development is so much easier. We don't have to explain all configuration files used in our
+				previous MVC framework, or how the Velocity language works to new project members. It's you, the Java
+				and the HTML.", Martijn Dashorst said when asked why he switched and started helping Wicket development.
+			</p>
+		</subsection>
+		<subsection name="About Wicket and the Wicket Development Team">
+			<p>
+				The Wicket development team 
+				(<a href="http://wicket.sourceforge.net/team-list.html" title="Wicket Development Team">http://wicket.sourceforge.net/team-list.html</a>)
+				is responsible for the Wicket open source project. Wicket was originally created by Jonathan
+				Locke in the Spring of 2004. Many important improvements and changes have been made since that time 
+				thanks to the 6 additional developers that have joined the project: Martijn Dashorst, Eelco Hillenius,
+				Chris Turner, Juergen Donnerstag, Johan Compagner and Gwyn Evans.				
+			</p>
+		</subsection>
+		<subsection name="Contact Information">
+			<p>
+				<strong>Wicket Development Team</strong>
+			</p>
+			<p>
+				Jonathan Locke, (206) 412-8922, jonl@muppetlabs.com
+			</p>
+		</subsection>
+		</section>
+	</body>
+</document>
