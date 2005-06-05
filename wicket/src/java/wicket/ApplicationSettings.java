@@ -387,7 +387,7 @@ public class ApplicationSettings
 	 */
 	public final void configure(final String configurationType)
 	{
-		configure(configurationType, "src/java");
+		configure(configurationType, (IResourceFinder)null);
 	}
 
 	/**
