@@ -17,9 +17,12 @@
  */
 package wicket.util.resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -45,6 +48,11 @@ public final class UrlResourceStream extends AbstractResourceStream
 
 	/** The URL to this resource. */
 	private URL url;
+	
+	/**
+	 * the handle to the file if it is a file resource
+	 */
+	private File file;
 
 	/** Length of stream. */
 	private int contentLength;
@@ -65,15 +73,24 @@ public final class UrlResourceStream extends AbstractResourceStream
 	{
 		// Save URL
 		this.url = url;
+		URLConnection connection = null;
 		try
 		{
-			URLConnection connection = url.openConnection();
+			connection = url.openConnection();
 			contentLength = connection.getContentLength();
 			contentType = connection.getContentType();
 			lastModified = connection.getLastModified();
-			if (connection instanceof HttpURLConnection)
+			try
 			{
-				((HttpURLConnection)connection).disconnect();
+				file = new File(new URI(url.toExternalForm()));
+			}
+			catch (URISyntaxException ex)
+			{
+				log.info("couldn't convert url: " + url + " to file");
+			}
+			if(file != null && !file.exists())
+			{
+				file = null;
 			}
 		}
 		catch (IOException ex)
@@ -85,6 +102,28 @@ public final class UrlResourceStream extends AbstractResourceStream
 					"Invalid URL parameter " + url);
 			illegalArgumentException.initCause(ex);
 			throw illegalArgumentException;
+		}
+		finally
+		{
+			// if applicable, disconnect
+			if (connection != null)
+			{
+				if(connection instanceof HttpURLConnection)
+		        { 
+		             ((HttpURLConnection)connection).disconnect();
+		        }
+				else
+				{
+					try
+					{
+						connection.getInputStream().close();
+					}
+					catch (Exception ex)
+					{
+						// ignore
+					}
+				}
+			}
 		}
 	}
 
@@ -151,27 +190,48 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public Time lastModifiedTime()
 	{
-		URLConnection urlConnection = null;
-		try
+		if(file != null)
 		{
-			urlConnection = url.openConnection();
-
-			// update the last modified time.
-			lastModified = urlConnection.getLastModified();
+			lastModified = file.lastModified();
 		}
-		catch (IOException e)
+		else
 		{
-			log.error("getLastModified for " + url + " failed: " + e.getMessage());
+			URLConnection urlConnection = null;
+			try
+			{
+				
+				urlConnection = url.openConnection();
+	
+				// update the last modified time.
+				lastModified = urlConnection.getLastModified();
+			}
+			catch (IOException e)
+			{
+				log.error("getLastModified for " + url + " failed: " + e.getMessage());
+			}
+			finally
+			{
+				// if applicable, disconnect
+				if (urlConnection != null)
+				{
+					if(urlConnection instanceof HttpURLConnection)
+			        { 
+			             ((HttpURLConnection)urlConnection).disconnect();
+			        }
+					else
+					{
+						try
+						{
+							urlConnection.getInputStream().close();
+						}
+						catch (Exception ex)
+						{
+							// ignore
+						}
+					}
+				}
+			}
 		}
-		finally
-		{
-			// if applicable, disconnect
-			if (urlConnection != null && urlConnection instanceof HttpURLConnection) 
-	        { 
-	             ((HttpURLConnection)urlConnection).disconnect();
-	        }
-		}
-
 		return Time.milliseconds(lastModified);
 	}
 
