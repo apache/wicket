@@ -382,10 +382,11 @@ public class ApplicationSettings
 		// Make sure it's a path
 		if (!(finder instanceof IResourcePath))
 		{
-			throw new IllegalArgumentException("To add a resource folder, the application's resource finder must be an instance of IResourcePath");
+			throw new IllegalArgumentException(
+					"To add a resource folder, the application's resource finder must be an instance of IResourcePath");
 		}
 
-		// Cast to resource path and add folder 
+		// Cast to resource path and add folder
 		final IResourcePath path = (IResourcePath)finder;
 		path.add(resourceFolder);
 		return this;
@@ -622,8 +623,10 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Gets any filesystem path or webapplication path to use when searching for
-	 * resources.
+	 * Gets the resource finder to use when searching for resources. If no
+	 * resource finder has been set explicitly via setResourceFinder(), the
+	 * factory method newResourceFinder() will be called to create a resource
+	 * finder.
 	 * 
 	 * @return Returns the resourceFinder.
 	 * @see ApplicationSettings#setResourceFinder(WebApplicationPath)

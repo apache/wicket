@@ -55,30 +55,28 @@ public final class WebApplicationPath implements IResourcePath
 	}
 
 	/**
-	 * @param path
+	 * @param folder
 	 *            add a path that is lookup through the servlet context
 	 */
-	public void add(String path)
+	public void add(String folder)
 	{
-		if (!path.startsWith("/"))
+		final Folder f = new Folder(folder);
+		if (f.exists())
 		{
-			path = "/" + path;
+			folders.add(f);			
 		}
-		if (!path.endsWith("/"))
+		else
 		{
-			path += "/";
+			if (!folder.startsWith("/"))
+			{
+				folder = "/" + folder;
+			}
+			if (!folder.endsWith("/"))
+			{
+				folder += "/";
+			}
+			webappPaths.add(folder);
 		}
-		webappPaths.add(path);
-	}
-
-	/**
-	 * @param folder
-	 * @return The WebApplicationResources, for invocation chaining
-	 */
-	public IResourceFinder add(final Folder folder)
-	{
-		folders.add(folder);
-		return this;
 	}
 
 	/**
