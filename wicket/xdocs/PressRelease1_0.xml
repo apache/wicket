@@ -24,7 +24,7 @@
 				Wicket splits the problem of creating dynamic web pages into two separate, well-defined portions.
 				This division allows coders and designers more freedom to work in parallel and without stepping on
 				each other’s toes. The design of web pages in wicket is kept in ordinary XHTML web pages which can
-				be edited with standard web development tools such as Macromedia DreamWeaver or Adobe Go Live.
+				be edited with standard web development tools such as Macromedia Dreamweaver or Adobe GoLive.
 				These pages are then made dynamic in an object-oriented fashion by associating components coded 
 				in Java. Wicket components are extensible within the Java language much like Swing components and
 				can be backed by POJO (Plain Old Java Object) model objects that can be persisted using an ORM tool
@@ -51,7 +51,7 @@
 				<strong>Wicket Development Team</strong>
 			</p>
 			<p>
-				Jonathan Locke, (206) 412-8922, jonl@muppetlabs.com
+				Jonathan Locke, jonl@muppetlabs.com
 			</p>
 		</subsection>
 		</section>
