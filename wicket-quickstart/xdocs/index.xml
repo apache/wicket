@@ -25,6 +25,12 @@
 			</p>
 		</section>
 		<section name="Latest News">
+		    <subsection name="June 5, 2005 - Wicket 1.0 final Launched!">
+		        <p>
+		            With the launch of <a href="http://wicket.sf.net/PressRelease1_0.html">Wicket 1.0 final</a>
+		            we also upgraded the Wicket Kickstart project to be 1.0 based.
+		        </p>
+		    </subsection>
 			<subsection name="May 4, 2005 - Eclipse Live Demo added">
 				<p>
 					Using <a href="http://www.debugmode.com/wink/" title="Wink">Wink</a> we have
