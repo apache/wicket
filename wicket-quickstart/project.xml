@@ -5,7 +5,7 @@
   <groupId>wicket-stuff</groupId>
   <id>wicket-kickstart</id>
   <name>Kick start</name>
-  <currentVersion>1.0.0-rc3</currentVersion>
+  <currentVersion>1.0</currentVersion>
   <organization>
     <name>Wicket Stuff</name>
     <url>http://wicket-stuff.sourceforge.net</url>
@@ -51,12 +51,17 @@
       <name>1.0.0-rc3</name>
       <tag>WICKET_R_1_0_0_RC3</tag>
     </version>
+    <version>
+      <id>1.0</id>
+      <name>1.0</name>
+      <tag>WICKET_R_1_0_0</tag>
+    </version>
   </versions>
   <dependencies>
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.0.0-rc3</version>
+      <version>1.0</version>
       <type>jar</type>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
@@ -244,7 +249,6 @@
   </build>
   <reports>
     <report>maven-license-plugin</report>
-    <report>maven-changes-plugin</report>
   </reports>
   <properties/>
 </project>
