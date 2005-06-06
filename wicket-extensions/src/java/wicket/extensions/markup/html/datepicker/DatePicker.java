@@ -109,6 +109,17 @@ public class DatePicker extends Panel
 	public static final StaticResourceReference STYLE_WIN2K_COLD_2 =
 		new StaticResourceReference(DatePicker.class, "style/calendar-win2k-cold-2.css");
 
+	/** language en. */
+	public static final StaticResourceReference LANGUAGE_EN =
+		new StaticResourceReference(DatePicker.class, "lang/calendar-en.js");
+
+	/** language nl. */
+	public static final StaticResourceReference LANGUAGE_NL =
+		new StaticResourceReference(DatePicker.class, "lang/calendar-nl.js");
+
+	// TODO due to a bug in the javascript component, no more languages are available at this time.
+	// See http://sourceforge.net/tracker/index.php?func=detail&aid=1193816&group_id=75569&atid=544285
+
 	// register dependent images so that they can be loaded by the css files
 
 	static
@@ -261,14 +272,14 @@ public class DatePicker extends Panel
 		}
 	}
 
-	/** the receiving text field. */
-	private final TextField targetTextField;
+	/** the receiving component. */
+	private final Component target;
 
 	/** the button that triggers the popup. */
 	private TriggerButton triggerButton;
 
 	/** properties for the javascript datepicker component. */
-	private DatePickerProperties datePickerProperties;
+	private final DatePickerProperties properties;
 
 	/**
 	 * Construct with a default button and style.
@@ -277,46 +288,41 @@ public class DatePicker extends Panel
 	 */
 	public DatePicker(String id, TextField targetTextField)
 	{
-		this(id, targetTextField, BUTTON_ICON_1, STYLE_AQUA);
+		this(id, targetTextField, new DatePickerProperties());
 	}
 
-	/**
-	 * Construct with a default style.
-	 * @param id the component id
-	 * @param targetTextField the receiving text field
-	 * @param buttonIcon icon image
-	 */
-	public DatePicker(String id, TextField targetTextField, ResourceReference buttonIcon)
-	{
-		this(id, targetTextField, buttonIcon, STYLE_AQUA);
-	}
 
 	/**
 	 * Construct.
 	 * @param id the component id
-	 * @param targetTextField the receiving text field
-	 * @param buttonIcon icon image
-	 * @param style style of this date picker
+	 * @param target the receiving component
+	 * @param properties datepicker properties
 	 */
-	public DatePicker(String id, TextField targetTextField,
-			ResourceReference buttonIcon, ResourceReference style)
+	public DatePicker(String id, Component target, DatePickerProperties properties)
 	{
 		super(id);
 
-		if (targetTextField == null)
+		if(properties == null)
+		{
+			throw new NullPointerException("properties must be non null when using this constructor");
+		}
+
+		this.properties = properties;
+		
+		if (target == null)
 		{
 			throw new NullPointerException("targetTextField must be not null");
 		}
 
-		targetTextField.add(new IdAttributeModifier(targetTextField));
-		this.targetTextField = targetTextField;
+		target.add(new IdAttributeModifier(target));
+		this.target = target;
 
-		add(triggerButton = new TriggerButton("trigger", buttonIcon));
+		add(triggerButton = new TriggerButton("trigger", properties.getIcon()));
 		add(new InitScript("script"));
 		addToHeader(new DatePickerResourceReference("calendarMain", "calendar.js", "src"));
 		addToHeader(new DatePickerResourceReference("calendarSetup", "calendar-setup.js", "src"));
-		addToHeader(new DatePickerResourceReference("calendarLanguage", "lang/calendar-en.js", "src"));
-		addToHeader(new DatePickerResourceReference("calendarStyle", style, "href"));
+		addToHeader(new DatePickerResourceReference("calendarLanguage", properties.getLanguage(), "src"));
+		addToHeader(new DatePickerResourceReference("calendarStyle", properties.getStyle(), "href"));
 
 		new StaticResourceReference(DatePicker.class, "style/aqua/active-bg.gif");
 		new StaticResourceReference(DatePicker.class, "style/aqua/dark-bg.gif");
@@ -336,37 +342,10 @@ public class DatePicker extends Panel
 	private String getInitScript()
 	{
 		StringBuffer b = new StringBuffer("\nCalendar.setup(\n{");
-		b.append("\n\t\tinputField : \"").append(targetTextField.getPath()).append("\",");
+		b.append("\n\t\tinputField : \"").append(target.getPath()).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
-		DatePickerProperties properties = getDatePickerProperties();
 		b.append(properties.toScript());
 		b.append("\n});");
 		return b.toString();
-	}
-
-	/**
-	 * Gets the properties for the javascript datepicker component.
-	 * @return the properties for the javascript datepicker component
-	 */
-	public final DatePickerProperties getDatePickerProperties()
-	{
-		// if null, lazily create the default object
-		if (datePickerProperties == null)
-		{
-			datePickerProperties = new DatePickerProperties();
-		}
-
-		return datePickerProperties;
-	}
-
-	/**
-	 * Sets the properties for the javascript datepicker component.
-	 * @param datePickerProperties the properties for the javascript datepicker component
-	 * @return This
-	 */
-	public final DatePicker setDatePickerProperties(DatePickerProperties datePickerProperties)
-	{
-		this.datePickerProperties = datePickerProperties;
-		return this;
 	}
 }

@@ -21,6 +21,7 @@ package wicket.extensions.markup.html.datepicker;
 import java.io.Serializable;
 import java.util.Locale;
 
+import wicket.ResourceReference;
 import wicket.Session;
 
 /**
@@ -129,6 +130,15 @@ public class DatePickerProperties implements Serializable
 	 * color).
 	 */
 	private boolean showOthers = false;
+
+	/** the style. */
+	private ResourceReference style = DatePicker.STYLE_AQUA;
+
+	/** the button icon. */
+	private ResourceReference icon = DatePicker.BUTTON_ICON_1;
+
+	/** the language. */
+	private ResourceReference language = DatePicker.LANGUAGE_EN;
 
 	/**
 	 * Construct.
@@ -392,5 +402,59 @@ public class DatePickerProperties implements Serializable
 	public void setWeekNumbers(boolean weekNumbers)
 	{
 		this.weekNumbers = weekNumbers;
+	}
+
+	/**
+	 * Gets the icon.
+	 * @return icon
+	 */
+	public ResourceReference getIcon()
+	{
+		return icon;
+	}
+
+	/**
+	 * Sets the icon.
+	 * @param icon icon
+	 */
+	public void setIcon(ResourceReference icon)
+	{
+		this.icon = icon;
+	}
+
+	/**
+	 * Gets the language.
+	 * @return language
+	 */
+	public ResourceReference getLanguage()
+	{
+		return language;
+	}
+
+	/**
+	 * Sets the language.
+	 * @param language language
+	 */
+	public void setLanguage(ResourceReference language)
+	{
+		this.language = language;
+	}
+
+	/**
+	 * Gets the style.
+	 * @return style
+	 */
+	public ResourceReference getStyle()
+	{
+		return style;
+	}
+
+	/**
+	 * Sets the style.
+	 * @param style style
+	 */
+	public void setStyle(ResourceReference style)
+	{
+		this.style = style;
 	}
 }
