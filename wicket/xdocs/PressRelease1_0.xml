@@ -14,16 +14,17 @@
 				The <a href="/team-list.html" title="Wicket development team">Wicket development team</a>, responsible
 				for the open source development of the Wicket Java web framework
 				(<a href="http://wicket.sourceforge.net" title="Wicket">http://wicket.sourceforge.net</a>) under the
-				Apache Software License, today announced the launch of Wicket 1.0. Wicket reduces the complexity of 
+				Apache Software License, today announced the launch of Wicket 1.0.  Wicket reduces the complexity of 
 				Java web development under current frameworks and allows both web designers and Java developers to 
 				work with unprecedented ease and productivity, and without expensive, specialized development tools
-				or vendor lock-in.  Beyond making web application development easy, Wicket enables developers to 
-				create and package advanced, reusable web components without hassle.
+				or vendor lock-in.  Beyond this, Wicket enables developers to create and package advanced, reusable 
+				web components without hassle.  A presentation on Wicket will be given at JavaOne later this month 
+				by Miko Matsumura, Martijn Dashorst and Eelco Hillenius.
 			</p>
 			<p>
-				Wicket splits the problem of creating dynamic web pages into two separate, well-defined portions.
-				This division allows coders and designers more freedom to work in parallel and without stepping on
-				each other's toes. The design of web pages in Wicket is kept in ordinary XHTML web pages which can
+				Wicket divides the problem of creating dynamic web pages into two separate, well-defined portions.
+				This structure allows coders and designers more freedom to work in parallel and without stepping on
+				each other's toes.  Web page design in Wicket is specified by ordinary XHTML web pages which can
 				be edited with standard web development tools such as Macromedia Dreamweaver or Adobe GoLive.
 				These pages are then made dynamic in an object-oriented fashion by associating components coded 
 				in Java. Wicket components are extensible within the Java language much like Swing components and
