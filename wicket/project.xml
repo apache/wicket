@@ -80,6 +80,11 @@
       <name>1.0.0-rc2</name>
       <tag>WICKET_R_1_0_0-RC2</tag>
     </version>
+    <version>
+      <id>1.0</id>
+      <name>1.0</name>
+      <tag>WICKET_R_1_0_0</tag>
+    </version>
   </versions>
   <mailingLists>
     <mailingList>
@@ -188,7 +193,7 @@
     <contributor>
       <name>Francois Denommee</name>
       <email>-</email>
-    </contributor>    
+    </contributor>
   </contributors>
   <dependencies>
     <dependency>

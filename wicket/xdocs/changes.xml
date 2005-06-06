@@ -7,680 +7,158 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="1.0" date="tbd" description="1.0 final">
+    <release version="1.0" date="2005-06-06" description="1.0 final">
       <action type="update" dev="Eelco Hillenius">StaticResourceReference now binds itself immediately so clients don't have to know about the binding internals.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1209753">Pageable list view navigator did not handle the "last" link properly in situations where additional elements have been added to the underlying list.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1213229">Image didn't like webapps with urlpattern set to /*. It does now.</action>
-  	  <action type="fix" dev="Martijn Dashorst" issue="1275631">Fixed negative numbers in PageParameters.</action>
-  	  <action type="update" dev="Eelco Hillenius">added PageableListView.setRowsPerPage</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1275631">Fixed negative numbers in PageParameters.</action>
+      <action type="update" dev="Eelco Hillenius">added PageableListView.setRowsPerPage</action>
       <action type="fix" dev="Eelco Hillenius" issue="1211663" due-to="Martijn Dashorst">Fixed converters once and for all. Null check results so that e.g., empty strings for numbers (e.g.) now return null instead of throwing a NPE</action>
       <action type="fix" dev="Eelco Hillenius" issue="1209027">The UploadForm now considers the encoding</action>
       <action type="add" dev="Juergen Donnerstag">By means of Component.setRenderBodyOnly(boolean) it is now easily possible to print the tag's body only. This is e.g. necessary with &lt;span&gt; tags and Panels where in cases you want to be strictly HTML compliant the &lt;span&gt; tag itself must be removed. The (tag's) body will always be printed.</action>
     </release>
-  	<release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
-  	  <action type="update" dev="Eelco Hillenius">
-  	  	Added constructors with just the id to the Choice component to be consistent
-  	  	with other Wicket components.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius">
-  	   Strings.escapeMarkup now properly escapes unicode.
-  	  </action>
-	  <action type="update" dev="Johan Compagner, Eelco Hillenius" due-to="Martijn Dashorst">
-	  Made the rendering strategy pluggable. From javadoc of ApplicationSettings:
-		<i>renderStrategy</i>- Sets in what way the render part of a request is handled.
-		Basically, there are two different options:
-		<ul>
-		 <li>
-		  Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one physical
-		  request. This is efficient, and is the best option if you want to do sophisticated
-		  clustering. It does not however, shield you from what is commonly known as the
-		  <i>Double submit problem</i>
-		 </li>
-		 <li>
-		  Using a redirect. This follows the pattern <a href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost"
-		  	>as described at the serverside</a> and that is commonly known as Redirect after post.
-		  Wicket takes it one step further to do any rendering after a redirect, so that not only
-		  form submits are shielded from the double submit problem, but also the IRequestListener
-		  handlers (that could be e.g. a link that deletes a row).
-		  With this pattern, you have two options to choose from:
-		  <ul>
-		   <li>
-		    ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the 'action' part
-		    of the request, which is either page construction (bookmarkable pages or the home page)
-		    or calling a IRequestListener handler, such as Link.onClick. When that part is done,
-		    a redirect is issued to the render part, which does all the rendering of the page
-		    and its components. <strong>Be aware</strong> that this may mean, depending on whether
-		    you access any models in the action part of the request, that attachement and detachement
-		    of some models is done twice for a request.
-		   </li>
-		   <li>
-		    ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action- and the
-		    render part of the request in one physical request, but instead of streaming the
-		    result to the browser directly, it is kept in memory, and a redirect is issue to
-		    get this buffered result (after which it is immediately removed).
-		    This option currently is the default render strategy, as it shields you from the
-		    double submit problem, while being more efficient and less error prone regarding to
-		    detachable models.
-		   </li>
-		  </ul>
-		 </li>
-		</ul>
-		  Note that this parameter sets the default behaviour, but that you can manually set
-		  whether any redirecting is done by calling method RequestCycle.setRedirect. Setting
-		  the redirect flag when the application is configured to use ONE_PASS_RENDER, will result
-		  in a redirect of type REDIRECT_TO_RENDER. When the application is configured to use
-		  REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to false, will
-		  result in that request begin rendered and streamed in one pass.
-	  </action>
-  	  <action type="fix" dev="Eelco Hillenius">
-  	   Fixed a bug that made MostRecentlyUsedMap (used to store page in the session)
-  	   behave like a MostRecentlyAddedToMap. Fixes lots of frames/ popup problems
-  	   in one strike.
-  	  </action>
-  	  <action type="add" dev="Eelco Hillenius" due-to="Jonathan Carlson">
-  	   Added method setChoices and some np checks to AbstractChoice
-  	  </action>
-  	  <action type="add" dev="Juergen Donnerstag" issue="1169374">
-  	   Implemented support for obfuscating URLs
-  	  </action>
-  	  <action type="fix" dev="Juergen Donnerstag" issue="1192572">
-  	   Fixed Javascript parse error. CDATA section are properly handled now.
-  	  </action>
-  	  <action type="update" dev="Johan Compagner, Eelco Hillenius">
-  	   Refactored resources and fixed some issues along the way. The major change is that
-  	   we removed ImageResource from the inheritance tree. So, if you have compile problems,
-  	   replace any reference to ImageResource with wicket.markup.html.WebResource.
-  	   Furthermore, StaticImageResource and StaticImageResourceReference are renamed to
-  	   StaticResource and StaticResourceReference, as it is perfectly acceptable to reference
-  	   e.g. a PDF (we did some testing with this as well). Also, as we fixed a localization
-  	   bug in this, you could for example package resources like 'mydoc.pdf' and 'mydoc_nl.pdf'
-  	   and reference them with a StaticResource(Reference), and let Wicket find out which
-  	   one should be loaded.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius" issue="1188417">
-  	   ResourceLinks were not binded for static resources.
-  	  </action>
-  	  <action type="fix" dev="Johan Compagner" issue="1192671">
-  	   Application is not serializable. Application in StaticImageResource is now transient
-  	   and is set just before it is needed.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius" issue="1197005">
-  	   Nesting of message receivers should work without any problems due to the recent
-  	   feedback message refactorings.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius" issue="1198740">
-  	   Instead of throwing an exception when a request could not be processed, Wicket
-  	   now sends a 404.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius">
-  	    in Form: Form components were persisted before the form was updated.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius">
-  	    When the upload does not validate, super.onSubmit will now not be called anymore.
-  	  </action>
-  	  <action type="update" dev="Eelco Hillenius">
-  	  	It is now possible to set a Comparator for sorting messages on both FeedbackPanel
-  	  	and FeedbackMessagesModel.
-  	  </action>
-  	  <action type="update" dev="Eelco Hillenius">
-		Refactored feedback message handling to be independent (using pull models) of the flow
-		of execution of a page again. This makes it easier to use, and results in less spagethi
-		code. Introduced IFeedbackBoundary that is a tagging interface to implement message
-		hierarchy blocks. Currently it is implemented by Page and Form. IFeedback now has one
-		method that can be used by implementing classes to set (override) the actual component
-		from where messages are collected. Form uses this to set the collection point when a
-		IFeedback instance is provided. The add/remove methods of IFeedback are removed.
-		Made both FeedbackPanel and FormComponentFeedbackBorder non-final, so users can
-		provide their own markup. Also, FeedbackMessagesModel that is used by FeedbackPanel
-		is public, so that it can be used for custom implementations without having to know
-		too much about the internals of message collecting.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius">
-  	  Added escapes for &amp;, " and ' in Strings utilities class.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius" issue="1196140">
-  	   This bug prevented running Wicket on VM's that don't use SUN's security implementation
-  	   classes. Don Ledford reported it for Blackdown 1.4.2 j2sdk. Removed SunJceCrypt's
-  	   static initializer and put it in it's constructor. Application now reuses the ICrypt
-  	   instance once it is created, so that it is easier to provide a dummy one. The current
-  	   ICrypt instances seem to be thread safe, so that shouldn't give any problems, and users
-  	   can override the factory method if they want to use non-thread safe instances.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius">
-		In ResourceTest URL.getFile() was used while it should use a URI to construct a file.
-  	  </action>
-  	  <action type="fix" dev="Martijn Dashorst" issue="1194464">
-  	  	ClassCastException on ListItem.onAttach using CompoundPropertyModel. When using a 
-  	  	CompoundPropertyModel to bind a list to a listview, the ListItem.onAttach throws a
-		ClassCastException. This is because the model of the ListView is not used
-		to cast to an element, but the root model. Fixed by using ListView.getModelObject()
-		instead of having the ListItemModel try to retrieve the model itself. The ListItem 
-		now takes a ListView instead of a ListModel, and requests the model on the listview.
-  	  </action>
-  	  <action type="fix" dev="Martijn Dashorst" issue="1194460">
-  	  	RequestCycle.onEndRequest not called after Exception. When an exception occurs, onEndRequest is not always
-		called. This results in open database connections etc.
-		when these are allocated and deallocated using a custom
-		RequestCycle. Fixed by moving the endRequest method calls into the finally block
-		of RequestCycle.request().
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius">
-		Fixed the beginning/ending callbacks of pages. This was not done properly for
-		listener interface calls: internalBeginRequest was called to late, or in case
-		the listener set another page to render, not at all. The same problem applied
-		to internalEndRequest. As this method is where the component models must be
-		detached (see earlier fix), this had the effect that models were often not
-		detached. Which in turn gave problems - besides a temporary memory leak -
-		with lazy Hibernate initialization etc.
-  	  </action>
-  	  <action type="fix" dev="Juergen Donnerstag" issue="1192572">
-  	    Fixed JavaScript parsing bug as reported on the user list by Andrew de Torres.
-  	  </action>
-  	  <action type="fix" dev="Eelco Hillenius">
-  	    Validators (LengthValidator, IntegerValidator and PatternValidator) now
-  	    only check non empty values.
-  	  </action>
-  	  <action type="update" dev="Martijn Dashorst" issue="1190287">
-  	    Made a clear seperation between IModel.getModel(), IModel.getNestedModel() and
-  	    IModel.getObject(). getNestedModel()/getRootModel() semantics getNestedModel() 
-  	    and getRootModel() returned Objects. They now return IModel.
-  	  </action>
-  	  <action type="add" dev="Eelco Hillenius">
-  	  	Added new Model LoadableDetachableModel that makes working with DetachableModels
-  	  	super easy.
-  	  </action>
-  	  <action type="fix" dev="Johan Compagner" issue="1190208">
-		PageableListviewNavigation number of pages shrinks when
-		the number of listview items gets smaller. This becomes
-		a problem when the number of listitems gets bigger again.
-  	  </action>
-  	  <action type="fix" dev="Johan Compagner" issue="1190148">
-  	   setModel triggers a model clone. It shouldn't as in fact it is a component state change.
-  	  </action>
-  	  <action type="fix" dev="Martijn Dashorst" issue="1189444">
-  	  Fixes that BoundCompoundPropertyModel.Binding doesn't implement Serializable.
-  	  </action>
-  	  <action type="update" dev="Jonathan Locke">
-  	  Made a number of small refactoring changes to support url path encryption.
-  	  The code is not that far from working, but the feature is turned off.  Added
-  	  a method Session.getPathCrypt() to get an instance of ICrypt for encrypting
-  	  url paths for a given session (it's probably not a good idea in general to
-  	  encrypt all paths for an application with the same key).  Moved ICrypt and
-  	  related implementations to wicket.util.crypt since the usage is more general
-  	  now.  Made a first pass at url encoding that doesn't work when path encryption
-  	  is enabled.  Also made a first pass at url decoding/reparsing that doesn't 
-  	  quite work either.  If someone out there has the time to fix my implementation 
-  	  (I don't think it's too far off), we could probably ship this with 1.0.  
-  	  </action>
-  	  <action type="add" dev="Eelco Hillenius" issue="1185624">
-  	  Added RadioChoice and multiple select lists to the form input example.
-  	  Also fixes issue 1185624
-  	  </action>
-  	  <action type="fix" dev="Juergen Donnerstag" issue="1187903">
- 		'-' in a attributes are parsed good now.
-	  </action>
-  	  <action type="add" dev="Eelco">
-  	  	added support for redirecting to external url's (e.g. Google) directly by
-  	  	introducing RedirectPage. Also added an example of this in the link-o-matic example.
-  	  </action>
-  	  <action type="update" dev="Jonathan Locke">
-  	  Form validation now occurs for every form submit in Form.onValidate().
-  	  If the form validates, Form.onSubmit is called unconditionally.  If
-  	  there is more than one button on the form and the form validates, then
-  	  Button.onSubmit() is also called.  Since multi-button forms (which are
-  	  a common case) are unlikely to want to override Form.onSubmit(), made 
-  	  this method non-abstract.
-  	  </action>
-  	  <action type="fix" dev="Jonathan Locke" issue="1186940">
- 		Enhanced CompoundPropertyModel's propertyType method to use the value
- 		from any TypeValidator attached to the FormComponent.  Also, removed type
- 		field from TextField in favor of using the more space-efficient 
- 		FormComponent.getValidationType() method (which was added to implement 
- 		CompoundPropertyModel.propertyType()).  If no TypeValidator has been 
- 		assigned, the default OGNL conversion will still occur.
-	  </action>
-	  <action type="fix" dev="Jonathan Locke" issue="1186293">
-	  Fixed problem with check in add() when undoing a remove operation.
-	  Added internalAdd() method to MarkupContainer and used it from Remove.undo()
-	  in the undo version manager.
-	  </action>
-  	  <action type="fix" dev="Martijn Dashorst" issue="1188128">
-		In a search form containing textfields, the input value is set to the empty 
-		string when no value is in the textfield. This should be configurable, so 
-		the user has the option to override this behaviour.
-		
-		Default usage should be that the value becomes NULL instead of empty string.
-  	  </action>
-  	  <action type="add" dev="Martijn Dashorst" issue="1186504">
-  	  	added support for CompoundPropertyModels to ListView, thus making it possible
-  	  	to add a ListView to a Form with a list property as the model without having
-  	  	to specify a seperate list model.
-  	  </action>
-  	  <action type="update" dev="Eelco Hillenius">
-  	    removed final from getLocale to enable users to pin a locale
-  	    (or use another algorithm) for custom sessions.
-  	  </action>
-  	  <action type="add" dev="Martijn Dashorst">
-  	  	Added additional constructor for MultiLineLabel for it to work with
-  	  	CompoundPropertyModels.
-  	  </action>
-	  <action type="update" dev="Eelco Hillenius">
-	  Made constructor of ListItem public as class ListItem is public, and
-	  ListView.newItem is overrideable while returning ListItem.
-	  </action>
-	  <action type="fix" dev="Eelco Hillenius">
-	  as in ListView accessor getOptimizeItemRemoval() is overrideable,
-	  the field should never be used directly. Fixed that.
-	  </action>
-	  <action type="update" dev="Eelco Hillenius">
-	  Introduced property optimizeItemRemoval for tree as well. Many internal improvements
-	  that fixed some unreported issues. Tree is versioned again.
-	  </action>
-  	</release>
-  	<release version="1.0.0-rc2" date="2005-04-16" description="1.0 Release Candidate 2">
-	  <action type="fix" dev="Eelco Hillenius" issue="1178309">
-	  tree does not need versioning by default.
-	  </action>
-	  <action type="fix" dev="Juergen Donnerstag" issue="1161111">
-	  Wickets mistakes &lt;a .../&gt; for an open-tag.
-	  </action>	
-	  <action type="update" dev="Eelco Hillenius">
-	  Tree can be extended by providing a custom panel for a node. This way
-	  the tree can be used to nest arbitrairy components, like input fields and
-	  (more) images.
-	  </action>
-	  <action type="fix" dev="Eelco Hillenius" issue="1183947">
-	  modelChanging and modelChanged were never called in the link handlers
-	  of the delete and moveUp/Down listview links
-	  </action>
-	  <action type="fix" dev="Eelco Hillenius">
-	  Tree is not a listener for tree events by default, as registering the tree
-	  as a listener by default can lead to memory leaks
-	  </action>
-	  <action type="fix" dev="Johan Compagner">
-	  Wrap catched exception so that we not only get the 'markup not found exception',
-	  but also what caused the problem in the first place.
-	  </action>
-	  <action type="fix" dev="Eelco Hillenius">
-	  Removed 'removeAll' from the render method in ListView
-	  </action>
-	  <action type="fix" dev="Eelco Hillenius">
-	  Added extra null pointer check in MultipartWebRequest
-	  </action>
-	  <action type="fix" dev="Eelco Hillenius">
-	  Resources were requested from the servlet context by relative path. This
-	  gives problems on some containers (like Jetty 5.1.x) 
-	  with a paths like 'mysubdir/foo.css'.
-	  The change is: final String url = '/' + getWebRequest().getRelativeURL();
-	  </action>	 
-	  <action type="fix" dev="Jonathan Locke" issue="1182158">
-	  Added updateCluster boolean to RequestCycle.  As a request is parsed, 
-	  this boolean is set in order to determine if the end of the request 
-	  cycle should update the cluster.  In WebRequestCycle, if the 
-	  resourceReference call returns true, there was a bug where parseRequest 
-	  would return true, which is incorrect.  Now, resourceReference() and 
-	  staticContent() both return false (since they don't involve pages).   
-	  In addition, both set the updateCluster boolean to false.  Then each 
-	  of bookmarkablePage, callComponentListener and homePage() set 
-	  updateCluster to true.  Finally, in Page.onRedirect, updateCluster is 
-	  set to false to override the true value set in callComponentListener 
-	  for simple page redirects.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1182728">
- 		Added PageMap.remove() method and PopupCloseLink class, which calls
- 		this method on Page.getPageMap(), which is now public.  A little 
- 		trick was necessary to invoke the java code AND close the window.
- 		When PopupCloseLink is clicked, the page map is removed and then
- 		the response page is set to a nested class with markup found in 
- 		PopupCloseLink$1.  This markup contains javascript that closes the
- 		window when it is loaded.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Factored out SharedResources class from Application and made some minor
-      improvements to the static path() methods.  This will clear the way to
-      make Session relative SharedResources in the future.  It also will enable
-      us to make changes to the SharedResources class without having to add
-      more methods to Application, which is already complex enough.
+    <release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+      <action type="update" dev="Eelco Hillenius">Added constructors with just the id to the Choice component to be consistent with other Wicket components.</action>
+      <action type="fix" dev="Eelco Hillenius">Strings.escapeMarkup now properly escapes unicode.</action>
+      <action type="update" dev="Johan Compagner, Eelco Hillenius" due-to="Martijn Dashorst">Made the rendering strategy pluggable. From javadoc of ApplicationSettings:
+        <i>renderStrategy</i>- Sets in what way the render part of a request is handled. Basically, there are two different options:
+        <ul>
+          <li>Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in one physical request. This is efficient, and is the best option if you want to do sophisticated clustering. It does not however, shield you from what is commonly known as the
+            <i>Double submit problem</i>
+          </li>
+          <li>Using a redirect. This follows the pattern
+            <a href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost">as described at the serverside</a>and that is commonly known as Redirect after post. Wicket takes it one step further to do any rendering after a redirect, so that not only form submits are shielded from the double submit problem, but also the IRequestListener handlers (that could be e.g. a link that deletes a row). With this pattern, you have two options to choose from:
+            <ul>
+              <li>ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the 'action' part of the request, which is either page construction (bookmarkable pages or the home page) or calling a IRequestListener handler, such as Link.onClick. When that part is done, a redirect is issued to the render part, which does all the rendering of the page and its components.
+                <strong>Be aware</strong>that this may mean, depending on whether you access any models in the action part of the request, that attachement and detachement of some models is done twice for a request.
+              </li>
+              <li>ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the action- and the render part of the request in one physical request, but instead of streaming the result to the browser directly, it is kept in memory, and a redirect is issue to get this buffered result (after which it is immediately removed). This option currently is the default render strategy, as it shields you from the double submit problem, while being more efficient and less error prone regarding to detachable models.</li>
+            </ul>
+          </li>
+        </ul>Note that this parameter sets the default behaviour, but that you can manually set whether any redirecting is done by calling method RequestCycle.setRedirect. Setting the redirect flag when the application is configured to use ONE_PASS_RENDER, will result in a redirect of type REDIRECT_TO_RENDER. When the application is configured to use REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to false, will result in that request begin rendered and streamed in one pass.
       </action>
-      <action type="fix" dev="Jonathan Locke" issue="1181983">
-      Any image path is now part of the resource key for shared images.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Added some parameter validation and finalized some methods that should 
-      not be overridden.  In particular, Component.getSession() is now final
-      as well as Component.getId().  The change to Component.getId() also
-      eliminated a field in Page that is really not necessary.  The result of
-      these changes is a tighter API.  There will be more changes of this 
-      nature as we lock down the API for 1.0 final.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Minor refactoring in Application and ApplicationSettings.  Changed
-      Application.sourcePath property to resourcePath since that's what it
-      really is.  Changed getCrypt() and getMarkupParser() to newCrypt()
-      and newMarkupParser() since these are really factory methods and they
-      should indicate that.  Made a bunch of methods final that should be
-      and reformatted some stuff.  Would like to make getSettings() final
-      too so that hotspot will inline accesses.  Unfortunately, some Spring
-      related subclass has already overridden the method and so now we cannot
-      make it final...
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Added FLAG_USER* bits to Component and made setFlag/getFlag protected. 
-      This will help avoid flag bit conflicts and will also make it possible to
-      reduce the space needs of Components other than Page (which already uses
-      bits in Component.flags).
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1177751"> 
-      Added Page.setDirty/isDirty and changed Session to replicate each dirty page
-      in the session based on this flag.  Then added code that sets the flag when
-      a Page is modified (in case someone changes some random page), but also set 
-      flag on by default and each time a Page object is pulled out of a Session
-      PageMap.  This will cause the default replication behavior described in this
-      bug.  Unfortunately, even though the change seems to work fine, there appears
-      to be a problem with one of the test cases.  It looks like MockWebApplication
-      was subtly dependent on something I changed and I suspect the test case rather
-      than the code since all the examples seem to work fine.  So I'm checking in
-      and hoping someone can take a look at the test since I can't make time for
-      a few days.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1176169"> 
-      Javadoc enhancement for ResouceReference.     
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Changed my mind about defaulting resources that are not lazy-inited.  If a
-      resource like "plus-sign.gif" is requested in the netherlands (locale nl_nl),
-      first an attempt is made to load "plus-sign_nl_nl.gif", then the lazy init
-      code is given a chance to create a resource for the nl_nl locale.  Then if
-      /that/ doesn't create a resource, we default it to "plus-sign.gif".  This 
-      kind of defaulting behavior is important in supporting non-localized static
-      resource references (which would not really be possible without this change).
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Fixed a bunch of unreported problems with image resources.  The new method
-      Application.localizedPath(name, locale, style) constructs more reasonable paths
-      for images by inserting the locale just before the extension (instead of after
-      it, which looks wrong and confusing).  This method will omit the locale if it
-      is equal to Locale.getDefault(), which means foo_en_US.gif and foo.gif are the
-      same resource in the US.  Updated Application.getResource() methods to use 
-      this method when searching for a resource in the shared resource cache.
-      The new getResource() method will actually fail if it cannot find a resource 
-      that matches the locale (as opposed to defaulting to the default locale).  This
-      will help keep localization problems to a minimum and also ensures that lazy
-      initialization will work (which it did not, before).  Undid a change that Johan
-      made to InputForm since we do not search for anything other than Locale.toString(),
-      meaning nl and nl_nl are not equal in Wicket at this time (which is really a bug
-      if anyone wants to report it).  Finally, made changes to the static image resolution
-      code so that it automatically creates shared resources! This means that the code 
-      for the Pub example did not have to change in order to be efficient /and/ localized.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1177942">      
-      Changed SharedResource to ResourceReference.  ResourceReference does not inherit
-      from Resource since it is a reference to a resource and not an actual resource now.
-      Added StaticImageResourceReference to make it easy to create references to static 
-      image resources.  See the Tree class for an example usage.  SharedResourceLink 
-      was changed to ResourceLink.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Fixed problem where error pages failing could cause recursive redirection.
-      In doing this, added Page.isErrorPage() method that returns false by default.
-      Error pages override this to let RequestCycle know when a recursive failure
-      is happening.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">      
-      Moved WebResource from http protocol package to markup.html package, which
-      seems more appropriate since it's used in web markup by ImageResource which
-      is in markup.html.image.resource.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1175835">
-      Fixed shared resource localization problem manifested in forminput example.
-      Image resources are now correctly shared under a URL that includes locale
-      and style (as originally intended).  Switching between locales will be correct
-      and efficient now.  The earlier code would result in unpredictable locale
-      shifts when used by multiple users.  It would also be very inefficient.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      	Added UploadForm.setMaxSize() method to limit the size of uploads. 
-      	This change includes an update to the upload example which shows how
-      	to use the feature and localize the strings involved.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Changed message model for "exception" to use Exception object:
-		
-				model.put("exception", e);
-		
-		This will allow full access to exception properties in localized Strings.  
-		In particular, you can now say ${exception.localizedMessage}.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Added Component.getString(final String key, final IModel model, final String defaultValue)
-      </action>
-    </release> 
-  	<release version="1.0.0-rc1" date="2005-04-03" description="1.0 Release Candidate 1"> 
-      <action type="update" dev="Jonathan Locke" issue="">
-      Reworked SharedResource a bit to address clustering issues for Chris.
-      I think the new structure will work finally, but I don't have a cluster
-      to test it on (which is why I checked in code that didn't work the first time).
-      See SharedResource javadoc and updated Images and Hangman applications for
-      details on how this works now.  Updated tree to use this new style.
-      Also, added a small change for Johan to get rid of inefficient asString()
-      implementation in StringBufferResouce and StringResource.  Nice find!
-      </action>
-  	  <action type="update" dev="Eelco Hillenius" issue="">
-		We've got a new project: Wicket Stuff (aka Wicket Contrib) at: http://sourceforge.net/projects/wicket-stuff
-		Wicket stuff is the project that is meant for contribution components/ utility classes
-		that should not be in either core or extensions. In effect, these are the projects
-		that are specific for an external libraries (like Hibernate, Spring or Velocity) or
-		that are not generic enough to support in the core projects.
-
-        In future, Wicket stuff can accept more committers than the core project, and also
-        the rules of accepting components for this project can be more relaxed.
-
-		Most of what was in wicket-contrib moved over to seperate projects.
-
-		Currently these projects are in wicket stuff:
-		- wicket-contrib-data : generic data models and utilities like PageableList;
-		- wicket-contrib-data-hibernate-2.1 : implementations of wicket-contrib-data for hibernate 2.1;
-		- wicket-contrib-data-hibernate-3.0 : implementations of wicket-contrib-data for hibernate 3.0;
-		- wicket-contrib-examples : meant for examples that use more than one contrib projects, currently only cdapp;
-		- wicket-contrib-fvalidate : javascript validation based on the fvalidate lib (http://www.peterbailey.net/fValidate/);
-		- wicket-contrib-groovy : groovy integration and examples;
-		- wicket-contrib-spring : spring framework integration and examples;
-		- wicket-contrib-velocity : velocity integration and examples.
-
-		The normal wicket-examples project is trimmed a lot, and has no dependencies on
-		the soon to be removed wicket-contrib project anymore.
-  	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Added Image.getImageResource() method.  Removed Component.getModelLock().
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Removed Localizer methods that don't work with Components.  Added getString(String key)
-      and getString(String key, IModel model) methods to Component for easy access to localized
-      strings.  Changed inheritance hierarchy of models so that AbstractModels are non-detachable
-      and AbstractDetachableModels are all detachable (and consequently implement IModel rather 
-      than extends AbstractModel).  Finally, removed MapModel class and created two factory methods
-      in Model that take List and Map objects and do appropriate wrapping for non-serializable 
-      instances.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Almost final checkin for RC1.  Changed initModel in Component to search the whole parent
-      hierarchy for CompoundModels.  Added logic that allows Components to know if they
-      are the root model or a child sharing the parent's compound model.  This allowed
-      me to remove getRootModelObject() and incorporate the logic necessary to get the
-      right model directly into getModelObject(), which now always works.  It also made
-      it possible to make replication of objects using compound models vastly more 
-      efficient since Components that inherit models are now detected and nulled out in
-      detachModel().  When the Component is deserialized, the model will be null and it
-      will be initialied via initModel() when needed as it originally was.  Made changes
-      to Images and ImageButtons so that they search for models differently (as a last
-      resort, actually).  This means they can be used with CompoundModels like any other
-      Component, although that use-case should be rare.
-      </action>
-      <action type="fix" dev="Eelco Hillenius" issue="1160518">
-        Support CheckBox / RadioChoice server-side actions.
-      </action>
-  	  <action type="update" dev="Martijn Dashorst">
-  	    Updated the error pages to have Wicket style error messages, made them HTML
-  	    4.01 transitional.
-  	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1166432">
-      Fixed lookahead code which was swallowing ?xml encoding header tag.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Added two convenient ways of constructing shared resources.  The first by calling
-		getShared() on an existing Resource.  The second by using an implementation of
-		ISharedResourceFactory in combination with new methods in Application.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Changed Page's request() handling method so that it does not do a 
-		component check in the finally block.  This was masking exceptions and
-		displaying them as rendering check problems.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1167377">
-      IMG tags are no longer split into open/close pair.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1166893">
-      Changed resource urls and added shared resources to Application via new 
-      add/getResource() methods.  The techniques are pretty well demonstrated in
-      FormInput and Hangman examples, which show how to use the new ResourceFactory
-      code and how to share resources efficiently across an application.  Docs are
-      somewhat lacking, but the code should at least make sense now.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1168600">
-      Added IRequestCycleFactory for first-class request cycle factories to enable
-      such things as a pluggable hibernate session manager in the future.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Moved ImageResourceFactory map to Application since that's a much more obvious
-      and intuitive place for it to be.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1167154">
-		Enhanced Component.toString() to include page name.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Made changes to AutoComponentResolver and AutoLinkResolver (new names) so that
-      they can sneakily add components that don't participate in either versioning or
-      modification checking.  
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1167112">
-      Fixed problem with URL.getFile() using the sun suggestion.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1166811">
-      Added explanatory exception when static images are not found.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1166597">
-      Added type setter to RenderedDynamicImageResource.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Changed the render cycle to make it better defined.  You can no longer change the component
-      hierarchy during rendering.  If you attempt to do so, an exception will be thrown.  To allow
-      for modification of the component hierarchy prior to rendering, there is a new onBeginRequest
-      and onEndRequest pair, which wholly replaces onBeginRender / onEndRender.  There should be no
-      need to do anything just before something renders now because the whole component tree is 
-      expected to be immutable throughout the rendering process.  I updated the Link, ListView and
-      Loop components so that they use internalOnBeginRequest() to add their children.  But we have
-      an ongoing problem with auto-links and auto-components, which now must be added during 
-      internalOnBeginRequest(), requiring changes to the markup parser as well (which should probably
-      just make notes about what components if any need to be added in internalOnBeginRequest()).
-      Also, fixed a major stupid bug in Component where i had implemented space efficient booleans 
-      nicely, but failed to initialize them.
-      </action>
-  	  <action type="fix" dev="Martijn Dashorst" issue="1167605">
-  	  	Documented running the examples using a binary or source distribution. Made it possible
-  	  	to run the examples using an embedded Jetty server.
-  	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Removed State and refactored clustering.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Changed loop to use iterations rather than size, since this makes more sense.  Removed LoopItem so that Loop is less easily confused with ListView.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Removed attach() method from IDetachable and added it to IChoiceList.
-      </action>
-      <action type="fix" dev="Jonathan Locke" issue="1165955">
-      Changed popup settings to use flags instead of booleans.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="1157844">
-      Major changes!  Added PageMap abstraction to Session to make it possible for multiple browser windows,
-      popups and frames to have their own page maps, avoiding the problem of pages going stale in one window
-      when the other window is used.  In the future, this will also allow us to implement a page stack for the
-      page map and using this a back() navigation method that always knows what the previous page was.  
-      Adding PageMap required a whole set of changes to the framework.
-      The various urlFor overloads moved from RequestCycle to Page (and they are implemented in WebPage).
-      The reason for this is that each Page belongs to a specific PageMap now and it will render differently
-      in that the url returned by urlFor will have the PageMap encoded in it (if it is not in the default 
-      page map).  A variety of other changes were necessary to support this abstraction, including changes to
-      state management and clustering code.  In addition, this checkin contains a very early implementation of
-      a concept I'm calling "PageSets".  The code will eventually apply to security, presentation and navigation,
-      but don't worry about all this just yet.  Also created newPage() methods in Component that make it easy
-      to create new pages using the Page's PageFactory.
-	  </action>
-      <action type="fix" dev="Juergen Donnerstag" issue="">
-      Replaced id="wicket-xxx" and wicket="xxx" with wicket:id="xxx". 
-      </action>
-      <action type="fix" dev="Juergen Donnerstag" issue="1124299">
-      Removed setStripComponentId(boolean). setStripWicketTags(boolean) now removes wicket:id="XX" as well.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Added Netherlands buttons to form input example to demo button factories.  Improved DefaultButtonImageResource so that it auto-resizes buttons with text that won't fit (as it most likely won't in Dutch).
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Made FormComponents non-versioned by default.  Added override of setVersioned(boolean) to Form which sets the versioning of all its children.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1162633">
-      Added setImageResource() to Image.  Changed image factory syntax from . separator to : separator for eelco.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1156254">
-      Added setResponsePage(Page) to Component.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1164326">
-      Changed Panel so you can have preview text inside the wicket:panel tag.  Fixed a bug in XmlTag regarding what the attributes map holds.  It now holds ordinary Strings.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Added a protected method to Link and Button to get onClick script code to install from subclasses.  Fixed bug where XmlTag attributes were case sensitive!
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      File uploading now has its own first class model that abstracts FileItem away.  The example has been updated.  See that for details.
-	  </action>
-      <action type="fix" dev="Jonathan Locke" issue="1138660">
-      It is now possible to create AttributeModifiers that do arbitrary things to the original and replacement values, such as appending one to the other.  See javadoc in AttributeModifier for details.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-		Now WebApplication reads the servlet init parameter "configuration". If the parameter has the value "development", settings appropriate for development are set. If it's "deployment", deployment settings are used. If development, configuration is specified and a "sourceFolder" init parameter is also set, then resources in that folder will be polled for changes.  Since this all occurs on initialization, the user can still override settings in the usual place.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Changed Component.name property to Component.id to match upcoming changes.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Changed RequestCycle.setPage() -> RequestCycle.setResponsePage().
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Added isVersioned boolean to Component.  Any child of a Component that is not versioned is not versioned itself.  So if you setVersioned(false) on a Page, then no component on that Page will be versioned.  Fixed various problems with undoing and tested it a little with Guestbook, which was broken and is now fixed.  Added setVersioned(false) to FeedbackPanel's listview so that no listview components will ever be versioned.  Made internalX pattern consistent in the framework.  Added RequestCycle factory method to WebApplication.  Moved static method for creating/attaching sessions from WebSession to WebApplication.  Added a notion of Charset to AbstractResource and then used this to implement asString().  Added Component.remove().  
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Added the first portion of our framework for doing page versioning, including the IPageVersionManager interface and calls into that from MarkupContainer, Component and elsewhere.  Removed all render count functionality and reworked the code to check component renderings as a debug-only Set in Page.  Also made more structural changes to onX() handlers so that all internal handlers are onInternalX() now, meaning that user code does not have to call super.onX() ever to have the core functionality work.  There are now user methods for each lifecycle event that the user might care about.  These are called in the following order: Page.onBeginRequest(), Component.onBeginRender(), Component.onRender(), Component.onEndRender(), Page.onEndRequest().  Component.onModelChanged() is called when a component's model is changed.  This is detected when Component.setModel() or Component.setModelObject() are called.  If a Component's model is changed by the programmer and they wish to let the framework know that a model change happened, they can call Component.modelChanged() directly.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-	   Straightened out resource serialization issues.  IResource is now serializable and all subclasses need to implement serialization semantics, which is done for all core components now.  In particular, all DynamicImageResources now have transient input streams that are recreated using the subclass' image data.  The only non-transient image resource is BufferedDynamicImageResource, which rightly has image data that it serializes.  Also fixed problems with lastModified timestamps.
-	  </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-	   Tightened up semantics of rendering/response overrides, which were much too loose.  You can no longer override render() because that method is now final.  You can change the rendering process by overriding onRender().  You can do something before rendering by overriding onBeginRender().  You can do something after rendering by overriding onEndRender().  And you can do something like invalidate the session on sign-out by overriding Page.onEndRequest().  It is not necessary to call the super implementation on Component, MarkupContainer or Page.  These are now coded defensively, assuming programmers will forget to do this.  The only place where you might actually need to do this with a core component would be if you subclassed FeedbackPanel, which overrides onEndRender() to clear out its message components... which makes me wonder if we don't need an auto-reset feature on ListViews...
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Changed clustering code so that PageState records are saved as independent attributes.  This should permit correct failover.
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Added onBeginRender() and onEndRender() methods to Page as appropriate places to put code instead of overriding render() and calling super.render(), which is unadvisable.  Refactored WicketServlet, RequestCycle, Session, WebRequestCycle and WebSession all somewhat to support clustering.  These changes should affect nobody at the moment except that they may break clustering (I have no way to test it right now).
-      </action>
-      <action type="update" dev="Jonathan Locke" issue="">
-      Removed constructor overloads taking OGNL expressions and Serializable objects, reducing parameters to (String name) and (String name, IModel model) in most places.  Made FormComponent and Component look in Form and Page, respectively, for models in their implementations of initModel().  This effectively gives any component missing a model either the parent form's model or the page's model.  Made setModel() public again since it's too inconvenient to pass models straight up the constructor chain.  So now Forms and Pages can have CompoundPropertyModels and BoundCompoundPropertyModels and their children will essentially inherit this compound model (which is parameterized by component).  Since Pages and Forms will typically hold CompoundPropertyModels, it was necessary to make a method getRootModel() which gets the rootmost nested model from the compound model.  This is convenient because it means that Forms do not have to have a separate instance variable to track the actual bean being edited.  If getRootModel() did not exist, getModelObject() on the Form or Page would fail because the model would be parameterized on the Form or Page itself.
-      </action>
-  	</release>
+      <action type="fix" dev="Eelco Hillenius">Fixed a bug that made MostRecentlyUsedMap (used to store page in the session) behave like a MostRecentlyAddedToMap. Fixes lots of frames/ popup problems in one strike.</action>
+      <action type="add" dev="Eelco Hillenius" due-to="Jonathan Carlson">Added method setChoices and some np checks to AbstractChoice</action>
+      <action type="add" dev="Juergen Donnerstag" issue="1169374">Implemented support for obfuscating URLs</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1192572">Fixed Javascript parse error. CDATA section are properly handled now.</action>
+      <action type="update" dev="Johan Compagner, Eelco Hillenius">Refactored resources and fixed some issues along the way. The major change is that we removed ImageResource from the inheritance tree. So, if you have compile problems, replace any reference to ImageResource with wicket.markup.html.WebResource. Furthermore, StaticImageResource and StaticImageResourceReference are renamed to StaticResource and StaticResourceReference, as it is perfectly acceptable to reference e.g. a PDF (we did some testing with this as well). Also, as we fixed a localization bug in this, you could for example package resources like 'mydoc.pdf' and 'mydoc_nl.pdf' and reference them with a StaticResource(Reference), and let Wicket find out which one should be loaded.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1188417">ResourceLinks were not binded for static resources.</action>
+      <action type="fix" dev="Johan Compagner" issue="1192671">Application is not serializable. Application in StaticImageResource is now transient and is set just before it is needed.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1197005">Nesting of message receivers should work without any problems due to the recent feedback message refactorings.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1198740">Instead of throwing an exception when a request could not be processed, Wicket now sends a 404.</action>
+      <action type="fix" dev="Eelco Hillenius">in Form: Form components were persisted before the form was updated.</action>
+      <action type="fix" dev="Eelco Hillenius">When the upload does not validate, super.onSubmit will now not be called anymore.</action>
+      <action type="update" dev="Eelco Hillenius">It is now possible to set a Comparator for sorting messages on both FeedbackPanel and FeedbackMessagesModel.</action>
+      <action type="update" dev="Eelco Hillenius">Refactored feedback message handling to be independent (using pull models) of the flow of execution of a page again. This makes it easier to use, and results in less spagethi code. Introduced IFeedbackBoundary that is a tagging interface to implement message hierarchy blocks. Currently it is implemented by Page and Form. IFeedback now has one method that can be used by implementing classes to set (override) the actual component from where messages are collected. Form uses this to set the collection point when a IFeedback instance is provided. The add/remove methods of IFeedback are removed. Made both FeedbackPanel and FormComponentFeedbackBorder non-final, so users can provide their own markup. Also, FeedbackMessagesModel that is used by FeedbackPanel is public, so that it can be used for custom implementations without having to know too much about the internals of message collecting.</action>
+      <action type="fix" dev="Eelco Hillenius">Added escapes for &amp;, " and ' in Strings utilities class.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1196140">This bug prevented running Wicket on VM's that don't use SUN's security implementation classes. Don Ledford reported it for Blackdown 1.4.2 j2sdk. Removed SunJceCrypt's static initializer and put it in it's constructor. Application now reuses the ICrypt instance once it is created, so that it is easier to provide a dummy one. The current ICrypt instances seem to be thread safe, so that shouldn't give any problems, and users can override the factory method if they want to use non-thread safe instances.</action>
+      <action type="fix" dev="Eelco Hillenius">In ResourceTest URL.getFile() was used while it should use a URI to construct a file.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1194464">ClassCastException on ListItem.onAttach using CompoundPropertyModel. When using a CompoundPropertyModel to bind a list to a listview, the ListItem.onAttach throws a ClassCastException. This is because the model of the ListView is not used to cast to an element, but the root model. Fixed by using ListView.getModelObject() instead of having the ListItemModel try to retrieve the model itself. The ListItem now takes a ListView instead of a ListModel, and requests the model on the listview.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1194460">RequestCycle.onEndRequest not called after Exception. When an exception occurs, onEndRequest is not always called. This results in open database connections etc. when these are allocated and deallocated using a custom RequestCycle. Fixed by moving the endRequest method calls into the finally block of RequestCycle.request().</action>
+      <action type="fix" dev="Eelco Hillenius">Fixed the beginning/ending callbacks of pages. This was not done properly for listener interface calls: internalBeginRequest was called to late, or in case the listener set another page to render, not at all. The same problem applied to internalEndRequest. As this method is where the component models must be detached (see earlier fix), this had the effect that models were often not detached. Which in turn gave problems - besides a temporary memory leak - with lazy Hibernate initialization etc.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1192572">Fixed JavaScript parsing bug as reported on the user list by Andrew de Torres.</action>
+      <action type="fix" dev="Eelco Hillenius">Validators (LengthValidator, IntegerValidator and PatternValidator) now only check non empty values.</action>
+      <action type="update" dev="Martijn Dashorst" issue="1190287">Made a clear seperation between IModel.getModel(), IModel.getNestedModel() and IModel.getObject(). getNestedModel()/getRootModel() semantics getNestedModel() and getRootModel() returned Objects. They now return IModel.</action>
+      <action type="add" dev="Eelco Hillenius">Added new Model LoadableDetachableModel that makes working with DetachableModels super easy.</action>
+      <action type="fix" dev="Johan Compagner" issue="1190208">PageableListviewNavigation number of pages shrinks when the number of listview items gets smaller. This becomes a problem when the number of listitems gets bigger again.</action>
+      <action type="fix" dev="Johan Compagner" issue="1190148">setModel triggers a model clone. It shouldn't as in fact it is a component state change.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1189444">Fixes that BoundCompoundPropertyModel.Binding doesn't implement Serializable.</action>
+      <action type="update" dev="Jonathan Locke">Made a number of small refactoring changes to support url path encryption. The code is not that far from working, but the feature is turned off. Added a method Session.getPathCrypt() to get an instance of ICrypt for encrypting url paths for a given session (it's probably not a good idea in general to encrypt all paths for an application with the same key). Moved ICrypt and related implementations to wicket.util.crypt since the usage is more general now. Made a first pass at url encoding that doesn't work when path encryption is enabled. Also made a first pass at url decoding/reparsing that doesn't quite work either. If someone out there has the time to fix my implementation (I don't think it's too far off), we could probably ship this with 1.0.</action>
+      <action type="add" dev="Eelco Hillenius" issue="1185624">Added RadioChoice and multiple select lists to the form input example. Also fixes issue 1185624</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1187903">'-' in a attributes are parsed good now.</action>
+      <action type="add" dev="Eelco">added support for redirecting to external url's (e.g. Google) directly by introducing RedirectPage. Also added an example of this in the link-o-matic example.</action>
+      <action type="update" dev="Jonathan Locke">Form validation now occurs for every form submit in Form.onValidate(). If the form validates, Form.onSubmit is called unconditionally. If there is more than one button on the form and the form validates, then Button.onSubmit() is also called. Since multi-button forms (which are a common case) are unlikely to want to override Form.onSubmit(), made this method non-abstract.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1186940">Enhanced CompoundPropertyModel's propertyType method to use the value from any TypeValidator attached to the FormComponent. Also, removed type field from TextField in favor of using the more space-efficient FormComponent.getValidationType() method (which was added to implement CompoundPropertyModel.propertyType()). If no TypeValidator has been assigned, the default OGNL conversion will still occur.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1186293">Fixed problem with check in add() when undoing a remove operation. Added internalAdd() method to MarkupContainer and used it from Remove.undo() in the undo version manager.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1188128">In a search form containing textfields, the input value is set to the empty string when no value is in the textfield. This should be configurable, so the user has the option to override this behaviour. Default usage should be that the value becomes NULL instead of empty string.</action>
+      <action type="add" dev="Martijn Dashorst" issue="1186504">added support for CompoundPropertyModels to ListView, thus making it possible to add a ListView to a Form with a list property as the model without having to specify a seperate list model.</action>
+      <action type="update" dev="Eelco Hillenius">removed final from getLocale to enable users to pin a locale (or use another algorithm) for custom sessions.</action>
+      <action type="add" dev="Martijn Dashorst">Added additional constructor for MultiLineLabel for it to work with CompoundPropertyModels.</action>
+      <action type="update" dev="Eelco Hillenius">Made constructor of ListItem public as class ListItem is public, and ListView.newItem is overrideable while returning ListItem.</action>
+      <action type="fix" dev="Eelco Hillenius">as in ListView accessor getOptimizeItemRemoval() is overrideable, the field should never be used directly. Fixed that.</action>
+      <action type="update" dev="Eelco Hillenius">Introduced property optimizeItemRemoval for tree as well. Many internal improvements that fixed some unreported issues. Tree is versioned again.</action>
+    </release>
+    <release version="1.0.0-rc2" date="2005-04-16" description="1.0 Release Candidate 2">
+      <action type="fix" dev="Eelco Hillenius" issue="1178309">tree does not need versioning by default.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1161111">Wickets mistakes &lt;a .../&gt; for an open-tag.</action>
+      <action type="update" dev="Eelco Hillenius">Tree can be extended by providing a custom panel for a node. This way the tree can be used to nest arbitrairy components, like input fields and (more) images.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1183947">modelChanging and modelChanged were never called in the link handlers of the delete and moveUp/Down listview links</action>
+      <action type="fix" dev="Eelco Hillenius">Tree is not a listener for tree events by default, as registering the tree as a listener by default can lead to memory leaks</action>
+      <action type="fix" dev="Johan Compagner">Wrap catched exception so that we not only get the 'markup not found exception', but also what caused the problem in the first place.</action>
+      <action type="fix" dev="Eelco Hillenius">Removed 'removeAll' from the render method in ListView</action>
+      <action type="fix" dev="Eelco Hillenius">Added extra null pointer check in MultipartWebRequest</action>
+      <action type="fix" dev="Eelco Hillenius">Resources were requested from the servlet context by relative path. This gives problems on some containers (like Jetty 5.1.x) with a paths like 'mysubdir/foo.css'. The change is: final String url = '/' + getWebRequest().getRelativeURL();</action>
+      <action type="fix" dev="Jonathan Locke" issue="1182158">Added updateCluster boolean to RequestCycle. As a request is parsed, this boolean is set in order to determine if the end of the request cycle should update the cluster. In WebRequestCycle, if the resourceReference call returns true, there was a bug where parseRequest would return true, which is incorrect. Now, resourceReference() and staticContent() both return false (since they don't involve pages). In addition, both set the updateCluster boolean to false. Then each of bookmarkablePage, callComponentListener and homePage() set updateCluster to true. Finally, in Page.onRedirect, updateCluster is set to false to override the true value set in callComponentListener for simple page redirects.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1182728">Added PageMap.remove() method and PopupCloseLink class, which calls this method on Page.getPageMap(), which is now public. A little trick was necessary to invoke the java code AND close the window. When PopupCloseLink is clicked, the page map is removed and then the response page is set to a nested class with markup found in PopupCloseLink$1. This markup contains javascript that closes the window when it is loaded.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Factored out SharedResources class from Application and made some minor improvements to the static path() methods. This will clear the way to make Session relative SharedResources in the future. It also will enable us to make changes to the SharedResources class without having to add more methods to Application, which is already complex enough.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1181983">Any image path is now part of the resource key for shared images.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added some parameter validation and finalized some methods that should not be overridden. In particular, Component.getSession() is now final as well as Component.getId(). The change to Component.getId() also eliminated a field in Page that is really not necessary. The result of these changes is a tighter API. There will be more changes of this nature as we lock down the API for 1.0 final.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Minor refactoring in Application and ApplicationSettings. Changed Application.sourcePath property to resourcePath since that's what it really is. Changed getCrypt() and getMarkupParser() to newCrypt() and newMarkupParser() since these are really factory methods and they should indicate that. Made a bunch of methods final that should be and reformatted some stuff. Would like to make getSettings() final too so that hotspot will inline accesses. Unfortunately, some Spring related subclass has already overridden the method and so now we cannot make it final...</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added FLAG_USER* bits to Component and made setFlag/getFlag protected. This will help avoid flag bit conflicts and will also make it possible to reduce the space needs of Components other than Page (which already uses bits in Component.flags).</action>
+      <action type="fix" dev="Jonathan Locke" issue="1177751">Added Page.setDirty/isDirty and changed Session to replicate each dirty page in the session based on this flag. Then added code that sets the flag when a Page is modified (in case someone changes some random page), but also set flag on by default and each time a Page object is pulled out of a Session PageMap. This will cause the default replication behavior described in this bug. Unfortunately, even though the change seems to work fine, there appears to be a problem with one of the test cases. It looks like MockWebApplication was subtly dependent on something I changed and I suspect the test case rather than the code since all the examples seem to work fine. So I'm checking in and hoping someone can take a look at the test since I can't make time for a few days.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1176169">Javadoc enhancement for ResouceReference.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed my mind about defaulting resources that are not lazy-inited. If a resource like "plus-sign.gif" is requested in the netherlands (locale nl_nl), first an attempt is made to load "plus-sign_nl_nl.gif", then the lazy init code is given a chance to create a resource for the nl_nl locale. Then if /that/ doesn't create a resource, we default it to "plus-sign.gif". This kind of defaulting behavior is important in supporting non-localized static resource references (which would not really be possible without this change).</action>
+      <action type="update" dev="Jonathan Locke" issue="">Fixed a bunch of unreported problems with image resources. The new method Application.localizedPath(name, locale, style) constructs more reasonable paths for images by inserting the locale just before the extension (instead of after it, which looks wrong and confusing). This method will omit the locale if it is equal to Locale.getDefault(), which means foo_en_US.gif and foo.gif are the same resource in the US. Updated Application.getResource() methods to use this method when searching for a resource in the shared resource cache. The new getResource() method will actually fail if it cannot find a resource that matches the locale (as opposed to defaulting to the default locale). This will help keep localization problems to a minimum and also ensures that lazy initialization will work (which it did not, before). Undid a change that Johan made to InputForm since we do not search for anything other than Locale.toString(), meaning nl and nl_nl are not equal in Wicket at this time (which is really a bug if anyone wants to report it). Finally, made changes to the static image resolution code so that it automatically creates shared resources! This means that the code for the Pub example did not have to change in order to be efficient /and/ localized.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1177942">Changed SharedResource to ResourceReference. ResourceReference does not inherit from Resource since it is a reference to a resource and not an actual resource now. Added StaticImageResourceReference to make it easy to create references to static image resources. See the Tree class for an example usage. SharedResourceLink was changed to ResourceLink.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Fixed problem where error pages failing could cause recursive redirection. In doing this, added Page.isErrorPage() method that returns false by default. Error pages override this to let RequestCycle know when a recursive failure is happening.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Moved WebResource from http protocol package to markup.html package, which seems more appropriate since it's used in web markup by ImageResource which is in markup.html.image.resource.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1175835">Fixed shared resource localization problem manifested in forminput example. Image resources are now correctly shared under a URL that includes locale and style (as originally intended). Switching between locales will be correct and efficient now. The earlier code would result in unpredictable locale shifts when used by multiple users. It would also be very inefficient.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added UploadForm.setMaxSize() method to limit the size of uploads. This change includes an update to the upload example which shows how to use the feature and localize the strings involved.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed message model for "exception" to use Exception object: model.put("exception", e); This will allow full access to exception properties in localized Strings. In particular, you can now say ${exception.localizedMessage}.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added Component.getString(final String key, final IModel model, final String defaultValue)</action>
+    </release>
+    <release version="1.0.0-rc1" date="2005-04-03" description="1.0 Release Candidate 1">
+      <action type="update" dev="Jonathan Locke" issue="">Reworked SharedResource a bit to address clustering issues for Chris. I think the new structure will work finally, but I don't have a cluster to test it on (which is why I checked in code that didn't work the first time). See SharedResource javadoc and updated Images and Hangman applications for details on how this works now. Updated tree to use this new style. Also, added a small change for Johan to get rid of inefficient asString() implementation in StringBufferResouce and StringResource. Nice find!</action>
+      <action type="update" dev="Eelco Hillenius" issue="">We've got a new project: Wicket Stuff (aka Wicket Contrib) at: http://sourceforge.net/projects/wicket-stuff Wicket stuff is the project that is meant for contribution components/ utility classes that should not be in either core or extensions. In effect, these are the projects that are specific for an external libraries (like Hibernate, Spring or Velocity) or that are not generic enough to support in the core projects. In future, Wicket stuff can accept more committers than the core project, and also the rules of accepting components for this project can be more relaxed. Most of what was in wicket-contrib moved over to seperate projects. Currently these projects are in wicket stuff: - wicket-contrib-data : generic data models and utilities like PageableList; - wicket-contrib-data-hibernate-2.1 : implementations of wicket-contrib-data for hibernate 2.1; - wicket-contrib-data-hibernate-3.0 : implementations of wicket-contrib-data for hibernate 3.0; - wicket-contrib-examples : meant for examples that use more than one contrib projects, currently only cdapp; - wicket-contrib-fvalidate : javascript validation based on the fvalidate lib (http://www.peterbailey.net/fValidate/); - wicket-contrib-groovy : groovy integration and examples; - wicket-contrib-spring : spring framework integration and examples; - wicket-contrib-velocity : velocity integration and examples. The normal wicket-examples project is trimmed a lot, and has no dependencies on the soon to be removed wicket-contrib project anymore.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added Image.getImageResource() method. Removed Component.getModelLock().</action>
+      <action type="update" dev="Jonathan Locke" issue="">Removed Localizer methods that don't work with Components. Added getString(String key) and getString(String key, IModel model) methods to Component for easy access to localized strings. Changed inheritance hierarchy of models so that AbstractModels are non-detachable and AbstractDetachableModels are all detachable (and consequently implement IModel rather than extends AbstractModel). Finally, removed MapModel class and created two factory methods in Model that take List and Map objects and do appropriate wrapping for non-serializable instances.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Almost final checkin for RC1. Changed initModel in Component to search the whole parent hierarchy for CompoundModels. Added logic that allows Components to know if they are the root model or a child sharing the parent's compound model. This allowed me to remove getRootModelObject() and incorporate the logic necessary to get the right model directly into getModelObject(), which now always works. It also made it possible to make replication of objects using compound models vastly more efficient since Components that inherit models are now detected and nulled out in detachModel(). When the Component is deserialized, the model will be null and it will be initialied via initModel() when needed as it originally was. Made changes to Images and ImageButtons so that they search for models differently (as a last resort, actually). This means they can be used with CompoundModels like any other Component, although that use-case should be rare.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1160518">Support CheckBox / RadioChoice server-side actions.</action>
+      <action type="update" dev="Martijn Dashorst">Updated the error pages to have Wicket style error messages, made them HTML 4.01 transitional.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1166432">Fixed lookahead code which was swallowing ?xml encoding header tag.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added two convenient ways of constructing shared resources. The first by calling getShared() on an existing Resource. The second by using an implementation of ISharedResourceFactory in combination with new methods in Application.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed Page's request() handling method so that it does not do a component check in the finally block. This was masking exceptions and displaying them as rendering check problems.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1167377">IMG tags are no longer split into open/close pair.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1166893">Changed resource urls and added shared resources to Application via new add/getResource() methods. The techniques are pretty well demonstrated in FormInput and Hangman examples, which show how to use the new ResourceFactory code and how to share resources efficiently across an application. Docs are somewhat lacking, but the code should at least make sense now.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1168600">Added IRequestCycleFactory for first-class request cycle factories to enable such things as a pluggable hibernate session manager in the future.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Moved ImageResourceFactory map to Application since that's a much more obvious and intuitive place for it to be.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1167154">Enhanced Component.toString() to include page name.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Made changes to AutoComponentResolver and AutoLinkResolver (new names) so that they can sneakily add components that don't participate in either versioning or modification checking.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1167112">Fixed problem with URL.getFile() using the sun suggestion.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1166811">Added explanatory exception when static images are not found.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1166597">Added type setter to RenderedDynamicImageResource.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed the render cycle to make it better defined. You can no longer change the component hierarchy during rendering. If you attempt to do so, an exception will be thrown. To allow for modification of the component hierarchy prior to rendering, there is a new onBeginRequest and onEndRequest pair, which wholly replaces onBeginRender / onEndRender. There should be no need to do anything just before something renders now because the whole component tree is expected to be immutable throughout the rendering process. I updated the Link, ListView and Loop components so that they use internalOnBeginRequest() to add their children. But we have an ongoing problem with auto-links and auto-components, which now must be added during internalOnBeginRequest(), requiring changes to the markup parser as well (which should probably just make notes about what components if any need to be added in internalOnBeginRequest()). Also, fixed a major stupid bug in Component where i had implemented space efficient booleans nicely, but failed to initialize them.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1167605">Documented running the examples using a binary or source distribution. Made it possible to run the examples using an embedded Jetty server.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Removed State and refactored clustering.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed loop to use iterations rather than size, since this makes more sense. Removed LoopItem so that Loop is less easily confused with ListView.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Removed attach() method from IDetachable and added it to IChoiceList.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1165955">Changed popup settings to use flags instead of booleans.</action>
+      <action type="update" dev="Jonathan Locke" issue="1157844">Major changes! Added PageMap abstraction to Session to make it possible for multiple browser windows, popups and frames to have their own page maps, avoiding the problem of pages going stale in one window when the other window is used. In the future, this will also allow us to implement a page stack for the page map and using this a back() navigation method that always knows what the previous page was. Adding PageMap required a whole set of changes to the framework. The various urlFor overloads moved from RequestCycle to Page (and they are implemented in WebPage). The reason for this is that each Page belongs to a specific PageMap now and it will render differently in that the url returned by urlFor will have the PageMap encoded in it (if it is not in the default page map). A variety of other changes were necessary to support this abstraction, including changes to state management and clustering code. In addition, this checkin contains a very early implementation of a concept I'm calling "PageSets". The code will eventually apply to security, presentation and navigation, but don't worry about all this just yet. Also created newPage() methods in Component that make it easy to create new pages using the Page's PageFactory.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="">Replaced id="wicket-xxx" and wicket="xxx" with wicket:id="xxx".</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1124299">Removed setStripComponentId(boolean). setStripWicketTags(boolean) now removes wicket:id="XX" as well.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added Netherlands buttons to form input example to demo button factories. Improved DefaultButtonImageResource so that it auto-resizes buttons with text that won't fit (as it most likely won't in Dutch).</action>
+      <action type="update" dev="Jonathan Locke" issue="">Made FormComponents non-versioned by default. Added override of setVersioned(boolean) to Form which sets the versioning of all its children.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1162633">Added setImageResource() to Image. Changed image factory syntax from . separator to : separator for eelco.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1156254">Added setResponsePage(Page) to Component.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1164326">Changed Panel so you can have preview text inside the wicket:panel tag. Fixed a bug in XmlTag regarding what the attributes map holds. It now holds ordinary Strings.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added a protected method to Link and Button to get onClick script code to install from subclasses. Fixed bug where XmlTag attributes were case sensitive!</action>
+      <action type="update" dev="Jonathan Locke" issue="">File uploading now has its own first class model that abstracts FileItem away. The example has been updated. See that for details.</action>
+      <action type="fix" dev="Jonathan Locke" issue="1138660">It is now possible to create AttributeModifiers that do arbitrary things to the original and replacement values, such as appending one to the other. See javadoc in AttributeModifier for details.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Now WebApplication reads the servlet init parameter "configuration". If the parameter has the value "development", settings appropriate for development are set. If it's "deployment", deployment settings are used. If development, configuration is specified and a "sourceFolder" init parameter is also set, then resources in that folder will be polled for changes. Since this all occurs on initialization, the user can still override settings in the usual place.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed Component.name property to Component.id to match upcoming changes.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed RequestCycle.setPage() -&gt; RequestCycle.setResponsePage().</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added isVersioned boolean to Component. Any child of a Component that is not versioned is not versioned itself. So if you setVersioned(false) on a Page, then no component on that Page will be versioned. Fixed various problems with undoing and tested it a little with Guestbook, which was broken and is now fixed. Added setVersioned(false) to FeedbackPanel's listview so that no listview components will ever be versioned. Made internalX pattern consistent in the framework. Added RequestCycle factory method to WebApplication. Moved static method for creating/attaching sessions from WebSession to WebApplication. Added a notion of Charset to AbstractResource and then used this to implement asString(). Added Component.remove().</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added the first portion of our framework for doing page versioning, including the IPageVersionManager interface and calls into that from MarkupContainer, Component and elsewhere. Removed all render count functionality and reworked the code to check component renderings as a debug-only Set in Page. Also made more structural changes to onX() handlers so that all internal handlers are onInternalX() now, meaning that user code does not have to call super.onX() ever to have the core functionality work. There are now user methods for each lifecycle event that the user might care about. These are called in the following order: Page.onBeginRequest(), Component.onBeginRender(), Component.onRender(), Component.onEndRender(), Page.onEndRequest(). Component.onModelChanged() is called when a component's model is changed. This is detected when Component.setModel() or Component.setModelObject() are called. If a Component's model is changed by the programmer and they wish to let the framework know that a model change happened, they can call Component.modelChanged() directly.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Straightened out resource serialization issues. IResource is now serializable and all subclasses need to implement serialization semantics, which is done for all core components now. In particular, all DynamicImageResources now have transient input streams that are recreated using the subclass' image data. The only non-transient image resource is BufferedDynamicImageResource, which rightly has image data that it serializes. Also fixed problems with lastModified timestamps.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Tightened up semantics of rendering/response overrides, which were much too loose. You can no longer override render() because that method is now final. You can change the rendering process by overriding onRender(). You can do something before rendering by overriding onBeginRender(). You can do something after rendering by overriding onEndRender(). And you can do something like invalidate the session on sign-out by overriding Page.onEndRequest(). It is not necessary to call the super implementation on Component, MarkupContainer or Page. These are now coded defensively, assuming programmers will forget to do this. The only place where you might actually need to do this with a core component would be if you subclassed FeedbackPanel, which overrides onEndRender() to clear out its message components... which makes me wonder if we don't need an auto-reset feature on ListViews...</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed clustering code so that PageState records are saved as independent attributes. This should permit correct failover.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Added onBeginRender() and onEndRender() methods to Page as appropriate places to put code instead of overriding render() and calling super.render(), which is unadvisable. Refactored WicketServlet, RequestCycle, Session, WebRequestCycle and WebSession all somewhat to support clustering. These changes should affect nobody at the moment except that they may break clustering (I have no way to test it right now).</action>
+      <action type="update" dev="Jonathan Locke" issue="">Removed constructor overloads taking OGNL expressions and Serializable objects, reducing parameters to (String name) and (String name, IModel model) in most places. Made FormComponent and Component look in Form and Page, respectively, for models in their implementations of initModel(). This effectively gives any component missing a model either the parent form's model or the page's model. Made setModel() public again since it's too inconvenient to pass models straight up the constructor chain. So now Forms and Pages can have CompoundPropertyModels and BoundCompoundPropertyModels and their children will essentially inherit this compound model (which is parameterized by component). Since Pages and Forms will typically hold CompoundPropertyModels, it was necessary to make a method getRootModel() which gets the rootmost nested model from the compound model. This is convenient because it means that Forms do not have to have a separate instance variable to track the actual bean being edited. If getRootModel() did not exist, getModelObject() on the Form or Page would fail because the model would be parameterized on the Form or Page itself.</action>
+    </release>
     <release version="0.9.19-beta" date="2005-03-04" description="Pre release candidate?">
       <action type="update" dev="Juergen Donnerstag" issue="">Introduced Loop component that can be used in cases where you just want to create a number of components without having the need for a real model.</action>
       <action type="update" dev="Martijn Dashorst" due-to="Cameron Braid">Updated all dependencies to be the same, and not to use proprietary Jars (JTA)</action>
-      <action type="update" dev="Jonathan Locke" issue="">Changed IModel signature to allow models to be parameterized on the requesting Component.  Made minor enhancements to AbstractDetachableModel and invented AbstractReadOnlyDetachableModel.  Created an abstract base class, AbstractPropertyModel, for all property models dealing with OGNL expressions and type conversions.  Implemented the current PropertyModel functionality using this base class.  Implemented CompoundPropertyModel to take advantage of the Component parmeter in IModel.  Then implemented a fully bindable BoundCompoundPropertyModel class as a subclass of that.</action>
+      <action type="update" dev="Jonathan Locke" issue="">Changed IModel signature to allow models to be parameterized on the requesting Component. Made minor enhancements to AbstractDetachableModel and invented AbstractReadOnlyDetachableModel. Created an abstract base class, AbstractPropertyModel, for all property models dealing with OGNL expressions and type conversions. Implemented the current PropertyModel functionality using this base class. Implemented CompoundPropertyModel to take advantage of the Component parmeter in IModel. Then implemented a fully bindable BoundCompoundPropertyModel class as a subclass of that.</action>
       <action type="update" dev="Jonathan Locke" issue="1153227">Generalized IValidationFeedback interface to IFeedback to deal with all kinds of feedback. Then added logic to Page, so that you can set a feedback for the page. If you do this, any messages added to the page using the usual error(), info() etc methods, will be displayed in this feedback.</action>
       <action type="fix" dev="Jonathan Locke" issue="1153916">Reworked RadioChoice as a much simpler subclass of AbstractChoice that is much more compatible with other choice components. Also fixed remaining bugs in form repopulation / validation and tested using Library application.</action>
       <action type="fix" dev="Jonathan Locke" issue="1153047">Finished working on invalid input problems and model problems in choices. The result is a reworked choice model in a new model sub-package of form (which makes it a lot easier to read the form components in the form package). In addition, this checkin includes significant fixes to the wicket.model package, the most important of which is the elimination of DetachableModel, in favor of typesafe and simple usage patterns in AbstractDetachableModel.</action>
