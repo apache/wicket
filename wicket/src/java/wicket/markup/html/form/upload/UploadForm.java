@@ -36,6 +36,10 @@ import wicket.util.lang.Bytes;
  * Form for handling (file) uploads with multipart requests. Use this with
  * {@link wicket.markup.html.form.upload.FileUploadField}components. You can
  * attach mutliple FileInput fields for muliple file uploads.
+ * <p>
+ * This class depends on package
+ * <a href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>, version 1.0.
+ * </p>
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke

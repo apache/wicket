@@ -17,9 +17,11 @@
  */
 package wicket.util.resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -37,22 +39,27 @@ import wicket.util.time.Time;
  */
 public final class UrlResourceStream extends AbstractResourceStream
 {
-	/** Logging */
+	/** Logging. */
 	private static Log log = LogFactory.getLog(UrlResourceStream.class);
 
-	/** Resource stream */
+	/** Resource stream. */
 	private transient InputStream inputStream;
 
-	/** The URL to this resource */
+	/** The URL to this resource. */
 	private URL url;
+	
+	/**
+	 * the handle to the file if it is a file resource
+	 */
+	private File file;
 
-	/** Length of stream */
+	/** Length of stream. */
 	private int contentLength;
 
-	/** Content type for stream */
+	/** Content type for stream. */
 	private String contentType;
 
-	/** Time the stream was last modified */
+	/** Last known time the stream was last modified. */
 	private long lastModified;
 
 	/**
@@ -65,15 +72,25 @@ public final class UrlResourceStream extends AbstractResourceStream
 	{
 		// Save URL
 		this.url = url;
+		URLConnection connection = null;
 		try
 		{
-			URLConnection connection = url.openConnection();
+			connection = url.openConnection();
 			contentLength = connection.getContentLength();
 			contentType = connection.getContentType();
 			lastModified = connection.getLastModified();
-			if (connection instanceof HttpURLConnection)
+			try
 			{
-				((HttpURLConnection)connection).disconnect();
+				file = new File(new URI(url.toExternalForm()));
+			}
+			catch (Exception ex)
+			{
+				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage() +
+				"), falling back to the inputstream for polling");
+			}
+			if(file != null && !file.exists())
+			{
+				file = null;
 			}
 		}
 		catch (IOException ex)
@@ -85,6 +102,28 @@ public final class UrlResourceStream extends AbstractResourceStream
 					"Invalid URL parameter " + url);
 			illegalArgumentException.initCause(ex);
 			throw illegalArgumentException;
+		}
+		finally
+		{
+			// if applicable, disconnect
+			if (connection != null)
+			{
+				if(connection instanceof HttpURLConnection)
+		        { 
+		             ((HttpURLConnection)connection).disconnect();
+		        }
+				else
+				{
+					try
+					{
+						connection.getInputStream().close();
+					}
+					catch (Exception ex)
+					{
+						// ignore
+					}
+				}
+			}
 		}
 	}
 
@@ -151,6 +190,48 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public Time lastModifiedTime()
 	{
+		if(file != null)
+		{
+			lastModified = file.lastModified();
+		}
+		else
+		{
+			URLConnection urlConnection = null;
+			try
+			{
+				
+				urlConnection = url.openConnection();
+	
+				// update the last modified time.
+				lastModified = urlConnection.getLastModified();
+			}
+			catch (IOException e)
+			{
+				log.error("getLastModified for " + url + " failed: " + e.getMessage());
+			}
+			finally
+			{
+				// if applicable, disconnect
+				if (urlConnection != null)
+				{
+					if(urlConnection instanceof HttpURLConnection)
+			        { 
+			             ((HttpURLConnection)urlConnection).disconnect();
+			        }
+					else
+					{
+						try
+						{
+							urlConnection.getInputStream().close();
+						}
+						catch (Exception ex)
+						{
+							// ignore
+						}
+					}
+				}
+			}
+		}
 		return Time.milliseconds(lastModified);
 	}
 

@@ -35,11 +35,13 @@ import wicket.util.lang.Classes;
  * asked for its markup type. It also has a method which subclasses can use to
  * retrieve a bookmarkable link to the application's home page.
  * <p>
- * Pages can be constructed with any constructor when they are being used in a
- * Wicket session, but if you wish to link to a Page using a URL that is
- * bookmarkable (doesn't have session information encoded into it), you need to
- * implement your Page with a constructor that accepts a single PageParameters
- * argument.
+ * WebPages can be constructed with any
+ * constructor when they are being used in a Wicket session, but if you wish to
+ * link to a Page using a URL that is "bookmarkable" (which implies that the URL
+ * will not have any session information encoded in it), you need to implement
+ * your Page with a no-arg constructor or with a constructor that accepts a
+ * PageParameters argument (which wraps any query string parameters for a
+ * request).
  * 
  * @author Jonathan Locke
  */
@@ -216,12 +218,10 @@ public class WebPage extends Page
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
+	 * Creates a prefix for a url.
 	 * @param cycle
 	 *            The web request cycle
-	 * @return Prefix for URLs including the context path, servlet path and
-	 *         application name (if servlet path is empty).
+	 * @return Prefix for URLs including the context path and servlet path.
 	 */
 	private StringBuffer urlPrefix(final WebRequestCycle cycle)
 	{
@@ -229,17 +229,9 @@ public class WebPage extends Page
 		final WebRequest request = cycle.getWebRequest();
 		if (request != null)
 		{
-			buffer.append(request.getContextPath());
-			final String servletPath = ((WebRequest)request).getServletPath();
-			if (servletPath.equals(""))
-			{
-				buffer.append('/');
-				buffer.append(cycle.getApplication().getName());
-			}
-			else
-			{
-				buffer.append(servletPath);
-			}
+			final String contextPath = request.getContextPath();
+			buffer.append(contextPath);
+			buffer.append(((WebRequest)request).getServletPath());
 		}
 
 		return buffer;

@@ -63,6 +63,18 @@ public final class ConvertersTest extends TestCase
 
 		assertEquals(date, converter.convert("24-10-02", Date.class));
 		assertEquals("24-10-02", converter.convert(date, String.class));
+
+		// empty strings should return null, NOT throw NPEs
+		assertNull(converter.convert("", Double.class));
+		assertNull(converter.convert("", Long.class));
+		assertNull(converter.convert("", Float.class));
+		assertNull(converter.convert("", Integer.class));
+		assertNull(converter.convert("", Byte.class));
+		assertNull(converter.convert("", Character.class));
+		assertNull(converter.convert("", Date.class));
+		assertNull(converter.convert("", Short.class));
+		assertEquals(Boolean.FALSE, converter.convert("", Boolean.class));
+		assertNotNull(converter.convert("", String.class));
 	}
 
 	/**

@@ -21,12 +21,15 @@ package wicket.examples.displaytag;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.Page;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.MyPageableListViewNavigator;
 import wicket.examples.displaytag.utils.PagedTableWithAlternatingRowStyle;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.IPageLink;
+import wicket.markup.html.link.PageLink;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigation;
@@ -46,7 +49,7 @@ public class ExamplePaging extends Displaytag
     public ExamplePaging(final PageParameters parameters)
     {
         // Test data
-        final List data = new TestList(60, false);
+        final List data = new TestList(55, false);
         
         // Add pageable table with alternating row styles
         final PagedTableWithAlternatingRowStyle table = new PagedTableWithAlternatingRowStyle("rows", data, 10)
@@ -156,7 +159,53 @@ public class ExamplePaging extends Displaytag
                 return nav;
             }
         };
-        
         add(nav4);
+
+        
+        // ----------------------------------------------------------------
+        // Table 5
+        // ----------------------------------------------------------------
+        
+		// Link to randomly change the size
+		add(new PageLink("resizeModelList", new IPageLink()
+		{
+			public Page getPage()
+			{
+			    List data5 = (List) ExamplePaging.this.get("rows5").getModelObject();
+		        data5.addAll(data.subList(0, 2));
+		        
+		        Label info5 = (Label) ExamplePaging.this.get("info5");
+		        info5.setModelObject("2 elements add to the list");
+				return ExamplePaging.this;
+			}
+
+			public Class getPageIdentity()
+			{
+				return this.getClass();
+			}
+		}));
+        
+		add(new Label("info5", ""));
+		
+        List data5 = new ArrayList();
+        //data5.addAll(data.subList(0, 20));
+        final PagedTableWithAlternatingRowStyle table5 = new PagedTableWithAlternatingRowStyle("rows5", data5, 4)
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                super.populateItem(listItem);
+                
+                final ListObject value = (ListObject) listItem.getModelObject();
+
+                listItem.add(new Label("id", Integer.toString(value.getId())));
+                listItem.add(new Label("name", value.getName()));
+                listItem.add(new Label("email", value.getEmail()));
+                listItem.add(new Label("status", value.getStatus()));
+                listItem.add(new Label("comments", value.getDescription()));
+            }
+        };
+        add(table5);
+        
+        add(new MyPageableListViewNavigator("pageTableNav5", table5));
     }
 }

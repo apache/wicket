@@ -19,12 +19,12 @@ package wicket.util.resource.locator;
 
 import java.util.Locale;
 
-import wicket.util.file.Path;
+import wicket.util.file.IResourceFinder;
 import wicket.util.resource.IResourceStream;
 
 /**
  * A resource locator that looks in default places for resources. At the present
- * time, the path and default classloader are searched.
+ * time, the given finder and the default classloader are searched.
  * 
  * @author Jonathan Locke
  */
@@ -33,19 +33,19 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 	/**
 	 * Constructor
 	 * 
-	 * @param path
-	 *            The path to search
+	 * @param finder
+	 *            The finder to search
 	 */
-	public DefaultResourceStreamLocator(final Path path)
+	public DefaultResourceStreamLocator(final IResourceFinder finder)
 	{
 		super(new IResourceStreamLocator()
 		{
-			private final PathResourceStreamLocator pathLocator = new PathResourceStreamLocator(path);
+			private final ResourceFinderResourceStreamLocator finderLocator = new ResourceFinderResourceStreamLocator(finder);
 			private final ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
 
 			public IResourceStream locate(String path, String style, Locale locale, String extension)
 			{
-				IResourceStream resource = pathLocator.locate(path, style, locale, extension);
+				IResourceStream resource = finderLocator.locate(path, style, locale, extension);
 				if (resource != null)
 				{
 					return resource;

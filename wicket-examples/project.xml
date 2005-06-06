@@ -3,7 +3,7 @@
 <project>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>1.0.0-rc2</currentVersion>
+  <currentVersion>1.0</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -52,6 +52,11 @@
       <id>1.0.0-rc2</id>
       <name>1.0.0-rc2</name>
       <tag>WICKET_R_1_0_0-rc2</tag>
+    </version>
+    <version>
+      <id>1.0</id>
+      <name>1.0</name>
+      <tag>WICKET_R_1_0_0</tag>
     </version>
   </versions>
   <mailingLists>
@@ -117,7 +122,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.0.0-rc2</version>
+      <version>1.0</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -126,7 +131,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <version>1.0.0-rc2</version>
+      <version>1.0</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>

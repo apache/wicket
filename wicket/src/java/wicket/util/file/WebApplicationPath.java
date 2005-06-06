@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,78 +16,67 @@
  */
 package wicket.util.file;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import wicket.util.string.StringList;
 
 /**
  * Mantains a list of folders as a path.
  * 
- * @author Jonathan Locke
+ * @author Johan Compagner
  */
-public final class Path implements IResourcePath
+public final class WebApplicationPath implements IResourcePath
 {
+	/** The list of urls in the path */
+	private final List webappPaths = new ArrayList();
+
 	/** The list of folders in the path */
 	private final List folders = new ArrayList();
 
-	/**
-	 * Constructor
-	 */
-	public Path()
-	{
-	}
+	private final ServletContext servletContext;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param folder
-	 *            A single folder to add to the path
+	 * @param servletContext
+	 *            The webapplication context where the resources must be loaded
+	 *            from
 	 */
-	public Path(final Folder folder)
+	public WebApplicationPath(ServletContext servletContext)
 	{
-		add(folder);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param folders
-	 *            An array of folders to add to the path
-	 */
-	public Path(final Folder[] folders)
-	{
-		for (int i = 0; i < folders.length; i++)
-		{
-			add(folders[i]);
-		}
+		this.servletContext = servletContext;
 	}
 
 	/**
 	 * @param folder
-	 *            Folder to add to path
+	 *            add a path that is lookup through the servlet context
 	 */
-	public void add(final Folder folder)
+	public void add(String folder)
 	{
-		if (!folder.exists())
+		final Folder f = new Folder(folder);
+		if (f.exists())
 		{
-			throw new IllegalArgumentException("Folder " + folder + " does not exist");
+			folders.add(f);			
 		}
-
-		folders.add(folder);
-	}
-
-	/**
-	 * @param path
-	 *            Folder to add to path
-	 * @see wicket.util.file.IResourcePath#add(java.lang.String)
-	 */
-	public void add(final String path)
-	{
-		add(new Folder(path));
+		else
+		{
+			if (!folder.startsWith("/"))
+			{
+				folder = "/" + folder;
+			}
+			if (!folder.endsWith("/"))
+			{
+				folder += "/";
+			}
+			webappPaths.add(folder);
+		}
 	}
 
 	/**
@@ -96,15 +84,14 @@ public final class Path implements IResourcePath
 	 * 
 	 * @param pathname
 	 *            The filename with possible path
-	 * @return The url located on the path
+	 * @return The file located on the path
 	 */
 	public URL find(final String pathname)
 	{
 		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
 		{
-			final Folder folder = (Folder)iterator.next();
-			final File file = new File(folder, pathname);
-
+			Folder folder = (Folder)iterator.next();
+			File file = new File(folder, pathname);
 			if (file.exists())
 			{
 				try
@@ -117,24 +104,24 @@ public final class Path implements IResourcePath
 				}
 			}
 		}
+		for (final Iterator iterator = webappPaths.iterator(); iterator.hasNext();)
+		{
+			final String path = (String)iterator.next();
+			try
+			{
+				final URL file = servletContext.getResource(path + pathname);
+				if (file != null)
+				{
+					return file;
+				}
+			}
+			catch (Exception ex)
+			{
+				// ignore, file couldn't be found
+			}
+		}
 
 		return null;
-	}
-
-	/**
-	 * @return Returns the folders.
-	 */
-	public List getFolders()
-	{
-		return folders;
-	}
-
-	/**
-	 * @return Number of folders on the path.
-	 */
-	public int size()
-	{
-		return folders.size();
 	}
 
 	/**
@@ -142,6 +129,7 @@ public final class Path implements IResourcePath
 	 */
 	public String toString()
 	{
-		return "[folders = " + StringList.valueOf(folders) + "]";
+		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: "
+				+ StringList.valueOf(webappPaths) + "]";
 	}
 }
