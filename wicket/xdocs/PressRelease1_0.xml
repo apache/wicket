@@ -23,7 +23,7 @@
 			<p>
 				Wicket splits the problem of creating dynamic web pages into two separate, well-defined portions.
 				This division allows coders and designers more freedom to work in parallel and without stepping on
-				each other’s toes. The design of web pages in wicket is kept in ordinary XHTML web pages which can
+				each other's toes. The design of web pages in wicket is kept in ordinary XHTML web pages which can
 				be edited with standard web development tools such as Macromedia Dreamweaver or Adobe GoLive.
 				These pages are then made dynamic in an object-oriented fashion by associating components coded 
 				in Java. Wicket components are extensible within the Java language much like Swing components and
