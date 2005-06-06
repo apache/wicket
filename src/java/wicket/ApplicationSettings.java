@@ -444,10 +444,7 @@ public class ApplicationSettings
 		}
 		if ("development".equalsIgnoreCase(configurationType))
 		{
-			if (resourceFinder != null)
-			{
-				setResourcePollFrequency(Duration.ONE_SECOND);
-			}
+			setResourcePollFrequency(Duration.ONE_SECOND);
 			setComponentUseCheck(true);
 			setStripWicketTags(false);
 		}
