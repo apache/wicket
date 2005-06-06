@@ -104,7 +104,7 @@ public class MarkupParser
 	 * Configure the markup parser based on Wicket application settings
 	 * @param settings Wicket application settings
 	 */
-	public void configure(final ApplicationSettings settings)
+	public final void configure(final ApplicationSettings settings)
 	{
         this.wicketNamespace = settings.getWicketNamespace();
         this.stripWicketTag = settings.getStripWicketTags();
@@ -158,7 +158,7 @@ public class MarkupParser
 	 * 
 	 * @param filter The filter to be appended
 	 */
-	public void appendMarkupFilter(final IMarkupFilter filter)
+	public final void appendMarkupFilter(final IMarkupFilter filter)
 	{
 	    filter.setParent(markupFilterChain);
 	    markupFilterChain = filter;
@@ -171,7 +171,7 @@ public class MarkupParser
      *
      * @return if null, than JVM default is used.
      */
-    public String getEncoding()
+    public final String getEncoding()
     {
         return xmlParser.getEncoding();
     }
@@ -182,7 +182,7 @@ public class MarkupParser
 	 * 
 	 * @return Null, if not found.
 	 */
-    public String getXmlDeclaration()
+    public final String getXmlDeclaration()
     {
         return xmlParser.getXmlDeclaration();
     }
@@ -195,7 +195,7 @@ public class MarkupParser
      * @throws IOException
      * @throws ResourceStreamNotFoundException
      */
-    public Markup readAndParse(final IResourceStream resource) throws ParseException, IOException,
+    final Markup readAndParse(final IResourceStream resource) throws ParseException, IOException,
             ResourceStreamNotFoundException
     {
         xmlParser.parse(resource);
@@ -210,7 +210,7 @@ public class MarkupParser
      * @throws IOException
      * @throws ResourceStreamNotFoundException
      */
-    Markup parse(final String string) throws ParseException, IOException,
+    final Markup parse(final String string) throws ParseException, IOException,
     	ResourceStreamNotFoundException
     {
         xmlParser.parse(string);
