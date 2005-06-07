@@ -221,6 +221,11 @@ public final class MarkupParserTest extends TestCase
         tokens = parser.readAndParse(resource);
         log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        resource = locator.locate(this.getClass(), "8", null, "html");
+        tokens = parser.readAndParse(resource);
+        log.info("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
     }
 
     /**
