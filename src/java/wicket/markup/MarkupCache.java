@@ -243,6 +243,10 @@ public class MarkupCache
 		}
 		catch (ParseException e)
 		{
+			synchronized (markupCache)
+			{
+				markupCache.remove(key);
+			}
 			log.error("Unable to parse markup from " + markupResourceStream, e);
 		}
 		catch (ResourceStreamNotFoundException e)
