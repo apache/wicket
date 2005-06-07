@@ -116,7 +116,7 @@ public class ListMultipleChoice extends AbstractChoice
 		for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
 				.hasMoreTokens();)
 		{
-			selectedValues.add(choices.choiceForId(tokenizer.nextToken()));
+			selectedValues.add(choices.choiceForId(tokenizer.nextToken()).getObject());
 		}
 	}
 
