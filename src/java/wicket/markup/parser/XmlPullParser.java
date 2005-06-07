@@ -235,6 +235,27 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				}
 				else
 				{
+					if(type == XmlTag.OPEN && startText.toLowerCase().startsWith("script"))
+					{
+						// this is a script tag with script as body skip this until </script> is found.
+						this.inputPosition = closeBracketIndex;
+						while(true)
+						{
+							this.inputPosition  = input.indexOf("</", this.inputPosition );
+							if(this.inputPosition == -1 || this.inputPosition+8 >= input.length())
+							{
+								throw new ParseException("Script tag not closed (line " + lineNumber + ", column "
+										+ columnNumber + ")", openBracketIndex);							
+							}
+							this.inputPosition = this.inputPosition+2;
+							if(input.substring(this.inputPosition, this.inputPosition+6).toLowerCase().equals("script"))
+							{
+								break;
+							}
+						}
+						return nextTag();
+					}
+						
 					// Parse remaining tag text, obtaining a tag object or null
 					// if it's invalid
 					final XmlTag tag = parseTagText(tagText);
