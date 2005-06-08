@@ -41,6 +41,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;
+import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
@@ -325,27 +326,24 @@ public class WebRequestCycle extends RequestCycle
 	 * 
 	 * @param component
 	 *            The component
-	 * @param interfaceName
-	 *            The name of the interface to call
+	 * @param method
+	 *            The name of the method to call
 	 */
-	private void invokeInterface(final Component component, final String interfaceName)
+	private Object invokeInterface(final Component component, final Method method)
 	{
-		// Look up interface to call
-		final Method method = getInterfaceMethod(interfaceName);
-
 		try
 		{
 			// Invoke the interface method on the component
-			method.invoke(component, new Object[] { });
+			return method.invoke(component, new Object[] { });
 		}
 		catch (IllegalAccessException e)
 		{
 			throw new WicketRuntimeException("Cannot access method " + method + " of interface "
-					+ interfaceName, e);
+					+ method.getClass().getName(), e);
 		}
 		catch (InvocationTargetException e)
 		{
-			throw new WicketRuntimeException("Method " + method + " of interface " + interfaceName
+			throw new WicketRuntimeException("Method " + method + " of interface " + method.getClass().getName()
 					+ " threw an exception", e);
 		}
 	}
@@ -362,32 +360,47 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	private void invokeInterface(final Page page, final String path, final String interfaceName)
 	{
-		// Set the page for the component as the response page
-		setResponsePage(page);
 		setInvokePage(page);
 		// Invoke interface on the component at the given path on the page
 		final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
 		if (component != null)
 		{
-			if(!interfaceName.equals("IRedirectListener"))
+			Method method = getRequestInterfaceMethod(interfaceName);
+			if(method != null)
+			{
+				// Set the page for the component as the response page
+				setResponsePage(page);
+				if(!interfaceName.equals("IRedirectListener"))
+				{
+					// Clear all feedback messages if it isn't a redirect
+					page.getFeedbackMessages().clear();
+	
+					// and see if we have to redirect the render part by default
+					ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
+							.getSettings().getRenderStrategy();
+					boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
+							|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
+	
+					setRedirect(issueRedirect);
+				}
+	
+				// Invoke interface on component
+				invokeInterface(component, method);
+	
+				// Set form component values from cookies
+				setFormComponentValuesFromCookies(page);
+			}
+			else if( (method = getAjaxInterfaceMethod(interfaceName)) != null)
 			{
 				// Clear all feedback messages if it isn't a redirect
 				page.getFeedbackMessages().clear();
-
-				// and see if we have to redirect the render part by default
-				ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
-						.getSettings().getRenderStrategy();
-				boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
-						|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
-
-				setRedirect(issueRedirect);
+				IResourceStream stream = (IResourceStream)invokeInterface(component, method);
+				setResponseStream(stream);
 			}
-
-			// Invoke interface on component
-			invokeInterface(component, interfaceName);
-
-			// Set form component values from cookies
-			setFormComponentValuesFromCookies(page);
+			else
+			{
+				throw new WicketRuntimeException("Attempt to access unknown interface " + interfaceName);
+			}
 		}
 		else
 		{
@@ -397,6 +410,7 @@ public class WebRequestCycle extends RequestCycle
 			setResponsePage(newPage(application.getPages().getInternalErrorPage()));
 		}
 	}
+
 
 	/**
 	 * Creates a new page.
