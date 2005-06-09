@@ -64,9 +64,12 @@
 		}
 	}
 	
-	function textfieldValidation(response)
+	function evalResponse(response)
 	{
-		eval(response.getElementsByTagName('response')[0].firstChild.data);
+		if(response.getElementsByTagName('response').length > 0)
+		{
+			eval(response.getElementsByTagName('response')[0].firstChild.data);
+		}
 	}
 </script>
 
