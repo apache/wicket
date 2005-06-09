@@ -569,7 +569,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Validates this component using the component's validator.
 	 */
-	protected final void validate()
+	public final void validate()
 	{
 		validator.validate(this);
 	}

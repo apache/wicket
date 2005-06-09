@@ -402,7 +402,7 @@ public abstract class Form extends WebMarkupContainer
 	 * @param visitor
 	 *            The visitor interface to call
 	 */
-	protected void visitFormComponents(final FormComponent.IVisitor visitor)
+	public final void visitFormComponents(final FormComponent.IVisitor visitor)
 	{
 		visitChildren(FormComponent.class, new IVisitor()
 		{
