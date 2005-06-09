@@ -235,7 +235,9 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				}
 				else
 				{
-					if(type == XmlTag.OPEN && startText.toLowerCase().startsWith("script"))
+					String lowerCase = tagText.toLowerCase();
+					// TODO hard coded wicket:id check?? Can be othername??
+					if(type == XmlTag.OPEN && tagText.startsWith("script") && tagText.indexOf("wicket:id") == -1)
 					{
 						// this is a script tag with script as body skip this until </script> is found.
 						this.inputPosition = closeBracketIndex;
