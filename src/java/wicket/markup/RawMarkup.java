@@ -28,7 +28,7 @@ package wicket.markup;
  * @see MarkupElement
  * @author Jonathan Locke
  */
-final class RawMarkup extends MarkupElement
+public final class RawMarkup extends MarkupElement
 { 
     /** The raw markup string **/
     private final CharSequence string;
@@ -37,7 +37,7 @@ final class RawMarkup extends MarkupElement
      * Create a RawMarkup element referencing an uninterpreted markup string.
      * @param string The raw markup
      */
-    RawMarkup(final CharSequence string)
+    public RawMarkup(final CharSequence string)
     {
         this.string = string;
     }

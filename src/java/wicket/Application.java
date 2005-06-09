@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
+import wicket.markup.html.BodyOnLoadResolver;
 import wicket.markup.html.HtmlHeaderResolver;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.XmlPullParser;
@@ -175,6 +176,7 @@ public abstract class Application
 		componentResolvers.add(new AutoComponentResolver());
 		componentResolvers.add(new MarkupInheritanceResolver());
 		componentResolvers.add(new HtmlHeaderResolver());
+		componentResolvers.add(new BodyOnLoadResolver());
 
 		// Install button image resource factory
 		addResourceFactory("buttonFactory", new DefaultButtonImageResourceFactory());
@@ -402,11 +404,12 @@ public abstract class Application
 	/**
 	 * Factory method that creates a markup parser.
 	 * 
+	 * @param container The wicket container requesting the markup
 	 * @return A new MarkupParser
 	 */
-	public MarkupParser newMarkupParser()
+	public MarkupParser newMarkupParser(final MarkupContainer container)
 	{
-		final MarkupParser parser = new MarkupParser(new XmlPullParser());
+		final MarkupParser parser = new MarkupParser(container, new XmlPullParser());
 		parser.configure(getSettings());
 		return parser;
 	}

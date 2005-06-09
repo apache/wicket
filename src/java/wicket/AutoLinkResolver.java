@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.BodyOnLoadContainer;
 import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
@@ -197,6 +198,11 @@ public final class AutoLinkResolver implements IComponentResolver
 		        {
 		            relevantContainer = findPanelComponent(container);
 		        }
+
+		        if (container instanceof BodyOnLoadContainer)
+		        {
+		            relevantContainer = container.getParent();
+		        }
 		        
 		        // Create the runtime href which has the proper package name
 		        // prepended.
@@ -219,7 +225,6 @@ public final class AutoLinkResolver implements IComponentResolver
 	 */
 	private Component findPanelComponent(MarkupContainer container)
 	{
-        final Component relatedContainer;
         final Class panelClass = container.getMarkupStream().getContainerClass(); 
         
         while (container instanceof HtmlHeaderContainer)

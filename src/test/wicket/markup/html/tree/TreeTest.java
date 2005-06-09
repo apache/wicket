@@ -55,7 +55,6 @@ public class TreeTest extends TestCase
 	 * Test Tree put on a plain page. Tests first render, and render after a node click.
 	 * @throws Exception
 	 */
-/*	
 	public void testRenderTreePage_1() throws Exception
 	{
 		System.out.println("=== " + TreePage.class.getName() + " ===");
@@ -81,7 +80,7 @@ public class TreeTest extends TestCase
 
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "TreePageExpectedResult_1-1.html"));
 	}
-*/
+
 	/**
 	 * Test Tree put on a page with a border. Tests first render, and render after a node click.
 	 * @throws Exception

@@ -117,25 +117,6 @@ public class MarkupCache
 	    
 	    return null;
 	}
-
-	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class its head markup
-	 * 
-	 * @param container
-	 *            The container the head markup should be associated with
-	 * @param clazz
-	 *            The class to get the associated head markup for. If null, the the
-	 *            container's class is used, but it can be a parent class of
-	 *            container as well.
-	 * 
-	 * @return A stream of MarkupElement elements
-	 */
-	public final MarkupStream getHeadMarkupStream(final MarkupContainer container, final Class clazz)
-	{
-		// TODO IMPL
-		return null;
-	}
 	
 	/**
 	 * @param container
@@ -200,7 +181,7 @@ public class MarkupCache
 				if (markupResource != null)
 				{
 					// load the markup and watch for changes
-					markup = loadMarkupAndWatchForChanges(key, markupResource, clazz);
+					markup = loadMarkupAndWatchForChanges(key, markupResource, clazz, container);
 				}
 				else
 				{
@@ -226,14 +207,16 @@ public class MarkupCache
 	 *            The markup resource stream to load
 	 * @param containerClass
 	 *            The Class the associated stream is directly associated
+	 * @param container 
+	 *            The container requesting the markup
 	 * @return The markup
 	 */
 	private final Markup loadMarkup(final String key, final IResourceStream markupResourceStream,
-	        final Class containerClass)
+	        final Class containerClass, final MarkupContainer container)
 	{
 		try
 		{
-			final Markup markup = application.newMarkupParser().readAndParse(markupResourceStream);
+			final Markup markup = application.newMarkupParser(container).readAndParse(markupResourceStream);
 			markup.setContainerClass(containerClass);
 			synchronized (markupCache)
 			{
@@ -271,10 +254,13 @@ public class MarkupCache
 	 *            The markup stream to load and begin to watch
 	 * @param containerClass
 	 *            The Class the associated stream is directly associated
+	 * @param container 
+	 *            The container requesting the markup
 	 * @return The markup in the stream
 	 */
 	private final Markup loadMarkupAndWatchForChanges(final String key,
-			final IResourceStream markupResourceStream, final Class containerClass)
+			final IResourceStream markupResourceStream, final Class containerClass,
+			final MarkupContainer container)
 	{
 		// Watch file in the future
 		final ModificationWatcher watcher = application.getResourceWatcher();
@@ -285,13 +271,13 @@ public class MarkupCache
 				public void onChange()
 				{
 					log.info("Reloading markup from " + markupResourceStream);
-					loadMarkup(key, markupResourceStream, containerClass);
+					loadMarkup(key, markupResourceStream, containerClass, container);
 				}
 			});
 		}
 
 		log.info("Loading markup from " + markupResourceStream);
-		return loadMarkup(key, markupResourceStream, containerClass);
+		return loadMarkup(key, markupResourceStream, containerClass, container);
 	}
 
 	/**

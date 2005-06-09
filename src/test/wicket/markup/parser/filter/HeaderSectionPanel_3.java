@@ -18,8 +18,7 @@
  */
 package wicket.markup.parser.filter;
 
-import wicket.PageParameters;
-import wicket.markup.html.WebPage;
+import wicket.markup.html.panel.Panel;
 
 
 /**
@@ -27,14 +26,14 @@ import wicket.markup.html.WebPage;
  *
  * @author Chris Turner
  */
-public class HeaderSectionPage_10 extends WebPage 
+public class HeaderSectionPanel_3 extends Panel
 {
 	/**
 	 * Construct.
-	 * @param parameters
+	 * @param id
 	 */
-	public HeaderSectionPage_10(final PageParameters parameters) 
+	public HeaderSectionPanel_3(final String id) 
 	{
-	    add(new HeaderSectionPanel_3("panel"));
+	    super(id);
     }
 }

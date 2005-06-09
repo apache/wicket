@@ -81,6 +81,8 @@ public class WicketTagPanelTest extends TestCase
 	{
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
+		Tag head = new Tag("head");
+		html.addExpectedChild(head);
 		Tag body = new Tag("body");
 		html.addExpectedChild(body);
 		body.addExpectedChild(new TextContent("\\s+"));
@@ -120,6 +122,8 @@ public class WicketTagPanelTest extends TestCase
 	{
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
+		Tag head = new Tag("head");
+		html.addExpectedChild(head);
 		Tag body = new Tag("body");
 		body.addExpectedChild(new TextContent("\\s+"));
 		html.addExpectedChild(body);

@@ -26,9 +26,11 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
+import wicket.markup.RawMarkup;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
+import wicket.markup.parser.XmlTag;
 
 /**
  * This is a markup inline filter. It assumes that WicketTagIdentifier has been 
@@ -102,44 +104,52 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			return tag;
 		}
 		
+		// Whatever there is left in the markup, <wicket:head> is no longer allowed
 		if (done == true)
 		{
 		    return tag;
 		}
 
-		if (!(tag instanceof WicketTag) && "head".equalsIgnoreCase(tag.getName()))
+		// if it is <head> or <wicket:head>
+		if ("head".equalsIgnoreCase(tag.getName()))
         {
-		    withinHead = !withinHead;
-		    if (tag.isClose() == true)
-		    {
-		        done = true;
-		    }
-		    
+		    // if <wicket:head>
+			if (tag instanceof WicketTag)
+			{
+			    if (tag.isClose() == true)
+			    {
+			        done = true;
+			    }
+			}
+			else
+			{
+			    // it is <head>
+			    withinHead = !withinHead;
+			    if (tag.isClose() == true)
+			    {
+			        if (done == false)
+			        {
+			            // we found <head> but no <wicket:head>
+			            insertWicketHeadTag();
+			        }
+			        
+			        done = true;
+			    }
+			}
+			
 		    return tag;
         }
 		
 		if ("body".equalsIgnoreCase(tag.getName()))
         {
+		    // <head> must allways be before <body>
 		    done = true;
-
-			// TODO remove comment, to activate
-/*		    
-			final XmlTag headOpenTag = new XmlTag();
-			headOpenTag.setName("head");
-			headOpenTag.setType(XmlTag.OPEN);
-			final ComponentTag openTag = new ComponentTag(headOpenTag);
-			openTag.setId("_header");
-				
-			final XmlTag headCloseTag = new XmlTag();
-			headCloseTag.setName("head");
-			headCloseTag.setType(XmlTag.CLOSE);
-			final ComponentTag closeTag = new ComponentTag(headCloseTag);
-			closeTag.setOpenTag(openTag);
-			closeTag.setId("_header");
-
-			tagList.add(openTag);
-			tagList.add(closeTag);
-*/		
+		    
+		    // we found neither <head> nor <wicket:head>
+			tagList.add(new RawMarkup("<head>"));
+		    insertWicketHeadTag();
+			tagList.add(new RawMarkup("</head>"));
+		
 		    return tag;
         }
 		
@@ -155,5 +165,26 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		}
 		
 		return tag;
+	}
+	
+	private void insertWicketHeadTag()
+	{
+		final XmlTag headOpenTag = new XmlTag();
+		headOpenTag.setName("head");
+		headOpenTag.setType(XmlTag.OPEN);
+		final WicketTag openTag = new WicketTag(headOpenTag);
+		openTag.setId("_header");
+			
+		final XmlTag headCloseTag = new XmlTag();
+		headCloseTag.setName("head");
+		headCloseTag.setType(XmlTag.CLOSE);
+		final WicketTag closeTag = new WicketTag(headCloseTag);
+		closeTag.setOpenTag(openTag);
+		closeTag.setId("_header");
+
+		tagList.add(openTag);
+		tagList.add(closeTag);
+		
+		done = true;
 	}
 }

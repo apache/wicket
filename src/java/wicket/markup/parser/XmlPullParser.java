@@ -78,6 +78,9 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	/** True to strip out HTML comments. */
 	private boolean stripComments;
 
+	/** temporary variable which will hold the name of the closing tag. */
+	private String skipUntilText;
+	
 	/**
 	 * Construct.
 	 */
@@ -143,6 +146,52 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	}
 
 	/**
+	 * Whatever will be in between the current index and the closing tag,
+	 * will be ignored (and thus treated as raw markup (text). This is useful
+	 * for tags like 'script'.
+	 *  
+	 * @throws ParseException
+	 */
+	private final void skipUntil() throws ParseException
+	{
+		// this is a script tag with script as body skip this until </script> is found.
+		final int startIndex = this.inputPosition;
+
+		int lastPos;
+		while (true)
+		{
+			this.inputPosition = input.indexOf("</", this.inputPosition);
+			
+			if ((this.inputPosition == -1) || ((this.inputPosition + 8) >= input.length()))
+			{
+				throw new ParseException("Script tag not closed (line " + lineNumber + ", column "
+						+ columnNumber + ")", startIndex);							
+			}
+			
+			lastPos = this.inputPosition + 2;
+			final String endTagText = input.substring(lastPos, lastPos + 6);
+			if (endTagText.toLowerCase().equals("script"))
+			{
+				break;
+			}
+			
+			this.inputPosition = lastPos;
+		}
+		
+		// Get index of closing tag and advance past the tag
+		lastPos = input.indexOf('>', lastPos + 6);
+		
+		if (lastPos == -1)
+		{
+			throw new ParseException("Script tag not closed (line " + lineNumber + ", column "
+					+ columnNumber + ")", startIndex);							
+		}
+		
+		// Reset the state variable
+		this.skipUntilText = null;
+	}
+	
+	/**
 	 * Gets the next tag from the input string.
 	 *
 	 * @return The extracted tag (will always be of type XmlTag).
@@ -150,6 +199,11 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
+	    if (this.skipUntilText != null)
+	    {
+	        skipUntil();
+	    }
+	    
 		// Index of open bracket
 		int openBracketIndex = input.indexOf('<', this.inputPosition);
 
@@ -191,7 +245,6 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
 			if (startText.toUpperCase().equals("![CDATA["))
 			{
-
 				// Get index of closing tag and advance past the tag
 				closeBracketIndex = findCloseBracket(input, '>', openBracketIndex);
 
@@ -203,7 +256,6 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 				// Get the tagtext between open and close brackets
 				tagText = input.substring(openBracketIndex + 1, closeBracketIndex);
-			    
 			}
 			
 			{
@@ -237,25 +289,9 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				{
 					String lowerCase = tagText.toLowerCase();
 					// TODO hard coded wicket:id check?? Can be othername??
-					if(type == XmlTag.OPEN && tagText.startsWith("script") && tagText.indexOf("wicket:id") == -1)
+					if ((type == XmlTag.OPEN) && lowerCase.startsWith("script"))
 					{
-						// this is a script tag with script as body skip this until </script> is found.
-						this.inputPosition = closeBracketIndex;
-						while(true)
-						{
-							this.inputPosition  = input.indexOf("</", this.inputPosition );
-							if(this.inputPosition == -1 || this.inputPosition+8 >= input.length())
-							{
-								throw new ParseException("Script tag not closed (line " + lineNumber + ", column "
-										+ columnNumber + ")", openBracketIndex);							
-							}
-							this.inputPosition = this.inputPosition+2;
-							if(input.substring(this.inputPosition, this.inputPosition+6).toLowerCase().equals("script"))
-							{
-								break;
-							}
-						}
-						return nextTag();
+					    this.skipUntilText = "script";
 					}
 						
 					// Parse remaining tag text, obtaining a tag object or null

@@ -48,6 +48,9 @@ import wicket.util.lang.Classes;
  */
 public class WebPage extends Page implements IHeaderRenderer
 {
+    /** Components contribution to <body onLoad="..." */
+    private String bodyOnLoad;
+    
 	/**
 	 * Constructor.
 	 */
@@ -276,5 +279,36 @@ public class WebPage extends Page implements IHeaderRenderer
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
         });
+	}
+	
+	/**
+	 * THIS IS NOT PART OF THE PUBLIC API. 
+	 * 
+	 * Append some text to the onLoad attribute of the body tag
+	 * 
+	 * @param onLoad
+	 */
+	public void addBodyOnLoad(final String onLoad)
+	{
+	    if (this.bodyOnLoad == null)
+	    {
+	        this.bodyOnLoad = onLoad;
+	    }
+	    else
+	    {
+	        this.bodyOnLoad = this.bodyOnLoad + onLoad;
+	    }
+	}
+
+	/**
+	 * THIS IS NOT PART OF THE PUBLIC API. 
+	 * 
+	 * Get what will be appended to the page markup's body onLoad attribute
+	 * 
+	 * @return The onLoad attribute
+	 */
+	public String getBodyOnLoad()
+	{
+	    return this.bodyOnLoad;
 	}
 }
