@@ -3,6 +3,7 @@
  */
 package wicket.markup.html.form.ajax;
 
+import wicket.ajax.IAjaxListener;
 import wicket.util.resource.IResourceStream;
 
 /**

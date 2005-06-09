@@ -1,7 +1,7 @@
 /**
  * 
  */
-package wicket.markup.html.form.ajax;
+package wicket.ajax;
 
 /**
  * @author jcompagner
