@@ -3,10 +3,12 @@
  */
 package wicket.markup.html.form.ajax;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import wicket.FeedbackMessage;
 import wicket.RequestCycle;
+import wicket.ajax.JavaScript;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -66,23 +68,18 @@ public class AjaxValidationTextField extends TextField implements IAjaxValidator
 	{
 		validate();
 		List lst = getPage().getFeedbackMessages().messages(this, true, false, FeedbackMessage.ERROR);
-		StringBuffer sb = new StringBuffer();
-		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
-		sb.append("<response>");
-		sb.append("var feedbackul =  document.getElementById('feedbackul');");
-		sb.append("var children = feedbackul.childNodes;");
-		sb.append("if(children.length > 0) feedbackul.removeChild(children[0]);");
+		ArrayList al = new ArrayList();
 		for (int i = 0; i < lst.size(); i++)
 		{
 			FeedbackMessage message = (FeedbackMessage)lst.get(i);
-			
-			sb.append("var li = document.createElement('li');");
-			sb.append("var linkText = document.createTextNode('");
-			sb.append(message.getMessage().replace('\'','"'));
-			sb.append("');");
-			sb.append("li.appendChild(linkText);");
-			sb.append("document.getElementById('feedbackul').appendChild(li);");
+			al.add(message.getMessage());
 		}
+		JavaScript javaScript = JavaScript.getInstance("ff");
+		StringBuffer sb = new StringBuffer();
+		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
+		sb.append("<response>");
+		javaScript.removeChilds(sb, "feedbackul");
+		javaScript.createLINodes(sb, "feedbackul",al);
 		sb.append("</response>");
 		return new StringResourceStream(sb.toString(),"text/xml");
 	}
@@ -93,7 +90,7 @@ public class AjaxValidationTextField extends TextField implements IAjaxValidator
 		final String url = urlFor(IAjaxValidator.class);
 
 		// NOTE: do not encode the url as that would give invalid JavaScript
-		tag.put("onChange", "ajaxSend('" + url + "&" + getPath()+  "=' + this.value,textfieldValidation);");
+		tag.put("onChange", "ajaxSend('" + url + "&" + getPath()+  "=' + this.value,evalResponse);");
 
 		super.onComponentTag(tag);
 	}
