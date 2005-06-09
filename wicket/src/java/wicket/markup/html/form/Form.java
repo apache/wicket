@@ -17,6 +17,9 @@
  */
 package wicket.markup.html.form;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,8 +34,12 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.markup.html.form.validation.IFormValidationStrategy;
+import wicket.markup.html.form.validation.IFormValidator;
+import wicket.markup.html.form.validation.IValidator;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.lang.Classes;
+import wicket.util.string.StringList;
 import wicket.util.string.Strings;
 import wicket.util.value.Count;
 
@@ -67,55 +74,111 @@ public abstract class Form extends WebMarkupContainer
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
 
-	/**
-	 * The default form validation strategy.
-	 */
-	private static final class DefaultFormValidationStrategy implements IFormValidationStrategy
-	{
-		/** Single instance of default form validation strategy */
-		private static final DefaultFormValidationStrategy instance = new DefaultFormValidationStrategy();
+	/** The validator or validator list for this form. */
+	IFormValidator validator = IFormValidator.NULL;
 
-		/** Log. */
-		private static final Log log = LogFactory.getLog(DefaultFormValidationStrategy.class);
+	/** form validation strategy instance. */
+	private IFormValidationStrategy formValidationStrategy;
+
+	/**
+	 * A convenient and memory efficent representation for a list of validators.
+	 */
+	private static final class ValidatorList implements IFormValidator
+	{
+		/** Left part of linked list. */
+		private final IFormValidator left;
+
+		/** Right part of linked list. */
+		private IFormValidator right;
 
 		/**
-		 * @return Singleton instance of DefaultFormValidationStrategy
+		 * Constructs a list with validators in it.
+		 * @param left The left validator
+		 * @param right The right validator
 		 */
-		private static DefaultFormValidationStrategy getInstance()
+		ValidatorList(final IFormValidator left, final IFormValidator right)
 		{
-			return instance;
+			this.left = left;
+			this.right = right;
 		}
 
 		/**
-		 * Validates all children of this form, recording all messages that are
-		 * returned by the validators.
-		 * 
-		 * @param form
-		 *            the form that the validation is applied to
+		 * Gets the string representation of this object.
+		 * @return String representation of this object
+		 */
+		public String toString()
+		{
+			final StringList stringList = new StringList();
+			ValidatorList current = this;
+
+			while (true)
+			{
+				stringList.add(Classes.name(current.left.getClass()) + " "
+						+ current.left.toString());
+
+				if (current.right instanceof ValidatorList)
+				{
+					current = (ValidatorList)current.right;
+				}
+				else
+				{
+					stringList.add(Classes.name(current.right.getClass()) + " "
+							+ current.right.toString());
+
+					break;
+				}
+			}
+
+			return stringList.toString();
+		}
+
+		/**
+		 * @see wicket.markup.html.form.validation.IFormValidator#validate(wicket.markup.html.form.Form)
 		 */
 		public void validate(final Form form)
 		{
-			// Visit all the form components and validate each
-			form.visitFormComponents(new FormComponent.IVisitor()
-			{
-				public void formComponent(final FormComponent formComponent)
-				{
-					// Validate form component
-					formComponent.validate();
+			left.validate(form);
+			right.validate(form);
+		}
 
-					// If component is not valid (has an error)
-					if (!formComponent.isValid())
-					{
-						// tell component to deal with invalidity
-						formComponent.invalid();
-					}
-					else
-					{
-						// tell component that it is valid now
-						formComponent.valid();
-					}
+		/**
+		 * Adds the given validator to this list of validators.
+		 * @param validator The validator
+		 */
+		void add(final IFormValidator validator)
+		{
+			ValidatorList current = this;
+
+			while (current.right instanceof ValidatorList)
+			{
+				current = (ValidatorList)current.right;
+			}
+
+			current.right = new ValidatorList(current.right, validator);
+		}
+
+		/**
+		 * Gets the validators as a List.
+		 * @return the validators as a List
+		 */
+		List asList()
+		{
+			ValidatorList current = this;
+			List validators = new ArrayList();
+			while (true)
+			{
+				validators.add(current.left);
+				if (current.right instanceof ValidatorList)
+				{
+					current = (ValidatorList)current.right;
 				}
-			});
+				else
+				{
+					validators.add(current.right);
+					break;
+				}
+			}
+			return validators;
 		}
 	}
 
@@ -167,13 +230,50 @@ public abstract class Form extends WebMarkupContainer
 	}
 
 	/**
+	 * Adds a validator to this form component.
+	 * 
+	 * @param validator
+	 *            The validator
+	 * @return This
+	 */
+	public final Form add(final IFormValidator validator)
+	{
+		// If we don't yet have a validator
+		if (this.validator == IFormValidator.NULL)
+		{
+			// Just add the validator directly
+			this.validator = validator;
+		}
+		else
+		{
+			// Create a validator list?
+			if (this.validator instanceof ValidatorList)
+			{
+				// Already have a list. Just add new validator to list
+				((ValidatorList)this.validator).add(validator);
+			}
+			else
+			{
+				// Create a set of the current validator and the new validator
+				this.validator = new ValidatorList(this.validator, validator);
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Gets the strategy to be used for form validation
 	 * 
 	 * @return The strategy to be used for validating this form
 	 */
 	public IFormValidationStrategy getValidationStrategy()
 	{
-		return DefaultFormValidationStrategy.getInstance();
+		// lazy construct
+		if (formValidationStrategy == null)
+		{
+			formValidationStrategy = new DefaultFormValidationStrategy();
+		}
+		return formValidationStrategy;
 	}
 
 	/**
@@ -413,6 +513,21 @@ public abstract class Form extends WebMarkupContainer
 			}
 		});
 	}
+//
+//	/**
+//	 * Called to indicate that
+//	 */
+//	public final void valid()
+//	{
+//		onValid();
+//	}
+//
+//	/**
+//	 * Handle validation
+//	 */
+//	protected void onValid()
+//	{
+//	}
 
 	/**
 	 * @return Number of buttons on this form
@@ -455,9 +570,49 @@ public abstract class Form extends WebMarkupContainer
 	}
 
 	/**
+	 * Gets whether this component is 'valid'. Valid in this context means that
+	 * no validation errors were reported the last time the form component was
+	 * processed. This variable not only is convenient for 'business' use, but
+	 * is also nescesarry as we don't want the form component models updated
+	 * with invalid input.
+	 * 
+	 * @return valid whether this component is 'valid'
+	 */
+	public final boolean isValid()
+	{
+		return !hasErrorMessage();
+	}
+
+	/**
+	 * Gets whether this component is to be validated.
+	 * 
+	 * @return True if this component has one or more validators
+	 */
+	public final boolean isValidated()
+	{
+		return this.validator != IValidator.NULL;
+	}
+
+	/**
 	 * @return True if this form has at least one error.
 	 */
-	private boolean hasError()
+	boolean hasError()
+	{
+		// if this form itself has an error message
+		if (hasErrorMessage())
+		{
+			return true;
+		}
+
+		// the form doesn't have any errors, now check any nested form components
+		return anyFormComponentError();
+	}
+
+	/**
+	 * Find out whether there is any registered error for a form component.
+	 * @return whether there is any registered error for a form component
+	 */
+	private boolean anyFormComponentError()
 	{
 		final Object value = visitChildren(new IVisitor()
 		{
@@ -481,6 +636,7 @@ public abstract class Form extends WebMarkupContainer
 	 */
 	private void invalid()
 	{
+		// call invalidate methods of all nested form components
 		visitFormComponents(new FormComponent.IVisitor()
 		{
 			public void formComponent(final FormComponent formComponent)
@@ -533,7 +689,7 @@ public abstract class Form extends WebMarkupContainer
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	private void updateFormComponentModels()
+	void updateFormComponentModels()
 	{
 		visitFormComponents(new FormComponent.IVisitor()
 		{
