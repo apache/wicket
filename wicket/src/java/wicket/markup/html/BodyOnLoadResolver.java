@@ -24,24 +24,16 @@ import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 
 /**
- * This is a tag resolver which handles &lt;wicket:head&gt; tags. It must be
- * registered (with the application) and assumes that a WicketTag has already
- * been created (see WicketTagIdentifier).
- * <p>
- * Provided the current tag is a &lt;wicket:head&gt;, a HtmlHeaderContainer
- * component is created, (auto) added to the component hierarchie and
- * immediately rendered. Please see the javadoc for HtmlHeaderContainer on how
- * it treats the tag.
+ * This is a tag resolver which handles &lt;body onLoad=".."&gt; tags. 
  * 
  * @author Juergen Donnerstag
  */
-public class HtmlHeaderResolver implements IComponentResolver
+public class BodyOnLoadResolver implements IComponentResolver
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(HtmlHeaderResolver.class);
+	private static Log log = LogFactory.getLog(BodyOnLoadResolver.class);
 
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container
@@ -61,21 +53,16 @@ public class HtmlHeaderResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <wicket:...>
-		if (tag instanceof WicketTag)
+		// It must be <body onLoad>
+		if ((tag instanceof ComponentTag) && "body".equalsIgnoreCase(tag.getName()) 
+		        && (tag.getNamespace() == null))
 		{
-			final WicketTag wicketTag = (WicketTag)tag;
+			// Create, add and render the component
+			BodyOnLoadContainer body = new BodyOnLoadContainer();
+			container.autoAdd(body);
 
-			// It must be <wicket:head...>
-			if (wicketTag.isHeadTag())
-			{
-				// Create, add and render the component
-				HtmlHeaderContainer header = new HtmlHeaderContainer();
-				container.autoAdd(header);
-
-				// Yes, we handled the tag
-				return true;
-			}
+			// Yes, we handled the tag
+			return true;
 		}
 
 		// We were not able to handle the tag

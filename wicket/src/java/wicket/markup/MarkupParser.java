@@ -28,10 +28,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.ApplicationSettings;
+import wicket.MarkupContainer;
+import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.XmlPullParser;
+import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHandler;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
@@ -80,6 +84,9 @@ public class MarkupParser
     /** The markup handler chain: each filter has a specific task */
     private IMarkupFilter markupFilterChain;
 
+    /** The wicket component requesting the markup */
+    private MarkupContainer container;
+    
     /**
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
@@ -93,10 +100,23 @@ public class MarkupParser
 
     /**
      * Constructor.
+     * 
      * @param xmlParser The streaming xml parser to read and parse the markup
      */
     public MarkupParser(final IXmlPullParser xmlParser)
     {
+        this.xmlParser = xmlParser;
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param container The wicket compoment requesting the markup
+     * @param xmlParser The streaming xml parser to read and parse the markup
+     */
+    public MarkupParser(final MarkupContainer container, final IXmlPullParser xmlParser)
+    {
+        this.container = container;
         this.xmlParser = xmlParser;
     }
 
@@ -120,7 +140,7 @@ public class MarkupParser
 	 * @param tagList
 	 * @return a preconfigured markup filter chain
 	 */
-	private IMarkupFilter newFilterChain(final List tagList)
+	private final IMarkupFilter newFilterChain(final List tagList)
 	{
         // Chain together all the different markup filters and configure them
         final WicketTagIdentifier detectWicketComponents = new WicketTagIdentifier(xmlParser);
@@ -134,12 +154,24 @@ public class MarkupParser
         
         final WicketLinkTagHandler autolinkHandler = new WicketLinkTagHandler(previewComponentTagRemover);
         autolinkHandler.setAutomaticLinking(this.automaticLinking);
-
-        // TODO Note: currently not needed
-        //final HtmlHeaderSectionHandler headerHandler = new HtmlHeaderSectionHandler(autolinkHandler);
-        //headerHandler.setTagList(tagList);
         
-        // Markup filter chain starts with auto link handler
+        if (this.container != null)
+        {
+	        final BodyOnLoadHandler bodyHandler = new BodyOnLoadHandler(autolinkHandler);
+	
+	        // Pages require additional handlers
+	        if ((this.container != null) && (container instanceof Page))
+	        {
+	            final HtmlHeaderSectionHandler headerHandler = new HtmlHeaderSectionHandler(bodyHandler);
+	            headerHandler.setTagList(tagList);
+	            
+	            return headerHandler;
+	        }
+	        
+	        // Markup filter chain starts with auto link handler
+	        return bodyHandler;
+        }
+        
         return autolinkHandler;
 	}
 

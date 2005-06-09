@@ -341,4 +341,23 @@ public final class MarkupParserTest extends TestCase
 	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
 	    assertEquals(1, markup.size());
    	}
+
+    /**
+     * Test &lt;wicket: .
+     * @throws ParseException
+     * @throws ResourceStreamNotFoundException
+     * @throws IOException
+     */
+    public final void testScript() throws ParseException,
+    	ResourceStreamNotFoundException, IOException
+   	{
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser());
+	    
+	    Markup markup = parser.parse("<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
+	    assertEquals(3, markup.size());
+	    assertEquals("html", ((ComponentTag)markup.get(0)).getName());
+	    assertEquals("html", ((ComponentTag)markup.get(2)).getName());
+	    assertEquals(true, markup.get(1) instanceof RawMarkup);
+	    assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", ((RawMarkup)markup.get(1)).toString());
+   	}
 }

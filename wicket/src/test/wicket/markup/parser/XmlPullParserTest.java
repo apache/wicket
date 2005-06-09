@@ -299,4 +299,25 @@ public class XmlPullParserTest extends TestCase
         parser.parse("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
     }
     
+    /**
+     * 
+     * @throws Exception
+     */
+    public final void testScript() throws Exception
+    {
+        final XmlPullParser parser = new XmlPullParser();
+        parser.parse("<html><script language=\"JavaScript\">... <x a> ...</script></html>");
+        XmlTag tag = (XmlTag) parser.nextTag();
+        assertTrue(tag.isOpen());
+        assertEquals("html", tag.getName());
+        tag = (XmlTag) parser.nextTag();
+        assertTrue(tag.isOpen());
+        assertEquals("script", tag.getName());
+        tag = (XmlTag) parser.nextTag();
+        assertTrue(tag.isClose());
+        assertEquals("script", tag.getName());
+        tag = (XmlTag) parser.nextTag();
+        assertTrue(tag.isClose());
+        assertEquals("html", tag.getName());
+    }
 }

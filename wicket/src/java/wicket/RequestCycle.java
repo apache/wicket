@@ -435,23 +435,34 @@ public abstract class RequestCycle
 			finally
 			{
 				// make sure the invokerPage is ended correctly.
-				try {
+				try 
+				{
 					if(invokePage != null) invokePage.internalEndRequest();
-				} catch (RuntimeException e) {
+				} 
+				catch (RuntimeException e) 
+				{
 					log.error("Exception occurred during invokerPage.internalEndRequest", e);
 				}
 
 				// Response is ending
-				try {
+				try 
+				{
 					internalOnEndRequest();
-				} catch (RuntimeException e) {
+				} 
+				catch (RuntimeException e) 
+				{
 					log.error("Exception occurred during internalOnEndRequest", e);
 				}
-				try {
+				
+				try 
+				{
 					onEndRequest();
-				} catch (RuntimeException e) {
+				} 
+				catch (RuntimeException e) 
+				{
 					log.error("Exception occurred during onEndRequest", e);
 				}
+				
 				// Release thread local resources
 				threadDetach();
 			}
