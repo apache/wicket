@@ -569,19 +569,6 @@ public abstract class Form extends WebMarkupContainer
 		});
 	}
 
-	/**
-	 * Gets whether this component is 'valid'. Valid in this context means that
-	 * no validation errors were reported the last time the form component was
-	 * processed. This variable not only is convenient for 'business' use, but
-	 * is also nescesarry as we don't want the form component models updated
-	 * with invalid input.
-	 * 
-	 * @return valid whether this component is 'valid'
-	 */
-	public final boolean isValid()
-	{
-		return !hasErrorMessage();
-	}
 
 	/**
 	 * Gets whether this component is to be validated.

@@ -1,6 +1,7 @@
 package wicket.markup.html.form;
 
 import wicket.markup.html.form.validation.IFormValidationStrategy;
+import wicket.markup.html.form.validation.IFormValidator;
 
 /**
  * The default form validation strategy.
@@ -43,7 +44,10 @@ final class DefaultFormValidationStrategy implements IFormValidationStrategy
 			}
 		});
 
-		// now, visit any validators of the form itself
-		form.validator.validate(form);
+		if ((form.validator != IFormValidator.NULL) && (!form.hasError()))
+		{
+			// now, visit any validators of the form itself
+			form.validator.validate(form);
+		}
 	}
 }

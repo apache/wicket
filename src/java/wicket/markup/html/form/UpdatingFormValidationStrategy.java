@@ -2,6 +2,7 @@ package wicket.markup.html.form;
 
 import wicket.Component;
 import wicket.markup.html.form.validation.IFormValidationStrategy;
+import wicket.markup.html.form.validation.IFormValidator;
 import wicket.model.IModel;
 import wicket.util.lang.Objects;
 import wicket.version.undo.Change;
@@ -9,12 +10,12 @@ import wicket.version.undo.Change;
 /**
  * The default form validation strategy.
  */
-final class UpdatingFormValidationStrategy implements IFormValidationStrategy
+public final class UpdatingFormValidationStrategy implements IFormValidationStrategy
 {
 	/**
 	 * Construct.
 	 */
-	UpdatingFormValidationStrategy()
+	public UpdatingFormValidationStrategy()
 	{
 	}
 
@@ -47,32 +48,37 @@ final class UpdatingFormValidationStrategy implements IFormValidationStrategy
 			}
 		});
 
-		// record the current model
-		ModelChange record = new ModelChange(form);
-
-		// record the versioned property
-		boolean wasVersioned = form.isVersioned();
-
-		// set it to false (that won't have any effect for components that just override the method btw)
-		form.setVersioned(false);
-		try
+		// only perform form validation if any validators are registered, and all form
+		// components validated succesfully
+		if ((form.validator != IFormValidator.NULL) && (!form.hasError()))
 		{
-			// update
-			form.updateFormComponentModels();
-
-			// visit any validators of the form itself
-			form.validator.validate(form);
-		}
-		finally
-		{
-			// rollback the updated model
-			if (form.hasError())
+			// record the current model
+			ModelChange record = new ModelChange(form);
+	
+			// record the versioned property
+			boolean wasVersioned = form.isVersioned();
+	
+			// set it to false (that won't have any effect for components that just override the method btw)
+			form.setVersioned(false);
+			try
 			{
-				record.undo();
+				// update
+				form.updateFormComponentModels();
+	
+				// visit any validators of the form itself
+				form.validator.validate(form);
 			}
-
-			// set versioned property to what it was before
-			form.setVersioned(wasVersioned);
+			finally
+			{
+				// rollback the updated model
+				if (form.hasError())
+				{
+					record.undo();
+				}
+	
+				// set versioned property to what it was before
+				form.setVersioned(wasVersioned);
+			}
 		}
 	}
 
