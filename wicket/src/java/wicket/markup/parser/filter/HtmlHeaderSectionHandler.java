@@ -25,8 +25,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupException;
-import wicket.markup.RawMarkup;
+import wicket.markup.WicketHeaderTag;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
@@ -44,16 +43,21 @@ import wicket.markup.parser.XmlTag;
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 {
-	/** Logging */
+    /** Logging */
 	private static final Log log = LogFactory.getLog(HtmlHeaderSectionHandler.class);
 
-	/** If true, we have seen <head> but not </head> yet. */
-	private boolean withinHead; 
+	private static final String HEADER_ID = "_header";
+    private static final String HEAD = "head";
+    
+    private static final int STATE_START = 0;
+    private static final int STATE_HEAD_OPENED = 1;
+    private static final int STATE_HEAD_CLOSED = 2;
+    private static final int STATE_WICKET_HEAD_OPENED = 3;
+    private static final int STATE_WICKET_HEAD_CLOSED = 4;
+    private static final int STATE_BODY_FOUND = 5;
 	
-	/**
-	 * Only if false, it will watch for head tags.
-	 */
-	private boolean done;
+	/** current state */
+	private int status;
 	
 	/** In case you want to add extra Component to the markup, just add them
 	 * to the list. MarkupParser will handle it.
@@ -105,35 +109,41 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		}
 		
 		// Whatever there is left in the markup, <wicket:head> is no longer allowed
-		if (done == true)
+		if ((status == STATE_BODY_FOUND) || (status == STATE_HEAD_CLOSED))
 		{
 		    return tag;
 		}
 
 		// if it is <head> or <wicket:head>
-		if ("head".equalsIgnoreCase(tag.getName()))
+		if (HEAD.equalsIgnoreCase(tag.getName()))
         {
 		    // if <wicket:head>
 			if (tag instanceof WicketTag)
 			{
-			    if (tag.isClose() == true)
+			    if (tag.isOpen() == true)
 			    {
-			        done = true;
+			        status = STATE_WICKET_HEAD_OPENED;
+			    }
+			    else
+			    {
+			        status = STATE_WICKET_HEAD_CLOSED;
 			    }
 			}
 			else
 			{
 			    // it is <head>
-			    withinHead = !withinHead;
-			    if (tag.isClose() == true)
+			    if (tag.isOpen() == true)
 			    {
-			        if (done == false)
+			        status = STATE_HEAD_OPENED;
+			    }
+			    else
+			    {
+			        if (status != STATE_WICKET_HEAD_CLOSED)
 			        {
 			            // we found <head> but no <wicket:head>
-			            insertWicketHeadTag();
+			            insertWicketHeadTag(false);
 			        }
-			        
-			        done = true;
+			        status = STATE_HEAD_CLOSED;
 			    }
 			}
 			
@@ -143,48 +153,39 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		if ("body".equalsIgnoreCase(tag.getName()))
         {
 		    // <head> must allways be before <body>
-		    done = true;
+		    status = STATE_BODY_FOUND;
 		    
 		    // we found neither <head> nor <wicket:head>
-			tagList.add(new RawMarkup("<head>"));
-		    insertWicketHeadTag();
-			tagList.add(new RawMarkup("</head>"));
-		
+		    insertWicketHeadTag(true);
 		    return tag;
         }
-		
-		if (!(tag instanceof WicketTag))
-		{
-		    return tag;
-		}
-
-		final WicketTag wtag = (WicketTag) tag;
-		if ((withinHead == false) && (wtag.isHeadTag() == true))
-		{
-		    throw new MarkupException("<wicket:head> is only allow within <head> section.");
-		}
 		
 		return tag;
 	}
 	
-	private void insertWicketHeadTag()
+	/**
+	 * Insert <wicket:head> open and close tag (with empty body)
+	 * @param requiresHeadTag
+	 */
+	private void insertWicketHeadTag(final boolean requiresHeadTag)
 	{
 		final XmlTag headOpenTag = new XmlTag();
-		headOpenTag.setName("head");
+		headOpenTag.setName(HEAD);
 		headOpenTag.setType(XmlTag.OPEN);
-		final WicketTag openTag = new WicketTag(headOpenTag);
-		openTag.setId("_header");
+		final WicketHeaderTag openTag = new WicketHeaderTag(headOpenTag);
+		openTag.setId(HEADER_ID);
+		openTag.setRequiresHtmlHeadTag(requiresHeadTag);
 			
 		final XmlTag headCloseTag = new XmlTag();
-		headCloseTag.setName("head");
+		headCloseTag.setName(HEAD);
 		headCloseTag.setType(XmlTag.CLOSE);
 		final WicketTag closeTag = new WicketTag(headCloseTag);
 		closeTag.setOpenTag(openTag);
-		closeTag.setId("_header");
+		closeTag.setId(HEADER_ID);
 
 		tagList.add(openTag);
 		tagList.add(closeTag);
 		
-		done = true;
+		status = STATE_WICKET_HEAD_CLOSED;
 	}
 }

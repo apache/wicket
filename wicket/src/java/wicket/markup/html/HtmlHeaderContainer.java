@@ -18,8 +18,11 @@
 package wicket.markup.html;
 
 import wicket.MarkupContainer;
+import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.WicketHeaderTag;
+import wicket.response.StringResponse;
 
 /**
  * The HtmlHeaderContainer is automatically created and added to the component
@@ -82,16 +85,42 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 */
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-	    // In any case, first render the header section associated with the markup
-		super.onComponentTagBody(markupStream, openTag);
-
-		// If the parent component is a Page (or a bordered Page), we must
-		// now include the header sections of all components in the component
-		// hierarchie.
-		MarkupContainer parent = getParent();
-		if (parent instanceof IHeaderRenderer)
-		{
-			((IHeaderRenderer)parent).renderHeadSections(this);
-		}
+	    final Response webResponse = this.getResponse();
+	    final StringResponse response = new StringResponse();
+	    this.getRequestCycle().setResponse(response);
+	    
+	    try
+	    {
+		    // In any case, first render the header section associated with the markup
+			super.onComponentTagBody(markupStream, openTag);
+	
+			// If the parent component is a Page (or a bordered Page), we must
+			// now include the header sections of all components in the component
+			// hierarchie.
+			MarkupContainer parent = getParent();
+			if (parent instanceof IHeaderRenderer)
+			{
+				((IHeaderRenderer)parent).renderHeadSections(this);
+			}
+			
+			final String output = response.toString();
+			if (output.length() > 0)
+			{
+			    final boolean requiresHeadTag = (openTag instanceof WicketHeaderTag) && ((WicketHeaderTag)openTag).isRequiresHtmlHeadTag();
+			    if (requiresHeadTag)
+			    {
+			        webResponse.write("<head>");
+			    }
+			    webResponse.write(output);
+			    if (requiresHeadTag)
+			    {
+				    webResponse.write("</head>");
+			    }
+			}
+	    }
+	    finally
+	    {
+		    this.getRequestCycle().setResponse(webResponse);
+	    }
 	}
 }
