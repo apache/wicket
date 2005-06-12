@@ -112,6 +112,68 @@ public class TreeTest extends TestCase
 	}
 
 	/**
+	 * Test Tree put on a plain page with a html head section, but without a wicket:head tag.
+	 * Tests first render, and render after a node click.
+	 * @throws Exception
+	 */
+	public void testRenderTreePageNoWicketHeadTag_1() throws Exception
+	{
+		System.out.println("=== " + TreePageNoWicketHeadTag.class.getName() + " ===");
+		
+		application = new MockWebApplication(null);
+		application.getPages().setHomePage(TreePageNoWicketHeadTag.class);
+
+		// Do the processing
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
+
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		//System.out.println(document);
+
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "TreePageNoWicketHeadTagExpectedResult_1.html"));
+
+		Page page = application.getLastRenderedPage();
+		application.setupRequestAndResponse();
+		application.getServletRequest().setRequestToRedirectString("?component=0.tree.tree.3.node.junctionLink&version=0&interface=ILinkListener");
+		application.processRequestCycle();
+		document = application.getServletResponse().getDocument();
+
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "TreePageNoWicketHeadTagExpectedResult_1-1.html"));
+	}
+
+//	/**
+//	 * Test Tree put on a plain page without a html head section.
+//	 * Tests first render, and render after a node click.
+//	 * @throws Exception
+//	 */
+//	public void testRenderTreePageNoHtmlHead_1() throws Exception
+//	{
+//		System.out.println("=== " + TreePageNoHtmlHead.class.getName() + " ===");
+//		
+//		application = new MockWebApplication(null);
+//		application.getPages().setHomePage(TreePageNoHtmlHead.class);
+//
+//		// Do the processing
+//		application.setupRequestAndResponse();
+//		application.processRequestCycle();
+//
+//		// Validate the document
+//		String document = application.getServletResponse().getDocument();
+//		System.out.println(document);
+//
+//		assertTrue(DiffUtil.validatePage(document, this.getClass(), "TreePageNoHtmlHeadExpectedResult_1.html"));
+//
+//		Page page = application.getLastRenderedPage();
+//		application.setupRequestAndResponse();
+//		application.getServletRequest().setRequestToRedirectString("?component=0.tree.tree.3.node.junctionLink&version=0&interface=ILinkListener");
+//		application.processRequestCycle();
+//		document = application.getServletResponse().getDocument();
+//
+//		assertTrue(DiffUtil.validatePage(document, this.getClass(), "TreePageNoHtmlHeadExpectedResult_1-1.html"));
+//	}
+
+	/**
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception
