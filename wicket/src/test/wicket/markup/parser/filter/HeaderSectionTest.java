@@ -126,7 +126,7 @@ public class HeaderSectionTest extends TestCase
 	 */
 	public void testRenderHomePage_10() throws Exception
 	{
-//	    executeTest(HeaderSectionPage_10.class, "HeaderSectionPageExpectedResult_10.html");
+	    executeTest(HeaderSectionPage_10.class, "HeaderSectionPageExpectedResult_10.html");
 	}
 
 	/**

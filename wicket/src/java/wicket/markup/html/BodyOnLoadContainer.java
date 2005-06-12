@@ -17,11 +17,13 @@
  */
 package wicket.markup.html;
 
+import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.Model;
 
 /**
  * 
@@ -45,10 +47,23 @@ public class BodyOnLoadContainer extends WebMarkupContainer implements IComponen
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-	    final String onLoad = tag.getAttributes().getString("onload");
-	    if (onLoad != null)
+	    if (getParent() instanceof WebPage)
 	    {
-	        ((WebPage)this.getPage()).addBodyOnLoad(onLoad);
+	        final String onLoad2 = ((WebPage)this.getPage()).getBodyOnLoad();
+	        if (onLoad2 != null)
+	        {
+		        String onLoad = tag.getAttributes().getString("onload");
+		        if (onLoad == null)
+		        {
+		            onLoad = onLoad2;
+		        }
+		        else
+		        {
+		            onLoad = onLoad + onLoad2;
+		        }
+		        
+		        add(new AttributeModifier("onLoad", true, new Model(onLoad)));
+	        }
 	    }
 	    
 		super.onComponentTag(tag);

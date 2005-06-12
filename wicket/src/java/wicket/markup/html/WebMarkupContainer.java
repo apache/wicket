@@ -99,7 +99,7 @@ public class WebMarkupContainer extends MarkupContainer
 		int index = -1;
 		if (associatedMarkupStream.getHeaderIndex() == Markup.HEADER_NOT_YET_EVALUATED)
 		{
-			// Iterate of the markup and find <wicket:head>
+			// Iterate the markup and find <wicket:head>
 			do
 			{
 				final MarkupElement element = associatedMarkupStream.get();
@@ -153,7 +153,7 @@ public class WebMarkupContainer extends MarkupContainer
 					{
 						for (Iterator iter = headerComponents.iterator(); iter.hasNext();)
 						{
-							headerContainer.add((Component)iter.next());
+					        headerContainer.add((Component)iter.next());
 						}
 					}
 					

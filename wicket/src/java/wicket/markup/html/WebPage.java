@@ -24,6 +24,9 @@ import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupElement;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequest;
@@ -274,11 +277,58 @@ public class WebPage extends Page implements IHeaderRenderer
 					if ((headerPart != null) && (container.get(headerPart.getId()) == null))
 					{
 						container.autoAdd(headerPart);
+						
+						checkBodyOnLoad(webMarkupContainer);
 					}
 				}
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
         });
+	}
+	
+	private final void checkBodyOnLoad(final WebMarkupContainer container)
+	{
+		// gracefull getAssociateMarkupStream. Throws no exception in case
+		// markup is not found
+		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
+				.getMarkupStream(container, null, false);
+
+		// No associated markup => no header section
+		if (associatedMarkupStream == null)
+		{
+			return;
+		}
+
+		int index = associatedMarkupStream.getCurrentIndex();
+		
+		try
+		{
+		    associatedMarkupStream.setCurrentIndex(0);
+		    
+			// Iterate the markup and find <wicket:head>
+			do
+			{
+				final MarkupElement element = associatedMarkupStream.get();
+				if (element instanceof ComponentTag)
+				{
+					final ComponentTag tag = (ComponentTag)element;
+					if ("body".equalsIgnoreCase(tag.getName()))
+					{
+					    final String onLoad = tag.getAttributes().getString("onload");
+					    if (onLoad != null)
+					    {
+					        ((WebPage)this.getPage()).addBodyOnLoad(onLoad);
+					    }
+					    break;
+					}
+				}
+			}
+			while (associatedMarkupStream.next() != null);
+		}
+		finally
+		{
+		    associatedMarkupStream.setCurrentIndex(index);
+		}
 	}
 	
 	/**
@@ -310,5 +360,19 @@ public class WebPage extends Page implements IHeaderRenderer
 	public String getBodyOnLoad()
 	{
 	    return this.bodyOnLoad;
+	}
+	
+	/**
+	 * @see wicket.Component#onEndRequest()
+	 */
+	protected void onEndRequest()
+	{
+	    final Component header = get("_header");
+	    if (header != null)
+	    {
+	        this.remove(header.getId());
+	    }
+		
+		super.onEndRequest();
 	}
 }
