@@ -21,13 +21,13 @@ import wicket.PageParameters;
 
 /**
  */
-public class TreePage extends AbstractTreePage
+public class TreePageNoWicketHeadTag extends AbstractTreePage
 {
 	/**
 	 * Constructor.
 	 * @param parameters Page parameters
 	 */
-	public TreePage(final PageParameters parameters)
+	public TreePageNoWicketHeadTag(final PageParameters parameters)
 	{
 		super(parameters);
 	}
