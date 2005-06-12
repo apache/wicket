@@ -10,6 +10,9 @@
     <release version="1.1.0-beta1" date="tbd" description="1.1.0 Beta 1">
 	  <action type="add" dev="Eelco Hillenius">Added component wicket.markup.html.include.Include for including content from non-Wicket resources.</action>
     </release>
+    <release version="1.0.1" date="tbd" description="1.0.1">
+      <action type="fix" dev="Eelco Hillenius" due-to="Adam Howard">fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</action>
+    </release>
     <release version="1.0.0" date="tbd" description="1.0.0 final">
       <action type="update" dev="Eelco Hillenius">StaticResourceReference now binds itself immediately so clients don't have to know about the binding internals.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1209753">Pageable list view navigator did not handle the "last" link properly in situations where additional elements have been added to the underlying list.</action>

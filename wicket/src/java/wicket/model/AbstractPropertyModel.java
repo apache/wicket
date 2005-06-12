@@ -40,7 +40,7 @@ import wicket.util.string.Strings;
 public abstract class AbstractPropertyModel extends AbstractDetachableModel
 {
 	/** Ognl context wrapper object. It contains the type converter. */
-	private transient OgnlContext context;
+	private transient ConversionContext conversionContext;
 
 	/** Any model object (which may or may not implement IModel) */
 	private Object nestedModel;
@@ -111,7 +111,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	protected void onDetach()
 	{
 		// Reset OGNL context
-		this.context = null;
+		this.conversionContext = null;
 
 		// Detach nested object if it's an IModel
 		if (nestedModel instanceof IModel)
@@ -141,7 +141,8 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 			try
 			{
 				// note: if property type is null it is ignored by Ognl
-				return Ognl.getValue(expression, getContext(component), modelObject,
+				prepareContext(component);
+				return Ognl.getValue(expression, conversionContext, modelObject,
 						propertyType(component));
 			}
 			catch (OgnlException e)
@@ -202,7 +203,8 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 				}
 	
 				// Let OGNL set the value
-				Ognl.setValue(ognlExpression(component), getContext(component), modelObject, object);
+				prepareContext(component);
+				Ognl.setValue(ognlExpression(component), conversionContext, modelObject, object);
 			}
 		}
 		catch (OgnlException e)
@@ -222,54 +224,74 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 * Gets the Ognl context that is used for evaluating expressions. It
 	 * contains the type converter that is used to access the converter
 	 * framework.
-	 * 
-	 * @param component
-	 *            The Component
-	 * @return The Ognl context that is used for evaluating expressions.
+	 * @param component The Component
 	 */
-	private final OgnlContext getContext(final Component component)
+	private final void prepareContext(final Component component)
 	{
-		if (context == null)
+		// create a context object when it was not yet done for this request cycle
+		if (conversionContext == null)
 		{
 			// Setup ognl context for this request
-			this.context = new OgnlContext();
-			context.setTypeConverter(new DefaultTypeConverter()
-			{
-				/**
-				 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
-				 *      java.lang.Object, java.lang.Class)
-				 */
-				public Object convertValue(Map context, Object value, Class toType)
-				{
-					if (value == null)
-					{
-						return null;
-					}
-
-					if (!toType.isArray() && value instanceof String[]
-							&& ((String[])value).length == 1)
-					{
-						value = ((String[])value)[0];
-					}
-
-					if (value instanceof String && ((String)value).trim().equals(""))
-					{
-						return null;
-					}
-					return component.getConverter().convert(value, toType);
-				}
-
-				/**
-				 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map,
-				 *      java.lang.Object,java.lang.Class)
-				 */
-				public Object convertValue(Map context, Object target, Member member,
-						String propertyName, Object value, Class toType)
-				{
-					return convertValue(context, value, toType);
-				}
-			});
+			this.conversionContext = new ConversionContext();
 		}
-		return context;
+
+		// set the current component for each request (as this could be a shared model, this
+		// has to be done every time!!!
+		conversionContext.component = component;
+	}
+
+	/**
+	 * Ognl context with a reference to the current component.
+	 */
+	private static final class ConversionContext extends OgnlContext
+	{
+		/** current component. */
+		Component component;
+
+		/**
+		 * Construct.
+		 */
+		ConversionContext()
+		{
+			setTypeConverter(new TypeConverter());
+		}
+
+		/**
+		 * Type converter for expressions.
+		 */
+		private final class TypeConverter extends DefaultTypeConverter
+		{
+			/**
+			 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.Class)
+			 */
+			public Object convertValue(Map context, Object value, Class toType)
+			{
+				if (value == null)
+				{
+					return null;
+				}
+
+				if (!toType.isArray() && value instanceof String[]
+						&& ((String[])value).length == 1)
+				{
+					value = ((String[])value)[0];
+				}
+
+				if (value instanceof String && ((String)value).trim().equals(""))
+				{
+					return null;
+				}
+				return component.getConverter().convert(value, toType);
+			}
+
+			/**
+			 * @see ognl.TypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.reflect.Member, java.lang.String, java.lang.Object, java.lang.Class)
+			 */
+			public Object convertValue(Map context, Object target, Member member,
+					String propertyName, Object value, Class toType)
+			{
+				return convertValue(context, value, toType);
+			}
+		}
 	}
 }
