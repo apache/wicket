@@ -1670,7 +1670,9 @@ public abstract class Component implements Serializable
 			}
 
 			// Write the tag
-			getResponse().write(tag.toString(settings.getStripWicketTags()));
+			getResponse().write(tag.toString(
+			        settings.getStripWicketTags(), 
+			        settings.getWicketNamespace()));
 		}
 	}
 

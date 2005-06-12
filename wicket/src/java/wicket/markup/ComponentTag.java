@@ -437,9 +437,10 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @param stripWicketAttributes If true, tag attributes with namespace
 	 *		'wicket# will not be printed. 
+	 * @param namespace Wicket namespace
 	 * @return String version of this object
 	 */
-	public String toString(final boolean stripWicketAttributes)
+	public String toString(final boolean stripWicketAttributes, final String namespace)
 	{
 		if (stripWicketAttributes == false)
 		{
@@ -447,7 +448,7 @@ public class ComponentTag extends MarkupElement
 		}
 		else
 		{
-			return xmlTag.toXmlString(DEFAULT_WICKET_NAMESPACE + ":id");
+			return xmlTag.toXmlString(namespace + ":id");
 		}
 	}
 	

@@ -56,20 +56,48 @@ public class HrefTest extends TestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-	    executeTest(Href_1.class, "HrefExpectedResult_1.html");
+	    executeTest(Href_1.class, "HrefExpectedResult_1.html", false, null);
+	}
+
+	/**
+	 * Simple Label
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_2() throws Exception
+	{
+	    executeTest(Href_1.class, "HrefExpectedResult_1-1.html", true, null);
+	}
+
+	/**
+	 * Simple Label
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_3() throws Exception
+	{
+	    executeTest(Href_2.class, "HrefExpectedResult_2.html", true, "wcn");
 	}
 
 	/**
 	 * @param pageClass
 	 * @param filename
+	 * @param stripWicketTag
+	 * @param namespace
 	 * @throws Exception
 	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
+	public void executeTest(final Class pageClass, final String filename, 
+	        final boolean stripWicketTag, final String namespace) throws Exception
 	{
 		application = new MockWebApplication(null);
 		application.getPages().setHomePage(pageClass);
-		application.getSettings().setStripWicketTags(true);
+		application.getSettings().setStripWicketTags(stripWicketTag);
 
+		if (namespace != null)
+		{
+		    application.getSettings().setWicketNamespace(namespace);
+		}
+		
 		// Do the processing
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
