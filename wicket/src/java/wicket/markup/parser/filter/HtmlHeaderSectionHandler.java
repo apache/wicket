@@ -36,9 +36,6 @@ import wicket.markup.parser.XmlTag;
  * called first and that <wicket:head> tags have been detected. This filter checks
  * that <wicket:head> occur only within <head> sections.<p>
  * 
- * Note: it is currently commented out, but it may also add <head> components
- * in case they are not found in the markup file.
- * 
  * @author Juergen Donnerstag
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
@@ -46,7 +43,9 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
     /** Logging */
 	private static final Log log = LogFactory.getLog(HtmlHeaderSectionHandler.class);
 
-	private static final String HEADER_ID = "_header";
+	/** Id of the header component */
+	public static final String HEADER_ID = "_header";
+	
     private static final String HEAD = "head";
     
     private static final int STATE_START = 0;
@@ -59,7 +58,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	/** current state */
 	private int status;
 	
-	/** In case you want to add extra Component to the markup, just add them
+	/** In case you want to add extra Components to the markup, just add them
 	 * to the list. MarkupParser will handle it.
 	 */
 	private List tagList;
@@ -88,11 +87,6 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 * Get the next tag from the next MarkupFilter in the chain and search for
 	 * Wicket specific tags.
 	 * <p>
-	 * Note: The xml parser - the next MarkupFilter in the chain - returns
-	 * XmlTags which are a subclass of MarkupElement. The implementation of this
-	 * filter will return either ComponentTags or ComponentWicketTags. Both are
-	 * subclasses of MarkupElement as well and both maintain a reference to the
-	 * XmlTag. But no XmlTag is returned.
 	 * 
 	 * @see wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return The next tag from markup to be processed. If null, no more tags
@@ -152,7 +146,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		
 		if ("body".equalsIgnoreCase(tag.getName()))
         {
-		    // <head> must allways be before <body>
+		    // <head> must always be before <body>
 		    status = STATE_BODY_FOUND;
 		    
 		    // we found neither <head> nor <wicket:head>
@@ -165,7 +159,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	
 	/**
 	 * Insert <wicket:head> open and close tag (with empty body)
-	 * @param requiresHeadTag
+	 * @param requiresHeadTag True, if no <head> was found
 	 */
 	private void insertWicketHeadTag(final boolean requiresHeadTag)
 	{
@@ -183,9 +177,11 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		closeTag.setOpenTag(openTag);
 		closeTag.setId(HEADER_ID);
 
+		// insert the tags into the markup stream
 		tagList.add(openTag);
 		tagList.add(closeTag);
 		
+		// done
 		status = STATE_WICKET_HEAD_CLOSED;
 	}
 }

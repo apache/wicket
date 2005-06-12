@@ -36,6 +36,7 @@ import wicket.util.lang.Classes;
  * class MarkupContainer, except that the markup type is defined to be HTML.
  * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
 public class WebMarkupContainer extends MarkupContainer
 {
@@ -96,9 +97,12 @@ public class WebMarkupContainer extends MarkupContainer
 			return null;
 		}
 
+		// Lazy scan the markup for a header component tag, if necessary
+		// 'index' will be where <wicket:head> resides in the markup 
 		int index = -1;
 		if (associatedMarkupStream.getHeaderIndex() == Markup.HEADER_NOT_YET_EVALUATED)
 		{
+		    // Markup has not yet been scanned
 			// Iterate the markup and find <wicket:head>
 			do
 			{
@@ -108,6 +112,7 @@ public class WebMarkupContainer extends MarkupContainer
 					final WicketTag wTag = (WicketTag)element;
 					if (wTag.isHeadTag() == true)
 					{
+					    // ok, found header. Remember the position
 					    index = associatedMarkupStream.getCurrentIndex();
 					    break;
 					}
@@ -117,18 +122,26 @@ public class WebMarkupContainer extends MarkupContainer
 		}
 		else if (associatedMarkupStream.getHeaderIndex() == Markup.HEADER_NO_HEADER_FOUND)
 		{
+		    // The markup has been scanned already, but does not contain any
+		    // header tag
 		    ; // Don't do anything
 		}
 		else
 		{
+		    // The markup has been scanned already. Get the index where the 
+		    // header tag resides from the markup
 		    index = associatedMarkupStream.getHeaderIndex();
 		}
 		
+		// Ok, finished scanning the markup for header tag
 		// If markup contains a header section, handle it now.
 		if (index >= 0)
 		{
+		    // Position markup stream at beginning of header tag
 		    associatedMarkupStream.setCurrentIndex(index);
 		    
+		    // Create a HtmlHeaderContainer for the header tag found and
+		    // add all components from addToHeader list
 			final MarkupElement element = associatedMarkupStream.get();
 			if (element instanceof WicketTag)
 			{

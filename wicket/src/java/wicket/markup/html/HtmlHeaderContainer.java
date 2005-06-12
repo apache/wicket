@@ -22,6 +22,7 @@ import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketHeaderTag;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.response.StringResponse;
 
 /**
@@ -51,7 +52,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	{
 		// There is only one HtmlHeaderContainer allowed. That is we
 		// don't have to worry about creating a unique id.
-		super("_header");
+		super(HtmlHeaderSectionHandler.HEADER_ID);
 
 		// Skip <wicket:head> and render just the body
 		setRenderBodyOnly(true);
@@ -60,7 +61,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	/**
 	 * Constructor used to add child component header sections. Because there
 	 * can more than just one component contributing to the header section, 
-	 * the id must be unique. And because the markup stream must the child
+	 * the id must be unique. And because the markup stream must be the child
 	 * components header section, it must be provided as well.
 	 * 
 	 * @param id
@@ -76,7 +77,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	}
 
 	/**
-	 * First render the body of component. And if it is the header component of
+	 * First render the body of the component. And if it is the header component of
 	 * a Page (compared to a Panel or Border), than get the header sections from
 	 * all component in the hierachie and render them as well.
 	 * 
@@ -85,12 +86,20 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 */
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
+	    // We are able to automatically add <head> to the page if it is 
+	    // missing. But we only want to add it, if we have content to be
+	    // written to its body. Thus we first write the output into a 
+	    // StringResponse and if not empty, we copy it to the original
+	    // web response.
+	    
+	    // Temporarily replace the web response with a String response 
 	    final Response webResponse = this.getResponse();
-	    final StringResponse response = new StringResponse();
-	    this.getRequestCycle().setResponse(response);
 	    
 	    try
 	    {
+		    final StringResponse response = new StringResponse();
+		    this.getRequestCycle().setResponse(response);
+		    
 		    // In any case, first render the header section associated with the markup
 			super.onComponentTagBody(markupStream, openTag);
 	
@@ -102,7 +111,8 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			{
 				((IHeaderRenderer)parent).renderHeadSections(this);
 			}
-			
+
+			// Automatically add <head> if necessary
 			final String output = response.toString();
 			if (output.length() > 0)
 			{
@@ -120,6 +130,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	    }
 	    finally
 	    {
+	        // Restore the original response
 		    this.getRequestCycle().setResponse(webResponse);
 	    }
 	}

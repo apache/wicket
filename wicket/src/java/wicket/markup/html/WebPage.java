@@ -28,6 +28,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
@@ -48,6 +49,7 @@ import wicket.util.lang.Classes;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Juergen Donnerstag
  */
 public class WebPage extends Page implements IHeaderRenderer
 {
@@ -245,13 +247,17 @@ public class WebPage extends Page implements IHeaderRenderer
 	 * Page if they have something to contribute to the &lt;head&gt; section 
 	 * of the HTML output. If they have, child components will return a 
 	 * WebMarkupContainer which is (auto) added to the component hierarchie 
-	 * and immediately rendered.
+	 * and immediately rendered.<p>
+	 * Note: HtmlHeaderContainer will be removed from the component hierachie
+	 * at the end of the request (@see #onEndRequest()) and thus can not 
+	 * transport status from one request to the next. This is true for all
+	 * components added to the header as well. 
 	 * 
-	 * @param container
+	 * @param container The header container 
 	 */
 	public final void renderHeadSections(final HtmlHeaderContainer container)
 	{
-		// collect all header parts and render them.
+		// Collect all header parts and render them.
 	    // Only MarkupContainer have associated markup files which
 	    // may contain <wicket:head> regions.
 		visitChildren(WebMarkupContainer.class, new IVisitor()
@@ -263,7 +269,7 @@ public class WebPage extends Page implements IHeaderRenderer
 			{
 				if (component.isVisible())
 				{
-				    // The child component 
+				    // The child component found 
 					WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
 					
 					// Ask the child component if it has something to contribute
@@ -273,11 +279,14 @@ public class WebPage extends Page implements IHeaderRenderer
 					// the header and in case the very same Component has not 
 					// contributed to the page, than ...
 					// A component's header section must only be added once, 
-					// no matter how often the same Component has been added.
+					// no matter how often the same Component has been added 
+					// to the page or any other container in the hierachie.
 					if ((headerPart != null) && (container.get(headerPart.getId()) == null))
 					{
 						container.autoAdd(headerPart);
 						
+						// Check if the component requires some <body onLoad="..">
+						// attribute to be copied to the page's body tag. 
 						checkBodyOnLoad(webMarkupContainer);
 					}
 				}
@@ -286,6 +295,12 @@ public class WebPage extends Page implements IHeaderRenderer
         });
 	}
 	
+	/**
+	 * Check if the component requires some <body onLoad=".."> attribute to 
+	 * be copied to the page's body tag.
+	 * 
+	 * @param container A child component of Page
+	 */
 	private final void checkBodyOnLoad(final WebMarkupContainer container)
 	{
 		// gracefull getAssociateMarkupStream. Throws no exception in case
@@ -293,19 +308,22 @@ public class WebPage extends Page implements IHeaderRenderer
 		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
 				.getMarkupStream(container, null, false);
 
-		// No associated markup => no header section
+		// No associated markup => no body tag
 		if (associatedMarkupStream == null)
 		{
 			return;
 		}
 
+		// Remember the current position within markup, where we need to 
+		// back to, at the end.
 		int index = associatedMarkupStream.getCurrentIndex();
 		
 		try
 		{
+		    // Start at the beginning
 		    associatedMarkupStream.setCurrentIndex(0);
 		    
-			// Iterate the markup and find <wicket:head>
+			// Iterate the markup and find <body onLoad="...">
 			do
 			{
 				final MarkupElement element = associatedMarkupStream.get();
@@ -317,8 +335,19 @@ public class WebPage extends Page implements IHeaderRenderer
 					    final String onLoad = tag.getAttributes().getString("onload");
 					    if (onLoad != null)
 					    {
-					        ((WebPage)this.getPage()).addBodyOnLoad(onLoad);
+					        // Tell the page to change the Page's 
+					        // body tags.
+						    if (WebPage.this.bodyOnLoad == null)
+						    {
+						        WebPage.this.bodyOnLoad = onLoad;
+						    }
+						    else
+						    {
+						        WebPage.this.bodyOnLoad = WebPage.this.bodyOnLoad + onLoad;
+						    }
 					    }
+					    
+					    // There can only be one body tag
 					    break;
 					}
 				}
@@ -327,27 +356,9 @@ public class WebPage extends Page implements IHeaderRenderer
 		}
 		finally
 		{
+		    // Make sure we return to the orginal position in the markup
 		    associatedMarkupStream.setCurrentIndex(index);
 		}
-	}
-	
-	/**
-	 * THIS IS NOT PART OF THE PUBLIC API. 
-	 * 
-	 * Append some text to the onLoad attribute of the body tag
-	 * 
-	 * @param onLoad
-	 */
-	public void addBodyOnLoad(final String onLoad)
-	{
-	    if (this.bodyOnLoad == null)
-	    {
-	        this.bodyOnLoad = onLoad;
-	    }
-	    else
-	    {
-	        this.bodyOnLoad = this.bodyOnLoad + onLoad;
-	    }
 	}
 
 	/**
@@ -363,11 +374,15 @@ public class WebPage extends Page implements IHeaderRenderer
 	}
 	
 	/**
+	 * Remove the header component and all its children from the component
+	 * hierachie. Be aware, thus you can not transfer state from one 
+	 * request to another.
+	 * 
 	 * @see wicket.Component#onEndRequest()
 	 */
 	protected void onEndRequest()
 	{
-	    final Component header = get("_header");
+	    final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 	    if (header != null)
 	    {
 	        this.remove(header.getId());

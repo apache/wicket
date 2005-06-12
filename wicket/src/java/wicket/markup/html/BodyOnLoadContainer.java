@@ -26,54 +26,75 @@ import wicket.markup.MarkupStream;
 import wicket.model.Model;
 
 /**
+ * Handle &lt;body&gt; tags. The reason why this is a component is because
+ * of JavaScript and CSS support which requires to append body onLoad 
+ * attributes from child component markup to the page's body tag.
  * 
  * @author Juergen Donnerstag
  */
 public class BodyOnLoadContainer extends WebMarkupContainer implements IComponentResolver
 {
 	/**
-	 * Constructor used by HtmlHeaderResolver. The id is fix "_header"
+	 * Constructor used by BodyOnLoadContainer. The id is fix "_body"
 	 * and the markup stream will be provided by the parent component.
 	 */
 	public BodyOnLoadContainer()
 	{
-		// There is only one HtmlHeaderContainer allowed. That is we
+		// There is only one BodyOnLoadContainer allowed. That is we
 		// don't have to worry about creating a unique id.
 		super("_body");
 	}
 
 	/**
+	 * If parent is WebPage append onLoad attribute values from all components
+	 * in the hierarchie with onLoad attribute in there own markup.
+	 *  
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+	    // If WebPage ...
+	    // If not WebPage, than just be a WebMarkupContainer
 	    if (getParent() instanceof WebPage)
 	    {
-	        final String onLoad2 = ((WebPage)this.getPage()).getBodyOnLoad();
-	        if (onLoad2 != null)
+	        // The the consolidates onLoad of all child components
+	        String onLoad = ((WebPage)this.getPage()).getBodyOnLoad();
+	        
+	        // Get the page's onLoad attribute value. Null if not given
+	        String pageOnLoad = tag.getAttributes().getString("onload");
+
+	        // Add an AttributeModifier if onLoad must be changed
+	        if (pageOnLoad != null)
 	        {
-		        String onLoad = tag.getAttributes().getString("onload");
-		        if (onLoad == null)
+		        if (onLoad != null)
 		        {
-		            onLoad = onLoad2;
+		            pageOnLoad = pageOnLoad + onLoad;
+			        add(new AttributeModifier("onLoad", true, new Model(pageOnLoad)));
 		        }
-		        else
-		        {
-		            onLoad = onLoad + onLoad2;
-		        }
-		        
-		        add(new AttributeModifier("onLoad", true, new Model(onLoad)));
+	        }
+	        else
+	        {
+	            if (onLoad != null)
+	            {
+			        add(new AttributeModifier("onLoad", true, new Model(onLoad)));
+	            }
 	        }
 	    }
 	    
+	    // go on with default implementation
 		super.onComponentTag(tag);
 	}
 
 	/**
+	 * BodyOnLoadContainer has been autoAdded, it has been injected similiar
+	 * to an AOP interceptor. Thus BodyOnLoadContainer must forward any request
+	 * to find a component based on an ID to its parent container.
+	 *  
 	 * @see wicket.IComponentResolver#resolve(wicket.MarkupContainer, wicket.markup.MarkupStream, wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
+	    // Try to find the component with the parent component.
 		MarkupContainer parent = getParent();
 		if (parent != null)
 		{
