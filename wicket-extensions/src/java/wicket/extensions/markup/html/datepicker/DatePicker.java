@@ -44,8 +44,8 @@ import wicket.model.Model;
  * </pre>
  * (html)
  * <pre>
- * &lt;input type="text" wicket:id="endDate" size="10" /&gt;
- * &lt;span wicket:id="endDateDP" /&gt;
+ * &lt;input type="text" wicket:id="dateField" size="10" /&gt;
+ * &lt;span wicket:id="dateFieldPicker" /&gt;
  * </pre>
  * </p>
  * <p>
