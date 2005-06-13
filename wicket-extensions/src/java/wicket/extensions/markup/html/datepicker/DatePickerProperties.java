@@ -25,7 +25,8 @@ import wicket.ResourceReference;
 import wicket.Session;
 
 /**
- * The properties of the date picker component.
+ * The properties of the date picker component. Use this to customize the datepicker
+ * (e.g. the icon, locale, format, etc).
  *
  * @author Eelco Hillenius
  */

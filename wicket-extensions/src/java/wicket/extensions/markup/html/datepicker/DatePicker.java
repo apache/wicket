@@ -26,18 +26,42 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.StaticResourceReference;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
  * Datepicker component.
- * TODO doc more
+ * <p>
+ * Link your datepicker to a textfield like this:
+ * </p>
+ * <p>
+ * (Java)
+ * <pre>
+ * TextField dateField = new TextField("dateField", Date.class);
+ * add(dateField);
+ * add(new DatePicker("dateFieldPicker", dateField));
+ * </pre>
+ * (html)
+ * <pre>
+ * &lt;input type="text" wicket:id="endDate" size="10" /&gt;
+ * &lt;span wicket:id="endDateDP" /&gt;
+ * </pre>
+ * </p>
+ * <p>
+ * Your target doesn't have to be a text field however, attach to any tag that is
+ * supported by JSCalendar.
+ * </p>
+ * <p>
+ * Customize the looks, localization etc of the datepicker by providing a custom
+ * {@link wicket.extensions.markup.html.datepicker.DatePickerProperties} object.
+ * </p>
  * <p>
  * This component is based on Dynarch's JSCalendar component, which can be found
  * at <a href="http://www.dynarch.com/">the Dynarch site</a>.
  * </p>
+ *
+ * @see wicket.extensions.markup.html.datepicker.DatePickerProperties
  *
  * @author Eelco Hillenius
  * @author Mihai Bazon (creator of the JSCalendar component)
@@ -284,11 +308,11 @@ public class DatePicker extends Panel
 	/**
 	 * Construct with a default button and style.
 	 * @param id the component id
-	 * @param targetTextField the receiving text field
+	 * @param target the receiving component
 	 */
-	public DatePicker(String id, TextField targetTextField)
+	public DatePicker(String id, Component target)
 	{
-		this(id, targetTextField, new DatePickerProperties());
+		this(id, target, new DatePickerProperties());
 	}
 
 
