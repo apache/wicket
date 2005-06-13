@@ -22,7 +22,7 @@ import java.util.Date;
 
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.datepicker.DatePicker;
-import wicket.extensions.markup.html.datepicker.DatePickerProperties;
+import wicket.extensions.markup.html.datepicker.DatePickerSettings;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
 import wicket.model.BoundCompoundPropertyModel;
@@ -60,15 +60,15 @@ public class Home extends WicketExamplePage
 
 		TextField dateField2 = new TextField("date2", new Model(new Date()), Date.class);
 		add(dateField2);
-		DatePickerProperties dp2Properties = new DatePickerProperties();
-		dp2Properties.setIcon(DatePicker.BUTTON_ICON_2);
-		add(new DatePicker("datePicker2", dateField2, dp2Properties));
+		DatePickerSettings dp2Settings = new DatePickerSettings();
+		dp2Settings.setIcon(DatePicker.BUTTON_ICON_2);
+		add(new DatePicker("datePicker2", dateField2, dp2Settings));
 
 		TextField dateField3 = new TextField("date3", new Model(new Date()), Date.class);
 		add(dateField3);
-		DatePickerProperties dp3Properties = new DatePickerProperties();
-		dp3Properties.setIcon(DatePicker.BUTTON_ICON_3);
+		DatePickerSettings dp3Settings = new DatePickerSettings();
+		dp3Settings.setIcon(DatePicker.BUTTON_ICON_3);
 
-		add(new DatePicker("datePicker3", dateField3, dp3Properties));
+		add(new DatePicker("datePicker3", dateField3, dp3Settings));
 	}
 }

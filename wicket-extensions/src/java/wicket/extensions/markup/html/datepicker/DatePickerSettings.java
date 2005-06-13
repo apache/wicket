@@ -25,12 +25,12 @@ import wicket.ResourceReference;
 import wicket.Session;
 
 /**
- * The properties of the date picker component. Use this to customize the datepicker
+ * The settings of the date picker component. Use this to customize the datepicker
  * (e.g. the icon, locale, format, etc).
  *
  * @author Eelco Hillenius
  */
-public class DatePickerProperties implements Serializable
+public class DatePickerSettings implements Serializable
 {
 	/**
 	 * The format string that will be used to enter the date in the input field. This
@@ -144,7 +144,7 @@ public class DatePickerProperties implements Serializable
 	/**
 	 * Construct.
 	 */
-	public DatePickerProperties()
+	public DatePickerSettings()
 	{
 	}
 

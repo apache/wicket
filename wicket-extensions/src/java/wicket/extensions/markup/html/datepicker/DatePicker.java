@@ -54,14 +54,14 @@ import wicket.model.Model;
  * </p>
  * <p>
  * Customize the looks, localization etc of the datepicker by providing a custom
- * {@link wicket.extensions.markup.html.datepicker.DatePickerProperties} object.
+ * {@link wicket.extensions.markup.html.datepicker.DatePickerSettings} object.
  * </p>
  * <p>
  * This component is based on Dynarch's JSCalendar component, which can be found
  * at <a href="http://www.dynarch.com/">the Dynarch site</a>.
  * </p>
  *
- * @see wicket.extensions.markup.html.datepicker.DatePickerProperties
+ * @see wicket.extensions.markup.html.datepicker.DatePickerSettings
  *
  * @author Eelco Hillenius
  * @author Mihai Bazon (creator of the JSCalendar component)
@@ -302,8 +302,8 @@ public class DatePicker extends Panel
 	/** the button that triggers the popup. */
 	private TriggerButton triggerButton;
 
-	/** properties for the javascript datepicker component. */
-	private final DatePickerProperties properties;
+	/** settings for the javascript datepicker component. */
+	private final DatePickerSettings settings;
 
 	/**
 	 * Construct with a default button and style.
@@ -312,7 +312,7 @@ public class DatePicker extends Panel
 	 */
 	public DatePicker(String id, Component target)
 	{
-		this(id, target, new DatePickerProperties());
+		this(id, target, new DatePickerSettings());
 	}
 
 
@@ -320,18 +320,18 @@ public class DatePicker extends Panel
 	 * Construct.
 	 * @param id the component id
 	 * @param target the receiving component
-	 * @param properties datepicker properties
+	 * @param settings datepicker properties
 	 */
-	public DatePicker(String id, Component target, DatePickerProperties properties)
+	public DatePicker(String id, Component target, DatePickerSettings settings)
 	{
 		super(id);
 
-		if(properties == null)
+		if(settings == null)
 		{
-			throw new NullPointerException("properties must be non null when using this constructor");
+			throw new NullPointerException("settings must be non null when using this constructor");
 		}
 
-		this.properties = properties;
+		this.settings = settings;
 		
 		if (target == null)
 		{
@@ -341,12 +341,12 @@ public class DatePicker extends Panel
 		target.add(new IdAttributeModifier(target));
 		this.target = target;
 
-		add(triggerButton = new TriggerButton("trigger", properties.getIcon()));
+		add(triggerButton = new TriggerButton("trigger", settings.getIcon()));
 		add(new InitScript("script"));
 		addToHeader(new DatePickerResourceReference("calendarMain", "calendar.js", "src"));
 		addToHeader(new DatePickerResourceReference("calendarSetup", "calendar-setup.js", "src"));
-		addToHeader(new DatePickerResourceReference("calendarLanguage", properties.getLanguage(), "src"));
-		addToHeader(new DatePickerResourceReference("calendarStyle", properties.getStyle(), "href"));
+		addToHeader(new DatePickerResourceReference("calendarLanguage", settings.getLanguage(), "src"));
+		addToHeader(new DatePickerResourceReference("calendarStyle", settings.getStyle(), "href"));
 
 		new StaticResourceReference(DatePicker.class, "style/aqua/active-bg.gif");
 		new StaticResourceReference(DatePicker.class, "style/aqua/dark-bg.gif");
@@ -368,7 +368,7 @@ public class DatePicker extends Panel
 		StringBuffer b = new StringBuffer("\nCalendar.setup(\n{");
 		b.append("\n\t\tinputField : \"").append(target.getPath()).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
-		b.append(properties.toScript());
+		b.append(settings.toScript());
 		b.append("\n});");
 		return b.toString();
 	}
