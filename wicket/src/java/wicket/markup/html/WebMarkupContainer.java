@@ -23,6 +23,7 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
@@ -38,7 +39,7 @@ import wicket.util.lang.Classes;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class WebMarkupContainer extends MarkupContainer
+public class WebMarkupContainer extends MarkupContainer implements IHeaderContributor
 {
 	private transient List headerComponents;
 
@@ -76,7 +77,90 @@ public class WebMarkupContainer extends MarkupContainer
 		renderComponent(findMarkupStream());
 	}
 
+	/**
+	 * Print to the web response what ever the component wants
+	 * to contribute to the head section.
+	 * 
+	 * @see wicket.markup.html.IHeaderContributor#printHead(wicket.markup.html.HtmlHeaderContainer)
+	 * 
+	 * @param container The HtmlHeaderContainer
+	 */
+	public void printHead(final HtmlHeaderContainer container)
+	{
+		// Ask the child component if it has something to contribute
+		WebMarkupContainer headerPart = getHeaderPart();
 
+		// If the child component has something to contribute to 
+		// the header and in case the very same Component has not 
+		// contributed to the page, than ...
+		// A component's header section must only be added once, 
+		// no matter how often the same Component has been added 
+		// to the page or any other container in the hierachie.
+		if ((headerPart != null) && (container.get(headerPart.getId()) == null))
+		{
+			container.autoAdd(headerPart);
+			
+			// Check if the component requires some <body onLoad="..">
+			// attribute to be copied to the page's body tag. 
+			checkBodyOnLoad();
+		}
+	}
+	
+	/**
+	 * Check if the component requires some <body onLoad=".."> attribute to 
+	 * be copied to the page's body tag.
+	 */
+	private void checkBodyOnLoad()
+	{
+		// gracefull getAssociateMarkupStream. Throws no exception in case
+		// markup is not found
+		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
+				.getMarkupStream(this, null, false);
+
+		// No associated markup => no body tag
+		if (associatedMarkupStream == null)
+		{
+			return;
+		}
+
+		// Remember the current position within markup, where we need to 
+		// back to, at the end.
+		int index = associatedMarkupStream.getCurrentIndex();
+		
+		try
+		{
+		    // Start at the beginning
+		    associatedMarkupStream.setCurrentIndex(0);
+		    
+			// Iterate the markup and find <body onLoad="...">
+			do
+			{
+				final MarkupElement element = associatedMarkupStream.get();
+				if (element instanceof ComponentTag)
+				{
+					final ComponentTag tag = (ComponentTag)element;
+					if ("body".equalsIgnoreCase(tag.getName()))
+					{
+					    final String onLoad = tag.getAttributes().getString("onload");
+					    if (onLoad != null)
+					    {
+					        ((WebPage)getPage()).appendToBodyOnLoad(onLoad);
+					    }
+					    
+					    // There can only be one body tag
+					    break;
+					}
+				}
+			}
+			while (associatedMarkupStream.next() != null);
+		}
+		finally
+		{
+		    // Make sure we return to the orginal position in the markup
+		    associatedMarkupStream.setCurrentIndex(index);
+		}
+	}
+	
 	/**
 	 * Gets the header part for the markup container. Returns null if it doesn't
 	 * contribute to a header.
@@ -84,7 +168,7 @@ public class WebMarkupContainer extends MarkupContainer
 	 * @return the header part for this markup container or null if it doesn't
 	 *         contribute anything.
 	 */
-	public final WebMarkupContainer getHeaderPart()
+	private final WebMarkupContainer getHeaderPart()
 	{
 		// gracefull getAssociateMarkupStream. Throws no exception in case
 		// markup is not found

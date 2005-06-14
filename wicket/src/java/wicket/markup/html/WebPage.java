@@ -24,9 +24,6 @@ import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupElement;
-import wicket.markup.MarkupStream;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
@@ -260,7 +257,7 @@ public class WebPage extends Page implements IHeaderRenderer
 		// Collect all header parts and render them.
 	    // Only MarkupContainer have associated markup files which
 	    // may contain <wicket:head> regions.
-		visitChildren(WebMarkupContainer.class, new IVisitor()
+		visitChildren(IHeaderContributor.class, new IVisitor()
         {
 			/**
 			 * @see wicket.Component.IVisitor#component(wicket.Component)
@@ -269,96 +266,14 @@ public class WebPage extends Page implements IHeaderRenderer
 			{
 				if (component.isVisible())
 				{
-				    // The child component found 
-					WebMarkupContainer webMarkupContainer = (WebMarkupContainer)component;
-					
-					// Ask the child component if it has something to contribute
-					WebMarkupContainer headerPart = webMarkupContainer.getHeaderPart();
-
-					// If the child component has something to contribute to 
-					// the header and in case the very same Component has not 
-					// contributed to the page, than ...
-					// A component's header section must only be added once, 
-					// no matter how often the same Component has been added 
-					// to the page or any other container in the hierachie.
-					if ((headerPart != null) && (container.get(headerPart.getId()) == null))
-					{
-						container.autoAdd(headerPart);
-						
-						// Check if the component requires some <body onLoad="..">
-						// attribute to be copied to the page's body tag. 
-						checkBodyOnLoad(webMarkupContainer);
+				    if (component instanceof IHeaderContributor)
+				    {
+				        ((IHeaderContributor)component).printHead(container);
 					}
 				}
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
         });
-	}
-	
-	/**
-	 * Check if the component requires some <body onLoad=".."> attribute to 
-	 * be copied to the page's body tag.
-	 * 
-	 * @param container A child component of Page
-	 */
-	private final void checkBodyOnLoad(final WebMarkupContainer container)
-	{
-		// gracefull getAssociateMarkupStream. Throws no exception in case
-		// markup is not found
-		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
-				.getMarkupStream(container, null, false);
-
-		// No associated markup => no body tag
-		if (associatedMarkupStream == null)
-		{
-			return;
-		}
-
-		// Remember the current position within markup, where we need to 
-		// back to, at the end.
-		int index = associatedMarkupStream.getCurrentIndex();
-		
-		try
-		{
-		    // Start at the beginning
-		    associatedMarkupStream.setCurrentIndex(0);
-		    
-			// Iterate the markup and find <body onLoad="...">
-			do
-			{
-				final MarkupElement element = associatedMarkupStream.get();
-				if (element instanceof ComponentTag)
-				{
-					final ComponentTag tag = (ComponentTag)element;
-					if ("body".equalsIgnoreCase(tag.getName()))
-					{
-					    final String onLoad = tag.getAttributes().getString("onload");
-					    if (onLoad != null)
-					    {
-					        // Tell the page to change the Page's 
-					        // body tags.
-						    if (WebPage.this.bodyOnLoad == null)
-						    {
-						        WebPage.this.bodyOnLoad = onLoad;
-						    }
-						    else
-						    {
-						        WebPage.this.bodyOnLoad = WebPage.this.bodyOnLoad + onLoad;
-						    }
-					    }
-					    
-					    // There can only be one body tag
-					    break;
-					}
-				}
-			}
-			while (associatedMarkupStream.next() != null);
-		}
-		finally
-		{
-		    // Make sure we return to the orginal position in the markup
-		    associatedMarkupStream.setCurrentIndex(index);
-		}
 	}
 
 	/**
@@ -371,6 +286,30 @@ public class WebPage extends Page implements IHeaderRenderer
 	public String getBodyOnLoad()
 	{
 	    return this.bodyOnLoad;
+	}
+
+	/**
+	 * THIS IS NOT PART OF THE PUBLIC API. 
+	 * 
+	 * Append string to body onLoad attribute
+	 * 
+	 * @param onLoad Attribute value to be appended
+	 */
+	public final void appendToBodyOnLoad(final String onLoad)
+	{
+	    if (onLoad != null)
+	    {
+	        // Tell the page to change the Page's 
+	        // body tags.
+		    if (this.bodyOnLoad == null)
+		    {
+		        this.bodyOnLoad = onLoad;
+		    }
+		    else
+		    {
+		        this.bodyOnLoad = this.bodyOnLoad + onLoad;
+		    }
+	    }
 	}
 	
 	/**

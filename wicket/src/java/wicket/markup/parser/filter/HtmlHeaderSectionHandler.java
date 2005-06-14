@@ -146,11 +146,11 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		
 		if ("body".equalsIgnoreCase(tag.getName()))
         {
-		    // <head> must always be before <body>
-		    status = STATE_BODY_FOUND;
-		    
 		    // we found neither <head> nor <wicket:head>
 		    insertWicketHeadTag(true);
+		    
+		    // <head> must always be before <body>
+		    status = STATE_BODY_FOUND;
 		    return tag;
         }
 		

@@ -130,6 +130,14 @@ public class HeaderSectionTest extends TestCase
 	}
 
 	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_11() throws Exception
+	{
+	    executeTest(HeaderSectionPage_11.class, "HeaderSectionPageExpectedResult_11.html");
+	}
+
+	/**
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception

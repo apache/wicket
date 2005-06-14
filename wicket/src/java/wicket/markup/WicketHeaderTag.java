@@ -27,7 +27,7 @@ import wicket.markup.parser.XmlTag;
 public class WicketHeaderTag extends WicketTag
 {
     /** True if <head> is surrounding <wicket:head> */
-    private boolean requiresHtmlHeadTag;
+    private boolean requiresHtmlHeadTag = false;
     
 	/**
 	 * Constructor
@@ -56,6 +56,7 @@ public class WicketHeaderTag extends WicketTag
 
 		final WicketHeaderTag tag = new WicketHeaderTag(xmlTag.mutable());
 		tag.setId(getId());
+		tag.setRequiresHtmlHeadTag(isRequiresHtmlHeadTag());
 		return tag;
 	}
 	
