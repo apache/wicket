@@ -65,7 +65,7 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	{
 	    // Default name for the container. The component is represented by
 	    // the <wicket:extend>...</wicket:extend> tag.
-		super("extend");
+		super("_extend");
 	}
 	
 	/**
@@ -237,5 +237,23 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	    
 		// Continue rendering the parent markup until its end
 		return true;
+	}
+	
+	/**
+	 * Remove the header component and all its children from the component
+	 * hierachie. Be aware, thus you can not transfer state from one 
+	 * request to another.
+	 * 
+	 * @see wicket.Component#onEndRequest()
+	 */
+	protected void onEndRequest()
+	{
+	    final Component container = get("_extend");
+	    if (container != null)
+	    {
+	        this.remove(container.getId());
+	    }
+		
+		super.onEndRequest();
 	}
 }
