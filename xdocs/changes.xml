@@ -13,6 +13,7 @@
 	    <action type="add" dev="Eelco Hillenius">Added component wicket.markup.html.include.Include for including content from non-Wicket resources.</action>
     </release>
     <release version="1.0.1" date="tbd" description="1.0.1">
+      <action type="update" dev="Eelco Hillenius" due-to="Phil Kulak">FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Adam Howard">fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</action>
     </release>
     <release version="1.0.0" date="tbd" description="1.0.0 final">

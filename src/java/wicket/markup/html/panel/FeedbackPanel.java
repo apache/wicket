@@ -17,7 +17,10 @@
  */
 package wicket.markup.html.panel;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 import wicket.AttributeModifier;
 import wicket.Component;
@@ -32,7 +35,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * A simple panel that displays {@link wicket.FeedbackMessage}s in a list view.
+ * A panel that displays {@link wicket.FeedbackMessage}s in a list view.
  * The maximum number of messages to show can be set with setMaxMessages().
  * 
  * @see wicket.FeedbackMessage
@@ -46,12 +49,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	private final MessageListView messageListView;
 
 	/**
-	 * Optional collecting component. When this is not set explicitly, the first occurence
-	 * of {@link IFeedbackBoundary} will be searched for higher up in the run-time
-	 * hierarchy.
-	 */
-
-	/**
 	 * List for messages.
 	 */
 	private final class MessageListView extends ListView
@@ -62,7 +59,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		public MessageListView(final String id)
 		{
 			super(id);
-			setModel(getFeedbackMessagesModel());
+			setModel(newFeedbackMessagesModel());
 		}
 
 		/**
@@ -110,7 +107,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 *            The maximum number of feedback messages that this feedback
 	 *            panel should show at one time
 	 */
-	public void setMaxMessages(int maxMessages)
+	public final void setMaxMessages(int maxMessages)
 	{
 		this.messageListView.setViewSize(maxMessages);
 	}
@@ -121,7 +118,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * hierarchy.
 	 * @param collectingComponent the collecting component
 	 */
-	public void setCollectingComponent(Component collectingComponent)
+	public final void setCollectingComponent(Component collectingComponent)
 	{
 		FeedbackMessagesModel feedbackMessagesModel =
 			(FeedbackMessagesModel)messageListView.getModel();
@@ -132,7 +129,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * Sets the comparator used for sorting the messages.
 	 * @param sortingComparator comparator used for sorting the messages.
 	 */
-	public void setSortingComparator(Comparator sortingComparator)
+	public final void setSortingComparator(Comparator sortingComparator)
 	{
 		FeedbackMessagesModel feedbackMessagesModel =
 			(FeedbackMessagesModel)messageListView.getModel();
@@ -140,9 +137,17 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false; // makes no sense to version the feedback panel
+	}
+
+	/**
 	 * @see wicket.Component#onBeginRequest()
 	 */
-	protected void onBeginRequest()
+	protected final void onBeginRequest()
 	{
 		messageListView.getModelObject(); // force loading of model
 	}
@@ -159,11 +164,61 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Gets the instance of FeedbackMessagesModel to use.
+	 * Gets a new instance of FeedbackMessagesModel to use.
 	 * @return instance of FeedbackMessagesModel to use
 	 */
-	protected FeedbackMessagesModel getFeedbackMessagesModel()
+	protected FeedbackMessagesModel newFeedbackMessagesModel()
 	{
 		return new FeedbackMessagesModel(true, null);
+	}
+
+	/**
+	 * Gets the currently collected messages for this panel.
+	 * @return the currently collected messages for this panel, possibly empty
+	 */
+	protected final List getCurrentMessages()
+	{
+		List msgs = (List)messageListView.getModelObject();
+		return Collections.unmodifiableList(msgs);
+	}
+
+	/**
+	 * Search messages that this panel will render, and see if there is any message of level ERROR or up.
+	 * This is a convenience method; same as calling 'anyMessage(FeedbackMessage.ERROR)'.
+	 * @return whether there is any message for this panel of level ERROR or up
+	 */
+	protected final boolean anyErrorMessage()
+	{
+		return anyMessage(FeedbackMessage.ERROR);
+	}
+
+	/**
+	 * Search messages that this panel will render, and see if there is any message.
+	 * @return whether there is any message for this panel
+	 */
+	protected final boolean anyMessage()
+	{
+		return anyMessage(FeedbackMessage.UNDEFINED);
+	}
+
+	/**
+	 * Search messages that this panel will render, and see if there is any message of the given level.
+	 * @param level the level, see FeedbackMessage
+	 * @return whether there is any message for this panel of the given level
+	 */
+	protected final boolean anyMessage(int level)
+	{
+		List msgs = getCurrentMessages();
+
+		for (Iterator i = msgs.iterator(); i.hasNext();)
+		{
+			FeedbackMessage msg = (FeedbackMessage)i.next();
+			if (msg.isLevel(level))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
