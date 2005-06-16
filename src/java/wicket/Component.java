@@ -18,7 +18,11 @@
 package wicket;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -203,7 +207,7 @@ import wicket.version.undo.Change;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Component implements Serializable
+public abstract class Component implements Serializable, IEventRequestListener
 {
 	/**
 	 * Change record of a model.
@@ -309,6 +313,9 @@ public abstract class Component implements Serializable
 
 	/** Any parent container. */
 	private MarkupContainer parent;
+
+	/** possible list of handlers of event requests (eg XmlHttpRequests). */
+	private Map eventRequestHandlers;
 
 	/**
 	 * Generic component visitor interface for component traversals.
@@ -1289,6 +1296,56 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Registers a handler for an event request.
+	 * @param eventRequestHandler handler
+	 */
+	public final void add(EventRequestHandler eventRequestHandler)
+	{
+		// lazy create
+		if (eventRequestHandlers == null)
+		{
+			eventRequestHandlers = new HashMap();
+		}
+		eventRequestHandlers.put(eventRequestHandler.getId(), eventRequestHandler);
+	}
+
+	/**
+	 * Gets an array with registered event request handlers or null.
+	 * @return an array with registered event request handlers, null if none are registered
+	 */
+	protected final EventRequestHandler[] getEventRequestHandlers()
+	{
+		if (eventRequestHandlers != null)
+		{
+			Collection handlers = eventRequestHandlers.values();
+			return (EventRequestHandler[])handlers.toArray(new EventRequestHandler[handlers.size()]);
+		}
+		return null;
+	}
+
+	/**
+	 * @see wicket.IEventRequestListener#onEventRequest()
+	 */
+	public void onEventRequest()
+	{
+		String id = getRequest().getParameter("id");
+
+		if (id == null)
+		{
+			throw new WicketRuntimeException("parameter id was not provided: unable to locate listener");
+		}
+
+		EventRequestHandler eventRequestHandler = (EventRequestHandler)eventRequestHandlers.get(id);
+
+		if (eventRequestHandler == null)
+		{
+			throw new WicketRuntimeException("no handler found with id " + id);
+		}
+
+		eventRequestHandler.onEventRequest();
+	}
+
+	/**
 	 * Adds state change to page.
 	 * 
 	 * @param change
@@ -1666,6 +1723,15 @@ public abstract class Component implements Serializable
 				for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
 				{
 					current.replaceAttibuteValue(this, tag);
+				}
+			}
+
+			if (eventRequestHandlers != null)
+			{
+				for (Iterator i = eventRequestHandlers.values().iterator(); i.hasNext();)
+				{
+					EventRequestHandler handler = (EventRequestHandler)i.next();
+					handler.attach(this, tag);
 				}
 			}
 

@@ -50,7 +50,7 @@ public class WebRequest extends Request
 	 * @param httpServletRequest
 	 *            The servlet request information
 	 */
-	protected WebRequest(final HttpServletRequest httpServletRequest)
+	public WebRequest(final HttpServletRequest httpServletRequest)
 	{
 		this.httpServletRequest = httpServletRequest;
 	}

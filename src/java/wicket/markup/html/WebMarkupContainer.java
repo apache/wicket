@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.Component;
+import wicket.EventRequestHandler;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
@@ -103,6 +104,15 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			// Check if the component requires some <body onLoad="..">
 			// attribute to be copied to the page's body tag. 
 			checkBodyOnLoad();
+		}
+
+		EventRequestHandler[] handlers = getEventRequestHandlers();
+		if (handlers != null) for (int i = 0; i < handlers.length; i++)
+		{
+			if (handlers[i] instanceof IHeaderContributor)
+			{
+				((IHeaderContributor)handlers[i]).printHead(container);
+			}
 		}
 	}
 	

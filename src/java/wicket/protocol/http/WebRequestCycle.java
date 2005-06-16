@@ -41,7 +41,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;
-import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
@@ -120,7 +119,13 @@ public class WebRequestCycle extends RequestCycle
 	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
-		if (callComponentListener() || bookmarkablePage() || homePage())
+
+		if (callDispatchedComponentListener())
+		{
+			// if it is, we don't need to update the cluster, etc, and return false
+		}
+		// it wasn't a dispatched listener, try other methods
+		else if (callComponentListener() || bookmarkablePage() || homePage())
 		{
 			// Returning a page
 			return true;
@@ -144,12 +149,12 @@ public class WebRequestCycle extends RequestCycle
 					log.error("unable to send 404 for " + getRequest() + ", cause: " + e.getMessage(), e);
 				}
 			}
-			
-			// Don't update the cluster, not returning a page
-			setUpdateCluster(false);
-			setResponsePage(null);
-			return false;
 		}
+
+		// Don't update the cluster, not returning a page
+		setUpdateCluster(false);
+		setResponsePage(null);
+		return false;
 	}
 
 	/**
@@ -248,6 +253,32 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * Calls a dispatched component listener interface on a page that already exists in the
+	 * session. This is the same as callComponentListener, except that the actual handler
+	 * is not the component itself, but an attached 'even request listener'. Such listeners
+	 * (typically used for AJAX behaviour) are responsible for their own output (which
+	 * could be XML, javascript, HTML or whatever), and thus the current page should not
+	 * be rendered when this method returns true.
+	 * 
+	 * @return True if the dispatched listener was successfully called
+	 * @throws WicketRuntimeException
+	 */
+	private boolean callDispatchedComponentListener()
+	{
+		if (request.getParameter("dispatched") != null)
+		{
+			if (!callComponentListener())
+			{
+				throw new WicketRuntimeException("incomplete dispatched request");
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Calls a component listener interface on a page that already exists in the
 	 * session. The session component is found using the path in the 'component'
 	 * parameter of the request. The interface method to be called is determined
@@ -329,12 +360,12 @@ public class WebRequestCycle extends RequestCycle
 	 * @param method
 	 *            The name of the method to call
 	 */
-	private Object invokeInterface(final Component component, final Method method)
+	private void invokeInterface(final Component component, final Method method)
 	{
 		try
 		{
 			// Invoke the interface method on the component
-			return method.invoke(component, new Object[] { });
+			method.invoke(component, new Object[] { });
 		}
 		catch (IllegalAccessException e)
 		{
@@ -389,13 +420,6 @@ public class WebRequestCycle extends RequestCycle
 	
 				// Set form component values from cookies
 				setFormComponentValuesFromCookies(page);
-			}
-			else if( (method = getAjaxInterfaceMethod(interfaceName)) != null)
-			{
-				// Clear all feedback messages if it isn't a redirect
-				page.getFeedbackMessages().clear();
-				IResourceStream stream = (IResourceStream)invokeInterface(component, method);
-				setResponseStream(stream);
 			}
 			else
 			{
