@@ -447,35 +447,40 @@ public abstract class Page extends MarkupContainer
 	 */
 	public final void doRender()
 	{
-		try
+		// check access much earlier then in onRender!
+		// if false in onRender then checkRendering below fails anyway!!
+		if(checkAccess())
 		{
-			// we have to initialize the page's request now
-
-			// first, give priority to IFeedback instances, as they have to collect their
-			// message before components like ListViews remove any child components
-			visitChildren(IFeedback.class, new IVisitor()
+			try
 			{
-				public Object component(Component component)
+				// we have to initialize the page's request now
+	
+				// first, give priority to IFeedback instances, as they have to collect their
+				// message before components like ListViews remove any child components
+				visitChildren(IFeedback.class, new IVisitor()
 				{
-					component.internalBeginRequest();
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
+					public Object component(Component component)
+					{
+						component.internalBeginRequest();
+						return IVisitor.CONTINUE_TRAVERSAL;
+					}
+				});
+				
+				// now, do the initialization for the other components
+				internalBeginRequest();
 			
-			// now, do the initialization for the other components
-			internalBeginRequest();
-		
-
-			// Handle request by rendering page
-			render();
-
-			// Check rendering if it happened fully
-			checkRendering();
-		}
-		finally
-		{
-			// The request is over
-			internalEndRequest();
+	
+				// Handle request by rendering page
+				render();
+	
+				// Check rendering if it happened fully
+				checkRendering();
+			}
+			finally
+			{
+				// The request is over
+				internalEndRequest();
+			}
 		}
 	}
 
@@ -714,8 +719,8 @@ public abstract class Page extends MarkupContainer
 	 */
 	protected final void onRender()
 	{
-		// Check access to page
-		if (checkAccess())
+		// Check access to page, already done in doRender of the page
+		//if (checkAccess())
 		{
 			// Set page's associated markup stream
 			final MarkupStream markupStream = getAssociatedMarkupStream();
