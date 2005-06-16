@@ -85,4 +85,12 @@ public class BufferedResponse extends StringResponse
 	{
 		this.mimeType = mimeType;
 	}
+	
+	/**
+	 * @see wicket.Response#redirect(java.lang.String)
+	 */
+	public void redirect(String url)
+	{
+		redirectUrl = url;
+	}
 }
