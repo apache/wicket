@@ -120,9 +120,10 @@ public class FormInput extends WicketExamplePage
 			super(name, new CompoundPropertyModel(new FormInputModel()), feedback);
 
 			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
-			stringTextField.add(new ValidationEventRequestHandler("onchange"));
 			add(stringTextField);
-			add(new RequiredTextField("integerProperty", Integer.class));
+			RequiredTextField integerTextField = new RequiredTextField("integerProperty", Integer.class);
+			integerTextField.add(new ValidationEventRequestHandler("onchange"));
+			add(integerTextField);
 			add(new RequiredTextField("doubleProperty", Double.class));
 			add(new RequiredTextField("dateProperty", Date.class));
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(IntegerValidator
