@@ -1301,12 +1301,20 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 */
 	public final void add(EventRequestHandler eventRequestHandler)
 	{
+		if (eventRequestHandler == null)
+		{
+			throw new NullPointerException("argument may not be null");
+		}
+
 		// lazy create
 		if (eventRequestHandlers == null)
 		{
 			eventRequestHandlers = new HashMap();
 		}
 		eventRequestHandlers.put(eventRequestHandler.getId(), eventRequestHandler);
+
+		// give handler the opportunity to bind this component
+		eventRequestHandler.bind(this);
 	}
 
 	/**
@@ -1731,7 +1739,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 				for (Iterator i = eventRequestHandlers.values().iterator(); i.hasNext();)
 				{
 					EventRequestHandler handler = (EventRequestHandler)i.next();
-					handler.attach(this, tag);
+					handler.onRenderComponentTag(this, tag);
 				}
 			}
 

@@ -33,13 +33,11 @@ import wicket.util.resource.IResourceStream;
  *
  * @author Eelco Hillenius
  */
+//TODO should we support other callbacks, like onComponentBody?
 public abstract class EventRequestHandler implements Serializable
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(EventRequestHandler.class);
-
-	/** the component this handler is attached to. */
-	protected Component component;
 
 	/** The actual raw resource this class is rendering */
 	protected IResourceStream resourceStream;
@@ -73,14 +71,23 @@ public abstract class EventRequestHandler implements Serializable
 	protected abstract IResourceStream getResourceStream();
 
 	/**
-	 * Attaches the event handler for the given component to the given tag.
-	 * 
-	 * @param component
-	 *            The component
-	 * @param tag
-	 *            The tag to attache
+	 * This method is called everytime a this handler is added to a component.
+	 * By default this does nothing.
+	 * @param component the component this handler is binded to
 	 */
-	protected abstract void attach(final Component component, final ComponentTag tag);
+	protected void bind(final Component component)
+	{		
+	}
+
+	/**
+	 * Called any time a component that has this handler registered is rendering the component tag.
+	 * Use this method e.g. to bind to javascript event handlers of the tag
+	 * @param component the component
+	 * @param tag the tag that is rendered
+	 */
+	protected void onRenderComponentTag(final Component component, final ComponentTag tag)
+	{
+	}
 
 	/**
 	 * Responds on the event request.

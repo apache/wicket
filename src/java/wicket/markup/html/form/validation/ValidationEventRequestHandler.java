@@ -24,10 +24,10 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.EventRequestHandler;
 import wicket.IEventRequestListener;
-import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
 import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.form.FormComponent;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.StringBufferResourceStream;
 import wicket.util.value.ValueMap;
@@ -37,6 +37,7 @@ import wicket.util.value.ValueMap;
  *
  * @author Eelco Hillenius
  */
+//TODO move dojo stuff to a package
 public final class ValidationEventRequestHandler extends EventRequestHandler implements IHeaderContributor
 {
 	/** log. */
@@ -45,9 +46,12 @@ public final class ValidationEventRequestHandler extends EventRequestHandler imp
 	/** name event, like onblur. */
 	private final String eventName;
 
+	/** component this handler is attached to. */
+	private FormComponent formComponent;
+
 	/**
 	 * Construct.
-	 * @param eventName 
+	 * @param eventName name of the event to attach to, e.g. 'onchange'
 	 */
 	public ValidationEventRequestHandler(String eventName)
 	{
@@ -78,17 +82,38 @@ public final class ValidationEventRequestHandler extends EventRequestHandler imp
 				"src=\"dojo/dojo-io.js\"></script>\n" +
 				"\t<script language=\"JavaScript\" type=\"text/javascript\">\n" +
 				"\t\tdojo.hostenv.loadModule(\"dojo.io.*\");\n" +
-				"\tfunction validate(componentUrl, value) { \n" +
+				"\tfunction validate(componentUrl, componentPath, field) { \n" +
 				"\t\tdojo.io.bind({\n" +
-				"\t\t\turl: componentUrl + '&value=' + value,\n" +
+				"\t\t\turl: componentUrl + '&' + componentPath + '=' + field.value,\n" +
 				"\t\t\tmimetype: \"text/xml\",\n" +
 				"\t\t\tload: function(type, data, evt) {\n" +
-				"\t\t\t\talert(data);\n" +
+				"\t\t\t\talert(field);\n" +
 				"\t\t\t}\n" +
 				"\t\t});\n" +
 				"\t}\n" +
 				"\t</script>\n";
 		container.getResponse().write(s);
+	}
+
+	/**
+	 * @see wicket.EventRequestHandler#bind(wicket.Component)
+	 */
+	protected void bind(Component component)
+	{
+		if (!(component instanceof FormComponent))
+		{
+			throw new IllegalArgumentException("this handler can only be bound to form components");
+		}
+
+		if (formComponent != null)
+		{
+			throw new IllegalStateException("this kind of handler cannot be attached to " +
+					"multiple components; it is allready attached to component " + formComponent +
+					", but component " + component + " wants to be attached too");
+
+		}
+
+		this.formComponent = (FormComponent)component;
 	}
 
 	/**
@@ -99,14 +124,14 @@ public final class ValidationEventRequestHandler extends EventRequestHandler imp
 	 * @param tag
 	 *            The tag to attache
 	 */
-	protected final void attach(final Component component, final ComponentTag tag)
+	protected final void onRenderComponentTag(final Component component, final ComponentTag tag)
 	{
-		this.component = component;
-
 		final ValueMap attributes = tag.getAttributes();
 
-		final String url = component.urlFor(IEventRequestListener.class) + "&id=" + getId();
-		final String attributeValue = "javascript:validate('" + url + "', this.value);";
+		//TODO loose + id sometime and e.g. put it in urlFor
+		final String url = formComponent.urlFor(IEventRequestListener.class) + "&id=" + getId();
+		final String attributeValue =
+			"javascript:validate('" + url + "', '" + formComponent.getPath() + "', this);";
 
 		attributes.put(getEventName(), attributeValue);
 	}
@@ -121,8 +146,14 @@ public final class ValidationEventRequestHandler extends EventRequestHandler imp
 	protected final IResourceStream getResourceStream()
 	{
 		StringBufferResourceStream s = new StringBufferResourceStream();
-		String value = RequestCycle.get().getRequest().getParameter("value");
-		s.append("hello! value: " + value);
+
+		formComponent.validate();
+
+		if (!formComponent.isValid())
+		{
+			s.append(formComponent.getFeedbackMessage().getMessage());
+		}
+
 		return s;
 	}
 }
