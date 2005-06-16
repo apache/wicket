@@ -18,6 +18,7 @@
 package wicket.markup.html;
 
 import wicket.Component;
+import wicket.EventRequestHandler;
 import wicket.model.IModel;
 
 /**
@@ -28,7 +29,7 @@ import wicket.model.IModel;
  * @see wicket.markup.html.WebMarkupContainer
  * @author Jonathan Locke
  */
-public class WebComponent extends Component
+public class WebComponent extends Component implements IHeaderContributor
 {
 	/**
 	 * @see Component#Component(String)
@@ -44,6 +45,25 @@ public class WebComponent extends Component
 	public WebComponent(final String id, final IModel model)
 	{
 		super(id, model);
+	}
+
+	/**
+	 * Print to the web response what ever the component wants
+	 * to contribute to the head section. Does nothing by default.
+	 *
+	 * @param container The HtmlHeaderContainer
+	 * @see wicket.markup.html.IHeaderContributor#printHead(wicket.markup.html.HtmlHeaderContainer)
+	 */
+	public void printHead(final HtmlHeaderContainer container)
+	{
+		EventRequestHandler[] handlers = getEventRequestHandlers();
+		if (handlers != null) for (int i = 0; i < handlers.length; i++)
+		{
+			if (handlers[i] instanceof IHeaderContributor)
+			{
+				((IHeaderContributor)handlers[i]).printHead(container);
+			}
+		}
 	}
 
 	/**

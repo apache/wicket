@@ -36,6 +36,7 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.model.ChoiceList;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.validation.IntegerValidator;
+import wicket.markup.html.form.validation.ValidationEventRequestHandler;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -118,7 +119,9 @@ public class FormInput extends WicketExamplePage
 		{
 			super(name, new CompoundPropertyModel(new FormInputModel()), feedback);
 
-			add(new RequiredTextField("stringProperty"));
+			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
+			stringTextField.add(new ValidationEventRequestHandler("onchange"));
+			add(stringTextField);
 			add(new RequiredTextField("integerProperty", Integer.class));
 			add(new RequiredTextField("doubleProperty", Double.class));
 			add(new RequiredTextField("dateProperty", Date.class));

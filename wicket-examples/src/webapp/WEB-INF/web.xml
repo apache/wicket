@@ -36,17 +36,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-    <servlet>
-        <servlet-name>ValidatingTextfieldApplication</servlet-name>
-        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-        <init-param>
-          <param-name>applicationClassName</param-name>
-          <param-value>wicket.examples.ajax.validatingtextfield.ValidatingTextfieldApplication</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-
 	<servlet>
 		<servlet-name>HangmanApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
@@ -241,11 +230,6 @@
 		<servlet-name>LinkomaticApplication</servlet-name>
 		<url-pattern>/linkomatic/*</url-pattern>
 	</servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ValidatingTextfieldApplication</servlet-name>
-        <url-pattern>/validatingtextfield/*</url-pattern>
-    </servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>LibraryApplication</servlet-name>

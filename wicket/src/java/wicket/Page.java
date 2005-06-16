@@ -1011,5 +1011,8 @@ public abstract class Page extends MarkupContainer
 	{
 		// Allow calls through the IRedirectListener interface
 		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
+
+		// Allow XmlHttpRequest calls
+		RequestCycle.registerRequestListenerInterface(IEventRequestListener.class);
 	}
 }

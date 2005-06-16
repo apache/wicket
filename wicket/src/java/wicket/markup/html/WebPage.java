@@ -20,6 +20,7 @@ package wicket.markup.html;
 import java.util.Iterator;
 
 import wicket.Component;
+import wicket.IEventRequestListener;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -141,6 +142,14 @@ public class WebPage extends Page implements IHeaderRenderer
 		buffer.append(component.getPage().getCurrentVersionNumber());
 		buffer.append("&interface=");
 		buffer.append(Classes.name(listenerInterface));
+
+		// add an extra parameter for regconition in case we are targetting a dispatched handler
+		if (IEventRequestListener.class.isAssignableFrom(listenerInterface))
+		{
+			// TODO we might come up with a more elegant pattern in future?
+			buffer.append("&dispatched=true");
+		}
+
 		return cycle.getResponse().encodeURL(buffer.toString());
 	}
 

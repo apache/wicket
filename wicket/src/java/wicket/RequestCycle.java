@@ -26,12 +26,9 @@ import javax.servlet.ServletException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ajax.IAjaxListener;
 import wicket.markup.html.pages.ExceptionErrorPage;
-import wicket.util.io.Streams;
 import wicket.util.lang.Classes;
 import wicket.util.resource.IResourceStream;
-import wicket.util.resource.IStringResourceStream;
 import wicket.util.string.Strings;
 
 /**
@@ -262,49 +259,6 @@ public abstract class RequestCycle
 			throw new IllegalArgumentException("Interface " + i + " can have only one method");
 		}
 	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Adds an interface to the map of interfaces that can be invoked by
-	 * outsiders. The interface must extend IRequestListener
-	 * 
-	 * @param i
-	 *            The interface class, which must extend IRequestListener.
-	 */
-	public static void registerAjaxListenerInterface(final Class i)
-	{
-		// Ensure that i extends IRequestListener
-		if (!IAjaxListener.class.isAssignableFrom(i))
-		{
-			throw new IllegalArgumentException("Class " + i + " must extend IAjaxListener");
-		}
-
-		// Get interface methods
-		final Method[] methods = i.getMethods();
-
-		// If there is only one method
-		if (methods.length == 1)
-		{
-			// and that method takes no parameters
-			if (methods[0].getParameterTypes().length != 0)
-			{
-				throw new IllegalArgumentException("Method in interface " + i
-						+ " cannot have parameters");
-			}
-			if (!IResourceStream.class.isAssignableFrom(methods[0].getReturnType()))
-			{
-				throw new IllegalArgumentException("Method in interface " + i
-						+ " must have a IResourceStream return type");
-			}
-			// Save this interface method by the non-qualified class name
-			listenerAjaxInterfaceMethods.put(Classes.name(i), methods[0]);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Interface " + i + " can have only one method");
-		}
-	}
 	
 	/**
 	 * Constructor.
@@ -511,25 +465,11 @@ public abstract class RequestCycle
 	{
 		this.responsePage = page;
 	}
-	
 
 	/**
-	 * @param stream
-	 */
-	protected final void setResponseStream(IResourceStream stream)
-	{
-		this.responseStream = stream;
-	}
-	
-	/**
-	 * @return
-	 */
-	protected final IResourceStream getResponseStream()
-	{
-		return responseStream;
-	}
-	
-	
+	 * Sets the page to invoke.
+	 * @param page
+	 */	
 	protected final void setInvokePage(final Page page)
 	{
 		this.invokePage = page;
@@ -742,27 +682,6 @@ public abstract class RequestCycle
 			{
 				// Handle any runtime exception
 				onRuntimeException(page, e);
-			}
-		}
-		else if(getResponseStream() != null)
-		{
-			IResourceStream stream = getResponseStream();
-			getResponse().setContentType(stream.getContentType());
-			getResponse().setContentLength(stream.length());
-			if(stream instanceof IStringResourceStream)
-			{
-				getResponse().write(((IStringResourceStream)stream).asString());
-			}
-			else
-			{
-				try
-				{
-					Streams.copy(stream.getInputStream(), getResponse().getOutputStream());
-				}
-				catch (Exception ex)
-				{
-					log.debug("error sending ajax response", ex);
-				}
 			}
 		}
 	}

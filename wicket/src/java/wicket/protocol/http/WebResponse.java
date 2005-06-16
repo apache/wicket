@@ -54,7 +54,7 @@ public class WebResponse extends Response
 	/**
 	 * Constructor for testing harness.
 	 */
-	WebResponse()
+	public WebResponse()
 	{
 		this.httpServletResponse = null;
 	}
@@ -66,7 +66,7 @@ public class WebResponse extends Response
 	 *            The servlet response object
 	 * @throws IOException
 	 */
-	WebResponse(final HttpServletResponse httpServletResponse) throws IOException
+	public WebResponse(final HttpServletResponse httpServletResponse) throws IOException
 	{
 		this.httpServletResponse = httpServletResponse;
 	}
