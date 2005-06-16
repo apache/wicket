@@ -185,7 +185,19 @@ public class WebRequestCycle extends RequestCycle
 				}
 				page.doRender();
 				setResponse(currentResponse);
-				((WebApplication)application).addRedirect(getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
+				String responseRedirect = redirectResponse.getRedirectUrl();
+				if(redirectUrl != responseRedirect)
+				{
+					// if the redirectResponse has another redirect url set 
+					// then the rendering of this page caused a redirect to something else.
+					// set this redirect then.
+					redirectUrl = redirectResponse.getRedirectUrl();
+				}
+				else if(redirectResponse.getContentLength() > 0)
+				{
+					// if no content is created then don't set it in the redirect buffer.. (maybe access failed)
+					((WebApplication)application).addRedirect(getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
+				}
 			}
 			catch (RuntimeException ex)
 			{
