@@ -174,8 +174,14 @@ public class WebRequestCycle extends RequestCycle
 			// create the redirect response.
 			try
 			{
-				Response currentResponse = getResponse();
-				BufferedResponse redirectResponse = new BufferedResponse(redirectUrl);
+				final Response currentResponse = getResponse();
+				// override the encodeURL so that it will use the real once encoding..
+				BufferedResponse redirectResponse = new BufferedResponse(redirectUrl) {
+					public String encodeURL(String url) 
+					{
+						return currentResponse.encodeURL(url);
+					};
+				};
 				setResponse(redirectResponse);
 				// test if the invoker page was the same as the page that is going to be renderd
 				if(getInvokePage() == getResponsePage())
