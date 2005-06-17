@@ -17,6 +17,10 @@
  */
 package wicket.util.lang;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import wicket.markup.MarkupException;
 import wicket.util.string.Strings;
 
 /**
@@ -62,5 +66,79 @@ public final class Classes
 			throws ClassNotFoundException
 	{
 		return Class.forName(Packages.absolutePath(p, path).replace('/', '.'));
+	}
+	
+	/**
+	 * Invoke the setter method for 'name' on object and provide the 'value'
+	 * 
+	 * @param object
+	 * @param name
+	 * @param value
+	 */
+	public static void invokeSetter(final Object object, final String name, final String value)
+	{
+        // Get the setter for the attribute
+        final String methodName = "set" + name;
+        final Method[] methods = object.getClass().getMethods();
+        Method method = null;
+        for (int i = 0; i < methods.length; i++)
+        {
+            if (methods[i].getName().equalsIgnoreCase(methodName))
+            {
+                method = methods[i];
+            }
+        }
+
+        if (method == null)
+        {
+            throw new MarkupException(
+                    "Unable to initialize Component. Method with name " + methodName
+                            + " not found");
+        }
+
+        // The method must have a single parameter
+        final Class[] parameterClasses = method.getParameterTypes();
+        if (parameterClasses.length != 1)
+        {
+            throw new MarkupException(
+                    "Unable to initialize Component. Method with name " + methodName
+                            + " must have one and only one parameter");
+        }
+
+        // Convert the parameter if necessary, depending on the setter's attribute
+        final Class paramClass = parameterClasses[0];
+        try
+        {
+            if (paramClass.equals(String.class))
+            {
+                method.invoke(object, new Object[] { value });
+            }
+            else if (paramClass.equals(int.class))
+            {
+                method.invoke(object, new Object[] { new Integer(value) });
+            }
+            else if (paramClass.equals(long.class))
+            {
+                method.invoke(object, new Object[] { new Long(value) });
+            }
+        }
+        catch (IllegalAccessException ex)
+        {
+            throw new MarkupException(
+                    "Unable to initialize Component. Failure while invoking method "
+                            + methodName + ". Cause: " + ex);
+        }
+        catch (InvocationTargetException ex)
+        {
+            throw new MarkupException(
+                    "Unable to initialize Component. Failure while invoking method "
+                            + methodName + ". Cause: " + ex);
+        }
+        catch (NumberFormatException ex)
+        {
+            throw new MarkupException(
+                    "Unable to initialize Component. Failure while invoking method "
+                            + methodName + ". Cause: " + ex);
+        }
 	}
 }
