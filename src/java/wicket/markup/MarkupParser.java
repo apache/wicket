@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.ApplicationSettings;
 import wicket.MarkupContainer;
 import wicket.Page;
+import wicket.markup.html.form.model.DetachableChoiceList;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.XmlPullParser;
@@ -86,6 +89,8 @@ public class MarkupParser
 
     /** The wicket component requesting the markup */
     private MarkupContainer container;
+
+	private WicketTagIdentifier detectWicketComponents;
     
     /**
      * Constructor.
@@ -143,7 +148,7 @@ public class MarkupParser
 	private final IMarkupFilter newFilterChain(final List tagList)
 	{
         // Chain together all the different markup filters and configure them
-        final WicketTagIdentifier detectWicketComponents = new WicketTagIdentifier(xmlParser);
+        detectWicketComponents = new WicketTagIdentifier(xmlParser);
         detectWicketComponents.setWicketNamespace(this.wicketNamespace);
         
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
@@ -271,6 +276,20 @@ public class MarkupParser
         // Loop through tags
         for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
         {
+        	if("html".equals(tag.getName().toLowerCase()))
+        	{
+        		Map map = tag.getAttributes();
+        		Iterator it = map.keySet().iterator();
+        		while(it.hasNext())
+        		{
+        			String attributeName = (String)it.next();
+        			if(attributeName.startsWith("xmlns:"))
+        			{
+        				String wicketPrefix = attributeName.substring(6);
+        				this.detectWicketComponents.setWicketNamespace(wicketPrefix);
+        			}
+        		}
+        	}
             boolean add = (tag.getId() != null);
             if (!add && tag.getXmlTag().isClose())
             {
