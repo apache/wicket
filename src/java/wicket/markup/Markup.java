@@ -44,6 +44,9 @@ public final class Markup
 	
 	/** The encoding as found in <?xml ... encoding="" ?>.	Null, else */
 	private final String encoding;
+
+	/** Wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net"> */
+	private final String wicketNamespace;
 	
 	/** The Class of the directly associated component/container */
 	private Class containerClass;
@@ -60,7 +63,7 @@ public final class Markup
 	private int headerIndex = HEADER_NOT_YET_EVALUATED;
 	
 	/** Placeholder that indicates no markup */
-	public static final Markup NO_MARKUP = new Markup(null, null, null, null);
+	public static final Markup NO_MARKUP = new Markup(null, null, null, null, ComponentTag.DEFAULT_WICKET_NAMESPACE);
 
 	/**
 	 * Constructor
@@ -68,13 +71,16 @@ public final class Markup
 	 * @param markup The markup elements
 	 * @param xmlDeclaration The <?xml ...?> string from markup, if avaiable
 	 * @param encoding The encoding of the markup file read taken from <?xml ..encoding=".." ?>
+	 * @param wicketNamespace Wicket namespace taken from xmlns:wicket="http://wicket.sourceforge.net"
 	 */
-	Markup(final IResourceStream resource, final List markup, final String xmlDeclaration, final String encoding)
+	Markup(final IResourceStream resource, final List markup, final String xmlDeclaration, 
+	        final String encoding, final String wicketNamespace)
 	{
 		this.resource = resource;
 		this.markup = markup;
 		this.xmlDeclaration = xmlDeclaration;
 		this.encoding = encoding;
+		this.wicketNamespace = wicketNamespace;
 	}
 
 	/**
@@ -173,5 +179,15 @@ public final class Markup
 	public void setHeaderIndex(final int index)
 	{
 	    this.headerIndex = index;
+	}
+	
+	/**
+	 * Get the wicket namespace valid for this specific markup
+	 * 
+	 * @return wicket namespace
+	 */
+	public String getWicketNamespace()
+	{
+	    return this.wicketNamespace;
 	}
 }

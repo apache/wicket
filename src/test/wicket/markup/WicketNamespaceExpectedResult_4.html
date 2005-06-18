@@ -12,9 +12,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<html xmlns:wcn="http://wicket.sourceforge.net">
+<html xmlns:wcn="http://wicket.sourceforge.net/">
 <body>
-  <a href="myHref.html"></a>
-  <a href="myHref.html"/>
+  <!-- not wicket namespace -->
+  <span wicket:id="label">xxx</span>
+  <span wcn:id="label">my label test</span>
 </body>
 </html>

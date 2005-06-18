@@ -1746,7 +1746,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 			// Write the tag
 			getResponse().write(tag.toString(
 			        settings.getStripWicketTags(), 
-			        settings.getWicketNamespace()));
+			        this.findMarkupStream().getWicketNamespace()));
 		}
 	}
 

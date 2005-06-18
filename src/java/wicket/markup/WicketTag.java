@@ -27,9 +27,8 @@ import wicket.markup.parser.XmlTag;
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
- * Note 2: The namespace name is configurable through ApplicationSettings.
- *
- * @see wicket.ApplicationSettings#setWicketNamespace(String)
+ * Note 2: The namespace name is configurable. E.g.
+ *    &lt;html xmlns:wcn="http://wicket.sourcefourge.net"&gt;
  * 
  * @author Juergen Donnerstag
  */

@@ -34,18 +34,13 @@ import wicket.util.value.LowerCaseKeyValueMap;
  */
 public class XmlTag extends MarkupElement
 {
-	/**
-	 * A close tag, like &lt;/TAG&gt;.
-	 */
+	/** A close tag, like &lt;/TAG&gt;. */
 	public static final Type CLOSE = new Type("CLOSE");
-	/**
-	 * An open tag, like &lt;TAG componentId = "xyz"&gt;.
-	 */
+	
+	/** An open tag, like &lt;TAG componentId = "xyz"&gt;. */
 	public static final Type OPEN = new Type("OPEN");
 
-	/**
-	 * An open/close tag, like &lt;TAG componentId = "xyz"/&gt;.
-	 */
+	/** An open/close tag, like &lt;TAG componentId = "xyz"/&gt;. */
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */

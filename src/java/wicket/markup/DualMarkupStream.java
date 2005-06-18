@@ -241,6 +241,14 @@ public class DualMarkupStream extends MarkupStream
 	{
 		return activeMarkupStream.getTag();
 	}
+	
+	/**
+	 * @see wicket.markup.MarkupStream#getWicketNamespace()
+	 */
+	public String getWicketNamespace()
+	{
+	    return activeMarkupStream.getWicketNamespace();
+	}
 
 	/**
 	 * @see java.lang.Object#hashCode()
