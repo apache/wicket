@@ -31,6 +31,9 @@ import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 
 /**
+ * THIS CODE IS CURRENTLY EXPERIMENTAL ONLY. IT IS LIKES TO CHANGE IN 
+ * THE NEAR FUTURE.
+ * 
  * This is a markup inline filter. It identifies Wicket parameter tags like
  * &lt;wicket:param key=value/&gt; and assigns the key/value pair to the
  * attribute list of the immediately preceding Wicket component.
@@ -90,7 +93,12 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 	 */
 	public void setStripWicketTag(final boolean strip)
 	{
-		this.stripWicketTag = strip;
+	    // It is dangerous. Most have stripping wicket tags switched off,
+	    // which causes subtle exception e.g. if the component calls
+	    // replaceComponentTagBody(). Thus, <wicket:param> tags will
+	    // currently always be removed from output.
+	    
+		//this.stripWicketTag = strip;
 	}
 
 	/**
@@ -161,8 +169,8 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		}
 
 		// By now we know it is a Wicket param tag.
-		// Only empty TEXT is allowed in between the component tag the
-		// param tag.
+		// Only empty TEXT is allowed in between the preceding component 
+		// tag and the param tag.
 		final CharSequence rawMarkup = xmlParser.getInputSubsequence(lastTag.getPos()
 				+ lastTag.getLength(), tag.getPos());
 
@@ -182,21 +190,20 @@ public final class WicketParamTagHandler extends AbstractMarkupFilter
 		// can contain everything</wicket:params> is currently not supported
 
 		// Add the parameters to the previous component tag
-		lastTag.putAll(tag.getAttributes());
+		lastTag.getAdditionalAttributes().putAll(tag.getAttributes());
 
 		// If wicket param tags shall not be included in the output, than
 		// go ahead and process the next one.
-
 		if (stripWicketTag == true)
 		{
 			tag = (ComponentTag)getParent().nextTag();
 		}
 		else
 		{
-			// E.g. An "Expected close tag" exception will be thrown if the
+			// E.g. An "expected close tag" exception will be thrown if the
 			// component uses replaceComponentTagBody() to replace the body
 			// of the component (see src/test/.../MyLabel.html).
-			log.debug("Be careful. Not stripping <wicket:param> may cause subtle errors.");
+			log.warn("Be careful. Not stripping <wicket:param> from output may cause subtle errors.");
 		}
 
 		return tag;

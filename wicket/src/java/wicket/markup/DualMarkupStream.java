@@ -25,14 +25,14 @@ import wicket.util.resource.IResourceStream;
 /**
  * THIS IS PART OF MARKUP INHERITANCE AND CURRENTLY EXPERIMENTAL ONLY.
  * 
- * This markup stream read markup from two different source markup stream
+ * This markup stream reads markup from 2+ different source markup streams
  * with a switch to swap the current reader stream.
  * 
- * How does this markup stream support nested inheritance of markup streams.
+ * How does this markup stream support nested inheritance of markup files.
  * Assuming you have three classes derived from each other: A => B => C. "C"
  * being subclass of "B" and "B" being derived from "A". The output generated
- * must be like shown below, with additional comments added to better when and
- * why to switch between the different markup stream involved.
+ * must be like shown below, with additional comments added to better understand
+ * when and why to switch between the different markup streams involved.
  * 
  * "output"                    "active stream"   "comment"
  * class C (pre-text ignored)  Class C           init => push
