@@ -47,6 +47,9 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
     /** Logger */
     private final static Log log = LogFactory.getLog(MarkupInheritanceContainer.class);
     
+    /** Component ID */
+    private static final String CONTAINER_ID = "_extend";
+    
 	/** The open tag for this container. */
 	private transient ComponentTag openTag;
 	
@@ -65,7 +68,7 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	{
 	    // Default name for the container. The component is represented by
 	    // the <wicket:extend>...</wicket:extend> tag.
-		super("_extend");
+		super(CONTAINER_ID);
 	}
 	
 	/**
@@ -248,7 +251,7 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	 */
 	protected void onEndRequest()
 	{
-	    final Component container = get("_extend");
+	    final Component container = get(CONTAINER_ID);
 	    if (container != null)
 	    {
 	        this.remove(container.getId());

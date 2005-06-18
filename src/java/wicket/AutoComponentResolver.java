@@ -208,7 +208,7 @@ public final class AutoComponentResolver implements IComponentResolver
         }
 
         // Get all remaining attributes and invoke the component's setters
-        final Iterator iter = tag.getAttributes().entrySet().iterator();
+        Iterator iter = tag.getAttributes().entrySet().iterator();
         while (iter.hasNext())
         {
             final Map.Entry entry = (Map.Entry)iter.next();
@@ -220,6 +220,17 @@ public final class AutoComponentResolver implements IComponentResolver
             {
                 continue;
             }
+
+           	Classes.invokeSetter(component, key, value);
+        }
+
+        // Get all remaining attributes and invoke the component's setters
+        iter = tag.getAdditionalAttributes().entrySet().iterator();
+        while (iter.hasNext())
+        {
+            final Map.Entry entry = (Map.Entry)iter.next();
+            final String key = (String)entry.getKey();
+            final String value = (String)entry.getValue();
 
            	Classes.invokeSetter(component, key, value);
         }
