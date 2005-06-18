@@ -391,7 +391,10 @@ public abstract class RequestCycle
 				// make sure the invokerPage is ended correctly.
 				try 
 				{
-					if(invokePage != null) invokePage.internalEndRequest();
+					if (invokePage != null) 
+					{
+					    invokePage.internalEndRequest();
+					}
 				} 
 				catch (RuntimeException e) 
 				{
