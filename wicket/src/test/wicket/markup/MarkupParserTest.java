@@ -27,11 +27,9 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ApplicationSettings;
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
@@ -334,12 +332,14 @@ public final class MarkupParserTest extends TestCase
 	    
 	    markup = parser.parse("<wcn:xxx>  </wcn:xxx>");
 	    assertEquals(3, markup.size());
-
+	    
+/* setWicketNamespace() deprecated since 1.1
 	    final ApplicationSettings settings = new ApplicationSettings(new MockWebApplication(null));
 	    settings.setWicketNamespace("wcn");
 	    parser.configure(settings);
 	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
 	    assertEquals(1, markup.size());
+*/	    
    	}
 
     /**

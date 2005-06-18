@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.link;
+package wicket.markup;
 
 import junit.framework.TestCase;
 
@@ -27,14 +27,10 @@ import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 
 /**
- * Simple application that demonstrates the mock http application code (and
- * checks that it is working)
- * 
- * @author Chris Turner
  */
-public class HrefTest extends TestCase
+public class WicketNamespaceTest extends TestCase
 {
-	private static Log log = LogFactory.getLog(HrefTest.class);
+	private static Log log = LogFactory.getLog(WicketNamespaceTest.class);
 
 	private MockWebApplication application;
 
@@ -44,62 +40,77 @@ public class HrefTest extends TestCase
 	 * @param name
 	 *            The test name
 	 */
-	public HrefTest(String name)
+	public WicketNamespaceTest(String name)
 	{
 		super(name);
 	}
 
 	/**
-	 * Simple Label
-	 * 
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-	    executeTest(Href_1.class, "HrefExpectedResult_1.html", false);
+	    executeTest(WicketNamespace_1.class, "WicketNamespaceExpectedResult_1.html");
 	}
 
 	/**
-	 * Simple Label
-	 * 
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-	    executeTest(Href_1.class, "HrefExpectedResult_1-1.html", true);
+	    executeTest(WicketNamespace_2.class, "WicketNamespaceExpectedResult_2.html");
 	}
 
 	/**
-	 * Simple Label
-	 * 
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-	    executeTest(Href_2.class, "HrefExpectedResult_2.html", true);
+	    executeTest(WicketNamespace_3.class, "WicketNamespaceExpectedResult_3.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_4() throws Exception
+	{
+	    executeTest(WicketNamespace_4.class, "WicketNamespaceExpectedResult_4.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_5() throws Exception
+	{
+	    executeTest(WicketNamespace_5.class, "WicketNamespaceExpectedResult_5.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_6() throws Exception
+	{
+	    executeTest(WicketNamespace_6.class, "WicketNamespaceExpectedResult_6.html");
 	}
 
 	/**
 	 * @param pageClass
 	 * @param filename
-	 * @param stripWicketTag
 	 * @throws Exception
 	 */
-	public void executeTest(final Class pageClass, final String filename, 
-	        final boolean stripWicketTag) throws Exception
+	public void executeTest(final Class pageClass, final String filename) throws Exception
 	{
+		System.out.println("=== " + pageClass.getName() + " ===");
+		
 		application = new MockWebApplication(null);
 		application.getPages().setHomePage(pageClass);
-		application.getSettings().setStripWicketTags(stripWicketTag);
-		
+
 		// Do the processing
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		log.info(document);
-
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
 }

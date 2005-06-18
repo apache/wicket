@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.ApplicationSettings;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.markup.html.form.model.DetachableChoiceList;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.XmlPullParser;
@@ -45,6 +43,7 @@ import wicket.markup.parser.filter.WicketRemoveTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.value.ValueMap;
 
 
 /**
@@ -90,8 +89,9 @@ public class MarkupParser
     /** The wicket component requesting the markup */
     private MarkupContainer container;
 
-	private WicketTagIdentifier detectWicketComponents;
-    
+    /** The handler detecting wicket tags: wicket namespace */
+    private WicketTagIdentifier detectWicketComponents;
+
     /**
      * Constructor.
      * @param xmlParser The streaming xml parser to read and parse the markup
@@ -148,8 +148,8 @@ public class MarkupParser
 	private final IMarkupFilter newFilterChain(final List tagList)
 	{
         // Chain together all the different markup filters and configure them
-        detectWicketComponents = new WicketTagIdentifier(xmlParser);
-        detectWicketComponents.setWicketNamespace(this.wicketNamespace);
+        this.detectWicketComponents = new WicketTagIdentifier(xmlParser);
+        this.detectWicketComponents.setWicketNamespace(this.wicketNamespace);
         
         final WicketParamTagHandler wicketParamTagHandler = new WicketParamTagHandler(
                 new HtmlHandler(detectWicketComponents));
@@ -236,7 +236,8 @@ public class MarkupParser
             ResourceStreamNotFoundException
     {
         xmlParser.parse(resource);
-        return new Markup(resource, parseMarkup(), getXmlDeclaration(), getEncoding());
+        return new Markup(resource, parseMarkup(), 
+                getXmlDeclaration(), getEncoding(), this.wicketNamespace);
     }
 
     /**
@@ -251,7 +252,8 @@ public class MarkupParser
     	ResourceStreamNotFoundException
     {
         xmlParser.parse(string);
-        return new Markup(null, parseMarkup(), getXmlDeclaration(), getEncoding());
+        return new Markup(null, parseMarkup(), getXmlDeclaration(), getEncoding(), 
+                this.wicketNamespace);
     }
 
     /**
@@ -276,25 +278,17 @@ public class MarkupParser
         // Loop through tags
         for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
         {
-        	if("html".equals(tag.getName().toLowerCase()))
-        	{
-        		Map map = tag.getAttributes();
-        		Iterator it = map.keySet().iterator();
-        		while(it.hasNext())
-        		{
-        			String attributeName = (String)it.next();
-        			if(attributeName.startsWith("xmlns:"))
-        			{
-        				String wicketPrefix = attributeName.substring(6);
-        				this.detectWicketComponents.setWicketNamespace(wicketPrefix);
-        			}
-        		}
-        	}
             boolean add = (tag.getId() != null);
             if (!add && tag.getXmlTag().isClose())
             {
                 add = ((tag.getOpenTag() != null) && (tag.getOpenTag().getId() != null));
             }
+            
+            // Determine wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net">
+			if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
+			{
+			    determineWicketNamespace(tag);
+			}
 
             // Add tag to list?
             if (add || (autoAddList.size() > 0))
@@ -403,5 +397,31 @@ public class MarkupParser
         
         // Return immutable list of all MarkupElements
         return Collections.unmodifiableList(list);
+    }
+
+    /**
+     * Determine wicket namespace from xmlns:wicket or
+     * xmlns:wicket="http://wicket.sourceforge.net"
+     * 
+     * @param tag
+     */
+    private void determineWicketNamespace(final ComponentTag tag)
+    {
+        final ValueMap attributes = tag.getAttributes();
+        final Iterator it = attributes.keySet().iterator();
+        while (it.hasNext())
+        {
+            final String attributeName = (String)it.next();
+            if (attributeName.startsWith("xmlns:"))
+            {
+                final String xmlnsUrl = attributes.getString(attributeName);
+                if ((xmlnsUrl == null) || (xmlnsUrl.trim().length() == 0) ||
+                        xmlnsUrl.toLowerCase().startsWith("http://wicket.sourceforge.net"))
+                {
+                    this.wicketNamespace = attributeName.substring(6);
+                    this.detectWicketComponents.setWicketNamespace(this.wicketNamespace);
+                }
+            }
+        }
     }
 }

@@ -401,4 +401,14 @@ public class MarkupStream
 	{
 	    markup.setHeaderIndex(index);
 	}
+	
+	/**
+	 * Get the wicket namespace valid for this specific markup
+	 * 
+	 * @return wicket namespace
+	 */
+	public String getWicketNamespace()
+	{
+	    return this.markup.getWicketNamespace();
+	}
 }

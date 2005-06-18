@@ -87,10 +87,10 @@ public class MarkupInheritanceTest extends TestCase
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 
+		assertEquals(pageClass, application.getLastRenderedPage().getClass());
+
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
-
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
 
@@ -109,9 +109,8 @@ public class MarkupInheritanceTest extends TestCase
 		application.processRequestCycle();
 
 		// Validate the document
+		assertEquals(MarkupInheritanceExtension_4.class, application.getLastRenderedPage().getClass());
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
-
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4.html"));
 
 		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)application.getLastRenderedPage();
@@ -120,8 +119,10 @@ public class MarkupInheritanceTest extends TestCase
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
-		document = application.getServletResponse().getDocument();
 
+		assertEquals(MarkupInheritanceExtension_4.class, application.getLastRenderedPage().getClass());
+
+		document = application.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4-1.html"));
 	}
 }
