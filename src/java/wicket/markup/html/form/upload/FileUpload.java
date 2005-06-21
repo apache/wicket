@@ -96,6 +96,8 @@ public class FileUpload implements Serializable
 	 */
 	public void writeTo(final File file) throws IOException
 	{
-		Files.writeTo(file, getInputStream());
+	    InputStream is = getInputStream();
+	    Files.writeTo(file, is);
+	    is.close();	
 	}
 }
