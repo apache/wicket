@@ -97,9 +97,16 @@ public class Files
 	public static final void writeTo(final java.io.File file, final InputStream input)
 			throws IOException
 	{
-	    FileOutputStream os = new FileOutputStream(file);
-	    Streams.copy(input, os);
-	    os.close();	}
+		FileOutputStream fos = new FileOutputStream(file);
+		try
+		{
+			Streams.copy(input, fos);
+		}
+		finally
+		{
+			fos.close();
+		}
+	}
 
 	/**
 	 * Deletes a file, dealing with a particularly nasty bug on Windows.
