@@ -306,7 +306,7 @@ public class PageableListViewNavigation extends Loop
 		int firstListItem = this.startIndex;
 
 		// How many page links shall be displayed
-		int viewSize = getViewSize();
+		int viewSize = Math.min(getViewSize(), pageableListView.getPageCount());
 		int margin = getMargin();
 
 		// What is the PageableListView's page index to be displayed
