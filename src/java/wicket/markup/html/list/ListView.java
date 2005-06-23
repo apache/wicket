@@ -56,7 +56,7 @@ import wicket.model.Model;
  * 	public void populateItem(final ListItem item)
  * 	{
  * 		final UserDetails user = (UserDetails)item.getModelObject();
- * 		item(new Label(&quot;id&quot;, user.getId()));
+ * 		item.add(new Label(&quot;id&quot;, user.getId()));
  * 	}
  * });
  * </pre>
