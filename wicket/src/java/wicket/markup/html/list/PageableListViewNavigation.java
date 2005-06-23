@@ -75,14 +75,12 @@ import wicket.version.undo.Change;
  * With:
  * 
  * <pre>
- * 
- *				 &lt;td wicket:id=&quot;navigation&quot;&gt;
- *					 &lt;span wicket:id=&quot;separator&quot;/&gt;
- *					 &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- *					   &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- *					 &lt;/a&gt;
- *				 &lt;/td&gt;
- *	
+ *	&lt;td wicket:id=&quot;navigation&quot;&gt;
+ *	  &lt;span wicket:id=&quot;separator&quot;/&gt;
+ *	  &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ *	    &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ *	  &lt;/a&gt;
+ *	&lt;/td&gt;
  * </pre>
  * 
  * renders like:
@@ -100,14 +98,12 @@ import wicket.version.undo.Change;
  * The page links displayed are automatically adjusted based on the number of
  * page links to be displayed and a margin. The margin makes sure that the page
  * link pointing to the current page is not at the left or right end of the page
- * links currently printed and thus provinding a better user experience.
+ * links currently printed and thus providing a better user experience.
  * <p>
  * Use setMargin() and setViewSize() to adjust the navigation's bar view size
  * and margin.
  * <p>
- * Please
- * 
- * @see PageableListViewNavigator for a ready made component which already
+ * Please @see PageableListViewNavigator for a ready made component which already
  *		includes links to the first, previous, next and last page.
  * 
  * @author Jonathan Locke
@@ -258,6 +254,17 @@ public class PageableListViewNavigation extends Loop
 	}
 
 	/**
+	 * Allow subclasses replacing populateItem to calculate the current 
+	 * page number
+	 * 
+	 * @return start index
+	 */
+	protected final int getStartIndex()
+	{
+		return this.startIndex;
+	}
+	
+	/**
 	 * Populate the current cell with a page link
 	 * (PageableListViewNavigationLink) enclosing the page number the link is
 	 * pointing to. Subclasses may provide there own implementation adding more
@@ -268,7 +275,7 @@ public class PageableListViewNavigation extends Loop
 	protected void populateItem(final Loop.LoopItem loopItem)
 	{
 		// Get the index of page this link shall point to
-		final int pageIndex = this.startIndex + loopItem.getIteration();
+		final int pageIndex = getStartIndex() + loopItem.getIteration();
 
 		// Add a page link pointing to the page
 		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
