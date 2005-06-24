@@ -22,46 +22,46 @@
 	padding: 0 0 0 20px
 }
 
-\html .tabNavigation/* */ {
+\html .wicket-navmenu-tabs-level0/* */ {
 	margin: 0;
 	padding: 3px 0 3px 20px
 }
 
-html>body .tabNavigation {
+html>body .wicket-navmenu-tabs-level0 {
 	margin: 0;
 	padding: 0 0 1px 20px
 }
 
-\head+body .tabNavigation {
+\head+body .wicket-navmenu-tabs-level0 {
 	padding: 0 0 3px 20px
 }
 
-html>body ul[id] .tabNavigation {
+html>body ul[id] .wicket-navmenu-tabs-level0 {
 	padding: 0 0 0 20px
 }
 
-.tabNavigation li,  #subNavigation li {
+.wicket-navmenu-tabs-level0 li,  #subNavigation li {
 	display: inline;
 	list-style: none outside none
 }
 
-.tabNavigation .preloadUnselected {
+.wicket-navmenu-tabs-level0 .preloadUnselected {
 	background: transparent url(folders/unselected.gif);
 }
 
-.tabNavigation .preloadSelected {
+.wicket-navmenu-tabs-level0 .preloadSelected {
 	background: transparent url(folders/selected.gif);
 }
 
-.tabNavigation .preloadHover {
+.wicket-navmenu-tabs-level0 .preloadHover {
 	background: transparent url(folders/hover.gif);
 }
 
-.tabNavigation .preloadActive {
+.wicket-navmenu-tabs-level0 .preloadActive {
 	background: transparent url(folders/active.gif);
 }
 
-html>body .tabNavigation li {
+html>body .wicket-navmenu-tabs-level0 li {
 	background: transparent url(folders/unselected.gif) no-repeat top left;
 	border-right: 1px solid #666;
 	display: block;
@@ -71,7 +71,7 @@ html>body .tabNavigation li {
 	padding: 3px 5px 5px 27px
 }
 
-head:first-child+body .tabNavigation li {
+head:first-child+body .wicket-navmenu-tabs-level0 li {
 	background: none;
 	border-right: none;
 	display: inline;
@@ -80,7 +80,7 @@ head:first-child+body .tabNavigation li {
 	padding: 0
 }
 
-.tabNavigation a, .tabNavigation a:link, .tabNavigation a:visited {
+.wicket-navmenu-tabs-level0 a, .wicket-navmenu-tabs-level0 a:link, .wicket-navmenu-tabs-level0 a:visited {
 	background: transparent url(folders/unselected.gif) no-repeat top left;
 	border-right: 1px solid #666;
 	color: #FFF;
@@ -91,13 +91,13 @@ head:first-child+body .tabNavigation li {
 	text-decoration: none
 }
 
-html>body .tabNavigation a, html>body .tabNavigation a:link, html>body .tabNavigation a:visited {
+html>body .wicket-navmenu-tabs-level0 a, html>body .wicket-navmenu-tabs-level0 a:link, html>body .wicket-navmenu-tabs-level0 a:visited {
 	border-right: none;
 	margin: 0;
 	padding: 0
 }
 
-head:first-child+body .tabNavigation a, head:first-child+body .tabNavigation a:link, head:first-child+body .tabNavigation a:visited {
+head:first-child+body .wicket-navmenu-tabs-level0 a, head:first-child+body .wicket-navmenu-tabs-level0 a:link, head:first-child+body .wicket-navmenu-tabs-level0 a:visited {
 	border-right: 1px solid #666;
 	margin: 0 0 0 -15px;
 	padding: 3px 5px 3px 27px;
@@ -105,19 +105,19 @@ head:first-child+body .tabNavigation a, head:first-child+body .tabNavigation a:l
 	z-index: 50
 }
 
-.tabNavigation a:hover {
+.wicket-navmenu-tabs-level0 a:hover {
 	background: transparent url(folders/hover.gif) no-repeat top left;
 	border-right: 1px solid #333;
 	color: #FFF;
 	text-decoration: none
 }
 
-html>body .tabNavigation a:hover {
+html>body .wicket-navmenu-tabs-level0 a:hover {
 	border-right: none;
 	text-decoration: underline
 }
 
-head:first-child+body .tabNavigation a:hover {
+head:first-child+body .wicket-navmenu-tabs-level0 a:hover {
 	border-right: 1px solid #333;
 	padding: 4px 5px 3px 27px;
 	position: relative;
@@ -125,21 +125,21 @@ head:first-child+body .tabNavigation a:hover {
 	z-index: 5000
 }
 
-.tabNavigation a:active {
+.wicket-navmenu-tabs-level0 a:active {
 	background: transparent url(folders/active.gif) no-repeat top left;
 	color: #FFF;
 	text-decoration: none
 }
 
-html>body .tabNavigation a:active {
+html>body .wicket-navmenu-tabs-level0 a:active {
 	text-decoration: underline
 }
 
-head:first-child+body .tabNavigation a:active {
+head:first-child+body .wicket-navmenu-tabs-level0 a:active {
 	text-decoration: none
 }
 
-html>body .tabNavigation li.selectedTab {
+html>body .wicket-navmenu-tabs-level0 li.selectedTab {
 	background: transparent url(folders/selected.gif) no-repeat top left;
 	border-right: 1px solid #C60;
 	display: block;
@@ -149,7 +149,7 @@ html>body .tabNavigation li.selectedTab {
 	padding: 3px 5px 5px 27px
 }
 
-head:first-child+body .tabNavigation li.selectedTab {
+head:first-child+body .wicket-navmenu-tabs-level0 li.selectedTab {
 	background: none;
 	border-right: none;
 	display: inline;
@@ -158,7 +158,7 @@ head:first-child+body .tabNavigation li.selectedTab {
 	padding: 0
 }
 
-.tabNavigation .selectedTab a, .tabNavigation .selectedTab a:link, .tabNavigation .selectedTab a:visited {
+.wicket-navmenu-tabs-level0 .selectedTab a, .wicket-navmenu-tabs-level0 .selectedTab a:link, .wicket-navmenu-tabs-level0 .selectedTab a:visited {
 	background: transparent url(folders/selected.gif) no-repeat top left;
 	border-right: 1px solid #C60;
 	color: #FFF;
@@ -169,13 +169,13 @@ head:first-child+body .tabNavigation li.selectedTab {
 	padding: 3px 5px 3px 27px
 }
 
-html>body .tabNavigation .selectedTab a, html>body .tabNavigation .selectedTab a:link, html>body .tabNavigation .selectedTab a:visited {
+html>body .wicket-navmenu-tabs-level0 .selectedTab a, html>body .wicket-navmenu-tabs-level0 .selectedTab a:link, html>body .wicket-navmenu-tabs-level0 .selectedTab a:visited {
 	border-right: none;
 	margin: 0;
 	padding: 0
 }
 
-head:first-child+body .tabNavigation .selectedTab a, head:first-child+body .tabNavigation .selectedTab a:link, head:first-child+body .tabNavigation .selectedTab a:visited, head:first-child+body .tabNavigation .selectedTab a:hover {
+head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a, head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a:link, head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a:visited, head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a:hover {
 	background: transparent url(folders/selected.gif) no-repeat top left;
 	border-right: 1px solid #C60;
 	margin: 0 0 0 -15px;
@@ -184,7 +184,7 @@ head:first-child+body .tabNavigation .selectedTab a, head:first-child+body .tabN
 	z-index: 10000
 }
 
-\html head:first-child+body .tabNavigation .selectedTab a, \html head:first-child+body .tabNavigation .selectedTab a:link, \html head:first-child+body .tabNavigation .selectedTab a:visited, \html head:first-child+body .tabNavigation .selectedTab a:hover {
+\html head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a, \html head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a:link, \html head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a:visited, \html head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a:hover {
 	padding: 4px 5px 5px 27px
 }
 

@@ -16,25 +16,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package objectedit;
+package wicket.examples.template;
 
-import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
+import wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for nested structure example.
+ * Application class for the template example.
  *
  * @author Eelco Hillenius
  */
-public class ObjectEditApplication extends WebApplication
+public class TemplateApplication extends WicketExampleApplication
 {
     /**
      * Constructor.
      */
-    public ObjectEditApplication()
+    public TemplateApplication()
     {
-        getPages().setHomePage(Home.class);
-        ApplicationSettings settings = getSettings();
-		settings.configure("development");
-	}
+        getPages().setHomePage(Page1.class);
+    }
 }

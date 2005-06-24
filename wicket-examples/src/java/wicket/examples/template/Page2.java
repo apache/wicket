@@ -16,25 +16,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package objectedit;
+package wicket.examples.template;
 
-import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
 
 /**
- * WicketServlet class for nested structure example.
- *
+ * Our base page that serves as a template for pages that inherit from it. Doesn't have
+ * to be abstract, but was made abstract here to stress the fact that this page is not
+ * meant for direct use.
+ * 
  * @author Eelco Hillenius
  */
-public class ObjectEditApplication extends WebApplication
+public class Page2 extends TemplatePage
 {
     /**
-     * Constructor.
+     * Constructor
      */
-    public ObjectEditApplication()
+    public Page2()
     {
-        getPages().setHomePage(Home.class);
-        ApplicationSettings settings = getSettings();
-		settings.configure("development");
-	}
+    	super();
+    	setPageTitle("Template example, page 2");
+    }
 }

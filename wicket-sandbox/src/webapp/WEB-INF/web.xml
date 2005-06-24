@@ -8,16 +8,6 @@
     <display-name>Wicket Sandbox</display-name>  
 
     <servlet>
-        <servlet-name>MenuApplication</servlet-name>
-        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-        <init-param>
-          <param-name>applicationClassName</param-name>
-          <param-value>navmenu.MenuApplication</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
         <servlet-name>ObjectEditApplication</servlet-name>
         <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
         <init-param>
@@ -26,11 +16,6 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
-    <servlet-mapping>
-        <servlet-name>MenuApplication</servlet-name>
-        <url-pattern>/menu/*</url-pattern>
-    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>ObjectEditApplication</servlet-name>

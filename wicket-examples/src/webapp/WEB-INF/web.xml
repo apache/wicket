@@ -187,11 +187,31 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>TemplateApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.template.TemplateApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
 		<servlet-name>WizardApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.wizard.WizardApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>NavMenuApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.navmenu.NavMenuApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -277,8 +297,18 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>TemplateApplication</servlet-name>
+		<url-pattern>/template/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>WizardApplication</servlet-name>
 		<url-pattern>/wizard/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>NavMenuApplication</servlet-name>
+		<url-pattern>/navmenu/*</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>

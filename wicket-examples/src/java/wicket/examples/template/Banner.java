@@ -16,25 +16,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package objectedit;
+package wicket.examples.template;
 
-import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
+import wicket.markup.html.panel.Panel;
+import wicket.model.IModel;
 
 /**
- * WicketServlet class for nested structure example.
+ * Base class for banners.
  *
  * @author Eelco Hillenius
  */
-public class ObjectEditApplication extends WebApplication
+public abstract class Banner extends Panel
 {
-    /**
-     * Constructor.
-     */
-    public ObjectEditApplication()
-    {
-        getPages().setHomePage(Home.class);
-        ApplicationSettings settings = getSettings();
-		settings.configure("development");
+	/**
+	 * Construct.
+	 * @param id
+	 */
+	public Banner(String id)
+	{
+		super(id);
 	}
+
+	/**
+	 * Construct.
+	 * @param id
+	 * @param model
+	 */
+	public Banner(String id, IModel model)
+	{
+		super(id, model);
+	}
+
 }

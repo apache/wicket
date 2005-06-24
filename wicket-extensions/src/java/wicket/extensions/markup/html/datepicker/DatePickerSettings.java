@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import wicket.ResourceReference;
 import wicket.Session;
+import wicket.markup.html.StaticResourceReference;
 
 /**
  * The settings of the date picker component. Use this to customize the datepicker
@@ -32,6 +33,98 @@ import wicket.Session;
  */
 public class DatePickerSettings implements Serializable
 {
+	// the packaged icon images
+
+	/** button icon for the date picker; refers to 'calendar_icon_1.jpg' in this package. */
+	public static final StaticResourceReference BUTTON_ICON_1 =
+		new StaticResourceReference(DatePickerSettings.class, "calendar_icon_1.jpg");
+
+	/** button icon for the date picker; refers to 'calendar_icon_2.jpg' in this package. */
+	public static final StaticResourceReference BUTTON_ICON_2 =
+		new StaticResourceReference(DatePickerSettings.class, "calendar_icon_2.jpg");
+
+	/** button icon for the date picker; refers to 'calendar_icon_3.jpg' in this package. */
+	public static final StaticResourceReference BUTTON_ICON_3 =
+		new StaticResourceReference(DatePickerSettings.class, "calendar_icon_3.jpg");
+
+	// the packages styles (comes with the date picker javascript widget)
+	
+	/** date picker style aqua. */
+	public static final StaticResourceReference STYLE_AQUA =
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/theme.css");
+
+	/** date picker style winter. */
+	public static final StaticResourceReference STYLE_WINTER =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-blue.css");
+
+	/** date picker style blue2. */
+	public static final StaticResourceReference STYLE_BLUE =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-blue2.css");
+
+	/** date picker style summer. */
+	public static final StaticResourceReference STYLE_SUMMER =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-brown.css");
+
+	/** date picker style green. */
+	public static final StaticResourceReference STYLE_GREEN =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-green.css");
+
+	/** date picker style system. */
+	public static final StaticResourceReference STYLE_SYSTEM =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-system.css");
+
+	/** date picker style tas. */
+	public static final StaticResourceReference STYLE_TAS =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-tas.css");
+
+	/** date picker style win2k. */
+	public static final StaticResourceReference STYLE_WIN2K =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k.css");
+
+	/** date picker style win2k-1. */
+	public static final StaticResourceReference STYLE_WIN2K_1 =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-1.css");
+
+	/** date picker style win2k-2. */
+	public static final StaticResourceReference STYLE_WIN2K_2 =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-2.css");
+
+	/** date picker style win2k-cold-1. */
+	public static final StaticResourceReference STYLE_WIN2K_COLD_1 =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
+
+	/** date picker style win2k-cold-2. */
+	public static final StaticResourceReference STYLE_WIN2K_COLD_2 =
+		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
+
+	/** language en. */
+	public static final StaticResourceReference LANGUAGE_EN =
+		new StaticResourceReference(DatePickerSettings.class, "lang/calendar-en.js");
+
+	/** language nl. */
+	public static final StaticResourceReference LANGUAGE_NL =
+		new StaticResourceReference(DatePickerSettings.class, "lang/calendar-nl.js");
+
+	// TODO due to a bug in the javascript component, no more languages are available at this time.
+	// See http://sourceforge.net/tracker/index.php?func=detail&aid=1193816&group_id=75569&atid=544285
+
+	// register dependent images so that they can be loaded by the css files
+
+	static
+	{
+		new StaticResourceReference(DatePickerSettings.class, "style/menuarrow.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/menuarrow2.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/active-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/dark-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/hover-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/menuarrow.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/normal-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/rowhover-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/status-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/title-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/today-bg.gif");
+	}
+
 	/**
 	 * The format string that will be used to enter the date in the input field. This
 	 * format will be honored even if the input field is hidden.
@@ -133,13 +226,13 @@ public class DatePickerSettings implements Serializable
 	private boolean showOthers = false;
 
 	/** the style. */
-	private ResourceReference style = DatePicker.STYLE_AQUA;
+	private ResourceReference style = STYLE_AQUA;
 
 	/** the button icon. */
-	private ResourceReference icon = DatePicker.BUTTON_ICON_1;
+	private ResourceReference icon = BUTTON_ICON_1;
 
 	/** the language. */
-	private ResourceReference language = DatePicker.LANGUAGE_EN;
+	private ResourceReference language = LANGUAGE_EN;
 
 	/**
 	 * Construct.

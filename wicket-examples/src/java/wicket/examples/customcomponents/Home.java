@@ -61,13 +61,13 @@ public class Home extends WicketExamplePage
 		TextField dateField2 = new TextField("date2", new Model(new Date()), Date.class);
 		add(dateField2);
 		DatePickerSettings dp2Settings = new DatePickerSettings();
-		dp2Settings.setIcon(DatePicker.BUTTON_ICON_2);
+		dp2Settings.setIcon(DatePickerSettings.BUTTON_ICON_2);
 		add(new DatePicker("datePicker2", dateField2, dp2Settings));
 
 		TextField dateField3 = new TextField("date3", new Model(new Date()), Date.class);
 		add(dateField3);
 		DatePickerSettings dp3Settings = new DatePickerSettings();
-		dp3Settings.setIcon(DatePicker.BUTTON_ICON_3);
+		dp3Settings.setIcon(DatePickerSettings.BUTTON_ICON_3);
 
 		add(new DatePicker("datePicker3", dateField3, dp3Settings));
 	}

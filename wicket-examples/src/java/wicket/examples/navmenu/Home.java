@@ -16,25 +16,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package objectedit;
+package wicket.examples.navmenu;
 
-import wicket.ApplicationSettings;
-import wicket.protocol.http.WebApplication;
+import wicket.PageParameters;
 
 /**
- * WicketServlet class for nested structure example.
- *
  * @author Eelco Hillenius
  */
-public class ObjectEditApplication extends WebApplication
+public class Home extends PageWithMenu
 {
-    /**
-     * Constructor.
-     */
-    public ObjectEditApplication()
-    {
-        getPages().setHomePage(Home.class);
-        ApplicationSettings settings = getSettings();
-		settings.configure("development");
+	/**
+	 * Constructor.
+	 * @param parameters Page parameters
+	 */
+	public Home(final PageParameters parameters)
+	{
+		super();
 	}
 }
