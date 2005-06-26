@@ -131,3 +131,11 @@ a.none {
 #siteSelection {
 	width: 200px;
 }
+
+#tabContent {
+	border-color: #DDDDDD;
+	border-style: solid;
+	border-width: 1px;
+	margin: 4px;
+	padding: 4px;
+}

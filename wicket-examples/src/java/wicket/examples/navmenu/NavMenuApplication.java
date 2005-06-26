@@ -18,12 +18,9 @@
  */
 package wicket.examples.navmenu;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-
 import wicket.ApplicationSettings;
 import wicket.extensions.markup.html.navmenu.MenuItem;
+import wicket.extensions.markup.html.navmenu.MenuModel;
 import wicket.protocol.http.WebApplication;
 
 /**
@@ -46,40 +43,30 @@ public class NavMenuApplication extends WebApplication
     /**
      * @return the menu as a tree model
      */
-    public static TreeModel getMenu()
+    public static MenuModel getMenu()
     {
 		// create tree
-		TreeModel model = null;
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT"); // dummy
-		DefaultMutableTreeNode a0 = new DefaultMutableTreeNode(
-				new MenuItem("Home", Home.class, null));
+		MenuModel model = null;
+		MenuItem root = new MenuItem(); // dummy
+		MenuItem a0 = new MenuItem("Home", Home.class, null);
 		root.add(a0);
-		DefaultMutableTreeNode a1 = new DefaultMutableTreeNode(
-				new MenuItem("Images", Page1.class, null));
+		MenuItem a1 = new MenuItem("Images", Page1.class, null);
 		root.add(a1);
-		DefaultMutableTreeNode a2 = new DefaultMutableTreeNode(
-				new MenuItem("Templates", Page2.class, null));
-		DefaultMutableTreeNode a2a = new DefaultMutableTreeNode(
-				new MenuItem("Ognl", Page2a.class, null));
+		MenuItem a2 = new MenuItem("Templates", Page2.class, null);
+		MenuItem a2a = new MenuItem("Ognl", Page2a.class, null);
 		a2.add(a2a);
-		DefaultMutableTreeNode a2b = new DefaultMutableTreeNode(
-				new MenuItem("Velocity", Page2b.class, null));
+		MenuItem a2b = new MenuItem("Velocity", Page2b.class, null);
 		a2.add(a2b);
 		root.add(a2);
-		DefaultMutableTreeNode a3 = new DefaultMutableTreeNode(
-				new MenuItem("Users", Page3.class, null));
-		DefaultMutableTreeNode a3a = new DefaultMutableTreeNode(
-				new MenuItem("Truus", Page3a.class, null));
+		MenuItem a3 = new MenuItem("Users", Page3.class, null);
+		MenuItem a3a = new MenuItem("Truus", Page3a.class, null);
 		a3.add(a3a);
-		DefaultMutableTreeNode a3b = new DefaultMutableTreeNode(
-				new MenuItem("Mien", Page3b.class, null));
+		MenuItem a3b = new MenuItem("Mien", Page3b.class, null);
 		a3.add(a3b);
 		root.add(a3);
-		DefaultMutableTreeNode a4 = new DefaultMutableTreeNode(
-				new MenuItem("Preferences", Page4.class, null));
+		MenuItem a4 = new MenuItem("Preferences", Page4.class, null);
 		root.add(a4);
-		// TODO this is just one level. We should be able to handle more than that
-		model = new DefaultTreeModel(root);
+		model = new MenuModel(root);
 		return model;
     }
 }

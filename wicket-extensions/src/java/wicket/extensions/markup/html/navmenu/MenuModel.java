@@ -21,45 +21,25 @@ package wicket.extensions.markup.html.navmenu;
 import java.util.Enumeration;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 
 import wicket.Page;
-import wicket.model.AbstractReadOnlyDetachableModel;
-import wicket.model.IModel;
 
 /**
- * 
+ * Model that holds the tree model of a navigation menu.
+ *
+ * @author Eelco Hillenius
  */
-public abstract class MenuModel extends AbstractReadOnlyDetachableModel
+public class MenuModel extends DefaultTreeModel
 {
-	/** tree model. */
-	private final TreeModel treeModel;
-
 	/**
 	 * Construct.
-	 * @param treeModel 
+	 * @param menuItem
 	 */
-	public MenuModel(TreeModel treeModel)
+	public MenuModel(MenuItem menuItem)
 	{
-		super();
-		this.treeModel = treeModel;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#getNestedModel()
-	 */
-	public final IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
-	 * Gets the treeModel.
-	 * @return treeModel
-	 */
-	public final TreeModel getTreeModel()
-	{
-		return treeModel;
+		super(menuItem);
 	}
 
 	/**
@@ -70,31 +50,26 @@ public abstract class MenuModel extends AbstractReadOnlyDetachableModel
 	 */
 	public boolean isPartOfCurrentSelection(Page currentPage, MenuItem menuItem)
 	{
-		DefaultMutableTreeNode node = findNodeFor(menuItem);
 		MenuTreePath selection = getCurrentSelection(currentPage);
-		return selection.isPartOfPath(node);
+		return selection.isPartOfPath(menuItem);
 	}
 
 	/**
-	 * Finds the tree node that has the given menu item attached.
-	 * @param menuItem the menu item to lookup
-	 * @return the tree node
+	 * @see javax.swing.tree.DefaultTreeModel#setRoot(javax.swing.tree.TreeNode)
 	 */
-	protected final DefaultMutableTreeNode findNodeFor(MenuItem menuItem)
+	public void setRoot(TreeNode root)
 	{
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)getTreeModel().getRoot();
-		Enumeration all = root.breadthFirstEnumeration();
-		while (all.hasMoreElements())
+		if (root == null)
 		{
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)all.nextElement();
-			Object userObject = node.getUserObject();
-			if (menuItem.equals(userObject))
-			{
-				return node;
-			}
+			throw new NullPointerException("treeNode may not be null");
 		}
-
-		throw new IllegalStateException("node for " + menuItem + " not found");
+		if (!(root instanceof MenuItem))
+		{
+			throw new IllegalArgumentException("argument must be of type " +
+					MenuItem.class.getName() + " (but is of type " +
+					root.getClass().getName() + ")");
+		}
+		super.setRoot(root);
 	}
 
 	/**
@@ -105,22 +80,17 @@ public abstract class MenuModel extends AbstractReadOnlyDetachableModel
 	protected MenuTreePath getCurrentSelection(Page currentPage)
 	{
 		Class currentPageClass = currentPage.getClass();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)getTreeModel().getRoot();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)getRoot();
 		MenuTreePath currentPath = null;
 	
 		Enumeration all = root.breadthFirstEnumeration();
 		while (all.hasMoreElements())
 		{
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)all.nextElement();
-			Object userObject = node.getUserObject();
-			if (userObject instanceof MenuItem)
+			MenuItem menuItem = (MenuItem)all.nextElement();
+			if (currentPageClass.equals(menuItem.getPageClass()))
 			{
-				MenuItem menuItem = (MenuItem)userObject;
-				if (currentPageClass.equals(menuItem.getPageClass()))
-				{
-					currentPath = new MenuTreePath(node.getPath());
-					break;
-				}
+				currentPath = new MenuTreePath(menuItem.getPath());
+				break;
 			}
 		}
 		if (currentPath == null)

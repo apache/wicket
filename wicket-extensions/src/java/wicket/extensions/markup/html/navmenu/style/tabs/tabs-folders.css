@@ -1,4 +1,4 @@
-#menu {
+.wicket-navmenu-tabs {
 	background: #EEE;
 	color: #000;
 	font: normal 11px Verdana, Geneva, Arial, Helvetica, sans-serif;
@@ -7,19 +7,8 @@
 	width: 100%
 }
 
-#tabContent {
-	border-color: #DDDDDD;
-	border-style: solid;
-	border-width: 1px;
-	margin: 4px;
-	padding: 4px;
-}
-
-.tabNavigation {
+.wicket-navmenu-tabs-level0 {
 	border-bottom: 1px solid #C60;
-	list-style: none outside none;
-	margin: 0;
-	padding: 0 0 0 20px
 }
 
 \html .wicket-navmenu-tabs-level0/* */ {
@@ -38,11 +27,6 @@ html>body .wicket-navmenu-tabs-level0 {
 
 html>body ul[id] .wicket-navmenu-tabs-level0 {
 	padding: 0 0 0 20px
-}
-
-.wicket-navmenu-tabs-level0 li,  #subNavigation li {
-	display: inline;
-	list-style: none outside none
 }
 
 .wicket-navmenu-tabs-level0 .preloadUnselected {
@@ -190,4 +174,17 @@ head:first-child+body .wicket-navmenu-tabs-level0 .selectedTab a, head:first-chi
 
 .fixTabsIE {
 	visibility: hidden
+}
+
+.wicket-navmenu-tabs-level1-border {
+	background: #F90;
+	border-top: 1px solid #FC3;
+	height: 20px;
+	margin: 0px;	
+}
+
+.wicket-navmenu-tabs-level1 li {
+	list-style: none outside none;
+	display: inline;
+	margin: 0px;
 }

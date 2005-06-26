@@ -23,8 +23,8 @@ import java.io.Serializable;
 import wicket.ResourceReference;
 
 /**
- * The settings of the date picker component. Use this to customize the datepicker
- * (e.g. the icon, locale, format, etc).
+ * Groups style elements for a navigation menu row, so that we don't have to provide
+ * custom markup all the time.
  *
  * @author Eelco Hillenius
  */
@@ -33,8 +33,11 @@ public class MenuRowStyle implements Serializable
 	/** the CSS style file. */
 	private ResourceReference styleSheetResource;
 
-	/** CSS class for this row. */
-	private String cssClass;
+	/** CSS class for the container of this row, e.g. the div element. */
+	private String containerCSSClass;
+
+	/** CSS class for the row, e.g. the ul element. */
+	private String rowCSSClass;
 
 	/**
 	 * Construct.
@@ -44,12 +47,12 @@ public class MenuRowStyle implements Serializable
 	}
 
 	/**
-	 * Gets the CSS class for the given menu item.
+	 * Gets the CSS class for the given menu item, to be attached e.g. to an li element.
 	 * @param menuItem the menu item
 	 * @param menuRow the menu row component
 	 * @return the CSS class for the given menu item
 	 */
-	protected String getCSSClass(MenuItem menuItem, MenuRow menuRow)
+	protected String getItemCSSClass(MenuItem menuItem, MenuRow menuRow)
 	{
 		MenuRowModel rowModel = (MenuRowModel)menuRow.getModel();
 		boolean active = (rowModel.isPartOfCurrentSelection(menuRow.getPage(), menuItem));
@@ -78,17 +81,35 @@ public class MenuRowStyle implements Serializable
 	 * Gets the cssClass.
 	 * @return cssClass
 	 */
-	public String getCssClass()
+	public final String getRowCSSClass()
 	{
-		return cssClass;
+		return rowCSSClass;
 	}
 
 	/**
 	 * Sets the cssClass.
 	 * @param cssClass cssClass
 	 */
-	public void setCssClass(String cssClass)
+	public final void setRowCSSClass(String cssClass)
 	{
-		this.cssClass = cssClass;
+		this.rowCSSClass = cssClass;
+	}
+
+	/**
+	 * Gets the rowClass.
+	 * @return rowClass
+	 */
+	public final String getContainerCSSClass()
+	{
+		return containerCSSClass;
+	}
+
+	/**
+	 * Sets the rowClass.
+	 * @param rowClass rowClass
+	 */
+	public final void setContainerCSSClass(String rowClass)
+	{
+		this.containerCSSClass = rowClass;
 	}
 }

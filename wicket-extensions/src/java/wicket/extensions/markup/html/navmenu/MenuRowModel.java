@@ -21,33 +21,56 @@ package wicket.extensions.markup.html.navmenu;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
-
 import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.model.AbstractReadOnlyDetachableModel;
+import wicket.model.IModel;
 
 /**
- * 
+ * Menu model for one row.
+ *
+ * @author Eelco Hillenius
  */
-public class MenuRowModel extends MenuModel
+public class MenuRowModel extends AbstractReadOnlyDetachableModel
 {
 	/** menu level. */
 	private final int level;
+
+	/** the tree model. */
+	private final MenuModel menuModel;
 
 	/** current row. */
 	private transient List row;
 
 	/**
 	 * Construct.
-	 * @param treeModel 
+	 * @param menuModel 
 	 * @param level 
 	 */
-	public MenuRowModel(TreeModel treeModel, int level)
+	public MenuRowModel(MenuModel menuModel, int level)
 	{
-		super(treeModel);
+		this.menuModel = menuModel;
 		this.level = level;
+	}
+
+	/**
+	 * Whether the given menu item is part of the currently selected path
+	 * @param currentPage the current page
+	 * @param menuItem the menu item
+	 * @return true if the given menu item is part of the currently selected path
+	 */
+	public boolean isPartOfCurrentSelection(Page currentPage, MenuItem menuItem)
+	{
+		return menuModel.isPartOfCurrentSelection(currentPage, menuItem);
+	}
+
+	/**
+	 * @see wicket.model.IModel#getNestedModel()
+	 */
+	public IModel getNestedModel()
+	{
+		return null;
 	}
 
 	/**
@@ -75,19 +98,18 @@ public class MenuRowModel extends MenuModel
 		{
 			row = new ArrayList();
 			Page currentPage = component.getPage();
-			MenuTreePath currentSelection = getCurrentSelection(currentPage);
+			MenuTreePath currentSelection = menuModel.getCurrentSelection(currentPage);
 			if (currentSelection.getPathCount() > level)
 			{
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode)currentSelection.getPathComponent(level);
+				MenuItem node = (MenuItem)currentSelection.getPathComponent(level);
 				int len = node.getChildCount();
 				RequestCycle requestCycle = component.getRequestCycle();
 				for (int i = 0; i < len; i++)
 				{
-					DefaultMutableTreeNode child = (DefaultMutableTreeNode)node.getChildAt(i);
-					MenuItem item = (MenuItem)child.getUserObject();
-					if (item.checkAccess(requestCycle))
+					MenuItem child = (MenuItem)node.getChildAt(i);
+					if (child.checkAccess(requestCycle))
 					{
-						row.add(child.getUserObject());
+						row.add(child);
 					}
 				}
 			}

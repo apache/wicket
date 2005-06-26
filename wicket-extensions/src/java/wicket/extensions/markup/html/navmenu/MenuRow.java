@@ -35,10 +35,10 @@ import wicket.model.Model;
  *
  * @author Eelco Hillenius
  */
-public final class MenuRow extends Panel
+public class MenuRow extends Panel
 {
 	/** this row's style. */
-	private final MenuRowStyle style;
+	protected final MenuRowStyle style;
 
 	/**
 	 * Construct.
@@ -50,16 +50,25 @@ public final class MenuRow extends Panel
 	{
 		super(id, model);
 		this.style = style;
-		WebMarkupContainer rowContainer = new WebMarkupContainer("rowContainer");
-		rowContainer.add(new AttributeModifier("class", true, new Model()
+		WebMarkupContainer div = new WebMarkupContainer("div");
+		div.add(new AttributeModifier("class", true, new Model())
 		{
 			public Object getObject(Component component)
 			{
-				return style.getCssClass();
+				return style.getContainerCSSClass();
+			}
+		});
+		WebMarkupContainer ul = new WebMarkupContainer("ul");
+		ul.add(new AttributeModifier("class", true, new Model()
+		{
+			public Object getObject(Component component)
+			{
+				return style.getRowCSSClass();
 			}
 		}));
-		rowContainer.add(new RowListView("columns", model));
-		add(rowContainer);
+		ul.add(new RowListView("columns", model));
+		div.add(ul);
+		add(div);
 
 		addToHeader(new StyleSheetReference("cssStyleResource", style.getStyleSheetResource()));
 	}
@@ -67,7 +76,7 @@ public final class MenuRow extends Panel
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
-	public boolean isVersioned()
+	public final boolean isVersioned()
 	{
 		return false;
 	}
@@ -104,7 +113,7 @@ public final class MenuRow extends Panel
 			{
 				public Object getObject(final Component component)
 				{
-					return style.getCSSClass(menuItem, MenuRow.this);
+					return style.getItemCSSClass(menuItem, MenuRow.this);
 				}
 			}));
 		}

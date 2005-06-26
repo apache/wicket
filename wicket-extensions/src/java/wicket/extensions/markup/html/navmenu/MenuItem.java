@@ -18,7 +18,9 @@
  */
 package wicket.extensions.markup.html.navmenu;
 
-import java.io.Serializable;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 import wicket.PageParameters;
 import wicket.RequestCycle;
@@ -28,7 +30,7 @@ import wicket.RequestCycle;
  *
  * @author Eelco Hillenius
  */
-public final class MenuItem implements Serializable
+public final class MenuItem extends DefaultMutableTreeNode
 {
 	/** label of the menu item. */
 	private String label;
@@ -123,6 +125,52 @@ public final class MenuItem implements Serializable
 	public void setPageParameters(PageParameters pageParameters)
 	{
 		this.pageParameters = pageParameters;
+	}
+
+	
+	/**
+	 * @see javax.swing.tree.DefaultMutableTreeNode#add(javax.swing.tree.MutableTreeNode)
+	 */
+	public void add(MutableTreeNode newChild)
+	{
+		check(newChild);
+		super.add(newChild);
+	}
+
+	/**
+	 * @see javax.swing.tree.DefaultMutableTreeNode#insert(javax.swing.tree.MutableTreeNode, int)
+	 */
+	public void insert(MutableTreeNode newChild, int childIndex)
+	{
+		check(newChild);
+		super.insert(newChild, childIndex);
+	}
+
+	/**
+	 * @see javax.swing.tree.DefaultMutableTreeNode#setParent(javax.swing.tree.MutableTreeNode)
+	 */
+	public void setParent(MutableTreeNode newParent)
+	{
+		check(newParent);
+		super.setParent(newParent);
+	}
+
+	/**
+	 * Checks whether the given node is not null and of the correct type.
+	 * @param treeNode node to check
+	 */
+	private void check(TreeNode treeNode)
+	{
+		if (treeNode == null)
+		{
+			throw new NullPointerException("treeNode may not be null");
+		}
+		if (!(treeNode instanceof MenuItem))
+		{
+			throw new IllegalArgumentException("argument must be of type " +
+					MenuItem.class.getName() + " (but is of type " +
+					treeNode.getClass().getName() + ")");
+		}
 	}
 
 	/**

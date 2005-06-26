@@ -33,7 +33,7 @@ public final class TabsStyle
 		private Level0()
 		{
 			setStyleSheetResource(new StaticResourceReference(TabsStyle.class, "tabs-folders.css"));
-			setCssClass("wicket-navmenu-tabs-level0");
+			setRowCSSClass("wicket-navmenu-tabs-level0");
 		}
 	}
 
@@ -48,7 +48,8 @@ public final class TabsStyle
 		private Level1()
 		{
 			setStyleSheetResource(new StaticResourceReference(TabsStyle.class, "tabs-folders.css"));
-			setCssClass("wicket-navmenu-tabs-level1");
+			setContainerCSSClass("wicket-navmenu-tabs-level1-border");
+			setRowCSSClass("wicket-navmenu-tabs-level1");
 		}
 	}
 

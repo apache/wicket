@@ -1,6 +1,5 @@
 package wicket.extensions.markup.html.navmenu;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 /**
@@ -19,18 +18,18 @@ public final class MenuTreePath extends TreePath
 
 	/**
 	 * Checks whether the given node is part of this path.
-	 * @param node the node
+	 * @param menuItem the node
 	 * @return true when the given node is part of the path
 	 */
-	public boolean isPartOfPath(DefaultMutableTreeNode node)
+	public boolean isPartOfPath(MenuItem menuItem)
 	{
 		int len = getPathCount();
-		Object parent = node.getParent();
+		Object parent = menuItem.getParent();
 		// first check whether the node is part of the actual path
 		for (int i = 0; i < len; i++)
 		{
 			Object pathComponent = getPathComponent(i);
-			if (pathComponent.equals(node))
+			if (pathComponent.equals(menuItem))
 			{
 				return true;
 			}

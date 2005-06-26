@@ -16,27 +16,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.examples.navmenu;
+package wicket.extensions.markup.html.navmenu.style.tabs;
 
 import wicket.extensions.markup.html.navmenu.MenuModel;
-import wicket.extensions.markup.html.navmenu.style.tabs.TabsNavigationMenu;
-import wicket.markup.html.border.Border;
+import wicket.extensions.markup.html.navmenu.MenuRow;
+import wicket.extensions.markup.html.navmenu.MenuRowModel;
+import wicket.markup.html.panel.Panel;
 
 /**
- * Border component that holds the menu.
+ * Two-level navigation menu with a tabs style.
+ *
  * @author Eelco Hillenius
  */
-public class MenuBorder extends Border
+public final class TabsNavigationMenu extends Panel
 {
+	/** the model. */
+	private final MenuModel menuModel;
+
 	/**
 	 * Construct.
-	 * @param id
-	 * @param currentPageClass 
+	 * @param id component id
+	 * @param model the model
 	 */
-	public MenuBorder(String id, Class currentPageClass)
+	public TabsNavigationMenu(String id, MenuModel model)
 	{
 		super(id);
-		MenuModel model = NavMenuApplication.getMenu();
-		add(new TabsNavigationMenu("navmenu", model));
+		this.menuModel = model;
+		MenuRow level0 = new MenuRow("level0", new MenuRowModel(model, 0), TabsStyle.LEVEL_0);
+		MenuRow level1 = new MenuRow("level1", new MenuRowModel(model, 1), TabsStyle.LEVEL_1);
+		add(level0);
+		add(level1);
 	}
 }
