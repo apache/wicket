@@ -707,7 +707,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void initialize()
 	{
 		authType = null;
-		method = "POST";
+		method = "post";
 		cookies.clear();
 		setDefaultHeaders();
 		path = null;
