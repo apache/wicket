@@ -231,7 +231,8 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * Sets link enabled state.
+	 * Sets link enabled state. Note that you have to setAutoEnable(false) 
+	 * as well in case you want to manually enable/disable the link.
 	 * 
 	 * @param enabled
 	 *            The enabled to set.
