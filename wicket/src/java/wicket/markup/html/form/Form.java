@@ -390,7 +390,7 @@ public abstract class Form extends WebMarkupContainer
 	{
 		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
-		tag.put("method", "POST");
+		tag.put("method", "post");
 		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
 	}
 
