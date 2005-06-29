@@ -352,7 +352,8 @@ public class WebRequestCycle extends RequestCycle
 	private boolean homePage()
 	{
 		final String path = getWebRequest().getPath();
-		if (Strings.isEmpty(path) || "/".equals(path))
+		final String servletPath = getWebRequest().getServletPath();
+		if (Strings.isEmpty(path) || ("/".equals(path) && "".equals(servletPath)))
 		{
 			try
 			{
