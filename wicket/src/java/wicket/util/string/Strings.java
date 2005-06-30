@@ -257,8 +257,7 @@ public final class Strings
 						if (escapeSpaces)
 						{
 							// Assumption is four space tabs (sorry, but that's
-							// just
-							// how it is!)
+							// just how it is!)
 							buffer.append("&nbsp;&nbsp;&nbsp;&nbsp;");
 						}
 						else
