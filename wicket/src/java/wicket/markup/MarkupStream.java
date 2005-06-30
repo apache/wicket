@@ -258,7 +258,7 @@ public class MarkupStream
 			}
 
 			// go on until we reach the end
-			if ( next() == null )
+			if (next() == null )
 			{
 				return;
 			}

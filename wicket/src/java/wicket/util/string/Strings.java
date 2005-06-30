@@ -289,7 +289,7 @@ public final class Strings
 					case '&':
 
 						// if this is an entity (&#), then do not convert
-						if ( (i < len - 1) && (s.charAt(i + 1) == '#') )
+						if ((i < len - 1) && (s.charAt(i + 1) == '#'))
 					    {
 							buffer.append(c);
 							
