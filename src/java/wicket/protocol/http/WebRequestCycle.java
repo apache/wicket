@@ -252,11 +252,34 @@ public class WebRequestCycle extends RequestCycle
 		final String pageClassName = request.getParameter("bookmarkablePage");
 		if (pageClassName != null)
 		{
+			Class pageClass = null;
 		    try
 		    {
-				final Class pageClass = session.getClassResolver().resolveClass(pageClassName);
+				pageClass = session.getClassResolver().resolveClass(pageClassName);
+		    }
+		    catch (RuntimeException e)
+		    {
+				try
+				{
+					getWebResponse().getHttpServletResponse().sendError(
+					        HttpServletResponse.SC_NOT_FOUND, 
+					        "Unable to load Page class: " + pageClassName);
+					
+					return false;
+				}
+				catch (IOException ex)
+				{
+					// that seems unlikely... anyway, log exception and forget about it
+					log.error("unable to send 404 for " + getRequest() + ", cause: " + ex.getMessage(), ex);
+					return false;
+				}
+		    }
+
+		    try
+		    {
 				Page newPage = session.getPageFactory().newPage(pageClass,
 						new PageParameters(getRequest().getParameterMap()));
+				
 				setResponsePage(newPage);
 				setUpdateCluster(true);
 				return true;
