@@ -180,7 +180,7 @@ public class PageableListViewNavigation extends Loop
 	 */
 	public int getMargin()
 	{
-		if(margin == -1 && viewSize !=0)
+		if (margin == -1 && viewSize !=0)
 		{			
 			return viewSize/2;
 		}
@@ -325,7 +325,7 @@ public class PageableListViewNavigation extends Loop
 		{
 			firstListItem = currentPage - margin;
 		}
-		else if((currentPage >= (firstListItem + viewSize - margin)))
+		else if ((currentPage >= (firstListItem + viewSize - margin)))
 		{
 
 			firstListItem = (currentPage + margin + 1) - viewSize;

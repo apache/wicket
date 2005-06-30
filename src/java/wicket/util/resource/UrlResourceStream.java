@@ -88,7 +88,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage() +
 						"), falling back to the inputstream for polling");
 			}
-			if(file != null && !file.exists())
+			if (file != null && !file.exists())
 			{
 				file = null;
 			}
@@ -108,7 +108,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 			// if applicable, disconnect
 			if (connection != null)
 			{
-				if(connection instanceof HttpURLConnection)
+				if (connection instanceof HttpURLConnection)
 		        { 
 		             ((HttpURLConnection)connection).disconnect();
 		        }
@@ -190,7 +190,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public Time lastModifiedTime()
 	{
-		if(file != null)
+		if (file != null)
 		{
 			lastModified = file.lastModified();
 		}
@@ -214,7 +214,7 @@ public final class UrlResourceStream extends AbstractResourceStream
 				// if applicable, disconnect
 				if (urlConnection != null)
 				{
-					if(urlConnection instanceof HttpURLConnection)
+					if (urlConnection instanceof HttpURLConnection)
 			        { 
 			             ((HttpURLConnection)urlConnection).disconnect();
 			        }

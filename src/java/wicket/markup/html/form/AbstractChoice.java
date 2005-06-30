@@ -111,7 +111,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public IChoiceList getChoices()
 	{
-		if(choices != null) choices.attach();
+		if (choices != null) choices.attach();
 		return this.choices;
 	}
 
@@ -122,7 +122,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public final void setChoices(IChoiceList choices)
 	{
-		if(this.choices != null && (this.choices != choices))
+		if (this.choices != null && (this.choices != choices))
 		{
 			if (isVersioned())
 			{
@@ -146,7 +146,7 @@ abstract class AbstractChoice extends FormComponent
 	protected void detachModel()
 	{
 		super.detachModel();
-		if(choices != null) choices.detach();
+		if (choices != null) choices.detach();
 	}
 
 	/**

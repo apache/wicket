@@ -535,7 +535,7 @@ public class XmlTag extends MarkupElement
 					buffer.append(" ");
 					buffer.append(key);
 					String value = getString(key);
-					if(value != null) // attributes without values are possible, e.g. 'disabled'
+					if (value != null) // attributes without values are possible, e.g. 'disabled'
 					{
 						buffer.append("=\"");
 						value = Strings.replaceAll(value,"\"", "\\\"");

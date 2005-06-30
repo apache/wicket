@@ -138,7 +138,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 		{
 			return binding.ognlExpression;
 		}
-		else if(component != null)
+		else if (component != null)
 		{
 			return component.getId();
 		}

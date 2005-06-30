@@ -327,7 +327,7 @@ public abstract class Application
 	 */
 	public ApplicationSettings getSettings()
 	{
-		if(settings == null)
+		if (settings == null)
 		{
 			settings = createApplicationSettings();
 		}
@@ -361,7 +361,7 @@ public abstract class Application
 	 */
 	public synchronized ICrypt newCrypt()
 	{
-		if(crypt == null)
+		if (crypt == null)
 		{
 			Class cryptClass = getSettings().getCryptClass();
 			try
@@ -383,7 +383,7 @@ public abstract class Application
 				log.warn("to provide a custom encryption/decryption implementation");
 				log.warn("The cause of the instantion failure: ");
 				log.warn("\t" + e.getMessage());
-				if(log.isDebugEnabled())
+				if (log.isDebugEnabled())
 				{
 					log.debug("exception: ", e);
 				}

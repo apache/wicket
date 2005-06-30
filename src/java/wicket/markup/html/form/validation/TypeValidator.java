@@ -103,7 +103,7 @@ public class TypeValidator extends StringValidator
 			}
 			catch (Exception e)
 			{
-				if(e instanceof ConversionException)
+				if (e instanceof ConversionException)
 				{
 					error(messageModel((ConversionException)e));
 				}

@@ -169,7 +169,7 @@ public class WebRequestCycle extends RequestCycle
 		String redirectUrl = page.urlFor(page, IRedirectListener.class);
 		// Check if use serverside response for client side redirects
 		ApplicationSettings settings = application.getSettings();
-		if(settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER && application instanceof WebApplication)
+		if (settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER && application instanceof WebApplication)
 		{
 			// create the redirect response.
 			try
@@ -184,7 +184,7 @@ public class WebRequestCycle extends RequestCycle
 				};
 				setResponse(redirectResponse);
 				// test if the invoker page was the same as the page that is going to be renderd
-				if(getInvokePage() == getResponsePage())
+				if (getInvokePage() == getResponsePage())
 				{
 					// set it to null because it is already ended in the page.doRender()
 					setInvokePage(null);
@@ -192,14 +192,14 @@ public class WebRequestCycle extends RequestCycle
 				page.doRender();
 				setResponse(currentResponse);
 				String responseRedirect = redirectResponse.getRedirectUrl();
-				if(redirectUrl != responseRedirect)
+				if (redirectUrl != responseRedirect)
 				{
 					// if the redirectResponse has another redirect url set 
 					// then the rendering of this page caused a redirect to something else.
 					// set this redirect then.
 					redirectUrl = redirectResponse.getRedirectUrl();
 				}
-				else if(redirectResponse.getContentLength() > 0)
+				else if (redirectResponse.getContentLength() > 0)
 				{
 					// if no content is created then don't set it in the redirect buffer.. (maybe access failed)
 					((WebApplication)application).addRedirect(getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
@@ -416,11 +416,11 @@ public class WebRequestCycle extends RequestCycle
 		if (component != null)
 		{
 			Method method = getRequestInterfaceMethod(interfaceName);
-			if(method != null)
+			if (method != null)
 			{
 				// Set the page for the component as the response page
 				setResponsePage(page);
-				if(!interfaceName.equals("IRedirectListener"))
+				if (!interfaceName.equals("IRedirectListener"))
 				{
 					// Clear all feedback messages if it isn't a redirect
 					page.getFeedbackMessages().clear();

@@ -449,7 +449,7 @@ public abstract class Page extends MarkupContainer
 	{
 		// check access much earlier then in onRender!
 		// if false in onRender then checkRendering below fails anyway!!
-		if(checkAccess())
+		if (checkAccess())
 		{
 			try
 			{
@@ -625,7 +625,7 @@ public abstract class Page extends MarkupContainer
 	 */
 	protected final void internalOnEndRequest()
 	{
-		if(log.isDebugEnabled())
+		if (log.isDebugEnabled())
 		{
 			log.debug("ending request for page " + this + ", request " + getRequest());
 		}

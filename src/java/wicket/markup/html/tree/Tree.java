@@ -271,7 +271,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 		 */
 		protected void onAttach()
 		{
-			if(dirty)
+			if (dirty)
 			{
 				paths.clear();
 				TreeModel model = (TreeModel)getTreeState().getModel();
@@ -494,7 +494,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	protected void internalOnBeginRequest()
 	{
 		// if we don't optimize, rebuild the paths on every request
-		if(!getOptimizeItemRemoval())
+		if (!getOptimizeItemRemoval())
 		{
 			treePathsModel.dirty = true;
 		}

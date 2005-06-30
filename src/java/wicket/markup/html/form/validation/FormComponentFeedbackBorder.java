@@ -74,7 +74,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		// get the messages for the current page
 		final FeedbackMessages feedbackMessages = getPage().getFeedbackMessages();
 
-		if(collectingComponent != null)
+		if (collectingComponent != null)
 		{
 			// use the one that was explicitly set
 			visible = feedbackMessages.hasErrorMessageFor(collectingComponent);
@@ -135,7 +135,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		 */
 		public Object component(Component component)
 		{
-			if(feedbackMessages.hasErrorMessageFor(component))
+			if (feedbackMessages.hasErrorMessageFor(component))
 			{
 				foundErrorMessage = true;
 				return IVisitor.STOP_TRAVERSAL;

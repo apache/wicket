@@ -171,7 +171,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 			{
 				// No expression will cause OGNL to throw an exception. The OGNL
 				// expression to set the current object is "#this".
-				if(nestedModel instanceof IModel)
+				if (nestedModel instanceof IModel)
 				{
 					((IModel)nestedModel).setObject(null, object);
 				}

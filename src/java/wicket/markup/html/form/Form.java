@@ -204,7 +204,7 @@ public abstract class Form extends WebMarkupContainer
 	public Form(final String id, final IFeedback feedback)
 	{
 		super(id);
-		if(feedback != null)
+		if (feedback != null)
 		{
 			feedback.setCollectingComponent(this);
 		}
@@ -223,7 +223,7 @@ public abstract class Form extends WebMarkupContainer
 	public Form(final String id, IModel model, final IFeedback feedback)
 	{
 		super(id, model);
-		if(feedback != null)
+		if (feedback != null)
 		{
 			feedback.setCollectingComponent(this);
 		}
