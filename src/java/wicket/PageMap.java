@@ -78,11 +78,41 @@ public final class PageMap implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @return Returns the name.
+	 */
+	public final String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @return True if this is the default page map
+	 */
+	public final boolean isDefault()
+	{
+		return name.equals(defaultName);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Removes this PageMap from the Session.
+	 */
+	public final void remove()
+	{
+		session.removePageMap(this);
+	}
+
+	/**
 	 * @param page
 	 *            The page to add
 	 * @return Any Page that got bumped out of the map
 	 */
-	public final Page add(final Page page)
+	final Page add(final Page page)
 	{
 		// Give page a new id
 		page.setId(this.pageId++);
@@ -99,7 +129,7 @@ public final class PageMap implements Serializable
 	 * @return True if an original destination was redirected to
 	 * @see PageMap#redirectToInterceptPage(Page)
 	 */
-	public final boolean continueToOriginalDestination()
+	final boolean continueToOriginalDestination()
 	{
 		// Get request cycle
 		final RequestCycle cycle = session.getRequestCycle();
@@ -127,7 +157,7 @@ public final class PageMap implements Serializable
 	 *            The identifier
 	 * @return Any page having the given id
 	 */
-	public final Page get(final String id)
+	final Page get(final String id)
 	{
 		final Page page = (Page)getPages().get(id);
 		if (page != null)
@@ -138,59 +168,35 @@ public final class PageMap implements Serializable
 	}
 
 	/**
-	 * @return Returns the name.
-	 */
-	public final String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * @return True if this is the default page map
-	 */
-	public final boolean isDefault()
-	{
-		return name.equals(defaultName);
-	}
-
-	/**
 	 * @param page
 	 *            The page to put into this map
 	 * @return Any page that was removed
 	 */
-	public final Page put(final Page page)
+	final Page put(final Page page)
 	{
 		MostRecentlyUsedMap pages = getPages();
 		pages.put(page.getId(), page);
 		return (Page)pages.getRemovedValue();
 	}
-
+	
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
 	 * 
 	 * @param page
 	 *            The sign in page
 	 */
-	public final void redirectToInterceptPage(final Page page)
+	final void redirectToInterceptPage(final Page page)
 	{
 		interceptContinuationURL = page.getResponse().encodeURL(page.getRequest().getURL());
 		page.redirectTo(page);
 		session.dirty();
-	}
-	
-	/**
-	 * Removes this PageMap from the Session.
-	 */
-	public final void remove()
-	{
-		session.removePageMap(this);
 	}
 
 	/**
 	 * @param page
 	 *            The page to remove
 	 */
-	public final void remove(final Page page)
+	final void remove(final Page page)
 	{
 		getPages().remove(page.getId());
 	}
@@ -198,7 +204,7 @@ public final class PageMap implements Serializable
 	/**
 	 * Removes all pages from this map
 	 */
-	public final void removeAll()
+	final void removeAll()
 	{
 		getPages().clear();
 	}
