@@ -127,7 +127,7 @@ public final class FileResourceStream extends AbstractResourceStream
 	 */
 	public String toString()
 	{
-		if(file != null)
+		if (file != null)
 		{
 			return file.toString();
 		}
@@ -139,7 +139,7 @@ public final class FileResourceStream extends AbstractResourceStream
 	 */
 	public long length()
 	{
-		if(file != null)
+		if (file != null)
 		{
 			return file.length();
 		}

@@ -311,7 +311,7 @@ public abstract class MarkupContainer extends Component
 		for (final Iterator iterator = childForId.values().iterator(); iterator.hasNext();)
 		{
 			Component child = (Component)iterator.next();
-			if(!(child instanceof IFeedback)) // ignore feedback as that was done in Page
+			if (!(child instanceof IFeedback)) // ignore feedback as that was done in Page
 			{
 				// Call begin request on the child
 				(child).internalBeginRequest();
@@ -693,7 +693,7 @@ public abstract class MarkupContainer extends Component
 	{
 		final IModel previous = getModel();
 		super.setModel(model);
-		if(previous instanceof CompoundPropertyModel)
+		if (previous instanceof CompoundPropertyModel)
 		{
 			visitChildren(new IVisitor()
 			{
@@ -701,11 +701,11 @@ public abstract class MarkupContainer extends Component
 				public Object component(Component component)
 				{
 					IModel compModel = component.getModel();
-					if(compModel == previous)
+					if (compModel == previous)
 					{
 						component.setModel(null);
 					}
-					else if(compModel == model)
+					else if (compModel == model)
 					{
 						component.modelChanged();
 					}

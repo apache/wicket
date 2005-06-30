@@ -111,7 +111,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final WicketServlet getWicketServlet()
 	{
-		if(wicketServlet == null)
+		if (wicketServlet == null)
 		{
 			throw new IllegalStateException("wicketServlet is not set yet. Any code in your" +
 					" Application object that uses the wicketServlet instance should be put" +

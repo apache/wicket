@@ -157,7 +157,7 @@ public class WicketServlet extends HttpServlet
 			final Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
 			if (resource != null)
 			{
-				if(resource instanceof StaticResource)
+				if (resource instanceof StaticResource)
 				{
 					((StaticResource)resource).setApplication(webApplication);
 				}
@@ -185,13 +185,13 @@ public class WicketServlet extends HttpServlet
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
 		// try to see if there is a redirect stored 
-		if(webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
+		if (webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
 		{
 			// TODO should we test here for queryString.indexOf("IRedirectListener") ?
 			// only such urls should have a bufferedresponse. 
 			String requestUri = servletRequest.getRequestURI() + "?" + servletRequest.getQueryString();
 			BufferedResponse bufferedResponse = (BufferedResponse)webApplication.getBufferedResponse(servletRequest, requestUri);
-			if(bufferedResponse != null)
+			if (bufferedResponse != null)
 			{
 				// got a buffered response; now write it
 				PrintWriter writer = servletResponse.getWriter();

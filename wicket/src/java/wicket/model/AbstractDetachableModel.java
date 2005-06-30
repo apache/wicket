@@ -53,7 +53,7 @@ public abstract class AbstractDetachableModel implements IModel
 	{
 		if (!attached)
 		{
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("attaching " + this + " for requestCycle " + RequestCycle.get());
 			}
@@ -69,14 +69,14 @@ public abstract class AbstractDetachableModel implements IModel
 	{
 		if (attached)
 		{
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("detaching " + this + " for requestCycle " + RequestCycle.get());
 			}
 			attached = false;
 			onDetach();
 		}
-		else if(getNestedModel() != null)
+		else if (getNestedModel() != null)
 		{
 			// do detach the nested model because this one could be attached 
 			// if the model is used not through this compound model

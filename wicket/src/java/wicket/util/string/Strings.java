@@ -311,7 +311,7 @@ public final class Strings
 
 					default :
 
-						if(convertToHtmlUnicodeEscapes)
+						if (convertToHtmlUnicodeEscapes)
 						{
 			                int ci = 0xffff & c;
 			                if (ci < 160 )

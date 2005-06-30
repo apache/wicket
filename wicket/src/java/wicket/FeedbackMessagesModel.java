@@ -98,7 +98,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	 */
 	public Object onGetObject(Component component)
 	{
-		if(current != null)
+		if (current != null)
 		{
 			return current;
 		}
@@ -108,14 +108,14 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 		FeedbackMessages feedbackMessages = page.getFeedbackMessages();
 
 		// if the queue is empty, just return an empty list
-		if(feedbackMessages.isEmpty())
+		if (feedbackMessages.isEmpty())
 		{
 			current = Collections.EMPTY_LIST;
 		}
 		else
 		{
 			final Component collector;
-			if(collectingComponent != null)
+			if (collectingComponent != null)
 			{
 				// use the one that was explicitly set
 				collector = collectingComponent;
@@ -146,7 +146,7 @@ public final class FeedbackMessagesModel extends AbstractDetachableModel
 	 */
 	protected void sort(List list)
 	{
-		if(sortingComparator != null)
+		if (sortingComparator != null)
 		{
 			Collections.sort(list, sortingComparator);
 		}

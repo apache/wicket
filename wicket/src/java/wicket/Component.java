@@ -614,7 +614,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 				// we need to return the root model and not a property of the
 				// model
 				Object result = getRootModel(model);
-				if( (result instanceof IModel))
+				if ((result instanceof IModel))
 				{
 					result = ((IModel)result).getObject(null);
 				}
@@ -1111,13 +1111,12 @@ public abstract class Component implements Serializable, IEventRequestListener
 			addStateChange(new ComponentModelChange(this.model));
 			this.model = (IModel)model;
 		}
+		
 		// If a compound model is explicitly set on this component
 		if (model instanceof CompoundPropertyModel)
 		{
 			// we need to remember this for getModelObject()
 			setFlag(FLAG_HAS_ROOT_MODEL, true);
-			
-			
 		}
 		
 		modelChanged();
@@ -1306,14 +1305,14 @@ public abstract class Component implements Serializable, IEventRequestListener
 			throw new NullPointerException("argument may not be null");
 		}
 
-		// lazy create
+		// Lazy create
 		if (eventRequestHandlers == null)
 		{
 			eventRequestHandlers = new HashMap();
 		}
 		eventRequestHandlers.put(eventRequestHandler.getId(), eventRequestHandler);
 
-		// give handler the opportunity to bind this component
+		// Give handler the opportunity to bind this component
 		eventRequestHandler.bind(this);
 	}
 
@@ -1995,7 +1994,10 @@ public abstract class Component implements Serializable, IEventRequestListener
 		while (nestedModelObject instanceof IModel)
 		{
 			final Object next = ((IModel)nestedModelObject).getNestedModel();
-			if(next == null) break;
+			if (next == null)
+			{
+				break;
+			}
 			if (nestedModelObject == next)
 			{
 				throw new WicketRuntimeException("Model for " + nestedModelObject

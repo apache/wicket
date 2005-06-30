@@ -55,7 +55,7 @@ class ModelChange extends Change
 			boolean cloneModel = true;
 
 			// If the component is a form component
-			if(model instanceof CompoundPropertyModel)
+			if (model instanceof CompoundPropertyModel)
 			{
 				if (component instanceof FormComponent)
 				{
