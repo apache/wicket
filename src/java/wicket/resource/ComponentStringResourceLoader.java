@@ -63,7 +63,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  * need only provide override values against their page and thus do not need to
  * change Y.
  * <p>
- * This implemnentation is fully aware of both locale and style values when
+ * This implementation is fully aware of both locale and style values when
  * trying to obtain the appropriate resources.
  * 
  * @author Chris Turner
