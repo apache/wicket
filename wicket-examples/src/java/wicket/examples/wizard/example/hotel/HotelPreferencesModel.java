@@ -18,14 +18,14 @@
  */
 package wicket.examples.wizard.example.hotel;
 
-import wicket.model.Model;
+import wicket.extensions.markup.html.beanedit.BeanModel;
 
 /**
  * Type safe model for hotel preferences.
  *
  * @author Eelco Hillenius
  */
-public final class HotelPreferencesModel extends Model
+public final class HotelPreferencesModel extends BeanModel
 {
 	/**
 	 * Construct.

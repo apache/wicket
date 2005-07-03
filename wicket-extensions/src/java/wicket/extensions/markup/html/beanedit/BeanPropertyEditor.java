@@ -16,33 +16,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
-import wicket.Component;
-import wicket.model.IModel;
+import java.beans.PropertyDescriptor;
+
+import wicket.markup.html.panel.Panel;
 
 /**
- * Model that does not allow writing.
+ * Base class for custom bean property editors.
  *
  * @author Eelco Hillenius
  */
-public abstract class ReadOnlyModel extends BeanModel
+public abstract class BeanPropertyEditor extends Panel
 {
-
 	/**
 	 * Construct.
-	 * @param nestedModel model that provides the java bean
+	 * @param id component id
+	 * @param beanModel model with the target bean
+	 * @param descriptor property descriptor
+	 * @param editMode edit mode indicator
 	 */
-	public ReadOnlyModel(IModel nestedModel)
+	public BeanPropertyEditor(String id, BeanModel beanModel,
+			PropertyDescriptor descriptor, EditMode editMode)
 	{
-		super(nestedModel);
+		super(id);
 	}
 
 	/**
-	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+	 * Construct.
+	 * @param id component id
+	 * @param beanModel model with the target bean
+	 * @param field the field
 	 */
-	public void setObject(Component component, Object object)
+	public BeanPropertyEditor(String id, BeanModel beanModel, BeanField field)
 	{
-		throw new UnsupportedOperationException("this (" + this + ") model is read-only");
+		super(id);
 	}
 }

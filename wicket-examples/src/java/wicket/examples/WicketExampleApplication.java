@@ -30,7 +30,7 @@ import wicket.protocol.http.WebApplication;
 import wicket.util.crypt.NoCrypt;
 
 /**
- * WicketServlet class for hello world example.
+ * Wicket Application class for hello world example.
  * @author Jonathan Locke
  */
 public abstract class WicketExampleApplication extends WebApplication

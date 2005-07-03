@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import wicket.markup.html.form.model.IChoiceList;
  *
  * @author Eelco Hillenius
  */
-public class ChoiceField extends AbstractField
+public class ChoiceField extends AbstractBeanField
 {
 	/**
 	 * The choices.

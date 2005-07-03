@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,10 +31,10 @@ import wicket.model.IModel;
  *
  * @author Eelco Hillenius
  */
-public class Fields implements Serializable
+public class BeanFields implements Serializable
 {
 	/** the target model; e.g. the model that holds the bean. */
-	private final IModel targetModel;
+	private final BeanModel beanModel;
 
 	/** display name. */
 	private String displayName;
@@ -47,11 +47,11 @@ public class Fields implements Serializable
 
 	/**
 	 * Construct.
-	 * @param targetModel the target model; e.g. the model that holds the bean
+	 * @param beanModel the target model; e.g. the model that holds the bean
 	 */
-	public Fields(IModel targetModel)
+	public BeanFields(BeanModel beanModel)
 	{
-		this.targetModel = targetModel;
+		this.beanModel = beanModel;
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class Fields implements Serializable
 	 * @param field the field to add
 	 * @return This
 	 */
-	public final Fields add(Field field)
+	public final BeanFields add(BeanField field)
 	{
 		fields.add(field);
 		fieldOnName.put(field.getName(), field);
@@ -70,7 +70,7 @@ public class Fields implements Serializable
 	 * Removes a field.
 	 * @param field the field to remove
 	 */
-	public final void remove(Field field)
+	public final void remove(BeanField field)
 	{
 		fields.remove(field);
 		fieldOnName.remove(field.getName());
@@ -82,7 +82,7 @@ public class Fields implements Serializable
 	 */
 	public final void remove(String name)
 	{
-		Field field = get(name);
+		BeanField field = get(name);
 		remove(field);
 	}
 
@@ -91,9 +91,9 @@ public class Fields implements Serializable
 	 * @param name name of the field
 	 * @return the field or null if not found
 	 */
-	public final Field get(String name)
+	public final BeanField get(String name)
 	{
-		return (Field)fieldOnName.get(name);
+		return (BeanField)fieldOnName.get(name);
 	}
 
 	/**
@@ -109,9 +109,9 @@ public class Fields implements Serializable
 	 * Gets the targetModel, e.g. the model that references the bean.
 	 * @return targetModel
 	 */
-	public final IModel getTargetModel()
+	public final IModel getBeanModel()
 	{
-		return targetModel;
+		return beanModel;
 	}
 
 	/**

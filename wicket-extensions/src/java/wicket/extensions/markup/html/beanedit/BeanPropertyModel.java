@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -31,19 +31,22 @@ import wicket.model.IModel;
  *
  * @author Eelco Hillenius
  */
-public class BeanPropertyModel extends BeanModel
+public class BeanPropertyModel implements IModel
 {
+	/** bean model. */
+	private final BeanModel beanModel;
+
 	/** property descriptor. */
 	private final PropertyDescriptor descriptor;
 
 	/**
 	 * Construct.
-	 * @param nestedModel
+	 * @param beanModel
 	 * @param descriptor
 	 */
-	public BeanPropertyModel(IModel nestedModel, PropertyDescriptor descriptor)
+	public BeanPropertyModel(BeanModel beanModel, PropertyDescriptor descriptor)
 	{
-		super(nestedModel);
+		this.beanModel = beanModel;
 		this.descriptor = descriptor;
 	}
 
@@ -55,7 +58,7 @@ public class BeanPropertyModel extends BeanModel
 		Method method = descriptor.getReadMethod();
 		if (method != null)
 		{
-			Object bean = getBean(component);
+			Object bean = beanModel.getBean();
 			try
 			{
 				Object value = method.invoke(bean, null);
@@ -81,7 +84,7 @@ public class BeanPropertyModel extends BeanModel
 		Method method = descriptor.getWriteMethod();
 		if (method != null)
 		{
-			Object bean = getBean(component);
+			Object bean = beanModel.getBean();
 			try
 			{
 				method.invoke(bean, new Object[]{object});
@@ -95,5 +98,20 @@ public class BeanPropertyModel extends BeanModel
 				throw new WicketRuntimeException(e);
 			}
 		}
+	}
+
+	/**
+	 * @see wicket.model.IModel#getNestedModel()
+	 */
+	public IModel getNestedModel()
+	{
+		return null;
+	}
+
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
 	}
 }

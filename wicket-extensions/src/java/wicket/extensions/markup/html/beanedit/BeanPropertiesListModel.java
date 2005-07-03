@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
@@ -25,22 +25,25 @@ import java.util.Collections;
 import java.util.List;
 
 import wicket.Component;
-import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * Models that extracts the property descriptors of a JavaBean as a list.
  *
  * @author Eelco Hillenius
  */
-public final class BeanPropertiesListModel extends ReadOnlyModel
+public final class BeanPropertiesListModel extends Model
 {
+	/** the bean model. */
+	private final BeanModel beanModel;
+
 	/**
 	 * Construct.
-	 * @param nestedModel model that provides the java bean
+	 * @param beanModel model that provides the java bean
 	 */
-	public BeanPropertiesListModel(IModel nestedModel)
+	public BeanPropertiesListModel(BeanModel beanModel)
 	{
-		super(nestedModel);
+		this.beanModel = beanModel;
 	}
 
 	/**
@@ -48,7 +51,7 @@ public final class BeanPropertiesListModel extends ReadOnlyModel
 	 */
 	public Object getObject(Component component)
 	{
-		BeanInfo beanInfo = getBeanInfo(component);
+		BeanInfo beanInfo = beanModel.getBeanInfo(component);
 		if(beanInfo != null)
 		{
 			PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
@@ -67,6 +70,16 @@ public final class BeanPropertiesListModel extends ReadOnlyModel
 			}
 		}
 		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * As this is a read-only model, this method allways
+	 * throws an {@link UnsupportedOperationException}.
+	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+	 */
+	public void setObject(Component component, Object object)
+	{
+		throw new UnsupportedOperationException("this model is read only");
 	}
 
 	/**

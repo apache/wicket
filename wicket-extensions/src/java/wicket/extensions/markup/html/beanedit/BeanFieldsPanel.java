@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -40,29 +40,20 @@ import wicket.model.PropertyModel;
  *
  * @author Eelco Hillenius
  */
-public class FieldsPanel extends BeanPanel
+public class BeanFieldsPanel extends Panel
 {
 	/** fields to be edited/ displayed. */
-	private Fields fields;
-
-	/**
-	 * Construct.
-	 * @param id component id
-	 */
-	public FieldsPanel(String id)
-	{
-		super(id);
-	}
+	private BeanFields fields;
 
 	/**
 	 * Construct.
 	 * @param id component id
 	 * @param fields fields to be edited/ displayed
 	 */
-	public FieldsPanel(String id, Fields fields)
+	public BeanFieldsPanel(String id, BeanFields fields)
 	{
 		super(id);
-		setModel(fields.getTargetModel());
+		setModel(fields.getBeanModel());
 		this.fields = fields;
 		add(new Label("displayName", fields.getDisplayName()));
 		add(new PropertyList("propertiesList", fields.list()));
@@ -72,7 +63,7 @@ public class FieldsPanel extends BeanPanel
 	 * Gets the fields to be edited/ displayed.
 	 * @return fields fields to be edited/ displayed
 	 */
-	public final Fields getFields()
+	public final BeanFields getFields()
 	{
 		return fields;
 	}
@@ -98,7 +89,7 @@ public class FieldsPanel extends BeanPanel
 		 */
 		protected void populateItem(ListItem item)
 		{
-			AbstractField field = (AbstractField)item.getModelObject();
+			AbstractBeanField field = (AbstractBeanField)item.getModelObject();
 			item.add(new Label("displayName", field.getDisplayName()));
 			Panel propertyEditor = getPropertyEditor("editor", field);
 			item.add(propertyEditor);
@@ -111,9 +102,9 @@ public class FieldsPanel extends BeanPanel
 	 * @param field the field
 	 * @return the editor
 	 */
-	protected Panel getPropertyEditor(String panelId, AbstractField field)
+	protected Panel getPropertyEditor(String panelId, AbstractBeanField field)
 	{
-		PropertyEditor editor = findCustomEditor(panelId, field);
+		BeanPropertyEditor editor = findCustomEditor(panelId, field);
 
 		if (editor == null)
 		{
@@ -129,21 +120,21 @@ public class FieldsPanel extends BeanPanel
 	 * @param field the field
 	 * @return a property editor
 	 */
-	protected final PropertyEditor getDefaultEditor(String panelId, AbstractField field)
+	protected final BeanPropertyEditor getDefaultEditor(String panelId, AbstractBeanField field)
 	{
-		PropertyEditor editor;
+		BeanPropertyEditor editor;
 
-		if (field instanceof Field)
+		if (field instanceof BeanField)
 		{
-			Field singleField = (Field)field;
+			BeanField singleField = (BeanField)field;
 			Class type = singleField.getType();
 			if (Boolean.class.isAssignableFrom(type) || Boolean.TYPE == type)
 			{
-				editor = new PropertyCheckBox(panelId, getModel(), singleField);
+				editor = new PropertyCheckBox(panelId, (BeanModel)getModel(), singleField);
 			}
 			else
 			{
-				editor = new PropertyInput(panelId, getModel(), singleField);
+				editor = new PropertyInput(panelId, (BeanModel)getModel(), singleField);
 			}
 		}
 //		else if (field instanceof ChoiceField)
@@ -165,10 +156,10 @@ public class FieldsPanel extends BeanPanel
 	 * @param field the field
 	 * @return PropertyEditor if found or null
 	 */
-	protected final PropertyEditor findCustomEditor(String panelId, final AbstractField field)
+	protected final BeanPropertyEditor findCustomEditor(String panelId, final AbstractBeanField field)
 	{
 		Class type = field.getClass();
-		if(type == Field.class)
+		if(type == BeanField.class)
 		{
 			return null; // no override
 		}
@@ -187,13 +178,13 @@ public class FieldsPanel extends BeanPanel
 			{
 				// get the constructor
 				Constructor constructor = editorClass.getConstructor(
-						new Class[]{String.class, IModel.class, Field.class});
+						new Class[]{String.class, IModel.class, BeanField.class});
 
 				// construct arguments
-				Object[] args = new Object[]{panelId, FieldsPanel.this.getModel(), field};
+				Object[] args = new Object[]{panelId, BeanFieldsPanel.this.getModel(), field};
 
 				// create the editor
-				PropertyEditor editor = (PropertyEditor)constructor.newInstance(args);
+				BeanPropertyEditor editor = (BeanPropertyEditor)constructor.newInstance(args);
 
 				return editor;
 			}
@@ -229,7 +220,7 @@ public class FieldsPanel extends BeanPanel
 	/**
 	 * Panel for an input field.
 	 */
-	private final class PropertyInput extends PropertyEditor
+	private final class PropertyInput extends BeanPropertyEditor
 	{
 		/**
 		 * Construct.
@@ -237,7 +228,7 @@ public class FieldsPanel extends BeanPanel
 		 * @param beanModel model with the target bean
 		 * @param field the field
 		 */
-		public PropertyInput(String id, final IModel beanModel, final Field field)
+		public PropertyInput(String id, final BeanModel beanModel, final BeanField field)
 		{
 			super(id, beanModel, field);
 			Class type = field.getType();
@@ -253,7 +244,7 @@ public class FieldsPanel extends BeanPanel
 	/**
 	 * Panel for a check box.
 	 */
-	public final class PropertyCheckBox extends PropertyEditor
+	public final class PropertyCheckBox extends BeanPropertyEditor
 	{
 		/**
 		 * Construct.
@@ -261,7 +252,7 @@ public class FieldsPanel extends BeanPanel
 		 * @param beanModel model with the target bean
 		 * @param field field
 		 */
-		public PropertyCheckBox(String id, IModel beanModel, Field field)
+		public PropertyCheckBox(String id, BeanModel beanModel, BeanField field)
 		{
 			super(id, beanModel, field);
 			CheckBox valueTextField = new CheckBox("value",

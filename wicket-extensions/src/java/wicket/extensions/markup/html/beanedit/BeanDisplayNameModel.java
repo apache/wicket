@@ -16,28 +16,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.beans.BeanDescriptor;
 import java.beans.BeanInfo;
 
 import wicket.Component;
-import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * Model for displaying the name of a JavaBean.
  *
  * @author Eelco Hillenius
  */
-public final class BeanDisplayNameModel extends ReadOnlyModel
+public final class BeanDisplayNameModel extends Model
 {
+	/** the bean model. */
+	private final BeanModel beanModel;
+
 	/**
 	 * Construct.
-	 * @param nestedModel model that provides the java bean
+	 * @param beanModel model that provides the java bean
 	 */
-	public BeanDisplayNameModel(IModel nestedModel)
+	public BeanDisplayNameModel(BeanModel beanModel)
 	{
-		super(nestedModel);
+		this.beanModel = beanModel;
 	}
 
 	/**
@@ -45,22 +48,35 @@ public final class BeanDisplayNameModel extends ReadOnlyModel
 	 */
 	public Object getObject(Component component)
 	{
-		BeanInfo beanInfo = getBeanInfo(component);
-		if(beanInfo != null)
+		BeanInfo beanInfo = beanModel.getBeanInfo(component);
+
+		if (beanInfo != null)
 		{
 			BeanDescriptor beanDescriptor = beanInfo.getBeanDescriptor();
 			String displayName;
-			if(beanDescriptor != null)
+
+			if (beanDescriptor != null)
 			{
 				displayName = beanDescriptor.getDisplayName();
 			}
 			else
 			{
-				Class clazz = getBeanClass(component);
+				Class clazz = beanModel.getBean().getClass();
 				displayName = (clazz != null) ? clazz.getName() : null;
 			}
 			return displayName;
 		}
+
 		return null;
+	}
+
+	/**
+	 * As this is a read-only model, this method allways
+	 * throws an {@link UnsupportedOperationException}.
+	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+	 */
+	public void setObject(Component component, Object object)
+	{
+		throw new UnsupportedOperationException("this model is read only");
 	}
 }

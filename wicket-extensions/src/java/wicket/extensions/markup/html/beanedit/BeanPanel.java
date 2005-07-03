@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
@@ -33,7 +33,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
-import wicket.model.Model;
 
 /**
  * Panel for generic bean displaying/ editing.
@@ -48,20 +47,11 @@ public class BeanPanel extends Panel
 	/**
 	 * Construct.
 	 * @param id component id
-	 */
-	public BeanPanel(String id)
-	{
-		super(id);
-	}
-
-	/**
-	 * Construct.
-	 * @param id component id
 	 * @param bean JavaBean to be edited or displayed
 	 */
 	public BeanPanel(String id, Serializable bean)
 	{
-		this(id, new Model(bean));
+		this(id, new BeanModel(bean));
 	}
 
 	/**
@@ -69,7 +59,7 @@ public class BeanPanel extends Panel
 	 * @param id component id
 	 * @param beanModel model with the JavaBean to be edited or displayed
 	 */
-	public BeanPanel(String id, IModel beanModel)
+	public BeanPanel(String id, BeanModel beanModel)
 	{
 		super(id, beanModel);
 		add(new Label("displayName", new BeanDisplayNameModel(beanModel)));
@@ -85,7 +75,7 @@ public class BeanPanel extends Panel
 	protected Panel getPropertyEditor(String panelId, PropertyDescriptor descriptor)
 	{
 		Class type = descriptor.getPropertyType();
-		PropertyEditor editor = findCustomEditor(panelId, descriptor);
+		BeanPropertyEditor editor = findCustomEditor(panelId, descriptor);
 
 		if (editor == null)
 		{
@@ -128,20 +118,29 @@ public class BeanPanel extends Panel
 	 * @param descriptor property descriptor
 	 * @return a property editor
 	 */
-	protected final PropertyEditor getDefaultEditor(
+	protected final BeanPropertyEditor getDefaultEditor(
 			String panelId, PropertyDescriptor descriptor)
 	{
-		PropertyEditor editor;
+		BeanPropertyEditor editor;
 		Class type = descriptor.getPropertyType();
 		if(Boolean.class.isAssignableFrom(type) || Boolean.TYPE == type)
 		{
-			editor = new PropertyCheckBox(panelId, getModel(), descriptor, getEditMode());
+			editor = new PropertyCheckBox(panelId, (BeanModel)getModel(), descriptor, getEditMode());
 		}
 		else
 		{
-			editor = new PropertyInput(panelId, getModel(), descriptor, getEditMode());
+			editor = new PropertyInput(panelId, (BeanModel)getModel(), descriptor, getEditMode());
 		}
 		return editor;
+	}
+
+	/**
+	 * Gets the model casted to {@link BeanModel}.
+	 * @return the model casted to {@link BeanModel}
+	 */
+	protected final BeanModel getBeanModel()
+	{
+		return (BeanModel)getModel();
 	}
 
 	/**
@@ -151,7 +150,7 @@ public class BeanPanel extends Panel
 	 * @param descriptor property descriptor
 	 * @return PropertyEditor if found or null
 	 */
-	protected final PropertyEditor findCustomEditor(String panelId, PropertyDescriptor descriptor)
+	protected final BeanPropertyEditor findCustomEditor(String panelId, PropertyDescriptor descriptor)
 	{
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (classLoader == null)
@@ -174,7 +173,7 @@ public class BeanPanel extends Panel
 				Object[] args = new Object[]{panelId, BeanPanel.this.getModel(), descriptor, getEditMode()};
 
 				// create editor instance
-				PropertyEditor editor = (PropertyEditor)constructor.newInstance(args);
+				BeanPropertyEditor editor = (BeanPropertyEditor)constructor.newInstance(args);
 				return editor;
 			}
 			catch (SecurityException e)
@@ -237,7 +236,7 @@ public class BeanPanel extends Panel
 	/**
 	 * Panel for an input field.
 	 */
-	private static final class PropertyInput extends PropertyEditor
+	private static final class PropertyInput extends BeanPropertyEditor
 	{
 		/**
 		 * Construct.
@@ -246,7 +245,7 @@ public class BeanPanel extends Panel
 		 * @param descriptor property descriptor
 		 * @param editMode the edit mode
 		 */
-		public PropertyInput(String id, final IModel beanModel,
+		public PropertyInput(String id, final BeanModel beanModel,
 				final PropertyDescriptor descriptor, final EditMode editMode)
 		{
 			super(id, beanModel, descriptor, editMode);
@@ -263,7 +262,7 @@ public class BeanPanel extends Panel
 	/**
 	 * Panel for a check box.
 	 */
-	public static final class PropertyCheckBox extends PropertyEditor
+	public static final class PropertyCheckBox extends BeanPropertyEditor
 	{
 		/**
 		 * Construct.
@@ -272,7 +271,7 @@ public class BeanPanel extends Panel
 		 * @param descriptor property descriptor
 		 * @param editMode edit mode
 		 */
-		public PropertyCheckBox(String id, IModel beanModel,
+		public PropertyCheckBox(String id, BeanModel beanModel,
 				final PropertyDescriptor descriptor, EditMode editMode)
 		{
 			super(id, beanModel, descriptor, editMode);

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ import java.io.Serializable;
  *
  * @author Eelco Hillenius
  */
-public abstract class AbstractField implements Serializable
+public abstract class AbstractBeanField implements Serializable
 {
 	/** Logical name of the field. By default used for displaying */
 	private final String name;
@@ -37,7 +37,7 @@ public abstract class AbstractField implements Serializable
 	 * Construct; uses the name as the name to display.
 	 * @param name logical name of the field
 	 */
-	public AbstractField(String name)
+	public AbstractBeanField(String name)
 	{
 		this(name, null);
 	}
@@ -47,7 +47,7 @@ public abstract class AbstractField implements Serializable
 	 * @param name logical name of the field
 	 * @param displayName name to display
 	 */
-	public AbstractField(String name, String displayName)
+	public AbstractBeanField(String name, String displayName)
 	{
 		this.name = name;
 		this.displayName = displayName;
@@ -76,7 +76,7 @@ public abstract class AbstractField implements Serializable
 	 * @param displayName name for displaying
 	 * @return This
 	 */
-	public AbstractField setDisplayName(String displayName)
+	public AbstractBeanField setDisplayName(String displayName)
 	{
 		this.displayName = displayName;
 		return this;

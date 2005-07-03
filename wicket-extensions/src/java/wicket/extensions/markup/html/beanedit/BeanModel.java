@@ -16,11 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
+import java.io.Serializable;
 
 import wicket.Component;
 import wicket.WicketRuntimeException;
@@ -31,18 +32,23 @@ import wicket.model.IModel;
  *
  * @author Eelco Hillenius
  */
-public abstract class BeanModel implements IModel
+public class BeanModel implements IModel
 {
-	/** the nested model that provides the java bean. */
-	private final IModel nestedModel;
+	/** the java bean to edit. */
+	private final Serializable bean;
 
 	/**
 	 * Construct.
-	 * @param nestedModel model that provides the java bean
+	 * @param bean the javabean to edit
 	 */
-	public BeanModel(IModel nestedModel)
+	public BeanModel(Serializable bean)
 	{
-		this.nestedModel = nestedModel;
+		if (bean == null)
+		{
+			throw new IllegalArgumentException("bean must be not null");
+		}
+
+		this.bean = bean;
 	}
 
 	/**
@@ -52,41 +58,15 @@ public abstract class BeanModel implements IModel
 	 */
 	protected final BeanInfo getBeanInfo(Component component)
 	{
-		Object bean = getBean(component);
-		if(bean != null)
+		Class objectClass = bean.getClass();
+		try
 		{
-			Class objectClass = bean.getClass();
-			try
-			{
-				return Introspector.getBeanInfo(objectClass);
-			}
-			catch (IntrospectionException e)
-			{
-				throw new WicketRuntimeException(e);
-			}	
+			return Introspector.getBeanInfo(objectClass);
 		}
-		return null;
-	}
-
-	/**
-	 * Gets the java bean proper.
-	 * @param component
-	 * @return the java bean proper, possibly null
-	 */
-	protected final Object getBean(Component component)
-	{
-		return ((IModel)getNestedModel()).getObject(component);
-	}
-
-	/**
-	 * Gets the class java bean proper.
-	 * @param component
-	 * @return the class of the java bean proper, or null if the model object is null
-	 */
-	protected final Class getBeanClass(Component component)
-	{
-		Object bean = getBean(component);
-		return (bean != null) ? bean.getClass() : null;
+		catch (IntrospectionException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	/**
@@ -94,7 +74,7 @@ public abstract class BeanModel implements IModel
 	 */
 	public IModel getNestedModel()
 	{
-		return nestedModel;
+		return null;
 	}
 
 	/**
@@ -102,5 +82,31 @@ public abstract class BeanModel implements IModel
 	 */
 	public void detach()
 	{
+	}
+
+	/**
+	 * @see wicket.model.IModel#getObject(wicket.Component)
+	 */
+	public Object getObject(Component component)
+	{
+		return bean;
+	}
+
+	/**
+	 * Throws an {@link UnsupportedOperationException} as changing the bean is not permitted.
+	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+	 */
+	public void setObject(Component component, Object object)
+	{
+		throw new UnsupportedOperationException("BeanModel is read-only");
+	}
+
+	/**
+	 * Convenience method.
+	 * @return the bean
+	 */
+	public Serializable getBean()
+	{
+		return bean;
 	}
 }

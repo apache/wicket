@@ -16,23 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.encodings;
+package wicket.examples.beanedit;
 
-import wicket.examples.WicketExampleApplication;
+import wicket.examples.WicketExamplePage;
 
 /**
- * Wicket Application class for hello world example.
+ * Everybody's favorite example!
+ * 
  * @author Jonathan Locke
  */
-public class EncodingsApplication extends WicketExampleApplication
+public class BeanEditPage extends WicketExamplePage
 {
     /**
-     * Constructor.
+     * Constructor
      */
-    public EncodingsApplication()
+    public BeanEditPage()
     {
-        getPages().setHomePage(Home.class);
+
     }
 }
-
-

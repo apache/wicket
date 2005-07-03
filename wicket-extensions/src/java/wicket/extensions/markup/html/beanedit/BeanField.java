@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.wizard.framework.beanedit;
+package wicket.extensions.markup.html.beanedit;
 
 
 /**
@@ -24,7 +24,7 @@ package wicket.examples.wizard.framework.beanedit;
  *
  * @author Eelco Hillenius
  */
-public class Field extends AbstractField
+public class BeanField extends AbstractBeanField
 {
 	/** type of the field. */
 	private final Class type;
@@ -38,7 +38,7 @@ public class Field extends AbstractField
 	 * @param displayName name to display
 	 * @param type the type of the field
 	 */
-	public Field(String name, String displayName, Class type)
+	public BeanField(String name, String displayName, Class type)
 	{
 		super(name, displayName);
 		this.type = type;
@@ -67,7 +67,7 @@ public class Field extends AbstractField
 	 * @param editMode the edit mode
 	 * @return This
 	 */
-	public Field setEditMode(EditMode editMode)
+	public BeanField setEditMode(EditMode editMode)
 	{
 		this.editMode = editMode;
 		return this;
