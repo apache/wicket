@@ -384,7 +384,7 @@ public abstract class RequestCycle
 			catch (RuntimeException e)
 			{
 				// Handle any runtime exception
-				onRuntimeException(null, e);
+				internalOnRuntimeException(null, e);
 			}
 			finally
 			{
@@ -576,7 +576,8 @@ public abstract class RequestCycle
 
 
 	/**
-	 * Sets up to handle a runtime exception thrown during rendering
+	 * Sets up to handle a runtime exception thrown during rendering.
+	 * FRAMEWORK CLIENTS SHOULD NOT CALL THIS METHOD.
 	 * 
 	 * @param page
 	 *            Any page context where the exception was thrown
@@ -585,9 +586,12 @@ public abstract class RequestCycle
 	 * @throws ServletException
 	 *             The exception rethrown for the servlet container
 	 */
-	protected final void onRuntimeException(final Page page, final RuntimeException e)
+	protected final void internalOnRuntimeException(final Page page, final RuntimeException e)
 			throws ServletException
 	{
+		// let client handle any specifics
+		onRuntimeException(page, e);
+
 		log.error("Unexpected runtime exception [page = " + page + "]", e);
 
 		e.printStackTrace();
@@ -616,6 +620,16 @@ public abstract class RequestCycle
 								+ page + ":\n" + Strings.toString(e), e2);
 			}
 		}
+	}
+
+	/**
+	 * Template method that is called when a runtime exception is thrown, just before the actual
+	 * handling of the runtime exception.
+	 * @param page Any page context where the exception was thrown
+	 * @param e The exception
+	 */
+	protected void onRuntimeException(final Page page, final RuntimeException e)
+	{
 	}
 
 	/**
@@ -684,7 +698,7 @@ public abstract class RequestCycle
 			catch (RuntimeException e)
 			{
 				// Handle any runtime exception
-				onRuntimeException(page, e);
+				internalOnRuntimeException(page, e);
 			}
 		}
 	}

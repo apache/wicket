@@ -207,7 +207,7 @@ public class WebRequestCycle extends RequestCycle
 			}
 			catch (RuntimeException ex)
 			{
-				onRuntimeException(page, ex);
+				internalOnRuntimeException(page, ex);
 			}
 		}
 		else
