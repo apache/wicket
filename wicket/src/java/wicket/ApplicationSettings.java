@@ -595,7 +595,8 @@ public class ApplicationSettings
 
 	/**
 	 * @since 1.1
-	 * @return Returns default encoding of markup files 
+	 * @return Returns default encoding of markup files. If null, the 
+	 * 		operating system provided encoding will be used. 
 	 */
 	public final String getDefaultMarkupEncoding()
 	{
@@ -880,7 +881,8 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Set default encoding for markup files
+	 * Set default encoding for markup files. If null, the encoding
+	 * provided by the operating system will be used.
 	 * 
 	 * @since 1.1
 	 * @param encoding
