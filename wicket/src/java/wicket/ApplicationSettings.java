@@ -271,6 +271,9 @@ public class ApplicationSettings
 	/** The default locale to use */
 	private Locale defaultLocale = Locale.getDefault();
 
+	/** Default markup encoding. If null, the OS default will be used */
+	private String defaultMarkupEncoding;
+	
 	/** Default factory to create new Page objects */
 	private IPageFactory defaultPageFactory = new DefaultPageFactory();
 
@@ -569,7 +572,7 @@ public class ApplicationSettings
 	{
 		return defaultLocale;
 	}
-
+	
 	/**
 	 * Gets the default factory to be used when creating pages
 	 * 
@@ -588,6 +591,15 @@ public class ApplicationSettings
 	public final String getEncryptionKey()
 	{
 		return encryptionKey;
+	}
+
+	/**
+	 * @since 1.1
+	 * @return Returns default encoding of markup files 
+	 */
+	public final String getDefaultMarkupEncoding()
+	{
+	    return defaultMarkupEncoding;
 	}
 
 	/**
@@ -867,6 +879,17 @@ public class ApplicationSettings
 		return this;
 	}
 
+	/**
+	 * Set default encoding for markup files
+	 * 
+	 * @since 1.1
+	 * @param encoding
+	 */
+	public final void setDefaultMarkupEncoding(final String encoding)
+	{
+	    this.defaultMarkupEncoding = encoding;
+	}
+	
 	/**
 	 * Sets the maximum number of pages held in a session. If a page is added to
 	 * a user's session when the session is full, the oldest page in the session

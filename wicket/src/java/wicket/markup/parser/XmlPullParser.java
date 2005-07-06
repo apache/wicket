@@ -83,11 +83,15 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	
 	/**
 	 * Construct.
+	 * 
+	 * @param defaultEncoding
 	 */
-	public XmlPullParser()
+	public XmlPullParser(final String defaultEncoding)
 	{
 	    // The xml parser does not have a parent filter
 	    super(null);
+	    
+	    this.encoding = defaultEncoding;
 	}
 
 	/**

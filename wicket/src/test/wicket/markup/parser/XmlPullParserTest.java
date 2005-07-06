@@ -38,7 +38,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testBasics() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser();
+        final XmlPullParser parser = new XmlPullParser(null);
         parser.parse("This is a text");
         MarkupElement elem = parser.nextTag();
         assertNull(elem);
@@ -129,7 +129,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testEncoding() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser();
+        final XmlPullParser parser = new XmlPullParser(null);
         parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"));
         assertEquals("iso-8859-1", parser.getEncoding());
         XmlTag tag = (XmlTag) parser.nextTag();
@@ -197,7 +197,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testAttributes() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser();
+        final XmlPullParser parser = new XmlPullParser(null);
         parser.parse("<tag>");
         XmlTag tag = (XmlTag) parser.nextTag();
         assertEquals(0, tag.getAttributes().size());
@@ -262,7 +262,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testComments() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser();
+        final XmlPullParser parser = new XmlPullParser(null);
         parser.parse("<!-- test --><tag>");
         XmlTag tag = (XmlTag) parser.nextTag();
 //      assertTrue(tag.isOpen("tag"));
@@ -295,7 +295,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testCompressWhitespace() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser();
+        final XmlPullParser parser = new XmlPullParser(null);
         parser.parse("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
     }
     
@@ -305,7 +305,7 @@ public class XmlPullParserTest extends TestCase
      */
     public final void testScript() throws Exception
     {
-        final XmlPullParser parser = new XmlPullParser();
+        final XmlPullParser parser = new XmlPullParser(null);
         parser.parse("<html><script language=\"JavaScript\">... <x a> ...</script></html>");
         XmlTag tag = (XmlTag) parser.nextTag();
         assertTrue(tag.isOpen());
