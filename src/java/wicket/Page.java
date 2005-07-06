@@ -605,7 +605,10 @@ public abstract class Page extends MarkupContainer
 			response.setContentType("text/" + getMarkupType() + "; charset="
 					+ markupStream.getEncoding());
 
-			response.write(markupStream.getXmlDeclaration());
+			if (getApplicationSettings().getStripXmlDeclarationFromOutput() == false)
+			{
+			    response.write(markupStream.getXmlDeclaration());
+			}
 		}
 		else
 		{

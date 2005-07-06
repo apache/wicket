@@ -308,6 +308,9 @@ public class ApplicationSettings
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
+	
+	/** In order to remove <?xml?> from output as required by IE quirks mode */
+	private boolean stripXmlDeclarationFromOutput;
 
 	/**
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
@@ -679,6 +682,16 @@ public class ApplicationSettings
 	}
 
 	/**
+	 * 
+	 * @since 1.1
+	 * @return if true, xml declaration will be removed.
+	 */
+	public final boolean getStripXmlDeclarationFromOutput()
+	{
+	    return this.stripXmlDeclarationFromOutput;
+	}
+	
+	/**
 	 * @return Whether to throw an exception when a missing resource is
 	 *         requested
 	 */
@@ -1037,6 +1050,16 @@ public class ApplicationSettings
 	{
 		this.stripWicketTags = stripWicketTags;
 		return this;
+	}
+	
+	/**
+	 * 
+	 * @since 1.1
+	 * @param strip if true, xml declaration will be stripped from output
+	 */
+	public final void setStripXmlDeclarationFromOutput(final boolean strip)
+	{
+	    this.stripXmlDeclarationFromOutput = strip;
 	}
 
 	/**
