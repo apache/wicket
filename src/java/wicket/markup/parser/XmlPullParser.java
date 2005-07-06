@@ -414,7 +414,11 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			// encoding=".."?>. If yes, set this.encoding.
 			// If no, return the whole line. determineEncoding will read-ahead
 			// at max. the very first line of the markup.
-			this.encoding = determineEncoding(bin, readAheadSize);
+			final String encoding = determineEncoding(bin, readAheadSize);
+			if (encoding != null)
+			{
+			    this.encoding = encoding;
+			}
 
 			// Depending on the encoding determined from the markup-file, read
 			// the rest either with specific encoding or JVM default
