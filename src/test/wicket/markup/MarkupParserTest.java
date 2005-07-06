@@ -52,7 +52,7 @@ public final class MarkupParserTest extends TestCase
      */
     public final void testTagParsing() throws Exception
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "componentName");
         final Markup markup = parser.parse(
                 "This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
                 + "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
@@ -115,7 +115,7 @@ public final class MarkupParserTest extends TestCase
      */
     public final void test() throws Exception
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "componentName");
         final Markup tokens = parser
                 .parse("This is a test <a componentName:id=9> <b>bold</b> <b componentName:id=10/></a> of the emergency broadcasting system");
 
@@ -155,7 +155,7 @@ public final class MarkupParserTest extends TestCase
            "<head><title>Some Page</title></head>" +
            "<body><h1>XHTML Test</h1></body>" +
            "</html>";
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "componentName");
         final Markup tokens = parser.parse(docText);
 
         log.info("tok(0)=" + tokens.get(0));
@@ -175,7 +175,7 @@ public final class MarkupParserTest extends TestCase
     public final void testFileDocument() throws ParseException,
             ResourceStreamNotFoundException, IOException
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "wcn");
         
         ResourceStreamLocator locator = new ResourceStreamLocator(new ClassLoaderResourceStreamLocator());
         
@@ -235,7 +235,7 @@ public final class MarkupParserTest extends TestCase
     public final void testWicketTag() throws ParseException,
     	ResourceStreamNotFoundException, IOException
    	{
-	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wicket");
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "wicket");
 	    
 	    parser.parse("<span wicket:id=\"test\"/>");
 
@@ -322,7 +322,7 @@ public final class MarkupParserTest extends TestCase
     public final void testDefaultWicketTag() throws ParseException,
     	ResourceStreamNotFoundException, IOException
    	{
-	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "wcn");
 	    
 	    Markup markup = parser.parse("<span wcn:id=\"test\"/>");
 	    assertEquals(1, markup.size());
@@ -351,7 +351,7 @@ public final class MarkupParserTest extends TestCase
     public final void testScript() throws ParseException,
     	ResourceStreamNotFoundException, IOException
    	{
-	    final MarkupParser parser = new MarkupParser(new XmlPullParser());
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser(null));
 	    
 	    Markup markup = parser.parse("<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
 	    assertEquals(3, markup.size());

@@ -33,7 +33,6 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
-import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -81,7 +80,7 @@ public class MarkupParser
     private boolean automaticLinking = false;
 
     /** The XML parser to use */
-    private IXmlPullParser xmlParser = new XmlPullParser();
+    private final IXmlPullParser xmlParser;
 
     /** The markup handler chain: each filter has a specific task */
     private IMarkupFilter markupFilterChain;
