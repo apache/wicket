@@ -69,6 +69,31 @@ public class PageLink extends Link
 			}
 		};
 	}
+	
+	/**
+	 * Construct a link to the Page
+	 * 
+	 * @param id  See component
+	 * @param page The page
+	 */
+	public PageLink(final String id, final Page page)
+	{
+	    super(id);
+
+		this.pageLink = new IPageLink()
+		{
+			public Page getPage()
+			{
+				// Create page using page factory
+				return page;
+			}
+
+			public Class getPageIdentity()
+			{
+				return page.getClass();
+			}
+		};
+	}
 
 	/**
 	 * Constructs a link which invokes the getPage() method of the IPageLink
