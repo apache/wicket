@@ -49,7 +49,16 @@ public final class DefaultPageFactory implements IPageFactory
 	{
 		try
 		{
+		    // throw an exception in case default constructor is missing 
+		    // => improved error message
+		    pageClass.getConstructor(null);
+		    
 			return (Page)pageClass.newInstance();
+		}
+		catch (NoSuchMethodException e)
+		{
+	        throw new WicketRuntimeException("Unable to create page from " 
+	                + pageClass + ". Class does not have a default contructor", e);
 		}
 		catch (InstantiationException e)
 		{
