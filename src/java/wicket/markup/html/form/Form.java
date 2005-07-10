@@ -336,19 +336,22 @@ public class Form extends WebMarkupContainer
 		{
 			public void formComponent(final FormComponent formComponent)
 			{
-				// Validate form component
-				formComponent.validate();
-
-				// If component is not valid (has an error)
-				if (!formComponent.isValid())
+				if (formComponent.isVisible())
 				{
-					// tell component to deal with invalidity
-					formComponent.invalid();
-				}
-				else
-				{
-					// tell component that it is valid now
-					formComponent.valid();
+					// Validate form component
+					formComponent.validate();
+	
+					// If component is not valid (has an error)
+					if (!formComponent.isValid())
+					{
+						// tell component to deal with invalidity
+						formComponent.invalid();
+					}
+					else
+					{
+						// tell component that it is valid now
+						formComponent.valid();
+					}
 				}
 			}
 		});
