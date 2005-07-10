@@ -32,7 +32,6 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
-import wicket.model.IModel;
 
 /**
  * Panel for generic bean displaying/ editing.
@@ -167,7 +166,7 @@ public class BeanPanel extends Panel
 			{
 				// get constructor
 				Constructor constructor = editorClass.getConstructor(
-						new Class[]{String.class, IModel.class, PropertyDescriptor.class, EditMode.class});
+						new Class[]{String.class, BeanModel.class, PropertyDescriptor.class, EditMode.class});
 
 				// construct arguments
 				Object[] args = new Object[]{panelId, BeanPanel.this.getModel(), descriptor, getEditMode()};
