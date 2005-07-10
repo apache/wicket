@@ -77,9 +77,9 @@ public abstract class UploadForm extends Form
 	 * Wraps the servlet request in a multipart request and sets it as the
 	 * current request.
 	 * 
-	 * @see wicket.markup.html.form.Form#onFormSubmitted()
+	 * @see wicket.markup.html.form.Form#process()
 	 */
-	public void onFormSubmitted()
+	public void process()
 	{
 		// Change the request to a multipart web request so parameters are
 		// parsed out correctly

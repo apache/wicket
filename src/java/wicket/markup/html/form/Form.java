@@ -17,9 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,159 +25,64 @@ import wicket.IFeedback;
 import wicket.IFeedbackBoundary;
 import wicket.Page;
 import wicket.RequestCycle;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
-import wicket.markup.html.form.validation.IFormValidationStrategy;
-import wicket.markup.html.form.validation.IFormValidator;
-import wicket.markup.html.form.validation.IValidator;
 import wicket.model.IModel;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.util.lang.Classes;
-import wicket.util.string.StringList;
 import wicket.util.string.Strings;
-import wicket.util.value.Count;
 
 /**
- * Base class for forms. To implement a form, subclass this class, add
- * FormComponents (such as CheckBoxes, ListChoices or TextFields) to the form
- * and provide an implementation of handleValidSubmit(). The handleValidSubmit()
- * method will be called by validate() when the form passes validation. If your
- * form has only one button, there is nothing else to do. However, if you want
- * to have multiple buttons which submit the same form, simply put two or more
- * button components somewhere in the hierarchy of components that are children
- * of the form. Forms which have two or more buttons do not automatically
- * validate themselves via validate(). Instead, they determine which Button
- * submitted the form and call that Button's onSubmit() method. In any
- * onSubmit() method where you want to attempt to validate the form and update
- * models, simply call validate().
+ * Base class for forms. To implement a form, subclass this class, add FormComponents
+ * (such as CheckBoxes, ListChoices or TextFields) to the form. You can nest multiple
+ * buttons if you want to vary submit behaviour. However, it is not nescesarry to use
+ * Wicket's button class, just putting e.g. &lt;input type="submit" value="go"&gt;
+ * suffices.
  * <p>
- * If you want to do something when validation errors occur you can override
- * onError(), but if you do, you probably will want to call super.onError() to
- * get the default handling to occur.
+ * By default, the processing of a form works like this:
+ * <li> The submitting button is looked up. A submitting button is a button that is nested
+ * in this form (is a child component) and that was clicked by the user. If a submitting
+ * button was found, and it has the immediate field true (default is false), it's onSubmit
+ * method will be called right away, thus no validition is done, and things like updating
+ * form component models that would normally be done are skipped. In that respect, nesting
+ * a button with the immediate field set to true has the same effect as nesting a normal
+ * link. If you want you can call validate() to execute form validation, hasError() to
+ * find out whether validate() resulted in validation errors, and
+ * updateFormComponentModels() to update the models of nested form components. </li>
+ * <li> When no immediate submitting button was found, this form is validated (method
+ * validate()). Now, two possible paths exist:
+ * <ul>
+ * <li> Form validation failed. All nested form components will be marked valid, and
+ * onError() is called to allow clients to provide custom error handling code. </li>
+ * <li> Form validation succeeded. The nested components will be asked to update their
+ * models and persist their data is applicable. After that, method delegateSubmit with
+ * optionally the submitting button is called. The default when there is a submitting
+ * button is to first call onSubmit on that button, and after that call onSubmit on this
+ * form. Clients may override delegateSubmit if they want different behaviour. </li>
+ * </ul>
+ * </li>
+ * </li>
+ * </p>
  * <p>
- * To get form components to persist their values for users via cookies, simply
- * call setPersistent(true) on the form component.
- * 
+ * If you want to have multiple buttons which submit the same form, simply put two or more
+ * button components somewhere in the hierarchy of components that are children of the
+ * form.
+ * </p>
+ * <p>
+ * To get form components to persist their values for users via cookies, simply call
+ * setPersistent(true) on the form component.
+ * </p>
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public abstract class Form extends WebMarkupContainer
+public class Form extends WebMarkupContainer
 	implements IFormSubmitListener, IFeedbackBoundary
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
-
-	/** The validator or validator list for this form. */
-	IFormValidator validator = IFormValidator.NULL;
-
-	/** form validation strategy instance. */
-	private IFormValidationStrategy formValidationStrategy;
-
-	/**
-	 * A convenient and memory efficent representation for a list of validators.
-	 */
-	private static final class ValidatorList implements IFormValidator
-	{
-		/** Left part of linked list. */
-		private final IFormValidator left;
-
-		/** Right part of linked list. */
-		private IFormValidator right;
-
-		/**
-		 * Constructs a list with validators in it.
-		 * @param left The left validator
-		 * @param right The right validator
-		 */
-		ValidatorList(final IFormValidator left, final IFormValidator right)
-		{
-			this.left = left;
-			this.right = right;
-		}
-
-		/**
-		 * Gets the string representation of this object.
-		 * @return String representation of this object
-		 */
-		public String toString()
-		{
-			final StringList stringList = new StringList();
-			ValidatorList current = this;
-
-			while (true)
-			{
-				stringList.add(Classes.name(current.left.getClass()) + " "
-						+ current.left.toString());
-
-				if (current.right instanceof ValidatorList)
-				{
-					current = (ValidatorList)current.right;
-				}
-				else
-				{
-					stringList.add(Classes.name(current.right.getClass()) + " "
-							+ current.right.toString());
-
-					break;
-				}
-			}
-
-			return stringList.toString();
-		}
-
-		/**
-		 * @see wicket.markup.html.form.validation.IFormValidator#validate(wicket.markup.html.form.Form)
-		 */
-		public void validate(final Form form)
-		{
-			left.validate(form);
-			right.validate(form);
-		}
-
-		/**
-		 * Adds the given validator to this list of validators.
-		 * @param validator The validator
-		 */
-		void add(final IFormValidator validator)
-		{
-			ValidatorList current = this;
-
-			while (current.right instanceof ValidatorList)
-			{
-				current = (ValidatorList)current.right;
-			}
-
-			current.right = new ValidatorList(current.right, validator);
-		}
-
-		/**
-		 * Gets the validators as a List.
-		 * @return the validators as a List
-		 */
-		List asList()
-		{
-			ValidatorList current = this;
-			List validators = new ArrayList();
-			while (true)
-			{
-				validators.add(current.left);
-				if (current.right instanceof ValidatorList)
-				{
-					current = (ValidatorList)current.right;
-				}
-				else
-				{
-					validators.add(current.right);
-					break;
-				}
-			}
-			return validators;
-		}
-	}
 
 	/**
 	 * Constructs a form with no validation.
@@ -230,53 +132,6 @@ public abstract class Form extends WebMarkupContainer
 	}
 
 	/**
-	 * Adds a validator to this form component.
-	 * 
-	 * @param validator
-	 *            The validator
-	 * @return This
-	 */
-	public final Form add(final IFormValidator validator)
-	{
-		// If we don't yet have a validator
-		if (this.validator == IFormValidator.NULL)
-		{
-			// Just add the validator directly
-			this.validator = validator;
-		}
-		else
-		{
-			// Create a validator list?
-			if (this.validator instanceof ValidatorList)
-			{
-				// Already have a list. Just add new validator to list
-				((ValidatorList)this.validator).add(validator);
-			}
-			else
-			{
-				// Create a set of the current validator and the new validator
-				this.validator = new ValidatorList(this.validator, validator);
-			}
-		}
-		return this;
-	}
-
-	/**
-	 * Gets the strategy to be used for form validation
-	 * 
-	 * @return The strategy to be used for validating this form
-	 */
-	public IFormValidationStrategy getValidationStrategy()
-	{
-		// lazy construct
-		if (formValidationStrategy == null)
-		{
-			formValidationStrategy = new DefaultFormValidationStrategy();
-		}
-		return formValidationStrategy;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Retrieves FormComponent values related to the page using the persister
@@ -317,10 +172,10 @@ public abstract class Form extends WebMarkupContainer
 	 * 
 	 * @see Form#validate()
 	 */
-	public void onFormSubmitted()
+	public final void onFormSubmitted()
 	{
-		// Validate form
-		onValidate();
+		// process the form for this request
+		process();
 	}
 
 	/**
@@ -374,24 +229,129 @@ public abstract class Form extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the form component persistence manager; it is lazy loaded.
+	 * Convenient and typesafe way to visit all the form components on a form
 	 * 
-	 * @return The form component value persister
+	 * @param visitor
+	 *            The visitor interface to call
 	 */
-	protected IValuePersister getValuePersister()
+	public final void visitFormComponents(final FormComponent.IVisitor visitor)
 	{
-		return new CookieValuePersister();
+		visitChildren(FormComponent.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				visitor.formComponent((FormComponent)component);
+				return CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**
-	 * @see wicket.Component#onComponentTag(ComponentTag)
+	 * Process the form. Though you can override this method to provide your whole own algoritm,
+	 * it is not recommended to do so.
+	 * <p>
+	 * See the class documentation for further details on the form processing
+	 * </p>
 	 */
-	protected void onComponentTag(final ComponentTag tag)
+	protected void process()
 	{
-		checkComponentTag(tag, "form");
-		super.onComponentTag(tag);
-		tag.put("method", "post");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
+		// first, see if the processing was triggered by a Wicket button
+		final Button submittingButton = findSubmittingButton();
+
+		// when processing was triggered by a Wicket button and that button indicates
+		// it wants to be called immediately (without validating), call onSubmit right away.
+		if (submittingButton != null && (submittingButton.isImmediate()))
+		{
+			submittingButton.onSubmit();
+		}
+		else
+		{
+			// as processing was not triggered by a button with immediate == true,
+			// we execute validation now before anything else
+			validate();
+
+			// If a validation error occurred
+			if (hasError())
+			{
+				// mark all children as invalid
+				markFormComponentsInvalid();
+
+				// let subclass handle error
+				onError();
+			}
+			else
+			{
+				// before updating, call the interception method for clients
+				beforeUpdateFormComponentModels();
+
+				// Update model using form data
+				updateFormComponentModels();
+
+				// Persist FormComponents if requested
+				persistFormComponentData();
+
+				// let clients handle further processing
+				delegateSubmit(submittingButton);
+			}
+		}
+	}
+
+	/**
+	 * Called (by the default implementation of 'process') when all fields validated,
+	 * the form was updated and it's data was allowed to be persisted. It is meant for delegating
+	 * further processing to clients.
+	 * <p>
+	 * This implementation first finds out whether the form processing was triggered by a nested
+	 * button of this form. If that is the case, that button's onSubmit is called first.
+	 * </p>
+	 * <p>
+	 * Regardless of whether a submitting button was found, the form's onSubmit method is called
+	 * next.
+	 * </p>
+	 * @param submittingButton the button that triggered this form processing, or null if the
+	 * 		processing was triggered by something else (like a non-Wicket submit button or
+	 * 		a javascript execution)
+	 */
+	protected void delegateSubmit(Button submittingButton)
+	{
+		// when the given button is not null, it means that it was the submitting button
+		if (submittingButton != null)
+		{
+			submittingButton.onSubmit();
+		}
+
+		// Model was successfully updated with valid data
+		onSubmit();
+	}
+
+	/**
+	 * Validates the form's nested children of type {@link FormComponent}. This method
+	 * is typically called before updating any models.
+	 */
+	protected final void validate()
+	{
+		// Validate model using validation strategy
+		// Visit all the form components and validate each
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				// Validate form component
+				formComponent.validate();
+
+				// If component is not valid (has an error)
+				if (!formComponent.isValid())
+				{
+					// tell component to deal with invalidity
+					formComponent.invalid();
+				}
+				else
+				{
+					// tell component that it is valid now
+					formComponent.valid();
+				}
+			}
+		});
 	}
 
 	/**
@@ -400,6 +360,44 @@ public abstract class Form extends WebMarkupContainer
 	 */
 	protected void onError()
 	{
+	}
+
+	/**
+	 * Template method to allow clients to do any processing (like recording the current
+	 * model so that, in case onSubmit does further validation, the model can be rolled
+	 * back) before the actual updating of form component models is done.
+	 */
+	protected void beforeUpdateFormComponentModels()
+	{		
+	}
+
+	/**
+	 * Implemented by subclasses to deal with form submits.
+	 */
+	protected void onSubmit()
+	{
+	}
+
+	/**
+	 * Update the model of all form components using the fields that were sent with the
+	 * current request.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	protected final void updateFormComponentModels()
+	{
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				// Only update the component when it is visible and valid
+				if (formComponent.isVisible() && formComponent.isValid())
+				{
+					// Potentially update the model
+					formComponent.updateModel();
+				}
+			}
+		});
 	}
 
 	/**
@@ -422,132 +420,61 @@ public abstract class Form extends WebMarkupContainer
 	}
 
 	/**
-	 * Implemented by subclasses to deal with form submits.
+	 * Gets the form component persistence manager; it is lazy loaded.
+	 * 
+	 * @return The form component value persister
 	 */
-	protected void onSubmit()
+	protected IValuePersister getValuePersister()
 	{
+		return new CookieValuePersister();
 	}
 
 	/**
-	 * Called when a form that has been submitted needs to be validated.
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected void onValidate()
+	protected void onComponentTag(final ComponentTag tag)
 	{
-		// Validate the form
-		if (validate())
-		{
-			// If there is more than one button, we also call the Button's
-			// onSubmit() handler
-			if (countButtons() > 1)
-			{
-				final Button button = findSubmittingButton();
-				if (button == null)
-				{
-					throw new WicketRuntimeException("Unable to find submitting button");
-				}
-				else
-				{
-					button.onSubmit();
-				}
-			}
-		}
+		checkComponentTag(tag, "form");
+		super.onComponentTag(tag);
+		tag.put("method", "post");
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
 	}
 
 	/**
-	 * Validates the form and updates the models of form components. If the form
-	 * validates successfully, handleValidSubmit() is called. If not,
-	 * handleErrors() is called.
-	 * 
-	 * @return True if the form validated
-	 * 
-	 * @see Form#onSubmit()
-	 * @see Form#onError()
+	 * Gets whether the current form has any error registered.
+	 * @return True if this form has at least one error.
 	 */
-	protected final boolean validate()
+	protected final boolean hasError()
 	{
-		// Validate model using validation strategy
-		getValidationStrategy().validate(this);
-
-		// If a validation error occurred
-		if (hasError())
+		// if this form itself has an error message
+		if (hasErrorMessage())
 		{
-			// mark all children as invalid
-			invalid();
-
-			// let subclass handle error
-			onError();
-			
-			// Form failed to validate
-			return false;
-		}
-		else
-		{
-			// Update model using form data
-			updateFormComponentModels();
-
-			// Persist FormComponents if requested
-			persistFormComponentData();
-
-			// Model was successfully updated with valid data
-			onSubmit();
-			
-			// Form validated
 			return true;
 		}
+
+		// the form doesn't have any errors, now check any nested form components
+		return anyFormComponentError();
 	}
 
 	/**
-	 * Convenient and typesafe way to visit all the form components on a form
-	 * 
-	 * @param visitor
-	 *            The visitor interface to call
+	 * Mark each form component on this form invalid.
 	 */
-	public final void visitFormComponents(final FormComponent.IVisitor visitor)
+	protected final void markFormComponentsInvalid()
 	{
-		visitChildren(FormComponent.class, new IVisitor()
+		// call invalidate methods of all nested form components
+		visitFormComponents(new FormComponent.IVisitor()
 		{
-			public Object component(final Component component)
+			public void formComponent(final FormComponent formComponent)
 			{
-				visitor.formComponent((FormComponent)component);
-				return CONTINUE_TRAVERSAL;
+				formComponent.invalid();
 			}
 		});
 	}
-//
-//	/**
-//	 * Called to indicate that
-//	 */
-//	public final void valid()
-//	{
-//		onValid();
-//	}
-//
-//	/**
-//	 * Handle validation
-//	 */
-//	protected void onValid()
-//	{
-//	}
 
 	/**
-	 * @return Number of buttons on this form
-	 */
-	private int countButtons()
-	{
-		final Count count = new Count();
-		visitChildren(Button.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				count.increment();
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-		return count.getCount();
-	}
-
-	/**
-	 * @return The button which submitted this form
+	 * Gets the button which submitted this form.
+	 * @return The button which submitted this form or none if the processing was not trigger
+	 * 		by a registered button component
 	 */
 	private Button findSubmittingButton()
 	{
@@ -567,32 +494,6 @@ public abstract class Form extends WebMarkupContainer
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-	}
-
-
-	/**
-	 * Gets whether this component is to be validated.
-	 * 
-	 * @return True if this component has one or more validators
-	 */
-	public final boolean isValidated()
-	{
-		return this.validator != IValidator.NULL;
-	}
-
-	/**
-	 * @return True if this form has at least one error.
-	 */
-	boolean hasError()
-	{
-		// if this form itself has an error message
-		if (hasErrorMessage())
-		{
-			return true;
-		}
-
-		// the form doesn't have any errors, now check any nested form components
-		return anyFormComponentError();
 	}
 
 	/**
@@ -616,21 +517,6 @@ public abstract class Form extends WebMarkupContainer
 		});
 
 		return value == IVisitor.STOP_TRAVERSAL ? true : false;
-	}
-
-	/**
-	 * Mark each form component on this form invalid
-	 */
-	private void invalid()
-	{
-		// call invalidate methods of all nested form components
-		visitFormComponents(new FormComponent.IVisitor()
-		{
-			public void formComponent(final FormComponent formComponent)
-			{
-				formComponent.invalid();
-			}
-		});
 	}
 
 	/**
@@ -669,27 +555,6 @@ public abstract class Form extends WebMarkupContainer
 				}
 			});
 		}
-	}
-
-	/**
-	 * Update the model of all form components.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	void updateFormComponentModels()
-	{
-		visitFormComponents(new FormComponent.IVisitor()
-		{
-			public void formComponent(final FormComponent formComponent)
-			{
-				// Only update the component when it is visible and valid
-				if (formComponent.isVisible() && formComponent.isValid())
-				{
-					// Potentially update the model
-					formComponent.updateModel();
-				}
-			}
-		});
 	}
 
 	static
