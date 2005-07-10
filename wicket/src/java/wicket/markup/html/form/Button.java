@@ -22,14 +22,22 @@ import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
+import wicket.version.undo.Change;
 
 /**
  * A form button.
  * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public class Button extends FormComponent
 {
+	/**
+	 * Indicates that this button should be called without any validation done.
+	 * By default, immediate is false.
+	 */
+	private Boolean immediate;
+
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -66,16 +74,24 @@ public class Button extends FormComponent
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Must be attached to an input tag
-		checkComponentTag(tag, "input");
+		String lowerCaseTagName = tag.getName().toLowerCase();
+		if (! ( lowerCaseTagName.equals("input") ||
+				lowerCaseTagName.equals("button") ))
+		{
+			findMarkupStream().throwMarkupException(
+					"Component " + getId() +
+					" must be applied to a tag of type 'input' or 'button', not " +
+					tag.toUserDebugString());
+		}
 
 		// Get tag attributes
 		final ValueMap attributes = tag.getAttributes();
 
 		// Check for type of button, image or submit
 		final String type = attributes.getString("type");
-		if (type == null
-				|| (!type.equalsIgnoreCase("button") && !type.equalsIgnoreCase("image") && !type
-						.equalsIgnoreCase("submit")))
+		if (type == null ||
+				!(type.equalsIgnoreCase("button") || type.equalsIgnoreCase("image") ||
+						type.equalsIgnoreCase("submit")) )
 		{
 			throw new WicketRuntimeException(
 					"Button tag must have a type of 'button', 'image' or 'submit'");
@@ -112,5 +128,41 @@ public class Button extends FormComponent
 	 */
 	protected void updateModel()
 	{
+	}
+
+	/**
+	 * Gets the immediate.
+	 * @return immediate
+	 */
+	public final boolean isImmediate()
+	{
+		return (immediate != null) ? immediate.booleanValue() : false;
+	}
+
+	/**
+	 * Sets the immediate.
+	 * @param immediate immediate
+	 */
+	public final void setImmediate(boolean immediate)
+	{
+		if (this.immediate != null)
+		{
+			if (this.immediate.booleanValue() != immediate)
+			{
+				addStateChange(new Change()
+				{
+					boolean formerValue = Button.this.immediate.booleanValue();
+
+					public void undo()
+					{
+						Button.this.immediate = (formerValue) ? Boolean.TRUE : Boolean.FALSE;
+					}
+				});
+			}
+		}
+		else
+		{
+			this.immediate = (immediate) ? Boolean.TRUE : Boolean.FALSE;
+		}
 	}
 }
