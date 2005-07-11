@@ -20,11 +20,10 @@ package wicket.markup.html.form;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.model.IChoice;
-import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
 
@@ -53,11 +52,11 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceRenderer,Collection)
 	 */
-	public ListMultipleChoice(final String id, final IChoiceList choices)
+	public ListMultipleChoice(final String id, final IChoiceRenderer renderer, final Collection choices)
 	{
-		super(id, choices);
+		super(id, renderer,choices);
 	}
 
 	/**
@@ -69,9 +68,9 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceRenderer,Collection)
 	 */
-	public ListMultipleChoice(final String id, IModel object, final IChoiceList choices)
+	public ListMultipleChoice(final String id, IModel object, final IChoiceRenderer renderer, final Collection choices)
 	{
 		super(id, object, choices);
 	}
@@ -86,11 +85,26 @@ public class ListMultipleChoice extends AbstractChoice
 		final StringBuffer buffer = new StringBuffer();
 		if (selectedValues != null)
 		{
-			final IChoiceList choices = getChoices();
+			final Collection choices = getChoices();
 			for (final Iterator iterator = selectedValues.iterator(); iterator.hasNext();)
 			{
-				final IChoice choice = choices.choiceForObject(iterator.next());
-				buffer.append(choice.getId());
+				final Object object = iterator.next();
+				
+				int index = -1;
+				if(choices instanceof List)
+				{
+					index = ((List)choices).indexOf(object);
+				}
+				else
+				{
+					Iterator it = choices.iterator();
+					while(it.hasNext())
+					{
+						index++;
+						if(it.next().equals(object)) break;
+					}
+				}
+				buffer.append(getChoiceRenderer().getIdValue(object, index));
 				buffer.append(";");
 			}
 		}
@@ -112,18 +126,32 @@ public class ListMultipleChoice extends AbstractChoice
 		{
 			selectedValues.clear();
 		}
-		final IChoiceList choices = getChoices();
+		final Collection choices = getChoices();
 		for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
 				.hasMoreTokens();)
 		{
-			selectedValues.add(choices.choiceForId(tokenizer.nextToken()).getObject());
+			String selected = tokenizer.nextToken();
+			
+			Iterator it = getChoices().iterator();
+			int index = -1;
+			while(it.hasNext())
+			{
+				index++;
+				Object object = it.next();
+				if(getChoiceRenderer().getIdValue(object, index).equals(selected))
+				{
+					selectedValues.add(object);
+					break;
+				}
+			}
+			
 		}
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(IChoice)
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int)
 	 */
-	protected final boolean isSelected(IChoice choice)
+	protected final boolean isSelected(Object choice, int index)
 	{
 		// Get value of the form "id1;id2;id3"
 		final String value = getValue();
@@ -136,7 +164,7 @@ public class ListMultipleChoice extends AbstractChoice
 					.hasMoreTokens();)
 			{
 				final String id = tokenizer.nextToken(); 
-				if (id.equals(choice.getId()))
+				if (id.equals(getChoiceRenderer().getIdValue(choice, index)))
 				{
 					return true;
 				}
@@ -180,13 +208,23 @@ public class ListMultipleChoice extends AbstractChoice
 		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 		{
 			// Get values that could be selected
-			final IChoiceList choices = getChoices();
+			final Collection choices = getChoices();
 
 			// Loop through selected indices
 			for (int i = 0; i < ids.length; i++)
 			{
-				final IChoice choice = choices.choiceForId(ids[i]);
-				selectedValues.add(choice.getObject());
+				Iterator it = getChoices().iterator();
+				int index = -1;
+				while(it.hasNext())
+				{
+					index++;
+					Object object = it.next();
+					if(getChoiceRenderer().getIdValue(object, index).equals(ids[i]))
+					{
+						selectedValues.add(object);
+						break;
+					}
+				}
 			}
 		}
 	}

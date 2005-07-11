@@ -76,17 +76,11 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @param id
-	 *			  See Component
-	 * @param model
-	 *			  See Component
-	 * @param values
-	 *			  The collection of values in the list
-	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceRenderer,Collection)
 	 */
-	public ListChoice(final String id, final IModel model, final Collection values)
+	public ListChoice(final String id, final IChoiceRenderer renderer,final Collection values)
 	{
-		this(id, model, values, defaultMaxRows);
+		super(id, renderer,values);
 	}
 
 	/**
@@ -94,15 +88,33 @@ public class ListChoice extends DropDownChoice
 	 *			  See Component
 	 * @param model
 	 *			  See Component
+	 * @param renderer
+	 * 			  See AbstractChoice 
+	 * @param values
+	 *			  The collection of values in the list
+	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 */
+	public ListChoice(final String id, final IModel model, final IChoiceRenderer renderer,final Collection values)
+	{
+		this(id, model, renderer,values, defaultMaxRows);
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param renderer
+	 * 			  See AbstractChoice 
 	 * @param values
 	 *			  The collection of values in the list
 	 * @param maxRows
 	 *			  Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
 	 */
-	public ListChoice(final String id, final IModel model, final Collection values, final int maxRows)
+	public ListChoice(final String id, final IModel model, final IChoiceRenderer renderer, final Collection values, final int maxRows)
 	{
-		super(id, model, values);
+		super(id, model, renderer,values);
 		this.maxRows = maxRows;
 	}
 
@@ -144,5 +156,36 @@ public class ListChoice extends DropDownChoice
 	protected final boolean supportsPersistence()
 	{
 		return true;
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param values
+	 *			  The collection of values in the list
+	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 */
+	public ListChoice(final String id, final IModel model, final Collection values)
+	{
+		this(id, model, values, defaultMaxRows);
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param values
+	 *			  The collection of values in the list
+	 * @param maxRows
+	 *			  Maximum number of rows to show
+	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 */
+	public ListChoice(final String id, final IModel model, final Collection values, final int maxRows)
+	{
+		super(id, model, values);
+		this.maxRows = maxRows;
 	}
 }

@@ -18,16 +18,19 @@
 package wicket.markup.html.form;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.form.model.ChoiceList;
-import wicket.markup.html.form.model.IChoice;
-import wicket.markup.html.form.model.IChoiceList;
+import wicket.model.IDetachable;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
+/**
+ * @author jcompagner
+ *
+ */
 /**
  * Abstract base class for all choice (html select) options.
  * 
@@ -37,8 +40,11 @@ import wicket.version.undo.Change;
  */
 abstract class AbstractChoice extends FormComponent
 {
-	/** The list of choices. */
-	private IChoiceList choices;
+	/** The list of objects. */
+	private Collection choices;
+
+	/** The renderer used to generate display/id values for the objects. */
+	private IChoiceRenderer renderer;
 
 	/**
 	 * @param id
@@ -59,7 +65,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, final Collection choices)
 	{
-		this(id, new ChoiceList(choices));
+		this(id, new ChoiceRenderer(),choices);
 	}
 
 	/**
@@ -69,10 +75,11 @@ abstract class AbstractChoice extends FormComponent
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final IChoiceList choices)
+	public AbstractChoice(final String id, final IChoiceRenderer renderer,final Collection choices)
 	{
 		super(id);
 		this.choices = choices;
+		this.renderer = renderer;
 	}
 
 	/**
@@ -86,7 +93,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, IModel model, final Collection choices)
 	{
-		this(id, model, new ChoiceList(choices));
+		this(id, model, new ChoiceRenderer(), choices);
 	}
 
 	/**
@@ -98,29 +105,28 @@ abstract class AbstractChoice extends FormComponent
 	 *            The drop down choices
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel model, final IChoiceList choices)
+	public AbstractChoice(final String id, IModel model, final IChoiceRenderer renderer, final Collection choices)
 	{
 		super(id, model);
 		this.choices = choices;
+		this.renderer = renderer;
+	}
+	
+	/**
+	 * @return The collection of object that this choice has
+	 */
+	public Collection getChoices()
+	{
+		return choices;
 	}
 
-	/**
-	 * Gets the list of choices.
-	 * 
-	 * @return The list of choices
-	 */
-	public IChoiceList getChoices()
-	{
-		if (choices != null) choices.attach();
-		return this.choices;
-	}
 
 	/**
 	 * Sets the list of choices.
 	 *
 	 * @param choices the list of choices
 	 */
-	public final void setChoices(IChoiceList choices)
+	public final void setChoices(Collection choices)
 	{
 		if (this.choices != null && (this.choices != choices))
 		{
@@ -128,8 +134,8 @@ abstract class AbstractChoice extends FormComponent
 			{
 				addStateChange(new Change()
 				{
-					final IChoiceList oldList = AbstractChoice.this.choices;
-
+					final Collection oldList = AbstractChoice.this.choices;
+	
 					public void undo()
 					{
 						AbstractChoice.this.choices = oldList;
@@ -139,6 +145,14 @@ abstract class AbstractChoice extends FormComponent
 		}
 		this.choices = choices;
 	}
+	
+	/**
+	 * @return The IChoiceRenderer used for rendering the data objects
+	 */
+	public IChoiceRenderer getChoiceRenderer()
+	{
+		return renderer;
+	}
 
 	/**
 	 * @see wicket.Component#detachModel()
@@ -146,7 +160,7 @@ abstract class AbstractChoice extends FormComponent
 	protected void detachModel()
 	{
 		super.detachModel();
-		if (choices != null) choices.detach();
+		if (choices instanceof IDetachable) ((IDetachable)choices).detach();
 	}
 
 	/**
@@ -162,11 +176,13 @@ abstract class AbstractChoice extends FormComponent
 	/**
 	 * Gets whether the given value represents the current selection.
 	 * 
-	 * @param choice
-	 *            The choice to check
+	 * @param object
+	 *            The object to check
+	 * @param index 
+	 * 			  The index in the choices collection this object is in.
 	 * @return Whether the given value represents the current selection
 	 */
-	protected abstract boolean isSelected(final IChoice choice);
+	protected abstract boolean isSelected(final Object object, int index);
 
 	/**
 	 * Handle the container's body.
@@ -182,34 +198,36 @@ abstract class AbstractChoice extends FormComponent
 	{
 		final StringBuffer buffer = new StringBuffer();
 		final Object selected = getModelObject();
-		final IChoiceList choices = getChoices();
 
 		// Append default option
 		buffer.append(getDefaultChoice(selected));
 
-		for (int i = 0; i < choices.size(); i++)
+		Iterator it = getChoices().iterator();
+		int index = 0;
+		while(it.hasNext())
 		{
-			final IChoice choice = choices.get(i);
-			if (choice != null)
+			final Object object = it.next();
+			if (object != null)
 			{
-				final String displayValue = choice.getDisplayValue();
+				final String displayValue = renderer.getDisplayValue(object);
 				buffer.append("\n<option ");
-				if (isSelected(choice))
+				if (isSelected(object, index))
 				{
 					buffer.append("selected=\"selected\"");
 				}
 				buffer.append("value=\"");
-				buffer.append(choice.getId());
+				buffer.append(renderer.getIdValue(object, index));
 				buffer.append("\">");
 				String display = getLocalizer().getString(
 						getId() + "." + displayValue, this, displayValue);
 				String escaped = Strings.escapeMarkup(display, false, true);
 				buffer.append(escaped);
 				buffer.append("</option>");
+				index++;
 			}
 			else
 			{
-				throw new IllegalArgumentException("Choice list has null value at index " + i);
+				throw new IllegalArgumentException("Choice list has null value at index " + index);
 			}
 		}
 
@@ -231,4 +249,5 @@ abstract class AbstractChoice extends FormComponent
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	protected abstract void updateModel();
+
 }

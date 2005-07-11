@@ -18,10 +18,8 @@
  */
 package wicket.extensions.markup.html.beanedit;
 
+import java.util.Collection;
 import java.util.List;
-
-import wicket.markup.html.form.model.ChoiceList;
-import wicket.markup.html.form.model.IChoiceList;
 
 /**
  * Field for rendering a drop down choice.
@@ -33,7 +31,7 @@ public class ChoiceField extends AbstractBeanField
 	/**
 	 * The choices.
 	 */
-	private final IChoiceList choices;
+	private final Collection choices;
 
 	/**
 	 * Construct.
@@ -41,7 +39,7 @@ public class ChoiceField extends AbstractBeanField
 	 * @param displayName display name
 	 * @param choices the choices
 	 */
-	public ChoiceField(String name, String displayName, IChoiceList choices)
+	public ChoiceField(String name, String displayName, Collection choices)
 	{
 		super(name, displayName);
 		this.choices = choices;
@@ -56,14 +54,14 @@ public class ChoiceField extends AbstractBeanField
 	public ChoiceField(String name, String displayName, List choices)
 	{
 		super(name, displayName);
-		this.choices = new ChoiceList(choices);
+		this.choices = choices;
 	}
 
 	/**
 	 * Gets the choices.
 	 * @return choices
 	 */
-	public final IChoiceList getChoices()
+	public final Collection getChoices()
 	{
 		return choices;
 	}

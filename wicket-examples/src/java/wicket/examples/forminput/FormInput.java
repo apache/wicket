@@ -26,6 +26,7 @@ import java.util.Locale;
 import wicket.IFeedback;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.CheckBox;
+import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ImageButton;
@@ -33,8 +34,6 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.model.ChoiceList;
-import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.validation.IntegerValidator;
 import wicket.markup.html.form.validation.ValidationEventRequestHandler;
 import wicket.markup.html.image.Image;
@@ -180,7 +179,7 @@ public class FormInput extends WicketExamplePage
 		 */
 		public LocaleDropDownChoice(String id)
 		{
-			super(id);
+			super(id,new LocaleChoice(),null);
 
 			// set the model that gets the current locale, and that is used for updating
 			// the current locale to property 'locale' of FormInput
@@ -188,14 +187,7 @@ public class FormInput extends WicketExamplePage
 
 			// use a custom implementation of choices, as we want to display
 			// the choices localized
-			ChoiceList locales = new ChoiceList(LOCALES)
-			{
-				protected IChoice newChoice(Object object, int index)
-				{
-					return new LocaleChoice((Locale)object, index);
-				}
-			};
-			setChoices(locales);
+			setChoices(LOCALES);
 		}
 
 		/**
@@ -221,48 +213,24 @@ public class FormInput extends WicketExamplePage
 	/**
 	 * Choice for a locale.
 	 */
-	private final class LocaleChoice implements IChoice
+	private final class LocaleChoice extends ChoiceRenderer
 	{
-		/** The index of the choice. */
-		private final int index;
-
-		/** The choice model object. */
-		private final Locale locale;
-
 		/**
 		 * Constructor.
-		 * @param locale The locale
-		 * @param index The index of the object in the choice list
 		 */
-		public LocaleChoice(final Locale locale, final int index)
+		public LocaleChoice()
 		{
-			this.locale = locale;
-			this.index = index;
+			super(null,null);
 		}
 
 		/**
-		 * @see wicket.markup.html.form.model.IChoice#getDisplayValue()
+		 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
-		public String getDisplayValue()
+		public String getDisplayValue(Object object)
 		{
+			Locale locale = (Locale)object;
 			String display = locale.getDisplayName(getLocale());
 			return display;
-		}
-
-		/**
-		 * @see wicket.markup.html.form.model.IChoice#getId()
-		 */
-		public String getId()
-		{
-			return Integer.toString(index);
-		}
-
-		/**
-		 * @see wicket.markup.html.form.model.IChoice#getObject()
-		 */
-		public Object getObject()
-		{
-			return locale;
 		}
 	}
 }
