@@ -90,7 +90,7 @@ public abstract class UploadForm extends Form
 			getRequestCycle().setRequest(multipartWebRequest);
 
 			// Now do normal form submit validation processing
-			super.onFormSubmitted();
+			super.process();
 		}
 		catch (FileUploadException e)
 		{
