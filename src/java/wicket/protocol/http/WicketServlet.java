@@ -18,7 +18,7 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -194,14 +194,28 @@ public class WicketServlet extends HttpServlet
 			if (bufferedResponse != null)
 			{
 				// got a buffered response; now write it
-				PrintWriter writer = servletResponse.getWriter();
 				servletResponse.setContentLength(bufferedResponse.getContentLength());
 				servletResponse.setContentType(bufferedResponse.getContentType());
-				writer.write(bufferedResponse.toString());
-				writer.close();
+//				PrintWriter pw = servletResponse.getWriter();
+//				pw.write(bufferedResponse.getString());
+//				pw.close();
+				
+				OutputStream os = servletResponse.getOutputStream();
+				os.write(bufferedResponse.getBytes());
+				os.close();
 				return;
 			}
 		}
+//		try
+//		{
+//			servletRequest.setCharacterEncoding("UTF-8");
+//		}
+//		catch (UnsupportedEncodingException ex)
+//		{
+//			// TODO Auto-generated catch block
+//			
+//			ex.printStackTrace();
+//		}
 
 		// Get session for request
 		final WebSession session = webApplication.getSession(servletRequest);
