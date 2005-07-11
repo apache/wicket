@@ -142,8 +142,9 @@ public class Button extends FormComponent
 	/**
 	 * Sets the immediate.
 	 * @param immediate immediate
+	 * @return This
 	 */
-	public final void setImmediate(boolean immediate)
+	public final Button setImmediate(boolean immediate)
 	{
 		if (this.immediate != null)
 		{
@@ -164,5 +165,7 @@ public class Button extends FormComponent
 		{
 			this.immediate = (immediate) ? Boolean.TRUE : Boolean.FALSE;
 		}
+
+		return this;
 	}
 }
