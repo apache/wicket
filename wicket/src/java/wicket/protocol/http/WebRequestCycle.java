@@ -202,6 +202,10 @@ public class WebRequestCycle extends RequestCycle
 				else if (redirectResponse.getContentLength() > 0)
 				{
 					// if no content is created then don't set it in the redirect buffer.. (maybe access failed)
+					// set the charset of the response (what the browser wants)
+					redirectResponse.setCharset(getWebResponse().getHttpServletResponse().getCharacterEncoding());
+					// close it so that this reponse can't be is fixed and encoded from here on.
+					redirectResponse.close();
 					((WebApplication)application).addRedirect(getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
 				}
 			}
