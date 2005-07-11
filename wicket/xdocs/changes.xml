@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.0.1" date="tbd" description="1.0.1">
+      <action type="fix" dev="Eelco Hillenius">Only validate components that are visible</action>
       <action type="update" dev="Eelco Hillenius" due-to="Phil Kulak">FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Adam Howard">fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</action>
     </release>
