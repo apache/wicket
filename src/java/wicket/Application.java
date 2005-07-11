@@ -410,7 +410,7 @@ public abstract class Application
 	public MarkupParser newMarkupParser(final MarkupContainer container)
 	{
 		final MarkupParser parser = new MarkupParser(container, 
-		        new XmlPullParser(settings.getDefaultMarkupEncoding()));
+		        new XmlPullParser(getSettings().getDefaultMarkupEncoding()));
 		
 		parser.configure(getSettings());
 		return parser;
