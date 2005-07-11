@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,29 +15,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.model;
+
+package wicket.markup.html.form;
 
 /**
- * Interface implemented by choices in an IChoiceList.
- * 
- * @author Jonathan Locke
+ * @author jcompagner
+ *
  */
-public interface IChoice
+public interface IChoiceRenderer
 {
 	/**
-	 * Gets the display value for the choice
-	 * 
-	 * @return The display value
+	 * @param object
+	 * @return
 	 */
-	public String getDisplayValue();
-
-	/**
-	 * @return The id for this choice
-	 */
-	public String getId();
+	public String getDisplayValue(Object object);
 	
 	/**
-	 * @return The actual object
+	 * @param object
+	 * @param index
+	 * @return
 	 */
-	public Object getObject();
+	public String getIdValue(Object object, int index);
 }

@@ -18,11 +18,10 @@
 package wicket.markup.html.form;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.form.model.IChoice;
-import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
 
@@ -56,11 +55,11 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceRenderer,Collection)
 	 */
-	public RadioChoice(final String id, final IChoiceList choices)
+	public RadioChoice(final String id, final IChoiceRenderer renderer, final Collection choices)
 	{
-		super(id, choices);
+		super(id,renderer,choices);
 	}
 
 	/**
@@ -72,11 +71,11 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceRenderer,Collection)
 	 */
-	public RadioChoice(final String id, IModel model, final IChoiceList choices)
+	public RadioChoice(final String id, IModel model, final IChoiceRenderer renderer, final Collection choices)
 	{
-		super(id, model, choices);
+		super(id, model, renderer,choices);
 	}
 
 	/**
@@ -145,16 +144,19 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		final StringBuffer buffer = new StringBuffer();
 
 		// Iterate through choices
-		final IChoiceList choices = getChoices();
+		final Collection choices = getChoices();
 
 		// Loop through choices
-		for (int i = 0; i < choices.size(); i++)
+		int index = -1;
+		Iterator it = choices.iterator();
+		while(it.hasNext())
 		{
+			index++;
 			// Get next choice
-			final IChoice choice = choices.get(i);
+			final Object choice = it.next();
 
 			// Get label for choice
-			final String label = choice.getDisplayValue();
+			final String label = getChoiceRenderer().getDisplayValue(choice);
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know
@@ -165,9 +167,10 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				// Append option suffix
 				buffer.append(getPrefix());
 
+				String id = getChoiceRenderer().getIdValue(choice, index);
 				// Add radio tag
 				buffer.append("<input name=\"" + getPath() + "\"" + " type=\"radio\""
-						+ (isSelected(choice) ? " checked" : "") + " value=\"" + choice.getId()
+						+ (isSelected(choice,index) ? " checked" : "") + " value=\"" + id
 						+ "\"");
 				
 				// Should a roundtrip be made (have onSelectionChanged called) when the option is clicked?
@@ -177,7 +180,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 					// NOTE: do not encode the url as that would give invalid JavaScript
 					buffer.append(" onclick=\"location.href='" + url + "&" + getPath()
-							+ "=" + choice.getId() + "';\"");
+							+ "=" + id + "';\"");
 				}
 
 				buffer.append(">");

@@ -21,7 +21,6 @@ import java.util.Collection;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
 
 /**
@@ -56,11 +55,11 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceRenderer,Collection)
 	 */
-	public DropDownChoice(final String id, final IChoiceList choices)
+	public DropDownChoice(final String id, final IChoiceRenderer renderer, final Collection data)
 	{
-		super(id, choices);
+		super(id,renderer, data);
 	}
 
 	/**
@@ -72,11 +71,11 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceRenderer, Collection)
 	 */
-	public DropDownChoice(final String id, IModel model, final IChoiceList choices)
+	public DropDownChoice(final String id, IModel model, final IChoiceRenderer renderer, final Collection data)
 	{
-		super(id, model, choices);
+		super(id, model,renderer, data);
 	}
 
 	/**
