@@ -304,7 +304,6 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	private void loadStaticImage(final String path)
 	{
 		final Class scope = component.findParentWithAssociatedMarkup().getClass();
-		final Package basePackage = scope.getPackage();
 		this.resourceReference = new ResourceReference(scope, path)
 		{
 			/**
@@ -312,7 +311,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			 */
 			protected Resource newResource()
 			{
-				return StaticResource.get(basePackage, path, locale, style);
+				return StaticResource.get(getScope().getPackage(), getName(), locale, style);
 			}
 		};
 		resourceReference.setLocale(locale);
