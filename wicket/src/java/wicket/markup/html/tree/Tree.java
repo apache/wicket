@@ -318,7 +318,7 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 * You can provide an alternative panel by overriding Tree.newNodePanel
 	 * </p>
 	 */
-	private final class NodePanel extends Panel
+	protected class NodePanel extends Panel
 	{
 		/**
 		 * Construct.
