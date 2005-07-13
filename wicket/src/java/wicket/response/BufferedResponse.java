@@ -25,10 +25,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Response;
+import wicket.WicketRuntimeException;
 
 /**
  * Holds a rendered response for future use.
- *
+ * 
  * @see wicket.ApplicationSettings.RenderStrategy
  * 
  * @author Johan Compagner
@@ -36,112 +37,101 @@ import wicket.Response;
  */
 public class BufferedResponse extends Response
 {
-	/**
-	 * The default char encoding that is used for String->bytes
-	 */
-	public static final String DEFAULT_CHARACTER_ENCODING="ISO-8859-1";
-	
 	/** Log. */
 	private static final Log log = LogFactory.getLog(BufferedResponse.class);
-	
+
 	/**
-	 * The url to be used to issue a client side redirect request; when a request to
-	 * the url comes in, this buffered response is streamed to the browser.
-	 * a request comes in.
+	 * The url to be used to issue a client side redirect request; when a
+	 * request to the url comes in, this buffered response is streamed to the
+	 * browser. a request comes in.
 	 */
 	private String redirectUrl;
-	
 
 	/**
 	 * A buffer for building up the string when the response is filled/created.
 	 */
 	private StringBuffer stringBuffer;
-	
+
 	/**
-	 * The byte buffer that holds the encoded string when this response is closed 
-	 * The content StringBuffer is converted using the right encoding. 
+	 * The byte buffer that holds the encoded string when this response is
+	 * closed. The content StringBuffer is converted using the right encoding.
 	 */
 	private byte[] byteBuffer;
-	
+
 	/**
 	 * The mime type of the request.
 	 */
 	private String mimeType;
 
-
-	private String charset;
-
 	/**
 	 * Construct.
-	 * @param redirectUrl The url to be used to issue a client side redirect request;
-	 * when a request to the url comes in, this buffered response is streamed to the browser.
+	 * 
+	 * @param redirectUrl
+	 *            The url to be used to issue a client side redirect request;
+	 *            when a request to the url comes in, this buffered response is
+	 *            streamed to the browser.
 	 */
-	public BufferedResponse(String redirectUrl)
+	public BufferedResponse(final String redirectUrl)
 	{
 		this.redirectUrl = redirectUrl;
 		this.stringBuffer = new StringBuffer();
 	}
-	
+
 	/**
-	 * The url to be used to issue a client side redirect request; when a request to
-	 * the url comes in, this buffered response is streamed to the browser.
+	 * The url to be used to issue a client side redirect request; when a
+	 * request to the url comes in, this buffered response is streamed to the
+	 * browser.
+	 * 
 	 * @return The redirect url that is used for this response
 	 */
-	public String getRedirectUrl()
+	public final String getRedirectUrl()
 	{
 		return redirectUrl;
 	}
-	
+
 	/**
 	 * Gets the content length.
+	 * <p>
+	 * Note: Prior to closing the response, the number of characters is
+	 * returned. After closing, the number of bytes is returned, which depending
+	 * on the encoding and the characters might be larger.
+	 * 
 	 * @return The content length of this redirect response
 	 */
-	public int getContentLength()
+	public final int getContentLength()
 	{
-		if(byteBuffer != null) return byteBuffer.length;
+		if (byteBuffer != null)
+		{
+			return byteBuffer.length;
+		}
+
 		return stringBuffer.length();
 	}
 
 	/**
+	 * Get the content mime type.
+	 * 
 	 * @return The content type of this redirect response
 	 */
-	public String getContentType()
+	public final String getContentType()
 	{
 		return this.mimeType;
-	}
-	
-	
-	/**
-	 * Set the charset to be used for string encoding.
-	 * @param charset The charsest name
-	 */
-	public void setCharset(String charset)
-	{
-		this.charset = charset;
-	}
-
-	/**
-	 * Get the charset that is or will be used for string encoding.
-	 * @return The charset used for encoding the string to  bytes
-	 */
-	public String getCharset()
-	{
-		return this.charset;
 	}
 
 	/**
 	 * Sets the content mimetype.
-	 * @param mimeType 
+	 * 
+	 * @param mimeType
 	 */
-	public void setContentType(String mimeType)
+	public final void setContentType(final String mimeType)
 	{
 		this.mimeType = mimeType;
 	}
-	
+
 	/**
 	 * @see wicket.Response#redirect(java.lang.String)
 	 */
-	public void redirect(String url)
+	public final void redirect(final String url)
 	{
 		redirectUrl = url;
 	}
@@ -149,7 +139,7 @@ public class BufferedResponse extends Response
 	/**
 	 * @see wicket.Response#getOutputStream()
 	 */
-	public OutputStream getOutputStream()
+	public final OutputStream getOutputStream()
 	{
 		throw new UnsupportedOperationException("Cannot get output stream on BufferedResponse");
 	}
@@ -157,107 +147,90 @@ public class BufferedResponse extends Response
 	/**
 	 * @see wicket.Response#write(java.lang.String)
 	 */
-	public void write(String string)
+	public final void write(final String string)
 	{
+		if (stringBuffer == null)
+		{
+			throw new WicketRuntimeException("Can not write to the response after closing it.");
+		}
 		stringBuffer.append(string);
 	}
-	
+
 	/**
 	 * @see wicket.Response#close()
 	 */
-	public void close()
+	public final void close()
 	{
-		super.close();
-		
-		String mimeCharset = null;
-		if(mimeType != null)
+		if (stringBuffer == null)
 		{
-			int index = mimeType.indexOf("charset");
-			if(index != -1)
-			{
-				index = mimeType.indexOf('=', index+7);
-				if(index != -1)
-				{
-					// TODO better parsing of this charset.. can string be after this..
-					mimeCharset = mimeType.substring(index+1);
-				}
-			}
+			throw new WicketRuntimeException("The response has already been closed.");
 		}
-		byteBuffer = convertToCharset(mimeCharset,charset);
-		stringBuffer = null;
+
+		super.close();
+
+		this.byteBuffer = convertToCharset(getCharacterEncoding());
+		this.stringBuffer = null;
 	}
-	
+
 	/**
-	 * Get the bytes of this buffered response string in the encoding of the mime type.
-	 * @return the encoded bytes
+	 * Get the bytes of this buffered response string in the encoding of the
+	 * mime type.
+	 * 
+	 * @return after closing the response, the encoded bytes, else null.
 	 */
-	public byte[] getBytes()
+	public final byte[] getBytes()
 	{
 		return byteBuffer;
 	}
-	
-	public String getString()
+
+	/**
+	 * Prior to closing the response, the current content of the buffer. After
+	 * closing the response, an exception will be thrown as the buffer is no
+	 * longer available.
+	 * 
+	 * @return String The buffer content
+	 */
+	public final String getString()
 	{
+		if (stringBuffer == null)
+		{
+			throw new WicketRuntimeException("You can call getString() after closing the response.");
+		}
 		return stringBuffer.toString();
 	}
-	
-	private byte[] convertToCharset(String charset, String backupCharset)
+
+	/**
+	 * Convert the string into the output encoding required
+	 * 
+	 * @param encoding
+	 *            The output encoding
+	 * @return byte[] The encoded characters converted into bytes
+	 */
+	private byte[] convertToCharset(final String encoding)
 	{
-		if(charset == null)
+		if (encoding == null)
 		{
-			charset = backupCharset;
-			backupCharset = null;
+			throw new WicketRuntimeException("Internal error: encoding must not be null");
 		}
-		byte[] bytes = null;
-		String string = stringBuffer.toString();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(string.length());
-		if(charset != null)
+
+		final String string = getString();
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream(string.length());
+
+		final OutputStreamWriter osw;
+		final byte[] bytes;
+		try
 		{
-			OutputStreamWriter osw = null;
-			try
-			{
-				osw = new OutputStreamWriter(baos,charset);
-				osw.write(string);
-				osw.close();
-				bytes = baos.toByteArray();
-				this.charset = charset;
-			}
-			catch (Exception ex)
-			{
-				log.debug("Can't convert response to charset: " + charset, ex);
-				if(backupCharset != null)
-				{
-					try
-					{
-						osw = new OutputStreamWriter(baos,backupCharset);
-						osw.write(string);
-						osw.close();
-						bytes = baos.toByteArray();
-						this.charset = backupCharset;
-					}
-					catch (Exception ex1)
-					{
-						log.debug("Can't convert response to charset: " + backupCharset, ex1);
-					}
-				}
-			}
+			osw = new OutputStreamWriter(baos, encoding);
+			osw.write(string);
+			osw.close();
+
+			bytes = baos.toByteArray();
 		}
-		if(bytes == null)
+		catch (Exception ex)
 		{
-			OutputStreamWriter osw = null;
-			try
-			{
-				osw = new OutputStreamWriter(baos,DEFAULT_CHARACTER_ENCODING);
-				osw.write(string);
-				osw.close();
-				bytes = baos.toByteArray();
-				this.charset = DEFAULT_CHARACTER_ENCODING;
-			}
-			catch (Exception ex1)
-			{
-				bytes = string.getBytes();
-			}
+			throw new WicketRuntimeException("Can't convert response to charset: " + encoding, ex);
 		}
+
 		return bytes;
 	}
 }

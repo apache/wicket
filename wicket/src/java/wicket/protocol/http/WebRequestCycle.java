@@ -167,31 +167,44 @@ public class WebRequestCycle extends RequestCycle
 	protected void redirectTo(final Page page) throws ServletException
 	{
 		String redirectUrl = page.urlFor(page, IRedirectListener.class);
+		
 		// Check if use serverside response for client side redirects
 		ApplicationSettings settings = application.getSettings();
-		if (settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER && application instanceof WebApplication)
+		if ((settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER) 
+		        && (application instanceof WebApplication))
 		{
 			// create the redirect response.
 			try
 			{
+			    // remember the current response
 				final Response currentResponse = getResponse();
-				// override the encodeURL so that it will use the real once encoding..
-				BufferedResponse redirectResponse = new BufferedResponse(redirectUrl) {
+				
+				// override the encodeURL so that it will use the real once encoding.
+				final BufferedResponse redirectResponse = new BufferedResponse(redirectUrl) 
+				{
 					public String encodeURL(String url) 
 					{
 						return currentResponse.encodeURL(url);
-					};
+					}
 				};
+
+				// redirect the response to the buffer
 				setResponse(redirectResponse);
+				
 				// test if the invoker page was the same as the page that is going to be renderd
 				if (getInvokePage() == getResponsePage())
 				{
 					// set it to null because it is already ended in the page.doRender()
 					setInvokePage(null);
 				}
+				
+				// render the page into the buffer
 				page.doRender();
+				
+				// re-assign the original response
 				setResponse(currentResponse);
-				String responseRedirect = redirectResponse.getRedirectUrl();
+				
+				final String responseRedirect = redirectResponse.getRedirectUrl();
 				if (redirectUrl != responseRedirect)
 				{
 					// if the redirectResponse has another redirect url set 
@@ -201,12 +214,16 @@ public class WebRequestCycle extends RequestCycle
 				}
 				else if (redirectResponse.getContentLength() > 0)
 				{
-					// if no content is created then don't set it in the redirect buffer.. (maybe access failed)
-					// set the charset of the response (what the browser wants)
-					redirectResponse.setCharset(getWebResponse().getHttpServletResponse().getCharacterEncoding());
-					// close it so that this reponse can't be is fixed and encoded from here on.
+					// if no content is created then don't set it in the redirect buffer 
+				    // (maybe access failed). 
+					// Set the encoding of the response (what the browser wants)
+					redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
+					
+					// close it so that the reponse is fixed and encoded from here on.
 					redirectResponse.close();
-					((WebApplication)application).addRedirect(getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
+					
+					((WebApplication)application).addRedirect(
+					        getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
 				}
 			}
 			catch (RuntimeException ex)
@@ -219,6 +236,7 @@ public class WebRequestCycle extends RequestCycle
 			// redirect page can touch its models already (via for example the constructors) 
 			page.internalEndRequest();
 		}
+		
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}
