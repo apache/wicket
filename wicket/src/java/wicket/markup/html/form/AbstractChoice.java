@@ -28,10 +28,6 @@ import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
 /**
- * @author jcompagner
- *
- */
-/**
  * Abstract base class for all choice (html select) options.
  * 
  * @author Jonathan Locke
@@ -47,6 +43,8 @@ abstract class AbstractChoice extends FormComponent
 	private IChoiceRenderer renderer;
 
 	/**
+	 * Constructor
+	 * 
 	 * @param id
 	 *            See Component
 	 * @see wicket.Component#Component(String)
@@ -65,17 +63,19 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, final Collection choices)
 	{
-		this(id, new ChoiceRenderer(),choices);
+		this(id, new ChoiceRenderer(), choices);
 	}
 
 	/**
 	 * @param id
 	 *            See Component
+	 * @param renderer
+	 *            The rendering engine
 	 * @param choices
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final IChoiceRenderer renderer,final Collection choices)
+	public AbstractChoice(final String id, final IChoiceRenderer renderer, final Collection choices)
 	{
 		super(id);
 		this.choices = choices;
@@ -101,17 +101,20 @@ abstract class AbstractChoice extends FormComponent
 	 *            See Component
 	 * @param model
 	 *            See Component
+	 * @param renderer
+	 *            The rendering engine
 	 * @param choices
 	 *            The drop down choices
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel model, final IChoiceRenderer renderer, final Collection choices)
+	public AbstractChoice(final String id, IModel model, final IChoiceRenderer renderer,
+			final Collection choices)
 	{
 		super(id, model);
 		this.choices = choices;
 		this.renderer = renderer;
 	}
-	
+
 	/**
 	 * @return The collection of object that this choice has
 	 */
@@ -120,22 +123,22 @@ abstract class AbstractChoice extends FormComponent
 		return choices;
 	}
 
-
 	/**
 	 * Sets the list of choices.
-	 *
-	 * @param choices the list of choices
+	 * 
+	 * @param choices
+	 *            the list of choices
 	 */
 	public final void setChoices(Collection choices)
 	{
-		if (this.choices != null && (this.choices != choices))
+		if ((this.choices != null) && (this.choices != choices))
 		{
 			if (isVersioned())
 			{
 				addStateChange(new Change()
 				{
 					final Collection oldList = AbstractChoice.this.choices;
-	
+
 					public void undo()
 					{
 						AbstractChoice.this.choices = oldList;
@@ -145,26 +148,41 @@ abstract class AbstractChoice extends FormComponent
 		}
 		this.choices = choices;
 	}
-	
+
 	/**
 	 * @return The IChoiceRenderer used for rendering the data objects
 	 */
-	public IChoiceRenderer getChoiceRenderer()
+	public final IChoiceRenderer getChoiceRenderer()
 	{
 		return renderer;
 	}
 
+	/**
+	 * Set the choice renderer to be used.
+	 *  
+	 * @param renderer
+	 */
+	public final void setChoiceRenderer(IChoiceRenderer renderer)
+	{
+	    this.renderer = renderer;
+	}
+	
 	/**
 	 * @see wicket.Component#detachModel()
 	 */
 	protected void detachModel()
 	{
 		super.detachModel();
-		if (choices instanceof IDetachable) ((IDetachable)choices).detach();
+		
+		if (choices instanceof IDetachable)
+		{
+			((IDetachable)choices).detach();
+		}
 	}
 
 	/**
-	 * @param selected The object that's currently selected
+	 * @param selected
+	 *            The object that's currently selected
 	 * @return Any default choice, such as "Choose One", depending on the
 	 *         subclass
 	 */
@@ -178,8 +196,8 @@ abstract class AbstractChoice extends FormComponent
 	 * 
 	 * @param object
 	 *            The object to check
-	 * @param index 
-	 * 			  The index in the choices collection this object is in.
+	 * @param index
+	 *            The index in the choices collection this object is in.
 	 * @return Whether the given value represents the current selection
 	 */
 	protected abstract boolean isSelected(final Object object, int index);
@@ -193,8 +211,7 @@ abstract class AbstractChoice extends FormComponent
 	 *            The open tag for the body
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final StringBuffer buffer = new StringBuffer();
 		final Object selected = getModelObject();
@@ -202,9 +219,9 @@ abstract class AbstractChoice extends FormComponent
 		// Append default option
 		buffer.append(getDefaultChoice(selected));
 
-		Iterator it = getChoices().iterator();
+		final Iterator it = getChoices().iterator();
 		int index = 0;
-		while(it.hasNext())
+		while (it.hasNext())
 		{
 			final Object object = it.next();
 			if (object != null)
@@ -218,8 +235,8 @@ abstract class AbstractChoice extends FormComponent
 				buffer.append("value=\"");
 				buffer.append(renderer.getIdValue(object, index));
 				buffer.append("\">");
-				String display = getLocalizer().getString(
-						getId() + "." + displayValue, this, displayValue);
+				String display = getLocalizer().getString(getId() + "." + displayValue, this,
+						displayValue);
 				String escaped = Strings.escapeMarkup(display, false, true);
 				buffer.append(escaped);
 				buffer.append("</option>");
