@@ -17,8 +17,7 @@
  */
 package wicket.markup.html.form;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -47,35 +46,35 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public RadioChoice(final String id, final Collection choices)
+	public RadioChoice(final String id, final List choices)
 	{
 		super(id, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceRenderer,Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public RadioChoice(final String id, final IChoiceRenderer renderer, final Collection choices)
+	public RadioChoice(final String id, final List choices, final IChoiceRenderer renderer)
 	{
-		super(id,renderer,choices);
+		super(id,choices,renderer);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public RadioChoice(final String id, IModel model, final Collection choices)
+	public RadioChoice(final String id, IModel model, final List choices)
 	{
 		super(id, model, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceRenderer,Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List,IChoiceRenderer)
 	 */
-	public RadioChoice(final String id, IModel model, final IChoiceRenderer renderer, final Collection choices)
+	public RadioChoice(final String id, IModel model, final List choices, final IChoiceRenderer renderer)
 	{
-		super(id, model, renderer,choices);
+		super(id, model, choices,renderer);
 	}
 
 	/**
@@ -144,16 +143,15 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		final StringBuffer buffer = new StringBuffer();
 
 		// Iterate through choices
-		final Collection choices = getChoices();
+		final List choices = getChoices();
 
 		// Loop through choices
-		int index = -1;
-		Iterator it = choices.iterator();
-		while(it.hasNext())
+		
+		
+		for(int index=0;index<choices.size();index++)
 		{
-			index++;
 			// Get next choice
-			final Object choice = it.next();
+			final Object choice = choices.get(index);
 
 			// Get label for choice
 			final String label = getChoiceRenderer().getDisplayValue(choice);

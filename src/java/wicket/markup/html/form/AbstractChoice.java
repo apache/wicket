@@ -17,8 +17,7 @@
  */
 package wicket.markup.html.form;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -37,7 +36,7 @@ import wicket.version.undo.Change;
 abstract class AbstractChoice extends FormComponent
 {
 	/** The list of objects. */
-	private Collection choices;
+	private List choices;
 
 	/** The renderer used to generate display/id values for the objects. */
 	private IChoiceRenderer renderer;
@@ -61,9 +60,9 @@ abstract class AbstractChoice extends FormComponent
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final Collection choices)
+	public AbstractChoice(final String id, final List choices)
 	{
-		this(id, new ChoiceRenderer(), choices);
+		this(id, choices,new ChoiceRenderer());
 	}
 
 	/**
@@ -75,7 +74,7 @@ abstract class AbstractChoice extends FormComponent
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final IChoiceRenderer renderer, final Collection choices)
+	public AbstractChoice(final String id, final List choices,final IChoiceRenderer renderer)
 	{
 		super(id);
 		this.choices = choices;
@@ -91,9 +90,9 @@ abstract class AbstractChoice extends FormComponent
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel model, final Collection choices)
+	public AbstractChoice(final String id, IModel model, final List choices)
 	{
-		this(id, model, new ChoiceRenderer(), choices);
+		this(id, model, choices, new ChoiceRenderer());
 	}
 
 	/**
@@ -107,8 +106,7 @@ abstract class AbstractChoice extends FormComponent
 	 *            The drop down choices
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel model, final IChoiceRenderer renderer,
-			final Collection choices)
+	public AbstractChoice(final String id, IModel model, final List choices, final IChoiceRenderer renderer)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -118,7 +116,7 @@ abstract class AbstractChoice extends FormComponent
 	/**
 	 * @return The collection of object that this choice has
 	 */
-	public Collection getChoices()
+	public List getChoices()
 	{
 		return choices;
 	}
@@ -129,7 +127,7 @@ abstract class AbstractChoice extends FormComponent
 	 * @param choices
 	 *            the list of choices
 	 */
-	public final void setChoices(Collection choices)
+	public final void setChoices(List choices)
 	{
 		if ((this.choices != null) && (this.choices != choices))
 		{
@@ -137,8 +135,7 @@ abstract class AbstractChoice extends FormComponent
 			{
 				addStateChange(new Change()
 				{
-					final Collection oldList = AbstractChoice.this.choices;
-
+					final List oldList = AbstractChoice.this.choices;
 					public void undo()
 					{
 						AbstractChoice.this.choices = oldList;
@@ -219,28 +216,27 @@ abstract class AbstractChoice extends FormComponent
 		// Append default option
 		buffer.append(getDefaultChoice(selected));
 
-		final Iterator it = getChoices().iterator();
-		int index = 0;
-		while (it.hasNext())
+		List choices = getChoices();
+		for(int index=0;index<choices.size();index++)
 		{
-			final Object object = it.next();
-			if (object != null)
+			// Get next choice
+			final Object choice = choices.get(index);
+			if (choice != null)
 			{
-				final String displayValue = renderer.getDisplayValue(object);
+				final String displayValue = renderer.getDisplayValue(choice);
 				buffer.append("\n<option ");
-				if (isSelected(object, index))
+				if (isSelected(choice, index))
 				{
 					buffer.append("selected=\"selected\"");
 				}
 				buffer.append("value=\"");
-				buffer.append(renderer.getIdValue(object, index));
+				buffer.append(renderer.getIdValue(choice, index));
 				buffer.append("\">");
 				String display = getLocalizer().getString(getId() + "." + displayValue, this,
 						displayValue);
 				String escaped = Strings.escapeMarkup(display, false, true);
 				buffer.append(escaped);
 				buffer.append("</option>");
-				index++;
 			}
 			else
 			{

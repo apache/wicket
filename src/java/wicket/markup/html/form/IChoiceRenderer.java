@@ -18,14 +18,17 @@
  */
 package wicket.markup.html.form;
 
+import java.io.Serializable;
+
 /**
  * Renders one choice. Seperates the 'id' values used for internal representation from
  * 'display values' which are the values show to the user of components that use this renderer.
  *
  * @author jcompagner
  */
-public interface IChoiceRenderer
+public interface IChoiceRenderer extends Serializable
 {
+
 	/**
 	 * Get the value for displaying to an end user.
 	 *
@@ -35,11 +38,13 @@ public interface IChoiceRenderer
 	public String getDisplayValue(Object object);
 	
 	/**
-	 * Gets the value meant for interal representation.
-	 *
-	 * @param object the actual object
-	 * @param index
-	 * @return the value meant for interal representation
+	 * This method is called to get the id value of an object (used as the value attribute of a choice element)
+	 * The id can be extracted from the object like a primairy key, or if the list is stable you could just return 
+	 * a toString of the index.
+	 * 
+	 * @param object The object for which the id should be generated
+	 * @param index The index of the object in the choices list.
+	 * @return String 
 	 */
 	public String getIdValue(Object object, int index);
 }
