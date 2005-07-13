@@ -839,8 +839,36 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 */
 	public final String getStyle()
 	{
-		return getSession().getStyle();
+		String variation = getVariation();
+		String style = getSession().getStyle();
+		if(variation != null && !"".equals(variation))
+		{
+			if(style != null && !"".equals(style))
+			{
+				style = variation + "_" + style;
+			}
+			else
+			{
+				style = variation;
+			}
+		}
+		return style;
 	}
+
+	/**
+	 * Gets the variation string of this component that will be used to look up markup for this component.
+	 * Subclasses can override this method to define by an instance what markup variation should be picked up.
+	 * By default it will return null. 
+	 * 
+	 * @return The variation of this component.
+	 * 
+	 */
+	public String getVariation()
+	{
+		return null;
+	}
+
+	
 
 	/**
 	 * @return True if this component has an error message
