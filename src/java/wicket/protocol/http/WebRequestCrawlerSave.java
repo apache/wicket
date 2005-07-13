@@ -115,7 +115,7 @@ public class WebRequestCrawlerSave extends WebRequest
 	 */
 	private String rebuildUrl(String queryString)
 	{
-	    queryString = Strings.replaceAll(queryString, "1=", "component=");
+	    queryString = Strings.replaceAll(queryString, "1=", "path=");
 	    queryString = Strings.replaceAll(queryString, "2=", "version=");
 	    queryString = Strings.replaceAll(queryString, "4=", "interface=IRedirectListener");
 	    queryString = Strings.replaceAll(queryString, "3=", "interface=");

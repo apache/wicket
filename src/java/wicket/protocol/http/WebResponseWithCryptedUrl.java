@@ -131,7 +131,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 */
 	private String shortenUrl(String queryString)
 	{
-	    queryString = Strings.replaceAll(queryString, "component=", "1=");
+	    queryString = Strings.replaceAll(queryString, "path=", "1=");
 	    queryString = Strings.replaceAll(queryString, "version=", "2=");
 	    queryString = Strings.replaceAll(queryString, "interface=IRedirectListener", "4=");
 	    queryString = Strings.replaceAll(queryString, "interface=", "3=");

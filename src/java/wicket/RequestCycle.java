@@ -83,7 +83,7 @@ import wicket.util.string.Strings;
  * session-relative number:
  * <p>
  * <ul>
- * /[Application]?component=[pageId]
+ * /[Application]?path=[pageId]
  * </ul>
  * <p>
  * Often, the reason to access an existing session page is due to some kind of
@@ -92,13 +92,13 @@ import wicket.util.string.Strings;
  * registered listener is dispatched like so:
  * <p>
  * <ul>
- * /[Application]?component=[pageId.componentPath]&interface=[interface]
+ * /[Application]?path=[pageId.componentPath]&interface=[interface]
  * </ul>
  * <p>
  * For example:
  * <p>
  * <ul>
- * /[Application]?component=3.signInForm.submit&interface=IFormSubmitListener
+ * /[Application]?path=3.signInForm.submit&interface=IFormSubmitListener
  * </ul>
  * </td>
  * </tr>
