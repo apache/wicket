@@ -136,15 +136,20 @@ public class WebPage extends Page implements IHeaderRenderer
 		final WebRequestCycle cycle = getWebRequestCycle();
 		final StringBuffer buffer = urlPrefix(cycle);
 		appendPageMapName(buffer);
-		buffer.append("component=");
+		buffer.append("path=");
 		buffer.append(component.getPath());
-		if (component.getPage().getCurrentVersionNumber() != 0)
+		int versionNumber = component.getPage().getCurrentVersionNumber();
+		if(versionNumber > 0)
 		{
-		    buffer.append("&version=");
-		    buffer.append(component.getPage().getCurrentVersionNumber());
+			buffer.append("&version=");
+			buffer.append(versionNumber);
 		}
-		buffer.append("&interface=");
-		buffer.append(Classes.name(listenerInterface));
+		String listenerName = Classes.name(listenerInterface);
+		if(!"IRedirectListener".equals(listenerName))
+		{
+			buffer.append("&interface=");
+			buffer.append(listenerName);
+		}
 
 		// add an extra parameter for regconition in case we are targetting a dispatched handler
 		if (IEventRequestListener.class.isAssignableFrom(listenerInterface))
