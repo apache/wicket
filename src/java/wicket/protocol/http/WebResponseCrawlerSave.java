@@ -29,6 +29,8 @@ import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
 /**
+ * EXPERIMENTAL ONLY
+ * <p>
  * It extends WebResponse and encodes wicket's URL to make them crawler save.
  *  
  * @author Juergen Donnerstag
@@ -82,23 +84,6 @@ public class WebResponseCrawlerSave extends WebResponse
 		
 		// we didn't change anything
 		return url;
-	}
-	
-	/**
-	 * Escape invalid URL characters 
-	 * 
-	 * @param queryString The orginal querystring
-	 * @return url The querystring with invalid characters escaped
-	 */
-	private String escapeUrl(String queryString)
-	{
-	    queryString = Strings.replaceAll(queryString, " ", "%20");
-	    queryString = Strings.replaceAll(queryString, "%", "%26");
-	    queryString = Strings.replaceAll(queryString, "=", "%3D");
-	    queryString = Strings.replaceAll(queryString, "/", "%2F");
-	    queryString = Strings.replaceAll(queryString, "+", "%2B");
-	    
-	    return queryString;
 	}
 	
 	/**

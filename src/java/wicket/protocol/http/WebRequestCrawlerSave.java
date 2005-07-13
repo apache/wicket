@@ -29,6 +29,8 @@ import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
 /**
+ * EXPERIMENTAL AND PROBABLY NOT YET COMPLETE
+ * <p>
  * It extends WebRequest and decodes URLs encoded by WebResponseCrawlerSave. 
  * Wicket's default URLs for static resources like Pages and Images
  * is like myApp?bookmarkable=wicket.test.MyPage. Many users however prefer
@@ -104,24 +106,6 @@ public class WebRequestCrawlerSave extends WebRequest
 	            this.parameters.put(entry.getKey(), entry.getValue());
 		    }
 		}
-	}
-
-	/**
-	 * In case the query string has been shortened prior to encryption,
-	 * than rebuild (lengthen) the query string now.
-	 * 
-	 * @param queryString The URL's query string
-	 * @return The lengthened query string
-	 */
-	private String rebuildUrl(String queryString)
-	{
-	    queryString = Strings.replaceAll(queryString, "1=", "path=");
-	    queryString = Strings.replaceAll(queryString, "2=", "version=");
-	    queryString = Strings.replaceAll(queryString, "4=", "interface=IRedirectListener");
-	    queryString = Strings.replaceAll(queryString, "3=", "interface=");
-	    queryString = Strings.replaceAll(queryString, "5=", "bookmarkablePage=");
-	    
-	    return queryString;
 	}
 
 	/**
