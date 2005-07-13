@@ -34,6 +34,9 @@ import wicket.util.time.Time;
  */
 public abstract class Response
 {
+    /** Default encoding of output stream */
+    private String defaultEncoding;
+    
 	/**
 	 * Closes the response output stream
 	 */
@@ -126,6 +129,29 @@ public abstract class Response
 	{
 	}
 
+	/**
+	 * Set the default encoding for the output. 
+	 * Note: It is up to the derived class to make use of the information.
+	 * Class Respsonse simply stores the value, but does not apply
+	 * it anywhere automatically.
+	 * 
+	 * @param encoding
+	 */
+	public void setCharacterEncoding(final String encoding)
+	{
+	    this.defaultEncoding = encoding;
+	}
+	
+	/**
+	 * Get the default encoding
+	 * 
+	 * @return default encoding
+	 */
+	public String getCharacterEncoding()
+	{
+	    return this.defaultEncoding;
+	}
+	
 	/**
 	 * Writes the given tag to via the write(String) abstract method.
 	 * 
