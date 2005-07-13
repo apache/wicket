@@ -26,14 +26,14 @@ public interface IChoiceRenderer
 {
 	/**
 	 * @param object
-	 * @return
+	 * @return String
 	 */
 	public String getDisplayValue(Object object);
 	
 	/**
 	 * @param object
 	 * @param index
-	 * @return
+	 * @return String
 	 */
 	public String getIdValue(Object object, int index);
 }
