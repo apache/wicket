@@ -53,15 +53,15 @@ import wicket.util.convert.IConverter;
 public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] 
-	        { Locale.US, new Locale("nl"), Locale.GERMANY , Locale.SIMPLIFIED_CHINESE });
+	private static final List LOCALES = Arrays.asList(new Locale[] { 
+	        Locale.US, new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE });
 
 	/** available numbers for the radio selection. */
-	private static final List NUMBERS = Arrays.asList(new String[]{"1", "2", "3"});
+	private static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
 
 	/** available sites for the multiple select. */
-	private static final List SITES = Arrays.asList(
-			new String[]{"The Server Side", "Java Lobby", "Java.Net"});
+	private static final List SITES = Arrays.asList(new String[] { 
+	        "The Server Side", "Java Lobby", "Java.Net" });
 
 	/**
 	 * Constructor
@@ -76,6 +76,9 @@ public class FormInput extends WicketExamplePage
 		add(new InputForm("inputForm", feedback));
 
 		// Dropdown for selecting locale
+		// TODO when I use IE with German locale preferred, I get the choices
+		// in German language, but not "Englisch" is selected instead of "Deutsch".
+		// Looking at the output generated, no option is "selected".
 		add(new LocaleDropDownChoice("localeSelect"));
 
 		// Link to return to default locale
@@ -102,7 +105,7 @@ public class FormInput extends WicketExamplePage
 	}
 
 	/**
-	 * Form for collecting input. 
+	 * Form for collecting input.
 	 */
 	private static class InputForm extends Form
 	{
@@ -125,8 +128,8 @@ public class FormInput extends WicketExamplePage
 			add(integerTextField);
 			add(new RequiredTextField("doubleProperty", Double.class));
 			add(new RequiredTextField("dateProperty", Date.class));
-			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(IntegerValidator
-					.range(0, 100)));
+			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(
+			        IntegerValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			add(new RadioChoice("numberRadioChoice", NUMBERS)
 			{
@@ -152,7 +155,8 @@ public class FormInput extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					// just call modelChanged so that any invalid input is cleared.
+					// just call modelChanged so that any invalid input is
+					// cleared.
 					InputForm.this.modelChanged();
 				}
 			}.add(new Image("resetButtonImage")));
@@ -175,14 +179,16 @@ public class FormInput extends WicketExamplePage
 	{
 		/**
 		 * Construct.
-		 * @param id component id
+		 * 
+		 * @param id
+		 *            component id
 		 */
 		public LocaleDropDownChoice(String id)
 		{
-			super(id,new LocaleChoice(),null);
+			super(id, new LocaleChoiceRenderer(), null);
 
-			// set the model that gets the current locale, and that is used for updating
-			// the current locale to property 'locale' of FormInput
+			// set the model that gets the current locale, and that is used for
+			// updating the current locale to property 'locale' of FormInput
 			setModel(new PropertyModel(FormInput.this, "locale"));
 
 			// use a custom implementation of choices, as we want to display
@@ -204,8 +210,8 @@ public class FormInput extends WicketExamplePage
 		 */
 		public void onSelectionChanged(Object newSelection)
 		{
-			// note that we don't have to do anything here, as our property model allready
-			// calls FormInput.setLocale when the model is updated
+			// note that we don't have to do anything here, as our property
+			// model allready calls FormInput.setLocale when the model is updated
 			// setLocale((Locale)newSelection); // so we don't need to do this
 		}
 	}
@@ -213,12 +219,12 @@ public class FormInput extends WicketExamplePage
 	/**
 	 * Choice for a locale.
 	 */
-	private final class LocaleChoice extends ChoiceRenderer
+	private final class LocaleChoiceRenderer extends ChoiceRenderer
 	{
 		/**
 		 * Constructor.
 		 */
-		public LocaleChoice()
+		public LocaleChoiceRenderer()
 		{
 		}
 
@@ -228,7 +234,7 @@ public class FormInput extends WicketExamplePage
 		public String getDisplayValue(Object object)
 		{
 			Locale locale = (Locale)object;
-			String display = locale.getDisplayName(getLocale());
+			String display = locale.getDisplayName(getLocale()); 
 			return display;
 		}
 	}
