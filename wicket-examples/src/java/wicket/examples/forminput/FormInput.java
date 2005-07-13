@@ -220,7 +220,6 @@ public class FormInput extends WicketExamplePage
 		 */
 		public LocaleChoice()
 		{
-			super(null,null);
 		}
 
 		/**
