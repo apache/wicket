@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
@@ -71,7 +72,19 @@ public class HtmlHeaderResolver implements IComponentResolver
 			{
 				// Create, add and render the component
 				HtmlHeaderContainer header = new HtmlHeaderContainer();
-				container.autoAdd(header);
+				
+				try
+				{
+				    container.autoAdd(header);
+				}
+				catch (IllegalArgumentException ex)
+				{
+				    throw new WicketRuntimeException(
+				            "If the root exception says something like " +
+				            "\"A child with id '_header' already exists\"" +
+				            "than you most likely forgot to override autoAdd() " + 
+				            "in your bordered page component.", ex);
+				}
 
 				// Yes, we handled the tag
 				return true;
