@@ -56,14 +56,15 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @param id 
-	 * @param renderer 
-	 * @param data 
+	 * @param id
+	 * @param renderer
+	 * @param data
 	 * @see AbstractChoice#AbstractChoice(String, IChoiceRenderer ,Collection)
 	 */
-	public AbstractSingleSelectChoice(final String id, final IChoiceRenderer renderer, final Collection data)
+	public AbstractSingleSelectChoice(final String id, final IChoiceRenderer renderer,
+			final Collection data)
 	{
-		super(id, renderer,data);
+		super(id, renderer, data);
 	}
 
 	/**
@@ -73,17 +74,19 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	{
 		super(id, model, data);
 	}
-	
+
 	/**
-	 * @param id 
-	 * @param model 
-	 * @param renderer 
-	 * @param data 
-	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceRenderer, Collection)
+	 * @param id
+	 * @param model
+	 * @param renderer
+	 * @param data
+	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceRenderer,
+	 *      Collection)
 	 */
-	public AbstractSingleSelectChoice(final String id, IModel model, final IChoiceRenderer renderer, final Collection data)
+	public AbstractSingleSelectChoice(final String id, IModel model,
+			final IChoiceRenderer renderer, final Collection data)
 	{
-		super(id, model,renderer, data);
+		super(id, model, renderer, data);
 	}
 
 	/**
@@ -96,17 +99,17 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		{
 			int index = -1;
 			Collection collection = getChoices();
-			if(collection instanceof List)
+			if (collection instanceof List)
 			{
 				index = ((List)collection).indexOf(object);
 			}
 			else
 			{
 				Iterator it = collection.iterator();
-				while(it.hasNext())
+				while (it.hasNext())
 				{
 					index++;
-					if(it.next().equals(object))
+					if (it.next().equals(object))
 					{
 						break;
 					}
@@ -131,7 +134,8 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * Is the <code>null</code> value a valid value?
 	 * 
-	 * @param nullValid whether null is a valid value
+	 * @param nullValid
+	 *            whether null is a valid value
 	 */
 	public void setNullValid(boolean nullValid)
 	{
@@ -145,11 +149,11 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	{
 		Iterator it = getChoices().iterator();
 		int index = -1;
-		while(it.hasNext())
+		while (it.hasNext())
 		{
 			index++;
 			Object object = it.next();
-			if(getChoiceRenderer().getIdValue(object, index).equals(value))
+			if (getChoiceRenderer().getIdValue(object, index).equals(value))
 			{
 				setModelObject(object);
 				break;
@@ -164,7 +168,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	{
 		// The <option> tag buffer
 		final StringBuffer buffer = new StringBuffer();
-		
+
 		// Is null a valid selection value?
 		if (isNullValid())
 		{
@@ -189,13 +193,12 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			if (selected == null)
 			{
 				// Force the user to pick a non-null value
-				final String option = getLocalizer().getString(getId() + ".null", this,
-						CHOOSE_ONE);
-				buffer.append("\n<option selected=\"selected\" value=\"\">").append(option)
-						.append("</option>");
+				final String option = getLocalizer().getString(getId() + ".null", this, CHOOSE_ONE);
+				buffer.append("\n<option selected=\"selected\" value=\"\">").append(option).append(
+						"</option>");
 			}
 		}
-		
+
 		return buffer.toString();
 	}
 
@@ -204,8 +207,8 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * 
 	 * @param object
 	 *            The object to check
-	 * @param index 
-	 * 			  The index of the object in the collection
+	 * @param index
+	 *            The index of the object in the collection
 	 * @return Whether the given value represents the current selection
 	 */
 	protected boolean isSelected(final Object object, int index)
