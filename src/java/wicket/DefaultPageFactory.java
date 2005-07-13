@@ -51,7 +51,7 @@ public final class DefaultPageFactory implements IPageFactory
 		{
 		    // throw an exception in case default constructor is missing 
 		    // => improved error message
-		    pageClass.getConstructor(null);
+		    pageClass.getConstructor((Class[])null);
 		    
 			return (Page)pageClass.newInstance();
 		}
