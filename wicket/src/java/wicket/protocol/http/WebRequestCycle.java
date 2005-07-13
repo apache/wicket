@@ -355,7 +355,7 @@ public class WebRequestCycle extends RequestCycle
 	private boolean callComponentListener()
 	{
 		// Get any component parameter
-		final String path = request.getParameter("component");
+		final String path = request.getParameter("path");
 		final String pageMapName = request.getParameter("pagemap");
 		if (path != null)
 		{
@@ -376,6 +376,10 @@ public class WebRequestCycle extends RequestCycle
 
 				// Execute the user's code
 				String interfaceName = request.getParameter("interface");
+				if(interfaceName == null)
+				{
+					interfaceName = "IRedirectListener";
+				}
 				invokeInterface(page, path, interfaceName);
 				return true;
 			}
@@ -403,7 +407,8 @@ public class WebRequestCycle extends RequestCycle
 			try
 			{
 				Page newPage = newPage(application.getPages().getHomePage());
-				
+				// Redirect to the home page so that a homepage has the same url as a post or get to that page.
+				setRedirect(true);
 				setResponsePage(newPage);
 				setUpdateCluster(true);
 			}
