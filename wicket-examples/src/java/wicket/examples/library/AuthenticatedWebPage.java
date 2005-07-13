@@ -58,6 +58,14 @@ public class AuthenticatedWebPage extends WicketExamplePage
     }
 
     /**
+	 * @see wicket.MarkupContainer#autoAdd(wicket.Component)
+	 */
+	public boolean autoAdd(Component component)
+	{
+		return border.autoAdd(component);
+	}
+	
+    /**
      * Removing children from instances of this class causes those children to
      * be removed from the border child instead.
      * @see wicket.MarkupContainer#removeAll()
@@ -98,12 +106,10 @@ public class AuthenticatedWebPage extends WicketExamplePage
             // okay to proceed
             return true;
         }
-        else
-        {
-            // Force sign in
-            redirectToInterceptPage(newPage(SignIn.class));
-            return false;
-        }
+        
+        // Force sign in
+        redirectToInterceptPage(newPage(SignIn.class));
+        return false;
     }
 }
 
