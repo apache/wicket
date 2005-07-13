@@ -53,8 +53,8 @@ import wicket.util.convert.IConverter;
 public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] { 
-	        Locale.US, new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE });
+	private static final List LOCALES = Arrays.asList(new Locale[] 
+	        { Locale.ENGLISH, new Locale("nl"), Locale.GERMAN , Locale.SIMPLIFIED_CHINESE });
 
 	/** available numbers for the radio selection. */
 	private static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
@@ -185,7 +185,7 @@ public class FormInput extends WicketExamplePage
 		 */
 		public LocaleDropDownChoice(String id)
 		{
-			super(id, new LocaleChoiceRenderer(), null);
+			super(id, null, new LocaleChoiceRenderer());
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
