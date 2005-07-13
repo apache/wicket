@@ -18,6 +18,7 @@
 package wicket.util.crypt;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import javax.crypto.Cipher;
@@ -38,10 +39,13 @@ public abstract class AbstractCrypt implements ICrypt
 {
 	/** Default encryption key */
 	private static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-CrYpT";
-	
+
+	/** Encoding used to convert java String from and to byte[] */
+	private static final String CHARACTER_ENCODING = "UTF-8";
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(AbstractCrypt.class);
-	
+
 	/** Key used to de-/encrypt the data */
 	private String encryptionKey = DEFAULT_ENCRYPTION_KEY;
 
@@ -61,7 +65,14 @@ public abstract class AbstractCrypt implements ICrypt
 	 */
 	public final String decrypt(final String text)
 	{
-		return new String(decryptStringToByteArray(text));
+		try
+		{
+			return new String(decryptStringToByteArray(text), CHARACTER_ENCODING);
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			throw new WicketRuntimeException(ex.getMessage());
+		}
 	}
 
 	/**
@@ -92,7 +103,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 */
 	public String getKey()
 	{
-	    return this.encryptionKey;
+		return this.encryptionKey;
 	}
 
 	/**
@@ -116,7 +127,8 @@ public abstract class AbstractCrypt implements ICrypt
 	 * @return the input crypted. Null in case of an error
 	 * @throws GeneralSecurityException
 	 */
-	protected abstract byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException;
+	protected abstract byte[] crypt(final byte[] input, final int mode)
+			throws GeneralSecurityException;
 
 	/**
 	 * Decrypts a String into a byte array.
@@ -155,6 +167,13 @@ public abstract class AbstractCrypt implements ICrypt
 	private final byte[] encryptStringToByteArray(final String plainText)
 			throws GeneralSecurityException
 	{
-		return crypt(plainText.getBytes(), Cipher.ENCRYPT_MODE);
+		try
+		{
+			return crypt(plainText.getBytes(CHARACTER_ENCODING), Cipher.ENCRYPT_MODE);
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			throw new WicketRuntimeException(ex.getMessage());
+		}
 	}
 }
