@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$
+ * $Id$
+ * $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -15,25 +16,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package wicket.markup.html.form;
 
 /**
- * @author jcompagner
+ * Renders one choice. Seperates the 'id' values used for internal representation from
+ * 'display values' which are the values show to the user of components that use this renderer.
  *
+ * @author jcompagner
  */
 public interface IChoiceRenderer
 {
 	/**
-	 * @param object
-	 * @return String
+	 * Get the value for displaying to an end user.
+	 *
+	 * @param object the actual object
+	 * @return the value meant for displaying to an end user
 	 */
 	public String getDisplayValue(Object object);
 	
 	/**
-	 * @param object
+	 * Gets the value meant for interal representation.
+	 *
+	 * @param object the actual object
 	 * @param index
-	 * @return String
+	 * @return the value meant for interal representation
 	 */
 	public String getIdValue(Object object, int index);
 }
