@@ -17,8 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import wicket.model.IModel;
@@ -48,45 +46,42 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, List)
 	 */
-	public AbstractSingleSelectChoice(final String id, final Collection choices)
+	public AbstractSingleSelectChoice(final String id, final List choices)
 	{
 		super(id, choices);
 	}
 
 	/**
-	 * @param id
-	 * @param renderer
-	 * @param data
-	 * @see AbstractChoice#AbstractChoice(String, IChoiceRenderer ,Collection)
+	 * @param id 
+	 * @param data 
+	 * @param renderer 
+	 * @see AbstractChoice#AbstractChoice(String, List ,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(final String id, final IChoiceRenderer renderer,
-			final Collection data)
+	public AbstractSingleSelectChoice(final String id, final List data, final IChoiceRenderer renderer)
 	{
-		super(id, renderer, data);
+		super(id, data,renderer);
 	}
 
 	/**
-	 * @see AbstractChoice#AbstractChoice(String, IModel, Collection)
+	 * @see AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public AbstractSingleSelectChoice(final String id, IModel model, final Collection data)
+	public AbstractSingleSelectChoice(final String id, IModel model, final List data)
 	{
 		super(id, model, data);
 	}
 
 	/**
-	 * @param id
-	 * @param model
-	 * @param renderer
-	 * @param data
-	 * @see AbstractChoice#AbstractChoice(String, IModel, IChoiceRenderer,
-	 *      Collection)
+	 * @param id 
+	 * @param model 
+	 * @param data 
+	 * @param renderer 
+	 * @see AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(final String id, IModel model,
-			final IChoiceRenderer renderer, final Collection data)
+	public AbstractSingleSelectChoice(final String id, IModel model, final List data, final IChoiceRenderer renderer)
 	{
-		super(id, model, renderer, data);
+		super(id, model,data, renderer);
 	}
 
 	/**
@@ -97,24 +92,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		final Object object = getModelObject();
 		if (object != null)
 		{
-			int index = -1;
-			Collection collection = getChoices();
-			if (collection instanceof List)
-			{
-				index = ((List)collection).indexOf(object);
-			}
-			else
-			{
-				Iterator it = collection.iterator();
-				while (it.hasNext())
-				{
-					index++;
-					if (it.next().equals(object))
-					{
-						break;
-					}
-				}
-			}
+			int index = getChoices().indexOf(object);
 			return getChoiceRenderer().getIdValue(object, index);
 		}
 		return "-1";
@@ -147,15 +125,14 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 */
 	public final void setModelValue(final String value)
 	{
-		Iterator it = getChoices().iterator();
-		int index = -1;
-		while (it.hasNext())
+		List choices = getChoices();
+		for(int index=0;index<choices.size();index++)
 		{
-			index++;
-			Object object = it.next();
-			if (getChoiceRenderer().getIdValue(object, index).equals(value))
+			// Get next choice
+			final Object choice = choices.get(index);
+			if(getChoiceRenderer().getIdValue(choice, index).equals(value))
 			{
-				setModelObject(object);
+				setModelObject(choice);
 				break;
 			}
 		}

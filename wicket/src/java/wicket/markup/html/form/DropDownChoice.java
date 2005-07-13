@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.form;
 
-import java.util.Collection;
+import java.util.List;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
@@ -47,35 +47,35 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public DropDownChoice(final String id, final Collection choices)
+	public DropDownChoice(final String id, final List choices)
 	{
 		super(id, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceRenderer,Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, final IChoiceRenderer renderer, final Collection data)
+	public DropDownChoice(final String id, final List data, final IChoiceRenderer renderer)
 	{
-		super(id,renderer, data);
+		super(id,data, renderer);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public DropDownChoice(final String id, IModel model, final Collection choices)
+	public DropDownChoice(final String id, IModel model, final List choices)
 	{
 		super(id, model, choices);
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceRenderer, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, IModel model, final IChoiceRenderer renderer, final Collection data)
+	public DropDownChoice(final String id, IModel model, final List data, final IChoiceRenderer renderer)
 	{
-		super(id, model,renderer, data);
+		super(id, model,data, renderer);
 	}
 
 	/**

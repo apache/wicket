@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.form;
 
-import java.util.Collection;
+import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -68,19 +68,25 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public ListChoice(final String id, final Collection values)
+	public ListChoice(final String id, final List values)
 	{
 		super(id, values);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IChoiceRenderer,Collection)
+	 * @param id
+	 *			  See Component
+	 * @param choices
+	 *			  The collection of values in the list
+	 * @param renderer
+	 * 			  See AbstractChoice 
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public ListChoice(final String id, final IChoiceRenderer renderer,final Collection values)
+	public ListChoice(final String id, final List choices,final IChoiceRenderer renderer)
 	{
-		super(id, renderer,values);
+		super(id, choices,renderer);
 	}
 
 	/**
@@ -88,15 +94,15 @@ public class ListChoice extends DropDownChoice
 	 *			  See Component
 	 * @param model
 	 *			  See Component
+	 * @param choices
+	 *			  The collection of values in the list
 	 * @param renderer
 	 * 			  See AbstractChoice 
-	 * @param values
-	 *			  The collection of values in the list
-	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
-	public ListChoice(final String id, final IModel model, final IChoiceRenderer renderer,final Collection values)
+	public ListChoice(final String id, final IModel model, final List choices,final IChoiceRenderer renderer)
 	{
-		this(id, model, renderer,values, defaultMaxRows);
+		this(id, model, choices,renderer, defaultMaxRows);
 	}
 
 	/**
@@ -104,17 +110,17 @@ public class ListChoice extends DropDownChoice
 	 *			  See Component
 	 * @param model
 	 *			  See Component
+	 * @param choices
+	 *			  The collection of values in the list
 	 * @param renderer
 	 * 			  See AbstractChoice 
-	 * @param values
-	 *			  The collection of values in the list
 	 * @param maxRows
 	 *			  Maximum number of rows to show
-	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
-	public ListChoice(final String id, final IModel model, final IChoiceRenderer renderer, final Collection values, final int maxRows)
+	public ListChoice(final String id, final IModel model, final List choices, final IChoiceRenderer renderer, final int maxRows)
 	{
-		super(id, model, renderer,values);
+		super(id, model, choices,renderer);
 		this.maxRows = maxRows;
 	}
 
@@ -163,13 +169,13 @@ public class ListChoice extends DropDownChoice
 	 *			  See Component
 	 * @param model
 	 *			  See Component
-	 * @param values
+	 * @param choices
 	 *			  The collection of values in the list
-	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
-	public ListChoice(final String id, final IModel model, final Collection values)
+	public ListChoice(final String id, final IModel model, final List choices)
 	{
-		this(id, model, values, defaultMaxRows);
+		this(id, model, choices, defaultMaxRows);
 	}
 
 	/**
@@ -177,15 +183,15 @@ public class ListChoice extends DropDownChoice
 	 *			  See Component
 	 * @param model
 	 *			  See Component
-	 * @param values
+	 * @param choices
 	 *			  The collection of values in the list
 	 * @param maxRows
 	 *			  Maximum number of rows to show
-	 * @see DropDownChoice#DropDownChoice(String, IModel, Collection)
+	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
 	 */
-	public ListChoice(final String id, final IModel model, final Collection values, final int maxRows)
+	public ListChoice(final String id, final IModel model, final List choices, final int maxRows)
 	{
-		super(id, model, values);
+		super(id, model, choices);
 		this.maxRows = maxRows;
 	}
 }
