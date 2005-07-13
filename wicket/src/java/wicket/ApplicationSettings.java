@@ -297,6 +297,14 @@ public class ApplicationSettings
 	 */
 	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
+	/** 
+	 * In order to do proper form parameter decoding it is important that the 
+	 * response and the following request have the same encoding. 
+	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
+	 * for additional information.
+	 */
+	private String responseRequestEncoding = "UTF-8";
+	    
 	/** Filesystem Path to search for resources */
 	private IResourceFinder resourceFinder = null;
 
@@ -1169,5 +1177,33 @@ public class ApplicationSettings
 	final List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
+	}
+
+	/**
+	 * In order to do proper form parameter decoding it is important that the 
+	 * response and the following request have the same encoding. 
+	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
+	 * for additional information.
+	 * 
+	 * @return The request and response encoding
+	 */
+	public final String getResponseRequestEncoding()
+	{
+		return responseRequestEncoding;
+	}
+	
+	/**
+	 * In order to do proper form parameter decoding it is important that the 
+	 * response and the following request have the same encoding. 
+	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
+	 * for additional information.
+	 * 
+	 * Default encoding: UTF-8
+	 * 
+	 * @param responseRequestEncoding The request and response encoding to be used.
+	 */
+	public final void setResponseRequestEncoding(final String responseRequestEncoding)
+	{
+		this.responseRequestEncoding = responseRequestEncoding;
 	}
 }

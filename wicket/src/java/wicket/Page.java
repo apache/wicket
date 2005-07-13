@@ -580,42 +580,39 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * Set-up response with appropriate content type and locale.
+	 * Set-up response with appropriate content type and locale. The locale
+	 * is set equal to the session locale. The content type header contains
+	 * information about the markup type (@see #getMarkupType()) and the 
+	 * encoding. The response (and request) encoding is determined by an
+	 * application setting (@see ApplicationSettings#getResponseRequestEncoding()).
+	 * In addition and in case the page's markup contains a xml declaration like
+	 * &lt?xml ... ?&gt; an xml declaration with proper encoding information is
+	 * written to the output as well, provided it is not disabled by an 
+	 * applicaton setting (@see ApplicationSettings#getStripXmlDeclarationFromOutput()).
+	 * <p>
+	 * Note: Prior to Wicket 1.1 the output encoding was determined by the page's
+	 * markup encoding. Because this caused uncertainties about the /request/
+	 * encoding, it has been changed in favour of the new, much saver, approach.
+	 * Please see the Wiki for more details.
 	 */
 	protected void configureResponse()
 	{
-		// Get response
+		// Get the response
 		final Response response = getResponse();
-
-		// In case the Page markup contained a <?xml ..?> to determine the
-		// markup's encoding, than forward that very same declaration to
-		// the browser. The xml declaration of all components on the page
-		// are swallowed. Note: this is a potential issue in cases where
-		// the page's encoding (e.g. ascii) does not allow for special
-		// characters used in the contained components. The user has to
-		// make sure that the Page's encoding allow for all characters
-		// required.
-
-		// Note:
+		
+		// Set content type based on markup type for page
+		response.setContentType("text/" + getMarkupType() + "; charset="
+				+ getApplicationSettings().getResponseRequestEncoding());
 
 		final MarkupStream markupStream = findMarkupStream();
-		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null))
+		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null) &&
+		        (getApplicationSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-			// Set content type based on markup type for page
-			response.setContentType("text/" + getMarkupType() + "; charset="
-					+ markupStream.getEncoding());
-
-			if (getApplicationSettings().getStripXmlDeclarationFromOutput() == false)
-			{
-			    response.write(markupStream.getXmlDeclaration());
-			}
+		    response.write("<?xml version='1.0' encoding='" + 
+		            getApplicationSettings().getResponseRequestEncoding() +
+		            "'?>");
 		}
-		else
-		{
-			// Set content type based on markup type for page
-			response.setContentType("text/" + getMarkupType());
-		}
-
+		
 		// Set response locale from session locale
 		response.setLocale(getSession().getLocale());
 	}
