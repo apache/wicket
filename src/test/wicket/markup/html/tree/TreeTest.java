@@ -74,7 +74,7 @@ public class TreeTest extends TestCase
 
 		Page page = application.getLastRenderedPage();
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString("?component=0.tree.tree.3.node.junctionLink&version=0&interface=ILinkListener");
+		application.getServletRequest().setRequestToRedirectString("?path=0.tree.tree.3.node.junctionLink&version=1&interface=ILinkListener");
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 
@@ -104,7 +104,7 @@ public class TreeTest extends TestCase
 
 		Page page = application.getLastRenderedPage();
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString("?component=0.border.tree.tree.3.node.junctionLink&version=0&interface=ILinkListener");
+		application.getServletRequest().setRequestToRedirectString("?path=0.border.tree.tree.3.node.junctionLink&version=1&interface=ILinkListener");
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 
@@ -135,7 +135,7 @@ public class TreeTest extends TestCase
 
 		Page page = application.getLastRenderedPage();
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToRedirectString("?component=0.tree.tree.3.node.junctionLink&version=0&interface=ILinkListener");
+		application.getServletRequest().setRequestToRedirectString("?path=0.tree.tree.3.node.junctionLink&version=1&interface=ILinkListener");
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 
@@ -166,7 +166,7 @@ public class TreeTest extends TestCase
 //
 //		Page page = application.getLastRenderedPage();
 //		application.setupRequestAndResponse();
-//		application.getServletRequest().setRequestToRedirectString("?component=0.tree.tree.3.node.junctionLink&version=0&interface=ILinkListener");
+//		application.getServletRequest().setRequestToRedirectString("?path=0.tree.tree.3.node.junctionLink&version=0&interface=ILinkListener");
 //		application.processRequestCycle();
 //		document = application.getServletResponse().getDocument();
 //
