@@ -138,8 +138,11 @@ public class WebPage extends Page implements IHeaderRenderer
 		appendPageMapName(buffer);
 		buffer.append("component=");
 		buffer.append(component.getPath());
-		buffer.append("&version=");
-		buffer.append(component.getPage().getCurrentVersionNumber());
+		if (component.getPage().getCurrentVersionNumber() != 0)
+		{
+		    buffer.append("&version=");
+		    buffer.append(component.getPage().getCurrentVersionNumber());
+		}
 		buffer.append("&interface=");
 		buffer.append(Classes.name(listenerInterface));
 
