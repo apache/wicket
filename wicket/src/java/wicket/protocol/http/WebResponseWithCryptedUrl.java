@@ -111,10 +111,14 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	private String escapeUrl(String queryString)
 	{
 	    queryString = Strings.replaceAll(queryString, " ", "%20");
+	    queryString = Strings.replaceAll(queryString, "\"", "%22");
 	    queryString = Strings.replaceAll(queryString, "%", "%26");
 	    queryString = Strings.replaceAll(queryString, "=", "%3D");
 	    queryString = Strings.replaceAll(queryString, "/", "%2F");
 	    queryString = Strings.replaceAll(queryString, "+", "%2B");
+	    queryString = Strings.replaceAll(queryString, "&", "%26");
+	    queryString = Strings.replaceAll(queryString, "~", "%7E");
+	    queryString = Strings.replaceAll(queryString, "?", "%3F");
 	    
 	    return queryString;
 	}
