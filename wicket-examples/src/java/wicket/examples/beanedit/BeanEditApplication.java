@@ -21,8 +21,9 @@ package wicket.examples.beanedit;
 import wicket.examples.WicketExampleApplication;
 
 /**
- * Wicket Application class for hello world example.
- * @author Jonathan Locke
+ * Application class for bean edit example.
+ *
+ * @author Eelco Hillenius
  */
 public class BeanEditApplication extends WicketExampleApplication
 {

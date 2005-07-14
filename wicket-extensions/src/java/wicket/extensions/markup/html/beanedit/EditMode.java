@@ -23,17 +23,20 @@ import wicket.util.lang.EnumeratedType;
 
 /**
  * Model that knows about 'modes of operation'.
- * Comes default with MODE_READ_ONLY and MODE_EDIT, but user types can be defined.
+ * Comes default with MODE_READ_ONLY, MODE_EDIT and INVISIBLE, but user types can be defined.
  *
  * @author Eelco Hillenius
  */
 public class EditMode extends EnumeratedType
 {
-	/** Mode that indicates the panel is in read only mode. */
+	/** Mode that indicates the subject or field is in read only mode. */
 	public static final EditMode READ_ONLY = new EditMode("read-only");
 
-	/** Mode that indicates the panel is in edit mode. */
+	/** Mode that indicates the subject is in edit mode. */
 	public static final EditMode READ_WRITE = new EditMode("read-write");
+
+	/** Mode that indicates the subject is not visible. */
+	public static final EditMode INVISIBLE = new EditMode("invisible");
 
 	/**
 	 * Construct a new edit mode type.

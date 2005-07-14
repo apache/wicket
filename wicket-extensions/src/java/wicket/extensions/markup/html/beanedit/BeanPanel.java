@@ -23,6 +23,7 @@ import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 
 import wicket.AttributeModifier;
 import wicket.WicketRuntimeException;
@@ -40,6 +41,13 @@ import wicket.markup.html.panel.Panel;
  */
 public class BeanPanel extends Panel
 {
+	/** boolean types. */
+	private static final Class[] BOOL_TYPES = new Class[] { Boolean.class, Boolean.TYPE };
+
+	/** basic java types. */
+	private static final Class[] BASE_TYPES = new Class[] { String.class, Number.class,
+			Integer.TYPE, Double.TYPE, Long.TYPE, Float.TYPE, Short.TYPE, Byte.TYPE, Date.class };
+
 	/** edit mode. */
 	private EditMode editMode = EditMode.READ_WRITE;
 
@@ -61,8 +69,24 @@ public class BeanPanel extends Panel
 	public BeanPanel(String id, BeanModel beanModel)
 	{
 		super(id, beanModel);
-		add(new Label("displayName", new BeanDisplayNameModel(beanModel)));
+		Panel header = newHeader("header", beanModel);
+		if (header == null)
+		{
+			throw new NullPointerException("header must be not null");
+		}
+		add(header);
 		add(new PropertyList("propertiesList", new BeanPropertiesListModel(beanModel)));
+	}
+
+	/**
+	 * Gets the header panel of this editor.
+	 * @param panelId id of panel; must be used for constructing any panel
+	 * @param beanModel model with the JavaBean to be edited or displayed
+	 * @return the header panel
+	 */
+	protected Panel newHeader(String panelId, BeanModel beanModel)
+	{
+		return new DefaultBeanHeaderPanel(panelId, beanModel);
 	}
 
 	/**
@@ -71,7 +95,7 @@ public class BeanPanel extends Panel
 	 * @param descriptor property descriptor
 	 * @return the editor
 	 */
-	protected Panel getPropertyEditor(String panelId, PropertyDescriptor descriptor)
+	protected Panel newPropertyEditor(String panelId, PropertyDescriptor descriptor)
 	{
 		Class type = descriptor.getPropertyType();
 		BeanPropertyEditor editor = findCustomEditor(panelId, descriptor);
@@ -80,11 +104,11 @@ public class BeanPanel extends Panel
 		{
 			if (descriptor instanceof IndexedPropertyDescriptor)
 			{
-				throw new WicketRuntimeException("index properties not supported yet ");
+				throw new WicketRuntimeException("indexed properties not supported yet ");
 			}
 			else
 			{
-				editor = getDefaultEditor(panelId, descriptor);
+				editor = newDefaultEditor(panelId, descriptor);
 			}
 		}
 
@@ -117,20 +141,43 @@ public class BeanPanel extends Panel
 	 * @param descriptor property descriptor
 	 * @return a property editor
 	 */
-	protected final BeanPropertyEditor getDefaultEditor(
-			String panelId, PropertyDescriptor descriptor)
+	protected final BeanPropertyEditor newDefaultEditor(
+			final String panelId, final PropertyDescriptor descriptor)
 	{
 		BeanPropertyEditor editor;
-		Class type = descriptor.getPropertyType();
-		if(Boolean.class.isAssignableFrom(type) || Boolean.TYPE == type)
+		final Class type = descriptor.getPropertyType();
+		if (checkAssignableFrom(BOOL_TYPES, type))
 		{
 			editor = new PropertyCheckBox(panelId, (BeanModel)getModel(), descriptor, getEditMode());
 		}
-		else
+		if (checkAssignableFrom(BASE_TYPES, type))
 		{
 			editor = new PropertyInput(panelId, (BeanModel)getModel(), descriptor, getEditMode());
 		}
+		else
+		{
+			return new ButtonToMoreDetails(panelId, (BeanModel)getModel(), descriptor, getEditMode());
+		}
 		return editor;
+	}
+
+	/**
+	 * Does isAssignableFrom check on given class array for given type.
+	 * @param types array of types
+	 * @param type type to check against
+	 * @return true if one of the types matched
+	 */
+	private boolean checkAssignableFrom(Class[] types, Class type)
+	{
+		int len = types.length;
+		for (int i = 0; i < len; i++)
+		{
+			if (types[i].isAssignableFrom(type))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -227,7 +274,11 @@ public class BeanPanel extends Panel
 		{
 			PropertyDescriptor descriptor = (PropertyDescriptor)item.getModelObject();
 			item.add(new Label("displayName", descriptor.getDisplayName()));
-			Panel propertyEditor = getPropertyEditor("editor", descriptor);
+			Panel propertyEditor = newPropertyEditor("editor", descriptor);
+			if (propertyEditor == null)
+			{
+				throw new NullPointerException("propertyEditor must be not null");
+			}
 			item.add(propertyEditor);
 		}
 	}
@@ -255,6 +306,26 @@ public class BeanPanel extends Panel
 				new EditModeReplacementModel(editMode, descriptor);
 			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
 			add(valueTextField);
+		}
+	}
+
+	/**
+	 * Panel for a button to more details.
+	 */
+	private static final class ButtonToMoreDetails extends BeanPropertyEditor
+	{
+		/**
+		 * Construct.
+		 * @param id component id
+		 * @param beanModel model with the target bean
+		 * @param descriptor property descriptor
+		 * @param editMode the edit mode
+		 */
+		public ButtonToMoreDetails(String id, final BeanModel beanModel,
+				final PropertyDescriptor descriptor, final EditMode editMode)
+		{
+			super(id, beanModel, descriptor, editMode);
+			//TODO implement
 		}
 	}
 

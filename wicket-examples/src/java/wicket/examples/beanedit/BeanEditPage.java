@@ -18,12 +18,16 @@
  */
 package wicket.examples.beanedit;
 
+import java.util.Calendar;
+
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.markup.html.beanedit.BeanModel;
+import wicket.extensions.markup.html.beanedit.BeanPanel;
 
 /**
- * Everybody's favorite example!
+ * Example Page for editing JavaBeans.
  * 
- * @author Jonathan Locke
+ * @author Eelco Hillenius
  */
 public class BeanEditPage extends WicketExamplePage
 {
@@ -32,6 +36,12 @@ public class BeanEditPage extends WicketExamplePage
      */
     public BeanEditPage()
     {
-
+    	Person p = new Person();
+    	p.setName("Fritz");
+    	p.setLastName("Fritzel");
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(1940, 12, 12);
+    	p.setDateOfBirth(cal.getTime());
+    	add(new BeanPanel("beanEditPanel", new BeanModel(p)));
     }
 }

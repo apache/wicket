@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.beanedit;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,19 +30,7 @@ public class ChoiceField extends AbstractBeanField
 	/**
 	 * The choices.
 	 */
-	private final Collection choices;
-
-	/**
-	 * Construct.
-	 * @param name name of the field
-	 * @param displayName display name
-	 * @param choices the choices
-	 */
-	public ChoiceField(String name, String displayName, Collection choices)
-	{
-		super(name, displayName);
-		this.choices = choices;
-	}
+	private final List choices;
 
 	/**
 	 * Construct.
@@ -61,7 +48,7 @@ public class ChoiceField extends AbstractBeanField
 	 * Gets the choices.
 	 * @return choices
 	 */
-	public final Collection getChoices()
+	public final List getChoices()
 	{
 		return choices;
 	}
