@@ -946,6 +946,19 @@ public abstract class Component implements Serializable, IEventRequestListener
 			return true;
 		}
 	}
+	
+	
+	public final boolean isVisibleInHierarchy()
+	{
+		Component component = this;
+		while(component != null)
+		{
+			if(!component.isVisible()) return false;
+			component = component.getParent();
+		}
+		return true;
+	}
+
 
 	/**
 	 * Gets whether this component and any children are visible.
