@@ -18,7 +18,12 @@
 package wicket;
 
 import java.io.OutputStream;
+import java.net.SocketException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.protocol.http.WebResponseCrawlerSave;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 
@@ -50,6 +55,9 @@ import wicket.util.resource.IResourceStream;
  */
 public abstract class Resource implements IResourceListener
 {
+    /** Logger */
+    private static Log log = LogFactory.getLog(Resource.class);
+	
 	/** The actual raw resource this class is rendering */
 	protected IResourceStream resourceStream;
 
@@ -167,6 +175,21 @@ public abstract class Resource implements IResourceListener
 			{
 				resourceStream.close();
 				out.flush();
+			}
+		}
+		catch(SocketException se)
+		{
+			String message = se.getMessage();
+			if(message != null && message.startsWith("Connection reset"))
+			{
+				if(log.isDebugEnabled())
+				{
+					log.debug("Socket exception ignored for sending Resource response to client (ClientAbort)",se);
+				}
+			}
+			else
+			{
+				throw new WicketRuntimeException("Unable to render resource stream " + resourceStream, se);
 			}
 		}
 		catch (Exception e)
