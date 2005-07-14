@@ -187,6 +187,7 @@ public class WebRequestCycle extends RequestCycle
 						return currentResponse.encodeURL(url);
 					}
 				};
+				redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
 
 				// redirect the response to the buffer
 				setResponse(redirectResponse);
