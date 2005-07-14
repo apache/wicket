@@ -336,7 +336,7 @@ public class Form extends WebMarkupContainer
 		{
 			public void formComponent(final FormComponent formComponent)
 			{
-				if (formComponent.isVisible())
+				if (formComponent.isVisibleInHierarchy())
 				{
 					// Validate form component
 					formComponent.validate();
@@ -394,7 +394,7 @@ public class Form extends WebMarkupContainer
 			public void formComponent(final FormComponent formComponent)
 			{
 				// Only update the component when it is visible and valid
-				if (formComponent.isVisible() && formComponent.isValid())
+				if (formComponent.isVisibleInHierarchy() && formComponent.isValid() )
 				{
 					// Potentially update the model
 					formComponent.updateModel();
@@ -469,7 +469,10 @@ public class Form extends WebMarkupContainer
 		{
 			public void formComponent(final FormComponent formComponent)
 			{
-				formComponent.invalid();
+				if(formComponent.isVisibleInHierarchy())
+				{
+					formComponent.invalid();
+				}
 			}
 		});
 	}
@@ -544,16 +547,19 @@ public class Form extends WebMarkupContainer
 			{
 				public void formComponent(final FormComponent formComponent)
 				{
-					// If peristence is switched on for that FormComponent ...
-					if (formComponent.isPersistent())
+					if(formComponent.isVisibleInHierarchy())
 					{
-						// Save component's data (e.g. in a cookie)
-						persister.save(formComponent);
-					}
-					else
-					{
-						// Remove component's data (e.g. cookie)
-						persister.clear(formComponent);
+						// If peristence is switched on for that FormComponent ...
+						if (formComponent.isPersistent())
+						{
+							// Save component's data (e.g. in a cookie)
+							persister.save(formComponent);
+						}
+						else
+						{
+							// Remove component's data (e.g. cookie)
+							persister.clear(formComponent);
+						}
 					}
 				}
 			});
