@@ -630,6 +630,8 @@ public abstract class RequestCycle
 		final Page page = getResponsePage();
 		if (page != null)
 		{
+			// add/touch the response page in its pagemap.
+			page.getPageMap().put(page);
 			try
 			{
 				// Should page be redirected to?
