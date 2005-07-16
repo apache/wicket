@@ -153,7 +153,7 @@ public abstract class Application
 	private ApplicationSettings settings;
 	
 	/** Shared resources for the application */
-	private final SharedResources sharedResources = new SharedResources();
+	private final SharedResources sharedResources;
 
 	/** cached encryption/decryption object. */
 	private ICrypt crypt;
@@ -171,6 +171,8 @@ public abstract class Application
 
 		// Construct localizer for this application
 		this.localizer = new Localizer(this);
+		
+		this.sharedResources = new SharedResources(this);
 
 		// Install default component resolvers
 		componentResolvers.add(new AutoComponentResolver());

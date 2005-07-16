@@ -819,7 +819,7 @@ public abstract class RequestCycle
 
 		final StringBuffer buffer = urlPrefix();
 		buffer.append("?bookmarkablePage=");
-		String pageReference = application.getPages().aliasForPageClass(pageClass);
+		String pageReference = application.getPages().aliasForClass(pageClass);
 		if (pageReference == null) pageReference = pageClass.getName();
 		buffer.append(pageReference);
 		if (parameters != null)
