@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ApplicationPages;
 import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.IRedirectListener;
@@ -153,7 +154,7 @@ public class WebRequestCycle extends RequestCycle
 
 		// Don't update the cluster, not returning a page
 		setUpdateCluster(false);
-		setResponsePage(null);
+		setResponsePage((Page)null);
 		return false;
 	}
 
@@ -241,6 +242,25 @@ public class WebRequestCycle extends RequestCycle
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}
+	
+	/**
+	 * Creates a prefix for a url.
+	 * @return Prefix for URLs including the context path and servlet path.
+	 */
+	protected StringBuffer urlPrefix()
+	{
+		final StringBuffer buffer = new StringBuffer();
+		final WebRequest request = getWebRequest();
+		if (request != null)
+		{
+			final String contextPath = request.getContextPath();
+			buffer.append(contextPath);
+			buffer.append(((WebRequest)request).getServletPath());
+		}
+
+		return buffer;
+	}
+	
 
 	/**
 	 * Sets values for form components based on cookie values in the request.
@@ -272,9 +292,10 @@ public class WebRequestCycle extends RequestCycle
 	private boolean bookmarkablePage()
 	{
 		// Get any component parameter
-		final String pageClassName = request.getParameter("bookmarkablePage");
-		if (pageClassName != null)
+		final String bookmarkableName = request.getParameter("bookmarkablePage");
+		if (bookmarkableName != null)
 		{
+			String pageClassName = application.getPages().getBookmarkablePageClassname(bookmarkableName);
 			Class pageClass = null;
 		    try
 		    {
@@ -286,7 +307,7 @@ public class WebRequestCycle extends RequestCycle
 				{
 					getWebResponse().getHttpServletResponse().sendError(
 					        HttpServletResponse.SC_NOT_FOUND, 
-					        "Unable to load Page class: " + pageClassName);
+					        "Unable to load Page class: " + bookmarkableName);
 					
 					return false;
 				}
@@ -310,7 +331,7 @@ public class WebRequestCycle extends RequestCycle
 		    catch (RuntimeException e)
 		    {
 		        throw new WicketRuntimeException("Unable to instantiate Page class: " 
-		                + pageClassName + ". See below for details.", e);
+		                + bookmarkableName + ". See below for details.", e);
 		    }
 		}
 		return false;
@@ -407,10 +428,28 @@ public class WebRequestCycle extends RequestCycle
 		{
 			try
 			{
-				Page newPage = newPage(application.getPages().getHomePage());
-				// Redirect to the home page so that a homepage has the same url as a post or get to that page.
-				setRedirect(true);
-				setResponsePage(newPage);
+				Class homePage = application.getPages().getHomePage();
+				ApplicationPages.HomePageStrategy homePageStrategy = application.getPages().getHomePageStrategy();
+				if(homePageStrategy == ApplicationPages.BOOKMARK_REDIRECT)
+				{
+					setResponsePage(homePage);
+				}
+				else
+				{
+					Page newPage = newPage(homePage);
+					
+					if(homePageStrategy == ApplicationPages.PAGE_REDIRECT)
+					{
+						//see if we have to redirect the render part by default
+						//so that a homepage has the same url as a post or get to that page.
+						ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
+								.getSettings().getRenderStrategy();
+						boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
+								|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);				
+						setRedirect(issueRedirect);
+					}
+					setResponsePage(newPage);
+				}
 				setUpdateCluster(true);
 			}
 			catch (WicketRuntimeException e)
@@ -421,6 +460,7 @@ public class WebRequestCycle extends RequestCycle
 		}
 		return false;
 	}
+
 
 	/**
 	 * Invokes a given interface on a component.
