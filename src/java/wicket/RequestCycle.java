@@ -169,9 +169,6 @@ public abstract class RequestCycle
 
 	/** Map from request interface Class to Method. */
 	private static final Map listenerRequestInterfaceMethods = new HashMap();
-
-	/** Map from ajax interface Class to Method. */
-	private static final Map listenerAjaxInterfaceMethods = new HashMap();
 	
 	/** Log */
 	private static final Log log = LogFactory.getLog(RequestCycle.class);
@@ -566,18 +563,6 @@ public abstract class RequestCycle
 	{
 		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
 	}
-
-	/**
-	 * Looks up an request interface method by name.
-	 * 
-	 * @param interfaceName
-	 *            The interface name
-	 * @return The method, null of nothing is found
-	 */
-	protected final Method getAjaxInterfaceMethod(final String interfaceName)
-	{
-		return (Method)listenerAjaxInterfaceMethods.get(interfaceName);
-	}
 	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE
@@ -790,9 +775,16 @@ public abstract class RequestCycle
 	public String urlFor(final Class pageClass,
 			final PageParameters parameters)
 	{
+		if (pageClass == null)
+		{
+			throw new NullPointerException("argument pageClass may not be null");
+		}
+
 		final StringBuffer buffer = urlPrefix();
 		buffer.append("?bookmarkablePage=");
-		buffer.append(application.getPages().getBookmarkablePageName(pageClass));
+		String pageReference = application.getPages().aliasForPageClass(pageClass);
+		if (pageReference == null) pageReference = pageClass.getName();
+		buffer.append(pageReference);
 		if (parameters != null)
 		{
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
