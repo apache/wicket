@@ -913,6 +913,23 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Checks if the component itself and all its parents are visible.
+	 * 
+	 * @return true if the component and all its parents are visible.
+	 */
+	public final boolean isVisibleInHierarchy()
+	{
+		Component component = this;
+		while(component != null)
+		{
+			if(!component.isVisible()) return false;
+			component = component.getParent();
+		}
+		return true;
+	}
+
+
+	/**
 	 * Gets whether this component and any children are visible.
 	 * 
 	 * @return True if component and any children are visible
