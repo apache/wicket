@@ -152,9 +152,9 @@ public class WebRequest extends Request
 	}
 
 	/**
-	 * Gets the request url.
-	 * 
-	 * @return Request URL
+	 * Retrieves the URL of this request for local use.
+	 *
+	 * @return The request URL for local use, which is the context path + the relative url
 	 */
 	public String getURL()
 	{
