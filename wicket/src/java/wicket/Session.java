@@ -107,7 +107,7 @@ public abstract class Session implements Serializable
 	public static final String sessionAttributeName = "session";
 
 	/** Separator for component paths. */
-	private static final char componentPathSeparator = '.';
+	private static final char componentPathSeparator = ':';
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();

@@ -112,7 +112,7 @@ public class PopupSettings implements Serializable
 		else
 		{
 			// Fix for IE bug.
-			windowTitle = windowTitle.replace('.', '_'); 
+			windowTitle = windowTitle.replace(':', '_'); 
 		}
 
 		StringBuffer script = new StringBuffer("if (!window.focus) return true; window.open("

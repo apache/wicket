@@ -241,7 +241,7 @@ public abstract class MarkupContainer extends Component
 		}
 
 		// Get child's id, if any
-		final String id = Strings.firstPathComponent(path, '.');
+		final String id = Strings.firstPathComponent(path, ':');
 
 		// Get child by id
 		final Component child = (Component)childForId.get(id);
@@ -250,7 +250,7 @@ public abstract class MarkupContainer extends Component
 		if (child != null)
 		{
 			// Recurse on latter part of path
-			return child.get(Strings.afterFirstPathComponent(path, '.'));
+			return child.get(Strings.afterFirstPathComponent(path, ':'));
 		}
 
 		// No child with the given id

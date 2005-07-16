@@ -126,7 +126,7 @@ public final class WicketComponentTree extends Panel
 					}
 	
 					// remove the path component
-					name = Strings.lastPathComponent(name, '.');
+					name = Strings.lastPathComponent(name, ':');
 	
 					object.path = component.getPageRelativePath();
 					object.type = name;
