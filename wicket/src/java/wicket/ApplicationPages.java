@@ -17,6 +17,13 @@
  */
 package wicket;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import wicket.util.lang.EnumeratedType;
+
 /**
  * Holder for specifying Wicket page classes that have special meaning to an
  * application, such as an application's home page and any error display pages.
@@ -35,14 +42,53 @@ package wicket;
  */
 public class ApplicationPages
 {
+	/**
+	 * Use this homepage strategy if you don't want to redirect so the url just stays / 
+	 */
+	public static final HomePageStrategy NO_REDIRECT = new HomePageStrategy("no-redirect");
+	
+	/**
+	 * Use this homepage strategy if you want to redirect the homepage to a bookmarkable url like: page=mybookmarkablepage
+	 * This is the same as calling: setResponsePage(MyPage.class); 
+	 */
+	public static final HomePageStrategy BOOKMARK_REDIRECT = new HomePageStrategy("bookmark-redirect");
+	
+	/**
+	 * Use this homepage strategy if you want to redirect the homepage just as a normal page would be in 
+	 * wicket (when you submit a form on the page or when you do in the code: setResponsePage(new MyPage());
+	 * If you have set the overall Redirect Strategy to ONE_PASS_RENDER then the homepage response will honor that. 
+	 * Then it is the same as setting the homepage strategy to NO_REDIRECT.
+	 */
+	public static final HomePageStrategy PAGE_REDIRECT = new HomePageStrategy("page-redirect");
+	
 	/** Home page class */
 	private Class homePage;
+	
+	/**
+	 * What homepage strategy should be used (no redirect/redirect to bookmarkable/redirect to page)
+	 * The default is redirect to page.
+	 */
+	private HomePageStrategy homePageStrategy = PAGE_REDIRECT;
 
 	/** Class of internal error page */
 	private Class internalErrorPage;
 
 	/** The error page displayed when an expired page is accessed */
 	private Class pageExpiredErrorPage;
+
+	/** A map where nice names for bookmarkable page classes are stored*/
+	private HashMap bookmarkableNames = new HashMap();
+	
+	/**
+	 * Enumerated type for different ways of handling the homepage.
+	 */	
+	public static final class HomePageStrategy extends EnumeratedType
+	{
+		HomePageStrategy(final String name)
+		{
+			super(name);
+		}
+	}
 
 	/**
 	 * Gets home page class.
@@ -60,6 +106,17 @@ public class ApplicationPages
 		}
 
 		return homePage;
+	}
+
+	/**
+	 * Gets home page redirect strategy.
+	 * 
+	 * @return Returns the homePage.
+	 * @see ApplicationPages#setHomePageStrategy(HomePageStrategy)
+	 */
+	public final HomePageStrategy getHomePageStrategy()
+	{
+		return homePageStrategy;
 	}
 
 	/**
@@ -99,6 +156,20 @@ public class ApplicationPages
 		return this;
 	}
 
+	/**
+	 * Sets home page strategy.
+	 * Set one of the ApplicationPages.NO_REDIRECT, ApplicationPages.BOOKMARK_REDIRECT or ApplicationPages.PAGE_REDIRECT
+	 *  
+	 * @param homePageStrategy The homepage redirect strategy that has to be used  
+	 *
+	 * @return This
+	 */
+	public final ApplicationPages setHomePageStrategy(final HomePageStrategy homePageStrategy)
+	{
+		this.homePageStrategy = homePageStrategy;
+		return this;
+	}
+	
 	/**
 	 * Sets internal error page class. The class must be bookmarkable and must
 	 * extend Page.
@@ -143,4 +214,52 @@ public class ApplicationPages
 			throw new IllegalArgumentException("Class must be a subclass of Page");
 		}
 	}
+
+	/**
+	 * Checks and returns if for the given class was set a nice bookmarkable name
+	 * if nothing was set for this class then the class name is returned.
+	 * 
+	 * @param pageClass The class to be checked
+	 * 
+	 * @return A name that was added to the bookmarkable map or the given name as nothing was found.
+	 */
+	public final String getBookmarkablePageName(final Class pageClass)
+	{
+		String niceName = (String)bookmarkableNames.get(pageClass.getName());
+		if(niceName == null) niceName = pageClass.getName();
+		return niceName;
+	}
+	
+	
+	/**
+	 * @param bookmarkableName String to check for
+	 * @return The page classname if the bookmarkable name if found or else the bookmarkablename itself
+	 */
+	public final String getBookmarkablePageClassname(final String bookmarkableName)
+	{
+		if(bookmarkableName == null) return null;
+		
+		Iterator it = bookmarkableNames.entrySet().iterator();
+		while(it.hasNext())
+		{
+			Map.Entry entry = (Entry)it.next();
+			if(entry.getValue().equals(bookmarkableName))
+			{
+				return (String)entry.getKey();
+			}
+		}
+		return bookmarkableName;
+	}
+	
+	/**
+	 * Use this method to add nice names to youre bookmarkable pages.
+	 * So that "org.wicket.pages.WicketPage" can be just "wicketpage" 
+	 * @param page
+	 * @param name
+	 */
+	public final void addBookmarkablePage(Class page, String name)
+	{
+		bookmarkableNames.put(page.getName(), name);
+	}
+
 }
