@@ -149,7 +149,7 @@ public class Form extends WebMarkupContainer
 				// once the user submits the Form containing that FormComponent.
 				// Note: if that is true, values may remain persisted longer
 				// than really necessary
-				if (formComponent.isPersistent())
+				if (formComponent.isVisibleInHierarchy() && formComponent.isPersistent())
 				{
 					// The persister
 					final IValuePersister persister = getValuePersister();
@@ -199,13 +199,16 @@ public class Form extends WebMarkupContainer
 		{
 			public void formComponent(final FormComponent formComponent)
 			{
-				// remove the FormComponent's persisted data
-				persister.clear(formComponent);
-
-				// Disable persistence if requested. Leave unchanged otherwise.
-				if (formComponent.isPersistent() && disablePersistence)
+				if(formComponent.isVisibleInHierarchy())
 				{
-					formComponent.setPersistent(false);
+					// remove the FormComponent's persisted data
+					persister.clear(formComponent);
+	
+					// Disable persistence if requested. Leave unchanged otherwise.
+					if (formComponent.isPersistent() && disablePersistence)
+					{
+						formComponent.setPersistent(false);
+					}
 				}
 			}
 		});
