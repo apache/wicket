@@ -83,7 +83,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	public String urlFor(final String pageMapName, final Class pageClass,
 			final PageParameters parameters)
 	{
-		final WebRequestCycle cycle = getWebRequestCycle();
+		final WebRequestCycle cycle = getWebRequestCycle(); 
 		final StringBuffer buffer = urlPrefix(cycle);
 		if (pageMapName == null)
 		{
@@ -96,7 +96,7 @@ public class WebPage extends Page implements IHeaderRenderer
 			buffer.append('&');
 		}
 		buffer.append("bookmarkablePage=");
-		buffer.append(pageClass.getName());
+		buffer.append(cycle.getApplication().getPages().getBookmarkablePageName(pageClass));
 		if (parameters != null)
 		{
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
