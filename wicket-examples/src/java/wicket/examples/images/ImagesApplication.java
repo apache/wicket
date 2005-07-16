@@ -17,6 +17,7 @@
  */
 package wicket.examples.images;
 
+import wicket.Application;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 
@@ -33,6 +34,10 @@ public class ImagesApplication extends WicketExampleApplication
 	public ImagesApplication()
 	{
 		getPages().setHomePage(Home.class);
+        // insert an alias for the Home class so that all images don't have the full home package in there url. 
+		getPages().putClassAlias(Home.class,"home");
+        // insert an alias for the wicket.Application class so that all images don't have the wicket.Application in there url. 
+		getPages().putClassAlias(Application.class,"application");
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 	}
 }

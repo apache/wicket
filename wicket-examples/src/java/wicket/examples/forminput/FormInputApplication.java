@@ -20,6 +20,7 @@ package wicket.examples.forminput;
 
 import java.util.Locale;
 
+import wicket.Application;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 
@@ -36,6 +37,8 @@ public class FormInputApplication extends WicketExampleApplication
     public FormInputApplication()
     {
         getPages().setHomePage(FormInput.class);
+        // insert an alias for the wicket.Application class so that all images don't have the wicket.Application in there url. 
+        getPages().putClassAlias(Application.class, "application");
 		getSettings().setThrowExceptionOnMissingResource(false);
 
 		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE,
