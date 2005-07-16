@@ -948,6 +948,11 @@ public abstract class Component implements Serializable, IEventRequestListener
 	}
 	
 	
+	/**
+	 * Checks if the component itself and all its parents are visible.
+	 * 
+	 * @return true if the component and all its parents are visible.
+	 */
 	public final boolean isVisibleInHierarchy()
 	{
 		Component component = this;
