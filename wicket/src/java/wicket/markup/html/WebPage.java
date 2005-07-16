@@ -83,6 +83,11 @@ public class WebPage extends Page implements IHeaderRenderer
 	public String urlFor(final String pageMapName, final Class pageClass,
 			final PageParameters parameters)
 	{
+		if (pageClass == null)
+		{
+			throw new NullPointerException("argument pageClass may not be null");
+		}
+
 		final WebRequestCycle cycle = getWebRequestCycle(); 
 		final StringBuffer buffer = urlPrefix(cycle);
 		if (pageMapName == null)
@@ -96,7 +101,9 @@ public class WebPage extends Page implements IHeaderRenderer
 			buffer.append('&');
 		}
 		buffer.append("bookmarkablePage=");
-		buffer.append(cycle.getApplication().getPages().getBookmarkablePageName(pageClass));
+		String pageReference = cycle.getApplication().getPages().aliasForPageClass(pageClass);
+		if (pageReference == null) pageReference = pageClass.getName();
+		buffer.append(pageReference);
 		if (parameters != null)
 		{
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)

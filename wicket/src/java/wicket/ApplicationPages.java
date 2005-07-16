@@ -37,21 +37,40 @@ import wicket.util.lang.EnumeratedType;
  * <p>
  * <i>pageExpiredErrorPage </i>- You can override this with your own
  * bookmarkable page class to display expired page errors in a different way.
+ * <p>
+ * You can set property homePageRenderStrategy to choose from different ways the home page
+ * url shows up in your browser.
+ * <p>
+ * You can register aliases for bookmarkable pages by calling putPageAlias; this way you can
+ * point to bookmarkable pages with logical names instead of full class names.
  * 
  * @author Jonathan Locke
+ * @author Johan Compagner
+ * @author Eelco Hillenius
  */
 public class ApplicationPages
 {
 	/**
-	 * Use this homepage strategy if you don't want to redirect so the url just stays / 
+	 * Enumerated type for different ways of handling the rendering/ redirecting of the homepage.
+	 */	
+	public static final class HomePageRenderStrategy extends EnumeratedType
+	{
+		HomePageRenderStrategy(final String name)
+		{
+			super(name);
+		}
+	}
+
+	/**
+	 * Use this homepage strategy if you don't want to redirect so the url just stays '/' .
 	 */
-	public static final HomePageStrategy NO_REDIRECT = new HomePageStrategy("no-redirect");
+	public static final HomePageRenderStrategy NO_REDIRECT = new HomePageRenderStrategy("no-redirect");
 	
 	/**
 	 * Use this homepage strategy if you want to redirect the homepage to a bookmarkable url like: page=mybookmarkablepage
-	 * This is the same as calling: setResponsePage(MyPage.class); 
+	 * This is the same as calling: setResponsePage(MyPage.class);. 
 	 */
-	public static final HomePageStrategy BOOKMARK_REDIRECT = new HomePageStrategy("bookmark-redirect");
+	public static final HomePageRenderStrategy BOOKMARK_REDIRECT = new HomePageRenderStrategy("bookmark-redirect");
 	
 	/**
 	 * Use this homepage strategy if you want to redirect the homepage just as a normal page would be in 
@@ -59,36 +78,25 @@ public class ApplicationPages
 	 * If you have set the overall Redirect Strategy to ONE_PASS_RENDER then the homepage response will honor that. 
 	 * Then it is the same as setting the homepage strategy to NO_REDIRECT.
 	 */
-	public static final HomePageStrategy PAGE_REDIRECT = new HomePageStrategy("page-redirect");
+	public static final HomePageRenderStrategy PAGE_REDIRECT = new HomePageRenderStrategy("page-redirect");
 	
 	/** Home page class */
 	private Class homePage;
-	
+
+	/** Class of internal error page. */
+	private Class internalErrorPage;
+
+	/** The error page displayed when an expired page is accessed. */
+	private Class pageExpiredErrorPage;
+
 	/**
 	 * What homepage strategy should be used (no redirect/redirect to bookmarkable/redirect to page)
 	 * The default is redirect to page.
 	 */
-	private HomePageStrategy homePageStrategy = PAGE_REDIRECT;
+	private HomePageRenderStrategy homePageRenderStrategy = PAGE_REDIRECT;
 
-	/** Class of internal error page */
-	private Class internalErrorPage;
-
-	/** The error page displayed when an expired page is accessed */
-	private Class pageExpiredErrorPage;
-
-	/** A map where nice names for bookmarkable page classes are stored*/
-	private HashMap bookmarkableNames = new HashMap();
-	
-	/**
-	 * Enumerated type for different ways of handling the homepage.
-	 */	
-	public static final class HomePageStrategy extends EnumeratedType
-	{
-		HomePageStrategy(final String name)
-		{
-			super(name);
-		}
-	}
+	/** A map where aliases for bookmarkable page classes are stored. */
+	private final Map pageAliases = new HashMap();
 
 	/**
 	 * Gets home page class.
@@ -112,11 +120,11 @@ public class ApplicationPages
 	 * Gets home page redirect strategy.
 	 * 
 	 * @return Returns the homePage.
-	 * @see ApplicationPages#setHomePageStrategy(HomePageStrategy)
+	 * @see ApplicationPages#setHomePageRenderStrategy(HomePageRenderStrategy)
 	 */
-	public final HomePageStrategy getHomePageStrategy()
+	public final HomePageRenderStrategy getHomePageRenderStrategy()
 	{
-		return homePageStrategy;
+		return homePageRenderStrategy;
 	}
 
 	/**
@@ -164,9 +172,14 @@ public class ApplicationPages
 	 *
 	 * @return This
 	 */
-	public final ApplicationPages setHomePageStrategy(final HomePageStrategy homePageStrategy)
+	public final ApplicationPages setHomePageRenderStrategy(final HomePageRenderStrategy homePageStrategy)
 	{
-		this.homePageStrategy = homePageStrategy;
+		if (homePageStrategy == null)
+		{
+			throw new NullPointerException("argument homePageStrategy may not be null");
+		}
+
+		this.homePageRenderStrategy = homePageStrategy;
 		return this;
 	}
 	
@@ -180,7 +193,12 @@ public class ApplicationPages
 	 */
 	public final ApplicationPages setInternalErrorPage(final Class internalErrorPage)
 	{
+		if (internalErrorPage == null)
+		{
+			throw new NullPointerException("argument internalErrorPage may not be null");
+		}
 		checkPageClass(internalErrorPage);
+
 		this.internalErrorPage = internalErrorPage;
 		return this;
 	}
@@ -195,71 +213,92 @@ public class ApplicationPages
 	 */
 	public final ApplicationPages setPageExpiredErrorPage(final Class pageExpiredErrorPage)
 	{
+		if (pageExpiredErrorPage == null)
+		{
+			throw new NullPointerException("argument pageExpiredErrorPage may not be null");
+		}
 		checkPageClass(pageExpiredErrorPage);
+
 		this.pageExpiredErrorPage = pageExpiredErrorPage;
 		return this;
 	}
 
 	/**
-	 * Throws an IllegalArgumentException if the given class is not a subclass
-	 * of Page.
-	 * 
-	 * @param pageClass
-	 *            The page class to check
+	 * Returns the alias for the given page class or null if no alias was found.
+	 * Returns null when argument pageClass is null.
+	 * @param pageClass The class to get the alias for
+	 * @return the alias of the page class
+	 */
+	public final String aliasForPageClass(final Class pageClass)
+	{
+		if (pageClass == null) return null;
+
+		checkPageClass(pageClass);
+		String alias = (String)pageAliases.get(pageClass.getName());
+		if(alias == null) alias = pageClass.getName();
+		return alias;
+	}
+	
+	
+	/**
+	 * Returns the page class for the given alias or null if the alias is not mapped.
+	 * Returns null if argument alias is null.
+	 * @param alias the alias to look up
+	 * @return The page class for the given alias or null if no mapping was found
+	 */
+	public final Class pageClassForAlias(final String alias)
+	{
+		if(alias == null) return null;
+		
+		for(Iterator i = pageAliases.entrySet().iterator(); i.hasNext();)
+		{
+			Map.Entry entry = (Entry)i.next();
+			if(entry.getValue().equals(alias))
+			{
+				return (Class)entry.getKey();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Use this method to add logical names to your bookmarkable pages.
+	 * E.g. "test" could map to "com.mycomp.MyPage".
+	 * @param pageClass class of the page to map
+	 * @param alias the alias or logical name of the bookmarkable page
+	 */
+	public final void putPageAlias(Class pageClass, String alias)
+	{
+		if (pageClass == null)
+		{
+			throw new NullPointerException("argument pageClass may not be null");
+		}
+
+		checkPageClass(pageClass);
+
+		if (alias == null)
+		{
+			throw new NullPointerException("argument alias may not be null");
+		}
+
+		pageAliases.put(pageClass, alias);
+	}
+
+	/**
+	 * Throws an IllegalArgumentException if the given class is not a subclass of Page.
+	 * @param pageClass the page class to check
 	 */
 	private final void checkPageClass(final Class pageClass)
 	{
+		// NOTE: we can't really check on whether it is a bookmarkable page here, as - though
+		// the default is that a bookmarkable page must either have a default constructor and/ or
+		// a constructor with a PageParameters object, this could be different for another
+		// IPageFactory implementation
+
 		if (!Page.class.isAssignableFrom(pageClass))
 		{
-			throw new IllegalArgumentException("Class must be a subclass of Page");
+			throw new IllegalArgumentException("argument " + pageClass +
+					" must be a subclass of Page");
 		}
 	}
-
-	/**
-	 * Checks and returns if for the given class was set a nice bookmarkable name
-	 * if nothing was set for this class then the class name is returned.
-	 * 
-	 * @param pageClass The class to be checked
-	 * 
-	 * @return A name that was added to the bookmarkable map or the given name as nothing was found.
-	 */
-	public final String getBookmarkablePageName(final Class pageClass)
-	{
-		String niceName = (String)bookmarkableNames.get(pageClass.getName());
-		if(niceName == null) niceName = pageClass.getName();
-		return niceName;
-	}
-	
-	
-	/**
-	 * @param bookmarkableName String to check for
-	 * @return The page classname if the bookmarkable name if found or else the bookmarkablename itself
-	 */
-	public final String getBookmarkablePageClassname(final String bookmarkableName)
-	{
-		if(bookmarkableName == null) return null;
-		
-		Iterator it = bookmarkableNames.entrySet().iterator();
-		while(it.hasNext())
-		{
-			Map.Entry entry = (Entry)it.next();
-			if(entry.getValue().equals(bookmarkableName))
-			{
-				return (String)entry.getKey();
-			}
-		}
-		return bookmarkableName;
-	}
-	
-	/**
-	 * Use this method to add nice names to youre bookmarkable pages.
-	 * So that "org.wicket.pages.WicketPage" can be just "wicketpage" 
-	 * @param page
-	 * @param name
-	 */
-	public final void addBookmarkablePage(Class page, String name)
-	{
-		bookmarkableNames.put(page.getName(), name);
-	}
-
 }

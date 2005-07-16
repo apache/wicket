@@ -33,7 +33,7 @@ public class HelloWorldApplication extends WicketExampleApplication
     public HelloWorldApplication()
     {
         getPages().setHomePage(HelloWorld.class);
-        getPages().addBookmarkablePage(HelloWorld.class, "helloworld");
-        getPages().setHomePageStrategy(ApplicationPages.BOOKMARK_REDIRECT);
+        getPages().putPageAlias(HelloWorld.class, "helloworld");
+        getPages().setHomePageRenderStrategy(ApplicationPages.BOOKMARK_REDIRECT);
     }
 }

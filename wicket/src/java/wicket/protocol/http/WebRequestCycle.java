@@ -297,29 +297,34 @@ public class WebRequestCycle extends RequestCycle
 		final String bookmarkableName = request.getParameter("bookmarkablePage");
 		if (bookmarkableName != null)
 		{
-			String pageClassName = application.getPages().getBookmarkablePageClassname(bookmarkableName);
-			Class pageClass = null;
-		    try
-		    {
-				pageClass = session.getClassResolver().resolveClass(pageClassName);
-		    }
-		    catch (RuntimeException e)
-		    {
-				try
-				{
-					getWebResponse().getHttpServletResponse().sendError(
-					        HttpServletResponse.SC_NOT_FOUND, 
-					        "Unable to load Page class: " + bookmarkableName);
-					
-					return false;
-				}
-				catch (IOException ex)
-				{
-					// that seems unlikely... anyway, log exception and forget about it
-					log.error("unable to send 404 for " + getRequest() + ", cause: " + ex.getMessage(), ex);
-					return false;
-				}
-		    }
+			// first see whether we have a logical mapping
+			Class pageClass = application.getPages().pageClassForAlias(bookmarkableName);
+
+			// nope, we don't have a logical mapping, so this should be a full class name
+			if (pageClass == null)
+			{
+			    try
+			    {
+					pageClass = session.getClassResolver().resolveClass(bookmarkableName);
+			    }
+			    catch (RuntimeException e)
+			    {
+					try
+					{
+						getWebResponse().getHttpServletResponse().sendError(
+						        HttpServletResponse.SC_NOT_FOUND, 
+						        "Unable to load Page class: " + bookmarkableName);
+						
+						return false;
+					}
+					catch (IOException ex)
+					{
+						// that seems unlikely... anyway, log exception and forget about it
+						log.error("unable to send 404 for " + getRequest() + ", cause: " + ex.getMessage(), ex);
+						return false;
+					}
+			    }
+			}
 
 		    try
 		    {
@@ -431,7 +436,7 @@ public class WebRequestCycle extends RequestCycle
 			try
 			{
 				Class homePage = application.getPages().getHomePage();
-				ApplicationPages.HomePageStrategy homePageStrategy = application.getPages().getHomePageStrategy();
+				ApplicationPages.HomePageRenderStrategy homePageStrategy = application.getPages().getHomePageRenderStrategy();
 				if(homePageStrategy == ApplicationPages.BOOKMARK_REDIRECT)
 				{
 					setResponsePage(homePage);
