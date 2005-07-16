@@ -491,6 +491,21 @@ public abstract class RequestCycle
 	 */
 	public final void setResponsePage(final Page page)
 	{
+		if (responsePageClass != null)
+		{
+			if(log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePageClass + " with " + page);
+			}
+		}
+		else if (responsePage != null)
+		{
+			if(log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePage + " with " + page);
+			}
+		}
+
 		this.responsePage = page;
 		// reset response page class, only one of the 2 responses should be set.
 		this.responsePageClass = null;
@@ -520,6 +535,21 @@ public abstract class RequestCycle
 	 */
 	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
 	{
+		if (responsePageClass != null)
+		{
+			if(log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePageClass + " with " + pageClass);
+			}
+		}
+		else if (responsePage != null)
+		{
+			if(log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePage + " with " + pageClass);
+			}
+		}
+
 		if (!Page.class.isAssignableFrom(pageClass))
 		{
 			throw new IllegalArgumentException("Class must be a subclass of Page");
@@ -617,7 +647,11 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to the given page.
-	 * 
+	 * NOTE: Usually, you should never call this method directly, but work with
+	 * setResponsePage instead. This method is part of Wicket's internal
+	 * behaviour and should only be used when you want to circumvent the normal
+	 * framework behaviour and issue the redirect directly.
+	 *
 	 * @param page
 	 *            The page to redirect to
 	 * @throws ServletException 
