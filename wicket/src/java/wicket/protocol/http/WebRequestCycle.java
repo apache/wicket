@@ -165,10 +165,10 @@ public class WebRequestCycle extends RequestCycle
 		ApplicationSettings settings = application.getSettings();
 		if(settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER && application instanceof WebApplication)
 		{
-			// create the redirect response.
+			Response currentResponse = getResponse();
 			try
 			{
-				Response currentResponse = getResponse();
+				// create the redirect response.
 				BufferedResponse redirectResponse = new BufferedResponse(redirectUrl);
 				setResponse(redirectResponse);
 				// test if the invoker page was the same as the page that is going to be renderd
@@ -183,6 +183,7 @@ public class WebRequestCycle extends RequestCycle
 			}
 			catch (RuntimeException ex)
 			{
+				setResponse(currentResponse);
 				onRuntimeException(page, ex);
 			}
 		}
