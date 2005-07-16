@@ -174,12 +174,11 @@ public class WebRequestCycle extends RequestCycle
 		if ((settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER) 
 		        && (application instanceof WebApplication))
 		{
-			// create the redirect response.
+		    // remember the current response
+			final Response currentResponse = getResponse();
 			try
 			{
-			    // remember the current response
-				final Response currentResponse = getResponse();
-				
+				// create the redirect response.
 				// override the encodeURL so that it will use the real once encoding.
 				final BufferedResponse redirectResponse = new BufferedResponse(redirectUrl) 
 				{
@@ -230,7 +229,10 @@ public class WebRequestCycle extends RequestCycle
 			}
 			catch (RuntimeException ex)
 			{
+				// re-assign the original response
+				setResponse(currentResponse);
 				internalOnRuntimeException(page, ex);
+				return;
 			}
 		}
 		else
