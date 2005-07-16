@@ -1691,10 +1691,13 @@ public abstract class Component implements Serializable, IEventRequestListener
 	}
 
 	/**
-	 * Redirects browser to the given page
+	 * Redirects browser to the given page.
+	 * note: usually, you should never call this method directly, but work with
+	 * setresponsepage instead. this method is part of wicket's internal
+	 * behaviour and should only be used when you want to circumvent the normal
+	 * framework behaviour and issue the redirect directly.
 	 * 
-	 * @param page
-	 *            The page to redirect to
+	 * @param page The page to redirect to
 	 */
 	protected void redirectTo(final Page page)
 	{
