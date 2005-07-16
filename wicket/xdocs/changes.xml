@@ -11,18 +11,19 @@
       <action type="fix" dev="Eelco Hillenius">Only validate components that are visible</action>
       <action type="update" dev="Eelco Hillenius" due-to="Phil Kulak">FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Adam Howard">fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</action>
+      <action type="update" dev="Chris Turner" due-to="Jonathan Carlson">ComponentStringResourceLoader: resources are now inherited from parent classes when components have been subclassed</action>
     </release>
     <release version="1.0" date="2005-06-06" description="1.0 final">
       <action type="update" dev="Eelco Hillenius">StaticResourceReference now binds itself immediately so clients don't have to know about the binding internals.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1209753">Pageable list view navigator did not handle the "last" link properly in situations where additional elements have been added to the underlying list.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1213229">Image didn't like webapps with urlpattern set to /*. It does now.</action>
-      <action type="fix" dev="Martijn Dashorst" issue="1275631">Fixed negative numbers in PageParameters.</action>
+  	  <action type="fix" dev="Martijn Dashorst" issue="1275631">Fixed negative numbers in PageParameters.</action>
       <action type="update" dev="Eelco Hillenius">added PageableListView.setRowsPerPage</action>
       <action type="fix" dev="Eelco Hillenius" issue="1211663" due-to="Martijn Dashorst">Fixed converters once and for all. Null check results so that e.g., empty strings for numbers (e.g.) now return null instead of throwing a NPE</action>
       <action type="fix" dev="Eelco Hillenius" issue="1209027">The UploadForm now considers the encoding</action>
       <action type="add" dev="Juergen Donnerstag">By means of Component.setRenderBodyOnly(boolean) it is now easily possible to print the tag's body only. This is e.g. necessary with &lt;span&gt; tags and Panels where in cases you want to be strictly HTML compliant the &lt;span&gt; tag itself must be removed. The (tag's) body will always be printed.</action>
     </release>
-    <release version="1.0.0-rc3" date="t.b.d." description="1.0 Release Candidate 3">
+    <release version="1.0.0-rc3" date="2005-05-22" description="1.0 Release Candidate 3">
       <action type="update" dev="Eelco Hillenius">Added constructors with just the id to the Choice component to be consistent with other Wicket components.</action>
       <action type="fix" dev="Eelco Hillenius">Strings.escapeMarkup now properly escapes unicode.</action>
       <action type="update" dev="Johan Compagner, Eelco Hillenius" due-to="Martijn Dashorst">Made the rendering strategy pluggable. From javadoc of ApplicationSettings:
