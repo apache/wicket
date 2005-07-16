@@ -790,9 +790,12 @@ public abstract class RequestCycle
 		else
 		{
 			final Class pageClass = getResponsePageClass();
-			final PageParameters pageParameters = getResponsePagePageParameters();
-			String redirectUrl = urlFor(pageClass, pageParameters);
-			getResponse().redirect(redirectUrl);
+			if (pageClass != null)
+			{
+				final PageParameters pageParameters = getResponsePagePageParameters();
+				String redirectUrl = urlFor(pageClass, pageParameters);
+				getResponse().redirect(redirectUrl);
+			}
 		}
 	}
 	
