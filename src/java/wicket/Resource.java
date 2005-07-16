@@ -23,7 +23,6 @@ import java.net.SocketException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.protocol.http.WebResponseCrawlerSave;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 
