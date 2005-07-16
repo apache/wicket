@@ -155,7 +155,7 @@ public class ResourceReference implements Serializable
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("resources/");
-		buffer.append(SharedResources.path(scope, name, locale, style));
+		buffer.append(SharedResources.path(RequestCycle.get().getApplication(), scope, name, locale, style));
 		return buffer.toString();
 	}
 

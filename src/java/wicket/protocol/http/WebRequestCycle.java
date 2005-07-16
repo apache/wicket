@@ -302,7 +302,7 @@ public class WebRequestCycle extends RequestCycle
 		if (bookmarkableName != null)
 		{
 			// first see whether we have a logical mapping
-			Class pageClass = application.getPages().pageClassForAlias(bookmarkableName);
+			Class pageClass = application.getPages().classForAlias(bookmarkableName);
 
 			// nope, we don't have a logical mapping, so this should be a full class name
 			if (pageClass == null)

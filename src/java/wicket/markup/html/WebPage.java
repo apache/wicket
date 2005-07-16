@@ -101,7 +101,7 @@ public class WebPage extends Page implements IHeaderRenderer
 			buffer.append('&');
 		}
 		buffer.append("bookmarkablePage=");
-		String pageReference = cycle.getApplication().getPages().aliasForPageClass(pageClass);
+		String pageReference = cycle.getApplication().getPages().aliasForClass(pageClass);
 		if (pageReference == null) pageReference = pageClass.getName();
 		buffer.append(pageReference);
 		if (parameters != null)

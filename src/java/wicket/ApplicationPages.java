@@ -96,7 +96,7 @@ public class ApplicationPages
 	private HomePageRenderStrategy homePageRenderStrategy = PAGE_REDIRECT;
 
 	/** A map where aliases for bookmarkable page classes are stored. */
-	private final Map pageAliases = new HashMap();
+	private final Map classAliases = new HashMap();
 
 	/**
 	 * Gets home page class.
@@ -229,12 +229,11 @@ public class ApplicationPages
 	 * @param pageClass The class to get the alias for
 	 * @return the alias of the page class
 	 */
-	public final String aliasForPageClass(final Class pageClass)
+	public final String aliasForClass(final Class pageClass)
 	{
 		if (pageClass == null) return null;
 
-		checkPageClass(pageClass);
-		String alias = (String)pageAliases.get(pageClass.getName());
+		String alias = (String)classAliases.get(pageClass);
 		if(alias == null) alias = pageClass.getName();
 		return alias;
 	}
@@ -246,11 +245,11 @@ public class ApplicationPages
 	 * @param alias the alias to look up
 	 * @return The page class for the given alias or null if no mapping was found
 	 */
-	public final Class pageClassForAlias(final String alias)
+	public final Class classForAlias(final String alias)
 	{
 		if(alias == null) return null;
 		
-		for(Iterator i = pageAliases.entrySet().iterator(); i.hasNext();)
+		for(Iterator i = classAliases.entrySet().iterator(); i.hasNext();)
 		{
 			Map.Entry entry = (Entry)i.next();
 			if(entry.getValue().equals(alias))
@@ -267,21 +266,26 @@ public class ApplicationPages
 	 * @param pageClass class of the page to map
 	 * @param alias the alias or logical name of the bookmarkable page
 	 */
-	public final void putPageAlias(Class pageClass, String alias)
+	public final void putClassAlias(Class pageClass, String alias)
 	{
 		if (pageClass == null)
 		{
 			throw new NullPointerException("argument pageClass may not be null");
 		}
 
-		checkPageClass(pageClass);
-
 		if (alias == null)
 		{
 			throw new NullPointerException("argument alias may not be null");
 		}
 
-		pageAliases.put(pageClass, alias);
+		if(classAliases.containsValue(alias))
+		{
+			throw new WicketRuntimeException("can't set the same alias name twice");
+		}
+		else
+		{
+			classAliases.put(pageClass, alias);
+		}
 	}
 
 	/**
