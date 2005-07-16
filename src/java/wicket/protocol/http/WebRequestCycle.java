@@ -514,7 +514,7 @@ public class WebRequestCycle extends RequestCycle
 	{
 		setInvokePage(page);
 		// Invoke interface on the component at the given path on the page
-		final Component component = page.get(Strings.afterFirstPathComponent(path, '.'));
+		final Component component = page.get(Strings.afterFirstPathComponent(path, ':'));
 		if (component != null)
 		{
 			Method method = getRequestInterfaceMethod(interfaceName);

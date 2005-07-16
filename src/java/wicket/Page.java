@@ -334,7 +334,7 @@ public abstract class Page extends MarkupContainer
 					levels++;
 				}
 				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath()
-						+ "." + Classes.name(component.getClass()));
+						+ ":" + Classes.name(component.getClass()));
 				return null;
 			}
 		});

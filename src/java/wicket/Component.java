@@ -696,7 +696,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 */
 	public final String getPageRelativePath()
 	{
-		return Strings.afterFirstPathComponent(getPath(), '.');
+		return Strings.afterFirstPathComponent(getPath(), ':');
 	}
 
 	/**
@@ -721,7 +721,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 		{
 			if (buffer.length() > 0)
 			{
-				buffer.insert(0, '.');
+				buffer.insert(0, ':');
 			}
 			buffer.insert(0, c.getId());
 		}
