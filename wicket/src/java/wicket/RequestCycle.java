@@ -19,6 +19,7 @@ package wicket;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -200,14 +201,21 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
-	/** The page to render to the user. */
+	/** The page to render to the user*/
 	private Page responsePage;
+
+	/** The class of a page to render to the user, redirect as a bookmarkable page */
+	private Class responsePageClass;
+
+	/** The page parameters used by the responsepage class to generate its bookmarkable page url*/
+	private PageParameters responsePageParams;
 
 	/** True if the cluster should be updated */
 	private boolean updateCluster;
 	private Page invokePage;
 
 	private IResourceStream responseStream;
+
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -322,7 +330,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the current page.
+	 * Gets the current respond page.
 	 * 
 	 * @return The page
 	 */
@@ -331,6 +339,26 @@ public abstract class RequestCycle
 		return responsePage;
 	}
 
+	/**
+	 * Gets the current responde page page parameters (only used with the responsepage class).
+	 * 
+	 * @return The page
+	 */
+	public final PageParameters getResponsePagePageParameters()
+	{
+		return responsePageParams;
+	}
+
+	/**
+	 * Gets the current responde page class.
+	 * 
+	 * @return The page
+	 */
+	public final Class getResponsePageClass()
+	{
+		return responsePageClass;
+	}
+	
 	/**
 	 * Gets the page that was used for invoking and interface.
 	 * 
@@ -467,7 +495,44 @@ public abstract class RequestCycle
 	public final void setResponsePage(final Page page)
 	{
 		this.responsePage = page;
+		// reset response page class, only one of the 2 responses should be set.
+		this.responsePageClass = null;
+		this.responsePageParams = null;
 	}
+	
+	/**
+	 * Convenience method that sets page class as the response.
+	 * This will generate a redirect to the page with a bookmarkable url
+	 * 
+	 * @param pageClass
+	 *            The page class to render as a response
+	 */
+	public final void setResponsePage(final Class pageClass)
+	{
+		setResponsePage(pageClass, null);
+	}
+
+	/**
+	 * Convenience method that sets page class as the response.
+	 * This will generate a redirect to the page with a bookmarkable url and its pageparameters.
+	 * 
+	 * @param pageClass
+	 *            The page class to render as a response
+	 * @param pageParameters 
+	 * 			  The page parameters that gets appended to the bookmarkable url,
+	 */
+	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
+	{
+		if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("Class must be a subclass of Page");
+		}
+		this.responsePageClass = pageClass;
+		this.responsePageParams = pageParameters;
+		// reset response page, only one of the 2 responses should be set.
+		this.responsePage = null;
+	}
+	
 
 	/**
 	 * Sets the page to invoke.
@@ -703,7 +768,51 @@ public abstract class RequestCycle
 				internalOnRuntimeException(page, e);
 			}
 		}
+		else
+		{
+			final Class pageClass = getResponsePageClass();
+			final PageParameters pageParameters = getResponsePagePageParameters();
+			String redirectUrl = urlFor(pageClass, pageParameters);
+			getResponse().redirect(redirectUrl);
+		}
 	}
+	
+	
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a given set of
+	 * page parameters. Since the URL which is returned contains all information necessary
+	 * to instantiate and render the page, it can be stored in a user's browser as a
+	 * stable bookmark.
+	 * @param pageClass Class of page
+	 * @param parameters Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public String urlFor(final Class pageClass,
+			final PageParameters parameters)
+	{
+		final StringBuffer buffer = urlPrefix();
+		buffer.append("?bookmarkablePage=");
+		buffer.append(application.getPages().getBookmarkablePageName(pageClass));
+		if (parameters != null)
+		{
+			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			{
+				final String key = (String)iterator.next();
+				buffer.append('&');
+				buffer.append(key);
+				buffer.append('=');
+				buffer.append(parameters.getString(key));
+			}
+		}
+		return getResponse().encodeURL(buffer.toString());
+	}
+	
+	/**
+	 * Creates a prefix for a url.
+	 * @return Prefix for URLs including the context path and servlet path.
+	 */
+	protected abstract StringBuffer urlPrefix();
+
 
 
 	/**
