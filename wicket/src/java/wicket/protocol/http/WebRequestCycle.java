@@ -152,7 +152,11 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * Redirects browser to the given page
+	 * Redirects browser to the given page.
+	 * NOTE: Usually, you should never call this method directly, but work with
+	 * setResponsePage instead. This method is part of Wicket's internal
+	 * behaviour and should only be used when you want to circumvent the normal
+	 * framework behaviour and issue the redirect directly.
 	 * 
 	 * @param page
 	 *            The page to redirect to
