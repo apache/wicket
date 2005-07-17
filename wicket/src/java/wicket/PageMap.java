@@ -167,6 +167,10 @@ public final class PageMap implements Serializable
 
 	/**
 	 * Redirects browser to an intermediate page such as a sign-in page.
+	 * The current request's url is saved for future use by method continueToOriginalDestination();
+	 * Only use this method when you plan to continue to the current url at some later time;
+	 * otherwise just use setResponsePage or - when you are in a constructor or checkAccessMethod,
+	 * call redirectTo.
 	 * 
 	 * @param page
 	 *            The sign in page

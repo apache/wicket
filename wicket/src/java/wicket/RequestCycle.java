@@ -68,9 +68,10 @@ import wicket.util.string.Strings;
  * /[Application]?bookmarkablePage=[classname]&[param]=[value] [...]
  * </ul>
  * <p>
- * Bookmarkable pages must implement a constructor that takes a PageParameters
- * argument. Links to bookmarkable pages are created by calling the
- * urlFor(Class, PageParameters) method, where Class is the page class and
+ * Bookmarkable pages must either implement a constructor that takes a PageParameters
+ * argument or a default constructor. If a Page has both constructors the constuctor with
+ * the PageParameters argument will be used. Links to bookmarkable pages are created by
+ * calling the urlFor(Class, PageParameters) method, where Class is the page class and
  * PageParameters are the parameters to encode into the URL.
  * <p>
  * </td>
@@ -447,6 +448,14 @@ public abstract class RequestCycle
 	 */
 	public final void setResponsePage(final Page page)
 	{
+		if (responsePage != null)
+		{
+			if(log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePage + " with " + page);
+			}
+		}
+
 		this.responsePage = page;
 	}
 	
@@ -537,6 +546,10 @@ public abstract class RequestCycle
 
 	/**
 	 * Redirects browser to the given page.
+	 * NOTE: Usually, you should never call this method directly, but work with
+	 * setResponsePage instead. This method is part of Wicket's internal
+	 * behaviour and should only be used when you want to circumvent the normal
+	 * framework behaviour and issue the redirect directly.
 	 * 
 	 * @param page
 	 *            The page to redirect to
@@ -630,6 +643,8 @@ public abstract class RequestCycle
 		final Page page = getResponsePage();
 		if (page != null)
 		{
+			// add/touch the response page in its pagemap.
+			page.getPageMap().put(page);
 			try
 			{
 				// Should page be redirected to?

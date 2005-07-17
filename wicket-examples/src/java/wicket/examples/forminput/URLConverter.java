@@ -44,18 +44,28 @@ public class URLConverter implements IConverter
 	 */
 	public Object convert(Object value, Class c)
 	{
-		if(c.equals(URL.class))
+		if (value == null)
 		{
+			return null;
+		}
+
+		if (c == URL.class)
+		{
+			if (value.getClass() == URL.class)
+			{
+				return value;
+			}
+
 			try
 			{
-				return new URL((String)value);
+				return new URL(value.toString());
 			}
 			catch (MalformedURLException e)
 			{
 				throw new ConversionException("'" + value + "' is not a valid URL");
 			}
 		}
-		return (value != null) ? value.toString() : "";
+		return value.toString();
 	}
 
 	/**

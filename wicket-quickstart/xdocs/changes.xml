@@ -6,8 +6,8 @@
     <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
   </properties>
   <body>
-  	<release version="1.0-RC2" date="t.b.d." description="1.0 Release Candidate 2">   	 
-      <action type="update" dev="Martijn Dashorst">Moved quick start project to Wicket Stuff.</action>
+    <release version="1.0" date="2005-06-06" description="Wicket 1.0 final">
+      <action type="update" dev="Martijn Dashorst">Upgraded Wicket to 1.0 final</action>
     </release>
   </body>
 </document>

@@ -41,6 +41,12 @@ public final class LongConverter extends AbstractIntegerConverter
 	{
 		final Number number = value instanceof Number ? (Number)value : parse(value,
 				Long.MIN_VALUE, Long.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
 		return new Long(number.longValue());
 	}
 

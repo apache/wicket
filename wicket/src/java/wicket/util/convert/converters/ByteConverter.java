@@ -42,6 +42,12 @@ public final class ByteConverter extends AbstractIntegerConverter
     {
         final Number number = value instanceof Number ? (Number)value : parse(value,
                 Byte.MIN_VALUE, Byte.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
         return new Byte(number.byteValue());
     }
 

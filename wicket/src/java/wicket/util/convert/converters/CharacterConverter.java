@@ -40,7 +40,12 @@ public final class CharacterConverter extends AbstractConverter
 	public Object convert(final Object value, Locale locale)
 	{
 		final String stringValue = value.toString();
-		if (stringValue.length() == 1)
+		int length = stringValue.length();
+		if (length == 0)
+		{
+			return null;
+		}
+		else if (length == 1)
 		{
 			return new Character(value.toString().charAt(0));
 		}

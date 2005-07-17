@@ -37,7 +37,7 @@
 					<li>unzip in your workspace</li>
 					<li>rename directory to project name</li>
 					<li>create new Java project in Eclipse, using previous project name</li>
-					<li>run the QuickStart class (Run as - Java application)</li>
+					<li>run the Start class (Run as - Java application)</li>
 					<li>
 						open browser to
 						<a href="http://localhost:8081/quickstart">
@@ -149,7 +149,7 @@
 						<code>src/main/java</code>
 						directory in the project and selecting the menu: 'Run as - Java
 						application'. If Eclipse prompts you for a main class, browse to the class
-						named 'QuickStart'.
+						named 'Start'.
 					</li>
 					<li>Start your browser</li>
 					<li>
@@ -202,7 +202,7 @@
 					Jetty is started in the
 					<code>main</code>
 					-method of the
-					<code>wicket.quickstart.QuickStart</code>
+					<code>wicket.quickstart.Start</code>
 					class.
 				</p>
 			</subsection>

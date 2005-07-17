@@ -25,8 +25,18 @@
 				<item name="Running Eclipse" href="#Running_Eclipse" />
 				<item name="Next Steps" href="#Next_Steps" />
 			</item>
-	 		<item name="IntelliJ IDEA" href="/intellij.html"/>
-			<item name="NetBeans" href="/netbeans.html"/>
+	 		<item name="IntelliJ IDEA" href="/intellij.html" collapse="true">
+				<item name="Introduction" href="#IntelliJ_IDEA_Kick_Start_Guide" />
+				<item name="Setting Up" href="#Setting_Up" />
+				<item name="Running IDEA" href="#Running_IntelliJ_IDEA" />
+				<item name="Next Steps" href="#Next_Steps" />
+	 		</item>
+			<item name="NetBeans" href="/netbeans.html" collapse="true">
+				<item name="Introduction" href="#NetBeans_Kick_Start_Guide" />
+				<item name="Setting Up" href="#Setting_Up" />
+				<item name="Running NetBeans" href="#Running_NetBeans" />
+				<item name="Next Steps" href="#Next_Steps" />
+			</item>
 		</menu>
 
 		<menu name="Download">
