@@ -333,7 +333,7 @@ public class DatePickerSettings implements Serializable
 		}
 
 		// return US pattern by default
-		return "%Y/%m/%d";		
+		return "%m/%d/%Y";		
 	}
 
 	/**
