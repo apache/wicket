@@ -1246,7 +1246,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 *            True is model strings should be escaped
 	 * @return This
 	 */
-	public final Component setShouldEscapeModelStrings(final boolean escapeMarkup)
+	public final Component setEscapeModelStrings(final boolean escapeMarkup)
 	{
 		setFlag(FLAG_ESCAPE_MODEL_STRINGS, escapeMarkup);
 		return this;
