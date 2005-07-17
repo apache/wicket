@@ -85,11 +85,16 @@
       <name>1.0</name>
       <tag>WICKET_R_1_0_0</tag>
     </version>
+    <version>
+      <id>1.0.1</id>
+      <name>1.0.1</name>
+      <tag>WICKET_R_1_0_1</tag>
+    </version>
   </versions>
   <branches>
-  	<branch>
-  		<tag>WICKET_1_0_0</tag>
-  	</branch>
+    <branch>
+      <tag>WICKET_1_0_0</tag>
+    </branch>
   </branches>
   <mailingLists>
     <mailingList>
