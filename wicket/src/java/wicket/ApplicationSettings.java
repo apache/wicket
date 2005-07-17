@@ -26,7 +26,6 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.ComponentTag;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
@@ -37,7 +36,6 @@ import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.EnumeratedType;
-import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.time.Duration;
 
 /**
@@ -337,9 +335,6 @@ public class ApplicationSettings
 
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
-
-	/** Wicket namespace to identify wicket components */
-	private String wicketNamespace = ComponentTag.DEFAULT_WICKET_NAMESPACE;
 
 	/**
 	 * Enumerated type for different ways of handling the render part of
@@ -735,19 +730,6 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Gets wicket namespace in use in this application. Normally, this is
-	 * "wicket", but it can be changed in the unlikely event of nameing
-	 * conflicts or for use by of pre-processors e.g.
-	 * 
-	 * @return The current wicket namespace
-	 * @see ApplicationSettings#setWicketNamespace(String)
-	 */
-	public final String getWicketNamespace()
-	{
-		return wicketNamespace;
-	}
-
-	/**
 	 * Application default for automatic link resolution. Please
 	 * 
 	 * @see wicket.AutoLinkResolver and
@@ -1133,28 +1115,6 @@ public class ApplicationSettings
 	public final void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
 		this.versionPagesByDefault = pagesVersionedByDefault;
-	}
-
-	/**
-	 * Sets wicket namespace in use in this application. Normally, this is
-	 * "wicket", but it can be changed in the unlikely event of nameing
-	 * conflicts.
-	 * 
-	 * @param namespace
-	 *            The wicket namespace to set.
-	 * @return This
-	 * @deprecated use the xmlns attribute in the markup file <html xmlns:namespace>
-	 */
-	public final ApplicationSettings setWicketNamespace(final String namespace)
-	{
-		if (!MetaPattern.VARIABLE_NAME.matcher(namespace).matches())
-		{
-			throw new IllegalArgumentException(
-					"Wicket namespace must be a valid variable name ([a-z][a-z0-9_]*)");
-		}
-
-		this.wicketNamespace = namespace;
-		return this;
 	}
 
 	/**

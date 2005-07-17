@@ -130,7 +130,6 @@ public class MarkupParser
 	 */
 	public final void configure(final ApplicationSettings settings)
 	{
-        this.wicketNamespace = settings.getWicketNamespace();
         this.stripWicketTag = settings.getStripWicketTags();
         this.stripComments = settings.getStripComments();
         this.compressWhitespace = settings.getCompressWhitespace();
