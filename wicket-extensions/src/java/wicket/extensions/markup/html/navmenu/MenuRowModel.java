@@ -45,8 +45,8 @@ public class MenuRowModel extends AbstractReadOnlyDetachableModel
 
 	/**
 	 * Construct.
-	 * @param menuModel 
-	 * @param level 
+	 * @param menuModel menu model
+	 * @param level the level in the menu, 0..n-1
 	 */
 	public MenuRowModel(MenuModel menuModel, int level)
 	{

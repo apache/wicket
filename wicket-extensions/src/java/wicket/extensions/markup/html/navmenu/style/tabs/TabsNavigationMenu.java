@@ -25,7 +25,6 @@ import wicket.markup.html.panel.Panel;
 
 /**
  * Two-level navigation menu with a tabs style.
- *
  * @author Eelco Hillenius
  */
 public final class TabsNavigationMenu extends Panel
