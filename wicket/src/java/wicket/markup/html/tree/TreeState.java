@@ -100,11 +100,19 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	{
 		setExpandedState(selection, true);
 		this.selectedPath = selection;
+
+		if (treeSelectionModel.isPathSelected(selection))
+		{
+			treeSelectionModel.removeSelectionPath(selection);
+		}
+		else
+		{
+			treeSelectionModel.addSelectionPath(selection);
+		}
 	}
 
 	/**
 	 * Gets the currently selected path.
-	 * 
 	 * @return the currently selected path
 	 */
 	public TreePath getSelectedPath()

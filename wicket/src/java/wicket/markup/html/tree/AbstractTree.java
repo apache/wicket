@@ -244,7 +244,7 @@ public abstract class AbstractTree extends Panel
 	{
 		final TreeState treeState = new TreeState();
 		final TreeSelectionModel treeSelectionModel = new DefaultTreeSelectionModel();
-		treeSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		treeSelectionModel.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		treeState.setModel(treeModel);
 		treeState.setSelectionModel(treeSelectionModel);
 		treeState.setRootVisible(rootVisible);
