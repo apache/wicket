@@ -5,7 +5,7 @@
   <id>wicket</id>
   <name>Wicket</name>
   <groupId>wicket</groupId>
-  <currentVersion>1.0</currentVersion>
+  <currentVersion>1.0.1</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -18,7 +18,7 @@
   <url>http://wicket.sourceforge.net</url>
   <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
   <siteAddress>shell.sourceforge.net</siteAddress>
-  <siteDirectory>/home/groups/w/wi/wicket/htdocs</siteDirectory>
+  <siteDirectory>/home/groups/w/wi/wicket/htdocs/wicket-1.0</siteDirectory>
   <repository>
     <connection>scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/wicket:wicket</connection>
     <developerConnection>scm:cvs:ext:${maven.username}@cvs.sourceforge.net:/cvsroot/wicket:wicket</developerConnection>
@@ -86,6 +86,11 @@
       <tag>WICKET_R_1_0_0</tag>
     </version>
   </versions>
+  <branches>
+  	<branch>
+  		<tag>WICKET_1_0_0</tag>
+  	</branch>
+  </branches>
   <mailingLists>
     <mailingList>
       <name>${pom.name} Dev List</name>
