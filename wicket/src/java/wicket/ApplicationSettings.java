@@ -1087,6 +1087,7 @@ public class ApplicationSettings
 	 * @param namespace
 	 *            The wicket namespace to set.
 	 * @return This
+	 * @deprecated removed in 1.1
 	 */
 	public final ApplicationSettings setWicketNamespace(final String namespace)
 	{
