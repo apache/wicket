@@ -55,6 +55,14 @@ public abstract class PageWithMenu extends WebPage
 	}
 
 	/**
+	 * @see wicket.MarkupContainer#autoAdd(wicket.Component)
+	 */
+	public boolean autoAdd(Component component)
+	{
+		return border.autoAdd(component);
+	}
+	
+	/**
 	 * @see wicket.MarkupContainer#removeAll()
 	 */
 	public void removeAll()
