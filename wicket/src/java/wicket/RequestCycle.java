@@ -70,9 +70,10 @@ import wicket.util.string.Strings;
  * /[Application]?bookmarkablePage=[classname]&[param]=[value] [...]
  * </ul>
  * <p>
- * Bookmarkable pages must implement a constructor that takes a PageParameters
- * argument. Links to bookmarkable pages are created by calling the
- * urlFor(Class, PageParameters) method, where Class is the page class and
+ * Bookmarkable pages must either implement a constructor that takes a PageParameters
+ * argument or a default constructor. If a Page has both constructors the constuctor with
+ * the PageParameters argument will be used. Links to bookmarkable pages are created by
+ * calling the urlFor(Class, PageParameters) method, where Class is the page class and
  * PageParameters are the parameters to encode into the URL.
  * <p>
  * </td>
