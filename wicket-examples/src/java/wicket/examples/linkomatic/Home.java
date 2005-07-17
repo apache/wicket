@@ -220,6 +220,14 @@ public class Home extends WicketExamplePage
 	{
 		this.onClickLinkClickCount = onClickLinkClickCount;
 	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
 }
 
 
