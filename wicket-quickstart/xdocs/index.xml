@@ -53,17 +53,6 @@
 					<a href="http://wicket.sourceforge.net">Wicket</a> application.
 				</p>
 			</subsection>
-			<subsection name="April 18, 2005 - Netbeans guide added">
-				<p>
-					Finally we have a Netbeans guide for running the kick start project in Netbeans.
-				</p>
-			</subsection>
-			<subsection name="April 15, 2005 - QuickStart has moved">
-				<p>
-					The project formerly known as 'Wicket QuickStart' has moved into the Wicket Stuff
-					project and has been renamed to 'Wicket Kick Start'.
-				</p>
-			</subsection>
 			<p>
 				See
 				<a href="News.html">the news archive</a>
