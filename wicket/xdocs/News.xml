@@ -11,6 +11,48 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="Juli 17, 2005 - NetBeans kickstart guide available">
+				<p>
+					Thanks to the writing talents of Geertjan Wielenga, the 
+					<a href="http://wicket=stuff.sourceforge.net/kickstart">Wicket Kickstart</a>
+					project now hosts a guide for kickstarting you Wicket development using
+					<a href="http://www.netbeans.org">NetBeans</a>. The project has been updated
+					to incorporate the latests Wicket maintenance release.
+				</p>
+			</subsection>
+			<subsection name="Juli 17, 2005 - Maintenance release Wicket 1.0.1 available">
+				<p>
+					The Wicket development team has released the first (and probably last)
+					maintenance release of Wicket 1.0. This release fixes some bugs and adds
+					some missing functionality:
+					<ul>
+						<li>Only validate components that are visible</li>
+						<li>FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</li>
+						<li>fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</li>
+						<li>ComponentStringResourceLoader: resources are now inherited from parent classes when components have been subclassed</li>
+					</ul>
+					Enjoy!
+				</p>
+			</subsection>
+			<subsection name="June 7, 2005 - Wicket 1.0 available for download">
+				<p>
+					The Wicket development team has made the 1.0 final release available for
+					immediate download. This release marks a huge milestone in the development
+					cycle of Wicket. Go to the <a href="Download.html">downloads page</a> to
+					download Wicket 1.0!
+				</p>
+				<p>
+					We are preparing a media campaign for Wicket 1.0. So you may find us in
+					the media soon. Keep an eye out for Wicket!
+				</p>
+			</subsection>
+			<subsection name="June 5, 2005 - Wicket 1.0 released">
+				<p>
+					The Wicket development team is proud to announce the launch of Wicket 1.0.
+					Wicket is a component based, Java web application framework which seeks to
+					ease and simplify web application development.
+				</p>
+			</subsection>
 			<subsection name="May 28, 2005 - Wicket on JavaOne 2005 / San Francisco">
 				<p>
 					Come see Wicket on JavaOne this summer. Wicket is featured in two events:
