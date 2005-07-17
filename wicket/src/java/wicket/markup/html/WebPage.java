@@ -38,10 +38,12 @@ import wicket.util.lang.Classes;
  * WebPages can be constructed with any
  * constructor when they are being used in a Wicket session, but if you wish to
  * link to a Page using a URL that is "bookmarkable" (which implies that the URL
- * will not have any session information encoded in it), you need to implement
- * your Page with a no-arg constructor or with a constructor that accepts a
- * PageParameters argument (which wraps any query string parameters for a
- * request).
+ * will not have any session information encoded in it, and that you can call this
+ * page directly without having a session first directly from your browser),
+ * you need to implement your Page with a no-arg constructor or with a constructor
+ * that accepts a PageParameters argument (which wraps any query string parameters for a
+ * request). In case the page has both constructors, the constructor with PageParameters will
+ * be used.
  * 
  * @author Jonathan Locke
  */
