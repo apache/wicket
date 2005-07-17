@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import wicket.IFeedback;
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
@@ -127,7 +128,9 @@ public class FormInput extends WicketExamplePage
 			integerTextField.add(new ValidationEventRequestHandler("onchange"));
 			add(integerTextField);
 			add(new RequiredTextField("doubleProperty", Double.class));
-			add(new RequiredTextField("dateProperty", Date.class));
+			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
+			add(datePropertyTextField);
+			add(new DatePicker("datePicker", datePropertyTextField));
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(
 			        IntegerValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
