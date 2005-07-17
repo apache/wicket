@@ -32,7 +32,7 @@ public class Start
 	/**
 	 * Used for logging.
 	 */
-	private static Log log = LogFactory.getLog(WicketExampleApplication.class);
+	private static Log log = LogFactory.getLog(Start.class);
 
 	/**
 	 * Construct.
