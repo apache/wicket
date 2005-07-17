@@ -35,7 +35,7 @@
 					<li>start IDEA and load the project file</li>
 					<li>rename the project and the module</li>
 					<li>edit the module settings to select the Java SDK you wish to use</li>
-					<li>create a new Application configuration using QuickStartApplication as the main class</li>
+					<li>create a new Application configuration using Start as the main class</li>
 					<li>run the Application</li>
 					<li>
 						open browser to
@@ -151,7 +151,7 @@
 					</li>
 					<li>
 						Select the 'Application' tag and create a new application
-						configuration, using the QuickStartApplication as the
+						configuration, using the Start as the
 						main class.
 						<img src="images/idea-application.png" />
 					</li>
@@ -185,11 +185,6 @@
 					find more information on the
 					<a href="/wiki">wiki</a>
 				</li>
-				<li>
-					take a look at the
-					<a href="http://jettylauncher.sourceforge.net/">Jetty launcher</a>
-					plugin to ease your development
-				</li>
 			</ul>
 			<subsection name="Jetty Configuration">
 				<p>The Jetty configuration file is located in the project directory:</p>
@@ -210,7 +205,7 @@
 					Jetty is started in the
 					<code>main</code>
 					-method of the
-					<code>wicket.quickstart.QuickStart</code>
+					<code>wicket.quickstart.Start</code>
 					class.
 				</p>
 			</subsection>

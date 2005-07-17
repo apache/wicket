@@ -11,6 +11,20 @@
 				<a href="http://wicket-stuff.sourceforge.net/wicket-kickstart">front page</a>
 				.
 			</p>
+			<subsection name="Juli 17, 2005 - NetBeans Guide available">
+				<p>
+					Thanks to the writing talents of 
+					<a href="http://blogs.sun.com/geertjan">Geertjan Wielenga</a>
+					we now have a full <a href="netbeans.html">NetBeans kickstart</a> description.
+				</p>
+			</subsection>
+			<subsection name="Juli 17, 2005 - Wicket 1.0.1 maintenance release available">
+				<p>
+					The first maintenance release of the 1.0 release of 
+					<a href="http://wicket.sf.net">Wicket</a> is available. The Kickstart project
+					has been updated to reflect this maintenance release.
+				</p>
+			</subsection>
 		    <subsection name="June 7, 2005 - Wicket 1.0 final Launched!">
 		        <p>
 		            With the launch of <a href="http://wicket.sf.net/PressRelease1_0.html">Wicket 1.0 final</a>
