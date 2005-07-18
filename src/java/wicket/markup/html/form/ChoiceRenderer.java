@@ -101,7 +101,7 @@ public class ChoiceRenderer implements IChoiceRenderer
 	public String getDisplayValue(Object object)
 	{
 		Object returnValue = object;
-		if(displayExpression != null && object != null)
+		if ((displayExpression != null) && (object != null))
 		{
 			try
 			{
@@ -109,11 +109,17 @@ public class ChoiceRenderer implements IChoiceRenderer
 			}
 			catch (OgnlException ex)
 			{
-				throw new WicketRuntimeException("Error getting display value of: " + object+ " for property: " + displayExpression,ex);
+				throw new WicketRuntimeException("Error getting display value of: " + 
+				        object+ " for property: " + displayExpression,ex);
 			}
 		}
-		if(returnValue == null) return "";
-		else return returnValue.toString();
+		
+		if (returnValue == null)
+		{
+		    return "";
+		}
+		
+		return returnValue.toString();
 	}
 
 	/**
@@ -121,18 +127,30 @@ public class ChoiceRenderer implements IChoiceRenderer
 	 */
 	public String getIdValue(Object object, int index)
 	{
-		if(idExpression == null) return Integer.toString(index);
-		if(object == null) return "";
+		if (idExpression == null)
+		{
+		    return Integer.toString(index);
+		}
+		
+		if (object == null)
+		{
+		    return "";
+		}
+		
 		try
 		{
 			Object returnValue = Ognl.getValue(idExpression, object);
-			if(returnValue == null) return "";
-			else return returnValue.toString();
+			if (returnValue == null)
+			{
+			    return "";
+			}
+			
+			return returnValue.toString();
 		}
 		catch (OgnlException ex)
 		{
-			throw new WicketRuntimeException("Error getting id value of: " + object + " for property: " + idExpression,ex);
+			throw new WicketRuntimeException("Error getting id value of: " + 
+			        object + " for property: " + idExpression,ex);
 		}
 	}
-
 }
