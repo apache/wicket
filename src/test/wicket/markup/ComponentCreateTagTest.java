@@ -100,6 +100,16 @@ public class ComponentCreateTagTest extends TestCase
 	}
 
 	/**
+	 * <wicket:param> attached
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_6() throws Exception
+	{
+	    executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
+	}
+
+	/**
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception

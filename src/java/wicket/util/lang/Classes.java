@@ -19,8 +19,11 @@ package wicket.util.lang;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 import wicket.markup.MarkupException;
+import wicket.util.convert.ConverterFactory;
+import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
 /**
@@ -74,9 +77,17 @@ public final class Classes
 	 * @param object
 	 * @param name
 	 * @param value
+	 * @param locale
 	 */
-	public static void invokeSetter(final Object object, final String name, final String value)
+	public static void invokeSetter(final Object object, final String name, final String value, final Locale locale)
 	{
+	    // Note: tag attributes are maintained in a LowerCaseKeyValueMap, thus 'name' will
+	    // be all lowercase. OGNL however requires correct cases, except for the first letter.
+	    // Thus, we have to find the proper name first.
+	    // Note: because the attributes are all lowercase, there is slight possibility of 
+	    // akward error due to naming issues.
+	    // Note: all setters must start with "set"
+	    
         // Get the setter for the attribute
         final String methodName = "set" + name;
         final Method[] methods = object.getClass().getMethods();
@@ -109,18 +120,16 @@ public final class Classes
         final Class paramClass = parameterClasses[0];
         try
         {
-            if (paramClass.equals(String.class))
+            // Implicitly use OGNL for default conversions
+            final IConverter converter = new ConverterFactory().newConverter(Locale.US);
+            final Object param = converter.convert(value, paramClass);
+            if (param == null)
             {
-                method.invoke(object, new Object[] { value });
+                throw new MarkupException(
+                        "Unable to convert value '" + value + "' into " + paramClass 
+                        + ". May be there is no converter for that type registered?");
             }
-            else if (paramClass.equals(int.class))
-            {
-                method.invoke(object, new Object[] { new Integer(value) });
-            }
-            else if (paramClass.equals(long.class))
-            {
-                method.invoke(object, new Object[] { new Long(value) });
-            }
+            method.invoke(object, new Object[] { param });
         }
         catch (IllegalAccessException ex)
         {

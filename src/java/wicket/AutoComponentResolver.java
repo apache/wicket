@@ -221,7 +221,7 @@ public final class AutoComponentResolver implements IComponentResolver
                 continue;
             }
 
-           	Classes.invokeSetter(component, key, value);
+           	Classes.invokeSetter(component, key, value, container.getLocale());
         }
 
         // Get all remaining attributes and invoke the component's setters
@@ -232,7 +232,7 @@ public final class AutoComponentResolver implements IComponentResolver
             final String key = (String)entry.getKey();
             final String value = (String)entry.getValue();
 
-           	Classes.invokeSetter(component, key, value);
+           	Classes.invokeSetter(component, key, value, container.getLocale());
         }
 
         return component;
