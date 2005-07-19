@@ -61,6 +61,12 @@ public abstract class AbstractValidator implements IValidator
 	private FormComponent formComponent;
 
 	/**
+	 * the validator's resource key. will be used when it was explicitly set by a user or
+	 * extending validator.
+	 */
+	private String resourceKey = null;
+
+	/**
 	 * Sets an error on the component being validated using the map returned by
 	 * messageModel() for variable interpolations.
 	 * <p>
@@ -131,6 +137,28 @@ public abstract class AbstractValidator implements IValidator
 	public String getInput()
 	{
 		return formComponent.getInput();
+	}
+
+	/**
+	 * Explicitly set the resource key that should be used.
+	 * WARNING: as resourceKey() is overrable, setting this parameter does not guarantee
+	 * that extending validators honor using it.
+	 * @param resourceKey the resource key
+	 */
+	public final void setResourceKey(String resourceKey)
+	{
+		this.resourceKey = resourceKey;
+	}
+
+	/**
+	 * Returns the explicitly set resource key. When no resource key was explictly set
+	 * (and the validator thus falls back on the <code>[form-name].[component-name].[validator-class]</code>)
+	 * schema, this method returns null
+	 * @return the explicitly set resource key or null
+	 */
+	protected final String getResourceKey()
+	{
+		return resourceKey;
 	}
 
 	/**
