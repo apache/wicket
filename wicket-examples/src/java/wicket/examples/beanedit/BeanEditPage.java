@@ -21,8 +21,8 @@ package wicket.examples.beanedit;
 import java.util.Calendar;
 
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.markup.html.beanedit.BeanFormPanel;
 import wicket.extensions.markup.html.beanedit.BeanModel;
-import wicket.extensions.markup.html.beanedit.BeanPanel;
 
 /**
  * Example Page for editing JavaBeans.
@@ -42,6 +42,7 @@ public class BeanEditPage extends WicketExamplePage
     	Calendar cal = Calendar.getInstance();
     	cal.set(1940, 12, 12);
     	p.setDateOfBirth(cal.getTime());
-    	add(new BeanPanel("beanEditPanel", new BeanModel(p)));
+
+    	add(new BeanFormPanel("beanEditPanel", new BeanModel(p)));
     }
 }

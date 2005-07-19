@@ -39,7 +39,7 @@ import wicket.markup.html.panel.Panel;
  *
  * @author Eelco Hillenius
  */
-public class BeanPanel extends Panel
+public class BeanPanel extends AbstractBeanPanel
 {
 	/** boolean types. */
 	private static final Class[] BOOL_TYPES = new Class[] { Boolean.class, Boolean.TYPE };
@@ -69,6 +69,7 @@ public class BeanPanel extends Panel
 	public BeanPanel(String id, BeanModel beanModel)
 	{
 		super(id, beanModel);
+		setRenderBodyOnly(true);
 		Panel header = newHeader("header", beanModel);
 		if (header == null)
 		{
@@ -181,15 +182,6 @@ public class BeanPanel extends Panel
 	}
 
 	/**
-	 * Gets the model casted to {@link BeanModel}.
-	 * @return the model casted to {@link BeanModel}
-	 */
-	protected final BeanModel getBeanModel()
-	{
-		return (BeanModel)getModel();
-	}
-
-	/**
 	 * Finds a possible custom editor by looking for the type name + 'Editor'
 	 * (e.g. mypackage.MyBean has editor mypackage.MyBeanEditor).
 	 * @param panelId id of panel; must be used for constructing any panel
@@ -299,9 +291,37 @@ public class BeanPanel extends Panel
 				final PropertyDescriptor descriptor, final EditMode editMode)
 		{
 			super(id, beanModel, descriptor, editMode);
+			setRenderBodyOnly(true);
 			Class type = descriptor.getPropertyType();
 			TextField valueTextField = new TextField("value",
 					new BeanPropertyModel(beanModel, descriptor), type);
+			EditModeReplacementModel replacementModel =
+				new EditModeReplacementModel(editMode, descriptor);
+			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
+			add(valueTextField);
+		}
+	}
+
+	/**
+	 * Panel for a check box.
+	 */
+	public static final class PropertyCheckBox extends BeanPropertyEditor
+	{
+		/**
+		 * Construct.
+		 * @param id component id
+		 * @param beanModel model with the target bean
+		 * @param descriptor property descriptor
+		 * @param editMode edit mode
+		 */
+		public PropertyCheckBox(String id, BeanModel beanModel,
+				final PropertyDescriptor descriptor, EditMode editMode)
+		{
+			super(id, beanModel, descriptor, editMode);
+			setRenderBodyOnly(true);
+			Class type = descriptor.getPropertyType();
+			CheckBox valueTextField = new CheckBox("value",
+					new BeanPropertyModel(beanModel, descriptor));
 			EditModeReplacementModel replacementModel =
 				new EditModeReplacementModel(editMode, descriptor);
 			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
@@ -326,32 +346,6 @@ public class BeanPanel extends Panel
 		{
 			super(id, beanModel, descriptor, editMode);
 			//TODO implement
-		}
-	}
-
-	/**
-	 * Panel for a check box.
-	 */
-	public static final class PropertyCheckBox extends BeanPropertyEditor
-	{
-		/**
-		 * Construct.
-		 * @param id component id
-		 * @param beanModel model with the target bean
-		 * @param descriptor property descriptor
-		 * @param editMode edit mode
-		 */
-		public PropertyCheckBox(String id, BeanModel beanModel,
-				final PropertyDescriptor descriptor, EditMode editMode)
-		{
-			super(id, beanModel, descriptor, editMode);
-			Class type = descriptor.getPropertyType();
-			CheckBox valueTextField = new CheckBox("value",
-					new BeanPropertyModel(beanModel, descriptor));
-			EditModeReplacementModel replacementModel =
-				new EditModeReplacementModel(editMode, descriptor);
-			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
-			add(valueTextField);
 		}
 	}
 }
