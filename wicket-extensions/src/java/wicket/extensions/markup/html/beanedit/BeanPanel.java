@@ -30,6 +30,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
@@ -345,7 +346,12 @@ public class BeanPanel extends AbstractBeanPanel
 				final PropertyDescriptor descriptor, final EditMode editMode)
 		{
 			super(id, beanModel, descriptor, editMode);
-			//TODO implement
+			add(new Link("button")
+			{
+				public void onClick()
+				{
+				}
+			});
 		}
 	}
 }

@@ -30,7 +30,7 @@ import wicket.model.Model;
 import wicket.model.StringResourceModel;
 
 /**
- * Panel for generic bean displaying/ editing.
+ * Panel with a form for generic bean displaying/ editing.
  *
  * @author Eelco Hillenius
  */
