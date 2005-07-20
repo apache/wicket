@@ -118,9 +118,7 @@ public abstract class AbstractValidator implements IValidator
 	}
 
 	/**
-	 * Explicitly set the resource key that should be used.
-	 * WARNING: as resourceKey() is overrable, setting this parameter does not guarantee
-	 * that extending validators honor using it.
+	 * Sets the resource key that should be used.
 	 * @param resourceKey the resource key
 	 */
 	public final void setResourceKey(String resourceKey)
