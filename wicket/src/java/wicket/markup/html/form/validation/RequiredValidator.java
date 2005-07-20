@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.markup.html.form.FormComponent;
 import wicket.util.string.Strings;
 
 /**
@@ -48,14 +49,16 @@ public class RequiredValidator extends StringValidator
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(java.lang.String)
+	 * Validates whether the input value is not-null or empty.
+	 *
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
 	 */
-	public void onValidate(String value)
+	public void onValidate(FormComponent formComponent, String value)
 	{
 		// Check value
 		if (Strings.isEmpty(value))
 		{
-			error();
+			error(formComponent);
 		}
 	}
 
