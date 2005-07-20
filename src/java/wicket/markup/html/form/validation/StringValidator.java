@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.markup.html.form.FormComponent;
+
 /**
  * A validator for strings designed for subclassing. A subclass implements
  * onValidate() to validate the component and its string value.
@@ -26,19 +28,18 @@ package wicket.markup.html.form.validation;
 public abstract class StringValidator extends AbstractValidator
 {
 	/**
-	 * @see wicket.markup.html.form.validation.AbstractValidator#onValidate()
+	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
-	public void onValidate()
+	public void validate(final FormComponent formComponent)
 	{
-		onValidate(getInput());		
+		onValidate(formComponent, formComponent.getInput());
 	}
 
 	/**
 	 * Subclasses should override this method to validate the string value for a
 	 * component.
-	 * 
-	 * @param value
-	 *            The string value to validate
+	 * @param formComponent form component 
+	 * @param value The string value to validate
 	 */
-	public abstract void onValidate(String value);
+	public abstract void onValidate(FormComponent formComponent, String value);
 }

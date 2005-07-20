@@ -22,7 +22,7 @@ import java.io.Serializable;
 import wicket.markup.html.form.FormComponent;
 
 /**
- * THIS INTERFACE IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+ * Interface for validations by form components.
  * <p>
  * Instead of subclassing IValidator, you should use one of the existing
  * validators, which cover a huge number of cases, or if none satisfies your

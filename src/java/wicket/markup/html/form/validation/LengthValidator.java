@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.markup.html.form.FormComponent;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
 
@@ -111,10 +112,9 @@ public class LengthValidator extends StringValidator
 	/**
 	 * Validates that a form component's value is of a certain minimum and/or
 	 * maximum length.
-	 * 
-	 * @see StringValidator#onValidate(String)
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
 	 */
-	public void onValidate(final String value)
+	public void onValidate(FormComponent formComponent, final String value)
 	{
 		// If value is non-empty
 		if (!Strings.isEmpty(value))
@@ -122,7 +122,7 @@ public class LengthValidator extends StringValidator
 			// Check length
 			if ((checkMin && value.length() < min) || (checkMax && value.length() > max))
 			{
-				error();
+				error(formComponent);
 			}
 		}
 	}
