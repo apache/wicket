@@ -19,7 +19,6 @@
 package wicket.extensions.markup.html.beanedit;
 
 import java.beans.IndexedPropertyDescriptor;
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -42,6 +41,11 @@ import wicket.markup.html.panel.Panel;
  */
 public class BeanPanel extends AbstractBeanPanel
 {
+	/**
+	 * factory for property editors. 
+	 */
+	private IPropertyEditorFactory propertyEditorFactory;
+
 	/** boolean types. */
 	private static final Class[] BOOL_TYPES = new Class[] { Boolean.class, Boolean.TYPE };
 
@@ -94,23 +98,23 @@ public class BeanPanel extends AbstractBeanPanel
 	/**
 	 * Gets the editor for the given property.
 	 * @param panelId id of panel; must be used for constructing any panel
-	 * @param descriptor property descriptor
+	 * @param propertyMeta property descriptor
 	 * @return the editor
 	 */
-	protected Panel newPropertyEditor(String panelId, PropertyDescriptor descriptor)
+	protected Panel newPropertyEditor(String panelId, PropertyMeta propertyMeta)
 	{
-		Class type = descriptor.getPropertyType();
-		BeanPropertyEditor editor = findCustomEditor(panelId, descriptor);
+		Class type = propertyMeta.getPropertyType();
+		BeanPropertyEditor editor = findCustomEditor(panelId, propertyMeta);
 
 		if (editor == null)
 		{
-			if (descriptor instanceof IndexedPropertyDescriptor)
+			if (propertyMeta.getPropertyDescriptor() instanceof IndexedPropertyDescriptor)
 			{
 				throw new WicketRuntimeException("indexed properties not supported yet ");
 			}
 			else
 			{
-				editor = newDefaultEditor(panelId, descriptor);
+				editor = newDefaultEditor(panelId, propertyMeta);
 			}
 		}
 
@@ -140,25 +144,25 @@ public class BeanPanel extends AbstractBeanPanel
 	/**
 	 * Gets a default property editor panel.
 	 * @param panelId component id
-	 * @param descriptor property descriptor
+	 * @param propertyMeta property descriptor
 	 * @return a property editor
 	 */
 	protected final BeanPropertyEditor newDefaultEditor(
-			final String panelId, final PropertyDescriptor descriptor)
+			final String panelId, final PropertyMeta propertyMeta)
 	{
 		BeanPropertyEditor editor;
-		final Class type = descriptor.getPropertyType();
+		final Class type = propertyMeta.getPropertyType();
 		if (checkAssignableFrom(BOOL_TYPES, type))
 		{
-			editor = new PropertyCheckBox(panelId, (BeanModel)getModel(), descriptor, getEditMode());
+			editor = new PropertyCheckBox(panelId, propertyMeta);
 		}
 		if (checkAssignableFrom(BASE_TYPES, type))
 		{
-			editor = new PropertyInput(panelId, (BeanModel)getModel(), descriptor, getEditMode());
+			editor = new PropertyInput(panelId, propertyMeta);
 		}
 		else
 		{
-			return new ButtonToMoreDetails(panelId, (BeanModel)getModel(), descriptor, getEditMode());
+			return new ButtonToMoreDetails(panelId, propertyMeta);
 		}
 		return editor;
 	}
@@ -186,10 +190,10 @@ public class BeanPanel extends AbstractBeanPanel
 	 * Finds a possible custom editor by looking for the type name + 'Editor'
 	 * (e.g. mypackage.MyBean has editor mypackage.MyBeanEditor).
 	 * @param panelId id of panel; must be used for constructing any panel
-	 * @param descriptor property descriptor
+	 * @param propertyMeta property descriptor
 	 * @return PropertyEditor if found or null
 	 */
-	protected final BeanPropertyEditor findCustomEditor(String panelId, PropertyDescriptor descriptor)
+	protected final BeanPropertyEditor findCustomEditor(String panelId, PropertyMeta propertyMeta)
 	{
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (classLoader == null)
@@ -197,7 +201,7 @@ public class BeanPanel extends AbstractBeanPanel
 			classLoader = getClass().getClassLoader();
 		}
 
-		Class type = descriptor.getPropertyType();
+		Class type = propertyMeta.getPropertyType();
 		String editorTypeName = type.getName() + "Editor";
 		try
 		{
@@ -206,10 +210,10 @@ public class BeanPanel extends AbstractBeanPanel
 			{
 				// get constructor
 				Constructor constructor = editorClass.getConstructor(
-						new Class[]{String.class, BeanModel.class, PropertyDescriptor.class, EditMode.class});
+						new Class[]{String.class, BeanModel.class, PropertyMeta.class, EditMode.class});
 
 				// construct arguments
-				Object[] args = new Object[]{panelId, BeanPanel.this.getModel(), descriptor, getEditMode()};
+				Object[] args = new Object[]{panelId, BeanPanel.this.getModel(), propertyMeta, getEditMode()};
 
 				// create editor instance
 				BeanPropertyEditor editor = (BeanPropertyEditor)constructor.newInstance(args);
@@ -265,9 +269,9 @@ public class BeanPanel extends AbstractBeanPanel
 		 */
 		protected void populateItem(ListItem item)
 		{
-			PropertyDescriptor descriptor = (PropertyDescriptor)item.getModelObject();
-			item.add(new Label("displayName", descriptor.getDisplayName()));
-			Panel propertyEditor = newPropertyEditor("editor", descriptor);
+			PropertyMeta propertyMeta = (PropertyMeta)item.getModelObject();
+			item.add(new Label("displayName", propertyMeta.getDisplayName()));
+			Panel propertyEditor = newPropertyEditor("editor", propertyMeta);
 			if (propertyEditor == null)
 			{
 				throw new NullPointerException("propertyEditor must be not null");
@@ -279,25 +283,22 @@ public class BeanPanel extends AbstractBeanPanel
 	/**
 	 * Panel for an input field.
 	 */
-	private static final class PropertyInput extends BeanPropertyEditor
+	static final class PropertyInput extends BeanPropertyEditor
 	{
 		/**
 		 * Construct.
 		 * @param id component id
-		 * @param beanModel model with the target bean
-		 * @param descriptor property descriptor
-		 * @param editMode the edit mode
+		 * @param propertyMeta property descriptor
 		 */
-		public PropertyInput(String id, final BeanModel beanModel,
-				final PropertyDescriptor descriptor, final EditMode editMode)
+		public PropertyInput(String id, final PropertyMeta propertyMeta)
 		{
-			super(id, beanModel, descriptor, editMode);
+			super(id, propertyMeta);
 			setRenderBodyOnly(true);
-			Class type = descriptor.getPropertyType();
+			Class type = propertyMeta.getPropertyType();
 			TextField valueTextField = new TextField("value",
-					new BeanPropertyModel(beanModel, descriptor), type);
+					new BeanPropertyModel(propertyMeta), type);
 			EditModeReplacementModel replacementModel =
-				new EditModeReplacementModel(editMode, descriptor);
+				new EditModeReplacementModel(propertyMeta);
 			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
 			add(valueTextField);
 		}
@@ -306,25 +307,22 @@ public class BeanPanel extends AbstractBeanPanel
 	/**
 	 * Panel for a check box.
 	 */
-	public static final class PropertyCheckBox extends BeanPropertyEditor
+	static final class PropertyCheckBox extends BeanPropertyEditor
 	{
 		/**
 		 * Construct.
 		 * @param id component id
-		 * @param beanModel model with the target bean
-		 * @param descriptor property descriptor
-		 * @param editMode edit mode
+		 * @param propertyMeta property descriptor
 		 */
-		public PropertyCheckBox(String id, BeanModel beanModel,
-				final PropertyDescriptor descriptor, EditMode editMode)
+		public PropertyCheckBox(String id, final PropertyMeta propertyMeta)
 		{
-			super(id, beanModel, descriptor, editMode);
+			super(id, propertyMeta);
 			setRenderBodyOnly(true);
-			Class type = descriptor.getPropertyType();
+			Class type = propertyMeta.getPropertyType();
 			CheckBox valueTextField = new CheckBox("value",
-					new BeanPropertyModel(beanModel, descriptor));
+					new BeanPropertyModel(propertyMeta));
 			EditModeReplacementModel replacementModel =
-				new EditModeReplacementModel(editMode, descriptor);
+				new EditModeReplacementModel(propertyMeta);
 			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
 			add(valueTextField);
 		}
@@ -333,19 +331,16 @@ public class BeanPanel extends AbstractBeanPanel
 	/**
 	 * Panel for a button to more details.
 	 */
-	private static final class ButtonToMoreDetails extends BeanPropertyEditor
+	static final class ButtonToMoreDetails extends BeanPropertyEditor
 	{
 		/**
 		 * Construct.
 		 * @param id component id
-		 * @param beanModel model with the target bean
-		 * @param descriptor property descriptor
-		 * @param editMode the edit mode
+		 * @param propertyMeta property descriptor
 		 */
-		public ButtonToMoreDetails(String id, final BeanModel beanModel,
-				final PropertyDescriptor descriptor, final EditMode editMode)
+		public ButtonToMoreDetails(String id, final PropertyMeta propertyMeta)
 		{
-			super(id, beanModel, descriptor, editMode);
+			super(id, propertyMeta);
 			add(new Link("button")
 			{
 				public void onClick()

@@ -18,12 +18,7 @@
  */
 package wicket.examples.wizard.example.hotel;
 
-import java.util.Date;
-
 import wicket.examples.wizard.framework.TransitionLabel;
-import wicket.extensions.markup.html.beanedit.BeanField;
-import wicket.extensions.markup.html.beanedit.BeanFields;
-import wicket.extensions.markup.html.beanedit.BeanFieldsPanel;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
 import wicket.util.string.Strings;
@@ -36,7 +31,7 @@ import wicket.util.string.Strings;
 public class PersonalDataStep extends AbstractHotelPrefStep
 {
 	/** fields of this step. */
-	private BeanFields fields;
+//	private BeanFields fields;
 
 	/**
 	 * Construct.
@@ -52,14 +47,15 @@ public class PersonalDataStep extends AbstractHotelPrefStep
 	 */
 	public Panel newEditor(String id)
 	{
-		fields = new BeanFields(getModel());
-		fields.setDisplayName("Personal Data");
-		fields.add(new BeanField("firstName", "first name", String.class));
-		fields.add(new BeanField("lastName", "last name", String.class));
-		fields.add(new BeanField("passportNumber", "passport number", String.class));
-		fields.add(new BeanField("dateOfBirth", "date of birth", Date.class));
-		BeanFieldsPanel panel = new BeanFieldsPanel(id, fields);
-		return panel;
+//		fields = new BeanFields(getModel());
+//		fields.setDisplayName("Personal Data");
+//		fields.add(new BeanField("firstName", "first name", String.class));
+//		fields.add(new BeanField("lastName", "last name", String.class));
+//		fields.add(new BeanField("passportNumber", "passport number", String.class));
+//		fields.add(new BeanField("dateOfBirth", "date of birth", Date.class));
+//		BeanFieldsPanel panel = new BeanFieldsPanel(id, fields);
+//		return panel;
+		return null;
 	}
 
 	/**

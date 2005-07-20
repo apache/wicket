@@ -36,6 +36,7 @@ import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IntegerValidator;
+import wicket.markup.html.form.validation.ValidationEventRequestHandler;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -124,7 +125,7 @@ public class FormInput extends WicketExamplePage
 			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
 			add(stringTextField);
 			RequiredTextField integerTextField = new RequiredTextField("integerProperty", Integer.class);
-			//integerTextField.add(new ValidationEventRequestHandler("onchange"));
+			integerTextField.add(new ValidationEventRequestHandler("onchange"));
 			add(integerTextField);
 			add(new RequiredTextField("doubleProperty", Double.class));
 			TextField datePropertyTextField = new TextField("dateProperty", Date.class);

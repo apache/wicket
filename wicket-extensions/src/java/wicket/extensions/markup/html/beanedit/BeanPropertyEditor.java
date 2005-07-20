@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.beanedit;
 
-import java.beans.PropertyDescriptor;
 
 import wicket.markup.html.panel.Panel;
 
@@ -32,23 +31,9 @@ public abstract class BeanPropertyEditor extends Panel
 	/**
 	 * Construct.
 	 * @param id component id
-	 * @param beanModel model with the target bean
-	 * @param descriptor property descriptor
-	 * @param editMode edit mode indicator
+	 * @param propertyMeta property descriptor
 	 */
-	public BeanPropertyEditor(String id, BeanModel beanModel,
-			PropertyDescriptor descriptor, EditMode editMode)
-	{
-		super(id);
-	}
-
-	/**
-	 * Construct.
-	 * @param id component id
-	 * @param beanModel model with the target bean
-	 * @param field the field
-	 */
-	public BeanPropertyEditor(String id, BeanModel beanModel, BeanField field)
+	public BeanPropertyEditor(String id, PropertyMeta propertyMeta)
 	{
 		super(id);
 	}

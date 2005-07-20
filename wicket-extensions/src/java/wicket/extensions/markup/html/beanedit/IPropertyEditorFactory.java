@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.beanedit;
 
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 
 /**
@@ -31,8 +30,10 @@ public interface IPropertyEditorFactory extends Serializable
 	/**
 	 * Creates a new property editor.
 	 * @param panelId id of the panel; must be used for constructing any panel
-	 * @param descriptor property descriptor
+	 * @param propertyMeta property descriptor
+	 * @param editMode edit mode
 	 * @return a property editor
 	 */
-	BeanPropertyEditor newPropertyEditor(String panelId, PropertyDescriptor descriptor);
+	BeanPropertyEditor newPropertyEditor(
+			String panelId, PropertyMeta propertyMeta, EditMode editMode);
 }

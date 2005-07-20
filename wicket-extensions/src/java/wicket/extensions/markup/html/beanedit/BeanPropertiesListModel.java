@@ -52,19 +52,25 @@ public final class BeanPropertiesListModel extends Model
 	public Object getObject(Component component)
 	{
 		BeanInfo beanInfo = beanModel.getBeanInfo(component);
-		if(beanInfo != null)
+		if (beanInfo != null)
 		{
 			PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
-			if(descriptors != null)
+			if (descriptors != null)
 			{
 				List all = new ArrayList();
 				int len = descriptors.length;
-				for(int i = 0; i < len; i++)
+				for (int i = 0; i < len; i++)
 				{
-					if(shouldAdd(descriptors[i]))
+					if (shouldAdd(descriptors[i]))
 					{
-						all.add(descriptors[i]);
+						PropertyMeta meta = new PropertyMeta(beanModel, descriptors[i]);
+						all.add(meta);
 					}
+				}
+				int defaultPropertyIndex = beanInfo.getDefaultPropertyIndex();
+				if (defaultPropertyIndex != -1)
+				{
+					
 				}
 				return all;
 			}
@@ -89,7 +95,7 @@ public final class BeanPropertiesListModel extends Model
 	 */
 	private boolean shouldAdd(PropertyDescriptor descriptor)
 	{
-		if("class".equals(descriptor.getName()))
+		if ("class".equals(descriptor.getName()))
 		{
 			return false;
 		}

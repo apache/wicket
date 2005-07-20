@@ -18,8 +18,6 @@
  */
 package wicket.extensions.markup.html.beanedit;
 
-import java.beans.PropertyDescriptor;
-
 import wicket.Component;
 import wicket.model.Model;
 
@@ -42,40 +40,29 @@ public final class EditModeReplacementModel extends Model
 	private final EditMode editMode;
 
 	/** property descriptor. */
-	private final PropertyDescriptor descriptor;
+	private final PropertyMeta propertyMeta;
 
 	/**
 	 * Construct.
-	 * @param editMode edit mode
+	 * @param propertyMeta property descriptor
 	 */
-	public EditModeReplacementModel(EditMode editMode)
+	public EditModeReplacementModel(PropertyMeta propertyMeta)
 	{
 		super();
-		this.editMode = editMode;
-		this.descriptor = null;
-	}
-
-	/**
-	 * Construct.
-	 * @param descriptor property descriptor
-	 */
-	public EditModeReplacementModel(PropertyDescriptor descriptor)
-	{
-		super();
-		this.descriptor = descriptor;
+		this.propertyMeta = propertyMeta;
 		this.editMode = null;
 	}
 
 	/**
 	 * Construct.
 	 * @param editMode edit mode
-	 * @param descriptor property descriptor
+	 * @param propertyMeta property descriptor
 	 */
-	public EditModeReplacementModel(EditMode editMode, PropertyDescriptor descriptor)
+	public EditModeReplacementModel(EditMode editMode, PropertyMeta propertyMeta)
 	{
 		super();
 		this.editMode = editMode;
-		this.descriptor = descriptor;
+		this.propertyMeta = propertyMeta;
 	}
 
 	/**
@@ -87,9 +74,9 @@ public final class EditModeReplacementModel extends Model
 		{
 			return (editMode == EditMode.READ_ONLY) ? "disabled" : null;
 		}
-		if(descriptor != null)
+		if(propertyMeta != null)
 		{
-			return (descriptor.getWriteMethod() == null) ? "disabled" : null;
+			return (propertyMeta.getPropertyDescriptor().getWriteMethod() == null) ? "disabled" : null;
 		}
 		return null;
 	}

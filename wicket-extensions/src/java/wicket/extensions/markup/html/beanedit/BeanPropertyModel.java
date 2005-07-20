@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.beanedit;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -33,21 +32,16 @@ import wicket.model.IModel;
  */
 public class BeanPropertyModel implements IModel
 {
-	/** bean model. */
-	private final BeanModel beanModel;
-
 	/** property descriptor. */
-	private final PropertyDescriptor descriptor;
+	private final PropertyMeta propertyMeta;
 
 	/**
 	 * Construct.
-	 * @param beanModel
-	 * @param descriptor
+	 * @param propertyMeta
 	 */
-	public BeanPropertyModel(BeanModel beanModel, PropertyDescriptor descriptor)
+	public BeanPropertyModel(PropertyMeta propertyMeta)
 	{
-		this.beanModel = beanModel;
-		this.descriptor = descriptor;
+		this.propertyMeta = propertyMeta;
 	}
 
 	/**
@@ -55,10 +49,10 @@ public class BeanPropertyModel implements IModel
 	 */
 	public Object getObject(Component component)
 	{
-		Method method = descriptor.getReadMethod();
+		Method method = propertyMeta.getPropertyDescriptor().getReadMethod();
 		if (method != null)
 		{
-			Object bean = beanModel.getBean();
+			Object bean = propertyMeta.getBeanModel().getBean();
 			try
 			{
 				Object value = method.invoke(bean, null);
@@ -81,10 +75,10 @@ public class BeanPropertyModel implements IModel
 	 */
 	public void setObject(Component component, Object object)
 	{
-		Method method = descriptor.getWriteMethod();
+		Method method = propertyMeta.getPropertyDescriptor().getWriteMethod();
 		if (method != null)
 		{
-			Object bean = beanModel.getBean();
+			Object bean = propertyMeta.getBeanModel().getBean();
 			try
 			{
 				method.invoke(bean, new Object[]{object});
