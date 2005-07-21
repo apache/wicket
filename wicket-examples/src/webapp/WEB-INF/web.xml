@@ -196,6 +196,16 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>ComponentReferenceApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.compref.ComponentReferenceApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>SignInApplication</servlet-name>
 		<url-pattern>/signin/*</url-pattern>
@@ -279,6 +289,11 @@
 	<servlet-mapping>
 		<servlet-name>BeanEditApplication</servlet-name>
 		<url-pattern>/beanedit/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ComponentReferenceApplication</servlet-name>
+		<url-pattern>/compref/*</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>
