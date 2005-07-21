@@ -34,8 +34,7 @@ import wicket.util.lang.Classes;
  * overloads. The error message will be retrieved using the Localizer for the form
  * component. Normally, this localizer will find the error message in a string resource
  * bundle (properties file) associated with the page in which this validator is contained.
- * The key that is used to get the message can be set explicity by calling setResourceKey.
- * If that key is not explicitly set, it default to the pattern:
+ * The key that is used to get the message defaults to the pattern:
  * <code>[form-name].[component-name].[validator-class]</code>.
  * For example:
  * <p>
@@ -58,12 +57,6 @@ import wicket.util.lang.Classes;
  */
 public abstract class AbstractValidator implements IValidator
 {
-	/**
-	 * Any set resource key. When it is not set, the validator uses it's default
-	 * message key.
-	 */
-	private String resourceKey;
-
 	/**
 	 * Sets an error on the component being validated using the map returned by
 	 * messageModel() for variable interpolations.
@@ -114,43 +107,18 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(FormComponent formComponent, final Map map)
 	{
-		error(formComponent, getResourceKey(formComponent), Model.valueOf(map));
-	}
-
-	/**
-	 * Sets the resource key that should be used.
-	 * @param resourceKey the resource key
-	 */
-	public final void setResourceKey(String resourceKey)
-	{
-		this.resourceKey = resourceKey;
-	}
-
-	/**
-	 * Returns the explicitly set resource key or null when it was not set explicitly.
-	 * @return the explicitly set resource key or null
-	 */
-	protected final String getResourceKey()
-	{
-		return resourceKey;
+		error(formComponent, resourceKey(formComponent), Model.valueOf(map));
 	}
 
 	/**
 	 * Gets the resource key based on the form component.
-	 * If the resource key is set explicitly with setResourceKey, that is used.
-	 * Otherwise it will default to the form:
+	 * It defaults to the form:
 	 * <code>[form-name].[component-name].[validator-class]</code>
 	 * @param formComponent form component
 	 * @return the resource key based on the form component
 	 */
-	protected final String getResourceKey(FormComponent formComponent)
+	protected String resourceKey(FormComponent formComponent)
 	{
-		// in case the key was set explicitly
-		if (resourceKey != null)
-		{
-			return resourceKey; // return that
-		}
-
 		// otherwise use a default pattern of form
 		// <form-id>.<component-name>.<validator-class>
 		return formComponent.getForm().getId() + "." + formComponent.getId() + "."
