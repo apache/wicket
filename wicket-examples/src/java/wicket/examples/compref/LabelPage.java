@@ -27,9 +27,9 @@ import wicket.model.Model;
 import wicket.model.StringResourceModel;
 
 /**
- * Everybody's favorite example!
- * 
- * @author Jonathan Locke
+ * Page with examples on {@link wicket.markup.html.basic.Label}.
+ *
+ * @author Eelco Hillenius
  */
 public class LabelPage extends WicketExamplePage
 {
