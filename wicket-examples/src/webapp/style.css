@@ -28,6 +28,12 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	margin: 5px;	
 }
 
+.lined {
+	border-width: 1px;
+	border-color: #6F6F6F;
+	border-style: solid;	
+}
+
 .feedbackPanelERROR {
 	color: red;
 	list-style: circle;

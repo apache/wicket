@@ -19,24 +19,18 @@
 package wicket.examples.compref;
 
 import wicket.examples.WicketExamplePage;
-import wicket.markup.html.basic.MultiLineLabel;
 
 /**
- * Page with examples on {@link wicket.markup.html.basic.MultiLineLabel}.
+ * Page with examples on {@link wicket.markup.html.panel.Panel}.
  * @author Eelco Hillenius
  */
-public class MultiLineLabelPage extends WicketExamplePage
+public class PanelPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
 	 */
-	public MultiLineLabelPage()
+	public PanelPage()
 	{
-		String text =
-			"\nThis is a line.\n" +
-			"And this is another line.\n" +
-			"End of lines.\n";
-
-		add(new MultiLineLabel("multiLineLabel", text));
+		add(new MyPanel("panel"));
 	}
 }
