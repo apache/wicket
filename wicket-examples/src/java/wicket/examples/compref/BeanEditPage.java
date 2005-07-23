@@ -16,22 +16,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.beanedit;
+package wicket.examples.compref;
 
-import wicket.examples.WicketExampleApplication;
+import java.util.Calendar;
+
+import wicket.examples.WicketExamplePage;
+import wicket.extensions.markup.html.beanedit.BeanFormPanel;
+import wicket.extensions.markup.html.beanedit.BeanModel;
 
 /**
- * Application class for bean edit example.
- *
+ * Example Page for editing JavaBeans.
+ * 
  * @author Eelco Hillenius
  */
-public class BeanEditApplication extends WicketExampleApplication
+public class BeanEditPage extends WicketExamplePage
 {
     /**
-     * Constructor.
+     * Constructor
      */
-    public BeanEditApplication()
+    public BeanEditPage()
     {
-        getPages().setHomePage(BeanEditPage.class);
+    	Person p = new Person();
+    	p.setName("Fritz");
+    	p.setLastName("Fritzel");
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(1940, 12, 12);
+    	p.setDateOfBirth(cal.getTime());
+
+    	add(new BeanFormPanel("beanEditPanel", new BeanModel(p)));
     }
 }
