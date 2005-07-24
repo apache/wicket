@@ -25,12 +25,12 @@ import wicket.examples.WicketExamplePage;
  * 
  * @author Eelco Hillenius
  */
-public class Home extends WicketExamplePage
+public class Index extends WicketExamplePage
 {
     /**
      * Constructor
      */
-    public Home()
+    public Index()
     {
     }
 }

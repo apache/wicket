@@ -32,6 +32,6 @@ public class ComponentReferenceApplication extends WicketExampleApplication
      */
     public ComponentReferenceApplication()
     {
-        getPages().setHomePage(Home.class);
+        getPages().setHomePage(Index.class);
      }
 }

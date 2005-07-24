@@ -23,6 +23,7 @@ import wicket.markup.html.basic.Label;
 
 /**
  * Page with examples on {@link wicket.markup.html.basic.MultiLineLabel}.
+ *
  * @author Eelco Hillenius
  */
 public class BorderPage extends WicketExamplePage
