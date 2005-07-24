@@ -90,6 +90,11 @@
       <name>1.0</name>
       <tag>WICKET_R_1_0_0</tag>
     </version>
+    <version>
+      <id>1.1-b1</id>
+      <name>1.1-b1</name>
+      <tag>WICKET_R_1_1_BETA1</tag>
+    </version>
   </versions>
   <mailingLists>
     <mailingList>
