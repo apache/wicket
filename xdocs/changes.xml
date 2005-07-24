@@ -9,7 +9,7 @@
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current state of development on HEAD">
     </release>
-    <release version="1.1.0-b1" date="tbd" description="1.1.0 Beta 1">
+    <release version="1.1-b1" date="tbd" description="1.1.0 Beta 1">
       <action type="update" dev="Juergen Donnerstag, Eelco Hillenius" issue="1223348">removed wicketNamspace property from ApplicationSettings, instead clients should use the xmlns attribute in the markup file (&lt;html xmlns:namespace&gt;)</action>
       <action type="fix" dev="Eelco Hillenius">Component.setShouldEscapeModelStrings renamed to setEscapeModelStrings</action>
       <action type="update" dev="Eelco Hillenius">Buttons now have an 'immediate' property. If true, this button behaves much like a normal link; no validation nor updating of the nested form components is done automatically in that case. This property is false by default.</action>
