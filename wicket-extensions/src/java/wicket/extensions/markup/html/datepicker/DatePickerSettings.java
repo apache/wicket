@@ -105,6 +105,10 @@ public class DatePickerSettings implements Serializable
 	public static final StaticResourceReference LANGUAGE_NL =
 		new StaticResourceReference(DatePickerSettings.class, "lang/calendar-nl.js");
 
+	/** language da. */
+	public static final StaticResourceReference LANGUAGE_DA =
+		new StaticResourceReference(DatePickerSettings.class, "lang/calendar-da.js");
+
 	// TODO due to a bug in the javascript component, no more languages are available at this time.
 	// See http://sourceforge.net/tracker/index.php?func=detail&aid=1193816&group_id=75569&atid=544285
 
@@ -328,6 +332,11 @@ public class DatePickerSettings implements Serializable
 		}
 
 		if ("nl".equals(locale.getLanguage()))
+		{
+			return "%d-%m-%Y";
+		}
+
+		if ("da".equals(locale.getLanguage()))
 		{
 			return "%d-%m-%Y";
 		}
