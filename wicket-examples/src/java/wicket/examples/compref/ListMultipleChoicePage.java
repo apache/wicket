@@ -65,6 +65,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 
 		// Add a multiple list choice component that uses Input's 'site' property to designate the
 		// current selection, and that uses the SITES list for the available options.
+		// Note that our model here holds a Collection, as we need to store multiple values too
 		ListMultipleChoice listChoice = new ListMultipleChoice("sites", SITES);
 		form.add(listChoice);
 	}
