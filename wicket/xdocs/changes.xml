@@ -17,12 +17,12 @@
       <action type="add" dev="Juergen Donnerstag">Added support for JavaScript and CSS. Please see the Wiki for more details.</action>
       <action type="add" dev="Eelco Hillenius">Added component wicket.markup.html.include.Include for including content from non-Wicket resources.</action>
     </release>
-    <release version="1.0.1" date="2005-07-17" description="1.0.1">
+    <release version="1.0.1" date="tbd" description="1.0.1">
       <action type="update" dev="Eelco Hillenius" due-to="Phil Kulak">FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Adam Howard">fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</action>
       <action type="update" dev="Chris Turner" due-to="Jonathan Carlson">ComponentStringResourceLoader: resources are now inherited from parent classes when components have been subclassed</action>
     </release>
-    <release version="1.0" date="2005-06-21" description="1.0.0 final">
+    <release version="1.0.0" date="tbd" description="1.0.0 final">
       <action type="update" dev="Eelco Hillenius">StaticResourceReference now binds itself immediately so clients don't have to know about the binding internals.</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1209753">Pageable list view navigator did not handle the "last" link properly in situations where additional elements have been added to the underlying list.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1213229">Image didn't like webapps with urlpattern set to /*. It does now.</action>
