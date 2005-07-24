@@ -17,10 +17,8 @@
  */
 package wicket.markup.html.form;
 
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
-import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 import wicket.version.undo.Change;
 
@@ -73,36 +71,8 @@ public class Button extends FormComponent
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		// Must be attached to an input tag
-		String lowerCaseTagName = tag.getName().toLowerCase();
-		if (! ( lowerCaseTagName.equals("input") ||
-				lowerCaseTagName.equals("button") ))
-		{
-			findMarkupStream().throwMarkupException(
-					"Component " + getId() +
-					" must be applied to a tag of type 'input' or 'button', not " +
-					tag.toUserDebugString());
-		}
-
 		// Get tag attributes
 		final ValueMap attributes = tag.getAttributes();
-
-		// Check for type of button, image or submit
-		final String type = attributes.getString("type");
-		if (type == null ||
-				!(type.equalsIgnoreCase("button") || type.equalsIgnoreCase("image") ||
-						type.equalsIgnoreCase("submit")) )
-		{
-			throw new WicketRuntimeException(
-					"Button tag must have a type of 'button', 'image' or 'submit'");
-		}
-
-		// Check for non-empty value
-		final String value = tag.getAttributes().getString("value");
-		if (Strings.isEmpty(value))
-		{
-			throw new WicketRuntimeException("Button tag must have non-empty value attribute");
-		}
 
 		// Default handling for component tag
 		super.onComponentTag(tag);
