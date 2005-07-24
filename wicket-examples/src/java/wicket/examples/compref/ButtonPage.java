@@ -19,32 +19,54 @@
 package wicket.examples.compref;
 
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.FeedbackPanel;
 
 /**
- * Page with examples on {@link wicket.markup.html.form.Form}.
+ * Page with examples on {@link wicket.markup.html.form.Button}.
  *
  * @author Eelco Hillenius
  */
-public class FormPage extends WicketExamplePage
+public class ButtonPage extends WicketExamplePage
 {
 	/**
 	 * Constructor
 	 */
-	public FormPage()
+	public ButtonPage()
 	{
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		add(new Form("form", feedbackPanel)
+		Form form = new Form("form", feedbackPanel)
 		{
 			protected void onSubmit()
 			{
-				info("the form was sumbitted!");
+				info("Form.onSubmit executed");
 			}
-		});
+		};
+
+		Button button1 = new Button("button1")
+		{
+			protected void onSubmit()
+			{
+				info("button1.onSubmit executed");
+			}
+		};
+		form.add(button1);
+
+		Button button2 = new Button("button2")
+		{
+			protected void onSubmit()
+			{
+				info("button2.onSubmit executed");
+			}
+		};
+		button2.setImmediate(true);
+		form.add(button2);
+
+		add(form);
 	}
 }
