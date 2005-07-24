@@ -193,9 +193,6 @@ public class FormInput extends WicketExamplePage
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
 			setModel(new PropertyModel(FormInput.this, "locale"));
-
-			// use a custom implementation of choices, as we want to display
-			// the choices localized
 			setChoices(LOCALES);
 		}
 
