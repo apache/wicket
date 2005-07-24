@@ -55,7 +55,7 @@ public class TextAreaPage extends WicketExamplePage
 		};
 		add(form);
 
-		// add a simple text field that uses Input's 'text' property. Nothing can go wrong here
+		// add a text area component that uses Input's 'text' property.
 		form.add(new TextArea("text"));
 	}
 
