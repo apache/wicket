@@ -331,7 +331,7 @@ public class Form extends WebMarkupContainer
 	 * Validates the form's nested children of type {@link FormComponent}. This method
 	 * is typically called before updating any models.
 	 */
-	protected final void validate()
+	protected void validate()
 	{
 		// Validate model using validation strategy
 		// Visit all the form components and validate each
@@ -482,10 +482,10 @@ public class Form extends WebMarkupContainer
 
 	/**
 	 * Gets the button which submitted this form.
-	 * @return The button which submitted this form or none if the processing was not trigger
+	 * @return The button which submitted this form or null if the processing was not trigger
 	 * 		by a registered button component
 	 */
-	private Button findSubmittingButton()
+	protected final Button findSubmittingButton()
 	{
 		return (Button)visitChildren(Button.class, new IVisitor()
 		{
