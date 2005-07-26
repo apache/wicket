@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.Component;
-import wicket.EventRequestHandler;
+import wicket.IEventRequestHandler;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
@@ -96,7 +96,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		// contributed to the page, than ...
 		// A component's header section must only be added once, 
 		// no matter how often the same Component has been added 
-		// to the page or any other container in the hierachie.
+		// to the page or any other container in the hierachy.
 		if ((headerPart != null) && (container.get(headerPart.getId()) == null))
 		{
 			container.autoAdd(headerPart);
@@ -106,13 +106,25 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			checkBodyOnLoad();
 		}
 
-		EventRequestHandler[] handlers = getEventRequestHandlers();
-		if (handlers != null) for (int i = 0; i < handlers.length; i++)
+		// get head and body contributions in one loop
+		IEventRequestHandler[] handlers = getEventRequestHandlers();
+		if (handlers != null)
 		{
-			if (handlers[i] instanceof IHeaderContributor)
+			for (int i = 0; i < handlers.length; i++)
 			{
-				((IHeaderContributor)handlers[i]).printHead(container);
-			}
+				if (handlers[i] instanceof IHeaderContributor)
+				{
+					((IHeaderContributor)handlers[i]).printHead(container);
+				}
+				if (handlers[i] instanceof IBodyOnloadContributor)
+				{
+					String stmt = ((IBodyOnloadContributor)handlers[i]).getBodyOnload();
+					if (stmt != null)
+					{
+						((WebPage)getPage()).appendToBodyOnLoad(stmt);
+					}
+				}
+			}	
 		}
 	}
 	

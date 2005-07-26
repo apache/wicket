@@ -18,7 +18,7 @@
 package wicket.markup.html;
 
 import wicket.Component;
-import wicket.EventRequestHandler;
+import wicket.IEventRequestHandler;
 import wicket.model.IModel;
 
 /**
@@ -56,12 +56,15 @@ public class WebComponent extends Component implements IHeaderContributor
 	 */
 	public void printHead(final HtmlHeaderContainer container)
 	{
-		EventRequestHandler[] handlers = getEventRequestHandlers();
-		if (handlers != null) for (int i = 0; i < handlers.length; i++)
+		IEventRequestHandler[] handlers = getEventRequestHandlers();
+		if (handlers != null)
 		{
-			if (handlers[i] instanceof IHeaderContributor)
+			for (int i = 0; i < handlers.length; i++)
 			{
-				((IHeaderContributor)handlers[i]).printHead(container);
+				if (handlers[i] instanceof IHeaderContributor)
+				{
+					((IHeaderContributor)handlers[i]).printHead(container);
+				}
 			}
 		}
 	}
