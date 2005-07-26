@@ -22,11 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.EventRequestHandler;
 import wicket.IEventRequestListener;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.ajax.rico.RicoEventRequestHandler;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.StringBufferResourceStream;
@@ -37,8 +36,7 @@ import wicket.util.value.ValueMap;
  *
  * @author Eelco Hillenius
  */
-//TODO move dojo stuff to a package
-public final class ValidationEventRequestHandler extends EventRequestHandler implements IHeaderContributor
+public final class ValidationEventRequestHandler extends RicoEventRequestHandler
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(ValidationEventRequestHandler.class);
@@ -59,7 +57,8 @@ public final class ValidationEventRequestHandler extends EventRequestHandler imp
 	}
 
 	/**
-	 * @see wicket.EventRequestHandler#getEventName()
+	 * Gets the name of the event to attach to.
+	 * @return the name of the event to attach to
 	 */
 	public final String getEventName()
 	{
@@ -67,38 +66,32 @@ public final class ValidationEventRequestHandler extends EventRequestHandler imp
 	}
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#printHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.ajax.AbstractEventRequestHandler#doPrintHead(wicket.markup.html.HtmlHeaderContainer)
 	 */
-	public final void printHead(HtmlHeaderContainer container)
+	public final void doPrintHead(HtmlHeaderContainer container)
 	{
-		//TODO make this neat using components and/ or templates instead of just writing to out
+		final String id = "f" + String.valueOf(formComponent.hashCode());
+		String handlerId = getId();
+		final String url = formComponent.urlFor(IEventRequestListener.class) + "&id=" + handlerId;
+		final String path = formComponent.getPath();
 		String s =
-				"\t<script language=\"JavaScript\" type=\"text/javascript\">\n" + 
-				"\t\tdjConfig = {\n" + 
-				"\t\tbaseRelativePath: \"./dojo/\"\n" +
-				"\t};\n" +
-				"\t</script>\n" +
-				"\t<script language=\"JavaScript\" type=\"text/javascript\" " +
-				"src=\"dojo/dojo-io.js\"></script>\n" +
-				"\t<script language=\"JavaScript\" type=\"text/javascript\">\n" +
-				"\t\tdojo.hostenv.loadModule(\"dojo.io.*\");\n" +
-				"\tfunction validate(componentUrl, componentPath, field) { \n" +
-				"\t\tdojo.io.bind({\n" +
-				"\t\t\turl: componentUrl + '&' + componentPath + '=' + field.value,\n" +
-				"\t\t\tmimetype: \"text/xml\",\n" +
-				"\t\t\tload: function(type, data, evt) {\n" +
-				"\t\t\t\talert(field);\n" +
-				"\t\t\t}\n" +
-				"\t\t});\n" +
-				"\t}\n" +
-				"\t</script>\n";
+			"<script language=\"JavaScript\">\n" +
+			"\tonloads.push(" + id + ");\n" +
+			"\tfunction " + id + "() {\n" +
+			"\t\tajaxEngine.registerRequest( '" + id + "', '" + url + "' );\n" +
+			"\t}\n" +
+			"\tfunction validate(field) {\n" +
+			"\t\tajaxEngine.sendRequest('" + id + "',\"" + path + "=\"+" + "field.value);\n" +
+			//"\t\tajaxEngine.sendRequest('" + id + "');\n" +
+			"\t}\n" +
+			"</script>";
 		container.getResponse().write(s);
 	}
 
 	/**
-	 * @see wicket.EventRequestHandler#bind(wicket.Component)
+	 * @see wicket.markup.html.ajax.AbstractEventRequestHandler#bind(wicket.Component)
 	 */
-	protected void bind(Component component)
+	public void bind(Component component)
 	{
 		if (!(component instanceof FormComponent))
 		{
@@ -124,15 +117,10 @@ public final class ValidationEventRequestHandler extends EventRequestHandler imp
 	 * @param tag
 	 *            The tag to attache
 	 */
-	protected final void onRenderComponentTag(final Component component, final ComponentTag tag)
+	public final void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		final ValueMap attributes = tag.getAttributes();
-
-		//TODO loose + id sometime and e.g. put it in urlFor
-		final String url = formComponent.urlFor(IEventRequestListener.class) + "&id=" + getId();
-		final String attributeValue =
-			"javascript:validate('" + url + "', '" + formComponent.getPath() + "', this);";
-
+		final String attributeValue = "javascript:validate(this)";
 		attributes.put(getEventName(), attributeValue);
 	}
 
@@ -143,7 +131,7 @@ public final class ValidationEventRequestHandler extends EventRequestHandler imp
 	 * Gets the resource to render to the requester.
 	 * @return the resource to render to the requester
 	 */
-	protected final IResourceStream getResourceStream()
+	protected final IResourceStream getResponse()
 	{
 		StringBufferResourceStream s = new StringBufferResourceStream();
 

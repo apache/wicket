@@ -1103,6 +1103,15 @@ public abstract class Component implements Serializable, IEventRequestListener
 	{
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
+
+		if (eventRequestHandlers != null)
+		{
+			for (Iterator i = eventRequestHandlers.values().iterator(); i.hasNext();)
+			{
+				IEventRequestHandler handler = (IEventRequestHandler)i.next();
+				handler.rendered(this);
+			}
+		}
 	}
 
 	/**
@@ -1344,7 +1353,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 * Registers a handler for an event request.
 	 * @param eventRequestHandler handler
 	 */
-	public final void add(EventRequestHandler eventRequestHandler)
+	public final void add(IEventRequestHandler eventRequestHandler)
 	{
 		if (eventRequestHandler == null)
 		{
@@ -1366,12 +1375,12 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 * Gets an array with registered event request handlers or null.
 	 * @return an array with registered event request handlers, null if none are registered
 	 */
-	protected final EventRequestHandler[] getEventRequestHandlers()
+	protected final IEventRequestHandler[] getEventRequestHandlers()
 	{
 		if (eventRequestHandlers != null)
 		{
 			Collection handlers = eventRequestHandlers.values();
-			return (EventRequestHandler[])handlers.toArray(new EventRequestHandler[handlers.size()]);
+			return (IEventRequestHandler[])handlers.toArray(new IEventRequestHandler[handlers.size()]);
 		}
 		return null;
 	}
@@ -1388,7 +1397,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 			throw new WicketRuntimeException("parameter id was not provided: unable to locate listener");
 		}
 
-		EventRequestHandler eventRequestHandler = (EventRequestHandler)eventRequestHandlers.get(id);
+		IEventRequestHandler eventRequestHandler = (IEventRequestHandler)eventRequestHandlers.get(id);
 
 		if (eventRequestHandler == null)
 		{
@@ -1786,8 +1795,8 @@ public abstract class Component implements Serializable, IEventRequestListener
 			{
 				for (Iterator i = eventRequestHandlers.values().iterator(); i.hasNext();)
 				{
-					EventRequestHandler handler = (EventRequestHandler)i.next();
-					handler.onRenderComponentTag(this, tag);
+					IEventRequestHandler handler = (IEventRequestHandler)i.next();
+					handler.onComponentTag(this, tag);
 				}
 			}
 
