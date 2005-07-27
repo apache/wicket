@@ -112,14 +112,19 @@ public abstract class AbstractEventRequestHandler
 	 * implementations (e.g. Dojo, Rico, Qooxdoo).
 	 * @return the onload statement(s) for the body component
 	 */
-	public abstract String getBodyOnloadInitContribution();
+	public String getBodyOnloadInitContribution()
+	{
+		return null;
+	}
 
 	/**
 	 * One time (per page) header contribution that is the same for all ajax variant
 	 * implementations (e.g. Dojo, Rico, Qooxdoo).
 	 * @param container head container
 	 */
-	public abstract void printHeadInitContribution(HtmlHeaderContainer container);
+	public void printHeadInitContribution(HtmlHeaderContainer container)
+	{
+	}
 
 	/**
 	 * Gets the onload statement(s) for the body component.

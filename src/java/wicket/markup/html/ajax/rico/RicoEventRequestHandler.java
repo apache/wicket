@@ -44,7 +44,7 @@ public abstract class RicoEventRequestHandler extends AbstractEventRequestHandle
 	static
 	{
 		PROTOTYPE_REF = new StaticResourceReference(RicoEventRequestHandler.class, "prototype.js");
-		RICO_REF = new StaticResourceReference(RicoEventRequestHandler.class, "rico.js");
+		RICO_REF = new StaticResourceReference(RicoEventRequestHandler.class, "rico-1.1b.js");
 	}
 	
 	/**
@@ -72,6 +72,14 @@ public abstract class RicoEventRequestHandler extends AbstractEventRequestHandle
 		// add our basic javascript needs to the header
 		addJsReference(container, PROTOTYPE_REF);
 		addJsReference(container, RICO_REF);
+		write(container,
+			"<script language=\"JavaScript\">\n" +
+			"\tvar onloads = new Array();\n" +
+			"\tfunction bodyOnLoad() {\n " +
+			"\t\tfor (var i = 0 ; i < onloads.length ; i++ )\n" +
+			"\t\t\tonloads[i]();\n" +
+			"\t}\n" +
+		    "</script>");
 	}
 
 	/**
@@ -84,14 +92,17 @@ public abstract class RicoEventRequestHandler extends AbstractEventRequestHandle
 		String url = container.getPage().urlFor(ref.getPath());
 		String s = 
 			"\t<script language=\"JavaScript\" type=\"text/javascript\" " +
-			"src=\"" + url + "\"></script>\n" +
-			"<script language=\"JavaScript\">\n" +
-		    "\tvar onloads = new Array();\n" +
-		    "\tfunction bodyOnLoad() {\n " +
-		    "\t\tfor (var i = 0 ; i < onloads.length ; i++ )\n" +
-		    "\t\t\tonloads[i]();\t" +
-		    "\t}\n" +
-		    "</script>;";
+			"src=\"" + url + "\"></script>\n";
+		write(container, s);
+	}
+
+	/**
+	 * Writes the given string to the header container.
+	 * @param container the header container
+	 * @param s the string to write
+	 */
+	private void write(HtmlHeaderContainer container, String s)
+	{
 		container.getResponse().write(s);
 	}
 }
