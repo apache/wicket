@@ -177,8 +177,17 @@ public abstract class AbstractEventRequestHandler
 	protected void configure(final Response response)
 	{
 		// Configure response with content type of resource
-		response.setContentType("text/html");
+		response.setContentType(getResponseType());
 		response.setContentLength((int)resourceStream.length());
+	}
+
+	/**
+	 * Gets the response type mime, e.g. 'text/html' or 'text/javascript'.
+	 * @return the response type mime
+	 */
+	protected String getResponseType()
+	{
+		return "text/html";
 	}
 
 	/**

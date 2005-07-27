@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>The Dojo Toolkit</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<script>
+		// document.domain = "localhost";
+		function init(){
+			if((window.parent != window)&&(window.parent["dojo"])){
+				var pdj = window.parent.dojo;
+				if((pdj["io"])&&(pdj["io"]["XMLHTTPTransport"])){
+					pdj.io.XMLHTTPTransport.iframeLoaded(null, window.location);
+				}
+			}
+		}
+	</script>
+</head>
+<body onload="try{ init(); }catch(e){ alert(e); }">
+	<h4>The Dojo Toolkit -- blank.html</h4>
+
+	<p>this space intentionally left blank</p>
+</body>
+</html>
