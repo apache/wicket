@@ -204,6 +204,38 @@
       <name>Francois Denommee</name>
       <email>-</email>
     </contributor>
+    <contributor>
+      <name>Timur Mehrvarz</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Cameron Braid</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Phil Kulak</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Matej Knopp</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Jonathan Carlson</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Anatol Pomozov</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Igor Vaynberg</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Jan Mikkelsen</name>
+      <email>-</email>
+    </contributor>
   </contributors>
   <dependencies>
     <dependency>
