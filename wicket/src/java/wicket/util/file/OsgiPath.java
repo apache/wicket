@@ -27,20 +27,28 @@ import java.net.URL;
  */
 public final class OsgiPath implements IResourceFinder
 {
+	/** class loader to be used for locating resources. */
+	final ClassLoader classLoader;
+
 	/**
 	 * Constructor.
+	 * @param classLoader class loader to be used for locating resources
 	 */
-	public OsgiPath()
+	public OsgiPath(ClassLoader classLoader)
 	{
+		this.classLoader = classLoader;
 	}
 
 	/**
-	 * Looks for a given file along this path in a OSGI bundle.
-	 * @param pathname The filename with possible path
+	 * Looks for a given pathname along this path in the OSGi (jar)  bundle.
+	 *
+	 * @param pathname
+	 *            The filename with possible path
 	 * @return The url located on the path
 	 */
 	public URL find(final String pathname)
 	{
-		return getClass().getResource("/" + pathname);
+		String resourcePathName = "/" + pathname;
+		return classLoader.getResource(resourcePathName);
 	}
 }
