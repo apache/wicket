@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.validation;
+package wicket.markup.html.ajax.dojo;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,7 +25,6 @@ import wicket.Component;
 import wicket.IEventRequestListener;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.ajax.rico.RicoEventRequestHandler;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.StringBufferResourceStream;
@@ -36,7 +35,7 @@ import wicket.util.value.ValueMap;
  *
  * @author Eelco Hillenius
  */
-public final class ValidationEventRequestHandler extends RicoEventRequestHandler
+public final class ValidationEventRequestHandler extends DojoEventRequestHandler
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(ValidationEventRequestHandler.class);
@@ -70,21 +69,20 @@ public final class ValidationEventRequestHandler extends RicoEventRequestHandler
 	 */
 	public final void doPrintHead(HtmlHeaderContainer container)
 	{
-		final String id = "f" + String.valueOf(formComponent.hashCode());
-		String handlerId = getId();
-		final String url = formComponent.urlFor(IEventRequestListener.class) + "&id=" + handlerId;
-		final String path = formComponent.getPath();
 		String s =
-			"<script language=\"JavaScript\">\n" +
-			"\tonloads.push(" + id + ");\n" +
-			"\tfunction " + id + "() {\n" +
-			"\t\tajaxEngine.registerRequest( '" + id + "', '" + url + "' );\n" +
+
+			"\t<script language=\"JavaScript\" type=\"text/javascript\">\n" +
+			"\tfunction validate(componentUrl, componentPath, field) { \n" +
+			"\t\tdojo.io.bind({\n" +
+			"\t\t\turl: componentUrl + '&' + componentPath + '=' + field.value,\n" +
+			"\t\t\tmimetype: \"text/plain\",\n" +
+			"\t\t\tload: function(type, data, evt) {\n" +
+			"\t\t\t\talert(data);\n" +
+			"\t\t\t}\n" +
+			"\t\t});\n" +
 			"\t}\n" +
-			"\tfunction validate(field) {\n" +
-			"\t\tajaxEngine.sendRequest('" + id + "',\"" + path + "=\"+" + "field.value);\n" +
-			//"\t\tajaxEngine.sendRequest('" + id + "');\n" +
-			"\t}\n" +
-			"</script>";
+			"\t</script>\n";
+
 		container.getResponse().write(s);
 	}
 
@@ -120,7 +118,9 @@ public final class ValidationEventRequestHandler extends RicoEventRequestHandler
 	public final void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		final ValueMap attributes = tag.getAttributes();
-		final String attributeValue = "javascript:validate(this)";
+		final String url = formComponent.urlFor(IEventRequestListener.class) + "&id=" + getId();
+		final String attributeValue =
+			"javascript:validate('" + url + "', '" + formComponent.getPath() + "', this);";
 		attributes.put(getEventName(), attributeValue);
 	}
 
@@ -137,10 +137,20 @@ public final class ValidationEventRequestHandler extends RicoEventRequestHandler
 
 		formComponent.validate();
 
-		if (!formComponent.isValid())
-		{
-			s.append(formComponent.getFeedbackMessage().getMessage());
-		}
+		// there's a lot that should happen here. For starters, we need to update all components
+		// that are affected by feedback messages (like FeedbackPanel and FormComponentFeedbackBorder,
+		// but it might actually be anything custom too
+
+		// So, for an ajax handler like this it pays of to have a generic ajax rendering cycle,
+		// though for some other cases, that might just be too much.
+
+//		if (!formComponent.isValid())
+//		{
+//			s.append(formComponent.getFeedbackMessage().getMessage());
+//		}
+
+		// for now, just display a simple message
+		s.append("ajax validation executed");
 
 		return s;
 	}
