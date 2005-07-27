@@ -81,8 +81,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 				{
 				    throw new WicketRuntimeException(
 				            "If the root exception says something like " +
-				            "\"A child with id '_header' already exists\"" +
-				            "than you most likely forgot to override autoAdd() " + 
+				            "\"A child with id '_header' already exists\" " +
+				            "then you most likely forgot to override autoAdd() " + 
 				            "in your bordered page component.", ex);
 				}
 
