@@ -261,6 +261,6 @@ abstract class AbstractChoice extends FormComponent
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	protected abstract void updateModel();
+	public abstract void updateModel();
 
 }

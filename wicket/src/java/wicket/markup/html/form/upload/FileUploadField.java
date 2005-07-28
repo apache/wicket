@@ -80,7 +80,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	protected void updateModel()
+	public void updateModel()
 	{
 		// Get request 
 		final Request request = getRequest();

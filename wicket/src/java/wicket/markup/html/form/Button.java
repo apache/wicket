@@ -96,7 +96,7 @@ public class Button extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	protected void updateModel()
+	public void updateModel()
 	{
 	}
 

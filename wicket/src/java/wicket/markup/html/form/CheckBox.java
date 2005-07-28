@@ -167,7 +167,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	protected void updateModel()
+	public void updateModel()
 	{
 		try
 		{

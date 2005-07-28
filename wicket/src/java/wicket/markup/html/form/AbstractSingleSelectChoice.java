@@ -199,7 +199,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * 
 	 * @see wicket.markup.html.form.AbstractChoice#updateModel()
 	 */
-	protected final void updateModel()
+	public final void updateModel()
 	{
 		final String id = getInput();
 		if (Strings.isEmpty(id))
