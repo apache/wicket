@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current state of development on HEAD">
+      <action type="update" dev="Eelco Hillenius" due-to="Cameron Braid">Folded UploadForm and Form into one (Form). Instead of using UploadForm, you can now just use Form and call setMultipart(true).</action>
       <action type="update" dev="Martijn Dashorst" issue="1246322">Made FormComponent.updateModel() public for AJAX support.</action>
     </release>
     <release version="1.1-b1" date="2005-07-24" description="1.1.0 Beta 1">

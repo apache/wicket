@@ -22,11 +22,12 @@ import org.apache.commons.fileupload.FileItem;
 import wicket.Request;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
+import wicket.model.IModel;
 
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
  * When a FileInput component is nested in a
- * {@link wicket.markup.html.form.upload.UploadForm}, its model is updated with
+ * {@link wicket.markup.html.form.Form}, that has multipart == true, its model is updated with
  * the {@link org.apache.commons.fileupload.FileItem}for this component.
  * 
  * @author Eelco Hillenius
@@ -43,13 +44,39 @@ public class FileUploadField extends FormComponent
 	{
 		super(id);
 	}
+	
+	/**
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 */
+	public FileUploadField(final String id, IModel model)
+	{
+		super(id, model);
+	}
 
 	/**
 	 * @return The uploaded file
 	 */
 	public FileUpload getFileUpload()
 	{
-		return fileUpload;
+		// Get request 
+		final Request request = getRequest();
+		// If we successfully installed a multipart request
+		if (request instanceof MultipartWebRequest)
+		{
+			// Get the item for the path
+			final FileItem item = ((MultipartWebRequest)request).getFile(getPath());
+	
+			// Only update the model when there is a file (larger than zero bytes)
+			if (item != null && item.getSize() > 0)
+			{
+				return new FileUpload(item);
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -82,20 +109,10 @@ public class FileUploadField extends FormComponent
 	 */
 	public void updateModel()
 	{
-		// Get request 
-		final Request request = getRequest();
-		
-		// If we successfully installed a multipart request
-		if (request instanceof MultipartWebRequest)
-		{
-			// Get the item for the path
-			final FileItem item = ((MultipartWebRequest)request).getFile(getPath());
-	
-			// Only update the model when there is a file (larger than zero bytes)
-			if (item != null && item.getSize() > 0)
-			{
-				this.fileUpload = new FileUpload(item);
-			}
+		// only update the model if one exists
+		if (getModel() != null) {
+			setModelObject(getFileUpload());
 		}
+
 	}
 }

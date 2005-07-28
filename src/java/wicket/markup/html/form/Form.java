@@ -17,6 +17,12 @@
  */
 package wicket.markup.html.form;
 
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -29,8 +35,12 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
+import wicket.markup.html.form.upload.MultipartWebRequest;
 import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
 
 /**
@@ -64,6 +74,16 @@ import wicket.util.string.Strings;
  * </li>
  * </li>
  * </p>
+ * 
+ * Form for handling (file) uploads with multipart requests is supported by callign setMultiPart(true).
+ * Use this with {@link wicket.markup.html.form.upload.FileUploadField} components. You can
+ * attach mutliple FileInput fields for muliple file uploads.
+ * <p>
+ * Using multipart forms causes a runtime dependency on 
+ * <a href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>, version 1.0.
+ * </p>
+ * 
+
  * <p>
  * If you want to have multiple buttons which submit the same form, simply put two or more
  * button components somewhere in the hierarchy of components that are children of the
@@ -77,6 +97,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
+ * @author Cameron Braid
  */
 public class Form extends WebMarkupContainer
 	implements IFormSubmitListener, IFeedbackBoundary
@@ -84,11 +105,24 @@ public class Form extends WebMarkupContainer
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
 
+	/** Maximum size of an upload in bytes */
+	private Bytes maxSize = Bytes.MAX;
+
+	protected boolean multiPart = false;
+
+	/**
+	 * set to true to use enctype='multipart/form-data', and to process file uplloads by
+	 * default multiPart = false
+	 * @param multiPart whether this form should behave as a multipart form
+	 */
+	public void setMultiPart(boolean multiPart)
+	{
+		this.multiPart = multiPart;
+	}
+
 	/**
 	 * Constructs a form with no validation.
-	 * 
-	 * @param id
-	 *            See Component
+	 * @param id See Component
 	 */
 	public Form(final String id)
 	{
@@ -258,6 +292,55 @@ public class Form extends WebMarkupContainer
 	 */
 	protected void process()
 	{
+		if (multiPart) 
+		{
+			// Change the request to a multipart web request so parameters are
+			// parsed out correctly
+			final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
+			try
+			{
+				final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(this.maxSize, request);
+				getRequestCycle().setRequest(multipartWebRequest);
+			}
+			catch (FileUploadException e)
+			{
+				// Create model with exception and maximum size values
+				final HashMap model = new HashMap();
+				model.put("exception", e);
+				model.put("maxSize", maxSize);
+
+				if (e instanceof SizeLimitExceededException)
+				{
+					// Resource key should be <form-id>.uploadTooLarge to override default message
+					final String defaultValue = "Upload must be less than " + maxSize;
+					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model), defaultValue);
+					error(msg);
+
+					if (log.isDebugEnabled())
+					{
+						log.error(msg, e);
+					}
+					else
+					{
+						log.error(msg);
+					}
+				}
+				else
+				{
+					// Resource key should be <form-id>.uploadFailed to override default message
+					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
+					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model), defaultValue);
+					error(msg);
+
+					log.error(msg, e);
+				}
+				
+				// don't process the form if there is a FileUploadException
+				return;
+			}
+
+		}
+		
 		// first, see if the processing was triggered by a Wicket button
 		final Button submittingButton = findSubmittingButton();
 
@@ -298,6 +381,24 @@ public class Form extends WebMarkupContainer
 			}
 		}
 	}
+
+
+	/**
+	 * @param maxSize
+	 *            The maxSize for uploaded files
+	 */
+	public void setMaxSize(final Bytes maxSize)
+	{
+		this.maxSize = maxSize;
+	}
+	/**
+	 * @return the maxSize of uploaded files
+	 */
+	public Bytes getMaxSize()
+	{
+		return this.maxSize;
+	}
+
 
 	/**
 	 * Called (by the default implementation of 'process') when all fields validated,
@@ -444,6 +545,9 @@ public class Form extends WebMarkupContainer
 		super.onComponentTag(tag);
 		tag.put("method", "post");
 		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
+		if (multiPart) {
+			tag.put("enctype", "multipart/form-data");
+		}
 	}
 
 	/**
