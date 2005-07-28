@@ -100,7 +100,7 @@ public class TextField extends AbstractTextComponent
 	/**
 	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
 	 */
-	protected void updateModel()
+	public void updateModel()
 	{
 		// Get any validation type
 		final Class type = getValidationType();

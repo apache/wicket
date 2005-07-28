@@ -84,7 +84,7 @@ abstract class AbstractTextComponent extends FormComponent
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	protected void updateModel()
+	public void updateModel()
 	{
 		String input = getInput();
 		if (input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))

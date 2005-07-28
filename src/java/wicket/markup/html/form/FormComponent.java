@@ -563,8 +563,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * Implemented by form component subclass to update the form component's
 	 * model.
+	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING.
+	 * USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
 	 */
-	protected abstract void updateModel();
+	public abstract void updateModel();
 
 	/**
 	 * Validates this component using the component's validator.
