@@ -28,9 +28,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Form;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
-import wicket.markup.html.form.upload.UploadForm;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -124,7 +124,7 @@ public class UploadPage extends WicketExamplePage
 	/**
 	 * Form for uploads.
 	 */
-	private class FileUploadForm extends UploadForm
+	private class FileUploadForm extends Form
 	{
 		private FileUploadField fileUploadField;
 
@@ -138,6 +138,9 @@ public class UploadPage extends WicketExamplePage
 		{
 			super(name);
 
+			// set this form to multipart mode (allways needed for uploads!)
+			setMultiPart(true);
+
 			// Add one file input field
 			add(fileUploadField = new FileUploadField("fileInput"));
 			
@@ -146,7 +149,7 @@ public class UploadPage extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.markup.html.form.upload.UploadForm#onSubmit()
+		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
 		protected void onSubmit()
 		{

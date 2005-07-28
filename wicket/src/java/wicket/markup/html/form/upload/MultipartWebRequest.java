@@ -31,6 +31,7 @@ import org.apache.commons.fileupload.FileUploadException;
 
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
+import wicket.util.lang.Bytes;
 import wicket.util.value.ValueMap;
 
 /**
@@ -38,6 +39,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Cameron Braid
  */
 public class MultipartWebRequest extends WebRequest
 {
@@ -46,17 +48,16 @@ public class MultipartWebRequest extends WebRequest
 
 	/** Map of parameters. */
 	private final ValueMap parameters = new ValueMap();
-
+	
 	/**
 	 * Constructor
 	 * 
-	 * @param uploadForm
-	 *            The form doing the uploading
+	 * @param maxSize the maximum size this request may be
 	 * @param httpServletRequest
 	 *            The servlet request
 	 * @throws FileUploadException Thrown if something goes wrong with upload
 	 */
-	MultipartWebRequest(final UploadForm uploadForm, final HttpServletRequest httpServletRequest) throws FileUploadException
+	public MultipartWebRequest(Bytes maxSize, final HttpServletRequest httpServletRequest) throws FileUploadException
 	{
 		super(httpServletRequest);
 
@@ -81,7 +82,7 @@ public class MultipartWebRequest extends WebRequest
 			diskFileUpload.setHeaderEncoding(encoding);
 		}
 
-		diskFileUpload.setSizeMax(uploadForm.maxSize.bytes());
+		diskFileUpload.setSizeMax(maxSize.bytes());
 		final List items = diskFileUpload.parseRequest(httpServletRequest);
 
 		// Loop through items
