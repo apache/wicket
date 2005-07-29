@@ -78,6 +78,39 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 */
+	public RadioChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 */
+	public RadioChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public RadioChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public RadioChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+	
+	/**
 	 * @see wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	public void onSelectionChanged()

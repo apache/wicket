@@ -76,6 +76,42 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 */
+	public ListMultipleChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 */
+	public ListMultipleChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+
+
+
+
+	/**
 	 * @see FormComponent#getModelValue()
 	 */
 	public final String getModelValue()

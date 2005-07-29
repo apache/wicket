@@ -79,6 +79,39 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 */
+	public DropDownChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 */
+	public DropDownChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+	
+	/**
 	 * Called when a selection changes.
 	 */
 	public final void onSelectionChanged()

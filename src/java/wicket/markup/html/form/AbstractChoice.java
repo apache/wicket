@@ -17,12 +17,14 @@
  */
 package wicket.markup.html.form;
 
+import java.io.Serializable;
 import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IDetachable;
 import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -36,7 +38,7 @@ import wicket.version.undo.Change;
 abstract class AbstractChoice extends FormComponent
 {
 	/** The list of objects. */
-	private List choices;
+	private IModel choices;
 
 	/** The renderer used to generate display/id values for the objects. */
 	private IChoiceRenderer renderer;
@@ -62,7 +64,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, final List choices)
 	{
-		this(id, choices,new ChoiceRenderer());
+		this(id, new Model((Serializable)choices),new ChoiceRenderer());
 	}
 
 	/**
@@ -76,9 +78,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, final List choices,final IChoiceRenderer renderer)
 	{
-		super(id);
-		this.choices = choices;
-		this.renderer = renderer;
+		this(id,new Model((Serializable)choices),renderer);
 	}
 
 	/**
@@ -92,7 +92,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, IModel model, final List choices)
 	{
-		this(id, model, choices, new ChoiceRenderer());
+		this(id, model, new Model((Serializable)choices), new ChoiceRenderer());
 	}
 
 	/**
@@ -108,17 +108,76 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, IModel model, final List choices, final IChoiceRenderer renderer)
 	{
-		super(id, model);
+		this(id, model, new Model((Serializable)choices), renderer);
+	}
+
+	/**
+	 * @param id
+	 *            See Component
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(final String id, final IModel choices)
+	{
+		this(id, choices,new ChoiceRenderer());
+	}
+
+	/**
+	 * @param id
+	 *            See Component
+	 * @param renderer
+	 *            The rendering engine
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String)
+	 */
+	public AbstractChoice(final String id, final IModel choices,final IChoiceRenderer renderer)
+	{
+		super(id);
 		this.choices = choices;
 		this.renderer = renderer;
 	}
 
 	/**
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param choices
+	 *            The collection of choices in the dropdown
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public AbstractChoice(final String id, IModel model, final IModel choices)
+	{
+		this(id, model, choices, new ChoiceRenderer());
+	}
+
+	/**
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param renderer
+	 *            The rendering engine
+	 * @param choices
+	 *            The drop down choices
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public AbstractChoice(final String id, IModel model, final IModel choices, final IChoiceRenderer renderer)
+	{
+		super(id, model);
+		this.choices = choices;
+		this.renderer = renderer;
+	}
+
+	
+	/**
 	 * @return The collection of object that this choice has
 	 */
 	public List getChoices()
 	{
-		return choices;
+		return (List)choices.getObject(this);
 	}
 
 	/**
@@ -135,7 +194,7 @@ abstract class AbstractChoice extends FormComponent
 			{
 				addStateChange(new Change()
 				{
-					final List oldList = AbstractChoice.this.choices;
+					final IModel oldList = AbstractChoice.this.choices;
 					public void undo()
 					{
 						AbstractChoice.this.choices = oldList;
@@ -143,7 +202,7 @@ abstract class AbstractChoice extends FormComponent
 				});
 			}
 		}
-		this.choices = choices;
+		this.choices = new Model((Serializable)choices);
 	}
 
 	/**
@@ -171,10 +230,7 @@ abstract class AbstractChoice extends FormComponent
 	{
 		super.detachModel();
 		
-		if (choices instanceof IDetachable)
-		{
-			((IDetachable)choices).detach();
-		}
+		choices.detach();
 	}
 
 	/**
