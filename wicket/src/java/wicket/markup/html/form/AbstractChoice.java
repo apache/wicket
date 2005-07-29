@@ -22,7 +22,6 @@ import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.model.IDetachable;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.string.Strings;
