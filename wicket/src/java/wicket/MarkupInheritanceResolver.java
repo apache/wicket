@@ -25,8 +25,6 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 
 /**
- * THIS IS PART OF MARKUP INHERITANCE AND CURRENTLY EXPERIMENTAL ONLY.
- * 
  * Detect &lt;wicket:extend&gt; regions and thus allows to implement markup
  * inheritance. See MarkupInheritanceContainer for additional information.
  * 

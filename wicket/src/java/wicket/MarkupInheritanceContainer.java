@@ -29,16 +29,12 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
 
 /**
- * THIS IS PART OF MARKUP INHERITANCE AND CURRENTLY EXPERIMENTAL ONLY.
- * <p>
  * This is a special Component (containter) automatically instanstiated by 
  * MarkupInheritanceResolver if markup contains &lt;wicket:extend&gt; and
  * automatically added to the component hierarchy. <p>
  * It is actually very similiar to the Border component with the base 
  * class' markup being the border and the subclass' markup the content
  * within the border.<p>
- * 
- * TODO It ssems to be so complicated. Does it have to be like that?
  *  
  * @author Juergen Donnerstag
  */
@@ -69,6 +65,9 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	    // Default name for the container. The component is represented by
 	    // the <wicket:extend>...</wicket:extend> tag.
 		super(CONTAINER_ID);
+		
+		// strip <wicket:extend> from output by default
+		this.setRenderBodyOnly(true);
 	}
 	
 	/**
