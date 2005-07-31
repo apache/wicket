@@ -45,17 +45,17 @@ import wicket.util.resource.IResourceStream;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- * 
- *                  &lt;servlet&gt;
- *                      &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *                      &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *                      &lt;init-param&gt;
- *                          &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                          &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *                      &lt;/init-param&gt;
- *                      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *                   &lt;/servlet&gt;
- *  
+ *    
+ *                     &lt;servlet&gt;
+ *                         &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                         &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                         &lt;init-param&gt;
+ *                             &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                             &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                         &lt;/init-param&gt;
+ *                         &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *                      &lt;/servlet&gt;
+ *     
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -73,13 +73,13 @@ import wicket.util.resource.IResourceStream;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- * 
- *   	public void init() throws ServletException
- *       {
- *            ServletConfig config = getServletConfig();
- *            String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *            ...
- *  
+ *    
+ *      	public void init() throws ServletException
+ *          {
+ *               ServletConfig config = getServletConfig();
+ *               String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *               ...
+ *     
  * </pre>
  * 
  * </p>
@@ -100,54 +100,92 @@ public class WicketServlet extends HttpServlet
 	protected WebApplication webApplication;
 
 	/**
+	 * The name of the context parameter that specifies application factory
+	 * class
+	 */
+	public static final String APP_FACT_PARAM = "applicationFactoryClassName";
+
+	/**
 	 * Servlet initialization
 	 */
 	public void init()
 	{
-		final String applicationClassName = getInitParameter("applicationClassName");
-		try
+		IWebApplicationFactory factory = getApplicationFactory();
+
+		// Construct WebApplication subclass
+		this.webApplication = factory.createApplication(this);
+
+		// Set this WicketServlet as the servlet for the web application
+		this.webApplication.setWicketServlet(this);
+
+		// Finished
+		log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
+				+ factory.getClass().getName() + " factory");
+
+		// Call init method of web application
+		this.webApplication.internalInit();
+		this.webApplication.init();
+	}
+
+	/**
+	 * Creates the web application factory instance.
+	 * 
+	 * If no APP_FACT_PARAM is specified in web.xml
+	 * ContextParamWebApplicationFactory will be used by default.
+	 * 
+	 * @see ContextParamWebApplicationFactory
+	 * 
+	 * @return application factory instance
+	 */
+	protected IWebApplicationFactory getApplicationFactory()
+	{
+		final String appFactoryClassName = getInitParameter(APP_FACT_PARAM);
+
+		if (appFactoryClassName == null)
 		{
-			final Class applicationClass = getClass().getClassLoader().loadClass(applicationClassName); 
-			if (WebApplication.class.isAssignableFrom(applicationClass))
+			// if no context param was specified we return the default factory
+			return new ContextParamWebApplicationFactory();
+		}
+		else
+		{
+			try
 			{
-				// Construct WebApplication subclass
-				this.webApplication = (WebApplication)applicationClass.newInstance();
+				// try to find the specified factory class
+				final Class factoryClass = getClass().getClassLoader().loadClass(
+						appFactoryClassName);
 
-				// Set this WicketServlet as the servlet for the web application
-				this.webApplication.setWicketServlet(this);
-
-				// Finished
-				log.info("WicketServlet loaded application " + applicationClass.getName());
-
-				// Call init method of web application
-				this.webApplication.internalInit();
-				this.webApplication.init();
+				if (IWebApplicationFactory.class.isAssignableFrom(factoryClass))
+				{
+					// instantiate the factory
+					return (IWebApplicationFactory)factoryClass.newInstance();
+				}
+				else
+				{
+					throw new WicketRuntimeException("Application factory class "
+							+ appFactoryClassName + " must implement IWebApplicationFactory");
+				}
 			}
-			else
+			catch (ClassNotFoundException e)
 			{
-				throw new WicketRuntimeException("Application class " + applicationClassName
-						+ " must be a subclass of WebApplication");
+				throw new WicketRuntimeException("Unable to create application factory of class "
+						+ appFactoryClassName, e);
 			}
-		}
-		catch (ClassNotFoundException e)
-		{
-			throw new WicketRuntimeException("Unable to create application of class "
-					+ applicationClassName, e);
-		}
-		catch (InstantiationException e)
-		{
-			throw new WicketRuntimeException("Unable to create application of class "
-					+ applicationClassName, e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new WicketRuntimeException("Unable to create application of class "
-					+ applicationClassName, e);
-		}
-		catch (SecurityException e)
-		{
-			throw new WicketRuntimeException("Unable to create application of class "
-					+ applicationClassName, e);
+			catch (InstantiationException e)
+			{
+				throw new WicketRuntimeException("Unable to create application factory of class "
+						+ appFactoryClassName, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException("Unable to create application factory of class "
+						+ appFactoryClassName, e);
+			}
+			catch (SecurityException e)
+			{
+				throw new WicketRuntimeException("Unable to create application factory of class "
+						+ appFactoryClassName, e);
+			}
+
 		}
 	}
 
@@ -159,8 +197,8 @@ public class WicketServlet extends HttpServlet
 		final String pathInfo = servletRequest.getPathInfo();
 		if ((pathInfo != null) && pathInfo.startsWith(WebRequestCycle.resourceReferencePrefix))
 		{
-			final String resourceReferenceKey = pathInfo.substring(
-			        WebRequestCycle.resourceReferencePrefix.length());
+			final String resourceReferenceKey = pathInfo
+					.substring(WebRequestCycle.resourceReferencePrefix.length());
 
 			final Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
 			if (resource != null)
@@ -201,10 +239,10 @@ public class WicketServlet extends HttpServlet
 			// only such urls should have a bufferedresponse.
 			String requestUri = servletRequest.getRequestURI() + "?"
 					+ servletRequest.getQueryString();
-			
+
 			BufferedResponse bufferedResponse = (BufferedResponse)webApplication
 					.getBufferedResponse(servletRequest, requestUri);
-			
+
 			if (bufferedResponse != null)
 			{
 				// got a buffered response; now write it
@@ -223,20 +261,20 @@ public class WicketServlet extends HttpServlet
 		}
 
 		// If the request does not provide information about the encoding of its
-		// body (which includes POST parameters), than assume the default encoding 
-		// as defined by the wicket application. Bare in mind that the encoding of 
-		// the request usually is equal to the previous response. However it is a 
-		// known bug of IE that it does not provide this information. Please see 
-		// the wiki for more details and why all other browser deliberately copied 
+		// body (which includes POST parameters), than assume the default encoding
+		// as defined by the wicket application. Bare in mind that the encoding of
+		// the request usually is equal to the previous response. However it is a
+		// known bug of IE that it does not provide this information. Please see
+		// the wiki for more details and why all other browser deliberately copied
 		// that bug.
 		if (servletRequest.getCharacterEncoding() == null)
 		{
 			try
 			{
-			    // The encoding defined by the wicket settings is used to encode
-			    // the responses. Thus, it is reasonable to assume the request
-			    // has the same encoding. This is especially important for
-			    // forms and form parameters.
+				// The encoding defined by the wicket settings is used to encode
+				// the responses. Thus, it is reasonable to assume the request
+				// has the same encoding. This is especially important for
+				// forms and form parameters.
 				servletRequest.setCharacterEncoding(webApplication.getSettings()
 						.getResponseRequestEncoding());
 			}
@@ -252,7 +290,7 @@ public class WicketServlet extends HttpServlet
 		// create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
 
-		// Create a response object and set the output encoding according to 
+		// Create a response object and set the output encoding according to
 		// wicket's application setttings.
 		final WebResponse response = webApplication.newWebResponse(servletResponse);
 		response.setCharacterEncoding(webApplication.getSettings().getResponseRequestEncoding());
