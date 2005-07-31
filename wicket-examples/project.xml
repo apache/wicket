@@ -145,11 +145,11 @@
     <dependency>
       <groupId>dom4j</groupId>
       <artifactId>dom4j</artifactId>
-      <version>1.4</version>
+      <version>1.6.1</version>
       <url>http://www.dom4j.org</url>
       <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description/>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Used for testing Wicket</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
