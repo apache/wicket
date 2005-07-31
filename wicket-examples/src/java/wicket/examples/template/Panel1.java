@@ -18,25 +18,32 @@
  */
 package wicket.examples.template;
 
+import wicket.model.IModel;
 
 /**
- * Our base page that serves as a template for pages that inherit from it. Doesn't have
- * to be abstract, but was made abstract here to stress the fact that this page is not
- * meant for direct use.
- * 
+ * Concrete, extending panel.
+ *
  * @author Eelco Hillenius
  */
-public class Page1 extends TemplatePage
+public class Panel1 extends TemplatePanel
 {
-    /**
-     * Constructor
-     */
-    public Page1()
-    {
-    	super();
-    	setPageTitle("Template example, page 1");
-  
-    	// markup inheritance for panels (and borders probably doesn't work yet
-    	//add(new Panel1("panel1"));
-    }
+	/**
+	 * Construct.
+	 * @param id  component id
+	 */
+	public Panel1(String id)
+	{
+		super(id);
+	}
+
+	/**
+	 * Construct.
+	 * @param id component id
+	 * @param model the model
+	 */
+	public Panel1(String id, IModel model)
+	{
+		super(id, model);
+	}
+
 }
