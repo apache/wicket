@@ -179,7 +179,7 @@ public abstract class Resource implements IResourceListener
 		catch(SocketException se)
 		{
 			String message = se.getMessage();
-			if(message != null && message.indexOf("Connection reset") != -1)
+			if( message != null && (message.indexOf("Connection reset") != -1 || message.indexOf("socket write error") != -1) )
 			{
 				if(log.isDebugEnabled())
 				{
