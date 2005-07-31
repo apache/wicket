@@ -57,14 +57,6 @@
   </versions>
   <dependencies>
     <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.4</version>
-      <properties>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
       <version>2.6.7</version>

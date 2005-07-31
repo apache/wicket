@@ -75,18 +75,6 @@
 			== Dependencies for using Wicket container                       ==
 			===================================================================
 		-->
-
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.4</version>
-      <url>http://www.dom4j.org</url>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description/>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
