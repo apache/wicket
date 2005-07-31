@@ -4,7 +4,6 @@
 	<classpathentry output="target/test-classes" kind="src" path="src/test"/>
 	<classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry sourcepath="/JAVA_SRC_JARS/dom4j-1.4-src.jar" kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.7.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
