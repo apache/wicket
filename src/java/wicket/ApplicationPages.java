@@ -67,7 +67,7 @@ public class ApplicationPages
 	public static final HomePageRenderStrategy NO_REDIRECT = new HomePageRenderStrategy("no-redirect");
 	
 	/**
-	 * Use this homepage strategy if you want to redirect the homepage to a bookmarkable url like: page=mybookmarkablepage
+	 * Use this homepage strategy if you want to redirect the homepage to a bookmarkable url like: bookmarkablePage=mybookmarkablepage
 	 * This is the same as calling: setResponsePage(MyPage.class);. 
 	 */
 	public static final HomePageRenderStrategy BOOKMARK_REDIRECT = new HomePageRenderStrategy("bookmark-redirect");
