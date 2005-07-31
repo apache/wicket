@@ -24,7 +24,6 @@ import wicket.Localizer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.lang.Classes;
 
 /**
  * Base class for form component validators. This class is thread-safe and therefore it is

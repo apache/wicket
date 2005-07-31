@@ -47,7 +47,7 @@ public class LengthValidator extends StringValidator
 
 	/**
 	 * Private constructor forces use of static factory method and static
-	 * instances.
+	 * instances. Or override it to implement resourceKey(Component)
 	 * 
 	 * @param checkMin
 	 *            True if minimum bound should be checked
@@ -58,7 +58,7 @@ public class LengthValidator extends StringValidator
 	 * @param max
 	 *            Upper bound on valid length
 	 */
-	private LengthValidator(final boolean checkMin, final int min, final boolean checkMax,
+	protected LengthValidator(final boolean checkMin, final int min, final boolean checkMax,
 			final int max)
 	{
 		this.min = min;
@@ -114,7 +114,7 @@ public class LengthValidator extends StringValidator
 	 * maximum length.
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
 	 */
-	public void onValidate(FormComponent formComponent, final String value)
+	public final void onValidate(FormComponent formComponent, final String value)
 	{
 		// If value is non-empty
 		if (!Strings.isEmpty(value))
