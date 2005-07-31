@@ -111,18 +111,16 @@ public abstract class AbstractValidator implements IValidator
 	}
 
 	/**
-	 * Gets the resource key based on the form component.
-	 * It defaults to the form:
-	 * <code>[form-name].[component-name].[validator-class]</code>
-	 * @param formComponent form component
+	 * Gets the resource key for validator's error message from the
+	 * ApplicationSettings class.
+	 * @param formComponent form component that is being validated
+	 * 
 	 * @return the resource key based on the form component
 	 */
 	protected String resourceKey(FormComponent formComponent)
 	{
-		// otherwise use a default pattern of form
-		// <form-id>.<component-name>.<validator-class>
-		return formComponent.getForm().getId() + "." + formComponent.getId() + "."
-				+ Classes.name(getClass());
+		return formComponent.getApplicationSettings()
+							.getValidatorResourceKey(this, formComponent);
 	}
 
 	/**

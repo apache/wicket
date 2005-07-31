@@ -26,7 +26,9 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
+import wicket.markup.html.form.validation.IValidator;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
@@ -335,6 +337,9 @@ public class ApplicationSettings
 
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
+
+	/** Factory for producing validator error message resource keys */
+	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
 
 	/**
 	 * Enumerated type for different ways of handling the render part of
@@ -1168,4 +1173,41 @@ public class ApplicationSettings
 	{
 		this.responseRequestEncoding = responseRequestEncoding;
 	}
+	
+	/**
+	 * This method is used to replace the default IValidatorResourceKeyFactory
+	 * implementation with a user specific one
+	 * 
+	 * @param factory
+	 *            the user defined implementation of
+	 *            IValidatorResourceKeyFactory
+	 */
+	public void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory)
+	{
+		if (factory == null)
+		{
+			throw new IllegalArgumentException("ValidatorResourceKeyFactory cannot be set to null");
+		}
+		this.validatorResourceKeyFactory = factory;
+	}
+
+
+	/**
+	 * This method builds a resource key for use by form component validators
+	 * using IValidatorResourceKeyFactory.
+	 * 
+	 * @see IValidatorResourceKeyFactory
+	 * @see DefaultValidatorResourceKeyFactory
+	 * 
+	 * @param validator
+	 *            the validator that is processing the error
+	 * @param formComponent
+	 *            the form component that is in error
+	 * @return resource key for validator's error message
+	 */
+	public String getValidatorResourceKey(IValidator validator, FormComponent formComponent)
+	{
+		return validatorResourceKeyFactory.newKey(validator, formComponent);
+	}
+
 }
