@@ -21,7 +21,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.7.jar"/>
 	<classpathentry sourcepath="/JAVA_SRC_JARS/servletapi-2.3-src.jar" kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/concurrent/jars/concurrent-1.3.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/concurrent/jars/concurrent-1.3.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.6.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
