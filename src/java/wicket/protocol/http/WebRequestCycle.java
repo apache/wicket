@@ -317,9 +317,9 @@ public class WebRequestCycle extends RequestCycle
 					{
 						getWebResponse().getHttpServletResponse().sendError(
 						        HttpServletResponse.SC_NOT_FOUND, 
-						        "Unable to load Page class: " + bookmarkableName);
+						        "Unable to load Bookmarkable Page");
 						
-						return false;
+						return true;
 					}
 					catch (IOException ex)
 					{
@@ -335,7 +335,11 @@ public class WebRequestCycle extends RequestCycle
 				Page newPage = session.getPageFactory().newPage(pageClass,
 						new PageParameters(getRequest().getParameterMap()));
 				
-				setResponsePage(newPage);
+				// If response is set in the construtor of the bookmarkable page.
+				if(getResponsePage() == null)
+				{
+					setResponsePage(newPage);
+				}
 				setUpdateCluster(true);
 				return true;
 		    }
@@ -449,17 +453,21 @@ public class WebRequestCycle extends RequestCycle
 				{
 					Page newPage = newPage(homePage);
 					
-					if(homePageStrategy == ApplicationPages.PAGE_REDIRECT)
+					// check if the home page didn't set a page by itself
+					if(getResponsePage() == null)
 					{
-						//see if we have to redirect the render part by default
-						//so that a homepage has the same url as a post or get to that page.
-						ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
-								.getSettings().getRenderStrategy();
-						boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
-								|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);				
-						setRedirect(issueRedirect);
+						if(homePageStrategy == ApplicationPages.PAGE_REDIRECT)
+						{
+							//see if we have to redirect the render part by default
+							//so that a homepage has the same url as a post or get to that page.
+							ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
+									.getSettings().getRenderStrategy();
+							boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
+									|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);				
+							setRedirect(issueRedirect);
+						}
+						setResponsePage(newPage);
 					}
-					setResponsePage(newPage);
 				}
 				setUpdateCluster(true);
 			}
