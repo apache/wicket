@@ -456,11 +456,13 @@ public class ApplicationSettings
 			setResourcePollFrequency(Duration.ONE_SECOND);
 			setComponentUseCheck(true);
 			setStripWicketTags(false);
+			setUnexpectedExceptionDisplay(SHOW_EXCEPTION_PAGE);
 		}
 		else if ("deployment".equalsIgnoreCase(configurationType))
 		{
 			setComponentUseCheck(false);
 			setStripWicketTags(true);
+			setUnexpectedExceptionDisplay(SHOW_INTERNAL_ERROR_PAGE);
 		}
 		else
 		{
