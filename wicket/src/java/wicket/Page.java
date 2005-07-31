@@ -488,6 +488,11 @@ public abstract class Page extends MarkupContainer
 				internalEndRequest();
 			}
 		}
+		// test if the response page is set by the checkAccess and render that one.
+		else if(getRequestCycle().getResponsePage() != this)
+		{
+			getRequestCycle().getResponsePage().doRender();
+		}
 	}
 
 	/**
@@ -577,6 +582,11 @@ public abstract class Page extends MarkupContainer
 
 	/**
 	 * Whether access is allowed to this page.
+	 * If the page is not allowed you must redirect to a another page, else you will get a blank page.
+	 * Redirecting to another page can be done in a few ways:
+	 * <li>Use redirectToInterceptPage(Page page), You will be redirected to that page when it is done you will be returned to this one</li> 
+	 * <li>Use redirectTo(Page page), You will be redirected to that page when it is done you will have to specify where you will go next</li>
+	 * <li>RequestCycle.setResponsePage(Page page), That page is rendered directly, no redirect wil happen</li>
 	 * 
 	 * @return true if access is allowed, false otherwise
 	 */
