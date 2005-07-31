@@ -42,9 +42,10 @@ public class RequiredValidator extends StringValidator
 	}
 	
 	/**
-	 * Private constructor to force use of static singleton accessor method.
+	 * Protectected constructor to force use of static singleton accessor method.
+	 * Or override it to implement resourceKey(Component)
 	 */
-	private RequiredValidator()
+	protected RequiredValidator()
 	{
 	}
 	
@@ -53,7 +54,7 @@ public class RequiredValidator extends StringValidator
 	 *
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
 	 */
-	public void onValidate(FormComponent formComponent, String value)
+	public final void onValidate(FormComponent formComponent, String value)
 	{
 		// Check value
 		if (Strings.isEmpty(value))
