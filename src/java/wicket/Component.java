@@ -1203,6 +1203,45 @@ public abstract class Component implements Serializable, IEventRequestListener
 	}
 
 	/**
+	 * Sets the page that will respond to this request
+	 * 
+	 * @param page
+	 *            The response page
+	 * @see RequestCycle#setResponsePage(Page)
+	 */
+	public final void setResponsePage(final Page page)
+	{
+		getRequestCycle().setResponsePage(page);
+	}
+
+	/**
+	 * Sets the page that will respond to this request
+	 * 
+	 * @param cls
+	 *            The response page class
+	 * @see RequestCycle#setResponsePage(Class)
+	 */
+	public final void setResponsePage(final Class cls)
+	{
+		getRequestCycle().setResponsePage(cls);
+	}
+
+	/**
+	 * Sets the page class and its parameters that will respond to this request
+	 * 
+	 * @param cls
+	 *            The response page class
+	 * @param parameters 
+	 * 			  The parameters for thsi bookmarkable page.
+	 * @see RequestCycle#setResponsePage(Class, PageParameters)
+	 */
+	public final void setResponsePage(final Class cls, PageParameters parameters)
+	{
+		getRequestCycle().setResponsePage(cls,parameters);
+	}
+	
+	
+	/**
 	 * @param redirect
 	 *            True if the response should be redirected to
 	 * @see RequestCycle#setRedirect(boolean)
@@ -1236,18 +1275,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 	    return getFlag(FLAG_RENDER_BODY_ONLY);
 	}
 	
-	/**
-	 * Sets the page that will respond to this request
-	 * 
-	 * @param page
-	 *            The response page
-	 * @see RequestCycle#setResponsePage(Page)
-	 */
-	public final void setResponsePage(final Page page)
-	{
-		getRequestCycle().setResponsePage(page);
-	}
-
 	/**
 	 * Sets whether model strings should be escaped.
 	 * 
