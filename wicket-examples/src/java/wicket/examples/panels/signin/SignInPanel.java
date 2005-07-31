@@ -18,6 +18,7 @@
 package wicket.examples.panels.signin;
 
 import wicket.IFeedback;
+import wicket.Page;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
@@ -111,7 +112,7 @@ public abstract class SignInPanel extends Panel
 				{
 					// HTTP redirect response has been committed. No more data
 					// shall be written to the response.
-					setResponsePage(null);
+					setResponsePage((Page)null);
 				}
 				else
 				{
