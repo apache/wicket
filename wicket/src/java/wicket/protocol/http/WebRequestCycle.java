@@ -525,6 +525,20 @@ public class WebRequestCycle extends RequestCycle
 		final Component component = page.get(Strings.afterFirstPathComponent(path, ':'));
 		if (component != null)
 		{
+			if(!component.isVisible())
+			{
+				try
+				{
+					getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_FORBIDDEN, 
+					        "Unable to execute this request");
+				}
+				catch (IOException ex)
+				{
+					// that seems unlikely... anyway, log exception and forget about it
+					log.error("unable to send 403 for " + getRequest() + ", cause: " + ex.getMessage(), ex);
+				}
+				return;
+			}
 			Method method = getRequestInterfaceMethod(interfaceName);
 			if (method != null)
 			{
