@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/wicket"/>
 	<classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
@@ -14,5 +13,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/org.mortbay.jetty-4.2.22.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/tomcat/jars/jasper-runtime-4.1.30.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/tomcat/jars/jasper-compiler-4.1.30.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
