@@ -30,7 +30,7 @@ import wicket.markup.html.link.PageLink;
 public final class PageableListViewNavigationLink extends PageLink
 {
 	/** The pageable list view. */
-	private final PageableListView pageableListView;
+	private final IPageableComponent pageable;
 
 	/** The page of the PageableListView this link is for. */
 	private final int pageNumber;
@@ -40,14 +40,14 @@ public final class PageableListViewNavigationLink extends PageLink
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param pageableListView
-	 *            The list view for this page link
+	 * @param pageable
+	 *            The pageable component for this page link
 	 * @param pageNumber
 	 *            The page number in the PageableListView that this link links
 	 *            to. Negative pageNumbers are relative to the end of the list.
 	 */
 	public PageableListViewNavigationLink(final String id,
-			final PageableListView pageableListView, final int pageNumber)
+			final IPageableComponent pageable, final int pageNumber)
 	{
 		super(id, new IPageLink()
 		{
@@ -56,12 +56,12 @@ public final class PageableListViewNavigationLink extends PageLink
 			    int idx = pageNumber;
 				if (idx < 0)
 				{
-					idx = pageableListView.getPageCount() + idx;
+					idx = pageable.getPageCount() + idx;
 				}
 				
-				if (idx > (pageableListView.getList().size() - 1))
+				if (idx > (pageable.getItemCount() - 1))
 				{
-					idx = pageableListView.getList().size() - 1;
+					idx = pageable.getItemCount() - 1;
 				}
 
 				if (idx < 0)
@@ -69,19 +69,19 @@ public final class PageableListViewNavigationLink extends PageLink
 					idx = 0;
 				}
 			    
-				pageableListView.setCurrentPage(idx);
+				pageable.setCurrentPage(idx);
 
-				return pageableListView.getPage();
+				return pageable.getPage();
 			}
 
 			public Class getPageIdentity()
 			{
-				return pageableListView.getPage().getClass();
+				return pageable.getPage().getClass();
 			}
 		});
 
 		this.pageNumber = pageNumber;
-		this.pageableListView = pageableListView;
+		this.pageable = pageable;
 	}
 
 	// TODO We need to explain this onClick method!
@@ -107,12 +107,12 @@ public final class PageableListViewNavigationLink extends PageLink
 	    int idx = pageNumber;
 		if (idx < 0)
 		{
-			idx = pageableListView.getPageCount() + idx;
+			idx = pageable.getPageCount() + idx;
 		}
 		
-		if (idx > (pageableListView.getList().size() - 1))
+		if (idx > (pageable.getItemCount() - 1))
 		{
-			idx = pageableListView.getList().size() - 1;
+			idx = pageable.getItemCount() - 1;
 		}
 
 		if (idx < 0)
@@ -138,7 +138,7 @@ public final class PageableListViewNavigationLink extends PageLink
 	 */
 	public boolean isLast()
 	{
-		return getPageNumber() == (pageableListView.size() - 1);
+		return getPageNumber() == (pageable.getPageCount() - 1);
 	}
 
 	/**
@@ -152,6 +152,6 @@ public final class PageableListViewNavigationLink extends PageLink
 	 */
 	public boolean linksTo(final Page page)
 	{
-		return getPageNumber() == pageableListView.getCurrentPage();
+		return getPageNumber() == pageable.getCurrentPage();
 	}
 }

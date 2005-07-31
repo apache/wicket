@@ -29,7 +29,7 @@ import wicket.version.undo.Change;
  * 
  * @author Jonathan Locke
  */
-public abstract class PageableListView extends ListView
+public abstract class PageableListView extends ListView implements IPageableComponent
 {
 	/** The page to show. */
 	private int currentPage;
@@ -238,4 +238,17 @@ public abstract class PageableListView extends ListView
 			setRowsPerPage(rowsPerPage);
 		}
 	}
+
+	/**
+	 * Returns the total number of items in the listview
+	 * 
+	 * @see IPageableComponent#getItemCount()
+	 */
+	public int getItemCount()
+	{
+		return getList().size();
+	}
+	
+	
+	
 }
