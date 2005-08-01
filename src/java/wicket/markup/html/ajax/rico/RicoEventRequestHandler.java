@@ -34,18 +34,6 @@ public abstract class RicoEventRequestHandler extends AbstractEventRequestHandle
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(RicoEventRequestHandler.class);
-
-	/** reference to prototype js. */
-	private static final StaticResourceReference PROTOTYPE_REF;
-
-	/** reference to rico js. */
-	private static final StaticResourceReference RICO_REF;
-
-	static
-	{
-		PROTOTYPE_REF = new StaticResourceReference(RicoEventRequestHandler.class, "prototype.js");
-		RICO_REF = new StaticResourceReference(RicoEventRequestHandler.class, "rico-1.1b.js");
-	}
 	
 	/**
 	 * Construct.
@@ -70,8 +58,8 @@ public abstract class RicoEventRequestHandler extends AbstractEventRequestHandle
 	public final void printHeadInitContribution(HtmlHeaderContainer container)
 	{
 		// add our basic javascript needs to the header
-		addJsReference(container, PROTOTYPE_REF);
-		addJsReference(container, RICO_REF);
+		addJsReference(container, new StaticResourceReference(RicoEventRequestHandler.class, "prototype.js"));
+		addJsReference(container, new StaticResourceReference(RicoEventRequestHandler.class, "rico-1.1b.js"));
 		write(container,
 			"<script language=\"JavaScript\">\n" +
 			"\tvar onloads = new Array();\n" +
