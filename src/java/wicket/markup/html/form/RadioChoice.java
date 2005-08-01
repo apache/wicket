@@ -26,7 +26,22 @@ import wicket.util.string.Strings;
 
 /**
  * A choice subclass that shows choices in radio style.
- * TODO elaborate with an example
+ * <p>
+ * Java:
+ * <pre>
+ * 	List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
+ *	// Add a radio choice component that uses Input's 'site' property to designate the
+ *	// current selection, and that uses the SITES list for the available options.
+ *	form.add(new RadioChoice("site", SITES));
+ * </pre>
+ * HTML:
+ * <pre>
+ * &lt;span valign="top" wicket:id="site"&gt;
+ *	&lt;input type="radio"&gt;site 1&lt;/input&gt;
+ *	&lt;input type="radio"&gt;site 2&lt;/input&gt;
+ * &lt;/span&gt;
+ * </pre>
+ * </p>
  * 
  * <p>
  * You can can extend this class and override method wantOnSelectionChangedNotifications()
