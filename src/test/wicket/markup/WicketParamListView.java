@@ -54,8 +54,6 @@ public abstract class WicketParamListView extends ListView
 	    {
 	        // ignore
 	    }
-	    
-		// TODO Auto-generated method stub
 		super.onRender();
 	}
 }
