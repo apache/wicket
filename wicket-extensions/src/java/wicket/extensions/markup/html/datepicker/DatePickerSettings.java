@@ -18,11 +18,17 @@
  */
 package wicket.extensions.markup.html.datepicker;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.ResourceReference;
-import wicket.Session;
 import wicket.markup.html.StaticResourceReference;
 
 /**
@@ -97,17 +103,187 @@ public class DatePickerSettings implements Serializable
 	public static final StaticResourceReference STYLE_WIN2K_COLD_2 =
 		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
 
-	/** language en. */
-	public static final StaticResourceReference LANGUAGE_EN =
-		new StaticResourceReference(DatePickerSettings.class, "lang/calendar-en.js");
+	/** language afrikaans. */
+	public static final StaticResourceReference LANGUAGE_AF;
 
-	/** language nl. */
-	public static final StaticResourceReference LANGUAGE_NL =
-		new StaticResourceReference(DatePickerSettings.class, "lang/calendar-nl.js");
+	/** language albanian. */
+	public static final StaticResourceReference LANGUAGE_AL;
 
-	/** language da. */
-	public static final StaticResourceReference LANGUAGE_DA =
-		new StaticResourceReference(DatePickerSettings.class, "lang/calendar-da.js");
+	/** language brazlian. */
+	public static final StaticResourceReference LANGUAGE_BR;
+
+	/** language czech. */
+	public static final StaticResourceReference LANGUAGE_CS;
+	
+	/** language danish. */
+	public static final StaticResourceReference LANGUAGE_DA;
+
+	/** language german. */
+	public static final StaticResourceReference LANGUAGE_DE;
+
+	/** language greek. */
+	public static final StaticResourceReference LANGUAGE_EL;
+
+	/** language english. */
+	public static final StaticResourceReference LANGUAGE_EN;
+
+	/** language spanish. */
+	public static final StaticResourceReference LANGUAGE_ES;
+
+	/** language basque. */
+	public static final StaticResourceReference LANGUAGE_EU;
+
+	/** language finish. */
+	public static final StaticResourceReference LANGUAGE_FI;
+
+	/** language french. */
+	public static final StaticResourceReference LANGUAGE_FR;
+
+	/** language hebrew. */
+	public static final StaticResourceReference LANGUAGE_HE;
+
+	/** language croatian. */
+	public static final StaticResourceReference LANGUAGE_HR;
+
+	/** language hungarian. */
+	public static final StaticResourceReference LANGUAGE_HU;
+
+	/** language italian. */
+	public static final StaticResourceReference LANGUAGE_IT;
+
+	/** language korean. */
+	public static final StaticResourceReference LANGUAGE_KO;
+
+	/** language lituanian. */
+	public static final StaticResourceReference LANGUAGE_LT;
+
+	/** language latvian. */
+	public static final StaticResourceReference LANGUAGE_LV;
+
+	/** language dutch. */
+	public static final StaticResourceReference LANGUAGE_NL;
+
+	/** language norwegian. */
+	public static final StaticResourceReference LANGUAGE_NO;
+
+	/** language polish. */
+	public static final StaticResourceReference LANGUAGE_PL;
+
+	/** language portoguese. */
+	public static final StaticResourceReference LANGUAGE_PT;
+
+	/** language romenian. */
+	public static final StaticResourceReference LANGUAGE_RO;
+
+	/** language russian. */
+	public static final StaticResourceReference LANGUAGE_RU;
+
+	/** language sinhalese. */
+	public static final StaticResourceReference LANGUAGE_SI;
+
+	/** language slovenian. */
+	public static final StaticResourceReference LANGUAGE_SK;
+
+	/** language serbian. */
+	public static final StaticResourceReference LANGUAGE_SR;
+
+	/** language swedish. */
+	public static final StaticResourceReference LANGUAGE_SV;
+
+	/** language turkish. */
+	public static final StaticResourceReference LANGUAGE_TR;
+
+	/** language chinese. */
+	public static final StaticResourceReference LANGUAGE_ZH;
+
+	/** log. */
+	private static Log log = LogFactory.getLog(DatePickerSettings.class);
+
+	/** locale to language map. */
+	private static final Map localeToLanguageReference = new HashMap();
+	static
+	{
+		LANGUAGE_AF = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-af.js");
+		LANGUAGE_AL = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-al.js");
+		LANGUAGE_BR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-br.js");
+		LANGUAGE_CS = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-cs-utf8.js");
+		LANGUAGE_DA = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-da.js");
+		LANGUAGE_DE = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-de.js");
+		LANGUAGE_EL = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-el-utf8.js");
+		LANGUAGE_EN = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-en.js");
+		LANGUAGE_ES = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-es.js");
+		LANGUAGE_EU = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-eu.js");
+		LANGUAGE_FI = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-fi.js");
+		LANGUAGE_FR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-fr.js");
+		LANGUAGE_HE = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-he-utf8.js");
+		LANGUAGE_HR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-hr-utf8.js");
+		LANGUAGE_HU = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-hu.js");
+		LANGUAGE_IT = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-it-utf8.js");
+		LANGUAGE_KO = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-ko-utf8.js");
+		LANGUAGE_LT = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-lt-utf8.js");
+		LANGUAGE_LV = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-lv.js");
+		LANGUAGE_NL = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-nl.js");
+		LANGUAGE_NO = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-no.js");
+		LANGUAGE_PL = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-pl-utf8.js");
+		LANGUAGE_PT = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-pt.js");
+		LANGUAGE_RO = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-ro-utf8.js");
+		LANGUAGE_RU = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-ru-utf8.js");
+		LANGUAGE_SI = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-si-utf8.js");
+		LANGUAGE_SK = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-sk-utf8.js");
+		LANGUAGE_SR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-sr-utf8.js");
+		LANGUAGE_SV = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-sv-utf8-utf8.js");
+		LANGUAGE_TR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-tr.js");
+		LANGUAGE_ZH = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-zh-utf8.js");
+
+		// fill our default map. Note that new Locale("en", "", "").getLanguage() is to avoid
+		// future breaks because of the instable standard (read about this in Locale.getLanguage()
+		localeToLanguageReference.put(new Locale("af", "", "").getLanguage(), LANGUAGE_AF);
+		localeToLanguageReference.put(new Locale("al", "", "").getLanguage(), LANGUAGE_AL);
+		localeToLanguageReference.put(new Locale("br", "", "").getLanguage(), LANGUAGE_BR);
+		localeToLanguageReference.put(new Locale("cs", "", "").getLanguage(), LANGUAGE_CS);
+		localeToLanguageReference.put(new Locale("da", "", "").getLanguage(), LANGUAGE_DA);
+		localeToLanguageReference.put(new Locale("de", "", "").getLanguage(), LANGUAGE_DE);
+		localeToLanguageReference.put(new Locale("el", "", "").getLanguage(), LANGUAGE_EL);
+		localeToLanguageReference.put(new Locale("en", "", "").getLanguage(), LANGUAGE_EN);
+		localeToLanguageReference.put(new Locale("es", "", "").getLanguage(), LANGUAGE_ES);
+		localeToLanguageReference.put(new Locale("eu", "", "").getLanguage(), LANGUAGE_EU);
+		localeToLanguageReference.put(new Locale("fi", "", "").getLanguage(), LANGUAGE_FI);
+		localeToLanguageReference.put(new Locale("fr", "", "").getLanguage(), LANGUAGE_FR);
+		localeToLanguageReference.put(new Locale("he", "", "").getLanguage(), LANGUAGE_HE);
+		localeToLanguageReference.put(new Locale("hr", "", "").getLanguage(), LANGUAGE_HR);
+		localeToLanguageReference.put(new Locale("hu", "", "").getLanguage(), LANGUAGE_HU);
+		localeToLanguageReference.put(new Locale("it", "", "").getLanguage(), LANGUAGE_IT);
+		localeToLanguageReference.put(new Locale("ko", "", "").getLanguage(), LANGUAGE_KO);
+		localeToLanguageReference.put(new Locale("lt", "", "").getLanguage(), LANGUAGE_LT);
+		localeToLanguageReference.put(new Locale("lv", "", "").getLanguage(), LANGUAGE_LV);
+		localeToLanguageReference.put(new Locale("nl", "", "").getLanguage(), LANGUAGE_NL);
+		localeToLanguageReference.put(new Locale("no", "", "").getLanguage(), LANGUAGE_NO);
+		localeToLanguageReference.put(new Locale("pl", "", "").getLanguage(), LANGUAGE_PL);
+		localeToLanguageReference.put(new Locale("pt", "", "").getLanguage(), LANGUAGE_PT);
+		localeToLanguageReference.put(new Locale("ro", "", "").getLanguage(), LANGUAGE_RO);
+		localeToLanguageReference.put(new Locale("ru", "", "").getLanguage(), LANGUAGE_RU);
+		localeToLanguageReference.put(new Locale("si", "", "").getLanguage(), LANGUAGE_SI);
+		localeToLanguageReference.put(new Locale("sk", "", "").getLanguage(), LANGUAGE_SK);
+		localeToLanguageReference.put(new Locale("sr", "", "").getLanguage(), LANGUAGE_SR);
+		localeToLanguageReference.put(new Locale("sv", "", "").getLanguage(), LANGUAGE_SV);
+		localeToLanguageReference.put(new Locale("tr", "", "").getLanguage(), LANGUAGE_TR);
+		localeToLanguageReference.put(new Locale("zh", "", "").getLanguage(), LANGUAGE_ZH);
+	}
+
+	/** all date formats. */
+	private static Properties dateformats = new Properties();
+	static
+	{
+		try
+		{
+			dateformats.load(DatePickerSettings.class.getResourceAsStream("dateformats.properties"));
+		}
+		catch (IOException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
+	}
 
 	// TODO due to a bug in the javascript component, no more languages are available at this time.
 	// See http://sourceforge.net/tracker/index.php?func=detail&aid=1193816&group_id=75569&atid=544285
@@ -236,7 +412,7 @@ public class DatePickerSettings implements Serializable
 	private ResourceReference icon = BUTTON_ICON_1;
 
 	/** the language. */
-	private ResourceReference language = LANGUAGE_EN;
+	private ResourceReference language = null;
 
 	/**
 	 * Construct.
@@ -247,9 +423,10 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Return the properties as a script.
+	 * @param locale the current locale
 	 * @return the properties as a script
 	 */
-	public String toScript()
+	public String toScript(Locale locale)
 	{
 		StringBuffer b = new StringBuffer();
 		// create the script that represents these properties. Only create entries for
@@ -296,53 +473,13 @@ public class DatePickerSettings implements Serializable
 		}
 
 		// append date format
-		String ifFormat = getIfFormat();
-		// if null, try some heuristics
-		if (ifFormat == null)
+		String ifFormat = getIfFormat(locale);
+		if (ifFormat != null)
 		{
-			// get the short date format object for the current locale
-			ifFormat = getDatePattern();
+			b.append("\n\t\tifFormat : \"").append(ifFormat).append("\"");
 		}
-		b.append("\n\t\tifFormat : \"").append(ifFormat).append("\"");
 		
 		return b.toString();
-	}
-
-	/**
-	 * When property ifFormat is not set, this method is called to get the date pattern.
-	 * This method gets the current locale, and returns the pattern based on that.
-	 * <p>
-	 * This locale/pattern map is by far complete. Override this method or set
-	 * ifFormat if this doesnt work for you. Any contributions are welcome.
-	 * </p>
-	 * @return the pattern
-	 */
-	protected String getDatePattern()
-	{
-		// TODO this is a very shallow implementation; see if there is anything smarter
-		// to do with the date pattern
-
-		Locale locale = Session.get().getLocale();
-
-		// now, just try a few that I know of
-
-		if (Locale.GERMAN.equals(locale))
-		{
-			return "%d.%m.%Y";
-		}
-
-		if ("nl".equals(locale.getLanguage()))
-		{
-			return "%d-%m-%Y";
-		}
-
-		if ("da".equals(locale.getLanguage()))
-		{
-			return "%d-%m-%Y";
-		}
-
-		// return US pattern by default
-		return "%m/%d/%Y";		
 	}
 
 	/**
@@ -401,11 +538,20 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the ifFormat.
+	 * @param locale current locale
 	 * @return ifFormat
 	 */
-	public String getIfFormat()
+	public String getIfFormat(Locale locale)
 	{
-		return ifFormat;
+		// when it was set explicitly, return that
+		if (ifFormat != null)
+		{
+			return ifFormat;
+		}
+
+		// else, get it from our map - might be null, but our calling
+		// function can handle that
+		return dateformats.getProperty(locale.getLanguage());
 	}
 
 	/**
@@ -527,11 +673,27 @@ public class DatePickerSettings implements Serializable
 
 	/**
 	 * Gets the language.
+	 * @param currentLocale the current locale
 	 * @return language
 	 */
-	public ResourceReference getLanguage()
+	public ResourceReference getLanguage(Locale currentLocale)
 	{
-		return language;
+		// if the language was set explicitly, return that
+		if (language != null)
+		{
+			return language;
+		}
+
+		// try to get the reference from our default mapping
+		StaticResourceReference ref = (StaticResourceReference)
+			localeToLanguageReference.get(currentLocale.getLanguage());
+		if (ref != null)
+		{
+			return ref;
+		}
+
+		// we didn't find a mapping; just return English
+		return LANGUAGE_EN;
 	}
 
 	/**

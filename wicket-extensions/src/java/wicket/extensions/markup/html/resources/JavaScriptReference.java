@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.resources;
 
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
 /**
@@ -44,9 +45,33 @@ public class JavaScriptReference extends PackagedResourceReference
 	/**
 	 * Construct.
 	 * @param id component id
+	 * @param referer the class that is refering; is used as the relative
+	 * root for gettting the resource
+	 * @param file reference as a string. The model must provide an instance
+	 * 		of {@link String}
+	 */
+	public JavaScriptReference(String id, Class referer, IModel file)
+	{
+		super(id, referer, file, "src");
+	}
+	
+	/**
+	 * Construct.
+	 * @param id component id
 	 * @param resourceReference resource reference
 	 */
 	public JavaScriptReference(String id, ResourceReference resourceReference)
+	{
+		super(id, resourceReference, "src");
+	}
+
+	/**
+	 * Construct.
+	 * @param id component id
+	 * @param resourceReference resource reference. The model must provide an instance
+	 * 		of {@link ResourceReference}
+	 */
+	public JavaScriptReference(String id, IModel resourceReference)
 	{
 		super(id, resourceReference, "src");
 	}

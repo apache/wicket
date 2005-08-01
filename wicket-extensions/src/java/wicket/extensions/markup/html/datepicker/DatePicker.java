@@ -176,7 +176,7 @@ public class DatePicker extends Panel
 	 * @param target the receiving component
 	 * @param settings datepicker properties
 	 */
-	public DatePicker(String id, Component target, DatePickerSettings settings)
+	public DatePicker(final String id, final Component target, final DatePickerSettings settings)
 	{
 		super(id);
 
@@ -199,7 +199,13 @@ public class DatePicker extends Panel
 		add(new InitScript("script"));
 		addToHeader(new JavaScriptReference("calendarMain", DatePicker.class, "calendar.js"));
 		addToHeader(new JavaScriptReference("calendarSetup", DatePicker.class, "calendar-setup.js"));
-		addToHeader(new JavaScriptReference("calendarLanguage", settings.getLanguage()));
+		addToHeader(new JavaScriptReference("calendarLanguage", new Model()
+		{
+			public Object getObject(Component component)
+			{
+				return settings.getLanguage(DatePicker.this.getLocale());
+			}
+		}));
 		addToHeader(new StyleSheetReference("calendarStyle", settings.getStyle()));
 	}
 
@@ -212,7 +218,7 @@ public class DatePicker extends Panel
 		StringBuffer b = new StringBuffer("\nCalendar.setup(\n{");
 		b.append("\n\t\tinputField : \"").append(target.getPath()).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
-		b.append(settings.toScript());
+		b.append(settings.toScript(getLocale()));
 		b.append("\n});");
 		return b.toString();
 	}

@@ -21,6 +21,7 @@ package wicket.extensions.markup.html.resources;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.StaticResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -41,8 +42,23 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param file relative location of the packaged file
 	 * @param attributeToReplace the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(String id, Class referer,
-			String file, String attributeToReplace)
+	public PackagedResourceReference(final String id, final Class referer,
+			final String file, final String attributeToReplace)
+	{
+		this(id, referer, new Model(file), attributeToReplace);
+	}
+
+	/**
+	 * Construct.
+	 * @param id component id
+	 * @param referer the class that is refering; is used as the relative
+	 * root for gettting the resource
+	 * @param file model that supplies the relative location of the packaged file.
+	 * 		Must return an instance of {@link String}
+	 * @param attributeToReplace the attribute to replace of the target tag
+	 */
+	public PackagedResourceReference(final String id, final Class referer,
+			final IModel file, final String attributeToReplace)
 	{
 		super(id);
 
@@ -59,12 +75,25 @@ public class PackagedResourceReference extends WebMarkupContainer
 			throw new NullPointerException("attributeToReplace may not be null");
 		}
 
-		final StaticResourceReference ref = new StaticResourceReference(referer, file);
-
 		IModel srcReplacement = new Model()
 		{
 			public Object getObject(Component component)
 			{
+				Object o = file.getObject(component);
+				if (o == null)
+				{
+					throw new NullPointerException(
+							"the model must provide a non-null object (component == " +
+							component + ")");
+				}
+				if (!(o instanceof String))
+				{
+					throw new WicketRuntimeException(
+							"the model must provide an instance of String");
+				}
+				String f = (String)component.getConverter().convert(
+							file.getObject(component), String.class);	
+				StaticResourceReference ref = new StaticResourceReference(referer, f);
 				String url = getPage().urlFor(ref.getPath());
 				return url;
 			};
@@ -78,9 +107,23 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param resourceReference the reference to the resource
 	 * @param attributeToReplace the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(String id,
+	public PackagedResourceReference(final String id,
 			final ResourceReference resourceReference,
-			String attributeToReplace)
+			final String attributeToReplace)
+	{
+		this(id, new Model(resourceReference), attributeToReplace);
+	}
+
+	/**
+	 * Construct.
+	 * @param id component id
+	 * @param resourceReference the reference to the resource.
+	 * 		Must return an instance of {@link ResourceReference}
+	 * @param attributeToReplace the attribute to replace of the target tag
+	 */
+	public PackagedResourceReference(final String id,
+			final IModel resourceReference,
+			final String attributeToReplace)
 	{
 		super(id);
 
@@ -97,7 +140,21 @@ public class PackagedResourceReference extends WebMarkupContainer
 		{
 			public Object getObject(Component component)
 			{
-				String url = getPage().urlFor(resourceReference.getPath());
+				Object o = resourceReference.getObject(component);
+				if (o == null)
+				{
+					throw new NullPointerException(
+							"the model must provide a non-null object (component == " +
+							component + ")");
+				}
+				if (!(o instanceof ResourceReference))
+				{
+					throw new WicketRuntimeException(
+							"the model must provide an instance of ResourceReference");
+				}
+				
+				ResourceReference ref = (ResourceReference)o;
+				String url = getPage().urlFor(ref.getPath());
 				return url;
 			};
 		};

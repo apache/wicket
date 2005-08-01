@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.resources;
 
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
 /**
@@ -44,9 +45,33 @@ public final class StyleSheetReference extends PackagedResourceReference
 	/**
 	 * Construct.
 	 * @param id component id
+	 * @param referer the class that is refering; is used as the relative
+	 * root for gettting the resource
+	 * @param file reference. The model must provide an instance
+	 * 		of {@link String}
+	 */
+	public StyleSheetReference(String id, Class referer, IModel file)
+	{
+		super(id, referer, file, "href");
+	}
+
+	/**
+	 * Construct.
+	 * @param id component id
 	 * @param resourceReference resource reference
 	 */
 	public StyleSheetReference(String id, ResourceReference resourceReference)
+	{
+		super(id, resourceReference, "href");
+	}
+
+	/**
+	 * Construct.
+	 * @param id component id
+	 * @param resourceReference resource reference.  The model must provide an instance
+	 * 		of {@link ResourceReference}
+	 */
+	public StyleSheetReference(String id, IModel resourceReference)
 	{
 		super(id, resourceReference, "href");
 	}
