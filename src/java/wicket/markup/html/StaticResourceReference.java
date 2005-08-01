@@ -52,6 +52,6 @@ public class StaticResourceReference extends ResourceReference
 	 */
 	protected Resource newResource()
 	{
-		return StaticResource.get(getScope().getPackage(), getName(),getLocale(),getStyle());
+		return StaticResource.get(getScope().getPackage(), getName(), getLocale(), getStyle());
 	}
 }
