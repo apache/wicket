@@ -24,6 +24,23 @@ import wicket.version.undo.Change;
 
 /**
  * A form button.
+ *<p>
+ * Within a form, you can nest Button components. Note that you don't have to do this to
+ * let the form work (a simple &lt;input type="submit".. suffices), but if you want to have
+ * different kinds of submit behaviour it might be a good idea to use Buttons.
+ *</p>
+ *<p>
+ * When you add a Wicket Button to a form, and that button is clicked, by default the button's
+ * onSubmit method is called first, and after that the form's onSubmit button is called.
+ * If you want to change this (e.g. you don't want to call the form's onSubmit method, or you
+ * want it called before the button's onSubmit method), you can override Form.delegateSubmit.
+ *</p>
+ *<p>
+ * One other option you should know of is the 'immediate' property of Button components.
+ * When you set this to true (default is false), all validation and formupdating is bypassed
+ * and the onSubmit method of that button is called directly, and the onSubmit method of the
+ * parent form is not called. A common use for this is to create a cancel button.
+ *</p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -101,7 +118,10 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * Gets the immediate.
+	 * Gets the immediate property. When true (default is false), all validation and
+	 * formupdating is bypassed and the onSubmit method of that button is called directly,
+	 * and the onSubmit method of the parent form is not called. A common use for this is
+	 * to create a cancel button.
 	 * @return immediate
 	 */
 	public final boolean isImmediate()
@@ -110,7 +130,10 @@ public class Button extends FormComponent
 	}
 
 	/**
-	 * Sets the immediate.
+	 * Sets the immediate property. When true (default is false), all validation and
+	 * formupdating is bypassed and the onSubmit method of that button is called directly,
+	 * and the onSubmit method of the parent form is not called. A common use for this is
+	 * to create a cancel button.
 	 * @param immediate immediate
 	 * @return This
 	 */
