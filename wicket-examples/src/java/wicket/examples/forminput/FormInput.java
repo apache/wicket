@@ -77,9 +77,6 @@ public class FormInput extends WicketExamplePage
 		add(new InputForm("inputForm", feedback));
 
 		// Dropdown for selecting locale
-		// TODO when I use IE with German locale preferred, I get the choices
-		// in German language, but not "Englisch" is selected instead of "Deutsch".
-		// Looking at the output generated, no option is "selected".
 		add(new LocaleDropDownChoice("localeSelect"));
 
 		// Link to return to default locale
