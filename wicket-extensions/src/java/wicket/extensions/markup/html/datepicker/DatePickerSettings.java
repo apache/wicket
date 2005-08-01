@@ -39,202 +39,46 @@ import wicket.markup.html.StaticResourceReference;
  */
 public class DatePickerSettings implements Serializable
 {
-	// the packaged icon images
-
-	/** button icon for the date picker; refers to 'calendar_icon_1.jpg' in this package. */
-	public static final StaticResourceReference BUTTON_ICON_1 =
-		new StaticResourceReference(DatePickerSettings.class, "calendar_icon_1.jpg");
-
-	/** button icon for the date picker; refers to 'calendar_icon_2.jpg' in this package. */
-	public static final StaticResourceReference BUTTON_ICON_2 =
-		new StaticResourceReference(DatePickerSettings.class, "calendar_icon_2.jpg");
-
-	/** button icon for the date picker; refers to 'calendar_icon_3.jpg' in this package. */
-	public static final StaticResourceReference BUTTON_ICON_3 =
-		new StaticResourceReference(DatePickerSettings.class, "calendar_icon_3.jpg");
-
-	// the packages styles (comes with the date picker javascript widget)
-	
-	/** date picker style aqua. */
-	public static final StaticResourceReference STYLE_AQUA =
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/theme.css");
-
-	/** date picker style winter. */
-	public static final StaticResourceReference STYLE_WINTER =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-blue.css");
-
-	/** date picker style blue2. */
-	public static final StaticResourceReference STYLE_BLUE =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-blue2.css");
-
-	/** date picker style summer. */
-	public static final StaticResourceReference STYLE_SUMMER =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-brown.css");
-
-	/** date picker style green. */
-	public static final StaticResourceReference STYLE_GREEN =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-green.css");
-
-	/** date picker style system. */
-	public static final StaticResourceReference STYLE_SYSTEM =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-system.css");
-
-	/** date picker style tas. */
-	public static final StaticResourceReference STYLE_TAS =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-tas.css");
-
-	/** date picker style win2k. */
-	public static final StaticResourceReference STYLE_WIN2K =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k.css");
-
-	/** date picker style win2k-1. */
-	public static final StaticResourceReference STYLE_WIN2K_1 =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-1.css");
-
-	/** date picker style win2k-2. */
-	public static final StaticResourceReference STYLE_WIN2K_2 =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-2.css");
-
-	/** date picker style win2k-cold-1. */
-	public static final StaticResourceReference STYLE_WIN2K_COLD_1 =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
-
-	/** date picker style win2k-cold-2. */
-	public static final StaticResourceReference STYLE_WIN2K_COLD_2 =
-		new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
-
-	/** language afrikaans. */
-	public static final StaticResourceReference LANGUAGE_AF;
-
-	/** language albanian. */
-	public static final StaticResourceReference LANGUAGE_AL;
-
-	/** language brazlian. */
-	public static final StaticResourceReference LANGUAGE_BR;
-
-	/** language czech. */
-	public static final StaticResourceReference LANGUAGE_CS;
-	
-	/** language danish. */
-	public static final StaticResourceReference LANGUAGE_DA;
-
-	/** language german. */
-	public static final StaticResourceReference LANGUAGE_DE;
-
-	/** language greek. */
-	public static final StaticResourceReference LANGUAGE_EL;
-
-	/** language english. */
-	public static final StaticResourceReference LANGUAGE_EN;
-
-	/** language spanish. */
-	public static final StaticResourceReference LANGUAGE_ES;
-
-	/** language basque. */
-	public static final StaticResourceReference LANGUAGE_EU;
-
-	/** language finish. */
-	public static final StaticResourceReference LANGUAGE_FI;
-
-	/** language french. */
-	public static final StaticResourceReference LANGUAGE_FR;
-
-	/** language hebrew. */
-	public static final StaticResourceReference LANGUAGE_HE;
-
-	/** language croatian. */
-	public static final StaticResourceReference LANGUAGE_HR;
-
-	/** language hungarian. */
-	public static final StaticResourceReference LANGUAGE_HU;
-
-	/** language italian. */
-	public static final StaticResourceReference LANGUAGE_IT;
-
-	/** language korean. */
-	public static final StaticResourceReference LANGUAGE_KO;
-
-	/** language lituanian. */
-	public static final StaticResourceReference LANGUAGE_LT;
-
-	/** language latvian. */
-	public static final StaticResourceReference LANGUAGE_LV;
-
-	/** language dutch. */
-	public static final StaticResourceReference LANGUAGE_NL;
-
-	/** language norwegian. */
-	public static final StaticResourceReference LANGUAGE_NO;
-
-	/** language polish. */
-	public static final StaticResourceReference LANGUAGE_PL;
-
-	/** language portoguese. */
-	public static final StaticResourceReference LANGUAGE_PT;
-
-	/** language romenian. */
-	public static final StaticResourceReference LANGUAGE_RO;
-
-	/** language russian. */
-	public static final StaticResourceReference LANGUAGE_RU;
-
-	/** language sinhalese. */
-	public static final StaticResourceReference LANGUAGE_SI;
-
-	/** language slovenian. */
-	public static final StaticResourceReference LANGUAGE_SK;
-
-	/** language serbian. */
-	public static final StaticResourceReference LANGUAGE_SR;
-
-	/** language swedish. */
-	public static final StaticResourceReference LANGUAGE_SV;
-
-	/** language turkish. */
-	public static final StaticResourceReference LANGUAGE_TR;
-
-	/** language chinese. */
-	public static final StaticResourceReference LANGUAGE_ZH;
-
 	/** log. */
 	private static Log log = LogFactory.getLog(DatePickerSettings.class);
 
+	private static String LANGUAGE_AF = "lang/calendar-af.js";
+	private static String LANGUAGE_AL = "lang/calendar-al.js";
+	private static String LANGUAGE_BR = "lang/calendar-br.js";
+	private static String LANGUAGE_CS = "lang/calendar-cs-utf8.js";
+	private static String LANGUAGE_DA = "lang/calendar-da.js";
+	private static String LANGUAGE_DE = "lang/calendar-de.js";
+	private static String LANGUAGE_EL = "lang/calendar-el-utf8.js";
+	private static String LANGUAGE_EN = "lang/calendar-en.js";
+	private static String LANGUAGE_ES = "lang/calendar-es.js";
+	private static String LANGUAGE_EU = "lang/calendar-eu.js";
+	private static String LANGUAGE_FI = "lang/calendar-fi.js";
+	private static String LANGUAGE_FR = "lang/calendar-fr.js";
+	private static String LANGUAGE_HE = "lang/calendar-he-utf8.js";
+	private static String LANGUAGE_HR = "lang/calendar-hr-utf8.js";
+	private static String LANGUAGE_HU = "lang/calendar-hu.js";
+	private static String LANGUAGE_IT = "lang/calendar-it-utf8.js";
+	private static String LANGUAGE_KO = "lang/calendar-ko-utf8.js";
+	private static String LANGUAGE_LT = "lang/calendar-lt-utf8.js";
+	private static String LANGUAGE_LV = "lang/calendar-lv.js";
+	private static String LANGUAGE_NL = "lang/calendar-nl.js";
+	private static String LANGUAGE_NO = "lang/calendar-no.js";
+	private static String LANGUAGE_PL = "lang/calendar-pl-utf8.js";
+	private static String LANGUAGE_PT = "lang/calendar-pt.js";
+	private static String LANGUAGE_RO = "lang/calendar-ro-utf8.js";
+	private static String LANGUAGE_RU = "lang/calendar-ru-utf8.js";
+	private static String LANGUAGE_SI = "lang/calendar-si-utf8.js";
+	private static String LANGUAGE_SK = "lang/calendar-sk-utf8.js";
+	private static String LANGUAGE_SR = "lang/calendar-sr-utf8.js";
+	private static String LANGUAGE_SV = "lang/calendar-sv-utf8-utf8.js";
+	private static String LANGUAGE_TR = "lang/calendar-tr.js";
+	private static String LANGUAGE_ZH = "lang/calendar-zh-utf8.js";
+
 	/** locale to language map. */
 	private static final Map localeToLanguageReference = new HashMap();
+
 	static
 	{
-		LANGUAGE_AF = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-af.js");
-		LANGUAGE_AL = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-al.js");
-		LANGUAGE_BR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-br.js");
-		LANGUAGE_CS = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-cs-utf8.js");
-		LANGUAGE_DA = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-da.js");
-		LANGUAGE_DE = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-de.js");
-		LANGUAGE_EL = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-el-utf8.js");
-		LANGUAGE_EN = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-en.js");
-		LANGUAGE_ES = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-es.js");
-		LANGUAGE_EU = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-eu.js");
-		LANGUAGE_FI = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-fi.js");
-		LANGUAGE_FR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-fr.js");
-		LANGUAGE_HE = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-he-utf8.js");
-		LANGUAGE_HR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-hr-utf8.js");
-		LANGUAGE_HU = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-hu.js");
-		LANGUAGE_IT = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-it-utf8.js");
-		LANGUAGE_KO = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-ko-utf8.js");
-		LANGUAGE_LT = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-lt-utf8.js");
-		LANGUAGE_LV = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-lv.js");
-		LANGUAGE_NL = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-nl.js");
-		LANGUAGE_NO = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-no.js");
-		LANGUAGE_PL = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-pl-utf8.js");
-		LANGUAGE_PT = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-pt.js");
-		LANGUAGE_RO = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-ro-utf8.js");
-		LANGUAGE_RU = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-ru-utf8.js");
-		LANGUAGE_SI = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-si-utf8.js");
-		LANGUAGE_SK = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-sk-utf8.js");
-		LANGUAGE_SR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-sr-utf8.js");
-		LANGUAGE_SV = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-sv-utf8-utf8.js");
-		LANGUAGE_TR = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-tr.js");
-		LANGUAGE_ZH = new StaticResourceReference(DatePickerSettings.class, "lang/calendar-zh-utf8.js");
-
 		// fill our default map. Note that new Locale("en", "", "").getLanguage() is to avoid
 		// future breaks because of the instable standard (read about this in Locale.getLanguage()
 		localeToLanguageReference.put(new Locale("af", "", "").getLanguage(), LANGUAGE_AF);
@@ -283,26 +127,6 @@ public class DatePickerSettings implements Serializable
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
-	}
-
-	// TODO due to a bug in the javascript component, no more languages are available at this time.
-	// See http://sourceforge.net/tracker/index.php?func=detail&aid=1193816&group_id=75569&atid=544285
-
-	// register dependent images so that they can be loaded by the css files
-
-	static
-	{
-		new StaticResourceReference(DatePickerSettings.class, "style/menuarrow.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/menuarrow2.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/active-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/dark-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/hover-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/menuarrow.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/normal-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/rowhover-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/status-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/title-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/today-bg.gif");
 	}
 
 	/**
@@ -406,10 +230,10 @@ public class DatePickerSettings implements Serializable
 	private boolean showOthers = false;
 
 	/** the style. */
-	private ResourceReference style = STYLE_AQUA;
+	private ResourceReference style = null;
 
 	/** the button icon. */
-	private ResourceReference icon = BUTTON_ICON_1;
+	private ResourceReference icon = null;
 
 	/** the language. */
 	private ResourceReference language = null;
@@ -419,6 +243,9 @@ public class DatePickerSettings implements Serializable
 	 */
 	public DatePickerSettings()
 	{
+		// register buttons
+		new StaticResourceReference(DatePickerSettings.class, "style/menuarrow.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/menuarrow2.gif");
 	}
 
 	/**
@@ -480,6 +307,152 @@ public class DatePickerSettings implements Serializable
 		}
 		
 		return b.toString();
+	}
+
+	/**
+	 * create a button icon.
+	 * @return a button icon.
+	 */
+	public final StaticResourceReference newButtonIconRed()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "calendar_icon_1.jpg");
+	}
+
+	/**
+	 * create a button icon.
+	 * @return a button icon.
+	 */
+	public final StaticResourceReference newButtonIconPlain()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "calendar_icon_2.jpg");
+	}
+
+	/**
+	 * create a button icon.
+	 * @return a button icon.
+	 */
+	public final StaticResourceReference newButtonIconBlue()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "calendar_icon_3.jpg");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleAqua()
+	{
+		// register dependencies
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/active-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/dark-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/hover-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/menuarrow.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/normal-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/rowhover-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/status-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/title-bg.gif");
+		new StaticResourceReference(DatePickerSettings.class, "style/aqua/today-bg.gif");
+
+		return new StaticResourceReference(DatePickerSettings.class, "style/aqua/theme.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleWinter()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-blue.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleBlue()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-blue2.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleSummer()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-brown.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleGreen()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-green.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleSystem()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-system.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleTas()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-tas.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleWin2k()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleWin2k1()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-1.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleWin2k2()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/aqua/theme.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleWin2kCold1()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
+	}
+
+	/**
+	 * Create a style
+	 * @return a style
+	 */
+	public final StaticResourceReference newStyleWin2kCold2()
+	{
+		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
 	}
 
 	/**
@@ -659,6 +632,11 @@ public class DatePickerSettings implements Serializable
 	 */
 	public ResourceReference getIcon()
 	{
+		if (icon == null)
+		{
+			icon = newButtonIconRed();
+		}
+
 		return icon;
 	}
 
@@ -685,15 +663,14 @@ public class DatePickerSettings implements Serializable
 		}
 
 		// try to get the reference from our default mapping
-		StaticResourceReference ref = (StaticResourceReference)
-			localeToLanguageReference.get(currentLocale.getLanguage());
+		String ref = (String)localeToLanguageReference.get(currentLocale.getLanguage());
 		if (ref != null)
 		{
-			return ref;
+			return new StaticResourceReference(DatePickerSettings.class, ref);
 		}
 
 		// we didn't find a mapping; just return English
-		return LANGUAGE_EN;
+		return new StaticResourceReference(DatePickerSettings.class, LANGUAGE_EN);
 	}
 
 	/**
@@ -711,6 +688,11 @@ public class DatePickerSettings implements Serializable
 	 */
 	public ResourceReference getStyle()
 	{
+		if (style == null)
+		{
+			style = newStyleAqua();
+		}
+		
 		return style;
 	}
 

@@ -63,16 +63,25 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	/** Name of the node image component; value = 'nodeImage'. */
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
+	/**
+	 * Gets a new image reference.
+	 * @return image reference
+	 */
+	private final ResourceReference newImageBlank()
+	{
+		return new StaticResourceReference(Tree.class, "blank.gif");
+	}
+
 	/** Blank image. */
-	private static final ResourceReference BLANK =
+	private final ResourceReference BLANK =
 		new StaticResourceReference(Tree.class, "blank.gif");
 
 	/** Minus sign image. */
-	private static final ResourceReference MINUS =
+	private final ResourceReference MINUS =
 		new StaticResourceReference(Tree.class, "minus.gif");
 
 	/** Plus sign image. */
-	private static final ResourceReference PLUS =
+	private final ResourceReference PLUS =
 		new StaticResourceReference(Tree.class, "plus.gif");
 
 	/**
