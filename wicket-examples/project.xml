@@ -3,7 +3,7 @@
 <project>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>1.1-b1</currentVersion>
+  <currentVersion>1.1-b2</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -62,6 +62,11 @@
       <id>1.1-b1</id>
       <name>1.1-b1</name>
       <tag>WICKET_R_1_1_BETA1</tag>
+    </version>
+    <version>
+      <id>1.1-b2</id>
+      <name>1.1-b2</name>
+      <tag>WICKET_R_1_1_BETA2</tag>
     </version>
   </versions>
   <mailingLists>
