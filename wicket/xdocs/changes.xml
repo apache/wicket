@@ -7,9 +7,8 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-  	<release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
-  	</release>
-    <release version="1.1-b2" date="tbd" description="1.1 Beta 2">
+    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
+    <release version="1.1-b2" date="2005-08-01" description="1.1 Beta 2">
       <action type="update" dev="Martijn Dashorst" issue="1231300">Upgraded dependencies to latests versions: log4j (1.2.8 -&gt; 1.2.11), concurrent (1.3.3 -&gt; 1.3.4).</action>
       <action type="fix" dev="Martijn Dashorst" due-to="Brad Pardee" issue="1248759">Removed dependency on dom4j</action>
       <action type="update" dev="Eelco Hillenius" due-to="Cameron Braid">Folded UploadForm and Form into one (Form). Instead of using UploadForm, you can now just use Form and call setMultipart(true).</action>
