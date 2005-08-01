@@ -26,8 +26,16 @@ import wicket.util.string.Strings;
 
 /**
  * HTML checkbox input component.
- * TODO elaborate with an example
- * 
+ * <p>
+ * Java:
+ * <pre>
+ * form.add(new CheckBox("bool"));
+ * </pre>
+ * HTML:
+ * <pre>
+ * &lt;input type="checkbox" wicket:id="bool" /&gt;
+ * </pre>
+ * </p>
  * <p>
  * You can can extend this class and override method wantOnSelectionChangedNotifications()
  * to force server roundtrips on each selection change.
