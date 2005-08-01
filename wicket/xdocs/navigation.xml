@@ -11,6 +11,7 @@
 				<item name="Motivations" href="#Motivations" />
 				<item name="Goals" href="#Goals" />
 			</item>
+			<item name="Roadmap" href="/Roadmap.html" />
 		</menu>
 		<menu name="Getting Started">
 			<item name="Examples" href="/QuickTour.html" collapse="true">
@@ -42,6 +43,7 @@
 			<item name="Dependencies" href="/dependencies.html" />
 		</menu>
 		<menu name="Releases">
+			<!--  <item name="Wicket 1.2 (n/a)" href="/Roadmap.html#Wicket_1.2"/> -->
 			<item name="Wicket 1.1 (beta)" href="/wicket-1.1/index.html" />
 			<item name="Wicket 1.0" href="/wicket-1.0/index.html" />
 		</menu>
