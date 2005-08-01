@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <groupId>wicket</groupId>
   <id>wicket-extensions</id>
-  <currentVersion>1.1-b1</currentVersion>
+  <currentVersion>1.1-b2</currentVersion>
   <inceptionYear>2004</inceptionYear>
   <package>wicket</package>
   <logo>/images/logo.gif</logo>
@@ -53,6 +53,11 @@
       <id>1.1-b1</id>
       <name>1.1-b1</name>
       <tag>WICKET_R_1_1_BETA1</tag>
+    </version>
+    <version>
+      <id>1.1-b2</id>
+      <name>1.1-b2</name>
+      <tag>WICKET_R_1_1_BETA2</tag>
     </version>
   </versions>
   <dependencies>
