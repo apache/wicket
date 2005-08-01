@@ -11,6 +11,29 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="August 1, 2005 - Wicket 1.1-beta 2 Available">
+				<p>
+					Wicket 1.1-beta 2 is available for download and testing. This is a beta release, so
+					you may expect some API changes. Most notable features in this release are:
+					<ul>
+						<li>JavaScript support</li>
+						<li>CSS support</li>
+						<li>Markup inheritence</li>
+						<li>Experimental AJAX support</li>
+						<li>Improved URL handling</li>
+						<li>Include of external markup</li>
+						<li>Simplified Choice component</li>
+						<li>Improved Feedback support</li>
+						<li>Thread safe validation (bug fix)</li>
+						<li>Immediate button support for Forms</li>
+						<li>Panel support for TreeView</li>
+						<li>Date picker component</li>
+						<li>Component reference examples</li>
+						<li>Upgrade of the log4j and concurrent dependencies to their latest releases</li>
+					</ul>
+					Please download this release and give us feedback on how you like these new features. A final 1.1 release will be available around begin september, so we <em>need your feedback!</em>
+				</p>
+			</subsection>
 			<subsection name="July 24, 2005 - Wicket 1.1-beta 1 Avaliable">
 				<p>
 					Wicket 1.1-beta 1 is available for download and testing. This is a
