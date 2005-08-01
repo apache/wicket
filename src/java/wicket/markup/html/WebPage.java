@@ -163,7 +163,6 @@ public class WebPage extends Page implements IHeaderRenderer
 		// add an extra parameter for regconition in case we are targetting a dispatched handler
 		if (IEventRequestListener.class.isAssignableFrom(listenerInterface))
 		{
-			// TODO we might come up with a more elegant pattern in future?
 			buffer.append("&dispatched=true");
 		}
 
