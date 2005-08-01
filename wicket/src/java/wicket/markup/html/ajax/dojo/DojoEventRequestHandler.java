@@ -34,6 +34,14 @@ public abstract class DojoEventRequestHandler extends AbstractEventRequestHandle
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(DojoEventRequestHandler.class);
+
+	/** reference to dojo js. */
+	private static final StaticResourceReference DOJO_REF;
+
+	static
+	{
+		DOJO_REF = new StaticResourceReference(DojoEventRequestHandler.class, "dojo-io-20050628.js");
+	}
 	
 	/**
 	 * Construct.
@@ -49,8 +57,7 @@ public abstract class DojoEventRequestHandler extends AbstractEventRequestHandle
 	public final void printHeadInitContribution(HtmlHeaderContainer container)
 	{
 		// add our basic javascript needs to the header
-		addJsReference(container, new StaticResourceReference(
-				DojoEventRequestHandler.class, "dojo-io-20050628.js"));
+		addJsReference(container, DOJO_REF);
 	}
 
 	/**
