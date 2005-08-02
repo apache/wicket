@@ -248,4 +248,15 @@ public class AttributeModifier implements Serializable
 			}
 		}
 	}
+	
+	/**
+	 * Gets the replacement model.
+	 * Allows subclasses access to replace model.
+	 * @return the replace model of this attribute modifier
+	 */
+	protected final IModel getReplaceModel()
+	{
+		return replaceModel;
+	}
+
 }
