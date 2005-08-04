@@ -17,6 +17,9 @@
  */
 package wicket.examples.library;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import wicket.PageParameters;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -40,25 +43,40 @@ public final class Home extends AuthenticatedWebPage
 	public Home(final PageParameters parameters)
 	{
 		// Add table of books
-		final User user = getLibrarySession().getUser();
-		if (user != null)
+		final PageableListView listView;
+		add(listView = new PageableListView("books", new PropertyModel(this, "books"), 4)
 		{
-			final PageableListView listView;
-			add(listView = new PageableListView("books", new PropertyModel(user, "books"), 4)
+			public void populateItem(final ListItem listItem)
 			{
-				public void populateItem(final ListItem listItem)
-				{
-					final Book book = (Book)listItem.getModelObject();
-					listItem.add(BookDetails.link("details", book, getLocalizer().getString(
-							"noBookTitle", this)));
-					listItem.add(new Label("author", new Model(book)));
-					listItem.add(moveUpLink("moveUp", listItem));
-					listItem.add(moveDownLink("moveDown", listItem));
-					listItem.add(removeLink("remove", listItem));
-					listItem.add(EditBook.link("edit", book.getId()));
-				}
-			});
-			add(new PageableListViewNavigator("navigator", listView));
+				final Book book = (Book)listItem.getModelObject();
+				listItem.add(BookDetails.link("details", book, getLocalizer().getString(
+						"noBookTitle", this)));
+				listItem.add(new Label("author", new Model(book)));
+				listItem.add(moveUpLink("moveUp", listItem));
+				listItem.add(moveDownLink("moveDown", listItem));
+				listItem.add(removeLink("remove", listItem));
+				listItem.add(EditBook.link("edit", book.getId()));
+			}
+		});
+		add(new PageableListViewNavigator("navigator", listView));
+	}
+	
+	/**
+	 * 
+	 * @return List of books
+	 */
+	public List getBooks()
+	{
+	    // Note: checkAccess() (and thus login etc.) happen after the Page
+	    // has been instantiated. Thus, you can not realy on user != null.
+	    // Note2: In any case, all components must be associated with a 
+	    // wicket tag. 
+		User user = getLibrarySession().getUser();
+		if (user == null)
+		{
+		    return new ArrayList();
 		}
+		
+		return user.getBooks();
 	}
 }
