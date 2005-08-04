@@ -33,4 +33,13 @@ public class InternalErrorPage extends WebPage
 	{
 		add(homePageLink("homePageLink"));
 	}
+	
+	/**
+	 * @see wicket.Page#isErrorPage()
+	 */
+	public boolean isErrorPage()
+	{
+		return true;
+	}
+	
 }
