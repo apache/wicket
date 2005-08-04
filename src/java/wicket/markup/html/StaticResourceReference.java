@@ -35,6 +35,7 @@ public class StaticResourceReference extends ResourceReference
 	public StaticResourceReference(Class scope, String name)
 	{
 		super(scope, name);
+		// TODO bind shouldn't happen here because this will kill the "static" nature.
 		bind(Session.get().getApplication());
 	}
 
@@ -44,6 +45,7 @@ public class StaticResourceReference extends ResourceReference
 	public StaticResourceReference(String name)
 	{
 		super(name);
+		// TODO bind shouldn't happen here because this will kill the "static" nature.
 		bind(Session.get().getApplication());
 	}
 	
