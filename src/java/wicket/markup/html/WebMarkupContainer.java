@@ -42,7 +42,7 @@ import wicket.util.lang.Classes;
  */
 public class WebMarkupContainer extends MarkupContainer implements IHeaderContributor
 {
-	private transient List headerComponents;
+	private List headerComponents;
 
 	/**
 	 * @see Component#Component(String)
