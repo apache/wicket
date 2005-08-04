@@ -331,7 +331,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final String getValue()
 	{
-		return invalidInput == NO_INVALID_INPUT ? getModelValue() : invalidInput;
+		return NO_INVALID_INPUT.equals(invalidInput) ? getModelValue() : invalidInput;
 	}
 
 	/**
