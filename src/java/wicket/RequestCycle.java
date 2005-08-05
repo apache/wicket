@@ -730,16 +730,24 @@ public abstract class RequestCycle
 		final ApplicationSettings settings = application.getSettings();
 		if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
-			if (settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
+			Class internalErrorPageClass = application.getPages().getInternalErrorPage();
+			Page responsePage = getResponsePage();
+			Class responseClass = responsePage != null?responsePage.getClass():null;
+			
+			if (responseClass != internalErrorPageClass && settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
 			{
 				// Show internal error page
-				setResponsePage(session.getPageFactory(page).newPage(
-						application.getPages().getInternalErrorPage()));
+				setResponsePage(session.getPageFactory(page).newPage(internalErrorPageClass));
 			}
-			else
+			else if(responseClass != ExceptionErrorPage.class)
 			{
 				// Show full details
 				setResponsePage(new ExceptionErrorPage(e, getResponsePage()));
+			}
+			else
+			{
+				// give up while we're ahead!
+				throw new ServletException("Internal Error: Could not render error page " + page, e);
 			}
 
 			// We generally want to redirect the response because we
