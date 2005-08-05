@@ -77,9 +77,9 @@ public class WebResponseWithCryptedUrl extends WebResponse
 			    String queryString = url.substring(pos + 1);
 			    
 			    // if the querystring starts with a parameter like 
-			    // "secure=", than don#t change the querystring as it 
+			    // "x=", than don#t change the querystring as it 
 			    // has been encoded already
-			    if (!queryString.startsWith("secure="))
+			    if (!queryString.startsWith("x="))
 			    {
 			        // The length of the encrypted string depends on the
 			        // length of the original querystring. Let's try to
@@ -92,7 +92,7 @@ public class WebResponseWithCryptedUrl extends WebResponse
 					final String encryptedQueryString = urlCrypt.encrypt(queryString);
 					
 					// build the new complete url
-					final String encryptedUrl = urlPrefix + "?secure=" + escapeUrl(encryptedQueryString);
+					final String encryptedUrl = urlPrefix + "?x=" + escapeUrl(encryptedQueryString);
 					return encryptedUrl;
 			    }
 		    }
