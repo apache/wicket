@@ -59,8 +59,8 @@ public class WebRequestWithCryptedUrl extends WebRequest
 	{
 		super(request);
 
-		// Encoded query string have only a single parameter named "secure"
-		final String secureParam = request.getParameter("secure");
+		// Encoded query string have only a single parameter named "x"
+		final String secureParam = request.getParameter("x");
 		if ((secureParam != null) && (secureParam.length() > 0))
 		{
 			// Get the crypt implementation from the application
@@ -77,7 +77,7 @@ public class WebRequestWithCryptedUrl extends WebRequest
 		}
 		else
 		{
-		    // If "secure" parameter does not exist, we assume the query string
+		    // If "x" parameter does not exist, we assume the query string
 		    // is not encoded.
 		    // Note: You might want to throw an exception, if you don't want 
 		    // the automatic fallback.
@@ -96,8 +96,8 @@ public class WebRequestWithCryptedUrl extends WebRequest
 		    {
 		        final Map.Entry entry = (Map.Entry)iter.next();
 		        
-		        // Ignore the "secure" parameter
-		        if (!"secure".equalsIgnoreCase((String)entry.getKey()))
+		        // Ignore the "x" parameter
+		        if (!"x".equalsIgnoreCase((String)entry.getKey()))
 		        {
 		            // add key/value to our parameter map
 		            this.parameters.put(entry.getKey(), entry.getValue());
