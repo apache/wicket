@@ -28,6 +28,8 @@ import java.net.URLConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.RequestCycle;
+import wicket.protocol.http.WebApplication;
 import wicket.util.time.Time;
 
 /**
@@ -147,11 +149,33 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public String getContentType()
 	{
-		if (contentType == null)
-		{
-			return URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
-		}
+		testContentType();
 		return contentType;
+	}
+
+	/**
+	 * Method to test the content type on null or unknown.
+	 * if this is the case the content type is tried to be resolved throw the servlet context
+	 */
+	private void testContentType()
+	{
+		if(contentType == null || contentType.indexOf("unknown") != -1)
+		{
+			RequestCycle rc = RequestCycle.get();
+			if(rc != null && (rc.getApplication() instanceof WebApplication))
+			{
+				// TODO for non webapplication another method should be implemented (getMimeType on application?)
+				contentType = ((WebApplication)rc.getApplication()).getWicketServlet().getServletContext().getMimeType(url.getFile());
+				if(contentType == null)
+				{
+					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
+				}
+			}
+			else
+			{
+				contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
+			}
+		}
 	}
 
 	/**
