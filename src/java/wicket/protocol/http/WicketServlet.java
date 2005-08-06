@@ -36,6 +36,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.StaticResource;
 import wicket.response.BufferedResponse;
 import wicket.util.resource.IResourceStream;
+import wicket.util.time.Time;
 
 /**
  * Servlet class for all wicket applications. The specific application class to
@@ -211,7 +212,8 @@ public class WicketServlet extends HttpServlet
 				IResourceStream stream = resource.getResourceStream();
 				// first ask the length so the content is created/accessed
 				stream.length();
-				return stream.lastModifiedTime().getMilliseconds();
+				Time time = stream.lastModifiedTime();
+				return time != null? time.getMilliseconds():-1;
 			}
 		}
 		return -1;
