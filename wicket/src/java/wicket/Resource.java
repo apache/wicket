@@ -110,7 +110,7 @@ public abstract class Resource implements IResourceListener
 		response.setContentType(resourceStream.getContentType());
 		response.setContentLength((int)resourceStream.length());
 
-		if (cacheable)
+		if (isCacheable())
 		{
 			// Don't set this above setContentLength call above. 
 			// The call above could create and set the last modified time.  
