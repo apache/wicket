@@ -71,7 +71,9 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * Invalidates this session immediately
+	 * Invalidates this session immediately. Calling this method will remove all
+	 * Wicket components from this session, which means that you will no longer
+	 * be able to work with them.
 	 */
 	public void invalidateNow()
 	{
