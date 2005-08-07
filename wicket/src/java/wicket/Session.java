@@ -558,6 +558,13 @@ public abstract class Session implements Serializable
 			removeAttribute(removedPage.getId());
 		}
 	}
+	
+	/**
+	 * Any detach logic for session subclasses.
+	 */
+	protected void detach()
+	{
+	}
 
 	/**
 	 * @param name
