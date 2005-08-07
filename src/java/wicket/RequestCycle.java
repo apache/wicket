@@ -872,6 +872,9 @@ public abstract class RequestCycle
 	 */
 	private final void threadDetach()
 	{
+		// Detach from session
+		session.detach();
+		
 		if (getRedirect())
 		{
 			// Since we are explicitly redirecting to a page already, we do not
