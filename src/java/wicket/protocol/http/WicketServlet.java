@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.38 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,17 +46,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *    
- *                     &lt;servlet&gt;
- *                         &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *                         &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *                         &lt;init-param&gt;
- *                             &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                             &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *                         &lt;/init-param&gt;
- *                         &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *                      &lt;/servlet&gt;
- *     
+ *                         &lt;servlet&gt;
+ *                             &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                             &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                             &lt;init-param&gt;
+ *                                 &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                                 &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                             &lt;/init-param&gt;
+ *                             &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *                          &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -74,13 +72,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *    
- *      	public void init() throws ServletException
- *          {
- *               ServletConfig config = getServletConfig();
- *               String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *               ...
- *     
+ *          	public void init() throws ServletException
+ *              {
+ *                   ServletConfig config = getServletConfig();
+ *                   String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                   ...
  * </pre>
  * 
  * </p>
@@ -94,6 +90,12 @@ import wicket.util.time.Time;
  */
 public class WicketServlet extends HttpServlet
 {
+	/**
+	 * The name of the context parameter that specifies application factory
+	 * class
+	 */
+	public static final String APP_FACT_PARAM = "applicationFactoryClassName";
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(WicketServlet.class);
 
@@ -101,10 +103,115 @@ public class WicketServlet extends HttpServlet
 	protected WebApplication webApplication;
 
 	/**
-	 * The name of the context parameter that specifies application factory
-	 * class
+	 * Handles servlet page requests.
+	 * 
+	 * @param servletRequest
+	 *            Servlet request object
+	 * @param servletResponse
+	 *            Servlet response object
+	 * @throws ServletException
+	 *             Thrown if something goes wrong during request handling
+	 * @throws IOException
 	 */
-	public static final String APP_FACT_PARAM = "applicationFactoryClassName";
+	public final void doGet(final HttpServletRequest servletRequest,
+			final HttpServletResponse servletResponse) throws ServletException, IOException
+	{
+		// try to see if there is a redirect stored
+		if (webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
+		{
+			// TODO should we test here for
+			// queryString.indexOf("IRedirectListener") ?
+			// only such urls should have a bufferedresponse.
+			String requestUri = servletRequest.getRequestURI() + "?"
+					+ servletRequest.getQueryString();
+
+			BufferedResponse bufferedResponse = (BufferedResponse)webApplication
+					.getBufferedResponse(servletRequest, requestUri);
+
+			if (bufferedResponse != null)
+			{
+				// got a buffered response; now write it
+				servletResponse.setContentLength(bufferedResponse.getContentLength());
+				servletResponse.setContentType(bufferedResponse.getContentType());
+
+				// PrintWriter pw = servletResponse.getWriter();
+				// pw.write(bufferedResponse.getString());
+				// pw.close();
+				final OutputStream out = servletResponse.getOutputStream();
+				out.write(bufferedResponse.getBytes());
+				out.close();
+
+				return;
+			}
+		}
+
+		// If the request does not provide information about the encoding of its
+		// body (which includes POST parameters), than assume the default
+		// encoding as defined by the wicket application. Bear in mind that the
+		// encoding of the request usually is equal to the previous response.
+		// However it is a known bug of IE that it does not provide this
+		// information. Please see the wiki for more details and why all other
+		// browser deliberately copied that bug.
+		if (servletRequest.getCharacterEncoding() == null)
+		{
+			try
+			{
+				// The encoding defined by the wicket settings is used to encode
+				// the responses. Thus, it is reasonable to assume the request
+				// has the same encoding. This is especially important for
+				// forms and form parameters.
+				servletRequest.setCharacterEncoding(webApplication.getSettings()
+						.getResponseRequestEncoding());
+			}
+			catch (UnsupportedEncodingException ex)
+			{
+				throw new WicketRuntimeException(ex.getMessage());
+			}
+		}
+
+		// Get session for request
+		final WebSession session = webApplication.getSession(servletRequest);
+
+		// create a new webrequest
+		final WebRequest request = webApplication.newWebRequest(servletRequest);
+
+		// Create a response object and set the output encoding according to
+		// wicket's application setttings.
+		final WebResponse response = webApplication.newWebResponse(servletResponse);
+		response.setCharacterEncoding(webApplication.getSettings().getResponseRequestEncoding());
+
+		try
+		{
+			// create a new request cycle
+			RequestCycle cycle = session.newRequestCycle(request, response);
+
+			// Process request
+			cycle.request();
+		}
+		finally
+		{
+			// Close response
+			response.close();
+		}
+	}
+
+	/**
+	 * Calls doGet with arguments.
+	 * 
+	 * @param servletRequest
+	 *            Servlet request object
+	 * @param servletResponse
+	 *            Servlet response object
+	 * @see WicketServlet#doGet(HttpServletRequest, HttpServletResponse)
+	 * @throws ServletException
+	 *             Thrown if something goes wrong during request handling
+	 * @throws IOException
+	 */
+	public final void doPost(final HttpServletRequest servletRequest,
+			final HttpServletResponse servletResponse) throws ServletException, IOException
+	{
+		doGet(servletRequest, servletResponse);
+	}
 
 	/**
 	 * Servlet initialization
@@ -186,7 +293,6 @@ public class WicketServlet extends HttpServlet
 				throw new WicketRuntimeException("Unable to create application factory of class "
 						+ appFactoryClassName, e);
 			}
-
 		}
 	}
 
@@ -202,6 +308,7 @@ public class WicketServlet extends HttpServlet
 					.substring(WebRequestCycle.resourceReferencePrefix.length());
 
 			final Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
+			resource.setParameters(new WebRequest(servletRequest).getParameterMap());
 			if (resource != null)
 			{
 				if (resource instanceof StaticResource)
@@ -210,123 +317,13 @@ public class WicketServlet extends HttpServlet
 				}
 
 				IResourceStream stream = resource.getResourceStream();
-				// first ask the length so the content is created/accessed
+
+				// First ask the length so the content is created/accessed
 				stream.length();
 				Time time = stream.lastModifiedTime();
-				return time != null? time.getMilliseconds():-1;
+				return time != null ? time.getMilliseconds() : -1;
 			}
 		}
 		return -1;
-	}
-
-	/**
-	 * Handles servlet page requests.
-	 * 
-	 * @param servletRequest
-	 *            Servlet request object
-	 * @param servletResponse
-	 *            Servlet response object
-	 * @throws ServletException
-	 *             Thrown if something goes wrong during request handling
-	 * @throws IOException
-	 */
-	public final void doGet(final HttpServletRequest servletRequest,
-			final HttpServletResponse servletResponse) throws ServletException, IOException
-	{
-		// try to see if there is a redirect stored
-		if (webApplication.getSettings().getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER)
-		{
-			// TODO should we test here for
-			// queryString.indexOf("IRedirectListener") ?
-			// only such urls should have a bufferedresponse.
-			String requestUri = servletRequest.getRequestURI() + "?"
-					+ servletRequest.getQueryString();
-
-			BufferedResponse bufferedResponse = (BufferedResponse)webApplication
-					.getBufferedResponse(servletRequest, requestUri);
-
-			if (bufferedResponse != null)
-			{
-				// got a buffered response; now write it
-				servletResponse.setContentLength(bufferedResponse.getContentLength());
-				servletResponse.setContentType(bufferedResponse.getContentType());
-
-				// PrintWriter pw = servletResponse.getWriter();
-				// pw.write(bufferedResponse.getString());
-				// pw.close();
-				final OutputStream os = servletResponse.getOutputStream();
-				os.write(bufferedResponse.getBytes());
-				os.close();
-
-				return;
-			}
-		}
-
-		// If the request does not provide information about the encoding of its
-		// body (which includes POST parameters), than assume the default encoding
-		// as defined by the wicket application. Bare in mind that the encoding of
-		// the request usually is equal to the previous response. However it is a
-		// known bug of IE that it does not provide this information. Please see
-		// the wiki for more details and why all other browser deliberately copied
-		// that bug.
-		if (servletRequest.getCharacterEncoding() == null)
-		{
-			try
-			{
-				// The encoding defined by the wicket settings is used to encode
-				// the responses. Thus, it is reasonable to assume the request
-				// has the same encoding. This is especially important for
-				// forms and form parameters.
-				servletRequest.setCharacterEncoding(webApplication.getSettings()
-						.getResponseRequestEncoding());
-			}
-			catch (UnsupportedEncodingException ex)
-			{
-				throw new WicketRuntimeException(ex.getMessage());
-			}
-		}
-
-		// Get session for request
-		final WebSession session = webApplication.getSession(servletRequest);
-
-		// create a new webrequest
-		final WebRequest request = webApplication.newWebRequest(servletRequest);
-
-		// Create a response object and set the output encoding according to
-		// wicket's application setttings.
-		final WebResponse response = webApplication.newWebResponse(servletResponse);
-		response.setCharacterEncoding(webApplication.getSettings().getResponseRequestEncoding());
-
-		try
-		{
-			// create a new request cycle
-			RequestCycle cycle = session.newRequestCycle(request, response);
-
-			// Process request
-			cycle.request();
-		}
-		finally
-		{
-			// Close response
-			response.close();
-		}
-	}
-
-	/**
-	 * Calls doGet with arguments.
-	 * 
-	 * @param servletRequest
-	 *            Servlet request object
-	 * @param servletResponse
-	 *            Servlet response object
-	 * @see WicketServlet#doGet(HttpServletRequest, HttpServletResponse)
-	 * @throws ServletException
-	 *             Thrown if something goes wrong during request handling
-	 * @throws IOException
-	 */
-	public final void doPost(final HttpServletRequest servletRequest,
-			final HttpServletResponse servletResponse) throws ServletException, IOException
-	{
-		doGet(servletRequest, servletResponse);
 	}
 }
