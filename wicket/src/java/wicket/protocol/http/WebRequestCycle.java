@@ -97,6 +97,14 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * @return Session as a WebSession
+	 */
+	public WebSession getWebSession()
+	{
+		return (WebSession)session;
+	}	
+
+	/**
 	 * Parses a request. The following four steps are followed:
 	 * <p>
 	 * 1. If the URL requested is in the form of a component listener
