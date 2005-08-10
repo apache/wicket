@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,23 +24,26 @@ import wicket.version.undo.Change;
 
 /**
  * A form button.
- *<p>
- * Within a form, you can nest Button components. Note that you don't have to do this to
- * let the form work (a simple &lt;input type="submit".. suffices), but if you want to have
- * different kinds of submit behaviour it might be a good idea to use Buttons.
- *</p>
- *<p>
- * When you add a Wicket Button to a form, and that button is clicked, by default the button's
- * onSubmit method is called first, and after that the form's onSubmit button is called.
- * If you want to change this (e.g. you don't want to call the form's onSubmit method, or you
- * want it called before the button's onSubmit method), you can override Form.delegateSubmit.
- *</p>
- *<p>
- * One other option you should know of is the 'immediate' property of Button components.
- * When you set this to true (default is false), all validation and formupdating is bypassed
- * and the onSubmit method of that button is called directly, and the onSubmit method of the
- * parent form is not called. A common use for this is to create a cancel button.
- *</p>
+ * <p>
+ * Within a form, you can nest Button components. Note that you don't have to do
+ * this to let the form work (a simple &lt;input type="submit".. suffices), but
+ * if you want to have different kinds of submit behaviour it might be a good
+ * idea to use Buttons.
+ * </p>
+ * <p>
+ * When you add a Wicket Button to a form, and that button is clicked, by
+ * default the button's onSubmit method is called first, and after that the
+ * form's onSubmit button is called. If you want to change this (e.g. you don't
+ * want to call the form's onSubmit method, or you want it called before the
+ * button's onSubmit method), you can override Form.delegateSubmit.
+ * </p>
+ * <p>
+ * One other option you should know of is the 'defaultFormProcessing' property
+ * of Button components. When you set this to true (default is false), all
+ * validation and formupdating is bypassed and the onSubmit method of that
+ * button is called directly, and the onSubmit method of the parent form is not
+ * called. A common use for this is to create a cancel button.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -49,9 +52,9 @@ public class Button extends FormComponent
 {
 	/**
 	 * Indicates that this button should be called without any validation done.
-	 * By default, immediate is false.
+	 * By default, defaultFormProcessing is enabled.
 	 */
-	private Boolean immediate;
+	private boolean defaultFormProcessing = true;
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -59,6 +62,55 @@ public class Button extends FormComponent
 	public Button(String id)
 	{
 		super(id);
+	}
+
+	/**
+	 * Gets the defaultFormProcessing property. When true (default is false),
+	 * all validation and formupdating is bypassed and the onSubmit method of
+	 * that button is called directly, and the onSubmit method of the parent
+	 * form is not called. A common use for this is to create a cancel button.
+	 * 
+	 * @return defaultFormProcessing
+	 */
+	public final boolean getDefaultFormProcessing()
+	{
+		return defaultFormProcessing;
+	}
+
+	/**
+	 * Sets the defaultFormProcessing property. When true (default is false),
+	 * all validation and formupdating is bypassed and the onSubmit method of
+	 * that button is called directly, and the onSubmit method of the parent
+	 * form is not called. A common use for this is to create a cancel button.
+	 * 
+	 * @param defaultFormProcessing
+	 *            defaultFormProcessing
+	 * @return This
+	 */
+	public final Button setDefaultFormProcessing(boolean defaultFormProcessing)
+	{
+		if (this.defaultFormProcessing != defaultFormProcessing)
+		{
+			addStateChange(new Change()
+			{
+				boolean formerValue = Button.this.defaultFormProcessing;
+
+				public void undo()
+				{
+					Button.this.defaultFormProcessing = formerValue;
+				}
+			});
+		}
+
+		this.defaultFormProcessing = defaultFormProcessing;
+		return this;
+	}
+
+	/**
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	public void updateModel()
+	{
 	}
 
 	/**
@@ -108,57 +160,5 @@ public class Button extends FormComponent
 	 */
 	protected void onSubmit()
 	{
-	}
-
-	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public void updateModel()
-	{
-	}
-
-	/**
-	 * Gets the immediate property. When true (default is false), all validation and
-	 * formupdating is bypassed and the onSubmit method of that button is called directly,
-	 * and the onSubmit method of the parent form is not called. A common use for this is
-	 * to create a cancel button.
-	 * @return immediate
-	 */
-	public final boolean isImmediate()
-	{
-		return (immediate != null) ? immediate.booleanValue() : false;
-	}
-
-	/**
-	 * Sets the immediate property. When true (default is false), all validation and
-	 * formupdating is bypassed and the onSubmit method of that button is called directly,
-	 * and the onSubmit method of the parent form is not called. A common use for this is
-	 * to create a cancel button.
-	 * @param immediate immediate
-	 * @return This
-	 */
-	public final Button setImmediate(boolean immediate)
-	{
-		if (this.immediate != null)
-		{
-			if (this.immediate.booleanValue() != immediate)
-			{
-				addStateChange(new Change()
-				{
-					boolean formerValue = Button.this.immediate.booleanValue();
-
-					public void undo()
-					{
-						Button.this.immediate = (formerValue) ? Boolean.TRUE : Boolean.FALSE;
-					}
-				});
-			}
-		}
-		else
-		{
-			this.immediate = (immediate) ? Boolean.TRUE : Boolean.FALSE;
-		}
-
-		return this;
 	}
 }
