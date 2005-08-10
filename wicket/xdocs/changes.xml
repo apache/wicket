@@ -8,6 +8,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
+      <action type="update" issue="1255297" dev="Jonathan Locke"></action>
+      <action type="add" dev="Jonathan Locke">Added WebSession.getId() and WebRequestCycle.getWebSession()</action>
       <action type="add" dev="Eelco Hillenius" issue="1250030" due-to="Igor Vaynberg">added AbstractReadOnlyModel</action>
 	  <action type="update" dev="Eelco Hillenius" issue="1249929" due-to="Igor Vaynberg">allow protected access to AttributeModifier's replacement model</action>
     <release version="1.1-b2" date="2005-08-01" description="1.1 Beta 2">
