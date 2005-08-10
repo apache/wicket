@@ -1203,6 +1203,18 @@ public abstract class Component implements Serializable, IEventRequestListener
 	}
 
 	/**
+	 * If false the component's tag will be printed as well as its
+	 * body (which is default). If true only the body will be printed,
+	 * but not the component's tag.
+	 * 
+	 * @return If true, the component tag will not be printed
+	 */
+	protected final boolean getRenderBodyOnly()
+	{
+	    return getFlag(FLAG_RENDER_BODY_ONLY);
+	}
+
+	/**
 	 * Sets the page that will respond to this request
 	 * 
 	 * @param page
@@ -1261,18 +1273,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 	public final void setRenderBodyOnly(final boolean renderTag)
 	{
 	    this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
-	}
-
-	/**
-	 * If false the component's tag will be printed as well as its
-	 * body (which is default). If true only the body will be printed,
-	 * but not the component's tag.
-	 * 
-	 * @return If true, the component tag will not be printed
-	 */
-	protected final boolean getRenderBodyOnly()
-	{
-	    return getFlag(FLAG_RENDER_BODY_ONLY);
 	}
 	
 	/**
@@ -1396,20 +1396,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 
 		// Give handler the opportunity to bind this component
 		eventRequestHandler.bind(this);
-	}
-
-	/**
-	 * Gets an array with registered event request handlers or null.
-	 * @return an array with registered event request handlers, null if none are registered
-	 */
-	protected final IEventRequestHandler[] getEventRequestHandlers()
-	{
-		if (eventRequestHandlers != null)
-		{
-			Collection handlers = eventRequestHandlers.values();
-			return (IEventRequestHandler[])handlers.toArray(new IEventRequestHandler[handlers.size()]);
-		}
-		return null;
 	}
 
 	/**
@@ -1554,6 +1540,20 @@ public abstract class Component implements Serializable, IEventRequestListener
 	{
 		// Search for page
 		return (Page)(this instanceof Page ? this : findParent(Page.class));
+	}
+
+	/**
+	 * Gets an array with registered event request handlers or null.
+	 * @return an array with registered event request handlers, null if none are registered
+	 */
+	protected final IEventRequestHandler[] getEventRequestHandlers()
+	{
+		if (eventRequestHandlers != null)
+		{
+			Collection handlers = eventRequestHandlers.values();
+			return (IEventRequestHandler[])handlers.toArray(new IEventRequestHandler[handlers.size()]);
+		}
+		return null;
 	}
 
 	/**
