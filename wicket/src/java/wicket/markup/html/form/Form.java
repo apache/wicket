@@ -214,8 +214,24 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 	 */
 	public final void onFormSubmitted()
 	{
-		// process the form for this request
-		process();
+		if (handleMultiPart())
+		{			
+			// First, see if the processing was triggered by a Wicket button
+			final Button submittingButton = findSubmittingButton();
+	
+			// When processing was triggered by a Wicket button and that button
+			// indicates it wants to be called immediately (without processing), 
+			// call Button.onSubmit() right away.
+			if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
+			{
+				submittingButton.onSubmit();
+			}
+			else
+			{
+				// process the form for this request
+				process(submittingButton);
+			}
+		}
 	}
 
 	/**
@@ -468,13 +484,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 	}
 
 	/**
-	 * Implemented by subclasses to deal with form submits.
-	 */
-	protected void onSubmit()
-	{
-	}
-	
-	/**
 	 * @see wicket.Component#onRender()
 	 */
 	protected void onRender()
@@ -490,114 +499,54 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 				}
 			}
 		});
-		
+
 		super.onRender();
 	}
 
 	/**
+	 * Implemented by subclasses to deal with form submits.
+	 */
+	protected void onSubmit()
+	{
+	}
+
+	/**
 	 * Process the form. Though you can override this method to provide your
-	 * whole own algoritm, it is not recommended to do so.
+	 * whole own algorithm, it is not recommended to do so.
 	 * <p>
 	 * See the class documentation for further details on the form processing
 	 * </p>
+	 * 
+	 * @param submittingButton
+	 *            The button that submitted this form
 	 */
-	protected void process()
+	protected void process(final Button submittingButton)
 	{
-		if (multiPart)
+		// Execute validation now before anything else
+		validate();
+
+		// If a validation error occurred
+		if (hasError())
 		{
-			// Change the request to a multipart web request so parameters are
-			// parsed out correctly
-			final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
-			try
-			{
-				final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(
-						this.maxSize, request);
-				getRequestCycle().setRequest(multipartWebRequest);
-			}
-			catch (FileUploadException e)
-			{
-				// Create model with exception and maximum size values
-				final HashMap model = new HashMap();
-				model.put("exception", e);
-				model.put("maxSize", maxSize);
+			// mark all children as invalid
+			markFormComponentsInvalid();
 
-				if (e instanceof SizeLimitExceededException)
-				{
-					// Resource key should be <form-id>.uploadTooLarge to
-					// override default message
-					final String defaultValue = "Upload must be less than " + maxSize;
-					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model),
-							defaultValue);
-					error(msg);
-
-					if (log.isDebugEnabled())
-					{
-						log.error(msg, e);
-					}
-					else
-					{
-						log.error(msg);
-					}
-				}
-				else
-				{
-					// Resource key should be <form-id>.uploadFailed to override
-					// default message
-					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model),
-							defaultValue);
-					error(msg);
-
-					log.error(msg, e);
-				}
-
-				// don't process the form if there is a FileUploadException
-				return;
-			}
-
-		}
-
-		// first, see if the processing was triggered by a Wicket button
-		final Button submittingButton = findSubmittingButton();
-
-		// when processing was triggered by a Wicket button and that button
-		// indicates
-		// it wants to be called immediately (without validating), call onSubmit
-		// right away.
-		if (submittingButton != null && (submittingButton.isImmediate()))
-		{
-			submittingButton.onSubmit();
+			// let subclass handle error
+			onError();
 		}
 		else
 		{
-			// as processing was not triggered by a button with immediate ==
-			// true,
-			// we execute validation now before anything else
-			validate();
+			// before updating, call the interception method for clients
+			beforeUpdateFormComponentModels();
 
-			// If a validation error occurred
-			if (hasError())
-			{
-				// mark all children as invalid
-				markFormComponentsInvalid();
+			// Update model using form data
+			updateFormComponentModels();
 
-				// let subclass handle error
-				onError();
-			}
-			else
-			{
-				// before updating, call the interception method for clients
-				beforeUpdateFormComponentModels();
+			// Persist FormComponents if requested
+			persistFormComponentData();
 
-				// Update model using form data
-				updateFormComponentModels();
-
-				// Persist FormComponents if requested
-				persistFormComponentData();
-
-				// let clients handle further processing
-				delegateSubmit(submittingButton);
-			}
+			// let clients handle further processing
+			delegateSubmit(submittingButton);
 		}
 	}
 
@@ -678,6 +627,66 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 		});
 
 		return value == IVisitor.STOP_TRAVERSAL ? true : false;
+	}
+
+	/**
+	 * @return False if form is multipart and upload failed
+	 */
+	private final boolean handleMultiPart()
+	{
+		if (multiPart)
+		{
+			// Change the request to a multipart web request so parameters are
+			// parsed out correctly
+			final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
+			try
+			{
+				final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(
+						this.maxSize, request);
+				getRequestCycle().setRequest(multipartWebRequest);
+			}
+			catch (FileUploadException e)
+			{
+				// Create model with exception and maximum size values
+				final HashMap model = new HashMap();
+				model.put("exception", e);
+				model.put("maxSize", maxSize);
+
+				if (e instanceof SizeLimitExceededException)
+				{
+					// Resource key should be <form-id>.uploadTooLarge to
+					// override default message
+					final String defaultValue = "Upload must be less than " + maxSize;
+					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model),
+							defaultValue);
+					error(msg);
+
+					if (log.isDebugEnabled())
+					{
+						log.error(msg, e);
+					}
+					else
+					{
+						log.error(msg);
+					}
+				}
+				else
+				{
+					// Resource key should be <form-id>.uploadFailed to override
+					// default message
+					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
+					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model),
+							defaultValue);
+					error(msg);
+
+					log.error(msg, e);
+				}
+
+				// don't process the form if there is a FileUploadException
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
