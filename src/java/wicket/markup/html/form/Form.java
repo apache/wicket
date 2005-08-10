@@ -44,63 +44,68 @@ import wicket.util.lang.Bytes;
 import wicket.util.string.Strings;
 
 /**
- * Base class for forms. To implement a form, subclass this class, add FormComponents
- * (such as CheckBoxes, ListChoices or TextFields) to the form. You can nest multiple
- * buttons if you want to vary submit behaviour. However, it is not nescesarry to use
- * Wicket's button class, just putting e.g. &lt;input type="submit" value="go"&gt;
- * suffices.
+ * Base class for forms. To implement a form, subclass this class, add
+ * FormComponents (such as CheckBoxes, ListChoices or TextFields) to the form.
+ * You can nest multiple buttons if you want to vary submit behaviour. However,
+ * it is not nescesarry to use Wicket's button class, just putting e.g.
+ * &lt;input type="submit" value="go"&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
- * <li> The submitting button is looked up. A submitting button is a button that is nested
- * in this form (is a child component) and that was clicked by the user. If a submitting
- * button was found, and it has the immediate field true (default is false), it's onSubmit
- * method will be called right away, thus no validition is done, and things like updating
- * form component models that would normally be done are skipped. In that respect, nesting
- * a button with the immediate field set to true has the same effect as nesting a normal
- * link. If you want you can call validate() to execute form validation, hasError() to
+ * <li> The submitting button is looked up. A submitting button is a button that
+ * is nested in this form (is a child component) and that was clicked by the
+ * user. If a submitting button was found, and it has the immediate field true
+ * (default is false), it's onSubmit method will be called right away, thus no
+ * validition is done, and things like updating form component models that would
+ * normally be done are skipped. In that respect, nesting a button with the
+ * immediate field set to true has the same effect as nesting a normal link. If
+ * you want you can call validate() to execute form validation, hasError() to
  * find out whether validate() resulted in validation errors, and
- * updateFormComponentModels() to update the models of nested form components. </li>
- * <li> When no immediate submitting button was found, this form is validated (method
- * validate()). Now, two possible paths exist:
+ * updateFormComponentModels() to update the models of nested form components.
+ * </li>
+ * <li> When no immediate submitting button was found, this form is validated
+ * (method validate()). Now, two possible paths exist:
  * <ul>
- * <li> Form validation failed. All nested form components will be marked valid, and
- * onError() is called to allow clients to provide custom error handling code. </li>
- * <li> Form validation succeeded. The nested components will be asked to update their
- * models and persist their data is applicable. After that, method delegateSubmit with
- * optionally the submitting button is called. The default when there is a submitting
- * button is to first call onSubmit on that button, and after that call onSubmit on this
- * form. Clients may override delegateSubmit if they want different behaviour. </li>
+ * <li> Form validation failed. All nested form components will be marked valid,
+ * and onError() is called to allow clients to provide custom error handling
+ * code. </li>
+ * <li> Form validation succeeded. The nested components will be asked to update
+ * their models and persist their data is applicable. After that, method
+ * delegateSubmit with optionally the submitting button is called. The default
+ * when there is a submitting button is to first call onSubmit on that button,
+ * and after that call onSubmit on this form. Clients may override
+ * delegateSubmit if they want different behaviour. </li>
  * </ul>
  * </li>
  * </li>
  * </p>
  * 
- * Form for handling (file) uploads with multipart requests is supported by callign setMultiPart(true).
- * Use this with {@link wicket.markup.html.form.upload.FileUploadField} components. You can
+ * Form for handling (file) uploads with multipart requests is supported by
+ * callign setMultiPart(true). Use this with
+ * {@link wicket.markup.html.form.upload.FileUploadField} components. You can
  * attach mutliple FileInput fields for muliple file uploads.
  * <p>
- * Using multipart forms causes a runtime dependency on 
- * <a href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>, version 1.0.
+ * Using multipart forms causes a runtime dependency on <a
+ * href="http://jakarta.apache.org/commons/fileupload/">Commons FileUpload</a>,
+ * version 1.0.
  * </p>
  * 
-
+ * 
  * <p>
- * If you want to have multiple buttons which submit the same form, simply put two or more
- * button components somewhere in the hierarchy of components that are children of the
- * form.
+ * If you want to have multiple buttons which submit the same form, simply put
+ * two or more button components somewhere in the hierarchy of components that
+ * are children of the form.
  * </p>
  * <p>
- * To get form components to persist their values for users via cookies, simply call
- * setPersistent(true) on the form component.
+ * To get form components to persist their values for users via cookies, simply
+ * call setPersistent(true) on the form component.
  * </p>
- *
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  * @author Cameron Braid
  */
-public class Form extends WebMarkupContainer
-	implements IFormSubmitListener, IFeedbackBoundary
+public class Form extends WebMarkupContainer implements IFormSubmitListener, IFeedbackBoundary
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
@@ -108,21 +113,14 @@ public class Form extends WebMarkupContainer
 	/** Maximum size of an upload in bytes */
 	private Bytes maxSize = Bytes.MAX;
 
-	protected boolean multiPart = false;
-
-	/**
-	 * set to true to use enctype='multipart/form-data', and to process file uplloads by
-	 * default multiPart = false
-	 * @param multiPart whether this form should behave as a multipart form
-	 */
-	public void setMultiPart(boolean multiPart)
-	{
-		this.multiPart = multiPart;
-	}
+	/** True if the form has enctype of multipart/form-data */
+	private boolean multiPart = false;
 
 	/**
 	 * Constructs a form with no validation.
-	 * @param id See Component
+	 * 
+	 * @param id
+	 *            See Component
 	 */
 	public Form(final String id)
 	{
@@ -163,6 +161,14 @@ public class Form extends WebMarkupContainer
 		{
 			feedback.setCollectingComponent(this);
 		}
+	}
+
+	/**
+	 * @return the maxSize of uploaded files
+	 */
+	public Bytes getMaxSize()
+	{
+		return this.maxSize;
 	}
 
 	/**
@@ -233,12 +239,13 @@ public class Form extends WebMarkupContainer
 		{
 			public void formComponent(final FormComponent formComponent)
 			{
-				if(formComponent.isVisibleInHierarchy())
+				if (formComponent.isVisibleInHierarchy())
 				{
 					// remove the FormComponent's persisted data
 					persister.clear(formComponent);
-	
-					// Disable persistence if requested. Leave unchanged otherwise.
+
+					// Disable persistence if requested. Leave unchanged
+					// otherwise.
 					if (formComponent.isPersistent() && disablePersistence)
 					{
 						formComponent.setPersistent(false);
@@ -246,6 +253,27 @@ public class Form extends WebMarkupContainer
 				}
 			}
 		});
+	}
+
+	/**
+	 * @param maxSize
+	 *            The maxSize for uploaded files
+	 */
+	public void setMaxSize(final Bytes maxSize)
+	{
+		this.maxSize = maxSize;
+	}
+
+	/**
+	 * Set to true to use enctype='multipart/form-data', and to process file
+	 * uplloads by default multiPart = false
+	 * 
+	 * @param multiPart
+	 *            whether this form should behave as a multipart form
+	 */
+	public void setMultiPart(boolean multiPart)
+	{
+		this.multiPart = multiPart;
 	}
 
 	/**
@@ -284,22 +312,206 @@ public class Form extends WebMarkupContainer
 	}
 
 	/**
-	 * Process the form. Though you can override this method to provide your whole own algoritm,
-	 * it is not recommended to do so.
+	 * Template method to allow clients to do any processing (like recording the
+	 * current model so that, in case onSubmit does further validation, the
+	 * model can be rolled back) before the actual updating of form component
+	 * models is done.
+	 */
+	protected void beforeUpdateFormComponentModels()
+	{
+	}
+
+	/**
+	 * Called (by the default implementation of 'process') when all fields
+	 * validated, the form was updated and it's data was allowed to be
+	 * persisted. It is meant for delegating further processing to clients.
+	 * <p>
+	 * This implementation first finds out whether the form processing was
+	 * triggered by a nested button of this form. If that is the case, that
+	 * button's onSubmit is called first.
+	 * </p>
+	 * <p>
+	 * Regardless of whether a submitting button was found, the form's onSubmit
+	 * method is called next.
+	 * </p>
+	 * 
+	 * @param submittingButton
+	 *            the button that triggered this form processing, or null if the
+	 *            processing was triggered by something else (like a non-Wicket
+	 *            submit button or a javascript execution)
+	 */
+	protected void delegateSubmit(Button submittingButton)
+	{
+		// when the given button is not null, it means that it was the
+		// submitting button
+		if (submittingButton != null)
+		{
+			submittingButton.onSubmit();
+		}
+
+		// Model was successfully updated with valid data
+		onSubmit();
+	}
+
+	/**
+	 * Gets the button which submitted this form.
+	 * 
+	 * @return The button which submitted this form or null if the processing
+	 *         was not trigger by a registered button component
+	 */
+	protected final Button findSubmittingButton()
+	{
+		return (Button)visitChildren(Button.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Get button
+				final Button button = (Button)component;
+
+				// Check for button-name or button-name.x request string
+				if (!Strings.isEmpty(button.getInput())
+						|| !Strings.isEmpty(getRequest().getParameter(button.getPath() + ".x")))
+				{
+					return button;
+				}
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+	}
+
+	/**
+	 * Gets the form component persistence manager; it is lazy loaded.
+	 * 
+	 * @return The form component value persister
+	 */
+	protected IValuePersister getValuePersister()
+	{
+		return new CookieValuePersister();
+	}
+
+	/**
+	 * Gets whether the current form has any error registered.
+	 * 
+	 * @return True if this form has at least one error.
+	 */
+	protected final boolean hasError()
+	{
+		// if this form itself has an error message
+		if (hasErrorMessage())
+		{
+			return true;
+		}
+
+		// the form doesn't have any errors, now check any nested form
+		// components
+		return anyFormComponentError();
+	}
+
+	/**
+	 * @see wicket.Component#internalOnModelChanged()
+	 */
+	protected void internalOnModelChanged()
+	{
+		// Visit all the form components and validate each
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				// If form component is using form model
+				if (formComponent.sameRootModel(Form.this))
+				{
+					formComponent.modelChanged();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Mark each form component on this form invalid.
+	 */
+	protected final void markFormComponentsInvalid()
+	{
+		// call invalidate methods of all nested form components
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					formComponent.invalid();
+				}
+			}
+		});
+	}
+
+	/**
+	 * @see wicket.Component#onComponentTag(ComponentTag)
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+		checkComponentTag(tag, "form");
+		super.onComponentTag(tag);
+		tag.put("method", "post");
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
+		if (multiPart)
+		{
+			tag.put("enctype", "multipart/form-data");
+		}
+	}
+
+	/**
+	 * Method to override if you want to do something special when an error
+	 * occurs (other than simply displaying validation errors).
+	 */
+	protected void onError()
+	{
+	}
+
+	/**
+	 * Implemented by subclasses to deal with form submits.
+	 */
+	protected void onSubmit()
+	{
+	}
+	
+	/**
+	 * @see wicket.Component#onRender()
+	 */
+	protected void onRender()
+	{
+		// Force multi-part on if any child form component is multi-part
+		visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(FormComponent formComponent)
+			{
+				if (formComponent.isVisible() && formComponent.isMultiPart())
+				{
+					setMultiPart(true);
+				}
+			}
+		});
+		
+		super.onRender();
+	}
+
+	/**
+	 * Process the form. Though you can override this method to provide your
+	 * whole own algoritm, it is not recommended to do so.
 	 * <p>
 	 * See the class documentation for further details on the form processing
 	 * </p>
 	 */
 	protected void process()
 	{
-		if (multiPart) 
+		if (multiPart)
 		{
 			// Change the request to a multipart web request so parameters are
 			// parsed out correctly
 			final HttpServletRequest request = ((WebRequest)getRequest()).getHttpServletRequest();
 			try
 			{
-				final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(this.maxSize, request);
+				final MultipartWebRequest multipartWebRequest = new MultipartWebRequest(
+						this.maxSize, request);
 				getRequestCycle().setRequest(multipartWebRequest);
 			}
 			catch (FileUploadException e)
@@ -311,9 +523,11 @@ public class Form extends WebMarkupContainer
 
 				if (e instanceof SizeLimitExceededException)
 				{
-					// Resource key should be <form-id>.uploadTooLarge to override default message
+					// Resource key should be <form-id>.uploadTooLarge to
+					// override default message
 					final String defaultValue = "Upload must be less than " + maxSize;
-					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model), defaultValue);
+					String msg = getString(getId() + ".uploadTooLarge", Model.valueOf(model),
+							defaultValue);
 					error(msg);
 
 					if (log.isDebugEnabled())
@@ -327,32 +541,37 @@ public class Form extends WebMarkupContainer
 				}
 				else
 				{
-					// Resource key should be <form-id>.uploadFailed to override default message
+					// Resource key should be <form-id>.uploadFailed to override
+					// default message
 					final String defaultValue = "Upload failed: " + e.getLocalizedMessage();
-					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model), defaultValue);
+					String msg = getString(getId() + ".uploadFailed", Model.valueOf(model),
+							defaultValue);
 					error(msg);
 
 					log.error(msg, e);
 				}
-				
+
 				// don't process the form if there is a FileUploadException
 				return;
 			}
 
 		}
-		
+
 		// first, see if the processing was triggered by a Wicket button
 		final Button submittingButton = findSubmittingButton();
 
-		// when processing was triggered by a Wicket button and that button indicates
-		// it wants to be called immediately (without validating), call onSubmit right away.
+		// when processing was triggered by a Wicket button and that button
+		// indicates
+		// it wants to be called immediately (without validating), call onSubmit
+		// right away.
 		if (submittingButton != null && (submittingButton.isImmediate()))
 		{
 			submittingButton.onSubmit();
 		}
 		else
 		{
-			// as processing was not triggered by a button with immediate == true,
+			// as processing was not triggered by a button with immediate ==
+			// true,
 			// we execute validation now before anything else
 			validate();
 
@@ -382,55 +601,31 @@ public class Form extends WebMarkupContainer
 		}
 	}
 
-
 	/**
-	 * @param maxSize
-	 *            The maxSize for uploaded files
+	 * Update the model of all form components using the fields that were sent
+	 * with the current request.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void setMaxSize(final Bytes maxSize)
+	protected final void updateFormComponentModels()
 	{
-		this.maxSize = maxSize;
-	}
-	/**
-	 * @return the maxSize of uploaded files
-	 */
-	public Bytes getMaxSize()
-	{
-		return this.maxSize;
-	}
-
-
-	/**
-	 * Called (by the default implementation of 'process') when all fields validated,
-	 * the form was updated and it's data was allowed to be persisted. It is meant for delegating
-	 * further processing to clients.
-	 * <p>
-	 * This implementation first finds out whether the form processing was triggered by a nested
-	 * button of this form. If that is the case, that button's onSubmit is called first.
-	 * </p>
-	 * <p>
-	 * Regardless of whether a submitting button was found, the form's onSubmit method is called
-	 * next.
-	 * </p>
-	 * @param submittingButton the button that triggered this form processing, or null if the
-	 * 		processing was triggered by something else (like a non-Wicket submit button or
-	 * 		a javascript execution)
-	 */
-	protected void delegateSubmit(Button submittingButton)
-	{
-		// when the given button is not null, it means that it was the submitting button
-		if (submittingButton != null)
+		visitFormComponents(new FormComponent.IVisitor()
 		{
-			submittingButton.onSubmit();
-		}
-
-		// Model was successfully updated with valid data
-		onSubmit();
+			public void formComponent(final FormComponent formComponent)
+			{
+				// Only update the component when it is visible and valid
+				if (formComponent.isVisibleInHierarchy() && formComponent.isValid())
+				{
+					// Potentially update the model
+					formComponent.updateModel();
+				}
+			}
+		});
 	}
 
 	/**
-	 * Validates the form's nested children of type {@link FormComponent}. This method
-	 * is typically called before updating any models.
+	 * Validates the form's nested children of type {@link FormComponent}. This
+	 * method is typically called before updating any models.
 	 */
 	protected void validate()
 	{
@@ -444,7 +639,7 @@ public class Form extends WebMarkupContainer
 				{
 					// Validate form component
 					formComponent.validate();
-	
+
 					// If component is not valid (has an error)
 					if (!formComponent.isValid())
 					{
@@ -462,155 +657,8 @@ public class Form extends WebMarkupContainer
 	}
 
 	/**
-	 * Method to override if you want to do something special when an error
-	 * occurs (other than simply displaying validation errors).
-	 */
-	protected void onError()
-	{
-	}
-
-	/**
-	 * Template method to allow clients to do any processing (like recording the current
-	 * model so that, in case onSubmit does further validation, the model can be rolled
-	 * back) before the actual updating of form component models is done.
-	 */
-	protected void beforeUpdateFormComponentModels()
-	{		
-	}
-
-	/**
-	 * Implemented by subclasses to deal with form submits.
-	 */
-	protected void onSubmit()
-	{
-	}
-
-	/**
-	 * Update the model of all form components using the fields that were sent with the
-	 * current request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	protected final void updateFormComponentModels()
-	{
-		visitFormComponents(new FormComponent.IVisitor()
-		{
-			public void formComponent(final FormComponent formComponent)
-			{
-				// Only update the component when it is visible and valid
-				if (formComponent.isVisibleInHierarchy() && formComponent.isValid() )
-				{
-					// Potentially update the model
-					formComponent.updateModel();
-				}
-			}
-		});
-	}
-
-	/**
-	 * @see wicket.Component#internalOnModelChanged()
-	 */
-	protected void internalOnModelChanged()
-	{
-		// Visit all the form components and validate each
-		visitFormComponents(new FormComponent.IVisitor()
-		{
-			public void formComponent(final FormComponent formComponent)
-			{
-				// If form component is using form model
-				if (formComponent.sameRootModel(Form.this))
-				{
-					formComponent.modelChanged();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Gets the form component persistence manager; it is lazy loaded.
-	 * 
-	 * @return The form component value persister
-	 */
-	protected IValuePersister getValuePersister()
-	{
-		return new CookieValuePersister();
-	}
-
-	/**
-	 * @see wicket.Component#onComponentTag(ComponentTag)
-	 */
-	protected void onComponentTag(final ComponentTag tag)
-	{
-		checkComponentTag(tag, "form");
-		super.onComponentTag(tag);
-		tag.put("method", "post");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.class), "&", "&amp;"));
-		if (multiPart) {
-			tag.put("enctype", "multipart/form-data");
-		}
-	}
-
-	/**
-	 * Gets whether the current form has any error registered.
-	 * @return True if this form has at least one error.
-	 */
-	protected final boolean hasError()
-	{
-		// if this form itself has an error message
-		if (hasErrorMessage())
-		{
-			return true;
-		}
-
-		// the form doesn't have any errors, now check any nested form components
-		return anyFormComponentError();
-	}
-
-	/**
-	 * Mark each form component on this form invalid.
-	 */
-	protected final void markFormComponentsInvalid()
-	{
-		// call invalidate methods of all nested form components
-		visitFormComponents(new FormComponent.IVisitor()
-		{
-			public void formComponent(final FormComponent formComponent)
-			{
-				if(formComponent.isVisibleInHierarchy())
-				{
-					formComponent.invalid();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Gets the button which submitted this form.
-	 * @return The button which submitted this form or null if the processing was not trigger
-	 * 		by a registered button component
-	 */
-	protected final Button findSubmittingButton()
-	{
-		return (Button)visitChildren(Button.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Get button
-				final Button button = (Button)component;
-
-				// Check for button-name or button-name.x request string
-				if (!Strings.isEmpty(button.getInput())
-						|| !Strings.isEmpty(getRequest().getParameter(button.getPath() + ".x")))
-				{
-					return button;
-				}
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-	}
-
-	/**
 	 * Find out whether there is any registered error for a form component.
+	 * 
 	 * @return whether there is any registered error for a form component
 	 */
 	private boolean anyFormComponentError()
@@ -654,9 +702,10 @@ public class Form extends WebMarkupContainer
 			{
 				public void formComponent(final FormComponent formComponent)
 				{
-					if(formComponent.isVisibleInHierarchy())
+					if (formComponent.isVisibleInHierarchy())
 					{
-						// If peristence is switched on for that FormComponent ...
+						// If peristence is switched on for that FormComponent
+						// ...
 						if (formComponent.isPersistent())
 						{
 							// Save component's data (e.g. in a cookie)
