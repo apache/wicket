@@ -69,6 +69,14 @@ public class WebSession extends Session
 	{
 		return httpSession;
 	}
+	
+	/**
+	 * @return Session id for this web session
+	 */
+	public String getId()
+	{
+		return httpSession.getId();
+	}
 
 	/**
 	 * Invalidates this session immediately. Calling this method will remove all
