@@ -341,6 +341,14 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		onInvalid();
 	}
+	
+	/**
+	 * @return True if this component encodes data in a multipart form submit
+	 */
+	public boolean isMultiPart()
+	{
+		return false;
+	}
 
 	/**
 	 * @return True if this component supports persistence AND it has been asked
