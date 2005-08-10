@@ -8,7 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
-      <action type="update" issue="1255297" dev="Jonathan Locke"></action>
+      <action type="update" issue="1255297" dev="Jonathan Locke">Added automatic multiPart support to Form.  You can still call Form.setMultiPart() if you want to, but it is no longer necessary.</action>
       <action type="add" dev="Jonathan Locke">Added WebSession.getId() and WebRequestCycle.getWebSession()</action>
       <action type="add" dev="Eelco Hillenius" issue="1250030" due-to="Igor Vaynberg">added AbstractReadOnlyModel</action>
 	  <action type="update" dev="Eelco Hillenius" issue="1249929" due-to="Igor Vaynberg">allow protected access to AttributeModifier's replacement model</action>
