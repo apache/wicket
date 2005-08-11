@@ -23,10 +23,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.Application;
-import wicket.RequestCycle;
+import wicket.Resource;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.WebApplication;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
 
@@ -58,9 +57,49 @@ public class PackageResource extends WebResource
 	/** The resource's style */
 	final String style;
 
-	/** the application to use for getting the resource stream */
-	private transient Application application;
+	/**
+	 * Binds a the resource to the given application object
+	 * Will create the resource if not already in the shared resources of the application object.
+	 * 
+	 * @param application
+	 * 			The application to bind to.
+	 * @param scope
+	 * 			The scope of the resource.
+	 * @param name
+	 * 			The name of the resource.
+	 * @param locale
+	 * 			The locale of the resource.
+	 * @param style
+	 * 			The style of the resource.
+	 */
+	public static void bind(Application application, Class scope, String name, Locale locale, String style)
+	{
+		Resource resource = application.getSharedResources().get(scope, name, locale, style);
+		// Not available yet?
+		if (resource == null)
+		{
+			// Share through application
+			resource = get(scope.getPackage(), name, locale, style);
+			application.getSharedResources().add(scope, name, locale, style, resource);
+		}
+	}
 
+	/**
+	 * Binds a the resource to the given application object
+	 * Will create the resource if not already in the shared resources of the application object.
+	 * 
+	 * @param application
+	 * 			The application to bind to.
+	 * @param scope
+	 * 			The scope of the resource.
+	 * @param name
+	 * 			The name of the resource.
+	 */
+	public static void bind(Application application, Class scope, String name)
+	{
+		bind(application, scope, name, null, null);
+	}
+	
 	/**
 	 * Gets a non-localized resource for a given set of criteria. Only one resource
 	 * will be loaded for the same criteria.
@@ -107,8 +146,7 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Constructor
-	 * 
+	 * private constructor
 	 * @param basePackage
 	 *            The base package to search from
 	 * @param path
@@ -125,7 +163,6 @@ public class PackageResource extends WebResource
 		this.absolutePath = Packages.absolutePath(basePackage, path);
 		this.locale = locale;
 		this.style = style;
-		this.application = RequestCycle.get().getApplication();
 	}
 
 	/**
@@ -136,7 +173,7 @@ public class PackageResource extends WebResource
 		if (resourceStream == null)
 		{
 			// Locate resource
-			this.resourceStream = application.getResourceStreamLocator().locate(
+			this.resourceStream = Application.get().getResourceStreamLocator().locate(
 					absolutePath, style, locale, null);
 
 			// Check that resource was found
@@ -147,14 +184,5 @@ public class PackageResource extends WebResource
 			}
 		}
 		return resourceStream;
-	}
-
-	/**
-	 * set the application object on this resource.
-	 * @param webApplication
-	 */
-	public void setApplication(WebApplication webApplication)
-	{
-		this.application = webApplication;
 	}
 }
