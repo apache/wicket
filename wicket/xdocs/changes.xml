@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
+      <action type="update" issue="1255293" dev="Juergen Donnerstag" due-to="Gili Tzabari">HtmlHeaderContainer to supports markup inheritance.</action>
       <action type="add" dev="Jonathan Locke">
 		Changed StaticResourceReference and StaticResource to PackageResourceReference and 
 		PackageResource, then added an Application parameter to each to make that explicit.  
