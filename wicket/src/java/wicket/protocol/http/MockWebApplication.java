@@ -22,6 +22,7 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.Page;
 import wicket.util.file.IResourceFinder;
@@ -101,6 +102,7 @@ public class MockWebApplication extends WebApplication
      */
     public MockWebApplication(final String path)
     {
+        Application.set(this);
         context = new MockServletContext(this, path);
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
