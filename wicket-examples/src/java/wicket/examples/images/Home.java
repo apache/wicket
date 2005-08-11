@@ -23,7 +23,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import wicket.Application;
-import wicket.IComponentInitializer;
+import wicket.IInitializer;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
@@ -122,22 +122,5 @@ public final class Home extends WicketExamplePage
 		// Draw circle with thick stroke width
 		graphics.setStroke(new BasicStroke(5));
 		graphics.drawOval(x, y, dx, dy);
-	}
-
-	/**
-	 * Initializes resources for this page when the application starts
-	 * 
-	 * @author Jonathan Locke
-	 */
-	public static class Initializer implements IComponentInitializer
-	{
-		/**
-		 * @see wicket.IComponentInitializer#init(wicket.Application)
-		 */
-		public void init(Application application)
-		{
-			application.getSharedResources().add("cancelButton",
-					new DefaultButtonImageResource("Cancel"));
-		}
 	}
 }
