@@ -9,6 +9,20 @@
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
       <action type="update" dev="Jonathan Locke">
+	  Refactored intializer code.  Now wicket.properties is checked for each jar or
+	  root folder on the classpath.  If it contains either initializer=[class]
+	  or [app-name]-initializer=[class], that class is instantiated and the 
+	  IInitializer.init(Application) method is called on the resulting object.
+	  So, both libraries and applications can easily initialize their resources now.
+	  For example, the core wicket.properties file contains just this:
+	  "initializer=wicket.Initializer", which invokes the wicket.Initializer class
+	  with the application being loaded.  The wicket.Initializer.init() method
+	  will contain a sequence of initializations.  For example, 
+	  "new TreeComponentInitializer().init(application)".  This is a much better
+	  and safer and more Java way of initializing components for a library like core.
+	  Updated the images example to show how this is done.
+      </action>
+      <action type="update" dev="Jonathan Locke">
       Changed structure of process() back to its original no-parameter form and introduced
       a nice, logical return value in onFormSubmitted to determined whether to call delegateSubmit().
       </action>
