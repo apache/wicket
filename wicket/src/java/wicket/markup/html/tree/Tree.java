@@ -64,32 +64,19 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	/** Name of the node image component; value = 'nodeImage'. */
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
-	/**
-	 * Gets a new image reference.
-	 * @return image reference
-	 */
-	private final ResourceReference newImageBlank()
-	{
-		return new PackageResourceReference(Application.get(), Tree.class, "blank.gif");
-	}
-
 	/** Blank image. */
-	private final ResourceReference BLANK =
-		new PackageResourceReference(Application.get(), Tree.class, "blank.gif");
+	private static final ResourceReference BLANK = new PackageResourceReference(Tree.class, "blank.gif");
 
 	/** Minus sign image. */
-	private final ResourceReference MINUS =
-		new PackageResourceReference(Application.get(), Tree.class, "minus.gif");
+	private static final ResourceReference MINUS = new PackageResourceReference(Tree.class, "minus.gif");
 
 	/** Plus sign image. */
-	private final ResourceReference PLUS =
-		new PackageResourceReference(Application.get(), Tree.class, "plus.gif");
+	private static final ResourceReference PLUS = new PackageResourceReference(Tree.class, "plus.gif");
 
 	/**
 	 * Reference to the css file.
 	 */
-	private static final PackageResourceReference CSS =
-		new PackageResourceReference(Application.get(), Tree.class, "tree.css");
+	private static final PackageResourceReference CSS = new PackageResourceReference(Tree.class, "tree.css");
 
 	/**
 	 * If true, re-rendering the tree is more efficient if the tree model doesn't get
