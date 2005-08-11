@@ -142,7 +142,7 @@ public class PackageResource extends WebResource
 			// Check that resource was found
 			if (this.resourceStream == null)
 			{
-				throw new WicketRuntimeException("Unable to find static resource [path = "
+				throw new WicketRuntimeException("Unable to find package resource [path = "
 						+ absolutePath + ", style = " + style + ", locale = " + locale + "]");
 			}
 		}
