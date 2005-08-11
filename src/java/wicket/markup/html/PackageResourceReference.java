@@ -21,7 +21,6 @@ package wicket.markup.html;
 import wicket.Application;
 import wicket.Resource;
 import wicket.ResourceReference;
-import wicket.Session;
 
 /**
  * A convenience class for creating resource references to static resources.
@@ -42,7 +41,7 @@ public class PackageResourceReference extends ResourceReference
 	public PackageResourceReference(Application application, Class scope, String name)
 	{
 		super(scope, name);
-		bind(Session.get().getApplication());
+		bind(application);
 	}
 
 	/**
@@ -55,7 +54,7 @@ public class PackageResourceReference extends ResourceReference
 	public PackageResourceReference(Application application, String name)
 	{
 		super(name);
-		bind(Session.get().getApplication());
+		bind(application);
 	}
 	
 	/**
