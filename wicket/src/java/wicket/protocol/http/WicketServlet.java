@@ -29,11 +29,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.PackageResource;
 import wicket.response.BufferedResponse;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
@@ -186,6 +186,7 @@ public class WicketServlet extends HttpServlet
 
 		try
 		{
+			Application.set(webApplication);
 			// create a new request cycle
 			RequestCycle cycle = session.newRequestCycle(request, response);
 
@@ -196,6 +197,7 @@ public class WicketServlet extends HttpServlet
 		{
 			// Close response
 			response.close();
+			Application.set(null);
 		}
 	}
 
@@ -234,9 +236,17 @@ public class WicketServlet extends HttpServlet
 		log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
 				+ factory.getClass().getName() + " factory");
 
-		// Call init method of web application
-		this.webApplication.internalInit();
-		this.webApplication.init();
+		try
+		{
+			Application.set(webApplication);
+			// Call init method of web application
+			this.webApplication.internalInit();
+			this.webApplication.init();
+		} 
+		finally
+		{
+			Application.set(null);
+		}
 	}
 
 	/**
@@ -314,35 +324,29 @@ public class WicketServlet extends HttpServlet
 			// Try to find shared resource
 			final Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
 			
-			// If resource found
-			if (resource != null)
+			// If resource found and it is cacheable
+			if (resource != null && resource.isCacheable())
 			{
-				// Set parameters from servlet request
-				resource.setParameters(new WebRequest(servletRequest).getParameterMap());
-				
-				// Bind resource to application if static
-				if (resource instanceof PackageResource)
+				try
 				{
-					((PackageResource)resource).setApplication(webApplication);
-				}
-
-				// If resource is not cacheable, there's no point in getting the
-				// last modified time!
-				if (!resource.isCacheable())
-				{
-					return -1;
-				}
-				else
-				{
+					Application.set(webApplication);
+					// Set parameters from servlet request
+					resource.setParameters(new WebRequest(servletRequest).getParameterMap());
+					
+	
 					// Get resource stream
 					IResourceStream stream = resource.getResourceStream();
-
+	
 					// First ask the length so the content is created/accessed
 					stream.length();
-
+	
 					// Get last modified time from stream
 					Time time = stream.lastModifiedTime();
 					return time != null ? time.getMilliseconds() : -1;
+				}
+				finally
+				{
+					Application.set(null);
 				}
 			}
 		}

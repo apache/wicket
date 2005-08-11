@@ -153,10 +153,11 @@ public class ResourceReference implements Serializable
 	 */
 	public final String getPath()
 	{
-		bind(RequestCycle.get().getApplication());
+		Application application = Application.get();
+		bind(application);
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("resources/");
-		buffer.append(SharedResources.path(RequestCycle.get().getApplication(), scope, name, locale, style));
+		buffer.append(SharedResources.path(application, scope, name, locale, style));
 		return buffer.toString();
 	}
 
