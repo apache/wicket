@@ -28,7 +28,7 @@ import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.StaticResource;
+import wicket.markup.html.PackageResource;
 import wicket.markup.html.WebResource;
 import wicket.util.lang.Objects;
 import wicket.util.parse.metapattern.Group;
@@ -317,7 +317,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			 */
 			protected Resource newResource()
 			{
-				return StaticResource.get(getScope().getPackage(), getName(), locale, style);
+				return PackageResource.get(getScope().getPackage(), getName(), locale, style);
 			}
 		};
 		resourceReference.setLocale(locale);

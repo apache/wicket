@@ -181,6 +181,7 @@ public abstract class WebApplication extends Application
 	 */
 	protected final void internalInit()
 	{
+		super.internalInit();
 		final WicketServlet servlet = getWicketServlet();
 		final String configuration = wicketServlet.getInitParameter("configuration");
 		if (configuration != null)
