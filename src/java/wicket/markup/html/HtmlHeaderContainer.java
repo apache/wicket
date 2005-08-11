@@ -18,6 +18,7 @@
 package wicket.markup.html;
 
 import wicket.MarkupContainer;
+import wicket.MarkupInheritanceContainer;
 import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -107,6 +108,12 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			// now include the header sections of all components in the component
 			// hierarchie.
 			MarkupContainer parent = getParent();
+			while (parent instanceof MarkupInheritanceContainer)
+			{
+			    // Get the real component
+			    parent = parent.getParent();
+			}
+			
 			if (parent instanceof IHeaderRenderer)
 			{
 				((IHeaderRenderer)parent).renderHeadSections(this);
