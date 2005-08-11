@@ -229,7 +229,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 			else
 			{
 				// process the form for this request
-				process(submittingButton);
+				if (process())
+				{
+					// let clients handle further processing
+					delegateSubmit(submittingButton);
+				}
 			}
 		}
 	}
@@ -516,11 +520,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 	 * <p>
 	 * See the class documentation for further details on the form processing
 	 * </p>
-	 * 
-	 * @param submittingButton
-	 *            The button that submitted this form
+	 * @return False if the form had an error
 	 */
-	protected void process(final Button submittingButton)
+	protected boolean process()
 	{
 		// Execute validation now before anything else
 		validate();
@@ -533,6 +535,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 
 			// let subclass handle error
 			onError();
+			
+			// Form has an error
+			return false;
 		}
 		else
 		{
@@ -544,9 +549,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 
 			// Persist FormComponents if requested
 			persistFormComponentData();
-
-			// let clients handle further processing
-			delegateSubmit(submittingButton);
+			
+			// Form has no error
+			return true;
 		}
 	}
 

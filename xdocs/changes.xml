@@ -8,6 +8,10 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
+      <action type="update" dev="Jonathan Locke">
+      Changed structure of process() back to its original no-parameter form and introduced
+      a nice, logical return value in onFormSubmitted to determined whether to call delegateSubmit().
+      </action>
       <action type="update" issue="1255293" dev="Juergen Donnerstag" due-to="Gili Tzabari">HtmlHeaderContainer to supports markup inheritance.</action>
       <action type="add" dev="Jonathan Locke">
 		Changed StaticResourceReference and StaticResource to PackageResourceReference and 
