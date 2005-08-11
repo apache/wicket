@@ -20,9 +20,7 @@ package wicket.extensions.markup.html.datepicker;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -42,78 +40,6 @@ public class DatePickerSettings implements Serializable
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(DatePickerSettings.class);
-
-	private static String LANGUAGE_AF = "lang/calendar-af.js";
-	private static String LANGUAGE_AL = "lang/calendar-al.js";
-	private static String LANGUAGE_BR = "lang/calendar-br.js";
-	private static String LANGUAGE_CS = "lang/calendar-cs-utf8.js";
-	private static String LANGUAGE_DA = "lang/calendar-da.js";
-	private static String LANGUAGE_DE = "lang/calendar-de.js";
-	private static String LANGUAGE_EL = "lang/calendar-el-utf8.js";
-	private static String LANGUAGE_EN = "lang/calendar-en.js";
-	private static String LANGUAGE_ES = "lang/calendar-es.js";
-	private static String LANGUAGE_EU = "lang/calendar-eu.js";
-	private static String LANGUAGE_FI = "lang/calendar-fi.js";
-	private static String LANGUAGE_FR = "lang/calendar-fr.js";
-	private static String LANGUAGE_HE = "lang/calendar-he-utf8.js";
-	private static String LANGUAGE_HR = "lang/calendar-hr-utf8.js";
-	private static String LANGUAGE_HU = "lang/calendar-hu.js";
-	private static String LANGUAGE_IT = "lang/calendar-it-utf8.js";
-	private static String LANGUAGE_KO = "lang/calendar-ko-utf8.js";
-	private static String LANGUAGE_LT = "lang/calendar-lt-utf8.js";
-	private static String LANGUAGE_LV = "lang/calendar-lv.js";
-	private static String LANGUAGE_NL = "lang/calendar-nl.js";
-	private static String LANGUAGE_NO = "lang/calendar-no.js";
-	private static String LANGUAGE_PL = "lang/calendar-pl-utf8.js";
-	private static String LANGUAGE_PT = "lang/calendar-pt.js";
-	private static String LANGUAGE_RO = "lang/calendar-ro-utf8.js";
-	private static String LANGUAGE_RU = "lang/calendar-ru-utf8.js";
-	private static String LANGUAGE_SI = "lang/calendar-si-utf8.js";
-	private static String LANGUAGE_SK = "lang/calendar-sk-utf8.js";
-	private static String LANGUAGE_SR = "lang/calendar-sr-utf8.js";
-	private static String LANGUAGE_SV = "lang/calendar-sv-utf8-utf8.js";
-	private static String LANGUAGE_TR = "lang/calendar-tr.js";
-	private static String LANGUAGE_ZH = "lang/calendar-zh-utf8.js";
-
-	/** locale to language map. */
-	private static final Map localeToLanguageReference = new HashMap();
-
-	static
-	{
-		// fill our default map. Note that new Locale("en", "", "").getLanguage() is to avoid
-		// future breaks because of the instable standard (read about this in Locale.getLanguage()
-		localeToLanguageReference.put(new Locale("af", "", "").getLanguage(), LANGUAGE_AF);
-		localeToLanguageReference.put(new Locale("al", "", "").getLanguage(), LANGUAGE_AL);
-		localeToLanguageReference.put(new Locale("br", "", "").getLanguage(), LANGUAGE_BR);
-		localeToLanguageReference.put(new Locale("cs", "", "").getLanguage(), LANGUAGE_CS);
-		localeToLanguageReference.put(new Locale("da", "", "").getLanguage(), LANGUAGE_DA);
-		localeToLanguageReference.put(new Locale("de", "", "").getLanguage(), LANGUAGE_DE);
-		localeToLanguageReference.put(new Locale("el", "", "").getLanguage(), LANGUAGE_EL);
-		localeToLanguageReference.put(new Locale("en", "", "").getLanguage(), LANGUAGE_EN);
-		localeToLanguageReference.put(new Locale("es", "", "").getLanguage(), LANGUAGE_ES);
-		localeToLanguageReference.put(new Locale("eu", "", "").getLanguage(), LANGUAGE_EU);
-		localeToLanguageReference.put(new Locale("fi", "", "").getLanguage(), LANGUAGE_FI);
-		localeToLanguageReference.put(new Locale("fr", "", "").getLanguage(), LANGUAGE_FR);
-		localeToLanguageReference.put(new Locale("he", "", "").getLanguage(), LANGUAGE_HE);
-		localeToLanguageReference.put(new Locale("hr", "", "").getLanguage(), LANGUAGE_HR);
-		localeToLanguageReference.put(new Locale("hu", "", "").getLanguage(), LANGUAGE_HU);
-		localeToLanguageReference.put(new Locale("it", "", "").getLanguage(), LANGUAGE_IT);
-		localeToLanguageReference.put(new Locale("ko", "", "").getLanguage(), LANGUAGE_KO);
-		localeToLanguageReference.put(new Locale("lt", "", "").getLanguage(), LANGUAGE_LT);
-		localeToLanguageReference.put(new Locale("lv", "", "").getLanguage(), LANGUAGE_LV);
-		localeToLanguageReference.put(new Locale("nl", "", "").getLanguage(), LANGUAGE_NL);
-		localeToLanguageReference.put(new Locale("no", "", "").getLanguage(), LANGUAGE_NO);
-		localeToLanguageReference.put(new Locale("pl", "", "").getLanguage(), LANGUAGE_PL);
-		localeToLanguageReference.put(new Locale("pt", "", "").getLanguage(), LANGUAGE_PT);
-		localeToLanguageReference.put(new Locale("ro", "", "").getLanguage(), LANGUAGE_RO);
-		localeToLanguageReference.put(new Locale("ru", "", "").getLanguage(), LANGUAGE_RU);
-		localeToLanguageReference.put(new Locale("si", "", "").getLanguage(), LANGUAGE_SI);
-		localeToLanguageReference.put(new Locale("sk", "", "").getLanguage(), LANGUAGE_SK);
-		localeToLanguageReference.put(new Locale("sr", "", "").getLanguage(), LANGUAGE_SR);
-		localeToLanguageReference.put(new Locale("sv", "", "").getLanguage(), LANGUAGE_SV);
-		localeToLanguageReference.put(new Locale("tr", "", "").getLanguage(), LANGUAGE_TR);
-		localeToLanguageReference.put(new Locale("zh", "", "").getLanguage(), LANGUAGE_ZH);
-	}
 
 	/** all date formats. */
 	private static Properties dateformats = new Properties();
@@ -244,9 +170,6 @@ public class DatePickerSettings implements Serializable
 	 */
 	public DatePickerSettings()
 	{
-		// register buttons
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/menuarrow.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/menuarrow2.gif");
 	}
 
 	/**
@@ -343,17 +266,6 @@ public class DatePickerSettings implements Serializable
 	 */
 	public final PackageResourceReference newStyleAqua()
 	{
-		// register dependencies
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/active-bg.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/dark-bg.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/hover-bg.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/menuarrow.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/normal-bg.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/rowhover-bg.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/status-bg.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/title-bg.gif");
-		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/today-bg.gif");
-
 		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/theme.css");
 	}
 
@@ -662,16 +574,7 @@ public class DatePickerSettings implements Serializable
 		{
 			return language;
 		}
-
-		// try to get the reference from our default mapping
-		String ref = (String)localeToLanguageReference.get(currentLocale.getLanguage());
-		if (ref != null)
-		{
-			return new PackageResourceReference(Application.get(), DatePickerSettings.class, ref);
-		}
-
-		// we didn't find a mapping; just return English
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class, LANGUAGE_EN);
+		return DatePickerComponentInitializer.getLanguage(currentLocale);
 	}
 
 	/**
