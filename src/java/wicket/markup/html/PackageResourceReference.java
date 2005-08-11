@@ -35,7 +35,7 @@ public class PackageResourceReference extends ResourceReference
 	 * that the resource will be created if it did not exist and added to 
 	 * the application shared resources.
 	 * 
-	 * Package resources should be added by a IComponentInitializer implementation
+	 * Package resources should be added by a IInitializer implementation
 	 * So that all needed packaged resources are there on startup of the application. 
 	 * 
 	 * @param application
@@ -58,7 +58,7 @@ public class PackageResourceReference extends ResourceReference
 	 * that the resource will be created if it did not exist and added to 
 	 * the application shared resources.
 	 * 
-	 * Package resources should be added by a IComponentInitializer implementation
+	 * Package resources should be added by a IInitializer implementation
 	 * So that all needed packaged resources are there on startup of the application. 
 	 *
 	 * The scope of this constructor will be the Application class itself.
@@ -80,7 +80,7 @@ public class PackageResourceReference extends ResourceReference
 	 * is already bindend to the current applicaiton. 
 	 * 
 	 * It will not bind a resource to the current application object, 
-	 * so the resource must be created by a IComponentInitializer implementation.
+	 * so the resource must be created by a IInitializer implementation.
 	 * So that it is already binded at startup. 
 	 *
 	 * @param scope

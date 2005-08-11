@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +42,6 @@ import wicket.util.convert.IConverterFactory;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCrypt;
 import wicket.util.lang.Classes;
-import wicket.util.resource.UrlResourceStream;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.string.Strings;
@@ -162,7 +162,7 @@ public abstract class Application
 
 	/** cached encryption/decryption object. */
 	private ICrypt crypt;
-	
+
 	private static ThreadLocal applicationObjects = new ThreadLocal();
 
 	/**
@@ -174,10 +174,12 @@ public abstract class Application
 	{
 		return (Application)applicationObjects.get();
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * @param application The current application or null for this thread
+	 * 
+	 * @param application
+	 *            The current application or null for this thread
 	 */
 	public static void set(Application application)
 	{
@@ -486,7 +488,7 @@ public abstract class Application
 	}
 
 	/**
-	 * Initializes wicket components 
+	 * Initializes wicket components
 	 */
 	private final void initializeComponents()
 	{
@@ -495,17 +497,12 @@ public abstract class Application
 		{
 			// Load components used by all applications
 			for (Enumeration e = getClass().getClassLoader().getResources(
-					"META-INF/wicket-component-initializers.txt"); e.hasMoreElements();)
+					"wicket.properties"); e.hasMoreElements();)
 			{
-				initializeComponents((URL)e.nextElement());
-			}
-
-			// Initialize components specific to this app
-			for (Enumeration e = getClass().getClassLoader().getResources(
-					"META-INF/" + getName() + "-wicket-component-initializers.txt"); e
-					.hasMoreElements();)
-			{
-				initializeComponents((URL)e.nextElement());
+				final URL url = (URL)e.nextElement();
+				final Properties properties = new Properties();
+				properties.load(url.openStream());
+				initializeComponents(properties);
 			}
 		}
 		catch (IOException e)
@@ -513,40 +510,47 @@ public abstract class Application
 			throw new WicketRuntimeException("Unable to load initializers file", e);
 		}
 	}
-	
+
 	/**
-	 * @param url
-	 *            URL of file with components to initialize
+	 * @param properties
+	 *            Properties table with names of any library initializers in it
 	 */
-	private void initializeComponents(final URL url)
+	private void initializeComponents(final Properties properties)
 	{
-		final String[] components = new UrlResourceStream(url).asString().split("[\n\r]+");
-		for (int i = 0; i < components.length; i++)
+		initialize(properties.getProperty("initializer"));
+		initialize(properties.getProperty(getName() + "-initializer"));
+	}
+
+	/**
+	 * Instantiate initializer with the given class name
+	 * 
+	 * @param className
+	 *            The name of the initializer class
+	 */
+	private void initialize(final String className)
+	{
+		if (!Strings.isEmpty(className))
 		{
-			final String className = components[i].trim();
-			if (!Strings.isEmpty(className))
+			try
 			{
-				try
-				{
-					Class c = Class.forName(className);
-					((IComponentInitializer)c.newInstance()).init(this);
-				}
-				catch (ClassCastException e)
-				{
-					throw new WicketRuntimeException("Unable to initialize " + className, e);
-				}
-				catch (ClassNotFoundException e)
-				{
-					throw new WicketRuntimeException("Unable to initialize " + className, e);
-				}
-				catch (InstantiationException e)
-				{
-					throw new WicketRuntimeException("Unable to initialize " + className, e);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new WicketRuntimeException("Unable to initialize " + className, e);
-				}
+				Class c = Class.forName(className);
+				((IInitializer)c.newInstance()).init(this);
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException("Unable to initialize " + className, e);
 			}
 		}
 	}

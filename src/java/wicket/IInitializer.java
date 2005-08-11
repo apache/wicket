@@ -18,11 +18,11 @@
 package wicket;
 
 /**
- * Initializes component on auto-loading
+ * Initializes library when it's loaded
  * 
  * @author Jonathan Locke
  */
-public interface IComponentInitializer
+public interface IInitializer
 {
 	/**
 	 * @param application
