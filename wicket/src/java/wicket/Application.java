@@ -162,6 +162,8 @@ public abstract class Application
 
 	/** cached encryption/decryption object. */
 	private ICrypt crypt;
+	
+	private static ThreadLocal applicationObjects = new ThreadLocal();
 
 	/**
 	 * Get application for current session.
@@ -170,7 +172,16 @@ public abstract class Application
 	 */
 	public static Application get()
 	{
-		return Session.get().getApplication();
+		return (Application)applicationObjects.get();
+	}
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * @param application The current application or null for this thread
+	 */
+	public static void set(Application application)
+	{
+		applicationObjects.set(application);
 	}
 
 	/**
@@ -519,6 +530,10 @@ public abstract class Application
 				{
 					Class c = Class.forName(className);
 					((IComponentInitializer)c.newInstance()).init(this);
+				}
+				catch (ClassCastException e)
+				{
+					throw new WicketRuntimeException("Unable to initialize " + className, e);
 				}
 				catch (ClassNotFoundException e)
 				{
