@@ -30,6 +30,14 @@ import wicket.ResourceReference;
 public class PackageResourceReference extends ResourceReference
 {
 	/**
+	 * Constuctor to get a resource reference to a packaged resource.
+	 * It will bind itself directly to the given application object, so
+	 * that the resource will be created if it did not exist and added to 
+	 * the application shared resources.
+	 * 
+	 * Package resources should be added by a IComponentInitializer implementation
+	 * So that all needed packaged resources are there on startup of the application. 
+	 * 
 	 * @param application
 	 *            The application to bind to
 	 * @param scope
@@ -45,6 +53,16 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
+	 * Constuctor to get a resource reference to a packaged resource.
+	 * It will bind itself directly to the given application object, so
+	 * that the resource will be created if it did not exist and added to 
+	 * the application shared resources.
+	 * 
+	 * Package resources should be added by a IComponentInitializer implementation
+	 * So that all needed packaged resources are there on startup of the application. 
+	 *
+	 * The scope of this constructor will be the Application class itself.
+	 * 
 	 * @param application
 	 *            The application to bind to
 	 * @param name
@@ -55,6 +73,25 @@ public class PackageResourceReference extends ResourceReference
 	{
 		super(name);
 		bind(application);
+	}
+
+	/**
+	 * Constuctor to get a resource reference to a packaged resource that
+	 * is already bindend to the current applicaiton. 
+	 * 
+	 * It will not bind a resource to the current application object, 
+	 * so the resource must be created by a IComponentInitializer implementation.
+	 * So that it is already binded at startup. 
+	 *
+	 * @param scope
+	 *            The scope of the binding
+	 * @param name
+	 *            The name of the resource
+	 * @see ResourceReference#ResourceReference(Class, String)
+	 */
+	public PackageResourceReference(Class scope, String name)
+	{
+		super(scope, name);
 	}
 	
 	/**
