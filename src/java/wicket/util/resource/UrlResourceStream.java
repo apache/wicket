@@ -28,7 +28,7 @@ import java.net.URLConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestCycle;
+import wicket.Application;
 import wicket.protocol.http.WebApplication;
 import wicket.util.time.Time;
 
@@ -161,11 +161,11 @@ public final class UrlResourceStream extends AbstractResourceStream
 	{
 		if(contentType == null || contentType.indexOf("unknown") != -1)
 		{
-			RequestCycle rc = RequestCycle.get();
-			if(rc != null && (rc.getApplication() instanceof WebApplication))
+			Application application = Application.get();
+			if(application instanceof WebApplication)
 			{
 				// TODO for non webapplication another method should be implemented (getMimeType on application?)
-				contentType = ((WebApplication)rc.getApplication()).getWicketServlet().getServletContext().getMimeType(url.getFile());
+				contentType = ((WebApplication)application).getWicketServlet().getServletContext().getMimeType(url.getFile());
 				if(contentType == null)
 				{
 					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());

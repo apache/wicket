@@ -483,7 +483,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 */
 	public final Application getApplication()
 	{
-		return getSession().getApplication();
+		return Application.get();
 	}
 
 	/**
