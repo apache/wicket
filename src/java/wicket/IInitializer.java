@@ -18,7 +18,7 @@
 package wicket;
 
 /**
- * Initializes library when it's loaded
+ * Initializes something when application loads
  * 
  * @author Jonathan Locke
  */
