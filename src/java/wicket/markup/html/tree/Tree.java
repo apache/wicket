@@ -27,7 +27,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
