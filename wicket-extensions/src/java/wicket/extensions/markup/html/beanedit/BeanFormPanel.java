@@ -166,7 +166,7 @@ public class BeanFormPanel extends Panel
 			};
 			cancel.add(new AttributeModifier("value", true, getLabelModelForCancelButton()));
 			cancel.add(new AttributeModifier("class", true, getCSSClassModelForCancelButton()));
-			cancel.setImmediate(true);
+			cancel.setDefaultFormProcessing(true);
 			add(cancel);
 
 			Button save = new Button("save")

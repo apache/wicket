@@ -18,6 +18,7 @@
  */
 package wicket.markup.html;
 
+import wicket.Application;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.Session;
@@ -27,25 +28,33 @@ import wicket.Session;
  * 
  * @author Jonathan Locke
  */
-public class StaticResourceReference extends ResourceReference
+public class PackageResourceReference extends ResourceReference
 {
 	/**
+	 * @param application
+	 *            The application to bind to
+	 * @param scope
+	 *            The scope of the binding
+	 * @param name
+	 *            The name of the resource
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
-	public StaticResourceReference(Class scope, String name)
+	public PackageResourceReference(Application application, Class scope, String name)
 	{
 		super(scope, name);
-		// TODO bind shouldn't happen here because this will kill the "static" nature.
 		bind(Session.get().getApplication());
 	}
 
 	/**
-	 * @see ResourceReference#ResourceReference(String)
+	 * @param application
+	 *            The application to bind to
+	 * @param name
+	 *            The name of the resource
+	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
-	public StaticResourceReference(String name)
+	public PackageResourceReference(Application application, String name)
 	{
 		super(name);
-		// TODO bind shouldn't happen here because this will kill the "static" nature.
 		bind(Session.get().getApplication());
 	}
 	
@@ -54,6 +63,6 @@ public class StaticResourceReference extends ResourceReference
 	 */
 	protected Resource newResource()
 	{
-		return StaticResource.get(getScope().getPackage(), getName(), getLocale(), getStyle());
+		return PackageResource.get(getScope().getPackage(), getName(), getLocale(), getStyle());
 	}
 }

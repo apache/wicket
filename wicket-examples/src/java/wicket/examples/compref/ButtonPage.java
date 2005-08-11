@@ -64,7 +64,7 @@ public class ButtonPage extends WicketExamplePage
 				info("button2.onSubmit executed");
 			}
 		};
-		button2.setImmediate(true);
+		button2.setDefaultFormProcessing(false);
 		form.add(button2);
 
 		add(form);

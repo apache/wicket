@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.43 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +17,10 @@
  */
 package wicket;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -38,8 +41,10 @@ import wicket.util.convert.IConverterFactory;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCrypt;
 import wicket.util.lang.Classes;
+import wicket.util.resource.UrlResourceStream;
 import wicket.util.resource.locator.DefaultResourceStreamLocator;
 import wicket.util.resource.locator.ResourceStreamLocator;
+import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
 
@@ -151,12 +156,22 @@ public abstract class Application
 
 	/** Settings for application. */
 	private ApplicationSettings settings;
-	
+
 	/** Shared resources for the application */
 	private final SharedResources sharedResources;
 
 	/** cached encryption/decryption object. */
 	private ICrypt crypt;
+
+	/**
+	 * Get application for current session.
+	 * 
+	 * @return The current application
+	 */
+	public static Application get()
+	{
+		return Session.get().getApplication();
+	}
 
 	/**
 	 * Constructor
@@ -171,7 +186,8 @@ public abstract class Application
 
 		// Construct localizer for this application
 		this.localizer = new Localizer(this);
-		
+
+		// Create shared resources repository
 		this.sharedResources = new SharedResources(this);
 
 		// Install default component resolvers
@@ -335,16 +351,18 @@ public abstract class Application
 		}
 		return settings;
 	}
-	
+
 	/**
-	 * Subclasses could override this to give there own implementation of ApplicaitonSettings
+	 * Subclasses could override this to give there own implementation of
+	 * ApplicaitonSettings
+	 * 
 	 * @return An instanceof an ApplicaitonSettings class.
 	 */
 	public ApplicationSettings createApplicationSettings()
 	{
 		return new ApplicationSettings(this);
 	}
-	
+
 	/**
 	 * @return Returns the sharedResources.
 	 */
@@ -354,10 +372,10 @@ public abstract class Application
 	}
 
 	/**
-	 * Factory method that creates an instance of de-/encryption class.
-	 * NOTE: this implementation caches the crypt instance, so it has
-	 * to be Threadsafe. If you want other behaviour, or want to provide
-	 * a custom crypt class, you should override this method.
+	 * Factory method that creates an instance of de-/encryption class. NOTE:
+	 * this implementation caches the crypt instance, so it has to be
+	 * Threadsafe. If you want other behaviour, or want to provide a custom
+	 * crypt class, you should override this method.
 	 * 
 	 * @return Instance of de-/encryption class
 	 */
@@ -406,14 +424,15 @@ public abstract class Application
 	/**
 	 * Factory method that creates a markup parser.
 	 * 
-	 * @param container The wicket container requesting the markup
+	 * @param container
+	 *            The wicket container requesting the markup
 	 * @return A new MarkupParser
 	 */
 	public MarkupParser newMarkupParser(final MarkupContainer container)
 	{
-		final MarkupParser parser = new MarkupParser(container, 
-		        new XmlPullParser(getSettings().getDefaultMarkupEncoding()));
-		
+		final MarkupParser parser = new MarkupParser(container, new XmlPullParser(getSettings()
+				.getDefaultMarkupEncoding()));
+
 		parser.configure(getSettings());
 		return parser;
 	}
@@ -438,6 +457,11 @@ public abstract class Application
 	 */
 	protected void internalInit()
 	{
+		// We initialize components here rather than in the constructor because
+		// the Application constructor is run before the Application subclass'
+		// constructor and that subclass constructor may add class aliases that
+		// would be used in installing resources in the component.
+		initializeComponents();
 	}
 
 	/**
@@ -450,4 +474,65 @@ public abstract class Application
 		this.resourceStreamLocator = null;
 	}
 
+	/**
+	 * Initializes wicket components 
+	 */
+	private final void initializeComponents()
+	{
+		// Load any wicket components we can find
+		try
+		{
+			// Load components used by all applications
+			for (Enumeration e = getClass().getClassLoader().getResources(
+					"META-INF/wicket-component-initializers.txt"); e.hasMoreElements();)
+			{
+				initializeComponents((URL)e.nextElement());
+			}
+
+			// Initialize components specific to this app
+			for (Enumeration e = getClass().getClassLoader().getResources(
+					"META-INF/" + getName() + "-wicket-component-initializers.txt"); e
+					.hasMoreElements();)
+			{
+				initializeComponents((URL)e.nextElement());
+			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Unable to load initializers file", e);
+		}
+	}
+	
+	/**
+	 * @param url
+	 *            URL of file with components to initialize
+	 */
+	private void initializeComponents(final URL url)
+	{
+		final String[] components = new UrlResourceStream(url).asString().split("[\n\r]+");
+		for (int i = 0; i < components.length; i++)
+		{
+			final String className = components[i].trim();
+			if (!Strings.isEmpty(className))
+			{
+				try
+				{
+					Class c = Class.forName(className);
+					((IComponentInitializer)c.newInstance()).init(this);
+				}
+				catch (ClassNotFoundException e)
+				{
+					throw new WicketRuntimeException("Unable to initialize " + className, e);
+				}
+				catch (InstantiationException e)
+				{
+					throw new WicketRuntimeException("Unable to initialize " + className, e);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new WicketRuntimeException("Unable to initialize " + className, e);
+				}
+			}
+		}
+	}
 }

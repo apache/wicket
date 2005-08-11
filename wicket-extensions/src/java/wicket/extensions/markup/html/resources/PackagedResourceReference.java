@@ -18,11 +18,12 @@
  */
 package wicket.extensions.markup.html.resources;
 
+import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.StaticResourceReference;
+import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -93,7 +94,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 				}
 				String f = (String)component.getConverter().convert(
 							file.getObject(component), String.class);	
-				StaticResourceReference ref = new StaticResourceReference(referer, f);
+				PackageResourceReference ref = new PackageResourceReference(Application.get(), referer, f);
 				String url = getPage().urlFor(ref.getPath());
 				return url;
 			};

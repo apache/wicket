@@ -27,10 +27,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
-import wicket.markup.html.StaticResourceReference;
+import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
@@ -69,26 +70,26 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private final ResourceReference newImageBlank()
 	{
-		return new StaticResourceReference(Tree.class, "blank.gif");
+		return new PackageResourceReference(Application.get(), Tree.class, "blank.gif");
 	}
 
 	/** Blank image. */
 	private final ResourceReference BLANK =
-		new StaticResourceReference(Tree.class, "blank.gif");
+		new PackageResourceReference(Application.get(), Tree.class, "blank.gif");
 
 	/** Minus sign image. */
 	private final ResourceReference MINUS =
-		new StaticResourceReference(Tree.class, "minus.gif");
+		new PackageResourceReference(Application.get(), Tree.class, "minus.gif");
 
 	/** Plus sign image. */
 	private final ResourceReference PLUS =
-		new StaticResourceReference(Tree.class, "plus.gif");
+		new PackageResourceReference(Application.get(), Tree.class, "plus.gif");
 
 	/**
 	 * Reference to the css file.
 	 */
-	private static final StaticResourceReference CSS =
-		new StaticResourceReference(Tree.class, "tree.css");
+	private static final PackageResourceReference CSS =
+		new PackageResourceReference(Application.get(), Tree.class, "tree.css");
 
 	/**
 	 * If true, re-rendering the tree is more efficient if the tree model doesn't get

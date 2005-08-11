@@ -33,7 +33,7 @@ import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.StaticResource;
+import wicket.markup.html.PackageResource;
 import wicket.response.BufferedResponse;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
@@ -321,9 +321,9 @@ public class WicketServlet extends HttpServlet
 				resource.setParameters(new WebRequest(servletRequest).getParameterMap());
 				
 				// Bind resource to application if static
-				if (resource instanceof StaticResource)
+				if (resource instanceof PackageResource)
 				{
-					((StaticResource)resource).setApplication(webApplication);
+					((PackageResource)resource).setApplication(webApplication);
 				}
 
 				// If resource is not cacheable, there's no point in getting the

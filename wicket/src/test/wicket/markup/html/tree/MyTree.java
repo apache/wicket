@@ -25,10 +25,10 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.ResourceReference;
-import wicket.markup.html.StaticResourceReference;
+import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.tree.Tree;
 
 /**
  * tree implementation.
@@ -37,9 +37,9 @@ import wicket.markup.html.tree.Tree;
  */
 public class MyTree extends Tree
 {
-	private static final ResourceReference folderOpen = new StaticResourceReference(MyTree.class, "folderopen.gif");
-	private static final ResourceReference folder = new StaticResourceReference(MyTree.class, "folder.gif");
-	private static final ResourceReference nodeImage = new StaticResourceReference(MyTree.class, "node.gif");
+	private static final ResourceReference folderOpen = new PackageResourceReference(Application.get(), MyTree.class, "folderopen.gif");
+	private static final ResourceReference folder = new PackageResourceReference(Application.get(), MyTree.class, "folder.gif");
+	private static final ResourceReference nodeImage = new PackageResourceReference(Application.get(), MyTree.class, "node.gif");
 	
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);

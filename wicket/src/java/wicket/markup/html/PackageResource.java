@@ -35,8 +35,8 @@ import wicket.util.resource.IResourceStream;
  * <p>
  * Use like eg:
  * <pre>
- * private static final StaticResource IMG_UNKNOWN =
- * 		StaticResource.get(EditPage.class.getPackage(), "questionmark.gif");
+ * private static final PackageResource IMG_UNKNOWN =
+ * 		PackageResource.get(EditPage.class.getPackage(), "questionmark.gif");
  * </pre>
  * where the static resource references image 'questionmark.gif' from the
  * the package that EditPage is in. 
@@ -44,7 +44,7 @@ import wicket.util.resource.IResourceStream;
  * 
  * @author Jonathan Locke
  */
-public class StaticResource extends WebResource
+public class PackageResource extends WebResource
 {
 	/** Map from key to resource */
 	private static Map resourceMap = new HashMap();
@@ -71,7 +71,7 @@ public class StaticResource extends WebResource
 	 *            The path to the resource
 	 * @return The resource
 	 */
-	public static StaticResource get(final Package basePackage, final String path)
+	public static PackageResource get(final Package basePackage, final String path)
 	{
 		return get(basePackage, path, null, null);
 	}
@@ -90,16 +90,16 @@ public class StaticResource extends WebResource
 	 *            The style of the resource (see {@link wicket.Session})
 	 * @return The resource
 	 */
-	public static StaticResource get(final Package basePackage, final String path,
+	public static PackageResource get(final Package basePackage, final String path,
 			final Locale locale, final String style)
 	{
 		final String key = basePackage.getName() + '/' + SharedResources.path(path, locale, style);
 		synchronized (resourceMap)
 		{
-			StaticResource resource = (StaticResource)resourceMap.get(key);
+			PackageResource resource = (PackageResource)resourceMap.get(key);
 			if (resource == null)
 			{
-				resource = new StaticResource(basePackage, path, locale, style);
+				resource = new PackageResource(basePackage, path, locale, style);
 				resourceMap.put(key, resource);
 			}
 			return resource;
@@ -118,7 +118,7 @@ public class StaticResource extends WebResource
 	 * @param style
 	 *            The style of the resource
 	 */
-	private StaticResource(final Package basePackage, final String path, final Locale locale,
+	private PackageResource(final Package basePackage, final String path, final Locale locale,
 			final String style)
 	{
 		// Convert resource path to absolute path relative to base package

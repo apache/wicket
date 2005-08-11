@@ -28,8 +28,9 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.ResourceReference;
-import wicket.markup.html.StaticResourceReference;
+import wicket.markup.html.PackageResourceReference;
 
 /**
  * The settings of the date picker component. Use this to customize the datepicker
@@ -244,8 +245,8 @@ public class DatePickerSettings implements Serializable
 	public DatePickerSettings()
 	{
 		// register buttons
-		new StaticResourceReference(DatePickerSettings.class, "style/menuarrow.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/menuarrow2.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/menuarrow.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/menuarrow2.gif");
 	}
 
 	/**
@@ -313,146 +314,146 @@ public class DatePickerSettings implements Serializable
 	 * create a button icon.
 	 * @return a button icon.
 	 */
-	public final StaticResourceReference newButtonIconRed()
+	public final PackageResourceReference newButtonIconRed()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "calendar_icon_1.jpg");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_1.jpg");
 	}
 
 	/**
 	 * create a button icon.
 	 * @return a button icon.
 	 */
-	public final StaticResourceReference newButtonIconPlain()
+	public final PackageResourceReference newButtonIconPlain()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "calendar_icon_2.jpg");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_2.jpg");
 	}
 
 	/**
 	 * create a button icon.
 	 * @return a button icon.
 	 */
-	public final StaticResourceReference newButtonIconBlue()
+	public final PackageResourceReference newButtonIconBlue()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "calendar_icon_3.jpg");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "calendar_icon_3.jpg");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleAqua()
+	public final PackageResourceReference newStyleAqua()
 	{
 		// register dependencies
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/active-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/dark-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/hover-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/menuarrow.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/normal-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/rowhover-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/status-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/title-bg.gif");
-		new StaticResourceReference(DatePickerSettings.class, "style/aqua/today-bg.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/active-bg.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/dark-bg.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/hover-bg.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/menuarrow.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/normal-bg.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/rowhover-bg.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/status-bg.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/title-bg.gif");
+		new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/today-bg.gif");
 
-		return new StaticResourceReference(DatePickerSettings.class, "style/aqua/theme.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/theme.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleWinter()
+	public final PackageResourceReference newStyleWinter()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-blue.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-blue.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleBlue()
+	public final PackageResourceReference newStyleBlue()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-blue2.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-blue2.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleSummer()
+	public final PackageResourceReference newStyleSummer()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-brown.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-brown.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleGreen()
+	public final PackageResourceReference newStyleGreen()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-green.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-green.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleSystem()
+	public final PackageResourceReference newStyleSystem()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-system.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-system.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleTas()
+	public final PackageResourceReference newStyleTas()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-tas.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-tas.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleWin2k()
+	public final PackageResourceReference newStyleWin2k()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-win2k.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleWin2k1()
+	public final PackageResourceReference newStyleWin2k1()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-1.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-win2k-1.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleWin2k2()
+	public final PackageResourceReference newStyleWin2k2()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/aqua/theme.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/aqua/theme.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleWin2kCold1()
+	public final PackageResourceReference newStyleWin2kCold1()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
 	}
 
 	/**
 	 * Create a style
 	 * @return a style
 	 */
-	public final StaticResourceReference newStyleWin2kCold2()
+	public final PackageResourceReference newStyleWin2kCold2()
 	{
-		return new StaticResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
 	}
 
 	/**
@@ -666,11 +667,11 @@ public class DatePickerSettings implements Serializable
 		String ref = (String)localeToLanguageReference.get(currentLocale.getLanguage());
 		if (ref != null)
 		{
-			return new StaticResourceReference(DatePickerSettings.class, ref);
+			return new PackageResourceReference(Application.get(), DatePickerSettings.class, ref);
 		}
 
 		// we didn't find a mapping; just return English
-		return new StaticResourceReference(DatePickerSettings.class, LANGUAGE_EN);
+		return new PackageResourceReference(Application.get(), DatePickerSettings.class, LANGUAGE_EN);
 	}
 
 	/**
