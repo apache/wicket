@@ -70,11 +70,12 @@ import wicket.util.string.Strings;
  * /[Application]?bookmarkablePage=[classname]&[param]=[value] [...]
  * </ul>
  * <p>
- * Bookmarkable pages must either implement a constructor that takes a PageParameters
- * argument or a default constructor. If a Page has both constructors the constuctor with
- * the PageParameters argument will be used. Links to bookmarkable pages are created by
- * calling the urlFor(Class, PageParameters) method, where Class is the page class and
- * PageParameters are the parameters to encode into the URL.
+ * Bookmarkable pages must either implement a constructor that takes a
+ * PageParameters argument or a default constructor. If a Page has both
+ * constructors the constuctor with the PageParameters argument will be used.
+ * Links to bookmarkable pages are created by calling the urlFor(Class,
+ * PageParameters) method, where Class is the page class and PageParameters are
+ * the parameters to encode into the URL.
  * <p>
  * </td>
  * </tr>
@@ -170,7 +171,7 @@ public abstract class RequestCycle
 
 	/** Map from request interface Class to Method. */
 	private static final Map listenerRequestInterfaceMethods = new HashMap();
-	
+
 	/** Log */
 	private static final Log log = LogFactory.getLog(RequestCycle.class);
 
@@ -186,6 +187,8 @@ public abstract class RequestCycle
 	/** The session object. */
 	protected final Session session;
 
+	private Page invokePage;
+
 	/**
 	 * If the page is set to null, we'll first set the current page to this
 	 * variable. We use this in order to be able to release resources on the
@@ -199,20 +202,24 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
-	/** The page to render to the user*/
+	/** The page to render to the user */
 	private Page responsePage;
 
-	/** The class of a page to render to the user, redirect as a bookmarkable page */
+	/**
+	 * The class of a page to render to the user, redirect as a bookmarkable
+	 * page
+	 */
 	private Class responsePageClass;
 
-	/** The page parameters used by the responsepage class to generate its bookmarkable page url*/
+	/**
+	 * The page parameters used by the responsepage class to generate its
+	 * bookmarkable page url
+	 */
 	private PageParameters responsePageParams;
+	private IResourceStream responseStream;
 
 	/** True if the cluster should be updated */
 	private boolean updateCluster;
-	private Page invokePage;
-
-	private IResourceStream responseStream;
 
 
 	/**
@@ -265,7 +272,7 @@ public abstract class RequestCycle
 			throw new IllegalArgumentException("Interface " + i + " can have only one method");
 		}
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -338,16 +345,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the current responde page page parameters (only used with the responsepage class).
-	 * 
-	 * @return The page
-	 */
-	public final PageParameters getResponsePagePageParameters()
-	{
-		return responsePageParams;
-	}
-
-	/**
 	 * Gets the current responde page class.
 	 * 
 	 * @return The page
@@ -356,15 +353,16 @@ public abstract class RequestCycle
 	{
 		return responsePageClass;
 	}
-	
+
 	/**
-	 * Gets the page that was used for invoking and interface.
+	 * Gets the current responde page page parameters (only used with the
+	 * responsepage class).
 	 * 
 	 * @return The page
 	 */
-	protected final Page getInvokePage()
+	public final PageParameters getResponsePagePageParameters()
 	{
-		return invokePage;
+		return responsePageParams;
 	}
 
 	/**
@@ -415,37 +413,37 @@ public abstract class RequestCycle
 			finally
 			{
 				// make sure the invokerPage is ended correctly.
-				try 
+				try
 				{
-					if (invokePage != null) 
+					if (invokePage != null)
 					{
-					    invokePage.internalEndRequest();
+						invokePage.internalEndRequest();
 					}
-				} 
-				catch (RuntimeException e) 
+				}
+				catch (RuntimeException e)
 				{
 					log.error("Exception occurred during invokerPage.internalEndRequest", e);
 				}
 
 				// Response is ending
-				try 
+				try
 				{
 					internalOnEndRequest();
-				} 
-				catch (RuntimeException e) 
+				}
+				catch (RuntimeException e)
 				{
 					log.error("Exception occurred during internalOnEndRequest", e);
 				}
-				
-				try 
+
+				try
 				{
 					onEndRequest();
-				} 
-				catch (RuntimeException e) 
+				}
+				catch (RuntimeException e)
 				{
 					log.error("Exception occurred during onEndRequest", e);
 				}
-				
+
 				// Release thread local resources
 				threadDetach();
 			}
@@ -485,37 +483,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Convenience method that sets page on response object.
-	 * 
-	 * @param page
-	 *            The page to render as a response
-	 */
-	public final void setResponsePage(final Page page)
-	{
-		if (responsePageClass != null)
-		{
-			if(log.isDebugEnabled())
-			{
-				log.warn("overwriting response page " + responsePageClass + " with " + page);
-			}
-		}
-		else if (responsePage != null)
-		{
-			if(log.isDebugEnabled())
-			{
-				log.warn("overwriting response page " + responsePage + " with " + page);
-			}
-		}
-
-		this.responsePage = page;
-		// reset response page class, only one of the 2 responses should be set.
-		this.responsePageClass = null;
-		this.responsePageParams = null;
-	}
-	
-	/**
-	 * Convenience method that sets page class as the response.
-	 * This will generate a redirect to the page with a bookmarkable url
+	 * Convenience method that sets page class as the response. This will
+	 * generate a redirect to the page with a bookmarkable url
 	 * 
 	 * @param pageClass
 	 *            The page class to render as a response
@@ -526,26 +495,28 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Convenience method that sets page class as the response.
-	 * This will generate a redirect to the page with a bookmarkable url and its pageparameters.
+	 * Convenience method that sets page class as the response. This will
+	 * generate a redirect to the page with a bookmarkable url and its
+	 * pageparameters.
 	 * 
 	 * @param pageClass
 	 *            The page class to render as a response
-	 * @param pageParameters 
-	 * 			  The page parameters that gets appended to the bookmarkable url,
+	 * @param pageParameters
+	 *            The page parameters that gets appended to the bookmarkable
+	 *            url,
 	 */
 	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
 	{
 		if (responsePageClass != null)
 		{
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.warn("overwriting response page " + responsePageClass + " with " + pageClass);
 			}
 		}
 		else if (responsePage != null)
 		{
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.warn("overwriting response page " + responsePage + " with " + pageClass);
 			}
@@ -560,15 +531,34 @@ public abstract class RequestCycle
 		// reset response page, only one of the 2 responses should be set.
 		this.responsePage = null;
 	}
-	
 
 	/**
-	 * Sets the page to invoke.
+	 * Convenience method that sets page on response object.
+	 * 
 	 * @param page
-	 */	
-	protected final void setInvokePage(final Page page)
+	 *            The page to render as a response
+	 */
+	public final void setResponsePage(final Page page)
 	{
-		this.invokePage = page;
+		if (responsePageClass != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePageClass + " with " + page);
+			}
+		}
+		else if (responsePage != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePage + " with " + page);
+			}
+		}
+
+		this.responsePage = page;
+		// reset response page class, only one of the 2 responses should be set.
+		this.responsePageClass = null;
+		this.responsePageParams = null;
 	}
 
 	/**
@@ -580,6 +570,65 @@ public abstract class RequestCycle
 	public void setUpdateCluster(boolean updateCluster)
 	{
 		this.updateCluster = updateCluster;
+	}
+
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) + "{thread="
+				+ Thread.currentThread().getName() + "}";
+	}
+
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public String urlFor(final Class pageClass, final PageParameters parameters)
+	{
+		if (pageClass == null)
+		{
+			throw new NullPointerException("argument pageClass may not be null");
+		}
+
+		final StringBuffer buffer = urlPrefix();
+		buffer.append("?bookmarkablePage=");
+		String pageReference = application.getPages().aliasForClass(pageClass);
+		if (pageReference == null)
+			pageReference = pageClass.getName();
+		buffer.append(pageReference);
+		if (parameters != null)
+		{
+			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			{
+				final String key = (String)iterator.next();
+				buffer.append('&');
+				buffer.append(key);
+				buffer.append('=');
+				buffer.append(parameters.getString(key));
+			}
+		}
+		return getResponse().encodeURL(buffer.toString());
+	}
+
+	/**
+	 * Gets the page that was used for invoking and interface.
+	 * 
+	 * @return The page
+	 */
+	protected final Page getInvokePage()
+	{
+		return invokePage;
 	}
 
 	/**
@@ -594,7 +643,7 @@ public abstract class RequestCycle
 	{
 		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE
 	 * THIS METHOD.
@@ -626,43 +675,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Called when the request cycle object is beginning its response
-	 */
-	protected void onBeginRequest()
-	{
-	}
-
-	/**
-	 * Called when the request cycle object has finished its response
-	 */
-	protected void onEndRequest()
-	{
-	}
-
-	/**
-	 * Parses a request when this request cycle is asked to respond.
-	 * 
-	 * @return True if a Page should be rendered back to the user
-	 */
-	protected abstract boolean parseRequest();
-
-	/**
-	 * Redirects browser to the given page.
-	 * NOTE: Usually, you should never call this method directly, but work with
-	 * setResponsePage instead. This method is part of Wicket's internal
-	 * behaviour and should only be used when you want to circumvent the normal
-	 * framework behaviour and issue the redirect directly.
-	 *
-	 * @param page
-	 *            The page to redirect to
-	 * @throws ServletException 
-	 */
-	protected abstract void redirectTo(final Page page) throws ServletException;
-
-
-	/**
-	 * Sets up to handle a runtime exception thrown during rendering.
-	 * FRAMEWORK CLIENTS SHOULD NOT CALL THIS METHOD.
+	 * Sets up to handle a runtime exception thrown during rendering. FRAMEWORK
+	 * CLIENTS SHOULD NOT CALL THIS METHOD.
 	 * 
 	 * @param page
 	 *            Any page context where the exception was thrown
@@ -708,23 +722,79 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Template method that is called when a runtime exception is thrown, just before the actual
-	 * handling of the runtime exception.
-	 * @param page Any page context where the exception was thrown
-	 * @param e The exception
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected void onBeginRequest()
+	{
+	}
+
+	/**
+	 * Called when the request cycle object has finished its response
+	 */
+	protected void onEndRequest()
+	{
+	}
+
+	/**
+	 * Template method that is called when a runtime exception is thrown, just
+	 * before the actual handling of the runtime exception.
+	 * 
+	 * @param page
+	 *            Any page context where the exception was thrown
+	 * @param e
+	 *            The exception
 	 */
 	protected void onRuntimeException(final Page page, final RuntimeException e)
 	{
 	}
 
 	/**
+	 * Parses a request when this request cycle is asked to respond.
+	 * 
+	 * @return True if a Page should be rendered back to the user
+	 */
+	protected abstract boolean parseRequest();
+
+	/**
+	 * Redirects browser to the given page. NOTE: Usually, you should never call
+	 * this method directly, but work with setResponsePage instead. This method
+	 * is part of Wicket's internal behaviour and should only be used when you
+	 * want to circumvent the normal framework behaviour and issue the redirect
+	 * directly.
+	 * 
+	 * @param page
+	 *            The page to redirect to
+	 * @throws ServletException
+	 */
+	protected abstract void redirectTo(final Page page) throws ServletException;
+
+	/**
+	 * Sets the page to invoke.
+	 * 
+	 * @param page
+	 */
+	protected final void setInvokePage(final Page page)
+	{
+		this.invokePage = page;
+	}
+
+
+	/**
+	 * Creates a prefix for a url.
+	 * 
+	 * @return Prefix for URLs including the context path and servlet path.
+	 */
+	protected abstract StringBuffer urlPrefix();
+
+	/**
 	 * @param page
 	 *            The page that went wrong
 	 * @param e
 	 *            The exception that was thrown
-	 * @throws ServletException 
+	 * @throws ServletException
 	 */
-	private final void redirectToExceptionErrorPage(final Page page, final RuntimeException e) throws ServletException
+	private final void redirectToExceptionErrorPage(final Page page, final RuntimeException e)
+			throws ServletException
 	{
 		// If application doesn't want debug info showing up for users
 		final ApplicationSettings settings = application.getSettings();
@@ -732,14 +802,15 @@ public abstract class RequestCycle
 		{
 			Class internalErrorPageClass = application.getPages().getInternalErrorPage();
 			Page responsePage = getResponsePage();
-			Class responseClass = responsePage != null?responsePage.getClass():null;
-			
-			if (responseClass != internalErrorPageClass && settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
+			Class responseClass = responsePage != null ? responsePage.getClass() : null;
+
+			if (responseClass != internalErrorPageClass
+					&& settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
 			{
 				// Show internal error page
 				setResponsePage(session.getPageFactory(page).newPage(internalErrorPageClass));
 			}
-			else if(responseClass != ExceptionErrorPage.class)
+			else if (responseClass != ExceptionErrorPage.class)
 			{
 				// Show full details
 				setResponsePage(new ExceptionErrorPage(e, getResponsePage()));
@@ -756,6 +827,7 @@ public abstract class RequestCycle
 			redirectTo(getResponsePage());
 		}
 	}
+
 
 	/**
 	 * Respond with response page
@@ -780,10 +852,12 @@ public abstract class RequestCycle
 				}
 				else
 				{
-					// test if the invoker page was the same as the page that is going to be rendered
+					// test if the invoker page was the same as the page that is
+					// going to be rendered
 					if (getInvokePage() == getResponsePage())
 					{
-						// set it to null because it is already ended inthe page.doRender()
+						// set it to null because it is already ended inthe
+						// page.doRender()
 						setInvokePage(null);
 					}
 					// Let page render itself
@@ -807,51 +881,6 @@ public abstract class RequestCycle
 			}
 		}
 	}
-	
-	
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a given set of
-	 * page parameters. Since the URL which is returned contains all information necessary
-	 * to instantiate and render the page, it can be stored in a user's browser as a
-	 * stable bookmark.
-	 * @param pageClass Class of page
-	 * @param parameters Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public String urlFor(final Class pageClass,
-			final PageParameters parameters)
-	{
-		if (pageClass == null)
-		{
-			throw new NullPointerException("argument pageClass may not be null");
-		}
-
-		final StringBuffer buffer = urlPrefix();
-		buffer.append("?bookmarkablePage=");
-		String pageReference = application.getPages().aliasForClass(pageClass);
-		if (pageReference == null) pageReference = pageClass.getName();
-		buffer.append(pageReference);
-		if (parameters != null)
-		{
-			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-			{
-				final String key = (String)iterator.next();
-				buffer.append('&');
-				buffer.append(key);
-				buffer.append('=');
-				buffer.append(parameters.getString(key));
-			}
-		}
-		return getResponse().encodeURL(buffer.toString());
-	}
-	
-	/**
-	 * Creates a prefix for a url.
-	 * @return Prefix for URLs including the context path and servlet path.
-	 */
-	protected abstract StringBuffer urlPrefix();
-
-
 
 	/**
 	 * Attach thread
@@ -874,7 +903,7 @@ public abstract class RequestCycle
 	{
 		// Detach from session
 		session.detach();
-		
+
 		if (getRedirect())
 		{
 			// Since we are explicitly redirecting to a page already, we do not
@@ -891,14 +920,5 @@ public abstract class RequestCycle
 
 		// This thread is no longer attached to a Session
 		Session.set(null);
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) +
-				"{thread=" + Thread.currentThread().getName() + "}";
 	}
 }
