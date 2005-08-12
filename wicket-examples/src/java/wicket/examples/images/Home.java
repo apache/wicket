@@ -22,8 +22,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import wicket.Application;
-import wicket.IInitializer;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
