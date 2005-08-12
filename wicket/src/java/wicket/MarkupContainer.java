@@ -689,7 +689,7 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
-	public void setModel(final IModel model)
+	public Component setModel(final IModel model)
 	{
 		final IModel previous = getModel();
 		super.setModel(model);
@@ -714,6 +714,7 @@ public abstract class MarkupContainer extends Component
 			
 			});
 		}
+		return this;
 	}
 	
 	

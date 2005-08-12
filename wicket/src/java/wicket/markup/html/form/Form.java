@@ -299,7 +299,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 	/**
 	 * @see wicket.Component#setVersioned(boolean)
 	 */
-	public void setVersioned(final boolean isVersioned)
+	public Component setVersioned(final boolean isVersioned)
 	{
 		super.setVersioned(isVersioned);
 
@@ -311,6 +311,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 				formComponent.setVersioned(isVersioned);
 			}
 		});
+		return this;
 	}
 
 	/**

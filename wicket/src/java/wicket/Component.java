@@ -1151,8 +1151,9 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 * 
 	 * @param model
 	 *            the model
+	 * @return This
 	 */
-	public void setModel(final IModel model)
+	public Component setModel(final IModel model)
 	{
 		// Detach current model
 		if (this.model != null)
@@ -1175,6 +1176,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 		}
 		
 		modelChanged();
+		return this;
 	}
 
 	/**
@@ -1183,8 +1185,9 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 * 
 	 * @param object
 	 *            The object to set
+	 * @return This
 	 */
-	public final void setModelObject(final Object object)
+	public final Component setModelObject(final Object object)
 	{
 		final IModel model = getModel();
 		if (model != null)
@@ -1200,6 +1203,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 		{
 			throw new IllegalStateException("Attempt to set model object on null model");
 		}
+		return this;
 	}
 
 	/**
@@ -1269,10 +1273,12 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 * but not the component's tag.
 	 * 
 	 * @param renderTag If true, the component tag will not be printed
+	 * @return This
 	 */
-	public final void setRenderBodyOnly(final boolean renderTag)
+	public final Component setRenderBodyOnly(final boolean renderTag)
 	{
 	    this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
+	    return this;
 	}
 	
 	/**
@@ -1292,10 +1298,12 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 * @param versioned
 	 *            True to turn on versioning for this component, false to turn
 	 *            it off for this component and any children.
+	 * @return This
 	 */
-	public void setVersioned(boolean versioned)
+	public Component setVersioned(boolean versioned)
 	{
 		setFlag(FLAG_VERSIONED, versioned);
+		return this;
 	}
 
 	/**
