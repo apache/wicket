@@ -216,7 +216,12 @@ public final class UrlResourceStream extends AbstractResourceStream
 	{
 		if (file != null)
 		{
-			lastModified = file.lastModified();
+			long lastModified = file.lastModified();
+			if(lastModified != this.lastModified)
+			{
+				this.lastModified = lastModified;
+				this.contentLength = (int)file.length();
+			}
 		}
 		else
 		{
@@ -227,7 +232,12 @@ public final class UrlResourceStream extends AbstractResourceStream
 				urlConnection = url.openConnection();
 	
 				// update the last modified time.
-				lastModified = urlConnection.getLastModified();
+				long lastModified = urlConnection.getLastModified();
+				if(lastModified != this.lastModified)
+				{
+					this.lastModified = lastModified;
+					this.contentLength = urlConnection.getContentLength();
+				}
 			}
 			catch (IOException e)
 			{
