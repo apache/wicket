@@ -208,31 +208,36 @@ public abstract class Resource implements IResourceListener
 				out.flush();
 			}
 		}
-		catch (SocketException se)
-		{
-			String message = se.getMessage();
-			if (message != null
-					&& (message.indexOf("Connection reset") != -1 || message
-							.indexOf("socket write error") != -1))
-			{
-				if (log.isDebugEnabled())
-				{
-					log
-							.debug(
-									"Socket exception ignored for sending Resource response to client (ClientAbort)",
-									se);
-				}
-			}
-			else
-			{
-				throw new WicketRuntimeException("Unable to render resource stream "
-						+ resourceStream, se);
-			}
-		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Unable to render resource stream " + resourceStream,
-					e);
+			Throwable throwable = e;
+			boolean ignoreException = false;
+			while (throwable!=null)
+			{
+				if (throwable instanceof SocketException)
+				{
+					String message = throwable.getMessage();
+					ignoreException = message != null && (message.indexOf("Connection reset by peer") != -1 ||
+										message.indexOf("Software caused connection abort") != -1);
+				}
+				else
+				{
+					ignoreException = throwable.getClass().getName().indexOf("ClientAbortException") != 0;
+				}
+				if (ignoreException)
+				{
+					if (log.isDebugEnabled())
+					{
+						log.debug("Socket exception ignored for sending Resource response to client (ClientAbort)",e);
+					}
+					break;
+				}
+				throwable = throwable.getCause();
+			}
+			if (!ignoreException)
+			{
+				throw new WicketRuntimeException("Unable to render resource stream " + resourceStream, e);
+			}
 		}
 	}
 
