@@ -23,7 +23,7 @@ package wicket.markup.html;
  * contribute statements to the onload hander of the &lt;body... tag.
  * 
  * @author Eelco Hillenius
- * @uahtor Juergen Donnerstag
+ * @author Juergen Donnerstag
  */
 public interface IBodyOnloadContributor
 {
