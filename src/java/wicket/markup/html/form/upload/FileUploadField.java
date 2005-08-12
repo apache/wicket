@@ -19,6 +19,7 @@ package wicket.markup.html.form.upload;
 
 import org.apache.commons.fileupload.FileItem;
 
+import wicket.Component;
 import wicket.Request;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
@@ -88,10 +89,10 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
-	public void setModel(IModel model)
+	public Component setModel(IModel model)
 	{
 		hasExplicitModel = true;
-		super.setModel(model);
+		return super.setModel(model);
 	}
 
 	/**
