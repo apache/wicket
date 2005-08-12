@@ -36,7 +36,6 @@ import wicket.util.crypt.SunJceCrypt;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
-import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.time.Duration;
 
@@ -652,7 +651,7 @@ public class ApplicationSettings
 	 * finder.
 	 * 
 	 * @return Returns the resourceFinder.
-	 * @see ApplicationSettings#setResourceFinder(WebApplicationPath)
+	 * @see ApplicationSettings#setResourceFinder(IResourceFinder)
 	 */
 	public final IResourceFinder getResourceFinder()
 	{
@@ -1014,7 +1013,7 @@ public class ApplicationSettings
 	 * @param resourcePollFrequency
 	 *            Frequency at which to poll resources
 	 * @return This
-	 * @see ApplicationSettings#setResourceFinder(WebApplicationPath)
+	 * @see ApplicationSettings#setResourceFinder(IResourceFinder)
 	 */
 	public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
 	{
