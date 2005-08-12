@@ -1,1 +1,0 @@
-wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer

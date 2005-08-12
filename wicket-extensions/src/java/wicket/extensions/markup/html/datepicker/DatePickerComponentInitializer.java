@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.Application;
-import wicket.IComponentInitializer;
+import wicket.IInitializer;
 import wicket.ResourceReference;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
@@ -18,7 +18,7 @@ import wicket.markup.html.PackageResourceReference;
  * @author jcompagner
  *
  */
-public class DatePickerComponentInitializer implements IComponentInitializer
+public class DatePickerComponentInitializer implements IInitializer
 {
 	private static String LANGUAGE_AF = "lang/calendar-af.js";
 	private static String LANGUAGE_AL = "lang/calendar-al.js";
@@ -111,7 +111,7 @@ public class DatePickerComponentInitializer implements IComponentInitializer
 	}
 	
 	/**
-	 * @see wicket.IComponentInitializer#init(wicket.Application)
+	 * @see wicket.IInitializer#init(wicket.Application)
 	 */
 	public void init(Application application)
 	{
