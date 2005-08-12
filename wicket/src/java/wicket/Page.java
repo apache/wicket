@@ -201,7 +201,7 @@ public abstract class Page extends MarkupContainer
 	 * redirectToInterceptPage.
 	 * 
 	 * @return True if an original destination was redirected to
-	 * @see PageMap#redirectToInterceptPage(Page)
+	 * @see Page#redirectToInterceptPage(Page)
 	 */
 	public final boolean continueToOriginalDestination()
 	{
