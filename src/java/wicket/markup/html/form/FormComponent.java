@@ -17,6 +17,10 @@
  */
 package wicket.markup.html.form;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
@@ -163,6 +167,29 @@ public abstract class FormComponent extends WebMarkupContainer
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Gets an unmodifiable list of validators for this FormComponent.
+	 * 
+	 * @return List of validators
+	 */
+	public final List getValidators()
+	{
+		final int size = validators_size();
+		if (size == 0)
+		{
+			return Collections.EMPTY_LIST;
+		}
+		else
+		{
+			final List list = new ArrayList();
+			for (int i = 0; i < size; i++)
+			{
+				list.add(validators_get(i));
+			}
+			return Collections.unmodifiableList(list);
+		}
 	}
 
 	/**
