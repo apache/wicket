@@ -688,12 +688,15 @@ public abstract class RequestCycle
 	protected final void internalOnRuntimeException(final Page page, final RuntimeException e)
 			throws ServletException
 	{
-		// let client handle any specifics
-		onRuntimeException(page, e);
+		// Let client handle any specifics and possibly return a page to redirect to
+		final Page redirectTo = onRuntimeException(page, e);
 
+		// Always log as error
 		log.error("Unexpected runtime exception [page = " + page + "]", e);
 
+		// Always print stack trace
 		e.printStackTrace();
+		
 		// Reset page for re-rendering after exception
 		if (page != null)
 		{
@@ -708,15 +711,23 @@ public abstract class RequestCycle
 		}
 		else
 		{
-			try
+			if (redirectTo != null)
 			{
-				redirectToExceptionErrorPage(page, e);
+				setResponsePage(redirectTo);
+				redirectTo(redirectTo);
 			}
-			catch (RuntimeException e2)
+			else
 			{
-				throw new ServletException(
-						"Internal Error: Could not redirect to exception error page.  Was trying to display exception for page "
-								+ page + ":\n" + Strings.toString(e), e2);
+				try
+				{
+					redirectToExceptionErrorPage(page, e);
+				}
+				catch (RuntimeException e2)
+				{
+					throw new ServletException(
+							"Internal Error: Could not redirect to exception error page.  Was trying to display exception for page "
+									+ page + ":\n" + Strings.toString(e), e2);
+				}
 			}
 		}
 	}
@@ -743,9 +754,11 @@ public abstract class RequestCycle
 	 *            Any page context where the exception was thrown
 	 * @param e
 	 *            The exception
+	 * @return Any error page to redirect to
 	 */
-	protected void onRuntimeException(final Page page, final RuntimeException e)
+	protected Page onRuntimeException(final Page page, final RuntimeException e)
 	{
+		return null;
 	}
 
 	/**
