@@ -9,6 +9,17 @@
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
       <action type="update" dev="Jonathan Locke">
+		Changed RequestCycle.internalOnRuntimeException() implementation so that
+		it checks the new Page return value from onRuntimeException.  if
+		onRuntimeException returns a Page, it will be redirected to.  if not,
+		wicket will use the default page. this provides a nice low-level way of
+		doing something totally different to handle runtime exceptions.  if you
+		just want to change the basic look of your InternalErrorPage, you can
+		still just subclass that.  but if you want to do sophisticated things
+		with runtime exceptions, you want to override RequestCycle's
+		onRuntimeException method.
+      </action>
+      <action type="update" dev="Jonathan Locke">
 	  Refactored intializer code.  Now wicket.properties is checked for each jar or
 	  root folder on the classpath.  If it contains either initializer=[class]
 	  or [app-name]-initializer=[class], that class is instantiated and the 
