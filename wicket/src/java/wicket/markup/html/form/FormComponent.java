@@ -46,27 +46,27 @@ import wicket.util.string.StringList;
  */
 public abstract class FormComponent extends WebMarkupContainer
 {
+	/** Make empty strings null values boolean.  Used by AbstractTextComponent subclass. */
+	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
+
+	/**
+	 * Whether this form component should save and restore state between
+	 * sessions. This is false by default.
+	 */
+	private static final short FLAG_PERSISTENT = FLAG_RESERVED2;
+
 	/**
 	 * Special flag value to indicate when there is no invalid input, since null
 	 * is a valid value!
 	 */
 	protected static final String NO_INVALID_INPUT = "[No invalid input]";
-
-	/** Make empty strings null values boolean */
-	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
-
+	
 	/**
 	 * When the user input does not validate, this is a temporary store for the
 	 * input he/she provided. We have to store it somewhere as we loose the
 	 * request parameter when redirecting.
 	 */
 	private String invalidInput = NO_INVALID_INPUT;
-
-	/**
-	 * Whether this form component should save and restore state between
-	 * sessions. This is false by default.
-	 */
-	private boolean persistent = false;
 
 	/** The validator or validator list for this component. */
 	private IValidator validator = IValidator.NULL;
@@ -356,7 +356,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final boolean isPersistent()
 	{
-		return supportsPersistence() && persistent;
+		return supportsPersistence() && getFlag(FLAG_PERSISTENT);
 	}
 
 	/**
@@ -404,7 +404,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		if (supportsPersistence())
 		{
-			this.persistent = persistent;
+			setFlag(FLAG_PERSISTENT, persistent);
 		}
 		else
 		{
@@ -414,11 +414,27 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * Implemented by form component subclass to update the form component's
+	 * model.
+	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING.
+	 * USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
+	 */
+	public abstract void updateModel();
+
+	/**
 	 * Called to indicate that
 	 */
 	public final void valid()
 	{
 		onValid();
+	}
+
+	/**
+	 * Validates this component using the component's validator.
+	 */
+	public final void validate()
+	{
+		validator.validate(this);
 	}
 
 	/**
@@ -566,21 +582,5 @@ public abstract class FormComponent extends WebMarkupContainer
 	protected boolean supportsPersistence()
 	{
 		return false;
-	}
-
-	/**
-	 * Implemented by form component subclass to update the form component's
-	 * model.
-	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING.
-	 * USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
-	 */
-	public abstract void updateModel();
-
-	/**
-	 * Validates this component using the component's validator.
-	 */
-	public final void validate()
-	{
-		validator.validate(this);
 	}
 }

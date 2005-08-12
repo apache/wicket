@@ -9,6 +9,10 @@
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
       <action type="update" dev="Jonathan Locke">
+      Made FormComponent more space efficient by using boolean flag bit
+      in Component superclass to keep track of persistent boolean.
+      </action>
+      <action type="update" dev="Jonathan Locke">
 		Changed RequestCycle.internalOnRuntimeException() implementation so that
 		it checks the new Page return value from onRuntimeException.  if
 		onRuntimeException returns a Page, it will be redirected to.  if not,
