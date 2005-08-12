@@ -9,6 +9,10 @@
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development"></release>
       <action type="update" dev="Jonathan Locke">
+      Maximized efficiency of validators list by doing a little neat object casting
+      in the private implementation.  This also simplified things conceptually.
+      </action>
+      <action type="update" dev="Jonathan Locke">
       Made FormComponent more space efficient by using boolean flag bit
       in Component superclass to keep track of persistent boolean.
       </action>
