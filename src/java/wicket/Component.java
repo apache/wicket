@@ -1079,7 +1079,7 @@ public abstract class Component implements Serializable, IEventRequestListener
 	 */
 	public final void remove()
 	{
-		parent.remove(getId());
+		parent.remove(this);
 	}
 
 	/**
