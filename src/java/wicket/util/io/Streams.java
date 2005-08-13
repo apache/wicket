@@ -103,6 +103,7 @@ public final class Streams
 
 		return buffer.toString();
 	}
+	
 	/**
 	 * Private to prevent instantiation.
 	 */
