@@ -30,5 +30,4 @@ public interface IFeedbackMessageFilter
 	 * @return True if the message should be included, false to exclude it
 	 */
 	public boolean accept(FeedbackMessage message);
-
 }
