@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="fix" dev="Gwyn Evans" issue="1249961" due-to="Cameron Braid">Fix HTML generated from AbstractChoice - Added missing space after 'option selected="selected"'</action>
       <action type="update" dev="Eelco Hillenius" issue="1254379" due-to="Phil Kulak">Added getBoolean() to ValueMap</action>
       <action type="fix" dev="Eelco Hillenius" issue="1253113" due-to="Cameron Braid">AbstractDetachableModel didn't propogate attach/detach</action>
       <action type="update" dev="Eelco Hillenius" issue="1253111" due-to="Cameron Braid">Made LoadableDetachableModel.getNestedModel() non final</action>
@@ -15,7 +16,7 @@
         Changed implementation of component map in MarkupContainer to an array model
         like the validators changed.  This made a significant reduction in the size
         of pages, especially big pages.  For example, nested shrank from 69,958 bytes
-        to 55,231 bytes which is a savings of 14,727 bytes that was due to HashMap 
+        to 55,231 bytes which is a savings of 14,727 bytes that was due to HashMap
         overhead.  Very large containers may run slower, but most containers are likely
         to be faster as should be recursion/iteration.  The main downside is that this
         code is very ugly and involves the same kinds of tests and casts that we did
