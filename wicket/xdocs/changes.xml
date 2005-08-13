@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="update" dev="Eelco Hillenius" issue="1253111">Made LoadableDetachableModel.getNestedModel() non final</action>
       <action type="update" dev="Jonathan Locke">
         Changed implementation of component map in MarkupContainer to an array model
         like the validators changed.  This made a significant reduction in the size
