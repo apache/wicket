@@ -27,8 +27,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IFeedback;
-import wicket.IFeedbackBoundary;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
@@ -105,7 +103,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Cameron Braid
  */
-public class Form extends WebMarkupContainer implements IFormSubmitListener, IFeedbackBoundary
+public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
 	/** Log. */
 	private static Log log = LogFactory.getLog(Form.class);
@@ -124,24 +122,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 	 */
 	public Form(final String id)
 	{
-		this(id, null);
-	}
-
-	/**
-	 * @param id
-	 *            See Component
-	 * @param feedback
-	 *            Interface to a component that can handle/display validation
-	 *            errors
-	 * @see wicket.Component#Component(String)
-	 */
-	public Form(final String id, final IFeedback feedback)
-	{
 		super(id);
-		if (feedback != null)
-		{
-			feedback.setCollectingComponent(this);
-		}
 	}
 
 	/**
@@ -149,18 +130,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 	 *            See Component
 	 * @param model
 	 *            See Component
-	 * @param feedback
-	 *            Interface to a component that can handle/display validation
-	 *            errors
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Form(final String id, IModel model, final IFeedback feedback)
+	public Form(final String id, IModel model)
 	{
 		super(id, model);
-		if (feedback != null)
-		{
-			feedback.setCollectingComponent(this);
-		}
 	}
 
 	/**
@@ -215,12 +189,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 	public final void onFormSubmitted()
 	{
 		if (handleMultiPart())
-		{			
+		{
 			// First, see if the processing was triggered by a Wicket button
 			final Button submittingButton = findSubmittingButton();
-	
+
 			// When processing was triggered by a Wicket button and that button
-			// indicates it wants to be called immediately (without processing), 
+			// indicates it wants to be called immediately (without processing),
 			// call Button.onSubmit() right away.
 			if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
 			{
@@ -521,6 +495,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 	 * <p>
 	 * See the class documentation for further details on the form processing
 	 * </p>
+	 * 
 	 * @return False if the form had an error
 	 */
 	protected boolean process()
@@ -536,7 +511,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 
 			// let subclass handle error
 			onError();
-			
+
 			// Form has an error
 			return false;
 		}
@@ -550,7 +525,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener, IFe
 
 			// Persist FormComponents if requested
 			persistFormComponentData();
-			
+
 			// Form has no error
 			return true;
 		}

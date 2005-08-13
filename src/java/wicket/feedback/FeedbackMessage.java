@@ -15,9 +15,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.feedback;
 
 import java.io.Serializable;
+
+import wicket.Component;
 
 /**
  * Represents a generic message meant for the end-user/ pages.

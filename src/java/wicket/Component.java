@@ -29,6 +29,7 @@ import javax.servlet.ServletException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.feedback.FeedbackMessage;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;

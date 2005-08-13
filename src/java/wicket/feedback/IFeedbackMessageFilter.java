@@ -15,21 +15,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.feedback;
 
 /**
- * TODO docme
+ * Interface for filtering feedback messages
  * 
  * @author Jonathan Locke
- * @author Eelco Hillenius
  */
-public interface IFeedback
+public interface IFeedbackMessageFilter
 {
 	/**
-	 * Sets the optional collecting component. When this is not set explicitly, the first occurence
-	 * of {@link IFeedbackBoundary} will be searched for higher up in the run-time
-	 * hierarchy.
-	 * @param collectingComponent the collecting component
+	 * @param message
+	 *            The message to test for inclusion
+	 * @return True if the message should be included, false to exclude it
 	 */
-	void setCollectingComponent(Component collectingComponent);
+	public boolean accept(FeedbackMessage message);
+
 }
