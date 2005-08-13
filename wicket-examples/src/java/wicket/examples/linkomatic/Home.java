@@ -17,7 +17,6 @@
  */
 package wicket.examples.linkomatic;
 
-import wicket.IFeedback;
 import wicket.Page;
 import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
@@ -133,7 +132,7 @@ public class Home extends WicketExamplePage
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
-		add(new RedirectForm("redirectForm", feedbackPanel));
+		add(new RedirectForm("redirectForm"));
 	}
 
 	/**
@@ -147,11 +146,10 @@ public class Home extends WicketExamplePage
 		/**
 		 * Construct.
 		 * @param id component id
-		 * @param feedback feedback receiver
 		 */
-		public RedirectForm(String id, IFeedback feedback)
+		public RedirectForm(String id)
 		{
-			super(id, feedback);
+			super(id);
 			setModel(new CompoundPropertyModel(this));
 			add(new TextField("redirectUrl"));
 		}

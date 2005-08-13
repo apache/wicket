@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;

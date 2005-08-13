@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import wicket.IFeedback;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.markup.html.ajax.dojo.ValidationEventRequestHandler;
@@ -74,7 +73,7 @@ public class FormInput extends WicketExamplePage
 		// Construct form and feedback panel and hook them up
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
-		add(new InputForm("inputForm", feedback));
+		add(new InputForm("inputForm"));
 
 		// Dropdown for selecting locale
 		add(new LocaleDropDownChoice("localeSelect"));
@@ -112,12 +111,10 @@ public class FormInput extends WicketExamplePage
 		 * 
 		 * @param name
 		 *            Component name
-		 * @param feedback
-		 *            Feedback display for form
 		 */
-		public InputForm(String name, IFeedback feedback)
+		public InputForm(String name)
 		{
-			super(name, new CompoundPropertyModel(new FormInputModel()), feedback);
+			super(name, new CompoundPropertyModel(new FormInputModel()));
 
 			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
 			add(stringTextField);

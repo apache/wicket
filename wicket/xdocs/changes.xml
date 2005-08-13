@@ -9,6 +9,21 @@
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
       <action type="update" dev="Jonathan Locke">
+		refactored feedback completely.  the new code is smaller, more powerful and more elegant.  but it will break clients.  most clients who are using simple features of the old feedback code will only have to (a) change their package imports from wicket to wicket.feedback (because the feedback stuff is several more class files that are polluting the root package and likely to grow due to the new filtering mechanism) and (b) delete any IFeedback argument to Form. 
+		
+		clients who are looking for more powerful ways to filter their messages will now have completely unlimited capacity to do so through the new IFeedbackMessageFilter interface and the default filter implementations ComponentFeedbackMessageFilter, ContainedByFeedbackMessageFilter and ErrorLevelFeedbackMessageFilter. 
+		
+		the whole model for feedback messages has changed from one of component-orientation, which was a mistake, to one of message orientation.  to give feedback, a feedback component implements the new IFeedback interface which contains just updateFeedback().  in this method, which is called before the page is rendered, the component can use the FeedbackMessages.messages() method in combination with a filter implementing IFeedbackMessageFilter to retrieve a list of appropriate messages.  all feedback messages on the page are pushed through this filter.  messages for which IFeedbackMessageFilter.accept() returns true are added to the list.
+		
+		for example, the new FormComponentFeedbackBorder uses the ContainedByFeedbackMessageFilter in its call to FeedbackMessages.messages().  The filter being used by the form component feedback border can be changed by overriding the getFeedbackMessagesFilter() method.  This combination allows FormComponentFeedbackBorder to show its error indicator by default when a component that it contains has an error, but allows the user to override this behavior. 
+		
+		another example is provided in FormComponentFeedbackIndicator, which is a panel showing a red star (and overridable with you own markup!) that shows or hides itself depending on the result of the filter returned by the overridable getFeedbackMessageFilter() method.  if the filter accepts at least one message, the indicator will show itself.  if no message matches the filter, the indicator will hide itself. 
+		
+		note that feedback message filters do not necessarily have to have anything to do with components.  you can install, for example, an ErrorLevelFeedbackMessageFilter which filters out messages below a certain threshold.  or you can make a custom filter that uses any attribute of FeedbackMessage to filter on.
+		
+		the new FeedbackPanel also provides a getFeedbackMessageFilter() override.
+      </action>
+      <action type="update" dev="Jonathan Locke">
       Maximized efficiency of validators list by doing a little neat object casting
       in the private implementation.  This also simplified things conceptually.
       </action>

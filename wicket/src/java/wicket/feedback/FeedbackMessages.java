@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.feedback;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,11 +26,12 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
 import wicket.util.string.StringList;
 
 /**
- * Structure for recording {@link wicket.FeedbackMessage}s; wraps a list and
- * acts as a {@link wicket.model.IModel}.
+ * Holds list of feedback messages. The list can be added to, cleared, queried
+ * and filtered.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -41,7 +42,7 @@ public final class FeedbackMessages implements Serializable
 	private static Log log = LogFactory.getLog(FeedbackMessages.class);
 
 	/**
-	 * Holds a list of {@link wicket.FeedbackMessage}s.
+	 * Holds a list of {@link wicket.feedback.FeedbackMessage}s.
 	 */
 	private List messages = null;
 
@@ -49,7 +50,7 @@ public final class FeedbackMessages implements Serializable
 	 * Package local constructor; clients are not allowed to create instances as
 	 * this class is managed by the framework.
 	 */
-	FeedbackMessages()
+	public FeedbackMessages()
 	{
 	}
 
@@ -62,15 +63,6 @@ public final class FeedbackMessages implements Serializable
 		{
 			messages.clear();
 		}
-	}
-
-	/**
-	 * Gets whether there are no messages.
-	 * @return True when there are no messages
-	 */
-	public final boolean isEmpty()
-	{
-		return (messages == null || messages.isEmpty());
 	}
 
 	/**
@@ -117,6 +109,16 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
+	 * Gets whether there are no messages.
+	 * 
+	 * @return True when there are no messages
+	 */
+	public final boolean isEmpty()
+	{
+		return messages == null || messages.isEmpty();
+	}
+
+	/**
 	 * Looks up a message for the given component.
 	 * 
 	 * @param component
@@ -141,68 +143,49 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
-	 * Gets the list of messages relevant to a given component. If the component
-	 * is a container, the list returned will be a list of all messages reported
-	 * by children of the container.
-	 * 
-	 * @param component
-	 *            The component to get messages for
-	 * @param recurse
-	 *            True if children of the component should be considered
-	 * @param stopAtBoundary whether to stop collecting messages when
-	 * 	a child component is of type {@link IFeedbackBoundary}.
-	 * 	Only has effect when recurse == true.
-	 * @param fromLevel from which level the messages are collected; DEBUG traps all,
-	 * 		but e.g. ERROR only traps ERROR and FATAL
-	 *
-	 * @return The messages or an empty list when no messages are found
+	 * @param filter
+	 *            Filter for selecting messages
+	 * @return True if one or more messages matches the filter
 	 */
-	public final List messages(final Component component, boolean recurse,
-			boolean stopAtBoundary, int fromLevel)
+	public final boolean hasMessage(final IFeedbackMessageFilter filter)
 	{
-		List result = null;
-		if (component != null && messages != null)
-		{
-			appendMessages(result = new ArrayList(), component, recurse, stopAtBoundary, fromLevel);
-		}
-		return (result != null) ? result : Collections.EMPTY_LIST;
+		return messages(filter).size() != 0;
 	}
 
 	/**
-	 * Gets the messages for the given component and append them to the given list.
-	 * @param list list to append messages to
-	 * @param component the component to get the messages for
-	 * @param recurse whether to append any messages of child components
-	 * @param stopAtBoundary whether to stop collecting messages when
-	 * 	a child component is of type {@link IFeedbackBoundary}.
-	 * 	Only has effect when recurse == true.
-	 * @param fromLevel from which level the messages are collected; DEBUG traps all,
-	 * 		but e.g. ERROR only traps ERROR and FATAL
+	 * Gets a list of messages from the page using a filter.
+	 * 
+	 * @param filter
+	 *            Filter for selecting messages
+	 * @return The messages or an empty list if no messages are found
 	 */
-	private final void appendMessages(final List list, final Component component,
-			boolean recurse, boolean stopAtBoundary, int fromLevel)
+	public final List messages(final IFeedbackMessageFilter filter)
 	{
-		for (Iterator iterator = messages.iterator(); iterator.hasNext();)
+		if (messages == null)
 		{
-			FeedbackMessage message = (FeedbackMessage)iterator.next();
-			Component reporter = message.getReporter();
-			if (reporter == component && message.isLevel(fromLevel))
-			{
-				list.add(message);
-			}
+			return Collections.EMPTY_LIST;
 		}
-		if (recurse && component instanceof MarkupContainer)
+		else
 		{
-			MarkupContainer container = (MarkupContainer)component;
-			for (Iterator i = container.iterator(); i.hasNext();)
+			final List list = new ArrayList();
+			for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
 			{
-				Component child = (Component)i.next();
-				if ((!stopAtBoundary) || (!(child instanceof IFeedbackBoundary)))
+				final FeedbackMessage message = (FeedbackMessage)iterator.next();
+				if (filter == null || filter.accept(message))
 				{
-					appendMessages(list, child, recurse, stopAtBoundary, fromLevel);
+					list.add(message);
 				}
 			}
+			return list;
 		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[feedbackMessages = " + StringList.valueOf(messages) + "]";
 	}
 
 	/**
@@ -232,35 +215,9 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	final void debug(Component reporter, String message)
+	public final void debug(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
-	}
-
-	/**
-	 * Adds a new ui message with level INFO to the current messages.
-	 * 
-	 * @param reporter
-	 *            The reporting component
-	 * @param message
-	 *            The actual message
-	 */
-	final void info(Component reporter, String message)
-	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
-	}
-
-	/**
-	 * Adds a new ui message with level WARNING to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	final void warn(Component reporter, String message)
-	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}
 
 	/**
@@ -271,7 +228,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	final void error(Component reporter, String message)
+	public final void error(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR));
 	}
@@ -284,16 +241,34 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	final void fatal(Component reporter, String message)
+	public final void fatal(Component reporter, String message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL));
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * Adds a new ui message with level INFO to the current messages.
+	 * 
+	 * @param reporter
+	 *            The reporting component
+	 * @param message
+	 *            The actual message
 	 */
-	public String toString()
+	public final void info(Component reporter, String message)
 	{
-		return "[feedbackMessages = " + StringList.valueOf(messages) + "]";
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
+	}
+
+	/**
+	 * Adds a new ui message with level WARNING to the current messages.
+	 * 
+	 * @param reporter
+	 *            the reporting component
+	 * @param message
+	 *            the actual message
+	 */
+	public final void warn(Component reporter, String message)
+	{
+		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}
 }

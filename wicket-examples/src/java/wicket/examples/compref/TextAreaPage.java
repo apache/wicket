@@ -46,7 +46,7 @@ public class TextAreaPage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form("form", feedbackPanel)
+		Form form = new Form("form")
 		{
 			protected void onSubmit()
 			{

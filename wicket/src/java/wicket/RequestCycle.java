@@ -853,7 +853,7 @@ public abstract class RequestCycle
 		final Page page = getResponsePage();
 		if (page != null)
 		{
-			// add/touch the response page in its pagemap.
+			// Add/touch the response page in its pagemap.
 			page.getPageMap().put(page);
 			try
 			{
@@ -865,14 +865,15 @@ public abstract class RequestCycle
 				}
 				else
 				{
-					// test if the invoker page was the same as the page that is
+					// Test if the invoker page was the same as the page that is
 					// going to be rendered
 					if (getInvokePage() == getResponsePage())
 					{
-						// set it to null because it is already ended inthe
+						// Set it to null because it is already ended inthe
 						// page.doRender()
 						setInvokePage(null);
 					}
+					
 					// Let page render itself
 					page.doRender();
 				}

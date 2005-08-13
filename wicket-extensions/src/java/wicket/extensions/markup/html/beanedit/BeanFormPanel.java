@@ -21,7 +21,6 @@ package wicket.extensions.markup.html.beanedit;
 import java.io.Serializable;
 
 import wicket.AttributeModifier;
-import wicket.IFeedback;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
@@ -43,7 +42,7 @@ public class BeanFormPanel extends Panel
 	 */
 	public BeanFormPanel(String id, Serializable bean)
 	{
-		this(id, new BeanModel(bean), null);
+		this(id, new BeanModel(bean));
 	}
 
 	/**
@@ -53,31 +52,9 @@ public class BeanFormPanel extends Panel
 	 */
 	public BeanFormPanel(String id, BeanModel beanModel)
 	{
-		this(id, beanModel, null);
-	}
-
-	/**
-	 * Construct.
-	 * @param id component id
-	 * @param bean JavaBean to be edited or displayed
-	 * @param feedback feeback receiver
-	 */
-	public BeanFormPanel(String id, Serializable bean, IFeedback feedback)
-	{
-		this(id, new BeanModel(bean));
-	}
-
-	/**
-	 * Construct.
-	 * @param id component id
-	 * @param beanModel model with the JavaBean to be edited or displayed
-	 * @param feedback feeback receiver
-	 */
-	public BeanFormPanel(String id, BeanModel beanModel, IFeedback feedback)
-	{
 		super(id, beanModel);
 		setRenderBodyOnly(true);
-		add(new BeanForm("form", beanModel, feedback));
+		add(new BeanForm("form", beanModel));
 	}
 
 	/**
@@ -150,11 +127,10 @@ public class BeanFormPanel extends Panel
 		 * Construct.
 		 * @param id component id
 		 * @param beanModel model with the JavaBean to be edited or displayed
-		 * @param feedback feeback receiver
 		 */
-		public BeanForm(String id, BeanModel beanModel, IFeedback feedback)
+		public BeanForm(String id, BeanModel beanModel)
 		{
-			super(id, beanModel, feedback);
+			super(id, beanModel);
 			add(newBeanPanel("beanPanel", beanModel));
 
 			Button cancel = new Button("cancel")

@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$
+ * $Id$ $Revision$
  * $Date$
  * 
  * ==============================================================================
@@ -16,20 +15,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.feedback;
 
 /**
- * Tagging interface to be able to create different levels of feedback message
- * collection.
- * <p>
- * For example, when you have a page with a form, and seperate feedbackpanels for the page level
- * messages and form level messages, you want the collecting of messages for the page to
- * stop with the form component, because otherwise you will see duplicates.
- * </p>
- *
+ * Interface for components that present some kind of feedback to the user,
+ * normally based on the feedback messages attached to various components on a
+ * given page.
+ * 
+ * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public interface IFeedbackBoundary
+public interface IFeedback
 {
-
+	/**
+	 * This method is called on any component implementing IFeedback when it is
+	 * time for the component to update its feedback display
+	 */
+	void updateFeedback();
 }

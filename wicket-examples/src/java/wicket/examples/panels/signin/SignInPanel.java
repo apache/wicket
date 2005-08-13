@@ -17,7 +17,6 @@
  */
 package wicket.examples.panels.signin;
 
-import wicket.IFeedback;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
@@ -69,12 +68,10 @@ public abstract class SignInPanel extends Panel
 		 * 
 		 * @param id
 		 *            id of the form component
-		 * @param feedback
-		 *            The feedback panel to update
 		 */
-		public SignInForm(final String id, final IFeedback feedback)
+		public SignInForm(final String id)
 		{
-			super(id, feedback);
+			super(id);
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
@@ -160,7 +157,7 @@ public abstract class SignInPanel extends Panel
 
 		// Add sign-in form to page, passing feedback panel as
 		// validation error handler
-		add(new SignInForm("signInForm", feedback));
+		add(new SignInForm("signInForm"));
 	}
 
 	/**

@@ -9,6 +9,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/concurrent/jars/concurrent-1.3.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
-	<classpathentry kind="src" path="/wicket"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-feedback-refactor"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
