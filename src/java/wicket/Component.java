@@ -210,6 +210,57 @@ import wicket.version.undo.Change;
  */
 public abstract class Component implements Serializable, IEventRequestListener
 {
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED1 = 0x0100;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED2 = 0x0200;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED3 = 0x0400;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final short FLAG_RESERVED4 = 0x0800;
+
+	/** True when a component is being auto-added */
+	private static final short FLAG_AUTO = 0x0001;
+
+	/** Flag for escaping HTML in model strings */
+	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+
+	/** Flag for Component holding root compound model */
+	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+
+	/** Render tag boolean */
+	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+
+	/** Versioning boolean */
+	private static final short FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final short FLAG_VISIBLE = 0x0010;
+
+	/** Log. */
+	private static Log log = LogFactory.getLog(Component.class);
+
+	/** List of AttributeModifiers to be applied for this Component */
+	private AttributeModifier attributeModifiers = null;
+
+	/** possible list of handlers of event requests (eg XmlHttpRequests). */
+	private Map eventRequestHandlers;
+
+	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
+	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED;
+
+	/** Component id. */
+	private String id;
+
+	/** The model for this component. */
+	private IModel model;
+
+	/** Any parent container. */
+	private MarkupContainer parent;
+
 	/**
 	 * Change record of a model.
 	 */
@@ -235,6 +286,34 @@ public abstract class Component implements Serializable, IEventRequestListener
 		{
 			setModel(this.model);
 		}
+	}
+
+	/**
+	 * Generic component visitor interface for component traversals.
+	 */
+	public static interface IVisitor
+	{
+		/**
+		 * Value to return to continue a traversal.
+		 */
+		public static final Object CONTINUE_TRAVERSAL = null;
+
+		/**
+		 * A generic value to return to stop a traversal.
+		 */
+		public static final Object STOP_TRAVERSAL = new Object();
+
+		/**
+		 * Called at each component in a traversal.
+		 * 
+		 * @param component
+		 *            The component
+		 * @return CONTINUE_TRAVERSAL (null) if the traversal should continue,
+		 *         or a non-null return value for the traversal method if it
+		 *         should stop. If no return value is useful, the generic
+		 *         non-null value STOP_TRAVERSAL can be used.
+		 */
+		public Object component(Component component);
 	}
 
 	/**
@@ -265,85 +344,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 		{
 			component.setVisible(!isVisible);
 		}
-	}
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED1 = 0x0100;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED2 = 0x0200;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED3 = 0x0400;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED4 = 0x0800;
-
-	/** True when a component is being auto-added */
-	private static final short FLAG_AUTO = 0x0001;
-
-	/** Flag for escaping HTML in model strings */
-	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-
-	/** Flag for Component holding root compound model */
-	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
-
-	/** Versioning boolean */
-	private static final short FLAG_VERSIONED = 0x0008;
-
-	/** Visibility boolean */
-	private static final short FLAG_VISIBLE = 0x0010;
-
-	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Log. */
-	private static Log log = LogFactory.getLog(Component.class);
-
-	/** List of AttributeModifiers to be applied for this Component */
-	private AttributeModifier attributeModifiers = null;
-
-	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED;
-
-	/** Component id. */
-	private String id;
-
-	/** The model for this component. */
-	private IModel model;
-
-	/** Any parent container. */
-	private MarkupContainer parent;
-
-	/** possible list of handlers of event requests (eg XmlHttpRequests). */
-	private Map eventRequestHandlers;
-
-	/**
-	 * Generic component visitor interface for component traversals.
-	 */
-	public static interface IVisitor
-	{
-		/**
-		 * Value to return to continue a traversal.
-		 */
-		public static final Object CONTINUE_TRAVERSAL = null;
-
-		/**
-		 * A generic value to return to stop a traversal.
-		 */
-		public static final Object STOP_TRAVERSAL = new Object();
-
-		/**
-		 * Called at each component in a traversal.
-		 * 
-		 * @param component
-		 *            The component
-		 * @return CONTINUE_TRAVERSAL (null) if the traversal should continue,
-		 *         or a non-null return value for the traversal method if it
-		 *         should stop. If no return value is useful, the generic
-		 *         non-null value STOP_TRAVERSAL can be used.
-		 */
-		public Object component(Component component);
 	}
 
 	/**
@@ -391,6 +391,28 @@ public abstract class Component implements Serializable, IEventRequestListener
 		modifier.next = attributeModifiers;
 		attributeModifiers = modifier;
 		return this;
+	}
+
+	/**
+	 * Registers a handler for an event request.
+	 * @param eventRequestHandler handler
+	 */
+	public final void add(IEventRequestHandler eventRequestHandler)
+	{
+		if (eventRequestHandler == null)
+		{
+			throw new NullPointerException("argument may not be null");
+		}
+
+		// Lazy create
+		if (eventRequestHandlers == null)
+		{
+			eventRequestHandlers = new HashMap();
+		}
+		eventRequestHandlers.put(eventRequestHandler.getId(), eventRequestHandler);
+
+		// Give handler the opportunity to bind this component
+		eventRequestHandler.bind(this);
 	}
 
 	/**
@@ -856,6 +878,8 @@ public abstract class Component implements Serializable, IEventRequestListener
 		return style;
 	}
 
+	
+
 	/**
 	 * Gets the variation string of this component that will be used to look up markup for this component.
 	 * Subclasses can override this method to define by an instance what markup variation should be picked up.
@@ -868,8 +892,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 	{
 		return null;
 	}
-
-	
 
 	/**
 	 * @return True if this component has an error message
@@ -921,7 +943,8 @@ public abstract class Component implements Serializable, IEventRequestListener
 		// This component is not an ancestor of the given component
 		return false;
 	}
-
+	
+	
 	/**
 	 * @return Returns the isVersioned.
 	 */
@@ -947,8 +970,18 @@ public abstract class Component implements Serializable, IEventRequestListener
 			return true;
 		}
 	}
-	
-	
+
+
+	/**
+	 * Gets whether this component and any children are visible.
+	 * 
+	 * @return True if component and any children are visible
+	 */
+	public boolean isVisible()
+	{
+		return getFlag(FLAG_VISIBLE);
+	}
+
 	/**
 	 * Checks if the component itself and all its parents are visible.
 	 * 
@@ -963,17 +996,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 			component = component.getParent();
 		}
 		return true;
-	}
-
-
-	/**
-	 * Gets whether this component and any children are visible.
-	 * 
-	 * @return True if component and any children are visible
-	 */
-	public boolean isVisible()
-	{
-		return getFlag(FLAG_VISIBLE);
 	}
 
 	/**
@@ -1027,6 +1049,28 @@ public abstract class Component implements Serializable, IEventRequestListener
 	public final Page newPage(final Class c, final PageParameters parameters)
 	{
 		return getPageFactory().newPage(c, parameters);
+	}
+
+	/**
+	 * @see wicket.IEventRequestListener#onEventRequest()
+	 */
+	public void onEventRequest()
+	{
+		String id = getRequest().getParameter("id");
+
+		if (id == null)
+		{
+			throw new WicketRuntimeException("parameter id was not provided: unable to locate listener");
+		}
+
+		IEventRequestHandler eventRequestHandler = (IEventRequestHandler)eventRequestHandlers.get(id);
+
+		if (eventRequestHandler == null)
+		{
+			throw new WicketRuntimeException("no handler found with id " + id);
+		}
+
+		eventRequestHandler.onEventRequest();
 	}
 
 	/**
@@ -1148,6 +1192,19 @@ public abstract class Component implements Serializable, IEventRequestListener
 	}
 
 	/**
+	 * Sets whether model strings should be escaped.
+	 * 
+	 * @param escapeMarkup
+	 *            True is model strings should be escaped
+	 * @return This
+	 */
+	public final Component setEscapeModelStrings(final boolean escapeMarkup)
+	{
+		setFlag(FLAG_ESCAPE_MODEL_STRINGS, escapeMarkup);
+		return this;
+	}
+
+	/**
 	 * Sets the given model.
 	 * 
 	 * @param model
@@ -1208,57 +1265,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 	}
 
 	/**
-	 * If false the component's tag will be printed as well as its
-	 * body (which is default). If true only the body will be printed,
-	 * but not the component's tag.
-	 * 
-	 * @return If true, the component tag will not be printed
-	 */
-	protected final boolean getRenderBodyOnly()
-	{
-	    return getFlag(FLAG_RENDER_BODY_ONLY);
-	}
-
-	/**
-	 * Sets the page that will respond to this request
-	 * 
-	 * @param page
-	 *            The response page
-	 * @see RequestCycle#setResponsePage(Page)
-	 */
-	public final void setResponsePage(final Page page)
-	{
-		getRequestCycle().setResponsePage(page);
-	}
-
-	/**
-	 * Sets the page that will respond to this request
-	 * 
-	 * @param cls
-	 *            The response page class
-	 * @see RequestCycle#setResponsePage(Class)
-	 */
-	public final void setResponsePage(final Class cls)
-	{
-		getRequestCycle().setResponsePage(cls);
-	}
-
-	/**
-	 * Sets the page class and its parameters that will respond to this request
-	 * 
-	 * @param cls
-	 *            The response page class
-	 * @param parameters 
-	 * 			  The parameters for thsi bookmarkable page.
-	 * @see RequestCycle#setResponsePage(Class, PageParameters)
-	 */
-	public final void setResponsePage(final Class cls, PageParameters parameters)
-	{
-		getRequestCycle().setResponsePage(cls,parameters);
-	}
-	
-	
-	/**
 	 * @param redirect
 	 *            True if the response should be redirected to
 	 * @see RequestCycle#setRedirect(boolean)
@@ -1267,7 +1273,8 @@ public abstract class Component implements Serializable, IEventRequestListener
 	{
 		getRequestCycle().setRedirect(redirect);
 	}
-
+	
+	
 	/**
 	 * If false the component's tag will be printed as well as its
 	 * body (which is default). If true only the body will be printed,
@@ -1281,18 +1288,43 @@ public abstract class Component implements Serializable, IEventRequestListener
 	    this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
 	    return this;
 	}
+
+	/**
+	 * Sets the page that will respond to this request
+	 * 
+	 * @param cls
+	 *            The response page class
+	 * @see RequestCycle#setResponsePage(Class)
+	 */
+	public final void setResponsePage(final Class cls)
+	{
+		getRequestCycle().setResponsePage(cls);
+	}
 	
 	/**
-	 * Sets whether model strings should be escaped.
+	 * Sets the page class and its parameters that will respond to this request
 	 * 
-	 * @param escapeMarkup
-	 *            True is model strings should be escaped
-	 * @return This
+	 * @param cls
+	 *            The response page class
+	 * @param parameters 
+	 * 			  The parameters for thsi bookmarkable page.
+	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
-	public final Component setEscapeModelStrings(final boolean escapeMarkup)
+	public final void setResponsePage(final Class cls, PageParameters parameters)
 	{
-		setFlag(FLAG_ESCAPE_MODEL_STRINGS, escapeMarkup);
-		return this;
+		getRequestCycle().setResponsePage(cls,parameters);
+	}
+
+	/**
+	 * Sets the page that will respond to this request
+	 * 
+	 * @param page
+	 *            The response page
+	 * @see RequestCycle#setResponsePage(Page)
+	 */
+	public final void setResponsePage(final Page page)
+	{
+		getRequestCycle().setResponsePage(page);
 	}
 
 	/**
@@ -1383,50 +1415,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 	public final void warn(final String message)
 	{
 		getPage().getFeedbackMessages().warn(this, message);
-	}
-
-	/**
-	 * Registers a handler for an event request.
-	 * @param eventRequestHandler handler
-	 */
-	public final void add(IEventRequestHandler eventRequestHandler)
-	{
-		if (eventRequestHandler == null)
-		{
-			throw new NullPointerException("argument may not be null");
-		}
-
-		// Lazy create
-		if (eventRequestHandlers == null)
-		{
-			eventRequestHandlers = new HashMap();
-		}
-		eventRequestHandlers.put(eventRequestHandler.getId(), eventRequestHandler);
-
-		// Give handler the opportunity to bind this component
-		eventRequestHandler.bind(this);
-	}
-
-	/**
-	 * @see wicket.IEventRequestListener#onEventRequest()
-	 */
-	public void onEventRequest()
-	{
-		String id = getRequest().getParameter("id");
-
-		if (id == null)
-		{
-			throw new WicketRuntimeException("parameter id was not provided: unable to locate listener");
-		}
-
-		IEventRequestHandler eventRequestHandler = (IEventRequestHandler)eventRequestHandlers.get(id);
-
-		if (eventRequestHandler == null)
-		{
-			throw new WicketRuntimeException("no handler found with id " + id);
-		}
-
-		eventRequestHandler.onEventRequest();
 	}
 
 	/**
@@ -1575,6 +1563,18 @@ public abstract class Component implements Serializable, IEventRequestListener
 	protected final boolean getFlag(final short flag)
 	{
 		return (this.flags & flag) != 0;
+	}
+
+	/**
+	 * If false the component's tag will be printed as well as its
+	 * body (which is default). If true only the body will be printed,
+	 * but not the component's tag.
+	 * 
+	 * @return If true, the component tag will not be printed
+	 */
+	protected final boolean getRenderBodyOnly()
+	{
+	    return getFlag(FLAG_RENDER_BODY_ONLY);
 	}
 
 
@@ -1935,6 +1935,24 @@ public abstract class Component implements Serializable, IEventRequestListener
 	}
 
 	/**
+	 * Detaches all models
+	 */
+	final void detachModels()
+	{
+		// Detach any detachable model from this component
+		detachModel();
+
+		// Also detach models from any contained attribute modifiers
+		if (attributeModifiers != null)
+		{
+			for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
+			{
+				current.detachModel();
+			}
+		}
+	}
+
+	/**
 	 * Gets the component at the given path.
 	 * 
 	 * @param path
@@ -2055,24 +2073,6 @@ public abstract class Component implements Serializable, IEventRequestListener
 			log.debug("replacing parent " + this.parent + " with " + parent);
 		}
 		this.parent = parent;
-	}
-
-	/**
-	 * Detaches all models
-	 */
-	final void detachModels()
-	{
-		// Detach any detachable model from this component
-		detachModel();
-
-		// Also detach models from any contained attribute modifiers
-		if (attributeModifiers != null)
-		{
-			for (AttributeModifier current = attributeModifiers; current != null; current = current.next)
-			{
-				current.detachModel();
-			}
-		}
 	}
 
 	/**
