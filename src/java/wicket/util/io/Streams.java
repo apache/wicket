@@ -24,9 +24,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Utilities methods for working with input and output streams.
  * 
@@ -34,9 +31,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class Streams
 {
-	/** Logging */
-	private static Log log = LogFactory.getLog(Streams.class);
-
 	/**
 	 * Writes the input stream to the output stream. Input is done without a
 	 * Reader object, meaning that the input is copied in its raw form.
