@@ -349,7 +349,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	    final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
 	    if (header != null)
 	    {
-	        this.remove(header.getId());
+	        this.remove(header);
 	    }
 		
 		super.onEndRequest();

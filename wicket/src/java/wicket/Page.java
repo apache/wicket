@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.100 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,6 +32,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
+import wicket.util.profile.ObjectProfiler;
 import wicket.util.string.StringValue;
 import wicket.util.value.Count;
 import wicket.version.undo.Change;
@@ -241,6 +242,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				// Handle request by rendering page
 				render();
 
+				// Size profiling for pages
+				// dumpSize();
+				
 				// Check rendering if it happened fully
 				checkRendering();
 			}
@@ -250,7 +254,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 				internalEndRequest();
 			}
 		}
-		// test if the response page is set by the checkAccess and render that
+		// Test if the response page is set by the checkAccess and render that
 		// one.
 		else if (getRequestCycle().getResponsePage() != this)
 		{
@@ -744,6 +748,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 	}
 
 	/**
+	 * Quick way to dump size of page without the whole session it's attached to
+	 */
+	final void dumpSize()
+	{
+		PageMap oldPageMap = this.pageMap;
+		Session oldSession = this.session;
+		
+		this.pageMap = null;
+		this.session = null;
+		
+		System.out.println("----> Sizeof(" + getClass().getName() + ") = "
+				+ ObjectProfiler.sizeof(this));
+
+		this.pageMap = oldPageMap;
+		this.session = oldSession;
+	}
+
+	/*
 	 * @param component
 	 *            The component that was added
 	 */
