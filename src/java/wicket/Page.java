@@ -230,6 +230,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener
 					public Object component(Component component)
 					{
 						((IFeedback)component).updateFeedback();
+						component.internalBeginRequest();
 						return IVisitor.CONTINUE_TRAVERSAL;
 					}
 				});
