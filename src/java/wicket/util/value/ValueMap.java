@@ -191,6 +191,18 @@ public class ValueMap implements Map, Serializable
 	}
 
 	/**
+	 * Gets a boolean value by key.
+	 *
+	 * @param key The key
+	 * @return The value
+	 * @throws StringValueConversionException
+	 */
+	public final boolean getBoolean(final String key) throws StringValueConversionException
+	{
+		return getStringValue(key).toBoolean();
+	}
+
+	/**
 	 * Gets a duration.
 	 * 
 	 * @param key
