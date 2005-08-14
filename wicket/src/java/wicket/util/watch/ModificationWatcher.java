@@ -49,12 +49,12 @@ public final class ModificationWatcher
 	// MarkupContainer class for holding modifiable entries to watch
 	private static final class Entry
 	{
-
 		// The most recent lastModificationTime polled on the object
 		Time lastModifiedTime;
 
 		// The set of listeners to call when the modifiable changes
 		final ChangeListenerSet listeners = new ChangeListenerSet();
+		
 		// The modifiable thing
 		IModifiable modifiable;
 	}
@@ -85,8 +85,9 @@ public final class ModificationWatcher
 	 *            The modifiable thing to monitor
 	 * @param listener
 	 *            The listener to call if the modifiable is modified
+	 * @return <tt>true</tt> if the set did not already contain the specified element.
 	 */
-	public final void add(final IModifiable modifiable, final IChangeListener listener)
+	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
 		// Look up entry for modifiable
 		final Entry entry = (Entry)modifiableToEntry.get(modifiable);
@@ -111,14 +112,27 @@ public final class ModificationWatcher
 				// The IModifiable is not returning a valid lastModifiedTime
 				log.info("Cannot track modifications to resource " + modifiable);
 			}
+			
+			return true;
 		}
 		else
 		{
 			// Add listener to existing entry
-			entry.listeners.add(listener);
+			return entry.listeners.add(listener);
 		}
 	}
 
+	/**
+	 * Remove all entries associated with 'modifiable'
+	 * 
+	 * @param modifiable
+	 * @return the object removed, else null
+	 */
+	public IModifiable remove(final IModifiable modifiable)
+	{
+		return (IModifiable) modifiableToEntry.remove(modifiable);
+	}
+	
 	/**
 	 * Start watching at a given polling rate
 	 * 
