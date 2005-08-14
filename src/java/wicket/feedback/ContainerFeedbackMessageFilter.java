@@ -7,7 +7,7 @@ import wicket.MarkupContainer;
  * 
  * @author Jonathan Locke
  */
-public class ContainedByFeedbackMessageFilter implements IFeedbackMessageFilter
+public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 {
 	private final MarkupContainer container;
 
@@ -17,7 +17,7 @@ public class ContainedByFeedbackMessageFilter implements IFeedbackMessageFilter
 	 * @param container
 	 *            The container that message reporters must be a child of
 	 */
-	public ContainedByFeedbackMessageFilter(MarkupContainer container)
+	public ContainerFeedbackMessageFilter(MarkupContainer container)
 	{
 		this.container = container;
 	}
