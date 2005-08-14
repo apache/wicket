@@ -17,7 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.feedback.ContainedByFeedbackMessageFilter;
+import wicket.feedback.ContainerFeedbackMessageFilter;
 import wicket.feedback.IFeedback;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.WebMarkupContainer;
@@ -92,6 +92,6 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	 */
 	protected IFeedbackMessageFilter getMessagesFilter()
 	{
-		return new ContainedByFeedbackMessageFilter(this);
+		return new ContainerFeedbackMessageFilter(this);
 	}
 }
