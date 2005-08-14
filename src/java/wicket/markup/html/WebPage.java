@@ -265,23 +265,24 @@ public class WebPage extends Page implements IHeaderRenderer
 	}
 
 	/**
-	 * Invoked from HtmlHeaderContainer it'll ask all child components of the 
+	 * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT USE IT YOURSELF.
+	 * <p>
+	 * Invoked by HtmlHeaderContainer it'll ask all child components of the 
 	 * Page if they have something to contribute to the &lt;head&gt; section 
-	 * of the HTML output. If they have, child components will return a 
-	 * WebMarkupContainer which is (auto) added to the component hierarchie 
-	 * and immediately rendered.<p>
+	 * of the HTML output. Every component interested must implement
+	 * IHeaderContributor.<p>
 	 * Note: HtmlHeaderContainer will be removed from the component hierachie
 	 * at the end of the request (@see #onEndRequest()) and thus can not 
 	 * transport status from one request to the next. This is true for all
-	 * components added to the header as well. 
+	 * components added to the header. 
 	 * 
-	 * @param container The header container 
+	 * @see IHeaderContributor
+	 * @param container The header component container 
 	 */
-	public final void renderHeadSections(final HtmlHeaderContainer container)
+	public final void renderHeaderSections(final HtmlHeaderContainer container)
 	{
-		// Collect all header parts and render them.
-	    // Only MarkupContainer have associated markup files which
-	    // may contain <wicket:head> regions.
+	    // A components interested in contributing to the header must
+	    // implement IHeaderContributor.
 		visitChildren(IHeaderContributor.class, new IVisitor()
         {
 			/**
@@ -291,10 +292,10 @@ public class WebPage extends Page implements IHeaderRenderer
 			{
 				if (component.isVisible())
 				{
-				    if (component instanceof IHeaderContributor)
+					if (component instanceof IHeaderContributor)
 				    {
-				        ((IHeaderContributor)component).printHead(container);
-					}
+			        	((IHeaderContributor)component).renderHead(container);
+				    }
 				}
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}

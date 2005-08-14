@@ -19,6 +19,7 @@ package wicket.markup.html.border;
 
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
+import wicket.MarkupInheritanceContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
@@ -253,12 +254,18 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
      *
      * @param container The current html header container
 	 */
-	public final void renderHeadSections(final HtmlHeaderContainer container)
+	public final void renderHeaderSections(final HtmlHeaderContainer container)
 	{
 		MarkupContainer parent = getParent();
+		
+		while (parent instanceof MarkupInheritanceContainer)
+		{
+		    parent = parent.getParent();
+		}
+		
 		if (parent instanceof IHeaderRenderer)
 		{
-		    ((IHeaderRenderer)parent).renderHeadSections(container);
+		    ((IHeaderRenderer)parent).renderHeaderSections(container);
 		}
 	}
 }

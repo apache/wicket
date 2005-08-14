@@ -479,7 +479,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public String toString()
 	{
-		if (!isMutable)
+		if (!isMutable && (text != null))
 		{
 			return text;
 		}

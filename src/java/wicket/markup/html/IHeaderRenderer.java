@@ -38,5 +38,5 @@ public interface IHeaderRenderer
 	 * @param container
 	 *            The current html header container
 	 */
-	public void renderHeadSections(final HtmlHeaderContainer container);
+	public void renderHeaderSections(final HtmlHeaderContainer container);
 }

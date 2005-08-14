@@ -16,37 +16,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.parser.filter;
+package wicket.markup;
 
-import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.IHeaderContributor;
+import wicket.PageParameters;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.model.Model;
+import wicket.markup.html.link.Link;
+import wicket.model.PropertyModel;
 
 
 /**
- * Mock page for testing.
- *
- * @author Chris Turner
  */
-public class HeaderSectionMyLabel2 extends Label implements IHeaderContributor
+public class MarkupInheritanceBase_5 extends WebPage 
 {
-	/**
-	 * Construct.
-	 * @param id
-	 * @param label
-	 */
-	public HeaderSectionMyLabel2(final String id, final String label) 
-	{
-	    super(id, new Model(label));
-    }
+	private int counter = 0;
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
-	 * @param container
+	 * Construct.
+	 * @param parameters
 	 */
-	public void renderHead(HtmlHeaderContainer container)
+	public MarkupInheritanceBase_5(final PageParameters parameters)
 	{
-	    this.getResponse().write("text added by contributor");
+		add(new Label("label1", new PropertyModel(this, "counter")));
+		add(new Link("link")
+		{
+			public void onClick()
+			{
+				counter++;
+			}
+		});
+	}
+
+	/**
+	 * Gets the counter.
+	 * @return counter
+	 */
+	public int getCounter()
+	{
+		return counter;
+	}
+
+	/**
+	 * Sets the counter.
+	 * @param counter counter
+	 */
+	public void setCounter(int counter)
+	{
+		this.counter = counter;
 	}
 }

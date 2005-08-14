@@ -155,7 +155,7 @@ public class HeaderSectionTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		System.out.println(document);
+		//System.out.println(document);
 
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}

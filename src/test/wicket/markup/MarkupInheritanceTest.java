@@ -125,4 +125,14 @@ public class MarkupInheritanceTest extends TestCase
 		document = application.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4-1.html"));
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_5() throws Exception
+	{
+	    // HeaderComponent in derived markup
+	    // TODO Doesn't work yet
+	    //executeTest(MarkupInheritanceExtension_5.class, "MarkupInheritanceExpectedResult_5.html");
+	}
 }

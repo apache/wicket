@@ -16,37 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.parser.filter;
+package wicket.markup;
 
-import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.IHeaderContributor;
+import wicket.PageParameters;
 import wicket.markup.html.basic.Label;
-import wicket.model.Model;
 
 
 /**
- * Mock page for testing.
- *
- * @author Chris Turner
  */
-public class HeaderSectionMyLabel2 extends Label implements IHeaderContributor
+public class MarkupInheritanceExtension_5 extends MarkupInheritanceBase_5 
 {
 	/**
 	 * Construct.
-	 * @param id
-	 * @param label
+	 * @param parameters
 	 */
-	public HeaderSectionMyLabel2(final String id, final String label) 
+	public MarkupInheritanceExtension_5(final PageParameters parameters) 
 	{
-	    super(id, new Model(label));
+	    super(parameters);
+	    
+	    add(new Label("label3", "extension label"));
     }
-
-	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
-	 * @param container
-	 */
-	public void renderHead(HtmlHeaderContainer container)
-	{
-	    this.getResponse().write("text added by contributor");
-	}
 }

@@ -74,7 +74,7 @@ public class MarkupStream
 
 		if (markup.size() > 0)
 		{
-			current = get(0);
+			current = get(currentIndex);
 		}
 	}
 
@@ -393,16 +393,6 @@ public class MarkupStream
 	}
 	
 	/**
-	 * Set the index pointing to the header element of the markup
-	 * 
-	 * @param index
-	 */
-	public final void setHeaderIndex(final int index)
-	{
-	    markup.setHeaderIndex(index);
-	}
-	
-	/**
 	 * Get the wicket namespace valid for this specific markup
 	 * 
 	 * @return wicket namespace
@@ -410,5 +400,16 @@ public class MarkupStream
 	public String getWicketNamespace()
 	{
 	    return this.markup.getWicketNamespace();
+	}
+	
+	/**
+	 * Get the index pointing to a &lt;wicket:extend&gt> tag.
+	 * -1 if not found.
+	 * 
+	 * @return index The index of the markup element
+	 */
+	public int getExtendIndex()
+	{
+	    return this.markup.getExtendIndex();
 	}
 }

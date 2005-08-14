@@ -25,44 +25,35 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.WicketHeaderTag;
-import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlTag;
 
 /**
- * This is a markup inline filter. It assumes that WicketTagIdentifier has been 
- * called first and that <wicket:head> tags have been detected. This filter checks
- * that <wicket:head> occur only within <head> sections.<p>
+ * This is a markup inline filter. It assumes that WicketTagIdentifier has been
+ * called first. Provided the markup contains a &lt;body&gt; tag it will
+ * automatically prepend a &lt;head&gt; tag if missing.
+ * <p>
  * 
  * @author Juergen Donnerstag
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 {
-    /** Logging */
+	/** Logging */
 	private static final Log log = LogFactory.getLog(HtmlHeaderSectionHandler.class);
 
-	/** Id of the header component */
+	/** The automatically assigned wicket:id to &gt;head&lt; tag */
 	public static final String HEADER_ID = "_header";
-	
-    private static final String HEAD = "head";
-    
-    private static final int STATE_START = 0;
-    private static final int STATE_HEAD_OPENED = 1;
-    private static final int STATE_HEAD_CLOSED = 2;
-    private static final int STATE_WICKET_HEAD_OPENED = 3;
-    private static final int STATE_WICKET_HEAD_CLOSED = 4;
-    private static final int STATE_BODY_FOUND = 5;
-	
-	/** current state */
-	private int status;
-	
-	/** In case you want to add extra Components to the markup, just add them
-	 * to the list. MarkupParser will handle it.
+
+	private boolean foundHead = false;
+	private boolean ignoreTheRest = false;
+
+	/**
+	 * In case you want to add extra Components to the markup, just add them to
+	 * the list. MarkupParser will handle it.
 	 */
 	private List tagList;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -73,14 +64,15 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	{
 		super(parent);
 	}
-	
+
 	/**
 	 * In order to add ComponentTags which are NOT from markup file.
+	 * 
 	 * @param tagList
 	 */
 	public void setTagList(final List tagList)
 	{
-	    this.tagList = tagList;
+		this.tagList = tagList;
 	}
 
 	/**
@@ -101,87 +93,75 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		{
 			return tag;
 		}
-		
-		// Whatever there is left in the markup, <wicket:head> is no longer allowed
-		if ((status == STATE_BODY_FOUND) || (status == STATE_HEAD_CLOSED))
+
+		// Whatever there is left in the markup, ignore it
+		if (ignoreTheRest == true)
 		{
-		    return tag;
+			return tag;
 		}
 
-		// if it is <head> or <wicket:head>
-		if (HEAD.equalsIgnoreCase(tag.getName()))
-        {
-		    // if <wicket:head>
-			if (tag instanceof WicketTag)
+		// if it is <head> or </head>
+		if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
+		{
+			// it is <head>
+			if (tag.isClose())
 			{
-			    if (tag.isOpen() == true)
-			    {
-			        status = STATE_WICKET_HEAD_OPENED;
-			    }
-			    else
-			    {
-			        status = STATE_WICKET_HEAD_CLOSED;
-			    }
+				foundHead = true;
 			}
-			else
+
+			// Usually <head> is not a wicket special tag. But because we want
+			// transparent header support we insert it automatically if mmissing
+			// and while rendering its content all child components are asked if 
+			// they want to contribute something to the header. Thus we have to
+			// handle <head> accordingly.
+			tag.setId(HEADER_ID);
+
+			return tag;
+		}
+
+		// if it is <body>
+		if (("body".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
+		{
+			// we found no <head> . But because we found <body> we assume it 
+		    // could be a page. And because we need to auto-add <head> to 
+		    // pages only (if missing) ... Note: no one prevent a designer
+		    // to put a <body> in a panel component, for previewabilty.
+		    // Thus more markups than actually required might now have
+			// that tag. It should be a problem, but ... you never know.
+			if (foundHead == false)
 			{
-			    // it is <head>
-			    if (tag.isOpen() == true)
-			    {
-			        status = STATE_HEAD_OPENED;
-			    }
-			    else
-			    {
-			        if (status != STATE_WICKET_HEAD_CLOSED)
-			        {
-			            // we found <head> but no <wicket:head>
-			            insertWicketHeadTag(false);
-			        }
-			        status = STATE_HEAD_CLOSED;
-			    }
+				insertHeadTag();
 			}
-			
-		    return tag;
-        }
-		
-		if ("body".equalsIgnoreCase(tag.getName()))
-        {
-		    // we found neither <head> nor <wicket:head>
-		    insertWicketHeadTag(true);
-		    
-		    // <head> must always be before <body>
-		    status = STATE_BODY_FOUND;
-		    return tag;
-        }
-		
+
+			// <head> must always be before <body>
+			ignoreTheRest = true;
+			return tag;
+		}
+
 		return tag;
 	}
-	
+
 	/**
-	 * Insert <wicket:head> open and close tag (with empty body)
-	 * @param requiresHeadTag True, if no <head> was found
+	 * Insert <head> open and close tag (with empty body) to the
+	 * current position.
 	 */
-	private void insertWicketHeadTag(final boolean requiresHeadTag)
+	private void insertHeadTag()
 	{
 		final XmlTag headOpenTag = new XmlTag();
-		headOpenTag.setName(HEAD);
+		headOpenTag.setName("head");
 		headOpenTag.setType(XmlTag.OPEN);
-		final WicketHeaderTag openTag = new WicketHeaderTag(headOpenTag);
+		final ComponentTag openTag = new ComponentTag(headOpenTag);
 		openTag.setId(HEADER_ID);
-		openTag.setRequiresHtmlHeadTag(requiresHeadTag);
-			
+
 		final XmlTag headCloseTag = new XmlTag();
-		headCloseTag.setName(HEAD);
+		headCloseTag.setName(headOpenTag.getName());
 		headCloseTag.setType(XmlTag.CLOSE);
-		final WicketTag closeTag = new WicketTag(headCloseTag);
+		final ComponentTag closeTag = new ComponentTag(headCloseTag);
 		closeTag.setOpenTag(openTag);
 		closeTag.setId(HEADER_ID);
 
 		// insert the tags into the markup stream
 		tagList.add(openTag);
 		tagList.add(closeTag);
-		
-		// done
-		status = STATE_WICKET_HEAD_CLOSED;
 	}
 }
