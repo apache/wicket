@@ -18,30 +18,39 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
+import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 
 /**
- * This is a markup inline filter. It detects &t;body&gt; tags with onLoad
- * attribute. The onLoad attribute must be copied from the component's markup to
- * the Page's markup. In case onLoad loads and runs a javascript, it must either
- * be referenced by file or included in &lt;wicket:head&gt;.
+ * This is a markup inline filter. It assumes that WicketTagIdentifier has been
+ * called first. It identifies &lt;wicket:extend&gt; tag which are used for
+ * markup inheritance and remove everything (stops processing) after the tag has
+ * been closed. Prior to the open tag only raw markup and &gt;head&lt; is
+ * allowed.
  * 
  * @author Juergen Donnerstag
  */
-public final class BodyOnLoadHandler extends AbstractMarkupFilter
+public final class WicketExtendHandler extends AbstractMarkupFilter
 {
-    /** Logging */
-	private static final Log log = LogFactory.getLog(BodyOnLoadHandler.class);
+	/** Logging */
+	private static final Log log = LogFactory.getLog(WicketExtendHandler.class);
 
-    /** The automatically assigned wicket:id to &gt;body&lt; tag */
-	public static final String BODY_ID = "_body";
+	/**
+	 * In case you want to add extra Components to the markup, just add them to
+	 * the list. MarkupParser will handle it.
+	 */
+	private List tagList;
+
+	/** True, if </wicket:extend> has been seen */
+	private boolean ignoreRemainingTag = false;
 
 	/**
 	 * Construct.
@@ -49,14 +58,25 @@ public final class BodyOnLoadHandler extends AbstractMarkupFilter
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public BodyOnLoadHandler(final IMarkupFilter parent)
+	public WicketExtendHandler(final IMarkupFilter parent)
 	{
 		super(parent);
 	}
 
 	/**
+	 * In order to add ComponentTags which are NOT from markup file.
+	 * 
+	 * @param tagList
+	 */
+	public void setTagList(final List tagList)
+	{
+		this.tagList = tagList;
+	}
+
+	/**
 	 * Get the next tag from the next MarkupFilter in the chain and search for
 	 * Wicket specific tags.
+	 * <p>
 	 * 
 	 * @see wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return The next tag from markup to be processed. If null, no more tags
@@ -72,12 +92,29 @@ public final class BodyOnLoadHandler extends AbstractMarkupFilter
 			return tag;
 		}
 
-		// must be <body onload="...">
-		if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
+		if (ignoreRemainingTag == true)
 		{
-			if (tag.getId() == null)
+			// ignore everything following </wicket:extend>
+			return null;
+		}
+
+		if (tag instanceof WicketTag)
+		{
+			final WicketTag wtag = (WicketTag)tag;
+			if (wtag.isExtendTag())
 			{
-				tag.setId(BODY_ID);
+				if (wtag.isClose())
+				{
+					ignoreRemainingTag = true;
+				}
+				else
+				{
+					// Note: This is a very special "command". It removes all
+					// existing tags already in the tag list, thus removing 
+				    // everything before <wicket:extend> AND it will remove 
+				    // everything following </wicket:extend>
+					tagList.add(null);
+				}
 			}
 		}
 

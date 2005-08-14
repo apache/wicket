@@ -82,11 +82,11 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 	 * Print to the web response what ever the component wants
 	 * to contribute to the head section.
 	 * 
-	 * @see wicket.markup.html.IHeaderContributor#printHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
 	 * 
 	 * @param container The HtmlHeaderContainer
 	 */
-	public void printHead(final HtmlHeaderContainer container)
+	public void renderHead(final HtmlHeaderContainer container)
 	{
 		// Ask the child component if it has something to contribute
 		WebMarkupContainer headerPart = getHeaderPart();
@@ -114,7 +114,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			{
 				if (handlers[i] instanceof IHeaderContributor)
 				{
-					((IHeaderContributor)handlers[i]).printHead(container);
+					((IHeaderContributor)handlers[i]).renderHead(container);
 				}
 				if (handlers[i] instanceof IBodyOnloadContributor)
 				{
@@ -205,34 +205,8 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 
 		// Lazy scan the markup for a header component tag, if necessary
 		// 'index' will be where <wicket:head> resides in the markup 
-		int index = -1;
-		if (associatedMarkupStream.getHeaderIndex() == Markup.HEADER_NOT_YET_EVALUATED)
-		{
-		    // Markup has not yet been scanned
-			// Iterate the markup and find <wicket:head>
-			do
-			{
-				final MarkupElement element = associatedMarkupStream.get();
-				if (element instanceof WicketTag)
-				{
-					final WicketTag wTag = (WicketTag)element;
-					if (wTag.isHeadTag() == true)
-					{
-					    // ok, found header. Remember the position
-					    index = associatedMarkupStream.getCurrentIndex();
-					    break;
-					}
-				}
-			}
-			while (associatedMarkupStream.next() != null);
-		}
-		else if (associatedMarkupStream.getHeaderIndex() == Markup.HEADER_NO_HEADER_FOUND)
-		{
-		    // The markup has been scanned already, but does not contain any
-		    // header tag
-		    ; // Don't do anything
-		}
-		else
+		int index = Markup.NO_HEADER_FOUND;
+		if (associatedMarkupStream.getHeaderIndex() != Markup.NO_HEADER_FOUND)
 		{
 		    // The markup has been scanned already. Get the index where the 
 		    // header tag resides from the markup
@@ -241,7 +215,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		
 		// Ok, finished scanning the markup for header tag
 		// If markup contains a header section, handle it now.
-		if (index >= 0)
+		if (index != Markup.NO_HEADER_FOUND)
 		{
 		    // Position markup stream at beginning of header tag
 		    associatedMarkupStream.setCurrentIndex(index);
@@ -252,17 +226,16 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 			if (element instanceof WicketTag)
 			{
 				final WicketTag wTag = (WicketTag)element;
-				if (wTag.isHeadTag() == true)
+				if ((wTag.isHeadTag() == true) && (wTag.getNamespace() != null))
 				{
-				    associatedMarkupStream.setHeaderIndex(index);
-				    
 				    // found <wicket:head>
 				    // create a unique id for the HtmlHeaderContainer to be created
 					final String headerId = "_" + Classes.name(this.getClass()) + "Header";
 					
 					// Create the header container and associate the markup with it
-					WebMarkupContainer headerContainer = new HtmlHeaderContainer(headerId,
-							associatedMarkupStream);
+					WebMarkupContainer headerContainer = new WebMarkupContainer(headerId);
+					headerContainer.setMarkupStream(associatedMarkupStream);
+					headerContainer.setRenderBodyOnly(true);
 					
 					// In case components are part of the region, the user must 
 					// have provided the component objects by means of addToHeader().

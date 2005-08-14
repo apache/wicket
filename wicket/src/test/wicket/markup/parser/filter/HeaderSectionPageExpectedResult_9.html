@@ -13,14 +13,14 @@
     limitations under the License.
 -->
 <html xmlns:wicket>
-<head>header - wicket header - <wicket:head>
+<head>header - wicket header - 
+  <!-- insert component from panel head. See xxxPanelComponent -->
+
   panel header 
   <link href="myStyle.css" type="css" wicket:id="cssHref" media="print,type"/>
   <wicket:link autolink="true">
-    <link href="wicket/markup/parser/filter/style.css" type="text/css" rel="StyleSheet"/>
+    <link href="wicket/markup/html/style.css" type="text/css" rel="StyleSheet"/>
   </wicket:link>
-</wicket:head>
-  <!-- insert component from panel head. See xxxPanelComponent -->
 </head>
 <body>
   <span wicket:id="panel"><wicket:panel>

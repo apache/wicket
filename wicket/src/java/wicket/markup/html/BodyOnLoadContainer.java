@@ -37,12 +37,12 @@ public class BodyOnLoadContainer extends WebMarkupContainer implements IComponen
 	/**
 	 * Constructor used by BodyOnLoadContainer. The id is fix "_body"
 	 * and the markup stream will be provided by the parent component.
+	 * 
+	 * @param id Componen id
 	 */
-	public BodyOnLoadContainer()
+	public BodyOnLoadContainer(final String id)
 	{
-		// There is only one BodyOnLoadContainer allowed. That is we
-		// don't have to worry about creating a unique id.
-		super("_body");
+		super(id);
 	}
 
 	/**
@@ -57,28 +57,22 @@ public class BodyOnLoadContainer extends WebMarkupContainer implements IComponen
 	    // If not WebPage, than just be a WebMarkupContainer
 	    if (getParent() instanceof WebPage)
 	    {
-	        // The the consolidates onLoad of all child components
+	        // The consolidated onLoad of all child components
 	        String onLoad = ((WebPage)this.getPage()).getBodyOnLoad();
 	        
 	        // Get the page's onLoad attribute value. Null if not given
 	        String pageOnLoad = tag.getAttributes().getString("onload");
 
 	        // Add an AttributeModifier if onLoad must be changed
-	        if (pageOnLoad != null)
+	        if ((pageOnLoad != null) && (onLoad != null))
 	        {
-		        if (onLoad != null)
-		        {
-		            pageOnLoad = pageOnLoad + onLoad;
-			        add(new AttributeModifier("onLoad", true, new Model(pageOnLoad)));
-		        }
+	            onLoad = pageOnLoad + onLoad;
 	        }
-	        else
-	        {
-	            if (onLoad != null)
-	            {
-			        add(new AttributeModifier("onLoad", true, new Model(onLoad)));
-	            }
-	        }
+	        
+            if (onLoad != null)
+            {
+		        add(new AttributeModifier("onLoad", true, new Model(onLoad)));
+            }
 	    }
 	    
 	    // go on with default implementation

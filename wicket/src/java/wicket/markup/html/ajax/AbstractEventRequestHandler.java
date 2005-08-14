@@ -95,9 +95,9 @@ public abstract class AbstractEventRequestHandler
 	}
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#printHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
 	 */
-	public final void printHead(HtmlHeaderContainer container)
+	public final void renderHead(HtmlHeaderContainer container)
 	{
 		if (headContribHolder.get() == null)
 		{

@@ -29,9 +29,9 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
 
 /**
- * This is a special Component (containter) automatically instanstiated by
- * MarkupInheritanceResolver if markup contains &lt;wicket:extend&gt; and
- * automatically added to the component hierarchy.
+ * This is a special Component (container) instantiated by
+ * MarkupInheritanceResolver if markup contains &lt;wicket:extend&gt;,
+ * automatically added to the component hierarchy and rendered.
  * <p>
  * It is actually very similiar to the Border component with the base class'
  * markup being the border and the subclass' markup the content within the
@@ -55,9 +55,9 @@ public class MarkupInheritanceContainer extends WebMarkupContainer implements IC
 	 * Special markup stream able to switch between the base class' markup and
 	 * the class' markup.
 	 */
-	transient DualMarkupStream dual;
+	private transient DualMarkupStream dual;
 
-	/** true, if <wicket:child/> has been processed */
+	/** true, if <wicket:child/>has been processed */
 	private transient boolean resolved;
 
 	/**

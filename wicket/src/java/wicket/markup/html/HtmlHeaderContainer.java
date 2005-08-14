@@ -17,128 +17,175 @@
  */
 package wicket.markup.html;
 
+import wicket.Component;
+import wicket.IComponentResolver;
 import wicket.MarkupContainer;
 import wicket.MarkupInheritanceContainer;
 import wicket.Response;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketHeaderTag;
-import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.response.StringResponse;
 
 /**
  * The HtmlHeaderContainer is automatically created and added to the component
  * hierarchie by a HtmlHeaderResolver instance. HtmlHeaderContainer tries to
- * handle/render the &gt;wicket:head&gt; tag including its body. However
- * depending on the parent component, the behaviour must be different. E.g. if
- * parent component is a Page all components must be asked if they have
- * something to contribute to the &lt;head&gt; section of html response. If yes,
- * it must <b>now</b> be rendered. If parent component is not a Page,
- * HtmlHeaderContainer is no different than a WebMarkupContainer and will just
- * render its tag and its body.
+ * handle/render the &gt;head&gt; tag and its body. However depending on the
+ * parent component, the behaviour must be different. E.g. if parent component
+ * is a Page all components of the page's hierarchy must be asked if they have
+ * something to contribute to the &lt;head&gt; section of the html response. If
+ * yes, it must <b>immediately </b> be rendered.
  * <p>
- * Of course &lt;wicket:head&gt; regions may contain additional wicket
- * components, which must be added by means of addToHeader() instead of add() to
- * be handled properly.
+ * Of course &lt;head&gt; regions may contain additional wicket components,
+ * which must be added by means of addToHeader() instead of add() to be handled
+ * properly.
+ * <p>
+ * &gt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
+ * created by a HtmlHeaderResolver.
  * 
  * @author Juergen Donnerstag
  */
-public class HtmlHeaderContainer extends WebMarkupContainer
+public class HtmlHeaderContainer extends WebMarkupContainer implements IComponentResolver
 {
 	/**
-	 * Constructor used by HtmlHeaderResolver. The id is fix "_header"
-	 * and the markup stream will be provided by the parent component.
-	 */
-	public HtmlHeaderContainer()
-	{
-		// There is only one HtmlHeaderContainer allowed. That is we
-		// don't have to worry about creating a unique id.
-		super(HtmlHeaderSectionHandler.HEADER_ID);
-
-		// Skip <wicket:head> and render just the body
-		setRenderBodyOnly(true);
-	}
-
-	/**
-	 * Constructor used to add child component header sections. Because there
-	 * can more than just one component contributing to the header section, 
-	 * the id must be unique. And because the markup stream must be the child
-	 * components header section, it must be provided as well.
+	 * Construct
 	 * 
-	 * @param id
-	 *            a unique component id
-	 * @param associatedMarkupStream
-	 *            the markup stream associated with the the &lt;wicket:head&gt;
-	 *            tag of the child component
+	 * @see Component#Component(String)
 	 */
-	public HtmlHeaderContainer(final String id, final MarkupStream associatedMarkupStream)
+	public HtmlHeaderContainer(final String id)
 	{
 		super(id);
-		setMarkupStream(associatedMarkupStream);
+		
+		// We will render the tags manually, because if no component asked to
+		// contribute to the header, the tags will not be printed either.
+		// No contribution usually only happens if none of the components
+		// including the page does have a <head> or <wicket:head> tag.
+		setRenderBodyOnly(true);
 	}
-
+	
 	/**
-	 * First render the body of the component. And if it is the header component of
-	 * a Page (compared to a Panel or Border), than get the header sections from
-	 * all component in the hierachie and render them as well.
+	 * First render the body of the component. And if it is the header component
+	 * of a Page (compared to a Panel or Border), than get the header sections
+	 * from all component in the hierachie and render them as well.
 	 * 
 	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	protected final void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-	    // We are able to automatically add <head> to the page if it is 
-	    // missing. But we only want to add it, if we have content to be
-	    // written to its body. Thus we first write the output into a 
-	    // StringResponse and if not empty, we copy it to the original
-	    // web response.
-	    
-	    // Temporarily replace the web response with a String response 
-	    final Response webResponse = this.getResponse();
-	    
-	    try
-	    {
-		    final StringResponse response = new StringResponse();
-		    this.getRequestCycle().setResponse(response);
-		    
-		    // In any case, first render the header section associated with the markup
+		// We are able to automatically add <head> to the page if it is
+		// missing. But we only want to add it, if we have content to be
+		// written to its body. Thus we first write the output into a
+		// StringResponse and if not empty, we copy it to the original
+		// web response.
+
+		// Temporarily replace the web response with a String response
+		final Response webResponse = this.getResponse();
+
+		try
+		{
+			final StringResponse response = new StringResponse();
+			this.getRequestCycle().setResponse(response);
+
+			// In any case, first render the header section directly associated
+			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
-	
+
 			// If the parent component is a Page (or a bordered Page), we must
-			// now include the header sections of all components in the component
-			// hierarchie.
+			// now include the header sections of all components in the
+			// component hierarchie.
 			MarkupContainer parent = getParent();
+
+			// transparently ignore markup inheritance container
 			while (parent instanceof MarkupInheritanceContainer)
 			{
-			    // Get the real component
-			    parent = parent.getParent();
+				// Get the real parent
+				parent = parent.getParent();
 			}
-			
+
+			// Usually only Page and Border implement IHeaderRenderer. Border
+			// does in order to support bordered pages.
 			if (parent instanceof IHeaderRenderer)
 			{
-				((IHeaderRenderer)parent).renderHeadSections(this);
+				((IHeaderRenderer)parent).renderHeaderSections(this);
+			}
+			else
+			{
+				throw new WicketRuntimeException(
+						"Programming error: 'parent' should be a Page or a Border implementing IHeaderRenderer");
 			}
 
 			// Automatically add <head> if necessary
-			final String output = response.toString();
+			String output = response.toString();
 			if (output.length() > 0)
 			{
-			    final boolean requiresHeadTag = (openTag instanceof WicketHeaderTag) && ((WicketHeaderTag)openTag).isRequiresHtmlHeadTag();
-			    if (requiresHeadTag)
-			    {
-			        webResponse.write("<head>");
-			    }
-			    webResponse.write(output);
-			    if (requiresHeadTag)
-			    {
-				    webResponse.write("</head>");
-			    }
+				if (output.charAt(0) == '\r')
+				{
+					for (int i=2; i < output.length(); i += 2)
+					{
+					    char ch = output.charAt(i);
+					    if (ch != '\r')
+					    {
+							output = output.substring(i - 2);
+					        break;
+					    }
+					}
+				}
+				else if (output.charAt(0) == '\n')
+				{
+					for (int i=1; i < output.length(); i++)
+					{
+					    char ch = output.charAt(i);
+					    if (ch != '\n')
+					    {
+							output = output.substring(i - 1);
+					        break;
+					    }
+					}
+				}
 			}
-	    }
-	    finally
-	    {
-	        // Restore the original response
-		    this.getRequestCycle().setResponse(webResponse);
-	    }
+			
+			if (output.length() > 0)
+			{
+				webResponse.write("<head>");
+				webResponse.write(output);
+				webResponse.write("</head>");
+			}
+		}
+		finally
+		{
+			// Restore the original response
+			this.getRequestCycle().setResponse(webResponse);
+		}
+	}
+
+	/**
+	 * HtmlHeaderContainer has been autoAdded, it has been injected similiar
+	 * to an AOP interceptor. Thus it must forward any request to find a 
+	 * component based on an ID to its parent container.
+	 *  
+	 * @see wicket.IComponentResolver#resolve(wicket.MarkupContainer, wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+	 */
+	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
+	{
+	    // Try to find the component with the parent component.
+		MarkupContainer parent = getParent();
+		if (parent != null)
+		{
+		    if (parent.getId().equals(tag.getId()))
+		    {
+		        parent.render();
+		        return true;
+		    }
+		    
+		    Component component = parent.get(tag.getId());
+		    if (component != null)
+		    {
+		        component.render();
+		        return true;
+		    }
+		}
+		
+		return false;
 	}
 }
