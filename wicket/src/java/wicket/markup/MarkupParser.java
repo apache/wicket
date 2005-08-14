@@ -36,7 +36,6 @@ import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
-import wicket.markup.parser.filter.WicketExtendHandler;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.markup.parser.filter.WicketParamTagHandler;
 import wicket.markup.parser.filter.WicketRemoveTagHandler;
@@ -158,14 +157,11 @@ public class MarkupParser
         
         final WicketLinkTagHandler autolinkHandler = new WicketLinkTagHandler(previewComponentTagRemover);
         autolinkHandler.setAutomaticLinking(this.automaticLinking);
-
-        final WicketExtendHandler extendHandler = new WicketExtendHandler(autolinkHandler);
-        extendHandler.setTagList(tagList);
         
         // Provided the wicket component requesting the markup is known ...
         if (this.container != null)
         {
-	        final BodyOnLoadHandler bodyHandler = new BodyOnLoadHandler(extendHandler);
+	        final BodyOnLoadHandler bodyHandler = new BodyOnLoadHandler(autolinkHandler);
 	
 	        // Pages require additional handlers
 	        if ((this.container != null) && (container instanceof Page))
@@ -180,7 +176,7 @@ public class MarkupParser
 	        return bodyHandler;
         }
         
-        return extendHandler;
+        return autolinkHandler;
 	}
 
 	/**
@@ -274,9 +270,6 @@ public class MarkupParser
         // List to return
         final List list = new ArrayList();
 
-        // true, if all remaining tags shall be ignored
-        boolean stripRemainingElements = false;
-
         // Loop through tags
         for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
         {
@@ -323,21 +316,7 @@ public class MarkupParser
                     xmlParser.setPositionMarker(tag.getPos());
                 }
 
-                // This is a special hack. If autoAddList contains a NULL 
-                // object, all already existing tags are REMOVED from the
-                // list AND any trailing raw markup will be ignored. This
-                // is used for <wicket:extend> where everything before
-                // the tag and after the tag shall be removed.
-                if ((autoAddList.size() > 0) && (autoAddList.get(0) == null))
-                {
-                    list.clear();
-                    stripRemainingElements = true;
-                }
-                else
-                {
-                    list.addAll(autoAddList);
-                }
-                
+                list.addAll(autoAddList);
                 autoAddList.clear();
             }
             
@@ -354,13 +333,10 @@ public class MarkupParser
         }
 
         // Add tail?
-        if (stripRemainingElements == false)
+        final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
+        if (text.length() > 0)
         {
-	        final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
-	        if (text.length() > 0)
-	        {
-	            list.add(new RawMarkup(text));
-	        }
+            list.add(new RawMarkup(text));
         }
         
         // Make all tags immutable. Note: We can not make tag immutable 

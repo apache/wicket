@@ -37,7 +37,7 @@ public final class Markup
 	public static final Markup NO_MARKUP = new Markup(null, null, null, null, ComponentTag.DEFAULT_WICKET_NAMESPACE);
 	
 	/** The list of markup elements */
-	private final List markup;
+	private /* final */ List markup;
 	
 	/** The markup's resource stream for diagnostic purposes */
 	private final IResourceStream resource;
@@ -61,12 +61,6 @@ public final class Markup
 	 * the MarkupElement.
 	 */
 	private int headerIndex = NO_HEADER_FOUND;
-    
-    /** Markup has been searched for wicket:extend, but it doesn't contain any */
-    public final static int NO_EXTEND_FOUND = -1;
-
-	/** The index of <wicket:extend> in the markup list; -1 if not available */
-	private int extendIndex = NO_EXTEND_FOUND;
 	
 	/**
 	 * Constructor
@@ -89,28 +83,12 @@ public final class Markup
 	}
 
 	/**
-	 * Initialize the index where <wicket:extend> can be found.
 	 * Initialize the index where <head> can be found.
 	 */
 	private void initialize()
 	{
 	    if (markup != null)
 	    {
-	   	 	// Initialize the index where <wicket:extend> can be found.
-		    for (int i=0; i < markup.size(); i++)
-		    {
-		        MarkupElement elem = (MarkupElement) markup.get(i);
-		        if (elem instanceof WicketTag)
-		        {
-		            WicketTag tag = (WicketTag) elem;
-		            if (tag.isExtendTag())
-		            {
-		                extendIndex = i;
-		                break;
-		            }
-		        }
-		    }
-		    
 	   	 	// Initialize the index where <wicket:extend> can be found.
 		    for (int i=0; i < markup.size(); i++)
 		    {
@@ -226,14 +204,8 @@ public final class Markup
 	    return this.wicketNamespace;
 	}
 	
-	/**
-	 * Get the index pointing to a &lt;wicket:extend&gt> tag.
-	 * -1 if not found.
-	 * 
-	 * @return index The index of the markup element
-	 */
-	public int getExtendIndex()
+	void setMarkup(final List markup)
 	{
-	    return this.extendIndex;
+	    this.markup = markup;
 	}
 }
