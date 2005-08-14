@@ -137,7 +137,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		// gracefull getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
 		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
-				.getMarkupStream(this, null, false);
+				.getMarkupStream(this, false);
 
 		// No associated markup => no body tag
 		if (associatedMarkupStream == null)
@@ -195,7 +195,7 @@ public class WebMarkupContainer extends MarkupContainer implements IHeaderContri
 		// gracefull getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
 		final MarkupStream associatedMarkupStream = getApplication().getMarkupCache()
-				.getMarkupStream(this, null, false);
+				.getMarkupStream(this, false);
 
 		// No associated markup => no header section
 		if (associatedMarkupStream == null)

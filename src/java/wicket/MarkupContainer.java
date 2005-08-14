@@ -656,7 +656,7 @@ public abstract class MarkupContainer extends Component
 	{
 		try
 		{
-			return getApplication().getMarkupCache().getMarkupStream(this, null);
+			return getApplication().getMarkupCache().getMarkupStream(this);
 		}
 		catch (WicketRuntimeException ex)
 		{
@@ -778,7 +778,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	final boolean hasAssociatedMarkup()
 	{
-		return getApplication().getMarkupCache().hasAssociatedMarkup(this, null);
+		return getApplication().getMarkupCache().hasAssociatedMarkup(this);
 	}
 
 	/**

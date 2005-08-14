@@ -401,15 +401,4 @@ public class MarkupStream
 	{
 	    return this.markup.getWicketNamespace();
 	}
-	
-	/**
-	 * Get the index pointing to a &lt;wicket:extend&gt> tag.
-	 * -1 if not found.
-	 * 
-	 * @return index The index of the markup element
-	 */
-	public int getExtendIndex()
-	{
-	    return this.markup.getExtendIndex();
-	}
 }

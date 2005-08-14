@@ -1,11 +1,14 @@
 <html>
   <head>
     base head
-    extension header
-  </head>
+  
+  extension header
+</head>
   <body>
-    111<span wicket:id="label1">Label 1</span>222
-    <wicket:child>888<span wicket:id="label3">Label 3</span>999</wicket:child>
-    333<a href="#" wicket:id="link">increment</a>444
+    111<span wicket:id="label1">0</span>222
+    <wicket:child><wicket:extend>
+   888<span wicket:id="label3">extension label</span>999
+</wicket:extend></wicket:child>
+    333<a href="/MockWebApplication/MockWebApplication?path=0:link&amp;interface=ILinkListener" wicket:id="link">increment</a>444
   </body>
 </html>

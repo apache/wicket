@@ -31,7 +31,8 @@ import wicket.markup.parser.XmlTag;
 
 /**
  * This is a markup inline filter. It assumes that WicketTagIdentifier has been
- * called first. Provided the markup contains a &lt;body&gt; tag it will
+ * called first and search for a &lt;head&gt; tag (note: not wicket:head). 
+ * Provided the markup contains a &lt;body&gt; tag it will
  * automatically prepend a &lt;head&gt; tag if missing.
  * <p>
  * 

@@ -131,8 +131,14 @@ public class MarkupInheritanceTest extends TestCase
 	 */
 	public void testRenderHomePage_5() throws Exception
 	{
-	    // HeaderComponent in derived markup
-	    // TODO Doesn't work yet
-	    //executeTest(MarkupInheritanceExtension_5.class, "MarkupInheritanceExpectedResult_5.html");
+	    executeTest(MarkupInheritanceExtension_5.class, "MarkupInheritanceExpectedResult_5.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_6() throws Exception
+	{
+	    executeTest(MarkupInheritancePage_6.class, "MarkupInheritanceExpectedResult_6.html");
 	}
 }

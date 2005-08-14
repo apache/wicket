@@ -20,7 +20,6 @@ package wicket.markup.html;
 import wicket.Component;
 import wicket.IComponentResolver;
 import wicket.MarkupContainer;
-import wicket.MarkupInheritanceContainer;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -95,13 +94,6 @@ public class HtmlHeaderContainer extends WebMarkupContainer implements IComponen
 			// now include the header sections of all components in the
 			// component hierarchie.
 			MarkupContainer parent = getParent();
-
-			// transparently ignore markup inheritance container
-			while (parent instanceof MarkupInheritanceContainer)
-			{
-				// Get the real parent
-				parent = parent.getParent();
-			}
 
 			// Usually only Page and Border implement IHeaderRenderer. Border
 			// does in order to support bordered pages.

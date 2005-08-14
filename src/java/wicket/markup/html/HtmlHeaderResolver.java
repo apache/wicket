@@ -81,26 +81,51 @@ public class HtmlHeaderResolver implements IComponentResolver
 		else if ((tag instanceof WicketTag) && "head".equalsIgnoreCase(tag.getName())
 				&& (tag.getNamespace() != null))
 		{
-			// It is <wicket:head>. Because they do not provide any additional
-			// functionality there are merely a means of surroounding relevant
-			// markup. Thus we simply create a WebMarkupContainer to handle
-			// the tag.
-			final WebMarkupContainer header = new WebMarkupContainer(
-					HtmlHeaderSectionHandler.HEADER_ID);
-			header.setRenderBodyOnly(true);
-
-			try
-			{
+		    // If we found <wicket:head> without surrounding <head> on a Page,
+		    // than we have to add wicket:head into a automatically generated
+		    // head first.
+		    if (container instanceof WebPage)
+		    {
+				// Create a special header component which will gather additional
+				// input the <head> from 'contributors'.
+				final WebMarkupContainer header = new HtmlHeaderContainer(
+						HtmlHeaderSectionHandler.HEADER_ID);
+				
+				// It is <wicket:head>. Because they do not provide any additional
+				// functionality there are merely a means of surroounding relevant
+				// markup. Thus we simply create a WebMarkupContainer to handle
+				// the tag.
+				final WebMarkupContainer header2 = new WebMarkupContainer(
+						HtmlHeaderSectionHandler.HEADER_ID);
+				header2.setRenderBodyOnly(true);
+				
+				header.add(header2);
+				
 				container.autoAdd(header);
-			}
-			catch (IllegalArgumentException ex)
-			{
-				throw new WicketRuntimeException("If the root exception says something like "
-						+ "\"A child with id '_header' already exists\" "
-						+ "then you most likely forgot to override autoAdd() "
-						+ "in your bordered page component.", ex);
-			}
-
+		    }
+		    else
+		    {
+				// It is <wicket:head>. Because they do not provide any additional
+				// functionality there are merely a means of surroounding relevant
+				// markup. Thus we simply create a WebMarkupContainer to handle
+				// the tag.
+				final WebMarkupContainer header = new WebMarkupContainer(
+						HtmlHeaderSectionHandler.HEADER_ID);
+				header.setRenderBodyOnly(true);
+	
+				try
+				{
+					container.autoAdd(header);
+				}
+				catch (IllegalArgumentException ex)
+				{
+					throw new WicketRuntimeException("If the root exception says something like "
+							+ "\"A child with id '_header' already exists\" "
+							+ "then you most likely forgot to override autoAdd() "
+							+ "in your bordered page component.", ex);
+				}
+		    }
+		    
 			// Yes, we handled the tag
 			return true;
 		}
