@@ -101,13 +101,17 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		setExpandedState(selection, true);
 		this.selectedPath = selection;
 
-		if (treeSelectionModel.isPathSelected(selection))
+		// if we have a multiple selection model
+		if (treeSelectionModel != null)
 		{
-			treeSelectionModel.removeSelectionPath(selection);
-		}
-		else
-		{
-			treeSelectionModel.addSelectionPath(selection);
+			if (treeSelectionModel.isPathSelected(selection))
+			{
+				treeSelectionModel.removeSelectionPath(selection);
+			}
+			else
+			{
+				treeSelectionModel.addSelectionPath(selection);
+			}
 		}
 	}
 
@@ -149,20 +153,20 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 * Sets the <code>TreeSelectionModel</code> used to manage the selection
 	 * to new LSM.
 	 * 
-	 * @param newLSM
+	 * @param selectionModel
 	 *			  the new <code>TreeSelectionModel</code>
 	 */
-	public void setSelectionModel(TreeSelectionModel newLSM)
+	public void setSelectionModel(TreeSelectionModel selectionModel)
 	{
-		if (treeSelectionModel != null)
+		if (this.treeSelectionModel != null)
 		{
-			treeSelectionModel.setRowMapper(null);
+			this.treeSelectionModel.setRowMapper(null);
 		}
-		treeSelectionModel = newLSM;
-		if (treeSelectionModel != null)
+		if (selectionModel != null)
 		{
-			treeSelectionModel.setRowMapper(this);
+			selectionModel.setRowMapper(this);
 		}
+		this.treeSelectionModel = selectionModel;
 	}
 
 	/**
