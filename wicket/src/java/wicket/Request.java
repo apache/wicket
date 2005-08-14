@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.5 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -63,11 +63,14 @@ public abstract class Request
 	public abstract String[] getParameters(final String key);
 
 	/**
-	 * Retrieves the URL of this request.
-	 * 
-	 * @return The full original request URL
+	 * Retrieves the URL of this request for local use.
+	 *
+	 * @return The request URL for local use
 	 */
 	public abstract String getURL();
+	
+	/**
+	 * @return Path info for request
+	 */
+	public abstract String getPath();
 }
-
-

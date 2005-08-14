@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,12 +17,14 @@
  */
 package wicket.markup.html.pages;
 
+import wicket.Page;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlContainer;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
+import wicket.markup.html.debug.WicketComponentTree;
 import wicket.util.string.Strings;
 
 /**
@@ -30,30 +32,29 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class ExceptionErrorPage extends HtmlPage
+public class ExceptionErrorPage extends WebPage
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 5578704587965089202L;
-
 	/**
 	 * Constructor.
 	 * 
-	 * @param e
-	 *            The markup exception to show
+	 * @param throwable
+	 *            The exception to show
+	 * @param page
+	 *            The page being rendered when the exception was thrown
 	 */
-	public ExceptionErrorPage(final RuntimeException e)
+	public ExceptionErrorPage(final Throwable throwable, final Page page)
 	{
 		// Add exception label
-		add(new MultiLineLabel("exception", Strings.toString(e)));
+		add(new MultiLineLabel("exception", Strings.toString(throwable)));
 
 		// Get values
 		String resource = "";
 		String markup = "";
 		MarkupStream markupStream = null;
 
-		if (e instanceof MarkupException)
+		if (throwable instanceof MarkupException)
 		{
-			markupStream = ((MarkupException)e).getMarkupStream();
+			markupStream = ((MarkupException)throwable).getMarkupStream();
 
 			if (markupStream != null)
 			{
@@ -65,10 +66,10 @@ public class ExceptionErrorPage extends HtmlPage
 		// Create markup label
 		final MultiLineLabel markupLabel = new MultiLineLabel("markup", markup);
 
-		markupLabel.setShouldEscapeModelStrings(false);
+		markupLabel.setEscapeModelStrings(false);
 
 		// Add container with markup highlighted
-		final HtmlContainer markupHighlight = new HtmlContainer("markupHighlight");
+		final WebMarkupContainer markupHighlight = new WebMarkupContainer("markupHighlight");
 
 		markupHighlight.add(markupLabel);
 		markupHighlight.add(new Label("resource", resource));
@@ -76,5 +77,23 @@ public class ExceptionErrorPage extends HtmlPage
 
 		// Show container if markup stream is available
 		markupHighlight.setVisible(markupStream != null);
+
+		// Show component tree of the page
+		if (page != null)
+		{
+		    add(new WicketComponentTree("componentTree", page));
+		}
+		else
+		{
+		    add(new Label("componentTree", ""));
+		}
+	}
+	
+	/**
+	 * @see wicket.Page#isErrorPage()
+	 */
+	public boolean isErrorPage()
+	{
+		return true;
 	}
 }

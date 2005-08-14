@@ -2,11 +2,11 @@
  * $Id$
  * $Revision$ $Date$
  *
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- *
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -19,12 +19,12 @@ package wicket;
 
 /**
  * A factory class that creates Pages. A Page can be created by Class, with or
- * without a PageParameters argument to pass to the Page's constructor. A Page
- * can also be created with a Page argument, but this form is intended for
- * internal use only.
+ * without a PageParameters argument to pass to the Page's constructor. 
  *
  * @see ApplicationSettings#setDefaultPageFactory(IPageFactory)
- * @see Session#setPageFactory(IPageFactory)
+ * @see Session#getPageFactory()
+ * @see Session#getPageFactory(Page)
+ * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
@@ -56,18 +56,4 @@ public interface IPageFactory
      *             Thrown if the page cannot be constructed
      */
     public Page newPage(final Class pageClass, final PageParameters parameters);
-
-    /**
-     * Creates a new Page, passing the given Page to the Page constructor if
-     * such a constructor exists. This method is intended for internal use only.
-     *
-     * @param pageClass
-     *            The page class to create
-     * @param page
-     *            The page
-     * @return The new page
-     * @throws WicketRuntimeException
-     *             Thrown if the page cannot be constructed
-     */
-    public Page newPage(final Class pageClass, final Page page);
 }

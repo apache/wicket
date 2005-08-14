@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,8 +19,8 @@ package wicket.markup.parser;
 
 import java.io.IOException;
 
-import wicket.util.resource.Resource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
  * The interface of a streaming XML parser as required by Wicket.
@@ -40,25 +40,33 @@ public interface IXmlPullParser extends IMarkupFilter
 	public abstract String getEncoding();
 
 	/**
-	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
-	 * which is not further analysed by Wicket. getInputFromPositionMarker() is
-	 * used to access the raw markup.
+	 * Return the XML declaration string, in case if found in the
+	 * markup.
 	 * 
+	 * @return Null, if not found.
+	 */
+	public String getXmlDeclaration();
+
+	/**
+	 * Wicket dissects the markup into Wicket relevant tags and raw markup, which 
+	 * is not further analysed by Wicket. The method getInputFromPositionMarker() 
+	 * is used to access the raw markup. 
+	 *
 	 * @param toPos
-	 *            To position
-	 * @return The raw markup in between the position marker and toPos
+	 *			  To position 
+	 * @return The raw markup in between the position marker and toPos 
 	 */
 	public abstract CharSequence getInputFromPositionMarker(int toPos);
 
 	/**
 	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
-	 * which is not further analysed by Wicket. getInputSubsequence() is used to
-	 * access the raw markup.
+	 * which is not further analysed by Wicket. The getInputSubsequence()
+	 * method is used to access the raw markup.
 	 * 
 	 * @param fromPos
-	 *            From position
+	 *			  From position
 	 * @param toPos
-	 *            To position
+	 *			  To position
 	 * @return The raw markup in between fromPos and toPos
 	 */
 	public abstract CharSequence getInputSubsequence(final int fromPos, final int toPos);
@@ -71,31 +79,28 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * provided does have the correct encoding already.
 	 * 
 	 * @param string
-	 *            The markup to be parsed
+	 *			  The markup to be parsed
+	 * @throws IOException
+	 *			   Error while reading the resource
+	 * @throws ResourceStreamNotFoundException
+	 *			   Resource not found
 	 */
-	public abstract void parse(final CharSequence string);
+	public abstract void parse(final CharSequence string) throws IOException,
+		ResourceStreamNotFoundException;
 
 	/**
 	 * Reads and parses markup from a resource like file. Use nextTag() to
 	 * access the tags contained, one after another.
 	 * 
 	 * @param resource
-	 *            A resource like e.g. a file
+	 *			  A resource like e.g. a file
 	 * @throws IOException
-	 *             Error while reading the resource
-	 * @throws ResourceNotFoundException
-	 *             Resource not found
+	 *			   Error while reading the resource
+	 * @throws ResourceStreamNotFoundException
+	 *			   Resource not found
 	 */
-	public abstract void parse(final Resource resource) throws IOException,
-			ResourceNotFoundException;
-
-	/**
-	 * Set whether whitespace should be compressed.
-	 * 
-	 * @param compressWhitespace
-	 *            if true, whitespaces will be compressed
-	 */
-	public abstract void setCompressWhitespace(boolean compressWhitespace);
+	public abstract void parse(final IResourceStream resource) throws IOException,
+			ResourceStreamNotFoundException;
 
 	/**
 	 * Set the position marker of the markup at the current position.
@@ -103,10 +108,17 @@ public interface IXmlPullParser extends IMarkupFilter
 	public abstract void setPositionMarker();
 
 	/**
+	 * Set the position marker of the markup
+	 * 
+	 * @param pos
+	 */
+	public abstract void setPositionMarker(final int pos);
+
+	/**
 	 * Set whether to strip components.
 	 * 
 	 * @param stripComments
-	 *            if true, comments will be stripped
+	 *			  if true, comments will be stripped
 	 */
 	public abstract void setStripComments(boolean stripComments);
 }

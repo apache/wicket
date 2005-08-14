@@ -2,10 +2,10 @@
  * $Id$ $Revision$
  * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,37 +17,44 @@
  */
 package wicket.markup.html.link;
 
-import java.io.Serializable;
-
-import wicket.Container;
+import wicket.Component;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.model.IModel;
+import wicket.util.string.Strings;
 
 /**
- * Implementation of a hyperlink component. A link must be used with an anchor
- * (&lt;a href...) element.
+ * Implementation of a hyperlink component. A link can be used with an anchor
+ * (&lt;a href...) element or any element that supports the onclick javascript
+ * event handler (such as buttons, td elements, etc). When used with an anchor,
+ * a href attribute will be generated. When used with any other element, an
+ * onclick javascript event handler attribute will be generated.
  * <p>
  * You can use a link like:
  * 
  * <pre>
- * 
- *  add(new Link(&quot;myLink&quot;){
- * 
- *    public void linkClicked(RequestCycle cycle)
- *    {
- *       // do something here...  
- *    }
- *  );
- *  
+ *       add(new Link(&quot;myLink&quot;){
+ *      
+ *         public void onClick(RequestCycle cycle)
+ *         {
+ *            // do something here...  
+ *         }
+ *       );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
+ *        &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ * </pre>
  * 
- *   &lt;a href=&quot;#&quot; id=&quot;wicket-myLink&quot;&gt;click here&lt;/a&gt;
- *  
+ * or:
+ * 
+ * <pre>
+ *        &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -55,14 +62,14 @@ import wicket.markup.MarkupStream;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class Link extends AbstractLink
+public abstract class Link extends WebMarkupContainer implements ILinkListener
 {
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
 	 * link </i>.
 	 */
 	private String afterDisabledLink;
-    
+
 	/** True if link should automatically enable/disable based on current page. */
 	private boolean autoEnable = true;
 
@@ -74,29 +81,27 @@ public abstract class Link extends AbstractLink
 
 	/** True if this link is enabled. */
 	private boolean enabled = true;
+	
+	/**
+	 * The popup specification. If not-null, a javascript on-click event handler
+	 * will be generated that opens a new window using the popup properties.
+	 */
+	private PopupSettings popupSettings = null;
 
 	/**
-     * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(String)
 	 */
-	public Link(String componentName)
+	public Link(final String id)
 	{
-		super(componentName);
+		super(id);
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Link(String name, Serializable object)
+	public Link(final String id, IModel object)
 	{
-		super(name, object);
-	}
-
-	/**
-     * @see wicket.Component#Component(String, Serializable, String)
-	 */
-	public Link(String name, Serializable object, String expression)
-	{
-		super(name, object, expression);
+		super(id, object);
 	}
 
 	/**
@@ -134,6 +139,18 @@ public abstract class Link extends AbstractLink
 	}
 
 	/**
+	 * Gets the popup specification. If not-null, a javascript on-click event
+	 * handler will be generated that opens a new window using the popup
+	 * properties.
+	 * 
+	 * @return the popup specification.
+	 */
+	public final PopupSettings getPopupSettings()
+	{
+		return popupSettings;
+	}
+
+	/**
 	 * Gets whether this link is enabled.
 	 * 
 	 * @return whether this link is enabled.
@@ -141,6 +158,27 @@ public abstract class Link extends AbstractLink
 	public final boolean isEnabled()
 	{
 		return enabled;
+	}
+
+	/**
+	 * Called when a link is clicked.
+	 */
+	public abstract void onClick();
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR
+	 * CALL IT.
+	 * 
+	 * Called when a link is clicked. The implementation of this method is
+	 * currently to simply call onClick(), but this may be augmented in the
+	 * future.
+	 * 
+	 * @see ILinkListener
+	 */
+	public final void onLinkClicked()
+	{
+		// Invoke subclass handler
+		onClick();
 	}
 
 	/**
@@ -193,7 +231,8 @@ public abstract class Link extends AbstractLink
 	}
 
 	/**
-	 * Sets link enabled state.
+	 * Sets link enabled state. Note that you have to setAutoEnable(false) 
+	 * as well in case you want to manually enable/disable the link.
 	 * 
 	 * @param enabled
 	 *            The enabled to set.
@@ -207,27 +246,156 @@ public abstract class Link extends AbstractLink
 	}
 
 	/**
-	 * Renders this link's body.
+	 * Sets the popup specification. If not-null, a javascript on-click event
+	 * handler will be generated that opens a new window using the popup
+	 * properties.
 	 * 
-	 * @param markupStream
-	 *            the markup stream
-	 * @param openTag
-	 *            the open part of this tag
-	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+	 * @param popupSettings
+	 *            the popup specification.
+	 * @return This
 	 */
-	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	public final Link setPopupSettings(final PopupSettings popupSettings)
+	{
+		this.popupSettings = popupSettings;
+		return this;
+	}
+
+	/**
+	 * @param url
+	 *            The url for the link
+	 * @return Any onClick JavaScript that should be used
+	 */
+	protected String getOnClickScript(final String url)
+	{
+		return null;
+	}
+
+	/**
+	 * Gets the url to use for this link.
+	 * 
+	 * @return The URL that this link links to
+	 */
+	protected String getURL()
+	{
+		return urlFor(ILinkListener.class);
+	}
+
+	/**
+	 * Whether this link refers to the given page.
+	 * 
+	 * @param page
+	 *            A page
+	 * @return True if this link goes to the given page
+	 */
+	protected boolean linksTo(final Page page)
+	{
+		return false;
+	}
+
+	/**
+	 * Handles this link's tag.
+	 * 
+	 * @param tag
+	 *            the component tag
+	 * @see wicket.Component#onComponentTag(ComponentTag)
+	 */
+	protected final void onComponentTag(final ComponentTag tag)
+	{
+		// Default handling for tag
+		super.onComponentTag(tag);
+
+		// If we're auto-enabling
+		if (autoEnable)
+		{
+			// the link is enabled if this link doesn't link to the current page
+			setEnabled(!linksTo(getPage()));
+		}
+
+		// Set href to link to this link's linkClicked method
+		String url = getURL();
+
+		// If we're disabled
+		if (!enabled)
+		{
+			// if the tag is an anchor proper
+			if (tag.getName().equalsIgnoreCase("a"))
+			{
+				// Change anchor link to span tag
+				tag.setName("span");
+
+				// Remove any href from the old link
+				tag.remove("href");
+
+				// if it generates a popupscript, remove the design time JS
+				// handler
+				if (popupSettings != null)
+				{
+					tag.remove("onclick");
+				}
+			}
+			else
+			{
+				// Remove any onclick design time code
+				tag.remove("onclick");
+			}
+		}
+		else
+		{
+			// if the tag is an anchor proper
+			if (tag.getName().equalsIgnoreCase("a"))
+			{
+				// generate the href attribute
+				tag.put("href", Strings.replaceAll(url,"&", "&amp;"));
+
+				// Add any popup script
+				if (popupSettings != null)
+				{
+					// NOTE: don't encode to HTML as that is not valid
+					// JavaScript
+					tag.put("onclick", popupSettings.getPopupJavaScript());
+				}
+			}
+			else
+			{
+				// generate a popup script by asking popup settings for one
+				if (popupSettings != null)
+				{
+					popupSettings.setTarget("'" + url + "'");
+					String popupScript = popupSettings.getPopupJavaScript();
+					tag.put("onclick", popupScript);
+				}
+				else
+				{
+					// or generate an onclick JS handler directly
+					tag.put("onclick", "location.href='" + url + "';");
+				}
+			}
+		}
+
+		// If the subclass specified javascript, use that
+		final String onClickJavaScript = getOnClickScript(url);
+		if (onClickJavaScript != null)
+		{
+			tag.put("onclick", onClickJavaScript);
+		}
+	}
+	
+	/**
+	 * @see wicket.Component#internalOnBeginRequest()
+	 */
+	protected void internalOnBeginRequest()
 	{
 		// Get disabled component of the same name with "Disabled" appended
-		final Container disabledContainer = (Container)get("disabled");
+		final Component disabledComponent = (Component)get("disabled");
 
-		if (disabledContainer != null)
+		if (disabledComponent != null)
 		{
 			// Get enabled container
-			final Container enabledContainer = (Container)get("enabled");
+			final Component enabledComponent = (Component)get("enabled");
 
 			// Set visibility of enabled and disabled children
-			enabledContainer.setVisible(enabled);
-			disabledContainer.setVisible(!enabled);
+			enabledComponent.setVisible(enabled);
+			disabledComponent.setVisible(!enabled);
 		}
 
 		// Set default for before/after link text
@@ -235,8 +403,21 @@ public abstract class Link extends AbstractLink
 		{
 			beforeDisabledLink = getApplicationSettings().getDefaultBeforeDisabledLink();
 			afterDisabledLink = getApplicationSettings().getDefaultAfterDisabledLink();
-		}
+		}		
+	}
 
+	/**
+	 * Renders this link's body.
+	 * 
+	 * @param markupStream
+	 *            the markup stream
+	 * @param openTag
+	 *            the open part of this tag
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 */
+	protected final void onComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
+	{
 		// Draw anything before the body?
 		if (!enabled && beforeDisabledLink != null)
 		{
@@ -253,60 +434,9 @@ public abstract class Link extends AbstractLink
 		}
 	}
 
-	/**
-	 * Handles this link's tag.
-	 * 
-	 * @param tag
-	 *            the component tag
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
-	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	static
 	{
-		// Can only attach links to anchor tags
-		checkComponentTag(tag, "a");
-
-		// Default handling for tag
-		super.handleComponentTag(tag);
-
-		// If we're auto-enabling
-		if (autoEnable)
-		{
-			// the link is enabled if this link doesn't link to the current page
-			setEnabled(!linksTo(getPage()));
-		}
-
-		// If we're disabled
-		if (!enabled)
-		{
-			// Change anchor link to span tag
-			tag.setName("span");
-
-			// Remove any href from the old link
-			tag.remove("href");
-		}
-		else
-		{
-			// Set href to link to this link's linkClicked method
-			tag.put("href", getURL().replaceAll("&", "&amp;"));
-		}
-
-		// Add any popup script
-		final PopupSettings popupSettings = getPopupSettings();
-		if (popupSettings != null)
-		{
-			tag.put("onClick", popupSettings.getPopupJavaScript().replaceAll("&", "&amp;"));
-		}
-	}
-
-	/**
-	 * Whether this link refers to the given page.
-	 * 
-	 * @param page
-	 *            A page
-	 * @return True if this link goes to the given page
-	 */
-	protected boolean linksTo(final Page page)
-	{
-		return false;
+		// Allow calls through the ILinkListener interface
+		RequestCycle.registerRequestListenerInterface(ILinkListener.class);
 	}
 }

@@ -2,11 +2,11 @@
  * $Id$
  * $Revision$ $Date$
  *
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- *
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -30,7 +30,6 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
  * A factory that constructs Pages.
  *
  * @see ApplicationSettings#setDefaultPageFactory(IPageFactory)
- * @see Session#setPageFactory(IPageFactory)
  * @see IPageFactory
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -50,7 +49,16 @@ public final class DefaultPageFactory implements IPageFactory
 	{
 		try
 		{
+		    // throw an exception in case default constructor is missing 
+		    // => improved error message
+		    pageClass.getConstructor((Class[])null);
+		    
 			return (Page)pageClass.newInstance();
+		}
+		catch (NoSuchMethodException e)
+		{
+	        throw new WicketRuntimeException("Unable to create page from " 
+	                + pageClass + ". Class does not have a default contructor", e);
 		}
 		catch (InstantiationException e)
 		{
@@ -77,35 +85,8 @@ public final class DefaultPageFactory implements IPageFactory
 			return newPage(constructor, parameters);
 		}
 
-		// If PageParameters is null or empty, try default constructor
-		if (parameters == null || parameters.isEmpty())
-		{
-			return newPage(pageClass);
-		}
-
-		// Couldn't find PageParameters constructor and parameters were passed
-		throw new WicketRuntimeException("Could not find a constructor in " + pageClass
-				+ " that would accept PageParameters argument " + parameters);
-	}
-
-	/**
-	 * @see IPageFactory#newPage(Class, Page)
-	 */
-	public final Page newPage(final Class pageClass, final Page page)
-	{
-		// Try to get constructor that takes PageParameters
-		Constructor constructor = constructor(pageClass, Page.class);
-
-		// If we got a PageParameters constructor
-		if (constructor != null)
-		{
-			// return new Page(parameters)
-			return newPage(constructor, page);
-		}
-
-		// Couldn't find constructor accepting page argument
-		throw new WicketRuntimeException("Could not find a constructor in " + pageClass
-				+ " that would accept Page argument " + page);
+		// Always try default constructor if one exists
+		return newPage(pageClass);
 	}
 
 	/**

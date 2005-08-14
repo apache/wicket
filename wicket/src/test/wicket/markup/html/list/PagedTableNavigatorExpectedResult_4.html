@@ -16,28 +16,19 @@
 <head>
 <title>Paged Table Page</title>
 </head>
-<body><ul><li id = "wicket-table"><span id = "wicket-txt">seven</span></li><li id = "wicket-table"><span id = "wicket-txt">eight</span></li></ul>
-<span id="wicket-navigator"/><wicket:panel>
-    <span id = "wicket-headline">8 items found, displaying 7 to 8.</span><p/>
-	  [<a href = "/MockWebApplication/MockWebApplication?component=0.navigator.first&amp;rendering=3&amp;interface=ILinkListener" id = "wicket-first">First</a>/<a href = "/MockWebApplication/MockWebApplication?component=0.navigator.prev&amp;rendering=3&amp;interface=ILinkListener" id = "wicket-prev">Prev</a>]
-    <span id = "wicket-navigation">
-		  <a href = "/MockWebApplication/MockWebApplication?component=0.navigator.navigation.0.pageLink&amp;rendering=3&amp;interface=ILinkListener" id = "wicket-pageLink">
-        <span id = "wicket-pageNumber">1</span>
-      </a>
-    </span><span id = "wicket-navigation">
-		  <a href = "/MockWebApplication/MockWebApplication?component=0.navigator.navigation.1.pageLink&amp;rendering=3&amp;interface=ILinkListener" id = "wicket-pageLink">
-        <span id = "wicket-pageNumber">2</span>
-      </a>
-    </span><span id = "wicket-navigation">
-		  <a href = "/MockWebApplication/MockWebApplication?component=0.navigator.navigation.2.pageLink&amp;rendering=3&amp;interface=ILinkListener" id = "wicket-pageLink">
-        <span id = "wicket-pageNumber">3</span>
-      </a>
-    </span><span id = "wicket-navigation">
-		  <span id = "wicket-pageLink"><i>
-        <span id = "wicket-pageNumber">4</span>
-      </i></span>
+<body><ul><li wicket:id="table"><span wicket:id="txt">seven</span></li><li wicket:id="table"><span wicket:id="txt">eight</span></li></ul>
+<span wicket:id="navigator"><wicket:panel>
+	<a href="/MockWebApplication/MockWebApplication?path=0:navigator:first&amp;interface=ILinkListener" wicket:id="first">&lt;&lt;</a>&nbsp;<a href="/MockWebApplication/MockWebApplication?path=0:navigator:prev&amp;interface=ILinkListener" wicket:id="prev">&lt;</a>
+    <span wicket:id="navigation">
+		  <a href="/MockWebApplication/MockWebApplication?path=0:navigator:navigation:0:pageLink&amp;interface=ILinkListener" wicket:id="pageLink"><span wicket:id="pageNumber">1</span></a>
+    </span><span wicket:id="navigation">
+		  <a href="/MockWebApplication/MockWebApplication?path=0:navigator:navigation:1:pageLink&amp;interface=ILinkListener" wicket:id="pageLink"><span wicket:id="pageNumber">2</span></a>
+    </span><span wicket:id="navigation">
+		  <a href="/MockWebApplication/MockWebApplication?path=0:navigator:navigation:2:pageLink&amp;interface=ILinkListener" wicket:id="pageLink"><span wicket:id="pageNumber">3</span></a>
+    </span><span wicket:id="navigation">
+		  <span wicket:id="pageLink"><i><span wicket:id="pageNumber">4</span></i></span>
     </span>
-		[<span id = "wicket-next"><i>Next</i></span>/<span id = "wicket-last"><i>Last</i></span>]
-  </wicket:panel>
+    <span wicket:id="next"><i>&gt;</i></span>&nbsp;<span wicket:id="last"><i>&gt;&gt;</i></span>
+  </wicket:panel></span>
 </body>
 </html>

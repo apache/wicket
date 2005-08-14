@@ -21,15 +21,9 @@ package wicket.markup.html.list;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.ListView;
-import wicket.model.Model;
-import wicket.protocol.http.WebRequestCycle;
-import wicket.protocol.http.MockWebApplication;
-import wicket.protocol.http.MockPage;
-
-
 import junit.framework.TestCase;
+import wicket.model.Model;
+import wicket.protocol.http.MockWebApplication;
 
 /**
  * Test for ListView
@@ -73,24 +67,6 @@ public class ListViewTest extends TestCase
 	}
 
 	/**
-	 * Helper: Create a request cycle and set the next page to render
-	 * @return request cycle
-	 * @throws IOException
-	 */
-	private WebRequestCycle createRequestCycle() throws IOException
-	{
-		// Prepare the mock application to test the Link
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = new WebRequestCycle(application, application.getWicketSession(),
-				application.getWicketRequest(), application.getWicketResponse());
-
-		MockPage page = new MockPage(null);
-		cycle.setPage(page);
-
-		return cycle;
-	}
-
-	/**
 	 * 
 	 */
 	public void testListView()
@@ -99,7 +75,6 @@ public class ListViewTest extends TestCase
 		assertEquals(4, lv.getList().size());
 		assertEquals(4, lv.getViewSize());
 		assertEquals(0, lv.getStartIndex());
-		assertEquals(new Integer(0), lv.getListObject(0));
 
 		// This is the number of ListViews child-components
 		assertEquals(0, lv.size());
@@ -112,30 +87,19 @@ public class ListViewTest extends TestCase
 
 		// The upper boundary doesn't get tested, yet.
 		lv.setStartIndex(99);
-		assertEquals(99, lv.getStartIndex());
+		assertEquals(0, lv.getStartIndex());
 
 		lv.setViewSize(-1);
-		assertEquals(0, lv.getViewSize());
+		assertEquals(4, lv.getViewSize());
 
 		lv.setViewSize(0);
 		assertEquals(0, lv.getViewSize());
 
 		// The upper boundary doesn't get tested, yet.
 		lv.setViewSize(99);
-		assertEquals(0, lv.getViewSize());
+		assertEquals(4, lv.getViewSize());
 		lv.setStartIndex(1);
 		assertEquals(3, lv.getViewSize());
-	}
-
-	/**
-	 * @throws IOException
-	 */
-	public void testListViewNewItem() throws IOException
-	{
-		ListView lv = createListView(4);
-		ListItem li = lv.newItem(0);
-		assertEquals(0, li.getIndex());
-		assertEquals(new Integer(0), li.getModelObject());
 	}
 
 	/**
@@ -163,7 +127,7 @@ public class ListViewTest extends TestCase
 
 		lv.setStartIndex(5);
 		lv.setViewSize(10);
-		assertEquals(5, lv.getStartIndex());
+		assertEquals(0, lv.getStartIndex());
 		assertEquals(10, lv.getViewSize());
 	}
 }

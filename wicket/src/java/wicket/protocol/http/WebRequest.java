@@ -1,11 +1,11 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -38,158 +38,195 @@ import java.util.Map;
  */
 public class WebRequest extends Request
 {
-    /** Null WebRequest object that does nothing */
-    public static final WebRequest NULL = new NullWebRequest();
+	/** Null WebRequest object that does nothing */
+	public static final WebRequest NULL = new NullWebRequest();
 
-    /** Servlet request information. */
-    private final HttpServletRequest httpServletRequest;
+	/** Servlet request information. */
+	private final HttpServletRequest httpServletRequest;
 
-    /**
-     * Package private constructor.
-     * 
-     * @param httpServletRequest
-     *            The servlet request information
-     */
-    WebRequest(final HttpServletRequest httpServletRequest)
-    {
-        this.httpServletRequest = httpServletRequest;
-    }
+	/**
+	 * Protected constructor.
+	 * 
+	 * @param httpServletRequest
+	 *            The servlet request information
+	 */
+	public WebRequest(final HttpServletRequest httpServletRequest)
+	{
+		this.httpServletRequest = httpServletRequest;
+	}
 
-    /**
-     * Gets the servlet context path.
-     * 
-     * @return Servlet context path
-     */
-    public String getContextPath()
-    {
-        return httpServletRequest.getContextPath();
-    }
+	/**
+	 * Gets the servlet context path.
+	 * 
+	 * @return Servlet context path
+	 */
+	public String getContextPath()
+	{
+		return httpServletRequest.getContextPath();
+	}
 
-    /**
-     * Returns the preferred <code>Locale</code> that the client will accept
-     * content in, based on the Accept-Language header. If the client request
-     * doesn't provide an Accept-Language header, this method returns the
-     * default locale for the server.
-     * 
-     * @return the preferred <code>Locale</code> for the client
-     */
-    public Locale getLocale()
-    {
-        return httpServletRequest.getLocale();
-    }
+	/**
+	 * Returns the preferred <code>Locale</code> that the client will accept
+	 * content in, based on the Accept-Language header. If the client request
+	 * doesn't provide an Accept-Language header, this method returns the
+	 * default locale for the server.
+	 * 
+	 * @return the preferred <code>Locale</code> for the client
+	 */
+	public Locale getLocale()
+	{
+		return httpServletRequest.getLocale();
+	}
 
-    /**
-     * Gets the request parameter with the given key.
-     * 
-     * @param key
-     *            Parameter name
-     * @return Parameter value
-     */
-    public String getParameter(final String key)
-    {
-        return httpServletRequest.getParameter(key);
-    }
+	/**
+	 * Gets the request parameter with the given key.
+	 * 
+	 * @param key
+	 *            Parameter name
+	 * @return Parameter value
+	 */
+	public String getParameter(final String key)
+	{
+		return httpServletRequest.getParameter(key);
+	}
 
-    /**
-     * Gets the request parameters.
-     * 
-     * @return Map of parameters
-     */
-    public Map getParameterMap()
-    {
-        final Map map = new HashMap();
+	/**
+	 * Gets the request parameters.
+	 * 
+	 * @return Map of parameters
+	 */
+	public Map getParameterMap()
+	{
+		final Map map = new HashMap();
 
-        for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
-                .hasMoreElements();)
-        {
-            final String name = (String)enumeration.nextElement();
-            map.put(name, httpServletRequest.getParameter(name));
-        }
+		for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
+				.hasMoreElements();)
+		{
+			final String name = (String)enumeration.nextElement();
+			map.put(name, httpServletRequest.getParameter(name));
+		}
 
-        return map;
-    }
+		return map;
+	}
 
-    /**
-     * Gets the request parameters with the given key.
-     * 
-     * @param key
-     *            Parameter name
-     * @return Parameter values
-     */
-    public String[] getParameters(final String key)
-    {
-        return httpServletRequest.getParameterValues(key);
-    }
+	/**
+	 * Gets the request parameters with the given key.
+	 * 
+	 * @param key
+	 *            Parameter name
+	 * @return Parameter values
+	 */
+	public String[] getParameters(final String key)
+	{
+		return httpServletRequest.getParameterValues(key);
+	}
 
-    /**
-     * Gets the path info if any.
-     * 
-     * @return Any servlet path info
-     */
-    public String getPathInfo()
-    {
-        return httpServletRequest.getPathInfo();
-    }
+	/**
+	 * Gets the path info if any.
+	 * 
+	 * @return Any servlet path info
+	 */
+	public String getPath()
+	{
+		return httpServletRequest.getPathInfo();
+	}
 
-    /**
-     * Gets the servlet path.
-     * 
-     * @return Servlet path
-     */
-    public String getServletPath()
-    {
-        return httpServletRequest.getServletPath();
-    }
+	/**
+	 * Gets the servlet path.
+	 * 
+	 * @return Servlet path
+	 */
+	public String getServletPath()
+	{
+		return httpServletRequest.getServletPath();
+	}
 
-    /**
-     * Gets the wrapped http servlet request object.
-     * 
-     * @return the wrapped http serlvet request object.
-     */
-    public final HttpServletRequest getHttpServletRequest()
-    {
-        return httpServletRequest;
-    }
+	/**
+	 * Gets the wrapped http servlet request object.
+	 * 
+	 * @return the wrapped http serlvet request object.
+	 */
+	public final HttpServletRequest getHttpServletRequest()
+	{
+		return httpServletRequest;
+	}
 
-    /**
-     * Gets the request url.
-     * 
-     * @return Request URL
-     */
-    public String getURL()
-    {
-        String url = httpServletRequest.getContextPath() + httpServletRequest.getServletPath();
-        final String pathInfo = httpServletRequest.getPathInfo();
+	/**
+	 * Retrieves the URL of this request for local use.
+	 *
+	 * @return The request URL for local use, which is the context path + the relative url
+	 */
+	public String getURL()
+	{
+		/*
+		 * Servlet 2.3 specification : Context Path: The path prefix associated
+		 * with the ServletContext that this servlet is a part of. If this
+		 * context is the default context rooted at the base of the web server's
+		 * URL namespace, this path will be an empty string. Otherwise, this
+		 * path starts with a "/" character but does not end with a "/"
+		 * character.
+		 */
+		return httpServletRequest.getContextPath() + '/' + getRelativeURL();
+	}
 
-        if (pathInfo != null)
-        {
-            url += pathInfo;
-        }
+	/**
+	 * Gets the relative url (url without the context path and without a leading
+	 * '/'). Use this method to load resources using the servlet context.
+	 * 
+	 * @return Request URL
+	 */
+	public String getRelativeURL()
+	{
+		/*
+		 * Servlet 2.3 specification :
+		 * 
+		 * Servlet Path: The path section that directly corresponds to the
+		 * mapping which activated this request. This path starts with a "/"
+		 * character except in the case where the request is matched with the
+		 * "/*" pattern, in which case it is the empty string.
+		 * 
+		 * PathInfo: The part of the request path that is not part of the
+		 * Context Path or the Servlet Path. It is either null if there is no
+		 * extra path, or is a string with a leading "/".
+		 */
+		String url = httpServletRequest.getServletPath();
+		final String pathInfo = httpServletRequest.getPathInfo();
 
-        final String queryString = httpServletRequest.getQueryString();
+		if (pathInfo != null)
+		{
+			url += pathInfo;
+		}
 
-        if (queryString != null)
-        {
-            url += ("?" + queryString);
-        }
+		final String queryString = httpServletRequest.getQueryString();
 
-        return url;
-    }
+		if (queryString != null)
+		{
+			url += ("?" + queryString);
+		}
 
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString()
-    {
-        return "[method = " + httpServletRequest.getMethod() + ", protocol = "
-                + httpServletRequest.getProtocol() + ", requestURL = " + httpServletRequest.getRequestURL()
-                + ", contentType = " + httpServletRequest.getContentType() + ", contentLength = "
-                + httpServletRequest.getContentLength() + ", contextPath = "
-                + httpServletRequest.getContextPath() + ", pathInfo = " + httpServletRequest.getPathInfo()
-                + ", requestURI = " + httpServletRequest.getRequestURI() + ", servletPath = "
-                + httpServletRequest.getServletPath() + ", pathTranslated = "
-                + httpServletRequest.getPathTranslated() + "]";
-    }
+		// If url is non-empty it has to start with '/', which we should lose
+		if (!url.equals(""))
+		{
+			// Remove leading '/'
+			url = url.substring(1);
+		}
+		return url;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
+				+ httpServletRequest.getProtocol() + ", requestURL = "
+				+ httpServletRequest.getRequestURL() + ", contentType = "
+				+ httpServletRequest.getContentType() + ", contentLength = "
+				+ httpServletRequest.getContentLength() + ", contextPath = "
+				+ httpServletRequest.getContextPath() + ", pathInfo = "
+				+ httpServletRequest.getPathInfo() + ", requestURI = "
+				+ httpServletRequest.getRequestURI() + ", servletPath = "
+				+ httpServletRequest.getServletPath() + ", pathTranslated = "
+				+ httpServletRequest.getPathTranslated() + "]";
+	}
 }
-
-

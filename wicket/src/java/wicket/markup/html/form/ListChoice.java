@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.8 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,10 +17,10 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 
 /**
  * Essentially a drop down choice that doesn't drop down. Instead, it scrolls
@@ -34,10 +34,7 @@ public class ListChoice extends DropDownChoice
 {
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
-    
-	/** Serial Version ID. */
-	private static final long serialVersionUID = 1227773600645861006L;
-
+	
 	/** The maximum number of rows to display. */
 	private int maxRows;
 
@@ -55,7 +52,7 @@ public class ListChoice extends DropDownChoice
 	 * Sets the default maximum number of rows to display.
 	 * 
 	 * @param defaultMaxRows
-	 *            The defaultMaxRows to set.
+	 *			  The defaultMaxRows to set.
 	 */
 	protected static void setDefaultMaxRows(final int defaultMaxRows)
 	{
@@ -63,74 +60,103 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
-	public ListChoice(final String name, final Serializable object, final Collection values)
+	public ListChoice(final String id)
 	{
-		this(name, object, values, defaultMaxRows);
+		super(id);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @param maxRows
-	 *            Maximum number of rows to show
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public ListChoice(final String name, final Serializable object, final Collection values, final int maxRows)
+	public ListChoice(final String id, final List values)
 	{
-		super(name, object, values);
-		setRenderNullOption(false);
+		super(id, values);
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param choices
+	 *			  The collection of values in the list
+	 * @param renderer
+	 * 			  See AbstractChoice 
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
+	 */
+	public ListChoice(final String id, final List choices,final IChoiceRenderer renderer)
+	{
+		super(id, choices,renderer);
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param choices
+	 *			  The collection of values in the list
+	 * @param renderer
+	 * 			  See AbstractChoice 
+	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
+	 */
+	public ListChoice(final String id, final IModel model, final List choices,final IChoiceRenderer renderer)
+	{
+		this(id, model, choices,renderer, defaultMaxRows);
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param choices
+	 *			  The collection of values in the list
+	 * @param renderer
+	 * 			  See AbstractChoice 
+	 * @param maxRows
+	 *			  Maximum number of rows to show
+	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
+	 */
+	public ListChoice(final String id, final IModel model, final List choices, final IChoiceRenderer renderer, final int maxRows)
+	{
+		super(id, model, choices,renderer);
 		this.maxRows = maxRows;
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public ListChoice(final String name, final Serializable object, final String expression, final Collection values)
+	public ListChoice(String id, IModel choices)
 	{
-		this(name, object, expression, values, defaultMaxRows);
+		super(id, choices);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The collection of values in the list
-	 * @param maxRows
-	 *            Maximum number of rows to show
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public ListChoice(final String name, final Serializable object, final String expression, final Collection values,
-			final int maxRows)
+	public ListChoice(String id, IModel model, IModel choices)
 	{
-		super(name, object, expression, values);
-		setRenderNullOption(false);
-		this.maxRows = maxRows;
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public ListChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
 	}
 
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public ListChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+	
 	/**
 	 * Gets the maximum number of rows to display.
 	 * 
@@ -141,19 +167,11 @@ public class ListChoice extends DropDownChoice
 		return maxRows;
 	}
 
-    /**
-     * @see wicket.markup.html.form.FormComponent#supportsPersistence()
-     */
-    public final boolean supportsPersistence()
-    {
-        return true;
-    }
-
 	/**
 	 * Sets the maximum number of rows to display.
 	 * 
 	 * @param maxRows
-	 *            the maximum number of rows to display
+	 *			  the maximum number of rows to display
 	 * @return This
 	 */
 	public final ListChoice setMaxRows(int maxRows)
@@ -163,11 +181,50 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected final void onComponentTag(final ComponentTag tag)
 	{
-		super.handleComponentTag(tag);
-		tag.put("size", Math.min(maxRows, getValues().size()));
+		super.onComponentTag(tag);
+		tag.put("size", Math.min(maxRows, getChoices().size()));
+	}
+
+	/**
+	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
+	 */
+	protected final boolean supportsPersistence()
+	{
+		return true;
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param choices
+	 *			  The collection of values in the list
+	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
+	 */
+	public ListChoice(final String id, final IModel model, final List choices)
+	{
+		this(id, model, choices, defaultMaxRows);
+	}
+
+	/**
+	 * @param id
+	 *			  See Component
+	 * @param model
+	 *			  See Component
+	 * @param choices
+	 *			  The collection of values in the list
+	 * @param maxRows
+	 *			  Maximum number of rows to show
+	 * @see DropDownChoice#DropDownChoice(String, IModel, List)
+	 */
+	public ListChoice(final String id, final IModel model, final List choices, final int maxRows)
+	{
+		super(id, model, choices);
+		this.maxRows = maxRows;
 	}
 }

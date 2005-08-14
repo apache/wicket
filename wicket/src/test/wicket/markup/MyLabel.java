@@ -18,22 +18,24 @@
  */
 package wicket.markup;
 
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
 
 /**
+ * Dummy component used for ComponentCreateTagTest
+ * 
  * @author Juergen Donnerstag
  */
-public class MyLabel extends HtmlComponent
+public class MyLabel extends WebComponent
 {
     private String text = "";
     
     /**
      * Construct.
-     * @param componentName
+     * @param id
      */
-    public MyLabel(final String componentName)
+    public MyLabel(final String id)
     {
-        super(componentName);
+        super(id);
     }
 
     /**
@@ -48,19 +50,19 @@ public class MyLabel extends HtmlComponent
     /**
      * Allows modification of component tag.
      * @param tag The tag to modify
-     * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
+     * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
      */
-    protected final void handleComponentTag(final ComponentTag tag)
+    protected final void onComponentTag(final ComponentTag tag)
     {
         checkComponentTag(tag, "component");
-        super.handleComponentTag(tag);
+        super.onComponentTag(tag);
     }
 
     /**
-     * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
+     * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
      *      wicket.markup.ComponentTag)
      */
-    protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
         replaceComponentTagBody(markupStream, openTag, text);
     }

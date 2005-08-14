@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -34,13 +34,19 @@ import wicket.markup.MarkupElement;
 public interface IMarkupFilter
 {
 	/**
-	 * IMarkupFilters are usually chained with the last filter being a XML
-	 * parser. getParent() returns the next filter in the chain.
+	 * IMarkupFilters are usually chained with the last filter being an XML
+	 * parser. The getParent() method returns the next filter in the chain.
 	 * 
-	 * @return the next filter in the chain, or null if the last one.
+	 * @return The next filter in the chain, or null if the last one.
 	 */
 	public abstract IMarkupFilter getParent();
-    
+	
+	/**
+	 * Set parent.
+	 * @param parent The next element in the chain
+	 */
+	public abstract void setParent(final IMarkupFilter parent);
+	
 	/**
 	 * Gets the next tag from the input string.
 	 * 

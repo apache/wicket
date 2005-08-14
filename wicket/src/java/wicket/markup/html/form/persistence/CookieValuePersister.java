@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -67,7 +67,7 @@ public class CookieValuePersister implements IValuePersister
 			if (value != null)
 			{
 				// Assign the retrieved/persisted value to the component
-				component.setValue(value);
+				component.setModelValue(value);
 			}
 		}
 	}
@@ -251,8 +251,8 @@ public class CookieValuePersister implements IValuePersister
     
     		cookie.setVersion(getSettings().getVersion());
     		cookie.setSecure(getSettings().isSecure());
-    
-    		getWebResponse().addCookie(cookie);
+
+    		getWebResponse().getHttpServletResponse().addCookie(cookie);
     
     		if (log.isDebugEnabled())
     		{

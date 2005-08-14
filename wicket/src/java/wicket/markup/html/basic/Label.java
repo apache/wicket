@@ -1,11 +1,11 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.13 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,11 +17,11 @@
  */
 package wicket.markup.html.basic;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * A Label component replaces its body with the String version of its model
@@ -38,58 +38,75 @@ import wicket.markup.html.HtmlComponent;
  * A Label with a dynamic model can be created like this:
  * 
  * <pre>
- *      add(new Label(&quot;myLabel&quot;, person, &quot;name&quot;);
+ * 
+ *       add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
+ *  
  * </pre>
  * 
- * In this case, the Label component will replace the body of the tag it is 
- * attached to with the 'name' property of the given Person object, where 
- * Person might look like:
+ * In this case, the Label component will replace the body of the tag it is
+ * attached to with the 'name' property of the given Person object, where Person
+ * might look like:
  * 
  * <pre>
  * public class Person
  * {
- * 	   private String name;
+ * 	private String name;
  * 
- * 	   public String getName()
- *     {
- * 	       return name;
- * 	   }
+ * 	public String getName()
+ * 	{
+ * 		return name;
+ * 	}
  * 
- *     public void setName(String name)
- * 	   {
- * 	       this.name = name;
- * 	   }
+ * 	public void setName(String name)
+ * 	{
+ * 		this.name = name;
+ * 	}
  * }
  * </pre>
  * 
  * @author Jonathan Locke
  */
-public class Label extends HtmlComponent
+public class Label extends WebComponent
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = -2180588252471379004L;
-
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * Constructor
+	 * 
+	 * @param id
+	 *            See Component
 	 */
-	public Label(String name, Serializable object)
+	public Label(final String id)
 	{
-		super(name, object);
+		super(id);
+	}
+	
+	/**
+	 * Convenience constructor. Same as Label(String, new Model(String))
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param label
+	 *            The label text
+	 * 
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public Label(final String id, String label)
+	{
+		this(id, new Model(label));
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Label(String name, Serializable object, String expression)
+	public Label(final String id, IModel model)
 	{
-		super(name, object, expression);
+		super(id, model);
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTagBody(wicket.markup.MarkupStream,
+	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
-	protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
 	}

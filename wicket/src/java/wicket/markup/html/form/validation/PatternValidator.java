@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.form.validation;
 
@@ -22,33 +21,38 @@ import java.util.regex.Pattern;
 
 import wicket.markup.html.form.FormComponent;
 import wicket.util.parse.metapattern.MetaPattern;
+import wicket.util.string.Strings;
 
 /**
- * Validates component by matching the component's value against a regular expression
- * pattern. A PatternValidator can be constructed with either a Java regular expression
- * (compiled or not) or a MetaPattern. If the pattern matches against the value of the
- * component it is attached to when validate() is called by the framework, then that input
- * value is considered valid. If the pattern does not match, the errorMessage() method
- * will be called.
+ * Validates component by matching the component's value against a regular
+ * expression pattern. A PatternValidator can be constructed with either a Java
+ * regular expression (compiled or not) or a MetaPattern. If the pattern matches
+ * against the value of the component it is attached to when validate() is
+ * called by the framework, then that input value is considered valid. If the
+ * pattern does not match, the errorMessage() method will be called.
  * <p>
- * For example, to restrict a field to only digits, you might add a PatternValidator
- * constructed with the pattern "\d+". Another way to do the same thing would be to
- * construct the PatternValidator passing in MetaPattern.DIGITS. The advantages of using
- * MetaPattern over straight Java regular expressions are that the patterns are easier to
- * construct and easier to combine into complex patterns. They are also more readable and
- * more reusable. See {@link wicket.util.parse.metapattern.MetaPattern}for details.
+ * For example, to restrict a field to only digits, you might add a
+ * PatternValidator constructed with the pattern "\d+". Another way to do the
+ * same thing would be to construct the PatternValidator passing in
+ * MetaPattern.DIGITS. The advantages of using MetaPattern over straight Java
+ * regular expressions are that the patterns are easier to construct and easier
+ * to combine into complex patterns. They are also more readable and more
+ * reusable. See {@link wicket.util.parse.metapattern.MetaPattern}for details.
+ * 
  * @see java.util.regex.Pattern
  * @see wicket.util.parse.metapattern.MetaPattern
  * @author Jonathan Locke
  */
-public class PatternValidator extends AbstractValidator
+public class PatternValidator extends StringValidator
 {
 	/** The regexp pattern. */
 	private final Pattern pattern;
 
 	/**
 	 * Constructor.
-	 * @param pattern Regular expression pattern
+	 * 
+	 * @param pattern
+	 *            Regular expression pattern
 	 */
 	public PatternValidator(final String pattern)
 	{
@@ -57,8 +61,11 @@ public class PatternValidator extends AbstractValidator
 
 	/**
 	 * Constructor.
-	 * @param pattern Regular expression pattern
-	 * @param flags Compile flags for java.util.regex.Pattern
+	 * 
+	 * @param pattern
+	 *            Regular expression pattern
+	 * @param flags
+	 *            Compile flags for java.util.regex.Pattern
 	 */
 	public PatternValidator(final String pattern, final int flags)
 	{
@@ -67,7 +74,9 @@ public class PatternValidator extends AbstractValidator
 
 	/**
 	 * Constructor.
-	 * @param pattern Java regex pattern
+	 * 
+	 * @param pattern
+	 *            Java regex pattern
 	 */
 	public PatternValidator(final Pattern pattern)
 	{
@@ -76,7 +85,9 @@ public class PatternValidator extends AbstractValidator
 
 	/**
 	 * Constructor.
-	 * @param pattern MetaPattern pattern
+	 * 
+	 * @param pattern
+	 *            MetaPattern pattern
 	 */
 	public PatternValidator(final MetaPattern pattern)
 	{
@@ -84,23 +95,26 @@ public class PatternValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validates the given form component.
-	 * @param component The component to validate
+	 * Validates the set pattern.
+	 *
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
 	 */
-	public final void validate(final FormComponent component)
+	public void onValidate(FormComponent formComponent, String value)
 	{
-		// Get component value
-		final String value = component.getRequestString();
-
-		// Check value against pattern
-		if (!pattern.matcher(value).matches())
+		// If value is non-empty
+		if (!Strings.isEmpty(value))
 		{
-			error(value, component);
+			// Check value against pattern
+			if (!pattern.matcher(value).matches())
+			{
+				error(formComponent);
+			}
 		}
 	}
 
 	/**
 	 * Gets the regexp pattern.
+	 * 
 	 * @return the regexp pattern
 	 */
 	public final Pattern getPattern()
@@ -113,6 +127,6 @@ public class PatternValidator extends AbstractValidator
 	 */
 	public String toString()
 	{
-		return "[pattern = " + pattern + "]";
+		return "[PatternValidator pattern = " + pattern + "]";
 	}
 }

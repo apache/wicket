@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ *
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,39 +31,36 @@ import wicket.markup.MarkupElement;
 import wicket.util.io.Streams;
 import wicket.util.parse.metapattern.parsers.TagNameParser;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import wicket.util.resource.Resource;
-import wicket.util.resource.ResourceNotFoundException;
-import wicket.util.string.StringValue;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.resource.StringResourceStream;
 
 /**
  * A fairly shallow markup pull or streaming parser. Parses a markup string of a
  * given type of markup (for example, html, xml, vxml or wml) into Tag and
  * RawMarkup tokens. IMarkupFilters may be used to handle markup specifics like
  * identifying Wicket components or HTML which is not 100% xml compliant.
- * 
+ *
  * @author Jonathan Locke
  */
-public final class XmlPullParser implements IXmlPullParser
+public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPullParser
 {
 	/** Regex to find <?xml encoding ... ?> */
 	private static final Pattern encodingPattern = Pattern
-			.compile("<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
-    
+			.compile("[\\s\\n\\r]*<\\?xml\\s+(.*\\s)?encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S]*)).*\\?>");
+
 	/** Logging */
 	private static final Log log = LogFactory.getLog(XmlPullParser.class);
 
 	/** current column number. */
 	private int columnNumber = 1;
 
-	/**
-	 * True to compress multiple spaces/tabs or line endings to a single space
-	 * or line ending.
-	 */
-	private boolean compressWhitespace;
-
 	/** Null, if JVM default. Else from <?xml encoding=""> */
 	private String encoding;
 
+	/** Null or if found in the markup, the whole <?xml ...?> string */
+	private String xmlDeclarationString;
+	
 	/** Input to parse. */
 	private String input;
 
@@ -81,16 +78,25 @@ public final class XmlPullParser implements IXmlPullParser
 	/** True to strip out HTML comments. */
 	private boolean stripComments;
 
+	/** temporary variable which will hold the name of the closing tag. */
+	private String skipUntilText;
+	
 	/**
 	 * Construct.
+	 * 
+	 * @param defaultEncoding
 	 */
-	public XmlPullParser()
+	public XmlPullParser(final String defaultEncoding)
 	{
+	    // The xml parser does not have a parent filter
+	    super(null);
+	    
+	    this.encoding = defaultEncoding;
 	}
 
 	/**
 	 * Return the encoding used while reading the markup file.
-	 * 
+	 *
 	 * @return if null, than JVM default
 	 */
 	public String getEncoding()
@@ -99,24 +105,39 @@ public final class XmlPullParser implements IXmlPullParser
 	}
 
 	/**
-	 * Get the character sequence from the position marker to toPos.
+	 * Return the XML declaration string, in case if found in the
+	 * markup.
 	 * 
+	 * @return Null, if not found.
+	 */
+	public String getXmlDeclaration()
+	{
+	    return this.xmlDeclarationString;
+	}
+	
+	/**
+	 * Get the character sequence from the position marker to toPos.
+	 *
 	 * @param toPos
 	 *            index of first character not included
 	 * @return Raw markup (a string) in between these two positions.
 	 */
 	public final CharSequence getInputFromPositionMarker(int toPos)
 	{
-		if (toPos < 0)
-		{
-			toPos = this.input.length();
-		}
+	    if (toPos < 0)
+	    {
+	        toPos = this.input.length();
+	    }
+	    else if (toPos < this.positionMarker)
+	    {
+	        return "";
+	    }
 		return this.input.subSequence(this.positionMarker, toPos);
 	}
 
 	/**
 	 * Get the character sequence in between both positions.
-	 * 
+	 *
 	 * @param fromPos
 	 *            first index
 	 * @param toPos
@@ -129,24 +150,64 @@ public final class XmlPullParser implements IXmlPullParser
 	}
 
 	/**
-	 * As the xml parser will always be the last element on the chain, it will
-	 * always return null.
-	 * 
-	 * @return always null.
+	 * Whatever will be in between the current index and the closing tag,
+	 * will be ignored (and thus treated as raw markup (text). This is useful
+	 * for tags like 'script'.
+	 *  
+	 * @throws ParseException
 	 */
-	public final IMarkupFilter getParent()
+	private final void skipUntil() throws ParseException
 	{
-		return null;
-	}
+		// this is a script tag with script as body skip this until </script> is found.
+		final int startIndex = this.inputPosition;
 
+		int lastPos;
+		while (true)
+		{
+			this.inputPosition = input.indexOf("</", this.inputPosition);
+			
+			if ((this.inputPosition == -1) || ((this.inputPosition + 8) >= input.length()))
+			{
+				throw new ParseException("Script tag not closed (line " + lineNumber + ", column "
+						+ columnNumber + ")", startIndex);							
+			}
+			
+			lastPos = this.inputPosition + 2;
+			final String endTagText = input.substring(lastPos, lastPos + 6);
+			if (endTagText.toLowerCase().equals("script"))
+			{
+				break;
+			}
+			
+			this.inputPosition = lastPos;
+		}
+		
+		// Get index of closing tag and advance past the tag
+		lastPos = input.indexOf('>', lastPos + 6);
+		
+		if (lastPos == -1)
+		{
+			throw new ParseException("Script tag not closed (line " + lineNumber + ", column "
+					+ columnNumber + ")", startIndex);							
+		}
+		
+		// Reset the state variable
+		this.skipUntilText = null;
+	}
+	
 	/**
 	 * Gets the next tag from the input string.
-	 * 
+	 *
 	 * @return The extracted tag (will always be of type XmlTag).
 	 * @throws ParseException
 	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
+	    if (this.skipUntilText != null)
+	    {
+	        skipUntil();
+	    }
+	    
 		// Index of open bracket
 		int openBracketIndex = input.indexOf('<', this.inputPosition);
 
@@ -157,7 +218,7 @@ public final class XmlPullParser implements IXmlPullParser
 			countLinesTo(input, openBracketIndex);
 
 			// Get index of closing tag and advance past the tag
-			final int closeBracketIndex = input.indexOf('>', openBracketIndex);
+			int closeBracketIndex = input.indexOf('>', openBracketIndex);
 
 			if (closeBracketIndex == -1)
 			{
@@ -182,7 +243,25 @@ public final class XmlPullParser implements IXmlPullParser
 
 				return nextTag();
 			}
-			else
+			
+			// CDATA sections might contain "<" which is not part of an XML tag.
+			// Make sure escaped "<" are treated right
+			final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
+			if (startText.toUpperCase().equals("![CDATA["))
+			{
+				// Get index of closing tag and advance past the tag
+				closeBracketIndex = findCloseBracket(input, '>', openBracketIndex);
+
+				if (closeBracketIndex == -1)
+				{
+					throw new ParseException("No matching close bracket at position "
+							+ openBracketIndex, this.inputPosition);
+				}
+
+				// Get the tagtext between open and close brackets
+				tagText = input.substring(openBracketIndex + 1, closeBracketIndex);
+			}
+			
 			{
 				// Type of tag
 				XmlTag.Type type = XmlTag.OPEN;
@@ -212,6 +291,13 @@ public final class XmlPullParser implements IXmlPullParser
 				}
 				else
 				{
+					String lowerCase = tagText.toLowerCase();
+					// TODO hard coded wicket:id check?? Can be othername??
+					if ((type == XmlTag.OPEN) && lowerCase.startsWith("script"))
+					{
+					    this.skipUntilText = "script";
+					}
+						
 					// Parse remaining tag text, obtaining a tag object or null
 					// if it's invalid
 					final XmlTag tag = parseTagText(tagText);
@@ -246,28 +332,67 @@ public final class XmlPullParser implements IXmlPullParser
 	}
 
 	/**
+	 * Find the char but ignore any text within ".." and '..'
+	 * 
+	 * @param input The markup string
+	 * @param ch The character to search
+	 * @param startIndex Start index
+	 * @return -1 if not found, else the index
+	 */
+	private int findCloseBracket(final String input, final char ch, int startIndex)
+	{
+	    char quote = 0;
+	    
+	    for(; startIndex < input.length(); startIndex++)
+	    {
+	        char charAt = input.charAt(startIndex);
+	        if (quote != 0)
+	        {
+	            if (quote == charAt)
+	            {
+	                quote = 0;
+	            }
+	        }
+	        else if ((charAt == '"') || (charAt == '\''))
+	        {
+	            quote = charAt;
+	        }
+	        else if (charAt == ch)
+	        {
+	            return startIndex;
+	        }
+	    }
+		
+	    return -1;
+	}
+
+	/**
 	 * Parse the given string.
 	 * <p>
 	 * Note: xml character encoding is NOT applied. It is assumed the input
 	 * provided does have the correct encoding already.
-	 * 
+	 *
 	 * @param string
 	 *            The input string
+	 * @throws IOException
+	 *             Error while reading the resource
+	 * @throws ResourceStreamNotFoundException
+	 *             Resource not found
 	 */
-	public void parse(final CharSequence string)
+	public void parse(final CharSequence string) throws IOException, ResourceStreamNotFoundException
 	{
-		setInput(string);
+		parse(new StringResourceStream(string));
 	}
 
 	/**
 	 * Reads and parses markup from a resource such as file.
-	 * 
+	 *
 	 * @param resource
 	 *            The resource to read and parse
 	 * @throws IOException
-	 * @throws ResourceNotFoundException
+	 * @throws ResourceStreamNotFoundException
 	 */
-	public void parse(final Resource resource) throws IOException, ResourceNotFoundException
+	public void parse(final IResourceStream resource) throws IOException, ResourceStreamNotFoundException
 	{
 		// reset: Must come from markup
 		this.encoding = null;
@@ -285,13 +410,15 @@ public final class XmlPullParser implements IXmlPullParser
 			final int readAheadSize = 80;
 			bin.mark(readAheadSize);
 
-			// read-ahead the input stream, if it starts with <?xml
-			// encoding=".."?>.
-			// If yes, set this.encoding and return the character which follows
-			// it.
+			// read-ahead the input stream if it starts with <?xml
+			// encoding=".."?>. If yes, set this.encoding.
 			// If no, return the whole line. determineEncoding will read-ahead
-			//        at max. the very first line of the markup
-			this.encoding = determineEncoding(bin, readAheadSize);
+			// at max. the very first line of the markup.
+			final String encoding = determineEncoding(bin, readAheadSize);
+			if (encoding != null)
+			{
+			    this.encoding = encoding;
+			}
 
 			// Depending on the encoding determined from the markup-file, read
 			// the rest either with specific encoding or JVM default
@@ -306,6 +433,7 @@ public final class XmlPullParser implements IXmlPullParser
 			{
 				// Use the encoding as specified in <?xml encoding=".." ?>
 				// Don't re-read <?xml ..> again
+			    // Ignore ALL characters preceding <?xml>
 				markup = Streams.readString(bin, encoding);
 			}
 
@@ -318,17 +446,6 @@ public final class XmlPullParser implements IXmlPullParser
 	}
 
 	/**
-	 * Set whether whitespace should be compressed.
-	 * 
-	 * @param compressWhitespace
-	 *            whether whitespace should be compressed.
-	 */
-	public void setCompressWhitespace(boolean compressWhitespace)
-	{
-		this.compressWhitespace = compressWhitespace;
-	}
-
-	/**
 	 * Remember the current position in markup
 	 */
 	public final void setPositionMarker()
@@ -337,8 +454,18 @@ public final class XmlPullParser implements IXmlPullParser
 	}
 
 	/**
-	 * Set whether to strip components.
+	 * Remember the current position in markup
 	 * 
+	 * @param pos
+	 */
+	public final void setPositionMarker(final int pos)
+	{
+		this.positionMarker = pos;
+	}
+
+	/**
+	 * Set whether to strip components.
+	 *
 	 * @param stripComments
 	 *            whether to strip components.
 	 */
@@ -357,7 +484,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Counts lines between indices.
-	 * 
+	 *
 	 * @param string
 	 *            String
 	 * @param end
@@ -386,32 +513,29 @@ public final class XmlPullParser implements IXmlPullParser
 	 * encoding=".." ?&gt;, than set this.encoding and return null. If not,
 	 * return all characters read so far. determineEncoding will read-ahead at
 	 * max. the very first line of the markup.
-	 * 
+	 *
 	 * @param in
 	 *            The markup file
 	 * @param readAheadSize
 	 *            The read ahead buffer available to read the xml encoding
 	 *            information
-	 * @return null, if &lt;?xml ..?&gt; has been found; else all characters
+	 * @return Null, if &lt;?xml ..?&gt; has been found; else all characters
 	 *         read ahead
 	 * @throws IOException
 	 */
 	private final String determineEncoding(final InputStream in, final int readAheadSize)
 			throws IOException
 	{
-		// max one line
+		// Max one line
 		StringBuffer pushBack = new StringBuffer(readAheadSize);
-
-		// TODO could be improved if <?xml would be checked as well.
 
 		int value;
 		while ((value = in.read()) != -1)
 		{
 			pushBack.append((char)value);
 
-			// stop at end of the first tag or end of line. If it is html
-			// without
-			// newlines, stop after X bytes (= characters)
+			// Stop at end of the first tag or end of line. If it is HTML
+			// without newlines, stop after X bytes (= characters)
 			if ((value == '>') || (value == '\n') || (value == '\r')
 					|| (pushBack.length() >= (readAheadSize - 1)))
 			{
@@ -421,12 +545,15 @@ public final class XmlPullParser implements IXmlPullParser
 
 		// Does the string match the <?xml .. ?> pattern
 		final Matcher matcher = encodingPattern.matcher(pushBack);
-		if (!matcher.find())
+		if (!matcher.matches())
 		{
 			// No
 			return null;
 		}
 
+		// Save the whole <?xml ..> string for later
+		this.xmlDeclarationString = pushBack.toString().trim();
+		
 		// Extract the encoding
 		String encoding = matcher.group(3);
 		if ((encoding == null) || (encoding.length() == 0))
@@ -439,7 +566,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Parses the text between tags. For example, "a href=foo.html".
-	 * 
+	 *
 	 * @param tagText
 	 *            The text between tags
 	 * @return A new Tag object or null if the tag is invalid
@@ -499,7 +626,11 @@ public final class XmlPullParser implements IXmlPullParser
 				final String key = attributeParser.getKey();
 
 				// Put the attribute in the attributes hash
-				tag.attributes.put(key, StringValue.valueOf(value));
+				if (null != tag.put(key, value))
+				{
+				    throw new ParseException("Same attribute found twice: " 
+				            + key, this.inputPosition);
+				}
 
 				// The input has to match exactly (no left over junk after
 				// attributes)
@@ -517,7 +648,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Sets the input string to parse.
-	 * 
+	 *
 	 * @param input
 	 *            The input string
 	 */

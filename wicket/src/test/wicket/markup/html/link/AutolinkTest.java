@@ -20,6 +20,10 @@ package wicket.markup.html.link;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
@@ -33,6 +37,8 @@ import wicket.protocol.http.documentvalidation.TextContent;
  */
 public class AutolinkTest extends TestCase 
 {
+	private static Log log = LogFactory.getLog(AutolinkTest.class);
+
     private MockWebApplication application;
 
     /**
@@ -58,7 +64,6 @@ public class AutolinkTest extends TestCase
 
         // Validate the document
         String document = application.getServletResponse().getDocument();
-        System.out.println(document);
     	Assert.assertTrue(validateDocument(document));
     }
 
@@ -69,6 +74,7 @@ public class AutolinkTest extends TestCase
 	 */
 	private boolean validateDocument(String document)
 	{
+	    System.out.println(document);
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
 		Tag head = new Tag("head");
@@ -108,7 +114,9 @@ public class AutolinkTest extends TestCase
 		
 		Tag anchor4 = new Tag("a");
 		anchor4.addExpectedAttribute("href", ".*MockWebApplication.*");
-		anchor4.addExpectedChild(new TextContent("Home"));
+		Tag span = new Tag("span");
+		anchor4.addExpectedChild(span);
+		span.addExpectedChild(new TextContent("Home"));
 		link3.addExpectedChild(anchor4);
 		
 		Tag link4 = new Tag("wicket:link");
@@ -147,7 +155,7 @@ public class AutolinkTest extends TestCase
 		body.addExpectedChild(anchor8);
 
 		Tag link8 = new Tag("link");
-		link8.addExpectedAttribute("href", "test.css");
+		link8.addExpectedAttribute("href", "wicket/markup/html/link/test.css");
 		body.addExpectedChild(link8);
 
 		Tag anchor9 = new Tag("a");

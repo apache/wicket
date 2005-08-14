@@ -19,9 +19,10 @@
 package wicket.protocol.http;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.model.PropertyModel;
 
 
 /**
@@ -29,10 +30,7 @@ import wicket.markup.html.link.Link;
  *
  * @author Chris Turner
  */
-public class MockPage extends HtmlPage {
-
-	/** Serial Version ID */
-	private static final long serialVersionUID = 2957175986254155110L;
+public class MockPage extends WebPage {
 
 	/**
 	 * Construct.
@@ -41,17 +39,11 @@ public class MockPage extends HtmlPage {
 	public MockPage(final PageParameters parameters) {
         // Action link counts link clicks
         final Link actionLink = new Link("actionLink") {
-			/** Serial Version ID */
-			private static final long serialVersionUID = 6609669501359176769L;
-
-			public void linkClicked() {
+			public void onClick() {
                 linkClickCount++;
-
-                // Redirect back to result to avoid refresh updating the link count
-                getRequestCycle().setRedirect(true);
             }
         };
-        actionLink.add(new Label("linkClickCount", this, "linkClickCount"));
+        actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
         add(actionLink);
     }
 

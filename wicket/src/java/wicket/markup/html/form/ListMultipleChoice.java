@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,7 +25,7 @@ import java.util.StringTokenizer;
 
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
-import wicket.model.Model;
+import wicket.util.string.Strings;
 
 /**
  * A multiple choice list component.
@@ -34,82 +33,111 @@ import wicket.model.Model;
  * @author Jonathan Locke
  * @author Johan Compagner
  */
-public class ListMultipleChoice extends Choice
+public class ListMultipleChoice extends AbstractChoice
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -1000324612688307682L;
-
 	/**
-	 * Constructor.
-	 * 
-	 * @param componentName
-	 *            the name of the component
-	 * @param model
-	 *            the component model
-	 * @param values
-	 *            the values to choose from
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
-	public ListMultipleChoice(final String componentName, final IModel model, final List values)
+	public ListMultipleChoice(final String id)
 	{
-		super(componentName, model, values);
-		setRenderNullOption(false);
+		super(id);
 	}
 
 	/**
-	 * Convenience constructor; wraps the given model in a {@link Model}object.
-	 * 
-	 * @param componentName
-	 *            the name of the component
-	 * @param model
-	 *            the component model; will be wraped in a {@link Model}object
-	 * @param values
-	 *            the values to choose from
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public ListMultipleChoice(final String componentName, final Serializable model,
-			final List values)
+	public ListMultipleChoice(final String id, final List choices)
 	{
-		this(componentName, new Model(model), values);
+		super(id, choices);
 	}
 
 	/**
-	 * @see FormComponent#getValue()
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public final String getValue()
+	public ListMultipleChoice(final String id, final List choices, final IChoiceRenderer renderer)
+	{
+		super(id, choices,renderer);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
+	 */
+	public ListMultipleChoice(final String id, IModel object, final List choices)
+	{
+		super(id, object, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(final String id, IModel object, final List choices, final IChoiceRenderer renderer)
+	{
+		super(id, object, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 */
+	public ListMultipleChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 */
+	public ListMultipleChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public ListMultipleChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+
+
+
+
+	/**
+	 * @see FormComponent#getModelValue()
+	 */
+	public final String getModelValue()
 	{
 		// Get the list of selected values
 		final Collection selectedValues = (Collection)getModelObject();
-		final StringBuffer value = new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		if (selectedValues != null)
 		{
-			final List list = getValues();
-			final Iterator it = selectedValues.iterator();
-			while (it.hasNext())
+			final List choices = getChoices();
+			for (final Iterator iterator = selectedValues.iterator(); iterator.hasNext();)
 			{
-				final int index = list.indexOf(it.next());
-				if (list instanceof IDetachableChoiceList)
-				{
-					value.append(((IDetachableChoiceList)list).getId(index));
-				}
-				else
-				{
-					value.append(index);
-				}
-				// the id's can't have ; in there id!! should we escape it or
-				// something??
-				value.append(";");
+				final Object object = iterator.next();
+				
+				int index = choices.indexOf(object);
+				buffer.append(getChoiceRenderer().getIdValue(object, index));
+				buffer.append(";");
 			}
 		}
-		return value.toString();
+		return buffer.toString();
 	}
 
 	/**
-	 * Sets the cookie value for this component.
-	 * 
-	 * @param value
-	 *            the cookie value for this component
-	 * @see FormComponent#setValue(java.lang.String)
+	 * @see FormComponent#setModelValue(java.lang.String)
 	 */
-	public final void setValue(final String value)
+	public final void setModelValue(final String value)
 	{
 		Collection selectedValues = (Collection)getModelObject();
 		if (selectedValues == null)
@@ -121,26 +149,61 @@ public class ListMultipleChoice extends Choice
 		{
 			selectedValues.clear();
 		}
-		final List list = getValues();
-		final StringTokenizer st = new StringTokenizer(value, ";");
-		while (st.hasMoreTokens())
+		final List choices = getChoices();
+		for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
+				.hasMoreTokens();)
 		{
-			final String idOrIndex = st.nextToken();
-			if (list instanceof IDetachableChoiceList)
+			String selected = tokenizer.nextToken();
+			
+			for(int index=0;index<choices.size();index++)
 			{
-				selectedValues.add(((IDetachableChoiceList)list).objectForId(idOrIndex));
+				// Get next choice
+				final Object choice = choices.get(index);
+				if(getChoiceRenderer().getIdValue(choice, index).equals(selected))
+				{
+					selectedValues.add(choice);
+					break;
+				}
 			}
-			else
-			{
-				final int index = Integer.parseInt(idOrIndex);
-				selectedValues.add(list.get(index));
-			}
+			
 		}
 	}
 
 	/**
-	 * Updates this forms model from the request.
-	 * 
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int)
+	 */
+	protected final boolean isSelected(Object choice, int index)
+	{
+		// Get value of the form "id1;id2;id3"
+		final String value = getValue();
+		
+		// Have a value at all?
+		if (value != null)
+		{
+			// Loop through ids
+			for (final StringTokenizer tokenizer = new StringTokenizer(value, ";"); tokenizer
+					.hasMoreTokens();)
+			{
+				final String id = tokenizer.nextToken(); 
+				if (id.equals(getChoiceRenderer().getIdValue(choice, index)))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @see wicket.Component#onComponentTag(ComponentTag)
+	 */
+	protected final void onComponentTag(final ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		tag.put("multiple", true);
+	}
+
+	/**
 	 * @see FormComponent#updateModel()
 	 */
 	public final void updateModel()
@@ -159,56 +222,28 @@ public class ListMultipleChoice extends Choice
 		}
 
 		// Get indices selected from request
-		final String[] indicesOrIds = getRequestStrings();
+		final String[] ids = inputAsStringArray();
 
-		if (indicesOrIds != null)
+		// If one or more ids is selected
+		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 		{
-			final List list = getValues();
+			// Get values that could be selected
+			final List choices = getChoices();
 
 			// Loop through selected indices
-			for (int i = 0; i < indicesOrIds.length; i++)
+			for (int i = 0; i < ids.length; i++)
 			{
-				if (list instanceof IDetachableChoiceList)
+				for(int index=0;index<choices.size();index++)
 				{
-					selectedValues.add(((IDetachableChoiceList)list).objectForId(indicesOrIds[i]));
-				}
-				else
-				{
-					final int index = Integer.parseInt(indicesOrIds[i]);
-					// Add the value at the given index to the collection of
-					// selected values
-					selectedValues.add(list.get(index));
+					// Get next choice
+					final Object choice = choices.get(index);
+					if(getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
+					{
+						selectedValues.add(choice);
+						break;
+					}
 				}
 			}
 		}
-	}
-
-	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag
-	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
-	 */
-	protected final void handleComponentTag(final ComponentTag tag)
-	{
-		super.handleComponentTag(tag);
-		tag.put("multiple", true);
-	}
-
-	/**
-	 * Gets whether the given value represents the current selection.
-	 * 
-	 * @param currentValue
-	 *            the current list value
-	 * @return whether the given value represents the current selection
-	 * @see wicket.markup.html.form.Choice#isSelected(java.lang.Object)
-	 */
-	protected final boolean isSelected(Object currentValue)
-	{
-		Collection collection = (Collection)getModelObject();
-		if (collection != null)
-			return collection.contains(currentValue);
-		return false;
 	}
 }

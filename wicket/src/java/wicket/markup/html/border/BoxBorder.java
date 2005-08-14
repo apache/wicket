@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.3 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -25,15 +25,12 @@ package wicket.markup.html.border;
  */
 public final class BoxBorder extends Border
 {
-	/** Serial Version ID */
-	private static final long serialVersionUID = 5906713416472971827L;
-
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public BoxBorder(final String componentName)
+	public BoxBorder(final String id)
 	{
-		super(componentName);
+		super(id);
 	}
 }
 

@@ -21,13 +21,14 @@ package wicket.markup;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.Page;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.Model;
 
 /**
+ * Dummy component used for ComponentCreateTagTest
+ * 
  * @author Juergen Donnerstag
  */
 public class MyTable extends ListView
@@ -36,11 +37,11 @@ public class MyTable extends ListView
     
     /**
      * Construct.
-     * @param componentName
+     * @param id
      */
-    public MyTable(final String componentName)
+    public MyTable(final String id)
     {
-        super(componentName, new Model(null));
+        super(id, new Model(null));
     }
 
     protected void populateItem(ListItem listItem)
@@ -63,12 +64,7 @@ public class MyTable extends ListView
         {
             list.add("row: " + String.valueOf(i));
         }
-        
-        this.setModelObject(list);
-        
-        if (this.findParent(Page.class) != null)
-        {
-            this.invalidateModel();
-        }
+                
+        setModelObject(list);
     }
 }

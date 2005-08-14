@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -27,14 +27,14 @@ import java.util.Locale;
  */
 public final class ConversionException extends RuntimeException
 {
-	/** serialVersionUID. */
-	private static final long serialVersionUID = 3751845072374225603L;
-
 	/** The converter that was used. */
 	private IConverter converter;
 
 	/** Pattern that was used for conversion. */
 	private Format format;
+
+	/** Locale that was used for conversion. */
+	private Locale locale;
 
 	/** The value that was tried to convert. */
 	private Object sourceValue;
@@ -95,13 +95,13 @@ public final class ConversionException extends RuntimeException
      */
     public final Locale getLocale()
     {
+		if (locale != null)
+		{
+			return locale;
+		}
     	if (converter != null)
         {
     		return converter.getLocale();
-        }
-        if (typeConverter != null)
-        {
-        	return typeConverter.getLocale();
         }
         return null;
     }
@@ -170,6 +170,19 @@ public final class ConversionException extends RuntimeException
 		return this;
 	}
 
+	/**
+	 * Sets the used locale.
+	 * 
+	 * @param locale
+	 *            the used locale.
+	 * @return This
+	 */
+	public final ConversionException setLocale(Locale locale)
+	{
+		this.locale = locale;
+		return this;
+	}
+	
 	/**
 	 * Sets the tried value.
 	 * 

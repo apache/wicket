@@ -149,6 +149,20 @@ a {
 	text-decoration: underline;
 }
 
+dt {
+	color: #E9601A;
+	font-weight : bold;
+}
+
+dt a {
+	text-decoration: none;
+	color: #E9601A;
+}
+dd {
+	margin-left : 0;
+	padding-left : 0;
+}
+
 img {
 	border: none;
 }

@@ -30,10 +30,10 @@ public class WicketPanel extends Panel
 {
 	/**
 	 * Construct.
-	 * @param componentName
+	 * @param id
 	 */
-	public WicketPanel(final String componentName) 
+	public WicketPanel(final String id) 
 	{
-	    super(componentName);
+	    super(id);
     }
 }

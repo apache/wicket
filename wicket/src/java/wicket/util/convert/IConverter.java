@@ -2,10 +2,10 @@
  * $Id$ $Revision$
  * $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,6 +17,8 @@
  */
 package wicket.util.convert;
 
+import java.io.Serializable;
+
 /**
  * General purpose data type converter.  An object that implements this
  * interface can convert objects from one class to another.
@@ -24,7 +26,7 @@ package wicket.util.convert;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface IConverter extends ILocalizable
+public interface IConverter extends ILocalizable, Serializable
 {
 	/**
 	 * Converts the given value to class c.

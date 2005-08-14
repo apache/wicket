@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,7 +17,7 @@
  */
 package wicket.markup;
 
-import wicket.util.resource.Resource;
+import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
@@ -42,7 +42,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public final class MarkupStream
+public class MarkupStream
 {
 	/** Element at currentIndex */
 	private MarkupElement current;
@@ -52,12 +52,21 @@ public final class MarkupStream
 
 	/** The markup element list */
 	private final Markup markup;
+	
+	/**
+	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN
+	 * THE NEAR FUTURE.
+	 */
+	protected MarkupStream()
+	{
+	    markup = null;
+	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param markup
-	 *            List of markup elements
+	 *			  List of markup elements
 	 */
 	public MarkupStream(final Markup markup)
 	{
@@ -65,7 +74,7 @@ public final class MarkupStream
 
 		if (markup.size() > 0)
 		{
-			current = get(0);
+			current = get(currentIndex);
 		}
 	}
 
@@ -86,14 +95,14 @@ public final class MarkupStream
 	}
 
 	/**
-	 * @param componentName
-	 *            Required component name attribute
+	 * @param componentId
+	 *			  Required component name attribute
 	 * @return True if the current markup element is an openclose tag with the
-	 *         given component name
+	 *		   given component name
 	 */
-	public boolean atOpenCloseTag(final String componentName)
+	public boolean atOpenCloseTag(final String componentId)
 	{
-		return atOpenCloseTag() && componentName.equals(getTag().getComponentName());
+		return atOpenCloseTag() && componentId.equals(getTag().getId());
 	}
 
 	/**
@@ -105,14 +114,14 @@ public final class MarkupStream
 	}
 
 	/**
-	 * @param componentName
-	 *            Required component name attribute
+	 * @param componentId
+	 *			  Required component name attribute
 	 * @return True if the current markup element is an open tag with the given
-	 *         component name
+	 *		   component name
 	 */
-	public boolean atOpenTag(final String componentName)
+	public boolean atOpenTag(final String componentId)
 	{
-		return atOpenTag() && componentName.equals(getTag().getComponentName());
+		return atOpenTag() && componentId.equals(getTag().getId());
 	}
 
 	/**
@@ -142,7 +151,7 @@ public final class MarkupStream
 	/**
 	 * @return The resource where this markup stream came from
 	 */
-	public Resource getResource()
+	public IResourceStream getResource()
 	{
 		return markup.getResource();
 	}
@@ -185,7 +194,7 @@ public final class MarkupStream
 
 	/**
 	 * @param currentIndex
-	 *            New current index in the stream
+	 *			  New current index in the stream
 	 */
 	public void setCurrentIndex(final int currentIndex)
 	{
@@ -236,10 +245,31 @@ public final class MarkupStream
 	}
 
 	/**
+	 * Skips any markup at the current position until the wicket tag name is found.
+	 * @param wicketTagName wicket tag name to seek
+	 */
+	public void skipUntil(final String wicketTagName)
+	{
+		while (true)
+		{
+			if ((current instanceof WicketTag) && ((WicketTag)current).getName().equals(wicketTagName))
+			{
+				return;
+			}
+
+			// go on until we reach the end
+			if (next() == null )
+			{
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Throws a new markup exception
 	 * 
 	 * @param message
-	 *            The exception message
+	 *			  The exception message
 	 * @throws MarkupException
 	 */
 	public void throwMarkupException(final String message)
@@ -249,7 +279,7 @@ public final class MarkupStream
 
 	/**
 	 * @return An HTML string highlighting the current position in the markup
-	 *         stream
+	 *		   stream
 	 */
 	public String toHtmlDebugString()
 	{
@@ -286,7 +316,7 @@ public final class MarkupStream
 
 	/**
 	 * @param index
-	 *            The index of a markup element
+	 *			  The index of a markup element
 	 * @return The MarkupElement element
 	 */
 	private MarkupElement get(final int index)
@@ -298,7 +328,7 @@ public final class MarkupStream
 	 * Renders markup until a closing tag for openTag is reached.
 	 * 
 	 * @param openTag
-	 *            The open tag
+	 *			  The open tag
 	 */
 	private void skipToMatchingCloseTag(final ComponentTag openTag)
 	{
@@ -316,6 +346,70 @@ public final class MarkupStream
 			next();
 		}
 	}
+
+	/**
+	 * Return the XML declaration string, in case if found in the
+	 * markup.
+	 * 
+	 * @return Null, if not found.
+	 */
+	public String getXmlDeclaration()
+	{
+		return markup.getXmlDeclaration();
+	}
+
+	/**
+	 * Gets the markup encoding.  A markup encoding may be specified in
+	 * a markup file with an XML encoding specifier of the form
+	 * &lt;?xml ... encoding="..." ?&gt;.
+	 *
+	 * @return The encoding, or null if not found
+	 */
+	public String getEncoding()
+	{
+		return markup.getEncoding();
+	}
+	
+	/**
+	 * Get the component/container's Class which is directly associated with 
+	 * the stream.
+	 * 
+	 * @return The component's class
+	 */
+	public Class getContainerClass()
+	{
+	    return markup.getContainerClass();
+	}
+	
+	/**
+	 * Get the current index pointing to the start element of the 
+	 * header section.
+	 * 
+	 * @return index
+	 */
+	public final int getHeaderIndex()
+	{
+	    return markup.getHeaderIndex();
+	}
+	
+	/**
+	 * Get the wicket namespace valid for this specific markup
+	 * 
+	 * @return wicket namespace
+	 */
+	public String getWicketNamespace()
+	{
+	    return this.markup.getWicketNamespace();
+	}
+	
+	/**
+	 * Get the index pointing to a &lt;wicket:extend&gt> tag.
+	 * -1 if not found.
+	 * 
+	 * @return index The index of the markup element
+	 */
+	public int getExtendIndex()
+	{
+	    return this.markup.getExtendIndex();
+	}
 }
-
-

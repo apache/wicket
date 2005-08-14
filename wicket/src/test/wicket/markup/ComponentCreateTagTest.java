@@ -19,72 +19,115 @@
 package wicket.markup;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 
 /**
- * Simple application that demonstrates the mock http application
- * code (and checks that it is working)
- *
+ * Simple application that demonstrates the mock http application code (and
+ * checks that it is working)
+ * 
  * @author Chris Turner
  */
-public class ComponentCreateTagTest extends TestCase {
+public class ComponentCreateTagTest extends TestCase
+{
+	private static Log log = LogFactory.getLog(ComponentCreateTagTest.class);
 
-    private MockWebApplication application;
+	private MockWebApplication application;
 
-    /**
-     * Create the test.
-     *
-     * @param name The test name
-     */
-    public ComponentCreateTagTest(String name) {
-        super(name);
-    }
+	/**
+	 * Create the test.
+	 * 
+	 * @param name
+	 *            The test name
+	 */
+	public ComponentCreateTagTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * @throws Exception
-     */
-    public void testRenderHomePage() throws Exception {
-        application = new MockWebApplication(null);
-        application.getPages().setHomePage(ComponentCreateTag.class);
-        
-        // Do the processing
-        application.setupRequestAndResponse();
-        application.processRequestCycle();
+	/**
+	 * Simple Label
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_1() throws Exception
+	{
+	    executeTest(ComponentCreateTag_1.class, "ComponentCreateTagExpectedResult_1.html");
+	}
 
-        // Validate the document
-        String document = application.getServletResponse().getDocument();
-        System.out.println(document);
-    }
+	/**
+	 * A Table with X rows and a label inside
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_2() throws Exception
+	{
+	    executeTest(ComponentCreateTag_2.class, "ComponentCreateTagExpectedResult_2.html");
+	}
 
-    /**
-     * @throws Exception
-     */
-    public void testRenderHomePage_2() throws Exception {
-        application = new MockWebApplication(null);
-        application.getPages().setHomePage(ComponentCreateTag_2.class);
-        
-        // Do the processing
-        application.setupRequestAndResponse();
-        application.processRequestCycle();
+	/**
+	 * A Border
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_3() throws Exception
+	{
+	    executeTest(ComponentCreateTag_3.class, "ComponentCreateTagExpectedResult_3.html");
+	}
 
-        // Validate the document
-        String document = application.getServletResponse().getDocument();
-        System.out.println(document);
-    }
+	/**
+	 * A Border inside another Border (nested <wicket:components>)
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_4() throws Exception
+	{
+	    executeTest(ComponentCreateTag_4.class, "ComponentCreateTagExpectedResult_4.html");
+	}
 
-    /**
-     * @throws Exception
-     */
-    public void testRenderHomePage_3() throws Exception {
-        application = new MockWebApplication(null);
-        application.getPages().setHomePage(ComponentCreateTag_3.class);
-        
-        // Do the processing
-        application.setupRequestAndResponse();
-        application.processRequestCycle();
+	/**
+	 * <wicket:param> attached
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_5() throws Exception
+	{
+	    executeTest(ComponentCreateTag_5.class, "ComponentCreateTagExpectedResult_5.html");
+	}
 
-        // Validate the document
-        String document = application.getServletResponse().getDocument();
-        System.out.println(document);
-    }
+	/**
+	 * <wicket:param> attached
+	 * 
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_6() throws Exception
+	{
+	    executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
+	}
+
+	/**
+	 * @param pageClass
+	 * @param filename
+	 * @throws Exception
+	 */
+	public void executeTest(final Class pageClass, final String filename) throws Exception
+	{
+		application = new MockWebApplication(null);
+		application.getPages().setHomePage(pageClass);
+		application.getSettings().setStripWicketTags(true);
+
+		// Do the processing
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
+
+		// Validate the document
+		String document = application.getServletResponse().getDocument();
+		log.info(document);
+
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+	}
 }

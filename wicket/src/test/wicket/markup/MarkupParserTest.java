@@ -23,11 +23,17 @@ import java.text.ParseException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.markup.html.pages.PageExpiredErrorPage;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
-import wicket.util.resource.Resource;
-import wicket.util.resource.ResourceNotFoundException;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.ResourceStreamNotFoundException;
+import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.string.StringValueConversionException;
 
 
@@ -37,23 +43,25 @@ import wicket.util.string.StringValueConversionException;
  */
 public final class MarkupParserTest extends TestCase
 {
+	private static Log log = LogFactory.getLog(MarkupParserTest.class);
+
     /**
      * 
      * @throws StringValueConversionException
-     * @throws ParseException
+     * @throws Exception
      */
-    public final void testTagParsing() throws StringValueConversionException, ParseException
+    public final void testTagParsing() throws Exception
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
-        final Markup markup = parser
-                .parse("This is a test <a componentName=\"a\" href=\"foo.html\"> <b componentName=\"b\">Bold!</b> "
-                        + "<img componentName=\"img\" width=9 height=10 src=\"foo\"> <marker componentName=\"marker\"/> </a>");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "componentName");
+        final Markup markup = parser.parse(
+                "This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
+                + "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
 
         final MarkupStream markupStream = new MarkupStream(markup);
 
         final ComponentTag aOpen = (ComponentTag) markupStream.next();
 
-        System.out.println(aOpen);
+        log.info(aOpen);
         Assert.assertTrue(aOpen.getName().equals("a"));
         Assert.assertEquals("foo.html", aOpen.getAttributes().getString("href"));
 
@@ -61,7 +69,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag boldOpen = (ComponentTag) markupStream.next();
 
-        System.out.println(boldOpen);
+        log.info(boldOpen);
         Assert.assertTrue(boldOpen.getName().equals("b"));
         Assert.assertEquals(XmlTag.OPEN, boldOpen.getType());
 
@@ -69,7 +77,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag boldClose = (ComponentTag) markupStream.next();
 
-        System.out.println(boldClose);
+        log.info(boldClose);
         Assert.assertTrue(boldClose.getName().equals("b"));
         Assert.assertEquals(XmlTag.CLOSE, boldClose.getType());
 
@@ -77,7 +85,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag img = (ComponentTag) markupStream.next();
 
-        System.out.println(img);
+        log.info(img);
         Assert.assertTrue(img.getName().equals("img"));
         Assert.assertEquals(9, img.getAttributes().getInt("width"));
         Assert.assertEquals(10, img.getAttributes().getInt("height"));
@@ -87,7 +95,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag marker = (ComponentTag) markupStream.next();
 
-        System.out.println(marker);
+        log.info(marker);
         Assert.assertTrue(marker.getName().equals("marker"));
         Assert.assertEquals(XmlTag.OPEN_CLOSE, marker.getType());
 
@@ -95,7 +103,7 @@ public final class MarkupParserTest extends TestCase
 
         final ComponentTag aClose = (ComponentTag) markupStream.next();
 
-        System.out.println(aClose);
+        log.info(aClose);
         Assert.assertTrue(aClose.getName().equals("a"));
 
         Assert.assertNull(markupStream.next());
@@ -103,32 +111,31 @@ public final class MarkupParserTest extends TestCase
 
     /**
      * 
-     * @throws StringValueConversionException
-     * @throws ParseException
+     * @throws Exception
      */
-    public final void test() throws StringValueConversionException, ParseException
+    public final void test() throws Exception
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "componentName");
         final Markup tokens = parser
-                .parse("This is a test <a componentName=9> <b>bold</b> <b componentName=10/></a> of the emergency broadcasting system");
+                .parse("This is a test <a componentName:id=9> <b>bold</b> <b componentName:id=10/></a> of the emergency broadcasting system");
 
-        System.out.println("tok(0)=" + tokens.get(0));
-        System.out.println("tok(1)=" + tokens.get(1));
-        System.out.println("tok(2)=" + tokens.get(2));
-        System.out.println("tok(3)=" + tokens.get(3));
-        System.out.println("tok(4)=" + tokens.get(4));
-        System.out.println("tok(5)=" + tokens.get(5));
+        log.info("tok(0)=" + tokens.get(0));
+        log.info("tok(1)=" + tokens.get(1));
+        log.info("tok(2)=" + tokens.get(2));
+        log.info("tok(3)=" + tokens.get(3));
+        log.info("tok(4)=" + tokens.get(4));
+        log.info("tok(5)=" + tokens.get(5));
 
         Assert.assertTrue(tokens.get(0).equals("This is a test "));
 
         final ComponentTag a = (ComponentTag) tokens.get(1);
 
-        Assert.assertEquals(9, a.getAttributes().getInt("componentName"));
+        Assert.assertEquals(9, a.getAttributes().getInt("componentName:id"));
         Assert.assertTrue(tokens.get(2).equals(" <b>bold</b> "));
 
         final ComponentTag b = (ComponentTag) tokens.get(3);
 
-        Assert.assertEquals(10, b.getAttributes().getInt("componentName"));
+        Assert.assertEquals(10, b.getAttributes().getInt("componentName:id"));
 
         final ComponentTag closeA = (ComponentTag) tokens.get(4);
 
@@ -138,9 +145,9 @@ public final class MarkupParserTest extends TestCase
 
     /**
      * 
-     * @throws ParseException
+     * @throws Exception
      */
-    public final void testXhtmlDocument() throws ParseException {
+    public final void testXhtmlDocument() throws Exception {
         final String docText = "" +
            "<?xml version='1.0' encoding='iso-8859-1' ?>" +
            "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" +
@@ -148,92 +155,105 @@ public final class MarkupParserTest extends TestCase
            "<head><title>Some Page</title></head>" +
            "<body><h1>XHTML Test</h1></body>" +
            "</html>";
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "componentName");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "componentName");
         final Markup tokens = parser.parse(docText);
 
-        System.out.println("tok(0)=" + tokens.get(0));
-        Assert.assertEquals(docText, tokens.get(0).toString());
+        log.info("tok(0)=" + tokens.get(0));
+        
+        // without HtmlHeaderSectionHandler
+        Assert.assertEquals(docText.substring(44), tokens.get(0).toString());
+        // with HtmlHeaderSectionHandler
+        //Assert.assertEquals(docText.substring(44, 147), tokens.get(0).toString());
     }
 
     /**
      * 
      * @throws ParseException
-     * @throws ResourceNotFoundException
+     * @throws ResourceStreamNotFoundException
      * @throws IOException
      */
     public final void testFileDocument() throws ParseException,
-            ResourceNotFoundException, IOException
+            ResourceStreamNotFoundException, IOException
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
-        Resource resource = Resource.locate(null, this.getClass(), "1", null, "html");
+        final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "wcn");
+        
+        ResourceStreamLocator locator = new ResourceStreamLocator(new ClassLoaderResourceStreamLocator());
+        
+        IResourceStream resource = locator.locate(this.getClass(), "1", null, "html");
         Markup tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "2", null, "html");
+        resource = locator.locate(this.getClass(), "2", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "3", null, "html");
+        resource = locator.locate(this.getClass(), "3", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "4", null, "html");
+        resource = locator.locate(this.getClass(), "4", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
         // File from jar (URL resource)
-        resource = Resource.locate(null, PageExpiredErrorPage.class, null, null, "html");
+        resource = locator.locate(PageExpiredErrorPage.class, null, null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "5", null, "html");
+        resource = locator.locate(this.getClass(), "5", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
 
-        resource = Resource.locate(null, this.getClass(), "6", null, "html");
+        resource = locator.locate(this.getClass(), "6", null, "html");
         tokens = parser.readAndParse(resource);
-        System.out.println("tok(0)=" + tokens.get(0));
+        log.info("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        resource = locator.locate(this.getClass(), "7", null, "html");
+        tokens = parser.readAndParse(resource);
+        log.info("tok(0)=" + tokens.get(0));
+        //Assert.assertEquals(docText, tokens.get(0).toString());
+
+        resource = locator.locate(this.getClass(), "8", null, "html");
+        tokens = parser.readAndParse(resource);
+        log.info("tok(0)=" + tokens.get(0));
         //Assert.assertEquals(docText, tokens.get(0).toString());
     }
 
     /**
      * Test &lt;wicket: .
      * @throws ParseException
-     * @throws ResourceNotFoundException
+     * @throws ResourceStreamNotFoundException
      * @throws IOException
      */
     public final void testWicketTag() throws ParseException,
-    	ResourceNotFoundException, IOException
+    	ResourceStreamNotFoundException, IOException
    	{
-	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wicket");
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "wicket");
 	    
-	    parser.parse("<span wicket=\"test\"/>");
+	    parser.parse("<span wicket:id=\"test\"/>");
 
-	    parser.parse("<span wicket=\"test\">Body</span>");
+	    parser.parse("<span wicket:id=\"test\">Body</span>");
 	    
-	    parser.parse("This is a test <span wicket=\"test\"/>");
+	    parser.parse("This is a test <span wicket:id=\"test\"/>");
 
-	    parser.parse("This is a test <span wicket=\"test\">Body</span>");
+	    parser.parse("This is a test <span wicket:id=\"test\">Body</span>");
 	    
-	    parser.parse("<span id=\"wicket-test\"/>");
-
-	    parser.parse("<span id=\"wicket-test\">Body</span>");
+	    parser.parse("<a wicket:id=\"[autolink]\" href=\"test.html\">Home</a>");
 	    
-	    parser.parse("<a wicket=\"[autolink]\" href=\"test.html\">Home</a>");
+	    parser.parse("<span wicket:id=\"test\"/><wicket:param key=value/>");
 	    
-	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=value/>");
-	    
-	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=\"value\" />");
+	    parser.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" />");
 	    
 	    try
 	    {
-	        parser.parse("<span id=\"wicket-test\"/>whatever<wicket:param key=\"value\" />");
+	        parser.parse("<span wicket:id=\"test\"/>whatever<wicket:param key=\"value\" />");
 	        assertTrue("Should have thrown an exception", false);
 	    }
 	    catch (MarkupException ex)
@@ -241,13 +261,13 @@ public final class MarkupParserTest extends TestCase
 	        ; // ignore
 	    }
 	    
-	    parser.parse("<span id=\"wicket-test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
+	    parser.parse("<span wicket:id=\"test\"/><wicket:param key=\"value\" /><wicket:param key2=\"value2\" />");
 	    
-	    parser.parse("<span id=\"wicket-test\"/>   <wicket:param key=\"value\" />   <wicket:param key2=\"value2\" />");
+	    parser.parse("<span wicket:id=\"test\"/>   <wicket:param key=\"value\" />   <wicket:param key2=\"value2\" />");
 	    
-	    parser.parse("<span id=\"wicket-test\"/> \n\r   <wicket:param key=\"value\" />\n\r\t   <wicket:param key2=\"value2\" />");
+	    parser.parse("<span wicket:id=\"test\"/> \n\r   <wicket:param key=\"value\" />\n\r\t   <wicket:param key2=\"value2\" />");
 	    
-	    //parser.parse("<span id=\"wicket-test\"/><wicket:param name=myParam>value</wicket>", null);
+	    //parser.parse("<span wicket:id=\"test\"/><wicket:param name=myParam>value</wicket>", null);
 	    
 	    parser.parse("<wicket:body/>");
 	    
@@ -288,32 +308,56 @@ public final class MarkupParserTest extends TestCase
 	    
 	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
 	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
-	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span id=\"wicket-msg\">hello world!</span></wicket:component>");
+	    parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
 	    
-	    parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span id=\"wicket-contentPanel\"/></div></wicket:panel>");
+	    parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
    	}
 
     /**
      * Test &lt;wicket: .
      * @throws ParseException
-     * @throws ResourceNotFoundException
+     * @throws ResourceStreamNotFoundException
      * @throws IOException
      */
     public final void testDefaultWicketTag() throws ParseException,
-    	ResourceNotFoundException, IOException
+    	ResourceStreamNotFoundException, IOException
    	{
-	    final MarkupParser parser = new MarkupParser(new XmlPullParser(), "wcn");
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser(null), "wcn");
 	    
-	    Markup markup = parser.parse("<span wcn=\"test\"/>");
+	    Markup markup = parser.parse("<span wcn:id=\"test\"/>");
 	    assertEquals(1, markup.size());
 
-	    markup = parser.parse("<span wicket=\"test\"/>");
+	    markup = parser.parse("<span wicket:id=\"test\"/>");
 	    assertEquals(1, markup.size());
 	    
 	    markup = parser.parse("<wcn:xxx>  </wcn:xxx>");
 	    assertEquals(3, markup.size());
 	    
+/* setWicketNamespace() deprecated since 1.1
+	    final ApplicationSettings settings = new ApplicationSettings(new MockWebApplication(null));
+	    settings.setWicketNamespace("wcn");
+	    parser.configure(settings);
 	    markup = parser.parse("<wicket:xxx>  </wicket:xxx>");
+	    assertEquals(1, markup.size());
+*/	    
+   	}
+
+    /**
+     * Test &lt;wicket: .
+     * @throws ParseException
+     * @throws ResourceStreamNotFoundException
+     * @throws IOException
+     */
+    public final void testScript() throws ParseException,
+    	ResourceStreamNotFoundException, IOException
+   	{
+	    final MarkupParser parser = new MarkupParser(new XmlPullParser(null));
+	    
+	    Markup markup = parser.parse("<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
 	    assertEquals(3, markup.size());
+	    assertEquals("html", ((ComponentTag)markup.get(0)).getName());
+	    assertEquals("html", ((ComponentTag)markup.get(2)).getName());
+	    assertEquals(true, markup.get(1) instanceof RawMarkup);
+	    assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", ((RawMarkup)markup.get(1)).toString());
    	}
 }

@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.7 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,7 +19,6 @@ package wicket.util.convert;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -89,13 +88,13 @@ public final class Converter implements IConverter
 			return OgnlOps.convertValue(value, c);
 		}
 
-		public void setLocale(Locale locale)
-		{
-		}
-
 		public Locale getLocale()
 		{
 			return Locale.getDefault();
+		}
+
+		public void setLocale(Locale locale)
+		{
 		}
 	};
 
@@ -107,22 +106,22 @@ public final class Converter implements IConverter
 	 */
 	public Converter()
 	{
-		set(Boolean.TYPE, new BooleanConverter());
-		set(Boolean.class, new BooleanConverter());
-		set(Byte.TYPE, new ByteConverter());
-		set(Byte.class, new ByteConverter());
-		set(Character.TYPE, new CharacterConverter());
-		set(Character.class, new CharacterConverter());
-		set(Double.TYPE, new DoubleConverter());
-		set(Double.class, new DoubleConverter());
-		set(Float.TYPE, new FloatConverter());
-		set(Float.class, new FloatConverter());
-		set(Integer.TYPE, new IntegerConverter());
-		set(Integer.class, new IntegerConverter());
-		set(Long.TYPE, new LongConverter());
-		set(Long.class, new LongConverter());
-		set(Short.TYPE, new ShortConverter());
-		set(Short.class, new ShortConverter());
+		set(Boolean.TYPE, BooleanConverter.INSTANCE);
+		set(Boolean.class, BooleanConverter.INSTANCE);
+		set(Byte.TYPE, ByteConverter.INSTANCE);
+		set(Byte.class, ByteConverter.INSTANCE);
+		set(Character.TYPE, CharacterConverter.INSTANCE);
+		set(Character.class, CharacterConverter.INSTANCE);
+		set(Double.TYPE, DoubleConverter.INSTANCE);
+		set(Double.class, DoubleConverter.INSTANCE);
+		set(Float.TYPE, FloatConverter.INSTANCE);
+		set(Float.class, FloatConverter.INSTANCE);
+		set(Integer.TYPE, IntegerConverter.INSTANCE);
+		set(Integer.class, IntegerConverter.INSTANCE);
+		set(Long.TYPE, LongConverter.INSTANCE);
+		set(Long.class, LongConverter.INSTANCE);
+		set(Short.TYPE, ShortConverter.INSTANCE);
+		set(Short.class, ShortConverter.INSTANCE);
 		set(String.class, new StringConverter());
 		set(Date.class, new DateConverter());
 	}
@@ -137,29 +136,6 @@ public final class Converter implements IConverter
 	{
 		this();
 		setLocale(locale);
-	}
-
-	/**
-	 * Registers a converter for use with class c.
-	 * 
-	 * @param converter
-	 *            The converter to add
-	 * @param c
-	 *            The class for which the converter should be used
-	 * @return The previous registered converter for class c or null if none was
-	 *         registered yet for class c
-	 */
-	public ITypeConverter set(final Class c, final ITypeConverter converter)
-	{
-		if (converter == null)
-		{
-			throw new IllegalArgumentException("Converter cannot be null");
-		}
-		if (c == null)
-		{
-			throw new IllegalArgumentException("Class cannot be null");
-		}
-		return (ITypeConverter)classToConverter.put(c, converter);
 	}
 
 	/**
@@ -193,7 +169,7 @@ public final class Converter implements IConverter
 		// Class cannot be null
 		if (c == null)
 		{
-			throw new IllegalArgumentException("Class cannot be null");
+			throw new NullPointerException("Class cannot be null");
 		}
 
 		// Catch all cases where value is already the right type
@@ -212,7 +188,7 @@ public final class Converter implements IConverter
 		try
 		{
 			// Use type converter to convert to value
-			return converter.convert(value);
+			return converter.convert(value,locale);
 		}
 		catch (ConversionException e)
 		{
@@ -268,6 +244,29 @@ public final class Converter implements IConverter
 	}
 
 	/**
+	 * Registers a converter for use with class c.
+	 * 
+	 * @param converter
+	 *            The converter to add
+	 * @param c
+	 *            The class for which the converter should be used
+	 * @return The previous registered converter for class c or null if none was
+	 *         registered yet for class c
+	 */
+	public ITypeConverter set(final Class c, final ITypeConverter converter)
+	{
+		if (converter == null)
+		{
+			throw new NullPointerException("Converter cannot be null");
+		}
+		if (c == null)
+		{
+			throw new NullPointerException("Class cannot be null");
+		}
+		return (ITypeConverter)classToConverter.put(c, converter);
+	}
+
+	/**
 	 * Sets the converter that is to be used when no registered converter is
 	 * found. This allows converter chaining.
 	 * 
@@ -286,12 +285,6 @@ public final class Converter implements IConverter
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
-
-		// Set locale on each string type converter
-		for (final Iterator iterator = classToConverter.values().iterator(); iterator.hasNext();)
-		{
-			((ITypeConverter)iterator.next()).setLocale(locale);
-		}
 
 		// Set locale on default converter
 		defaultConverter.setLocale(locale);

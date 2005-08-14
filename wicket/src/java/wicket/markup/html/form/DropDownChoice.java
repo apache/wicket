@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,86 +17,151 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
+import wicket.model.IModel;
 
 /**
- * A choice implemented as a dropdown menu/list. Framework users can extend this
- * class and optionally implement interface
- * {@link wicket.markup.html.form.IOnChangeListener}to implement onChange
- * behaviour of the HTML select element.
+ * A choice implemented as a dropdown menu/list.
+ * <p>
+ * Java:
+ * <pre>
+ * 	List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
+ *
+ *	// Add a dropdown choice component that uses Input's 'site' property to designate the
+ *	// current selection, and that uses the SITES list for the available options.
+ *	// Note that when the selection is null, Wicket will lookup a localized string to
+ *	// represent this null with key: "id + '.null'". In this case, this is 'site.null'
+ *	// which can be found in DropDownChoicePage.properties
+ *	form.add(new DropDownChoice("site", SITES));
+ * </pre>
+ * HTML:
+ * <pre>
+ *	&lt;select wicket:id="site"&gt;
+ *		&lt;option&gt;site 1&lt;/option&gt;
+ *		&lt;option&gt;site 2&lt;/option&gt;
+ *	&lt;/select&gt;
+ * </pre>
+ * </p>
+ * 
+ * <p>
+ * You can can extend this class and override method wantOnSelectionChangedNotifications()
+ * to force server roundtrips on each selection change.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public class DropDownChoice extends Choice
+public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
 {
-	/** serial UID. */
-	private static final long serialVersionUID = 122777360064586107L;
-
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param values
-	 *            The drop down values
-	 * @see wicket.Component#Component(String, Serializable)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
-	public DropDownChoice(String name, Serializable object, final Collection values)
+	public DropDownChoice(final String id)
 	{
-		super(name, object, values);
+		super(id);
 	}
 
 	/**
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
-	 * @param expression
-	 *            See Component constructor
-	 * @param values
-	 *            The drop down values
-	 * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public DropDownChoice(String name, Serializable object, String expression,
-			final Collection values)
+	public DropDownChoice(final String id, final List choices)
 	{
-		super(name, object, expression, values);
+		super(id, choices);
 	}
 
 	/**
-	 * @see FormComponent#getValue()
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public final String getValue()
+	public DropDownChoice(final String id, final List data, final IChoiceRenderer renderer)
 	{
-		final List list = getValues();
-		if (list instanceof IDetachableChoiceList)
-		{
-			final int index = list.indexOf(getModelObject());
-			if (index != -1)
-			{
-				return ((IDetachableChoiceList)list).getId(index);
-			}
-			return "-1";
-		}
-		else
-		{
-			return Integer.toString(list.indexOf(getModelObject()));
-		}
+		super(id,data, renderer);
 	}
 
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
+	 */
+	public DropDownChoice(final String id, IModel model, final List choices)
+	{
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
+	 */
+	public DropDownChoice(final String id, IModel model, final List data, final IChoiceRenderer renderer)
+	{
+		super(id, model,data, renderer);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 */
+	public DropDownChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 */
+	public DropDownChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+	
 	/**
 	 * Called when a selection changes.
 	 */
-	public final void selectionChanged()
+	public final void onSelectionChanged()
 	{
-		selectionChanged(internalUpdateModel());
+		updateModel();
+		onSelectionChanged(getModelObject());
+	}
+
+	/**
+	 * Processes the component tag.
+	 * 
+	 * @param tag
+	 *			  Tag to modify
+	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+		checkComponentTag(tag, "select");
+		
+		// Should a roundtrip be made (have onSelectionChanged called) when the selection changed?
+		if (wantOnSelectionChangedNotifications())
+		{
+			// url that points to this components IOnChangeListener method
+			final String url = urlFor(IOnChangeListener.class);
+
+			// NOTE: do not encode the url as that would give invalid JavaScript
+			tag.put("onChange", "location.href='" + url + "&" + getPath()
+					+ "=' + this.options[this.selectedIndex].value;");
+		}
+
+		super.onComponentTag(tag);
 	}
 
 	/**
@@ -109,86 +174,25 @@ public class DropDownChoice extends Choice
 	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is
-	 *            the same as you would get by calling getModelObject() if the
-	 *            new selection were current
+	 *			  The newly selected object of the backing model NOTE this is
+	 *			  the same as you would get by calling getModelObject() if the
+	 *			  new selection were current
 	 */
-	public void selectionChanged(final Object newSelection)
+	protected void onSelectionChanged(final Object newSelection)
 	{
 	}
 
 	/**
-	 * @see FormComponent#setValue(java.lang.String)
+	 * Whether this component's onSelectionChanged event handler should called using
+	 * javascript if the selection changes. If true, a roundtrip will be generated with
+	 * each selection change, resulting in the model being updated (of just this component)
+	 * and onSelectionChanged being called. This method returns false by default.
+	 * @return True if this component's onSelectionChanged event handler should
+	 *			called using javascript if the selection changes
 	 */
-	public final void setValue(final String value)
+	protected boolean wantOnSelectionChangedNotifications()
 	{
-		final List list = getValues();
-		if (list instanceof IDetachableChoiceList)
-		{
-			setModelObject(((IDetachableChoiceList)list).objectForId(value));
-		}
-		else
-		{
-			setModelObject(list.get(Integer.parseInt(value)));
-		}
-	}
-
-	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.Choice#updateModel()
-	 */
-	public final void updateModel()
-	{
-		internalUpdateModel();
-	}
-
-	/**
-	 * Processes the component tag.
-	 * 
-	 * @param tag
-	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
-	 */
-	protected void handleComponentTag(final ComponentTag tag)
-	{
-		if (this instanceof IOnChangeListener)
-		{
-			// If a user subclasses this class and implements IOnChangeListener
-			// an onChange scriptlet is added
-			String url = getRequestCycle().urlFor(this, IOnChangeListener.class);
-			url = url.replaceAll("&", "&amp;");
-			tag.put("onChange", "location.href='" + url + "&amp;" + getPath()
-					+ "=' + this.options[this.selectedIndex].value;");
-		}
-		super.handleComponentTag(tag);
-	}
-
-	/**
-	 * Update model and return the object.
-	 * 
-	 * @return the object
-	 */
-	private Object internalUpdateModel()
-	{
-		final String indexOrId = getRequestString();
-		Object object = null;
-		final List list = getValues();
-		if (indexOrId == null || "".equals(indexOrId))
-		{
-			setModelObject(null);
-		}
-		else if (list instanceof IDetachableChoiceList)
-		{
-			object = ((IDetachableChoiceList)list).objectForId(indexOrId);
-			setModelObject(object);
-		}
-		else
-		{
-			object = list.get(Integer.parseInt(indexOrId));
-			setModelObject(object);
-		}
-		return object;
+		return false;
 	}
 
 	static

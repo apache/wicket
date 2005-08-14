@@ -2,10 +2,10 @@
  * $Id: FormComponentFeedbackBorder.java,v 1.3 2005/01/02 21:58:21 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,12 +17,14 @@
  */
 package wicket.markup.html.form.validation;
 
-import wicket.markup.html.HtmlContainer;
+import wicket.feedback.ContainerFeedbackMessageFilter;
+import wicket.feedback.IFeedback;
+import wicket.feedback.IFeedbackMessageFilter;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
-import wicket.markup.html.form.FormComponent;
 
 /**
- * A border that can be placed around a form bordered to indicate when the
+ * A border that can be placed around a form component to indicate when the
  * bordered child has a validation error. A child of the border named
  * "errorIndicator" will be shown and hidden depending on whether the child has
  * an error. A typical error indicator might be a little red asterisk.
@@ -30,47 +32,66 @@ import wicket.markup.html.form.FormComponent;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class FormComponentFeedbackBorder extends Border implements IValidationFeedback
+public class FormComponentFeedbackBorder extends Border implements IFeedback
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -7070716217601930304L;
-
 	/** The error indicator child which should be shown if an error occurs. */
-	private final HtmlContainer errorIndicator;
+	private final ErrorIndicator errorIndicator;
 
-	/** The child to border; is used to get whether there is an error for it. */
-	private final FormComponent child;
+	/** Visible property cache. */
+	private boolean visible;
+
+	/**
+	 * Error indicator that will be shown whenever there is an error-level
+	 * message for the collecting component.
+	 */
+	private final class ErrorIndicator extends WebMarkupContainer
+	{
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 *            component id
+		 */
+		public ErrorIndicator(String id)
+		{
+			super(id);
+		}
+
+		/**
+		 * @see wicket.Component#isVisible()
+		 */
+		public boolean isVisible()
+		{
+			return visible;
+		}
+	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param componentName
-	 *            This component's name
-	 * @param child
-	 *            The child to border
+	 * @param id
+	 *            See Component
 	 */
-	public FormComponentFeedbackBorder(final String componentName, FormComponent child)
+	public FormComponentFeedbackBorder(final String id)
 	{
-		super(componentName);
-
-		this.child = child;
-		add(child);
-
-		// Create invisible error indicator bordered that will be shown when a
-		// validation error occurs
-		errorIndicator = new HtmlContainer("errorIndicator");
-		errorIndicator.setVisible(false);
-		add(errorIndicator);
+		super(id);
+		add(errorIndicator = new ErrorIndicator("errorIndicator"));
 	}
 
 	/**
-	 * Handles validation errors. If any errors were registered, the decorated
-	 * error indicator will be set to invisible.
-	 * 
-	 * @see wicket.markup.html.form.validation.IValidationFeedback#updateValidationFeedback()
+	 * @see wicket.feedback.IFeedback#updateFeedback()
 	 */
-	public void updateValidationFeedback()
+	public void updateFeedback()
 	{
-		errorIndicator.setVisible(child.hasErrorMessage());
+		// Get the messages for the current page
+		visible = getPage().getFeedbackMessages().messages(getMessagesFilter()).size() != 0;
+	}
+
+	/**
+	 * @return Let subclass specify some other filter
+	 */
+	protected IFeedbackMessageFilter getMessagesFilter()
+	{
+		return new ContainerFeedbackMessageFilter(this);
 	}
 }

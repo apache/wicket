@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.10 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,61 +17,58 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
+import wicket.markup.html.form.validation.TypeValidator;
+import wicket.model.IModel;
 
 /**
  * A simple text field.
  * 
  * @author Jonathan Locke
  */
-public class TextField extends FormComponent
+public class TextField extends AbstractTextComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -2913294206388017417L;
-
 	/**
-	 * When the user input does not validate, this is a temporary store for the
-	 * input he/she provided. We have to store it somewhere as we loose the
-	 * request parameter when redirecting.
+	 * @see wicket.Component#Component(String)
 	 */
-	private String invalidInput;
-
-	/**
-     * @see wicket.Component#Component(String, Serializable)
-	 */
-	public TextField(String name, Serializable object)
+	public TextField(final String id)
 	{
-		super(name, object);
+		super(id);
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @param id
+	 *            See Component
+	 * @param type
+	 *            Type for field validation
 	 */
-	public TextField(String name, Serializable object, String expression)
+	public TextField(final String id, final Class type)
 	{
-		super(name, object, expression);
+		super(id);
+		add(new TypeValidator(type));
 	}
 
 	/**
-	 * @see FormComponent#supportsPersistence()
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public final boolean supportsPersistence()
+	public TextField(final String id, final IModel object)
 	{
-		return true;
+		super(id, object);
 	}
 
 	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param type
+	 *            The type to use when updating the model for this text field
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public void updateModel()
+	public TextField(final String id, IModel model, Class type)
 	{
-        // Component validated, so clear the input
-		invalidInput = null; 
-		setModelObject(getRequestString());
+		super(id, model);
+		add(new TypeValidator(type));
 	}
 
 	/**
@@ -79,33 +76,43 @@ public class TextField extends FormComponent
 	 * 
 	 * @param tag
 	 *            Tag to modify
-	 * @see wicket.Component#handleComponentTag(ComponentTag)
+	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void handleComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
+		// Must be attached to an input tag
 		checkComponentTag(tag, "input");
-		checkComponentTagAttribute(tag, "type", "text");
-		super.handleComponentTag(tag);
-		if (invalidInput == null)
+
+		// If this is not a subclass (PasswordTextField)
+		if (getClass() == TextField.class)
 		{
-			// No validation errors
-			tag.put("value", getModelObjectAsString());
+			// check for text type
+			checkComponentTagAttribute(tag, "type", "text");
 		}
-		else
-		{
-			// Invalid input detected
-			tag.put("value", invalidInput);
-		}
+
+		// No validation errors
+		tag.put("value", getValue());
+		
+		// Default handling for component tag
+		super.onComponentTag(tag);
 	}
 
 	/**
-	 * Handle a validation error.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#invalid()
+	 * @see wicket.markup.html.form.AbstractTextComponent#updateModel()
 	 */
-	protected void invalid()
+	public void updateModel()
 	{
-		// Store the user input
-		invalidInput = getRequestString();
+		// Get any validation type
+		final Class type = getValidationType();
+		if (type != null)
+		{
+			// Set model to request string converted to the appropriate type
+			setModelObject(getConverter().convert(getInput(), type));
+		}
+		else
+		{
+			// Update String model
+			super.updateModel();
+		}
 	}
 }

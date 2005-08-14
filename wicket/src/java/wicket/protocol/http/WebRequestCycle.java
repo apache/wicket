@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -21,23 +21,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ApplicationPages;
+import wicket.ApplicationSettings;
 import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.PageParameters;
-import wicket.WicketRuntimeException;
 import wicket.RequestCycle;
+import wicket.Resource;
 import wicket.Response;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
+import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;
-import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
@@ -53,6 +57,9 @@ import wicket.util.string.Strings;
  */
 public class WebRequestCycle extends RequestCycle
 {
+	/** Path prefix for shared resources */
+	public static final String resourceReferencePrefix = "/resources/";
+	
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
 
@@ -60,8 +67,6 @@ public class WebRequestCycle extends RequestCycle
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there.
 	 * 
-	 * @param application
-	 *            The application
 	 * @param session
 	 *            The session
 	 * @param request
@@ -69,112 +74,38 @@ public class WebRequestCycle extends RequestCycle
 	 * @param response
 	 *            The response
 	 */
-	public WebRequestCycle(final WebApplication application, final WebSession session,
-			final WebRequest request, final Response response)
+	public WebRequestCycle(final WebSession session, final WebRequest request,
+			final Response response)
 	{
-		super(application, session, request, response);
+		super(session, request, response);
 	}
 
 	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
+	 * @return Request as a WebRequest
 	 */
-	public String urlFor(final Class pageClass, final PageParameters parameters)
+	public WebRequest getWebRequest()
 	{
-		final StringBuffer buffer = urlPrefix();
-
-		buffer.append("?bookmarkablePage=");
-		buffer.append(pageClass.getName());
-
-		if (parameters != null)
-		{
-			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-			{
-				final String key = (String)iterator.next();
-
-				buffer.append('&');
-				buffer.append(key);
-				buffer.append('=');
-				buffer.append(parameters.getString(key));
-			}
-		}
-
-		return response.encodeURL(buffer.toString());
+		return (WebRequest)request;
 	}
 
 	/**
-	 * Returns a URL that references a given interface on a component. When the
-	 * URL is requested from the server at a later time, the interface will be
-	 * called. A URL returned by this method will not be stable across sessions
-	 * and cannot be bookmarked by a user.
-	 * 
-	 * @param component
-	 *            The component to reference
-	 * @param listenerInterface
-	 *            The listener interface on the component
-	 * @return A URL that encodes a page, component and interface to call
+	 * @return Response as a WebResponse
 	 */
-	public String urlFor(final Component component, final Class listenerInterface)
+	public WebResponse getWebResponse()
 	{
-		// Ensure that component instanceof listenerInterface
-		if (!listenerInterface.isAssignableFrom(component.getClass()))
-		{
-			throw new WicketRuntimeException("The component " + component + " of class "
-					+ component.getClass() + " does not implement " + listenerInterface);
-		}
-
-		// Compose the URL
-		final StringBuffer buffer = urlPrefix();
-
-		buffer.append("?component=");
-		buffer.append(component.getPath());
-		buffer.append("&rendering=");
-		buffer.append(component.getPage().getRendering());
-		buffer.append("&interface=");
-		buffer.append(Classes.name(listenerInterface));
-
-		// Return the encoded URL
-		return response.encodeURL(buffer.toString());
+		return (WebResponse)response;
 	}
 
 	/**
-	 * @return Prefix for URLs including the context path, servlet path and
-	 *         application name (if servlet path is empty).
+	 * @return Session as a WebSession
 	 */
-	public StringBuffer urlPrefix()
+	public WebSession getWebSession()
 	{
-		final StringBuffer buffer = new StringBuffer();
-
-		if (request != null)
-		{
-			buffer.append(((WebRequest)request).getContextPath());
-
-			final String servletPath = ((WebRequest)request).getServletPath();
-			if (servletPath.equals(""))
-			{
-				buffer.append('/');
-				buffer.append(application.getName());
-			}
-			else
-			{
-				buffer.append(servletPath);
-			}
-		}
-
-		return buffer;
-	}
+		return (WebSession)session;
+	}	
 
 	/**
-	 * Renders a response for the current request. The following four steps are
-	 * followed in rendering a response:
+	 * Parses a request. The following four steps are followed:
 	 * <p>
 	 * 1. If the URL requested is in the form of a component listener
 	 * invocation, then that invocation will occur and is expected to generate a
@@ -190,58 +121,160 @@ public class WebRequestCycle extends RequestCycle
 	 * content, available through the servlet context.
 	 * <p>
 	 * If all four steps are executed and content cannot be found to satisfy the
-	 * request, then the request is considered invalid and a response is written
-	 * detailing the problem.
+	 * request, then false is returned.
+	 * 
+	 * @return True if a Page should be rendered back to the user
 	 */
-	protected void handleRender()
+	protected final boolean parseRequest()
 	{
 		// Try different methods of parsing and dispatching the request
-		if (callComponentListener() || bookmarkablePage() || homePage())
+
+		if (callDispatchedComponentListener())
 		{
-			// Get page set by handler
-			final Page page = getPage();
-
-			// Is there a page to render?
-			if (page != null)
+			// if it is, we don't need to update the cluster, etc, and return false
+		}
+		// it wasn't a dispatched listener, try other methods
+		else if (callComponentListener() || bookmarkablePage() || homePage())
+		{
+			// Returning a page
+			return true;
+		}
+		else
+		{
+			// If it's not a resource reference or static content
+			if (!resourceReference() && !staticContent())
 			{
-				// Should page be redirected to?
-				if (getRedirect())
+				// not found... send 404 to client indicating that no resource was found
+				// for the request uri
+				WebResponse webResponse = (WebResponse)getResponse();
+				HttpServletResponse httpServletResponse = webResponse.getHttpServletResponse();
+				try
 				{
-					// Redirect to the page
-					redirectToPage(page);
+					httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
 				}
-				else
+				catch (IOException e)
 				{
-					// Render the page
-					page.render();
+					// that seems unlikely... anyway, log exception and forget about it
+					log.error("unable to send 404 for " + getRequest() + ", cause: " + e.getMessage(), e);
+				}
+			}
+		}
 
-					// Clear all feedback messages
-					page.getFeedbackMessages().clear();
+		// Don't update the cluster, not returning a page
+		setUpdateCluster(false);
+		setResponsePage((Page)null);
+		return false;
+	}
+
+	/**
+	 * Redirects browser to the given page.
+	 * NOTE: Usually, you should never call this method directly, but work with
+	 * setResponsePage instead. This method is part of Wicket's internal
+	 * behaviour and should only be used when you want to circumvent the normal
+	 * framework behaviour and issue the redirect directly.
+	 * 
+	 * @param page
+	 *            The page to redirect to
+	 * @throws ServletException 
+	 */
+	protected void redirectTo(final Page page) throws ServletException
+	{
+		String redirectUrl = page.urlFor(page, IRedirectListener.class);
+		
+		// Check if use serverside response for client side redirects
+		ApplicationSettings settings = application.getSettings();
+		if ((settings.getRenderStrategy() == ApplicationSettings.REDIRECT_TO_BUFFER) 
+		        && (application instanceof WebApplication))
+		{
+		    // remember the current response
+			final Response currentResponse = getResponse();
+			try
+			{
+				// create the redirect response.
+				// override the encodeURL so that it will use the real once encoding.
+				final BufferedResponse redirectResponse = new BufferedResponse(redirectUrl) 
+				{
+					public String encodeURL(String url) 
+					{
+						return currentResponse.encodeURL(url);
+					}
+				};
+				redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
+
+				// redirect the response to the buffer
+				setResponse(redirectResponse);
+				
+				// test if the invoker page was the same as the page that is going to be renderd
+				if (getInvokePage() == getResponsePage())
+				{
+					// set it to null because it is already ended in the page.doRender()
+					setInvokePage(null);
 				}
+				
+				// render the page into the buffer
+				page.doRender();
+				
+				// re-assign the original response
+				setResponse(currentResponse);
+				
+				final String responseRedirect = redirectResponse.getRedirectUrl();
+				if (redirectUrl != responseRedirect)
+				{
+					// if the redirectResponse has another redirect url set 
+					// then the rendering of this page caused a redirect to something else.
+					// set this redirect then.
+					redirectUrl = redirectResponse.getRedirectUrl();
+				}
+				else if (redirectResponse.getContentLength() > 0)
+				{
+					// if no content is created then don't set it in the redirect buffer 
+				    // (maybe access failed). 
+					// Set the encoding of the response (what the browser wants)
+					redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
+					
+					// close it so that the reponse is fixed and encoded from here on.
+					redirectResponse.close();
+					
+					((WebApplication)application).addRedirect(
+					        getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
+				}
+			}
+			catch (RuntimeException ex)
+			{
+				// re-assign the original response
+				setResponse(currentResponse);
+				internalOnRuntimeException(page, ex);
+				return;
 			}
 		}
 		else
 		{
-			// Try to respond with static content
-			if (!renderStaticContent())
-			{
-				// No static content could be found
-				response.write("<pre>Invalid request: " + request + "</pre>");
-			}
+			// redirect page can touch its models already (via for example the constructors) 
+			page.internalEndRequest();
 		}
-	}
-
-	/**
-	 * Redirects browser to the given page
-	 * 
-	 * @param page
-	 *            The page to redirect to
-	 */
-	protected void redirectToPage(final Page page)
-	{
+		
 		// Redirect to the url for the page
-		response.redirect(urlFor(page, IRedirectListener.class));
+		response.redirect(redirectUrl);
 	}
+	
+	/**
+	 * Creates a prefix for a url.
+	 * @return Prefix for URLs including the context path and servlet path.
+	 */
+	protected StringBuffer urlPrefix()
+	{
+		final StringBuffer buffer = new StringBuffer();
+		final WebRequest request = getWebRequest();
+		if (request != null)
+		{
+			final String contextPath = request.getContextPath();
+			buffer.append(contextPath);
+			buffer.append(((WebRequest)request).getServletPath());
+		}
+
+		return buffer;
+	}
+	
 
 	/**
 	 * Sets values for form components based on cookie values in the request.
@@ -257,7 +290,7 @@ public class WebRequestCycle extends RequestCycle
 			// For each FormComponent found on the Page (not Form)
 			public Object component(final Component component)
 			{
-				((Form)component).setFormComponentValuesFromPersister();
+				((Form)component).loadPersistentFormComponentValues();
 				return CONTINUE_TRAVERSAL;
 			}
 		});
@@ -273,13 +306,79 @@ public class WebRequestCycle extends RequestCycle
 	private boolean bookmarkablePage()
 	{
 		// Get any component parameter
-		final String pageClassName = request.getParameter("bookmarkablePage");
-
-		if (pageClassName != null)
+		final String bookmarkableName = request.getParameter("bookmarkablePage");
+		if (bookmarkableName != null)
 		{
-			final Class pageClass = getSession().getClassResolver().resolveClass(pageClassName);
-			setPage(getPageFactory().newPage(pageClass,
-					new PageParameters(getRequest().getParameterMap())));
+			// first see whether we have a logical mapping
+			Class pageClass = application.getPages().classForAlias(bookmarkableName);
+
+			// nope, we don't have a logical mapping, so this should be a full class name
+			if (pageClass == null)
+			{
+			    try
+			    {
+					pageClass = session.getClassResolver().resolveClass(bookmarkableName);
+			    }
+			    catch (RuntimeException e)
+			    {
+					try
+					{
+						getWebResponse().getHttpServletResponse().sendError(
+						        HttpServletResponse.SC_NOT_FOUND, 
+						        "Unable to load Bookmarkable Page");
+						
+						return true;
+					}
+					catch (IOException ex)
+					{
+						// that seems unlikely... anyway, log exception and forget about it
+						log.error("unable to send 404 for " + getRequest() + ", cause: " + ex.getMessage(), ex);
+						return false;
+					}
+			    }
+			}
+
+		    try
+		    {
+				Page newPage = session.getPageFactory().newPage(pageClass,
+						new PageParameters(getRequest().getParameterMap()));
+				
+				// If response is set in the construtor of the bookmarkable page.
+				if(getResponsePage() == null)
+				{
+					setResponsePage(newPage);
+				}
+				setUpdateCluster(true);
+				return true;
+		    }
+		    catch (RuntimeException e)
+		    {
+		        throw new WicketRuntimeException("Unable to instantiate Page class: " 
+		                + bookmarkableName + ". See below for details.", e);
+		    }
+		}
+		return false;
+	}
+
+	/**
+	 * Calls a dispatched component listener interface on a page that already exists in the
+	 * session. This is the same as callComponentListener, except that the actual handler
+	 * is not the component itself, but an attached 'even request listener'. Such listeners
+	 * (typically used for AJAX behaviour) are responsible for their own output (which
+	 * could be XML, javascript, HTML or whatever), and thus the current page should not
+	 * be rendered when this method returns true.
+	 * 
+	 * @return True if the dispatched listener was successfully called
+	 * @throws WicketRuntimeException
+	 */
+	private boolean callDispatchedComponentListener()
+	{
+		if (request.getParameter("dispatched") != null)
+		{
+			if (!callComponentListener())
+			{
+				throw new WicketRuntimeException("incomplete dispatched request");
+			}
 
 			return true;
 		}
@@ -301,117 +400,40 @@ public class WebRequestCycle extends RequestCycle
 	private boolean callComponentListener()
 	{
 		// Get any component parameter
-		final String path = request.getParameter("component");
-
+		final String path = request.getParameter("path");
+		final String pageMapName = request.getParameter("pagemap");
 		if (path != null)
 		{
-			// Get page where component resides
-			log.debug("Getting page " + path);
+			// Get version number
+			final String versionNumberString = request.getParameter("version");
+			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
+					.parseInt(versionNumberString);
 
 			// Get page from path
-			final Page page = session.getPage(path);
-
-			// Get the rendering of the page
-			final int rendering = Integer.parseInt(request.getParameter("rendering"));
-
+			final Page page = session.getPage(pageMapName, path, versionNumber);
+			
 			// Does page exist?
 			if (page != null)
 			{
-				// Is page stale?
-				if (page.isStale())
+				// Assume cluster needs to be updated now, unless listener invocation
+				// change this (for example, with a simple page redirect)
+				setUpdateCluster(true);
+
+				// Execute the user's code
+				String interfaceName = request.getParameter("interface");
+				if(interfaceName == null)
 				{
-					// Page was marked stale because the data model for some
-					// component on the page is stale.  Find the most recent 
-                    // fresh page and send the user there.
-					final Page freshestPage = session.getFreshestPage();
-
-					if (freshestPage != null)
-					{
-						setPage(newPage(application.getPages().getStaleDataErrorPage(),
-								freshestPage));
-					}
-					else
-					{
-						setPage(newPage(application.getPages().getHomePage()));
-					}
-
-					return true;
+					interfaceName = "IRedirectListener";
 				}
-				else if (page.isRenderingStale(rendering))
-				{
-					// Just a particular rendering of the page is stale, so send
-					// the user back to the page
-					setPage(newPage(application.getPages().getStaleDataErrorPage(), page));
-					return true;
-				}
-				else
-				{
-					// Get the component at the given path on the page
-					final Component component = page
-							.get(Strings.afterFirstPathComponent(path, '.'));
-
-					// Got component?
-					if (component != null)
-					{
-						// Set the page for the component as the response page
-						// and expire any pages in the session cache that are
-						// newer than the given page since they will no longer
-						// be accessible.
-						setPage(page);
-
-						// Look up interface to call
-						final String interfaceName = request.getParameter("interface");
-						final Method method = getInterfaceMethod(interfaceName);
-
-						try
-						{
-							// Invoke the interface method on the component
-							method.invoke(component, new Object[] { });
-						}
-						catch (IllegalAccessException e)
-						{
-							throw new WicketRuntimeException("Cannot access method " + method
-									+ " of interface " + interfaceName, e);
-						}
-						catch (InvocationTargetException e)
-						{
-							throw new WicketRuntimeException("Method " + method + " of interface "
-									+ interfaceName + " threw an exception", e);
-						}
-
-						// Set form component values from cookies
-						setFormComponentValuesFromCookies(page);
-
-						// If the current page is also the next page or we're redirecting
-						if (getPage() != page || getRedirect())
-						{
-							// detach any models loaded by the component listener
-							page.detachModels();
-						}
-						return true;
-					}
-					else
-					{
-						// If the page is in the session and is not stale, then
-						// the component in question should exist. Therefore, we
-						// should not get here. So it must be an internal error
-						// of some kind or someone is hacking around with URLs 
-                        // in their browser.
-						log.error("No component found for " + path);
-						setPage(newPage(application.getPages().getInternalErrorPage()));
-						return true;
-					}
-				}
+				invokeInterface(page, path, interfaceName);
+				return true;
 			}
 			else
 			{
-				// Page was expired from session, probably because backtracking
-				// limit was reached
-				setPage(newPage(application.getPages().getPageExpiredErrorPage()));
+				onExpiredPage();
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -423,24 +445,147 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	private boolean homePage()
 	{
-		final String pathInfo = ((WebRequest)request).getPathInfo();
-
-		if (pathInfo == null || "/".equals(pathInfo) || "".equals(pathInfo))
+		final String path = getWebRequest().getPath();
+		final String servletPath = getWebRequest().getServletPath();
+		if (Strings.isEmpty(path) || ("/".equals(path) && "".equals(servletPath)))
 		{
 			try
 			{
-				setPage(newPage(application.getPages().getHomePage()));
+				Class homePage = application.getPages().getHomePage();
+				ApplicationPages.HomePageRenderStrategy homePageStrategy = application.getPages().getHomePageRenderStrategy();
+				if(homePageStrategy == ApplicationPages.BOOKMARK_REDIRECT)
+				{
+					setResponsePage(homePage);
+				}
+				else
+				{
+					Page newPage = newPage(homePage);
+					
+					// check if the home page didn't set a page by itself
+					if(getResponsePage() == null)
+					{
+						if(homePageStrategy == ApplicationPages.PAGE_REDIRECT)
+						{
+							//see if we have to redirect the render part by default
+							//so that a homepage has the same url as a post or get to that page.
+							ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
+									.getSettings().getRenderStrategy();
+							boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
+									|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);				
+							setRedirect(issueRedirect);
+						}
+						setResponsePage(newPage);
+					}
+				}
+				setUpdateCluster(true);
 			}
 			catch (WicketRuntimeException e)
 			{
 				throw new WicketRuntimeException("Could not create home page", e);
 			}
-
 			return true;
 		}
-
 		return false;
 	}
+
+
+	/**
+	 * Invokes a given interface on a component.
+	 * 
+	 * @param component
+	 *            The component
+	 * @param method
+	 *            The name of the method to call
+	 */
+	private void invokeInterface(final Component component, final Method method)
+	{
+		try
+		{
+			// Invoke the interface method on the component
+			method.invoke(component, new Object[] { });
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new WicketRuntimeException("Cannot access method " + method + " of interface "
+					+ method.getClass().getName(), e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new WicketRuntimeException("Method " + method + " of interface " + method.getClass().getName()
+					+ " threw an exception", e);
+		}
+	}
+
+	/**
+	 * Invokes a given interface on a component on a given page
+	 * 
+	 * @param page
+	 *            The page where the component is
+	 * @param path
+	 *            The path to the component
+	 * @param interfaceName
+	 *            The name of the interface to call
+	 */
+	private void invokeInterface(final Page page, final String path, final String interfaceName)
+	{
+		setInvokePage(page);
+		// Invoke interface on the component at the given path on the page
+		final Component component = page.get(Strings.afterFirstPathComponent(path, ':'));
+		if (component != null)
+		{
+			if(!component.isVisible())
+			{
+				try
+				{
+					getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_FORBIDDEN, 
+					        "Unable to execute this request");
+				}
+				catch (IOException ex)
+				{
+					// that seems unlikely... anyway, log exception and forget about it
+					log.error("unable to send 403 for " + getRequest() + ", cause: " + ex.getMessage(), ex);
+				}
+				return;
+			}
+			Method method = getRequestInterfaceMethod(interfaceName);
+			if (method != null)
+			{
+				// Set the page for the component as the response page
+				setResponsePage(page);
+				if (!interfaceName.equals("IRedirectListener"))
+				{
+					// Clear all feedback messages if it isn't a redirect
+					page.getFeedbackMessages().clear();
+	
+					// and see if we have to redirect the render part by default
+					ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
+							.getSettings().getRenderStrategy();
+					boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
+							|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);
+	
+					setRedirect(issueRedirect);
+				}
+	
+				// Invoke interface on component
+				invokeInterface(component, method);
+	
+				// Set form component values from cookies
+				setFormComponentValuesFromCookies(page);
+			}
+			else
+			{
+				throw new WicketRuntimeException("Attempt to access unknown interface " + interfaceName);
+			}
+		}
+		else
+		{
+			// Must be an internal error of some kind or someone is hacking
+			// around with URLs in their browser.
+			log.error("No component found for " + path);
+			setResponsePage(newPage(application.getPages().getInternalErrorPage()));
+		}
+	}
+
 
 	/**
 	 * Creates a new page.
@@ -453,33 +598,57 @@ public class WebRequestCycle extends RequestCycle
 	private final Page newPage(final Class pageClass)
 	{
 		final PageParameters parameters = new PageParameters(getRequest().getParameterMap());
-		return getPageFactory().newPage(pageClass, parameters);
+		return session.getPageFactory().newPage(pageClass, parameters);
 	}
 
 	/**
-	 * Creates a new instance of a page using the given class name.
-	 * 
-	 * @param pageClass
-	 *            The class of page to create
-	 * @param page
-	 *            Parameter to page constructor
-	 * @return The new page
-	 * @throws WicketRuntimeException
+	 * Called when the requested page is not available.
 	 */
-	private final Page newPage(final Class pageClass, final Page page)
+	private void onExpiredPage()
 	{
-		return getPageFactory().newPage(pageClass, page);
+		// Page was expired from session, probably because backtracking
+		// limit was reached
+		setResponsePage(newPage(application.getPages().getPageExpiredErrorPage()));
+	}
+
+	/**
+	 * Renders resource to user if URL matches resource pattern
+	 * 
+	 * @return True if the resource was found 
+	 */
+	private boolean resourceReference()
+	{
+		final String path = request.getPath();
+		if (path.startsWith(resourceReferencePrefix))
+		{
+			final String resourceReferenceKey = path.substring(resourceReferencePrefix.length());
+			final Resource resource = getApplication().getSharedResources().get(resourceReferenceKey);
+			if (resource == null)
+			{
+				throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey);
+			}
+			else
+			{
+				resource.onResourceRequested();
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * @return True if static content was returned
 	 */
-	private boolean renderStaticContent()
+	private boolean staticContent()
 	{
 		try
 		{
-			// Get URL
-			final String url = ((WebRequest)getRequest()).getURL();
+			// Get the relative URL we need for loading the resource from
+			// the servlet context
+			final String url = '/' + getWebRequest().getRelativeURL();
+			// NOTE: we NEED to put the '/' in front as otherwise some versions of
+			// application servers (e.g. Jetty 5.1.x) will fail for requests like
+			// '/mysubdir/myfile.css'
 
 			// Get servlet context
 			final ServletContext context = ((WebApplication)application).getWicketServlet()
@@ -495,7 +664,7 @@ public class WebRequestCycle extends RequestCycle
 				try
 				{
 					// Copy resource input stream to servlet output stream
-					Streams.writeStream(in, ((WebResponse)response).getHttpServletResponse()
+					Streams.copy(in, getWebResponse().getHttpServletResponse()
 							.getOutputStream());
 				}
 				finally

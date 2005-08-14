@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -20,18 +20,18 @@ package wicket.markup.html.form;
 import wicket.IRequestListener;
 
 /**
- * Listener method for OnChange events of dropdown lists. Users can optionally
- * implement this interface with drop down components to have an onchange
- * javascript event handler rendered that will call the implementor directly
- * when an onchange event is issued.
- * 
+ * Listener method for OnChange events of dropdown lists and onclick events of
+ * CheckBoxes and RadioChoice components.
+ * When any of those components wantOnSelectionChangedNotifications() method
+ * returns true, a javascript onchange or onclick handler will be generated that
+ * calls this interface method when the user changes the selection.
+ *
  * @author Eelco Hillenius
  */
 public interface IOnChangeListener extends IRequestListener
 {
 	/**
-	 * Called when a option is selected of a dropdown list that wants to be
-	 * notified of this event.
+	 * Called when a new option is selected.
 	 */
-	void selectionChanged();
+	void onSelectionChanged();
 }

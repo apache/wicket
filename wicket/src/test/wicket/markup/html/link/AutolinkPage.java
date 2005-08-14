@@ -19,7 +19,8 @@
 package wicket.markup.html.link;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.basic.Label;
 
 
 /**
@@ -27,7 +28,7 @@ import wicket.markup.html.HtmlPage;
  *
  * @author Chris Turner
  */
-public class AutolinkPage extends HtmlPage 
+public class AutolinkPage extends WebPage 
 {
 	/**
 	 * Construct.
@@ -35,5 +36,6 @@ public class AutolinkPage extends HtmlPage
 	 */
 	public AutolinkPage(final PageParameters parameters) 
 	{
+	    add(new Label("myLabel", "Home"));
     }
 }

@@ -1,11 +1,11 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,8 +17,10 @@
  */
 package wicket.markup.html.list;
 
-import java.io.Serializable;
 import java.util.List;
+
+import wicket.model.IModel;
+import wicket.version.undo.Change;
 
 /**
  * PageableListView is similar to ListView but provides in addition pageable
@@ -27,67 +29,46 @@ import java.util.List;
  * 
  * @author Jonathan Locke
  */
-public abstract class PageableListView extends ListView
+public abstract class PageableListView extends ListView implements IPageableComponent
 {
 	/** The page to show. */
 	private int currentPage;
 
 	/** Number of rows per page of the list view. */
-	private final int rowsPerPage;
+	private int rowsPerPage;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param model
+	 *            See Component
+	 * @param rowsPerPage
+	 *            Number of rows to show on a page
+	 */
+	public PageableListView(final String id, final IModel model, int rowsPerPage)
+	{
+		super(id, model);
+		this.rowsPerPage = rowsPerPage;
+	}
 
 	/**
 	 * Creates a pagable list view having the given number of rows per page that
 	 * uses the provided object as a simple model.
 	 * 
-	 * @see wicket.Component#Component(String, Serializable)
-	 * @param name
-	 *            See Component constructor
-	 * @param object
-	 *            See Component constructor
+	 * @param id
+	 *            See Component
+	 * @param list
+	 *            See Component
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
+	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(String name, Serializable object, int rowsPerPage)
+	public PageableListView(final String id, final List list, final int rowsPerPage)
 	{
-		super(name, object);
+		super(id, list);
 		this.rowsPerPage = rowsPerPage;
-	}
-
-	/**
-     * Creates a pagable list view having the given number of rows per page that
-     * uses the provided object as a simple model.
-     * 
-     * @see wicket.Component#Component(String, Serializable)
-     * @param name
-     *            See Component constructor
-     * @param object
-     *            See Component constructor
-	 * @param expression
-     *            See Component constructor
-     * @param rowsPerPage
-     *            Number of rows to show on a page
-	 */
-	public PageableListView(String name, Serializable object, String expression, int rowsPerPage)
-	{
-		super(name, object, expression);
-		this.rowsPerPage = rowsPerPage;
-	}
-
-	/**
-     * Creates a pagable list view having the given number of rows per page that
-     * uses the provided object as a simple model.
-     * 
-     * @see wicket.Component#Component(String, Serializable)
-     * @param name
-     *            See Component constructor
-     * @param object
-     *            See Component constructor
-     * @param rowsPerPage
-     *            Number of rows to show on a page
-	 */
-	public PageableListView(String name, List object, int rowsPerPage)
-	{
-		this(name, (Serializable)object, rowsPerPage);
 	}
 
 	/**
@@ -117,36 +98,29 @@ public abstract class PageableListView extends ListView
 	}
 
 	/**
-	 * Sets the current page that this list view should show.
-	 * 
-	 * @param currentPage
-	 *            The currentPage to set.
-	 */
-	public final void setCurrentPage(final int currentPage)
-	{
-		if (currentPage < 0)
-		{
-			throw new IllegalArgumentException("Cannot set current page to " + currentPage);
-		}
-
-		int pageCount = getPageCount();
-		if (currentPage > 0 && (currentPage >= pageCount))
-		{
-			throw new IllegalArgumentException("Cannot set current page to " + currentPage
-					+ " because this pageable list view only has " + pageCount + " pages");
-		}
-
-		this.currentPage = currentPage;
-	}
-
-	/**
-	 * Get the maximum number of rows on each page.
+	 * Gets the maximum number of rows on each page.
 	 * 
 	 * @return the maximum number of rows on each page.
 	 */
 	public final int getRowsPerPage()
 	{
 		return rowsPerPage;
+	}
+
+	/**
+	 * Sets the maximum number of rows on each page.
+	 * 
+	 * @param rowsPerPage the maximum number of rows on each page.
+	 */
+	public final void setRowsPerPage(int rowsPerPage)
+	{
+		if (rowsPerPage < 0)
+		{
+			rowsPerPage = 0;
+		}
+
+		addStateChange(new RowsPerPageChange(this.rowsPerPage));
+		this.rowsPerPage = rowsPerPage;
 	}
 
 	/**
@@ -162,6 +136,30 @@ public abstract class PageableListView extends ListView
 
 		return super.getViewSize();
 	}
+
+	/**
+	 * Sets the current page that this list view should show.
+	 * 
+	 * @param currentPage
+	 *            The currentPage to set.
+	 */
+	public final void setCurrentPage(int currentPage)
+	{
+		if (currentPage < 0)
+		{
+			currentPage = 0;
+		}
+
+		int pageCount = getPageCount();
+		if ((currentPage > 0) && (currentPage >= pageCount))
+		{
+			currentPage = pageCount - 1;
+		}
+		
+		addStateChange(new CurrentPageChange(this.currentPage));
+		this.currentPage = currentPage;
+	}
+
 
 	/**
 	 * Prevent users from accidentially using it. Throw an
@@ -190,4 +188,67 @@ public abstract class PageableListView extends ListView
 		throw new UnsupportedOperationException(
 				"You must not use setViewSize() with PageableListView");
 	}
+	
+	/**
+	 * Records the changing of the current page.
+	 */
+	private class CurrentPageChange extends Change
+	{
+		/** the former 'current' page. */
+		private int currentPage;
+
+		/**
+		 * Construct.
+		 * @param currentPage the former 'current' page
+		 */
+		CurrentPageChange(int currentPage)
+		{
+			this.currentPage = currentPage;
+		}
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setCurrentPage(currentPage);
+		}
+	}
+
+	/**
+	 * Records the changing of the nbr of rows per page.
+	 */
+	private class RowsPerPageChange extends Change
+	{
+		/** the former nbr of rows per page. */
+		private int rowsPerPage;
+
+		/**
+		 * Construct.
+		 * @param rowsPerPage the former nbr of rows per page
+		 */
+		RowsPerPageChange(int rowsPerPage)
+		{
+			this.rowsPerPage = rowsPerPage;
+		}
+		/**
+		 * @see wicket.version.undo.Change#undo()
+		 */
+		public void undo()
+		{
+			setRowsPerPage(rowsPerPage);
+		}
+	}
+
+	/**
+	 * Returns the total number of items in the listview
+	 * 
+	 * @see IPageableComponent#getItemCount()
+	 */
+	public int getItemCount()
+	{
+		return getList().size();
+	}
+	
+	
+	
 }

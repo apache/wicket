@@ -1,11 +1,11 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.21 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,54 +17,31 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.model.IModel;
 
 /**
  * Multi-row text editing component.
  * 
  * @author Jonathan Locke
  */
-public class TextArea extends FormComponent
+public class TextArea extends AbstractTextComponent
 {
-	/** Serial Version ID. */
-	private static final long serialVersionUID = -1323747673401786242L;
-
 	/**
-	 * when the user input does not validate, this is a temporary store for the
-	 * input he/she provided. We have to store it somewhere as we loose the
-	 * request parameter when redirecting.
+	 * @see wicket.Component#Component(String)
 	 */
-	private String invalidInput;
-
-	/**
-     * @see wicket.Component#Component(String, Serializable)
-	 */
-	public TextArea(final String name, final Serializable object)
+	public TextArea(final String id)
 	{
-		super(name, object);
+		super(id);
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextArea(final String name, final Serializable object, final String expression)
+	public TextArea(final String id, final IModel model)
 	{
-		super(name, object, expression);
-	}
-
-	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public void updateModel()
-	{
-        // Component validated, so clear the input
-		invalidInput = null; 
-		setModelObject(getRequestString());
+		super(id, model);
 	}
 
 	/**
@@ -74,32 +51,11 @@ public class TextArea extends FormComponent
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
-	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
 	{
-		final String bodyContent;
-		if (invalidInput == null) 
-		{
-            // No validation errors
-			bodyContent = getModelObjectAsString();
-		}
-		else
-		{
-            // Invalid input detected
-			bodyContent = invalidInput;
-		}
-		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
-	}
-
-	/**
-	 * Handle a validation error.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#invalid()
-	 */
-	protected void invalid()
-	{
-		// store the user input
-		invalidInput = getRequestString();
+		replaceComponentTagBody(markupStream, openTag, getValue());
 	}
 }

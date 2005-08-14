@@ -3,10 +3,10 @@
  * $Revision$
  * $Date$
  *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
  *  http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -29,7 +29,7 @@ package wicket;
  * their markup) can be distributed as a self-contained JAR file.
  * 
  * @see wicket.markup.html.image.Image
- * @see wicket.markup.html.image.DynamicImage
+ * @see wicket.markup.html.image.resource.RenderedDynamicImageResource
  * @author Jonathan Locke
  */
 public interface IResourceListener extends IRequestListener
@@ -37,7 +37,7 @@ public interface IResourceListener extends IRequestListener
     /**
      * Called when a resource is requested.
      */
-    public void resourceRequested();
+    public void onResourceRequested();
 }
 
 

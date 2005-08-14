@@ -1,11 +1,11 @@
 /*
- * $Id: AttributeModifier.java,v 1.11 2005/01/18 23:44:32
- * jonathanlocke Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -20,7 +20,6 @@ package wicket;
 import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
-import wicket.model.IDetachableModel;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
@@ -45,14 +44,31 @@ import wicket.util.value.ValueMap;
  * </p>
  * <p>
  * Instances of this class should be added to components via the
- * {@link wicket.Component#add(AttributeModifier)}method after the
- * componet has been constucted.
+ * {@link wicket.Component#add(AttributeModifier)}method after the component
+ * has been constucted.
+ * <p>
+ * It is possible to create new subclasses of AttributeModifier by overriding
+ * the newValue(String, String) method. For example, you could create an
+ * AttributeModifier subclass which appends the replacement value like this:
+ * <code>
+ * 	new AttributeModifier("myAttribute", model)
+ *  {
+ * 		protected String newValue(final String currentValue, final String replacementValue)
+ *      {
+ *      	return currentValue + replacementValue;
+ *      }
+ *  };
+ * </code>
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public class AttributeModifier implements Serializable
 {
+	/** The next attribute modifier in any chain */
+	AttributeModifier next;
+
 	/** Whether to add the attribute if it is not an attribute in the markup. */
 	private final boolean addAttributeIfNotPresent;
 
@@ -80,8 +96,8 @@ public class AttributeModifier implements Serializable
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public AttributeModifier(final String attribute,
-			final boolean addAttributeIfNotPresent, final IModel replaceModel)
+	public AttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
+			final IModel replaceModel)
 	{
 		this(attribute, null, addAttributeIfNotPresent, replaceModel);
 	}
@@ -148,8 +164,7 @@ public class AttributeModifier implements Serializable
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public AttributeModifier(final String attribute, final String pattern,
-			final IModel replaceModel)
+	public AttributeModifier(final String attribute, final String pattern, final IModel replaceModel)
 	{
 		this(attribute, pattern, false, replaceModel);
 	}
@@ -159,7 +174,7 @@ public class AttributeModifier implements Serializable
 	 * 
 	 * @return Whether enabled or not
 	 */
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
 		return enabled;
 	}
@@ -174,63 +189,28 @@ public class AttributeModifier implements Serializable
 	{
 		this.enabled = enabled;
 	}
-	
+
 	/**
-	 * Detach the model if it was a IDetachableModel
-	 * Internal method. shouldn't be called from the outside
+	 * Gets the value that should replace the current attribute value.
+	 * 
+	 * @param currentValue
+	 *            The current attribute value
+	 * @param replacementValue
+	 *            The replacement value
+	 * @return The value that should replace the current attribute value
+	 */
+	protected String newValue(final String currentValue, final String replacementValue)
+	{
+		return replacementValue;
+	}
+
+	/**
+	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
+	 * be called from the outside
 	 */
 	final void detachModel()
 	{
-		if (replaceModel instanceof IDetachableModel)
-		{
-			((IDetachableModel)replaceModel).detach();
-		}
-	}
-
-	/**
-	 * Gets the name of the attribute whose value is being replaced.
-	 * 
-	 * @return The name of the attribute
-	 */
-	final String getAttribute()
-	{
-		return attribute;
-	}
-
-	/**
-	 * Gets the pattern that the current value must match in order to be
-	 * replaced.
-	 * 
-	 * @return The pattern
-	 */
-	final String getPattern()
-	{
-		return pattern;
-	}
-
-	/**
-	 * Gets the model that the value will be replaced with.
-	 * 
-	 * @return The model used for replacement
-	 */
-	final IModel getReplaceModel()
-	{
-		if (replaceModel instanceof IDetachableModel)
-		{
-			((IDetachableModel)replaceModel).attach();
-		}
-		return replaceModel;
-	}
-
-	/**
-	 * Checks whether this modifier will add an attribute to the tag if it is
-	 * not present in the markup and the replacement value is not null.
-	 * 
-	 * @return Whether the attribute will be added if not present or not
-	 */
-	final boolean isAddAttributeIfNotPresent()
-	{
-		return addAttributeIfNotPresent;
+		replaceModel.detach();
 	}
 
 	/**
@@ -238,15 +218,17 @@ public class AttributeModifier implements Serializable
 	 * and if all criteria are met then replace the value of this attribute with
 	 * the value of the contained model object.
 	 * 
+	 * @param component
+	 *            The component
 	 * @param tag
 	 *            The tag to replace the attribute value for
 	 */
-	void replaceAttibuteValue(final ComponentTag tag)
+	final void replaceAttibuteValue(final Component component, final ComponentTag tag)
 	{
-		if (enabled)
+		if (isEnabled())
 		{
 			final ValueMap attributes = tag.getAttributes();
-			final Object replacementValue = getReplaceModel().getObject();
+			final Object replacementValue = replaceModel.getObject(component);
 
 			// Only do something when we have a replacement
 			if (replacementValue != null)
@@ -256,14 +238,25 @@ public class AttributeModifier implements Serializable
 					final String value = attributes.get(attribute).toString();
 					if (pattern == null || value.matches(pattern))
 					{
-						attributes.put(attribute, replacementValue);
+						attributes.put(attribute, newValue(value, replacementValue.toString()));
 					}
 				}
 				else if (addAttributeIfNotPresent)
 				{
-					attributes.put(attribute, replacementValue);
+					attributes.put(attribute, newValue(null, replacementValue.toString()));
 				}
 			}
 		}
 	}
+	
+	/**
+	 * Gets the replacement model.
+	 * Allows subclasses access to replace model.
+	 * @return the replace model of this attribute modifier
+	 */
+	protected final IModel getReplaceModel()
+	{
+		return replaceModel;
+	}
+
 }

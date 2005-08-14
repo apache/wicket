@@ -22,17 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.PageParameters;
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListViewNavigator;
 import wicket.markup.html.list.PageableListView;
 
-
 /**
  * Dummy page used for resource testing.
  */
-public class PagedTableNavigatorPage extends HtmlPage
+public class PagedTableNavigatorPage extends WebPage
 {
 
 	/**
@@ -63,5 +62,14 @@ public class PagedTableNavigatorPage extends HtmlPage
 
 		add(table);
 		add(new PageableListViewNavigator("navigator", table));
+	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		// for testing we set versioning off, because it gets too difficult to maintain otherwise
+		return false;
 	}
 }

@@ -2,10 +2,10 @@
  * $Id$ $Revision:
  * 1.7 $ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -19,37 +19,35 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
+import wicket.util.convert.ITypeConverter;
+
+
 /**
  * Converts from Object to Byte.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class ByteConverter extends NumberConverter
+public final class ByteConverter extends AbstractIntegerConverter
 {
+	/**
+	 * The singleton instance for a byte converter
+	 */
+	public static final ITypeConverter INSTANCE = new ByteConverter();
+	
     /**
-     * Constructor
+     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object, java.util.Locale)
      */
-    public ByteConverter()
-    {
-    }
-    
-    /**
-     * Constructor
-     * @param locale The locale for this converter
-     */
-    public ByteConverter(final Locale locale)
-    {
-        super(locale);
-    }
-
-    /**
-     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object)
-     */
-    public Object convert(final Object value)
+    public Object convert(final Object value, Locale locale)
     {
         final Number number = value instanceof Number ? (Number)value : parse(value,
-                Byte.MIN_VALUE, Byte.MAX_VALUE);
+                Byte.MIN_VALUE, Byte.MAX_VALUE,locale);
+
+        if (number == null)
+        {
+        	return null;
+        }
+
         return new Byte(number.byteValue());
     }
 

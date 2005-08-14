@@ -63,7 +63,7 @@ public class PagedTableTest extends TestCase
 		String document = application.getServletResponse().getDocument();
 		assertTrue(validatePage1(document));
 
-		Link link = (Link)page.get("navigation.1.pageLink");
+		Link link = (Link)page.get("navigation:1:pageLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
@@ -78,8 +78,6 @@ public class PagedTableTest extends TestCase
 	 */
 	private boolean validatePage1(String document)
 	{
-		System.err.println(document);
-
 		HtmlDocumentValidator validator = new HtmlDocumentValidator();
 		Tag html = new Tag("html");
 		Tag head = new Tag("head");

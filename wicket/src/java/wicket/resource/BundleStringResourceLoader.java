@@ -2,10 +2,10 @@
  * $Id: BundleStringResourceLoader.java,v 1.4 2005/01/19 08:07:58 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -61,7 +61,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
      *            The locale identifying the resource set to select the strings
      *            from
      * @param style
-     *            Not used for this implementation
+     *            Not used for this implementation (see {@link wicket.Session})
      * @return The string resource value or null if resource not found
      */
     public final String loadStringResource(final Component component, final String key,

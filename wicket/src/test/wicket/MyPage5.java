@@ -18,12 +18,12 @@
  */
 package wicket;
 
-import wicket.markup.html.HtmlPage;
+import wicket.markup.html.WebPage;
 
 /**
  * Dummy Page with PageParameter constructor and default constructor
  */
-public class MyPage5 extends HtmlPage
+public class MyPage5 extends WebPage
 {
     /**
      * Construct.

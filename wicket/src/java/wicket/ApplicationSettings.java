@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,22 +17,26 @@
  */
 package wicket;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.markup.ComponentTag;
-import wicket.markup.html.form.encryption.Crypt;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
+import wicket.markup.html.form.validation.IValidator;
 import wicket.resource.ApplicationStringResourceLoader;
 import wicket.resource.ComponentStringResourceLoader;
 import wicket.resource.IStringResourceLoader;
+import wicket.util.crypt.SunJceCrypt;
+import wicket.util.file.IResourceFinder;
+import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
 import wicket.util.lang.EnumeratedType;
-import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.time.Duration;
 
 /**
@@ -43,14 +47,14 @@ import wicket.util.time.Duration;
  * <p>
  * <ul>
  * <i>bufferResponse </i> (defaults to true) - True if the application should
- * buffer responses.  This does require some additional memory, but helps keep
- * exception displays accurate because the whole rendering process completes 
- * before the page is sent to the user, thus avoiding the possibility of a 
+ * buffer responses. This does require some additional memory, but helps keep
+ * exception displays accurate because the whole rendering process completes
+ * before the page is sent to the user, thus avoiding the possibility of a
  * partially rendered page.
  * <p>
  * <ul>
- * <i>componentNameAttribute </i> (defaults to "wicket") - The markup attribute
- * which denotes the names of components to be attached
+ * <i>componentIdAttribute </i> (defaults to "wicket") - The markup attribute
+ * which denotes the ids of components to be attached
  * <p>
  * <i>componentUseCheck </i> (defaults to true) - Causes the framework to do a
  * check after rendering each page to ensure that each component was used in
@@ -65,20 +69,20 @@ import wicket.util.time.Duration;
  * <i>unexpectedExceptionDisplay </i> (defaults to SHOW_EXCEPTION_PAGE) -
  * Determines how exceptions are displayed to the developer or user
  * <p>
- * <i>maxSessionPages </i>- The maximum number of pages in the user's session
- * before old pages are expired.
+ * <i>maxPages </i>- The maximum number of pages in the user's session before
+ * old pages are expired.
  * <p>
  * <i>resourcePollFrequency </i> (defaults to no polling frequency) - Frequency
  * at which resources should be polled for changes.
  * <p>
- * <i>sourcePath </i> (no default) - Set this to enable polling of resources on
- * your source path
+ * <i>resourceFinder </i> (classpath) - Set this to alter the search path for
+ * resources.
  * <p>
  * <i>stripComments </i> (defaults to false) - Set to true to strip HTML
  * comments during markup loading
  * <p>
- * <i>stripComponentNames </i> (defaults to false) - Set to true to strip
- * component name attributes during rendering
+ * <i>stripComponentIds </i> (defaults to false) - Set to true to strip
+ * component id attributes during rendering
  * <p>
  * <i>throwExceptionOnMissingResource </i> (defaults to true) - Set to true to
  * throw a runtime exception if a required string resource is not found. Set to
@@ -100,15 +104,115 @@ import wicket.util.time.Duration;
  * <i>defaultPageFactory </i>- the factory class that is used for constructing
  * page instances.
  * <p>
+ * <p>
+ * <i>renderStrategy </i>- Sets in what way the render part of a request is
+ * handled. Basically, there are two different options:
+ * <ul>
+ * <li>Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled in
+ * one physical request. This is efficient, and is the best option if you want
+ * to do sophisticated clustering. It does not however, shield you from what is
+ * commonly known as the <i>Double submit problem </i></li>
+ * <li>Using a redirect. This follows the pattern <a
+ * href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost"
+ * >as described at the serverside </a> and that is commonly known as Redirect
+ * after post. Wicket takes it one step further to do any rendering after a
+ * redirect, so that not only form submits are shielded from the double submit
+ * problem, but also the IRequestListener handlers (that could be e.g. a link
+ * that deletes a row). With this pattern, you have two options to choose from:
+ * <ul>
+ * <li>ApplicationSettings.REDIRECT_TO_RENDER. This option first handles the
+ * 'action' part of the request, which is either page construction (bookmarkable
+ * pages or the home page) or calling a IRequestListener handler, such as
+ * Link.onClick. When that part is done, a redirect is issued to the render
+ * part, which does all the rendering of the page and its components. <strong>Be
+ * aware </strong> that this may mean, depending on whether you access any
+ * models in the action part of the request, that attachement and detachement of
+ * some models is done twice for a request.</li>
+ * <li>ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the
+ * action- and the render part of the request in one physical request, but
+ * instead of streaming the result to the browser directly, it is kept in
+ * memory, and a redirect is issue to get this buffered result (after which it
+ * is immediately removed). This option currently is the default render
+ * strategy, as it shields you from the double submit problem, while being more
+ * efficient and less error prone regarding to detachable models.</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * Note that this parameter sets the default behaviour, but that you can
+ * manually set whether any redirecting is done by calling method
+ * RequestCycle.setRedirect. Setting the redirect flag when the application is
+ * configured to use ONE_PASS_RENDER, will result in a redirect of type
+ * REDIRECT_TO_RENDER. When the application is configured to use
+ * REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to false,
+ * will result in that request begin rendered and streamed in one pass.
+ * </p>
  * More documentation is available about each setting in the setter method for
  * the property.
  * 
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
+ * @author Juergen Donnerstag
+ * @author Johan Compagner
  */
-public final class ApplicationSettings
+public class ApplicationSettings
 {
+	/**
+	 * All logical parts of a request (the action and render part) are handled
+	 * within the same request. To enable a the client side redirect for a
+	 * request, users can set the 'redirect' property of {@link RequestCycle}to
+	 * true (getRequestCycle.setRedirect(true)), after which the behaviour will
+	 * be like RenderStragegy 'REDIRECT_TO_RENDER'.
+	 * <p>
+	 * This strategy is more efficient than the 'REDIRECT_TO_RENDER' strategy,
+	 * and doesn't have some of the potential problems of it, it also does not
+	 * solve the double submit problem. It is however the best option to use
+	 * when you want to do sophisticated (non-sticky session) clustering.
+	 * </p>
+	 */
+	public static final RenderStrategy ONE_PASS_RENDER = new RenderStrategy("ONE_PASS_RENDER");
+
+	/**
+	 * All logical parts of a request (the action and render part) are handled
+	 * within the same request, but instead of streaming the render result to
+	 * the browser directly, the result is cached on the server. A client side
+	 * redirect command is issued to the browser specifically to render this
+	 * request.
+	 */
+	public static final RenderStrategy REDIRECT_TO_BUFFER = new RenderStrategy("REDIRECT_BUFFER");
+
+	/**
+	 * The render part of a request (opposed to the 'action part' which is
+	 * either the construction of a bookmarkable page or the execution of a
+	 * IRequestListener handler) is handled by a seperate request by issueing a
+	 * redirect request to the browser. This is commonly known as the 'redirect
+	 * after submit' pattern, though in our case, we use it for GET and POST
+	 * requests instead of just the POST requests. To cancel the client side
+	 * redirect for a request, users can set the 'redirect' property of
+	 * {@link RequestCycle}to false (getRequestCycle.setRedirect(false)).
+	 * <p>
+	 * This pattern solves the 'refresh' problem. While it is a common feature
+	 * of browsers to refresh/ reload a web page, this results in problems in
+	 * many dynamic web applications. For example, when you have a link with an
+	 * event handler that e.g. deletes a row from a list, you usually want to
+	 * ignore refresh requests after that link is clicked on. By using this
+	 * strategy, the refresh request only results in the re-rendering of the
+	 * page without executing the event handler again.
+	 * </p>
+	 * <p>
+	 * Though it solves the refresh problem, it introduces potential problems,
+	 * as the request that is logically one, are actually two seperate request.
+	 * Not only is this less efficient, but this also can mean that within the
+	 * same request attachement/ detachement of models is done twice (in case
+	 * you use models in the bookmarkable page constructors and IRequestListener
+	 * handlers). If you use this strategy, you should be aware of this
+	 * possibily, and should also be aware that for one logical request,
+	 * actually two instances of RequestCycle are created and processed.
+	 * </p>
+	 */
+	public static final RenderStrategy REDIRECT_TO_RENDER = new RenderStrategy(
+			"CLIENT_SIDE_REDIRECT");
+
 	/**
 	 * Indicates that an exception page appropriate to development should be
 	 * shown when an unexpected exception is thrown.
@@ -129,17 +233,18 @@ public final class ApplicationSettings
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
 			"SHOW_NO_EXCEPTION_PAGE");
+
 	/** Log */
 	private static final Log log = LogFactory.getLog(ApplicationSettings.class);
 
+	/** The application */
+	private Application application;
+
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
-    
-    /** True if the response should be buffered */
-    private boolean bufferResponse = true;
 
-	/** Component attribute name */
-	private String componentNameAttribute = ComponentTag.DEFAULT_COMPONENT_NAME_ATTRIBUTE;
+	/** True if the response should be buffered */
+	private boolean bufferResponse = true;
 
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
@@ -151,7 +256,7 @@ public final class ApplicationSettings
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
 
 	/** Class of type ICrypt to implement encryption */
-	private Class cryptClass = Crypt.class;
+	private Class cryptClass = SunJceCrypt.class;
 
 	/** Default markup for after a disabled link */
 	private String defaultAfterDisabledLink = "</i>";
@@ -162,6 +267,12 @@ public final class ApplicationSettings
 	/** Default class resolver to find classes */
 	private IClassResolver defaultClassResolver = new DefaultClassResolver();
 
+	/** The default locale to use */
+	private Locale defaultLocale = Locale.getDefault();
+
+	/** Default markup encoding. If null, the OS default will be used */
+	private String defaultMarkupEncoding;
+	
 	/** Default factory to create new Page objects */
 	private IPageFactory defaultPageFactory = new DefaultPageFactory();
 
@@ -169,27 +280,49 @@ public final class ApplicationSettings
 	private String encryptionKey = "WiCkEt-FRAMEwork";
 
 	/** The maximum number of pages in a session */
-	private int maxSessionPages = 10;
+	private int maxPages = 10;
+
+	/** The maximum number of versions of a page to track */
+	private int maxPageVersions = 10;
 
 	/** True if string resource loaders have been overridden */
 	private boolean overriddenStringResourceLoaders = false;
 
+	/**
+	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'. This property
+	 * influences the default way in how a logical request that consists of an
+	 * 'action' and a 'render' part is handled, and is mainly used to have a
+	 * means to circumvent the 'refresh' problem.
+	 */
+	private RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
+
+	/** 
+	 * In order to do proper form parameter decoding it is important that the 
+	 * response and the following request have the same encoding. 
+	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
+	 * for additional information.
+	 */
+	private String responseRequestEncoding = "UTF-8";
+	    
+	/** Filesystem Path to search for resources */
+	private IResourceFinder resourceFinder = null;
+
 	/** Frequency at which files should be polled */
 	private Duration resourcePollFrequency = null;
-
-	/** Source path */
-	private Path sourcePath = new Path();
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(2);
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
+	
+	/** In order to remove <?xml?> from output as required by IE quirks mode */
+	private boolean stripXmlDeclarationFromOutput;
 
-	/** Should component names be stripped during rendering? */
-	private boolean stripComponentNames = false;
-
-	/** If true, wicket tags ( <wicket ..>) shall be removed from output */
+	/**
+	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
+	 * removed from output
+	 */
 	private boolean stripWicketTags = false;
 
 	/** Flags used to determine how to behave if resources are not found */
@@ -200,6 +333,24 @@ public final class ApplicationSettings
 
 	/** Determines behavior of string resource loading if string is missing */
 	private boolean useDefaultOnMissingResource = true;
+
+	/** Determines if pages should be managed by a version manager by default */
+	private boolean versionPagesByDefault = true;
+
+	/** Factory for producing validator error message resource keys */
+	private IValidatorResourceKeyFactory validatorResourceKeyFactory = new DefaultValidatorResourceKeyFactory();
+
+	/**
+	 * Enumerated type for different ways of handling the render part of
+	 * requests.
+	 */
+	public static final class RenderStrategy extends EnumeratedType
+	{
+		RenderStrategy(final String name)
+		{
+			super(name);
+		}
+	}
 
 	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
@@ -221,8 +372,37 @@ public final class ApplicationSettings
 	 */
 	public ApplicationSettings(final Application application)
 	{
+		this.application = application;
 		stringResourceLoaders.add(new ComponentStringResourceLoader());
 		stringResourceLoaders.add(new ApplicationStringResourceLoader(application));
+	}
+
+	/**
+	 * Convenience method that sets the resource search path to a single folder.
+	 * use when searching for resources. By default, the resources are located
+	 * on the classpath. If you want to configure other, additional, search
+	 * paths, you can use this method
+	 * 
+	 * @param resourceFolder
+	 *            The resourceFolder to set
+	 * @return This
+	 */
+	public final ApplicationSettings addResourceFolder(final String resourceFolder)
+	{
+		// Get resource finder
+		final IResourceFinder finder = getResourceFinder();
+
+		// Make sure it's a path
+		if (!(finder instanceof IResourcePath))
+		{
+			throw new IllegalArgumentException(
+					"To add a resource folder, the application's resource finder must be an instance of IResourcePath");
+		}
+
+		// Cast to resource path and add folder
+		final IResourcePath path = (IResourcePath)finder;
+		path.add(resourceFolder);
+		return this;
 	}
 
 	/**
@@ -246,34 +426,91 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * If true, automatic link resolution is enabled.
+	 * Configures application settings for a given configuration type.
 	 * 
+	 * @param configurationType
+	 *            The configuration type. Must currently be either "development"
+	 *            or "deployment". If the type is 'development', the classpath
+	 *            is polled for changes
+	 */
+	public final void configure(final String configurationType)
+	{
+		configure(configurationType, (IResourceFinder)null);
+	}
+
+	/**
+	 * Configures application settings for a given configuration type.
+	 * 
+	 * @param configurationType
+	 *            The configuration type. Must currently be either "development"
+	 *            or "deployment". If the type is 'development', the given
+	 *            resourceFinder is polled for changes
+	 * @param resourceFinder
+	 *            Finder for looking up resources
+	 * @see File#pathSeparator
+	 */
+	public final void configure(final String configurationType, final IResourceFinder resourceFinder)
+	{
+		if (resourceFinder != null)
+		{
+			setResourceFinder(resourceFinder);
+		}
+		if ("development".equalsIgnoreCase(configurationType))
+		{
+			setResourcePollFrequency(Duration.ONE_SECOND);
+			setComponentUseCheck(true);
+			setStripWicketTags(false);
+			setUnexpectedExceptionDisplay(SHOW_EXCEPTION_PAGE);
+		}
+		else if ("deployment".equalsIgnoreCase(configurationType))
+		{
+			setComponentUseCheck(false);
+			setStripWicketTags(true);
+			setUnexpectedExceptionDisplay(SHOW_INTERNAL_ERROR_PAGE);
+		}
+		else
+		{
+			throw new IllegalArgumentException(
+					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
+		}
+	}
+
+	/**
+	 * Convenience method that configures application settings for a given
+	 * configuration type.
+	 * 
+	 * @param configurationType
+	 *            The configuration type. Must currently be either "development"
+	 *            or "deployment". If the type is 'development', the given
+	 *            resourceFolder is polled for changes
+	 * @param resourceFolder
+	 *            Folder for polling resources
+	 * @see File#pathSeparator
+	 */
+	public final void configure(final String configurationType, final String resourceFolder)
+	{
+		configure(configurationType);
+		addResourceFolder(resourceFolder);
+	}
+
+	/**
+	 * If true, automatic link resolution is enabled. Please
+	 * 
+	 * @see wicket.AutoLinkResolver and
+	 * @see wicket.markup.parser.filter.WicketLinkTagHandler for more details.
 	 * @return Returns the automaticLinking.
 	 */
-	public boolean getAutomaticLinking()
+	public final boolean getAutomaticLinking()
 	{
 		return automaticLinking;
 	}
 
-    /**
+	/**
 	 * @return True if this application buffers its responses
 	 */
-	public boolean getBufferResponse()
+	public final boolean getBufferResponse()
 	{
 		return bufferResponse;
-	}
-    
-	/**
-	 * Gets component name attribute in use in this application. Normally, this
-	 * is "wicket", but it can be changed in the unlikely event that tag
-	 * attribute naming conflicts arise.
-	 * 
-	 * @return The current component name attribute
-	 * @see ApplicationSettings#setComponentNameAttribute(String)
-	 */
-	public final String getComponentNameAttribute()
-	{
-		return componentNameAttribute;
 	}
 
 	/**
@@ -341,6 +578,14 @@ public final class ApplicationSettings
 	}
 
 	/**
+	 * @return Returns the defaultLocale.
+	 */
+	public final Locale getDefaultLocale()
+	{
+		return defaultLocale;
+	}
+	
+	/**
 	 * Gets the default factory to be used when creating pages
 	 * 
 	 * @return The default page factory
@@ -361,14 +606,60 @@ public final class ApplicationSettings
 	}
 
 	/**
+	 * @since 1.1
+	 * @return Returns default encoding of markup files. If null, the 
+	 * 		operating system provided encoding will be used. 
+	 */
+	public final String getDefaultMarkupEncoding()
+	{
+	    return defaultMarkupEncoding;
+	}
+
+	/**
 	 * Gets the maximum number of pages held in a session.
 	 * 
-	 * @return Returns the maxSessionPages.
-	 * @see ApplicationSettings#setMaxSessionPages(int)
+	 * @return Returns the maxPages.
+	 * @see ApplicationSettings#setMaxPages(int)
 	 */
-	public final int getMaxSessionPages()
+	public final int getMaxPages()
 	{
-		return maxSessionPages;
+		return maxPages;
+	}
+
+	/**
+	 * @return Returns the maxPageVersions.
+	 */
+	public final int getMaxPageVersions()
+	{
+		return maxPageVersions;
+	}
+
+	/**
+	 * Gets in what way the render part of a request is handled.
+	 * 
+	 * @return the render strategy
+	 */
+	public final RenderStrategy getRenderStrategy()
+	{
+		return renderStrategy;
+	}
+
+	/**
+	 * Gets the resource finder to use when searching for resources. If no
+	 * resource finder has been set explicitly via setResourceFinder(), the
+	 * factory method newResourceFinder() will be called to create a resource
+	 * finder.
+	 * 
+	 * @return Returns the resourceFinder.
+	 * @see ApplicationSettings#setResourceFinder(IResourceFinder)
+	 */
+	public final IResourceFinder getResourceFinder()
+	{
+		if (resourceFinder == null)
+		{
+			resourceFinder = newResourceFinder();
+		}
+		return resourceFinder;
 	}
 
 	/**
@@ -381,17 +672,6 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Gets any source code path to use when searching for resources.
-	 * 
-	 * @return Returns the sourcePath.
-	 * @see ApplicationSettings#setSourcePath(Path)
-	 */
-	public final Path getSourcePath()
-	{
-		return sourcePath;
-	}
-
-	/**
 	 * @return Returns the stripComments.
 	 * @see ApplicationSettings#setStripComments(boolean)
 	 */
@@ -401,27 +681,25 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Returns true if componentName attributes should be stripped from tags
-	 * when rendering.
-	 * 
-	 * @return Returns the stripComponentNames.
-	 * @see ApplicationSettings#setStripComponentNames(boolean)
-	 */
-	public final boolean getStripComponentNames()
-	{
-		return stripComponentNames;
-	}
-
-	/**
 	 * Gets whether to remove wicket tags from the output.
 	 * 
 	 * @return whether to remove wicket tags from the output
 	 */
-	public final boolean getStripWicketParamTag()
+	public final boolean getStripWicketTags()
 	{
 		return this.stripWicketTags;
 	}
 
+	/**
+	 * 
+	 * @since 1.1
+	 * @return if true, xml declaration will be removed.
+	 */
+	public final boolean getStripXmlDeclarationFromOutput()
+	{
+	    return this.stripXmlDeclarationFromOutput;
+	}
+	
 	/**
 	 * @return Whether to throw an exception when a missing resource is
 	 *         requested
@@ -450,43 +728,34 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Application default for automatic link resolution.
+	 * @return Returns the pagesVersionedByDefault.
+	 */
+	public final boolean getVersionPagesByDefault()
+	{
+		return versionPagesByDefault;
+	}
+
+	/**
+	 * Application default for automatic link resolution. Please
+	 * 
+	 * @see wicket.AutoLinkResolver and
+	 * @see wicket.markup.parser.filter.WicketLinkTagHandler for more details.
 	 * 
 	 * @param automaticLinking
 	 *            The automaticLinking to set.
 	 */
-	public void setAutomaticLinking(boolean automaticLinking)
+	public final void setAutomaticLinking(boolean automaticLinking)
 	{
 		this.automaticLinking = automaticLinking;
 	}
-    
-    /**
-     * @param bufferResponse True if this application should buffer responses.
-     */
-    public void setBufferResponse(boolean bufferResponse)
-    {
-    	this.bufferResponse = bufferResponse;
-    }
-    
+
 	/**
-	 * Sets component name attribute in use in this application. Normally, this
-	 * is "wicket", but it can be changed in the unlikely event that tag
-	 * attribute naming conflicts arise.
-	 * 
-	 * @param componentNameAttribute
-	 *            The componentNameAttribute to set.
-	 * @return This
+	 * @param bufferResponse
+	 *            True if this application should buffer responses.
 	 */
-	public final ApplicationSettings setComponentNameAttribute(final String componentNameAttribute)
+	public final void setBufferResponse(boolean bufferResponse)
 	{
-	    if (!MetaPattern.VARIABLE_NAME.matcher(componentNameAttribute).matches())
-	    {
-	        throw new IllegalArgumentException(
-	                "Component name attribute must be a valid variable name ([a-z][a-z0-9_]*)");
-	    }
-	    
-		this.componentNameAttribute = componentNameAttribute;
-		return this;
+		this.bufferResponse = bufferResponse;
 	}
 
 	/**
@@ -531,7 +800,7 @@ public final class ApplicationSettings
 	 * @param cookieValuePersisterSettings
 	 *            The cookieValuePersisterSettings to set.
 	 */
-	public void setCookieValuePersisterSettings(
+	public final void setCookieValuePersisterSettings(
 			CookieValuePersisterSettings cookieValuePersisterSettings)
 	{
 		this.cookieValuePersisterSettings = cookieValuePersisterSettings;
@@ -587,6 +856,15 @@ public final class ApplicationSettings
 	}
 
 	/**
+	 * @param defaultLocale
+	 *            The defaultLocale to set.
+	 */
+	public final void setDefaultLocale(Locale defaultLocale)
+	{
+		this.defaultLocale = defaultLocale;
+	}
+
+	/**
 	 * Sets the default factory to be used when creating pages.
 	 * 
 	 * @param defaultPageFactory
@@ -612,18 +890,117 @@ public final class ApplicationSettings
 	}
 
 	/**
+	 * Set default encoding for markup files. If null, the encoding
+	 * provided by the operating system will be used.
+	 * 
+	 * @since 1.1
+	 * @param encoding
+	 */
+	public final void setDefaultMarkupEncoding(final String encoding)
+	{
+	    this.defaultMarkupEncoding = encoding;
+	}
+	
+	/**
 	 * Sets the maximum number of pages held in a session. If a page is added to
 	 * a user's session when the session is full, the oldest page in the session
 	 * will be expired. The primary purpose of setting a maximum number of pages
 	 * in a session is to limit the resources consumed by server-side state.
 	 * 
-	 * @param maxSessionPages
-	 *            The maxSessionPages to set.
+	 * @param maxPages
+	 *            The maxPages to set.
 	 * @return This
 	 */
-	public final ApplicationSettings setMaxSessionPages(final int maxSessionPages)
+	public final ApplicationSettings setMaxPages(final int maxPages)
 	{
-		this.maxSessionPages = maxSessionPages;
+		if (maxPages < 1)
+		{
+			throw new IllegalArgumentException("Value for maxPages must be >= 1");
+		}
+		this.maxPages = maxPages;
+		return this;
+	}
+
+	/**
+	 * @param maxPageVersions
+	 *            The maxPageVersion to set.
+	 */
+	public final void setMaxPageVersions(int maxPageVersions)
+	{
+		if (maxPageVersions < 0)
+		{
+			throw new IllegalArgumentException("Value for maxPageVersions must be >= 0");
+		}
+		this.maxPageVersions = maxPageVersions;
+	}
+
+	/**
+	 * Sets in what way the render part of a request is handled. Basically,
+	 * there are two different options:
+	 * <ul>
+	 * <li>Direct, ApplicationSettings.ONE_PASS_RENDER. Everything is handled
+	 * in one physical request. This is efficient, and is the best option if you
+	 * want to do sophisticated clustering. It does not however, shield you from
+	 * what is commonly known as the <i>Double submit problem </i></li>
+	 * <li>Using a redirect. This follows the pattern <a
+	 * href="http://www.theserverside.com/articles/article.tss?l=RedirectAfterPost"
+	 * >as described at the serverside </a> and that is commonly known as
+	 * Redirect after post. Wicket takes it one step further to do any rendering
+	 * after a redirect, so that not only form submits are shielded from the
+	 * double submit problem, but also the IRequestListener handlers (that could
+	 * be e.g. a link that deletes a row). With this pattern, you have two
+	 * options to choose from:
+	 * <ul>
+	 * <li>ApplicationSettings.REDIRECT_TO_RENDER. This option first handles
+	 * the 'action' part of the request, which is either page construction
+	 * (bookmarkable pages or the home page) or calling a IRequestListener
+	 * handler, such as Link.onClick. When that part is done, a redirect is
+	 * issued to the render part, which does all the rendering of the page and
+	 * its components. <strong>Be aware </strong> that this may mean, depending
+	 * on whether you access any models in the action part of the request, that
+	 * attachement and detachement of some models is done twice for a request.
+	 * </li>
+	 * <li>ApplicationSettings.REDIRECT_TO_BUFFER. This option handles both the
+	 * action- and the render part of the request in one physical request, but
+	 * instead of streaming the result to the browser directly, it is kept in
+	 * memory, and a redirect is issue to get this buffered result (after which
+	 * it is immediately removed). This option currently is the default render
+	 * strategy, as it shields you from the double submit problem, while being
+	 * more efficient and less error prone regarding to detachable models.</li>
+	 * </ul>
+	 * Note that this parameter sets the default behaviour, but that you can
+	 * manually set whether any redirecting is done by calling method
+	 * RequestCycle.setRedirect. Setting the redirect flag when the application
+	 * is configured to use ONE_PASS_RENDER, will result in a redirect of type
+	 * REDIRECT_TO_RENDER. When the application is configured to use
+	 * REDIRECT_TO_RENDER or REDIRECT_TO_BUFFER, setting the redirect flag to
+	 * false, will result in that request begin rendered and streamed in one
+	 * pass.
+	 * 
+	 * @param renderStrategy
+	 *            the render strategy that should be used by default.
+	 */
+	public final void setRenderStrategy(RenderStrategy renderStrategy)
+	{
+		this.renderStrategy = renderStrategy;
+	}
+
+	/**
+	 * Sets the finder to use when searching for resources. By default, the
+	 * resources are located on the classpath. If you want to configure other,
+	 * additional, search paths, you can use this method.
+	 * 
+	 * @param resourceFinder
+	 *            The resourceFinder to set
+	 * @return This
+	 */
+	public final ApplicationSettings setResourceFinder(final IResourceFinder resourceFinder)
+	{
+		this.resourceFinder = resourceFinder;
+
+		// Cause resource locator to get recreated
+		application.resourceFinderChanged();
+
 		return this;
 	}
 
@@ -636,26 +1013,11 @@ public final class ApplicationSettings
 	 * @param resourcePollFrequency
 	 *            Frequency at which to poll resources
 	 * @return This
-	 * @see ApplicationSettings#setSourcePath(Path)
+	 * @see ApplicationSettings#setResourceFinder(IResourceFinder)
 	 */
 	public final ApplicationSettings setResourcePollFrequency(final Duration resourcePollFrequency)
 	{
 		this.resourcePollFrequency = resourcePollFrequency;
-		return this;
-	}
-
-	/**
-	 * Sets a source code path to use when searching for resources. Setting a
-	 * source path can allow developers to "hot update" pages by simply changing
-	 * markup on the fly and hitting refresh in their browser.
-	 * 
-	 * @param sourcePath
-	 *            The sourcePath to set
-	 * @return This
-	 */
-	public final ApplicationSettings setSourcePath(final Path sourcePath)
-	{
-		this.sourcePath = sourcePath;
 		return this;
 	}
 
@@ -674,22 +1036,6 @@ public final class ApplicationSettings
 	}
 
 	/**
-	 * Determines if componentName attributes should be stripped from tags when
-	 * rendering. Component name attributes in rendered pages can be a helpful
-	 * debugging tool, but they are not helpful to end-users and do not increase
-	 * efficiency in delivering pages over any protocol.
-	 * 
-	 * @param stripComponentNames
-	 *            The stripComponentNames to set.
-	 * @return This
-	 */
-	public final ApplicationSettings setStripComponentNames(final boolean stripComponentNames)
-	{
-		this.stripComponentNames = stripComponentNames;
-		return this;
-	}
-
-	/**
 	 * Sets whether to remove wicket tags from the output.
 	 * 
 	 * @param stripWicketTags
@@ -700,6 +1046,16 @@ public final class ApplicationSettings
 	{
 		this.stripWicketTags = stripWicketTags;
 		return this;
+	}
+	
+	/**
+	 * 
+	 * @since 1.1
+	 * @param strip if true, xml declaration will be stripped from output
+	 */
+	public final void setStripXmlDeclarationFromOutput(final boolean strip)
+	{
+	    this.stripXmlDeclarationFromOutput = strip;
 	}
 
 	/**
@@ -759,13 +1115,98 @@ public final class ApplicationSettings
 	}
 
 	/**
+	 * @param pagesVersionedByDefault
+	 *            The pagesVersionedByDefault to set.
+	 */
+	public final void setVersionPagesByDefault(boolean pagesVersionedByDefault)
+	{
+		this.versionPagesByDefault = pagesVersionedByDefault;
+	}
+
+	/**
+	 * This method returns a default Path object. Subclasses should override
+	 * this implementation to return any specialized ResourceFinder.
+	 * 
+	 * @return IResourceFinder implementation
+	 */
+	protected IResourceFinder newResourceFinder()
+	{
+		return new Path();
+	}
+
+	/**
 	 * Internal method to expose the string resource loaders configured within
 	 * the settings to the localization helpers that need to work with them.
 	 * 
 	 * @return The string resource loaders
 	 */
-	List getStringResourceLoaders()
+	final List getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
 	}
+
+	/**
+	 * In order to do proper form parameter decoding it is important that the 
+	 * response and the following request have the same encoding. 
+	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
+	 * for additional information.
+	 * 
+	 * @return The request and response encoding
+	 */
+	public final String getResponseRequestEncoding()
+	{
+		return responseRequestEncoding;
+	}
+	
+	/**
+	 * In order to do proper form parameter decoding it is important that the 
+	 * response and the following request have the same encoding. 
+	 * see http://www.crazysquirrel.com/computing/general/form-encoding.jspx
+	 * for additional information.
+	 * 
+	 * Default encoding: UTF-8
+	 * 
+	 * @param responseRequestEncoding The request and response encoding to be used.
+	 */
+	public final void setResponseRequestEncoding(final String responseRequestEncoding)
+	{
+		this.responseRequestEncoding = responseRequestEncoding;
+	}
+	
+	/**
+	 * This method is used to replace the default IValidatorResourceKeyFactory
+	 * implementation with a user specific one
+	 * 
+	 * @param factory
+	 *            the user defined implementation of
+	 *            IValidatorResourceKeyFactory
+	 */
+	public void setValidatorResourceKeyFactory(IValidatorResourceKeyFactory factory)
+	{
+		if (factory == null)
+		{
+			throw new IllegalArgumentException("ValidatorResourceKeyFactory cannot be set to null");
+		}
+		this.validatorResourceKeyFactory = factory;
+	}
+
+
+	/**
+	 * This method builds a resource key for use by form component validators
+	 * using IValidatorResourceKeyFactory.
+	 * 
+	 * @see IValidatorResourceKeyFactory
+	 * @see DefaultValidatorResourceKeyFactory
+	 * 
+	 * @param validator
+	 *            the validator that is processing the error
+	 * @param formComponent
+	 *            the form component that is in error
+	 * @return resource key for validator's error message
+	 */
+	public String getValidatorResourceKey(IValidator validator, FormComponent formComponent)
+	{
+		return validatorResourceKeyFactory.newKey(validator, formComponent);
+	}
+
 }

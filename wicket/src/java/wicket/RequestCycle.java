@@ -1,14 +1,14 @@
 /*
  * $Id$
  * $Revision$ $Date$
- *
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- *
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,6 +19,7 @@ package wicket;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -28,13 +29,15 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.util.lang.Classes;
+import wicket.util.resource.IResourceStream;
+import wicket.util.string.Strings;
 
 /**
- * Represents the request cycle, including the applicable application, page,
- * request, response and session.
- * <p>
  * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
  * INTENDED TO BE SUBCLASSED BY FRAMEWORK CLIENTS.
+ * <p>
+ * Represents the request cycle, including the applicable application, page,
+ * request, response and session.
  * <p>
  * Convenient container for an application, session, request and response object
  * for a page request cycle. Each of these properties can be retrieved with the
@@ -67,10 +70,12 @@ import wicket.util.lang.Classes;
  * /[Application]?bookmarkablePage=[classname]&[param]=[value] [...]
  * </ul>
  * <p>
- * Bookmarkable pages must implement a constructor that takes a PageParameters
- * argument. Links to bookmarkable pages are created by calling the
- * urlFor(Class, PageParameters) method, where Class is the page class and
- * PageParameters are the parameters to encode into the URL.
+ * Bookmarkable pages must either implement a constructor that takes a
+ * PageParameters argument or a default constructor. If a Page has both
+ * constructors the constuctor with the PageParameters argument will be used.
+ * Links to bookmarkable pages are created by calling the urlFor(Class,
+ * PageParameters) method, where Class is the page class and PageParameters are
+ * the parameters to encode into the URL.
  * <p>
  * </td>
  * </tr>
@@ -81,7 +86,7 @@ import wicket.util.lang.Classes;
  * session-relative number:
  * <p>
  * <ul>
- * /[Application]?component=[pageId]
+ * /[Application]?path=[pageId]
  * </ul>
  * <p>
  * Often, the reason to access an existing session page is due to some kind of
@@ -90,13 +95,13 @@ import wicket.util.lang.Classes;
  * registered listener is dispatched like so:
  * <p>
  * <ul>
- * /[Application]?component=[pageId.componentPath]&interface=[interface]
+ * /[Application]?path=[pageId.componentPath]&interface=[interface]
  * </ul>
  * <p>
  * For example:
  * <p>
  * <ul>
- * /[Application]?component=3.signInForm.submit&interface=IFormSubmitListener
+ * /[Application]?path=3.signInForm.submit&interface=IFormSubmitListener
  * </ul>
  * </td>
  * </tr>
@@ -153,7 +158,7 @@ import wicket.util.lang.Classes;
  * methods could also be useful in "interstitial" advertising or other kinds of
  * "intercepts".
  * <p>
- *
+ * 
  * @author Jonathan Locke
  */
 public abstract class RequestCycle
@@ -164,8 +169,8 @@ public abstract class RequestCycle
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
 
-	/** Map from interface Class to Method. */
-	private static final Map listenerInterfaceMethods = new HashMap();
+	/** Map from request interface Class to Method. */
+	private static final Map listenerRequestInterfaceMethods = new HashMap();
 
 	/** Log */
 	private static final Log log = LogFactory.getLog(RequestCycle.class);
@@ -174,7 +179,7 @@ public abstract class RequestCycle
 	protected final Application application;
 
 	/** The current request. */
-	protected final Request request;
+	protected Request request;
 
 	/** The current response. */
 	protected Response response;
@@ -182,8 +187,7 @@ public abstract class RequestCycle
 	/** The session object. */
 	protected final Session session;
 
-	/** The page to render to the user. */
-	private Page page;
+	private Page invokePage;
 
 	/**
 	 * If the page is set to null, we'll first set the current page to this
@@ -198,9 +202,29 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
+	/** The page to render to the user */
+	private Page responsePage;
+
+	/**
+	 * The class of a page to render to the user, redirect as a bookmarkable
+	 * page
+	 */
+	private Class responsePageClass;
+
+	/**
+	 * The page parameters used by the responsepage class to generate its
+	 * bookmarkable page url
+	 */
+	private PageParameters responsePageParams;
+	private IResourceStream responseStream;
+
+	/** True if the cluster should be updated */
+	private boolean updateCluster;
+
+
 	/**
 	 * Gets request cycle for calling thread.
-	 *
+	 * 
 	 * @return Request cycle for calling thread
 	 */
 	public final static RequestCycle get()
@@ -209,11 +233,11 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
 	 * Adds an interface to the map of interfaces that can be invoked by
-	 * outsiders. The interface must have a single method with the signature
-	 * methodName(RequestCycle). NOTE: THIS METHOD IS NOT INTENDED FOR USE BY
-	 * FRAMEWORK CLIENTS.
-	 *
+	 * outsiders. The interface must extend IRequestListener
+	 * 
 	 * @param i
 	 *            The interface class, which must extend IRequestListener.
 	 */
@@ -235,7 +259,7 @@ public abstract class RequestCycle
 			if (methods[0].getParameterTypes().length == 0)
 			{
 				// Save this interface method by the non-qualified class name
-				listenerInterfaceMethods.put(Classes.name(i), methods[0]);
+				listenerRequestInterfaceMethods.put(Classes.name(i), methods[0]);
 			}
 			else
 			{
@@ -251,9 +275,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Constructor.
-	 *
-	 * @param application
-	 *            The application
+	 * 
 	 * @param session
 	 *            The session
 	 * @param request
@@ -261,10 +283,9 @@ public abstract class RequestCycle
 	 * @param response
 	 *            The response
 	 */
-	protected RequestCycle(final Application application, final Session session,
-			final Request request, final Response response)
+	protected RequestCycle(final Session session, final Request request, final Response response)
 	{
-		this.application = application;
+		this.application = session.getApplication();
 		this.session = session;
 		this.request = request;
 		this.response = response;
@@ -274,34 +295,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Redirects to any intercept page previously specified by a call to
-	 * redirectToInterceptPage.
-	 *
-	 * @return True if an original destination was redirected to
-	 * @see RequestCycle#redirectToInterceptPage(Class)
-	 * @see RequestCycle#redirectToInterceptPage(Page)
-	 */
-	public final boolean continueToOriginalDestination()
-	{
-		final String url = session.getInterceptContinuationURL();
-		if (url != null)
-		{
-			response.redirect(url);
-
-			// Since we are explicitly redirecting to a page already, we do not
-			// want a second redirect to occur automatically
-			setRedirect(false);
-
-			// Reset interception URL
-			session.setInterceptContinuationURL(null);
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Gets the application object.
-	 *
+	 * 
 	 * @return Application interface
 	 */
 	public final Application getApplication()
@@ -310,28 +305,8 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets the current page.
-	 *
-	 * @return The page
-	 */
-	public final Page getPage()
-	{
-		return page;
-	}
-
-	/**
-	 * Convinience method to get the Page factory
-	 *
-	 * @return DefaultPageFactory from application settings
-	 */
-	public final IPageFactory getPageFactory()
-	{
-		return getSession().getPageFactory();
-	}
-
-	/**
 	 * Gets whether the page for this request should be redirected.
-	 *
+	 * 
 	 * @return whether the page for this request should be redirected
 	 */
 	public final boolean getRedirect()
@@ -341,7 +316,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the request.
-	 *
+	 * 
 	 * @return Request object
 	 */
 	public final Request getRequest()
@@ -351,7 +326,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets the response.
-	 *
+	 * 
 	 * @return Response object
 	 */
 	public final Response getResponse()
@@ -360,8 +335,39 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Gets the current respond page.
+	 * 
+	 * @return The page
+	 */
+	public final Page getResponsePage()
+	{
+		return responsePage;
+	}
+
+	/**
+	 * Gets the current responde page class.
+	 * 
+	 * @return The page
+	 */
+	public final Class getResponsePageClass()
+	{
+		return responsePageClass;
+	}
+
+	/**
+	 * Gets the current responde page page parameters (only used with the
+	 * responsepage class).
+	 * 
+	 * @return The page
+	 */
+	public final PageParameters getResponsePagePageParameters()
+	{
+		return responsePageParams;
+	}
+
+	/**
 	 * Gets the session.
-	 *
+	 * 
 	 * @return Session object
 	 */
 	public final Session getSession()
@@ -370,111 +376,83 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
-	 *
-	 * @param c
-	 *            The sign in page class
-	 */
-	public final void redirectToInterceptPage(final Class c)
-	{
-		redirectToInterceptPage(getPageFactory().newPage(c));
-	}
-
-	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
-	 *
-	 * @param c
-	 *            The sign in page class
-	 * @param parameters
-	 *            The page parameters
-	 */
-	public final void redirectToInterceptPage(final Class c, final PageParameters parameters)
-	{
-		redirectToInterceptPage(getPageFactory().newPage(c, parameters));
-	}
-
-	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
-	 *
-	 * @param page
-	 *            The sign in page
-	 */
-	public final void redirectToInterceptPage(final Page page)
-	{
-		// Access was denied. Construct sign in page with
-		session.setInterceptContinuationURL(response.encodeURL(request.getURL()));
-		redirectToPage(page);
-	}
-
-	/**
-	 * Renders response for request. NOTE: THIS METHOD IS INTENDED FOR INTERNAL
-	 * USE ONLY AND MAY NOT BE SUPPORTED IN THE FUTURE.
-	 *
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Responds to a request.
+	 * 
 	 * @throws ServletException
 	 */
-	public final void render() throws ServletException
+	public final void request() throws ServletException
 	{
 		// Serialize renderings on the session object so that only one page
 		// can be rendered at a time for a given session.
 		synchronized (session)
 		{
-			// Restore the transient application association with the session
-			session.setApplication(application);
-
-			// Set this request cycle as the active request cycle for the
-			// session for easy access by the page being rendered and any
-			// components on that page
-			session.setRequestCycle(this);
-
-
 			try
 			{
-				// Render response for request cycle
-				handleRender();
+				// Attach thread local resources for request
+				threadAttach();
+
+				// Response is beginning
+				internalOnBeginRequest();
+				onBeginRequest();
+
+				// If request is parsed successfully
+				if (parseRequest())
+				{
+					// respond with a page
+					respond();
+				}
+
 			}
 			catch (RuntimeException e)
 			{
-				// Reset page for re-rendering after exception
-				Page currentPage = getPage();
-                                
-                // Could be null when it expired
-				if (currentPage != null) 
-				{
-					currentPage.reset();
-				}
-
-				// Handle the exception
-				handleRenderingException(e);
+				// Handle any runtime exception
+				internalOnRuntimeException(null, e);
 			}
 			finally
 			{
-				// Close the response
-				response.close();
+				// make sure the invokerPage is ended correctly.
+				try
+				{
+					if (invokePage != null)
+					{
+						invokePage.internalEndRequest();
+					}
+				}
+				catch (RuntimeException e)
+				{
+					log.error("Exception occurred during invokerPage.internalEndRequest", e);
+				}
 
-				// Set the active request cycle back to null since we are
-				// done rendering the requested page
-				session.setRequestCycle(null);
+				// Response is ending
+				try
+				{
+					internalOnEndRequest();
+				}
+				catch (RuntimeException e)
+				{
+					log.error("Exception occurred during internalOnEndRequest", e);
+				}
 
-				// Thread is done and should release thread local resources
+				try
+				{
+					onEndRequest();
+				}
+				catch (RuntimeException e)
+				{
+					log.error("Exception occurred during onEndRequest", e);
+				}
+
+				// Release thread local resources
 				threadDetach();
 			}
 		}
 	}
 
 	/**
-	 * Convenience method that sets page on response object.
-	 *
-	 * @param page
-	 *            The page to render as a response
-	 */
-	public final void setPage(final Page page)
-	{
-		this.page = page;
-	}
-
-	/**
 	 * Sets whether the page for this request should be redirected.
-	 *
+	 * 
 	 * @param redirect
 	 *            True if the page for this request cycle should be redirected
 	 *            to rather than directly rendered.
@@ -485,125 +463,461 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * @param request
+	 *            The request to set.
+	 */
+	public final void setRequest(Request request)
+	{
+		this.request = request;
+	}
+
+	/**
 	 * Sets response.
-	 *
+	 * 
 	 * @param response
 	 *            The response
 	 */
-	public void setResponse(final Response response)
+	public final void setResponse(final Response response)
 	{
 		this.response = response;
 	}
 
 	/**
-	 * Gets the url for the given page class using the given parameters. THIS
-	 * METHOD IS NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
-	 *
+	 * Convenience method that sets page class as the response. This will
+	 * generate a redirect to the page with a bookmarkable url
+	 * 
+	 * @param pageClass
+	 *            The page class to render as a response
+	 */
+	public final void setResponsePage(final Class pageClass)
+	{
+		setResponsePage(pageClass, null);
+	}
+
+	/**
+	 * Convenience method that sets page class as the response. This will
+	 * generate a redirect to the page with a bookmarkable url and its
+	 * pageparameters.
+	 * 
+	 * @param pageClass
+	 *            The page class to render as a response
+	 * @param pageParameters
+	 *            The page parameters that gets appended to the bookmarkable
+	 *            url,
+	 */
+	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
+	{
+		if (responsePageClass != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePageClass + " with " + pageClass);
+			}
+		}
+		else if (responsePage != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePage + " with " + pageClass);
+			}
+		}
+
+		if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("Class must be a subclass of Page");
+		}
+		this.responsePageClass = pageClass;
+		this.responsePageParams = pageParameters;
+		// reset response page, only one of the 2 responses should be set.
+		this.responsePage = null;
+	}
+
+	/**
+	 * Convenience method that sets page on response object.
+	 * 
+	 * @param page
+	 *            The page to render as a response
+	 */
+	public final void setResponsePage(final Page page)
+	{
+		if (responsePageClass != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePageClass + " with " + page);
+			}
+		}
+		else if (responsePage != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.warn("overwriting response page " + responsePage + " with " + page);
+			}
+		}
+
+		this.responsePage = page;
+		// reset response page class, only one of the 2 responses should be set.
+		this.responsePageClass = null;
+		this.responsePageParams = null;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * 
+	 * @param updateCluster
+	 *            The updateCluster to set.
+	 */
+	public void setUpdateCluster(boolean updateCluster)
+	{
+		this.updateCluster = updateCluster;
+	}
+
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "RequestCycle" + "@" + Integer.toHexString(hashCode()) + "{thread="
+				+ Thread.currentThread().getName() + "}";
+	}
+
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public abstract String urlFor(final Class pageClass, final PageParameters parameters);
-
-	/**
-	 * Gets the url for the given component/ listener interface. THIS METHOD IS
-	 * NOT INTENDED FOR USE BY FRAMEWORK CLIENTS.
-	 *
-	 * @param component
-	 *            Component that has listener interface
-	 * @param listenerInterface
-	 *            The listener interface
-	 * @return A URL that encodes a page, component and interface to call
-	 */
-	public abstract String urlFor(final Component component, final Class listenerInterface);
-
-	/**
-	 * Looks up an interface method by name.
-	 *
-	 * @param name
-	 *            The interface
-	 * @return The method
-	 * @throws WicketRuntimeException
-	 */
-	protected final Method getInterfaceMethod(final String name)
+	public String urlFor(final Class pageClass, final PageParameters parameters)
 	{
-		final Method method = (Method)listenerInterfaceMethods.get(name);
-		if (method == null)
+		if (pageClass == null)
 		{
-			throw new WicketRuntimeException("Attempt to access unknown interface " + name);
+			throw new NullPointerException("argument pageClass may not be null");
 		}
-		return method;
+
+		final StringBuffer buffer = urlPrefix();
+		buffer.append("?bookmarkablePage=");
+		String pageReference = application.getPages().aliasForClass(pageClass);
+		if (pageReference == null)
+			pageReference = pageClass.getName();
+		buffer.append(pageReference);
+		if (parameters != null)
+		{
+			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			{
+				final String key = (String)iterator.next();
+				buffer.append('&');
+				buffer.append(key);
+				buffer.append('=');
+				buffer.append(parameters.getString(key));
+			}
+		}
+		return getResponse().encodeURL(buffer.toString());
 	}
 
 	/**
-	 * Renders response for request.
+	 * Gets the page that was used for invoking and interface.
+	 * 
+	 * @return The page
 	 */
-	protected abstract void handleRender();
+	protected final Page getInvokePage()
+	{
+		return invokePage;
+	}
 
 	/**
-	 * Redirects browser to the given page.
-	 *
+	 * Looks up an request interface method by name.
+	 * 
+	 * @param interfaceName
+	 *            The interface name
+	 * @return The method, null of nothing is found
+	 * 
+	 */
+	protected final Method getRequestInterfaceMethod(final String interfaceName)
+	{
+		return (Method)listenerRequestInterfaceMethods.get(interfaceName);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE
+	 * THIS METHOD.
+	 * 
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected final void internalOnBeginRequest()
+	{
+		// Before the beginning of the response, we need to update
+		// our session based on any information that might be in
+		// session attributes
+		session.updateSession();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE
+	 * THIS METHOD.
+	 * 
+	 * Called when the request cycle object has finished its response
+	 */
+	protected final void internalOnEndRequest()
+	{
+		if (updateCluster)
+		{
+			// At the end of our response, we need to set any session
+			// attributes that might be required to update the cluster
+			session.updateCluster();
+		}
+	}
+
+	/**
+	 * Sets up to handle a runtime exception thrown during rendering. FRAMEWORK
+	 * CLIENTS SHOULD NOT CALL THIS METHOD.
+	 * 
 	 * @param page
-	 *            The page to redirect to
-	 */
-	protected abstract void redirectToPage(final Page page);
-
-	/**
-	 * Sets up to handle a runtime exception thrown during rendering
-	 *
+	 *            Any page context where the exception was thrown
 	 * @param e
 	 *            The exception
+	 * @throws ServletException
+	 *             The exception rethrown for the servlet container
 	 */
-	private void handleRenderingException(RuntimeException e)
+	protected final void internalOnRuntimeException(final Page page, final RuntimeException e)
+			throws ServletException
 	{
-		// Render a page for the user
-		try
+		// Let client handle any specifics and possibly return a page to redirect to
+		final Page redirectTo = onRuntimeException(page, e);
+
+		// Always log as error
+		log.error("Unexpected runtime exception [page = " + page + "]", e);
+
+		// Always print stack trace
+		e.printStackTrace();
+		
+		// Reset page for re-rendering after exception
+		if (page != null)
 		{
-			// If application doesn't want debug info showing up for users
-			ApplicationSettings settings = application.getSettings();
-			if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
+			page.resetMarkupStreams();
+		}
+
+		// If the page we failed to render is an error page
+		if (page != null && page.isErrorPage())
+		{
+			// give up while we're ahead!
+			throw new ServletException("Internal Error: Could not render error page " + page, e);
+		}
+		else
+		{
+			if (redirectTo != null)
 			{
-				if (settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
+				setResponsePage(redirectTo);
+				redirectTo(redirectTo);
+			}
+			else
+			{
+				try
 				{
-					// use internal error page
-					setPage(getPageFactory().newPage(application.getPages().getInternalErrorPage()));
+					redirectToExceptionErrorPage(page, e);
+				}
+				catch (RuntimeException e2)
+				{
+					throw new ServletException(
+							"Internal Error: Could not redirect to exception error page.  Was trying to display exception for page "
+									+ page + ":\n" + Strings.toString(e), e2);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected void onBeginRequest()
+	{
+	}
+
+	/**
+	 * Called when the request cycle object has finished its response
+	 */
+	protected void onEndRequest()
+	{
+	}
+
+	/**
+	 * Template method that is called when a runtime exception is thrown, just
+	 * before the actual handling of the runtime exception.
+	 * 
+	 * @param page
+	 *            Any page context where the exception was thrown
+	 * @param e
+	 *            The exception
+	 * @return Any error page to redirect to
+	 */
+	protected Page onRuntimeException(final Page page, final RuntimeException e)
+	{
+		return null;
+	}
+
+	/**
+	 * Parses a request when this request cycle is asked to respond.
+	 * 
+	 * @return True if a Page should be rendered back to the user
+	 */
+	protected abstract boolean parseRequest();
+
+	/**
+	 * Redirects browser to the given page. NOTE: Usually, you should never call
+	 * this method directly, but work with setResponsePage instead. This method
+	 * is part of Wicket's internal behaviour and should only be used when you
+	 * want to circumvent the normal framework behaviour and issue the redirect
+	 * directly.
+	 * 
+	 * @param page
+	 *            The page to redirect to
+	 * @throws ServletException
+	 */
+	protected abstract void redirectTo(final Page page) throws ServletException;
+
+	/**
+	 * Sets the page to invoke.
+	 * 
+	 * @param page
+	 */
+	protected final void setInvokePage(final Page page)
+	{
+		this.invokePage = page;
+	}
+
+
+	/**
+	 * Creates a prefix for a url.
+	 * 
+	 * @return Prefix for URLs including the context path and servlet path.
+	 */
+	protected abstract StringBuffer urlPrefix();
+
+	/**
+	 * @param page
+	 *            The page that went wrong
+	 * @param e
+	 *            The exception that was thrown
+	 * @throws ServletException
+	 */
+	private final void redirectToExceptionErrorPage(final Page page, final RuntimeException e)
+			throws ServletException
+	{
+		// If application doesn't want debug info showing up for users
+		final ApplicationSettings settings = application.getSettings();
+		if (settings.getUnexpectedExceptionDisplay() != ApplicationSettings.SHOW_NO_EXCEPTION_PAGE)
+		{
+			Class internalErrorPageClass = application.getPages().getInternalErrorPage();
+			Page responsePage = getResponsePage();
+			Class responseClass = responsePage != null ? responsePage.getClass() : null;
+
+			if (responseClass != internalErrorPageClass
+					&& settings.getUnexpectedExceptionDisplay() == ApplicationSettings.SHOW_INTERNAL_ERROR_PAGE)
+			{
+				// Show internal error page
+				setResponsePage(session.getPageFactory(page).newPage(internalErrorPageClass));
+			}
+			else if (responseClass != ExceptionErrorPage.class)
+			{
+				// Show full details
+				setResponsePage(new ExceptionErrorPage(e, getResponsePage()));
+			}
+			else
+			{
+				// give up while we're ahead!
+				throw new ServletException("Internal Error: Could not render error page " + page, e);
+			}
+
+			// We generally want to redirect the response because we
+			// were in the middle of rendering and the page may end up
+			// looking like spaghetti otherwise
+			redirectTo(getResponsePage());
+		}
+	}
+
+
+	/**
+	 * Respond with response page
+	 * 
+	 * @throws ServletException
+	 */
+	private final void respond() throws ServletException
+	{
+		// Get any page that is to be used to respond to the request
+		final Page page = getResponsePage();
+		if (page != null)
+		{
+			// Add/touch the response page in its pagemap.
+			page.getPageMap().put(page);
+			try
+			{
+				// Should page be redirected to?
+				if (getRedirect())
+				{
+					// Redirect to the page
+					redirectTo(page);
 				}
 				else
 				{
-					// otherwise show full details
-					setPage(new ExceptionErrorPage(e));
+					// Test if the invoker page was the same as the page that is
+					// going to be rendered
+					if (getInvokePage() == getResponsePage())
+					{
+						// Set it to null because it is already ended inthe
+						// page.doRender()
+						setInvokePage(null);
+					}
+					
+					// Let page render itself
+					page.doRender();
 				}
-				// We generally want to redirect the response because we were
-				// in the middle of rendering and the page may end up looking
-				// like spaghetti otherwise
-				redirectToPage(getPage());
+			}
+			catch (RuntimeException e)
+			{
+				// Handle any runtime exception
+				internalOnRuntimeException(page, e);
 			}
 		}
-		catch (RuntimeException ignored)
+		else
 		{
-			// We ignore any problems trying to render the exception display
-			// page because we are just going to rethrow the exception anyway
-			// and the original problem will be displayed on the console by
-			// the container. It's better this way because users of the
-			// framework
-			// will not want to be distracted by any internal problems rendering
-			// a runtime exception error display page.
+			final Class pageClass = getResponsePageClass();
+			if (pageClass != null)
+			{
+				final PageParameters pageParameters = getResponsePagePageParameters();
+				String redirectUrl = urlFor(pageClass, pageParameters);
+				getResponse().redirect(redirectUrl);
+			}
 		}
+	}
 
-		// Rethrow error for console / container
-		throw e;
+	/**
+	 * Attach thread
+	 */
+	private final void threadAttach()
+	{
+		// Set this request cycle as the active request cycle for the
+		// session for easy access by the page being rendered and any
+		// components on that page
+		session.setRequestCycle(this);
 	}
 
 	/**
 	 * Releases the current thread local related resources. The threadlocal of
 	 * this request cycle is reset. If we are in a 'redirect' state, we do not
-	 * want to loose our messages as - e.g. when handling a form - there's a fat
-	 * change we are comming back for the rendering of it.
+	 * want to lose our messages as - e.g. when handling a form - there's a fat
+	 * chance we are coming back for the rendering of it.
 	 */
-	private void threadDetach()
+	private final void threadDetach()
 	{
+		// Detach from session
+		session.detach();
+
 		if (getRedirect())
 		{
 			// Since we are explicitly redirecting to a page already, we do not
@@ -613,7 +927,12 @@ public abstract class RequestCycle
 
 		// Clear ThreadLocal reference
 		current.set(null);
+
+		// Set the active request cycle back to null since we are
+		// done rendering the requested page
+		session.setRequestCycle(null);
+
+		// This thread is no longer attached to a Session
+		Session.set(null);
 	}
 }
-
-

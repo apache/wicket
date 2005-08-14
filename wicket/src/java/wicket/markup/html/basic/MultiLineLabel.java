@@ -2,10 +2,10 @@
  * $Id$
  * $Revision$ $Date$
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -17,11 +17,11 @@
  */
 package wicket.markup.html.basic;
 
-import java.io.Serializable;
-
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.WebComponent;
+import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.util.string.Strings;
 
 /**
@@ -34,31 +34,47 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class MultiLineLabel extends HtmlComponent
+public class MultiLineLabel extends WebComponent
 { 
-	/** Serial Version ID */
-	private static final long serialVersionUID = 7949493094618802759L;
-
 	/**
-     * @see wicket.Component#Component(String, Serializable)
+	 * Constructor. Same as Label(String).
+	 * 
+	 * @param id
+	 *            See Component
+	 * @see Label#Label(String)
 	 */
-	public MultiLineLabel(String name, Serializable object)
+	public MultiLineLabel(final String id)
 	{
-		super(name, object);
+		super(id);
+	}
+	
+	/**
+	 * Convenience constructor. Same as MultiLineLabel(String, new Model(String))
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param label
+	 *            The label text
+	 * 
+	 * @see wicket.Component#Component(String, IModel)
+	 */
+	public MultiLineLabel(final String id, String label)
+	{
+		this(id, new Model(label));
 	}
 
 	/**
-     * @see wicket.Component#Component(String, Serializable, String)
+	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MultiLineLabel(String name, Serializable object, String expression)
+	public MultiLineLabel(final String id, IModel model)
 	{
-		super(name, object, expression);
+		super(id, model);
 	}
 
 	/**
-	 * @see wicket.Component#handleComponentTagBody(MarkupStream, ComponentTag)
+	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected void handleComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final String body = Strings.toMultilineMarkup(getModelObjectAsString());
 		replaceComponentTagBody(markupStream, openTag, body);

@@ -8,17 +8,16 @@
 
 <body>
 
-<h1>Introduction</h1>
-
-<section name="Why Wicket?">
-<subsection name="Frameworks, Frameworks Everywhere">
+<section name="Introduction">
+<p><author>Jonathan Locke</author></p>
+<subsection name="Why Wicket?">
 <p>
 If you are looking to do web application programming in Java, you have a very large number of
 choices these days. In fact, there are so many web application frameworks now that it
 has become somewhat of a joke. One blog site on the Internet poses the question: How many
 Java web frameworks can you name? The answer they show looks like this:
 </p>
-
+<subsection name="Frameworks, Frameworks Everywhere">
 <table>
 <tr><td>Echo</td><td>Cocoon</td><td>Millstone</td><td>OXF</td></tr>
 <tr><td>Struts</td><td>SOFIA</td><td>Tapestry</td><td>WebWork</td></tr>
@@ -36,12 +35,11 @@ Java web frameworks can you name? The answer they show looks like this:
 <tr><td>Nacho</td><td>Cassandra</td><td>Baritus</td><td></td></tr>
 </table>
 </subsection>
-</section>
 <subsection name='Why "Reinvent the Wheel"?'>
 <p>
 In light of this, you may be wondering "What good is another web application framework?"
-Indeed. Why "re-invent the wheel?" One snappy comeback to that old saw is: because this time we
-could make it rounder!
+Indeed. Why "re-invent the wheel?" One snappy comeback to that old saw is: <i>because 
+this time we could make it rounder!</i>
 </p>
 <p>
 But it was not simply a desire for higher quality that drove the creation of Wicket.
@@ -51,18 +49,20 @@ that Wicket fills. In fact, Wicket is quite unlike each of the frameworks above.
 <p>
 Wicket's closest cousins are probably Tapestry and Echo, but even there the likeness is
 very shallow. Like Tapestry, Wicket uses a special HTML attribute to denote components,
-enabling easy editing with ordinary HTML editors. Like Echo, Wicket has a Swing-like component model.
-But Wicket applications are not like applications written in either Tapestry or Echo,
-because in Wicket you get the best of both worlds. You get the benefits of a Swing-like 
-component model and a non-intrusive approach to HTML. In many situations, this combination
-may prove to be a significant development advantage.
+enabling easy editing with ordinary HTML editors. Like Echo, Wicket has a first-class
+component model.  But Wicket applications are not like applications written in either 
+Tapestry or Echo, because in Wicket you get the best of both worlds. You get the benefits 
+of a first-class component model and a non-intrusive approach to HTML. In many situations, 
+this combination may prove to be a significant development advantage.
 </p>
 <p>
-To understand why Wicket is so different, it may help to understand the motivations that created it.
+To understand why Wicket is so different, it may help to understand the motivations that 
+created it.
 </p>
 </subsection>
+</subsection>
 
-<section name="Motivations">
+<subsection name="Motivations">
 <subsection name="Most existing web frameworks provide weak to non-existent support in managing server-side state.">
 <p>
 This normally means lots of ad-hoc code in web applications dealing with the gory mechanics
@@ -73,17 +73,21 @@ it goes a long ways towards making it easy and often transparent to manage that 
 In Wicket, all server side state is automatically managed. You will never directly use
 an HttpSession object or similar wrapper to store state. Instead, state is associated
 with components. Each server-side page component holds a nested hierarchy of stateful
-components, where each component's model is in the end a POJO (Plain Old Java Object).
+components, where each component's model is, in the end, a POJO (Plain Old Java Object).
 Wicket maintains a map of these pages in each user's session. One purpose of this page map
 (and the component hierarchy on each page) is to allow the framework to hide all details
 of how your components and models are accessed. You deal with simple, familiar Java objects
-and Wicket deals with things like URLs, session ids and GET/POST requests. You will also
-find that this well-structured server state makes it very easy to deal with the dreaded
-"back button problem". In fact, Wicket has a generic and robust solution which can
-identify and expire browser-cached pages that have become stale due to structural
-changes to the model of a component on the page. Finally, Wicket has been designed to
-work with POJO persistence frameworks supporting "detachable objects", such as Hibernate.
-This can make database driven web applications quite easy to write.
+and Wicket deals with things like URLs, session ids and GET/POST requests. 
+</p>
+<p>
+You will also find that this well-structured server state makes it very easy to deal 
+with the dreaded "back button problem". In fact, Wicket has a generic and robust solution 
+which can identify and expire browser-cached pages that have become stale due to structural
+changes to the model of a component on the page. 
+</p>
+<p>
+Finally, Wicket has been designed to work with POJO persistence frameworks such as JDO
+or Hibernate.  This can make database driven web applications quite easy to write.
 </p>
 <p>
 For many applications, it will be worth trading off the increased server load of extra
@@ -114,17 +118,24 @@ pure-and-simple HTML markup that web designers are familiar with, to some kind o
 This special HTML can be more difficult to preview, edit and understand.
 </p>
 <p>
-Wicket does not introduce any special syntax to HTML. This means that you can use
-Macromedia Dreamweaver, Microsoft Front Page, Word, Adobe Go Live, or any other existing
-HTML editor to work on your web pages and web components. To accomplish this, Wicket
-consistently uses a single component name attribute (the name of which you can choose)
-to mark HTML tags that should receive special treatment by the toolkit.
+Wicket does not introduce any special syntax to HTML.  Instead, it extends HTML in a 
+standards-compliant way via a Wicket namespace that is fully compliant with the 
+XHTML standard. This means that you can use Macromedia Dreamweaver, Microsoft Front Page, 
+Word, Adobe Go Live, or any other existing HTML editor to work on your web pages 
+and Wicket components. To accomplish this, Wicket consistently uses a single id attribute 
+in the Wicket namespace ("wicket:id") to mark HTML tags that should receive special 
+treatment by the toolkit.  If you prefer not to render Wicket namespaced tags and 
+attributes to your end-users, Wicket has a simple setting to strip them all out, 
+resulting in ordinary, standards-compliant HTML.
 </p>
 <p>
 No "special sauce" in your HTML means designers can mock up pages that you can use directly
 in development. Adding Java components to the HTML is as simple as setting the component
 name attribute. And you can then give the HTML back to your web designers knowing that they
-can change it with confidence. Wicket, more than any other framework gives you a separation
+can change it with confidence. 
+</p>
+<p>
+Wicket, more than any other framework gives you a separation
 of concerns. Web designers can work on the HTML with very little knowledge of the application
 code (they cannot remove the component name tags and they cannot arbitrarily change the nesting
 of components, but anything else goes). Likewise, coders can work on the Java components that
@@ -133,16 +144,16 @@ stepping on each other's toes, everyone can get more work done.
 </p>
 </subsection>
 
-<subsection name="Existing frameworks are not easy or Swing-like.">
+<subsection name="Existing frameworks are not easy.">
 <p>
-Most of the existing toolkits have a poorly defined or non-existent object model. In some cases,
+Most of the existing toolkits have poorly defined or non-existent object models. In some cases,
 the model is defined using special XML syntaxes. The syntaxes may be so cumbersome that special
 tools are required to manipulate all the configuration information. Since these toolkits are not
 simple Java libraries you may or may not be able to use your favorite IDE tools such as editors,
 debuggers and compilers.
 </p>
 <p>
-Wicket believes in simplicity. There are no configuration files to learn in Wicket. Wicket is
+Wicket is all about simplicity. There are no configuration files to learn in Wicket. Wicket is
 a simple class library with a consistent approach to component structure. In Wicket, your web
 applications will more closely resemble a Swing application than a JSP application. If you know
 Java (and especially if you know Swing), you already know a lot about Wicket.
@@ -151,12 +162,15 @@ Java (and especially if you know Swing), you already know a lot about Wicket.
 
 <subsection name="Existing frameworks inhibit reusability.">
 <p>
-Even Tapestry and JSF (which at least have component models) do not make it trivial to build
-and package components to be reused as modules. Wicket has been explicitly designed to make
-it easy to create reusable components. It's surprisingly simple to make compound components
-such as a SignInPanel or AddressForm. It is also relatively easy to create components that
-exploit new features of browsers. Components can be packaged up in JAR files and reused by
-simply dropping them in your lib folder - no configuration necessary!
+Tapestry and JSF at least have component models that allow reuse, but you are likely 
+to find that it is not particularly trivial to do, at least when compared with Wicket.  
+Wicket has been explicitly designed to make it very, very easy to create reusable components. 
+It's surprisingly simple to extend existing components and to make compound components 
+such as a SignInPanel or AddressForm. It is also relatively easy to create components 
+that exploit new features of browsers. Components in Wicket can be packaged up in JAR 
+files and reused by simply dropping them in your lib folder - no configuration necessary!  
+</p>
+<p>
 Web programming should be fun!
 </p>
 <p>
@@ -166,9 +180,9 @@ is my hope that Wicket represents a significant step in the direction of making 
 applications easy and fun to write.
 </p>
 </subsection>
-</section>
+</subsection>
 
-<section name="Goals">
+<subsection name="Goals">
 <p>
 Coming from these motivations, the following goals for Wicket emerged:
 </p>
@@ -207,7 +221,7 @@ Coming from these motivations, the following goals for Wicket emerged:
 <li>SAFE
     <ul>
         <li>Code is secure by default</li>
-        <li>Only explicitly created external page links can expose state in the page or in the URL</li>
+        <li>Only explicitly bookmarkable links can expose state in the page or URL</li>
         <li>All logic in Java with maximum type safety</li>
         <li>Easy to integrate with Java security</li>
     </ul>
@@ -218,24 +232,26 @@ Coming from these motivations, the following goals for Wicket emerged:
         <li>Efficient and lightweight, but not at the expense of other goals</li>
         <li>Clustering through sticky sessions preferred</li>
         <li>
-            Clustering via session replication is easy to accomplish and easy to tune due through
+            Clustering via session replication is easy to accomplish and easy to tune by
             working with detachable models.
         </li>
     </ul>
     </li>
 <li>COMPLETE
     <ul>
-        <li>We are committed to deliver a feature complete, ready-to-use framework for developing
-            Java web applications. The core framework was contributed by heavy-weight Jonathan
-            Locke, who put together an architecture that will last for years. The current
-            team consists of a group of experienced programmers, some of which were active
-            on some of the other frameworks stated above, and all of which have extensive
-            experience building large scale Java web applications. We eat our own dogfood,
-            and will thus work on Wicket from a framework user's perspective.
+        <li>The Wicket team is committed to deliver a feature complete, ready-to-use 
+        	framework for developing Java web applications. The core framework was 
+        	written and contributed by the author of this introduction, Jonathan Locke. 
+        	The current team consists of a group of experienced programmers, some of 
+        	which were active on some of the other frameworks stated above, and all 
+        	of which have extensive experience building large scale Java web applications. 
+        	We eat our own dogfood, and will thus work on Wicket from a framework user's 
+        	perspective.
         </li>
     </ul>
     </li>
 </ul>
+</subsection>
 </section>
 </body>
 </document>

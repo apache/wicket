@@ -5,7 +5,7 @@
   <id>wicket</id>
   <name>Wicket</name>
   <groupId>wicket</groupId>
-  <currentVersion>0.9.17-beta</currentVersion>
+  <currentVersion>1.1-b2</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -13,7 +13,7 @@
   </organization>
   <inceptionYear>2004</inceptionYear>
   <package>wicket</package>
-  <description>Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a first-class component model backed by POJO data beans that can easily be persisted with frameworks like Hibernate.</description>
+  <description>Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a first-class component model backed by POJO data beans that can easily be persisted using your favourite technology.</description>
   <shortDescription>a Java web application framework.</shortDescription>
   <url>http://wicket.sourceforge.net</url>
   <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</issueTrackingUrl>
@@ -59,6 +59,46 @@
       <id>0.9.17-beta</id>
       <name>0.9.17-beta</name>
       <tag>WICKET_R_0_9_17_BETA</tag>
+    </version>
+    <version>
+      <id>0.9.18-beta</id>
+      <name>0.9.18-beta</name>
+      <tag>WICKET_R_0_9_18_BETA</tag>
+    </version>
+    <version>
+      <id>0.9.19-beta</id>
+      <name>0.9.19-beta</name>
+      <tag>WICKET_R_0_9_19_BETA</tag>
+    </version>
+    <version>
+      <id>1.0.0-rc1</id>
+      <name>1.0.0-rc1</name>
+      <tag>WICKET_R_1_0_0_RC1</tag>
+    </version>
+    <version>
+      <id>1.0.0-rc2</id>
+      <name>1.0.0-rc2</name>
+      <tag>WICKET_R_1_0_0-RC2</tag>
+    </version>
+    <version>
+      <id>1.0.0-rc3</id>
+      <name>1.0.0-rc3</name>
+      <tag>WICKET_R_1_0_0_RC3</tag>
+    </version>
+    <version>
+      <id>1.0</id>
+      <name>1.0</name>
+      <tag>WICKET_R_1_0_0</tag>
+    </version>
+    <version>
+      <id>1.1-b1</id>
+      <name>1.1-b1</name>
+      <tag>WICKET_R_1_1_BETA1</tag>
+    </version>
+    <version>
+      <id>1.1-b2</id>
+      <name>1.1-b2</name>
+      <tag>WICKET_R_1_1_BETA2</tag>
     </version>
   </versions>
   <mailingLists>
@@ -141,19 +181,68 @@
       <name>Martin Fey</name>
       <email>-</email>
     </contributor>
+    <contributor>
+      <name>Cameron Braid</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Jan Blok</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Wang Lei</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Xiaoyz</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Andrew de Torres</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Dan Gould</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Francois Denommee</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Timur Mehrvarz</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Cameron Braid</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Phil Kulak</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Matej Knopp</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Jonathan Carlson</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Anatol Pomozov</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Igor Vaynberg</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Jan Mikkelsen</name>
+      <email>-</email>
+    </contributor>
   </contributors>
   <dependencies>
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.4</version>
-      <url>http://www.dom4j.org</url>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description/>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -168,7 +257,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.8</version>
+      <version>1.2.11</version>
       <url>http://logging.apache.org/log4j</url>
       <properties>
         <wicket.group>optional</wicket.group>
@@ -179,7 +268,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>2.6.5</version>
+      <version>2.6.7</version>
       <url>http://www.ognl.org</url>
       <properties>
         <wicket.group>required</wicket.group>
@@ -201,7 +290,7 @@
     <dependency>
       <groupId>concurrent</groupId>
       <artifactId>concurrent</artifactId>
-      <version>1.3.3</version>
+      <version>1.3.4</version>
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description/>
@@ -240,7 +329,7 @@
       </includes>
       <resources>
         <resource>
-          <directory>src/test</directory>
+          <directory>${basedir}/src/test</directory>
           <includes>
             <include>**</include>
           </includes>
@@ -266,6 +355,7 @@
   </build>
   <reports>
     <report>maven-changes-plugin</report>
+    <report>maven-faq-plugin</report>
     <report>maven-license-plugin</report>
     <report>maven-tasklist-plugin</report>
     <report>maven-javadoc-plugin</report>
