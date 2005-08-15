@@ -137,7 +137,7 @@ public class StaticResource extends WebResource
 		{
 			// Locate resource
 			this.resourceStream = application.getResourceStreamLocator().locate(
-					absolutePath, style, locale, null);
+					getClass().getClassLoader(), absolutePath, style, locale, null);
 
 			// Check that resource was found
 			if (this.resourceStream == null)

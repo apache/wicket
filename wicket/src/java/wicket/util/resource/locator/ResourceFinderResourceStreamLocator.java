@@ -53,9 +53,9 @@ public final class ResourceFinderResourceStreamLocator extends AbstractResourceS
 	}
 
 	/**
-	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.String)
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.ClassLoader, java.lang.String)
 	 */
-	protected IResourceStream locate(final String path)
+	protected IResourceStream locate(final ClassLoader classLoader, final String path)
 	{
 		// Log attempt
 		log.debug("Attempting to locate resource '" + path + "' on path " + finder);
