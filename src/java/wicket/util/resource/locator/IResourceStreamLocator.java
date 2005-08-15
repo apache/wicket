@@ -30,7 +30,7 @@ public interface IResourceStreamLocator
 {
 	/**
 	 * Loads a resource, given a path, style, locale and extension.
-	 * 
+	 * @param classLoader TODO
 	 * @param path
 	 *            The path of the resource
 	 * @param style
@@ -39,7 +39,8 @@ public interface IResourceStreamLocator
 	 *            The locale of the resource to load
 	 * @param extension
 	 *            The extension of the resource
+	 * 
 	 * @return The resource
 	 */
-	public IResourceStream locate(String path, String style, Locale locale, String extension);
+	public IResourceStream locate(ClassLoader classLoader, String path, String style, Locale locale, String extension);
 }

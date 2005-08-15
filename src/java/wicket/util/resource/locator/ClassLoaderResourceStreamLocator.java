@@ -36,9 +36,6 @@ public final class ClassLoaderResourceStreamLocator extends AbstractResourceStre
 	/** Logging */
 	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
 
-	/** The path to search along */
-	private ClassLoader classloader;
-
 	/**
 	 * Constructor
 	 */
@@ -47,32 +44,18 @@ public final class ClassLoaderResourceStreamLocator extends AbstractResourceStre
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param classloader
-	 *            The class loader to search
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.ClassLoader, java.lang.String)
 	 */
-	public ClassLoaderResourceStreamLocator(final ClassLoader classloader)
+	protected IResourceStream locate(final ClassLoader classLoader, final String path)
 	{
-		this.classloader = classloader;
-	}
-
-	/**
-	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.String)
-	 */
-	protected IResourceStream locate(final String path)
-	{
-		// Ensure classloader
-		if (classloader == null)
+		// Log attempt
+		if (log.isDebugEnabled())
 		{
-			classloader = getClass().getClassLoader();
+			log.debug("Attempting to locate resource '" + path + "' using classloader " + classLoader);
 		}
 
-		// Log attempt
-		log.debug("Attempting to locate resource '" + path + "' using classloader " + classloader);
-
 		// Try loading path using classloader
-		final URL url = classloader.getResource(path);
+		final URL url = classLoader.getResource(path);
 		if (url != null)
 		{
 			return new UrlResourceStream(url);

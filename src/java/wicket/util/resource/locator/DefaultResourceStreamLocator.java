@@ -43,14 +43,14 @@ public final class DefaultResourceStreamLocator extends ResourceStreamLocator
 			private final ResourceFinderResourceStreamLocator finderLocator = new ResourceFinderResourceStreamLocator(finder);
 			private final ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
 
-			public IResourceStream locate(String path, String style, Locale locale, String extension)
+			public IResourceStream locate(ClassLoader loader, String path, String style, Locale locale, String extension)
 			{
-				IResourceStream resource = finderLocator.locate(path, style, locale, extension);
+				IResourceStream resource = finderLocator.locate(loader, path, style, locale, extension);
 				if (resource != null)
 				{
 					return resource;
 				}
-				return classLoaderLocator.locate(path, style, locale, extension);
+				return classLoaderLocator.locate(loader, path, style, locale, extension);
 			}
 		});
 	}
