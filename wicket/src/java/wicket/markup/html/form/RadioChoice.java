@@ -178,7 +178,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 */
 	protected String getSuffix()
 	{
-		return "<br>\n";
+		return "<br/>\n";
 	}
 
 	/**
