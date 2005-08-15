@@ -7,6 +7,9 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
+    <release version="1.0.2" date="tbd" description="1.0.2">
+      <action type="fix" dev="Martijn Dashorst">Closed FileOutputStream in wicket.util.file.Files in finally block, backport from TRUNC</action>
+    </release>
     <release version="1.0.1" date="2005-07-17" description="1.0.1">
       <action type="fix" dev="Eelco Hillenius">Only validate components that are visible</action>
       <action type="update" dev="Eelco Hillenius" due-to="Phil Kulak">FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</action>
