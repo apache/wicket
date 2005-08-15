@@ -95,8 +95,20 @@ Calendar._TT["CLOSE"] = "Sulje";
 Calendar._TT["TODAY"] = "T?n??n";
 Calendar._TT["TIME_PART"] = "(Shift-) Klikkaa tai liikuta muuttaaksesi aikaa";
 
-// date formats
-Calendar._TT["DEF_DATE_FORMAT"] = "%d.%m.%Y";
-Calendar._TT["TT_DATE_FORMAT"] = "%d.%m.%Y";
+// the following is to inform that "%s" is to be the first day of week
+// %s will be replaced with the day name.
+Calendar._TT["DAY_FIRST"] = "Display %s first";
 
-Calendar._TT["WK"] = "Vko";
+// This may be locale-dependent.  It specifies the week-end days, as an array
+// of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
+Calendar._TT["TIME_PART"] = "(Shift-)Click or drag to change value";
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "%Y-%m-%d";
+Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
+
+Calendar._TT["WK"] = "wk";
+Calendar._TT["TIME"] = "Tijd:";
