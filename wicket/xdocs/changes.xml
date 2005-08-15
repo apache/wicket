@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.0.2" date="tbd" description="1.0.2">
+      <action type="fix" dev="Eelco Hillenius">fix for classloading problems that caused problems loading markup/ resources for components that were loaded by another classloader than the current one.</action>
       <action type="fix" dev="Martijn Dashorst">Closed FileOutputStream in wicket.util.file.Files in finally block, backport from TRUNC</action>
     </release>
     <release version="1.0.1" date="2005-07-17" description="1.0.1">
