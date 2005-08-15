@@ -57,6 +57,9 @@ public class PackageResource extends WebResource
 	/** The resource's style */
 	final String style;
 
+	/** The package's class, used for class loading. */
+	final Class packageClass;
+
 	/**
 	 * Binds a the resource to the given application object
 	 * Will create the resource if not already in the shared resources of the application object.
@@ -159,6 +162,7 @@ public class PackageResource extends WebResource
 	private PackageResource(final Package basePackage, final String path, final Locale locale,
 			final String style)
 	{
+		packageClass = basePackage.getClass();
 		// Convert resource path to absolute path relative to base package
 		this.absolutePath = Packages.absolutePath(basePackage, path);
 		this.locale = locale;
@@ -174,7 +178,7 @@ public class PackageResource extends WebResource
 		{
 			// Locate resource
 			this.resourceStream = Application.get().getResourceStreamLocator().locate(
-					absolutePath, style, locale, null);
+					packageClass.getClassLoader(), absolutePath, style, locale, null);
 
 			// Check that resource was found
 			if (this.resourceStream == null)
