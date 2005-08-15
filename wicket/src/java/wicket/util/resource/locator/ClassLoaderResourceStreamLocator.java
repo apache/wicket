@@ -26,7 +26,8 @@ import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
 
 /**
- * IResourceStreamLocator implementation that locates resources using a class loader.
+ * IResourceStreamLocator implementation that locates resources using a class
+ * loader.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -44,14 +45,29 @@ public final class ClassLoaderResourceStreamLocator extends AbstractResourceStre
 	}
 
 	/**
-	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.ClassLoader, java.lang.String)
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.ClassLoader,
+	 *      java.lang.String)
 	 */
-	protected IResourceStream locate(final ClassLoader classLoader, final String path)
+	protected IResourceStream locate(ClassLoader classLoader, final String path)
 	{
+		if (classLoader == null)
+		{
+			// use context classloader when no specific classloader is set
+			// (package resources for instance)
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+
+		if (classLoader == null)
+		{
+			// use Wicket classloader when no specific classloader is set
+			classLoader = getClass().getClassLoader();
+		}
+
 		// Log attempt
 		if (log.isDebugEnabled())
 		{
-			log.debug("Attempting to locate resource '" + path + "' using classloader " + classLoader);
+			log.debug("Attempting to locate resource '" + path + "' using classloader "
+					+ classLoader);
 		}
 
 		// Try loading path using classloader
