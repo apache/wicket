@@ -101,7 +101,8 @@ public class WicketServlet extends HttpServlet
 		final String applicationClassName = getInitParameter("applicationClassName");
 		try
 		{
-			final Class applicationClass = Class.forName(applicationClassName);
+			final Class applicationClass =
+				getClass().getClassLoader().loadClass(applicationClassName);
 			if (WebApplication.class.isAssignableFrom(applicationClass))
 			{
 				// Construct WebApplication subclass
