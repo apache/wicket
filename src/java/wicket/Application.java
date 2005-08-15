@@ -533,7 +533,7 @@ public abstract class Application
 		{
 			try
 			{
-				Class c = Class.forName(className);
+				Class c = getClass().getClassLoader().loadClass(className);
 				((IInitializer)c.newInstance()).init(this);
 			}
 			catch (ClassCastException e)
