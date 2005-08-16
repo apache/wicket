@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -499,6 +501,20 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * Sort children using comparator
+	 * 
+	 * @param comparator
+	 *            The comparator
+	 */
+	public final void sort(Comparator comparator)
+	{
+		if (children instanceof Component[])
+		{
+			Arrays.sort((Component[])children, comparator);
+		}
+	}
+
+	/**
 	 * Get the number of children in this container.
 	 * 
 	 * @return Number of children in this container
@@ -903,7 +919,7 @@ public abstract class MarkupContainer extends Component
 						return i;
 					}
 				}
-			}			
+			}
 		}
 		return -1;
 	}
