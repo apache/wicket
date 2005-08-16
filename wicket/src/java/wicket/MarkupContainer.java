@@ -364,14 +364,21 @@ public abstract class MarkupContainer extends Component
 	public final Iterator iterator(Comparator comparator)
 	{
 		final List sorted;
-		if (children instanceof Component)
+		if (children == null)
 		{
-			sorted = new ArrayList(1);
-			sorted.add(children);
+			sorted = Collections.EMPTY_LIST;
 		}
 		else
 		{
-			sorted = Arrays.asList((Component[])children);
+			if (children instanceof Component)
+			{
+				sorted = new ArrayList(1);
+				sorted.add(children);
+			}
+			else
+			{
+				sorted = Arrays.asList((Component[])children);
+			}
 		}
 		Collections.sort(sorted);
 		return sorted.iterator();
@@ -1010,11 +1017,14 @@ public abstract class MarkupContainer extends Component
 		{
 			return 0;
 		}
-		if (children instanceof Component)
+		else
 		{
-			return 1;
+			if (children instanceof Component)
+			{
+				return 1;
+			}
+			return ((Component[])children).length;
 		}
-		return ((Component[])children).length;
 	}
 
 	/**
