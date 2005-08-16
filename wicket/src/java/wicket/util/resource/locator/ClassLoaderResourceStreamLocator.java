@@ -46,8 +46,21 @@ public final class ClassLoaderResourceStreamLocator extends AbstractResourceStre
 	/**
 	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.ClassLoader, java.lang.String)
 	 */
-	protected IResourceStream locate(final ClassLoader classLoader, final String path)
+	protected IResourceStream locate(ClassLoader classLoader, final String path)
 	{
+		if (classLoader == null)
+		{
+			// use context classloader when no specific classloader is set
+			// (package resources for instance)
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+
+		if (classLoader == null)
+		{
+			// use Wicket classloader when no specific classloader is set
+			classLoader = getClass().getClassLoader();
+		}
+
 		// Log attempt
 		if (log.isDebugEnabled())
 		{
