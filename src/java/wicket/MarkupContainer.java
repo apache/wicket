@@ -17,7 +17,9 @@
  */
 package wicket;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -164,13 +166,6 @@ public abstract class MarkupContainer extends Component
 		component.internalBeginRequest();
 		component.render();
 		return true;
-		/* */
-		/*
-		 * re-use strategy if (get(component.getId()) == null) {
-		 * component.setAuto(true); add(component);
-		 * component.internalBeginRequest(); component.render(); return true; }
-		 * return false;
-		 */
 	}
 
 	/**
@@ -361,6 +356,28 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * @param comparator
+	 *            The comparator
+	 * @return Iterator that iterates over children in the order specified by
+	 *         comparator
+	 */
+	public final Iterator iterator(Comparator comparator)
+	{
+		final List sorted;
+		if (children instanceof Component)
+		{
+			sorted = new ArrayList(1);
+			sorted.add(children);
+		}
+		else
+		{
+			sorted = Arrays.asList((Component[])children);
+		}
+		Collections.sort(sorted);
+		return sorted.iterator();
+	}
+
+	/**
 	 * @param component
 	 *            Component to remove from this container
 	 */
@@ -498,20 +515,6 @@ public abstract class MarkupContainer extends Component
 			});
 		}
 		return this;
-	}
-
-	/**
-	 * Sort children using comparator
-	 * 
-	 * @param comparator
-	 *            The comparator
-	 */
-	public final void sort(Comparator comparator)
-	{
-		if (children instanceof Component[])
-		{
-			Arrays.sort((Component[])children, comparator);
-		}
 	}
 
 	/**
@@ -902,7 +905,7 @@ public abstract class MarkupContainer extends Component
 	{
 		if (children instanceof Component)
 		{
-			if (children == child)
+			if (((Component)children).getId().equals(child.getId()))
 			{
 				return 0;
 			}
@@ -914,7 +917,7 @@ public abstract class MarkupContainer extends Component
 				final Component[] components = (Component[])children;
 				for (int i = 0; i < components.length; i++)
 				{
-					if (components[i] == child)
+					if (components[i].getId().equals(child.getId()))
 					{
 						return i;
 					}

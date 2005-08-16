@@ -8,7 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
-      <action type="add" dev="Jonathan Locke">Added MarkupContainer.sort(Comparator comparator)</action>
+      <action type="add" dev="Jonathan Locke">Added MarkupContainer.iterator(Comparator comparator)</action>
       <action type="fix" dev="Eelco Hillenius">fix for classloading problems that caused problems loading markup/ resources for components that were loaded by another classloader than the current one.</action>
       <action type="fix" dev="Gwyn Evans" issue="1249961" due-to="Cameron Braid">Fix HTML generated from AbstractChoice - Added missing space after 'option selected="selected"'</action>
       <action type="update" dev="Eelco Hillenius" issue="1254379" due-to="Phil Kulak">Added getBoolean() to ValueMap</action>
