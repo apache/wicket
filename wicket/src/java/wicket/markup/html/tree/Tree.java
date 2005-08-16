@@ -89,10 +89,10 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	private boolean optimizeItemRemoval = true;
 
 	/** Model for the paths of the tree. */
-	private final TreePathsModel treePathsModel;
+	private TreePathsModel treePathsModel;
 
 	/** List view for tree paths. */
-	private final TreePathsListView treePathsListView;
+	private TreePathsListView treePathsListView;
 
 	/**
 	 * Replacement model that looks up whether the current row is the active one.
@@ -423,6 +423,33 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
 		this.optimizeItemRemoval = optimizeItemRemoval;
+	}
+
+	/**
+	 * Sets the current tree state to the given tree state.
+	 * 
+	 * @param treeState
+	 *            the tree state to set as the current one
+	 */
+	public void setTreeState(final TreeState treeState)
+	{
+		super.setTreeState(treeState);
+		this.treePathsModel = new TreePathsModel();
+		treePathsListView = createTreePathsListView();
+		replace(treePathsListView);
+	}
+
+	/**
+	 * Sets the current tree model.
+	 *
+	 * @param treeModel the tree model to set as the current one
+	 */
+	public void setTreeModel(final TreeModel treeModel)
+	{
+		super.setTreeModel(treeModel);
+		this.treePathsModel = new TreePathsModel();
+		treePathsListView = createTreePathsListView();
+		replace(treePathsListView);
 	}
 
 	/**
