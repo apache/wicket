@@ -126,7 +126,8 @@ public abstract class DynamicImageResource extends WebResource
 
 			public long length()
 			{
-				return DynamicImageResource.this.getImageData().length;
+				byte[] imageData = DynamicImageResource.this.getImageData();
+				return (imageData != null) ? imageData.length : 0;
 			}
 		};
 	}

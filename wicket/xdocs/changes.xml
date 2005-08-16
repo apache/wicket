@@ -8,8 +8,12 @@
   </properties>
   <body>
     <release version="1.0.2" date="tbd" description="1.0.2">
+      <action type="fix" dev="Martijn Dashorst" issue="1253113">Backport: AbstractDetachableModel doesn't propogate attach/detach</action>
+      <action type="fix" dev="Martijn Dashorst">Backport: serialization bug in LocalizedImageResource</action>
+      <action type="fix" dev="Martijn Dashorst">Backport: possible NullPointerException in DynamicImageResource.getResourceStream()</action>
+      <action type="fix" dev="Martijn Dashorst">Backport: catch if session is saved to disk and reloaded again but locale is changed</action>
       <action type="fix" dev="Eelco Hillenius">fix for classloading problems that caused problems loading markup/ resources for components that were loaded by another classloader than the current one.</action>
-      <action type="fix" dev="Martijn Dashorst">Closed FileOutputStream in wicket.util.file.Files in finally block, backport from TRUNC</action>
+      <action type="fix" dev="Martijn Dashorst">Backport: closed FileOutputStream in wicket.util.file.Files in finally block</action>
     </release>
     <release version="1.0.1" date="2005-07-17" description="1.0.1">
       <action type="fix" dev="Eelco Hillenius">Only validate components that are visible</action>
