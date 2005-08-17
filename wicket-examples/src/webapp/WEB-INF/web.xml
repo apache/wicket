@@ -36,6 +36,15 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+    <servlet>
+        <servlet-name>StockQuoteApplication</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>wicket.examples.stockquote.StockQuoteApplication</param-value>
+        </init-param>
+    </servlet>
+    
 	<servlet>
 		<servlet-name>HangmanApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
@@ -201,6 +210,11 @@
 		<url-pattern>/signin/*</url-pattern>
 	</servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>StockQuoteApplication</servlet-name>
+        <url-pattern>/stock/*</url-pattern>
+    </servlet-mapping>
+    
 	<servlet-mapping>
 		<servlet-name>SignIn2Application</servlet-name>
 		<url-pattern>/signin2/*</url-pattern>
