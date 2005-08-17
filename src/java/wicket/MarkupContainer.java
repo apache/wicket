@@ -997,18 +997,26 @@ public abstract class MarkupContainer extends Component
 
 	private final Component children_set(int index, Component child)
 	{
+		final Component replaced;
 		if (index < children_size())
 		{
-			if (children instanceof Component)
+			if (children == null || children instanceof Component)
 			{
+				replaced = (Component)children;
 				children = child;
 			}
 			else
 			{
-				((Component[])children)[index] = child;
+				final Component[] children = (Component[])this.children;
+				replaced = children[index];
+				children[index] = child;
 			}
 		}
-		throw new IndexOutOfBoundsException();
+		else
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		return replaced;
 	}
 
 	private final int children_size()
