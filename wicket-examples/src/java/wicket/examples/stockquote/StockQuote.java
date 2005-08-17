@@ -18,22 +18,79 @@
  */
 package wicket.examples.stockquote;
 
+import java.io.Serializable;
+
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextField;
+import wicket.model.IModel;
+import wicket.model.PropertyModel;
 
 /**
- * Everybody's favorite example!
+ * Stock quote webservice custom component example.
  * 
- * @author Jonathan Locke
+ * @author Martijn Dashorst
  */
 public class StockQuote extends WicketExamplePage
 {
-    /**
-     * Constructor
-     */
-    public StockQuote()
-    {
-        add(new StockQuoteLabel("IBM"));
-        add(new StockQuoteLabel("RHAT"));
-        add(new StockQuoteLabel("SUNW"));
-    }
+	/**
+	 * Constructor
+	 */
+	public StockQuote()
+	{
+		// code for the first example, directly using the
+		// stock quote component.
+		add(new StockQuoteLabel("stockIBM", "IBM"));
+
+		// code for second example: using a form for selecting the
+		// symbol of the stock quote.
+
+		// shared model to get and set the symbol property on the 
+		// quote instance
+		final IModel model = new PropertyModel(quote, "symbol");
+		
+		// form holding the input field.
+		final Form form = new Form("form");
+		add(form);
+		form.add(new TextField("symbol", model));
+
+		// labels for displaying the chosen symbol
+		add(new Label("symbol", model));
+
+		// and its quote
+		add(new StockQuoteLabel("quote", model));
+	}
+
+	/**
+	 * Quote instance used for communicating between the form input field
+	 * and the display labels for showing the stock quote.
+	 */
+	private final Quote quote = new Quote();
+
+	/**
+	 * POJO to hold the symbol for the quote query.
+	 */
+	public static class Quote implements Serializable
+	{
+		private String symbol;
+
+		/**
+		 * Gets the symbol.
+		 * @return the symbol
+		 */
+		public String getSymbol()
+		{
+			return symbol;
+		}
+
+		/**
+		 * Sets the symbol.
+		 * @param symbol the symbol
+		 */
+		public void setSymbol(String symbol)
+		{
+			this.symbol = symbol;
+		}
+	}
 }
