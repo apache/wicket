@@ -380,7 +380,7 @@ public abstract class MarkupContainer extends Component
 				sorted = Arrays.asList((Component[])children);
 			}
 		}
-		Collections.sort(sorted);
+		Collections.sort(sorted,comparator);
 		return sorted.iterator();
 	}
 
