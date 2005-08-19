@@ -46,17 +46,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- * 
- *                          &lt;servlet&gt;
- *                              &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *                              &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *                              &lt;init-param&gt;
- *                                  &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                                  &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *                              &lt;/init-param&gt;
- *                              &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *                           &lt;/servlet&gt;
- *  
+ *   &lt;servlet&gt;
+ *       &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *       &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *       &lt;init-param&gt;
+ *           &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *           &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *       &lt;/init-param&gt;
+ *       &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *   &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -74,13 +72,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- * 
- *           	public void init() throws ServletException
- *               {
- *                    ServletConfig config = getServletConfig();
- *                    String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                    ...
- *  
+ *   public void init() throws ServletException
+ *   {
+ *       ServletConfig config = getServletConfig();
+ *       String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *       ...
  * </pre>
  * 
  * </p>
@@ -126,8 +122,11 @@ public class WicketServlet extends HttpServlet
 			// TODO should we test here for
 			// queryString.indexOf("IRedirectListener") ?
 			// only such urls should have a bufferedresponse.
-			String requestUri = servletRequest.getRequestURI() + "?"
-					+ servletRequest.getQueryString();
+			String requestUri = servletRequest.getRequestURI();
+			if (servletRequest.getQueryString() != null)
+			{
+			    requestUri += "?" + servletRequest.getQueryString();
+			}
 
 			BufferedResponse bufferedResponse = (BufferedResponse)webApplication
 					.getBufferedResponse(servletRequest, requestUri);
