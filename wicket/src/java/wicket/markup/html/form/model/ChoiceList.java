@@ -39,7 +39,7 @@ public class ChoiceList implements IChoiceList
 	 * 
 	 * @author Jonathan Locke
 	 */
-	private class Choice implements IChoice
+	protected class Choice implements IChoice
 	{
 		/** The index of the choice */
 		private final int index;
@@ -72,7 +72,7 @@ public class ChoiceList implements IChoiceList
 		/**
 		 * @see wicket.markup.html.form.model.IChoice#getId()
 		 */
-		public String getId()
+		public final String getId()
 		{
 			return Integer.toString(index);
 		}
@@ -80,7 +80,7 @@ public class ChoiceList implements IChoiceList
 		/**
 		 * @see wicket.markup.html.form.model.IChoice#getObject()
 		 */
-		public Object getObject()
+		public final Object getObject()
 		{
 			return object;
 		}
