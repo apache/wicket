@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.0.2" date="tbd" description="1.0.2">
+      <action type="fix" dev="Martijn Dashorst" issue="1263892" due-to="Arjan Zwaan">newChoiceItem does not use object parameter but selects directly from list</action>
       <action type="fix" dev="Martijn Dashorst" issue="1253113">Backport: AbstractDetachableModel doesn't propogate attach/detach</action>
       <action type="fix" dev="Martijn Dashorst">Backport: serialization bug in LocalizedImageResource</action>
       <action type="fix" dev="Martijn Dashorst">Backport: possible NullPointerException in DynamicImageResource.getResourceStream()</action>

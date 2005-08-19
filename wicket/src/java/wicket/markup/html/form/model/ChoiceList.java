@@ -219,6 +219,6 @@ public class ChoiceList implements IChoiceList
 	 */
 	protected IChoice newChoice(final Object object, final int index)
 	{
-		return new Choice(list.get(index), index);
+		return new Choice(object, index);
 	}
 }
