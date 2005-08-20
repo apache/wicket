@@ -8,6 +8,7 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="fix" dev="Eelco Hillenius" issue="1253113" due-to="Cameron Braid">AbstractDetachableModel doesn't propogate attach/detach</action>
       <action type="fix" dev="Martijn Dashorst" issue="1247719" due-to="Gili Tzabari">Javadoc missing for AbstractChoice</action>
       <action type="fix" dev="Martijn Dashorst" issue="1253999">ListMultipleChoice doesn't support maxRows</action>
       <action type="fix" dev="Eelco Hillenius" issue="1259701" due-to="Francis Amanfo">PageParameters doesn't escape markup in values</action>
