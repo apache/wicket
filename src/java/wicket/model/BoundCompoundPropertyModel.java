@@ -56,6 +56,19 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 			this.ognlExpression = ognlExpression;
 			this.type = type;
 		}
+
+		/**
+		 * @see Object#toString()
+		 */
+		public String toString()
+		{
+			StringBuffer sb = new StringBuffer("Binding(");
+			sb.append(":component=[").append(component).append("]");
+			sb.append(":expression=[").append(ognlExpression).append("]");
+			sb.append(":type=[").append(type).append("]");
+			sb.append(")");
+			return sb.toString();
+		}
 	}
 
 	/**
@@ -170,5 +183,24 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @see wicket.model.AbstractDetachableModel#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":bindings=[");
+		for (int i = 0, size = this.bindings.size(); i < size; i++)
+		{
+			if (i > 0)
+			{
+				sb.append(",");
+			}
+			sb.append(bindings.get(i));
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }

@@ -145,8 +145,10 @@ public class PropertyModel extends AbstractPropertyModel
 	 */
 	public String toString()
 	{
-		return "[PropertyModel super = " + super.toString() + ", expression = " + expression
-				+ ", propertyType = " + propertyType + "]";
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":expression=[").append(expression).append("]");
+		sb.append(":propertyType=[").append(propertyType).append("]");
+		return sb.toString();
 	}
 
 	/**

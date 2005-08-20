@@ -241,6 +241,15 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	}
 
 	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":nestedModel=[").append(nestedModel).append("]");
+		return sb.toString();
+	}
+	/**
 	 * Ognl context with a reference to the current component.
 	 */
 	private static final class ConversionContext extends OgnlContext

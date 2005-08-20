@@ -126,4 +126,14 @@ public abstract class LoadableDetachableModel extends AbstractDetachableModel
 	{
 		return null;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":tempModelObject=[").append(this.tempModelObject).append("]");
+		return sb.toString();
+	}
 }
