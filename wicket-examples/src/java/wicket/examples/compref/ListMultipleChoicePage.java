@@ -32,7 +32,7 @@ import wicket.model.CompoundPropertyModel;
 
 /**
  * Page with examples on {@link wicket.markup.html.form.ListMultipleChoice}.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class ListMultipleChoicePage extends WicketExamplePage
@@ -40,6 +40,10 @@ public class ListMultipleChoicePage extends WicketExamplePage
 	/** available sites for selection. */
 	private static final List SITES = Arrays.asList(new String[] { 
 	        "The Server Side", "Java Lobby", "Java.Net" });
+
+	/** available choices for large selection box. */
+	private static final List MANY_CHOICES = Arrays.asList(new String[] {
+			"Choice1", "Choice2", "Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
 
 	/**
 	 * Constructor
@@ -63,10 +67,16 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		};
 		add(form);
 
-		// Add a multiple list choice component that uses Input's 'site' property to designate the
-		// current selection, and that uses the SITES list for the available options.
-		// Note that our model here holds a Collection, as we need to store multiple values too
+		// Add a multiple list choice component that uses Input's 'site'
+		// property to designate the
+		// current selection, and that uses the SITES list for the available
+		// options.
+		// Note that our model here holds a Collection, as we need to store
+		// multiple values too
 		ListMultipleChoice listChoice = new ListMultipleChoice("sites", SITES);
+		form.add(listChoice);
+		
+		listChoice = new ListMultipleChoice("choices", MANY_CHOICES).setMaxRows(5);
 		form.add(listChoice);
 	}
 
@@ -76,18 +86,28 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		/** the selected sites. */
 		public List sites = new ArrayList();
 
+		/** the selected choices. */
+		public List choices = new ArrayList();
+		
+		/** adds pre-selected items to the choices list */
+		public Input() {
+			choices.add("Choice3");
+			choices.add("Choice4");
+			choices.add("Choice5");
+		}
+
 		/**
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString()
 		{
-			return "sites = '" + sitesAsString() + "'";
+			return "sites = '" + listAsString(sites) + "', choices='" + listAsString(choices) + "'";
 		}
 
-		private String sitesAsString()
+		private String listAsString(List list)
 		{
 			StringBuffer b = new StringBuffer();
-			for(Iterator i = sites.iterator(); i.hasNext();)
+			for(Iterator i = list.iterator(); i.hasNext();)
 			{
 				b.append(i.next());
 				if (i.hasNext()) b.append(", ");
