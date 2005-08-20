@@ -31,6 +31,7 @@ import wicket.model.IModel;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.lang.Classes;
+import wicket.util.string.Strings;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when
@@ -111,10 +112,11 @@ public class WebPage extends Page implements IHeaderRenderer
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
 				final String key = (String)iterator.next();
+				final String value = Strings.escapeMarkup(parameters.getString(key));
 				buffer.append('&');
 				buffer.append(key);
 				buffer.append('=');
-				buffer.append(parameters.getString(key));
+				buffer.append(value);
 			}
 		}
 		return cycle.getResponse().encodeURL(buffer.toString());
