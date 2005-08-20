@@ -28,6 +28,7 @@ import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessagesModel;
 import wicket.feedback.IFeedback;
 import wicket.feedback.IFeedbackMessageFilter;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -35,8 +36,9 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * A panel that displays {@link wicket.feedback.FeedbackMessage}s in a list view. The
- * maximum number of messages to show can be set with setMaxMessages().
+ * A panel that displays {@link wicket.feedback.FeedbackMessage}s in a list
+ * view. The maximum number of messages to show can be set with
+ * setMaxMessages().
  * 
  * @see wicket.feedback.FeedbackMessage
  * @see wicket.feedback.FeedbackMessages
@@ -101,9 +103,17 @@ public class FeedbackPanel extends Panel implements IFeedback
 	public FeedbackPanel(final String id)
 	{
 		super(id);
+		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul")
+		{
+			public boolean isVisible()
+			{
+				return anyMessage();
+			}
+		};
+		add(messagesContainer);
 		this.messageListView = new MessageListView("messages");
 		messageListView.setVersioned(false);
-		add(messageListView);
+		messagesContainer.add(messageListView);
 	}
 
 	/**
@@ -248,12 +258,12 @@ public class FeedbackPanel extends Panel implements IFeedback
 	{
 		return new FeedbackMessagesModel(getFeedbackMessageFilter());
 	}
-	
+
 	/**
 	 * @return Let subclass specify some other filter
 	 */
 	protected IFeedbackMessageFilter getFeedbackMessageFilter()
 	{
-		return null; 
+		return null;
 	}
 }

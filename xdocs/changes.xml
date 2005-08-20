@@ -8,6 +8,8 @@
   </properties>
   <body>
     <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="fix" dev="Martijn Dashorst" issue="1263096" due-to="Simon Berriman">Can't have two FeedbackPanels - fixed in conjunction with 1219458</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1219458" due-to="Gili Tzabari">FeedbackPanel produces illegal HTML - The initial state of the FeedbackPanel produces empty ul open and close tag since there is no initial message to display. This is illegal HTML according to the HTML validator (XHTML strict mode).</action>
       <action type="fix" dev="Juergen Donnerstag" issue="1261052 " due-to="Jan Bares">Fixed WicketServlet.doGet URI bug</action>
       <action type="update" dev="Juergen Donnerstag">Extended markup inheritance to support panels and borders as well</action>
       <action type="add" dev="Jonathan Locke">Added MarkupContainer.iterator(Comparator comparator)</action>
