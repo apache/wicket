@@ -60,4 +60,12 @@ public abstract class AbstractReadOnlyModel extends AbstractModel
 		throw new UnsupportedOperationException("Model " + getClass()
 				+ " does not support setObject(Object)");
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return super.toString();
+	}
 }

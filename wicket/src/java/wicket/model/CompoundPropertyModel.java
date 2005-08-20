@@ -67,4 +67,12 @@ public class CompoundPropertyModel extends AbstractPropertyModel
 		}
 		return null;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return new StringBuffer(super.toString()).toString();
+	}
 }

@@ -118,7 +118,17 @@ public abstract class AbstractDetachableModel implements IModel
 		attach();
 		onSetObject(component, object);
 	}
-	
+
+	/**
+	 * @see Object#toString() 
+	 */
+	public String toString() {
+		StringBuffer sb = new StringBuffer("Model:classname=[");
+		sb.append(getClass().getName()).append("]");
+		sb.append(":attached=").append(isAttached());
+		return sb.toString();
+	}
+
 	/**
 	 * Attaches to the current request. Implement this method with custom
 	 * behaviour, such as loading the model object.

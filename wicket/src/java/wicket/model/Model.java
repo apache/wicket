@@ -126,4 +126,15 @@ public class Model extends AbstractModel
 	{
 		this.object = object;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":nestedModel=[").append(getNestedModel()).append("]");
+		sb.append(":object=[").append(this.object).append("]");
+		return sb.toString();
+	}
 }
