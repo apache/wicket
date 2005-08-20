@@ -99,10 +99,10 @@ abstract class AbstractChoice extends FormComponent
 	 *            See Component
 	 * @param model
 	 *            See Component
-	 * @param renderer
-	 *            The rendering engine
 	 * @param choices
 	 *            The drop down choices
+	 * @param renderer
+	 *            The rendering engine
 	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public AbstractChoice(final String id, IModel model, final List choices, final IChoiceRenderer renderer)
