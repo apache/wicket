@@ -120,6 +120,12 @@
       <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</unsubscribe>
       <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-autocvs</archive>
     </mailingList>
+    <mailingList>
+      <name>${pom.name} automated builds List</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-builds</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-builds</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-builds</archive>
+    </mailingList>
   </mailingLists>
   <developers>
     <developer>
