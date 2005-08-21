@@ -35,7 +35,7 @@ import wicket.util.resource.IResourceStream;
  * Use like eg:
  * <pre>
  * private static final PackageResource IMG_UNKNOWN =
- * 		PackageResource.get(EditPage.class.getPackage(), "questionmark.gif");
+ * 		PackageResource.get(EditPage.class, "questionmark.gif");
  * </pre>
  * where the static resource references image 'questionmark.gif' from the
  * the package that EditPage is in. 
@@ -57,8 +57,8 @@ public class PackageResource extends WebResource
 	/** The resource's style */
 	final String style;
 
-	/** The package's class, used for class loading. */
-	final Class packageClass;
+	/** The scoping class, used for class loading and to determine the package. */
+	final Class scope;
 
 	/**
 	 * Binds a the resource to the given application object
@@ -82,7 +82,7 @@ public class PackageResource extends WebResource
 		if (resource == null)
 		{
 			// Share through application
-			resource = get(scope.getPackage(), name, locale, style);
+			resource = get(scope, name, locale, style);
 			application.getSharedResources().add(scope, name, locale, style, resource);
 		}
 	}
@@ -107,23 +107,27 @@ public class PackageResource extends WebResource
 	 * Gets a non-localized resource for a given set of criteria. Only one resource
 	 * will be loaded for the same criteria.
 	 * 
-	 * @param basePackage
-	 *            The base package to search from
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the
+	 *            package resource, and to determine what package it is in. Typically
+	 *            this is the calling class/ the class in which you call this method
 	 * @param path
 	 *            The path to the resource
 	 * @return The resource
 	 */
-	public static PackageResource get(final Package basePackage, final String path)
+	public static PackageResource get(final Class scope, final String path)
 	{
-		return get(basePackage, path, null, null);
+		return get(scope, path, null, null);
 	}
 
 	/**
 	 * Gets the resource for a given set of criteria. Only one resource will be
 	 * loaded for the same criteria.
 	 * 
-	 * @param basePackage
-	 *            The base package to search from
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the
+	 *            package resource, and to determine what package it is in. Typically
+	 *            this is the calling class/ the class in which you call this method
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -132,16 +136,16 @@ public class PackageResource extends WebResource
 	 *            The style of the resource (see {@link wicket.Session})
 	 * @return The resource
 	 */
-	public static PackageResource get(final Package basePackage, final String path,
+	public static PackageResource get(final Class scope, final String path,
 			final Locale locale, final String style)
 	{
-		final String key = basePackage.getName() + '/' + SharedResources.path(path, locale, style);
+		final String key = scope.getPackage().getName() + '/' + SharedResources.path(path, locale, style);
 		synchronized (resourceMap)
 		{
 			PackageResource resource = (PackageResource)resourceMap.get(key);
 			if (resource == null)
 			{
-				resource = new PackageResource(basePackage, path, locale, style);
+				resource = new PackageResource(scope, path, locale, style);
 				resourceMap.put(key, resource);
 			}
 			return resource;
@@ -149,9 +153,11 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * private constructor
-	 * @param basePackage
-	 *            The base package to search from
+	 * Hidden constructor.
+	 *
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the
+	 *            package resource, and to determine what package it is in
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -159,12 +165,12 @@ public class PackageResource extends WebResource
 	 * @param style
 	 *            The style of the resource
 	 */
-	private PackageResource(final Package basePackage, final String path, final Locale locale,
+	private PackageResource(final Class scope, final String path, final Locale locale,
 			final String style)
 	{
-		packageClass = basePackage.getClass();
+		this.scope = scope;
 		// Convert resource path to absolute path relative to base package
-		this.absolutePath = Packages.absolutePath(basePackage, path);
+		this.absolutePath = Packages.absolutePath(scope.getPackage(), path);
 		this.locale = locale;
 		this.style = style;
 	}
@@ -178,7 +184,7 @@ public class PackageResource extends WebResource
 		{
 			// Locate resource
 			this.resourceStream = Application.get().getResourceStreamLocator().locate(
-					packageClass.getClassLoader(), absolutePath, style, locale, null);
+					scope.getClassLoader(), absolutePath, style, locale, null);
 
 			// Check that resource was found
 			if (this.resourceStream == null)
