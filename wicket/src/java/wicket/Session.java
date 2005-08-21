@@ -615,7 +615,7 @@ public abstract class Session implements Serializable
 	/**
 	 * Marks session state as dirty
 	 */
-	final void dirty()
+	protected final void dirty()
 	{
 		this.dirty = true;
 	}
