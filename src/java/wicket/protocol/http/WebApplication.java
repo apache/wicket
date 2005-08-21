@@ -196,12 +196,15 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param request
 	 *            The http request object
+	 * @param create 
+	 * 			  Should the session be created if not there.
 	 * @return The session object
 	 */
-	final WebSession getSession(final HttpServletRequest request)
+	final WebSession getSession(final HttpServletRequest request, boolean create)
 	{
 		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = request.getSession(true);
+		final HttpSession httpSession = request.getSession(create);
+		if(!create && httpSession == null) return null;
 
 		// Namespacing for session attributes is provided by adding the servlet
 		// path
@@ -215,6 +218,7 @@ public abstract class WebApplication extends Application
 		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttribute);
 		if (webSession == null)
 		{
+			if(!create) return null;
 			// Create session using session factory
 			final Session session = getSessionFactory().newSession();
 			if (session instanceof WebSession)
