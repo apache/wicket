@@ -24,9 +24,7 @@ import java.util.List;
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.PageableListViewNavigation;
+import wicket.markup.html.navigation.paging.PagingNavigation;
 
 
 /**
@@ -56,7 +54,7 @@ public class PagedTablePage extends WebPage
 		};
 
 		add(table);
- 		PageableListViewNavigation navigation = new PageableListViewNavigation("navigation", table);
+ 		PagingNavigation navigation = new PagingNavigation("navigation", table);
 		add(navigation);
 	}
 }

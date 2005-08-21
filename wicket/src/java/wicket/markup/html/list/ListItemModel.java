@@ -1,5 +1,5 @@
 /*
- * $Id: PageableListViewNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
+ * $Id: PagingNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================

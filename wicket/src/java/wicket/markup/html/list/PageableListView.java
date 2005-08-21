@@ -19,6 +19,7 @@ package wicket.markup.html.list;
 
 import java.util.List;
 
+import wicket.markup.html.navigation.paging.IPageable;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
 
@@ -29,7 +30,7 @@ import wicket.version.undo.Change;
  * 
  * @author Jonathan Locke
  */
-public abstract class PageableListView extends ListView implements IPageableComponent
+public abstract class PageableListView extends ListView implements IPageable
 {
 	/** The page to show. */
 	private int currentPage;
@@ -239,16 +240,4 @@ public abstract class PageableListView extends ListView implements IPageableComp
 		}
 	}
 
-	/**
-	 * Returns the total number of items in the listview
-	 * 
-	 * @see IPageableComponent#getItemCount()
-	 */
-	public int getItemCount()
-	{
-		return getList().size();
-	}
-	
-	
-	
 }

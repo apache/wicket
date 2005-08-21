@@ -1,5 +1,5 @@
 /*
- * $Id: PageableListViewNavigationLink.java,v 1.2 2005/02/12 22:02:48
+ * $Id: PagingNavigationLink.java,v 1.2 2005/02/12 22:02:48
  * jonathanlocke Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,11 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.list;
+package wicket.markup.html.navigation.paging;
 
 import wicket.Page;
-import wicket.markup.html.link.IPageLink;
-import wicket.markup.html.link.PageLink;
+import wicket.markup.html.link.Link;
 
 /**
  * A link to a page of a PageableListView.
@@ -27,10 +26,10 @@ import wicket.markup.html.link.PageLink;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public final class PageableListViewNavigationLink extends PageLink
+public final class PagingNavigationLink extends Link
 {
 	/** The pageable list view. */
-	private final IPageableComponent pageable;
+	private final IPageable pageable;
 
 	/** The page of the PageableListView this link is for. */
 	private final int pageNumber;
@@ -46,39 +45,10 @@ public final class PageableListViewNavigationLink extends PageLink
 	 *            The page number in the PageableListView that this link links
 	 *            to. Negative pageNumbers are relative to the end of the list.
 	 */
-	public PageableListViewNavigationLink(final String id,
-			final IPageableComponent pageable, final int pageNumber)
+	public PagingNavigationLink(final String id,
+			final IPageable pageable, final int pageNumber)
 	{
-		super(id, new IPageLink()
-		{
-			public Page getPage()
-			{
-			    int idx = pageNumber;
-				if (idx < 0)
-				{
-					idx = pageable.getPageCount() + idx;
-				}
-				
-				if (idx > (pageable.getItemCount() - 1))
-				{
-					idx = pageable.getItemCount() - 1;
-				}
-
-				if (idx < 0)
-				{
-					idx = 0;
-				}
-			    
-				pageable.setCurrentPage(idx);
-
-				return pageable.getPage();
-			}
-
-			public Class getPageIdentity()
-			{
-				return pageable.getPage().getClass();
-			}
-		});
+		super(id);
 
 		this.pageNumber = pageNumber;
 		this.pageable = pageable;
@@ -94,7 +64,25 @@ public final class PageableListViewNavigationLink extends PageLink
 	    // We do not need to redirect
 		setRedirect(false);
 		
-		super.onClick();
+		int idx = pageNumber;
+		if (idx < 0)
+		{
+			idx = pageable.getPageCount() + idx;
+		}
+		
+		if (idx > (pageable.getPageCount() - 1))
+		{
+			idx = pageable.getPageCount() - 1;
+		}
+
+		if (idx < 0)
+		{
+			idx = 0;
+		}
+	    
+		pageable.setCurrentPage(idx);
+
+		setResponsePage(getPage());
 	}
 
 	/**
@@ -110,9 +98,9 @@ public final class PageableListViewNavigationLink extends PageLink
 			idx = pageable.getPageCount() + idx;
 		}
 		
-		if (idx > (pageable.getItemCount() - 1))
+		if (idx > (pageable.getPageCount() - 1))
 		{
-			idx = pageable.getItemCount() - 1;
+			idx = pageable.getPageCount() - 1;
 		}
 
 		if (idx < 0)

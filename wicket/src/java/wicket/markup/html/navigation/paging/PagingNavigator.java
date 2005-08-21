@@ -1,5 +1,5 @@
 /*
- * $Id: PageableListViewNavigator.java,v 1.3 2005/02/12 22:02:48 jonathanlocke
+ * $Id: PagingNavigator.java,v 1.3 2005/02/12 22:02:48 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.list;
+package wicket.markup.html.navigation.paging;
 
 import wicket.markup.html.panel.Panel;
 
@@ -28,10 +28,10 @@ import wicket.markup.html.panel.Panel;
  * 
  * @author Juergen Donnerstag
  */
-public class PageableListViewNavigator extends Panel
+public class PagingNavigator extends Panel
 {
 	/** The navigation bar to be printed, e.g. 1 | 2 | 3 etc. */
-	private final PageableListViewNavigation pageableListViewNavigation;
+	private final PagingNavigation pageableListViewNavigation;
 
 	/**
 	 * Constructor.
@@ -41,40 +41,56 @@ public class PageableListViewNavigator extends Panel
 	 * @param pageable
 	 *            The pageable component the page links are referring to.
 	 */
-	public PageableListViewNavigator(final String id, final IPageableComponent pageable)
+	public PagingNavigator(final String id, final IPageable pageable)
+	{
+		this(id,pageable,null);
+	}
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param pageable
+	 *            The pageable component the page links are referring to.
+	 * @param labelProvider 
+	 * 			  The label provider for the link text.
+	 */
+	public PagingNavigator(final String id, final IPageable pageable, final IPagingLabelProvider labelProvider)
 	{
 		super(id);
 
 		
 		// Get the navigation bar and add it to the hierarchy
-		this.pageableListViewNavigation = newNavigation(pageable);
+		this.pageableListViewNavigation = newNavigation(pageable, labelProvider);
 		add(pageableListViewNavigation);
 
 		// Add additional page links
-		add(new PageableListViewNavigationLink("first", pageable, 0));
-		add(new PageableListViewNavigationIncrementLink("prev", pageable, -1));
-		add(new PageableListViewNavigationIncrementLink("next", pageable, 1));
-		add(new PageableListViewNavigationLink("last", pageable, -1));
+		add(new PagingNavigationLink("first", pageable, 0));
+		add(new PagingNavigationIncrementLink("prev", pageable, -1));
+		add(new PagingNavigationIncrementLink("next", pageable, 1));
+		add(new PagingNavigationLink("last", pageable, -1));
 	}
 
 	/**
-	 * Create a new PageableListViewNavigation. May be subclassed to make us of
-	 * specialized PageableListViewNavigation.
+	 * Create a new PagingNavigation. May be subclassed to make us of
+	 * specialized PagingNavigation.
 	 * 
 	 * @param pageable
 	 *            the pageable component
+	 * @param labelProvider 
+	 * 			  The label provider for the link text.
 	 * @return the navigation object
 	 */
-	protected PageableListViewNavigation newNavigation(final IPageableComponent pageable)
+	protected PagingNavigation newNavigation(final IPageable pageable, final IPagingLabelProvider labelProvider)
 	{
-		return new PageableListViewNavigation("navigation", pageable);
+		return new PagingNavigation("navigation", pageable,labelProvider);
 	}
 
 	/**
 	 * Gets the pageable navigation component for configuration purposes.
 	 * @return the associated pageable navigation.
 	 */
-	public final PageableListViewNavigation getPageableListViewNavigation()
+	public final PagingNavigation getPageableListViewNavigation()
 	{
 		return pageableListViewNavigation;
 	}
