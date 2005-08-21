@@ -1,5 +1,5 @@
 /*
- * $Id: PageableListViewNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
+ * $Id: PagingNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
  * Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
@@ -15,9 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.list;
+package wicket.markup.html.navigation.paging;
 
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.Loop;
 import wicket.version.undo.Change;
 
 /**
@@ -25,7 +26,7 @@ import wicket.version.undo.Change;
  * PageableListView.
  * <p>
  * For each row (one page of the list of pages) a
- * {@link PageableListViewNavigationLink}will be added that contains a
+ * {@link PagingNavigationLink}will be added that contains a
  * {@link Label}with the page number of that link (1..n).
  * 
  * <pre>
@@ -56,7 +57,7 @@ import wicket.version.undo.Change;
  * protected void populateItem(ListItem listItem)
  * {
  *	final int page = ((Integer)listItem.getModelObject()).intValue();
- *	final PageableListViewNavigationLink link = new PageableListViewNavigationLink(&quot;pageLink&quot;,
+ *	final PagingNavigationLink link = new PagingNavigationLink(&quot;pageLink&quot;,
  *			pageableListView, page);
  *	if (page &gt; 0)
  *	{
@@ -92,7 +93,7 @@ import wicket.version.undo.Change;
  * </p>
  * Assuming a PageableListView with 1000 entries and not more than 10 lines
  * shall be printed per page, the navigation bar would have 100 entries. Because
- * this is not feasible PageableListViewNavigation's navigation bar is pageable
+ * this is not feasible PagingNavigation's navigation bar is pageable
  * as well.
  * <p>
  * The page links displayed are automatically adjusted based on the number of
@@ -103,14 +104,14 @@ import wicket.version.undo.Change;
  * Use setMargin() and setViewSize() to adjust the navigation's bar view size
  * and margin.
  * <p>
- * Please @see PageableListViewNavigator for a ready made component which already
+ * Please @see PagingNavigator for a ready made component which already
  *		includes links to the first, previous, next and last page.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  */
-public class PageableListViewNavigation extends Loop
+public class PagingNavigation extends Loop
 {
 	/**
 	 * Undo change for navigation start index. Makes certain that back button works
@@ -134,13 +135,16 @@ public class PageableListViewNavigation extends Loop
 		 */
 		public final void undo()
 		{
-			PageableListViewNavigation.this.startIndex = startIndex;
+			PagingNavigation.this.startIndex = startIndex;
 		}
 	}
 
 	/** The PageableListView this navigation is navigating. */
-	protected IPageableComponent pageable;
+	protected IPageable pageable;
 
+	/** The label provider for the text that the links should be displaying. */
+	protected IPagingLabelProvider labelProvider;
+	
 	/** Offset for the Loop */
 	private int startIndex;
 
@@ -158,6 +162,7 @@ public class PageableListViewNavigation extends Loop
 	 */
 	private int viewSize = 10;
 
+
 	/**
 	 * Constructor.
 	 * 
@@ -166,10 +171,25 @@ public class PageableListViewNavigation extends Loop
 	 * @param pageable
 	 *			  The underlying pageable component to navigate
 	 */
-	public PageableListViewNavigation(final String id, final IPageableComponent pageable)
+	public PagingNavigation(final String id, final IPageable pageable)
+	{
+		this(id,pageable,null);
+	}
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *			  See Component
+	 * @param pageable
+	 *			  The underlying pageable component to navigate
+	 * @param labelProvider 
+	 * 			  The label provider for the text that the links should be displaying.
+	 */
+	public PagingNavigation(final String id, final IPageable pageable, final IPagingLabelProvider labelProvider)
 	{
 		super(id, pageable.getPageCount());
 		this.pageable = pageable;
+		this.labelProvider = labelProvider;
 		startIndex = 0;
 	}
 
@@ -243,7 +263,7 @@ public class PageableListViewNavigation extends Loop
 	 */
 	protected void internalOnBeginRequest()
 	{
-		// PageableListViewNavigation itself (as well as the PageableListView)
+		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
 		// The index of the first page link depends on the PageableListView's
@@ -266,7 +286,7 @@ public class PageableListViewNavigation extends Loop
 	
 	/**
 	 * Populate the current cell with a page link
-	 * (PageableListViewNavigationLink) enclosing the page number the link is
+	 * (PagingNavigationLink) enclosing the page number the link is
 	 * pointing to. Subclasses may provide there own implementation adding more
 	 * sophisticated page links.
 	 * 
@@ -278,12 +298,21 @@ public class PageableListViewNavigation extends Loop
 		final int pageIndex = getStartIndex() + loopItem.getIteration();
 
 		// Add a page link pointing to the page
-		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
+		final PagingNavigationLink link = new PagingNavigationLink("pageLink",
 				pageable, pageIndex);
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
-		link.add(new Label("pageNumber", String.valueOf(pageIndex + 1)));
+		String label = "";
+		if(labelProvider != null)
+		{
+			label = labelProvider.getPageLabel(pageIndex);
+		}
+		else
+		{
+			label = String.valueOf(pageIndex + 1);
+		}
+		link.add(new Label("pageNumber", label));
 	}
 
 	/**

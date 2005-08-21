@@ -33,14 +33,16 @@ import wicket.markup.html.navigation.paging.PagingNavigator;
 /**
  * Dummy page used for resource testing.
  */
-public class PagedTableNavigatorWithMarginPage extends WebPage
+public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 {
 
 	/**
 	 * Construct.
-	 * @param parameters page parameters.
+	 * 
+	 * @param parameters
+	 *            page parameters.
 	 */
-	public PagedTableNavigatorWithMarginPage(final PageParameters parameters)
+public PagedTableNavigatorWithLabelProviderPage(final PageParameters parameters)
 	{
 		super();
 		List list = new ArrayList();
@@ -58,8 +60,9 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 		list.add("twelve");
 		list.add("thirteen");
 		list.add("fourteen");
-
-		PageableListView table = new PageableListView("table", list, 2)
+		
+		final int pageSize = 2;
+		final PageableListView listview = new PageableListView("table", list, pageSize)
 		{
 			protected void populateItem(ListItem listItem)
 			{
@@ -68,33 +71,31 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 			}
 		};
 
-		add(table);
-		add(new PagingNavigator("navigator", table)
-        {
-			/**
-			 * @see wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(wicket.markup.html.navigation.paging.IPageable, wicket.markup.html.navigation.paging.IPagingLabelProvider)
-			 */
-			protected PagingNavigation newNavigation(IPageable pageable, IPagingLabelProvider labelProvider)
+		IPagingLabelProvider labelProvider = new IPagingLabelProvider()
+		{
+		
+			public String getPageLabel(int page)
 			{
-                PagingNavigation nav = new PagingNavigation("navigation", pageable);
-                nav.setMargin(2);
-                if (nav.getViewSize() > 5)
-                {
-                    nav.setViewSize(5);
-                }
-                
-                nav.setSeparator(", ");
-                return nav;
+				int size = listview.getList().size();
+				 int current = page*pageSize;
+				 int end = current+pageSize;
+				 if(end > size) end = size;
+				 current++; // page start at 0.
+				 return current + "-" + end;
 			}
-        });
-	}
+		};
 
+
+		add(listview);
+		add(new PagingNavigator("navigator", listview,labelProvider));
+	}
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
 	public boolean isVersioned()
 	{
-		// for testing we set versioning off, because it gets too difficult to maintain otherwise
+		// for testing we set versioning off, because it gets too difficult to
+		// maintain otherwise
 		return false;
 	}
 }
