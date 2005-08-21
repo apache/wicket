@@ -18,6 +18,7 @@
 package wicket;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -62,18 +63,16 @@ public class SharedResources
 		final String extension = Files.extension(path);
 		final String basePath = Files.basePath(path, extension);
 		buffer.append(basePath);
-		if (locale != null)
-		{
-			if (!locale.equals(Locale.getDefault()))
-			{
-				buffer.append('_');
-				buffer.append(locale.toString());
-			}
-		}
+		// first style because locale can append later on.
 		if (style != null)
 		{
 			buffer.append('_');
 			buffer.append(style);
+		}
+		if (locale != null)
+		{
+			buffer.append('_');
+			buffer.append(locale.toString());
 		}
 		if (extension != null)
 		{
@@ -219,5 +218,18 @@ public class SharedResources
 	public final Resource get(final String key)
 	{
 		return (Resource)resourceMap.get(key);
+	}
+
+	/**
+	 * 
+	 */
+	void localeChange()
+	{
+		Iterator it = resourceMap.values().iterator();
+		while(it.hasNext())
+		{
+			Resource resource = (Resource)it.next();
+			resource.localeChange();
+		}
 	}
 }
