@@ -64,7 +64,7 @@ public abstract class Resource implements IResourceListener
 	protected IResourceStream resourceStream;
 
 	/** True if this resource can be cached */
-	private boolean cacheable;
+	private byte cacheable;
 
 	/** Any parameters associated with the request for this resource */
 	private ValueMap parameters;
@@ -75,7 +75,7 @@ public abstract class Resource implements IResourceListener
 	protected Resource()
 	{
 		// By default, nothing is cacheable
-		cacheable = false;
+		cacheable = 0;
 	}
 
 	/**
@@ -86,11 +86,24 @@ public abstract class Resource implements IResourceListener
 	/**
 	 * @return boolean True or False if this resource is cacheable
 	 */
-	public boolean isCacheable()
+	public final boolean isCacheable()
 	{
-		return cacheable;
+		if(cacheable == 2)
+		{
+			cacheable = 1;
+			return false;
+		}
+		return cacheable == 1;
 	}
-
+	
+	void localeChange()
+	{
+		if(cacheable == 1)
+		{
+			cacheable = 2;
+		}
+	}
+	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
@@ -136,7 +149,10 @@ public abstract class Resource implements IResourceListener
 	 */
 	public final void setCacheable(boolean cacheable)
 	{
-		this.cacheable = cacheable;
+		// set first on 2 (means is cacheable but not the first time)
+		// so that this image will render once before a head/lastmodified request 
+		// already says it is cachable
+		this.cacheable = 2;
 	}
 
 	/**
@@ -183,6 +199,11 @@ public abstract class Resource implements IResourceListener
 			if (this.resourceStream == null)
 			{
 				throw new WicketRuntimeException("Could not get resource stream");
+			}
+			// resource is served so if cacheable is wanted set the cache bit.
+			if(cacheable == 2)
+			{
+				cacheable = 1;
 			}
 		}
 	}
