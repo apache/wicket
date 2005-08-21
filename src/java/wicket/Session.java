@@ -436,6 +436,7 @@ public abstract class Session implements Serializable
 	{
 		this.locale = locale;
 		this.converter = null;
+		application.getSharedResources().localeChange();
 		dirty();
 	}
 
