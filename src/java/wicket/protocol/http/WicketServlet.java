@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,6 +34,7 @@ import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.RequestCycle;
 import wicket.Resource;
+import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.response.BufferedResponse;
 import wicket.util.resource.IResourceStream;
@@ -173,7 +175,7 @@ public class WicketServlet extends HttpServlet
 		}
 
 		// Get session for request
-		final WebSession session = webApplication.getSession(servletRequest);
+		final WebSession session = webApplication.getSession(servletRequest, true);
 
 		// create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
@@ -320,9 +322,31 @@ public class WicketServlet extends HttpServlet
 			final String resourceReferenceKey = pathInfo
 					.substring(WebRequestCycle.resourceReferencePrefix.length());
 
-			// Try to find shared resource
-			final Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
+			Locale locale = servletRequest.getLocale();
+			WebSession session = webApplication.getSession(servletRequest, false);
+			if(session != null)
+			{
+				locale = session.getLocale();
+			}
+			String localizedResourceReferenceKey = SharedResources.path(resourceReferenceKey, locale, null); // no style because that is already in the key
 			
+			// Try to find shared resource
+			Resource resource = webApplication.getSharedResources().get(localizedResourceReferenceKey);
+			if (resource == null)
+			{
+				if(locale != null && locale.getCountry() != null)
+				{
+					// try only language
+					locale = new Locale(locale.getLanguage());
+					localizedResourceReferenceKey = SharedResources.path(resourceReferenceKey, locale, null);
+					resource = webApplication.getSharedResources().get(localizedResourceReferenceKey);					
+				}
+				// try it without any locale (plain url, could be different locale then the default)
+				if(resource == null)
+				{
+					resource = webApplication.getSharedResources().get(resourceReferenceKey);
+				}
+			}
 			// If resource found and it is cacheable
 			if (resource != null && resource.isCacheable())
 			{
