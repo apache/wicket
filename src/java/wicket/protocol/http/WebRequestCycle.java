@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -38,6 +39,8 @@ import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Response;
+import wicket.Session;
+import wicket.SharedResources;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.response.BufferedResponse;
@@ -622,15 +625,31 @@ public class WebRequestCycle extends RequestCycle
 		if (path.startsWith(resourceReferencePrefix))
 		{
 			final String resourceReferenceKey = path.substring(resourceReferencePrefix.length());
-			final Resource resource = getApplication().getSharedResources().get(resourceReferenceKey);
+			Session session = Session.get();
+			Locale locale = session.getLocale();
+			String localizedResourceReferenceKey = SharedResources.path(resourceReferenceKey, locale, null); // no style because that is already in the key
+			Resource resource = getApplication().getSharedResources().get(localizedResourceReferenceKey);
 			if (resource == null)
 			{
-				throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey);
+				if(locale != null && locale.getCountry() != null)
+				{
+					// try only language
+					locale = new Locale(locale.getLanguage());
+					localizedResourceReferenceKey = SharedResources.path(resourceReferenceKey, locale, null);
+					resource = getApplication().getSharedResources().get(localizedResourceReferenceKey);					
+				}
+				// try it without any locale (plain url, could be different locale then the default)
+				if(resource == null)
+				{
+					resource = getApplication().getSharedResources().get(resourceReferenceKey);
+				}
+				// if still null throw an exception
+				if(resource == null)
+				{
+					throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey);
+				}
 			}
-			else
-			{
-				resource.onResourceRequested();
-			}
+			resource.onResourceRequested();
 			return true;
 		}
 		return false;
