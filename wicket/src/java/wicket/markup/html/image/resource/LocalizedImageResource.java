@@ -28,7 +28,7 @@ import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.StaticResource;
+import wicket.markup.html.PackageResource;
 import wicket.markup.html.WebResource;
 import wicket.util.lang.Objects;
 import wicket.util.parse.metapattern.Group;
@@ -70,11 +70,11 @@ import wicket.util.string.Strings;
  */
 public final class LocalizedImageResource implements Serializable, IResourceListener
 {
+	/** What kind of resource it is. TRUE==Resource is set, FALSE==ResourceReference is set, null none */
+	private Boolean resourceKind;
+	
 	/** The component that is referencing this image resource */
 	private Component component;
-
-	/** The locale of the image resource */
-	private Locale locale;
 
 	/** The image resource this image component references */
 	private Resource resource;
@@ -82,8 +82,11 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	/** The resource reference */
 	private ResourceReference resourceReference;
 
+	/** The locale of the image resource */
+	private transient Locale locale;
+
 	/** The style of the image resource */
-	private String style;
+	private transient String style;
 
 	/**
 	 * Parses image value specifications of the form "[factoryName]:
@@ -188,6 +191,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 */
 	public final void setResource(final Resource resource)
 	{
+		resourceKind = Boolean.TRUE;
 		this.resource = resource;
 	}
 
@@ -197,6 +201,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference)
 	{
+		resourceKind = Boolean.FALSE;
 		this.resourceReference = resourceReference;
 		bind();
 	}
@@ -213,8 +218,9 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		// If locale has changed from the initial locale used to attach image
 		// resource, then we need to reload the resource in the new locale
-		if (!Objects.equal(locale, component.getLocale())
-				|| !Objects.equal(style, component.getStyle()))
+		if ( resourceKind == null && 
+				(!Objects.equal(locale, component.getLocale())
+				|| !Objects.equal(style, component.getStyle())))
 		{
 			// Get new component locale and style
 			this.locale = component.getLocale();
@@ -311,7 +317,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			 */
 			protected Resource newResource()
 			{
-				return StaticResource.get(getScope().getPackage(), getName(), locale, style);
+				return PackageResource.get(getScope().getPackage(), getName(), locale, style);
 			}
 		};
 		resourceReference.setLocale(locale);

@@ -70,7 +70,8 @@ public class SunJceCrypt extends AbstractCrypt
 	    {
 			// Initialize and add a security provider required for encryption
 			//Security.addProvider(new com.sun.crypto.provider.SunJCE());
-	        final Class clazz = Class.forName("com.sun.crypto.provider.SunJCE");
+	        final Class clazz = getClass().getClassLoader().loadClass(
+    			"com.sun.crypto.provider.SunJCE");
 	        Security.addProvider((Provider)clazz.newInstance());
 	    }
 	    catch (ClassNotFoundException ex)

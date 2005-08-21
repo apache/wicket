@@ -18,7 +18,10 @@
 package wicket.protocol.http;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
+
+import wicket.util.lang.Bytes;
 
 /**
  * A placeholder WebRequest where all methods do nothing. This class is not
@@ -36,7 +39,6 @@ class NullWebRequest extends WebRequest
 	 */
 	NullWebRequest()
 	{
-		super(null);
 	}
 
 	/**
@@ -101,5 +103,32 @@ class NullWebRequest extends WebRequest
 	public String toString()
 	{
 		return "[NullWebRequest]";
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebRequest#getRelativeURL()
+	 */
+	public String getRelativeURL()
+	{
+		// TODO adouma: check if null is ok here
+		return null;
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebRequest#newMultipartWebRequest(wicket.util.lang.Bytes)
+	 */
+	public WebRequest newMultipartWebRequest(Bytes maxsize)
+	{
+		// TODO adouma: check if null is ok here
+		return null;
+	}
+
+	/**
+	 * @see wicket.Request#getLocale()
+	 */
+	public Locale getLocale()
+	{
+		// TODO adouma: check if null is ok here
+		return null;
 	}
 }

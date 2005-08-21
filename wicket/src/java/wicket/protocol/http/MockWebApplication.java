@@ -22,8 +22,10 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import wicket.Application;
 import wicket.ApplicationSettings;
 import wicket.Page;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
 
@@ -101,11 +103,15 @@ public class MockWebApplication extends WebApplication
      */
     public MockWebApplication(final String path)
     {
+        Application.set(this);
         context = new MockServletContext(this, path);
         servletSession = new MockHttpSession(context);
         servletRequest = new MockHttpServletRequest(this, servletSession, context);
         servletResponse = new MockHttpServletResponse();
-        wicketSession = getSession(servletRequest);
+        // TODO adouma: check if the next line can be replaced by the following two        
+        // wicketSession = getSession(servletRequest);
+		wicketRequest = newWebRequest(servletRequest);
+        wicketSession = getSession(wicketRequest);
         ApplicationSettings settings = getSettings();
         settings.setRenderStrategy(ApplicationSettings.ONE_PASS_RENDER);
     }
@@ -229,10 +235,12 @@ public class MockWebApplication extends WebApplication
             lastRenderedPage = cycle.getResponsePage();
             
             final MockHttpServletRequest httpRequest = 
-                	(MockHttpServletRequest)cycle.getWebRequest().getHttpServletRequest();
+                	(MockHttpServletRequest)((ServletWebRequest)cycle.getWebRequest()).getHttpServletRequest();
             
             httpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
-            wicketSession = getSession(servletRequest);
+            // TODO adouma: check if this is a valid fix            
+            // wicketSession = getSession(servletRequest);            
+            wicketSession = getSession(wicketRequest);
             new WebRequestCycle(wicketSession, wicketRequest,
                     wicketResponse).request();
         }
@@ -261,8 +269,8 @@ public class MockWebApplication extends WebApplication
     {
         servletRequest.initialize();
         servletResponse.initialize();
-        wicketSession = getSession(servletRequest);
-        wicketRequest = new WebRequest(servletRequest);
+        wicketRequest = new ServletWebRequest(servletRequest);
+        wicketSession = getSession(wicketRequest);
         wicketResponse = new WebResponse(servletResponse);
     }
 

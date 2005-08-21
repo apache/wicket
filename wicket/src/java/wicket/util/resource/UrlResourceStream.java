@@ -28,6 +28,8 @@ import java.net.URLConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
+import wicket.protocol.http.WebApplication;
 import wicket.util.time.Time;
 
 /**
@@ -147,11 +149,33 @@ public final class UrlResourceStream extends AbstractResourceStream
 	 */
 	public String getContentType()
 	{
-		if (contentType == null)
-		{
-			return URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
-		}
+		testContentType();
 		return contentType;
+	}
+
+	/**
+	 * Method to test the content type on null or unknown.
+	 * if this is the case the content type is tried to be resolved throw the servlet context
+	 */
+	private void testContentType()
+	{
+		if(contentType == null || contentType.indexOf("unknown") != -1)
+		{
+			Application application = Application.get();
+			if(application instanceof WebApplication)
+			{
+				// TODO for non webapplication another method should be implemented (getMimeType on application?)
+				contentType = ((WebApplication)application).getWicketServlet().getServletContext().getMimeType(url.getFile());
+				if(contentType == null)
+				{
+					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
+				}
+			}
+			else
+			{
+				contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
+			}
+		}
 	}
 
 	/**
@@ -192,7 +216,12 @@ public final class UrlResourceStream extends AbstractResourceStream
 	{
 		if (file != null)
 		{
-			lastModified = file.lastModified();
+			long lastModified = file.lastModified();
+			if(lastModified != this.lastModified)
+			{
+				this.lastModified = lastModified;
+				this.contentLength = (int)file.length();
+			}
 		}
 		else
 		{
@@ -203,7 +232,12 @@ public final class UrlResourceStream extends AbstractResourceStream
 				urlConnection = url.openConnection();
 	
 				// update the last modified time.
-				lastModified = urlConnection.getLastModified();
+				long lastModified = urlConnection.getLastModified();
+				if(lastModified != this.lastModified)
+				{
+					this.lastModified = lastModified;
+					this.contentLength = urlConnection.getContentLength();
+				}
 			}
 			catch (IOException e)
 			{

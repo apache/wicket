@@ -48,13 +48,14 @@ public class WebComponent extends Component implements IHeaderContributor
 	}
 
 	/**
+     * THIS IS NOT PART OF WICKETS PUBLIC API. DO NOT CALL IT YOURSELF
 	 * Print to the web response what ever the component wants
 	 * to contribute to the head section. Does nothing by default.
 	 *
 	 * @param container The HtmlHeaderContainer
-	 * @see wicket.markup.html.IHeaderContributor#printHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
 	 */
-	public void printHead(final HtmlHeaderContainer container)
+	public void renderHead(final HtmlHeaderContainer container)
 	{
 		IEventRequestHandler[] handlers = getEventRequestHandlers();
 		if (handlers != null)
@@ -63,7 +64,7 @@ public class WebComponent extends Component implements IHeaderContributor
 			{
 				if (handlers[i] instanceof IHeaderContributor)
 				{
-					((IHeaderContributor)handlers[i]).printHead(container);
+					((IHeaderContributor)handlers[i]).renderHead(container);
 				}
 			}
 		}

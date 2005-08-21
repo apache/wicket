@@ -67,7 +67,7 @@ public class ApplicationPages
 	public static final HomePageRenderStrategy NO_REDIRECT = new HomePageRenderStrategy("no-redirect");
 	
 	/**
-	 * Use this homepage strategy if you want to redirect the homepage to a bookmarkable url like: page=mybookmarkablepage
+	 * Use this homepage strategy if you want to redirect the homepage to a bookmarkable url like: bookmarkablePage=mybookmarkablepage
 	 * This is the same as calling: setResponsePage(MyPage.class);. 
 	 */
 	public static final HomePageRenderStrategy BOOKMARK_REDIRECT = new HomePageRenderStrategy("bookmark-redirect");
@@ -77,6 +77,7 @@ public class ApplicationPages
 	 * wicket (when you submit a form on the page or when you do in the code: setResponsePage(new MyPage());
 	 * If you have set the overall Redirect Strategy to ONE_PASS_RENDER then the homepage response will honor that. 
 	 * Then it is the same as setting the homepage strategy to NO_REDIRECT.
+	 * This one is the default used by wicket. 
 	 */
 	public static final HomePageRenderStrategy PAGE_REDIRECT = new HomePageRenderStrategy("page-redirect");
 	

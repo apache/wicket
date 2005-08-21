@@ -42,9 +42,10 @@ public class HeaderSectionMyLabel2 extends Label implements IHeaderContributor
     }
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#printHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.HtmlHeaderContainer)
+	 * @param container
 	 */
-	public void printHead(HtmlHeaderContainer container)
+	public void renderHead(HtmlHeaderContainer container)
 	{
 	    this.getResponse().write("text added by contributor");
 	}

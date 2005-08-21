@@ -38,35 +38,36 @@ public class PageableListViewNavigator extends Panel
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param pageableListView
-	 *            The PageableListView the page links are referring to.
+	 * @param pageable
+	 *            The pageable component the page links are referring to.
 	 */
-	public PageableListViewNavigator(final String id, final PageableListView pageableListView)
+	public PageableListViewNavigator(final String id, final IPageableComponent pageable)
 	{
 		super(id);
 
+		
 		// Get the navigation bar and add it to the hierarchy
-		this.pageableListViewNavigation = newNavigation(pageableListView);
+		this.pageableListViewNavigation = newNavigation(pageable);
 		add(pageableListViewNavigation);
 
 		// Add additional page links
-		add(new PageableListViewNavigationLink("first", pageableListView, 0));
-		add(new PageableListViewNavigationIncrementLink("prev", pageableListView, -1));
-		add(new PageableListViewNavigationIncrementLink("next", pageableListView, 1));
-		add(new PageableListViewNavigationLink("last", pageableListView, -1));
+		add(new PageableListViewNavigationLink("first", pageable, 0));
+		add(new PageableListViewNavigationIncrementLink("prev", pageable, -1));
+		add(new PageableListViewNavigationIncrementLink("next", pageable, 1));
+		add(new PageableListViewNavigationLink("last", pageable, -1));
 	}
 
 	/**
 	 * Create a new PageableListViewNavigation. May be subclassed to make us of
 	 * specialized PageableListViewNavigation.
 	 * 
-	 * @param pageableListView
-	 *            the pageable list view
+	 * @param pageable
+	 *            the pageable component
 	 * @return the navigation object
 	 */
-	protected PageableListViewNavigation newNavigation(final PageableListView pageableListView)
+	protected PageableListViewNavigation newNavigation(final IPageableComponent pageable)
 	{
-		return new PageableListViewNavigation("navigation", pageableListView);
+		return new PageableListViewNavigation("navigation", pageable);
 	}
 
 	/**

@@ -57,8 +57,11 @@ public class BodyOnLoadResolver implements IComponentResolver
 		if ((tag instanceof ComponentTag) && "body".equalsIgnoreCase(tag.getName()) 
 		        && (tag.getNamespace() == null))
 		{
-			// Create, add and render the component
-			BodyOnLoadContainer body = new BodyOnLoadContainer();
+			// Create, add and render the component.
+		    
+			// There is only one BodyOnLoadContainer allowed. That is we
+			// don't have to worry about creating a unique id.
+			BodyOnLoadContainer body = new BodyOnLoadContainer(tag.getId());
 			container.autoAdd(body);
 
 			// Yes, we handled the tag

@@ -495,7 +495,7 @@ public abstract class ListView extends WebMarkupContainer
 				// Get index
 				final int index = firstIndex + i;
 
-				// If this component does not already exist, populate it
+				// Get list item for index
 				ListItem item = (ListItem)get(Integer.toString(index));
 
 				// Rewind to start of markup for kids

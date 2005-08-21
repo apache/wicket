@@ -7,7 +7,100 @@
     <author email="jonl at muppetlabs.com">Jonathan Locke</author>
   </properties>
   <body>
-    <release version="1.1-SNAPSHOT" date="tbd" description="Current state of development on HEAD">
+    <release version="1.1-SNAPSHOT" date="tbd" description="Current CVS HEAD development">
+      <action type="fix" dev="Martijn Dashorst" issue="1263096" due-to="Simon Berriman">Can't have two FeedbackPanels - fixed in conjunction with 1219458</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1219458" due-to="Gili Tzabari">FeedbackPanel produces illegal HTML - The initial state of the FeedbackPanel produces empty ul open and close tag since there is no initial message to display. This is illegal HTML according to the HTML validator (XHTML strict mode).</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1261052 " due-to="Jan Bares">Fixed WicketServlet.doGet URI bug</action>
+      <action type="update" dev="Juergen Donnerstag">Extended markup inheritance to support panels and borders as well</action>
+      <action type="add" dev="Jonathan Locke">Added MarkupContainer.iterator(Comparator comparator)</action>
+      <action type="fix" dev="Eelco Hillenius">fix for classloading problems that caused problems loading markup/ resources for components that were loaded by another classloader than the current one.</action>
+      <action type="fix" dev="Gwyn Evans" issue="1249961" due-to="Cameron Braid">Fix HTML generated from AbstractChoice - Added missing space after 'option selected="selected"'</action>
+      <action type="update" dev="Eelco Hillenius" issue="1254379" due-to="Phil Kulak">Added getBoolean() to ValueMap</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1253113" due-to="Cameron Braid">AbstractDetachableModel didn't propogate attach/detach</action>
+      <action type="update" dev="Eelco Hillenius" issue="1253111" due-to="Cameron Braid">Made LoadableDetachableModel.getNestedModel() non final</action>
+      <action type="update" dev="Jonathan Locke">
+        Changed implementation of component map in MarkupContainer to an array model
+        like the validators changed.  This made a significant reduction in the size
+        of pages, especially big pages.  For example, nested shrank from 69,958 bytes
+        to 55,231 bytes which is a savings of 14,727 bytes that was due to HashMap
+        overhead.  Very large containers may run slower, but most containers are likely
+        to be faster as should be recursion/iteration.  The main downside is that this
+        code is very ugly and involves the same kinds of tests and casts that we did
+        to make the validators implementation more space efficient.
+      </action>
+      <action type="update" dev="Jonathan Locke">
+		refactored feedback completely.  the new code is smaller, more powerful and more elegant.  but it will break clients.  most clients who are using simple features of the old feedback code will only have to (a) change their package imports from wicket to wicket.feedback (because the feedback stuff is several more class files that are polluting the root package and likely to grow due to the new filtering mechanism) and (b) delete any IFeedback argument to Form. 
+		
+		clients who are looking for more powerful ways to filter their messages will now have completely unlimited capacity to do so through the new IFeedbackMessageFilter interface and the default filter implementations ComponentFeedbackMessageFilter, ContainedByFeedbackMessageFilter and ErrorLevelFeedbackMessageFilter. 
+		
+		the whole model for feedback messages has changed from one of component-orientation, which was a mistake, to one of message orientation.  to give feedback, a feedback component implements the new IFeedback interface which contains just updateFeedback().  in this method, which is called before the page is rendered, the component can use the FeedbackMessages.messages() method in combination with a filter implementing IFeedbackMessageFilter to retrieve a list of appropriate messages.  all feedback messages on the page are pushed through this filter.  messages for which IFeedbackMessageFilter.accept() returns true are added to the list.
+		
+		for example, the new FormComponentFeedbackBorder uses the ContainedByFeedbackMessageFilter in its call to FeedbackMessages.messages().  The filter being used by the form component feedback border can be changed by overriding the getFeedbackMessagesFilter() method.  This combination allows FormComponentFeedbackBorder to show its error indicator by default when a component that it contains has an error, but allows the user to override this behavior. 
+		
+		another example is provided in FormComponentFeedbackIndicator, which is a panel showing a red star (and overridable with you own markup!) that shows or hides itself depending on the result of the filter returned by the overridable getFeedbackMessageFilter() method.  if the filter accepts at least one message, the indicator will show itself.  if no message matches the filter, the indicator will hide itself. 
+		
+		note that feedback message filters do not necessarily have to have anything to do with components.  you can install, for example, an ErrorLevelFeedbackMessageFilter which filters out messages below a certain threshold.  or you can make a custom filter that uses any attribute of FeedbackMessage to filter on.
+		
+		the new FeedbackPanel also provides a getFeedbackMessageFilter() override.
+      </action>
+      <action type="update" dev="Jonathan Locke">
+      Maximized efficiency of validators list by doing a little neat object casting
+      in the private implementation.  This also simplified things conceptually.
+      </action>
+      <action type="update" dev="Jonathan Locke">
+      Made FormComponent more space efficient by using boolean flag bit
+      in Component superclass to keep track of persistent boolean.
+      </action>
+      <action type="update" dev="Jonathan Locke">
+		Changed RequestCycle.internalOnRuntimeException() implementation so that
+		it checks the new Page return value from onRuntimeException.  if
+		onRuntimeException returns a Page, it will be redirected to.  if not,
+		wicket will use the default page. this provides a nice low-level way of
+		doing something totally different to handle runtime exceptions.  if you
+		just want to change the basic look of your InternalErrorPage, you can
+		still just subclass that.  but if you want to do sophisticated things
+		with runtime exceptions, you want to override RequestCycle's
+		onRuntimeException method.
+      </action>
+      <action type="update" dev="Jonathan Locke">
+	  Refactored intializer code.  Now wicket.properties is checked for each jar or
+	  root folder on the classpath.  If it contains either initializer=[class]
+	  or [app-name]-initializer=[class], that class is instantiated and the 
+	  IInitializer.init(Application) method is called on the resulting object.
+	  So, both libraries and applications can easily initialize their resources now.
+	  For example, the core wicket.properties file contains just this:
+	  "initializer=wicket.Initializer", which invokes the wicket.Initializer class
+	  with the application being loaded.  The wicket.Initializer.init() method
+	  will contain a sequence of initializations.  For example, 
+	  "new TreeComponentInitializer().init(application)".  This is a much better
+	  and safer and more Java way of initializing components for a library like core.
+	  Updated the images example to show how this is done.
+      </action>
+      <action type="update" dev="Jonathan Locke">
+      Changed structure of process() back to its original no-parameter form and introduced
+      a nice, logical return value in onFormSubmitted to determined whether to call delegateSubmit().
+      </action>
+      <action type="update" issue="1255293" dev="Juergen Donnerstag" due-to="Gili Tzabari">HtmlHeaderContainer to supports markup inheritance.</action>
+      <action type="add" dev="Jonathan Locke">
+		Changed StaticResourceReference and StaticResource to PackageResourceReference and 
+		PackageResource, then added an Application parameter to each to make that explicit.  
+		Added IComponentInitializer method that is called in Application constructor for 
+		each class listed in META-INF/wicket-component-initializers.txt.  This will allow
+		component developers to initialize resources when the app starts up.  For applications,
+		you can also create a META-INF/[ApplicationName]-wicket-component-initializers.txt
+		if you want to preload resources or otherwise initialize for pages.  Made changes
+		to ImagesApplication to demo this, including an example that preloads the cancel
+		button via META-INF/ImagesApplication-wicket-component-initializers.txt
+      </action>
+      <action type="add" dev="Martijn Dashorst">Added min, max and length parameters to the error message interpolation of LengthValidator</action>
+      <action type="update" issue="1255297" dev="Jonathan Locke">Added automatic multiPart support to Form.  You can still call Form.setMultiPart() if you want to, but it is no longer necessary.</action>
+      <action type="add" dev="Jonathan Locke">Added WebSession.getId() and WebRequestCycle.getWebSession()</action>
+      <action type="add" dev="Eelco Hillenius" issue="1250030" due-to="Igor Vaynberg">added AbstractReadOnlyModel</action>
+	  <action type="update" dev="Eelco Hillenius" issue="1249929" due-to="Igor Vaynberg">allow protected access to AttributeModifier's replacement model</action>
+	</release>
+    <release version="1.1-b2" date="2005-08-01" description="1.1 Beta 2">
+      <action type="update" dev="Martijn Dashorst" issue="1231300">Upgraded dependencies to latests versions: log4j (1.2.8 -&gt; 1.2.11), concurrent (1.3.3 -&gt; 1.3.4).</action>
+      <action type="fix" dev="Martijn Dashorst" due-to="Brad Pardee" issue="1248759">Removed dependency on dom4j</action>
       <action type="update" dev="Eelco Hillenius" due-to="Cameron Braid">Folded UploadForm and Form into one (Form). Instead of using UploadForm, you can now just use Form and call setMultipart(true).</action>
       <action type="update" dev="Martijn Dashorst" issue="1246322">Made FormComponent.updateModel() public for AJAX support.</action>
     </release>

@@ -21,8 +21,9 @@ package wicket.markup.html.ajax.rico;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.StaticResourceReference;
+import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.ajax.AbstractEventRequestHandler;
 
 /**
@@ -34,18 +35,6 @@ public abstract class RicoEventRequestHandler extends AbstractEventRequestHandle
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(RicoEventRequestHandler.class);
-
-	/** reference to prototype js. */
-	private static final StaticResourceReference PROTOTYPE_REF;
-
-	/** reference to rico js. */
-	private static final StaticResourceReference RICO_REF;
-
-	static
-	{
-		PROTOTYPE_REF = new StaticResourceReference(RicoEventRequestHandler.class, "prototype.js");
-		RICO_REF = new StaticResourceReference(RicoEventRequestHandler.class, "rico-1.1b.js");
-	}
 	
 	/**
 	 * Construct.
@@ -70,8 +59,8 @@ public abstract class RicoEventRequestHandler extends AbstractEventRequestHandle
 	public final void printHeadInitContribution(HtmlHeaderContainer container)
 	{
 		// add our basic javascript needs to the header
-		addJsReference(container, PROTOTYPE_REF);
-		addJsReference(container, RICO_REF);
+		addJsReference(container, new PackageResourceReference(Application.get(), RicoEventRequestHandler.class, "prototype.js"));
+		addJsReference(container, new PackageResourceReference(Application.get(), RicoEventRequestHandler.class, "rico-1.1b.js"));
 		write(container,
 			"<script language=\"JavaScript\">\n" +
 			"\tvar onloads = new Array();\n" +
@@ -87,7 +76,7 @@ public abstract class RicoEventRequestHandler extends AbstractEventRequestHandle
 	 * @param container the header container
 	 * @param ref reference to add
 	 */
-	private void addJsReference(HtmlHeaderContainer container, StaticResourceReference ref)
+	private void addJsReference(HtmlHeaderContainer container, PackageResourceReference ref)
 	{
 		String url = container.getPage().urlFor(ref.getPath());
 		String s = 

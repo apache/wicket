@@ -26,9 +26,9 @@ import wicket.markup.html.link.PageLink;
  * navigation looks like
  * 
  * <pre>
- * 
- *	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *	
+ *  
+ * 	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
+ * 	
  * </pre>
  * 
  * <p>
@@ -43,20 +43,20 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	private final int increment;
 
 	/** The PageableListView the page links are referring to. */
-	private final PageableListView pageableListView;
+	private final IPageableComponent pageable;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param id
-	 *			  See Component
-	 * @param pageableListView
-	 *			  The list view the page links are referring to
+	 *            See Component
+	 * @param pageable
+	 *            The pageable component the page links are referring to
 	 * @param increment
-	 *			  increment by
+	 *            increment by
 	 */
 	public PageableListViewNavigationIncrementLink(final String id,
-			final PageableListView pageableListView, final int increment)
+			final IPageableComponent pageable, final int increment)
 	{
 		super(id, new IPageLink()
 		{
@@ -68,21 +68,21 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 				// Determine the page number based on the current
 				// PageableListView page
 				// and the increment
-				int idx = pageableListView.getCurrentPage() + increment;
+				int idx = pageable.getCurrentPage() + increment;
 				if (idx < 0)
 				{
 					idx = 0;
 				}
-				else if (idx > (pageableListView.getList().size() - 1))
+				else if (idx > (pageable.getItemCount() - 1))
 				{
-					idx = pageableListView.getList().size() - 1;
+					idx = pageable.getItemCount() - 1;
 				}
 
 				// Tell the PageableListView which page to print next
-				pageableListView.setCurrentPage(idx);
+				pageable.setCurrentPage(idx);
 
 				// Return the PageableListView page the link is referring to
-				return pageableListView.getPage();
+				return pageable.getPage();
 			}
 
 			/**
@@ -90,12 +90,12 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 			 */
 			public Class getPageIdentity()
 			{
-				return pageableListView.getPage().getClass();
+				return pageable.getPage().getClass();
 			}
 		});
 
 		this.increment = increment;
-		this.pageableListView = pageableListView;
+		this.pageable = pageable;
 	}
 
 	// TODO We need to explain this onClick method!
@@ -106,41 +106,41 @@ public class PageableListViewNavigationIncrementLink extends PageLink
 	{
 		// We do not need to redirect
 		setRedirect(false);
-		
+
 		super.onClick();
 	}
-	
+
 	/**
 	 * @return True if it is referring to the first page of the underlying
-	 *		   PageableListView.
+	 *         PageableListView.
 	 */
 	public boolean isFirst()
 	{
-		return pageableListView.getCurrentPage() <= 0;
+		return pageable.getCurrentPage() <= 0;
 	}
 
 	/**
 	 * @return True if it is referring to the last page of the underlying
-	 *		   PageableListView.
+	 *         PageableListView.
 	 */
 	public boolean isLast()
 	{
-		return pageableListView.getCurrentPage() >= (pageableListView.getPageCount() - 1);
+		return pageable.getCurrentPage() >= (pageable.getPageCount() - 1);
 	}
 
 	/**
 	 * Returns true if the page link links to the given page.
 	 * 
 	 * @param page
-	 *			  The page to test
+	 *            The page to test
 	 * @return True if this link links to the given page
 	 * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
 	 */
 	public boolean linksTo(final Page page)
 	{
-		int currentPage = pageableListView.getCurrentPage();
+		int currentPage = pageable.getCurrentPage();
 		if (((increment < 0) && (currentPage <= 0))
-				|| ((increment > 0) && (currentPage >= (pageableListView.getPageCount() - 1))))
+				|| ((increment > 0) && (currentPage >= (pageable.getPageCount() - 1))))
 		{
 			return true;
 		}

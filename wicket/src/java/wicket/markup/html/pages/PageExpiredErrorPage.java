@@ -33,4 +33,12 @@ public class PageExpiredErrorPage extends WebPage
 	{
 		add(homePageLink("homePageLink"));
 	}
+	
+	/**
+	 * @see wicket.Page#isErrorPage()
+	 */
+	public boolean isErrorPage()
+	{
+		return true;
+	}
 }

@@ -36,6 +36,7 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.response.BufferedResponse;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.WebApplicationPath;
@@ -179,8 +180,9 @@ public abstract class WebApplication extends Application
 	 * configuration is specified and a "sourceFolder" init parameter is also
 	 * set, then resources in that folder will be polled for changes.
 	 */
-	protected final void internalInit()
+	protected void internalInit()
 	{
+		super.internalInit();
 		final WicketServlet servlet = getWicketServlet();
 		final String configuration = wicketServlet.getInitParameter("configuration");
 		if (configuration != null)
@@ -189,18 +191,26 @@ public abstract class WebApplication extends Application
 		}
 	}
 
+	/*
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 */
+	protected void internalDestroy()
+	{
+	}
+
 	/**
-	 * Gets a WebSession object from the HttpServletRequest, creating a new one
+	 * Gets a WebSession object from a WebRequest, creating a new one
 	 * if it doesn't already exist.
 	 * 
 	 * @param request
-	 *            The http request object
+	 *            The web request object
 	 * @return The session object
 	 */
-	final WebSession getSession(final HttpServletRequest request)
+	final WebSession getSession(final WebRequest request)
 	{
 		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = request.getSession(true);
+		final HttpSession httpSession = ((ServletWebRequest)request).getHttpServletRequest().getSession(true);
 
 		// Namespacing for session attributes is provided by adding the servlet
 		// path
@@ -251,7 +261,7 @@ public abstract class WebApplication extends Application
 	 */
 	protected WebRequest newWebRequest(final HttpServletRequest servletRequest)
 	{
-		return new WebRequest(servletRequest);
+		return new ServletWebRequest(servletRequest);
 	}
 
 	/**

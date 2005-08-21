@@ -74,7 +74,7 @@ public class MarkupStream
 
 		if (markup.size() > 0)
 		{
-			current = get(0);
+			current = get(currentIndex);
 		}
 	}
 
@@ -390,16 +390,6 @@ public class MarkupStream
 	public final int getHeaderIndex()
 	{
 	    return markup.getHeaderIndex();
-	}
-	
-	/**
-	 * Set the index pointing to the header element of the markup
-	 * 
-	 * @param index
-	 */
-	public final void setHeaderIndex(final int index)
-	{
-	    markup.setHeaderIndex(index);
 	}
 	
 	/**

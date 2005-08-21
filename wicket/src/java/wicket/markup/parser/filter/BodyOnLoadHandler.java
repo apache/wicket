@@ -29,17 +29,20 @@ import wicket.markup.parser.IMarkupFilter;
 
 /**
  * This is a markup inline filter. It detects &t;body&gt; tags with onLoad
- * attribute. The onLoad attribute must be copied from the component's
- * markup to the Page's markup. In case onLoad loads and runs a javascript,
- * it must either be referenced by file or included in &lt;wicket:head&gt;. 
+ * attribute. The onLoad attribute must be copied from the component's markup to
+ * the Page's markup. In case onLoad loads and runs a javascript, it must either
+ * be referenced by file or included in &lt;wicket:head&gt;.
  * 
  * @author Juergen Donnerstag
  */
 public final class BodyOnLoadHandler extends AbstractMarkupFilter
 {
-	/** Logging */
+    /** Logging */
 	private static final Log log = LogFactory.getLog(BodyOnLoadHandler.class);
-	
+
+    /** The automatically assigned wicket:id to &gt;body&lt; tag */
+	public static final String BODY_ID = "_body";
+
 	/**
 	 * Construct.
 	 * 
@@ -70,14 +73,14 @@ public final class BodyOnLoadHandler extends AbstractMarkupFilter
 		}
 
 		// must be <body onload="...">
-		if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName()))
+		if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
 		{
-		    if (tag.getId() == null)
-		    {
-		        tag.setId("_body");
-		    }
-        }
-		
+			if (tag.getId() == null)
+			{
+				tag.setId(BODY_ID);
+			}
+		}
+
 		return tag;
 	}
 }

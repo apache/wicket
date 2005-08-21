@@ -21,8 +21,9 @@ package wicket.markup.html.ajax.dojo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.markup.html.HtmlHeaderContainer;
-import wicket.markup.html.StaticResourceReference;
+import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.ajax.AbstractEventRequestHandler;
 
 /**
@@ -34,14 +35,6 @@ public abstract class DojoEventRequestHandler extends AbstractEventRequestHandle
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(DojoEventRequestHandler.class);
-
-	/** reference to dojo js. */
-	private static final StaticResourceReference DOJO_REF;
-
-	static
-	{
-		DOJO_REF = new StaticResourceReference(DojoEventRequestHandler.class, "dojo-io-20050628.js");
-	}
 	
 	/**
 	 * Construct.
@@ -57,7 +50,8 @@ public abstract class DojoEventRequestHandler extends AbstractEventRequestHandle
 	public final void printHeadInitContribution(HtmlHeaderContainer container)
 	{
 		// add our basic javascript needs to the header
-		addJsReference(container, DOJO_REF);
+		addJsReference(container, new PackageResourceReference(
+				Application.get(), DojoEventRequestHandler.class, "dojo-io-20050628.js"));
 	}
 
 	/**
@@ -65,7 +59,7 @@ public abstract class DojoEventRequestHandler extends AbstractEventRequestHandle
 	 * @param container the header container
 	 * @param ref reference to add
 	 */
-	private void addJsReference(HtmlHeaderContainer container, StaticResourceReference ref)
+	private void addJsReference(HtmlHeaderContainer container, PackageResourceReference ref)
 	{
 		String url = container.getPage().urlFor(ref.getPath());
 		String s = 

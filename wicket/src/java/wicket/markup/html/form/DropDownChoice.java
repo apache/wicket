@@ -25,7 +25,26 @@ import wicket.model.IModel;
 
 /**
  * A choice implemented as a dropdown menu/list.
- * TODO elaborate with an example
+ * <p>
+ * Java:
+ * <pre>
+ * 	List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
+ *
+ *	// Add a dropdown choice component that uses Input's 'site' property to designate the
+ *	// current selection, and that uses the SITES list for the available options.
+ *	// Note that when the selection is null, Wicket will lookup a localized string to
+ *	// represent this null with key: "id + '.null'". In this case, this is 'site.null'
+ *	// which can be found in DropDownChoicePage.properties
+ *	form.add(new DropDownChoice("site", SITES));
+ * </pre>
+ * HTML:
+ * <pre>
+ *	&lt;select wicket:id="site"&gt;
+ *		&lt;option&gt;site 1&lt;/option&gt;
+ *		&lt;option&gt;site 2&lt;/option&gt;
+ *	&lt;/select&gt;
+ * </pre>
+ * </p>
  * 
  * <p>
  * You can can extend this class and override method wantOnSelectionChangedNotifications()
@@ -78,6 +97,39 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 		super(id, model,data, renderer);
 	}
 
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 */
+	public DropDownChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 */
+	public DropDownChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+	
 	/**
 	 * Called when a selection changes.
 	 */

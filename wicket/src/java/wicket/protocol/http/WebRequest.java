@@ -17,14 +17,8 @@
  */
 package wicket.protocol.http;
 
-import javax.servlet.http.HttpServletRequest;
-
 import wicket.Request;
-
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import wicket.util.lang.Bytes;
 
 /**
  * Subclass of Request for HTTP protocol requests which holds an underlying
@@ -36,120 +30,24 @@ import java.util.Map;
  * 
  * @author Jonathan Locke
  */
-public class WebRequest extends Request
+public abstract class WebRequest extends Request
 {
 	/** Null WebRequest object that does nothing */
 	public static final WebRequest NULL = new NullWebRequest();
 
-	/** Servlet request information. */
-	private final HttpServletRequest httpServletRequest;
-
 	/**
-	 * Protected constructor.
+	 * Gets the application context path.
 	 * 
-	 * @param httpServletRequest
-	 *            The servlet request information
+	 * @return application context path
 	 */
-	public WebRequest(final HttpServletRequest httpServletRequest)
-	{
-		this.httpServletRequest = httpServletRequest;
-	}
-
-	/**
-	 * Gets the servlet context path.
-	 * 
-	 * @return Servlet context path
-	 */
-	public String getContextPath()
-	{
-		return httpServletRequest.getContextPath();
-	}
-
-	/**
-	 * Returns the preferred <code>Locale</code> that the client will accept
-	 * content in, based on the Accept-Language header. If the client request
-	 * doesn't provide an Accept-Language header, this method returns the
-	 * default locale for the server.
-	 * 
-	 * @return the preferred <code>Locale</code> for the client
-	 */
-	public Locale getLocale()
-	{
-		return httpServletRequest.getLocale();
-	}
-
-	/**
-	 * Gets the request parameter with the given key.
-	 * 
-	 * @param key
-	 *            Parameter name
-	 * @return Parameter value
-	 */
-	public String getParameter(final String key)
-	{
-		return httpServletRequest.getParameter(key);
-	}
-
-	/**
-	 * Gets the request parameters.
-	 * 
-	 * @return Map of parameters
-	 */
-	public Map getParameterMap()
-	{
-		final Map map = new HashMap();
-
-		for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
-				.hasMoreElements();)
-		{
-			final String name = (String)enumeration.nextElement();
-			map.put(name, httpServletRequest.getParameter(name));
-		}
-
-		return map;
-	}
-
-	/**
-	 * Gets the request parameters with the given key.
-	 * 
-	 * @param key
-	 *            Parameter name
-	 * @return Parameter values
-	 */
-	public String[] getParameters(final String key)
-	{
-		return httpServletRequest.getParameterValues(key);
-	}
-
-	/**
-	 * Gets the path info if any.
-	 * 
-	 * @return Any servlet path info
-	 */
-	public String getPath()
-	{
-		return httpServletRequest.getPathInfo();
-	}
+	public abstract String getContextPath();
 
 	/**
 	 * Gets the servlet path.
 	 * 
 	 * @return Servlet path
 	 */
-	public String getServletPath()
-	{
-		return httpServletRequest.getServletPath();
-	}
-
-	/**
-	 * Gets the wrapped http servlet request object.
-	 * 
-	 * @return the wrapped http serlvet request object.
-	 */
-	public final HttpServletRequest getHttpServletRequest()
-	{
-		return httpServletRequest;
-	}
+	public abstract String getServletPath();
 
 	/**
 	 * Retrieves the URL of this request for local use.
@@ -166,7 +64,7 @@ public class WebRequest extends Request
 		 * path starts with a "/" character but does not end with a "/"
 		 * character.
 		 */
-		return httpServletRequest.getContextPath() + '/' + getRelativeURL();
+		return getContextPath() + '/' + getRelativeURL();
 	}
 
 	/**
@@ -175,47 +73,21 @@ public class WebRequest extends Request
 	 * 
 	 * @return Request URL
 	 */
-	public String getRelativeURL()
-	{
-		/*
-		 * Servlet 2.3 specification :
-		 * 
-		 * Servlet Path: The path section that directly corresponds to the
-		 * mapping which activated this request. This path starts with a "/"
-		 * character except in the case where the request is matched with the
-		 * "/*" pattern, in which case it is the empty string.
-		 * 
-		 * PathInfo: The part of the request path that is not part of the
-		 * Context Path or the Servlet Path. It is either null if there is no
-		 * extra path, or is a string with a leading "/".
-		 */
-		String url = httpServletRequest.getServletPath();
-		final String pathInfo = httpServletRequest.getPathInfo();
+	public abstract String getRelativeURL();
 
-		if (pathInfo != null)
-		{
-			url += pathInfo;
-		}
-
-		final String queryString = httpServletRequest.getQueryString();
-
-		if (queryString != null)
-		{
-			url += ("?" + queryString);
-		}
-
-		// If url is non-empty it has to start with '/', which we should lose
-		if (!url.equals(""))
-		{
-			// Remove leading '/'
-			url = url.substring(1);
-		}
-		return url;
-	}
+	/**
+	 * Create a runtime context type specific (e.g. Servlet or Portlet) MultipartWebRequest wrapper
+	 * for handling multipart content uploads.
+	 * 
+	 * @param maxSize the maximum size this request may be
+	 * @return new WebRequest wrapper implementing MultipartWebRequest
+	 */
+    public abstract WebRequest newMultipartWebRequest(Bytes maxSize); 
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+/*	TODO adouma: validate concrete subclasses provide one themselves
 	public String toString()
 	{
 		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
@@ -229,4 +101,5 @@ public class WebRequest extends Request
 				+ httpServletRequest.getServletPath() + ", pathTranslated = "
 				+ httpServletRequest.getPathTranslated() + "]";
 	}
+*/	
 }

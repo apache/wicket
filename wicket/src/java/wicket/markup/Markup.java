@@ -33,8 +33,11 @@ import wicket.util.resource.IResourceStream;
  */
 public final class Markup
 {
+	/** Placeholder that indicates no markup */
+	public static final Markup NO_MARKUP = new Markup(null, null, null, null, ComponentTag.DEFAULT_WICKET_NAMESPACE);
+	
 	/** The list of markup elements */
-	private final List markup;
+	private /* final */ List markup;
 	
 	/** The markup's resource stream for diagnostic purposes */
 	private final IResourceStream resource;
@@ -50,21 +53,15 @@ public final class Markup
 	
 	/** The Class of the directly associated component/container */
 	private Class containerClass;
-	
-    /** Default value: The markup has not been search for the header */ 
-    public final static int HEADER_NOT_YET_EVALUATED = -1;
     
-    /** Markup have been searched for the header, but it doesn't contain any */
-    public final static int HEADER_NO_HEADER_FOUND = -2;
+    /** Markup has been searched for the header, but it doesn't contain any */
+    public final static int NO_HEADER_FOUND = -1;
 
 	/** If the markup contains a header section, the index will point to
 	 * the MarkupElement.
 	 */
-	private int headerIndex = HEADER_NOT_YET_EVALUATED;
+	private int headerIndex = NO_HEADER_FOUND;
 	
-	/** Placeholder that indicates no markup */
-	public static final Markup NO_MARKUP = new Markup(null, null, null, null, ComponentTag.DEFAULT_WICKET_NAMESPACE);
-
 	/**
 	 * Constructor
 	 * @param resource The resource where the markup was found
@@ -81,8 +78,34 @@ public final class Markup
 		this.xmlDeclaration = xmlDeclaration;
 		this.encoding = encoding;
 		this.wicketNamespace = wicketNamespace;
+		
+		initialize();
 	}
 
+	/**
+	 * Initialize the index where <head> can be found.
+	 */
+	private void initialize()
+	{
+	    if (markup != null)
+	    {
+	   	 	// Initialize the index where <wicket:extend> can be found.
+		    for (int i=0; i < markup.size(); i++)
+		    {
+		        MarkupElement elem = (MarkupElement) markup.get(i);
+		        if (elem instanceof WicketTag)
+		        {
+		            WicketTag tag = (WicketTag) elem;
+					if ((tag.isHeadTag() == true) && (tag.getNamespace() != null))
+					{
+		                headerIndex = i;
+		                break;
+		            }
+		        }
+		    }
+	    }
+	}
+	
 	/**
 	 * Set the component/container's class directly associated with the markup
 	 * 
@@ -159,7 +182,7 @@ public final class Markup
 	{
 		return encoding;
 	}
-	
+
 	/**
 	 * Get the current index pointing to the start element of the 
 	 * header section.
@@ -170,17 +193,7 @@ public final class Markup
 	{
 	    return this.headerIndex;
 	}
-	
-	/**
-	 * Set the index pointing to the header element of the markup
-	 * 
-	 * @param index
-	 */
-	public void setHeaderIndex(final int index)
-	{
-	    this.headerIndex = index;
-	}
-	
+
 	/**
 	 * Get the wicket namespace valid for this specific markup
 	 * 
@@ -189,5 +202,10 @@ public final class Markup
 	public String getWicketNamespace()
 	{
 	    return this.wicketNamespace;
+	}
+	
+	void setMarkup(final List markup)
+	{
+	    this.markup = markup;
 	}
 }

@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.util.Map;
+
 import wicket.markup.html.form.FormComponent;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
@@ -28,6 +30,14 @@ import wicket.util.string.Strings;
  * valid only when the input of the component it is attached to is at least 6
  * characters long. Likewise, LengthValidator.range(3, 5) would only validate a
  * component containing between 3 and 5 characters (inclusive).
+ *
+ * Depending on which factory is used to create the validator, one or more of the 
+ * following parameters are added to the error message interpolation:
+ * <ul>
+ * <li>min</li>
+ * <li>max</li>
+ * <li>length - length of the user input, always present</li>
+ * </ul>
  * 
  * @author Jonathan Locke
  */
@@ -47,7 +57,7 @@ public class LengthValidator extends StringValidator
 
 	/**
 	 * Private constructor forces use of static factory method and static
-	 * instances.
+	 * instances. Or override it to implement resourceKey(Component)
 	 * 
 	 * @param checkMin
 	 *            True if minimum bound should be checked
@@ -58,7 +68,7 @@ public class LengthValidator extends StringValidator
 	 * @param max
 	 *            Upper bound on valid length
 	 */
-	private LengthValidator(final boolean checkMin, final int min, final boolean checkMax,
+	protected LengthValidator(final boolean checkMin, final int min, final boolean checkMax,
 			final int max)
 	{
 		this.min = min;
@@ -114,7 +124,7 @@ public class LengthValidator extends StringValidator
 	 * maximum length.
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
 	 */
-	public void onValidate(FormComponent formComponent, final String value)
+	public final void onValidate(FormComponent formComponent, final String value)
 	{
 		// If value is non-empty
 		if (!Strings.isEmpty(value))
@@ -165,6 +175,34 @@ public class LengthValidator extends StringValidator
 	public final int getMin()
 	{
 		return min;
+	}
+
+	/**
+	 * Gets the default variables for interpolation. These are:
+	 * <ul>
+	 * <li>${min}: the minimal length</li>
+	 * <li>${max}: the maximum length</li>
+	 * <li>${length}: the length of the user input</li>
+	 * </ul>
+	 * they are only added when the corresponding enabling flag is set.
+	 * @param formComponent form component
+	 * @return a map with the variables for interpolation
+	 */
+	protected Map messageModel(FormComponent formComponent)
+	{
+		final Map map = super.messageModel(formComponent);
+		if(checkMin) {
+			map.put("min", new Long(min));
+		}
+		if(checkMax) {
+			map.put("max", new Long(max));
+		}
+		int size = 0;
+		if(formComponent.getInput() != null) {
+			size = formComponent.getInput().length();
+		}
+		map.put("length", new Integer(size));
+        return map;
 	}
 
 	/**

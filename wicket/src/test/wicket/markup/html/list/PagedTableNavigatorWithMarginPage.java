@@ -70,8 +70,8 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 		add(table);
 		add(new PageableListViewNavigator("navigator", table)
         {
-            protected PageableListViewNavigation newNavigation(final PageableListView table)
-            {
+			protected PageableListViewNavigation newNavigation(IPageableComponent table)
+			{
                 PageableListViewNavigation nav = new PageableListViewNavigation("navigation", table);
                 nav.setMargin(2);
                 if (nav.getViewSize() > 5)
@@ -81,7 +81,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
                 
                 nav.setSeparator(", ");
                 return nav;
-            }
+			}
         });
 	}
 

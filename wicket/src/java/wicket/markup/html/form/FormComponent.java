@@ -19,7 +19,6 @@ package wicket.markup.html.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import wicket.WicketRuntimeException;
@@ -28,11 +27,10 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
-import wicket.util.lang.Classes;
 import wicket.util.string.StringList;
 
 /**
- * An html form component knows how to validate itself. Validators that
+ * An HTML form component knows how to validate itself. Validators that
  * implement IValidator can be added to the component. They will be evaluated in
  * the order they were added and the first Validator that returns an error
  * message determines the error message returned by the component.
@@ -47,13 +45,22 @@ import wicket.util.string.StringList;
 public abstract class FormComponent extends WebMarkupContainer
 {
 	/**
+	 * Make empty strings null values boolean. Used by AbstractTextComponent
+	 * subclass.
+	 */
+	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
+
+	/**
 	 * Special flag value to indicate when there is no invalid input, since null
 	 * is a valid value!
 	 */
 	protected static final String NO_INVALID_INPUT = "[No invalid input]";
 
-	/** Make empty strings null values boolean */
-	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
+	/**
+	 * Whether this form component should save and restore state between
+	 * sessions. This is false by default.
+	 */
+	private static final short FLAG_PERSISTENT = FLAG_RESERVED2;
 
 	/**
 	 * When the user input does not validate, this is a temporary store for the
@@ -63,13 +70,10 @@ public abstract class FormComponent extends WebMarkupContainer
 	private String invalidInput = NO_INVALID_INPUT;
 
 	/**
-	 * Whether this form component should save and restore state between
-	 * sessions. This is false by default.
+	 * The list of validators for this form component as either an IValidator
+	 * instance or an array of IValidator instances.
 	 */
-	private boolean persistent = false;
-
-	/** The validator or validator list for this component. */
-	private IValidator validator = IValidator.NULL;
+	private Object validators = null;
 
 	/**
 	 * Typesafe interface to code that is called when visiting a form component
@@ -85,122 +89,6 @@ public abstract class FormComponent extends WebMarkupContainer
 		 *            The form component
 		 */
 		public void formComponent(FormComponent formComponent);
-	}
-
-	/**
-	 * A convenient and memory efficent representation for a list of validators.
-	 */
-	static private final class ValidatorList implements IValidator
-	{
-		/**
-		 * Left part of linked list.
-		 */
-		private final IValidator left;
-
-		/**
-		 * Right part of linked list.
-		 */
-		private IValidator right;
-
-		/**
-		 * Constructs a list with validators in it.
-		 * 
-		 * @param left
-		 *            The left validator
-		 * @param right
-		 *            The right validator
-		 */
-		ValidatorList(final IValidator left, final IValidator right)
-		{
-			this.left = left;
-			this.right = right;
-		}
-
-		/**
-		 * Gets the string representation of this object.
-		 * 
-		 * @return String representation of this object
-		 */
-		public String toString()
-		{
-			final StringList stringList = new StringList();
-			ValidatorList current = this;
-
-			while (true)
-			{
-				stringList.add(Classes.name(current.left.getClass()) + " "
-						+ current.left.toString());
-
-				if (current.right instanceof ValidatorList)
-				{
-					current = (ValidatorList)current.right;
-				}
-				else
-				{
-					stringList.add(Classes.name(current.right.getClass()) + " "
-							+ current.right.toString());
-
-					break;
-				}
-			}
-
-			return stringList.toString();
-		}
-
-		/**
-		 * Validates the given component.
-		 * 
-		 * @param component
-		 *            The component to validate
-		 */
-		public void validate(final FormComponent component)
-		{
-			left.validate(component);
-			right.validate(component);
-		}
-
-		/**
-		 * Adds the given code validator to this list of code validators.
-		 * 
-		 * @param validator
-		 *            The validator
-		 */
-		void add(final IValidator validator)
-		{
-			ValidatorList current = this;
-
-			while (current.right instanceof ValidatorList)
-			{
-				current = (ValidatorList)current.right;
-			}
-
-			current.right = new ValidatorList(current.right, validator);
-		}
-
-		/**
-		 * Gets the validators as a List.
-		 * 
-		 * @return the validators as a List
-		 */
-		List asList()
-		{
-			ValidatorList current = this;
-			List validators = new ArrayList();
-			while (true)
-			{
-				validators.add(current.left);
-				if (current.right instanceof ValidatorList)
-				{
-					current = (ValidatorList)current.right;
-				}
-				else
-				{
-					validators.add(current.right);
-					break;
-				}
-			}
-			return validators;
-		}
 	}
 
 	/**
@@ -230,26 +118,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final FormComponent add(final IValidator validator)
 	{
-		// If we don't yet have a validator
-		if (this.validator == IValidator.NULL)
-		{
-			// Just add the validator directly
-			this.validator = validator;
-		}
-		else
-		{
-			// Create a validator list?
-			if (this.validator instanceof ValidatorList)
-			{
-				// Already have a list. Just add new validator to list
-				((ValidatorList)this.validator).add(validator);
-			}
-			else
-			{
-				// Create a set of the current validator and the new validator
-				this.validator = new ValidatorList(this.validator, validator);
-			}
-		}
+		validators_add(validator);
 		return this;
 	}
 
@@ -286,11 +155,11 @@ public abstract class FormComponent extends WebMarkupContainer
 	public final Class getValidationType()
 	{
 		// Loop through validators
-		final List validators = getValidators();
-		for (final Iterator iterator = validators.iterator(); iterator.hasNext();)
+		final int size = validators_size();
+		for (int i = 0; i < size; i++)
 		{
 			// If validator is a TypeValidator
-			final IValidator validator = (IValidator)iterator.next();
+			final IValidator validator = validators_get(i);
 			if (validator instanceof TypeValidator)
 			{
 				// Return the type validator's type
@@ -299,29 +168,28 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		return null;
 	}
-
+	
 	/**
-	 * Gets the registered validators as a list.
+	 * Gets an unmodifiable list of validators for this FormComponent.
 	 * 
-	 * @return the validators as a list
+	 * @return List of validators
 	 */
 	public final List getValidators()
 	{
-		final List list;
-		if (this.validator == null)
+		final int size = validators_size();
+		if (size == 0)
 		{
-			list = Collections.EMPTY_LIST;
-		}
-		else if (this.validator instanceof ValidatorList)
-		{
-			list = ((ValidatorList)this.validator).asList();
+			return Collections.EMPTY_LIST;
 		}
 		else
 		{
-			list = new ArrayList(1);
-			list.add(validator);
+			final List list = new ArrayList();
+			for (int i = 0; i < size; i++)
+			{
+				list.add(validators_get(i));
+			}
+			return Collections.unmodifiableList(list);
 		}
-		return list;
 	}
 
 	/**
@@ -331,7 +199,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final String getValue()
 	{
-		return invalidInput == NO_INVALID_INPUT ? getModelValue() : invalidInput;
+		return NO_INVALID_INPUT.equals(invalidInput) ? getModelValue() : invalidInput;
 	}
 
 	/**
@@ -343,12 +211,20 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * @return True if this component encodes data in a multipart form submit
+	 */
+	public boolean isMultiPart()
+	{
+		return false;
+	}
+
+	/**
 	 * @return True if this component supports persistence AND it has been asked
 	 *         to persist itself with setPersistent().
 	 */
 	public final boolean isPersistent()
 	{
-		return supportsPersistence() && persistent;
+		return supportsPersistence() && getFlag(FLAG_PERSISTENT);
 	}
 
 	/**
@@ -372,7 +248,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final boolean isValidated()
 	{
-		return this.validator != IValidator.NULL;
+		return this.validators != null;
 	}
 
 	/**
@@ -396,7 +272,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		if (supportsPersistence())
 		{
-			this.persistent = persistent;
+			setFlag(FLAG_PERSISTENT, persistent);
 		}
 		else
 		{
@@ -406,11 +282,31 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
+	 * Implemented by form component subclass to update the form component's
+	 * model. DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE
+	 * DOING. USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY
+	 * BY YOU.
+	 */
+	public abstract void updateModel();
+
+	/**
 	 * Called to indicate that
 	 */
 	public final void valid()
 	{
 		onValid();
+	}
+
+	/**
+	 * Validates this component using the component's validator.
+	 */
+	public final void validate()
+	{
+		final int size = validators_size();
+		for (int i = 0; i < size; i++)
+		{
+			validators_get(i).validate(this);
+		}
 	}
 
 	/**
@@ -561,18 +457,73 @@ public abstract class FormComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Implemented by form component subclass to update the form component's
-	 * model.
-	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING.
-	 * USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
+	 * @param validator
+	 *            The validator to add to the validators Object (which may be an
+	 *            array of IValidators or a single instance, for efficiency)
 	 */
-	public abstract void updateModel();
+	private void validators_add(final IValidator validator)
+	{
+		if (this.validators == null)
+		{
+			this.validators = validator;
+		}
+		else
+		{
+			// Get current list size
+			final int size = validators_size();
+
+			// Create array that holds size + 1 elements
+			final IValidator[] validators = new IValidator[size + 1];
+
+			// Loop through existing validators copying them
+			for (int i = 0; i < size; i++)
+			{
+				validators[i] = validators_get(i);
+			}
+
+			// Add new validator to the end
+			validators[size] = validator;
+
+			// Save new validator list
+			this.validators = validators;
+		}
+	}
 
 	/**
-	 * Validates this component using the component's validator.
+	 * Gets validator from validators Object (which may be an array of
+	 * IValidators or a single instance, for efficiency) at the given index
+	 * 
+	 * @param index
+	 *            The index of the validator to get
+	 * @return The validator
 	 */
-	public final void validate()
+	private IValidator validators_get(int index)
 	{
-		validator.validate(this);
+		if (this.validators == null)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		if (this.validators instanceof IValidator[])
+		{
+			return ((IValidator[])validators)[index];
+		}
+		return (IValidator)validators;
+	}
+
+	/**
+	 * @return The number of validators in the validators Object (which may be
+	 *         an array of IValidators or a single instance, for efficiency)
+	 */
+	private int validators_size()
+	{
+		if (this.validators == null)
+		{
+			return 0;
+		}
+		if (this.validators instanceof IValidator[])
+		{
+			return ((IValidator[])validators).length;
+		}
+		return 1;
 	}
 }

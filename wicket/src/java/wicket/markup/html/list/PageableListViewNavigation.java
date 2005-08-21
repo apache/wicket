@@ -139,7 +139,7 @@ public class PageableListViewNavigation extends Loop
 	}
 
 	/** The PageableListView this navigation is navigating. */
-	protected PageableListView pageableListView;
+	protected IPageableComponent pageable;
 
 	/** Offset for the Loop */
 	private int startIndex;
@@ -163,13 +163,13 @@ public class PageableListViewNavigation extends Loop
 	 * 
 	 * @param id
 	 *			  See Component
-	 * @param pageableListView
-	 *			  The underlying list view to navigate
+	 * @param pageable
+	 *			  The underlying pageable component to navigate
 	 */
-	public PageableListViewNavigation(final String id, final PageableListView pageableListView)
+	public PageableListViewNavigation(final String id, final IPageableComponent pageable)
 	{
-		super(id, pageableListView.getPageCount());
-		this.pageableListView = pageableListView;
+		super(id, pageable.getPageCount());
+		this.pageable = pageable;
 		startIndex = 0;
 	}
 
@@ -279,7 +279,7 @@ public class PageableListViewNavigation extends Loop
 
 		// Add a page link pointing to the page
 		final PageableListViewNavigationLink link = new PageableListViewNavigationLink("pageLink",
-				pageableListView, pageIndex);
+				pageable, pageIndex);
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
@@ -313,11 +313,11 @@ public class PageableListViewNavigation extends Loop
 		int firstListItem = this.startIndex;
 
 		// How many page links shall be displayed
-		int viewSize = Math.min(getViewSize(), pageableListView.getPageCount());
+		int viewSize = Math.min(getViewSize(), pageable.getPageCount());
 		int margin = getMargin();
 
 		// What is the PageableListView's page index to be displayed
-		int currentPage = pageableListView.getCurrentPage();
+		int currentPage = pageable.getCurrentPage();
 
 		// Make sure the current page link index is within the current
 		// window taking the left and right margin into account
@@ -333,9 +333,9 @@ public class PageableListViewNavigation extends Loop
 
 		// Make sure the first index is >= 0 and the last index is <=
 		// than the last page link index.
-		if ((firstListItem + viewSize) >= pageableListView.getPageCount())
+		if ((firstListItem + viewSize) >= pageable.getPageCount())
 		{
-			firstListItem = pageableListView.getPageCount() - viewSize;
+			firstListItem = pageable.getPageCount() - viewSize;
 		}
 
 		if (firstListItem < 0)
@@ -351,7 +351,7 @@ public class PageableListViewNavigation extends Loop
 			addStateChange(new StartIndexChange(this.startIndex));
 			this.startIndex = firstListItem;
 			
-			this.setIterations(Math.min(viewSize,pageableListView.getPageCount()));
+			this.setIterations(Math.min(viewSize,pageable.getPageCount()));
 
 			this.modelChanged();
 

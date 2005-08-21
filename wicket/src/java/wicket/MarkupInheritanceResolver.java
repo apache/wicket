@@ -25,10 +25,8 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 
 /**
- * THIS IS PART OF MARKUP INHERITANCE AND CURRENTLY EXPERIMENTAL ONLY.
- * 
- * Detect &lt;wicket:extend&gt; regions and thus allows to implement markup
- * inheritance. See MarkupInheritanceContainer for additional information.
+ * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags,
+ * which are silently ignored, because they have already been processed.
  * 
  * @author Juergen Donnerstag
  */
@@ -59,15 +57,18 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			// It must be <wicket:extend...>
 			if (wicketTag.isExtendTag())
 			{
-			    if (markupStream.getCurrentIndex() != 0)
-			    {
-			        log.warn("nothing should precede the <wicket:extend> tag");
-			    }
-
-			    // wicket:extend regions are handled by MarkupInheritanceContainer
-		        final MarkupInheritanceContainer inherit = new MarkupInheritanceContainer();
-	            container.autoAdd(inherit);
-		        
+			    container.getResponse().write(wicketTag);
+			    markupStream.next();
+			    
+			    return true;
+			}
+			
+			// It must be <wicket:child...>
+			if (wicketTag.isChildTag())
+			{
+			    container.getResponse().write(wicketTag);
+			    markupStream.next();
+			    
 			    return true;
 			}
 		}

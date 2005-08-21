@@ -125,4 +125,20 @@ public class MarkupInheritanceTest extends TestCase
 		document = application.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4-1.html"));
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_5() throws Exception
+	{
+	    executeTest(MarkupInheritanceExtension_5.class, "MarkupInheritanceExpectedResult_5.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_6() throws Exception
+	{
+	    executeTest(MarkupInheritancePage_6.class, "MarkupInheritanceExpectedResult_6.html");
+	}
 }

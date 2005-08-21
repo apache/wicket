@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.dom4j.Node;
-
 /**
  * A variety of static String utility methods.
  * <p>
@@ -672,10 +670,6 @@ public final class Strings
 		if (object instanceof Throwable)
 		{
 			return toString((Throwable)object);
-		}
-		else if (object instanceof Node)
-		{
-			return ((Node)object).getText();
 		}
 		else if (object == null)
 		{

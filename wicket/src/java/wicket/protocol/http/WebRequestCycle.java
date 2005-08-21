@@ -40,6 +40,7 @@ import wicket.Resource;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
+import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.response.BufferedResponse;
 import wicket.util.io.Streams;
 import wicket.util.string.Strings;
@@ -95,6 +96,14 @@ public class WebRequestCycle extends RequestCycle
 	{
 		return (WebResponse)response;
 	}
+
+	/**
+	 * @return Session as a WebSession
+	 */
+	public WebSession getWebSession()
+	{
+		return (WebSession)session;
+	}	
 
 	/**
 	 * Parses a request. The following four steps are followed:
@@ -227,8 +236,9 @@ public class WebRequestCycle extends RequestCycle
 					// close it so that the reponse is fixed and encoded from here on.
 					redirectResponse.close();
 					
+          // TODO adouma: no Portlets support yet so typecasted for Servlet env.
 					((WebApplication)application).addRedirect(
-					        getWebRequest().getHttpServletRequest(), redirectUrl, redirectResponse);
+					        ((ServletWebRequest)getWebRequest()).getHttpServletRequest(), redirectUrl, redirectResponse);
 				}
 			}
 			catch (RuntimeException ex)
@@ -317,9 +327,9 @@ public class WebRequestCycle extends RequestCycle
 					{
 						getWebResponse().getHttpServletResponse().sendError(
 						        HttpServletResponse.SC_NOT_FOUND, 
-						        "Unable to load Page class: " + bookmarkableName);
+						        "Unable to load Bookmarkable Page");
 						
-						return false;
+						return true;
 					}
 					catch (IOException ex)
 					{
@@ -335,7 +345,11 @@ public class WebRequestCycle extends RequestCycle
 				Page newPage = session.getPageFactory().newPage(pageClass,
 						new PageParameters(getRequest().getParameterMap()));
 				
-				setResponsePage(newPage);
+				// If response is set in the construtor of the bookmarkable page.
+				if(getResponsePage() == null)
+				{
+					setResponsePage(newPage);
+				}
 				setUpdateCluster(true);
 				return true;
 		    }
@@ -449,17 +463,21 @@ public class WebRequestCycle extends RequestCycle
 				{
 					Page newPage = newPage(homePage);
 					
-					if(homePageStrategy == ApplicationPages.PAGE_REDIRECT)
+					// check if the home page didn't set a page by itself
+					if(getResponsePage() == null)
 					{
-						//see if we have to redirect the render part by default
-						//so that a homepage has the same url as a post or get to that page.
-						ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
-								.getSettings().getRenderStrategy();
-						boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
-								|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);				
-						setRedirect(issueRedirect);
+						if(homePageStrategy == ApplicationPages.PAGE_REDIRECT)
+						{
+							//see if we have to redirect the render part by default
+							//so that a homepage has the same url as a post or get to that page.
+							ApplicationSettings.RenderStrategy strategy = getSession().getApplication()
+									.getSettings().getRenderStrategy();
+							boolean issueRedirect = (strategy == ApplicationSettings.REDIRECT_TO_RENDER
+									|| strategy == ApplicationSettings.REDIRECT_TO_BUFFER);				
+							setRedirect(issueRedirect);
+						}
+						setResponsePage(newPage);
 					}
-					setResponsePage(newPage);
 				}
 				setUpdateCluster(true);
 			}
@@ -517,6 +535,20 @@ public class WebRequestCycle extends RequestCycle
 		final Component component = page.get(Strings.afterFirstPathComponent(path, ':'));
 		if (component != null)
 		{
+			if(!component.isVisible())
+			{
+				try
+				{
+					getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_FORBIDDEN, 
+					        "Unable to execute this request");
+				}
+				catch (IOException ex)
+				{
+					// that seems unlikely... anyway, log exception and forget about it
+					log.error("unable to send 403 for " + getRequest() + ", cause: " + ex.getMessage(), ex);
+				}
+				return;
+			}
 			Method method = getRequestInterfaceMethod(interfaceName);
 			if (method != null)
 			{

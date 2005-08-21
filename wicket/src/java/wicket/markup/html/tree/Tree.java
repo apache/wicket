@@ -30,7 +30,7 @@ import javax.swing.tree.TreePath;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
-import wicket.markup.html.StaticResourceReference;
+import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
@@ -64,22 +64,18 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
 	/** Blank image. */
-	private static final ResourceReference BLANK =
-		new StaticResourceReference(Tree.class, "blank.gif");
+	private static final ResourceReference BLANK = new PackageResourceReference(Tree.class, "blank.gif");
 
 	/** Minus sign image. */
-	private static final ResourceReference MINUS =
-		new StaticResourceReference(Tree.class, "minus.gif");
+	private static final ResourceReference MINUS = new PackageResourceReference(Tree.class, "minus.gif");
 
 	/** Plus sign image. */
-	private static final ResourceReference PLUS =
-		new StaticResourceReference(Tree.class, "plus.gif");
+	private static final ResourceReference PLUS = new PackageResourceReference(Tree.class, "plus.gif");
 
 	/**
 	 * Reference to the css file.
 	 */
-	private static final StaticResourceReference CSS =
-		new StaticResourceReference(Tree.class, "tree.css");
+	private static final PackageResourceReference CSS = new PackageResourceReference(Tree.class, "tree.css");
 
 	/**
 	 * If true, re-rendering the tree is more efficient if the tree model doesn't get
@@ -93,10 +89,10 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	private boolean optimizeItemRemoval = true;
 
 	/** Model for the paths of the tree. */
-	private final TreePathsModel treePathsModel;
+	private TreePathsModel treePathsModel;
 
 	/** List view for tree paths. */
-	private final TreePathsListView treePathsListView;
+	private TreePathsListView treePathsListView;
 
 	/**
 	 * Replacement model that looks up whether the current row is the active one.
@@ -427,6 +423,33 @@ public abstract class Tree extends AbstractTree implements TreeModelListener
 	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
 		this.optimizeItemRemoval = optimizeItemRemoval;
+	}
+
+	/**
+	 * Sets the current tree state to the given tree state.
+	 * 
+	 * @param treeState
+	 *            the tree state to set as the current one
+	 */
+	public void setTreeState(final TreeState treeState)
+	{
+		super.setTreeState(treeState);
+		this.treePathsModel = new TreePathsModel();
+		treePathsListView = createTreePathsListView();
+		replace(treePathsListView);
+	}
+
+	/**
+	 * Sets the current tree model.
+	 *
+	 * @param treeModel the tree model to set as the current one
+	 */
+	public void setTreeModel(final TreeModel treeModel)
+	{
+		super.setTreeModel(treeModel);
+		this.treePathsModel = new TreePathsModel();
+		treePathsListView = createTreePathsListView();
+		replace(treePathsListView);
 	}
 
 	/**

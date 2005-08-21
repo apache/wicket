@@ -174,7 +174,7 @@ public class AttributeModifier implements Serializable
 	 * 
 	 * @return Whether enabled or not
 	 */
-	public final boolean isEnabled()
+	public boolean isEnabled()
 	{
 		return enabled;
 	}
@@ -225,7 +225,7 @@ public class AttributeModifier implements Serializable
 	 */
 	final void replaceAttibuteValue(final Component component, final ComponentTag tag)
 	{
-		if (enabled)
+		if (isEnabled())
 		{
 			final ValueMap attributes = tag.getAttributes();
 			final Object replacementValue = replaceModel.getObject(component);
@@ -248,4 +248,15 @@ public class AttributeModifier implements Serializable
 			}
 		}
 	}
+	
+	/**
+	 * Gets the replacement model.
+	 * Allows subclasses access to replace model.
+	 * @return the replace model of this attribute modifier
+	 */
+	protected final IModel getReplaceModel()
+	{
+		return replaceModel;
+	}
+
 }

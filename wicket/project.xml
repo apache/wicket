@@ -5,7 +5,7 @@
   <id>wicket</id>
   <name>Wicket</name>
   <groupId>wicket</groupId>
-  <currentVersion>1.1-b1</currentVersion>
+  <currentVersion>1.2-b1</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -95,6 +95,11 @@
       <name>1.1-b1</name>
       <tag>WICKET_R_1_1_BETA1</tag>
     </version>
+    <version>
+      <id>1.1-b2</id>
+      <name>1.1-b2</name>
+      <tag>WICKET_R_1_1_BETA2</tag>
+    </version>
   </versions>
   <mailingLists>
     <mailingList>
@@ -155,6 +160,18 @@
       <roles/>
     </developer>
   </developers>
+    <developer>
+      <name>Ate Douma</name>
+      <id>adouma</id>
+      <email>adouma at users.sourceforge.net</email>
+      <roles/>
+    </developer>
+    <developer>
+      <name>Jan Blok</name>
+      <id>jan_blok</id>
+      <email>jan_blok at users.sourceforge.net</email>
+      <roles/>
+    </developer>
   <contributors>
     <contributor>
       <name>Wouter de Jong</name>
@@ -239,17 +256,6 @@
   </contributors>
   <dependencies>
     <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.4</version>
-      <url>http://www.dom4j.org</url>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description/>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
@@ -263,7 +269,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.8</version>
+      <version>1.2.11</version>
       <url>http://logging.apache.org/log4j</url>
       <properties>
         <wicket.group>optional</wicket.group>
@@ -296,21 +302,10 @@
     <dependency>
       <groupId>concurrent</groupId>
       <artifactId>concurrent</artifactId>
-      <version>1.3.3</version>
+      <version>1.3.4</version>
       <properties>
         <wicket.group>required</wicket.group>
         <wicket.description/>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.0</version>
-      <url>http://jakarta.apache.org/commons/fileupload/</url>
-      <properties>
-        <wicket.group>optional</wicket.group>
-        <wicket.description>This library is required when you want to use the file upload component.</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>

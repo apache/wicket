@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,12 +19,14 @@ package wicket;
 
 import java.io.OutputStream;
 import java.net.SocketException;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
+import wicket.util.value.ValueMap;
 
 /**
  * A Resource is something that implements IResourceListener and provides a
@@ -45,24 +47,28 @@ import wicket.util.resource.IResourceStream;
  * emphasize that components <i>cannot </i> be shared among containers. For
  * example, you can create a button image resource with new
  * DefaultButtonImageResource(...) and store that in the Application with
- * addResource(). You can then assign that logical resource via ResourceReference
- * to several ImageButton components. While the button image resource can be
- * shared between components like this, the ImageButton components in this
- * example are like all other components in Wicket and cannot be shared.
+ * addResource(). You can then assign that logical resource via
+ * ResourceReference to several ImageButton components. While the button image
+ * resource can be shared between components like this, the ImageButton
+ * components in this example are like all other components in Wicket and cannot
+ * be shared.
  * 
  * @author Jonathan Locke
  */
 public abstract class Resource implements IResourceListener
 {
-    /** Logger */
-    private static Log log = LogFactory.getLog(Resource.class);
-	
+	/** Logger */
+	private static Log log = LogFactory.getLog(Resource.class);
+
 	/** The actual raw resource this class is rendering */
 	protected IResourceStream resourceStream;
 
 	/** True if this resource can be cached */
 	private boolean cacheable;
-	
+
+	/** Any parameters associated with the request for this resource */
+	private ValueMap parameters;
+
 	/**
 	 * Constructor
 	 */
@@ -110,10 +116,10 @@ public abstract class Resource implements IResourceListener
 		response.setContentType(resourceStream.getContentType());
 		response.setContentLength((int)resourceStream.length());
 
-		if (cacheable)
+		if (isCacheable())
 		{
-			// Don't set this above setContentLength call above. 
-			// The call above could create and set the last modified time.  
+			// Don't set this above setContentLength call above.
+			// The call above could create and set the last modified time.
 			response.setLastModifiedTime(resourceStream.lastModifiedTime());
 		}
 
@@ -122,13 +128,39 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * Should this resource be cacheable, so will it set the last modified and the some cache headers in the response.
+	 * Should this resource be cacheable, so will it set the last modified and
+	 * the some cache headers in the response.
+	 * 
 	 * @param cacheable
-	 * 			boolean if the lastmodified and cache headers must be set.
+	 *            boolean if the lastmodified and cache headers must be set.
 	 */
 	public final void setCacheable(boolean cacheable)
 	{
 		this.cacheable = cacheable;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * @param parameters
+	 *            Map of query parameters that paramterize this resource
+	 */
+	public void setParameters(final Map parameters)
+	{
+		this.parameters = new ValueMap(parameters);
+	}
+
+	/**
+	 * @return Any query parameters associated with the request for this
+	 *         resource
+	 */
+	protected ValueMap getParameters()
+	{
+		if (parameters == null)
+		{
+			setParameters(RequestCycle.get().getRequest().getParameterMap());
+		}
+		return parameters;
 	}
 
 	/**
@@ -176,24 +208,36 @@ public abstract class Resource implements IResourceListener
 				out.flush();
 			}
 		}
-		catch(SocketException se)
-		{
-			String message = se.getMessage();
-			if(message != null && message.indexOf("Connection reset") != -1)
-			{
-				if(log.isDebugEnabled())
-				{
-					log.debug("Socket exception ignored for sending Resource response to client (ClientAbort)",se);
-				}
-			}
-			else
-			{
-				throw new WicketRuntimeException("Unable to render resource stream " + resourceStream, se);
-			}
-		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Unable to render resource stream " + resourceStream, e);
+			Throwable throwable = e;
+			boolean ignoreException = false;
+			while (throwable!=null)
+			{
+				if (throwable instanceof SocketException)
+				{
+					String message = throwable.getMessage();
+					ignoreException = message != null && (message.indexOf("Connection reset by peer") != -1 ||
+										message.indexOf("Software caused connection abort") != -1);
+				}
+				else
+				{
+					ignoreException = throwable.getClass().getName().indexOf("ClientAbortException") != 0;
+				}
+				if (ignoreException)
+				{
+					if (log.isDebugEnabled())
+					{
+						log.debug("Socket exception ignored for sending Resource response to client (ClientAbort)",e);
+					}
+					break;
+				}
+				throwable = throwable.getCause();
+			}
+			if (!ignoreException)
+			{
+				throw new WicketRuntimeException("Unable to render resource stream " + resourceStream, e);
+			}
 		}
 	}
 
