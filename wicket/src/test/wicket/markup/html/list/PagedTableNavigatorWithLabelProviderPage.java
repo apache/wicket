@@ -24,9 +24,7 @@ import java.util.List;
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.navigation.paging.IPagingLabelProvider;
-import wicket.markup.html.navigation.paging.PagingNavigation;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 
 
