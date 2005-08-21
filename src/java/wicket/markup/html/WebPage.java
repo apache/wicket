@@ -19,6 +19,7 @@ package wicket.markup.html;
 
 import java.util.Iterator;
 
+import wicket.ApplicationPages;
 import wicket.Component;
 import wicket.IEventRequestListener;
 import wicket.Page;
@@ -47,7 +48,7 @@ import wicket.util.string.Strings;
  * that accepts a PageParameters argument (which wraps any query string parameters for a
  * request). In case the page has both constructors, the constructor with PageParameters will
  * be used.
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
@@ -103,10 +104,21 @@ public class WebPage extends Page implements IHeaderRenderer
 			buffer.append(pageMapName);
 			buffer.append('&');
 		}
-		buffer.append("bookmarkablePage=");
-		String pageReference = cycle.getApplication().getPages().aliasForClass(pageClass);
-		if (pageReference == null) pageReference = pageClass.getName();
-		buffer.append(pageReference);
+		ApplicationPages pages = getApplicationPages();
+
+		// "bookmarkablePage=xxx" is required if PageParameters exist,
+		// some sort of redirection takes place, or if we're not dealing
+		// with the homepage.
+		if ((parameters!=null && !parameters.isEmpty()) ||
+		  pages.getHomePageRenderStrategy()!=ApplicationPages.NO_REDIRECT ||
+		  !pages.getHomePage().equals(pageClass))
+		{
+		  buffer.append("bookmarkablePage=");
+		  String pageReference = cycle.getApplication().getPages().aliasForClass(pageClass);
+		  if (pageReference == null)
+		    pageReference = pageClass.getName();
+		  buffer.append(pageReference);
+		}
 		if (parameters != null)
 		{
 			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
@@ -119,6 +131,8 @@ public class WebPage extends Page implements IHeaderRenderer
 				buffer.append(value);
 			}
 		}
+		if (buffer.charAt(buffer.length()-1)=='?')
+			buffer.deleteCharAt(buffer.length()-1);
 		return cycle.getResponse().encodeURL(buffer.toString());
 	}
 
@@ -127,7 +141,7 @@ public class WebPage extends Page implements IHeaderRenderer
 	 * URL is requested from the server at a later time, the interface will be
 	 * called. A URL returned by this method will not be stable across sessions
 	 * and cannot be bookmarked by a user.
-	 * 
+	 *
 	 * @param component
 	 *            The component to reference
 	 * @param listenerInterface
@@ -305,10 +319,10 @@ public class WebPage extends Page implements IHeaderRenderer
 	}
 
 	/**
-	 * THIS IS NOT PART OF THE PUBLIC API. 
-	 * 
+	 * THIS IS NOT PART OF THE PUBLIC API.
+	 *
 	 * Get what will be appended to the page markup's body onLoad attribute
-	 * 
+	 *
 	 * @return The onLoad attribute
 	 */
 	public String getBodyOnLoad()
