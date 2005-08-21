@@ -157,7 +157,15 @@ public class ResourceReference implements Serializable
 		bind(application);
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("resources/");
-		buffer.append(SharedResources.path(application, scope, name, locale, style));
+		Locale currentLocale = Session.get().getLocale();
+		if(locale != null && !locale.equals(currentLocale))
+		{
+			buffer.append(SharedResources.path(application, scope, name, locale, style));
+		}
+		else
+		{
+			buffer.append(SharedResources.path(application, scope, name, null, style));
+		}
 		return buffer.toString();
 	}
 
