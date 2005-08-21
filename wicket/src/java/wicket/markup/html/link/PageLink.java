@@ -69,10 +69,11 @@ public class PageLink extends Link
 			}
 		};
 	}
-	
+
 	/**
-	 * Construct a link to the Page
-	 * 
+	 * This constructor is ideal if a Page object was passed in from a previous
+	 * Page. Construct a link to the Page.
+	 *
 	 * @param id  See component
 	 * @param page The page
 	 */
@@ -96,10 +97,12 @@ public class PageLink extends Link
 	}
 
 	/**
+	 * This constructor is ideal for constructing pages lazily.
+	 *
 	 * Constructs a link which invokes the getPage() method of the IPageLink
 	 * interface when the link is clicked. Whatever Page objects is returned by
 	 * this method will be rendered back to the user.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param pageLink
