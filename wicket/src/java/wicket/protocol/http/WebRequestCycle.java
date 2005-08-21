@@ -646,7 +646,19 @@ public class WebRequestCycle extends RequestCycle
 				// if still null throw an exception
 				if(resource == null)
 				{
-					throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey);
+					log.debug("Could not find resource referenced by key " + resourceReferenceKey);
+					try
+					{
+						getWebResponse().getHttpServletResponse().sendError(HttpServletResponse.SC_NOT_FOUND);
+					}
+					catch (IOException ex)
+					{
+						log.error("error sending 404", ex);
+						throw new WicketRuntimeException("Could not find resource referenced by key " + resourceReferenceKey + 
+								" and send a 404", ex);
+					}
+					// do return true, the response is handled.
+					return true;
 				}
 			}
 			resource.onResourceRequested();
