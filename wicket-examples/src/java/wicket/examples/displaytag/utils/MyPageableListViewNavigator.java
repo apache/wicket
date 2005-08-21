@@ -22,12 +22,12 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.PageableListViewNavigator;
+import wicket.markup.html.navigation.paging.PagingNavigator;
 
 /**
  * @author Juergen Donnerstag
  */
-public class MyPageableListViewNavigator extends PageableListViewNavigator
+public class MyPageableListViewNavigator extends PagingNavigator
 {
     /**
      * 

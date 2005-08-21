@@ -31,7 +31,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.PageableListViewNavigation;
+import wicket.markup.html.navigation.paging.PagingNavigation;
 import wicket.model.Model;
 
 /**
@@ -115,9 +115,9 @@ public class ExamplePaging extends Displaytag
         
         MyPageableListViewNavigator nav3 = new MyPageableListViewNavigator("pageTableNav3", table3)
         {
-            protected PageableListViewNavigation newNavigation(final PageableListView table)
+            protected PagingNavigation newNavigation(final PageableListView table)
             {
-                final PageableListViewNavigation nav = new PageableListViewNavigation("navigation", table);
+                final PagingNavigation nav = new PagingNavigation("navigation", table);
                 nav.setMargin(2);
                 nav.setViewSize(5);
                 nav.setSeparator(", ");
@@ -148,9 +148,9 @@ public class ExamplePaging extends Displaytag
         
         MyPageableListViewNavigator nav4 = new MyPageableListViewNavigator("pageTableNav4", table4)
         {
-            protected PageableListViewNavigation newNavigation(final PageableListView table)
+            protected PagingNavigation newNavigation(final PageableListView table)
             {
-                final PageableListViewNavigation nav = new PageableListViewNavigation("navigation", table);
+                final PagingNavigation nav = new PagingNavigation("navigation", table);
                 nav.setMargin(2);
                 if (nav.getViewSize() > 5)
                 {

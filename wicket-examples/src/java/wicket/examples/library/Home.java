@@ -24,7 +24,7 @@ import wicket.PageParameters;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.PageableListViewNavigator;
+import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 
@@ -58,7 +58,7 @@ public final class Home extends AuthenticatedWebPage
 				listItem.add(EditBook.link("edit", book.getId()));
 			}
 		});
-		add(new PageableListViewNavigator("navigator", listView));
+		add(new PagingNavigator("navigator", listView));
 	}
 	
 	/**
