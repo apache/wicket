@@ -23,10 +23,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import wicket.Application;
-import wicket.RequestCycle;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.WebApplication;
 import wicket.util.resource.IResourceStream;
 
 /**
@@ -56,9 +54,6 @@ public class StaticFileResource extends WebResource
 
 	/** The resource's style */
 	final String style;
-
-	/** the application to use for getting the resource stream */
-	private transient Application application;
 
 	/**
 	 * Gets a non-localized resource for a given set of criteria. Only one resource
@@ -118,7 +113,6 @@ public class StaticFileResource extends WebResource
 		this.absolutePath = SharedResources.path(path, locale, style);
 		this.locale = locale;
 		this.style = style;
-		this.application = RequestCycle.get().getApplication();
 	}
 
 	/**
@@ -129,7 +123,7 @@ public class StaticFileResource extends WebResource
 		if (resourceStream == null)
 		{
 			// Locate resource
-			this.resourceStream = application.getResourceStreamLocator().locate(
+			this.resourceStream = Application.get().getResourceStreamLocator().locate(
 					getClass().getClassLoader(), absolutePath, style, locale, null);
 
 			// Check that resource was found
@@ -140,14 +134,5 @@ public class StaticFileResource extends WebResource
 			}
 		}
 		return resourceStream;
-	}
-
-	/**
-	 * set the application object on this resource.
-	 * @param webApplication
-	 */
-	public void setApplication(WebApplication webApplication)
-	{
-		this.application = webApplication;
 	}
 }
