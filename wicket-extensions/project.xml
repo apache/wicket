@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <groupId>wicket</groupId>
   <id>wicket-extensions</id>
-  <currentVersion>1.1-b2</currentVersion>
+  <currentVersion>1.1-b3</currentVersion>
   <inceptionYear>2004</inceptionYear>
   <package>wicket</package>
   <logo>/images/logo.gif</logo>
@@ -59,6 +59,11 @@
       <name>1.1-b2</name>
       <tag>WICKET_R_1_1_BETA2</tag>
     </version>
+    <version>
+      <id>1.1-b3</id>
+      <name>1.1-b3</name>
+      <tag>WICKET_R_1_1_BETA3</tag>
+    </version>
   </versions>
   <dependencies>
     <dependency>
@@ -104,7 +109,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1-b2</version>
+      <version>1.1-b3</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
