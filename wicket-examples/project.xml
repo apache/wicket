@@ -3,7 +3,7 @@
 <project>
   <id>wicket-examples</id>
   <name>Wicket Examples</name>
-  <currentVersion>1.1-b2</currentVersion>
+  <currentVersion>1.1-b3</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -132,7 +132,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket</artifactId>
-      <version>1.1-b2</version>
+      <version>1.1-b3</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
@@ -141,7 +141,7 @@
     <dependency>
       <groupId>wicket</groupId>
       <artifactId>wicket-extensions</artifactId>
-      <version>1.1-b2</version>
+      <version>1.1-b3</version>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
         <war.bundle>true</war.bundle>
